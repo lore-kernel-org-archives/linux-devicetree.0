@@ -2,99 +2,66 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C9CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45ABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A81992065F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C1820671
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589475230;
+	bh=uLsNhapwCHDABTtF2A6EH6XG/RphfBmrqkR3vk1nbHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2C6SRx0vUJwetnG+IiQcrehCtPdrC9ZvQU/vS76utLVMpREvhyeyRWaPJBB/WZa6l
+	 NT9+P/IOj8uEA+qAD7+bJh2VsE3CTZkq6Vd35wg2CZOoT3MG90CX7+qKc5bTF9w3BU
+	 gECV8VJiDIjFpBvSYCnRqpQnlwhuoWh4MDz5q4Lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgENQuC (ORCPT
+        id S1726141AbgENQxu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 12:50:02 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:48766 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726090AbgENQuB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 12:50:01 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04EGnFxN006865;
-        Thu, 14 May 2020 19:49:15 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 205E7639C0; Thu, 14 May 2020 19:49:15 +0300 (IDT)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org,
-        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH v1] tpm: tpm_tis: make implementation of read16, read32 and write32 optional fix
-Date:   Thu, 14 May 2020 19:48:25 +0300
-Message-Id: <20200514164825.35377-2-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200514164825.35377-1-amirmizi6@gmail.com>
-References: <20200514164825.35377-1-amirmizi6@gmail.com>
+        Thu, 14 May 2020 12:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgENQxu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 12:53:50 -0400
+Received: from localhost (unknown [122.182.193.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA9FE2065F;
+        Thu, 14 May 2020 16:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589475229;
+        bh=uLsNhapwCHDABTtF2A6EH6XG/RphfBmrqkR3vk1nbHM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=snFrfeWHib9cVGp/q9/42I5b4Qz43/1+9jJSArgjjz0VOLBE4BXbd1tSgo36qBgTl
+         TXlZF83pc90U+H0Rm126mgQz+LraJe46hpGQnwd0lkJWCos9PC9quXHb+1jd4fgaXZ
+         vVPvnjGuHV7qMyWQz4/OWmwNCx7BzQsXtdAsVRy4=
+Date:   Thu, 14 May 2020 22:23:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/5] remoteproc: qcom: PIL info support
+Message-ID: <20200514165338.GA14092@vkoul-mobl>
+References: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+On 12-05-20, 22:56, Bjorn Andersson wrote:
+> Introduce support for filling out the relocation information in IMEM, to aid
+> post mortem debug tools to locate the various remoteprocs.
 
-Removed SPI extern function definitions and unused callback functions for
-CR50 driver.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Fixes: fa05dc792ea0 ("tpm: tpm_tis: make implementation of read16, read32 and write32 optional")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- drivers/char/tpm/tpm_tis_spi.h      | 4 ----
- drivers/char/tpm/tpm_tis_spi_cr50.c | 3 ---
- 2 files changed, 7 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm_tis_spi.h b/drivers/char/tpm/tpm_tis_spi.h
-index bba7397..d0f66f6 100644
---- a/drivers/char/tpm/tpm_tis_spi.h
-+++ b/drivers/char/tpm/tpm_tis_spi.h
-@@ -31,10 +31,6 @@ extern int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
- extern int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 				u8 *in, const u8 *out);
- 
--extern int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result);
--extern int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result);
--extern int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value);
--
- #ifdef CONFIG_TCG_TIS_SPI_CR50
- extern int cr50_spi_probe(struct spi_device *spi);
- #else
-diff --git a/drivers/char/tpm/tpm_tis_spi_cr50.c b/drivers/char/tpm/tpm_tis_spi_cr50.c
-index 37d72e8..f339d20 100644
---- a/drivers/char/tpm/tpm_tis_spi_cr50.c
-+++ b/drivers/char/tpm/tpm_tis_spi_cr50.c
-@@ -215,9 +215,6 @@ static int tpm_tis_spi_cr50_write_bytes(struct tpm_tis_data *data, u32 addr,
- static const struct tpm_tis_phy_ops tpm_spi_cr50_phy_ops = {
- 	.read_bytes = tpm_tis_spi_cr50_read_bytes,
- 	.write_bytes = tpm_tis_spi_cr50_write_bytes,
--	.read16 = tpm_tis_spi_read16,
--	.read32 = tpm_tis_spi_read32,
--	.write32 = tpm_tis_spi_write32,
- };
- 
- static void cr50_print_fw_version(struct tpm_tis_data *data)
 -- 
-2.7.4
-
+~Vinod
