@@ -2,85 +2,137 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A17C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A756AC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E4F2070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8232C20671
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FFVssbIp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dj7/g773"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgENOGm (ORCPT
+        id S1726707AbgENOIN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 10:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726087AbgENOGm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 10:06:42 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A9CC061A0C
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 07:06:42 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y16so4314477wrs.3
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 07:06:42 -0700 (PDT)
+        Thu, 14 May 2020 10:08:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727841AbgENOIN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 10:08:13 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15730C061A0F
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 07:08:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id o14so3677860ljp.4
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 07:08:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LNkj51r2L9rZ0K9EyWV0hvRQYzmcF5SBVqNFyVyFPAo=;
-        b=FFVssbIpXryFajjJXelTChxllm6xJFU04WJDqYHF38lQ/dFAnf2M7LYURSvd2MAZLH
-         1aFzJ5ydJ+ryiTLpYI4YhCocurxWwXswgOTYigjFTMJstIFj/kqzctDv7RL4JFBcM55O
-         +ZKs8WrMfnD+KDmRrrXs8Z/FeIbgrcGT3m7Rn28Ve7jUxrDRv4iah9/vpyOz9A7RC9kx
-         ilf3YTjrAeBfYkZnxl7oVDtVX5zOe0QTre9YKfBEldQO+nq+dZRH1JJTuU7lnGhbE/UG
-         yM7qAoLViyV1mRjKxwVf5+28hiHEm9lkR5c2ODp4AA2GEtpKS1GdNnrVQVkyTtf5kSgh
-         78OQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4tjpLfreP4k0pSGmLfKu7J4qVyl2PfcgR+DBUFuyQfI=;
+        b=Dj7/g773oDlRsTiNUR7xo2qlLm/wu1orsMurVYbTiR6KmugblKgadVSe7mPERK4aCL
+         vEPNEYTpo0FsOvkLTFcAR67KlJyF7Lm0tYMvWEFjNfuewnDqxPfak/mLCAwyBwyRj2ir
+         q0by15fYjqzhJnUNE1ONVJGr3vLUxaVTcB05C/nT5aCMA95AP0XrrQXYs66hWza3MVLf
+         R+msddyOYrqaHHXoL1h2Zg7FvdZ9e0msvkVGT4lgti3NVlNIlsRBi9Wq6iHo7+nPlyp+
+         J4SOOLifvlUKFSIzHAfmGa1qomnjT8z0ZSZ1URkY4VQZLOT1r8zjI6FEv5Gh00Bgxe6d
+         cS2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LNkj51r2L9rZ0K9EyWV0hvRQYzmcF5SBVqNFyVyFPAo=;
-        b=lLLXtGlGhItnXtABnkZivWLehD4fBqs3QqQ6vfULtfNoxzrxlZFl5FjRmT5c7KbN3e
-         W+vtPMbUyqe8PIjsiLylWDeBhHhb1ovQ5idWx06nX/ykBaWoGV9rYJaVJpLdPyD3b9GC
-         Mj8P8bNZfv86VdUoqYAIkXwFnynrbdFt00P/tFxoSjVgYmhdIU89n4JiCLfn8msiujzu
-         ox4ONbNa9NznxanhuaO2MfxQglq0RlLOlxqsMGd0P10oG+PWmqQe3xgOrXNZl11TPOSH
-         VbcoaQAYAFKubePKHNXNCxeJ0FJvgXxWXSSLYFIYlt+X37y01lm5eJooovBQSdDNgbKD
-         0ejA==
-X-Gm-Message-State: AOAM533ZzfgCsJtfVg4LuMlPA2PODDwOufpH32Vava67wCRDYYrLaOkb
-        mdWiYSDVsk9f2VJHYQH2PHySDw==
-X-Google-Smtp-Source: ABdhPJwWfEo76YwG+HFwYeVUwbduEOE4F024tHFCHqVD7jVePGd1AlpWVV1SVylPxSX56t17X0n1JQ==
-X-Received: by 2002:a5d:5388:: with SMTP id d8mr5583058wrv.242.1589465200349;
-        Thu, 14 May 2020 07:06:40 -0700 (PDT)
-Received: from localhost.localdomain ([37.120.32.219])
-        by smtp.gmail.com with ESMTPSA id t22sm10487621wmj.37.2020.05.14.07.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 07:06:39 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Robert Foss <robert.foss@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: c630: Add WiFi node
-Date:   Thu, 14 May 2020 16:06:06 +0200
-Message-Id: <20200514140606.1343766-1-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20191018055841.3729591-1-bjorn.andersson@linaro.org>
-References: <20191018055841.3729591-1-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4tjpLfreP4k0pSGmLfKu7J4qVyl2PfcgR+DBUFuyQfI=;
+        b=m9ltCKCP4gP+jTUUoUXSQYo4SHwFAu7DTkH9ow3GDc5XeHy7Ftti99FuA8bKv9Yp/p
+         FaPY5503ovDi71vnk+9HdAd//AJnEf5ZsICB2+Jtrj9WrLvIQCLzXcEmLIwsrN1OfCB2
+         DwbU02UdJrzEKjL17Me3GpSqxnyc45v4WLvE2QF/J+6w8BjQIgADZSE4eQFZW7YMupXY
+         41lV6CzDwu+HYc/RneZqFSXDtgf4lbA6dlEAd03h28wE/d5j2YXC7TSkY6QHduM0VgvW
+         DqUXsbHxPTLp7WfYW9tfAnk4iB5vncBWOKhO1ZqkW5V78q6TKubIs4sS4UMmE8mCPpRu
+         sH0g==
+X-Gm-Message-State: AOAM5320p5XcyIklhFR/GcchqxFY5bjgBJsL+X8ONEwoGO+n6Q3SDRhR
+        iP4hA3bKsSB77TJ3f7o/qFzzTqm61NYMKkCodkk+OA==
+X-Google-Smtp-Source: ABdhPJx5t1yZM5yB0Se02KNKlQ3Kf5olZkwfnoQ7/EcJOQjcx6eZpQDoXhQSKSv4wdy91TSKQPnH1L4MsQ9yfH5F0tc=
+X-Received: by 2002:a2e:531e:: with SMTP id h30mr2030382ljb.168.1589465290360;
+ Thu, 14 May 2020 07:08:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+ <1589267017-17294-6-git-send-email-dillon.minfei@gmail.com>
+ <CACRpkdbZoMDC-D12CByKJUZbu4shqixC=QrKwJUd8x=nyK7seQ@mail.gmail.com> <CAL9mu0LVsePqifEC+-FR+NxvuZT3UGpU86KhzaTqb7w_Px0z2g@mail.gmail.com>
+In-Reply-To: <CAL9mu0LVsePqifEC+-FR+NxvuZT3UGpU86KhzaTqb7w_Px0z2g@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 14 May 2020 16:07:57 +0200
+Message-ID: <CACRpkdbcD7i+kNoJ9YP5XXTtLi12=yzW5OBNzet5oRdwPYz=dA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] drm/panel: Add ilitek ili9341 driver
+To:     dillon min <dillon.minfei@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Specify regulators and enable the &wifi node. The firmware uses the 8
-> bit version of the host capability message, so specify this quirk.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Thu, May 14, 2020 at 12:22 PM dillon min <dillon.minfei@gmail.com> wrote:
 
-Reviewed-by: Robert Foss <robert.foss@linaro.org>
+> > > +       /* Gamma */
+> > > +       mipi_dbi_command(dbi, ILI9341_3GAMMA_EN, 0x00);
+> > > +       mipi_dbi_command(dbi, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
+> > > +       mipi_dbi_command(dbi, ILI9341_PGAMMA,
+> > > +                        0x0f, 0x31, 0x2b, 0x0c, 0x0e, 0x08, 0x4e, 0xf1,
+> > > +                        0x37, 0x07, 0x10, 0x03, 0x0e, 0x09, 0x00);
+> > > +       mipi_dbi_command(dbi, ILI9341_NGAMMA,
+> > > +                        0x00, 0x0e, 0x14, 0x03, 0x11, 0x07, 0x31, 0xc1,
+> > > +                        0x48, 0x08, 0x0f, 0x0c, 0x31, 0x36, 0x0f);
+> >
+> > It seems to be copies of the stuff above, but why is there a different
+> > gamma if you use DBI?
+
+> for dbi interface, currently i just copy the code from tiny/ili9341.c.
+> as so many boards use this driver now, like raspberry pi, etc
+> i'm afraid it's will not work after modification. so, just leave the
+> original code there.
+
+OK if you move it to ili9341_config it will be clear which panels
+need this gamma and which panels need another gamma.
+
+I think there should be one ili9341_config for the new st,*
+variant and one for the old DBI variant.
+
+> anther question:
+> is there any panel driver have dbi & dpi or dpi & dsi supported? which
+> i mean support
+> two different panel interface in one driver.
+> thanks
+
+Usually you split the driver in three files becuase a driver can
+only list one initcall, and also it makes it modularized.
+
+There is nothing in-tree but look at my branch here:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/log/?h=ux500-skomer-v5.7-rc1
+
+You see how I split up the s6e63m0 driver in one SPI part
+and one DSI part:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/commit/?h=ux500-skomer-v5.7-rc1&id=6c0e1fb5df5fa8fa857dee65f6c0f54d06d158a7
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/commit/?h=ux500-skomer-v5.7-rc1&id=cfbf562cc709b53b62f5fbc7fedf176ffa17b088
+
+The overall idea should work the same with DBI.
+
+Yours,
+Linus Walleij
+
+Yours,
+Linus Walleij
