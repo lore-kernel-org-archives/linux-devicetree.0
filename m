@@ -2,287 +2,199 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD74C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4835FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1DD206F1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C9C2065D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ztt20Lw3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O18fRYkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgENQIq (ORCPT
+        id S1726240AbgENQLi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 12:08:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59114 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgENQIq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 12:08:46 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EG8cRY051077;
-        Thu, 14 May 2020 11:08:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589472518;
-        bh=DWuRI69VJhwA75p0adY2f23XQmUB8NXX6FfYCzE7bCM=;
-        h=From:To:CC:Subject:Date;
-        b=Ztt20Lw38DPeUIV8HkE08ppOj7nK/PvvvemjraFSJR1DRyEA4NBnLbuXaaysF+sPv
-         tTjle5SJUmFXBG8W4vA4aPqa/uyKqdN0Ckj6IHdZPU8r3O/tJXw07Alx+N3d8raQ2G
-         dWxXB6lYPOcZpVB5/9buX/2DJuHENY+ydaimqdYo=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EG8cNH088896
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 11:08:38 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 11:08:38 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 11:08:38 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EG8bJD003060;
-        Thu, 14 May 2020 11:08:38 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>
-CC:     <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next] dt-bindings: dp83867: Convert DP83867 to yaml
-Date:   Thu, 14 May 2020 10:59:05 -0500
-Message-ID: <20200514155905.26845-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 14 May 2020 12:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgENQLi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 12:11:38 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0F6C061A0C;
+        Thu, 14 May 2020 09:11:37 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b18so1532738ilf.2;
+        Thu, 14 May 2020 09:11:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pWAwL4iY43kHKyzq6JgPam8fDxHVDDtXpG7mRg32aJE=;
+        b=O18fRYkJuCVHLzSDHMiTV/YEvTTqeLQpSzk7AUAl1veaDpHB0AhDrBCf6pG6NOIJ69
+         IVKsNZ3fA75gmbzuDAe9ruH9MEFZd4RjPd5l7XMXsa9JnQglfU6WlqT5lKEfreMB5mpa
+         yLiuZhfm1eIS1G/957nwLkHVLS+MHbLeJ+wOrXDXNXNqjYGERRRjU4frvhsoaaEfctCs
+         TOK4ipsoWjopZW/F3wg+NJ2uwwRe8hgMBHYVXkuqgOqby141+OUTgLvFgNbfg3CODLo9
+         TdoiXHXOZy+3W9snj2LFBt6LX/eRdGwR20ISOpHddhvO3HEKQmYx8gnopiazWe6kaubv
+         UEXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pWAwL4iY43kHKyzq6JgPam8fDxHVDDtXpG7mRg32aJE=;
+        b=CK/IU3wAf7Ml7o/oouS4rFRY3+v0USZnpEHo30+KjSo5UuJbSgq3qwyTd37ReQDCzG
+         BS1+2Lv/UzDrljWE75OekhkJH/sJvFps0z6j95f/Ocj91WdjmFs9tGN2y4Sr0PM1yt58
+         cHraaJeDyriwLePOTXxzKebFYQMkhl+4hutVLqXqm5ZHzUeHq3OdZp1ZDHA2JDqyR+Xp
+         bS8Y+GrIj7a35rqDHLjwyd5hyUL3O4S9BoQz/jaZhEErfx89C5GQ2M1CTiRHbW5FhFXm
+         weIB2fU/sULEJ+m4EmAgp/KzTPSd/KhxidR9gM/nmG1UnUmTY7RvOwtoPZP4OqeFzjCd
+         qJzA==
+X-Gm-Message-State: AOAM530SHhqYJ+IAkVQkGiC542wOYKYcCrfv8m8cXzWcm2ZishK84uwC
+        beqz0OP6KE0RcoThHZba6tiOWqP2/uBDBoN4U73wHDfn/Es=
+X-Google-Smtp-Source: ABdhPJx6Rsp5ROFxXwYlYudzEUx9ly+h8b+Qj8M+Twx/mohFFLUuzJpw12Ch5e3R3mp3ipZq22gY7LfKaKb8NlNe79A=
+X-Received: by 2002:a05:6e02:68e:: with SMTP id o14mr1854794ils.184.1589472696421;
+ Thu, 14 May 2020 09:11:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+ <1589267017-17294-6-git-send-email-dillon.minfei@gmail.com>
+ <CACRpkdbZoMDC-D12CByKJUZbu4shqixC=QrKwJUd8x=nyK7seQ@mail.gmail.com>
+ <CAL9mu0LVsePqifEC+-FR+NxvuZT3UGpU86KhzaTqb7w_Px0z2g@mail.gmail.com> <CACRpkdbcD7i+kNoJ9YP5XXTtLi12=yzW5OBNzet5oRdwPYz=dA@mail.gmail.com>
+In-Reply-To: <CACRpkdbcD7i+kNoJ9YP5XXTtLi12=yzW5OBNzet5oRdwPYz=dA@mail.gmail.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Thu, 14 May 2020 16:11:00 +0800
+Message-ID: <CAL9mu0Kdc4TqcGB7JYDWkOJqwvxX1m_026aB0iprkHTzN4HXoQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] drm/panel: Add ilitek ili9341 driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the dp83867 binding to yaml.
+Hi Linus,
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../devicetree/bindings/net/ti,dp83867.txt    |  68 ----------
- .../devicetree/bindings/net/ti,dp83867.yaml   | 127 ++++++++++++++++++
- 2 files changed, 127 insertions(+), 68 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/ti,dp83867.txt
- create mode 100644 Documentation/devicetree/bindings/net/ti,dp83867.yaml
+Linus Walleij <linus.walleij@linaro.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=8814=
+=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:08=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+> On Thu, May 14, 2020 at 12:22 PM dillon min <dillon.minfei@gmail.com> wro=
+te:
+>
+> > > > +       /* Gamma */
+> > > > +       mipi_dbi_command(dbi, ILI9341_3GAMMA_EN, 0x00);
+> > > > +       mipi_dbi_command(dbi, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
+> > > > +       mipi_dbi_command(dbi, ILI9341_PGAMMA,
+> > > > +                        0x0f, 0x31, 0x2b, 0x0c, 0x0e, 0x08, 0x4e, =
+0xf1,
+> > > > +                        0x37, 0x07, 0x10, 0x03, 0x0e, 0x09, 0x00);
+> > > > +       mipi_dbi_command(dbi, ILI9341_NGAMMA,
+> > > > +                        0x00, 0x0e, 0x14, 0x03, 0x11, 0x07, 0x31, =
+0xc1,
+> > > > +                        0x48, 0x08, 0x0f, 0x0c, 0x31, 0x36, 0x0f);
+> > >
+> > > It seems to be copies of the stuff above, but why is there a differen=
+t
+> > > gamma if you use DBI?
+>
+> > for dbi interface, currently i just copy the code from tiny/ili9341.c.
+> > as so many boards use this driver now, like raspberry pi, etc
+> > i'm afraid it's will not work after modification. so, just leave the
+> > original code there.
+>
+> OK if you move it to ili9341_config it will be clear which panels
+> need this gamma and which panels need another gamma.
+>
+> I think there should be one ili9341_config for the new st,*
+> variant and one for the old DBI variant.
+>
+Okay, it's a good idea to setup two different configs.  ili9341_dbi_config,
+ili9341_dpi_config. first for old dbi variant, second for dpi variant.
 
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-deleted file mode 100644
-index 44e2a4fab29e..000000000000
---- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-+++ /dev/null
-@@ -1,68 +0,0 @@
--* Texas Instruments - dp83867 Giga bit ethernet phy
--
--Required properties:
--	- reg - The ID number for the phy, usually a small integer
--	- ti,rx-internal-delay - RGMII Receive Clock Delay - see dt-bindings/net/ti-dp83867.h
--		for applicable values. Required only if interface type is
--		PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_RXID
--	- ti,tx-internal-delay - RGMII Transmit Clock Delay - see dt-bindings/net/ti-dp83867.h
--		for applicable values. Required only if interface type is
--		PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_TXID
--
--Note: If the interface type is PHY_INTERFACE_MODE_RGMII the TX/RX clock delays
--      will be left at their default values, as set by the PHY's pin strapping.
--      The default strapping will use a delay of 2.00 ns.  Thus
--      PHY_INTERFACE_MODE_RGMII, by default, does not behave as RGMII with no
--      internal delay, but as PHY_INTERFACE_MODE_RGMII_ID.  The device tree
--      should use "rgmii-id" if internal delays are desired as this may be
--      changed in future to cause "rgmii" mode to disable delays.
--
--Optional property:
--	- ti,min-output-impedance - MAC Interface Impedance control to set
--				    the programmable output impedance to
--				    minimum value (35 ohms).
--	- ti,max-output-impedance - MAC Interface Impedance control to set
--				    the programmable output impedance to
--				    maximum value (70 ohms).
--	- ti,dp83867-rxctrl-strap-quirk - This denotes the fact that the
--				    board has RX_DV/RX_CTRL pin strapped in
--				    mode 1 or 2. To ensure PHY operation,
--				    there are specific actions that
--				    software needs to take when this pin is
--				    strapped in these modes. See data manual
--				    for details.
--	- ti,clk-output-sel - Muxing option for CLK_OUT pin.  See dt-bindings/net/ti-dp83867.h
--			      for applicable values.  The CLK_OUT pin can also
--			      be disabled by this property.  When omitted, the
--			      PHY's default will be left as is.
--	- ti,sgmii-ref-clock-output-enable - This denotes which
--				    SGMII configuration is used (4 or 6-wire modes).
--				    Some MACs work with differential SGMII clock.
--				    See data manual for details.
--
--	- ti,fifo-depth - Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h
--		for applicable values (deprecated)
--
--	-tx-fifo-depth - As defined in the ethernet-controller.yaml.  Values for
--			 the depth can be found in dt-bindings/net/ti-dp83867.h
--	-rx-fifo-depth - As defined in the ethernet-controller.yaml.  Values for
--			 the depth can be found in dt-bindings/net/ti-dp83867.h
--
--Note: ti,min-output-impedance and ti,max-output-impedance are mutually
--      exclusive. When both properties are present ti,max-output-impedance
--      takes precedence.
--
--Default child nodes are standard Ethernet PHY device
--nodes as described in Documentation/devicetree/bindings/net/phy.txt
--
--Example:
--
--	ethernet-phy@0 {
--		reg = <0>;
--		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_25_NS>;
--		ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_75_NS>;
--		tx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
--	};
--
--Datasheet can be found:
--http://www.ti.com/product/DP83867IR/datasheet
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.yaml b/Documentation/devicetree/bindings/net/ti,dp83867.yaml
-new file mode 100644
-index 000000000000..554dcd7a40a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ti,dp83867.yaml
-@@ -0,0 +1,127 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-+# Copyright (C) 2019 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/net/ti,dp83867.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: TI DP83867 ethernet PHY
-+
-+allOf:
-+  - $ref: "ethernet-controller.yaml#"
-+
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
-+
-+description: |
-+  The DP83867 device is a robust, low power, fully featured Physical Layer
-+  transceiver with integrated PMD sublayers to support 10BASE-Te, 100BASE-TX
-+  and 1000BASE-T Ethernet protocols.
-+
-+  The DP83867 is designed for easy implementation of 10/100/1000 Mbps Ethernet
-+  LANs. It interfaces directly to twisted pair media via an external
-+  transformer. This device interfaces directly to the MAC layer through the
-+  IEEE 802.3 Standard Media Independent Interface (MII), the IEEE 802.3 Gigabit
-+  Media Independent Interface (GMII) or Reduced GMII (RGMII).
-+
-+  Specifications about the charger can be found at:
-+    https://www.ti.com/lit/gpn/dp83867ir
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+
-+  ti,min-output-impedance:
-+    type: boolean
-+    description: |
-+       MAC Interface Impedance control to set the programmable output impedance
-+       to a minimum value (35 ohms).
-+
-+  ti,max-output-impedance:
-+    type: boolean
-+    description: |
-+      MAC Interface Impedance control to set the programmable output impedance
-+      to a maximum value (70 ohms).
-+      Note: ti,min-output-impedance and ti,max-output-impedance are mutually
-+        exclusive. When both properties are present ti,max-output-impedance
-+        takes precedence.
-+
-+  tx-fifo-depth:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+       Transmitt FIFO depth see dt-bindings/net/ti-dp83867.h for values
-+
-+  rx-fifo-depth:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+       Receive FIFO depth see dt-bindings/net/ti-dp83867.h for values
-+
-+  ti,clk-output-sel:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+      Muxing option for CLK_OUT pin.  See dt-bindings/net/ti-dp83867.h
-+      for applicable values. The CLK_OUT pin can also be disabled by this
-+      property.  When omitted, the PHY's default will be left as is.
-+
-+  ti,rx-internal-delay:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+      RGMII Receive Clock Delay - see dt-bindings/net/ti-dp83867.h
-+      for applicable values. Required only if interface type is
-+      PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_RXID.
-+
-+  ti,tx-internal-delay:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+      RGMII Transmit Clock Delay - see dt-bindings/net/ti-dp83867.h
-+      for applicable values. Required only if interface type is
-+      PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_TXID.
-+
-+        Note: If the interface type is PHY_INTERFACE_MODE_RGMII the TX/RX clock
-+          delays will be left at their default values, as set by the PHY's pin
-+          strapping. The default strapping will use a delay of 2.00 ns.  Thus
-+          PHY_INTERFACE_MODE_RGMII, by default, does not behave as RGMII with no
-+          internal delay, but as PHY_INTERFACE_MODE_RGMII_ID.  The device tree
-+          should use "rgmii-id" if internal delays are desired as this may be
-+          changed in future to cause "rgmii" mode to disable delays.
-+
-+  ti,dp83867-rxctrl-strap-quirk:
-+    type: boolean
-+    description: |
-+      This denotes the fact that the board has RX_DV/RX_CTRL pin strapped in
-+      mode 1 or 2. To ensure PHY operation, there are specific actions that
-+      software needs to take when this pin is strapped in these modes.
-+      See data manual for details.
-+
-+  ti,sgmii-ref-clock-output-enable:
-+    type: boolean
-+    description: |
-+      This denotes which SGMII configuration is used (4 or 6-wire modes).
-+      Some MACs work with differential SGMII clock. See data manual for details.
-+
-+  ti,fifo-depth:
-+    deprecated: true
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+      Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h for applicable
-+      values.
-+
-+required:
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/net/ti-dp83867.h>
-+    mdio0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      ethphy0: ethernet-phy@0 {
-+        reg = <0>;
-+        tx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+        rx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+        ti,max-output-impedance;
-+        ti,clk-output-sel = <DP83867_CLK_O_SEL_CHN_A_RCLK>;
-+        ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_25_NS>;
-+        ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_75_NS>;
-+      };
-+    };
--- 
-2.26.2
+> > anther question:
+> > is there any panel driver have dbi & dpi or dpi & dsi supported? which
+> > i mean support
+> > two different panel interface in one driver.
+> > thanks
+>
+> Usually you split the driver in three files becuase a driver can
+> only list one initcall, and also it makes it modularized.
+>
+> There is nothing in-tree but look at my branch here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
+log/?h=3Dux500-skomer-v5.7-rc1
+>
+> You see how I split up the s6e63m0 driver in one SPI part
+> and one DSI part:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
+commit/?h=3Dux500-skomer-v5.7-rc1&id=3D6c0e1fb5df5fa8fa857dee65f6c0f54d06d1=
+58a7
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
+commit/?h=3Dux500-skomer-v5.7-rc1&id=3Dcfbf562cc709b53b62f5fbc7fedf176ffa17=
+b088
+>
+> The overall idea should work the same with DBI.
+>
+> Yours,
+> Linus Walleij
+>
+> Yours,
+> Linus Walleij
 
+Thanks for share, but i thinks it's not suitable to my case. the difference=
+ is
+for panel s6e63m0
+1 spi only for panel register configuration
+2 dpi for rgb video data transfer (drm_panel_init(..., DRM_MODE_CONNECTOR_D=
+PI);)
+
+my case:
+1 support ili9341 by drm mipi dbi (only spi bus,  "3/4 line serial
+interface", pdf chap 7.6.1), Ie, raspberry pi + ili9341 + spi
+2 support ili9341 by spi & dpi (spi for register set, dpi for rgb
+data, "6/16/18 bit parallel rgb interface", pdf chap 7.6.8)
+   Ie, stm32f429+ili9341+ltdc+spi
+these two communication type has no dependency with each other.
+
+DBI has much more difference than DPI & SPI, or DSI & SPI in drm.
+   drm_mipi_dbi support both panel register configuration and video
+data transfer via spi
+   with or without dc pins.
+   also the registration to drm is difference, for dbi is
+mipi_dbi_dev_init and drm_fbdev_generic_setup
+   for panel driver is drm_panel_init and drm_panel_add
+at soc's view, we can drive ili9341 to work just by drm mipi dbi
+(actually it's dbi -> spi bus) without host's lcd or dsi controller
+but for some panel can't transfer video data by spi, and with dpi or
+dsi interface, must connect to host's lcd or dsi controller.
+
+so, for ilitek-ili9341 , it's use different dts binding drive to
+register different client type (dbi, or dpi & spi) to drm.
+actually, there is a driver tiny/ili9341.c support this panel by spi
+bus only already. but, from Sam's suggestion, should extend this
+driver
+to support dpi & spi interface, this is the background of panel-ilitek-ili9=
+341.c
+
+thanks.
+
+best regards.
+
+dillon
