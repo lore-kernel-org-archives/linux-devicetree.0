@@ -2,136 +2,123 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD8EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD966C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2758120722
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703EA2065D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qPxbDB2j"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jneSebl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgENMjI (ORCPT
+        id S1727851AbgENMna (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 08:39:08 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30316 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726232AbgENMjG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 08:39:06 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ECWRpb031347;
-        Thu, 14 May 2020 14:38:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=gK4gRac8zCJ49BVWhgCYszm1HwapCUJoPR2k/1pndPk=;
- b=qPxbDB2jBqpiVaEwpezjOHZi/uxRnvCZ6Exwe+7WK52uI0EdKnWpTbUqyUuiZPXCnxJ4
- Do6vdK1vZ0BxbplxQakO7YP4qQZWe06PIx/FpH1gIMcKGPzyorjE+R6N4d64sBoQYGFp
- 6XO7K2XAzNc3Z7GAh/KLe7Mvzt1CrlA+Sfk7Nw+jVvL318TTMhJ4u+i4zo6wiH69qmza
- OKPCF+Htv29t+IyHli1feCCpVLZJGh0yYtHEWLOOzm08UKgOsA2t3tMOXT/ZnjgJDPpd
- UNX2aYKc3WJbUEPgHfToOJA+AmAwRIjoU0NPtm6/GAGnGRvPxTKb/D3g7lAKGvY+CXG8 Sw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vqk4kq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 14:38:55 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8996610002A;
-        Thu, 14 May 2020 14:38:55 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 786702B8A1F;
-        Thu, 14 May 2020 14:38:55 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
- 2020 14:38:51 +0200
-Subject: Re: [PATCH v2 0/6] Add Stinger96 and IoT Box board support
-To:     <mani@kernel.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200503154215.23654-1-mani@kernel.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <abbd6fd1-ec74-3ae5-b041-d31dfc5ded82@st.com>
-Date:   Thu, 14 May 2020 14:38:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 08:43:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35546 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbgENMn3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 08:43:29 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EChB9A128213;
+        Thu, 14 May 2020 07:43:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589460191;
+        bh=yY/LsSZIBi414qmKI1QeADfQF07kR8esflMsRRh0bLs=;
+        h=From:To:CC:Subject:Date;
+        b=jneSebl7NqXDTM8Jh6ybrZf+/0jIVV7Jpitgb9atH0qfGrZIK2LSlUtDQO66TBc0D
+         rgp9UB8BBi/13H84VM9hrSV3M3ta6YVt736qbI0ljbXC11MdqWm3a6fqPyfYlHV8SY
+         0WwcGbQGA3EWWcur+pdSW5UXM89AhEjiABxkn8d4=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EChBPE121673
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 07:43:11 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 07:43:10 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 07:43:10 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EChA9a030574;
+        Thu, 14 May 2020 07:43:10 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 1/3] ASoC: tlv320adcx140: Add controls for PDM clk
+Date:   Thu, 14 May 2020 07:33:36 -0500
+Message-ID: <20200514123338.20392-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200503154215.23654-1-mani@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_03:2020-05-14,2020-05-14 signatures=0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mani
+Add ALSA controls to configure the PDM clocks.
+The clocks need to be configurable to accommodate various microphones
+that use clocks for low power/low resolution modes to high power/high
+resolution modes.
 
-On 5/3/20 5:42 PM, mani@kernel.org wrote:
-> From: Manivannan Sadhasivam <mani@kernel.org>
-> 
-> Hello,
-> 
-> This series adds Stinger96 and IoT Box board support. These boards are
-> based on STM32MP157A SoC, designed and manufactured by Shiratech solutions.
-> 
-> The Stinger96 is a base board (96Boards IoT Extended edition) while IoT Box
-> adds one mezzanine on top of it and sold as a gateway device.
-> 
-> This series depends on below patchsets already submitted and gone through
-> reviews:
-> 
-> [PATCH v3 0/3] Add Reset and Wakeup support for CCS811
-> [PATCH v3 0/2] Add CTS/RTS gpio support to STM32 UART
-> 
-> More information about these boards can be found in below links:
-> 
-> https://www.shiratech-solutions.com/products/stinger96/
-> https://www.shiratech-solutions.com/products/iot-box/
-> 
-> Thanks,
-> Mani
-> 
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ sound/soc/codecs/tlv320adcx140.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Series applied on stm32-next.
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index 0f713efde046..97634e0ca0ba 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -180,6 +180,17 @@ static const struct snd_kcontrol_new decimation_filter_controls[] = {
+ 	SOC_DAPM_ENUM("Decimation Filter", decimation_filter_enum),
+ };
+ 
++static const char * const pdmclk_text[] = {
++	"2.8224 MHz", "1.4112 MHz", "705.6 kHz", "5.6448 MHz"
++};
++
++static SOC_ENUM_SINGLE_DECL(pdmclk_select_enum, ADCX140_PDMCLK_CFG, 0,
++			    pdmclk_text);
++
++static const struct snd_kcontrol_new pdmclk_div_controls[] = {
++	SOC_DAPM_ENUM("PDM Clk Divider Select", pdmclk_select_enum),
++};
++
+ static const char * const resistor_text[] = {
+ 	"2.5 kOhm", "10 kOhm", "20 kOhm"
+ };
+@@ -416,6 +427,9 @@ static const struct snd_soc_dapm_widget adcx140_dapm_widgets[] = {
+ 	SND_SOC_DAPM_MUX("IN4 Analog Mic Resistor", SND_SOC_NOPM, 0, 0,
+ 			in4_resistor_controls),
+ 
++	SND_SOC_DAPM_MUX("PDM Clk Div Select", SND_SOC_NOPM, 0, 0,
++			pdmclk_div_controls),
++
+ 	SND_SOC_DAPM_MUX("Decimation Filter", SND_SOC_NOPM, 0, 0,
+ 			decimation_filter_controls),
+ };
+@@ -493,6 +507,11 @@ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
+ 	{"IN4 Analog Mic Resistor", "10 kOhm", "MIC4M Input Mux"},
+ 	{"IN4 Analog Mic Resistor", "20 kOhm", "MIC4M Input Mux"},
+ 
++	{"PDM Clk Div Select", "2.8224 MHz", "MIC1P Input Mux"},
++	{"PDM Clk Div Select", "1.4112 MHz", "MIC1P Input Mux"},
++	{"PDM Clk Div Select", "705.6 kHz", "MIC1P Input Mux"},
++	{"PDM Clk Div Select", "5.6448 MHz", "MIC1P Input Mux"},
++
+ 	{"MIC1 Analog Mux", "Line In", "MIC1P"},
+ 	{"MIC2 Analog Mux", "Line In", "MIC2P"},
+ 	{"MIC3 Analog Mux", "Line In", "MIC3P"},
+-- 
+2.26.2
 
-Regards
-Alex
-
-> Changes in v2:
-> 
-> * Used "stm32" prefix for all DT commits
-> * Dropped custom sdmmc2 pinctrl node since existing node itself has pullup
->    enabled and works fine.
-> 
-> Manivannan Sadhasivam (6):
->    dt-bindings: Add vendor prefix for Shiratech Solutions
->    ARM: dts: stm32: Add missing pinctrl entries for STM32MP15
->    dt-bindings: arm: stm32: Document Stinger96 compatible
->    ARM: dts: stm32: Add Stinger96 board support
->    dt-bindings: arm: stm32: Document IoT Box compatible
->    ARM: dts: stm32: Add IoT Box board support
-> 
->   .../devicetree/bindings/arm/stm32/stm32.yaml  |   2 +
->   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->   arch/arm/boot/dts/Makefile                    |   2 +
->   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      |  64 ++++
->   arch/arm/boot/dts/stm32mp157a-iot-box.dts     |  68 ++++
->   arch/arm/boot/dts/stm32mp157a-stinger96.dts   |  12 +
->   arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  | 342 ++++++++++++++++++
->   7 files changed, 492 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-iot-box.dts
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-stinger96.dts
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
-> 
