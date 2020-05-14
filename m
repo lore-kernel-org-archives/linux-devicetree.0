@@ -2,83 +2,103 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33856C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FFBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1180C20748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764BB206DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589461685;
+	bh=h306FV35eG189sbShcYa1Vc8owR5Bi5Bad/ZWYSnKyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QMwb/2D1HY3bxUgKelorhMr91EQaVM7haYOWo1n7jR9i441YIwYMYsx9CFHX+63L1
+	 dOgb8nV9nRMdmhQw2auZb4qMryJM3XacDsHDuA0drT3M/FaBcNKAhLuQnY5PpFc34D
+	 +udOc7+Yvw0UL7k9mrEU8KlyzZpnL9m0sgdUxEKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgENNEO (ORCPT
+        id S1726051AbgENNIF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 09:04:14 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58910 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENNEO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 09:04:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4DA46803087B;
-        Thu, 14 May 2020 13:04:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1H7tDBhNpUNg; Thu, 14 May 2020 16:04:08 +0300 (MSK)
-Date:   Thu, 14 May 2020 16:04:07 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
- IRQ specified in DT
-Message-ID: <20200514130407.guyk3r4ltjvszy5s@mobilestation>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200513140031.25633-2-lars.povlsen@microchip.com>
- <20200513142050.GH4803@sirena.org.uk>
+        Thu, 14 May 2020 09:08:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33628 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgENNIE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 09:08:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o24so24466565oic.0;
+        Thu, 14 May 2020 06:08:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fbQaej0+IJeKYT0mug72y3TFgNAGh3pGBDCTmds+4Dg=;
+        b=ggKxPgTE5lsEr2Lp9mtxlQaGy9V5W46OIASq8eTGlIKRtUWAQMZ9Rv8Cbf4vTUSHdq
+         kOWfW4N9COBe9b1BLrLqzn4zBgGI3VhMS08Lhj6bb1t05rBHyoTNMdCU/dZKe42lgwIc
+         C/qbdU6/l93p+hl8epFdr6cn7tDZKyh4w5wQO6iP1+SCqwVZnCL9thCiUBflTOKkYpw6
+         KOJrIwyWWnlO8GFElD+dmMjE9eT7Y5X2dFbY0kFgiuJjKayj96XRgbaKT/QIntkQqdd9
+         2A6IrjtgYVMciuIBp55Br5AMKpEF4aGDsacjMqU9W5s7RTA3c2cvXwH6esSSB9BziaSb
+         S09w==
+X-Gm-Message-State: AOAM530LVQtpFYCTazIu0gt7ORlYb/jkwRY14/TQM2bFd1e1qr59tbtX
+        46gAvd9CAC2omOyg+hEZ2w==
+X-Google-Smtp-Source: ABdhPJw9GMygDyZnfEXw9k49JWUj2GYlVgzzt4Ko7/p8rxdjnplLymQ5zNFFIPHAyaQ6bZG1qZsHbQ==
+X-Received: by 2002:aca:af94:: with SMTP id y142mr4549151oie.111.1589461682497;
+        Thu, 14 May 2020 06:08:02 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l89sm757614otc.32.2020.05.14.06.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 06:08:01 -0700 (PDT)
+Received: (nullmailer pid 23923 invoked by uid 1000);
+        Thu, 14 May 2020 13:08:01 -0000
+Date:   Thu, 14 May 2020 08:08:01 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     TY Chang <tychang@realtek.com>
+Cc:     robh+dt@kernel.org, afaerber@suse.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        linux-realtek-soc@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC
+ rtd1195 and rtd1295.
+Message-ID: <20200514130801.GA23147@bogus>
+References: <20200514092125.6875-1-tychang@realtek.com>
+ <20200514092125.6875-5-tychang@realtek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513142050.GH4803@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200514092125.6875-5-tychang@realtek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark
-
-On Wed, May 13, 2020 at 03:20:50PM +0100, Mark Brown wrote:
-> On Wed, May 13, 2020 at 04:00:22PM +0200, Lars Povlsen wrote:
-> > With this change a SPI controller can be added without having a IRQ
-> > associated, and causing all transfers to be polled. For SPI controllers
-> > without DMA, this can significantly improve performance by less
-> > interrupt handling overhead.
+On Thu, 14 May 2020 17:21:22 +0800, TY Chang wrote:
+> Add compatible string for RTD1195 and RTD1295.
 > 
-> This overlaps substantially with some work that Serge Semin (CCed) has
-> in progress, please coordinate with him.
+> Signed-off-by: TY Chang <tychang@realtek.com>
+> ---
+>  .../bindings/pinctrl/realtek,rtd-pinctrl.yaml | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
+> 
 
-Thanks for copying me these mails. I haven't been Cc'ed in the series and
-hasn't been subscribed to the SPI mailing list, so I would have definitely
-missed that.
 
-I would like to coordinate my efforts with Lars. I'll have the patchset reviewed
-soon in addition providing my comments/suggestions of how to make it useful for
-both mine and Lars solution.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-One thing I can tell about the mem_ops he implemented, is that they aren't
-mem_ops, but dirmap (as you remember it's also implemented in my code, but with
-alignment specific), and the exec_mem_op partly consists of a code, which belong
-to the supports_op() callback. The rest of my comments will be inlined in the
-patches.
+Error: Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dts:24.5-6 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
--Sergey
+See https://patchwork.ozlabs.org/patch/1290046
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
