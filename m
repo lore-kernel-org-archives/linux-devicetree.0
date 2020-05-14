@@ -2,174 +2,192 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736FDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 00:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462CFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862C020659
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 00:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iq9bV2Mv"
+	by mail.kernel.org (Postfix) with ESMTP id 5EDC72054F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbgENAxv (ORCPT
+        id S1725967AbgENBC2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 20:53:51 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:46079 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgENAw6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 20:52:58 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200514005255epoutp0488833ea1a026798d0477a5938b044ae6~Ovt0RtVqe0825508255epoutp04q
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 00:52:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200514005255epoutp0488833ea1a026798d0477a5938b044ae6~Ovt0RtVqe0825508255epoutp04q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589417575;
-        bh=HK/1/VP5ov7EOoNpQ0X08DtlhI52O+2EyAZ3cTvlQkI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iq9bV2MvKBaOd4OJVeKR6lAshvSH27Q+7A3iAfWowsketrFby9TCRt2YUM7y7pdX1
-         Lmd1Spbxo4y04ptgTGF+RPLZd9v6j+1hmvOcudsVMFjAWJ2ljzx0hAv9iWeazxpTft
-         C5Jp5AD9GJtDGgeGrPkn2oWVnuw7NdVhBNMxIc0c=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200514005254epcas5p4e1a104efe68d28acdbb3e0768208a94e~OvtznjCWp1376013760epcas5p4-;
-        Thu, 14 May 2020 00:52:54 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        95.45.10010.6669CBE5; Thu, 14 May 2020 09:52:54 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200514005254epcas5p27e2ef61a6d7f595ff2eaf4ec65940cf6~OvtzOhf9E1337713377epcas5p2E;
-        Thu, 14 May 2020 00:52:54 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200514005254epsmtrp1fa7c612eaa29d07db168f66d1a091dae~OvtzNnQGq1028710287epsmtrp1j;
-        Thu, 14 May 2020 00:52:54 +0000 (GMT)
-X-AuditID: b6c32a49-71fff7000000271a-ee-5ebc9666ccf5
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6C.C3.18461.5669CBE5; Thu, 14 May 2020 09:52:53 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200514005252epsmtip2f8c61bf224dc7b461d8ca8f6611a8818~OvtxTQi6n3205832058epsmtip2k;
-        Thu, 14 May 2020 00:52:51 +0000 (GMT)
-From:   Alim Akhtar <alim.akhtar@samsung.com>
-To:     robh@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
-        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
-        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
-        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v9 01/10] scsi: ufs: add quirk to fix mishandling
- utrlclr/utmrlclr
-Date:   Thu, 14 May 2020 06:09:05 +0530
-Message-Id: <20200514003914.26052-2-alim.akhtar@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200514003914.26052-1-alim.akhtar@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphleLIzCtJLcpLzFFi42LZdlhTUzdt2p44g8eHxC0ezNvGZvHy51U2
-        i0/rl7FazD9yjtXi/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
-        sXTrTUYHXo/Lfb1MHptWdbJ5bF5S79Fycj+Lx8ent1g8+rasYvT4vEnOo/1AN1MARxSXTUpq
-        TmZZapG+XQJXxouja1gKdgtU7P9wnLmB8TVvFyMnh4SAicT/nUsZuxi5OIQEdjNKPLu6jxnC
-        +cQo8anjNRuE841R4uWKw0wwLWcvLYBq2cso8efUWSYIp4VJ4tG+VlaQKjYBbYm707eAdYgI
-        CEsc+dbGCGIzC9xgkniw0gXEFhYIkZi+/AALiM0ioCqxbd5SMJtXwEbi0btHzBDb5CVWbzgA
-        ZnMK2Eps+XKMFWSZhEAnh8SxKe/YIYpcgM6DWCwBtOzV8S1QcSmJl/1tQDYHkJ0t0bPLGCJc
-        I7F03jEWCNte4sCVOSwgJcwCmhLrd+lDnMkn0fv7CRNEJ69ER5sQRLWqRPO7q1Cd0hITu7uh
-        lnpIHJ7SAA25CYwSpzuWsk1glJ2FMHUBI+MqRsnUguLc9NRi0wLDvNRyveLE3OLSvHS95Pzc
-        TYzghKLluYPx7oMPeocYmTgYDzFKcDArifD6rd8dJ8SbklhZlVqUH19UmpNafIhRmoNFSZz3
-        dNqWOCGB9MSS1OzU1ILUIpgsEwenVANTSJnzMv5rL39Y3Mt0iLvRx/S56k3xjSSHrhmCTzep
-        WJ2tOt9iKMnLwf5Hd9/bgjmJL/fFnYsN/fJddLP5IQ0nrssbfn2R8vxs6v/4YsxzLpWUT+er
-        dX3XXqp508mrVOOz4XZbYI+2p//pZ1947glPZNnwM806SH4CT/BJ1867W42F65NmXvY3dD6p
-        tOPBwhCP2SyJlQ688yy+51fWM86ckSvNXvuHW3TupkzzXsuCKxc4by2Ka8iqP+Ip2X/E5KGY
-        90yPxOTYsobjCVuOTPnM1NjHdEh56eLfqqoKs+xt0lwSOLR/qMl1mAezzn1975Pa29T1Z380
-        5uhM2niK2/bm2eaPLVoPRIvjy2eHTVNiKc5INNRiLipOBACNXPbjlwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMLMWRmVeSWpSXmKPExsWy7bCSvG7qtD1xBscfWlo8mLeNzeLlz6ts
-        Fp/WL2O1mH/kHKvF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
-        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYAjigum5TU
-        nMyy1CJ9uwSujBdH17AU7Bao2P/hOHMD42veLkZODgkBE4mzlxYwdjFycQgJ7GaUeLV6BjNE
-        Qlri+sYJ7BC2sMTKf8/ZIYqamCTOP1/KBJJgE9CWuDt9C5gtAlR05FsbI4jNLPCMSeLUw1IQ
-        W1ggSKKz8wPYIBYBVYlt85aygNi8AjYSj949glomL7F6wwEwm1PAVmLLl2OsILYQUM2yNcsY
-        JzDyLWBkWMUomVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERzOWpo7GLev+qB3iJGJg/EQ
-        owQHs5IIr9/63XFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeW8ULowTEkhPLEnNTk0tSC2CyTJx
-        cEo1MEU+O7ZK3TMjRdpH5+OTebG7TsqITjglXarYLNs1qXf95ccX9x7atVxyJRvD1udpddck
-        DFm1lu1PW9zU/m75opfzX4Z5qLzdXc3/WIMtY2/D6vt1N0zdX/XczSsIC/njvWr9Qk4Hhazv
-        UusYZuinv7cW21vvf+7ppyqlrO2yx7yfVNXbHXqUsWP+RaPjf/sVtCu4lbhCtgdNV9mXLhLp
-        /narxgVdC5EraR1FRzlPfMh4bPkn4sMXlwMLn592r5zJbLclNV7V5tZh31kbn0eINi+Y4jBd
-        ek35+iMVi2TyfH+KPvpm+FNhL++i3ktyLgzsISK1oTtCLAX4lm6Kelwf97TOWLZRNuBy1f2d
-        2zg2hCuxFGckGmoxFxUnAgD+I2701gIAAA==
-X-CMS-MailID: 20200514005254epcas5p27e2ef61a6d7f595ff2eaf4ec65940cf6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200514005254epcas5p27e2ef61a6d7f595ff2eaf4ec65940cf6
-References: <20200514003914.26052-1-alim.akhtar@samsung.com>
-        <CGME20200514005254epcas5p27e2ef61a6d7f595ff2eaf4ec65940cf6@epcas5p2.samsung.com>
+        Wed, 13 May 2020 21:02:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:54506 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725925AbgENBC1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 21:02:27 -0400
+IronPort-SDR: ZVX797FBOzzWSRRkN9FyyIBDzjeWDd4dhnv0KEgJmGMeY8rrK9514vxX6F1xcIcU6mQGjhLm4n
+ maGbxT37JL6Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 18:02:27 -0700
+IronPort-SDR: vejgvzA8ElnatyBbGq5Yk3x7aJmddwFE43yalkoKiZyRJVGbZCjtnvH7KN49EAuDbWO+QSQmWh
+ CP+RQZsvJIrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
+   d="scan'208";a="409887144"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 13 May 2020 18:02:27 -0700
+Received: from [10.249.66.53] (vramuthx-mobl1.gar.corp.intel.com [10.249.66.53])
+        by linux.intel.com (Postfix) with ESMTP id 0D32E580646;
+        Wed, 13 May 2020 18:02:19 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v6 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513104615.7905-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513153405.GS185537@smile.fi.intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <9d3fc773-d7ed-f2cd-808e-78748c43b81b@linux.intel.com>
+Date:   Thu, 14 May 2020 09:02:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200513153405.GS185537@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In the right behavior, setting the bit to '0' indicates clear and '1'
-indicates no change. If host controller handles this the other way,
-UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR can be used.
+Hi Andy,
+On 13/5/2020 11:34 pm, Andy Shevchenko wrote:
+> On Wed, May 13, 2020 at 06:46:15PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>> on Intel's Lightning Mountain(LGM) SoC.
+>>
+>> DMA is used for burst data transfer operation, also DMA HW supports
+>> aligned 32bit memory address and aligned data access by default.
+>> DMA burst of 8 supported. Data register used to support the read/write
+>> operation from/to device.
+>>
+>> NAND controller driver implements ->exec_op() to replace legacy hooks,
+>> these specific call-back method to execute NAND operations.
+> 
+> ...
+> 
+>> +static int ebu_nand_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct ebu_nand_controller *ebu_host;
+>> +	struct nand_chip *nand;
+>> +	struct mtd_info *mtd;
+>> +	struct resource *res;
+>> +	char *resname;
+>> +	int ret, i;
+>> +	u32 reg;
+>> +
+>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+>> +	if (!ebu_host)
+>> +		return -ENOMEM;
+>> +
+>> +	ebu_host->dev = dev;
+>> +	nand_controller_init(&ebu_host->controller);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+>> +	ebu_host->ebu = devm_ioremap_resource(&pdev->dev, res);
+> 
+> devm_platform_ioremap_resource_byname
+> 
+>> +	if (IS_ERR(ebu_host->ebu))
+>> +		return PTR_ERR(ebu_host->ebu);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+>> +	ebu_host->hsnand = devm_ioremap_resource(&pdev->dev, res);
+> 
+> devm_platform_ioremap_resource_byname
+Thanks for the review comments
+As Boris suggested , split into 2 API's.
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- drivers/scsi/ufs/ufshcd.c | 11 +++++++++--
- drivers/scsi/ufs/ufshcd.h |  5 +++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+> 
+>> +	if (IS_ERR(ebu_host->hsnand))
+>> +		return PTR_ERR(ebu_host->hsnand);
+>> +
+>> +	ret = device_property_read_u32(dev, "nand,cs", &reg);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to get chip select: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	ebu_host->cs_num = reg;
+>> +
+>> +	for (i = 0; i < MAX_CS; i++) {
+>> +		resname = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", i);
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   resname);
+> 
+> if res is NULL?
+Noted.
+> 
+>> +		ebu_host->cs[i].chipaddr = devm_ioremap_resource(dev, res);
+>> +		ebu_host->cs[i].nand_pa = res->start;
+>> +			if (IS_ERR(ebu_host->cs[i].chipaddr))
+>> +				return PTR_ERR(ebu_host->cs[i].chipaddr);
+> 
+> Something happened with ordering / indentation along these lines...
+Noted.
+> 
+>> +	}
+>> +
+> 
+>> +	for (i = 0; i < MAX_CS; i++) {
+>> +		resname = devm_kasprintf(dev, GFP_KERNEL, "addr_sel%d", i);
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   resname);
+> 
+> if res is NULL?
+Noted.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 698e8d20b4ba..3655b88fc862 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -645,7 +645,11 @@ static inline int ufshcd_get_tr_ocs(struct ufshcd_lrb *lrbp)
-  */
- static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
- {
--	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
-+		ufshcd_writel(hba, (1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
-+	else
-+		ufshcd_writel(hba, ~(1 << pos),
-+				REG_UTP_TRANSFER_REQ_LIST_CLEAR);
- }
- 
- /**
-@@ -655,7 +659,10 @@ static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
-  */
- static inline void ufshcd_utmrl_clear(struct ufs_hba *hba, u32 pos)
- {
--	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
-+		ufshcd_writel(hba, (1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
-+	else
-+		ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
- }
- 
- /**
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 6ffc08ad85f6..071f0edf3f64 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -518,6 +518,11 @@ enum ufshcd_quirks {
- 	 * ops (get_ufs_hci_version) to get the correct version.
- 	 */
- 	UFSHCD_QUIRK_BROKEN_UFS_HCI_VERSION		= 1 << 5,
-+
-+	/*
-+	 * Clear handling for transfer/task request list is just opposite.
-+	 */
-+	UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR		= 1 << 6,
- };
- 
- enum ufshcd_caps {
--- 
-2.17.1
-
+Regards
+Vadivel
+> 
+>> +		ebu_host->cs[i].addr_sel = res->start;
+>> +		writel(ebu_host->cs[i].addr_sel | EBU_ADDR_MASK(5) |
+>> +		       EBU_ADDR_SEL_REGEN, ebu_host->ebu + EBU_ADDR_SEL(i));
+>> +	}
+> 
+>> +	return ret;
+>> +}
+> 
+> ...
+> 
+>> +static int ebu_nand_remove(struct platform_device *pdev)
+>> +{
+>> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
+>> +
+> 
+>> +	if (ebu_host) {
+> 
+> How it can be NULL here?
+> 
+>> +		mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
+>> +		nand_cleanup(&ebu_host->chip);
+>> +		ebu_nand_disable(&ebu_host->chip);
+>> +
+>> +		if (ebu_host->dma_rx || ebu_host->dma_tx)
+>> +			ebu_dma_cleanup(ebu_host);
+>> +
+>> +		clk_disable_unprepare(ebu_host->clk);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> 
