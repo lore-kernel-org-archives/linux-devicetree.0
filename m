@@ -2,156 +2,220 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E70DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 09:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D27C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 09:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F01692065D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 09:26:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="eO0qn++f"
+	by mail.kernel.org (Postfix) with ESMTP id B3B0A206A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 09:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgENJ0H (ORCPT
+        id S1725999AbgENJgY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 05:26:07 -0400
-Received: from mail-eopbgr1320117.outbound.protection.outlook.com ([40.107.132.117]:40736
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725925AbgENJ0H (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 05:26:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GDQ0j2RaKJO8ALzSLxxUex/pJav8P6cRURwQE1U4LJYzFVq0xIwKUpC5EPso9LVzXX4DVGZk/EnQEKA9tzzghKei1ITKCJRzA2J+NGWMbrkvNF2G6uQnYbvI4g456Njej1hbGZ0O+qwSNsVPJVAGbE5VriO6EfPovB8XcpXWFMoBsFZHKf3E99nZAxQSeZIVR7Xftg7O0VRPz1La8WS6CNIkRNvkbw0S4gs3ZOcYaowmlHbDuKPp+insBRduvlGd4yDQx6Pd8r/js48Lc1ZotxVJqMcveidckOUlQN5zOCg76MAvwz1xNuJeh5rZjoipjqKyBtobO7WmxRVoLcS7GA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f5UK9U7SOMoFr4iWmgj0oEqEN2BXL1t6Fpdan7xgf14=;
- b=hRo5l3inRXXyJ5/q1+bUDOK6mEROaJgwtpCSttqwvI4gSiWVYjstuHAYy0Bb8Uy48hj8ZpIYqpri2A7wCy3fJsF8KGFUSvSxYRwOc6ORZgkjrl7Urr6uad+NEw5seyNUUWQhkEOH8dUGe2dgy8JbQOl4g4nS5YGqwYUfUZzC5UI4rxru25wDMbYBxylDp3nRm1YE1aX9e3bMvCO4Ws4MJ3e7h5qbKtaB3m9thkg1o95GjcBw57GjB25JRKuP0rwUoyllPLPGS2cW2nccLCPgBAmQmi+GYyPwsxiYP7ejfXHI6eJ9Yn1RVjJP/NadQvs6iMN/qFgr0YuKTF+jZ8Ka+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f5UK9U7SOMoFr4iWmgj0oEqEN2BXL1t6Fpdan7xgf14=;
- b=eO0qn++f5GFQkFvGC3nsPLM1l7BQrVWy95E9rqNZruINjACkuSWYiOyfI8jbBHC1cOqAldXeNvIjF5sqx+OfJJn3xZ9/jbLSMM7o9yI+mvRQUBxHy2EO/jc/8y0PAoxAXPIIqI23MiPEATCaNOmzlqOzMUTvtcahlZTjJLa6ODU=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (20.178.142.214) by
- TY2PR01MB4570.jpnprd01.prod.outlook.com (20.179.171.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.33; Thu, 14 May 2020 09:26:02 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::2da1:bdb7:9089:7f43]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::2da1:bdb7:9089:7f43%3]) with mapi id 15.20.2979.033; Thu, 14 May 2020
- 09:26:02 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     "kishon@ti.com" <kishon@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v4 0/4] dt-bindings: phy: add r8a77961 support
-Thread-Topic: [PATCH v4 0/4] dt-bindings: phy: add r8a77961 support
-Thread-Index: AQHWBBrcd7y2rHbfv0+Yu2gHqJGbY6inmj+Q
-Date:   Thu, 14 May 2020 09:26:02 +0000
-Message-ID: <TY2PR01MB3692334705CC2191432F3178D8BC0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <1585301636-24399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1585301636-24399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3e7b2f8f-d793-4c39-2121-08d7f7e8d218
-x-ms-traffictypediagnostic: TY2PR01MB4570:
-x-microsoft-antispam-prvs: <TY2PR01MB4570FF303E790AB647B94200D8BC0@TY2PR01MB4570.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 040359335D
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: W9MHKaZpEo8n0oN840pRWYYULQBG6Ge0reBV/RORZanVcckFln4ikqS1y4k0IkBMWbmaEWBU5N57czlk1x+QsT0hal0w+iH6b1M2P3vkujgv4g5rYmQqX7MukQI5ruEGvAChEX7TezVf50f7eYSOjsxHte4/e9gumev1Jz6RmQMfE+9lXj2BmVzO8cyBJ0UxYjxMW9s6MBq0r6Iohot149tKNMpai0aqy1eVq8W7//W8WqbtHXnKALhW3UzlZWtJeZ6KvmoV/4o2Y4E3fm7VuFZnPS+Cvn3PQrRLtwTqzzxfTAdZFfTvaLbkvO/yH40X7uvEun8OZVcahfi8iIZbgn1Pbiwd5m/AWtTd8BqqSTEhiDGU+lo8XKsNkFgPvSgoUNyZGDN2pEP+D+HQEumqnaYsyTvgcHNFhMTDlliaxUaMdiKp0Nzp3q9sN3HM17MTEOFy9IstEpJlnvZ2I/sHbKXFF7evThnCoFU1P5vPDGLivPtHWBbiVr0ix1FZTqhMP8TFpJyb2tVVVJPt1q7RwA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(76116006)(33656002)(478600001)(9686003)(4326008)(55236004)(186003)(26005)(52536014)(8676002)(7696005)(86362001)(8936002)(2906002)(66946007)(5660300002)(55016002)(966005)(110136005)(54906003)(66446008)(71200400001)(6506007)(316002)(66476007)(64756008)(66556008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: OEIeXwmA/KDfrgv6h8kBMlxaNi4b8ETo3dirdQpPoqBr39r2fY65HqB6jQ9yjO6H6uIDbpUjQy2dCk3IFHmxrn0swHtLR1uFI1AtTDmtRqvLcf6upFASWmmIN70FpuLDCGBG0DUBb7AtkwXWbZvpsDXExm2Lwd2dz0XZBJbjJflw7g9ENZp9Bcnj6XQy2aDf2nzFSELp2DKmcWx94yQLviKdWAUXNiUD0sBZLpkQa8+Q+B0KvPyYlxuVic1RJsI7CNsWieNGuJvvaYUGx5cpx3igWsOp25y6LFu+vkEtHBKR5lkPfUWTTAJAz3uRntGTC1/l6r12jA4GENW4m7TUD+9OIQYMvdP0v3Rrmjheb7a8iv95rUhGr3e9yvJ6Sn4qXg4sVVv9ICcIUF2D14PQyuWx+SAzjLoMSy82BNayc2xhyxq8xwwMlqVFtC1gm0dKFeUrOPJk+swI2liYM/RvSV8Y88ul8Ga1EZsSrIyBlu0Jzj27C3cYof1G8MHPGTrt
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 14 May 2020 05:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725935AbgENJgY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 05:36:24 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD6C7C061A0C
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 02:36:23 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id 0244F2A06B8
+Date:   Thu, 14 May 2020 11:36:17 +0200
+From:   Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, geert+renesas@glider.be,
+        robh+dt@kernel.org, xuwei5@hisilicon.com
+Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt:
+ convert to yaml
+Message-ID: <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360>
+Mail-Followup-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, geert+renesas@glider.be,
+        robh+dt@kernel.org, xuwei5@hisilicon.com
+References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
+ <20200511110611.3142-7-ricardo.canuelo@collabora.com>
+ <20200514015412.GF7425@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e7b2f8f-d793-4c39-2121-08d7f7e8d218
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2020 09:26:02.4515
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TKNbRIlW1wzORC/WDH9oSvX/gXcWtYrWYeeMi0PAk6RuR32KPwiX8XoFrJP3AiZWVB0anuUf59sqlCDNs6pUZarqgv6uu/EQ4QFiT9OtU/3LeD7HGLEEcFForQShmbAY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4570
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200514015412.GF7425@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20171215
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hi Laurent, thanks for the thorough review. Some comments below:
 
-> From: Yoshihiro Shimoda, Sent: Friday, March 27, 2020 6:34 PM
->=20
-> This patch adds USBPHY 2.0/3.0 devices support for r8a77961
-> (R-Car M3-W+).
+On jue 14-05-2020 04:54:12, Laurent Pinchart wrote:
+> > +description: |
+> > +  The ADV7511, ADV7511W and ADV7513 are HDMI audio and video
+> > +  transmitters compatible with HDMI 1.4 and DVI 1.0. They support color
+> > +  space conversion, S/PDIF, CEC and HDCP. They support RGB input
+> > +  interface.
+> 
+> I would write the last sentence as "The transmitter input is parallel
+> RGB or YUV data." as YUV is also supported.
 
-Would you apply this patch series to your repository?
-Or, should I resend?
+Ok.
 
-JFYI:
-https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=3D26263=
-3
+> > +  adi,input-colorspace:
+> > +    description: Input color space.
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/string
+> > +      - enum: [ rgb, yuv422, yuv444 ]
+> 
+> Isn't string implied ? Can't you write
+> 
+>   adi,input-colorspace:
+>     description: Input color space.
+>     enum: [ rgb, yuv422, yuv444 ]
 
-Best regards,
-Yoshihiro Shimoda
+example-schema.yaml says that
 
-> Changes from v3:
->  - Retain a description of #phy-cell in patch 1/4.
->  - Add Reviewed-by in patch 1/4 and 3/4.
->  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=3D26=
-2507
->=20
-> Changes from v2:
->  - Modify json-schema files which Geert-san was pointed out.
->  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=3D26=
-1847
->=20
-> Changes from v1:
->  - Rebase these patches on top of my patches of convert bindings to
->    json-schema.
->  - Add Reviewed-by.
->  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=3D26=
-1195
->=20
-> Yoshihiro Shimoda (4):
->   dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
->   dt-bindings: phy: renesas: usb2-phy: add r8a77961 support
->   dt-bindings: phy: renesas: usb3-phy: convert bindings to json-schema
->   dt-bindings: phy: renesas: usb3-phy: add r8a77961 support
->=20
->  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 ------------
->  .../devicetree/bindings/phy/rcar-gen3-phy-usb3.txt |  52 ---------
->  .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 117 +++++++++++++++=
-++++++
->  .../devicetree/bindings/phy/renesas,usb3-phy.yaml  |  79 ++++++++++++++
->  4 files changed, 196 insertions(+), 122 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-u=
-sb2.txt
->  delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-u=
-sb3.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-ph=
-y.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb3-ph=
-y.yaml
->=20
-> --
-> 2.7.4
+    Vendor specific properties have slightly different schema
+    requirements than common properties. They must have at least a type
+    definition and 'description'.
 
+However, dt_binding_check doesn't seem to enforce this rule for string
+properties, and I saw a couple of vendor-specific string properties in
+other bindings that don't define the type either, so I'm going to follow
+your suggestion but only for string properties, the rest need a type
+definition.
+
+I noticed I can remove the "allOf" keywords from these too.
+
+> > +  adi,embedded-sync:
+> > +    description:
+> > +      The input uses synchronization signals embedded in the data
+> > +      stream (similar to BT.656). Defaults to 0 (separate H/V
+> > +      synchronization signals).
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > +      - enum: [ 0, 1 ]
+> > +      - default: 0
+> 
+> This be a boolean property (it is read as a bool by the driver, the
+> property being absent means false, the property being present means
+> true).
+
+You're completely right.
+
+> > +  ports:
+> > +    description:
+> > +      The ADV7511(W)/13 has two video ports and one audio port. This node
+> > +      models their connections as documented in
+> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +      Documentation/devicetree/bindings/graph.txt
+> > +    type: object
+> > +    properties:
+> > +      port@0:
+> > +        description: Video port for the RGB, YUV or DSI input.
+> 
+> s/RGB, YUV or DSI/RGB or YUV/
+
+Ok.
+
+> > +if:
+> > +  not:
+> > +    properties:
+> > +      adi,input-colorspace:
+> > +        contains:
+> > +          enum: [ rgb, yuv444 ]
+> > +      adi,input-clock:
+> > +        contains:
+> > +          const: 1x
+> 
+> As both properties take a single value, I think you can omit
+> "contains:".
+
+I think it's required here, removing it makes the test fail.
+
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - ports
+> > +  - adi,input-depth
+> > +  - adi,input-colorspace
+> > +  - adi,input-clock
+> 
+> Shouldn't the power supplies be required ?
+
+Good question. The original binding is not completely clear on
+this. There's a "Required properties" section at the top that doesn't
+include the supplies, the supplies block for the ADV7511/11w/13 looks
+like a gray area in that regard, while the same block for ADV7533/35 is
+more explicit in that they are required, and they are not listed in the
+"Optional properties" section.
+
+However, most of the DTs that use this binding don't define any
+supplies. And AFAICT from looking at the code, regulator_get() will use
+a dummy regulator and show a warning for every expected regulator that's
+not defined in the DT.
+
+If we want to be more strict and require the definition of all the
+supplies, there will be many more DTs changes in the series, and I'm not
+sure I'll be able to do that in a reasonable amount of time. I'm looking
+at them and it's not always clear which regulators to use or if they are
+even defined.
+
+> > +description: |
+> > +  The ADV7533 and ADV7535 are HDMI audio and video transmitters
+> > +  compatible with HDMI 1.4 and DVI 1.0. They support color space
+> > +  conversion, S/PDIF, CEC and HDCP. They support DSI for input pixels.
+> 
+> I would write the last sentence as "The transmitter input is MIPI DSI.".
+>
+> ...
+>
+> > +      Disables the interal timing generator. The chip will rely on the
+> 
+> s/interal/internal/
+> 
+> > +      sync signals in the DSI data lanes, rather than generate its own
+> 
+> s/generate/generating/
+>
+> ...
+>
+> > +    properties:
+> > +      port@0:
+> > +        description:
+> > +          Video port for the RGB, YUV or DSI input. The remote endpoint
+> 
+> s/RGB, YUV or //
+
+Ok.
+
+> > +        ports {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +
+> > +            port@0 {
+> > +                reg = <0>;
+> > +                adv7511w_in: endpoint {
+> > +                    remote-endpoint = <&dpi_out>;
+> > +                };
+> > +            };
+> > +
+> > +            port@1 {
+> > +                reg = <1>;
+> > +                adv7511_out: endpoint {
+> > +                    remote-endpoint = <&hdmi_connector_in>;
+> > +                };
+> > +            };
+> 
+> The name of the two endpoints doesn't match the adv7533. The remote
+> endpoint phandle for port 0 should have dsi in its name.
+
+Oops, thanks for catching these.
+
+Cheers,
+Ricardo
