@@ -2,486 +2,178 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AA0C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 04:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E96C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 05:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7946206C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 04:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B91F205CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 05:03:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="z52ZZwty";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="vo583oKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725806AbgENEnU (ORCPT
+        id S1725967AbgENFDL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 00:43:20 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:52366 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgENEnT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 00:43:19 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id EBDCB80512;
-        Thu, 14 May 2020 06:43:10 +0200 (CEST)
-Date:   Thu, 14 May 2020 06:43:09 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v11 1/2] drm/panel: add support for rm69299 visionox
- panel driver
-Message-ID: <20200514044309.GA76575@ravnborg.org>
-References: <20200421045508.21137-1-harigovi@codeaurora.org>
- <20200421045508.21137-2-harigovi@codeaurora.org>
- <20200506185703.GB8227@ravnborg.org>
- <CAPM=9twxp8xBRyBCGntn8OVuwOX0i+ZSMfZBcHEtT5zQ=L7foA@mail.gmail.com>
+        Thu, 14 May 2020 01:03:11 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:35441 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgENFDK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 01:03:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589432588; x=1620968588;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=TSexiDkQCH7zfebUhamGMaYfEJXG7bLgnyL+idOQP2Q=;
+  b=z52ZZwtyoy9dE49JGM4nF50IAFoW+aO0c52puXDDko7xfJxjWu17Ah6E
+   OKODeLY4w7yyeT+aN7r2xun1Mug2iS4JUvp/iPBwewOnXY/X6P+Ekzf/T
+   PlveJAkoDFUjhliXGDR3dfwRdECPGarlIV1l+af8GhZuCLFXdN7E9vCUc
+   E3OzfRJ27TWjg+a+2xCTOXZuBZVE5b3b7+Sxh6yUeK6QKBX70eeayIpg/
+   z/b+4ySmaPoAn6yp/txfmiqjNY8urcAM3j7vm2F2XLR8nz+vBKpyLPA5g
+   dSsPzJSsOqvtOL75k1VjopCTbcTYFA+qKX6r6yMNNDhLFpFEyYoAcso91
+   w==;
+IronPort-SDR: ARGYZ5UuCMAdqxWFXC08rYZJ4Z1Rh9T+H391IhPoUT5XCg7215wm7NkIabagn4mi12tSg69Zuo
+ a7Y81Hm8bfabS+FPHDpe/huLUEo0tPKGp9rudGcCzgVInRMK2j6S/a86B/4+gsHAJyS/lyy1AO
+ FBdAomiwCT2EzEXrZ/L0bWBn5hV4znk++/9vWzlGdTDnnLgxYbdbN4qiIeia9KSHwLg5OXmimQ
+ IsAhhoMlAwSOwvzis/lp3CLmNAp1dVsPrpYd+6dBE+tpxt/8uK/kt00kRmwJKxD6gc4o0CpIij
+ WLw=
+X-IronPort-AV: E=Sophos;i="5.73,390,1583218800"; 
+   d="scan'208";a="79551072"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 22:03:08 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 22:03:07 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 13 May 2020 22:03:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SQmojqUmgsI774bXwhH8RT/FNdjxAYX5GloucIRsBjjYQwHg66gDRLEdI2HsKyaj04d4Rh0kjcBRyO30Visr+cf/+0efdbk1i2O/CvlGbudXa6uX+D2sxYdwWeTtQNOrIZlz/UDpXDXW+M2gJgMdS4I+gvtuyotftayVa8lmhNwUUZyBMenuCcqF8L1WILG40uDPLC3zzVWtIdEflro99ArujrI0HPIsZ4i6ubPth4bAbLu22UQ1VJnl+tbtBuxJPFGx9plyUfJFG2rxpCR7P4gXZ9XTveam9Xm+fEqmvKyGJVR914d3H0GNA6JDm0DgdDr5J8JlaDq1S1u5+R07AA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DLu20Zj4HmXk889XYgjlzp+zdbqrOcMBaFgYmvoIgdI=;
+ b=OlZJQGKCnRiphb2gUBhGNdnNothbMIZiNZYjOg+5QbJBFS8D/3vdsonA80pufWW6Y12UCAgj5MOiEfeB+j3JrQVdDNzlPgodOwAhD8SHZcARGk+jChG80fAoSq/hrWw1TxTeEQJeQr3h2hfcLBbwZQpmW4fq9VGOrwmf4GGuIismBF6sa+73tLv3oE+TfoD4jeCWRztqsf0oBY0pQCsKSSVxdnISVcGOm5331dAbMk3shrsXCeD9Nt1WD5lQPn7qc/zYoP5l701D594QnskuY5+b3AzcjFm+tb9WQ7lJNQfs5JHaIRUjzbKcyxUwkwjjm8a6urLpAWH9QS8q9I8Ddw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DLu20Zj4HmXk889XYgjlzp+zdbqrOcMBaFgYmvoIgdI=;
+ b=vo583oKfvzamJJrsUZ+4EpRHNd6Y5zz4nP+Wo7bjPqBwD8IpIgsHHBR0nzPyf3KWzO8gvHLCfA6M1oTsGc24jPiVyI191WZ61m3ino8/AfQmCJE3CvRlfCu1op/fKRfOKr1MNS7pVe8y+3OBHaAshq5PLmJCbS8SL0RJLbP5mVI=
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
+ by BY5PR11MB4483.namprd11.prod.outlook.com (2603:10b6:a03:1bc::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24; Thu, 14 May
+ 2020 05:03:06 +0000
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3000.022; Thu, 14 May 2020
+ 05:03:06 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
+        <Nicolas.Ferre@microchip.com>
+CC:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Codrin.Ciubotariu@microchip.com>,
+        <Tudor.Ambarus@microchip.com>
+Subject: [PATCH 00/16] ARM: dts: at91: sama5d2: Rework Flexcom definitions
+Thread-Topic: [PATCH 00/16] ARM: dts: at91: sama5d2: Rework Flexcom
+ definitions
+Thread-Index: AQHWKaz0lTobzlRRV0ujGkZZNIV0NQ==
+Date:   Thu, 14 May 2020 05:03:06 +0000
+Message-ID: <20200514050301.147442-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d7005605-d41b-49e4-86c6-08d7f7c416b2
+x-ms-traffictypediagnostic: BY5PR11MB4483:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB44834F74C74D4BB43F43D251F0BC0@BY5PR11MB4483.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 040359335D
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: C9O2m4BIM+PhdGFC9+lAjOGFdyhMRgMIBsIoTjq5m6cUS0iJHf9SiA66qefzd2Xx8WVRaA3w5D768jHSQ/SUorPsoyuUGdeLA0nTTQGIIVUOkrYxtlgXZ1jCrhuCfSJUw2vXe8ALJyaC1qWqzqgPBSUYPaYuAmUOOJdDREHY134mjeQg7hEzi3GMARAHuzUgROjdNnJ1dhJYQ5OlRzt/X3Y4U+wtmCvkg2oyEXRp7KbPEpbChCN/uqnjNss2GMUXDKbzV/MDeyTOde+ldC9gF5l7ca5Dg+sNZb/QYYDcPQDx/OBt2FIGss3ylHUrYSeV8RBDH1XzEGUse/ZK1osYZhh+woFO/NU4XRyAqh4MNOyn16yV+dAAhUYmd4x+b0E/LC4p/UZXrsRK3/SHMdTXaf+evkySbbO0H6io1CJiR7uyLWnJcutLYE/C622Nkwh5
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(346002)(396003)(136003)(39860400002)(6506007)(76116006)(6486002)(26005)(66446008)(8676002)(6512007)(86362001)(66946007)(2616005)(64756008)(8936002)(478600001)(66476007)(66556008)(186003)(1076003)(4326008)(2906002)(71200400001)(6636002)(54906003)(316002)(107886003)(5660300002)(36756003)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: TNR4Iy9CHQ3gO6j06FBCXkDQUi7xzHc7vOWw74KQyyM/finiBsrd21dyQO+xXOPheULXIjGKozTU4FjZWJT2MDALAlChu+TH5ZRTdPaOqZkwuzww3fI3Uc3o0her5sM6s/NKcLaoI7LjifXGFwYH3Y8OaMWW0eAOo/sOTJnoNCVqqIxKzUOfKPKemxz7+dEKyexsdco7HO/usXao3yfcFUxOJ+fpVJCOnZxPPCNJh3cFGrPjbPY+MZnyj7TbAJu+vMi5AMGOs8lgP+JN3GFqxTIMBSLgICXTCamEt7HKUglPMPCTEeeTtqXkjtNM3lj9axSp2a0PhnEarkMAzga6UxzQ5ilLM7ObQjxnSuUMFgRzLdQmNhdaSnqZaAEdcduUsX4pIv6whVDRSXhAJAy4ei+X8hVb4U1cc4cphVLGlOalzrZ6d4Td2UMOWGh/OIWAwJgWQ0/2GB521dKHAtOO7wzJi5HEZ2AgTMnVd46z2fc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPM=9twxp8xBRyBCGntn8OVuwOX0i+ZSMfZBcHEtT5zQ=L7foA@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=LpQP-O61AAAA:8 a=cm27Pg_UAAAA:8
-        a=e5mUnYsNAAAA:8 a=f_Wl3r1SmYH8fCJVqjsA:9 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=pioyyrs4ZptJ924tMmac:22
-        a=xmb-EsYY8bH0VWELuYED:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7005605-d41b-49e4-86c6-08d7f7c416b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2020 05:03:06.1334
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q3o8UdvVa+T9sV4tCVChpKKPlNB0EZbYynQkO4Oao2MdYBpt3SwCamnTiFXv6ErZaQi/1Jef0zgJsoHyJ6EXBSUnVsxZ2Uvnhot6EPueaek=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4483
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dave.
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-On Thu, May 14, 2020 at 01:35:22PM +1000, Dave Airlie wrote:
-> On Thu, 7 May 2020 at 04:57, Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > Hi Harigovindan
-> >
-> > On Wed, Apr 29, 2020 at 11:15:14AM +0530, Harigovindan P wrote:
-> > > Add support for Visionox panel driver.
-> > >
-> > > Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> >
-> > Thanks for your persistence on this.
-> > Patch applied.
-> >
-> > I fixed a few lingering --strict releated checkpatch warnings
-> > when I applied.
-> >
-> >         Sam
-> 
-> I'm seeing
-> 
-> WARNING: modpost: missing MODULE_LICENSE() in
-> drivers/gpu/drm/panel/panel-visionox-rm69299.o
-> 
-> Can we fix that up?
+Rework the sama5d2 SoC flexcom definitions. The Flexcom IPs are
+in the SoC. Move all the flexcom nodes together with their function
+definitions in the SoC dtsi. Boards will just fill the pins and enable
+the desired functions. With this we remove the duplication of the
+flexcom definitions across the sama5d2 boards.
 
-The patch is in drm-misc-next:
-e41b49b7e4d4ad9755af4813a57b5f6a09e357d7
-"drm: panel: add MODULE_LICENSE to panel-visionox-rm69299.c"
+Round the flexcom support and add the missing flexcom definitions.
+All the flexcom functions are now defined.
 
-Holler if this does not fix it or we need to expedit it somehow.
+Apart of the aliases and the new flx0 i2c function on sama5d2_xplained,
+the only functional change that this patch set adds, is that it uart5,
+uart6 and uart7 inherit the atmel,fifo-size =3D <32>; optional property.
+These nodes have both the FIFO size described and the DMA enabled.
+uart5 was tested on sama5d27-wlsom1-ek. On uart6 and uart7 a
+Bluetooth module can be connected. Tested BT uart7 on sama5d2-icp.
 
-	Sam
+Tudor Ambarus (16):
+  ARM: dts: at91: sama5d2: Fix the label numbering for flexcom functions
+  ARM: dts: at91: sama5d2: Move flx4 definitions in the SoC dtsi
+  ARM: dts: at91: sama5d2: Move flx3 definitions in the SoC dtsi
+  ARM: dts: at91: sama5d2: Move flx2 definitions in the SoC dtsi
+  ARM: dts: at91: sama5d2: Move flx1 definitions in the SoC dtsi
+  ARM: dts: at91: sama5d2: Move flx0 definitions in the SoC dtsi
+  ARM: dts: at91: sama5d2: Specify the FIFO size for the Flexcom UART
+  ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and UART flx4
+    functions
+  ARM: dts: at91: sama5d2: Add DMA bindings for the flx3 SPI function
+  ARM: dts: at91: sama5d2: Add DMA bindings for the flx1 I2C function
+  ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and I2C flx0
+    functions
+  ARM: dts: at91: sama5d2: Add missing flexcom definitions
+  ARM: dts: at91: sama5d2: Remove i2s and tcb aliases from SoC dtsi
+  ARM: dts: at91: sama5d2_xplained: Add alias for DBGU
+  ARM: dts: at91: sama5d2_xplained: Describe the flx0 I2C function
+  ARM: dts: at91: sama5d2_ptc_ek: Add comments to describe the aliases
 
-> 
-> Dave.
-> 
-> >
-> > > ---
-> > >
-> > > Changes in v2:
-> > >       - Dropping redundant space in Kconfig(Sam Ravnborg).
-> > >       - Changing structure for include files(Sam Ravnborg).
-> > >       - Removing backlight related code and functions(Sam Ravnborg).
-> > >       - Removing repeated printing of error message(Sam Ravnborg).
-> > >       - Adding drm_connector as an argument for get_modes function.
-> > > Changes in v3:
-> > >       - Adding arguments for drm_panel_init to support against mainline.
-> > > Changes in v4:
-> > >       - Removing error messages from regulator_set_load.
-> > >       - Removing dev struct entry.
-> > >       - Removing checks.
-> > >       - Dropping empty comment lines.
-> > > Changes in v5:
-> > >       - Removing unused struct member variables.
-> > >       - Removing blank lines.
-> > >       - Fixed indentation.
-> > >       - Invoking dsi_detach and panel_remove while early exiting from probe.
-> > > Changes in v6:
-> > >       - Changed "35597" to "rm69299" for power_on function.
-> > >       - Removing rm69299_config since it supports single type of panel for now.
-> > >       - Fixed alignment.
-> > >       - Using goto statements when regulator_set_load fails.
-> > > Changes in v7:
-> > >       - Added new goto statement when regulator_set_load fails.
-> > > Changes in v8,v9,v10:
-> > >       - Had changes in first patch, did not make any change in panel driver.
-> > > Changes in v11:
-> > >       - Fixing checkpatch script errors.
-> > >       - Updated assignment of panel.dev property in  probe.
-> > >
-> > >  drivers/gpu/drm/panel/Kconfig                 |   8 +
-> > >  drivers/gpu/drm/panel/Makefile                |   1 +
-> > >  .../gpu/drm/panel/panel-visionox-rm69299.c    | 304 ++++++++++++++++++
-> > >  3 files changed, 313 insertions(+)
-> > >  create mode 100644 drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> > >
-> > > diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> > > index d56258b9fcaf..4b6131f5893d 100644
-> > > --- a/drivers/gpu/drm/panel/Kconfig
-> > > +++ b/drivers/gpu/drm/panel/Kconfig
-> > > @@ -444,6 +444,14 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
-> > >         Say Y here if you want to enable support for Truly NT35597 WQXGA Dual DSI
-> > >         Video Mode panel
-> > >
-> > > +config DRM_PANEL_VISIONOX_RM69299
-> > > +     tristate "Visionox RM69299"
-> > > +     depends on OF
-> > > +     depends on DRM_MIPI_DSI
-> > > +     help
-> > > +       Say Y here if you want to enable support for Visionox
-> > > +       RM69299  DSI Video Mode panel.
-> > > +
-> > >  config DRM_PANEL_XINPENG_XPP055C272
-> > >       tristate "Xinpeng XPP055C272 panel driver"
-> > >       depends on OF
-> > > diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> > > index 2335a1e32ae0..8eac3e6fa82c 100644
-> > > --- a/drivers/gpu/drm/panel/Makefile
-> > > +++ b/drivers/gpu/drm/panel/Makefile
-> > > @@ -47,4 +47,5 @@ obj-$(CONFIG_DRM_PANEL_TPO_TD028TTEC1) += panel-tpo-td028ttec1.o
-> > >  obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
-> > >  obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
-> > >  obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
-> > > +obj-$(CONFIG_DRM_PANEL_VISIONOX_RM69299) += panel-visionox-rm69299.o
-> > >  obj-$(CONFIG_DRM_PANEL_XINPENG_XPP055C272) += panel-xinpeng-xpp055c272.o
-> > > diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> > > new file mode 100644
-> > > index 000000000000..3ef4cc80044a
-> > > --- /dev/null
-> > > +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> > > @@ -0,0 +1,304 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> > > + */
-> > > +
-> > > +#include <linux/delay.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of_device.h>
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/regulator/consumer.h>
-> > > +
-> > > +#include <video/mipi_display.h>
-> > > +
-> > > +#include <drm/drm_mipi_dsi.h>
-> > > +#include <drm/drm_modes.h>
-> > > +#include <drm/drm_panel.h>
-> > > +#include <drm/drm_print.h>
-> > > +
-> > > +struct visionox_rm69299 {
-> > > +     struct drm_panel panel;
-> > > +     struct regulator_bulk_data supplies[2];
-> > > +     struct gpio_desc *reset_gpio;
-> > > +     struct mipi_dsi_device *dsi;
-> > > +     bool prepared;
-> > > +     bool enabled;
-> > > +};
-> > > +
-> > > +static inline struct visionox_rm69299 *panel_to_ctx(struct drm_panel *panel)
-> > > +{
-> > > +     return container_of(panel, struct visionox_rm69299, panel);
-> > > +}
-> > > +
-> > > +static int visionox_rm69299_power_on(struct visionox_rm69299 *ctx)
-> > > +{
-> > > +     int ret;
-> > > +
-> > > +     ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +
-> > > +     /*
-> > > +      * Reset sequence of visionox panel requires the panel to be
-> > > +      * out of reset for 10ms, followed by being held in reset
-> > > +      * for 10ms and then out again
-> > > +      */
-> > > +     gpiod_set_value(ctx->reset_gpio, 1);
-> > > +     usleep_range(10000, 20000);
-> > > +     gpiod_set_value(ctx->reset_gpio, 0);
-> > > +     usleep_range(10000, 20000);
-> > > +     gpiod_set_value(ctx->reset_gpio, 1);
-> > > +     usleep_range(10000, 20000);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int visionox_rm69299_power_off(struct visionox_rm69299 *ctx)
-> > > +{
-> > > +     gpiod_set_value(ctx->reset_gpio, 0);
-> > > +
-> > > +     return regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> > > +}
-> > > +
-> > > +static int visionox_rm69299_unprepare(struct drm_panel *panel)
-> > > +{
-> > > +     struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> > > +     int ret;
-> > > +
-> > > +     ctx->dsi->mode_flags = 0;
-> > > +
-> > > +     ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_SET_DISPLAY_OFF, NULL, 0);
-> > > +     if (ret < 0)
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "set_display_off cmd failed ret = %d\n", ret);
-> > > +
-> > > +     /* 120ms delay required here as per DCS spec */
-> > > +     msleep(120);
-> > > +
-> > > +     ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_ENTER_SLEEP_MODE, NULL, 0);
-> > > +     if (ret < 0) {
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "enter_sleep cmd failed ret = %d\n", ret);
-> > > +     }
-> > > +
-> > > +     ret = visionox_rm69299_power_off(ctx);
-> > > +
-> > > +     ctx->prepared = false;
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static int visionox_rm69299_prepare(struct drm_panel *panel)
-> > > +{
-> > > +     struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> > > +     int ret;
-> > > +
-> > > +     if (ctx->prepared)
-> > > +             return 0;
-> > > +
-> > > +     ret = visionox_rm69299_power_on(ctx);
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +
-> > > +     ctx->dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-> > > +
-> > > +     ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0xfe, 0x00 }, 2);
-> > > +     if (ret < 0) {
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "cmd set tx 0 failed, ret = %d\n", ret);
-> > > +             goto power_off;
-> > > +     }
-> > > +
-> > > +     ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0xc2, 0x08 }, 2);
-> > > +     if (ret < 0) {
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "cmd set tx 1 failed, ret = %d\n", ret);
-> > > +             goto power_off;
-> > > +     }
-> > > +
-> > > +     ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0x35, 0x00 }, 2);
-> > > +     if (ret < 0) {
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "cmd set tx 2 failed, ret = %d\n", ret);
-> > > +             goto power_off;
-> > > +     }
-> > > +
-> > > +     ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0x51, 0xff }, 2);
-> > > +     if (ret < 0) {
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "cmd set tx 3 failed, ret = %d\n", ret);
-> > > +             goto power_off;
-> > > +     }
-> > > +
-> > > +     ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_EXIT_SLEEP_MODE, NULL, 0);
-> > > +     if (ret < 0) {
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "exit_sleep_mode cmd failed ret = %d\n", ret);
-> > > +             goto power_off;
-> > > +     }
-> > > +
-> > > +     /* Per DSI spec wait 120ms after sending exit sleep DCS command */
-> > > +     msleep(120);
-> > > +
-> > > +     ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_SET_DISPLAY_ON, NULL, 0);
-> > > +     if (ret < 0) {
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "set_display_on cmd failed ret = %d\n", ret);
-> > > +             goto power_off;
-> > > +     }
-> > > +
-> > > +     /* Per DSI spec wait 120ms after sending set_display_on DCS command */
-> > > +     msleep(120);
-> > > +
-> > > +     ctx->prepared = true;
-> > > +
-> > > +     return 0;
-> > > +
-> > > +power_off:
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static const struct drm_display_mode visionox_rm69299_1080x2248_60hz = {
-> > > +     .name = "1080x2248",
-> > > +     .clock = 158695,
-> > > +     .hdisplay = 1080,
-> > > +     .hsync_start = 1080 + 26,
-> > > +     .hsync_end = 1080 + 26 + 2,
-> > > +     .htotal = 1080 + 26 + 2 + 36,
-> > > +     .vdisplay = 2248,
-> > > +     .vsync_start = 2248 + 56,
-> > > +     .vsync_end = 2248 + 56 + 4,
-> > > +     .vtotal = 2248 + 56 + 4 + 4,
-> > > +     .vrefresh = 60,
-> > > +     .flags = 0,
-> > > +};
-> > > +
-> > > +static int visionox_rm69299_get_modes(struct drm_panel *panel,
-> > > +                                   struct drm_connector *connector)
-> > > +{
-> > > +     struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> > > +     struct drm_display_mode *mode;
-> > > +
-> > > +     mode = drm_mode_create(connector->dev);
-> > > +     if (!mode) {
-> > > +             DRM_DEV_ERROR(ctx->panel.dev,
-> > > +                     "failed to create a new display mode\n");
-> > > +             return 0;
-> > > +     }
-> > > +
-> > > +     connector->display_info.width_mm = 74;
-> > > +     connector->display_info.height_mm = 131;
-> > > +     drm_mode_copy(mode, &visionox_rm69299_1080x2248_60hz);
-> > > +     mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-> > > +     drm_mode_probed_add(connector, mode);
-> > > +
-> > > +     return 1;
-> > > +}
-> > > +
-> > > +static const struct drm_panel_funcs visionox_rm69299_drm_funcs = {
-> > > +     .unprepare = visionox_rm69299_unprepare,
-> > > +     .prepare = visionox_rm69299_prepare,
-> > > +     .get_modes = visionox_rm69299_get_modes,
-> > > +};
-> > > +
-> > > +static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
-> > > +{
-> > > +     struct device *dev = &dsi->dev;
-> > > +     struct visionox_rm69299 *ctx;
-> > > +     int ret;
-> > > +
-> > > +     ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> > > +     if (!ctx)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     mipi_dsi_set_drvdata(dsi, ctx);
-> > > +
-> > > +     ctx->panel.dev = dev;
-> > > +     ctx->dsi = dsi;
-> > > +
-> > > +     ctx->supplies[0].supply = "vdda";
-> > > +     ctx->supplies[1].supply = "vdd3p3";
-> > > +
-> > > +     ret = devm_regulator_bulk_get(ctx->panel.dev, ARRAY_SIZE(ctx->supplies),
-> > > +                                   ctx->supplies);
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +
-> > > +     ctx->reset_gpio = devm_gpiod_get(ctx->panel.dev,
-> > > +                                     "reset", GPIOD_OUT_LOW);
-> > > +     if (IS_ERR(ctx->reset_gpio)) {
-> > > +             DRM_DEV_ERROR(dev, "cannot get reset gpio %ld\n",
-> > > +                     PTR_ERR(ctx->reset_gpio));
-> > > +             return PTR_ERR(ctx->reset_gpio);
-> > > +     }
-> > > +
-> > > +     drm_panel_init(&ctx->panel, dev, &visionox_rm69299_drm_funcs,
-> > > +                    DRM_MODE_CONNECTOR_DSI);
-> > > +     ctx->panel.dev = dev;
-> > > +     ctx->panel.funcs = &visionox_rm69299_drm_funcs;
-> > > +     drm_panel_add(&ctx->panel);
-> > > +
-> > > +     dsi->lanes = 4;
-> > > +     dsi->format = MIPI_DSI_FMT_RGB888;
-> > > +     dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_LPM |
-> > > +             MIPI_DSI_CLOCK_NON_CONTINUOUS;
-> > > +     ret = mipi_dsi_attach(dsi);
-> > > +     if (ret < 0) {
-> > > +             DRM_DEV_ERROR(dev, "dsi attach failed ret = %d\n", ret);
-> > > +             goto err_dsi_attach;
-> > > +     }
-> > > +
-> > > +     ret = regulator_set_load(ctx->supplies[0].consumer, 32000);
-> > > +     if (ret) {
-> > > +             DRM_DEV_ERROR(dev,
-> > > +                     "regulator set load failed for vdda supply ret = %d\n",
-> > > +                     ret);
-> > > +             goto err_set_load;
-> > > +     }
-> > > +
-> > > +     ret = regulator_set_load(ctx->supplies[1].consumer, 13200);
-> > > +     if (ret) {
-> > > +             DRM_DEV_ERROR(dev,
-> > > +                     "regulator set load failed for vdd3p3 supply ret = %d\n",
-> > > +                     ret);
-> > > +             goto err_set_load;
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +
-> > > +err_set_load:
-> > > +     mipi_dsi_detach(dsi);
-> > > +err_dsi_attach:
-> > > +     drm_panel_remove(&ctx->panel);
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static int visionox_rm69299_remove(struct mipi_dsi_device *dsi)
-> > > +{
-> > > +     struct visionox_rm69299 *ctx = mipi_dsi_get_drvdata(dsi);
-> > > +
-> > > +     mipi_dsi_detach(ctx->dsi);
-> > > +     mipi_dsi_device_unregister(ctx->dsi);
-> > > +
-> > > +     drm_panel_remove(&ctx->panel);
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static const struct of_device_id visionox_rm69299_of_match[] = {
-> > > +     {
-> > > +             .compatible = "visionox,rm69299-1080p-display",
-> > > +     }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, visionox_rm69299_of_match);
-> > > +
-> > > +static struct mipi_dsi_driver visionox_rm69299_driver = {
-> > > +     .driver = {
-> > > +             .name = "panel-visionox-rm69299",
-> > > +             .of_match_table = visionox_rm69299_of_match,
-> > > +     },
-> > > +     .probe = visionox_rm69299_probe,
-> > > +     .remove = visionox_rm69299_remove,
-> > > +};
-> > > +module_mipi_dsi_driver(visionox_rm69299_driver);
-> > > +
-> > > +MODULE_DESCRIPTION("Visionox RM69299 DSI Panel Driver");
-> > > +
-> > > --
-> > > 2.25.1
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+ arch/arm/boot/dts/at91-kizbox3-hs.dts         |   4 +-
+ arch/arm/boot/dts/at91-kizbox3_common.dtsi    |  48 +--
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts   |  64 +---
+ arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi   |  12 -
+ arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts |  12 -
+ arch/arm/boot/dts/at91-sama5d2_icp.dts        |  42 +--
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts     |  14 +-
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts   |  42 ++-
+ arch/arm/boot/dts/sama5d2.dtsi                | 295 +++++++++++++++++-
+ 9 files changed, 347 insertions(+), 186 deletions(-)
+
+--=20
+2.23.0
