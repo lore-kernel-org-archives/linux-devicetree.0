@@ -2,281 +2,159 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE83C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C81C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1299C2065D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:40:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mndkhuel"
+	by mail.kernel.org (Postfix) with ESMTP id 9A632206DC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589478944;
+	bh=YuV4JmNCFxZTXRRZDTourQqWeIzvbe4ZSXIszNZz9GA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=s2DgkLj2ASb4gQaV4spHV9r4J6FrYKR1ohmi2/sY5bEIfCoLRNrj115zeN686uhfU
+	 yVchZBjROLpB9DLH23UVwKObG1YnYLV67DgWvvodoOWB68teKJhgruzyUm4BghUe14
+	 yHnRtleZXr03oUhw/gCV+1ECh9f12bvXLGwQngoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgENRkv (ORCPT
+        id S1726087AbgENRzo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 13:40:51 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59466 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgENRkv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 13:40:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EHeeN5069015;
-        Thu, 14 May 2020 12:40:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589478040;
-        bh=FigQr+2Mv2wX+Wfrei1Ja0e3JTrb7EYrHkDL262CaN0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Mndkhuelw8rrz0NPNRU0yF6rqJ3WpEf7eZFX2j1LJvYYReY4LZbnwtZpGO8i1ID9Q
-         DHfMJdyBSr+ZuqQ9DeFHWamGGIzxE9448CpjgXnBrmcQ9WE5foiGTkH2x42JCne3bT
-         FXy8JcssYcLylUn7V45S4AUYIBZ/BB5F+P3eKI0Y=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EHee0c092960;
-        Thu, 14 May 2020 12:40:40 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 12:40:40 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 12:40:40 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EHee0D031800;
-        Thu, 14 May 2020 12:40:40 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>
-CC:     <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next 2/2] net: phy: DP83822: Add ability to advertise Fiber connection
-Date:   Thu, 14 May 2020 12:30:55 -0500
-Message-ID: <20200514173055.15013-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200514173055.15013-1-dmurphy@ti.com>
-References: <20200514173055.15013-1-dmurphy@ti.com>
+        Thu, 14 May 2020 13:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbgENRzn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 13:55:43 -0400
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9689206DC;
+        Thu, 14 May 2020 17:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589478943;
+        bh=YuV4JmNCFxZTXRRZDTourQqWeIzvbe4ZSXIszNZz9GA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qk0qfM6N9/BYlt8vhnlziu5fJ2+hOhGJEWF6m2LEC+7om7iytJH/k4q2cTG4oZN8n
+         yiW6yUweL151sXQTBt7Y8q6ov+iS15+MQ+V14DHZXd5ADbc5rs4SmsQNlarrP1H9/Y
+         y1CXJBHRie4MdgEjWs7rJ+63hfpeKuin7pqCfZw8=
+Received: by mail-oo1-f43.google.com with SMTP id u190so905177ooa.10;
+        Thu, 14 May 2020 10:55:42 -0700 (PDT)
+X-Gm-Message-State: AOAM530ZM0MnjH73JLF5vIDzMut9GkB9GDiClqS27X6zj3CiuIPvSVc4
+        DSiECRVRIDDfXa6lNrygk2aXL9/JhDtl55/thA==
+X-Google-Smtp-Source: ABdhPJyYQ1f7xwVyNWr/S3JB/4XJ/2dszYIEcPkkumlKlHYG1FOqs0/y0vGXRbvvDqR04i1DfUOOMXv5SZ6p1Vso3BA=
+X-Received: by 2002:a4a:894d:: with SMTP id g13mr4522354ooi.81.1589478941954;
+ Thu, 14 May 2020 10:55:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+ <1588756279-17289-7-git-send-email-christophe.kerello@st.com>
+ <20200514150028.GB28489@bogus> <9ffc04cf-137f-5ee5-57ff-39a876abfb34@st.com>
+In-Reply-To: <9ffc04cf-137f-5ee5-57ff-39a876abfb34@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 14 May 2020 12:55:30 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLTyDHBHncrQqtPdkCNgKDkEbp+ts7BOeqWmGv64kcAsg@mail.gmail.com>
+Message-ID: <CAL_JsqLTyDHBHncrQqtPdkCNgKDkEbp+ts7BOeqWmGv64kcAsg@mail.gmail.com>
+Subject: Re: [PATCH v4 06/10] dt-bindings: mtd: update STM32 FMC2 NAND
+ controller documentation
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org,
+        =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The DP83822 can be configured to use a Fiber connection.  The strap
-register is read to determine if the device has been configured to use
-a fiber connection.  With the fiber connection the PHY can be configured
-to detect whether the fiber connection is active by either a high signal
-or a low signal.
+On Thu, May 14, 2020 at 11:35 AM Christophe Kerello
+<christophe.kerello@st.com> wrote:
+>
+> Hi Rob,
+>
+> On 5/14/20 5:00 PM, Rob Herring wrote:
+> > On Wed, May 06, 2020 at 11:11:15AM +0200, Christophe Kerello wrote:
+> >> These bindings can be used on SOCs where the FMC2 NAND controller is
+> >> in standalone. In case that the FMC2 embeds 2 controllers (an external
+> >> bus controller and a raw NAND controller), the register base and the
+> >> clock will be defined in the parent node. It is the reason why the
+> >> register base address and the clock are now optional.
+> >>
+> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> >> ---
+> >>   .../devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml   | 19 ++++++++++---------
+> >>   1 file changed, 10 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> >> index b059267..68fac1a 100644
+> >> --- a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> >> +++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> >> @@ -18,13 +18,15 @@ properties:
+> >>
+> >>     reg:
+> >>       items:
+> >> -      - description: Registers
+> >> +      - description: Registers (optional)
+> >
+> > The only thing that can be optional are the last entries. You have to do
+> > a 'oneOf' with 6 entries and 7 entries.
+>
+> Ok, so the way to describe the reg property in my case should be:
+>         reg:
+>           oneOf:
+>             - description: FMC2 embeds the NFC controller in standalone.
+>               items:
+>                 - description: Registers
+>                 - description: Chip select 0 data
+>                 - description: Chip select 0 command
+>                 - description: Chip select 0 address space
+>                 - description: Chip select 1 data
+>                 - description: Chip select 1 command
+>                 - description: Chip select 1 address space
+>
+>             - description: FMC2 embeds the NFC controller and the EBI
+>                 controller.
+>               items:
+>                 - description: Chip select 0 data
+>                 - description: Chip select 0 command
+>                 - description: Chip select 0 address space
+>                 - description: Chip select 1 data
+>                 - description: Chip select 1 command
+>                 - description: Chip select 1 address space
+>
+> >
+> > And where's your new compatible string for this different h/w?
+>
+>  From NFC controller point of view, it is the same HW.
 
-Fiber mode is only applicable to the DP83822 so rework the PHY match
-table so that non-fiber PHYs can still use the same driver but not call
-or use any of the fiber features.
+That's what everyone says until they have some quirk or integration
+difference to handle.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/dp83822.c | 140 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 132 insertions(+), 8 deletions(-)
+> In the case that we have 2 controllers embedded, the register base is
+> shared.
+> The NFC driver will check at probe time the compatible string of its
+> parent node.
+> In case that it is "st,stm32mp1-fmc2-ebi", then the driver will find the
+> register base in the parent node (EBI node), otherwise it will find it
+> in the NFC node.
+> Is it better to have 2 compatible strings (one for each reg description)
+> than checking the parent's compatible string and have only one
+> compatible string?
 
-diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-index 1dd19d0cb269..fe7443bc8b06 100644
---- a/drivers/net/phy/dp83822.c
-+++ b/drivers/net/phy/dp83822.c
-@@ -27,6 +27,11 @@
- #define MII_DP83822_MISR1	0x12
- #define MII_DP83822_MISR2	0x13
- #define MII_DP83822_RESET_CTRL	0x1f
-+#define MII_DP83822_GENCFG	0x465
-+#define MII_DP83822_SOR1	0x467
-+
-+/* GENCFG */
-+#define DP83822_SIG_DET_POLARITY BIT(0)
- 
- #define DP83822_HW_RESET	BIT(15)
- #define DP83822_SW_RESET	BIT(14)
-@@ -77,6 +82,21 @@
- #define DP83822_WOL_INDICATION_SEL BIT(8)
- #define DP83822_WOL_CLR_INDICATION BIT(11)
- 
-+/* SOR1 bits */
-+#define DP83822_FX_EN_STRAP	BIT(11)
-+#define DP83822_FX_DUPLEX_STRAP	BIT(0)
-+
-+#define MII_DP83822_FIBER_ADVERTISE	(SUPPORTED_AUI | SUPPORTED_FIBRE | \
-+					 SUPPORTED_BNC | SUPPORTED_Pause | \
-+					 SUPPORTED_Asym_Pause | \
-+					 SUPPORTED_100baseT_Full)
-+
-+struct dp83822_private {
-+	bool fx_signal_detect_low;
-+	int fx_enabled;
-+	u16 fx_duplex_mode;
-+};
-+
- static int dp83822_ack_interrupt(struct phy_device *phydev)
- {
- 	int err;
-@@ -255,7 +275,7 @@ static int dp83822_config_intr(struct phy_device *phydev)
- 	return phy_write(phydev, MII_DP83822_PHYSCR, physcr_status);
- }
- 
--static int dp83822_config_init(struct phy_device *phydev)
-+static int dp8382x_disable_wol(struct phy_device *phydev)
- {
- 	int value = DP83822_WOL_EN | DP83822_WOL_MAGIC_EN |
- 		    DP83822_WOL_SECURE_ON;
-@@ -264,6 +284,41 @@ static int dp83822_config_init(struct phy_device *phydev)
- 				  MII_DP83822_WOL_CFG, value);
- }
- 
-+static int dp83822_config_init(struct phy_device *phydev)
-+{
-+	struct dp83822_private *dp83822 = phydev->priv;
-+	int err = 0;
-+
-+	if (dp83822->fx_enabled) {
-+		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
-+				 phydev->supported);
-+		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
-+				 phydev->advertising);
-+
-+		/*  Auto negotiation is not available in fiber mode */
-+		phydev->autoneg = AUTONEG_DISABLE;
-+		phydev->speed = SPEED_100;
-+		phydev->duplex = DUPLEX_FULL;
-+
-+		/* Setup fiber advertisement */
-+		err = phy_modify_changed(phydev, MII_ADVERTISE,
-+					 ADVERTISE_1000XFULL |
-+					 ADVERTISE_1000XPAUSE |
-+					 ADVERTISE_1000XPSE_ASYM,
-+					 MII_DP83822_FIBER_ADVERTISE);
-+
-+		if (err < 0)
-+			return err;
-+	}
-+
-+	return dp8382x_disable_wol(phydev);
-+}
-+
-+static int dp8382x_config_init(struct phy_device *phydev)
-+{
-+	return dp8382x_disable_wol(phydev);
-+}
-+
- static int dp83822_phy_reset(struct phy_device *phydev)
- {
- 	int err;
-@@ -272,7 +327,60 @@ static int dp83822_phy_reset(struct phy_device *phydev)
- 	if (err < 0)
- 		return err;
- 
--	dp83822_config_init(phydev);
-+	return phydev->drv->config_init(phydev);
-+}
-+
-+#ifdef CONFIG_OF_MDIO
-+static int dp83822_of_init(struct phy_device *phydev)
-+{
-+	struct dp83822_private *dp83822 = phydev->priv;
-+	struct device *dev = &phydev->mdio.dev;
-+
-+	if (dp83822->fx_enabled)
-+		dp83822->fx_signal_detect_low = device_property_present(dev,
-+									"ti,signal-polarity-low");
-+
-+	return 0;
-+}
-+#else
-+static int dp83822_of_init(struct phy_device *phydev)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_OF_MDIO */
-+
-+static int dp83822_read_straps(struct phy_device *phydev)
-+{
-+	struct dp83822_private *dp83822 = phydev->priv;
-+	u16 val;
-+
-+	val = phy_read_mmd(phydev, DP83822_DEVADDR, MII_DP83822_SOR1);
-+	if (val < 0)
-+		return val;
-+
-+	dp83822->fx_enabled = val & DP83822_FX_EN_STRAP;
-+	dp83822->fx_duplex_mode = val & DP83822_FX_DUPLEX_STRAP;
-+
-+	return 0;
-+}
-+
-+static int dp83822_probe(struct phy_device *phydev)
-+{
-+	struct dp83822_private *dp83822;
-+	int ret;
-+
-+	dp83822 = devm_kzalloc(&phydev->mdio.dev, sizeof(*dp83822),
-+			       GFP_KERNEL);
-+	if (!dp83822)
-+		return -ENOMEM;
-+
-+	phydev->priv = dp83822;
-+
-+	ret = dp83822_read_straps(phydev);
-+	if (ret)
-+		return ret;
-+
-+	dp83822_of_init(phydev);
- 
- 	return 0;
- }
-@@ -308,6 +416,7 @@ static int dp83822_resume(struct phy_device *phydev)
- 		PHY_ID_MATCH_MODEL(_id),			\
- 		.name		= (_name),			\
- 		/* PHY_BASIC_FEATURES */			\
-+		.probe          = dp83822_probe,		\
- 		.soft_reset	= dp83822_phy_reset,		\
- 		.config_init	= dp83822_config_init,		\
- 		.get_wol = dp83822_get_wol,			\
-@@ -318,14 +427,29 @@ static int dp83822_resume(struct phy_device *phydev)
- 		.resume = dp83822_resume,			\
- 	}
- 
-+#define DP8382X_PHY_DRIVER(_id, _name)				\
-+	{							\
-+		PHY_ID_MATCH_MODEL(_id),			\
-+		.name		= (_name),			\
-+		/* PHY_BASIC_FEATURES */			\
-+		.soft_reset	= dp83822_phy_reset,		\
-+		.config_init	= dp8382x_config_init,		\
-+		.get_wol = dp83822_get_wol,			\
-+		.set_wol = dp83822_set_wol,			\
-+		.ack_interrupt = dp83822_ack_interrupt,		\
-+		.config_intr = dp83822_config_intr,		\
-+		.suspend = dp83822_suspend,			\
-+		.resume = dp83822_resume,			\
-+	}
-+
- static struct phy_driver dp83822_driver[] = {
- 	DP83822_PHY_DRIVER(DP83822_PHY_ID, "TI DP83822"),
--	DP83822_PHY_DRIVER(DP83825I_PHY_ID, "TI DP83825I"),
--	DP83822_PHY_DRIVER(DP83826C_PHY_ID, "TI DP83826C"),
--	DP83822_PHY_DRIVER(DP83826NC_PHY_ID, "TI DP83826NC"),
--	DP83822_PHY_DRIVER(DP83825S_PHY_ID, "TI DP83825S"),
--	DP83822_PHY_DRIVER(DP83825CM_PHY_ID, "TI DP83825M"),
--	DP83822_PHY_DRIVER(DP83825CS_PHY_ID, "TI DP83825CS"),
-+	DP8382X_PHY_DRIVER(DP83825I_PHY_ID, "TI DP83825I"),
-+	DP8382X_PHY_DRIVER(DP83826C_PHY_ID, "TI DP83826C"),
-+	DP8382X_PHY_DRIVER(DP83826NC_PHY_ID, "TI DP83826NC"),
-+	DP8382X_PHY_DRIVER(DP83825S_PHY_ID, "TI DP83825S"),
-+	DP8382X_PHY_DRIVER(DP83825CM_PHY_ID, "TI DP83825M"),
-+	DP8382X_PHY_DRIVER(DP83825CS_PHY_ID, "TI DP83825CS"),
- };
- module_phy_driver(dp83822_driver);
- 
--- 
-2.26.2
+Why not just put the register base into the child node too? While
+overlapping 'reg' regions for siblings is bad, it's fine for child
+nodes. I guess since there are chip selects for the child nodes that
+may not work here.
 
+It doesn't hurt to have another compatible. You can always make the
+old one a fallback. With different compatibles you can make sure reg
+has the right number of entries.
+
+Rob
