@@ -2,122 +2,116 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D09C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66B5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E87A52065F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:08:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtSzbFug"
+	by mail.kernel.org (Postfix) with ESMTP id 79DE920722
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589488841;
+	bh=jPPQZ0RhlAk4LlkzHIvg67OHCVaezZjs7+20BukTROQ=;
+	h=In-Reply-To:References:Subject:From:To:Date:List-ID:From;
+	b=q4oNZQbTzMiJ//K0AmLyGHTabjmQ8PCCPbg/NkZmolahVg5wWztq7mSQdBh9XseXI
+	 GAPMlqwixBn4fi4xBDmIaWpg0sQBxcvpyyvIJvHzfuSLYGqQIeeJWf4kSHMKk7l0nQ
+	 Jx2Q8T3g90ztorDzLyOzS7Yy9YlrCqFndpdyPe9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgENUIO (ORCPT
+        id S1728073AbgENUkl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 16:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729278AbgENUHn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 16:07:43 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC12CC061A0C;
-        Thu, 14 May 2020 13:07:42 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id h16so3459503eds.5;
-        Thu, 14 May 2020 13:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ioo9tN1eVsbgycuXVtXW3j/mdJh9pHsUFw60B6xaAJg=;
-        b=GtSzbFugKXUZLfIGhS+lGWTCnLshbSF1JRUkZH+02JeQGSSHJvXuU04N7PFHtpvCph
-         jDrfm6OXEey0Yult4YjLTHi8ilKeMa+sAT5PIK7kSky98WtwzkWMUSh/UykuEbn3nTyW
-         H+FkpMQ5SA70GwSWmEaOtbzmSED5MFgxAoOUo73yo3CyNIqDQTCTPgQBBbpnwqgPw7Wb
-         S6dNrKVF1aNaFlQ0CoVPpBTB5P+l94OLWUoUgkBkbgJ85MUhFPGyLb6qQUFbDHa6vBRm
-         LgkExgyHxWI1wJ4hQsdEeEHgDbUoYcg9DzkTgbvkMRAKe+D0nZOdczddC6ieRB+uZy1L
-         7kKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ioo9tN1eVsbgycuXVtXW3j/mdJh9pHsUFw60B6xaAJg=;
-        b=XlSFpIpLLI01Gt9PLV963g7Bk3FytgioNR+nkJbBuXVwJE8vNQ0HMX5MmRliHiOqeC
-         NcfKm3iE3e9ME3xFM1jmf7DGD18L0/czs/2N/8Lah5WJtDwspuOBcjcH0FBLDllswvyX
-         64TfHWW6jmWm4PfJ6j0smSOlXKmYOYUqVJxPPY9cVEuCB9IPR/okRO3boY03o8HytH+D
-         sy0mRLTpUdQng6+Cq39csUOphUnv3uIZ6OvrPWcKA5AU9yxh+k+syZowIwk3/NdQ35e0
-         sU5Vn/ENabpbciVnu8onq0ZMnGRYzyB6LuehhFNSkNAPNfvNbsWk1s6/INTannh+bCap
-         YLhQ==
-X-Gm-Message-State: AOAM532ajUKgdYjHZC8WYl32/ncb3WfHt7kz4EGZlwLOpdWJtrrYNTw9
-        znSC4Z+cqHnPZ06OfEdK6OM=
-X-Google-Smtp-Source: ABdhPJyt4UuV2TMAZZyM8I2pUJSWcQuUc1x/pxGNfo0AGSIDTCiuplAOe/iA9oVWL1HR11F172Qx+A==
-X-Received: by 2002:a05:6402:30b2:: with SMTP id df18mr5357586edb.323.1589486861453;
-        Thu, 14 May 2020 13:07:41 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
-        by smtp.googlemail.com with ESMTPSA id bd10sm1472edb.10.2020.05.14.13.07.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 13:07:40 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 05/10] dt-bindings: PCI: qcom: Add ext reset
-Date:   Thu, 14 May 2020 22:07:06 +0200
-Message-Id: <20200514200712.12232-6-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200514200712.12232-1-ansuelsmth@gmail.com>
-References: <20200514200712.12232-1-ansuelsmth@gmail.com>
+        Thu, 14 May 2020 16:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726241AbgENUkk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 16:40:40 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA7F20722;
+        Thu, 14 May 2020 20:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589488839;
+        bh=jPPQZ0RhlAk4LlkzHIvg67OHCVaezZjs7+20BukTROQ=;
+        h=In-Reply-To:References:Subject:From:To:Date:From;
+        b=joDZfSD1q1oIDk3PNxUr+a2VvPslTZZMCegoK9C9/oTR67Iw3JCa7RpvoCA4QmMQK
+         tnkuoSlPIejfXkKXsX1XD98DCvSybqleOCzrYZab9oiEDg+1wo9kVheVHLXPI32TbD
+         l/EGa666ytUz6d7KTKfEM1wn5jl7bRTngumQQxL4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4025e5c3-b532-d235-f73b-2b86055bdde2@codeaurora.org>
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org> <1586832922-29191-4-git-send-email-sivaprak@codeaurora.org> <158754602745.132238.14379194464345140559@swboyd.mtv.corp.google.com> <4025e5c3-b532-d235-f73b-2b86055bdde2@codeaurora.org>
+Subject: Re: [PATCH V3 3/8] clk: qcom: Add A53 PLL support for ipq6018 devices
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Date:   Thu, 14 May 2020 13:40:39 -0700
+Message-ID: <158948883904.215346.15910533287389644445@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document ext reset used in ipq8064 SoC by qcom PCIe driver.
+Quoting Sivaprakash Murugesan (2020-04-22 03:44:33)
+> On 4/22/2020 2:30 PM, Stephen Boyd wrote:
+> > Quoting Sivaprakash Murugesan (2020-04-13 19:55:17)
+> >> diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
+> >> index 45cfc57..a95351c 100644
+> >> --- a/drivers/clk/qcom/a53-pll.c
+> >> +++ b/drivers/clk/qcom/a53-pll.c
+> >> @@ -57,30 +146,26 @@ static int qcom_a53pll_probe(struct platform_devi=
+ce *pdev)
+> >>          if (IS_ERR(regmap))
+> >>                  return PTR_ERR(regmap);
+> >>  =20
+> >> -       pll->l_reg =3D 0x04;
+> >> -       pll->m_reg =3D 0x08;
+> >> -       pll->n_reg =3D 0x0c;
+> >> -       pll->config_reg =3D 0x14;
+> >> -       pll->mode_reg =3D 0x00;
+> >> -       pll->status_reg =3D 0x1c;
+> >> -       pll->status_bit =3D 16;
+> >> -       pll->freq_tbl =3D a53pll_freq;
+> >> -
+> >> -       init.name =3D "a53pll";
+> >> -       init.parent_names =3D (const char *[]){ "xo" };
+> >> -       init.num_parents =3D 1;
+> >> -       init.ops =3D &clk_pll_sr2_ops;
+> >> -       init.flags =3D CLK_IS_CRITICAL;
+> > Please document why a clk is critical.
+> ok
+> >
+> >> -       pll->clkr.hw.init =3D &init;
+> >> -
+> >> -       ret =3D devm_clk_register_regmap(dev, &pll->clkr);
+> >> +       if (pll_data->flags & PLL_IS_ALPHA) {
+> >> +               struct clk_alpha_pll *alpha_pll =3D
+> >> +                       pll_data->a53pll.alpha_pll.pll;
+> >> +               struct alpha_pll_config *alpha_pll_config =3D
+> >> +                       pll_data->a53pll.alpha_pll.pll_config;
+> >> +
+> >> +               clk_alpha_pll_configure(alpha_pll, regmap, alpha_pll_c=
+onfig);
+> >> +               clkr =3D &pll_data->a53pll.alpha_pll.pll->clkr;
+> >> +       } else {
+> >> +               clkr =3D &pll_data->a53pll.pll->clkr;
+> >> +       }
+> > Sorry, the design is confusing.
+>=20
+> The basic idea is to add support for various PLLs available to clock the =
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/pci/qcom,pcie.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> A53 core.
+>=20
+> if this messing up the code, can the alpha pll support be moved to a=20
+> separate file?
+>=20
+> It would be very helpful if you provide your input on this.
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index becdbdc0fffa..6efcef040741 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -179,6 +179,7 @@
- 			- "pwr"			PWR reset
- 			- "ahb"			AHB reset
- 			- "phy_ahb"		PHY AHB reset
-+			- "ext"			EXT reset
- 
- - reset-names:
- 	Usage: required for ipq8074
-@@ -287,8 +288,9 @@
- 			 <&gcc PCIE_HCLK_RESET>,
- 			 <&gcc PCIE_POR_RESET>,
- 			 <&gcc PCIE_PCI_RESET>,
--			 <&gcc PCIE_PHY_RESET>;
--		reset-names = "axi", "ahb", "por", "pci", "phy";
-+			 <&gcc PCIE_PHY_RESET>,
-+			 <&gcc PCIE_EXT_RESET>;
-+		reset-names = "axi", "ahb", "por", "pci", "phy", "ext";
- 		pinctrl-0 = <&pcie_pins_default>;
- 		pinctrl-names = "default";
- 	};
--- 
-2.25.1
-
+Isn't the alpha PLL support already in a different file? Is it sometimes
+an alpha pll and other times it is something else?
