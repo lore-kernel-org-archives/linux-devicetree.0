@@ -2,106 +2,87 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D501C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D88C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3277A2065C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5646B205ED
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgENBEX (ORCPT
+        id S1725973AbgENBSV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 21:04:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31154 "EHLO mga18.intel.com"
+        Wed, 13 May 2020 21:18:21 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39022 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgENBEX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 May 2020 21:04:23 -0400
-IronPort-SDR: xEAf9AC1SXzK7+QNw5Vjw2VJBT/2JRidro/8MNPkTi0qoNhymqzkRZEQajijTJcNJOgfnYwofD
- dq6qhGX6lJFQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 18:04:23 -0700
-IronPort-SDR: 7bbX+hPA/cSQi2+URin7m/oJ0Xx1k4B/wxePUY4vh+nXrzcqZQGlZIAlMmzI28irXsfEwaAHJw
- 7Y15zIhRrQJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
-   d="scan'208";a="298544452"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 13 May 2020 18:04:22 -0700
-Received: from [10.249.66.53] (vramuthx-mobl1.gar.corp.intel.com [10.249.66.53])
-        by linux.intel.com (Postfix) with ESMTP id D48F5580646;
-        Wed, 13 May 2020 18:04:17 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v6 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200513104615.7905-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200513153405.GS185537@smile.fi.intel.com>
- <20200513153532.GT185537@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <364cb1f3-1a66-20d3-f256-739ee9c915f0@linux.intel.com>
-Date:   Thu, 14 May 2020 09:04:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200513153532.GT185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725925AbgENBSU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 21:18:20 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5E9931A15F1;
+        Thu, 14 May 2020 03:18:18 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 81F5F1A012E;
+        Thu, 14 May 2020 03:18:14 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 70523402B4;
+        Thu, 14 May 2020 09:18:09 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] ARM: dts: imx6qdl: Use nvmem interface to get fuse data
+Date:   Thu, 14 May 2020 09:08:47 +0800
+Message-Id: <1589418528-26410-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Although ocotp clock is always ON for i.MX6QDL, OCOTP can be
+accessed directly, but since i.MX6QDL nvmem interface is supported,
+and fsl,tempmon-data is deprecated, use it instead of getting fuse
+data by reading ocotp directly, this makes all i.MX6 SoCs aligned.
 
-On 13/5/2020 11:35 pm, Andy Shevchenko wrote:
-> On Wed, May 13, 2020 at 06:34:05PM +0300, Andy Shevchenko wrote:
->> On Wed, May 13, 2020 at 06:46:15PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> 
-> ...
-> 
->>> +static int ebu_nand_remove(struct platform_device *pdev)
->>> +{
->>> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
->>> +
->>
->>> +	if (ebu_host) {
->>
->> How it can be NULL here?
->>
->>> +		mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
->>> +		nand_cleanup(&ebu_host->chip);
->>> +		ebu_nand_disable(&ebu_host->chip);
->>> +
-> 
->>> +		if (ebu_host->dma_rx || ebu_host->dma_tx)
-> 
-> This is duplicate and thus redundant.
-Let me check and update, Thanks!
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Regards
-Vadivel
-> 
->>> +			ebu_dma_cleanup(ebu_host);
->>> +
->>> +		clk_disable_unprepare(ebu_host->clk);
->>> +	}
->>> +
->>> +	return 0;
->>> +}
-> 
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 98da446..1763c2b 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -74,7 +74,8 @@
+ 		interrupt-parent = <&gpc>;
+ 		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
+ 		fsl,tempmon = <&anatop>;
+-		fsl,tempmon-data = <&ocotp>;
++		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++		nvmem-cell-names = "calib", "temp_grade";
+ 		clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+ 		#thermal-sensor-cells = <0>;
+ 	};
+@@ -1171,6 +1172,14 @@
+ 				cpu_speed_grade: speed-grade@10 {
+ 					reg = <0x10 4>;
+ 				};
++
++				tempmon_calib: calib@38 {
++					reg = <0x38 4>;
++				};
++
++				tempmon_temp_grade: temp-grade@20 {
++					reg = <0x20 4>;
++				};
+ 			};
+ 
+ 			tzasc@21d0000 { /* TZASC1 */
+-- 
+2.7.4
+
