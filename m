@@ -2,268 +2,118 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEAFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 09:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA6EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 09:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9BB20671
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 09:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1FE206A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 09:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ttafYhaM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UFysw5t4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725878AbgENJnV (ORCPT
+        id S1726090AbgENJol (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 05:43:21 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:59374 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgENJnU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 05:43:20 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 590B09A8;
-        Thu, 14 May 2020 11:43:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589449397;
-        bh=VNCQSWC3QmQRouQhg1waF4+jeFDbDhwDwko0JwPWluo=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ttafYhaMudhyyvIUtN/M4W2kRjA+KwTtnTJ4cqrge0NS5X32Srow3CVAn5iwokc+b
-         /qnaard5MgGRpRmhDdcyXovGZiIAfrca9U+PX8f7XkrT80Lqyp4CERqIns5rU5MVCj
-         Kbq8DcNqA8daWeXKRvvef0G0hXIyDif0mAWqaXNo=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH] fixup! dt-bindings: media: i2c: Add bindings for Maxima
- Integrated MAX9286
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund@ragnatech.se
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, sakari.ailus@iki.fi,
-        mchehab@kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Hyun Kwon <hyunk@xilinx.com>
-References: <20200512223329.GA23701@bogus>
- <20200513125445.54132-1-jacopo+renesas@jmondi.org>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <bd648891-67c2-098b-3a0e-72bf4e938535@ideasonboard.com>
-Date:   Thu, 14 May 2020 10:43:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 05:44:41 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18803 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgENJol (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 05:44:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebd127f0001>; Thu, 14 May 2020 02:42:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 14 May 2020 02:44:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 14 May 2020 02:44:41 -0700
+Received: from [10.25.73.206] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 May
+ 2020 09:44:37 +0000
+Subject: Re: [PATCH V3 0/8] Tegra XUSB charger detect support
+To:     Felipe Balbi <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1589437363-16727-1-git-send-email-nkristam@nvidia.com>
+ <87wo5e4zzi.fsf@kernel.org>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <de31ad94-6884-cf83-36c4-0a865bc01753@nvidia.com>
+Date:   Thu, 14 May 2020 15:16:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200513125445.54132-1-jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <87wo5e4zzi.fsf@kernel.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589449343; bh=IjElWauWpJw92WntPBv2Q9z6+yo5qw4xWM56DjfOXrA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=UFysw5t4oIzHzmyonRYLlW3RfxdrYITKUAEJOaiNz8TXpelUnGolk8wRFclt2gUsp
+         milukPQu8fyoz+ySK0BJ6vimiRDpWU2QZidyPER2HDyJP8mkaXRjiUdz84u5lB7Crz
+         SDZqkjVEoPM29GeGfEMaA/pVrwn9MPIvqnXeg58cHreZhExEC/JT+ss/Uj9hXwzoPj
+         WXmHMAq2reAs0aJoIf6Gl7y1E9P+yvuT9A/az7+svUa+Cy/90YH+SLVLNlTPythwx3
+         SfN2TehRuXTXPrMrgduBc3RJnRUWIr2CLMp9eMrFQ8IY4/MSlYdwTOo24z0EcvCLR+
+         31RExRP4EVujQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
 
-On 13/05/2020 13:54, Jacopo Mondi wrote:
-> Subject: [PATCH] fixup! dt-bindings: media: i2c: Add bindings for Maxima Integrated MAX9286
+
+On 14-05-2020 15:09, Felipe Balbi wrote:
+> Nagarjuna Kristam<nkristam@nvidia.com>  writes:
 > 
-> Temporary fixup to ease review. To be squashed into v10 if accepted.
+>> This patch series adds charger detect support on XUSB hardware used in
+>> Tegra210 and Tegra186 SoCs.
+>>
+>> This patchset is composed with :
+>>   - dt bindings of XUSB Pad Controller
+>>   - Tegra XUSB device mode driver to add vbus_draw support
+>>   - Tegra PHY driver for charger detect support
+>>
+>> Tests done:
+>>   - Connect USB cable from ubuntu host to micro-B port of DUT to detect
+>>     SDP_TYPE charger
+>>   - Connect USB cable from external powered USB hub(which inturn connects
+>>     to ubuntu host) to micro-B port of DUT to detect CDP_TYPE charger.
+>>   - Connect USB cable from USB charger to micro-B port of DUT to detect
+>>     DCP_TYPE charger.
+>> DUT: Jetson-tx1, Jetson tx2.
+>>
+>> V3:
+>>   - Added ACKed-by details for PHY driver and DT changes.
+>>   - Functions and its arguments are aligned.
+>>   - Tabs are used for alignment of MACRO's
+>>   - For vbus_draw USDC callback, usb_phy set_power error is propogated.
+>>   - Fixed various comments given by thierry.
+>> V2:
+>>   - Added ACKed-by details for DT patches.
+>>   - All patches rebased.
+>>
+>> Nagarjuna Kristam (8):
+>>    dt-bindings: phy: tegra-xusb: Add charger-detect property
+>>    usb: gadget: tegra-xudc: Add vbus_draw support
+>>    phy: tegra: xusb: Add support for UTMI pad power control
+>>    phy: tegra: xusb: Add USB2 pad power control support for Tegra210
+>>    phy: tegra: xusb: Add soc ops API to enable UTMI PAD protection
+>>    phy: tegra: xusb: Add support for charger detect
+>>    phy: tegra: xusb: Enable charger detect for Tegra186
+>>    phy: tegra: xusb: Enable charger detect for Tegra210
+> Is there a hard-dependency between gadget and phy patches?
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
-> 
-> While fixing Rob's reported bug on v9 I realized thanks to a
-> dt_binding_check warning that the i2c-mux child nodes where under-specified.
-> 
-> This fixup epxands the i2c-mux child nodes description and updates the
-> example to match our currently-out-of-tree DTS files for GMSL platforms.
-> 
-> dt_binding_check still reports a warning:
-> 
-> Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dt.yaml: camera@51: reg: [[81, 97]] is too short
-> Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dt.yaml: camera@52: reg: [[82, 98]] is too short
-> Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dt.yaml: camera@53: reg: [[83, 99]] is too short
-> Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dt.yaml: camera@54: reg: [[84, 100]] is too short
+> -- balbiNo dependency. They can be merged independently.
 
-Is too short? That seems odd. We accept 1, 2, or 3 values in the reg
-(for the serializer, camera, mcu addresses) but those values are
-specific to the camera device, and are managed by that driver and
-shouldn't be validated here.
-
-
-> 
-> Which I was not able to silence.
-> ---
->  .../bindings/media/i2c/maxim,max9286.yaml     | 86 +++++++++++++++++--
->  1 file changed, 77 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-> index f9d3e5712c59..d9bd19caed2f 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-> @@ -130,9 +130,7 @@ properties:
->      description: |
->        Each GMSL link is modelled as a child bus of an i2c bus
->        multiplexer/switch, in accordance with bindings described in
-> -      Documentation/devicetree/bindings/i2c/i2c-mux.txt. The serializer
-> -      device on the remote end of the GMSL link shall be modelled as a child
-> -      node of the corresponding I2C bus.
-> +      Documentation/devicetree/bindings/i2c/i2c-mux.txt.
-> 
->      properties:
->        '#address-cells':
-> @@ -141,7 +139,74 @@ properties:
->        '#size-cells':
->          const: 0
-> 
-> -  additionalProperties: false
-> +    patternProperties:
-> +      "^i2c@[0-3]$":
-> +        type: object
-> +        description: |
-> +          Child node of the i2c bus multiplexer which represents a GMSL link.
-> +          Each serializer device on the GMSL link remote end is represented with
-> +          an i2c-mux child node. The MAX9286 chip supports up to 4 GMSL
-> +          channels.
-> +
-> +        properties:
-> +          '#address-cells':
-> +            const: 1
-> +
-> +          '#size-cells':
-> +            const: 0
-> +
-> +          reg:
-> +            description: The index of the GMSL channel.
-> +            maxItems: 1
-> +
-> +        patternProperties:
-> +          "^camera@[0-9]+":
-
-This value after @ represents a non 0x prefixed hex value, where your
-regex will only match numerical values.
-
-	"^camera@[a-f0-9]+":
-
-
-
-is likely therefore required.
-
-I see other uses of this patternProperties also terminate the regex with
-a $ (end of line) but that confuses me, as the node is often presented
-with the opening brace after the name and identifier:
-
- (i.e.)
-   camera@52 {
-
-But perhaps the validator extracts the node name and reg and matches on
-that directly in which case it would be
-
-	"^camera@[a-f0-9]+$":
-
-
-
-> +            type: object
-> +            description: |
-> +              The remote camera device, composed by a GMSL serializer and a
-> +              connected video source.
-> +
-> +            properties:
-> +              compatible:
-> +                description: The remote device compatible string.
-> +
-> +              reg:
-> +                description: |
-> +                  The I2C addresses to be assigned to the remote devices through
-> +                  address reprogramming. The number of entries depends on the
-> +                  requirements of the currently connected remote device.
-> +
-> +              port:
-> +                type: object
-> +
-> +                properties:
-> +                  endpoint:
-> +                    type: object
-> +
-> +                    properties:
-> +                      remote-endpoint:
-> +                        description: phandle to the MAX9286 sink endpoint.
-> +
-> +                    required:
-> +                      - remote-endpoint
-> +
-> +                    additionalProperties: false
-> +
-> +                required:
-> +                  - endpoint
-> +
-> +                additionalProperties: false
-> +
-> +            required:
-> +              - compatible
-> +              - reg
-> +              - port
-> +
-> +            additionalProperties: false
-> +
-> +        additionalProperties: false
-> +
-> +    additionalProperties: false
-> 
-
-
-Wow, is it required to specify additionalProperties: false quite so many
-times?
-
-
->  required:
->    - compatible
-> @@ -220,11 +285,11 @@ examples:
->            i2c@0 {
->              #address-cells = <1>;
->              #size-cells = <0>;
-> -
->              reg = <0>;
-> 
->              camera@51 {
-> -              reg = <0x51>;
-> +              compatible = "imi,rdacm20";
-> +              reg = <0x51 0x61>;
-> 
->                port {
->                  rdacm20_out0: endpoint {
-> @@ -241,7 +306,8 @@ examples:
->              reg = <1>;
-> 
->              camera@52 {
-> -              reg = <0x52>;
-> +              compatible = "imi,rdacm20";
-> +              reg = <0x52 0x62>;
-> 
->                port {
->                  rdacm20_out1: endpoint {
-> @@ -257,7 +323,8 @@ examples:
->              reg = <2>;
-> 
->              camera@53 {
-> -              reg = <0x53>;
-> +              compatible = "imi,rdacm20";
-> +              reg = <0x53 0x63>;
-> 
->                port {
->                  rdacm20_out2: endpoint {
-> @@ -273,7 +340,8 @@ examples:
->              reg = <3>;
-> 
->              camera@54 {
-> -              reg = <0x54>;
-> +              compatible = "imi,rdacm20";
-> +              reg = <0x54 0x64>;
-> 
->                port {
->                  rdacm20_out3: endpoint {
-> --
-> 2.26.2
-> 
-
+- Nagarjuna
