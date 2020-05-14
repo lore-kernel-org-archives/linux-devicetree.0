@@ -2,357 +2,516 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6589CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3842BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DADC20728
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E654F2074A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:19:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="LOsjAs/j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCcpWEYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgENNRy (ORCPT
+        id S1726073AbgENNTQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 09:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52416 "EHLO
+        Thu, 14 May 2020 09:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727891AbgENNRx (ORCPT
+        by vger.kernel.org with ESMTP id S1726050AbgENNTP (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 09:17:53 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF298C061A0C;
-        Thu, 14 May 2020 06:17:53 -0700 (PDT)
-Received: from localhost.localdomain (unknown [142.147.94.151])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 84EB620820;
-        Thu, 14 May 2020 13:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1589462273; bh=uqS/qkV/cOZlWr119FMfbm4Ch6cVX5nOp6L8u7qoUlg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOsjAs/jrtrVcBRpPYTQs+4CvCpJ+gDxkA6T7ME0uSlnJzX6IZed5UVY9zKUTSrs0
-         yWZH2TsWoAYbVMFJlch/jnOnCoP48BgASSRA3/SeBtmyQ55k2v0jXCW+CtS5ud3u6f
-         zT2yPNrMt4mEq62O2xSYndSY+P8GvAqZrZ8RbI2IbZX3QZj0cAXrrdLJ8gzJ4HluJp
-         bFp53F7z9g026wk4k77zhLbC1lEqKjgu8uCvS5rLtb7mrD9l89aI1mF+AOkxRmEehE
-         IYF18JhWv6EBLVoDUqDloGUw+NiG+MHjJ+gZxIFIQjqOK1oAISVl/Sa4JVPvXcvA3U
-         hQDR/RHbBBxsQ==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
-Date:   Thu, 14 May 2020 21:16:41 +0800
-Message-Id: <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
- <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+        Thu, 14 May 2020 09:19:15 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0878C061A0C;
+        Thu, 14 May 2020 06:19:14 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id v192so752069vkd.3;
+        Thu, 14 May 2020 06:19:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qwGKokfZ7yhrtizAMHpkO5eEddzeumIbA//xV7D/Qfs=;
+        b=XCcpWEYnbJLZ/KR8NZ2/Wf1j1p7dhtSg/ziH835UCRD5WPE6sZrn3Vxst22ofUY4Sf
+         Nw8+/XP0VzK6kP13OoOdcEgAiU6ulVMkeo78SykKWzS05cUGqmWczoP930FGq+beTOmL
+         XMZo6GPtSmfEP1qeWnEC506+sJsamrp8uQkCbtH8dOSKhkOoVKC95KQysJMJERf8rpVv
+         IdwH8mzSvJjCQpZIl5k2OxygbQHloLEMP7wWLMsDZhANZylWyAcs1UeG01El7CcXGq13
+         wWkTp67AlhtrY/hvD1QsxEE125cPYnpb+WJlT9FcrTYK8kZ2NbbvmMJ3wb+4XL8WwOBD
+         KAgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qwGKokfZ7yhrtizAMHpkO5eEddzeumIbA//xV7D/Qfs=;
+        b=dFgXFsFk0YvjmzODN8FmwYd7LWSZWvsvYcgrEeaQ+Cxb+YUhKce9aM69QPvv9YMlnu
+         wZOcjxvOc515mjo+eFXSEQZcd2FzGohyK+09W7rzLZAEKraoSJNd6SWTqupN0Ih5Xorj
+         CtuFbWjdk55vv+Gzkk686sbTg+DDCigLa+AoD5bko+B+/HS0k2zMOM7nPpv2YBYiEMOO
+         jVxiWlFXBUpTIPfmQqyUoCZ/U8i9RtQfix+K3ThG3VA+LK1iKDDuy64d3WmFXITJf/Ea
+         v4RZB6eaChnMsZBi94Si6hjEdziE9Btiyp8T1pf/NXNtG1xZSKobg6dihM4hWf7kks+z
+         3+nQ==
+X-Gm-Message-State: AOAM532J8EQoqRHJ2tea6aY9JQ9wb9fnHq8hHCK5S+4PR18Pi/pBWaJu
+        JhlbkKqarcBXgewFkaYTsZ/LAFCVWNdoXZ1Mvq4=
+X-Google-Smtp-Source: ABdhPJwgNn0PDN9Pi9N/boBzDA6CvwFtJqSQKuN8w3pMoLak3EmmBroSSaEzZMyzeeTbkDlS4pJiVw8oyrVrS6xQWS8=
+X-Received: by 2002:a1f:ff11:: with SMTP id p17mr3416855vki.25.1589462353906;
+ Thu, 14 May 2020 06:19:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <karthik.poduval@gmail.com> <20200406073017.19462-1-karthik.poduval@gmail.com>
+ <20200406073017.19462-4-karthik.poduval@gmail.com> <2fc95890-f938-30a5-a163-bf3fa2e223df@gmail.com>
+ <CAFP0Ok-NxDDF8TMP4pN=xn6w3H=TYqN3DMfGW-vuiC5qB-Oj5g@mail.gmail.com>
+ <CAFP0Ok9XGzVbghbnOOyfXiOOc5-a94uFRu7sD5wXz9sr-+AYEA@mail.gmail.com> <9407b6c3-b932-5904-18ff-7c6cbf6bcc8b@gmail.com>
+In-Reply-To: <9407b6c3-b932-5904-18ff-7c6cbf6bcc8b@gmail.com>
+From:   karthik poduval <karthik.poduval@gmail.com>
+Date:   Thu, 14 May 2020 06:19:02 -0700
+Message-ID: <CAFP0Ok-kjYCFu_yrhvPE0n62qdgwX=r3yJF8FBgZ9s7JUncgGA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: add rk3288 ISP and DPHY
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We can now enable generic PCI driver in Kconfig, and remove legacy
-PCI driver code.
+Ping, gentle reminder, do we have a recommendation on how to deal with
+common driver supporting multiple SoC with different types and number
+of clocks.
 
-Radeon vbios quirk is moved to the platform folder to fit the
-new structure.
+On Thu, Apr 23, 2020 at 4:12 AM Johan Jonker <jbx6244@gmail.com> wrote:
+>
+> Hi robh, Heiko, Karthik, Helen and others,
+>
+> See comments below.
+> Should we change Helen's patch serie a little bit to accommodate other
+> isp1 compatibles as well? Could you give advise here? Thanks!
+>
+> Johan
+>
+>
+> On 4/23/20 7:10 AM, karthik poduval wrote:
+> > Hi Johan/Helen,
+> >
+> > I was attempting to fix the yaml to work for both platforms rk3288 and
+> > rk3399. I couldn't find any specific example in the existing yaml files
+> > that deal with this exact scenario common driver but different clocks for
+> > different chipsets. Could you point me to an appropriate example ?
+> >
+> > Meanwhile here is the patch I was trying out.
+> > diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > index af246b71eac6..4ca76a1bbb63 100644
+> > --- a/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > +++ b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > @@ -15,7 +15,11 @@ description: |
+> >
+> >  properties:
+> >    compatible:
+> > -    const: rockchip,rk3399-cif-isp
+> > +    items:
+> > +      - enum:
+> > +        - rockchip,rk3288-cif-isp
+> > +        - rockchip,rk3399-cif-isp
+> > +      - const: rockchip,rk3399-cif-isp
+> >
+> >    reg:
+> >      maxItems: 1
+> > @@ -37,20 +41,38 @@ properties:
+> >      const: dphy
+> >
+>
+> >    clocks:
+> > -    items:
+> > -      - description: ISP clock
+> > -      - description: ISP AXI clock clock
+> > -      - description: ISP AXI clock  wrapper clock
+> > -      - description: ISP AHB clock clock
+> > -      - description: ISP AHB wrapper clock
+> > +    oneOf:
+> > +      # rk3399 clocks
+> > +      - items:
+> > +        - description: ISP clock
+> > +        - description: ISP AXI clock clock
+> > +        - description: ISP AXI clock  wrapper clock
+> > +        - description: ISP AHB clock clock
+> > +        - description: ISP AHB wrapper clock
+> > +      # rk3288 clocks
+> > +      - items:
+> > +        - description: ISP clock
+> > +        - description: ISP AXI clock clock
+> > +        - description: ISP AHB clock clock
+> > +        - description: ISP Pixel clock
+> > +        - description: ISP JPEG source clock
+> >
+>
+> We can expect a few more clocks here, so just use:
+>
+>   clocks:
+>     minItems: 4
+>     maxItems: 5
+>
+> or
+>
+> See question for Helen about 'pclk_isp_wrap':
+>
+>   clocks:
+>     minItems: 4
+>     maxItems: 6
+>
+>
+> From Rockchip tree:
+>
+> static const char * const rk1808_isp_clks[] = {
+>         "clk_isp",
+>         "aclk_isp",
+>         "hclk_isp",
+>         "pclk_isp",
+> };
+>
+> static const char * const rk3288_isp_clks[] = {
+>         "clk_isp",
+>         "aclk_isp",
+>         "hclk_isp",
+>         "pclk_isp_in",
+>         "sclk_isp_jpe",
+> };
+>
+> static const char * const rk3326_isp_clks[] = {
+>         "clk_isp",
+>         "aclk_isp",
+>         "hclk_isp",
+>         "pclk_isp",
+> };
+>
+> static const char * const rk3368_isp_clks[] = {
+>         "clk_isp",
+>         "aclk_isp",
+>         "hclk_isp",
+>         "pclk_isp",
+> };
+>
+> static const char * const rk3399_isp_clks[] = {
+>         "clk_isp",
+>         "aclk_isp",
+>         "hclk_isp",
+>         "aclk_isp_wrap",
+>         "hclk_isp_wrap",
+>         "pclk_isp_wrap"
+> };
+>
+> Question for Helen:
+>
+> Where did 'pclk_isp_wrap' go in your patch serie?
+>
+> >    clock-names:
+> > -    items:
+> > -      - const: clk_isp
+> > -      - const: aclk_isp
+> > -      - const: aclk_isp_wrap
+> > -      - const: hclk_isp
+> > -      - const: hclk_isp_wrap
+> > +    oneOf:
+> > +      # rk3399 clocks
+>
+> sort on SoC
+>
+> > +      - items:
+> > +        - const: clk_isp
+> > +        - const: aclk_isp
+> > +        - const: aclk_isp_wrap
+> > +        - const: hclk_isp
+> > +        - const: hclk_isp_wrap
+> > +      # rk3288 clocks
+>
+> sort on SoC
+>
+> > +      - items:
+> > +        - const: clk_isp
+> > +        - const: aclk_isp
+> > +        - const: hclk_isp
+> > +        - const: pclk_isp_in
+> > +        - const: sclk_isp_jpe
+>
+>   clock-names:
+>     oneOf:
+>       # rk3288 clocks
+>       - items:
+>         - const: clk_isp
+>           description: ISP clock
+>         - const: aclk_isp
+>           description: ISP AXI clock clock
+>         - const: hclk_isp
+>           description: ISP AHB clock clock
+>         - const: pclk_isp_in
+>           description: ISP Pixel clock
+>         - const: sclk_isp_jpe
+>           description: ISP JPEG source clock
+>       # rk3399 clocks
+>       - items:
+>         - const: clk_isp
+>           description: ISP clock
+>         - const: aclk_isp
+>           description: ISP AXI clock clock
+>         - const: aclk_isp_wrap
+>           description: ISP AXI clock  wrapper clock
+>         - const: hclk_isp
+>           description: ISP AHB clock clock
+>         - const: hclk_isp_wrap
+>           description: ISP AHB wrapper clock
+>
+> Question for robh:
+> Is this a proper way to add description or is there a beter way?
+>
+> >
+> > on running command.
+> > make ARCH=arm dtbs_check
+> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >
+> > I see following messages for dts nodes.
+> >  DTC     arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml
+> >   CHECK   arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml
+> > /home/kpoduval/workspace/tinkerboard-yocto/build/tmp/work/tinker_board-poky-linux-gnueabi/linux-stable/5.5.7+gitAUTOINC+ceab3ac1e6-r0/linux-tinker_board-standard-build/arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml:
+> > isp@ff910000: clocks: [[7, 107], [7, 205], [7, 469], [7, 371], [7, 108]] is
+> > valid under each of {'additionalItems': False, 'items': [{}, {}, {}, {},
+> > {}], 'maxItems': 5, 'minItems': 5, 'type': 'array'}, {'additionalItems':
+> > False, 'items': [{}, {}, {}, {}, {}], 'maxItems': 5, 'minItems': 5, 'type':
+> > 'array'}
+> > /home/kpoduval/workspace/tinkerboard-yocto/build/tmp/work/tinker_board-poky-linux-gnueabi/linux-stable/5.5.7+gitAUTOINC+ceab3ac1e6-r0/linux-tinker_board-standard-build/arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml:
+> > isp@ff910000: compatible: ['rockchip,rk3288-cif-isp'] is too short
+> >
+> > Are these cosidered as error messages ? The "too short" is being alerted
+> > for the orgianl yaml for rk3399 without any of my chnages.
+> > Kindly advise.
+> >
+> > --
+> > Regards,
+> > Karthik Poduval
+> >
+> > On Sat, Apr 11, 2020 at 10:13 PM karthik poduval <karthik.poduval@gmail.com>
+> > wrote:
+> >
+> >> Thanks Johan for your valuable comments.
+> >>
+> >> On Wed, Apr 8, 2020 at 6:19 PM Johan Jonker <jbx6244@gmail.com> wrote:
+> >>>
+> >>> Hi Karthik and others,
+> >>>
+> >>> Include all mail lists found with:
+> >>> ./scripts/get_maintainer.pl --nogit-fallback --nogit
+> >>>
+> >>> Helen is moving isp1 bindings out of staging.
+> >>> Clocks and other things don't fit with her patch serie.
+> >>> Maybe fix this while still in staging?
+> >>>
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
+> >>> 'phys' is a required property
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
+> >>> 'phy-names' is a required property
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
+> >>> 'ports' is a required property
+> >>>
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
+> >>> 'assigned-clock-rates', 'assigned-clocks'
+> >>> do not match any of the regexes: 'pinctrl-[0-9]+'
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
+> >>> clock-names:2: 'aclk_isp_wrap' was expected
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
+> >>> clock-names:3: 'hclk_isp' was expected
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
+> >>> clock-names:4: 'hclk_isp_wrap' was expected
+> >>>
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: 'power-domains'
+> >>> is a required property
+> >>>
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clock-names:1:
+> >>> 'dphy-cfg' was expected
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clock-names:
+> >>> ['dphy-ref', 'pclk'] is too short
+> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clocks: [[7,
+> >>> 126], [7, 358]] is too short
+> >>>
+> >>>
+> >>> Inside yaml:
+> >>> Use enum and sort.
+> >>>>>  properties:
+> >>>>>    compatible:
+> >>>
+> >>>>>      const: rockchip,rk3399-cif-isp
+> >>>>> +    const: rockchip,rk3288-rkisp1
+> >>>
+> >>>     enum:
+> >>>       - rockchip,rk3288-rkisp1
+> >>>       - rockchip,rk3399-cif-isp
+> >>>
+> >>>>>  properties:
+> >>>>>    compatible:
+> >>>>>      const: rockchip,rk3399-mipi-dphy-rx0
+> >>>>> +    const: rockchip,rk3288-mipi-dphy-rx0
+> >>>
+> >>>     enum:
+> >>>       - rockchip,rk3288-mipi-dphy-rx0
+> >>>       - rockchip,rk3399-mipi-dphy-rx0
+> >>>
+> >>>>
+> >>>> Please, keep consistency, or rk3288-cif-isp, or we change
+> >> rk3399-cif-isp to be rk3399-rkisp1.
+> >>>
+> >>>
+> >>> On 4/6/20 9:30 AM, Karthik Poduval wrote:
+> >>>> ISP and DPHY device entries missing so add them.
+> >>>>
+> >>>
+> >>>> tested on tinkerbaord with ov5647 using command
+> >>>> cam -c 1 -C -F cap
+> >>>
+> >>> Disclose dts node for ov5647 in cover letter, so people can reproduce
+> >>> this experiment.
+> >>>
+> >>> Caution!
+> >>> Without dts node this command doesn't work correct.
+> >>>
+> >>> make ARCH=arm dtbs_check
+> >>>
+> >> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >>>
+> >>> make ARCH=arm dtbs_check
+> >>>
+> >> DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
+> >>>
+> >>> Needed to detect missing: phys, phy-names and ports ,etc.
+> >>>
+> >>> &isp {
+> >>>         status = "okay";
+> >>> };
+> >>>
+> >> Makes sense, that's why my kernel compilation passed and I didn't
+> >> these errors. Thanks for the command, I will verify dts for
+> >> correctness in next patch series.
+> >>
+> >>> Needed to detect missing: power-domains, etc.
+> >>>
+> >>> &mipi_phy_rx0 {
+> >>>         status = "okay";
+> >>> };
+> >>>
+> >>>>
+> >>>> Reported-by: Karthik Poduval <karthik.poduval@gmail.com>
+> >>>> Signed-off-by: Karthik Poduval <karthik.poduval@gmail.com>
+> >>>> ---
+> >>>>  arch/arm/boot/dts/rk3288.dtsi | 25 +++++++++++++++++++++++++
+> >>>>  1 file changed, 25 insertions(+)
+> >>>>
+> >>>> diff --git a/arch/arm/boot/dts/rk3288.dtsi
+> >> b/arch/arm/boot/dts/rk3288.dtsi
+> >>>> index 9beb662166aa..adea8189abd9 100644
+> >>>> --- a/arch/arm/boot/dts/rk3288.dtsi
+> >>>> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> >>>> @@ -247,6 +247,23 @@
+> >>>>               ports = <&vopl_out>, <&vopb_out>;
+> >>>>       };
+> >>>>
+> >>>
+> >>>> +     isp: isp@ff910000 {
+> >>>
+> >>> For nodes:
+> >>> Sort things without reg alphabetical first,
+> >>> then sort the rest by reg address.
+> >>>
+> >> Sure
+> >>>> +             compatible = "rockchip,rk3288-rkisp1";
+> >>>> +             reg = <0x0 0xff910000 0x0 0x4000>;
+> >>>> +             interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> >>>> +             clocks = <&cru SCLK_ISP>, <&cru ACLK_ISP>,
+> >>>> +                      <&cru HCLK_ISP>, <&cru PCLK_ISP_IN>,
+> >>>> +                      <&cru SCLK_ISP_JPE>;
+> >>>> +             clock-names = "clk_isp", "aclk_isp",
+> >>>> +                           "hclk_isp", "pclk_isp_in",
+> >>>> +                           "sclk_isp_jpe";
+> >>>> +             assigned-clocks = <&cru SCLK_ISP>, <&cru SCLK_ISP_JPE>;
+> >>>> +             assigned-clock-rates = <400000000>, <400000000>;
+> >>>
+> >>>> +             power-domains = <&power RK3288_PD_VIO>;
+> >>>> +             iommus = <&isp_mmu>;
+> >>>
+> >>> sort
+> >>>
+> >>> Something missing?
+> >>> Where are the ports and port nodes?
+> >>
+> >> I was assuming that this would be a part of the board specific dtsi or
+> >> dts entry where the isp node would be overriden and the i2c camera
+> >> port
+> >> and the isp port remote-endpoints would be connected. I had this as a
+> >> part of my first patch series. However I was advised by Helen to not
+> >> include the ov5647
+> >> dtsi as it isn't hardwired to the SoC and resides on an camera adapter
+> >> board.
+> >>
+> >> Should this be defined without the remote-endpoint phandle since we
+> >> don't know exactly which sensor gets connected in this dtsi file ?
+> >>
+> >>>
+> >>>> +             status = "disabled";
+>
+> Question for Heiko:
+> Should we add status to Helen's serie as well?
+>
+> >>>> +     };
+> >>>> +
+> >>>>       sdmmc: mmc@ff0c0000 {
+> >>>>               compatible = "rockchip,rk3288-dw-mshc";
+> >>>>               max-frequency = <150000000>;
+> >>>> @@ -891,6 +908,14 @@
+> >>>>                       status = "disabled";
+> >>>>               };
+> >>>>
+> >>>
+> >>>> +             mipi_phy_rx0: mipi-phy-rx0 {
+> >>>
+> >>> Use separate patch.
+> >>>
+> >>> For nodes:
+> >>> Sort things without reg alphabetical first,
+> >>> then sort the rest by reg address.
+> >>>
+> >> Sure
+> >>
+> >>>> +                     compatible = "rockchip,rk3288-mipi-dphy-rx0";
+> >>>> +                     clocks = <&cru SCLK_MIPIDSI_24M>, <&cru
+> >> PCLK_MIPI_CSI>;
+> >>>> +                     clock-names = "dphy-ref", "pclk";
+> >>> Something missing?
+> >>> Does this phy have a power domain?
+> >> The tinkerboard debian kernel (where I referred to for this patch)
+> >> didn't have it defined for the DPHY. I would guess that it would be
+> >> the same as the ISP i.e. RK3288_PD_VIO,
+> >> does anyone know the answer to this or do I have to reach out to
+> >> Rockchip engineering ?
+> >>>
+> >>>> +                     #phy-cells = <0>;
+> >>>> +                     status = "disabled";
+> >>>> +             };
+> >>>> +
+> >>>>               io_domains: io-domains {
+> >>>>                       compatible = "rockchip,rk3288-io-voltage-domain";
+> >>>>                       status = "disabled";
+> >>>>
+> >>>
+> >>
+> >>
+> >> --
+> >> Regards,
+> >> Karthik Poduval
+> >>
+> >
+> >
+>
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v9: Fix licenses tag
----
- arch/mips/Kconfig                  |   1 +
- arch/mips/loongson64/Makefile      |   2 +-
- arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
- arch/mips/pci/Makefile             |   1 -
- arch/mips/pci/fixup-loongson3.c    |  71 ------------------
- arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
- 6 files changed, 31 insertions(+), 189 deletions(-)
- create mode 100644 arch/mips/loongson64/vbios_quirk.c
- delete mode 100644 arch/mips/pci/fixup-loongson3.c
- delete mode 100644 arch/mips/pci/ops-loongson3.c
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 0519ca9f00f9..7a4fcc4ade1f 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -480,6 +480,7 @@ config MACH_LOONGSON64
- 	select IRQ_MIPS_CPU
- 	select NR_CPUS_DEFAULT_64
- 	select USE_GENERIC_EARLY_PRINTK_8250
-+	select PCI_DRIVERS_GENERIC
- 	select SYS_HAS_CPU_LOONGSON64
- 	select SYS_HAS_EARLY_PRINTK
- 	select SYS_SUPPORTS_SMP
-diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
-index 6f3c2b47f66f..6f81b822aeae 100644
---- a/arch/mips/loongson64/Makefile
-+++ b/arch/mips/loongson64/Makefile
-@@ -8,5 +8,5 @@ obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o dma.o \
- obj-$(CONFIG_SMP)	+= smp.o
- obj-$(CONFIG_NUMA)	+= numa.o
- obj-$(CONFIG_RS780_HPET) += hpet.o
--obj-$(CONFIG_PCI) += pci.o
- obj-$(CONFIG_SUSPEND) += pm.o
-+obj-$(CONFIG_PCI_QUIRKS) += vbios_quirk.o
-diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbios_quirk.c
-new file mode 100644
-index 000000000000..9a29e94d3db1
---- /dev/null
-+++ b/arch/mips/loongson64/vbios_quirk.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include <linux/pci.h>
-+#include <loongson.h>
-+
-+static void pci_fixup_radeon(struct pci_dev *pdev)
-+{
-+	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
-+
-+	if (res->start)
-+		return;
-+
-+	if (!loongson_sysconf.vgabios_addr)
-+		return;
-+
-+	pci_disable_rom(pdev);
-+	if (res->parent)
-+		release_resource(res);
-+
-+	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
-+	res->end   = res->start + 256*1024 - 1;
-+	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-+		     IORESOURCE_PCI_FIXED;
-+
-+	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
-+		 PCI_ROM_RESOURCE, res);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, 0x9615,
-+				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
-diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
-index 342ce10ef593..438f10955d89 100644
---- a/arch/mips/pci/Makefile
-+++ b/arch/mips/pci/Makefile
-@@ -35,7 +35,6 @@ obj-$(CONFIG_LASAT)		+= pci-lasat.o
- obj-$(CONFIG_MIPS_COBALT)	+= fixup-cobalt.o
- obj-$(CONFIG_LEMOTE_FULOONG2E)	+= fixup-fuloong2e.o ops-loongson2.o
- obj-$(CONFIG_LEMOTE_MACH2F)	+= fixup-lemote2f.o ops-loongson2.o
--obj-$(CONFIG_MACH_LOONGSON64)	+= fixup-loongson3.o ops-loongson3.o
- obj-$(CONFIG_MIPS_MALTA)	+= fixup-malta.o pci-malta.o
- obj-$(CONFIG_PMC_MSP7120_GW)	+= fixup-pmcmsp.o ops-pmcmsp.o
- obj-$(CONFIG_PMC_MSP7120_EVAL)	+= fixup-pmcmsp.o ops-pmcmsp.o
-diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
-deleted file mode 100644
-index 8a741c2c6685..000000000000
---- a/arch/mips/pci/fixup-loongson3.c
-+++ /dev/null
-@@ -1,71 +0,0 @@
--/*
-- * fixup-loongson3.c
-- *
-- * Copyright (C) 2012 Lemote, Inc.
-- * Author: Xiang Yu, xiangy@lemote.com
-- *         Chen Huacai, chenhc@lemote.com
-- *
-- * This program is free software; you can redistribute  it and/or modify it
-- * under  the terms of  the GNU General  Public License as published by the
-- * Free Software Foundation;  either version 2 of the  License, or (at your
-- * option) any later version.
-- *
-- * THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
-- * WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES OF
-- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
-- * NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
-- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-- * NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS OF
-- * USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-- * ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TORT
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- *
-- */
--
--#include <linux/pci.h>
--#include <boot_param.h>
--
--static void print_fixup_info(const struct pci_dev *pdev)
--{
--	dev_info(&pdev->dev, "Device %x:%x, irq %d\n",
--			pdev->vendor, pdev->device, pdev->irq);
--}
--
--int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--	print_fixup_info(dev);
--	return dev->irq;
--}
--
--static void pci_fixup_radeon(struct pci_dev *pdev)
--{
--	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
--
--	if (res->start)
--		return;
--
--	if (!loongson_sysconf.vgabios_addr)
--		return;
--
--	pci_disable_rom(pdev);
--	if (res->parent)
--		release_resource(res);
--
--	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
--	res->end   = res->start + 256*1024 - 1;
--	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
--		     IORESOURCE_PCI_FIXED;
--
--	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
--		 PCI_ROM_RESOURCE, res);
--}
--
--DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
--				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
--
--/* Do platform specific device initialization at pci_enable_device() time */
--int pcibios_plat_dev_init(struct pci_dev *dev)
--{
--	return 0;
--}
-diff --git a/arch/mips/pci/ops-loongson3.c b/arch/mips/pci/ops-loongson3.c
-deleted file mode 100644
-index 2f6ad36bdea6..000000000000
---- a/arch/mips/pci/ops-loongson3.c
-+++ /dev/null
-@@ -1,116 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/types.h>
--#include <linux/pci.h>
--#include <linux/kernel.h>
--
--#include <asm/mips-boards/bonito64.h>
--
--#include <loongson.h>
--
--#define PCI_ACCESS_READ  0
--#define PCI_ACCESS_WRITE 1
--
--#define HT1LO_PCICFG_BASE      0x1a000000
--#define HT1LO_PCICFG_BASE_TP1  0x1b000000
--
--static int loongson3_pci_config_access(unsigned char access_type,
--		struct pci_bus *bus, unsigned int devfn,
--		int where, u32 *data)
--{
--	unsigned char busnum = bus->number;
--	int function = PCI_FUNC(devfn);
--	int device = PCI_SLOT(devfn);
--	int reg = where & ~3;
--	void *addrp;
--	u64 addr;
--
--	if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
--		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
--		if (busnum == 0) {
--			if (device > 31)
--				return PCIBIOS_DEVICE_NOT_FOUND;
--			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE | addr);
--		} else {
--			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE_TP1 | addr);
--		}
--	} else if (where < PCI_CFG_SPACE_EXP_SIZE) {  /* extended config */
--		struct pci_dev *rootdev;
--
--		rootdev = pci_get_domain_bus_and_slot(0, 0, 0);
--		if (!rootdev)
--			return PCIBIOS_DEVICE_NOT_FOUND;
--
--		addr = pci_resource_start(rootdev, 3);
--		if (!addr)
--			return PCIBIOS_DEVICE_NOT_FOUND;
--
--		addr |= busnum << 20 | device << 15 | function << 12 | reg;
--		addrp = (void *)TO_UNCAC(addr);
--	} else {
--		return PCIBIOS_DEVICE_NOT_FOUND;
--	}
--
--	if (access_type == PCI_ACCESS_WRITE)
--		writel(*data, addrp);
--	else {
--		*data = readl(addrp);
--		if (*data == 0xffffffff) {
--			*data = -1;
--			return PCIBIOS_DEVICE_NOT_FOUND;
--		}
--	}
--	return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int devfn,
--				 int where, int size, u32 *val)
--{
--	u32 data = 0;
--	int ret = loongson3_pci_config_access(PCI_ACCESS_READ,
--			bus, devfn, where, &data);
--
--	if (ret != PCIBIOS_SUCCESSFUL)
--		return ret;
--
--	if (size == 1)
--		*val = (data >> ((where & 3) << 3)) & 0xff;
--	else if (size == 2)
--		*val = (data >> ((where & 3) << 3)) & 0xffff;
--	else
--		*val = data;
--
--	return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_write(struct pci_bus *bus, unsigned int devfn,
--				  int where, int size, u32 val)
--{
--	u32 data = 0;
--	int ret;
--
--	if (size == 4)
--		data = val;
--	else {
--		ret = loongson3_pci_config_access(PCI_ACCESS_READ,
--				bus, devfn, where, &data);
--		if (ret != PCIBIOS_SUCCESSFUL)
--			return ret;
--
--		if (size == 1)
--			data = (data & ~(0xff << ((where & 3) << 3))) |
--			    (val << ((where & 3) << 3));
--		else if (size == 2)
--			data = (data & ~(0xffff << ((where & 3) << 3))) |
--			    (val << ((where & 3) << 3));
--	}
--
--	ret = loongson3_pci_config_access(PCI_ACCESS_WRITE,
--			bus, devfn, where, &data);
--
--	return ret;
--}
--
--struct pci_ops loongson_pci_ops = {
--	.read = loongson3_pci_pcibios_read,
--	.write = loongson3_pci_pcibios_write
--};
 -- 
-2.26.2
-
+Regards,
+Karthik Poduval
