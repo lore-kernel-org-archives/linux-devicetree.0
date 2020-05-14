@@ -2,126 +2,101 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECF4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15E5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBBC206A5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:16:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVOaUokL"
+	by mail.kernel.org (Postfix) with ESMTP id B9EF7206DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgENMQl (ORCPT
+        id S1727827AbgENMWS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 08:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgENMQk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 08:16:40 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837AFC061A0C;
-        Thu, 14 May 2020 05:16:40 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f23so1183022pgj.4;
-        Thu, 14 May 2020 05:16:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8psrfxuLJ4TJl2o4vMFKaniWYtduDfiv4RO4VswAsrg=;
-        b=bVOaUokLCYXkFYeqHH1OEV25hz4lgjtn3NrokN2C6Rn7s2p2uXiWnKD4bkGL3ZWhX+
-         4U/IWnlxdqSjXFSjFSUc3CoUw5hEzO3deTXiBjj3dlQ/xu0EIoJH37StmbJ8CVWrWSWU
-         DLFldL8sreksestfVDeWpurmaGyuaRSFySqqebepjGRbUEc3akLu5QR+29idvfUTC29n
-         exA+NdktkyWgpbixn3YkjQSR7tMmB2g7SnZnViQ/ZahPVEMi0YNYNi312F2vWpthtWBD
-         Fjot1xo8EMN8G7GBToq7yR6FFBeKu4jjcLq4ibMpAY8AmF7bsS3hki9KwYUvtFJi2iAS
-         qy/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8psrfxuLJ4TJl2o4vMFKaniWYtduDfiv4RO4VswAsrg=;
-        b=LCCLSQ0jl+7PB+4vcNg+LmevDLxLj+49G7ox4NSmCa0/Zz0xhYHtHcXmUMYzc9B+ki
-         Yno9GZO/I3+tRv4GcEwCx7uE2f3bcSLBZCkkvlqakz+MrW5nODBxJX9YVt0tqAoP5DcK
-         Dyxq7WXLu4psNGAMgExonnOLvB5abnVYW7KrJZUI6awAHPngMsvRquWN56XnA/jS+57d
-         wNqUM0WkbKXJwruDU9WQwTkSxYXR8Xn4oCt9YYHDwX7LBmPMiadlaS8LQEpHT3olui/k
-         dL9+KMlbFd8Mo9lVXKxRoFRy2v2J1eupJ/U8Ebakz3gk9HDvEnFLQlIP/GS/z3NSeSqo
-         JLow==
-X-Gm-Message-State: AOAM532v2sLuMohAcIHj0v/DBLUNLOe58U5m9MDWErjbhdU87AeIJ591
-        iM6ZgkfSkzvL1N8v6jPn754=
-X-Google-Smtp-Source: ABdhPJz2p17RSHqQW3n8WMjTtwaHmykfyYXnrgEUQwJ9KTqyeHsLsXjfpqXub/PHt+EivdkDTsGJDA==
-X-Received: by 2002:aa7:8bd3:: with SMTP id s19mr4517069pfd.143.1589458600090;
-        Thu, 14 May 2020 05:16:40 -0700 (PDT)
-Received: from localhost.localdomain ([2001:2d8:eb02:505a:d5fe:3ea6:5791:c8e8])
-        by smtp.gmail.com with ESMTPSA id m4sm2216727pfm.26.2020.05.14.05.16.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 05:16:39 -0700 (PDT)
-From:   Steve Lee <steves.lee.maxim@gmail.com>
-X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee@maximintegrated.com, steves.lee.maxim@gmail.com
-Subject: [V4 PATCH 1/2] dt-bindings: Added device tree binding for max98390
-Date:   Thu, 14 May 2020 21:16:17 +0900
-Message-Id: <20200514121617.8193-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 May 2020 08:22:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:34995 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgENMWR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 08:22:17 -0400
+IronPort-SDR: jq2G9j4l+MtmXiBskeawpsxih7yy4UmJ+LGfE9+Lk1E9tY6Q3W5xMH79i5d4wHG7PLmfYN7wg4
+ t4Z3FDFHyuyg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 05:22:17 -0700
+IronPort-SDR: g4YTAvFTxqNPtU0jkIbc5r78CO9/Y4ylYkQmK+EhgU7xCpQhcG80N1AgmABpc/Vg8MOpmJRO+L
+ MmVc/XiEeHqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,391,1583222400"; 
+   d="scan'208";a="464312030"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 14 May 2020 05:22:12 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZCsQ-006cUm-3m; Thu, 14 May 2020 15:22:14 +0300
+Date:   Thu, 14 May 2020 15:22:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 11/17] spi: dw: Fix native CS being unset
+Message-ID: <20200514122214.GC185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-12-Sergey.Semin@baikalelectronics.ru>
+ <CACRpkdY=wkgnYPcqSzyzNpS6ckJZs-9kXfTfdwa1E+POzOBQGA@mail.gmail.com>
+ <20200513001347.dyt357erev7vzy3l@mobilestation>
+ <CACRpkdZTH1DNHvi4r48nLNWp4rqyYDZTzT12hw0eTNcYmgSr3Q@mail.gmail.com>
+ <20200514115558.e6cqnuxqyqkysfn7@mobilestation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514115558.e6cqnuxqyqkysfn7@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for DT binding of max98390 amplifier driver.
+On Thu, May 14, 2020 at 02:55:58PM +0300, Serge Semin wrote:
+> On Thu, May 14, 2020 at 10:31:13AM +0200, Linus Walleij wrote:
+> > On Wed, May 13, 2020 at 2:13 AM Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
----
+> BTW I experience a problem with vger.kernel.org. For some reason a few days ago
+> it started bouncing my emails back sent to the GPIO/MIPS/SPI/kernel mailing lists.
+> I've sent multiple backward messages to the postmaster (postmaster (dog) vger.kernel.org)
+> with the bounce text, but still with no response. Could you tell me who should I
+> bother with this problem to get a help with its solution? 
 
-Changed since V3:
-	* No changes.
-Changed since V2:
-	* No changes.
-Changed since V1:
-	* Modified sample text in example
+Perhaps, helpdesk@kernel.org ?
 
- .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-new file mode 100644
-index 000000000000..0ddd4c6ae55e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/max98390.txt
-@@ -0,0 +1,26 @@
-+Maxim Integrated MAX98390 Speaker Amplifier
-+
-+This device supports I2C.
-+
-+Required properties:
-+
-+ - compatible : "maxim,max98390"
-+
-+ - reg : the I2C address of the device.
-+
-+Optional properties:
-+
-+- maxim,temperature_calib
-+  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-+
-+- maxim,r0_calib
-+  u32. This is r0 calibration data which was measured in factory mode.
-+
-+Example:
-+
-+codec: max98390@38 {
-+	compatible = "maxim,max98390";
-+	reg = <0x38>;
-+	maxim,temperature_calib = <1024>;
-+	maxim,r0_calib = <100232>;
-+};
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
