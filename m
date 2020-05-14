@@ -2,65 +2,126 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBB3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9C4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF1420727
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:40:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589463643;
-	bh=jNuPA/dabcue1FHcKH317SrIIgVTgh/73Xfhxy1N3ys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DeOlpMyGrOKNIJfwBqPxA1XX1Pxni11daM1SDXIjtXEXrgQwFGc47EWq09RpPmhkG
-	 +l6sAU2yR4tz4jv0F2ei3/h0aewFDzfJykEHm5iQreNFmQdgayUiGUDgmMFMnC10lu
-	 WhCVspJaRbMJU3zcOtqJ08vkv4b9MhbYaWxqUS5U=
+	by mail.kernel.org (Postfix) with ESMTP id 1A4FA20728
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:42:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lpZCseNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgENNkk (ORCPT
+        id S1727769AbgENNmt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 09:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgENNkj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 09:40:39 -0400
-Received: from localhost (unknown [122.182.193.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A18EC20727;
-        Thu, 14 May 2020 13:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589463639;
-        bh=jNuPA/dabcue1FHcKH317SrIIgVTgh/73Xfhxy1N3ys=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tB1h5IvLUjxY1J5AEn8KN6oNNBIqrDgkdylvwL7wrwljvb+G/ffzjvgEUAScfgJAg
-         Dq6VgU6IcGxexhTnCh/1I5MZKjNe9NrLUYDT3z70Y9Uu4jl45A9qpy/qFgYC034rSx
-         r9uiLdhXe4EXqqgf9AvsAHXMruxi9zRtqskYjXJo=
-Date:   Thu, 14 May 2020 19:10:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: db820c: Add pmi8994 RPM regulators
-Message-ID: <20200514134027.GS14092@vkoul-mobl>
-References: <20200417070303.1376290-1-bjorn.andersson@linaro.org>
+        Thu, 14 May 2020 09:42:49 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61750 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726197AbgENNmt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 09:42:49 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EDgMxu028132;
+        Thu, 14 May 2020 15:42:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=tD1qvdb0EwmAv9XocfBUyYNcHtOhYgnwwbYe5684NcY=;
+ b=lpZCseNN1q8B2O++L5FqZEfrupQp8UmuSICipi2VpYbbXdKqjviuS4uNBmOQ1Qk1/JYn
+ FC0+aT7IZOR+0AaKhzk+Ozpgl88d1a5y1MBWH1j0sjx/T8Vy7mAFxLIZkKAuH5DBT24e
+ w8vnJeOoFwf7/cYeADMBCKg6OvlIrAm70cghUtpnyO8Px5h4+ovsh1x/0sNyYzBPay55
+ GNVpTBzYrzgrxIYjV346YgPOw8M8x1YuBl3tdk9ASS/dhGkQVptEBfcXiG2r4Y/3xJqM
+ b1YktOvA+/Pa6WYvOrUBAuOptDbM+z10mLDDQLjERCoYWeW9MwohkWsITtdfWVTKKrAK eQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3100vnbg0g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 15:42:33 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0CF2C100034;
+        Thu, 14 May 2020 15:42:33 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA8332BE24D;
+        Thu, 14 May 2020 15:42:32 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
+ 2020 15:42:27 +0200
+Subject: Re: [PATCH 00/15] Fix STM32 DT issues on v5.7-rc4
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <gregkh@linuxfoundation.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
+References: <20200513145935.22493-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <caef6641-b7c2-881a-a331-3d05f6f4bba6@st.com>
+Date:   Thu, 14 May 2020 15:42:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417070303.1376290-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_04:2020-05-14,2020-05-14 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17-04-20, 00:03, Bjorn Andersson wrote:
-> The PMI8994 provides 3 SPMS regulators and one boost/bypass regulator.
-> Define s1 and the boot/bypass and update pm8994 to appropriately
-> describe the supply from PMI8994.
+Hi Benjamin
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+On 5/13/20 4:59 PM, Benjamin Gaignard wrote:
+> This series fixes issues hight lighted by dtbs_check on STM32 devicetrees.
+> The patches has been developped on top of v5.7-rc4 tag.
+> 
+> Benjamin Gaignard (15):
+>    ARM: dts: stm32: remove useless interrupt-names property on stm32f429
+>    ARM: dts: stm32: update pwm pinctrl node names for stm32f4
+>    ARM: dts: stm32: update led nodes names for stm32f249-disco
+>    ARM: dts: stm32: update led nodes names for stm32f469-disco
+>    ARM: dts: stm32: remove useless interrupt-names property on stm32f746
+>    ARM: dts: stm32: update led nodes names for stm32f429-eval
+>    ARM: dts: stm32: update led nodes names for stm32f769-disco
+>    ARM: dts: stm32: update led nodes names for stm32f746-eval
+>    ARM: dts: stm32: remove useless interrupt-names property on stm32f743
+>    ARM: dts: stm32: Update nodes names for stm32h743 pinctrl
+>    ARM: dts: stm32: Update nodes names for stm32mp15 pinctrl
+>    ARM: dts: stm32: Add missing #address and #size cells on spi node for
+>      stm32mp151
+>    ARM: dts: stm32: update led nodes names for stm32f746-eval
+>    dt-bindings: pinctrl: stm32: Add missing interrupts property
+>    dt-bindings: usb: dwc2: Fix issues for stm32mp15x SoC
 
--- 
-~Vinod
+For dts(i) part, it looks good to me. I let Rob to review before taking 
+the whole series.
+
+thanks
+alex
+
+
+> 
+>   .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          |  3 +++
+>   Documentation/devicetree/bindings/usb/dwc2.yaml                |  6 ++++--
+>   arch/arm/boot/dts/stm32429i-eval.dts                           |  8 ++++----
+>   arch/arm/boot/dts/stm32746g-eval.dts                           |  8 ++++----
+>   arch/arm/boot/dts/stm32f4-pinctrl.dtsi                         |  4 ++--
+>   arch/arm/boot/dts/stm32f429-disco.dts                          |  4 ++--
+>   arch/arm/boot/dts/stm32f429.dtsi                               |  1 -
+>   arch/arm/boot/dts/stm32f469-disco.dts                          |  8 ++++----
+>   arch/arm/boot/dts/stm32f746.dtsi                               |  1 -
+>   arch/arm/boot/dts/stm32f769-disco.dts                          |  4 ++--
+>   arch/arm/boot/dts/stm32h743-pinctrl.dtsi                       | 10 +++++-----
+>   arch/arm/boot/dts/stm32h743.dtsi                               |  1 -
+>   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi                       |  6 +++---
+>   arch/arm/boot/dts/stm32mp151.dtsi                              |  2 ++
+>   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi                         |  2 +-
+>   15 files changed, 36 insertions(+), 32 deletions(-)
+> 
