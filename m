@@ -2,157 +2,421 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E41C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924A3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11B2520722
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6476420722
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 21:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kk1bCOr+"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LKkB8JK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgENVmF (ORCPT
+        id S1727777AbgENVmY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 17:42:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46738 "EHLO
+        Thu, 14 May 2020 17:42:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgENVmE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 17:42:04 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E376C061A0F
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 14:42:04 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id 50so677910wrc.11
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 14:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yI1U8AUDDWNI+XLdCwvv3rQd/eXkcVvXBcnHMoqn2qs=;
-        b=Kk1bCOr+u0FZ27Ewkgo62P8UuxadSMbSCNxeDyztymTB+LAUTxnvfBx3RKlx8eaDBq
-         4gRT1WWY3+SYT8cT9GDQ9735amGfk5TXyyUGW/yi29CejUWYEFd/16MeVgD5sWoQ5OSo
-         Tgvz0PxpMiQ2OsiNskkJ21U01V81g9N09C2MvATjUyDiL313bTfOsylyNWH+0YJW2wyb
-         Wt93Al6Ou9B2ql9V3jjVMwGbbfq6xQ4z5E/5VZC5Qb+Pc5XpXyvnmihbVNgrsE7HHat6
-         3gNtsoydhQWTtpT/WxmG37CoTNcL0aIK7eP7onAZ5SxJJKHym0OATkLunzM9zlc54mXz
-         qzXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yI1U8AUDDWNI+XLdCwvv3rQd/eXkcVvXBcnHMoqn2qs=;
-        b=SR2yxz5PU7EL61bOVmfcxcKBbbuK2HEmsL72rIvSfWsjBQhLS5lSrDoCz3yYomgePV
-         aBbuetjtXemu9vrwSjmQejJLqeTeH22llCGOGYdADipu6xGK3wIMHNufHhBdFLPtx0D4
-         dSwpvx2Lo5NHrpaedjHTdht1wpLtQlgh2flGs/ho3tCE5aENvNHu8OeCIOUtnod/YUWu
-         hz3Qs6pEfWM0HetswrQKe2M7jMCh+v8d5jadmqHx+2pM9wZ/dbHfQEmehn6pnhNoeA/b
-         EsCGpz0wqvPKZxsrU0bQm+fJCGEmzdyVpOk3EOUJrxZufsrxy18oVyxxCUvohnqvo1yX
-         SaWw==
-X-Gm-Message-State: AOAM532yt8Daj0dYTOhPrxTGKQ17NZgugeRHNtLhyhqjP9eyGJNCSGVk
-        +lGIH6Hop/Vlbm8rRDC3voL8nw==
-X-Google-Smtp-Source: ABdhPJwjLsGzxSnhBdTpwCv1KxMeZM+KqYK5ICQ+zgFr9Y8weXPm1qgo3lpneSurN2sf/JsKaNVavQ==
-X-Received: by 2002:a5d:60c3:: with SMTP id x3mr506758wrt.48.1589492523207;
-        Thu, 14 May 2020 14:42:03 -0700 (PDT)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id p8sm406400wre.11.2020.05.14.14.42.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 14:42:02 -0700 (PDT)
-Subject: Re: [PATCH v4 2/2] clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock
- Controller
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        shawn.guo@linaro.org, p.zabel@pengutronix.de,
-        vincent.knecht@mailoo.org, konradybcio@gmail.com
-References: <20200512115023.2856617-1-bryan.odonoghue@linaro.org>
- <20200512115023.2856617-3-bryan.odonoghue@linaro.org>
- <158949186096.215346.4442403798485610696@swboyd.mtv.corp.google.com>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <ae2045bf-52f9-9be8-b48a-90d65c1ab96d@linaro.org>
-Date:   Thu, 14 May 2020 22:42:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        with ESMTP id S1727029AbgENVmX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 17:42:23 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24DF1C061A0C;
+        Thu, 14 May 2020 14:42:23 -0700 (PDT)
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6189D26A;
+        Thu, 14 May 2020 23:42:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1589492541;
+        bh=J9P+vZZXv5Zyw860VWhuv2oVcd0leM2twqSlW3e+DpI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LKkB8JK4FhxE8E7ORTUvFdGVN388uWGvk9wILw3AyC9x9FA3/o1a2gRN0TOxqI93N
+         quRDsqAeTBHA8cBBCd5K7tkjP5bQjuMDO49vU3zgUZhlDjLKyEe+pEv/ZFPNUVdasd
+         fXRYZVaEdCKJGgQTrKy2BWlcHBRge6+X2CPeb9yA=
+From:   Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v1.2 4/4] dt-bindings: display: bridge: renesas,lvds: Convert binding to YAML
+Date:   Fri, 15 May 2020 00:42:11 +0300
+Message-Id: <20200514214211.9036-1-laurent.pinchart+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200514213742.GO5955@pendragon.ideasonboard.com>
+References: <20200514213742.GO5955@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <158949186096.215346.4442403798485610696@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14/05/2020 22:31, Stephen Boyd wrote:
-> Quoting Bryan O'Donoghue (2020-05-12 04:50:23)
->> This patch adds support for the MSM8939 GCC. The MSM8939 is based on the
->> MSM8916. MSM8939 is compatible in several ways with MSM8916 but, has
->> additional functional blocks added which require additional PLL sources. In
->> some cases functional blocks from the MSM8916 have different clock sources
->> or different supported frequencies.
->>
->> Cc: Andy Gross <agross@kernel.org>
->> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Cc: Michael Turquette <mturquette@baylibre.com>
->> Cc: Stephen Boyd <sboyd@kernel.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Philipp Zabel <p.zabel@pengutronix.de>
->> Cc: linux-arm-msm@vger.kernel.org
->> Cc: linux-clk@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> 
-> Is this a co-developed-by tag?
+Convert the Renesas R-Car LVDS encoder text binding to YAML.
 
-Yep. I'm squashing down about 30-some internal patches to this one patch 
-here including one or two from Shawn in this set.
-
-I wasn't quite sure what the etiquette on Co-developed was i.e. it 
-wasn't something git allowed me to specify with a "git commit -s 
---co-developed="xyz"" so I just retained the SOB.
-
-Looking through git logs I see an example
-
-I'll apply a
-Co-developed-by: Shawn Guo <shawn.guo@linaro.org>
-
-for v5.
-
->> +static int gcc_msm8939_probe(struct platform_device *pdev)
->> +{
->> +       int ret;
->> +       struct regmap *regmap;
->> +
->> +       ret = qcom_cc_probe(pdev, &gcc_msm8939_desc);
->> +       if (ret)
->> +               return ret;
->> +
->> +       regmap = dev_get_regmap(&pdev->dev, NULL);
->> +       clk_pll_configure_sr_hpm_lp(&gpll3, regmap, &gpll3_config, true);
->> +       clk_pll_configure_sr_hpm_lp(&gpll4, regmap, &gpll4_config, true);
-> 
-> We should probably configure these before registering the clks. Can you
-> do the usual, map registers, configure stuff, and then
-> qcom_cc_really_probe()?
-
-I think so. If there was a good reason to configure the plls after the 
-registration, I can't recall what that was, maybe the original flow from 
-downstream ...
-
->> +
->> +MODULE_DESCRIPTION("Qualcomm GCC MSM8939 Driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:gcc-msm8939");
-> 
-> The module alias isn't needed right?
-
-Nope g/msm8916/s//msm8939/g - I can zap that.
-
-Thanks for the review.
-
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Acked-by: Maxime Ripard <mripard@kernel.org>
 ---
-bod
+Changes since v1:
+
+- Mention RZ/G1 and R2/G2 explicitly
+- Drop the part numbers in comments, only keep the SoC names
+- Use one address and size cell in the examples
+---
+ .../bindings/display/bridge/renesas,lvds.txt  |  85 ------
+ .../bindings/display/bridge/renesas,lvds.yaml | 248 ++++++++++++++++++
+ 2 files changed, 248 insertions(+), 85 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+deleted file mode 100644
+index c62ce2494ed9..000000000000
+--- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
++++ /dev/null
+@@ -1,85 +0,0 @@
+-Renesas R-Car LVDS Encoder
+-==========================
+-
+-These DT bindings describe the LVDS encoder embedded in the Renesas R-Car
+-Gen2, R-Car Gen3 and RZ/G SoCs.
+-
+-Required properties:
+-
+-- compatible : Shall contain one of
+-  - "renesas,r8a7743-lvds" for R8A7743 (RZ/G1M) compatible LVDS encoders
+-  - "renesas,r8a7744-lvds" for R8A7744 (RZ/G1N) compatible LVDS encoders
+-  - "renesas,r8a774a1-lvds" for R8A774A1 (RZ/G2M) compatible LVDS encoders
+-  - "renesas,r8a774b1-lvds" for R8A774B1 (RZ/G2N) compatible LVDS encoders
+-  - "renesas,r8a774c0-lvds" for R8A774C0 (RZ/G2E) compatible LVDS encoders
+-  - "renesas,r8a7790-lvds" for R8A7790 (R-Car H2) compatible LVDS encoders
+-  - "renesas,r8a7791-lvds" for R8A7791 (R-Car M2-W) compatible LVDS encoders
+-  - "renesas,r8a7793-lvds" for R8A7793 (R-Car M2-N) compatible LVDS encoders
+-  - "renesas,r8a7795-lvds" for R8A7795 (R-Car H3) compatible LVDS encoders
+-  - "renesas,r8a7796-lvds" for R8A7796 (R-Car M3-W) compatible LVDS encoders
+-  - "renesas,r8a77965-lvds" for R8A77965 (R-Car M3-N) compatible LVDS encoders
+-  - "renesas,r8a77970-lvds" for R8A77970 (R-Car V3M) compatible LVDS encoders
+-  - "renesas,r8a77980-lvds" for R8A77980 (R-Car V3H) compatible LVDS encoders
+-  - "renesas,r8a77990-lvds" for R8A77990 (R-Car E3) compatible LVDS encoders
+-  - "renesas,r8a77995-lvds" for R8A77995 (R-Car D3) compatible LVDS encoders
+-
+-- reg: Base address and length for the memory-mapped registers
+-- clocks: A list of phandles + clock-specifier pairs, one for each entry in
+-  the clock-names property.
+-- clock-names: Name of the clocks. This property is model-dependent.
+-  - The functional clock, which mandatory for all models, shall be listed
+-    first, and shall be named "fck".
+-  - On R8A77990, R8A77995 and R8A774C0, the LVDS encoder can use the EXTAL or
+-    DU_DOTCLKINx clocks. Those clocks are optional. When supplied they must be
+-    named "extal" and "dclkin.x" respectively, with "x" being the DU_DOTCLKIN
+-    numerical index.
+-  - When the clocks property only contains the functional clock, the
+-    clock-names property may be omitted.
+-- resets: A phandle + reset specifier for the module reset
+-
+-Required nodes:
+-
+-The LVDS encoder has two video ports. Their connections are modelled using the
+-OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+-
+-- Video port 0 corresponds to the parallel RGB input
+-- Video port 1 corresponds to the LVDS output
+-
+-Each port shall have a single endpoint.
+-
+-Optional properties:
+-
+-- renesas,companion : phandle to the companion LVDS encoder. This property is
+-  mandatory for the first LVDS encoder on D3 and E3 SoCs, and shall point to
+-  the second encoder to be used as a companion in dual-link mode. It shall not
+-  be set for any other LVDS encoder.
+-
+-
+-Example:
+-
+-	lvds0: lvds@feb90000 {
+-		compatible = "renesas,r8a77990-lvds";
+-		reg = <0 0xfeb90000 0 0x20>;
+-		clocks = <&cpg CPG_MOD 727>;
+-		power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
+-		resets = <&cpg 727>;
+-
+-		renesas,companion = <&lvds1>;
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@0 {
+-				reg = <0>;
+-				lvds0_in: endpoint {
+-					remote-endpoint = <&du_out_lvds0>;
+-				};
+-			};
+-			port@1 {
+-				reg = <1>;
+-				lvds0_out: endpoint {
+-				};
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
+new file mode 100644
+index 000000000000..98c7330a9485
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
+@@ -0,0 +1,248 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/renesas,lvds.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas R-Car LVDS Encoder
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++
++description: |
++  These DT bindings describe the LVDS encoder embedded in the Renesas R-Car
++  Gen2, R-Car Gen3, RZ/G1 and RZ/G2 SoCs.
++
++properties:
++  compatible:
++    enum:
++      - renesas,r8a7743-lvds # for RZ/G1M compatible LVDS encoders
++      - renesas,r8a7744-lvds # for RZ/G1N compatible LVDS encoders
++      - renesas,r8a774a1-lvds # for RZ/G2M compatible LVDS encoders
++      - renesas,r8a774b1-lvds # for RZ/G2N compatible LVDS encoders
++      - renesas,r8a774c0-lvds # for RZ/G2E compatible LVDS encoders
++      - renesas,r8a7790-lvds # for R-Car H2 compatible LVDS encoders
++      - renesas,r8a7791-lvds # for R-Car M2-W compatible LVDS encoders
++      - renesas,r8a7793-lvds # for R-Car M2-N compatible LVDS encoders
++      - renesas,r8a7795-lvds # for R-Car H3 compatible LVDS encoders
++      - renesas,r8a7796-lvds # for R-Car M3-W compatible LVDS encoders
++      - renesas,r8a77965-lvds # for R-Car M3-N compatible LVDS encoders
++      - renesas,r8a77970-lvds # for R-Car V3M compatible LVDS encoders
++      - renesas,r8a77980-lvds # for R-Car V3H compatible LVDS encoders
++      - renesas,r8a77990-lvds # for R-Car E3 compatible LVDS encoders
++      - renesas,r8a77995-lvds # for R-Car D3 compatible LVDS encoders
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 4
++
++  clock-names:
++    minItems: 1
++    maxItems: 4
++
++  resets:
++    maxItems: 1
++
++  ports:
++    type: object
++    description: |
++      This device has two video ports. Their connections are modelled using the
++      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
++      Each port shall have a single endpoint.
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++      port@0:
++        type: object
++        description: Parallel RGB input port
++
++      port@1:
++        type: object
++        description: LVDS output port
++
++    required:
++      - port@0
++      - port@1
++
++    additionalProperties: false
++
++  power-domains:
++    maxItems: 1
++
++  renesas,companion:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      phandle to the companion LVDS encoder. This property is mandatory
++      for the first LVDS encoder on D3 and E3 SoCs, and shall point to
++      the second encoder to be used as a companion in dual-link mode. It
++      shall not be set for any other LVDS encoder.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - power-domains
++  - resets
++  - ports
++
++if:
++  properties:
++    compatible:
++      enum:
++        - renesas,r8a774c0-lvds
++        - renesas,r8a77990-lvds
++        - renesas,r8a77995-lvds
++then:
++  properties:
++    clocks:
++      minItems: 1
++      maxItems: 4
++      items:
++        - description: Functional clock
++        - description: EXTAL input clock
++        - description: DU_DOTCLKIN0 input clock
++        - description: DU_DOTCLKIN1 input clock
++
++    clock-names:
++      minItems: 1
++      maxItems: 4
++      items:
++        - const: fck
++        # The LVDS encoder can use the EXTAL or DU_DOTCLKINx clocks.
++        # These clocks are optional.
++        - enum:
++          - extal
++          - dclkin.0
++          - dclkin.1
++        - enum:
++          - extal
++          - dclkin.0
++          - dclkin.1
++        - enum:
++          - extal
++          - dclkin.0
++          - dclkin.1
++
++  required:
++    - clock-names
++
++else:
++  properties:
++    clocks:
++      maxItems: 1
++      items:
++        - description: Functional clock
++
++    clock-names:
++      maxItems: 1
++      items:
++        - const: fck
++
++    renesas,companion: false
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/renesas-cpg-mssr.h>
++    #include <dt-bindings/power/r8a7795-sysc.h>
++
++    lvds@feb90000 {
++        compatible = "renesas,r8a7795-lvds";
++        reg = <0xfeb90000 0x14>;
++        clocks = <&cpg CPG_MOD 727>;
++        power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++        resets = <&cpg 727>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                reg = <0>;
++                lvds_in: endpoint {
++                    remote-endpoint = <&du_out_lvds0>;
++                };
++            };
++            port@1 {
++                reg = <1>;
++                lvds_out: endpoint {
++                    remote-endpoint = <&panel_in>;
++                };
++            };
++        };
++    };
++
++  - |
++    #include <dt-bindings/clock/renesas-cpg-mssr.h>
++    #include <dt-bindings/power/r8a77990-sysc.h>
++
++    lvds0: lvds@feb90000 {
++        compatible = "renesas,r8a77990-lvds";
++        reg = <0xfeb90000 0x20>;
++        clocks = <&cpg CPG_MOD 727>,
++                 <&x13_clk>,
++                 <&extal_clk>;
++        clock-names = "fck", "dclkin.0", "extal";
++        power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
++        resets = <&cpg 727>;
++
++        renesas,companion = <&lvds1>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                reg = <0>;
++                lvds0_in: endpoint {
++                    remote-endpoint = <&du_out_lvds0>;
++                };
++            };
++            port@1 {
++                reg = <1>;
++                lvds0_out: endpoint {
++                    remote-endpoint = <&panel_in1>;
++                };
++            };
++        };
++    };
++
++    lvds1: lvds@feb90100 {
++        compatible = "renesas,r8a77990-lvds";
++        reg = <0xfeb90100 0x20>;
++        clocks = <&cpg CPG_MOD 727>,
++                 <&x13_clk>,
++                 <&extal_clk>;
++        clock-names = "fck", "dclkin.0", "extal";
++        power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
++        resets = <&cpg 726>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                reg = <0>;
++                lvds1_in: endpoint {
++                    remote-endpoint = <&du_out_lvds1>;
++                };
++            };
++            port@1 {
++                reg = <1>;
++                lvds1_out: endpoint {
++                    remote-endpoint = <&panel_in2>;
++                };
++            };
++        };
++    };
++
++...
+-- 
+Regards,
+
+Laurent Pinchart
+
