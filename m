@@ -2,516 +2,206 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3842BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330A0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E654F2074A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E269820575
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCcpWEYn"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JSAcLnGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgENNTQ (ORCPT
+        id S1726140AbgENNUO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 09:19:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgENNTP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 09:19:15 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0878C061A0C;
-        Thu, 14 May 2020 06:19:14 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id v192so752069vkd.3;
-        Thu, 14 May 2020 06:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qwGKokfZ7yhrtizAMHpkO5eEddzeumIbA//xV7D/Qfs=;
-        b=XCcpWEYnbJLZ/KR8NZ2/Wf1j1p7dhtSg/ziH835UCRD5WPE6sZrn3Vxst22ofUY4Sf
-         Nw8+/XP0VzK6kP13OoOdcEgAiU6ulVMkeo78SykKWzS05cUGqmWczoP930FGq+beTOmL
-         XMZo6GPtSmfEP1qeWnEC506+sJsamrp8uQkCbtH8dOSKhkOoVKC95KQysJMJERf8rpVv
-         IdwH8mzSvJjCQpZIl5k2OxygbQHloLEMP7wWLMsDZhANZylWyAcs1UeG01El7CcXGq13
-         wWkTp67AlhtrY/hvD1QsxEE125cPYnpb+WJlT9FcrTYK8kZ2NbbvmMJ3wb+4XL8WwOBD
-         KAgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qwGKokfZ7yhrtizAMHpkO5eEddzeumIbA//xV7D/Qfs=;
-        b=dFgXFsFk0YvjmzODN8FmwYd7LWSZWvsvYcgrEeaQ+Cxb+YUhKce9aM69QPvv9YMlnu
-         wZOcjxvOc515mjo+eFXSEQZcd2FzGohyK+09W7rzLZAEKraoSJNd6SWTqupN0Ih5Xorj
-         CtuFbWjdk55vv+Gzkk686sbTg+DDCigLa+AoD5bko+B+/HS0k2zMOM7nPpv2YBYiEMOO
-         jVxiWlFXBUpTIPfmQqyUoCZ/U8i9RtQfix+K3ThG3VA+LK1iKDDuy64d3WmFXITJf/Ea
-         v4RZB6eaChnMsZBi94Si6hjEdziE9Btiyp8T1pf/NXNtG1xZSKobg6dihM4hWf7kks+z
-         3+nQ==
-X-Gm-Message-State: AOAM532J8EQoqRHJ2tea6aY9JQ9wb9fnHq8hHCK5S+4PR18Pi/pBWaJu
-        JhlbkKqarcBXgewFkaYTsZ/LAFCVWNdoXZ1Mvq4=
-X-Google-Smtp-Source: ABdhPJwgNn0PDN9Pi9N/boBzDA6CvwFtJqSQKuN8w3pMoLak3EmmBroSSaEzZMyzeeTbkDlS4pJiVw8oyrVrS6xQWS8=
-X-Received: by 2002:a1f:ff11:: with SMTP id p17mr3416855vki.25.1589462353906;
- Thu, 14 May 2020 06:19:13 -0700 (PDT)
+        Thu, 14 May 2020 09:20:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59872 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgENNUO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 09:20:14 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EDJoRa003750;
+        Thu, 14 May 2020 08:19:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589462390;
+        bh=dUj5luPHu1YhkdbBoiYQztRz+qbnT9MuBcFThH036h8=;
+        h=From:To:CC:Subject:Date;
+        b=JSAcLnGN6B3gF7j/k2fuXUpxgxjlvjFGMeJSnlDxUew7ebr4Zcrz9NauxFnlsiHG1
+         C/S9d/j22oLiFOXaqu8wnupqCipMOegC5Ykae59u4ZKQRbHQAhA3v9TuHVNqi2MEEj
+         BbPKQ9d52i16k+vNCLjKl0dgoP9gOgfFdfibr9Ok=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EDJo1t045219
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 08:19:50 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 08:19:50 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 08:19:50 -0500
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EDJmDV032816;
+        Thu, 14 May 2020 08:19:48 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+CC:     <linux-crypto@vger.kernel.org>, <herbert@gondor.apana.org.au>,
+        <mpm@selenic.com>
+Subject: [PATCH 1/1] dt-bindings: rng: Convert OMAP RNG to schema
+Date:   Thu, 14 May 2020 16:19:47 +0300
+Message-ID: <20200514131947.28094-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <karthik.poduval@gmail.com> <20200406073017.19462-1-karthik.poduval@gmail.com>
- <20200406073017.19462-4-karthik.poduval@gmail.com> <2fc95890-f938-30a5-a163-bf3fa2e223df@gmail.com>
- <CAFP0Ok-NxDDF8TMP4pN=xn6w3H=TYqN3DMfGW-vuiC5qB-Oj5g@mail.gmail.com>
- <CAFP0Ok9XGzVbghbnOOyfXiOOc5-a94uFRu7sD5wXz9sr-+AYEA@mail.gmail.com> <9407b6c3-b932-5904-18ff-7c6cbf6bcc8b@gmail.com>
-In-Reply-To: <9407b6c3-b932-5904-18ff-7c6cbf6bcc8b@gmail.com>
-From:   karthik poduval <karthik.poduval@gmail.com>
-Date:   Thu, 14 May 2020 06:19:02 -0700
-Message-ID: <CAFP0Ok-kjYCFu_yrhvPE0n62qdgwX=r3yJF8FBgZ9s7JUncgGA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: add rk3288 ISP and DPHY
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ping, gentle reminder, do we have a recommendation on how to deal with
-common driver supporting multiple SoC with different types and number
-of clocks.
+Convert TI OMAP Random number generator bindings to DT schema.
 
-On Thu, Apr 23, 2020 at 4:12 AM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Hi robh, Heiko, Karthik, Helen and others,
->
-> See comments below.
-> Should we change Helen's patch serie a little bit to accommodate other
-> isp1 compatibles as well? Could you give advise here? Thanks!
->
-> Johan
->
->
-> On 4/23/20 7:10 AM, karthik poduval wrote:
-> > Hi Johan/Helen,
-> >
-> > I was attempting to fix the yaml to work for both platforms rk3288 and
-> > rk3399. I couldn't find any specific example in the existing yaml files
-> > that deal with this exact scenario common driver but different clocks for
-> > different chipsets. Could you point me to an appropriate example ?
-> >
-> > Meanwhile here is the patch I was trying out.
-> > diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > index af246b71eac6..4ca76a1bbb63 100644
-> > --- a/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > +++ b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > @@ -15,7 +15,11 @@ description: |
-> >
-> >  properties:
-> >    compatible:
-> > -    const: rockchip,rk3399-cif-isp
-> > +    items:
-> > +      - enum:
-> > +        - rockchip,rk3288-cif-isp
-> > +        - rockchip,rk3399-cif-isp
-> > +      - const: rockchip,rk3399-cif-isp
-> >
-> >    reg:
-> >      maxItems: 1
-> > @@ -37,20 +41,38 @@ properties:
-> >      const: dphy
-> >
->
-> >    clocks:
-> > -    items:
-> > -      - description: ISP clock
-> > -      - description: ISP AXI clock clock
-> > -      - description: ISP AXI clock  wrapper clock
-> > -      - description: ISP AHB clock clock
-> > -      - description: ISP AHB wrapper clock
-> > +    oneOf:
-> > +      # rk3399 clocks
-> > +      - items:
-> > +        - description: ISP clock
-> > +        - description: ISP AXI clock clock
-> > +        - description: ISP AXI clock  wrapper clock
-> > +        - description: ISP AHB clock clock
-> > +        - description: ISP AHB wrapper clock
-> > +      # rk3288 clocks
-> > +      - items:
-> > +        - description: ISP clock
-> > +        - description: ISP AXI clock clock
-> > +        - description: ISP AHB clock clock
-> > +        - description: ISP Pixel clock
-> > +        - description: ISP JPEG source clock
-> >
->
-> We can expect a few more clocks here, so just use:
->
->   clocks:
->     minItems: 4
->     maxItems: 5
->
-> or
->
-> See question for Helen about 'pclk_isp_wrap':
->
->   clocks:
->     minItems: 4
->     maxItems: 6
->
->
-> From Rockchip tree:
->
-> static const char * const rk1808_isp_clks[] = {
->         "clk_isp",
->         "aclk_isp",
->         "hclk_isp",
->         "pclk_isp",
-> };
->
-> static const char * const rk3288_isp_clks[] = {
->         "clk_isp",
->         "aclk_isp",
->         "hclk_isp",
->         "pclk_isp_in",
->         "sclk_isp_jpe",
-> };
->
-> static const char * const rk3326_isp_clks[] = {
->         "clk_isp",
->         "aclk_isp",
->         "hclk_isp",
->         "pclk_isp",
-> };
->
-> static const char * const rk3368_isp_clks[] = {
->         "clk_isp",
->         "aclk_isp",
->         "hclk_isp",
->         "pclk_isp",
-> };
->
-> static const char * const rk3399_isp_clks[] = {
->         "clk_isp",
->         "aclk_isp",
->         "hclk_isp",
->         "aclk_isp_wrap",
->         "hclk_isp_wrap",
->         "pclk_isp_wrap"
-> };
->
-> Question for Helen:
->
-> Where did 'pclk_isp_wrap' go in your patch serie?
->
-> >    clock-names:
-> > -    items:
-> > -      - const: clk_isp
-> > -      - const: aclk_isp
-> > -      - const: aclk_isp_wrap
-> > -      - const: hclk_isp
-> > -      - const: hclk_isp_wrap
-> > +    oneOf:
-> > +      # rk3399 clocks
->
-> sort on SoC
->
-> > +      - items:
-> > +        - const: clk_isp
-> > +        - const: aclk_isp
-> > +        - const: aclk_isp_wrap
-> > +        - const: hclk_isp
-> > +        - const: hclk_isp_wrap
-> > +      # rk3288 clocks
->
-> sort on SoC
->
-> > +      - items:
-> > +        - const: clk_isp
-> > +        - const: aclk_isp
-> > +        - const: hclk_isp
-> > +        - const: pclk_isp_in
-> > +        - const: sclk_isp_jpe
->
->   clock-names:
->     oneOf:
->       # rk3288 clocks
->       - items:
->         - const: clk_isp
->           description: ISP clock
->         - const: aclk_isp
->           description: ISP AXI clock clock
->         - const: hclk_isp
->           description: ISP AHB clock clock
->         - const: pclk_isp_in
->           description: ISP Pixel clock
->         - const: sclk_isp_jpe
->           description: ISP JPEG source clock
->       # rk3399 clocks
->       - items:
->         - const: clk_isp
->           description: ISP clock
->         - const: aclk_isp
->           description: ISP AXI clock clock
->         - const: aclk_isp_wrap
->           description: ISP AXI clock  wrapper clock
->         - const: hclk_isp
->           description: ISP AHB clock clock
->         - const: hclk_isp_wrap
->           description: ISP AHB wrapper clock
->
-> Question for robh:
-> Is this a proper way to add description or is there a beter way?
->
-> >
-> > on running command.
-> > make ARCH=arm dtbs_check
-> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> >
-> > I see following messages for dts nodes.
-> >  DTC     arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml
-> >   CHECK   arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml
-> > /home/kpoduval/workspace/tinkerboard-yocto/build/tmp/work/tinker_board-poky-linux-gnueabi/linux-stable/5.5.7+gitAUTOINC+ceab3ac1e6-r0/linux-tinker_board-standard-build/arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml:
-> > isp@ff910000: clocks: [[7, 107], [7, 205], [7, 469], [7, 371], [7, 108]] is
-> > valid under each of {'additionalItems': False, 'items': [{}, {}, {}, {},
-> > {}], 'maxItems': 5, 'minItems': 5, 'type': 'array'}, {'additionalItems':
-> > False, 'items': [{}, {}, {}, {}, {}], 'maxItems': 5, 'minItems': 5, 'type':
-> > 'array'}
-> > /home/kpoduval/workspace/tinkerboard-yocto/build/tmp/work/tinker_board-poky-linux-gnueabi/linux-stable/5.5.7+gitAUTOINC+ceab3ac1e6-r0/linux-tinker_board-standard-build/arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml:
-> > isp@ff910000: compatible: ['rockchip,rk3288-cif-isp'] is too short
-> >
-> > Are these cosidered as error messages ? The "too short" is being alerted
-> > for the orgianl yaml for rk3399 without any of my chnages.
-> > Kindly advise.
-> >
-> > --
-> > Regards,
-> > Karthik Poduval
-> >
-> > On Sat, Apr 11, 2020 at 10:13 PM karthik poduval <karthik.poduval@gmail.com>
-> > wrote:
-> >
-> >> Thanks Johan for your valuable comments.
-> >>
-> >> On Wed, Apr 8, 2020 at 6:19 PM Johan Jonker <jbx6244@gmail.com> wrote:
-> >>>
-> >>> Hi Karthik and others,
-> >>>
-> >>> Include all mail lists found with:
-> >>> ./scripts/get_maintainer.pl --nogit-fallback --nogit
-> >>>
-> >>> Helen is moving isp1 bindings out of staging.
-> >>> Clocks and other things don't fit with her patch serie.
-> >>> Maybe fix this while still in staging?
-> >>>
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
-> >>> 'phys' is a required property
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
-> >>> 'phy-names' is a required property
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
-> >>> 'ports' is a required property
-> >>>
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
-> >>> 'assigned-clock-rates', 'assigned-clocks'
-> >>> do not match any of the regexes: 'pinctrl-[0-9]+'
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
-> >>> clock-names:2: 'aclk_isp_wrap' was expected
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
-> >>> clock-names:3: 'hclk_isp' was expected
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
-> >>> clock-names:4: 'hclk_isp_wrap' was expected
-> >>>
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: 'power-domains'
-> >>> is a required property
-> >>>
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clock-names:1:
-> >>> 'dphy-cfg' was expected
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clock-names:
-> >>> ['dphy-ref', 'pclk'] is too short
-> >>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clocks: [[7,
-> >>> 126], [7, 358]] is too short
-> >>>
-> >>>
-> >>> Inside yaml:
-> >>> Use enum and sort.
-> >>>>>  properties:
-> >>>>>    compatible:
-> >>>
-> >>>>>      const: rockchip,rk3399-cif-isp
-> >>>>> +    const: rockchip,rk3288-rkisp1
-> >>>
-> >>>     enum:
-> >>>       - rockchip,rk3288-rkisp1
-> >>>       - rockchip,rk3399-cif-isp
-> >>>
-> >>>>>  properties:
-> >>>>>    compatible:
-> >>>>>      const: rockchip,rk3399-mipi-dphy-rx0
-> >>>>> +    const: rockchip,rk3288-mipi-dphy-rx0
-> >>>
-> >>>     enum:
-> >>>       - rockchip,rk3288-mipi-dphy-rx0
-> >>>       - rockchip,rk3399-mipi-dphy-rx0
-> >>>
-> >>>>
-> >>>> Please, keep consistency, or rk3288-cif-isp, or we change
-> >> rk3399-cif-isp to be rk3399-rkisp1.
-> >>>
-> >>>
-> >>> On 4/6/20 9:30 AM, Karthik Poduval wrote:
-> >>>> ISP and DPHY device entries missing so add them.
-> >>>>
-> >>>
-> >>>> tested on tinkerbaord with ov5647 using command
-> >>>> cam -c 1 -C -F cap
-> >>>
-> >>> Disclose dts node for ov5647 in cover letter, so people can reproduce
-> >>> this experiment.
-> >>>
-> >>> Caution!
-> >>> Without dts node this command doesn't work correct.
-> >>>
-> >>> make ARCH=arm dtbs_check
-> >>>
-> >> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> >>>
-> >>> make ARCH=arm dtbs_check
-> >>>
-> >> DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
-> >>>
-> >>> Needed to detect missing: phys, phy-names and ports ,etc.
-> >>>
-> >>> &isp {
-> >>>         status = "okay";
-> >>> };
-> >>>
-> >> Makes sense, that's why my kernel compilation passed and I didn't
-> >> these errors. Thanks for the command, I will verify dts for
-> >> correctness in next patch series.
-> >>
-> >>> Needed to detect missing: power-domains, etc.
-> >>>
-> >>> &mipi_phy_rx0 {
-> >>>         status = "okay";
-> >>> };
-> >>>
-> >>>>
-> >>>> Reported-by: Karthik Poduval <karthik.poduval@gmail.com>
-> >>>> Signed-off-by: Karthik Poduval <karthik.poduval@gmail.com>
-> >>>> ---
-> >>>>  arch/arm/boot/dts/rk3288.dtsi | 25 +++++++++++++++++++++++++
-> >>>>  1 file changed, 25 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/arm/boot/dts/rk3288.dtsi
-> >> b/arch/arm/boot/dts/rk3288.dtsi
-> >>>> index 9beb662166aa..adea8189abd9 100644
-> >>>> --- a/arch/arm/boot/dts/rk3288.dtsi
-> >>>> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> >>>> @@ -247,6 +247,23 @@
-> >>>>               ports = <&vopl_out>, <&vopb_out>;
-> >>>>       };
-> >>>>
-> >>>
-> >>>> +     isp: isp@ff910000 {
-> >>>
-> >>> For nodes:
-> >>> Sort things without reg alphabetical first,
-> >>> then sort the rest by reg address.
-> >>>
-> >> Sure
-> >>>> +             compatible = "rockchip,rk3288-rkisp1";
-> >>>> +             reg = <0x0 0xff910000 0x0 0x4000>;
-> >>>> +             interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> >>>> +             clocks = <&cru SCLK_ISP>, <&cru ACLK_ISP>,
-> >>>> +                      <&cru HCLK_ISP>, <&cru PCLK_ISP_IN>,
-> >>>> +                      <&cru SCLK_ISP_JPE>;
-> >>>> +             clock-names = "clk_isp", "aclk_isp",
-> >>>> +                           "hclk_isp", "pclk_isp_in",
-> >>>> +                           "sclk_isp_jpe";
-> >>>> +             assigned-clocks = <&cru SCLK_ISP>, <&cru SCLK_ISP_JPE>;
-> >>>> +             assigned-clock-rates = <400000000>, <400000000>;
-> >>>
-> >>>> +             power-domains = <&power RK3288_PD_VIO>;
-> >>>> +             iommus = <&isp_mmu>;
-> >>>
-> >>> sort
-> >>>
-> >>> Something missing?
-> >>> Where are the ports and port nodes?
-> >>
-> >> I was assuming that this would be a part of the board specific dtsi or
-> >> dts entry where the isp node would be overriden and the i2c camera
-> >> port
-> >> and the isp port remote-endpoints would be connected. I had this as a
-> >> part of my first patch series. However I was advised by Helen to not
-> >> include the ov5647
-> >> dtsi as it isn't hardwired to the SoC and resides on an camera adapter
-> >> board.
-> >>
-> >> Should this be defined without the remote-endpoint phandle since we
-> >> don't know exactly which sensor gets connected in this dtsi file ?
-> >>
-> >>>
-> >>>> +             status = "disabled";
->
-> Question for Heiko:
-> Should we add status to Helen's serie as well?
->
-> >>>> +     };
-> >>>> +
-> >>>>       sdmmc: mmc@ff0c0000 {
-> >>>>               compatible = "rockchip,rk3288-dw-mshc";
-> >>>>               max-frequency = <150000000>;
-> >>>> @@ -891,6 +908,14 @@
-> >>>>                       status = "disabled";
-> >>>>               };
-> >>>>
-> >>>
-> >>>> +             mipi_phy_rx0: mipi-phy-rx0 {
-> >>>
-> >>> Use separate patch.
-> >>>
-> >>> For nodes:
-> >>> Sort things without reg alphabetical first,
-> >>> then sort the rest by reg address.
-> >>>
-> >> Sure
-> >>
-> >>>> +                     compatible = "rockchip,rk3288-mipi-dphy-rx0";
-> >>>> +                     clocks = <&cru SCLK_MIPIDSI_24M>, <&cru
-> >> PCLK_MIPI_CSI>;
-> >>>> +                     clock-names = "dphy-ref", "pclk";
-> >>> Something missing?
-> >>> Does this phy have a power domain?
-> >> The tinkerboard debian kernel (where I referred to for this patch)
-> >> didn't have it defined for the DPHY. I would guess that it would be
-> >> the same as the ISP i.e. RK3288_PD_VIO,
-> >> does anyone know the answer to this or do I have to reach out to
-> >> Rockchip engineering ?
-> >>>
-> >>>> +                     #phy-cells = <0>;
-> >>>> +                     status = "disabled";
-> >>>> +             };
-> >>>> +
-> >>>>               io_domains: io-domains {
-> >>>>                       compatible = "rockchip,rk3288-io-voltage-domain";
-> >>>>                       status = "disabled";
-> >>>>
-> >>>
-> >>
-> >>
-> >> --
-> >> Regards,
-> >> Karthik Poduval
-> >>
-> >
-> >
->
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ .../devicetree/bindings/rng/omap_rng.txt      | 38 ---------
+ .../devicetree/bindings/rng/ti,omap-rng.yaml  | 77 +++++++++++++++++++
+ 2 files changed, 77 insertions(+), 38 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rng/omap_rng.txt
+ create mode 100644 Documentation/devicetree/bindings/rng/ti,omap-rng.yaml
 
-
+diff --git a/Documentation/devicetree/bindings/rng/omap_rng.txt b/Documentation/devicetree/bindings/rng/omap_rng.txt
+deleted file mode 100644
+index ea434ce50f36..000000000000
+--- a/Documentation/devicetree/bindings/rng/omap_rng.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-OMAP SoC and Inside-Secure HWRNG Module
+-
+-Required properties:
+-
+-- compatible : Should contain entries for this and backward compatible
+-  RNG versions:
+-  - "ti,omap2-rng" for OMAP2.
+-  - "ti,omap4-rng" for OMAP4, OMAP5 and AM33XX.
+-  - "inside-secure,safexcel-eip76" for SoCs with EIP76 IP block
+-  Note that these two versions are incompatible.
+-- ti,hwmods: Name of the hwmod associated with the RNG module
+-- reg : Offset and length of the register set for the module
+-- interrupts : the interrupt number for the RNG module.
+-		Used for "ti,omap4-rng" and "inside-secure,safexcel-eip76"
+-- clocks: the trng clock source. Only mandatory for the
+-  "inside-secure,safexcel-eip76" compatible, the second clock is
+-  needed for the Armada 7K/8K SoCs
+-- clock-names: mandatory if there is a second clock, in this case the
+-  name must be "core" for the first clock and "reg" for the second
+-  one
+-
+-
+-Example:
+-/* AM335x */
+-rng: rng@48310000 {
+-	compatible = "ti,omap4-rng";
+-	ti,hwmods = "rng";
+-	reg = <0x48310000 0x2000>;
+-	interrupts = <111>;
+-};
+-
+-/* SafeXcel IP-76 */
+-trng: rng@f2760000 {
+-	compatible = "inside-secure,safexcel-eip76";
+-	reg = <0xf2760000 0x7d>;
+-	interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&cpm_syscon0 1 25>;
+-};
+diff --git a/Documentation/devicetree/bindings/rng/ti,omap-rng.yaml b/Documentation/devicetree/bindings/rng/ti,omap-rng.yaml
+new file mode 100644
+index 000000000000..b37d73295e9f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/ti,omap-rng.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rng/ti,omap-rng.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: OMAP SoC and Inside-Secure HWRNG Module
++
++maintainers:
++  - Tero Kristo <t-kristo@ti.com>
++
++properties:
++  compatible:
++    enum:
++      - ti,omap2-rng
++      - ti,omap4-rng
++      - inside-secure,safexcel-eip76
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description:
++      The TRNG clock source. Only mandatory for the
++      "inside-secure,safexcel-eip76" compatible, the second clock is needed
++      for the Armada 7K/8K SoCs
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: core
++      - const: reg
++
++  ti,hwmods:
++    description: TI hwmod name
++    deprecated: true
++    $ref: /schemas/types.yaml#/definitions/string-array
++    items:
++      const: rng
++
++required:
++  - compatible
++  - reg
++
++if:
++  properties:
++    compatible:
++      enum:
++        - inside-secure,safexcel-eip76
++then:
++  required:
++    - clocks
++
++examples:
++  - |
++    /* AM335x */
++    rng: rng@48310000 {
++      compatible = "ti,omap4-rng";
++      ti,hwmods = "rng";
++      reg = <0x48310000 0x2000>;
++      interrupts = <111>;
++    };
++
++  - |+
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    /* SafeXcel IP-76 */
++    trng: rng@f2760000 {
++      compatible = "inside-secure,safexcel-eip76";
++      reg = <0xf2760000 0x7d>;
++      interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cpm_syscon0 1 25>;
++    };
++...
 -- 
-Regards,
-Karthik Poduval
+2.17.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
