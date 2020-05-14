@@ -4,71 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D88C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DA7C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5646B205ED
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760E4205ED
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbgENBSV (ORCPT
+        id S1727097AbgENBSV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 13 May 2020 21:18:21 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39022 "EHLO inva020.nxp.com"
+Received: from inva020.nxp.com ([92.121.34.13]:39050 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgENBSU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1725952AbgENBSU (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Wed, 13 May 2020 21:18:20 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5E9931A15F1;
-        Thu, 14 May 2020 03:18:18 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4E25B1A0194;
+        Thu, 14 May 2020 03:18:19 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 81F5F1A012E;
-        Thu, 14 May 2020 03:18:14 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7CCCD1A0167;
+        Thu, 14 May 2020 03:18:15 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 70523402B4;
-        Thu, 14 May 2020 09:18:09 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6F753402BB;
+        Thu, 14 May 2020 09:18:10 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
         kernel@pengutronix.de, festevam@gmail.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/2] ARM: dts: imx6qdl: Use nvmem interface to get fuse data
-Date:   Thu, 14 May 2020 09:08:47 +0800
-Message-Id: <1589418528-26410-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 2/2] ARM: dts: imx6sl: Use nvmem interface to get fuse data
+Date:   Thu, 14 May 2020 09:08:48 +0800
+Message-Id: <1589418528-26410-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589418528-26410-1-git-send-email-Anson.Huang@nxp.com>
+References: <1589418528-26410-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Although ocotp clock is always ON for i.MX6QDL, OCOTP can be
-accessed directly, but since i.MX6QDL nvmem interface is supported,
+Although ocotp clock is always ON for i.MX6SL, OCOTP can be
+accessed directly, but since i.MX6SL nvmem interface is supported,
 and fsl,tempmon-data is deprecated, use it instead of getting fuse
 data by reading ocotp directly, this makes all i.MX6 SoCs aligned.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 11 ++++++++++-
+ arch/arm/boot/dts/imx6sl.dtsi | 11 ++++++++++-
  1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 98da446..1763c2b 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -74,7 +74,8 @@
- 		interrupt-parent = <&gpc>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 8230b45..fcb84fe 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -98,7 +98,8 @@
  		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gpc>;
  		fsl,tempmon = <&anatop>;
 -		fsl,tempmon-data = <&ocotp>;
 +		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
 +		nvmem-cell-names = "calib", "temp_grade";
- 		clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
- 		#thermal-sensor-cells = <0>;
+ 		clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
  	};
-@@ -1171,6 +1172,14 @@
+ 
+@@ -961,6 +962,14 @@
  				cpu_speed_grade: speed-grade@10 {
  					reg = <0x10 4>;
  				};
@@ -82,7 +84,7 @@ index 98da446..1763c2b 100644
 +				};
  			};
  
- 			tzasc@21d0000 { /* TZASC1 */
+ 			audmux: audmux@21d8000 {
 -- 
 2.7.4
 
