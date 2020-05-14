@@ -2,73 +2,89 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501E1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3057C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 341BC2065F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954F02065C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:58:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Cr/LzUcV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgENT4F (ORCPT
+        id S1728000AbgENT6r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 15:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727117AbgENT4F (ORCPT
+        Thu, 14 May 2020 15:58:47 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28479 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728991AbgENT6q (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 15:56:05 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97DBAC061A0C;
-        Thu, 14 May 2020 12:56:05 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EE51E128D3256;
-        Thu, 14 May 2020 12:56:03 -0700 (PDT)
-Date:   Thu, 14 May 2020 12:56:03 -0700 (PDT)
-Message-Id: <20200514.125603.1095750660571738939.davem@davemloft.net>
-To:     brgl@bgdev.pl
-Cc:     corbet@lwn.net, robh+dt@kernel.org, matthias.bgg@gmail.com,
-        john@phrozen.org, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
-        kuba@kernel.org, arnd@arndb.de, fparent@baylibre.com,
-        hkallweit1@gmail.com, edwin.peer@broadcom.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        stephane.leprovost@mediatek.com, pedro.tsai@mediatek.com,
-        andrew.perepech@mediatek.com, bgolaszewski@baylibre.com
-Subject: Re: [PATCH v3 00/15] mediatek: add support for MediaTek Ethernet
- MAC
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200514075942.10136-1-brgl@bgdev.pl>
-References: <20200514075942.10136-1-brgl@bgdev.pl>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 14 May 2020 12:56:04 -0700 (PDT)
+        Thu, 14 May 2020 15:58:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589486326; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=uinFiHZJfF96ynk2XThtzqi73Peb6XENqUK6oR8JKRI=; b=Cr/LzUcV2aHZHhbD+nf8Q/VZ30TT+X23kJTawmpW19rtQYR30nbeqYIIAhyc27d4YSTaBAzQ
+ auwLP1loDRoLAkPrgpnKjcdB+osJ9Hj7wZoAvphfdyuUKMiHmeiSN4OA3jIXGmRFc+Y9faL5
+ nvpxFHz9GnQsGko1gzhyX4bgHRA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ebda2e3aefa5a01ccccf243 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 14 May 2020 19:58:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7D496C44788; Thu, 14 May 2020 19:58:26 +0000 (UTC)
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38F05C433D2;
+        Thu, 14 May 2020 19:58:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38F05C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        coresight@lists.linaro.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2 0/2] coresight: etm4x: Add support to skip trace unit power up
+Date:   Fri, 15 May 2020 01:27:54 +0530
+Message-Id: <cover.1589485594.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 14 May 2020 09:59:27 +0200
+This series adds support to skip powering up of trace unit on systems
+with an errata which stops CPU watchdog counter when power up bit is
+set (TRCPDCR.PU = 1). Setting this bit is not required on Qualcomm
+Technologies Inc. chipsets where this errata exists since the ETMs
+are in the same power domain as their respective CPU cores.
 
-> Next we do some cleanup of the mediatek ethernet drivers directory and update
-> the devres documentation with existing networking devres helpers.
+Tingwei Zhang (2):
+  coresight: etm4x: Add support to skip trace unit power up
+  dt-bindings: arm: coresight: Add support to skip trace unit power up
 
-I don't agree with the new devres stuff.
+ .../devicetree/bindings/arm/coresight.txt     |  7 +++++
+ drivers/hwtracing/coresight/coresight-etm4x.c | 27 ++++++++++++-------
+ drivers/hwtracing/coresight/coresight-etm4x.h |  3 +++
+ 3 files changed, 27 insertions(+), 10 deletions(-)
 
-You have to be very careful with the ordering of when you map/unmap
-registers, free up anciliary resources, etc. in relationship to when
-the netdev unregister happens.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-Please submit this driver without these controversial devres changes,
-and then you can submit and discuss those changes separately later.
-
-Thanks.
