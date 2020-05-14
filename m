@@ -2,212 +2,131 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3426EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483E5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6D52065C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23124206D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:07:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApMDbkPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgENUBG (ORCPT
+        id S1729234AbgENUHa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 16:01:06 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44616 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgENUBG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 16:01:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j4so37397otr.11;
-        Thu, 14 May 2020 13:01:05 -0700 (PDT)
+        Thu, 14 May 2020 16:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726035AbgENUHa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 16:07:30 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E2BC061A0C;
+        Thu, 14 May 2020 13:07:29 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id se13so3870446ejb.9;
+        Thu, 14 May 2020 13:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cQmt30TFAqZp3yOvZIOG5QAMcRr8CjctI3ajbEh56NE=;
+        b=ApMDbkPkRNIC/7RcXmpSwCcvYGJNF485BSW10W+PTcRPdHjRQRRnSgDZgC9dL4dLcZ
+         JO5wK4BbdxmM2pyFjSSy6wjHui7t4pMqh9zGKL9gQFfuAppjsMceZAYYi/M0YJYPObEp
+         DTXpB5VoTaSbeFi/T96dsKzdeXHuOrIhQ/ha4fOq8+9MmKSfP3GzfOExSzDBXD/Aqjfr
+         FpLfUl72IjTNWr3lADuDZ3WRxfEpFdpvdS87vfPuXJB5oNZs9ePpW8x8N676aWYOjt8X
+         Wb9sj3/B9GV0IqdjPbU/x4WmHD10OFpG5eiR0xKbWBoBn9hjAqjxJ4HjRcLY++/IUaNv
+         jx9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PtBjkIGGxXDp1dHFJEjYfiWUY2P5QlsKo/K6/+WZmeY=;
-        b=eRLUE4rvRcOHfERfQ/lZ1rp8Kk//qNdCk4bS2xoOhfNO5mIntyKzTVA1Ew4NEPbqll
-         Z9Xp/obclZWi7Rp8ZkJWnI40MuL/JroOONIWQ3nXX17Ik0xrhHlp8+icT4xbqol+nGG2
-         wyHt6VeTrarxUE3nWZYnrDC90la4CRI3f76nNCy/F0dr7Tobz3XX4F/z44r9E8SPGR1r
-         NCBRJhVH4t/cyHUR6WVUYzlH/VJnE++5Aq9t7nfgoU+qwF2NCK0ffxo8V3TT03M2bGns
-         efQnrPDQqMiZyu1ayC39UUJAcEf4tuOgT5p26XiynCL178rf1RL27Vgd3IwFD0QuO0w5
-         vV0Q==
-X-Gm-Message-State: AOAM532+LP+Ow5o84UFzRHCjQ/WL+gkAC6gY/oXaZMrd6GDDH462NWkj
-        8+JloxnL0KveMpiodaoOpCDwSFn/rQZtNOrNdJI=
-X-Google-Smtp-Source: ABdhPJxlL7bOKztMOeZJClvcFRKGEuvOXp/eLE3eVPuXdamQTY6erD7PmPjlCxeaUKv6T7vSuweVf114QyJxq2E0ayI=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr4920155otw.250.1589486465222;
- Thu, 14 May 2020 13:01:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cQmt30TFAqZp3yOvZIOG5QAMcRr8CjctI3ajbEh56NE=;
+        b=jJVNdxJxcjK4jGgJ+Fl8oRGSvM7pSg/erUUCX7Z1/3V9Xv5c+YcjgW5ZErIfBck060
+         vdtUj+reaTsssgVUNeyaJ+WHNfYsr3CoeDMEMN/zkdwqk31u7uEsX5NoZLGhOH1KiW3y
+         RvEgWnjvqussp/cLN6NSZ+69iTF5IS6ZiMuQ6eYcCd2qqynsvYv+hgLAqQWpNX/pTzAM
+         MnU6b77KXsW3MpVyrPC/v2E1OnQZpsOHdB0gNaZwP5cgVAnk8KMl+CSO7GewgMRE5LsV
+         AheSMlNy/QWWrf/RdTyTHX+O36lS+6Je6gJKrkFQpQmH6BRHfxhmjIBQ7NisbUp3F4EP
+         25oQ==
+X-Gm-Message-State: AOAM531Fe5pYRwaXlubvdLPWWet2zMpG05Nn9xbMac9RidRWzbBNIlFi
+        WQgZtT8qfaf1BEY1Vj/nrUo=
+X-Google-Smtp-Source: ABdhPJyZAqVxxW4F6pijP3vARs0Mzl6g5yvW5S652fmezLr8yo1QqHC5CwiciahBVh46lbuFoEDTFg==
+X-Received: by 2002:a17:906:5795:: with SMTP id k21mr5504825ejq.374.1589486848391;
+        Thu, 14 May 2020 13:07:28 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
+        by smtp.googlemail.com with ESMTPSA id bd10sm1472edb.10.2020.05.14.13.07.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 13:07:27 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/10] Multiple fixes in PCIe qcom driver
+Date:   Thu, 14 May 2020 22:07:01 +0200
+Message-Id: <20200514200712.12232-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200417140920.22596-1-geert+renesas@glider.be> <20200430023237.GA23316@bogus>
-In-Reply-To: <20200430023237.GA23316@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 May 2020 22:00:53 +0200
-Message-ID: <CAMuHMdUySoqH+uCQrOVCQm9YU5h0F0JwZaPT5291Mo5bb8-Oxg@mail.gmail.com>
-Subject: Re: [PATCH RFC] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+This contains multiple fix for PCIe qcom driver.
+Some optional reset and clocks were missing.
+Fix a problem with no PARF programming that cause kernel lock on load.
+Add support to force gen 1 speed if needed. (due to hardware limitation)
+Add ipq8064 rev 2 support that use a different tx termination offset.
 
-On Thu, Apr 30, 2020 at 4:32 AM Rob Herring <robh@kernel.org> wrote:
-> On Fri, Apr 17, 2020 at 04:09:20PM +0200, Geert Uytterhoeven wrote:
-> > Convert the Renesas Pin Function Controller (PFC) Device Tree binding
-> > documentation to json-schema.
-> >
-> > Document missing properties.
-> > Drop deprecated and obsolete #gpio-range-cells property.
-> > Update the example to match reality.
-> > Drop consumer examples, as they do not belong here.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > How to describe that pin configuration nodes can have subnodes?
-> > E.g.
-> >
-> >     arch/arm/boot/dts/sh73a0-kzm9g.dt.yaml: pin-controller@e6050000: mmc: Additional properties are not allowed ('cfg', 'mux' were unexpected)
->
-> I shouldn't tell you so no one does this again...
->
-> I think you want something like this assuming you have either
-> grandchildren or properties, but not both in the child nodes:
->
-> patternProperties:
->   ".*":
->     if:
->       type: object
->     then:
->       oneOf:
->         - allOf:
->             - $ref: pincfg-node.yaml#
->             - $ref: pinmux-node.yaml#
->           ...
->         - patternProperties:
->             ".*":
->               type: object
->               allOf:
->                 - $ref: pincfg-node.yaml#
->                 - $ref: pinmux-node.yaml#
+v4:
+* Fix grammar error across all patch subject
+* Use bulk api for clks
+* Program PARF only in ipq8064 SoC
+* Program tx term only in ipq8064 SoC
+* Drop configurable tx-dempth rx-eq
+* Make added clk optional
 
-Thanks, sounds sane!
-As there are phandles pointing to the child node, I do need an explicit
-phandle property in the child node...
+v3:
+* Fix check reported by checkpatch --strict
+* Rename force_gen1 to gen
 
-> If you did have a mixture, then you'd need the same if/then construct.
+v2:
+* Drop iATU programming (already done in pcie init)
+* Use max-link-speed instead of force-gen1 custom definition
+* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+* Introduce a new variant for different revision of ipq8064
 
-... so I have a mixture, and do need the if/then construct.
-However, that gives me "is valid under each of" errors for all  child nodes
-of sh-pfc nodes.
+Abhishek Sahu (1):
+  PCI: qcom: Change duplicate PCI reset to phy reset
 
-As both child and grandchild do not have any required properties, I
-tried adding some, but that didn't help.
+Ansuel Smith (8):
+  PCI: qcom: Add missing ipq806x clocks in PCIe driver
+  dt-bindings: PCI: qcom: Add missing clks
+  PCI: qcom: Add missing reset for ipq806x
+  dt-bindings: PCI: qcom: Add ext reset
+  PCI: qcom: Use bulk clk api and assert on error
+  PCI: qcom: Define some PARF params needed for ipq8064 SoC
+  PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
+  dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
 
-Do you have a clue? For reference, this is what I ended up with:
+Sham Muthayyan (1):
+  PCI: qcom: Add Force GEN1 support
 
-patternProperties:
-  "^.*$":
-    if:
-      type: object
-    then:
-      oneOf:
-        - allOf:
-            - $ref: pincfg-node.yaml#
-            - $ref: pinmux-node.yaml#
-          description:
-            Pinctrl node's client devices use subnodes for desired pin
-            configuration.
-            Client device subnodes use below standard properties.
-
-          properties:
-            phandle: true
-            pins: true
-            groups: true
-            function: true
-            bias-disable: true
-            bias-pull-down: true
-            bias-pull-up: true
-            drive-strength:
-              enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of
-supported values
-            power-source:
-              enum: [ 1800, 3300 ]
-            gpio-hog: true
-            gpios: true
-            input: true
-            output-high: true
-            output-low: true
-
-          additionalProperties: false
-
-        - properties:
-            phandle: true
-
-          patternProperties:
-            "^.*$":
-              if:
-                type: object
-              then:
-                allOf:
-                  - $ref: pincfg-node.yaml#
-                  - $ref: pinmux-node.yaml#
-                description:
-                  Pinctrl node's client devices use subnodes for desired pin
-                  configuration.
-                  Client device subnodes use below standard properties.
-
-                properties:
-                  pins: true
-                  groups: true
-                  function: true
-                  bias-disable: true
-                  bias-pull-down: true
-                  bias-pull-up: true
-                  drive-strength:
-                    enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset
-of supported values
-                  power-source:
-                    enum: [ 1800, 3300 ]
-                  gpio-hog: true
-                  gpios: true
-                  input: true
-                  output-high: true
-                  output-low: true
-
-                additionalProperties: false
-
-          additionalProperties: false
-
-> Now it probably ends up that the 'allOf' and everything else with it are
-> duplicated. If so you can do:
->
-> definitions:
->   pin-nodes:
->     allOf:
->     ...
->
-> And use '$ref: #/definitions/pin-nodes' where you need it.
->
-> That probably is not going to work with the fixups the tooling does, but
-> we could fix that.
-
-Obviously I haven't tried this part yet, but I'll keep it in mind.
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 171 ++++++++++++------
+ 2 files changed, 123 insertions(+), 63 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
