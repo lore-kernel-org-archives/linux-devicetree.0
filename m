@@ -5,66 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF31C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D4BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1A1620709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6DE20709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 20:07:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgYWAvhn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMfJLANr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgENUHj (ORCPT
+        id S1729356AbgENUHv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 16:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60212 "EHLO
+        Thu, 14 May 2020 16:07:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726035AbgENUHi (ORCPT
+        by vger.kernel.org with ESMTP id S1729341AbgENUHs (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 16:07:38 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0453BC061A0E;
-        Thu, 14 May 2020 13:07:38 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id se13so3870779ejb.9;
-        Thu, 14 May 2020 13:07:37 -0700 (PDT)
+        Thu, 14 May 2020 16:07:48 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ECA4C061A0C;
+        Thu, 14 May 2020 13:07:47 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id s3so4617eji.6;
+        Thu, 14 May 2020 13:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=s9klwDUAQHUdrbunE/kS0tb+TnD6OrjCFpNB//xZIAs=;
-        b=lgYWAvhnlWoeuSlKxHEiWo9lDRmXAv+LQuUg3uUiPZVd0etoitxx9sgGWrLnmkmhgB
-         XVWKQIMcHBet2fLYzSXiVZjJsn70i/0pWqsH20sRTK5WaqDbGlrVBEOT0KtUwNiyKhkK
-         pZRz58sgW8vv4ruOBZOcbHhg8lxFrorQGvMBG178/VC1SoeNv8h6U5SJiYOwzOqpQMyr
-         M5lnP8jgD6OdjqStIwciFuyIwrHcLIVg7T/uPv1xpjvWZeiGzmv0G+EG87NgmMuO3dsy
-         6LmzZ1kXx6EUSj8Y5jrc9NUWltYwTuufDaxTHK8pnliL9dgAncAkhN/rucK6qNiw8+BK
-         2MeA==
+        bh=c7s8PI1C4weEkl07MvE9RhRVBEJwMJ9l5BWaz0ggV1E=;
+        b=mMfJLANrQoMjmVFz0LsA1WxCOPSD63DvdKi+3nsjWqFyJMyR2ND2+NYvw0u76y7oXP
+         gfhXeQIo8IFOy/GmFm61rcgjYrV7gljEGzebEX80Bgi5EAmP9Bc7emc2VStUfR1KPCFL
+         8vHv9RHIOCsm49DAplxLQb9egoEKIKWoqleIHDUtSM8+KJiTvJWxntan2+TJzoF3oycI
+         Y/lcpCkFaQNf4Npt6RKDhLAsPIDV6nagnhKrvgZzllBIi4yqJ7VqV0jd8rCK+9T8On0B
+         2MkcNpv5pjxbNmbEJAg85CpXT6c5ZtrMge0ckCrFg9oHT5LNlVsRoCBDXb5eTrdXjFaT
+         PxHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=s9klwDUAQHUdrbunE/kS0tb+TnD6OrjCFpNB//xZIAs=;
-        b=oa1Bs1f+iVjzdmEnHw5zDEcaiAVmTADJp0lvjhEh4eb++i0t/ycaPUczPVhDGWL4dC
-         WB0cRFfwivFxuFf9TWyRYlzhn51heqXWKK/1oGsFz13J/6cw3VkvVaVilCRoQmMtU3Pi
-         7FoJ7ckY03SsTg785pfWtmt0WcR7UW2JrM7YvZvRNpbNDkW6riKsYg8HO3zRvEUB6oej
-         sWW5dyZwGFKqx2OllokpFV4e7xdhHMo51UtL2yhbv/8tpOfLrIH9hiq/GjioLA/D3QiC
-         IP2Ni8pd/xEAr/ruWELXJz0kbu/nSR+TFPBHRabMlnHXPmz8LddoSkce5qIsEVToRj2d
-         WmKA==
-X-Gm-Message-State: AOAM53250bH5wi055WgAYJPx5oQ76R/HM40Dli2nthtnn3RWaajLx1OE
-        REhizOityWo5lgfEFXXvED03Q+tJICtHMPl+
-X-Google-Smtp-Source: ABdhPJx2VN38BTsQQky5SYYq4CsRgqGboc3SVvuZTT/0POgaC7rFcBc1pDCLQq1RrwLvJRVgdRS0cA==
-X-Received: by 2002:a17:906:51b:: with SMTP id j27mr5346654eja.246.1589486856614;
-        Thu, 14 May 2020 13:07:36 -0700 (PDT)
+        bh=c7s8PI1C4weEkl07MvE9RhRVBEJwMJ9l5BWaz0ggV1E=;
+        b=L97vmS3Bc4wUPo+uJRRFpZDs8ZmnwsMxRqBqq6crom4QTSeNM1u+VxVxtl5vfrpWYp
+         bI4RkzdaIwNz5kh3R4NLak33vQlDu4g1MMrnO0RHdx7e9Lp6IHaA0rYh5RT0gcFmm8D9
+         8jx5xpIK3ry0Y53EoF5XUqO/GFRxKDOuBhRtH2DSKIzZ9xwqt4avIz1W3ZXAE94ZdyqT
+         OJzk9DkzkbdCUvk2z+tCw26cXF75pM4fwBB8YXeFTFtMOy1g8E4R9n1FyFldUnnIYzs/
+         nDLUpvI8dpxweknxnuIrS0rkXoBC/+xjLSqSGE1A2CCD8Cr7BLvpwYRQSyDMIQlcyDkx
+         GR3A==
+X-Gm-Message-State: AOAM530w6bfy91n4afpxHxcO3S7QESCzs1/3eDCOQVPjKrSEaq90+RJ5
+        N4JieS673YHw2MHNwqlAhlA=
+X-Google-Smtp-Source: ABdhPJymzN4HIFPWCqToGODe6lRdU+8SC1V1goiAZWdYlI/8xEFUJRgE3qC3l9Cpvq7ObzAhCyWUcg==
+X-Received: by 2002:a17:906:770b:: with SMTP id q11mr5435245ejm.224.1589486866213;
+        Thu, 14 May 2020 13:07:46 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
-        by smtp.googlemail.com with ESMTPSA id bd10sm1472edb.10.2020.05.14.13.07.34
+        by smtp.googlemail.com with ESMTPSA id bd10sm1472edb.10.2020.05.14.13.07.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 13:07:35 -0700 (PDT)
+        Thu, 14 May 2020 13:07:45 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Abhishek Sahu <absahu@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>, stable@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -74,9 +73,9 @@ Cc:     Abhishek Sahu <absahu@codeaurora.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/10] PCI: qcom: Change duplicate PCI reset to phy reset
-Date:   Thu, 14 May 2020 22:07:04 +0200
-Message-Id: <20200514200712.12232-4-ansuelsmth@gmail.com>
+Subject: [PATCH v4 07/10] PCI: qcom: Define some PARF params needed for ipq8064 SoC
+Date:   Thu, 14 May 2020 22:07:08 +0200
+Message-Id: <20200514200712.12232-8-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200514200712.12232-1-ansuelsmth@gmail.com>
 References: <20200514200712.12232-1-ansuelsmth@gmail.com>
@@ -87,74 +86,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Abhishek Sahu <absahu@codeaurora.org>
+Set some specific value for Tx De-Emphasis, Tx Swing and Rx equalization
+needed on some ipq8064 based device (Netgear R7800 for example). Without
+this the system locks on kernel load.
 
-The deinit issues reset_control_assert for PCI twice and does not contain
-phy reset.
-
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: stable@vger.kernel.org # v4.5+
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 4bf93ab8c7a7..4512c2c5f61c 100644
+index f2ea1ab6f584..f5398b0d270c 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -280,14 +280,14 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
- {
+@@ -46,6 +46,9 @@
+ 
+ #define PCIE20_PARF_PHY_CTRL			0x40
+ #define PCIE20_PARF_PHY_REFCLK			0x4C
++#define PHY_REFCLK_SSP_EN			BIT(16)
++#define PHY_REFCLK_USE_PAD			BIT(12)
++
+ #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+ #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+ #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+@@ -77,6 +80,18 @@
+ #define DBI_RO_WR_EN				1
+ 
+ #define PERST_DELAY_US				1000
++/* PARF registers */
++#define PCIE20_PARF_PCS_DEEMPH			0x34
++#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		((x) << 16)
++#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	((x) << 8)
++#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	((x) << 0)
++
++#define PCIE20_PARF_PCS_SWING			0x38
++#define PCS_SWING_TX_SWING_FULL(x)		((x) << 8)
++#define PCS_SWING_TX_SWING_LOW(x)		((x) << 0)
++
++#define PCIE20_PARF_CONFIG_BITS		0x50
++#define PHY_RX0_EQ(x)				((x) << 24)
+ 
+ #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+ #define SLV_ADDR_SPACE_SZ			0x10000000
+@@ -293,6 +308,7 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
++	struct device_node *node = dev->of_node;
+ 	u32 val;
+ 	int ret;
  
-+	clk_disable_unprepare(res->phy_clk);
- 	reset_control_assert(res->pci_reset);
- 	reset_control_assert(res->axi_reset);
- 	reset_control_assert(res->ahb_reset);
- 	reset_control_assert(res->por_reset);
--	reset_control_assert(res->pci_reset);
-+	reset_control_assert(res->phy_reset);
- 	clk_disable_unprepare(res->iface_clk);
- 	clk_disable_unprepare(res->core_clk);
--	clk_disable_unprepare(res->phy_clk);
- 	clk_disable_unprepare(res->aux_clk);
- 	clk_disable_unprepare(res->ref_clk);
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
-@@ -325,12 +325,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 		goto err_clk_core;
- 	}
+@@ -347,6 +363,17 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 	val &= ~BIT(0);
+ 	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
  
--	ret = clk_prepare_enable(res->phy_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable phy clock\n");
--		goto err_clk_phy;
--	}
--
- 	ret = clk_prepare_enable(res->aux_clk);
- 	if (ret) {
- 		dev_err(dev, "cannot prepare/enable aux clock\n");
-@@ -383,6 +377,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 		return ret;
- 	}
- 
-+	ret = clk_prepare_enable(res->phy_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable phy clock\n");
-+		goto err_deassert_ahb;
++	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
++		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
++			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
++			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
++		       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
++		writel(PCS_SWING_TX_SWING_FULL(120) |
++			       PCS_SWING_TX_SWING_LOW(120),
++		       pcie->parf + PCIE20_PARF_PCS_SWING);
++		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
 +	}
 +
- 	/* wait for clock acquisition */
- 	usleep_range(1000, 1500);
- 
-@@ -400,8 +400,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- err_clk_ref:
- 	clk_disable_unprepare(res->aux_clk);
- err_clk_aux:
--	clk_disable_unprepare(res->phy_clk);
--err_clk_phy:
- 	clk_disable_unprepare(res->core_clk);
- err_clk_core:
- 	clk_disable_unprepare(res->iface_clk);
+ 	/* enable external reference clock */
+ 	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+ 	val |= BIT(16);
 -- 
 2.25.1
 
