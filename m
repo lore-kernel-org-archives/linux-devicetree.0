@@ -2,199 +2,112 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4835FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBE0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C9C2065D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9AB20675
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O18fRYkJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6gmBW2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgENQLi (ORCPT
+        id S1726294AbgENQL7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 12:11:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51516 "EHLO
+        Thu, 14 May 2020 12:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgENQLi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 12:11:38 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0F6C061A0C;
-        Thu, 14 May 2020 09:11:37 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id b18so1532738ilf.2;
-        Thu, 14 May 2020 09:11:37 -0700 (PDT)
+        with ESMTP id S1726073AbgENQL7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 12:11:59 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B043C061A0C
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 09:11:59 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r22so1417119pga.12
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 09:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pWAwL4iY43kHKyzq6JgPam8fDxHVDDtXpG7mRg32aJE=;
-        b=O18fRYkJuCVHLzSDHMiTV/YEvTTqeLQpSzk7AUAl1veaDpHB0AhDrBCf6pG6NOIJ69
-         IVKsNZ3fA75gmbzuDAe9ruH9MEFZd4RjPd5l7XMXsa9JnQglfU6WlqT5lKEfreMB5mpa
-         yLiuZhfm1eIS1G/957nwLkHVLS+MHbLeJ+wOrXDXNXNqjYGERRRjU4frvhsoaaEfctCs
-         TOK4ipsoWjopZW/F3wg+NJ2uwwRe8hgMBHYVXkuqgOqby141+OUTgLvFgNbfg3CODLo9
-         TdoiXHXOZy+3W9snj2LFBt6LX/eRdGwR20ISOpHddhvO3HEKQmYx8gnopiazWe6kaubv
-         UEXg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=kERbVPKOH+FX4g8aG+gjJYUwyTHcVS7ylYTdMC7w4rU=;
+        b=M6gmBW2wkreDT1FjE3XduSEnQnlx1OmUN/sGm+c1dA/9z8Lf+QwnE+4mSUZQxq3Yqu
+         M+JaZF5Iuuwjecknhi+K9sE/vriSN4mlm9OwWCv2XKKJCA1r0Y1TW0CEjmAZ3XrnKeu1
+         6dlncoMK7eu2uW+ysxkfQK101dKE0lU0xBsST/dXRin/2gdLg5OQKZ6nQltS4hfH/7F1
+         40eds0q0Ae92dk8jUUsigc+rLMM26S2w3p3JAieBkUe9F1kZFZjFs/+Wv/R30hIWvBQz
+         dSYWgFo7wkCPwULy0CDpZ+UwLEXqPIMC6ucOabOIVLSIk1rCiq+/QRzlJpmvZGrIyObB
+         WivA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pWAwL4iY43kHKyzq6JgPam8fDxHVDDtXpG7mRg32aJE=;
-        b=CK/IU3wAf7Ml7o/oouS4rFRY3+v0USZnpEHo30+KjSo5UuJbSgq3qwyTd37ReQDCzG
-         BS1+2Lv/UzDrljWE75OekhkJH/sJvFps0z6j95f/Ocj91WdjmFs9tGN2y4Sr0PM1yt58
-         cHraaJeDyriwLePOTXxzKebFYQMkhl+4hutVLqXqm5ZHzUeHq3OdZp1ZDHA2JDqyR+Xp
-         bS8Y+GrIj7a35rqDHLjwyd5hyUL3O4S9BoQz/jaZhEErfx89C5GQ2M1CTiRHbW5FhFXm
-         weIB2fU/sULEJ+m4EmAgp/KzTPSd/KhxidR9gM/nmG1UnUmTY7RvOwtoPZP4OqeFzjCd
-         qJzA==
-X-Gm-Message-State: AOAM530SHhqYJ+IAkVQkGiC542wOYKYcCrfv8m8cXzWcm2ZishK84uwC
-        beqz0OP6KE0RcoThHZba6tiOWqP2/uBDBoN4U73wHDfn/Es=
-X-Google-Smtp-Source: ABdhPJx6Rsp5ROFxXwYlYudzEUx9ly+h8b+Qj8M+Twx/mohFFLUuzJpw12Ch5e3R3mp3ipZq22gY7LfKaKb8NlNe79A=
-X-Received: by 2002:a05:6e02:68e:: with SMTP id o14mr1854794ils.184.1589472696421;
- Thu, 14 May 2020 09:11:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
- <1589267017-17294-6-git-send-email-dillon.minfei@gmail.com>
- <CACRpkdbZoMDC-D12CByKJUZbu4shqixC=QrKwJUd8x=nyK7seQ@mail.gmail.com>
- <CAL9mu0LVsePqifEC+-FR+NxvuZT3UGpU86KhzaTqb7w_Px0z2g@mail.gmail.com> <CACRpkdbcD7i+kNoJ9YP5XXTtLi12=yzW5OBNzet5oRdwPYz=dA@mail.gmail.com>
-In-Reply-To: <CACRpkdbcD7i+kNoJ9YP5XXTtLi12=yzW5OBNzet5oRdwPYz=dA@mail.gmail.com>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Thu, 14 May 2020 16:11:00 +0800
-Message-ID: <CAL9mu0Kdc4TqcGB7JYDWkOJqwvxX1m_026aB0iprkHTzN4HXoQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] drm/panel: Add ilitek ili9341 driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=kERbVPKOH+FX4g8aG+gjJYUwyTHcVS7ylYTdMC7w4rU=;
+        b=cgEwXqsQ55grOVQLzVaLIs/KlO5LWyRRRi9ajRHcGiDjAfGq7fNzjHD21XWGrcwB+6
+         nG7vVjZs8TchJcGq4z3m5z0q3+fU5tGSUoFyDlbGvFUK9RaF9F227MsaOdn0dvz+4DKy
+         JCX6bHVAxR8D3mDu5nceMl+vi0bo42Axmiocpof39Ml4fXz9ioCxZgWEYuvBM1NlHGEe
+         xChAuFQ8AWQOS56crvXxqxjJPEtJiclHTOVPRpV0EDZ3VohROAopZYPlDR108kBo5EkS
+         WutZdUORLYkOVFpBXieuSCl3rS82C80LZe1u/eoRc80ee8ZoH27ChwhUCLjMGTUAf+4z
+         iAHQ==
+X-Gm-Message-State: AOAM530qE5byZHJrrZUkz+jvfEn6NFDRnyWTMflT/n6RANqt3V5AgA3d
+        XPx1o5sVzJBAoVQtRrBs1Lo=
+X-Google-Smtp-Source: ABdhPJx221SdCqxog59nayKDC2HJHmIZOnrjna5bc90Ic4mLEglczKwHZp+qojX8hzWdHl57pCXkSA==
+X-Received: by 2002:a63:f90a:: with SMTP id h10mr4621315pgi.57.1589472718688;
+        Thu, 14 May 2020 09:11:58 -0700 (PDT)
+Received: from localhost.localdomain ([106.215.24.137])
+        by smtp.gmail.com with ESMTPSA id t5sm2331755pgp.80.2020.05.14.09.11.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 May 2020 09:11:58 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     cristian.ciocaltea@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v1 4/9] arm64: dts: actions: do not merge disable sps node from S700
+Date:   Thu, 14 May 2020 21:40:52 +0530
+Message-Id: <1589472657-3930-5-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
+References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus,
+After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
+Actions Semi S700") following error has been observed while booting
+Linux on Cubieboard7-lite(based on S700 SoC).
 
-Linus Walleij <linus.walleij@linaro.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=8814=
-=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:08=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> On Thu, May 14, 2020 at 12:22 PM dillon min <dillon.minfei@gmail.com> wro=
-te:
->
-> > > > +       /* Gamma */
-> > > > +       mipi_dbi_command(dbi, ILI9341_3GAMMA_EN, 0x00);
-> > > > +       mipi_dbi_command(dbi, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
-> > > > +       mipi_dbi_command(dbi, ILI9341_PGAMMA,
-> > > > +                        0x0f, 0x31, 0x2b, 0x0c, 0x0e, 0x08, 0x4e, =
-0xf1,
-> > > > +                        0x37, 0x07, 0x10, 0x03, 0x0e, 0x09, 0x00);
-> > > > +       mipi_dbi_command(dbi, ILI9341_NGAMMA,
-> > > > +                        0x00, 0x0e, 0x14, 0x03, 0x11, 0x07, 0x31, =
-0xc1,
-> > > > +                        0x48, 0x08, 0x0f, 0x0c, 0x31, 0x36, 0x0f);
-> > >
-> > > It seems to be copies of the stuff above, but why is there a differen=
-t
-> > > gamma if you use DBI?
->
-> > for dbi interface, currently i just copy the code from tiny/ili9341.c.
-> > as so many boards use this driver now, like raspberry pi, etc
-> > i'm afraid it's will not work after modification. so, just leave the
-> > original code there.
->
-> OK if you move it to ili9341_config it will be clear which panels
-> need this gamma and which panels need another gamma.
->
-> I think there should be one ili9341_config for the new st,*
-> variant and one for the old DBI variant.
->
-Okay, it's a good idea to setup two different configs.  ili9341_dbi_config,
-ili9341_dpi_config. first for old dbi variant, second for dpi variant.
+[    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
+resource [mem 0xe01b0000-0xe01b0fff]
+[    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
 
-> > anther question:
-> > is there any panel driver have dbi & dpi or dpi & dsi supported? which
-> > i mean support
-> > two different panel interface in one driver.
-> > thanks
->
-> Usually you split the driver in three files becuase a driver can
-> only list one initcall, and also it makes it modularized.
->
-> There is nothing in-tree but look at my branch here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
-log/?h=3Dux500-skomer-v5.7-rc1
->
-> You see how I split up the s6e63m0 driver in one SPI part
-> and one DSI part:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
-commit/?h=3Dux500-skomer-v5.7-rc1&id=3D6c0e1fb5df5fa8fa857dee65f6c0f54d06d1=
-58a7
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
-commit/?h=3Dux500-skomer-v5.7-rc1&id=3Dcfbf562cc709b53b62f5fbc7fedf176ffa17=
-b088
->
-> The overall idea should work the same with DBI.
->
-> Yours,
-> Linus Walleij
->
-> Yours,
-> Linus Walleij
+This is due to the fact that memory range for "sps" power domain controller
+clashes with pinctrl.
 
-Thanks for share, but i thinks it's not suitable to my case. the difference=
- is
-for panel s6e63m0
-1 spi only for panel register configuration
-2 dpi for rgb video data transfer (drm_panel_init(..., DRM_MODE_CONNECTOR_D=
-PI);)
+This commit disable "sps" to avoid this conflict and let us test DMA and MMC
+related changes.
 
-my case:
-1 support ili9341 by drm mipi dbi (only spi bus,  "3/4 line serial
-interface", pdf chap 7.6.1), Ie, raspberry pi + ili9341 + spi
-2 support ili9341 by spi & dpi (spi for register set, dpi for rgb
-data, "6/16/18 bit parallel rgb interface", pdf chap 7.6.8)
-   Ie, stm32f429+ili9341+ltdc+spi
-these two communication type has no dependency with each other.
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since RFC:
+	* kept as do not merge.
+---
+ arch/arm64/boot/dts/actions/s700.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-DBI has much more difference than DPI & SPI, or DSI & SPI in drm.
-   drm_mipi_dbi support both panel register configuration and video
-data transfer via spi
-   with or without dc pins.
-   also the registration to drm is difference, for dbi is
-mipi_dbi_dev_init and drm_fbdev_generic_setup
-   for panel driver is drm_panel_init and drm_panel_add
-at soc's view, we can drive ili9341 to work just by drm mipi dbi
-(actually it's dbi -> spi bus) without host's lcd or dsi controller
-but for some panel can't transfer video data by spi, and with dpi or
-dsi interface, must connect to host's lcd or dsi controller.
+diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+index 2006ad5424fa..0397c5dd3dec 100644
+--- a/arch/arm64/boot/dts/actions/s700.dtsi
++++ b/arch/arm64/boot/dts/actions/s700.dtsi
+@@ -220,6 +220,7 @@
+ 			compatible = "actions,s700-sps";
+ 			reg = <0x0 0xe01b0100 0x0 0x100>;
+ 			#power-domain-cells = <1>;
++			status = "disabled";
+ 		};
+ 
+ 		timer: timer@e024c000 {
+-- 
+2.7.4
 
-so, for ilitek-ili9341 , it's use different dts binding drive to
-register different client type (dbi, or dpi & spi) to drm.
-actually, there is a driver tiny/ili9341.c support this panel by spi
-bus only already. but, from Sam's suggestion, should extend this
-driver
-to support dpi & spi interface, this is the background of panel-ilitek-ili9=
-341.c
-
-thanks.
-
-best regards.
-
-dillon
