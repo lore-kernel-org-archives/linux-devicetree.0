@@ -2,156 +2,195 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0869C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ADAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABB8720671
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB72206A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 16:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Yl/aIKqo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WOtOzTtk"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cIxk/9B0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbgENQWo (ORCPT
+        id S1725975AbgENQfZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 12:22:44 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:43585 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725951AbgENQWn (ORCPT
+        Thu, 14 May 2020 12:35:25 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36512 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725977AbgENQfX (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 12:22:43 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 963665C0212;
-        Thu, 14 May 2020 12:22:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 14 May 2020 12:22:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=BBAPlSEHy7qfk456tIvoxyLmZFq
-        Ly4UcCnDWEG14lto=; b=Yl/aIKqo4MPIc7QpZmLqew2xx3UMNUzD9BV+J+dmaOQ
-        y2UQEJLuUAMouu92M3NUxkyMUMrAkcZxbu6eGRFmQsyEKTyTrudQ8j1QWzTg6ley
-        uwky1kRZW7lyxLHTpEls3IwIn/l0Iif3xhcrkhyhl4JcClGUfM4ZQyJo8ktRBY2a
-        TiQ7zDyRRrYDdstZPLhTO42CngCXE1WSrAkjS91b+HpAc3M4MYNK4fVtcEW2MTkC
-        rcv/7kSZD7FjwP9fNsZ/yBVwP4q2b7A9J6UnIKAoJtc20ZXnEjONDJvu5MDo5GWq
-        Z8kyYIxQKc5B9A5cYYeytdN8ZtfgN/MrY6fKPXXXtzQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=BBAPlS
-        EHy7qfk456tIvoxyLmZFqLy4UcCnDWEG14lto=; b=WOtOzTtkbEXrlLfpeXbIY4
-        4sB3pcXdz+ovlZEpBIeYHiarKEKF9SzbbLqpztSi0ZrSqrv4vjMrp+Z8u92sU4En
-        C8o3muOawFpn4+5vjPdC4NkgfstnrhYDl59wNrTerIgFY568s59hkHIMWfmrKQcb
-        b/mKZN82qsibYCn/E/FlBx4xiHKlFDX5MwX+ExvAnSLeVkb3f2NOZda+/mGnpVOw
-        uNclSAh1q5wC4yjHm3PKQI2+0k1CItr86CsuLl+PuGnmtt5XpzvjYPYA84IHRtXN
-        5lJAxs1YUYNlRGRuIcDGtChpR86NCAw45pUjZ9LnnzhseS0ULx5Y8Mycnh2yQfxg
-        ==
-X-ME-Sender: <xms:TXC9XpNDVcPyn68f-ks293yeNgPlPtzPyxTObRAoI-egFr8qGIep2w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeigdelvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:TXC9Xr_zfdP2leqWlSrUsY3yr_xIyeKY4qRFd6UK5n_0lueJrD8ioQ>
-    <xmx:TXC9XoS6EoMGVFTa-s3BvO_emvkjxtlMuKwKEmfImqsXxWpTZ_UHYQ>
-    <xmx:TXC9XltuH1G-4lKs5iO5viP83uvaV7km3tzxKbpNBs0cVwYsrJBtfw>
-    <xmx:UnC9Xo5iA9Nm8bC-KW7sn6PAEqC6Vm78k-mxEydZzCz8egtAj7uMNw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2D873328005A;
-        Thu, 14 May 2020 12:22:37 -0400 (EDT)
-Date:   Thu, 14 May 2020 18:22:35 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v4 0/5] iommu: Add Allwinner H6 IOMMU driver
-Message-ID: <20200514162235.he2q7vx3dra5ck2l@gilmour.lan>
-References: <cover.b27dedd61e008ffcf55a028ccddda3bb4d21dfc8.1589378833.git-series.maxime@cerno.tech>
- <20200514123855.GI18353@8bytes.org>
- <20200514130900.k4gvr3zcajg3rouc@gilmour.lan>
- <20200514131647.GK18353@8bytes.org>
+        Thu, 14 May 2020 12:35:23 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EGX9LD016146;
+        Thu, 14 May 2020 18:34:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=6CWTZEVuPSh18Gx/dEw+pHe2HNLYt2f856wC0oo8ZZs=;
+ b=cIxk/9B0oAGAeKm62YX9t0NG7W/KMHFKjA5dyFQF37+EeX0MB4mo0hNR4z/RS8e0b5vR
+ EdJL3EODjAONumZPR8ECm+MFUHtLVBnomkx0w9QNoSpV2Il2jUWBDGAnKF8O/KghUqBa
+ 45EzhCuopvvmzsYCHsaiqJxy4cFetWdNLv8TP4OZYjOMgMRd28/g/prkc6U3IkGv7SMC
+ wgZbBxMcoIT1SpJcq3EEhwB2mXiiLIewFd0MeSoGcporBlDjWaeFGQti9NpJrSmm7xqB
+ /OfUcZj72DSxJ5ax8frY5vrK9eYTkAEcbbwHn6+LKTMR71MFvsPoDebwVYr8WggjsSeZ 2Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3100vymmu2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 18:34:53 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C044A10002A;
+        Thu, 14 May 2020 18:34:51 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AACFD2A7CEA;
+        Thu, 14 May 2020 18:34:51 +0200 (CEST)
+Received: from [10.211.8.23] (10.75.127.45) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
+ 2020 18:34:49 +0200
+Subject: Re: [PATCH v4 06/10] dt-bindings: mtd: update STM32 FMC2 NAND
+ controller documentation
+To:     Rob Herring <robh@kernel.org>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+ <1588756279-17289-7-git-send-email-christophe.kerello@st.com>
+ <20200514150028.GB28489@bogus>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <9ffc04cf-137f-5ee5-57ff-39a876abfb34@st.com>
+Date:   Thu, 14 May 2020 18:34:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="phtkiivizeocuqcp"
-Content-Disposition: inline
-In-Reply-To: <20200514131647.GK18353@8bytes.org>
+In-Reply-To: <20200514150028.GB28489@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_05:2020-05-14,2020-05-14 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
---phtkiivizeocuqcp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/14/20 5:00 PM, Rob Herring wrote:
+> On Wed, May 06, 2020 at 11:11:15AM +0200, Christophe Kerello wrote:
+>> These bindings can be used on SOCs where the FMC2 NAND controller is
+>> in standalone. In case that the FMC2 embeds 2 controllers (an external
+>> bus controller and a raw NAND controller), the register base and the
+>> clock will be defined in the parent node. It is the reason why the
+>> register base address and the clock are now optional.
+>>
+>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>> ---
+>>   .../devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml   | 19 ++++++++++---------
+>>   1 file changed, 10 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+>> index b059267..68fac1a 100644
+>> --- a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+>> +++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+>> @@ -18,13 +18,15 @@ properties:
+>>   
+>>     reg:
+>>       items:
+>> -      - description: Registers
+>> +      - description: Registers (optional)
+> 
+> The only thing that can be optional are the last entries. You have to do
+> a 'oneOf' with 6 entries and 7 entries.
 
-Hi,
+Ok, so the way to describe the reg property in my case should be:
+        reg:
+          oneOf:
+            - description: FMC2 embeds the NFC controller in standalone.
+              items:
+                - description: Registers
+                - description: Chip select 0 data
+                - description: Chip select 0 command
+                - description: Chip select 0 address space
+                - description: Chip select 1 data
+                - description: Chip select 1 command
+                - description: Chip select 1 address space
 
-On Thu, May 14, 2020 at 03:16:47PM +0200, Joerg Roedel wrote:
-> On Thu, May 14, 2020 at 03:09:00PM +0200, Maxime Ripard wrote:
-> > On Thu, May 14, 2020 at 02:38:55PM +0200, Joerg Roedel wrote:
-> > > On Wed, May 13, 2020 at 04:07:19PM +0200, Maxime Ripard wrote:
-> > > > Maxime Ripard (5):
-> > > >   dt-bindings: iommu: Add Allwinner H6 IOMMU bindings
-> > > >   dt-bindings: display: sun8i-mixer: Allow for an iommu property
-> > > >   iommu: Add Allwinner H6 IOMMU driver
-> > > >   arm64: dts: allwinner: h6: Add IOMMU
-> > > >   drm/sun4i: mixer: Call of_dma_configure if there's an IOMMU
-> > >=20
-> > > Applied all to the IOMMU tree, thanks. The code lives in the
-> > > arm/allwinner branch.
-> >=20
-> > Did you also merge the DTS and DRM patches?
-> >=20
-> > Ideally, they should be merged through other trees to avoid the conflic=
-ts as
-> > much as possible (arm-soc and drm-misc respectively).
-> >=20
-> > If it's an option, could you drop all of them but "dt-bindings: iommu: =
-Add
-> > Allwinner H6 IOMMU bindings" and "iommu: Add Allwinner H6 IOMMU driver"?
->=20
-> Okay, just to be on the safe side, I am going to drop:
->=20
-> 	dt-bindings: display: sun8i-mixer: Allow for an iommu property
-> 	arm64: dts: allwinner: h6: Add IOMMU
-> 	drm/sun4i: mixer: Call of_dma_configure if there's an IOMMU
->=20
-> from the iommu-tree?
+            - description: FMC2 embeds the NFC controller and the EBI
+                controller.
+              items:
+                - description: Chip select 0 data
+                - description: Chip select 0 command
+                - description: Chip select 0 address space
+                - description: Chip select 1 data
+                - description: Chip select 1 command
+                - description: Chip select 1 address space
 
-Yep, please :)
+> 
+> And where's your new compatible string for this different h/w?
 
-> I took them because you are also maintaining the DRM driver, which
-> counted as an implicit ACK for me :)
+ From NFC controller point of view, it is the same HW.
+In the case that we have 2 controllers embedded, the register base is 
+shared.
+The NFC driver will check at probe time the compatible string of its 
+parent node.
+In case that it is "st,stm32mp1-fmc2-ebi", then the driver will find the 
+register base in the parent node (EBI node), otherwise it will find it 
+in the NFC node.
+Is it better to have 2 compatible strings (one for each reg description) 
+than checking the parent's compatible string and have only one 
+compatible string?
 
-I also maintain the DTS patches for that matter, but we have a good number =
-of
-patches queued up for those files in those trees usually, so it's easier for
-everyone to avoid the conflicts and just merge them into separate trees whe=
-n we
-can.
+Regards,
+Christophe Kerello.
 
-Thanks!
-Maxime
-
---phtkiivizeocuqcp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXr1wSgAKCRDj7w1vZxhR
-xQ1UAP9NNM9p3Y+kfFB3QB7uFNTQoj45RAJZ4+7liXO1OnMMYQD9FQkWyw3VFTeT
-i82PNurLgs71brOZ1Qfwy2UAvsBU8QE=
-=thRW
------END PGP SIGNATURE-----
-
---phtkiivizeocuqcp--
+> 
+>>         - description: Chip select 0 data
+>>         - description: Chip select 0 command
+>>         - description: Chip select 0 address space
+>>         - description: Chip select 1 data
+>>         - description: Chip select 1 command
+>>         - description: Chip select 1 address space
+>> +    minItems: 6
+>> +    maxItems: 7
+>>   
+>>     interrupts:
+>>       maxItems: 1
+>> @@ -61,7 +63,6 @@ required:
+>>     - compatible
+>>     - reg
+>>     - interrupts
+>> -  - clocks
+>>   
+>>   examples:
+>>     - |
+>> @@ -77,13 +78,13 @@ examples:
+>>               <0x81000000 0x1000>,
+>>               <0x89010000 0x1000>,
+>>               <0x89020000 0x1000>;
+>> -            interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+>> -            dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
+>> -                   <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
+>> -                   <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
+>> -            dma-names = "tx", "rx", "ecc";
+>> -            clocks = <&rcc FMC_K>;
+>> -            resets = <&rcc FMC_R>;
+>> +      interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+>> +      dmas = <&mdma1 20 0x2 0x12000a02 0x0 0x0>,
+>> +             <&mdma1 20 0x2 0x12000a08 0x0 0x0>,
+>> +             <&mdma1 21 0x2 0x12000a0a 0x0 0x0>;
+>> +      dma-names = "tx", "rx", "ecc";
+>> +      clocks = <&rcc FMC_K>;
+>> +      resets = <&rcc FMC_R>;
+>>         #address-cells = <1>;
+>>         #size-cells = <0>;
+>>   
+>> -- 
+>> 1.9.1
+>>
