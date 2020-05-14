@@ -2,203 +2,88 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EE2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 06:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F9EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 06:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79746205CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 06:04:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t+81K8xI"
+	by mail.kernel.org (Postfix) with ESMTP id 998202070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 06:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589436687;
+	bh=lgAfsk3eTdBS1nBtTAp6vjs9oy84Hv0KqdYyYePcZLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AIb7MH06z/5gl/Ae/PP50BtdX2TiAHFYHlw2Fr/PLpfIOGz90/5Uid9oe9Rg+asp9
+	 m3enWlpfLgM36cqyh8G2Acg9udiRDGN5tHuKMUmN2gGWlSfnA/422LCqPwwyRessPv
+	 WUvx+1wf5AVhq6AZ5ihVHZQfmLhHuFQ19gH08eYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725976AbgENGE1 (ORCPT
+        id S1725866AbgENGLY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 02:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725794AbgENGE0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 02:04:26 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42568C061A0C
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 23:04:26 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p21so801352pgm.13
-        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 23:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fdmSIWMsCpUW7wJAjQcM04l5EV2d38V1LLlFH56zh/Q=;
-        b=t+81K8xIWHZAb+qZy4b/CyLYaDJEC3buGiFxgEM+vGGtP3OpgN/uRorgVQdklsZolt
-         fUMiHNpNafAs3xthBI978lkA1NzlDyGuLkTuTs++Fwos6trlUHlOCcWOLT51P/tbaPa8
-         EMAX6Xneovwlf0jYO+DSG7ju4bF4ps5Pnu6r04J47Kkq3Jn9Yqr0qHK99/QnLcb9TWOe
-         ELDo+1d9D3l3uzm0ltFq+Gz3mTRDd7+gli5UHpqztRYjkZV+BL79pSaa/x1f/AvQIBqA
-         eMHOSwaYnIjuc0cY0Fbh7YoccJUt6COcV9CoG13JZrx4h1P3lnzkrDoHP+bYr+91ROv4
-         5yDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fdmSIWMsCpUW7wJAjQcM04l5EV2d38V1LLlFH56zh/Q=;
-        b=mDurQGGXg9dKpPFk/RImMLq7alMm2t5nGcoSsnfO563oeG2/DV0LiRUcJD/g+IbNWl
-         jQyXeDmXf5EnZcQGFHG2fDTFQWgEuhd/blD1kFHWKU6roFunIbqVAy3G+KgMsuccmBdW
-         LzTUFX40FF5QqqMA62a2d4pPMfgXICO6XznMRE0ExoI0eVEtvdea1UUalHafMNbtbgx3
-         4mp2bP6+wO/U26SMpNS6EYfkaFP4mB3wcUwfQv+OxH9V9LD9UhMoh0Z5UZL/XxLkeu3y
-         NZDPAKkxmMIT+8qV/b0Xe8nRLOLiczkFUbgEYPGvmQ+9uAHKZ32IlL7Ey9NgSyOaei7U
-         cmUA==
-X-Gm-Message-State: AOAM533otk2EBRGzFKReiFkJASBfgSmewCQE5qXg8npBViD09heds8f5
-        hpiOZ8qlQpaOH9sRMUCh8vdehQ==
-X-Google-Smtp-Source: ABdhPJy8/5JndA1WeHN8nNz8gCYQDDpjdxcICz8QbFZopFUpG6xUKfXZ6hED2rLKq8OOCHvu7Dtn/w==
-X-Received: by 2002:a62:6dc3:: with SMTP id i186mr2697519pfc.273.1589436265605;
-        Wed, 13 May 2020 23:04:25 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v189sm1218271pfv.176.2020.05.13.23.04.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 23:04:24 -0700 (PDT)
-Date:   Wed, 13 May 2020 23:04:22 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 pinctrl
- bindings
-Message-ID: <20200514060422.GL1302550@yoga>
-References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
- <20200417061907.1226490-2-bjorn.andersson@linaro.org>
- <20200429213453.GA32114@bogus>
+        Thu, 14 May 2020 02:11:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbgENGLY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 02:11:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73C19206D4;
+        Thu, 14 May 2020 06:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589436683;
+        bh=lgAfsk3eTdBS1nBtTAp6vjs9oy84Hv0KqdYyYePcZLQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bZXzY7gyv5zKYElVKKiYQlhweKPTH1RYphccgVbIGHryFOgSy66qS4qWZYxYEeVgN
+         nfCrcU1YKIIy8ya3PoKBNLNvC9DlyNYhJNYoOjPeKLE/9H66SGH6SHGb6A+5+bV5x7
+         2Idtx63UnEOY/hU98tBIMugsUfoiygwZFlFrDQys=
+Date:   Thu, 14 May 2020 08:11:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCHv1 01/19] kobject: increase allowed number of uevent
+ variables
+Message-ID: <20200514061121.GA1457703@kroah.com>
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+ <20200513185615.508236-2-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429213453.GA32114@bogus>
+In-Reply-To: <20200513185615.508236-2-sebastian.reichel@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 29 Apr 14:34 PDT 2020, Rob Herring wrote:
-> On Thu, Apr 16, 2020 at 11:19:06PM -0700, Bjorn Andersson wrote:
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
-[..]
-> > +#PIN CONFIGURATION NODES
-> > +patternProperties:
-> > +  '^.*$':
-> > +    if:
-> > +      type: object
-> > +    then:
+On Wed, May 13, 2020 at 08:55:57PM +0200, Sebastian Reichel wrote:
+> SBS battery driver exposes 32 power supply properties now,
+> which will result in uevent failure on (un)plugging the
+> battery. Other drivers (e.g. bq27xxx) are also coming close
+> to this limit, so increase it.
 > 
-> Needs a $ref to the standard properties.
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  include/linux/kobject.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Would be good to show a child node in the example too. (And try having 
-> an error in a standard property type to verify you get an error).
-> 
+> diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+> index e2ca0a292e21..75e822569e39 100644
+> --- a/include/linux/kobject.h
+> +++ b/include/linux/kobject.h
+> @@ -29,7 +29,7 @@
+>  #include <linux/uidgid.h>
+>  
+>  #define UEVENT_HELPER_PATH_LEN		256
+> -#define UEVENT_NUM_ENVP			32	/* number of env pointers */
+> +#define UEVENT_NUM_ENVP			64	/* number of env pointers */
+>  #define UEVENT_BUFFER_SIZE		2048	/* buffer for the variables */
+>  
+>  #ifdef CONFIG_UEVENT_HELPER
 
-Finally looked into this. By $ref'ing pinmux-node.yaml I can drop pins
-and function from below properties, and by $ref'ing pincfg-node.yaml I
-can drop the pinconf entries listed.
-
-But how do I $ref both?
-
-What's the appropriate method for amending pins, function and
-drive-strength with the more specific value set? Should I both $ref them
-and list them here?
-
-How do I limit which standard properties are actually supported in this
-binding?
-
-Thanks,
-Bjorn
-
-> > +      properties:
-> > +        pins:
-> > +          description:
-> > +            List of gpio pins affected by the properties specified in this
-> > +            subnode.
-> > +          items:
-> > +            oneOf:
-> > +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
-> > +              - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset ]
-> > +          minItems: 1
-> > +          maxItems: 36
-> > +
-> > +        function:
-> > +          description:
-> > +            Specify the alternative function to be configured for the specified
-> > +            pins.
-> > +
-> > +          enum: [ aoss_cti, atest, audio_ref, cam_mclk, cci_async, cci_i2c,
-> > +            cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4, cri_trng,
-> > +            cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
-> > +            ddr_pxi2, ddr_pxi3, dp_hot, dp_lcd, gcc_gp1, gcc_gp2, gcc_gp3, gpio,
-> > +            ibi_i3c, jitter_bist, lpass_slimbus, mdp_vsync, mdp_vsync0,
-> > +            mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s0_data0, mi2s0_data1,
-> > +            mi2s0_sck, mi2s0_ws, mi2s1_data0, mi2s1_data1, mi2s1_sck, mi2s1_ws,
-> > +            mi2s2_data0, mi2s2_data1, mi2s2_sck, mi2s2_ws, pci_e0, pci_e1,
-> > +            pci_e2, phase_flag, pll_bist, pll_bypassnl, pll_clk, pll_reset,
-> > +            pri_mi2s, prng_rosc, qdss_cti, qdss_gpio, qspi0, qspi1, qspi2, qspi3,
-> > +            qspi_clk, qspi_cs, qup0, qup1, qup10, qup11, qup12, qup13, qup14,
-> > +            qup15, qup16, qup17, qup18, qup19, qup2, qup3, qup4, qup5, qup6,
-> > +            qup7, qup8, qup9, qup_l4, qup_l5, qup_l6, sd_write, sdc40, sdc41,
-> > +            sdc42, sdc43, sdc4_clk, sdc4_cmd, sec_mi2s, sp_cmu, tgu_ch0, tgu_ch1,
-> > +            tgu_ch2, tgu_ch3, tsense_pwm1, tsense_pwm2, tsif0_clk, tsif0_data,
-> > +            tsif0_en, tsif0_error, tsif0_sync, tsif1_clk, tsif1_data, tsif1_en,
-> > +            tsif1_error, tsif1_sync, usb2phy_ac, usb_phy, vsense_trigger ]
-> > +
-> > +        drive-strength:
-> > +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> > +          default: 2
-> > +          description:
-> > +            Selects the drive strength for the specified pins, in mA.
-> > +
-> > +        bias-pull-down: true
-> > +
-> > +        bias-pull-up: true
-> > +
-> > +        bias-disable: true
-> > +
-> > +        output-high: true
-> > +
-> > +        output-low: true
-> > +
-> > +      required:
-> > +        - pins
-> > +        - function
-> > +
-> > +      additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +  - interrupts
-> > +  - interrupt-controller
-> > +  - '#interrupt-cells'
-> > +  - gpio-controller
-> > +  - '#gpio-cells'
-> > +  - gpio-ranges
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +        pinctrl@1f00000 {
-> > +                compatible = "qcom,sm8250-pinctrl";
-> > +                reg = <0x0f100000 0x300000>,
-> > +                      <0x0f500000 0x300000>,
-> > +                      <0x0f900000 0x300000>;
-> > +                reg-names = "west", "south", "north";
-> > +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> > +                gpio-controller;
-> > +                #gpio-cells = <2>;
-> > +                interrupt-controller;
-> > +                #interrupt-cells = <2>;
-> > +                gpio-ranges = <&tlmm 0 0 180>;
-> > +                wakeup-parent = <&pdc>;
-> > +        };
-> > -- 
-> > 2.24.0
-> > 
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
