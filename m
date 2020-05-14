@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48D7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621D3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9222020575
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F66A20575
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:01:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SidQb2k3"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="P+q8w1go"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbgENIB1 (ORCPT
+        id S1726137AbgENIAK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 04:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
+        Thu, 14 May 2020 04:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726072AbgENIAN (ORCPT
+        by vger.kernel.org with ESMTP id S1725955AbgENIAK (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 04:00:13 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D80C061A0C
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:00:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e1so2616810wrt.5
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:00:13 -0700 (PDT)
+        Thu, 14 May 2020 04:00:10 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91CE5C05BD0C
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:00:08 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k12so29101454wmj.3
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=75HMiSxkO2iGkQyQ4GVIN4XRI1pdsKTRs1XUFo380Tg=;
-        b=SidQb2k3EhXCryAgRq6gIPuNO1gSc1ymSxmVWmaAMjWgIA8V7nqMU6gzB5DHBHPwUA
-         tbB5YxAQ3a8Y9XCmyxdwx7HmOh5WdFDKBHtWMJJxPLgeXTgBOgqAMBm+PK+eh5D7yM+v
-         8HA+rZQ5NsDizXjPwTnrqGlHMsaAXQAvKtARpjRHk0erwPsnkhwsgB0cO59MoGtN4HyH
-         Sso5t3yIewzdpRasYjH4Buni7el0CFRHSV9X6JcQdvImZbW9asceazSSx6KVXVW+eluY
-         nN61T0d4cD8Hl5LM8eWKTtX0oGIz0iIvfzksYD3TNEzS7mmVo1utx1a2uqDICPUVNhHK
-         fhAA==
+        bh=SYamWCGpGqZL1TdMciPU3s1N0hd2ppZ++0/IfJ1caGY=;
+        b=P+q8w1goUvDD7gR6IchyV00vB3pVcrHK1pDbN1eYY/VOYjgNmBkbQGQCYfXXV+eFP6
+         4nf1Uy7o9a0eFzUc8hHDpXmqBGjs705jAZsWOO2j2XQAD5HlSFiVxGUeeRognXurIqJe
+         FPIsufHTJ4GuF9r/qJTFwlF/Fy+VxgGQq58XWZHFrz4MxV/et4oTsm0Oxzuw/HD9nc34
+         8yEi+GIBBK+Y9nC12SRDgelejI8LlrfC6x25QcgYArrW4SBm3ZgFtZI/79b1TeNOtPUw
+         LLPr2Q1C3Wtpg+JZ6L/7KyJwhrYoECFXR4fNhARaTt4abxJ9QBuZXWngiMdxSPFy1aIr
+         7f6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=75HMiSxkO2iGkQyQ4GVIN4XRI1pdsKTRs1XUFo380Tg=;
-        b=YmkHv3q4nujRQNS02QqW4frkmYnyGhU/z95D400jXAYD4jx6DjefvfPvPzrEwnrRh7
-         LiGzuqY1qPUEh6VuhyGv/zAo0yl9V0350dCQCYIGyYQFjpOZtdMNK8HqugGETrkwKbU1
-         bHuwBmfhl8u/SfZkjGJRVytOPVFafVgaz2wf8Pp+Yd8TfWMfTZ4n1pqV/WKRrJr20vuO
-         frCYQeBNKGCV17J1G41zhNTsDlRAcSvpgl4ALDe5n4e0ER8YblLKX/lXca3psyhy914j
-         DkSqNre44YZYz1MEMRl1XH1Hf5I0wRDUY6x24/vGxXult/4DSGFn88fgkP2ff4B7M/K9
-         1IuA==
-X-Gm-Message-State: AOAM530Y13n65q8vd8GL/F9Fd2okyhLxUYYsyXqLYzMbzyJGLcc//TSt
-        cUcRaG7cvtiZrtcRk2gUe4R2sg==
-X-Google-Smtp-Source: ABdhPJyPB8tR3ALwj2/06aB+MU3MgeCuCaNoqPzuspDC4TKtFqqj7Hvg40WVJk8Hlp8ZczryagK4ew==
-X-Received: by 2002:a05:6000:1104:: with SMTP id z4mr4196133wrw.57.1589443211875;
-        Thu, 14 May 2020 01:00:11 -0700 (PDT)
+        bh=SYamWCGpGqZL1TdMciPU3s1N0hd2ppZ++0/IfJ1caGY=;
+        b=Fl7wkg5CBYObd9hrNcumZji1ab4CKcifoofZYuXDY3ITyMQ9JNfNv1VCKxxGnnDfVS
+         ze7Plb0BDG179BQRlHraLpQEqRahdz7BBOkFBJiZi0icJkvrIu1hx9BMJsV+zRWIYI+Y
+         3I23wFs1O63ONplcj48/4X+iVIOyl8ov5PahLgPVc7T0gKo0edT0vO6MDxOckhRI7p8m
+         X3+0+yGZHVv2NWa6WKhHU3MnSSaiQqkmTxf4MxHXdpMtpbrRVRgeBmOEYtzxoem25IcU
+         8rU2Kqh3BPxo9NzTq1LOMaig4fkGLP5lP1yRGje/bsMEikFF0n/bT3u8cSA641SSU3P+
+         vBGQ==
+X-Gm-Message-State: AGi0Puawu72p91d586sP+Vj8HOtvBHACD/fjjlgqB3dGGybs14Pgiyku
+        WObZUcmIdlUihee0DfKbCDDgqA==
+X-Google-Smtp-Source: APiQypLkU2jxnKbFs8gBgz1ml8D56KMxK6JlEHw7o56nvtnY9O7hz8Oxa+M4tm30hkKVFqKw1ft9IQ==
+X-Received: by 2002:a1c:f012:: with SMTP id a18mr45714052wmb.41.1589443207361;
+        Thu, 14 May 2020 01:00:07 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 81sm23337446wme.16.2020.05.14.01.00.10
+        by smtp.gmail.com with ESMTPSA id 81sm23337446wme.16.2020.05.14.01.00.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 01:00:11 -0700 (PDT)
+        Thu, 14 May 2020 01:00:06 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,9 +78,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 05/15] net: ethernet: mediatek: remove unnecessary spaces from Makefile
-Date:   Thu, 14 May 2020 09:59:32 +0200
-Message-Id: <20200514075942.10136-6-brgl@bgdev.pl>
+Subject: [PATCH v3 02/15] dt-bindings: add new compatible to mediatek,pericfg
+Date:   Thu, 14 May 2020 09:59:29 +0200
+Message-Id: <20200514075942.10136-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200514075942.10136-1-brgl@bgdev.pl>
 References: <20200514075942.10136-1-brgl@bgdev.pl>
@@ -93,25 +93,26 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The Makefile formatting in the kernel tree usually doesn't use tabs,
-so remove them before we add a second driver.
+The PERICFG controller is present on the MT8516 SoC. Add an appropriate
+compatible variant.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/ethernet/mediatek/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml       | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mediatek/Makefile b/drivers/net/ethernet/mediatek/Makefile
-index 2d8362f9341b..3362fb7ef859 100644
---- a/drivers/net/ethernet/mediatek/Makefile
-+++ b/drivers/net/ethernet/mediatek/Makefile
-@@ -3,5 +3,5 @@
- # Makefile for the Mediatek SoCs built-in ethernet macs
- #
- 
--obj-$(CONFIG_NET_MEDIATEK_SOC)                 += mtk_eth.o
-+obj-$(CONFIG_NET_MEDIATEK_SOC) += mtk_eth.o
- mtk_eth-y := mtk_eth_soc.o mtk_sgmii.o mtk_eth_path.o
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+index 1340c6288024..55209a2baedc 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+@@ -25,6 +25,7 @@ properties:
+           - mediatek,mt8135-pericfg
+           - mediatek,mt8173-pericfg
+           - mediatek,mt8183-pericfg
++          - mediatek,mt8516-pericfg
+         - const: syscon
+       - items:
+         # Special case for mt7623 for backward compatibility
 -- 
 2.25.0
 
