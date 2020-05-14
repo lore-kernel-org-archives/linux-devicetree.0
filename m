@@ -2,139 +2,140 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F07C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2C5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9E320734
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA57F2074A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 23:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgENXFH (ORCPT
+        id S1729053AbgENXFL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 19:05:07 -0400
-Received: from mail-dm6nam12olkn2048.outbound.protection.outlook.com ([40.92.22.48]:47424
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        Thu, 14 May 2020 19:05:11 -0400
+Received: from mail-mw2nam12olkn2106.outbound.protection.outlook.com ([40.92.23.106]:25648
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728508AbgENXFG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 19:05:06 -0400
+        id S1729030AbgENXFK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 19:05:10 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gdYG3GM2E6DZNF3aoaeD39O3T4OfsV5XN9Zzc9TLdMfAY/BKisbC46jkvT7qgDGIPFlIA2sL7QE1FVmzhwaeV235nwpWVX3WggkX4EEm/IHceCtB5xifFos7vNwFoRtP170S+Z1pLZt1s0RO5eobHwLT4gjFTka5HzqmmreQpx6FwrlJXs1knWsScuKqQYOcJaEn6fk/1EbLfmGpxOQ54n4K6IelNXhzdGQYsYeZo7z8ffi36SIEgaAr64S6DxeqwkND/iG8+O/BgrSn5kAiI7/OvrE6da0FUV8VRI6iAKToYXOpd3rcfFrRaCLxcym4whh0/CGHgwF8B1zn+qkRsQ==
+ b=aLVLYC9nvW8X8/JMbhT6M1UnikqLvDY6Lb/fR474DHDEffIdrZa/J/tuQXIKvnABI328ZuxtDryUGqMUJDzmGr55rNNQX7AUTgZns3L0ngdgFOYTbblUl9+0u1Bp7pzobOUQOVyb1anO1EDUxKuciSoD2p8fsZ2xGc6gAsIlw3u/6RiA2rFnaVllrf/k64+rfO5e5s2emAz7fKNReI8Nm2CcHEbblszv9LYsy7+64l3gWjtIPD0cFMR+1I2jqkHX9Ljoe5uLkFB2ZQEd5s7mKgXG+Xfpd94vxVZrgx4LDDxICo8SySrke35mHqS+0PJcosjgUAJ41w2WFOHUiC59qw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u8Z4mUac3jNXx26SHqo2XYSo2AyvhLsfSPKAt2qH4nM=;
- b=B9Zs7TvD+lex5/QF9NzXp51hsYled7lTeKOSGUQMNfAMw9JmcpprwyycnwKKhe7qySUNpU9I69GbJ6O+Y18ZkkAAiUbILHqga4c/Y1ToSO1UPDU944UX3/4zIgejnH8Cp6ZajRFa1Ahp3i9oyK68lJBJVuNQfWEeWTvDXjhEkhWEs4YB2uKgP7xpabnE+pJPohg13KoAz7C/G+ZSs5N4kKjhUzTZnLHz+eFti1s1Ray70RUrCEluyCQ+WgFr77L06SFM4MBTi72KIEVt0PrgJz1UhLg/hI+QJRbXh17NYTIr05+zxuTrYqBsvOGExqeRS6ZWQWPl3/DH27DteY7w0A==
+ bh=QLomBpgXv/TDUtX34CbzmZ3HlSD3S1fzXXzPwtYsxso=;
+ b=HOFuGOVDECtZtLX5cAAnj314JCyAfo3a78mNEYlti1u6uNonMjqlxRAzKFsXqSH0MfgpJ4DfwZ/ua5AHxuHT+1jiIOpcadCc7QHLzvyf3KOcriCp3skyGFoaKeW76bpzBkT1vD4sGvOuG8L608wQoKy7iZuSNfSIxV5hKaDmFBDnNIp4sN4zlTkKUscd3OqkImIsbYeJzk0M+CXkidmqx7dUyRsEy1KZ2gnzRyFvTLfoc0rOwW+AEXIexh3Rba6U3iRfdh4woGftWDLH7YDXR3/5b5Aut5I8XTrzJKengJlG4dMIQ3fuMcf8eeaAuOheGS/bVmsgrU4nZkxeGq70ZA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
  header.d=live.ca; arc=none
 Received: from MW2NAM12FT003.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc65::48) by
- MW2NAM12HT221.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc65::279)
+ (2a01:111:e400:fc65::40) by
+ MW2NAM12HT204.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc65::250)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11; Thu, 14 May
- 2020 23:05:04 +0000
+ 2020 23:05:09 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  (2a01:111:e400:fc65::44) by MW2NAM12FT003.mail.protection.outlook.com
  (2a01:111:e400:fc65::70) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11 via Frontend
- Transport; Thu, 14 May 2020 23:05:04 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:2B908F33ADF082C81FC1E0FCB353C2A7DCA76E6AA8734CB8F5D9CE6A53963CFD;UpperCasedChecksum:74C0D38BCB1EA9186C10664C7F62431CC02EA446E510634877E7D9DA5FB97A8B;SizeAsReceived:7743;Count:48
+ Transport; Thu, 14 May 2020 23:05:09 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:64CBFC3109C95C9FCBD57A6799AA931C810E773B695283F3A3641466A59781AC;UpperCasedChecksum:17975E63A85A75CD90A3DDC234C1FBC63FC781E611BF75CB3B850DE16DE0F16E;SizeAsReceived:7865;Count:50
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.3000.022; Thu, 14 May 2020
- 23:05:04 +0000
+ 23:05:08 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
 To:     sre@kernel.org, krzk@kernel.org, jonghwa3.lee@samsung.com,
         tglx@linutronix.de, kstewart@linuxfoundation.org,
         baolin.wang7@gmail.com, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH 00/10] power: supply: Charger-manager improvements
-Date:   Thu, 14 May 2020 16:04:25 -0700
-Message-ID: <BN6PR04MB06603115D277DF264D9380E8A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Subject: [PATCH 03/10] power: supply: charger-manager: Always use POWER_SUPPLY_PROP_TEMP
+Date:   Thu, 14 May 2020 16:04:28 -0700
+Message-ID: <BN6PR04MB06600CBDDBE7C28E49B4A88AA3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200514230435.11798-1-xc-racer2@live.ca>
+References: <20200514230435.11798-1-xc-racer2@live.ca>
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MWHPR22CA0040.namprd22.prod.outlook.com
  (2603:10b6:300:69::26) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200514230435.11798-1-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200514230435.11798-4-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR22CA0040.namprd22.prod.outlook.com (2603:10b6:300:69::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend Transport; Thu, 14 May 2020 23:05:02 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR22CA0040.namprd22.prod.outlook.com (2603:10b6:300:69::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend Transport; Thu, 14 May 2020 23:05:07 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200514230435.11798-1-xc-racer2@live.ca>
-X-TMN:  [LHc+2olohFnXGtQZ9kDZurzcUck2jh1xjDnxFJJ2eRRV/Kohx+25bz1VVfCpu2qV]
+X-Microsoft-Original-Message-ID: <20200514230435.11798-4-xc-racer2@live.ca>
+X-TMN:  [yDx9y3RCGQmBAsPKlcjBN6IkC4h43GEhmkQKsM/wuvmI7hcTOrSOrrQj5QjGHG5+]
 X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
+X-IncomingHeaderCount: 50
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: f984340d-8d2c-46d8-a3fd-08d7f85b3c3e
-X-MS-TrafficTypeDiagnostic: MW2NAM12HT221:
+X-MS-Office365-Filtering-Correlation-Id: d49610f8-b4d8-4617-06bc-08d7f85b3f5c
+X-MS-TrafficTypeDiagnostic: MW2NAM12HT204:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zEK1vFgZqFPbxQudR2BGPp2pdGOL30XDE/H1APDQuD9mJ69a0uXXwI+2yAT5GB1qE4MO1SLmRoWyZUKDUyis7OLV9UTujY53etGoA3k/Cop7FZNsUhGvz799uhS1ozt9xMDAUHMBYQI0gYnNxkS2YXftPMdndAMUa5H2pRe71A8G5ULXXnCXJRhQcI+rJnavPuD7gCo7RjpqDQStVXTW192wwK/Y8QxmYfB7EX9LjfnCUMzvEAb/L2PyG2jPIC5f
+X-Microsoft-Antispam-Message-Info: 2A6/MF1kAHsYuwQs/+VUj94zUE9CLuXQTeyuocBo6UCsYw0GxPcKq9ELw4y+HD0w44xUc6YnjPE5X0P9tO63J1sHhtCWC+BwXcEqYAWB89yHpMtlTDMvvuYFPWpn0tXL7xfemoClYIJDMi2QjlIEnrPTHt3wPsD5qWARa9Rh+3SotU9/z4RcREmVfbMwxi1+cRmVDIoP9IZANED/NOb4hg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: TIXwLDbwsqF2yzraKILd15S/al3pSAZhOVLabJc8h/79+Gm4GfDdB13jP2gCM6zZOglCXdVdoMUkNsnnyI31AXbKQLlBuHGkhEZGNg2EU3ctyo2XbrZmUfdqI+abgknkLGjJqiMKU0eIHedbdXtyeh1u2L58kMPsybIVH6D4wkyYaEr22pU3dWdFb/a40SxdhpH/GI+Pogb+PZyc+nwFow==
+X-MS-Exchange-AntiSpam-MessageData: aJ1pJZ5qNMvJfvKEVhwsdzUUBrdMYSPBGK1DWKQBi5IuyHgueMALySGQ3I32i2hJDnXrw7dIkqAXHRWx2SsWXrLgxPP/fPpdKRcJd2X5f2YB1yUD2Jeow+gQElc8MxonZ7jGDWSdC6Cafcea8fZtqbQpM6rO10TgnWls79b2jxLaA/kQmTQ2nn2pElHDRxvTiJr9MbIVWlokQrgvbcCw8A==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f984340d-8d2c-46d8-a3fd-08d7f85b3c3e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 23:05:03.8852
+X-MS-Exchange-CrossTenant-Network-Message-Id: d49610f8-b4d8-4617-06bc-08d7f85b3f5c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 23:05:08.9060
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2NAM12HT221
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2NAM12HT204
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Charger-manager is a virtual driver for unifying chargers, fuel gauges,
-extcon devices, and a thermal device into a battery management system.
+We were using POWER_SUPPLY_PROP_TEMP if the temperature was coming
+via the fuel gauge and POWER_SUPPLY_PROP_TEMP_AMBIENT if it was
+coming via the thermal framework.  Since they're mutually
+exclusive in the driver and we don't know if the thermal framework
+ is ambient or not, unify them both to use POWER_SUPPLY_PROP_TEMP.
 
-Unfortunately, it has been broken since commit 830ae442202e ("extcon:
-Remove the deprecated extcon functions") when the extcon internal API
-was changed but some drivers were not updated.  Additionally, it had
-some race conditions and was unnecessarily complex.
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+---
+ drivers/power/supply/charger-manager.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-A number of these patches come from a Tizen git tree(1); they have been
-rebased and the commit messages cleaned up.
-
-These changes have been tested on a couple of first-gen Galaxy S devices
-based on s5pv210 with a modified max8998 driver so that a charger
-regulator is exposed.  In addition to the max8998, this hardware has
-a max17040 fuel gauge, fsa9480 extcon, and a generic thermal resistor
-for temperature sensing.
-
-1) https://git.tizen.org/cgit/platform/kernel/linux-exynos/log/drivers/power/charger-manager.c?h=tizen_5.0
-
-Jonathan Bakker (4):
-  power: supply: charger-manager: Always use POWER_SUPPLY_PROP_TEMP
-  power: supply: charger-manager: Update extcon functions
-  power: supply: charger-manager: Count cm-chargers property directly
-  dt-bindings: power: supply: Cleanup charger-manager bindings
-
-Jonghwa Lee (6):
-  power: supply: charger-manager: Swap private uevent for
-    power_supply_changed
-  power: supply: charger-manager: Remove cm_notify_event function
-  power: supply: charger-manager: Correct usage of CHARGE_NOW/FULL
-  power: supply: charger-manager:  Collect all power_supply_changed()
-    calls
-  power: supply: charger-manager: Make decisions focussed on battery
-    status
-  power: supply: charger-manager: Don't start charging in cable
-    nofitication
-
- .../bindings/power/supply/charger-manager.txt |  30 +-
- drivers/power/supply/charger-manager.c        | 571 +++++-------------
- include/linux/power/charger-manager.h         |  41 +-
- 3 files changed, 175 insertions(+), 467 deletions(-)
-
+diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
+index 413f291fda5f..6a5ae1d0ef92 100644
+--- a/drivers/power/supply/charger-manager.c
++++ b/drivers/power/supply/charger-manager.c
+@@ -791,7 +791,6 @@ static int charger_get_property(struct power_supply *psy,
+ 				POWER_SUPPLY_PROP_CURRENT_NOW, val);
+ 		break;
+ 	case POWER_SUPPLY_PROP_TEMP:
+-	case POWER_SUPPLY_PROP_TEMP_AMBIENT:
+ 		return cm_get_battery_temperature(cm, &val->intval);
+ 	case POWER_SUPPLY_PROP_CAPACITY:
+ 		if (!is_batt_present(cm)) {
+@@ -899,8 +898,7 @@ static enum power_supply_property default_charger_props[] = {
+ 	 * Optional properties are:
+ 	 * POWER_SUPPLY_PROP_CHARGE_NOW,
+ 	 * POWER_SUPPLY_PROP_CURRENT_NOW,
+-	 * POWER_SUPPLY_PROP_TEMP, and
+-	 * POWER_SUPPLY_PROP_TEMP_AMBIENT,
++	 * POWER_SUPPLY_PROP_TEMP,
+ 	 */
+ };
+ 
+@@ -1298,7 +1296,7 @@ static int cm_init_thermal_data(struct charger_manager *cm,
+ 
+ 		/* Use external thermometer */
+ 		cm->charger_psy_desc.properties[cm->charger_psy_desc.num_properties] =
+-				POWER_SUPPLY_PROP_TEMP_AMBIENT;
++				POWER_SUPPLY_PROP_TEMP;
+ 		cm->charger_psy_desc.num_properties++;
+ 		cm->desc->measure_battery_temp = true;
+ 		ret = 0;
 -- 
 2.20.1
 
