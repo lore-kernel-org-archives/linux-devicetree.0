@@ -2,206 +2,153 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330A0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B19C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E269820575
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JSAcLnGN"
+	by mail.kernel.org (Postfix) with ESMTP id 8499E20728
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589462682;
+	bh=C7NAO11aE0r2LgHOJkaFdjJFZKOV8MUBP8uh8MfpQyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WGa6EsYxZ3i9NDbcqLjqrZpY0IYLCpGmwzmMxPgPe5ONbhat4c35lEgnz1hePbOni
+	 i/MYO0A62IFEmOG0FAopR+cDjRYmaZfaqblXl7bZuMLkyJ9ntUMO2/hr7llEx8ZBSk
+	 r55ZnfJeQIvwLMxAheCsPVIXadkbotHFSL2VPPoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgENNUO (ORCPT
+        id S1726073AbgENNYl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 09:20:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59872 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgENNUO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 09:20:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EDJoRa003750;
-        Thu, 14 May 2020 08:19:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589462390;
-        bh=dUj5luPHu1YhkdbBoiYQztRz+qbnT9MuBcFThH036h8=;
-        h=From:To:CC:Subject:Date;
-        b=JSAcLnGN6B3gF7j/k2fuXUpxgxjlvjFGMeJSnlDxUew7ebr4Zcrz9NauxFnlsiHG1
-         C/S9d/j22oLiFOXaqu8wnupqCipMOegC5Ykae59u4ZKQRbHQAhA3v9TuHVNqi2MEEj
-         BbPKQ9d52i16k+vNCLjKl0dgoP9gOgfFdfibr9Ok=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EDJo1t045219
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 08:19:50 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 08:19:50 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 08:19:50 -0500
-Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EDJmDV032816;
-        Thu, 14 May 2020 08:19:48 -0500
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-CC:     <linux-crypto@vger.kernel.org>, <herbert@gondor.apana.org.au>,
-        <mpm@selenic.com>
-Subject: [PATCH 1/1] dt-bindings: rng: Convert OMAP RNG to schema
-Date:   Thu, 14 May 2020 16:19:47 +0300
-Message-ID: <20200514131947.28094-1-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 May 2020 09:24:41 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36143 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbgENNYl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 09:24:41 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x7so23585945oic.3;
+        Thu, 14 May 2020 06:24:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mV1gDXAu3PHj2qz8NxRMN80UJwMB7imwalApGyVK3E0=;
+        b=rDlcZMRT8ZFy0X7uHFdkSZKCNdaDLNy4xKlFadQg8bTr9KP1Y/pRZppJJFHf3UZHB+
+         EefEkFnSRzjkCjP0zJheirTviEGXaOhqNho41j3Dh1xKGW+sYY26D+2hpjt8Z49ghSuy
+         Q79AeKDseVuWDnyy0y8xuqvAiPwFSmqnB4jyRpuM8aIB6180vF9BCxESJv2sXxE2x4l4
+         3SlviqGS7yYxKEqoCkX0EJd7JuwIzq8MZQwjBg6xTSce06n3UXN38DLXahBKUpO5hLMn
+         zf7iybh3381wdNvPflCKLUtc8e8SMEBqhPFhvxIfGzh1buRNxt3AqaZJHArhW7B5pmgv
+         pvPg==
+X-Gm-Message-State: AOAM533bHrwdkXsOuS+EzAlgXw4YuYIYe5DG+Q0Su5qaPDEShdOtWHQF
+        qnhzETBG41zaxdvPve+Jmw==
+X-Google-Smtp-Source: ABdhPJzvIYVfE92YPp93du6vUI1pwaY/vFWHWgAMhu5qICOSPCQPcgESncNedDAP0dRa0QJKVz0y2A==
+X-Received: by 2002:aca:cdc6:: with SMTP id d189mr809229oig.19.1589462680705;
+        Thu, 14 May 2020 06:24:40 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l196sm1634201oih.25.2020.05.14.06.24.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 06:24:39 -0700 (PDT)
+Received: (nullmailer pid 14823 invoked by uid 1000);
+        Thu, 14 May 2020 13:24:39 -0000
+Date:   Thu, 14 May 2020 08:24:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     TY Chang <tychang@realtek.com>
+Cc:     linux-realtek-soc@lists.infradead.org, afaerber@suse.de,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC
+ rtd1195 and rtd1295.
+Message-ID: <20200514132439.GB23147@bogus>
+References: <20200514092125.6875-1-tychang@realtek.com>
+ <20200514092125.6875-5-tychang@realtek.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514092125.6875-5-tychang@realtek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert TI OMAP Random number generator bindings to DT schema.
+On Thu, May 14, 2020 at 05:21:22PM +0800, TY Chang wrote:
+> Add compatible string for RTD1195 and RTD1295.
+> 
+> Signed-off-by: TY Chang <tychang@realtek.com>
+> ---
+>  .../bindings/pinctrl/realtek,rtd-pinctrl.yaml | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..5af5fc8fe633
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/realtek,rtd-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Realtek DHC pin control
+> +
+> +maintainers:
+> +  - Andreas Farber <afaerber@suse.de>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - realtek,rtd1195-iso-pinctrl
+> +      - realtek,rtd1195-crt-pinctrl
+> +      - realtek,rtd1295-iso-pinctrl
+> +      - realtek,rtd1295-sb2-pinctrl
+> +      - realtek,rtd1295-disp-pinctrl
+> +      - realtek,rtd1295-cr-pinctrl
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    iso_pinctrl: pinctrl@300 {
+> +        compatible = "realtek,rtd1195-iso-pinctrl";
+> +        reg = <0x300 0x14>;
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- .../devicetree/bindings/rng/omap_rng.txt      | 38 ---------
- .../devicetree/bindings/rng/ti,omap-rng.yaml  | 77 +++++++++++++++++++
- 2 files changed, 77 insertions(+), 38 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rng/omap_rng.txt
- create mode 100644 Documentation/devicetree/bindings/rng/ti,omap-rng.yaml
+Aren't there child nodes with pin settings? They need to be documented.
 
-diff --git a/Documentation/devicetree/bindings/rng/omap_rng.txt b/Documentation/devicetree/bindings/rng/omap_rng.txt
-deleted file mode 100644
-index ea434ce50f36..000000000000
---- a/Documentation/devicetree/bindings/rng/omap_rng.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--OMAP SoC and Inside-Secure HWRNG Module
--
--Required properties:
--
--- compatible : Should contain entries for this and backward compatible
--  RNG versions:
--  - "ti,omap2-rng" for OMAP2.
--  - "ti,omap4-rng" for OMAP4, OMAP5 and AM33XX.
--  - "inside-secure,safexcel-eip76" for SoCs with EIP76 IP block
--  Note that these two versions are incompatible.
--- ti,hwmods: Name of the hwmod associated with the RNG module
--- reg : Offset and length of the register set for the module
--- interrupts : the interrupt number for the RNG module.
--		Used for "ti,omap4-rng" and "inside-secure,safexcel-eip76"
--- clocks: the trng clock source. Only mandatory for the
--  "inside-secure,safexcel-eip76" compatible, the second clock is
--  needed for the Armada 7K/8K SoCs
--- clock-names: mandatory if there is a second clock, in this case the
--  name must be "core" for the first clock and "reg" for the second
--  one
--
--
--Example:
--/* AM335x */
--rng: rng@48310000 {
--	compatible = "ti,omap4-rng";
--	ti,hwmods = "rng";
--	reg = <0x48310000 0x2000>;
--	interrupts = <111>;
--};
--
--/* SafeXcel IP-76 */
--trng: rng@f2760000 {
--	compatible = "inside-secure,safexcel-eip76";
--	reg = <0xf2760000 0x7d>;
--	interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&cpm_syscon0 1 25>;
--};
-diff --git a/Documentation/devicetree/bindings/rng/ti,omap-rng.yaml b/Documentation/devicetree/bindings/rng/ti,omap-rng.yaml
-new file mode 100644
-index 000000000000..b37d73295e9f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/ti,omap-rng.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rng/ti,omap-rng.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OMAP SoC and Inside-Secure HWRNG Module
-+
-+maintainers:
-+  - Tero Kristo <t-kristo@ti.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,omap2-rng
-+      - ti,omap4-rng
-+      - inside-secure,safexcel-eip76
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      The TRNG clock source. Only mandatory for the
-+      "inside-secure,safexcel-eip76" compatible, the second clock is needed
-+      for the Armada 7K/8K SoCs
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: reg
-+
-+  ti,hwmods:
-+    description: TI hwmod name
-+    deprecated: true
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    items:
-+      const: rng
-+
-+required:
-+  - compatible
-+  - reg
-+
-+if:
-+  properties:
-+    compatible:
-+      enum:
-+        - inside-secure,safexcel-eip76
-+then:
-+  required:
-+    - clocks
-+
-+examples:
-+  - |
-+    /* AM335x */
-+    rng: rng@48310000 {
-+      compatible = "ti,omap4-rng";
-+      ti,hwmods = "rng";
-+      reg = <0x48310000 0x2000>;
-+      interrupts = <111>;
-+    };
-+
-+  - |+
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    /* SafeXcel IP-76 */
-+    trng: rng@f2760000 {
-+      compatible = "inside-secure,safexcel-eip76";
-+      reg = <0xf2760000 0x7d>;
-+      interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cpm_syscon0 1 25>;
-+    };
-+...
--- 
-2.17.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> +    }
+> +  - |
+> +    crt_pinctrl: pinctrl@300 {
+> +        compatible = "realtek,rtd1195-crt-pinctrl";
+> +        reg = <0x300 0x78>;
+> +    }
+> +  - |
+> +    iso_pinctrl: pinctrl@300 {
+> +        compatible = "realtek,rtd1295-iso-pinctrl";
+> +        reg = <0x300 0x24>;
+> +    }
+> +  - |
+> +    sb2_pinctrl: pinctrl@900 {
+> +        compatible = "realtek,rtd1295-sb2-pinctrl";
+> +        reg = <0x900 0x100>;
+> +    }
+> +  - |
+> +    disp_pinctrl: pinctrl@4d000 {
+> +        compatible = "realtek,rtd1295-disp-pinctrl";
+> +        reg = <0x4d000 0x100>;
+> +    };
+> +  - |
+> +    cr_pinctrl: pinctrl@12600 {
+> +        compatible = "realtek,rtd1295-cr-pinctrl";
+> +        reg = <0x12600 0x100>;
+> +    };
+> +
+> -- 
+> 2.26.2
+> 
