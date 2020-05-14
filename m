@@ -2,80 +2,92 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAB9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926ACC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBD720728
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70049206DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:17:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="gXvAIxvL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgENNQu (ORCPT
+        id S1726551AbgENNRG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 09:16:50 -0400
-Received: from 8bytes.org ([81.169.241.247]:42890 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgENNQu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 09:16:50 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A636E379; Thu, 14 May 2020 15:16:48 +0200 (CEST)
-Date:   Thu, 14 May 2020 15:16:47 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Thu, 14 May 2020 09:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726073AbgENNRG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 09:17:06 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B50C061A0C;
+        Thu, 14 May 2020 06:17:06 -0700 (PDT)
+Received: from localhost.localdomain (unknown [142.147.94.151])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id DC1E3204A0;
+        Thu, 14 May 2020 13:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1589462224; bh=eJnR5u9wxpZzi1TozIj3O/mYN+6KO3jlz58PZP+YVW4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gXvAIxvLBuHh696jacAGYaWXey/BbIiqdtCmSYadB42UAMhSyLWCMnk2xz+0LMbl7
+         ODin41yuW7vVdp8+oir6nwnlm2nzvxTxZtS8ss6CYFy5zRzfjr6XQ+Queylt/AXK0C
+         GjQ/wbM3diHotnI8KcyQE9mt5Qg3HdhkYOVPZI6re8Krxsp1ao5iS967GBMm7Rt/mz
+         YCysd8z+ztESRmBIvQ8O0iEOqZsgJb/9Hw7sRg1WeAVhJWd7xUFXaL7c3ZNXgkEgxx
+         gb3JA3PNowlHbesLYNcld8YbqyOtR2xTSdaytO7XM9cVmQiYC070eJjCXmGyDgSKJu
+         o0j0c0GZsRRFA==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v4 0/5] iommu: Add Allwinner H6 IOMMU driver
-Message-ID: <20200514131647.GK18353@8bytes.org>
-References: <cover.b27dedd61e008ffcf55a028ccddda3bb4d21dfc8.1589378833.git-series.maxime@cerno.tech>
- <20200514123855.GI18353@8bytes.org>
- <20200514130900.k4gvr3zcajg3rouc@gilmour.lan>
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v10 1/5] PCI: Don't disable decoding when mmio_always_on is set
+Date:   Thu, 14 May 2020 21:16:37 +0800
+Message-Id: <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514130900.k4gvr3zcajg3rouc@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 03:09:00PM +0200, Maxime Ripard wrote:
-> On Thu, May 14, 2020 at 02:38:55PM +0200, Joerg Roedel wrote:
-> > On Wed, May 13, 2020 at 04:07:19PM +0200, Maxime Ripard wrote:
-> > > Maxime Ripard (5):
-> > >   dt-bindings: iommu: Add Allwinner H6 IOMMU bindings
-> > >   dt-bindings: display: sun8i-mixer: Allow for an iommu property
-> > >   iommu: Add Allwinner H6 IOMMU driver
-> > >   arm64: dts: allwinner: h6: Add IOMMU
-> > >   drm/sun4i: mixer: Call of_dma_configure if there's an IOMMU
-> > 
-> > Applied all to the IOMMU tree, thanks. The code lives in the
-> > arm/allwinner branch.
-> 
-> Did you also merge the DTS and DRM patches?
-> 
-> Ideally, they should be merged through other trees to avoid the conflicts as
-> much as possible (arm-soc and drm-misc respectively).
-> 
-> If it's an option, could you drop all of them but "dt-bindings: iommu: Add
-> Allwinner H6 IOMMU bindings" and "iommu: Add Allwinner H6 IOMMU driver"?
+Don't disable MEM/IO decoding when a device have both non_compliant_bars
+and mmio_always_on.
 
-Okay, just to be on the safe side, I am going to drop:
+That would allow us quirk devices with junk in BARs but can't disable
+their decoding.
 
-	dt-bindings: display: sun8i-mixer: Allow for an iommu property
-	arm64: dts: allwinner: h6: Add IOMMU
-	drm/sun4i: mixer: Call of_dma_configure if there's an IOMMU
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Acked-by: Bjorn Helgaas <helgaas@kernel.org>
+---
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-from the iommu-tree?
-
-I took them because you are also maintaining the DRM driver, which
-counted as an implicit ACK for me :)
-
-
-	Joerg
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 77b8a145c39b..d9c2c3301a8a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
+ 
+-	if (dev->non_compliant_bars) {
++	if (dev->non_compliant_bars && !dev->mmio_always_on) {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+ 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
+-- 
+2.26.2
 
