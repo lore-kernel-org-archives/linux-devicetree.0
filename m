@@ -2,115 +2,128 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0458C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09C5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C6920675
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C472620675
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIm3W3vx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xHi/CO+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgENIYm (ORCPT
+        id S1726340AbgENIb6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 04:24:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34816 "EHLO
+        Thu, 14 May 2020 04:31:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726163AbgENIYl (ORCPT
+        by vger.kernel.org with ESMTP id S1726317AbgENIb0 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 04:24:41 -0400
+        Thu, 14 May 2020 04:31:26 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F4B0C061A0E
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:24:41 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id o14so2535471ljp.4
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:24:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACC1C061A0C
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:31:26 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id l19so2516742lje.10
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Jkb8BxKnl71QcTSlAQifB2QDBHTd1utKf7Tuku0XIK4=;
-        b=iIm3W3vxPyvQT8hBr8kR8u+6yVBH0h6bfGPXKdobARfet5qpx6e2NJwbGUoVD4BTiz
-         kvpn1tyKA+LwVUJc8z8fF1ZwXlCreaNrldq4vaEDBNH9cKFjh4tAUHQkvEkgZrv38eDN
-         o2gz3Js+ZsuW3daffpbxtnkSsvbVGjH/1ch+B53s3SDAzYlJpVIgVSGq9BIdUF43U3J3
-         PYEdm9THYdzNqhqnu0YtajA3OhEFK2moz2+zytOAdmmOqgbfZNV8YpRwBfYf+FcYfKP1
-         slXNCbKogiAPZuvMbATklfcba8DSvlZ/NhggKTK4KlzEC8fEhJbI/SNZCFcSB3u8yrD/
-         oIKw==
+        bh=ch5Lo0qUlNLfqqdr8oPDugFIwsbkUAsTV/pjrrFuHLo=;
+        b=xHi/CO+kw7Zb1AKTwwXYOr5rqnL21pX27PIcAoZpAyWED1KbMsgJJ+aHzrEV/Isbwh
+         cCj8ce0L7btUVbF3US3EeioBiXXi2iCdmOyXoxSJCWosyCfLczsKK9alpmOGav2v80w+
+         vuDG2+aAvxzcOE2K3TrrYIvY0mqmBU/BMbT7IEB1scIBSlpp8HiBHlfn8UCnFVtjjBns
+         DbfLyYIf6KoVVieHkBEAcyIGtiD44sr1xCf8Lwsd64ayvLqSzC2AAnY/k71w+wMolPqK
+         JyDlDZKYHbrozYowGa+UzXmNfLBfNgsdCqJb+BahKwZn8S+ATnRlB96BNNSEyPU6wjca
+         s33g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Jkb8BxKnl71QcTSlAQifB2QDBHTd1utKf7Tuku0XIK4=;
-        b=f5Q73T5JCGiatxGm2S4bQHRYx2hVzoXzpItasQzARXt7xbs3GCdpxT5RG/ITpUxIFn
-         JEKbM15M6jwRcfL0klPtS4y5WV5tj0b+CNgbnqgf4K0w2bnOtapdVLjYOQLFNL5K1/cb
-         iQbwLo+r8OaqEz/EHvqsalyAOt7MBCLZc+vxLKIp3ceet5cu25BM3Io2HltZUSJ8imtk
-         Tfnsj7bWHbb4Rd+kr8KyrggRoWoV6+u/y5aqc/v9kTLCPQ1AZgHcSzuuP74w5y1i4t4Q
-         K9Q+kJgnMPdRePfaLz4w/RXoVBqJn49r+65KsD2hxvUiM7w/kpOau5+BDvSI1zee54SK
-         Ei3A==
-X-Gm-Message-State: AOAM532unOGH+xAB+uFJ41Rgaq5oACN2inP3nhhFxZGozYa70hld3uaj
-        xOLUfTllLixIYdymX8GMSTiGR5eUzw7N1tFMZ04lEw==
-X-Google-Smtp-Source: ABdhPJzbR0lONsL+LHNQ562bI+zZx3vzCrNYamk5GJI5zjbv9WVScZ7rOiUe3C6sarzGNmAWB4jF6RMUNqx0dbXgSxU=
-X-Received: by 2002:a2e:8805:: with SMTP id x5mr2073815ljh.223.1589444679816;
- Thu, 14 May 2020 01:24:39 -0700 (PDT)
+        bh=ch5Lo0qUlNLfqqdr8oPDugFIwsbkUAsTV/pjrrFuHLo=;
+        b=EfZGhqLuWcBEtp4DdVMV0/O3qOLoJfNhIS3CgLvUQ3Kz3qLiTAJPsjkA0uSYTmZ/wb
+         V/FuNx9W8CZ2+xtPC8+BrVdY3s6J6ikYrDhfwcvtckd2viTa/Fjp59MXDR1GTcmNKD4/
+         ZBvnGVSYJndECNCwBrakDLDXcwBjE1P9tITDIq/7ouUKnuM3xBchlQrQPT05UOVkThcY
+         NSF4CwmU8kyDaq72i7BZZYL1HouZP/ADSzT3q3qOMUXyKW7yGPpGu80nvEHcqLHp1e43
+         dgkFs3ZUOS9haeLSpSWngb/sl2f0C7J07fSP+L2dual8+6wBcowI60kDpdXdlrMERSnk
+         ndSA==
+X-Gm-Message-State: AOAM531gAZhqm92g2M1J5g9tUfXvR5PfROrFshUIyPi5gmBVLumDxKmH
+        +QiTQhjfcpDpEpHBpkgx/Cr6/jc1OC06IccQJAL5lA==
+X-Google-Smtp-Source: ABdhPJxYkw641+rzOfo0jk8kZqtPycWY4TTgsg+FJ176sdZrmEbUxUP61n/P+mU74fyLtp+Q1AgVt3G79WECR07lQH0=
+X-Received: by 2002:a2e:b609:: with SMTP id r9mr1982744ljn.125.1589445084550;
+ Thu, 14 May 2020 01:31:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com> <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-12-Sergey.Semin@baikalelectronics.ru>
+ <CACRpkdY=wkgnYPcqSzyzNpS6ckJZs-9kXfTfdwa1E+POzOBQGA@mail.gmail.com> <20200513001347.dyt357erev7vzy3l@mobilestation>
+In-Reply-To: <20200513001347.dyt357erev7vzy3l@mobilestation>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 14 May 2020 10:24:28 +0200
-Message-ID: <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] ARM: dts: stm32: enable ltdc binding with ili9341
- on stm32429-disco board
-To:     dillon.minfei@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+Date:   Thu, 14 May 2020 10:31:13 +0200
+Message-ID: <CACRpkdZTH1DNHvi4r48nLNWp4rqyYDZTzT12hw0eTNcYmgSr3Q@mail.gmail.com>
+Subject: Re: [PATCH 11/17] spi: dw: Fix native CS being unset
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 9:04 AM <dillon.minfei@gmail.com> wrote:
+On Wed, May 13, 2020 at 2:13 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 
-> From: dillon min <dillon.minfei@gmail.com>
+> > This is the correct fix now but I an afraid not correct before
+> > commit 3e5ec1db8bfe.
 >
-> Enable the ltdc & ili9341 on stm32429-disco board.
+> Sorry, but that's "enable" flag propagation from basic spi_set_cs() to the HW CS
+> setting callback is a nightmare. In Russia there is a common saying for such
+> cases, which can be translated as "you can't figure it out without a bottle of
+> vodka".)
 >
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> Actually the fix is correct no matter whether commit 3e5ec1db8bfe is applied or
+> not. At least I don't see a connection between them.
 
-This mostly looks good but...
+OK that seems to hold given the resoning below so:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-> +&spi5 {
-> +       status = "okay";
-> +       pinctrl-0 = <&spi5_pins>;
-> +       pinctrl-names = "default";
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +       cs-gpios = <&gpioc 2 GPIO_ACTIVE_LOW>;
-> +       dmas = <&dma2 3 2 0x400 0x0>,
-> +              <&dma2 4 2 0x400 0x0>;
-> +       dma-names = "rx", "tx";
+> > What I can't help but asking is: can the native chip select even
+> > handle active high chip select if not backed by a GPIO?
+> > Which register would set that polarity?
+>
+> No. DW APB SSI doesn't support active-high mode of the native CS's.
 
-These DMA assignments seem to be SoC things and should
-rather be in the DTS(I) file where &spi5 is defined, right?
-stm32f429.dtsi I suppose?
+We had some related discussion what to do with this case
+when a controller can support active high CS if and only if
+it is using a GPIO instead of the native CS. We didn't really
+figure it out, I suppose ideally we should use two flags in the
+master but that exercise is for another day.
 
-It is likely the same no matter which device is using spi5.
-
-Yours,
+Yours.
 Linus Walleij
