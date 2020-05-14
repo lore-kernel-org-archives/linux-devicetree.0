@@ -2,207 +2,181 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9335C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D377FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C90D72065D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0362206A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:50:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="osEpHVY3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H9aI1ieI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgENMsr (ORCPT
+        id S1726098AbgENMuX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 08:48:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726094AbgENMsq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 08:48:46 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 646FEC061A0F
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 05:48:46 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t16so1126991plo.7
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 05:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=HH9s1RO49ZtqpXezfn4WcfsL3Wu1eFjXG3a4er9M5VM=;
-        b=osEpHVY3rjAZwkvGBQY6IZcjr+rWAvBBT3RR2pRCeF8WQqqjBUcFijQ2A1iO4kddqZ
-         cGXn0Vybzjm5R+LuztSsPhQouakQyqEMsBeXFhyv+6rf8lg3reNxZFCiW3/eqQKp0IlF
-         fMLZ/2w4qfZDRCenzSetTk/2Kx3ILp8b+M4mObysfC7J+jcb0hOWINsIOuPU+qwiU+/4
-         6opd3ZsAdTqC/4MboMI3ou9/eUjY+hOx2QbPa3m25L/2PB1ifPfqBNR4hlwD1nKqTwHJ
-         L8ln7mINjlXveb0G4HGo32bwGC81ztYrCjy6GdOqWHRnfVJxWwsQIevDwAZrk3VKCWOA
-         3C8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=HH9s1RO49ZtqpXezfn4WcfsL3Wu1eFjXG3a4er9M5VM=;
-        b=nBrTTyMqCNgC2Edg8sC7T1iCPwgvRjgfmUEXcMbyPvwxNWurIo4JrE4iWdmWeRzm8c
-         HBqPxs2bSwrXNeDzptfN7o6MzQqDYLEAkhwAYy/VBOi/ENJR/gDsBjr7JKwosrIEl8SH
-         0XWxWyMWx2BKzV6F+aFQvU0jbNSBF1xsNkFlgKemlo4vozAdjtpxF5TL6yv1U5VRRjaz
-         RK0GvsOjjben6uc0psdbMAVF9exqsEX6tuYkEV0x01v/Z9OjsixKT5fp3zk8t6AE3HQe
-         nJdtROg/nTCasFDe2PF6tv1D0u9gq+AsrH4NnBc/gxuUgAzu0DJnB0zau3ZUeIUnCfix
-         3DMA==
-X-Gm-Message-State: AOAM5303x7bdNPX7c2FxTi6rA9CeiQbQmS8IwfBNNBK7O8MFMHvRa+pf
-        oZkJilQsQe30mBlSpLLcUo6e
-X-Google-Smtp-Source: ABdhPJxdddKbpOXRE7WZ+kpkkncGEFB3l+dgPbB0dnOaYGPN7BHIpGk9Y0Z1bXstUpFiVvx4TZRSqQ==
-X-Received: by 2002:a17:902:d70f:: with SMTP id w15mr4121397ply.55.1589460525640;
-        Thu, 14 May 2020 05:48:45 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:406:efde:ac17:556c:1ce3:639f])
-        by smtp.gmail.com with ESMTPSA id t21sm2126873pgu.39.2020.05.14.05.48.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 05:48:44 -0700 (PDT)
-Date:   Thu, 14 May 2020 18:18:31 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>, Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
-Message-ID: <20200514124831.GG2877@Mani-XPS-13-9360>
-References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
- <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
- <20200512181706.GA21014@Mani-XPS-13-9360>
- <11aca587-9438-4fba-081c-b82631e96989@ideasonboard.com>
- <20200514101356.GF2877@Mani-XPS-13-9360>
- <d492cbcb-3b13-82b8-8e5d-0f49320170a2@ideasonboard.com>
- <CAMuHMdWSEY2q1f1iobrSXHYWzweV9yjk4i1ROj2Yde7DJMiabQ@mail.gmail.com>
+        Thu, 14 May 2020 08:50:23 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56614 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgENMuX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 08:50:23 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04ECo80g126913;
+        Thu, 14 May 2020 07:50:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589460608;
+        bh=Fkq9j3sMdZa+zOtHYp3Cdxd3KNG03i48ARRIFHUTQPw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=H9aI1ieIPQj0AMIsAxyQ6840x9W+fe6Rawe0b4geeqCoETBUwsolpMszQgv3qwUnx
+         0luaurEBckMB/uMk7Y5OhLKu2ESmFoGNKjotbvpG0LuS+RmJeUEy/JbRWlWDu5IgKW
+         fCwAPXflnzFsEHQYyytnrF8WhYfXjP0gSk6i0S8c=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04ECo8j6043105
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 07:50:08 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 07:50:07 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 07:50:07 -0500
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04ECo5o7108688;
+        Thu, 14 May 2020 07:50:06 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>
+CC:     Keerthy <j-keerthy@ti.com>, Rob Herring <robh@kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCHv3 1/7] dt-bindings: crypto: Add TI SA2UL crypto accelerator documentation
+Date:   Thu, 14 May 2020 15:50:05 +0300
+Message-ID: <20200514125005.23641-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511215343.GA10123@bogus>
+References: <20200511215343.GA10123@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdWSEY2q1f1iobrSXHYWzweV9yjk4i1ROj2Yde7DJMiabQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 01:59:35PM +0200, Geert Uytterhoeven wrote:
-> Hi Kieran,
-> 
-> On Thu, May 14, 2020 at 1:47 PM Kieran Bingham
-> <kieran.bingham+renesas@ideasonboard.com> wrote:
-> > On 14/05/2020 11:13, Manivannan Sadhasivam wrote:
-> > > On Thu, May 14, 2020 at 11:02:53AM +0100, Kieran Bingham wrote:
-> > >> On 12/05/2020 19:17, Manivannan Sadhasivam wrote:
-> > >>> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
-> > >>>> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
-> > >>>> CSI-2 output. The device supports multicamera streaming applications,
-> > >>>> and features the ability to synchronise the attached cameras.
-> > >>>>
-> > >>>> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
-> > >>>> is supported over I2C, which implements an I2C mux to facilitate
-> > >>>> communications with connected cameras across the reverse control
-> > >>>> channel.
-> > >>>>
-> > >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > >>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> > >>>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > >>>> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> 
-> > >>>> --- /dev/null
-> > >>>> +++ b/drivers/media/i2c/max9286.c
-> 
-> > >>>> +static int max9286_register_gpio(struct max9286_priv *priv)
-> > >>>> +{
-> > >>>> +  struct device *dev = &priv->client->dev;
-> > >>>> +  struct gpio_chip *gpio = &priv->gpio;
-> > >>>> +  int ret;
-> > >>>> +
-> > >>>> +  static const char * const names[] = {
-> > >>>> +          "GPIO0OUT",
-> > >>>> +          "GPIO1OUT",
-> > >>>> +  };
-> > >>>> +
-> > >>>> +  /* Configure the GPIO */
-> > >>>> +  gpio->label = dev_name(dev);
-> > >>>
-> > >>> So if you have more than one MAX9286 in a system, all gpiochips will appear
-> > >>> with the same name. I'd recommend to append the index to distinguish properly.
-> > >>
-> > >> Ah yes, that's a good point, and I think I've even seen that.
-> > >>
-> > >> I'll fix it now.
-> >
-> > Oh, in fact actually this doesn't.
-> >
-> > gpiodetect prints:
-> >
-> > gpiochip10 [4-004c] (2 lines)
-> > gpiochip11 [4-006c] (2 lines)
-> >
-> > and mostly references them as gpiochip10 and gpiochip11.
-> 
-> Indeed, dev_name() should be different for each instance.
-> 
+From: Keerthy <j-keerthy@ti.com>
 
-Ah, my bad! Somehow I got confused that this delivers static name... Sorry for
-the noise, Kieran.
+The Security Accelerator Ultra Lite (SA2UL) subsystem provides hardware
+cryptographic acceleration for the following use cases:
 
-> > However,
-> >
-> > > [    2.318533] gpio gpiochip11: Detected name collision for GPIO name 'GPIO0OUT'
-> > > [    2.325739] gpio gpiochip11: Detected name collision for GPIO name 'GPIO1OUT'
-> >
-> > That seems to be more of a problem for the gpio library, so I think I'll
-> > just drop the const names. I don't think they add much value.
-> 
+* Encryption and authentication for secure boot
+* Encryption and authentication of content in applications
+  requiring DRM (digital rights management) and
+  content/asset protection
 
-Well, I should've pointed this instead of above...
+SA2UL provides support for number of different cryptographic algorithms
+including SHA1, SHA256, SHA512, AES, 3DES, and various combinations of
+the previous for AEAD use.
 
-(lack of coffee)
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+[t-kristo@ti.com: converted documentation to yaml]
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+v3:
+  - fixed a typo in rng child node regex
 
-> These are the line names.  If they're not unique, a warning is printed,
-> but they are still registered.
-> So probably you want to use kasprintf("%s.%s", dev_name(dev), names[i]) to
-> generate names.
-> 
+ .../devicetree/bindings/crypto/ti,sa2ul.yaml  | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
 
-Ack.
+diff --git a/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
+new file mode 100644
+index 000000000000..27bb3a7e2b87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/crypto/ti,sa2ul.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: K3 SoC SA2UL crypto module
++
++maintainers:
++  - Tero Kristo <t-kristo@ti.com>
++
++properties:
++  compatible:
++    enum:
++      - ti,j721e-sa2ul
++      - ti,am654-sa2ul
++
++  reg:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: TX DMA Channel
++      - description: RX DMA Channel #1
++      - description: RX DMA Channel #2
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx1
++      - const: rx2
++
++  dma-coherent: true
++
++  "#address-cells":
++    const: 2
++
++  "#size-cells":
++    const: 2
++
++  ranges:
++    description:
++      Address translation for the possible RNG child node for SA2UL
++
++patternProperties:
++  "^rng@[a-f0-9]+$":
++    type: object
++    description:
++      Child RNG node for SA2UL
++
++required:
++  - compatible
++  - reg
++  - power-domains
++  - dmas
++  - dma-names
++  - dma-coherent
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++
++    main_crypto: crypto@4e00000 {
++        compatible = "ti,j721-sa2ul";
++        reg = <0x0 0x4e00000 0x0 0x1200>;
++        power-domains = <&k3_pds 264 TI_SCI_PD_EXCLUSIVE>;
++        dmas = <&main_udmap 0xc000>, <&main_udmap 0x4000>,
++               <&main_udmap 0x4001>;
++        dma-names = "tx", "rx1", "rx2";
++        dma-coherent;
++    };
+-- 
+2.17.1
 
-I think you should CC Linus W for next iteration to get review for gpiolib
-implementation.
-
-Thanks,
-Mani
-
-> See "[PATCH] gpiolib: Document that GPIO line names are not globally unique"
-> (https://lore.kernel.org/linux-gpio/20200511101828.30046-1-geert+renesas@glider.be/)
-> to clear up the details.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
