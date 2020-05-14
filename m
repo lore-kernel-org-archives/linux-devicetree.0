@@ -2,436 +2,214 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68A1C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 11:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0735C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 11:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACA852076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 11:29:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="mczlEgtC"
+	by mail.kernel.org (Postfix) with ESMTP id 9648E206A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 11:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgENL31 (ORCPT
+        id S1726087AbgENLaL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 07:29:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35480 "EHLO
+        Thu, 14 May 2020 07:30:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgENL3Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 07:29:25 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC3AC061A0E;
-        Thu, 14 May 2020 04:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589455763;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=pviOsIEMTTX0X8EoxRj4qyAZ6lEskNj9OnoyH+3eXwA=;
-        b=mczlEgtC9V5H0z3xXK9KnI9CqksN4h9i8Am2wDsE5J8ebhszRgOfkMJRSP0p8S2r3H
-        CJpgqK5uIUhXne1h3IRY++GYRVuhh6l0yyGUEEYA8mXmNBGg47cPOze3wKCFsbOncOHY
-        3Qw8ggUb/kexKmMIGHfpobxGAmuF2cOn8tQK3ZYhzc9wmS3CXb5HwANZ8sU2GXWY8myZ
-        D/kuKuNDd6h4BS30yqZsPbBFwn+qK4/IcRLBbghDPnrKoXZymgXYxeHB9cmXQ0MIugQ4
-        GjopbrkHV1M7pcAgCwar3Z4B8Gah8Zn7SXqF87M/t720vNHZukjUEaXWjxv0X0x49gPb
-        YfrA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB5m6NBgYo"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id 60b02dw4EBTKHey
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 14 May 2020 13:29:20 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 3/3] arm64: dts: qcom: apq8016-sbc: merge -pins.dtsi into main .dtsi
-Date:   Thu, 14 May 2020 13:27:54 +0200
-Message-Id: <20200514112754.148919-3-stephan@gerhold.net>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200514112754.148919-1-stephan@gerhold.net>
-References: <20200514112754.148919-1-stephan@gerhold.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S1725925AbgENLaL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 07:30:11 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADB0EC061A0C
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 04:30:10 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:4185:4144:add6:db37])
+        by laurent.telenet-ops.be with bizsmtp
+        id ebW7220042fnlSd01bW7yt; Thu, 14 May 2020 13:30:07 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jZC3z-0003fp-1v; Thu, 14 May 2020 13:30:07 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jZC3y-0004yV-Vk; Thu, 14 May 2020 13:30:07 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] dt-bindings: auxdisplay: hd44780: Convert to json-schema
+Date:   Thu, 14 May 2020 13:30:02 +0200
+Message-Id: <20200514113003.19067-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-apq8016-sbc.dtsi is the only remaining device which takes up
-4 files since it has its pinctrl split into separate files.
+Convert the Hitachi HD44780 Character LCD Controller Device Tree binding
+documentation to json-schema.
 
-Actually this does not really make the device tree easier to read
-(just harder to find nodes). For db820c the files were merged in
-commit 88264f1f6bf5 ("arm64: dts: qcom: db820c: Remove pin specific files").
-
-Do the same for apq8016-sbc (db410c) and move the pinctrl definitions
-into apq8016-sbc.dtsi.
-
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- .../boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi  |  74 --------
- .../boot/dts/qcom/apq8016-sbc-soc-pins.dtsi   |  89 ----------
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi     | 158 +++++++++++++++++-
- 3 files changed, 156 insertions(+), 165 deletions(-)
- delete mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
- delete mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+ .../bindings/auxdisplay/hit,hd44780.txt       | 45 ---------
+ .../bindings/auxdisplay/hit,hd44780.yaml      | 96 +++++++++++++++++++
+ 2 files changed, 96 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+ create mode 100644 Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+diff --git a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
 deleted file mode 100644
-index 41907938014c..000000000000
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+index 2aa24b8899236882..0000000000000000
+--- a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
 +++ /dev/null
-@@ -1,74 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
--#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
+@@ -1,45 +0,0 @@
+-DT bindings for the Hitachi HD44780 Character LCD Controller
 -
--&pm8916_gpios {
+-The Hitachi HD44780 Character LCD Controller is commonly used on character LCDs
+-that can display one or more lines of text. It exposes an M6800 bus interface,
+-which can be used in either 4-bit or 8-bit mode.
 -
--	usb_hub_reset_pm: usb-hub-reset-pm {
--		pinconf {
--			pins = "gpio3";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			input-disable;
--			output-high;
--		};
+-Required properties:
+-  - compatible: Must contain "hit,hd44780",
+-  - data-gpios: Must contain an array of either 4 or 8 GPIO specifiers,
+-    referring to the GPIO pins connected to the data signal lines DB0-DB7
+-    (8-bit mode) or DB4-DB7 (4-bit mode) of the LCD Controller's bus interface,
+-  - enable-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+-    connected to the "E" (Enable) signal line of the LCD Controller's bus
+-    interface,
+-  - rs-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+-    connected to the "RS" (Register Select) signal line of the LCD Controller's
+-    bus interface,
+-  - display-height-chars: Height of the display, in character cells,
+-  - display-width-chars: Width of the display, in character cells.
+-
+-Optional properties:
+-  - rw-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+-    connected to the "RW" (Read/Write) signal line of the LCD Controller's bus
+-    interface,
+-  - backlight-gpios: Must contain a GPIO specifier, referring to the GPIO pin
+-    used for enabling the LCD's backlight,
+-  - internal-buffer-width: Internal buffer width (default is 40 for displays
+-    with 1 or 2 lines, and display-width-chars for displays with more than 2
+-    lines).
+-
+-Example:
+-
+-	auxdisplay {
+-		compatible = "hit,hd44780";
+-
+-		data-gpios = <&hc595 0 GPIO_ACTIVE_HIGH>,
+-			     <&hc595 1 GPIO_ACTIVE_HIGH>,
+-			     <&hc595 2 GPIO_ACTIVE_HIGH>,
+-			     <&hc595 3 GPIO_ACTIVE_HIGH>;
+-		enable-gpios = <&hc595 4 GPIO_ACTIVE_HIGH>;
+-		rs-gpios = <&hc595 5 GPIO_ACTIVE_HIGH>;
+-
+-		display-height-chars = <2>;
+-		display-width-chars = <16>;
 -	};
--
--	usb_hub_reset_pm_device: usb-hub-reset-pm-device {
--		pinconf {
--			pins = "gpio3";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			output-low;
--		};
--	};
--
--	usb_sw_sel_pm: usb-sw-sel-pm {
--		pinconf {
--			pins = "gpio4";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			power-source = <PM8916_GPIO_VPH>;
--			input-disable;
--			output-high;
--		};
--	};
--
--	usb_sw_sel_pm_device: usb-sw-sel-pm-device {
--		pinconf {
--			pins = "gpio4";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			power-source = <PM8916_GPIO_VPH>;
--			input-disable;
--			output-low;
--		};
--	};
--
--	pm8916_gpios_leds: pm8916-gpios-leds {
--		pinconf {
--			pins = "gpio1", "gpio2";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			output-low;
--		};
--	};
--};
--
--&pm8916_mpps {
--
--	pinctrl-names = "default";
--	pinctrl-0 = <&ls_exp_gpio_f>;
--
--	ls_exp_gpio_f: pm8916-mpp4 {
--		pinconf {
--			pins = "mpp4";
--			function = "digital";
--			output-low;
--			power-source = <PM8916_MPP_L5>;	// 1.8V
--		};
--	};
--
--	pm8916_mpps_leds: pm8916-mpps-leds {
--		pinconf {
--			pins = "mpp2", "mpp3";
--			function = "digital";
--			output-low;
--		};
--	};
--};
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
-deleted file mode 100644
-index ac00beec102f..000000000000
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
-+++ /dev/null
-@@ -1,89 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#include <dt-bindings/gpio/gpio.h>
--
--&msmgpio {
--
--	msmgpio_leds: msmgpio-leds {
--		pinconf {
--			pins = "gpio21", "gpio120";
--			function = "gpio";
--			output-low;
--		};
--	};
--
--	usb_id_default: usb-id-default {
--		pinmux {
--			function = "gpio";
--			pins = "gpio121";
--		};
--
--		pinconf {
--			pins = "gpio121";
--			drive-strength = <8>;
--			input-enable;
--			bias-pull-up;
--		};
--	};
--
--	adv7533_int_active: adv533-int-active {
--		pinmux {
--			function = "gpio";
--			pins = "gpio31";
--		};
--		pinconf {
--			pins = "gpio31";
--			drive-strength = <16>;
--			bias-disable;
--		};
--	};
--
--	adv7533_int_suspend: adv7533-int-suspend {
--		pinmux {
--			function = "gpio";
--			pins = "gpio31";
--		};
--		pinconf {
--			pins = "gpio31";
--			drive-strength = <2>;
--			bias-disable;
--		};
--	};
--
--	adv7533_switch_active: adv7533-switch-active {
--		pinmux {
--			function = "gpio";
--			pins = "gpio32";
--		};
--		pinconf {
--			pins = "gpio32";
--			drive-strength = <16>;
--			bias-disable;
--		};
--	};
--
--	adv7533_switch_suspend: adv7533-switch-suspend {
--		pinmux {
--			function = "gpio";
--			pins = "gpio32";
--		};
--		pinconf {
--			pins = "gpio32";
--			drive-strength = <2>;
--			bias-disable;
--		};
--	};
--
--	msm_key_volp_n_default: msm-key-volp-n-default {
--		pinmux {
--			function = "gpio";
--			pins = "gpio107";
--		};
--		pinconf {
--			pins = "gpio107";
--			drive-strength = <8>;
--			input-enable;
--			bias-pull-up;
--		};
--	};
--};
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 08c7538b9c9f..8a4b790aa7ff 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -5,10 +5,10 @@
- 
- #include "msm8916.dtsi"
- #include "pm8916.dtsi"
--#include "apq8016-sbc-soc-pins.dtsi"
--#include "apq8016-sbc-pmic-pins.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
- #include <dt-bindings/sound/apq8016-lpass.h>
- 
- /*
-@@ -777,3 +777,157 @@ l18 {
- 		regulator-max-microvolt = <3337000>;
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+new file mode 100644
+index 0000000000000000..9222b06e93a042e6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/auxdisplay/hit,hd44780.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+&msmgpio {
-+	msmgpio_leds: msmgpio-leds {
-+		pinconf {
-+			pins = "gpio21", "gpio120";
-+			function = "gpio";
-+			output-low;
-+		};
-+	};
++title: Hitachi HD44780 Character LCD Controller
 +
-+	usb_id_default: usb-id-default {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio121";
-+		};
++maintainers:
++  - Geert Uytterhoeven <geert@linux-m68k.org>
 +
-+		pinconf {
-+			pins = "gpio121";
-+			drive-strength = <8>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+	};
++description:
++  The Hitachi HD44780 Character LCD Controller is commonly used on character
++  LCDs that can display one or more lines of text. It exposes an M6800 bus
++  interface, which can be used in either 4-bit or 8-bit mode.
 +
-+	adv7533_int_active: adv533-int-active {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio31";
-+		};
-+		pinconf {
-+			pins = "gpio31";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
++properties:
++  compatible:
++    const: hit,hd44780
 +
-+	adv7533_int_suspend: adv7533-int-suspend {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio31";
-+		};
-+		pinconf {
-+			pins = "gpio31";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
++  data-gpios:
++    description:
++      GPIO pins connected to the data signal lines DB0-DB7 (8-bit mode) or
++      DB4-DB7 (4-bit mode) of the LCD Controller's bus interface.
++    oneOf:
++      - maxItems: 4
++      - maxItems: 8
 +
-+	adv7533_switch_active: adv7533-switch-active {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio32";
-+		};
-+		pinconf {
-+			pins = "gpio32";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
++  enable-gpios:
++    description:
++      GPIO pin connected to the "E" (Enable) signal line of the LCD
++      Controller's bus interface.
++    maxItems: 1
 +
-+	adv7533_switch_suspend: adv7533-switch-suspend {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio32";
-+		};
-+		pinconf {
-+			pins = "gpio32";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
++  rs-gpios:
++    description:
++      GPIO pin connected to the "RS" (Register Select) signal line of the LCD
++      Controller's bus interface.
++    maxItems: 1
 +
-+	msm_key_volp_n_default: msm-key-volp-n-default {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio107";
-+		};
-+		pinconf {
-+			pins = "gpio107";
-+			drive-strength = <8>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+	};
-+};
++  rw-gpios:
++    description:
++      GPIO pin connected to the "RW" (Read/Write) signal line of the LCD
++      Controller's bus interface.
++    maxItems: 1
 +
-+&pm8916_gpios {
-+	usb_hub_reset_pm: usb-hub-reset-pm {
-+		pinconf {
-+			pins = "gpio3";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			input-disable;
-+			output-high;
-+		};
-+	};
++  backlight-gpios:
++    description: GPIO pin used for enabling the LCD's backlight.
++    maxItems: 1
 +
-+	usb_hub_reset_pm_device: usb-hub-reset-pm-device {
-+		pinconf {
-+			pins = "gpio3";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+		};
-+	};
++  display-height-chars:
++    description: Height of the display, in character cells,
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 4
 +
-+	usb_sw_sel_pm: usb-sw-sel-pm {
-+		pinconf {
-+			pins = "gpio4";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			power-source = <PM8916_GPIO_VPH>;
-+			input-disable;
-+			output-high;
-+		};
-+	};
++  display-width-chars:
++    description: Width of the display, in character cells.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 64
 +
-+	usb_sw_sel_pm_device: usb-sw-sel-pm-device {
-+		pinconf {
-+			pins = "gpio4";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			power-source = <PM8916_GPIO_VPH>;
-+			input-disable;
-+			output-low;
-+		};
-+	};
++  internal-buffer-width:
++    description:
++      Internal buffer width (default is 40 for displays with 1 or 2 lines, and
++      display-width-chars for displays with more than 2 lines).
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 64
 +
-+	pm8916_gpios_leds: pm8916-gpios-leds {
-+		pinconf {
-+			pins = "gpio1", "gpio2";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+		};
-+	};
-+};
++required:
++  - compatible
++  - data-gpios
++  - enable-gpios
++  - rs-gpios
++  - display-height-chars
++  - display-width-chars
 +
-+&pm8916_mpps {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ls_exp_gpio_f>;
++additionalProperties: false
 +
-+	ls_exp_gpio_f: pm8916-mpp4 {
-+		pinconf {
-+			pins = "mpp4";
-+			function = "digital";
-+			output-low;
-+			power-source = <PM8916_MPP_L5>;	// 1.8V
-+		};
-+	};
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    auxdisplay {
++            compatible = "hit,hd44780";
 +
-+	pm8916_mpps_leds: pm8916-mpps-leds {
-+		pinconf {
-+			pins = "mpp2", "mpp3";
-+			function = "digital";
-+			output-low;
-+		};
-+	};
-+};
++            data-gpios = <&hc595 0 GPIO_ACTIVE_HIGH>,
++                         <&hc595 1 GPIO_ACTIVE_HIGH>,
++                         <&hc595 2 GPIO_ACTIVE_HIGH>,
++                         <&hc595 3 GPIO_ACTIVE_HIGH>;
++            enable-gpios = <&hc595 4 GPIO_ACTIVE_HIGH>;
++            rs-gpios = <&hc595 5 GPIO_ACTIVE_HIGH>;
++
++            display-height-chars = <2>;
++            display-width-chars = <16>;
++    };
 -- 
-2.26.2
+2.17.1
 
