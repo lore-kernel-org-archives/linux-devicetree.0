@@ -2,131 +2,207 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE09C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9335C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF4C20722
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90D72065D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 12:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZzYL2yj4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="osEpHVY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgENMoK (ORCPT
+        id S1726161AbgENMsr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 08:44:10 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49584 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgENMoK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 08:44:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EChLJW068221;
-        Thu, 14 May 2020 07:43:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589460201;
-        bh=e5oLHvSAcu1wID8AuM4YdTSx1fGtweYfUrxREiY/l9M=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ZzYL2yj4lW+zhLcKMjsSTdTS2fE29lTKlJ8Ggipl0k8j3MPxk5B3VZXMxQJYjqbya
-         7CXtPd1IQRbCKiqb7+1bbug0Fp2QmrztoxTl2a2AL9D7ku42OwaRNIO2P67p5TPKfa
-         gXpaubt1qVABlteXdF/td+vUct15nOCJzrupxfZ8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EChLME122019
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 07:43:21 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 07:43:21 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 07:43:21 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EChLrv030975;
-        Thu, 14 May 2020 07:43:21 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 3/3] ASoC: tlv320adcx140: Configure PDM sampling edge
-Date:   Thu, 14 May 2020 07:33:38 -0500
-Message-ID: <20200514123338.20392-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200514123338.20392-1-dmurphy@ti.com>
-References: <20200514123338.20392-1-dmurphy@ti.com>
+        Thu, 14 May 2020 08:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726094AbgENMsq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 08:48:46 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 646FEC061A0F
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 05:48:46 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t16so1126991plo.7
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 05:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=HH9s1RO49ZtqpXezfn4WcfsL3Wu1eFjXG3a4er9M5VM=;
+        b=osEpHVY3rjAZwkvGBQY6IZcjr+rWAvBBT3RR2pRCeF8WQqqjBUcFijQ2A1iO4kddqZ
+         cGXn0Vybzjm5R+LuztSsPhQouakQyqEMsBeXFhyv+6rf8lg3reNxZFCiW3/eqQKp0IlF
+         fMLZ/2w4qfZDRCenzSetTk/2Kx3ILp8b+M4mObysfC7J+jcb0hOWINsIOuPU+qwiU+/4
+         6opd3ZsAdTqC/4MboMI3ou9/eUjY+hOx2QbPa3m25L/2PB1ifPfqBNR4hlwD1nKqTwHJ
+         L8ln7mINjlXveb0G4HGo32bwGC81ztYrCjy6GdOqWHRnfVJxWwsQIevDwAZrk3VKCWOA
+         3C8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=HH9s1RO49ZtqpXezfn4WcfsL3Wu1eFjXG3a4er9M5VM=;
+        b=nBrTTyMqCNgC2Edg8sC7T1iCPwgvRjgfmUEXcMbyPvwxNWurIo4JrE4iWdmWeRzm8c
+         HBqPxs2bSwrXNeDzptfN7o6MzQqDYLEAkhwAYy/VBOi/ENJR/gDsBjr7JKwosrIEl8SH
+         0XWxWyMWx2BKzV6F+aFQvU0jbNSBF1xsNkFlgKemlo4vozAdjtpxF5TL6yv1U5VRRjaz
+         RK0GvsOjjben6uc0psdbMAVF9exqsEX6tuYkEV0x01v/Z9OjsixKT5fp3zk8t6AE3HQe
+         nJdtROg/nTCasFDe2PF6tv1D0u9gq+AsrH4NnBc/gxuUgAzu0DJnB0zau3ZUeIUnCfix
+         3DMA==
+X-Gm-Message-State: AOAM5303x7bdNPX7c2FxTi6rA9CeiQbQmS8IwfBNNBK7O8MFMHvRa+pf
+        oZkJilQsQe30mBlSpLLcUo6e
+X-Google-Smtp-Source: ABdhPJxdddKbpOXRE7WZ+kpkkncGEFB3l+dgPbB0dnOaYGPN7BHIpGk9Y0Z1bXstUpFiVvx4TZRSqQ==
+X-Received: by 2002:a17:902:d70f:: with SMTP id w15mr4121397ply.55.1589460525640;
+        Thu, 14 May 2020 05:48:45 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:406:efde:ac17:556c:1ce3:639f])
+        by smtp.gmail.com with ESMTPSA id t21sm2126873pgu.39.2020.05.14.05.48.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 May 2020 05:48:44 -0700 (PDT)
+Date:   Thu, 14 May 2020 18:18:31 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>, Rob Herring <robh+dt@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
+Message-ID: <20200514124831.GG2877@Mani-XPS-13-9360>
+References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
+ <20200512181706.GA21014@Mani-XPS-13-9360>
+ <11aca587-9438-4fba-081c-b82631e96989@ideasonboard.com>
+ <20200514101356.GF2877@Mani-XPS-13-9360>
+ <d492cbcb-3b13-82b8-8e5d-0f49320170a2@ideasonboard.com>
+ <CAMuHMdWSEY2q1f1iobrSXHYWzweV9yjk4i1ROj2Yde7DJMiabQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAMuHMdWSEY2q1f1iobrSXHYWzweV9yjk4i1ROj2Yde7DJMiabQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Configure the PDM sampling edges based on the values from the firmware.
+On Thu, May 14, 2020 at 01:59:35PM +0200, Geert Uytterhoeven wrote:
+> Hi Kieran,
+> 
+> On Thu, May 14, 2020 at 1:47 PM Kieran Bingham
+> <kieran.bingham+renesas@ideasonboard.com> wrote:
+> > On 14/05/2020 11:13, Manivannan Sadhasivam wrote:
+> > > On Thu, May 14, 2020 at 11:02:53AM +0100, Kieran Bingham wrote:
+> > >> On 12/05/2020 19:17, Manivannan Sadhasivam wrote:
+> > >>> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
+> > >>>> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
+> > >>>> CSI-2 output. The device supports multicamera streaming applications,
+> > >>>> and features the ability to synchronise the attached cameras.
+> > >>>>
+> > >>>> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
+> > >>>> is supported over I2C, which implements an I2C mux to facilitate
+> > >>>> communications with connected cameras across the reverse control
+> > >>>> channel.
+> > >>>>
+> > >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > >>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> > >>>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > >>>> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> 
+> > >>>> --- /dev/null
+> > >>>> +++ b/drivers/media/i2c/max9286.c
+> 
+> > >>>> +static int max9286_register_gpio(struct max9286_priv *priv)
+> > >>>> +{
+> > >>>> +  struct device *dev = &priv->client->dev;
+> > >>>> +  struct gpio_chip *gpio = &priv->gpio;
+> > >>>> +  int ret;
+> > >>>> +
+> > >>>> +  static const char * const names[] = {
+> > >>>> +          "GPIO0OUT",
+> > >>>> +          "GPIO1OUT",
+> > >>>> +  };
+> > >>>> +
+> > >>>> +  /* Configure the GPIO */
+> > >>>> +  gpio->label = dev_name(dev);
+> > >>>
+> > >>> So if you have more than one MAX9286 in a system, all gpiochips will appear
+> > >>> with the same name. I'd recommend to append the index to distinguish properly.
+> > >>
+> > >> Ah yes, that's a good point, and I think I've even seen that.
+> > >>
+> > >> I'll fix it now.
+> >
+> > Oh, in fact actually this doesn't.
+> >
+> > gpiodetect prints:
+> >
+> > gpiochip10 [4-004c] (2 lines)
+> > gpiochip11 [4-006c] (2 lines)
+> >
+> > and mostly references them as gpiochip10 and gpiochip11.
+> 
+> Indeed, dev_name() should be different for each instance.
+> 
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- sound/soc/codecs/tlv320adcx140.c | 22 ++++++++++++++++++++++
- sound/soc/codecs/tlv320adcx140.h |  3 +++
- 2 files changed, 25 insertions(+)
+Ah, my bad! Somehow I got confused that this delivers static name... Sorry for
+the noise, Kieran.
 
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 97634e0ca0ba..140a5802a9a9 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -760,6 +760,10 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
- 	int sleep_cfg_val = ADCX140_WAKE_DEV;
- 	u8 bias_source;
- 	u8 vref_source;
-+	int pdm_count;
-+	u32 pdm_edges[ADCX140_NUM_PDM_EDGES];
-+	u32 pdm_edge_val = 0;
-+	int i;
- 	int ret;
- 
- 	ret = device_property_read_u8(adcx140->dev, "ti,mic-bias-source",
-@@ -786,6 +790,24 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
- 
- 	bias_source |= vref_source;
- 
-+	pdm_count = device_property_count_u32(adcx140->dev,
-+					      "ti,pdm-edge-select");
-+	if (pdm_count <= ADCX140_NUM_PDM_EDGES && pdm_count > 0) {
-+		ret = device_property_read_u32_array(adcx140->dev,
-+						     "ti,pdm-edge-select",
-+						     pdm_edges, pdm_count);
-+		if (ret)
-+			return ret;
-+
-+		for (i = 0; i < pdm_count; i++)
-+			pdm_edge_val |= pdm_edges[i] << (ADCX140_PDM_EDGE_SHIFT - i);
-+
-+		ret = regmap_write(adcx140->regmap, ADCX140_PDM_CFG,
-+				   pdm_edge_val);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	ret = adcx140_reset(adcx140);
- 	if (ret)
- 		goto out;
-diff --git a/sound/soc/codecs/tlv320adcx140.h b/sound/soc/codecs/tlv320adcx140.h
-index 6d055e55909e..432eaf25d1a7 100644
---- a/sound/soc/codecs/tlv320adcx140.h
-+++ b/sound/soc/codecs/tlv320adcx140.h
-@@ -128,4 +128,7 @@
- 
- #define ADCX140_TX_OFFSET_MASK		GENMASK(4, 0)
- 
-+#define ADCX140_NUM_PDM_EDGES		4
-+#define ADCX140_PDM_EDGE_SHIFT		7
-+
- #endif /* _TLV320ADCX140_ */
--- 
-2.26.2
+> > However,
+> >
+> > > [    2.318533] gpio gpiochip11: Detected name collision for GPIO name 'GPIO0OUT'
+> > > [    2.325739] gpio gpiochip11: Detected name collision for GPIO name 'GPIO1OUT'
+> >
+> > That seems to be more of a problem for the gpio library, so I think I'll
+> > just drop the const names. I don't think they add much value.
+> 
 
+Well, I should've pointed this instead of above...
+
+(lack of coffee)
+
+> These are the line names.  If they're not unique, a warning is printed,
+> but they are still registered.
+> So probably you want to use kasprintf("%s.%s", dev_name(dev), names[i]) to
+> generate names.
+> 
+
+Ack.
+
+I think you should CC Linus W for next iteration to get review for gpiolib
+implementation.
+
+Thanks,
+Mani
+
+> See "[PATCH] gpiolib: Document that GPIO line names are not globally unique"
+> (https://lore.kernel.org/linux-gpio/20200511101828.30046-1-geert+renesas@glider.be/)
+> to clear up the details.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
