@@ -2,212 +2,242 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F99C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE7AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B9C20787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A434205CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 14:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589467972;
-	bh=KyMeowribavtsIbTUR+vWwY63ali5afdWjqtehs4ado=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fKB2F8K9hPRMYUSrgeKh7j71FrQHkuvuijBxGR7orEbJBejAW3hCci9uJbHV68sTA
-	 39YFnKutIS2YAr0qG3A+PHemIAmhAslgSN78ztlT4gDluxVAMeHOtD479JGisz6dwJ
-	 DvTT4mESw0Yh2CkIcQBL/u5hl3k55gbej9WUtxEc=
+	s=default; t=1589468076;
+	bh=XF7VqCo4FKHfUB4Zx6lTd0nl/oUWIyInCLXc99nPfpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gMzHOH+sZAm5Jdcd9LlVerVDqDP2klS5RC1bgcdVUw3tO3tMAIl5ZedCjSAEgAUz2
+	 UpamCq9kU2CvJuJOmR+DGUNLmVToh6bsaVeAUwplON4r9MvBvGkPAruWkzaEZt/v8L
+	 bVroN9B6egxV/w85kgxnJzyIV0a7rZzg/VuyjZiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgENOww (ORCPT
+        id S1727124AbgENOyg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 10:52:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbgENOwv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 10:52:51 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD6A20657;
-        Thu, 14 May 2020 14:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589467970;
-        bh=KyMeowribavtsIbTUR+vWwY63ali5afdWjqtehs4ado=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jO+lD2cCU6q+5tJVkwkyOBKh8wI3TB5mInfIHe4hmQgT8JBiuB9lCqG8j40WAUs2e
-         GBE/X3aXCrtmqPdF7LYRETB7jvg2CCP1UwQonVipOc7Lb97gzY0+t4ax94t/WeNM0h
-         vketF0DJ9519leZRWWEsKTbZZQSFsyacHizFkUxo=
-Received: by mail-oi1-f170.google.com with SMTP id o24so24768110oic.0;
-        Thu, 14 May 2020 07:52:50 -0700 (PDT)
-X-Gm-Message-State: AGi0PubBBLONm6r65UiOs4vWocSk31JKMsHxmNubiQ6Fsv99dZ2WrGBX
-        +/STx0pzUmOYumYn+grT3uHAqejfR+WRMEOxvw==
-X-Google-Smtp-Source: APiQypLD1q0aJ+FQry7uiKJF40s+kUkpHEeLYwhAf8rdZYNoqrECkbbBawOpUYBN2DKPnQ4iPCEQXyF96LsbhjXfFTU=
-X-Received: by 2002:aca:1904:: with SMTP id l4mr31504767oii.106.1589467969912;
- Thu, 14 May 2020 07:52:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200501073949.120396-1-john.stultz@linaro.org>
- <20200501073949.120396-4-john.stultz@linaro.org> <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
- <47e7eded-7240-887a-39e1-97c55bf752e7@arm.com> <CALAqxLU6kmvJ+xPCFzc3N+RNMv4g=L9bmzgE0wrOXefiGfPoHg@mail.gmail.com>
- <20200504090628.d2q32dwyg6em5pp7@DESKTOP-E1NTVVP.localdomain>
- <20200512163714.GA22577@bogus> <20200513104401.lhh2m5avlasev6mj@DESKTOP-E1NTVVP.localdomain>
-In-Reply-To: <20200513104401.lhh2m5avlasev6mj@DESKTOP-E1NTVVP.localdomain>
+        Thu, 14 May 2020 10:54:36 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35577 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726051AbgENOyf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 10:54:35 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o7so24782098oif.2;
+        Thu, 14 May 2020 07:54:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yB9VTl8KywTt9Ux7iGL6NMMzFHRwNMMveEGo6bB/Nqs=;
+        b=T0LHW//wg1PT5ZhYrD5YNYAJaFyvoLbvaDx5AvdpOhL/xcjcF7bgouQg23E1pzKwrh
+         FTsUfm6uumwnDuAqUBSlF1+UxrAvB5aIroIXdil8bBXDfQ84m917KjJWv4cRhgRbhXkC
+         viQn7d34JJxJYRxuqmDLJ+LSeFCwOA8C7K0pLgGK1w2weV99X/Rxcy6W5pQsRdRrc2hX
+         ok0s3qhjJrCqmgoFd8rfYzn5UbyQF+GsoiMvXUQ4FFARGmUVkn/Oe2qzbfgO/Y+0GjBm
+         m6d898f2rqwKLlRrBc5BuNq1kjQuMvs8/waZnm0qcCwbZx/Eh9ttZLAeITt65MRzHsJe
+         ZUGA==
+X-Gm-Message-State: AGi0PuYxShKp4+FFQ+g/8AwPi3VIdPLOJAPvgBLTTTyo+AFH1qJpORPw
+        XmtKtcAnRsZQzh+AW5K/Bw==
+X-Google-Smtp-Source: APiQypKK3YHethFZkt7Xx5I2o7MWAZ0bYDIOxjjLF2SWgo5qkdd1iKlpLeZMoOaRUFuLjsQuL2Qxeg==
+X-Received: by 2002:a05:6808:a93:: with SMTP id q19mr31602743oij.6.1589468074296;
+        Thu, 14 May 2020 07:54:34 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n9sm819299otl.76.2020.05.14.07.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 07:54:33 -0700 (PDT)
+Received: (nullmailer pid 26910 invoked by uid 1000);
+        Thu, 14 May 2020 14:54:32 -0000
+Date:   Thu, 14 May 2020 09:54:32 -0500
 From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 14 May 2020 09:52:35 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+V-YA9B7i+9U0as3oXNC=HLPHmZ2NrPzNJu5CXpvD3tg@mail.gmail.com>
-Message-ID: <CAL_Jsq+V-YA9B7i+9U0as3oXNC=HLPHmZ2NrPzNJu5CXpvD3tg@mail.gmail.com>
-Subject: Re: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA
- regions tagged with "linux,cma-heap"
-To:     Brian Starkey <brian.starkey@arm.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     devicetree@vger.kernel.org, devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Message-ID: <20200514145432.GA6091@bogus>
+References: <cover.1588747998.git.xji@analogixsemi.com>
+ <b720f7d2c5338813d31b7f715f59ca68c367d5a8.1588747998.git.xji@analogixsemi.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b720f7d2c5338813d31b7f715f59ca68c367d5a8.1588747998.git.xji@analogixsemi.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 5:44 AM Brian Starkey <brian.starkey@arm.com> wrote:
->
-> Hi Rob,
->
-> On Tue, May 12, 2020 at 11:37:14AM -0500, Rob Herring wrote:
-> > On Mon, May 04, 2020 at 10:06:28AM +0100, Brian Starkey wrote:
-> > > On Fri, May 01, 2020 at 12:01:40PM -0700, John Stultz wrote:
-> > > > On Fri, May 1, 2020 at 4:08 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > >
-> > > > > On 2020-05-01 11:21 am, Brian Starkey wrote:
-> > > > > > Hi John,
-> > > > > >
-> > > > > > On Fri, May 01, 2020 at 07:39:48AM +0000, John Stultz wrote:
-> > > > > >> This patch reworks the cma_heap initialization so that
-> > > > > >> we expose both the default CMA region and any CMA regions
-> > > > > >> tagged with "linux,cma-heap" in the device-tree.
-> > > > > >>
-> > > > > >> Cc: Rob Herring <robh+dt@kernel.org>
-> > > > > >> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> > > > > >> Cc: "Andrew F. Davis" <afd@ti.com>
-> > > > > >> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> > > > > >> Cc: Liam Mark <lmark@codeaurora.org>
-> > > > > >> Cc: Pratik Patel <pratikp@codeaurora.org>
-> > > > > >> Cc: Laura Abbott <labbott@redhat.com>
-> > > > > >> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> > > > > >> Cc: Chenbo Feng <fengc@google.com>
-> > > > > >> Cc: Alistair Strachan <astrachan@google.com>
-> > > > > >> Cc: Sandeep Patil <sspatil@google.com>
-> > > > > >> Cc: Hridya Valsaraju <hridya@google.com>
-> > > > > >> Cc: Christoph Hellwig <hch@lst.de>
-> > > > > >> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > >> Cc: Robin Murphy <robin.murphy@arm.com>
-> > > > > >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > > >> Cc: devicetree@vger.kernel.org
-> > > > > >> Cc: dri-devel@lists.freedesktop.org
-> > > > > >> Cc: linux-mm@kvack.org
-> > > > > >> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > > > >> ---
-> > > > > >>   drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
-> > > > > >>   1 file changed, 9 insertions(+), 9 deletions(-)
-> > > > > >>
-> > > > > >> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-> > > > > >> index 626cf7fd033a..dd154e2db101 100644
-> > > > > >> --- a/drivers/dma-buf/heaps/cma_heap.c
-> > > > > >> +++ b/drivers/dma-buf/heaps/cma_heap.c
-> > > > > >> @@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
-> > > > > >>   {
-> > > > > >>      struct cma_heap *cma_heap;
-> > > > > >>      struct dma_heap_export_info exp_info;
-> > > > > >> +    struct cma *default_cma = dev_get_cma_area(NULL);
-> > > > > >> +
-> > > > > >> +    /* We only add the default heap and explicitly tagged heaps */
-> > > > > >> +    if (cma != default_cma && !cma_dma_heap_enabled(cma))
-> > > > > >> +            return 0;
-> > > > > >
-> > > > > > Thinking about the pl111 thread[1], I'm wondering if we should also
-> > > > > > let drivers call this directly to expose their CMA pools, even if they
-> > > > > > aren't tagged for dma-heaps in DT. But perhaps that's too close to
-> > > > > > policy.
-> > > > >
-> > > > > That sounds much like what my first thoughts were - apologies if I'm
-> > > > > wildly off-base here, but as far as I understand:
-> > > > >
-> > > > > - Device drivers know whether they have their own "memory-region" or not.
-> > > > > - Device drivers already have to do *something* to participate in dma-buf.
-> > > > > - Device drivers know best how they make use of both the above.
-> > > > > - Therefore couldn't it be left to drivers to choose whether to register
-> > > > > their CMA regions as heaps, without having to mess with DT at all?
-> >
-> > +1, but I'm biased toward any solution not using DT. :)
-> >
-> > > > I guess I'm not opposed to this. But I guess I'd like to see some more
-> > > > details? You're thinking the pl111 driver would add the
-> > > > "memory-region" node itself?
-> > > >
-> > > > Assuming that's the case, my only worry is what if that memory-region
-> > > > node isn't a CMA area, but instead something like a carveout? Does the
-> > > > driver need to parse enough of the dt to figure out where to register
-> > > > the region as a heap?
-> > >
-> > > My thinking was more like there would already be a reserved-memory
-> > > node in DT for the chunk of memory, appropriately tagged so that it
-> > > gets added as a CMA region.
-> > >
-> > > The device's node would have "memory-region=<&blah>;" and would use
-> > > of_reserved_mem_device_init() to link up dev->cma_area to the
-> > > corresponding cma region.
-> > >
-> > > So far, that's all in-place already. The bit that's missing is
-> > > exposing that dev->cma_area to userspace as a dma_heap - so we could
-> > > just have "int cma_heap_add(struct cma *cma)" or "int
-> > > cma_heap_dev_add(struct device *dev)" or something exported for
-> > > drivers to expose their device-assigned cma region if they wanted to.
-> > >
-> > > I don't think this runs into the lifetime problems of generalised
-> > > heaps-as-modules either, because the CMA region will never go away
-> > > even if the driver does.
-> > >
-> > > Alongside that, I do think the completely DT-driven approach can be
-> > > useful too - because there may be regions which aren't associated with
-> > > any specific device driver, that we want exported as heaps.
-> >
-> > And they are associated with the hardware description rather than the
-> > userspace environment?
->
-> I'm not sure how to answer that. We already have CMA regions being
-> created from device-tree, so we're only talking about explicitly
-> exposing those to userspace.
+On Wed, May 06, 2020 at 03:04:20PM +0800, Xin Ji wrote:
+> The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> for portable device. It converts MIPI to DisplayPort 1.3 4K.
+> 
+> You can add support to your board with binding.
 
-It's easier to argue that how much CMA memory a system/device needs is
-h/w description as that's more a function of devices and frame sizes.
-But exposing to userspace or not is an OS architecture decision. It's
-not really any different than a kernel vs. userspace driver question.
-What's exposed by UIO or spi-dev is purely a kernel thing.
+We have an example in the binding, no reason to also put in the commit 
+msg.
 
-> Are you thinking that userspace should be deciding whether they get
-> exposed or not? I don't know how userspace would discover them in
-> order to make that decision.
+> 
+> Example:
+> 	anx7625_bridge: encoder@58 {
+> 		compatible = "analogix,anx7625";
+> 		reg = <0x58>;
+> 		status = "okay";
+> 		enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+> 		reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
+> 
+> 		ports {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			mipi2dp_bridge_in: port@0 {
+> 				reg = <0>;
+> 				anx7625_in: endpoint {
+> 					remote-endpoint = <&mipi_dsi>;
+> 				};
+> 			};
+> 
+> 			mipi2dp_bridge_out: port@1 {
+> 				reg = <1>;
+> 				anx7625_out: endpoint {
+> 					remote-endpoint = <&panel_in>;
+> 				};
+> 			};
+> 		};
+> 	};
+> 
+> Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> ---
+>  .../bindings/display/bridge/analogix,anx7625.yaml  | 98 ++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> new file mode 100644
+> index 0000000..6e54176
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> @@ -0,0 +1,98 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Analogix Semiconductor, Inc.
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/bridge/analogix,anx7625.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
+> +
+> +maintainers:
+> +  - Xin Ji <xji@analogixsemi.com>
+> +
+> +description: |
+> +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
+> +  designed for portable devices.
+> +
+> +properties:
+> +  "#address-cells": true
+> +  "#size-cells": true
 
-Or perhaps the kernel should be deciding. Expose to userspace what the
-kernel doesn't need or drivers decide?
+These don't belong here.
 
-It's hard to argue against 1 new property. It's death by a 1000 cuts though.
+> +
+> +  compatible:
+> +    items:
+> +      - const: analogix,anx7625
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: used for interrupt pin B8.
+> +    maxItems: 1
+> +
+> +  enable-gpios:
+> +    description: used for power on chip control, POWER_EN pin D2.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: used for reset chip control, RESET_N pin B7.
+> +    maxItems: 1
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description:
+> +          Video port for MIPI DSI input.
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          Video port for panel or connector.
+> +
+> +    required:
+> +        - port@0
+> +        - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        anx7625_bridge: encoder@58 {
 
-Rob
+Drop any unused labels.
+
+> +            compatible = "analogix,anx7625";
+> +            reg = <0x58>;
+> +            enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+> +            reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                mipi2dp_bridge_in: port@0 {
+> +                    reg = <0>;
+> +                    anx7625_in: endpoint {
+> +                        remote-endpoint = <&mipi_dsi>;
+> +                    };
+> +                };
+> +
+> +                mipi2dp_bridge_out: port@1 {
+> +                    reg = <1>;
+> +                    anx7625_out: endpoint {
+> +                        remote-endpoint = <&panel_in>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.7.4
+> 
