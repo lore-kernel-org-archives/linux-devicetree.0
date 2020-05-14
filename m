@@ -2,115 +2,248 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42C5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 10:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF8AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 10:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE1852065D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 10:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="l3JU6WsA"
+	by mail.kernel.org (Postfix) with ESMTP id 1D10B2065D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 10:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgENKFe (ORCPT
+        id S1726067AbgENKNE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 06:05:34 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60988 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgENKFe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 06:05:34 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E2ECC9A8;
-        Thu, 14 May 2020 12:05:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589450732;
-        bh=HIFwH/zOaG31nesCn5CYtH8UsMJVPfM9hl/t5q8ugGw=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=l3JU6WsAtFYJQ0oW0AMxTQpL7yuv2VFOn2B78j+H5oRrMUCN8EywMz11LKmckgDGQ
-         WTQ5EKNg372EPCC1DFcy161FEDQCIdL/LANgmeGPK/THbUe9E5ZqT1QOeM2RRW3lIu
-         ygToiBIb6KqYFH8FtHADBrUwhlK2rA8kU+2RTeM4=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        sakari.ailus@iki.fi, Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>, Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
- <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
- <20200512174056.GH5526@Mani-XPS-13-9360>
- <e07af762-2db1-920c-5ab8-5528bdcfc2ce@ideasonboard.com>
- <20200514095948.GE2877@Mani-XPS-13-9360>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <92d53749-4ba4-503c-f7c2-386d32d2876d@ideasonboard.com>
-Date:   Thu, 14 May 2020 11:05:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 06:13:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58394 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgENKNE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 06:13:04 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id E62C62A2C39
+From:   =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     devicetree@vger.kernel.org
+Cc:     kernel@collabora.com, dri-devel@lists.freedesktop.org,
+        robh+dt@kernel.org, enric.balletbo@collabora.com
+Subject: [PATCH v4] dt-bindings: display: anx7814.txt: convert to yaml
+Date:   Thu, 14 May 2020 12:12:35 +0200
+Message-Id: <20200514101235.7290-1-ricardo.canuelo@collabora.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200514095948.GE2877@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mani,
+This converts the Analogix ANX7814 bridge DT binding to yaml. Port
+definitions and descriptions were expanded, apart from that it's a
+direct translation from the original binding.
 
-On 14/05/2020 10:59, Manivannan Sadhasivam wrote:
-> On Thu, May 14, 2020 at 10:53:00AM +0100, Kieran Bingham wrote:
->> Hi Mani,
->>>> +static int max9286_set_fmt(struct v4l2_subdev *sd,
->>>> +			   struct v4l2_subdev_pad_config *cfg,
->>>> +			   struct v4l2_subdev_format *format)
->>>> +{
->>>> +	struct max9286_priv *priv = sd_to_max9286(sd);
->>>> +	struct v4l2_mbus_framefmt *cfg_fmt;
->>>> +
->>>> +	if (format->pad >= MAX9286_SRC_PAD)
->>>> +		return -EINVAL;
->>>> +
->>>> +	/* Refuse non YUV422 formats as we hardcode DT to 8 bit YUV422 */
->>>> +	switch (format->format.code) {
->>>> +	case MEDIA_BUS_FMT_UYVY8_2X8:
->>>> +	case MEDIA_BUS_FMT_VYUY8_2X8:
->>>> +	case MEDIA_BUS_FMT_YUYV8_2X8:
->>>> +	case MEDIA_BUS_FMT_YVYU8_2X8:
->>>> +		break;
->>>> +	default:
->>>> +		format->format.code = MEDIA_BUS_FMT_YUYV8_2X8;
->>>
->>> Is there any reason for not setting default format to MEDIA_BUS_FMT_UYVY8_2X8?
->>>
->>
->>
->> No good reason no, and I see that in max9286_enum_mbus_code(), we
->> currently code to MEDIA_BUS_FMT_YUYV8_2X8, and that's the value that we
->> init to, so that would be a better default indeed.
->>
-> 
-> max9286_enum_mbus_code() returns MEDIA_BUS_FMT_UYVY8_2X8, no?
+Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+Changes in v4:
+  - Make interrupts and gpios optional (Enric Balletbo)
+  - Make hpd-gpios deprecated (Rob Herring)
+  - Remove maxItems from dvdd10-supply
 
-Argh, sorry - yet anther typo or copy/paste error.
+Changes in v3 (suggested by Sam Ravnborg):
+  - Rename example node i2c0 to i2c.
 
-Indeed, I have changed this locally to ...
-   <double checks> MEDIA_BUS_FMT_UYVY8_2X8 </double checks>
-as suggested. ;-)
+Changes in v2 (suggested by Enric Balletbo):
+  - File name change: use full compatible string.
+  - Binding description removed.
+  - #address-cells and #size-cells properties removed from ports node.
+  - Example node renamed: anx7814 -> bridge.
 
+Tested with:
+make dt_binding_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
+make dtbs_check ARCH=arm64 DT_SCHEMA_FILES=<.../analogix,anx7814.yaml>
 
-> 
-> Thanks,
-> Mani
+ .../display/bridge/analogix,anx7814.yaml      | 119 ++++++++++++++++++
+ .../bindings/display/bridge/anx7814.txt       |  42 -------
+ 2 files changed, 119 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/anx7814.txt
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
+new file mode 100644
+index 000000000000..3ba477aefdd7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7814.yaml
+@@ -0,0 +1,119 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/analogix,anx7814.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analogix ANX7814 SlimPort (Full-HD Transmitter)
++
++maintainers:
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++
++properties:
++  compatible:
++    enum:
++      - analogix,anx7808
++      - analogix,anx7812
++      - analogix,anx7814
++      - analogix,anx7818
++
++  reg:
++    maxItems: 1
++    description: I2C address of the device.
++
++  interrupts:
++    maxItems: 1
++    description: Should contain the INTP interrupt.
++
++  hpd-gpios:
++    deprecated: true
++    maxItems: 1
++    description: Which GPIO to use for hpd.
++
++  pd-gpios:
++    maxItems: 1
++    description: Which GPIO to use for power down.
++
++  reset-gpios:
++    maxItems: 1
++    description: Which GPIO to use for reset.
++
++  dvdd10-supply:
++    description: Regulator for 1.0V digital core power.
++
++  ports:
++    type: object
++    description:
++      A node containing input and output port nodes with endpoint
++      definitions as documented in
++      Documentation/devicetree/bindings/media/video-interfaces.txt
++      Documentation/devicetree/bindings/graph.txt
++
++    properties:
++      port@0:
++        type: object
++        description: Video port for HDMI input.
++
++        properties:
++          reg:
++            const: 0
++
++      port@1:
++        type: object
++        description:
++          Video port for SlimPort, DisplayPort, eDP or MyDP output.
++
++        properties:
++          reg:
++            const: 1
++
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        anx7814: bridge@38 {
++            compatible = "analogix,anx7814";
++            reg = <0x38>;
++            interrupt-parent = <&gpio0>;
++            interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
++            pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
++            reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    anx7814_in: endpoint {
++                        remote-endpoint = <&hdmi0_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    anx7814_out: endpoint {
++                        remote-endpoint = <&edp_out>;
++                    };
++                };
++            };
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/display/bridge/anx7814.txt b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
+deleted file mode 100644
+index 17258747fff6..000000000000
+--- a/Documentation/devicetree/bindings/display/bridge/anx7814.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-Analogix ANX7814 SlimPort (Full-HD Transmitter)
+------------------------------------------------
+-
+-The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
+-designed for portable devices.
+-
+-Required properties:
+-
+- - compatible		: Must be one of:
+-			  "analogix,anx7808"
+-			  "analogix,anx7812"
+-			  "analogix,anx7814"
+-			  "analogix,anx7818"
+- - reg			: I2C address of the device
+- - interrupts		: Should contain the INTP interrupt
+- - hpd-gpios		: Which GPIO to use for hpd
+- - pd-gpios		: Which GPIO to use for power down
+- - reset-gpios		: Which GPIO to use for reset
+-
+-Optional properties:
+-
+- - dvdd10-supply	: Regulator for 1.0V digital core power.
+- - Video port for HDMI input, using the DT bindings defined in [1].
+-
+-[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+-
+-Example:
+-
+-	anx7814: anx7814@38 {
+-		compatible = "analogix,anx7814";
+-		reg = <0x38>;
+-		interrupt-parent = <&gpio0>;
+-		interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
+-		hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
+-		pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
+-		reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
+-		port {
+-			anx7814_in: endpoint {
+-				remote-endpoint = <&hdmi0_out>;
+-			};
+-		};
+-	};
+-- 
+2.18.0
+
