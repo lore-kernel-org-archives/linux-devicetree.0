@@ -2,121 +2,67 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE02C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8862DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 078C62054F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B0B20727
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 13:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589463927;
-	bh=BiyP19s8ArH79tbowm7Md7c5VYSdaAeLlwmIsR16syE=;
+	s=default; t=1589463947;
+	bh=dgB3erlnMsKKlBRi9JYD4MLepXgCEwkoJfddRxExqm8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pvTS9jWz9KlrEIfPvorbf0ve/2waBvkW00cGS0WlRCWVHSeIkio73/46S9I9/Xnbe
-	 9IhericNam2ph/xoE28ZGv8mJJWQHXDqmmYwPqrQVfwgF+LatiaHbKmC3zOshSov5h
-	 Q8a7APWY0CpZa7iTXdsh/uQH/S2ysA234AbIZwNw=
+	b=uj/LrQPr/dpiSSP5E/m3pwZ3JdkcZhujKiDjC403l6bsJwKkn4FopVoCKBNmndxi5
+	 ianvUEkyvhv3YKU9mJiTxIAJ7D5jm5nbgblRaPgy9u8hCiNS2LcxHljTltQbGZMHM+
+	 QmK3JZmXKhnLBlF0Et/NlLFbCzJoZkruiNCm6UHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726176AbgENNp0 (ORCPT
+        id S1726128AbgENNpr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 09:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 09:45:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgENNp0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 09:45:26 -0400
+        id S1726087AbgENNpq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 09:45:46 -0400
 Received: from localhost (unknown [122.182.193.86])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FC942054F;
-        Thu, 14 May 2020 13:45:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8203920727;
+        Thu, 14 May 2020 13:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589463925;
-        bh=BiyP19s8ArH79tbowm7Md7c5VYSdaAeLlwmIsR16syE=;
+        s=default; t=1589463946;
+        bh=dgB3erlnMsKKlBRi9JYD4MLepXgCEwkoJfddRxExqm8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KajdqBrH81XEVNYOh/a8PIo3/kb/e2owHgWHMPDdeB4GQ3X5E3E1phiTooLAkNa80
-         TLdxD64/QO/QMzEPLRauoyehamXgtHgTNmsGaEpOFgGQVGv0sMszopoXoDEdwZqieo
-         XnwCk/RnWwSTKrnoIiYrRrtX9NiRLcFfwXXkmUdM=
-Date:   Thu, 14 May 2020 19:15:21 +0530
+        b=CCrwM8o+t+1VFNrNGslEuyxYPgw6MKPdEw2P9i2L2bMAOidiIHVdvu3oYI2pvB2og
+         MJ7ruoZRZClacV0/dkL/GgSKq6H7ICU+tTQR8nG8ORhlSO9jNUOyJ0VdErGTZasSV3
+         zHMzP3JiQ3OXypQiecxZ9WHyh2/UXCtmM0chEF5w=
+Date:   Thu, 14 May 2020 19:15:42 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: remoteproc: qcom: pas: Add SM8250
- remoteprocs
-Message-ID: <20200514134521.GU14092@vkoul-mobl>
+Subject: Re: [PATCH v2 2/2] remoteproc: qcom: pas: Add SM8250 PAS remoteprocs
+Message-ID: <20200514134542.GV14092@vkoul-mobl>
 References: <20200430180051.3795305-1-bjorn.andersson@linaro.org>
+ <20200430180051.3795305-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430180051.3795305-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200430180051.3795305-2-bjorn.andersson@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 30-04-20, 11:00, Bjorn Andersson wrote:
-> Add the SM8250 audio, compute and sensor remoteprocs to the PAS DT
-> binding.
-
+> Add audio, compute and sensor DSP compatibles to the Qualcomm PAS
+> binding and driver.
 
 Reviewed-by: Vinod Koul <vkoul@kernel.org>
-
-> 
-> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Changed adsp power-domains to lcx and added missing lmx
-> 
->  .../devicetree/bindings/remoteproc/qcom,adsp.txt         | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> index 9938918b2fea..c18c1b8d2869 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> @@ -21,6 +21,9 @@ on the Qualcomm ADSP Hexagon core.
->  		    "qcom,sm8150-cdsp-pas"
->  		    "qcom,sm8150-mpss-pas"
->  		    "qcom,sm8150-slpi-pas"
-> +		    "qcom,sm8250-adsp-pas"
-> +		    "qcom,sm8250-cdsp-pas"
-> +		    "qcom,sm8250-slpi-pas"
->  
->  - interrupts-extended:
->  	Usage: required
-> @@ -44,6 +47,9 @@ on the Qualcomm ADSP Hexagon core.
->  	qcom,sm8150-adsp-pas:
->  	qcom,sm8150-cdsp-pas:
->  	qcom,sm8150-slpi-pas:
-> +	qcom,sm8250-adsp-pas:
-> +	qcom,sm8250-cdsp-pas:
-> +	qcom,sm8250-slpi-pas:
->  		    must be "wdog", "fatal", "ready", "handover", "stop-ack"
->  	qcom,qcs404-wcss-pas:
->  	qcom,sm8150-mpss-pas:
-> @@ -105,10 +111,13 @@ on the Qualcomm ADSP Hexagon core.
->  	qcom,sdm845-cdsp-pas:
->  	qcom,sm8150-adsp-pas:
->  	qcom,sm8150-cdsp-pas:
-> +	qcom,sm8250-cdsp-pas:
->  		    must be "cx", "load_state"
->  	qcom,sm8150-mpss-pas:
->  		    must be "cx", "load_state", "mss"
-> +	qcom,sm8250-adsp-pas:
->  	qcom,sm8150-slpi-pas:
-> +	qcom,sm8250-slpi-pas:
->  		    must be "lcx", "lmx", "load_state"
->  
->  - memory-region:
-> -- 
-> 2.24.0
 
 -- 
 ~Vinod
