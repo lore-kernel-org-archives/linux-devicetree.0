@@ -2,252 +2,163 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A2BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F52C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 737F120643
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFA7206A5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 19:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZolF2Dg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kCm4gyCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgENTe5 (ORCPT
+        id S1727819AbgENTsa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 15:34:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726128AbgENTe4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 15:34:56 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CCB4C061A0C;
-        Thu, 14 May 2020 12:34:56 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h4so4792828ljg.12;
-        Thu, 14 May 2020 12:34:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=og+mFqkQ1CAe/czR3+TKiYrXrYEV1ucIAEKU/RyoNDU=;
-        b=CZolF2DggsKTYh/lV2wyHaCyiHB7GdpzW6g/ZtAFXpginQWA/dcpxrrOZQN7GAq3Ue
-         8zdhEQ1f//fiAMdlhLLQ9WqGSx/FouKUOmmRxTGAat8BhikOJpfiS79qRkg8S9neyS9p
-         bKYRxmRxa0kRH7ZNCcu1yBLfMAmLjoxyNNzZwVcTDc6XcT/Wnw6z7NdKlmWP9xaxgI93
-         F9JR+DvnTzhW6HBs4pLEg4DtNlD1nEoeO5CmRc63GIwhYw4UsMuejkrXmqv08YofzFUg
-         s20cXrdibxukNV0TOQleiGRde2ZVH1xtygUSM2YCyDWwfClF7IGM9uOXOV61tuPCHY2X
-         vqrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=og+mFqkQ1CAe/czR3+TKiYrXrYEV1ucIAEKU/RyoNDU=;
-        b=Pdz23X5p8SznJ0UV4lEV1aQvQryKgsrLmTY5JOnQgXcEQW9iGeuAQiNsN2MxBS6cNs
-         j1AkquVLeYjCKdUm67GpRvgMGK0FKPikMbDstkhZr+BN9Bj0yiB9ci6nb6rFdUCYROBq
-         MNIik8CzvKXGsohkz3gS7ZZ+XfVxspmDLafkfbvb20Zunkh0tPpKucGwrtNYocOTpSp0
-         AZhxwL7+j4Sj9qtMojCxGzuqf9q/KXW6Wv6WL9RszWETh+FekgwfxTgVKsG8MUW5NjPo
-         6cGXEuU6ynsh44N6swSHXat9pMX9cweDZ2CxgIUeW44gdWYFigkASHCeiSYvyRqZYqvz
-         EtiQ==
-X-Gm-Message-State: AOAM5331E38FW//1wv/4pbwlz9OUUgrlC3gBcJoK6z979yP3ujA8B8ea
-        Klyc/m3iDmc96J/m4uxPIyWjqwpP
-X-Google-Smtp-Source: ABdhPJxDflsh0HvwluZVujuFduHUZilb+GFF3x0ItuiZEaHP8qSiaL9YfMiDfg6H1ZW4TlRkFv1U/w==
-X-Received: by 2002:a2e:9e97:: with SMTP id f23mr3698618ljk.228.1589484892987;
-        Thu, 14 May 2020 12:34:52 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id w12sm53343ljj.55.2020.05.14.12.34.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 12:34:51 -0700 (PDT)
-Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
- for Summit SMB3xx
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Myungjoo Ham <myungjoo.ham@samsung.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ramakrishna.pallala@intel.com,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-References: <20200329161552.215075-1-david@ixit.cz>
- <20200329162128.218584-5-david@ixit.cz> <20200410164905.GA719@bogus>
- <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
- <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
- <687db60d-fea9-f157-d4ce-907189bb3cc7@gmail.com>
- <20200509011406.hs7nj3g7f5pzetxp@earth.universe>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fea13673-9500-c34b-5b50-c4f8cef9c4d8@gmail.com>
-Date:   Thu, 14 May 2020 22:34:49 +0300
+        Thu, 14 May 2020 15:48:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51950 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbgENTs3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 15:48:29 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EJmMmb101895;
+        Thu, 14 May 2020 14:48:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589485702;
+        bh=L8yaIk6s3rQNnlVa1+GsvW8B3fjy5acHx+zekh7EIek=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kCm4gyCvWRHJIrlwnSoE2YKbDrJZGO49JyM2hiz3wTnJf+rs7EFeyvtfZwXSNQiQL
+         A9faduoFhItlqvDDLBjzb2+TGhncLiPKEj3bck6QRF63FvjTDEKzs34SqasALG7oNH
+         K4Vpn5LiwpkCQNi64WuerL3TB7C6zHBfY4v0rmac=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EJmMXd123049
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 14:48:22 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 14:48:21 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 14:48:21 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EJmLPI008923;
+        Thu, 14 May 2020 14:48:21 -0500
+Subject: Re: [PATCH net-next 1/2] dt-bindings: net: dp83822: Add TI dp83822
+ phy
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200514173055.15013-1-dmurphy@ti.com>
+ <20200514173055.15013-2-dmurphy@ti.com> <20200514183912.GW499265@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2f03f066-38d0-a7c7-956d-e14356ca53b3@ti.com>
+Date:   Thu, 14 May 2020 14:38:54 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200509011406.hs7nj3g7f5pzetxp@earth.universe>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200514183912.GW499265@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-09.05.2020 04:14, Sebastian Reichel пишет:
-> Hi,
-> 
-> On Wed, Apr 15, 2020 at 06:30:02PM +0300, Dmitry Osipenko wrote:
->> 15.04.2020 17:27, Rob Herring пишет:
->>> On Fri, Apr 10, 2020 at 2:02 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>>>
->>>> 10.04.2020 19:49, Rob Herring пишет:
->>>> ...
->>>>>> +  summit,max-chg-curr:
->>>>>> +    description: Maximum current for charging (in uA)
->>>>>> +    allOf:
->>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>>>> +
->>>>>> +  summit,max-chg-volt:
->>>>>> +    description: Maximum voltage for charging (in uV)
->>>>>> +    allOf:
->>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>>>> +    minimum: 3500000
->>>>>> +    maximum: 4500000
->>>>>> +
->>>>>> +  summit,pre-chg-curr:
->>>>>> +    description: Pre-charging current for charging (in uA)
->>>>>> +    allOf:
->>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>>>> +
->>>>>> +  summit,term-curr:
->>>>>> +    description: Charging cycle termination current (in uA)
->>>>>> +    allOf:
->>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>> ...
->>>>> These are all properties of the battery attached and we have standard
->>>>> properties for some/all of these.
->>>>
->>>> Looks like only four properties seem to be matching the properties of
->>>> the battery.txt binding.
->>>>
->>>> Are you suggesting that these matching properties should be renamed
->>>> after the properties in battery.txt?
->>>
->>> Yes, and that there should be a battery node.
->>
->> Usually, it's a battery that has a phandle to the power-supply. Isn't it?
-> 
-> There are two things: The infrastructure described by 
-> Documentation/devicetree/bindings/power/supply/power-supply.yaml is
-> used for telling the operating system, that a battery is charged
-> by some charger. This is done by adding a power-supplies = <&phandle>
-> in the battery fuel gauge node referencing the charger and probably
-> what you mean here.
-> 
-> Then we have the infrastructure described by 
-> Documentation/devicetree/bindings/power/supply/battery.txt, which
-> provides data about the battery cell. In an ideal world we would
-> have only smart batteries providing this data, but we don't live
-> in such a world. So what we currently have is a binding looking
-> like this:
-> 
-> bat: dumb-battery {
->     compatible = "simple-battery";
-> 
->     // data about battery cell(s)
-> };
-> 
-> fuel-gauge {
->     // fuel-gauge specific data
-> 
->     supplies = <&charger>;
->     monitored-battery = <&bat>;
-> };
-> 
-> charger: charger {
->     // charger specific data
-> 
->     monitored-battery = <&bat>;
-> };
-> 
-> In an ideal world, charger should possibly reference fuel-gauge
-> node, which could provide combined data. Right now we do not have
-> the infrastructure for that, so it needs to directly reference
-> the simple-battery node.
-> 
->>> Possibly you should add
->>> new properties battery.txt. It's curious that different properties are
->>> needed.
->>
->> I guess it should be possible to make all these properties generic.
->>
->> Sebastian, will you be okay if we will add all the required properties
->> to the power_supply_core?
-> 
-> Extending battery.txt is possible when something is missing. As Rob
-> mentioned quite a few are already described, though:
-> 
-> summit,max-chg-curr => constant-charge-current-max-microamp
-> summit,max-chg-volt => constant-charge-voltage-max-microvolt
-> summit,pre-chg-curr => precharge-current-microamp
-> summit,term-curr => charge-term-current-microamp
-> 
-> I think at least the battery temperature limits are something, that
-> should be added to the generic code.
-> 
->>> Ultimately, for a given battery technology I would expect
->>> there's a fixed set of properties needed to describe how to charge
->>> them.
->>
->> Please notice that the charger doesn't "only charge" the battery,
->> usually it also supplies power to the whole device.
->>
->> For example, when battery is fully-charged and charger is connected to
->> the power source (USB or mains), then battery may not draw any current
->> at all.
-> 
-> It is also a question of how good the charging process should be.
-> Technically I can charge a single cell Li-ion battery without
-> knowing much, but it can reduce battery life and/or be very slow.
-> It might even be dangerous, if charging is done at high
-> temperatures. Also some of the properties in the battery binding
-> are not about charging, but about gauging. Some devices basically
-> have only options to measure voltage and voltage drop over a
-> resistor and everything else must be done by the operating system.
-> 
->>> Perhaps some of these properties can just be derived from other
->>> properties and folks are just picking what a specific charger wants.
->>
->> Could be so, but I don't know for sure.
-> 
-> I don't think we have things, that can be derived with a reasonable
-> amount of effort in the existing simple-battery binding, except for
-> energy-full-design-microwatt-hours & charge-full-design-microamp-hours.
-> 
->> Even if some properties could be derived from the others, it won't hurt
->> if we will specify everything explicitly in the device-tree.
->>
->>> Unfortunately, we have just a mess of stuff made up for each charger
->>> out there. I don't have the time nor the experience in this area to do
->>> much more than say do better.
->>
->> I don't think it's a mess in the kernel. For example, it's common that
->> embedded controllers are exposed to the system as "just a battery",
->> while in fact it's a combined charger + battery controller and the
->> charger parameters just couldn't be changed by SW.
-> 
-> A good EC driver exposes a charger and a battery device, so that
-> userspace can easily identify if a charger is connected.
-> 
->> In a case of the Nexus 7 devices, the battery controller and charger
->> controller are two separate entities in the system. The battery
->> controller (bq27541) only monitors status of the battery (charge level,
->> temperature and etc).
+Andrew
 
-Hello Sebastian,
+On 5/14/20 1:39 PM, Andrew Lunn wrote:
+> On Thu, May 14, 2020 at 12:30:54PM -0500, Dan Murphy wrote:
+>> Add a dt binding for the TI dp83822 ethernet phy device.
+>>
+>> CC: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../devicetree/bindings/net/ti,dp83822.yaml   | 49 +++++++++++++++++++
+>>   1 file changed, 49 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+>> new file mode 100644
+>> index 000000000000..60afd43ad3b6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+>> @@ -0,0 +1,49 @@
+>> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+>> +# Copyright (C) 2020 Texas Instruments Incorporated
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/net/ti,dp83822.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: TI DP83822 ethernet PHY
+>> +
+>> +allOf:
+>> +  - $ref: "ethernet-controller.yaml#"
+>> +
+>> +maintainers:
+>> +  - Dan Murphy <dmurphy@ti.com>
+>> +
+>> +description: |
+>> +  The DP83822 is a low-power, single-port, 10/100 Mbps Ethernet PHY. It
+>> +  provides all of the physical layer functions needed to transmit and receive
+>> +  data over standard, twisted-pair cables or to connect to an external,
+>> +  fiber-optic transceiver. Additionally, the DP83822 provides flexibility to
+>> +  connect to a MAC through a standard MII, RMII, or RGMII interface
+> Hi Dan
+>
+> You say 10/100 Mbps Ethernet PHY, but then list RGMII?
+Copied from the data sheet.
+>
+>> +
+>> +  Specifications about the charger can be found at:
+>> +    http://www.ti.com/lit/ds/symlink/dp83822i.pdf
+>> +
+>> +properties:
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  ti,signal-polarity-low:
+>> +    type: boolean
+>> +    description: |
+>> +       DP83822 PHY in Fiber mode only.
+>> +       Sets the DP83822 to detect a link drop condition when the signal goes
+>> +       high.  If not set then link drop will occur when the signal goes low.
+> Are we talking about the LOS line from the SFP cage? In the SFF/SFP
+> binding we have:
+>
+> - los-gpios : GPIO phandle and a specifier of the Receiver Loss of Signal
+>    Indication input gpio signal, active (signal lost) high
+>
+> It would be nice to have a consistent naming.
 
-Thank you very much for the comments! We'll prepare the v2.
+> Is it required the LOS signal is connected to the PHY? Russell King
+> has some patches which allows the Marvell PHY to be used as a media
+> converter. In that setting, i think the SFP signals are connected to
+> GPIOs not the PHY. The SFP core can then control the transmit disable,
+> module insertion detection etc. So i'm wondering if you need a
+> property to indicate the LOS is not connected to the PHY?
 
+The LED_1 pin can be strapped to be an input to the chip for signal loss 
+detection.  This is an optional feature of the PHY.
+
+This property defines the polarity for the 822 LED_1/GPIO input pin.
+
+The LOS is not required to be connected to the PHY.  If the preferred 
+method is to use the SFP framework and Processor GPIOs then I can remove 
+this from the patch set.
+
+And if a user would like to use the feature then they can add it.
+
+Dan
+
+
+>
+> 	 Andrew
