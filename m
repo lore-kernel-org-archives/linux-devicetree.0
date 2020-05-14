@@ -2,62 +2,63 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9279C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CE1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A2A20675
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0401220709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UeCZEBRs"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ZkLZSavx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgENIAJ (ORCPT
+        id S1726296AbgENIAS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 04:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
+        Thu, 14 May 2020 04:00:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbgENIAI (ORCPT
+        by vger.kernel.org with ESMTP id S1726240AbgENIAR (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 04:00:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A5EC061A0F
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:00:05 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s8so2587357wrt.9
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:00:05 -0700 (PDT)
+        Thu, 14 May 2020 04:00:17 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF56C05BD0C
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:00:14 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id k12so29101859wmj.3
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:00:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LxiKwe63FtUym2hYC0zoHVQTlvrxg5XLv5yLWaD9fEo=;
-        b=UeCZEBRs20fQXYUJ0r4rTsxGg5GcFmWuh+lzieEtDQHE6NKCFyIP95HcoRaJphptG5
-         74JYw+/BDgF0+IGCJKhnHi2sLi9epciTNrn5bNRabbYKCppawHl9heC30ToTWy8S+k7K
-         bX2hvRdeMZyAwM2HRTSbE7gTewUuiRny5XmWOo+XV3wnsrYxyzDOekfkIC8mT2wEbEzO
-         igxRgI47NryMgg+Oy9pl5skMNrp+Un81sJEPKNc3dUOYJnkSblhpuqBZ3a/jPmmHjshf
-         C9AGxQFsPEl2nOzoQkl7j+thuirCBjnt6vDkFMZ1oNrZL2ANTi+lKoWUYkba21FsTb26
-         ORag==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=v4BoYkqJ2NsZ2nSSjChgUqJJCyqhbfFRrbuVJ3n7szg=;
+        b=ZkLZSavxQRtaRZqyeN3NFITIp9a8YO30SCLrAOX1aUcrsNHL+prXkOix/ACHyjGgVw
+         q2jd8BjkbRwT4oWyuOPZgk2WnU5xIg+ORja/yqRwPiv9GFywqNZ4ulkSaelZm736kYYR
+         Fu8UY/ImjWaaMsyK66j0UQo5E47LwAU554W01yFA/2vENar3TWpS10oflMxQQSTySRW8
+         JbHon+nwYkQtXYF5oGqOvwqCPI62pOAGKXEAfjeV2TQn8dABDV3myryZW1ABzae0dBqJ
+         EIPQiClTLRuBE7bkT9QdySvB0BFZi0/0hgpZtmAk4favh17kUH2Elntgnab3OXB98Tn6
+         1FKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LxiKwe63FtUym2hYC0zoHVQTlvrxg5XLv5yLWaD9fEo=;
-        b=fy4OtRjaH1o+LLq/MiNBW41dA3glW5Ar77KghvnDwtASokDaMXJRtxRVB1gg2BEUYT
-         knW51Lc69CnnVzI4ek+4rvqRsewTBp57eOKFsa5CuZ55t7eIsgwS4IX7qx3Oq6hNVWIs
-         oJ9KpBUJN6k5QMPkuVz9jic65RHv9lU3Tq2sQs3TsZnZQyK+/dqsG3c3CFq5vMuR+5xZ
-         Y14iCGI5BEhNrDZ4fZERQTwADA2slHSez9ZZve7Sku+YRVYi8X+r3oXzQatJeMn6RY5t
-         vQAbv3nKDkOmJufBbDrzsV5ku567YMFrAFrJfHY01hEztkJeDM6MzF+uL515/x35uBzR
-         +XWQ==
-X-Gm-Message-State: AOAM532xdg0sfkqAZhXawjaB/MgeYVbn5V9bQAyqKy5BDvRMB9ehLJ8F
-        L7lfvXc9MrSG+VClyxeEZbmNHg==
-X-Google-Smtp-Source: ABdhPJwI5TAiw6JGHe10xqjfyRvp21tN6e/WVtsWSo1V4Qnb8O2x5Ne8GkVd7g59r7PlsF292M6lGw==
-X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr3740674wrw.425.1589443204180;
-        Thu, 14 May 2020 01:00:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=v4BoYkqJ2NsZ2nSSjChgUqJJCyqhbfFRrbuVJ3n7szg=;
+        b=GQQ7j0i4gMWr8f+7Zm10+yECATSfCK+nHBAprlctF2vUHYdPNE28bLkej7+Is6sh5H
+         u2IbEBni2O9xTVoDjIPN4EefOat3i49/QDq851WXF7ca6g2Xiqrzg2NM0Ycj9OSNOPBX
+         eDnD9MM/HLyEj2xOhCMzsMHMAhwxKPY57HR+IPatzwkINWtkdKfFfiHPl4WqQurR5gHS
+         RqU7KL10mfMf/arBKy99e2cs8dGK80plC8oSE+zCMk1ExyHKdRkIwU8sQIXwemeywTTS
+         0KvK527YYo+T+YfHxrqBPaWE4PIx7uawZk9uRoVddUi94CP0iD5hbq1exdGln4ZJMzmh
+         /krw==
+X-Gm-Message-State: AGi0PubFjICemXNiYuhaiVK7TLlOW/RIiO/WZ5BoxHfNRiRZW1PRVwN9
+        hOasen2a77mAkt5OpVWZDvdXNw==
+X-Google-Smtp-Source: APiQypJomtPT0QqK17VEMkCe8OZhQJx80jykT2rYty3mL5D0FV9hIY70uXGJUu6dWm6hAMRJlHfP1Q==
+X-Received: by 2002:a1c:ab45:: with SMTP id u66mr46456934wme.152.1589443213276;
+        Thu, 14 May 2020 01:00:13 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 81sm23337446wme.16.2020.05.14.01.00.02
+        by smtp.gmail.com with ESMTPSA id 81sm23337446wme.16.2020.05.14.01.00.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 01:00:03 -0700 (PDT)
+        Thu, 14 May 2020 01:00:12 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -77,10 +78,12 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 00/15] mediatek: add support for MediaTek Ethernet MAC
-Date:   Thu, 14 May 2020 09:59:27 +0200
-Message-Id: <20200514075942.10136-1-brgl@bgdev.pl>
+Subject: [PATCH v3 06/15] Documentation: devres: add a missing section for networking helpers
+Date:   Thu, 14 May 2020 09:59:33 +0200
+Message-Id: <20200514075942.10136-7-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200514075942.10136-1-brgl@bgdev.pl>
+References: <20200514075942.10136-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -90,105 +93,29 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This adds support for the Ethernet Controller present on MediaTeK SoCs from
-the MT8* family.
+Add a new section for networking devres helpers to devres.rst and list
+the two existing devm functions.
 
-First we convert the existing DT bindings for the PERICFG controller to YAML
-and add a new compatible string for mt8516 variant of it. Then we add the DT
-bindings for the MAC.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ Documentation/driver-api/driver-model/devres.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Next we do some cleanup of the mediatek ethernet drivers directory and update
-the devres documentation with existing networking devres helpers.
-
-The following patches introduce a resource managed variant of
-register_netdev() and move all networking devres helpers into a separate .c
-file.
-
-The largest patch in the series adds the actual new driver.
-
-The rest of the patches add DT fixups for the boards already supported
-upstream.
-
-v1 -> v2:
-- add a generic helper for retrieving the net_device associated with given
-  private data
-- fix several typos in commit messages
-- remove MTK_MAC_VERSION and don't set the driver version
-- use NET_IP_ALIGN instead of a magic number (2) but redefine it as it defaults
-  to 0 on arm64
-- don't manually turn the carrier off in mtk_mac_enable()
-- process TX cleanup in napi poll callback
-- configure pause in the adjust_link callback
-- use regmap_read_poll_timeout() instead of handcoding the polling
-- use devres_find() to verify that struct net_device is managed by devres in
-  devm_register_netdev()
-- add a patch moving all networking devres helpers into net/devres.c
-- tweak the dma barriers: remove where unnecessary and add comments to the
-  remaining barriers
-- don't reset internal counters when enabling the NIC
-- set the net_device's mtu size instead of checking the framesize in
-  ndo_start_xmit() callback
-- fix a race condition in waking up the netif queue
-- don't emit log messages on OOM errors
-- use dma_set_mask_and_coherent()
-- use eth_hw_addr_random()
-- rework the receive callback so that we reuse the previous skb if unmapping
-  fails, like we already do if skb allocation fails
-- rework hash table operations: add proper timeout handling and clear bits when
-  appropriate
-
-v2 -> v3:
-- drop the patch adding priv_to_netdev() and store the netdev pointer in the
-  driver private data
-- add an additional dma_wmb() after reseting the descriptor in
-  mtk_mac_ring_pop_tail()
-- check the return value of dma_set_mask_and_coherent()
-- improve the DT bindings for mtk-eth-mac: make the reg property in the example
-  use single-cell address and size, extend the description of the PERICFG
-  phandle and document the mdio sub-node
-- add a patch converting the old .txt bindings for PERICFG to yaml
-- limit reading the DMA memory by storing the mapped addresses in the driver
-  private structure
-- add a patch documenting the existing networking devres helpers
-
-Bartosz Golaszewski (15):
-  dt-bindings: convert the binding document for mediatek PERICFG to yaml
-  dt-bindings: add new compatible to mediatek,pericfg
-  dt-bindings: net: add a binding document for MediaTek Ethernet MAC
-  net: ethernet: mediatek: rename Kconfig prompt
-  net: ethernet: mediatek: remove unnecessary spaces from Makefile
-  Documentation: devres: add a missing section for networking helpers
-  net: move devres helpers into a separate source file
-  net: devres: define a separate devres structure for
-    devm_alloc_etherdev()
-  net: devres: provide devm_register_netdev()
-  net: ethernet: mtk-eth-mac: new driver
-  ARM64: dts: mediatek: add pericfg syscon to mt8516.dtsi
-  ARM64: dts: mediatek: add the ethernet node to mt8516.dtsi
-  ARM64: dts: mediatek: add an alias for ethernet0 for pumpkin boards
-  ARM64: dts: mediatek: add ethernet pins for pumpkin boards
-  ARM64: dts: mediatek: enable ethernet on pumpkin boards
-
- .../arm/mediatek/mediatek,pericfg.txt         |   36 -
- .../arm/mediatek/mediatek,pericfg.yaml        |   64 +
- .../bindings/net/mediatek,eth-mac.yaml        |   89 +
- .../driver-api/driver-model/devres.rst        |    5 +
- arch/arm64/boot/dts/mediatek/mt8516.dtsi      |   17 +
- .../boot/dts/mediatek/pumpkin-common.dtsi     |   34 +
- drivers/net/ethernet/mediatek/Kconfig         |    8 +-
- drivers/net/ethernet/mediatek/Makefile        |    3 +-
- drivers/net/ethernet/mediatek/mtk_eth_mac.c   | 1578 +++++++++++++++++
- include/linux/netdevice.h                     |    2 +
- net/Makefile                                  |    2 +-
- net/devres.c                                  |   95 +
- net/ethernet/eth.c                            |   28 -
- 13 files changed, 1894 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
- create mode 100644 Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
- create mode 100644 drivers/net/ethernet/mediatek/mtk_eth_mac.c
- create mode 100644 net/devres.c
-
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index 46c13780994c..50df28d20fa7 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -372,6 +372,10 @@ MUX
+   devm_mux_chip_register()
+   devm_mux_control_get()
+ 
++NET
++  devm_alloc_etherdev()
++  devm_alloc_etherdev_mqs()
++
+ PER-CPU MEM
+   devm_alloc_percpu()
+   devm_free_percpu()
 -- 
 2.25.0
 
