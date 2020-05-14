@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EFDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4B6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5F7205CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F71205CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 15:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gBKGQY9X"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MkKcHfOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgENPAO (ORCPT
+        id S1727992AbgENPAW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 11:00:14 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47020 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgENPAO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 11:00:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EExvBg130907;
-        Thu, 14 May 2020 09:59:57 -0500
+        Thu, 14 May 2020 11:00:22 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42116 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgENPAV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 11:00:21 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EF06Rd029135;
+        Thu, 14 May 2020 10:00:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589468397;
-        bh=P+37mJt9YrDEDpSiMSSixlIIbmpXp8JY1av4XG/9za0=;
+        s=ti-com-17Q1; t=1589468406;
+        bh=oPxuXqtF223OER+bcyGCz8Cb674T5LZwKws+2r6ddns=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gBKGQY9X+GAUWPoK8e3ZW00lKjTc88LcrBYmDLrYCaQk9qhiPuDIgSSRX0dxf/bWq
-         nq4Nf7y8LNRNFPw5sIeHlcxr+VHCBjFC3OVFaRc0D7ScpEvmLSueyEGke1hIeXyus8
-         5gYnNNqoh5QOvZnWwgnO6nj3WGfVNWJFVV6qqaSs=
+        b=MkKcHfOX0rkPf/0CruxXMcU/KDNgv7PfzNXoxweAGS0wa6ecFAEvPpP/K37TmmSmb
+         Muc1KvKYi7OBEN/wPFkhaFxwWdgNqM3rPHdKkYoVv365sZNi2HVPqPogyD5qLel9IP
+         TIt80aFUFEPdMTPyhdw1PlkTnDLp9CTxsgTYgFoM=
 Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EExvbJ058295
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EF05qA117768
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 09:59:57 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+        Thu, 14 May 2020 10:00:06 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
  (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 09:59:56 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 10:00:06 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 09:59:56 -0500
+ Frontend Transport; Thu, 14 May 2020 10:00:05 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EExgAk019279;
-        Thu, 14 May 2020 09:59:52 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EExgAm019279;
+        Thu, 14 May 2020 10:00:01 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
@@ -60,9 +60,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 02/19] Documentation: PCI: Add specification for the *PCI NTB* function device
-Date:   Thu, 14 May 2020 20:29:10 +0530
-Message-ID: <20200514145927.17555-3-kishon@ti.com>
+Subject: [PATCH 04/19] PCI: endpoint: Add API to create EPF device from device tree
+Date:   Thu, 14 May 2020 20:29:12 +0530
+Message-ID: <20200514145927.17555-5-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200514145927.17555-1-kishon@ti.com>
 References: <20200514145927.17555-1-kishon@ti.com>
@@ -74,376 +74,140 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add specification for the *PCI NTB* function device. The endpoint function
-driver and the host PCI driver should be created based on this
-specification.
+Add API to create EPF device from device tree and the device managed
+interface corresponding to it. This is added in order to define
+an endpoint function completely from device tree.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- Documentation/PCI/endpoint/index.rst        |   1 +
- Documentation/PCI/endpoint/pci-test-ntb.rst | 344 ++++++++++++++++++++
- 2 files changed, 345 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-test-ntb.rst
+ drivers/pci/endpoint/pci-epf-core.c | 68 +++++++++++++++++++++++++++++
+ include/linux/pci-epf.h             |  6 +++
+ 2 files changed, 74 insertions(+)
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index d114ea74b444..33c19746cdaa 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -11,3 +11,4 @@ PCI Endpoint Framework
-    pci-endpoint-cfs
-    pci-test-function
-    pci-test-howto
-+   pci-test-ntb
-diff --git a/Documentation/PCI/endpoint/pci-test-ntb.rst b/Documentation/PCI/endpoint/pci-test-ntb.rst
-new file mode 100644
-index 000000000000..28027ad7ec4f
---- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-test-ntb.rst
-@@ -0,0 +1,344 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+PCI NTB Function
-+=================
-+
-+:Author: Kishon Vijay Abraham I <kishon@ti.com>
-+
-+PCI NTB Function allows two different systems (or hosts) to communicate
-+with each other by configurig the endpoint instances in such a way that
-+transactions from one system is routed to the other system.
-+
-+In the below diagram, PCI NTB function configures the SoC with multiple
-+PCIe Endpoint (EP) instances in such a way that transaction from one EP
-+controller is routed to the other EP controller. Once PCI NTB function
-+configures the SoC with multiple EP instances, HOST1 and HOST2 can
-+communicate with each other using SoC as a bridge.
-+
-+.. code-block:: text
-+
-+    +-------------+                                   +-------------+
-+    |             |                                   |             |
-+    |    HOST1    |                                   |    HOST2    |
-+    |             |                                   |             |
-+    +------^------+                                   +------^------+
-+           |                                                 |
-+           |                                                 |
-+ +---------|-------------------------------------------------|---------+
-+ |  +------v------+                                   +------v------+  |
-+ |  |             |                                   |             |  |
-+ |  |     EP      |                                   |     EP      |  |
-+ |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
-+ |  |             <----------------------------------->             |  |
-+ |  |             |                                   |             |  |
-+ |  |             |                                   |             |  |
-+ |  |             |  SoC With Multiple EP Instances   |             |  |
-+ |  |             |  (Configured using NTB Function)  |             |  |
-+ |  +-------------+                                   +-------------+  |
-+ +---------------------------------------------------------------------+
-+
-+Constructs used for Implementing NTB
-+====================================
-+
-+	1) Config Region
-+	2) Self Scratchpad Registers
-+	3) Peer Scratchpad Registers
-+	4) Doorbell Registers
-+	5) Memory Window
-+
-+
-+Config Region:
-+--------------
-+
-+Config Region is a construct that is specific to NTB implemented using NTB
-+Endpoint Function Driver. The host and endpoint side NTB function driver will
-+exchange information with each other using this region. Config Region has
-+Control/Status Registers for configuring the Endpoint Controller. Host can
-+write into this region for configuring the outbound ATU and to indicate the
-+link status. Endpoint can indicate the status of commands issued be host in
-+this region. Endpoint can also indicate the scratchpad offset, number of
-+memory windows to the host using this region.
-+
-+The format of Config Region is given below. Each of the fields here are 32
-+bits.
-+
-+.. code-block:: text
-+
-+	+------------------------+
-+	|         COMMAND        |
-+	+------------------------+
-+	|         ARGUMENT       |
-+	+------------------------+
-+	|         STATUS         |
-+	+------------------------+
-+	|         TOPOLOGY       |
-+	+------------------------+
-+	|    ADDRESS (LOWER 32)  |
-+	+------------------------+
-+	|    ADDRESS (UPPER 32)  |
-+	+------------------------+
-+	|           SIZE         |
-+	+------------------------+
-+	|   NO OF MEMORY WINDOW  |
-+	+------------------------+
-+	|  MEMORY WINDOW1 OFFSET |
-+	+------------------------+
-+	|       SPAD OFFSET      |
-+	+------------------------+
-+	|        SPAD COUNT      |
-+	+------------------------+
-+	|      DB ENTRY SIZE     |
-+	+------------------------+
-+	|         DB DATA        |
-+	+------------------------+
-+	|            :           |
-+	+------------------------+
-+	|            :           |
-+	+------------------------+
-+	|         DB DATA        |
-+	+------------------------+
-+
-+
-+  COMMAND:
-+
-+	NTB function supports three commands:
-+
-+	  CMD_CONFIGURE_DOORBELL (0x1): Command to configure doorbell. Before
-+	invoking this command, the host should allocate and initialize
-+	MSI/MSI-X vectors (i.e initialize the MSI/MSI-X capability in the
-+	Endpoint). The endpoint on receiving this command will configure
-+	the outbound ATU such that transaction to DB BAR will be routed
-+	to the MSI/MSI-X address programmed by the host. The ARGUMENT
-+	register should be populated with number of DBs to configure (in the
-+	lower 16 bits) and if MSI or MSI-X should be configured (BIT 16).
-+	(TODO: Add support for MSI-X).
-+
-+	  CMD_CONFIGURE_MW (0x2): Command to configure memory window. The
-+	host invokes this command after allocating a buffer that can be
-+	accessed by remote host. The allocated address should be programmed
-+	in the ADDRESS register (64 bit), the size should be programmed in
-+	the SIZE register and the memory window index should be programmed
-+	in the ARGUMENT register. The endpoint on receiving this command
-+	will configure the outbound ATU such that trasaction to MW BAR
-+	will be routed to the address provided by the host.
-+
-+	  CMD_LINK_UP (0x3): Command to indicate an NTB application is
-+	bound to the EP device on the host side. Once the endpoint
-+	receives this command from both the hosts, the endpoint will
-+	raise an LINK_UP event to both the hosts to indicate the hosts
-+	can start communicating with each other.
-+
-+  ARGUMENT:
-+
-+	The value of this register is based on the commands issued in
-+	command register. See COMMAND section for more information.
-+
-+  TOPOLOGY:
-+
-+	Set to NTB_TOPO_B2B_USD for Primary interface
-+	Set to NTB_TOPO_B2B_DSD for Secondary interface
-+
-+  ADDRESS/SIZE:
-+
-+	Address and Size to be used while configuring the memory window.
-+	See "CMD_CONFIGURE_MW" for more info.
-+
-+  MEMORY WINDOW1 OFFSET:
-+
-+	Memory Window 1 and Doorbell registers are packed together in the
-+	same BAR. The initial portion of the region will have doorbell
-+	registers and the latter portion of the region is for memory window 1.
-+	This register will specify the offset of the memory window 1.
-+
-+  NO OF MEMORY WINDOW:
-+
-+	Specifies the number of memory windows supported by the NTB device.
-+
-+  SPAD OFFSET:
-+
-+	Self scratchpad region and config region are packed together in the
-+	same BAR. The initial portion of the region will have config region
-+	and the latter portion of the region is for self scratchpad. This
-+	register will specify the offset of the self scratchpad registers.
-+
-+  SPAD COUNT:
-+
-+	Specifies the number of scratchpad registers supported by the NTB
-+	device.
-+
-+  DB ENTRY SIZE:
-+
-+	Used to determine the offset within the DB BAR that should be written
-+	in order to raise doorbell. EPF NTB can use either MSI/MSI-X to
-+	ring doorbell (MSI-X support will be added later). MSI uses same
-+	address for all the interrupts and MSI-X can provide different
-+	addresses for different interrupts. The MSI/MSI-X address is provided
-+	by the host and the address it gives is based on the MSI/MSI-X
-+	implementation supported by the host. For instance, ARM platform
-+	using GIC ITS will have same MSI-X address for all the interrupts.
-+	In order to support all the combinations and use the same mechanism
-+	for both MSI and MSI-X, EPF NTB allocates separate region in the
-+	Outbound Address Space for each of the interrupts. This region will
-+	be mapped to the MSI/MSI-X address provided by the host. If a host
-+	provides the same address for all the interrupts, all the regions
-+	will be translated to the same address. If a host provides different
-+	address, the regions will be translated to different address. This
-+	will ensure there is no difference while raising the doorbell.
-+
-+  DB DATA:
-+
-+	EPF NTB supports 32 interrupts. So there are 32 DB DATA registers.
-+	This holds the MSI/MSI-X data that has to be written to MSI address
-+	for raising doorbell interrupt. This will be populated by EPF NTB
-+	while invoking CMD_CONFIGURE_DOORBELL.
-+
-+Scratchpad Registers:
-+---------------------
-+
-+  Each host has it's own register space allocated in the memory of NTB EPC.
-+  They are both readable and writable from both sides of the bridge. They
-+  are used by applications built over NTB and can be used to pass control
-+  and status information between both sides of a device.
-+
-+  Scratchpad registers has 2 parts
-+	1) Self Scratchpad: Host's own register space
-+	2) Peer Scratchpad: Remote host's register space.
-+
-+Doorbell Registers:
-+-------------------
-+
-+  Registers using which one host can interrupt the other host.
-+
-+Memory Window:
-+--------------
-+
-+  Actual transfer of data between the two hosts will happen using the
-+  memory window.
-+
-+Modeling Constructs:
-+====================
-+
-+There are 5 or more distinct regions (config, self scratchpad, peer
-+scratchpad, doorbell, one or more memory windows) to be modeled to achieve
-+NTB functionality. Atleast one memory window is required while more than
-+one is permitted. All these regions should be mapped to BAR for hosts to
-+access these regions.
-+
-+If one 32-bit BAR is allocated for each of these regions, the scheme would
-+look like
-+
-+======  ===============
-+BAR NO  CONSTRUCTS USED
-+======  ===============
-+BAR0    Config Region
-+BAR1    Self Scratchpad
-+BAR2    Peer Scratchpad
-+BAR3    Doorbell
-+BAR4    Memory Window 1
-+BAR5    Memory Window 2
-+======  ===============
-+
-+However if we allocate a separate BAR for each of the region, there would not
-+be enough BARs for all the regions in a platform that supports only 64-bit
-+BAR.
-+
-+In order to be be supported by most of the platforms, the regions should be
-+packed and mapped to BARs in a way that provides NTB functionality and
-+also making sure the hosts doesn't access any region that it is not supposed
-+to.
-+
-+The following scheme is used in EPF NTB Function
-+
-+======  ===============================
-+BAR NO  CONSTRUCTS USED
-+======  ===============================
-+BAR0    Config Region + Self Scratchpad
-+BAR1    Peer Scratchpad
-+BAR2    Doorbell + Memory Window 1
-+BAR3    Memory Window 2
-+BAR4    Memory Window 3
-+BAR5    Memory Window 4
-+======  ===============================
-+
-+With this scheme, for the basic NTB functionality 3 BARs should be sufficient.
-+
-+Modeling Config/Scratchpad Region:
-+----------------------------------
-+
-+.. code-block:: text
-+
-+ +-----------------+------->+------------------+        +-----------------+
-+ |       BAR0      |        |  CONFIG REGION   |        |       BAR0      |
-+ +-----------------+----+   +------------------+<-------+-----------------+
-+ |       BAR1      |    |   |SCRATCHPAD REGION |        |       BAR1      |
-+ +-----------------+    +-->+------------------+<-------+-----------------+
-+ |       BAR2      |            Local Memory            |       BAR2      |
-+ +-----------------+                                    +-----------------+
-+ |       BAR3      |                                    |       BAR3      |
-+ +-----------------+                                    +-----------------+
-+ |       BAR4      |                                    |       BAR4      |
-+ +-----------------+                                    +-----------------+
-+ |       BAR5      |                                    |       BAR5      |
-+ +-----------------+                                    +-----------------+
-+   EP CONTROLLER 1                                        EP CONTROLLER 2
-+
-+Above diagram shows Config region + Scratchpad region for HOST1 (connected to
-+EP controller 1) allocated in local memory. The HOST1 can access the config
-+region and scratchpad region (self scratchpad) using BAR0 of EP controller 1.
-+The peer host (HOST2 connected to EP controller 2) can also access this
-+scratchpad region (peer scratchpad) using BAR1 of EP controller 2. This
-+diagram shows the case where Config region and Scratchpad region is allocated
-+for HOST1, however the same is applicable for HOST2.
-+
-+Modeling Doorbell/Memory Window 1:
-+----------------------------------
-+
-+.. code-block:: text
-+
-+ +-----------------+    +----->+----------------+-----------+-----------------+
-+ |       BAR0      |    |      |   Doorbell 1   +-----------> MSI-X ADDRESS 1 |
-+ +-----------------+    |      +----------------+           +-----------------+
-+ |       BAR1      |    |      |   Doorbell 2   +---------+ |                 |
-+ +-----------------+----+      +----------------+         | |                 |
-+ |       BAR2      |           |   Doorbell 3   +-------+ | +-----------------+
-+ +-----------------+----+      +----------------+       | +-> MSI-X ADDRESS 2 |
-+ |       BAR3      |    |      |   Doorbell 4   +-----+ |   +-----------------+
-+ +-----------------+    |      |----------------+     | |   |                 |
-+ |       BAR4      |    |      |                |     | |   +-----------------+
-+ +-----------------+    |      |      MW1       +---+ | +-->+ MSI-X ADDRESS 3||
-+ |       BAR5      |    |      |                |   | |     +-----------------+
-+ +-----------------+    +----->-----------------+   | |     |                 |
-+   EP CONTROLLER 1             |                |   | |     +-----------------+
-+                               |                |   | +---->+ MSI-X ADDRESS 4 |
-+                               +----------------+   |       +-----------------+
-+                                EP CONTROLLER 2     |       |                 |
-+                                  (OB SPACE)        |       |                 |
-+                                                    +------->      MW1        |
-+                                                            |                 |
-+                                                            |                 |
-+                                                            +-----------------+
-+                                                            |                 |
-+                                                            |                 |
-+                                                            |                 |
-+                                                            |                 |
-+                                                            |                 |
-+                                                            +-----------------+
-+                                                             PCI Address Space
-+                                                             (Managed by HOST2)
-+
-+Above diagram shows how the doorbell and memory window 1 is mapped so that
-+HOST1 can raise doorbell interrupt on HOST2 and also how HOST1 can access
-+buffers exposed by HOST2 using memory window1 (MW1). Here doorbell and
-+memory window 1 regions are allocated in EP controller 2 outbound (OB) address
-+space. Allocating and configuring BARs for doorbell and memory window1
-+is done during the initialization phase of NTB endpoint function driver.
-+Mapping from EP controller 2 OB space to PCI address space is done when HOST2
-+sends CMD_CONFIGURE_MW/CMD_CONFIGURE_DOORBELL. The commands are explained
-+below.
-+
-+Modeling Optional Memory Windows:
-+---------------------------------
-+
-+This is modeled the same was as MW1 but each of the additional memory windows
-+is mapped to separate BARs.
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 244e00f48c5c..cb6c7b886325 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -280,6 +280,73 @@ struct pci_epf *pci_epf_create(const char *name)
+ }
+ EXPORT_SYMBOL_GPL(pci_epf_create);
+ 
++/**
++ * pci_epf_of_create() - create a new PCI EPF device from device tree node
++ * @node: the device node of the PCI EPF device.
++ *
++ * Invoke to create a new PCI EPF device by providing a device tree node
++ * with compatible property.
++ */
++struct pci_epf *pci_epf_of_create(struct device_node *node)
++{
++	struct pci_epf *epf;
++	const char *compat;
++	int ret;
++
++	of_node_get(node);
++
++	ret = of_property_read_string(node, "compatible", &compat);
++	if (ret) {
++		of_node_put(node);
++		return ERR_PTR(ret);
++	}
++
++	epf = pci_epf_create(compat);
++	if (!IS_ERR(epf))
++		epf->node = node;
++
++	return epf;
++}
++EXPORT_SYMBOL_GPL(pci_epf_of_create);
++
++static void devm_epf_release(struct device *dev, void *res)
++{
++	struct pci_epf *epf = *(struct pci_epf **)res;
++
++	pci_epf_destroy(epf);
++}
++
++/**
++ * devm_pci_epf_of_create() - create a new PCI EPF device from device tree node
++ * @dev: device that is creating the new EPF
++ * @node: the device node of the PCI EPF device.
++ *
++ * Invoke to create a new PCI EPF device by providing a device tree node with
++ * compatible property. While at that, it also associates the device with the
++ * EPF using devres. On driver detach, release function is invoked on the devres
++ * data, where devres data is freed.
++ */
++struct pci_epf *devm_pci_epf_of_create(struct device *dev,
++				       struct device_node *node)
++{
++	struct pci_epf **ptr, *epf;
++
++	ptr = devres_alloc(devm_epf_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	epf = pci_epf_of_create(node);
++	if (!IS_ERR(epf)) {
++		*ptr = epf;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return epf;
++}
++EXPORT_SYMBOL_GPL(devm_pci_epf_of_create);
++
+ const struct pci_epf_device_id *
+ pci_epf_match_device(const struct pci_epf_device_id *id, struct pci_epf *epf)
+ {
+@@ -300,6 +367,7 @@ static void pci_epf_dev_release(struct device *dev)
+ {
+ 	struct pci_epf *epf = to_pci_epf(dev);
+ 
++	of_node_put(epf->node);
+ 	kfree(epf->name);
+ 	kfree(epf);
+ }
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index 6644ff3b0702..8fb77ab1968f 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -11,6 +11,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/of.h>
+ #include <linux/pci.h>
+ 
+ struct pci_epf;
+@@ -108,6 +109,7 @@ struct pci_epf_bar {
+ /**
+  * struct pci_epf - represents the PCI EPF device
+  * @dev: the PCI EPF device
++ * @node: the device tree node of the PCI EPF device
+  * @name: the name of the PCI EPF device
+  * @header: represents standard configuration header
+  * @bar: represents the BAR of EPF device
+@@ -121,6 +123,7 @@ struct pci_epf_bar {
+  */
+ struct pci_epf {
+ 	struct device		dev;
++	struct device_node	*node;
+ 	const char		*name;
+ 	struct pci_epf_header	*header;
+ 	struct pci_epf_bar	bar[6];
+@@ -167,6 +170,9 @@ static inline void *epf_get_drvdata(struct pci_epf *epf)
+ const struct pci_epf_device_id *
+ pci_epf_match_device(const struct pci_epf_device_id *id, struct pci_epf *epf);
+ struct pci_epf *pci_epf_create(const char *name);
++struct pci_epf *pci_epf_of_create(struct device_node *node);
++struct pci_epf *devm_pci_epf_of_create(struct device *dev,
++				       struct device_node *node);
+ void pci_epf_destroy(struct pci_epf *epf);
+ int __pci_epf_register_driver(struct pci_epf_driver *driver,
+ 			      struct module *owner);
 -- 
 2.17.1
 
