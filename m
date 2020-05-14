@@ -2,125 +2,86 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A58C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 10:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99942C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 10:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35D5820722
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 10:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589453370;
-	bh=ihBtKopP3k1Y1JCaSjxHNdvYIfEueCdWieJSz6SvBN4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=rNgkjIo0znOZZgi2Ts8Wi4UQJYDq0KAlRaoVDDP22jluQq2S1stEbOli9g8rUoSNy
-	 V9I6/sJ+Ru/lR7acrunKs0atFsS0SGUxMzE1JkFPLV8GyawmM58bv7/1TU5uXHHN2k
-	 tRBUOlQGcgvw5TImMWQ8dZzTkCEf22BbrsiRg/AA=
+	by mail.kernel.org (Postfix) with ESMTP id 736E220575
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 10:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jBzvtJcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgENKtY (ORCPT
+        id S1726232AbgENKyg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 06:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgENKtX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 06:49:23 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A19C061A0C;
-        Thu, 14 May 2020 03:49:21 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id a9so2205663lfb.8;
-        Thu, 14 May 2020 03:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ihBtKopP3k1Y1JCaSjxHNdvYIfEueCdWieJSz6SvBN4=;
-        b=cdbYIJYI4NcPSHfXQP07wl2UNIDAxSzXgr70FR6ySmwbSMRzx8KwYUedNTajATJy/V
-         WKHUAcz8fGKYFbQKBnpHjKNb5/BtjeFwc7j+qHSH+r6CZ6GMYgkrBDx1kpCWi97NidTH
-         rLPuqm07AeGkf/mjPYIMXanP0sJaGaY55Q81xIGQR/wNjOFkEdtTmIDay2rhpGrrjMmN
-         qviYV4EAXvXUo1D24t+bER/5c0QLaxujdOwoxc9iwoSUSYb9Z592o6ZrpEA1Fna6UdNq
-         BynEx9iqLFaPGBtBzpj5xjiWel2Ikw31NmXP/eyJrdimO2kr0qUWqZZNfNQmo+0neqix
-         rrFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=ihBtKopP3k1Y1JCaSjxHNdvYIfEueCdWieJSz6SvBN4=;
-        b=n2kWgQbgVDxbKo2s+6TawAIoVPHUg+SxZlnzuZ0zEYcHnyIeABr27R1Ko5wfpqR5vs
-         61jymtHBOuIo5g2NiVezufWLIU7LQKDD1kDvDqI1ip+1vaF9bpwRSSHEouFcb3NLbbqQ
-         9yWAKH3oFxo+SytwYsvK9lycwtnsx4ynP5Kli/negXx3aAR1k1kJvx7Po/PK2p/3610M
-         yctMvXAZmo2SpE4qmtOn5vL42qpSN4ghC5JE/WMLpFHhxmGs9rjcU5icJ9YtbMm4O07x
-         yC4B3f33SyNOdekxewc2IUrZvf3GqyZ20LB4nfA4UEKcKCX7xcQamZiGYOBK/oa8D9J+
-         Q0AA==
-X-Gm-Message-State: AOAM53208ZE6+byIRp6ZIyD0L8Cm+P/GAo8k+E9/4oszC6MGPe+EOazl
-        GKplIoOmnj13lcj9WRN8tyg=
-X-Google-Smtp-Source: ABdhPJzemH7406zwPBPhxjJ/sOFlUJLUa/CJWeWsI8Bjd4BU54bVJGKrYv8rSvofcAhwn7pE2K814w==
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr2888415lfi.21.1589453360383;
-        Thu, 14 May 2020 03:49:20 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id v4sm1276524ljj.104.2020.05.14.03.49.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 03:49:19 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     "Sandeep Maheswaram \(Temp\)" <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v7 0/4] ADD interconnect support for Qualcomm DWC3 driver
-In-Reply-To: <a119cf75-8bda-f380-8249-173fa426279c@codeaurora.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <20200429183542.GS4525@google.com> <a119cf75-8bda-f380-8249-173fa426279c@codeaurora.org>
-Date:   Thu, 14 May 2020 13:49:15 +0300
-Message-ID: <87eerm4wr8.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Thu, 14 May 2020 06:54:36 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:38039 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725925AbgENKyg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 06:54:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589453676; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=4pj2pSGmKEolcDAZl5r+t+wxWGg/AYuXOejKTDbWUcE=; b=jBzvtJcNM9dcgBmV953iVV5M8U+vSp/gNSk3kRScnpNs9W54TvdcFoVcdhfEoZVmzzz40OKY
+ MObQfOdvQEzUXChaLtS/kc3YqDEgse1n4TdEt5SsJmNMjoC/W66Ex5SGmzyIUVZuRcs8W0sM
+ B4wkhshAtunppamIVU9WOL2vExQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebd2369.7f72daae1688-smtp-out-n03;
+ Thu, 14 May 2020 10:54:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D34CDC433BA; Thu, 14 May 2020 10:54:33 +0000 (UTC)
+Received: from hyd-lnxbld559.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5464EC4478C;
+        Thu, 14 May 2020 10:54:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5464EC4478C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        georgi.djakov@linaro.org, mka@chromium.org,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH 1/6] arm64: dts: qcom: sc7180: Add interconnect bindings for GPU
+Date:   Thu, 14 May 2020 16:24:14 +0530
+Message-Id: <1589453659-27581-2-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+This patch adds the interconnect bindings to the GPU node. This enables
+the GPU->DDR path bandwidth voting.
 
-"Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Hi Felipe,
->
-> Any update about landing this series.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index b46ee78..0ce9921 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1384,6 +1384,8 @@
+ 			operating-points-v2 = <&gpu_opp_table>;
+ 			qcom,gmu = <&gmu>;
 
-in my tree now
++			interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
++
+ 			gpu_opp_table: opp-table {
+ 				compatible = "operating-points-v2";
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69IisACgkQzL64meEa
-mQbu6A//fIS1BToxj09T/BzusfhWqlmhP82ZlNUi/d/TwchOeTjRexbJ1nYm+i+F
-+DelctoeEuZhzYlQr91ZgliYidtTH26NRBAna9Lld6pDlJg31YS8NxB1s9KNNaz5
-9s2HKUt//5ZRzvxhhZZgIvv84iE7cXviVzSzbZ/cU5PjKXJ1E8zsvrbQ9biWP7P6
-AMNP+MbwSBDH2EYz3JyjqmlsBO3oEnJ7IyZDJnMcfXiCIscf7AKYaQY6WOrEj5WH
-ioJFm/GmfJ6Nh77DAtYNjHitz45tFzWGxRbjhUKqIbCnnVMOmwJ8zJNqYH8LDk8X
-ZfEdCU3FcDO98D0izBf0PdAfypa1MFul4bLBaPNKahDjKJKQq6fKvHNMF71ORflI
-HoCy9nm0czUSAIC6i1BZjmEK9yNkMmyKpXGC3YBDw1aQbzrV4uIjZqGRfnzpAzvY
-ng03LpR1BDemQiw869vPmVkX2Y86PaFFnigKaMS2wBN6QBtt6XGePGqf5i3PYmYa
-yEMWBJgRptHAkimChB8EJd02DLeXczae3i85qPFA56Tl9OvMpldIhjD7y47kFKW3
-AseQQAFult5iMM0xIZIXgRXG1JDKajMMqHTz6j7sh/OxnHcrOaSA5mi+XPHp4F94
-z+e8VD3UHm7iHKzOIttpyeTf6l9bP4wczMPup4YhwcaB0xOMY6U=
-=/l/R
------END PGP SIGNATURE-----
---=-=-=--
+--
+2.7.4
