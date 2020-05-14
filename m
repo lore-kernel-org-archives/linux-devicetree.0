@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E932C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0458C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFDEA20675
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C6920675
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:24:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pL+XB6xD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIm3W3vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgENIVX (ORCPT
+        id S1726169AbgENIYm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 04:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34300 "EHLO
+        Thu, 14 May 2020 04:24:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgENIVW (ORCPT
+        by vger.kernel.org with ESMTP id S1726163AbgENIYl (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 04:21:22 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA79C061A0E
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:21:22 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h4so2469524ljg.12
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:21:22 -0700 (PDT)
+        Thu, 14 May 2020 04:24:41 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F4B0C061A0E
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:24:41 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id o14so2535471ljp.4
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ylNyjxPU0jW9A5cG6J8lYn77ZbNao4PuP4byNxuwb40=;
-        b=pL+XB6xDy0cGnanxPxZeCoXI+0/bH/MJrC9FZHLbSFeABMiSHzmaFy/I+vlbadTqdg
-         moVU55iWLxpm1nnhHrCGKzA2uK7DqkWVrHrypLWkQ77O98C65VIQg4eWTACmBhqQAvbe
-         pHSqklAJtsA1BGN8aJrEPgAzkjuaIRy0vNfWRPOiZ0Gx9pkVb9qjr26pYd9MiqLjtOJr
-         54QU9Kl6XwBPNiecFaQ5Q2UN0C0xobJnHAsuUb9l4eWMcWJxS8krPxWVDver5JV680GH
-         IzpZdlsYOHiSkmT8GBGTZ0VfuqV8Pk7Uv4HSe7NIk0lkUADLNFPO/dZ01aPB2TJo4RoU
-         he7w==
+        bh=Jkb8BxKnl71QcTSlAQifB2QDBHTd1utKf7Tuku0XIK4=;
+        b=iIm3W3vxPyvQT8hBr8kR8u+6yVBH0h6bfGPXKdobARfet5qpx6e2NJwbGUoVD4BTiz
+         kvpn1tyKA+LwVUJc8z8fF1ZwXlCreaNrldq4vaEDBNH9cKFjh4tAUHQkvEkgZrv38eDN
+         o2gz3Js+ZsuW3daffpbxtnkSsvbVGjH/1ch+B53s3SDAzYlJpVIgVSGq9BIdUF43U3J3
+         PYEdm9THYdzNqhqnu0YtajA3OhEFK2moz2+zytOAdmmOqgbfZNV8YpRwBfYf+FcYfKP1
+         slXNCbKogiAPZuvMbATklfcba8DSvlZ/NhggKTK4KlzEC8fEhJbI/SNZCFcSB3u8yrD/
+         oIKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ylNyjxPU0jW9A5cG6J8lYn77ZbNao4PuP4byNxuwb40=;
-        b=ZYOe/z2ckaytBhybwXb1qdYuXZLGWeEqXMSfP0RXzOccWs9by3WOdXcajZPdKt0QlO
-         F1Gy8BMYkKJ96tQBcX6w2guFHVAC4nLetJml6Fu5Av/eXHMps4pHKi5Pbzu+7+pHLq+r
-         pfNEsPVWMr+8krKeeduravyhqEqtAtQ/A7yuJEcJnG4U0WdQZZbO/t3bfrk7boqeKnam
-         AgKK3LhOcKv505ZMkPTviGCICPhY8iUAQTYNjAMGI07BHV6c6Ry4fhvbpd1MM05+cfAS
-         N/PfTRVmwbT3KHF8tWTnmPd1knrDGFcI6lMvv34NzHK2Z8uKCOX4yliUMtqbsESXp3tw
-         Kz6Q==
-X-Gm-Message-State: AOAM531gBoXDRUlIjp2s1MRxEX3SpWJdAWwb3Ge02wq8pAyHPfbF1wt8
-        QrAlq9IW/TRCfCwXHaP33b0b1xluA6842p4F7JSDpw==
-X-Google-Smtp-Source: ABdhPJyRERMIh+MQZPItj7QatuGXtUx06mgJ88uloHfqTCykxSiONeYCm+tNHIHuv9MC+hs2Hr0mPlFfLP8XGnr3zRA=
-X-Received: by 2002:a2e:531e:: with SMTP id h30mr1125043ljb.168.1589444480845;
- Thu, 14 May 2020 01:21:20 -0700 (PDT)
+        bh=Jkb8BxKnl71QcTSlAQifB2QDBHTd1utKf7Tuku0XIK4=;
+        b=f5Q73T5JCGiatxGm2S4bQHRYx2hVzoXzpItasQzARXt7xbs3GCdpxT5RG/ITpUxIFn
+         JEKbM15M6jwRcfL0klPtS4y5WV5tj0b+CNgbnqgf4K0w2bnOtapdVLjYOQLFNL5K1/cb
+         iQbwLo+r8OaqEz/EHvqsalyAOt7MBCLZc+vxLKIp3ceet5cu25BM3Io2HltZUSJ8imtk
+         Tfnsj7bWHbb4Rd+kr8KyrggRoWoV6+u/y5aqc/v9kTLCPQ1AZgHcSzuuP74w5y1i4t4Q
+         K9Q+kJgnMPdRePfaLz4w/RXoVBqJn49r+65KsD2hxvUiM7w/kpOau5+BDvSI1zee54SK
+         Ei3A==
+X-Gm-Message-State: AOAM532unOGH+xAB+uFJ41Rgaq5oACN2inP3nhhFxZGozYa70hld3uaj
+        xOLUfTllLixIYdymX8GMSTiGR5eUzw7N1tFMZ04lEw==
+X-Google-Smtp-Source: ABdhPJzbR0lONsL+LHNQ562bI+zZx3vzCrNYamk5GJI5zjbv9WVScZ7rOiUe3C6sarzGNmAWB4jF6RMUNqx0dbXgSxU=
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr2073815ljh.223.1589444679816;
+ Thu, 14 May 2020 01:24:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com> <1589267017-17294-3-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1589267017-17294-3-git-send-email-dillon.minfei@gmail.com>
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com> <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com>
+In-Reply-To: <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 14 May 2020 10:21:09 +0200
-Message-ID: <CACRpkdZUyRh0KZzRxsdfFU_L-F=Ns0j1d3eR-ermhx2Gb0Zrgg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: display: panel: Add ilitek ili9341
- panel bindings
+Date:   Thu, 14 May 2020 10:24:28 +0200
+Message-ID: <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] ARM: dts: stm32: enable ltdc binding with ili9341
+ on stm32429-disco board
 To:     dillon.minfei@gmail.com
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -85,16 +85,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 9:03 AM <dillon.minfei@gmail.com> wrote:
+On Tue, May 12, 2020 at 9:04 AM <dillon.minfei@gmail.com> wrote:
 
 > From: dillon min <dillon.minfei@gmail.com>
 >
-> Add documentation for "ilitek,ili9341" panel.
+> Enable the ltdc & ili9341 on stm32429-disco board.
 >
 > Signed-off-by: dillon min <dillon.minfei@gmail.com>
 
-This looks good to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This mostly looks good but...
+
+> +&spi5 {
+> +       status = "okay";
+> +       pinctrl-0 = <&spi5_pins>;
+> +       pinctrl-names = "default";
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       cs-gpios = <&gpioc 2 GPIO_ACTIVE_LOW>;
+> +       dmas = <&dma2 3 2 0x400 0x0>,
+> +              <&dma2 4 2 0x400 0x0>;
+> +       dma-names = "rx", "tx";
+
+These DMA assignments seem to be SoC things and should
+rather be in the DTS(I) file where &spi5 is defined, right?
+stm32f429.dtsi I suppose?
+
+It is likely the same no matter which device is using spi5.
 
 Yours,
 Linus Walleij
