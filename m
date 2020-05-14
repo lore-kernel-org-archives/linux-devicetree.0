@@ -2,198 +2,91 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CAFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F846C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07FA220671
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="IHFWVTxh"
+	by mail.kernel.org (Postfix) with ESMTP id 482642065F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 17:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589475932;
+	bh=HwjC0mdEpvRNfNDbCJoWOZLsIFufbVD8D3rudxfe4kU=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=v4YuA8b7T0aPtOXpMoCJAQInnZfTGYG43hcpw+g1rnhcmlFiEeZm0FW4N70JwP107
+	 vKXTmn70cn4FBUKNGYA6cHG/dssweGvuu23n0Y+fik2pxBf95XPgZ2TJYVth4vIiNv
+	 FU5kmajXpHp+bCHQjsLFyKAVNPOQjCHDlsFT4yHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgENREr (ORCPT
+        id S1726037AbgENRFb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 13:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgENREr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 13:04:47 -0400
-Received: from mxa2.seznam.cz (mxa2.seznam.cz [IPv6:2a02:598:2::90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D27C061A0C;
-        Thu, 14 May 2020 10:04:46 -0700 (PDT)
-Received: from email.seznam.cz
-        by email-smtpc11b.ng.seznam.cz (email-smtpc11b.ng.seznam.cz [10.23.14.75])
-        id 3ef2742065fc20493f5bb87e;
-        Thu, 14 May 2020 19:04:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
-        t=1589475878; bh=U1RHpu2MQPEcxje/nVWl8eQg+lZOAKfXx2Xs659abiQ=;
-        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-         Content-Transfer-Encoding;
-        b=IHFWVTxhrun3hvhbMkMoKgl8/SzmQYKKtSjGwdKu8F8i01OT5l2iSyAAFYzv2uE+W
-         YG6i5jEDUQo5ch5HdgRiU6ciO5592O2rU8TMOKWrDEKTVPR+b8VlcZ149rfg6WpsKo
-         bnKaKtsGbVsNal2IuKclpn8OQkm552aKfxpVvzCM=
-Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
-        by email-relay9.ng.seznam.cz (Seznam SMTPD 1.3.114) with ESMTP;
-        Thu, 14 May 2020 19:04:33 +0200 (CEST)  
-From:   michael.srba@seznam.cz
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Michael Srba <michael.srba@seznam.cz>
-Subject: [PATCH] arm64: dts: qcom: msm8916-samsung-a3u: add nodes for display panel
-Date:   Thu, 14 May 2020 19:01:29 +0200
-Message-Id: <20200514170129.10902-1-michael.srba@seznam.cz>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 14 May 2020 13:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbgENRFb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 13:05:31 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FFBB206D8;
+        Thu, 14 May 2020 17:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589475931;
+        bh=HwjC0mdEpvRNfNDbCJoWOZLsIFufbVD8D3rudxfe4kU=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=zvXKgrNaAp32PZfFs9VQf/nQ7ByZSBe3Ae03TO+khlKVpIC4iaO9jb5IgyPVu75Nl
+         jkYdPhh7ADAoWxClOF3x29zKbi67UV1NgDUxbscmNnJMkBqiH4+6jplbSUyygnv1vx
+         GgV6nnjdV4AWUnfgBBMPelbjfwak7zi4IfTfXmWg=
+Date:   Thu, 14 May 2020 18:05:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     lgirdwood@gmail.com, tiwai@suse.com, Dan Murphy <dmurphy@ti.com>,
+        perex@perex.cz
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+In-Reply-To: <20200514123338.20392-1-dmurphy@ti.com>
+References: <20200514123338.20392-1-dmurphy@ti.com>
+Subject: Re: [PATCH v3 1/3] ASoC: tlv320adcx140: Add controls for PDM clk
+Message-Id: <158947592846.11145.11012655309437023343.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Michael Srba <michael.srba@seznam.cz>
+On Thu, 14 May 2020 07:33:36 -0500, Dan Murphy wrote:
+> Add ALSA controls to configure the PDM clocks.
+> The clocks need to be configurable to accommodate various microphones
+> that use clocks for low power/low resolution modes to high power/high
+> resolution modes.
 
-This patch wires up display support on Samsung Galaxy A3 2015.
+Applied to
 
-Signed-off-by: Michael Srba <michael.srba@seznam.cz>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
 
----
- .../qcom/msm8916-samsung-a2015-common.dtsi    | 44 +++++++++++++++
- .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts | 54 +++++++++++++++++++
- 2 files changed, 98 insertions(+)
+Thanks!
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index af812f76e8be..2a64aa269f52 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -72,6 +72,24 @@ phy {
- 			};
- 		};
- 
-+		mdss@1a00000 {
-+			dsi@1a98000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				vdda-supply = <&pm8916_l2>;
-+				vddio-supply = <&pm8916_l6>;
-+
-+				pinctrl-names = "default", "sleep";
-+				pinctrl-0 = <&mdss_default>;
-+				pinctrl-1 = <&mdss_sleep>;
-+			};
-+
-+			dsi-phy@1a98300 {
-+				vddio-supply = <&pm8916_l6>;
-+			};
-+		};
-+
- 		wcnss@a21b000 {
- 			status = "okay";
- 		};
-@@ -172,6 +190,32 @@ pinconf {
- 			bias-disable;
- 		};
- 	};
-+
-+	pmx-mdss {
-+		mdss_default: mdss-default {
-+			pinmux {
-+				function = "gpio";
-+				pins = "gpio25";
-+			};
-+			pinconf {
-+				pins = "gpio25";
-+				drive-strength = <8>;
-+				bias-disable;
-+			};
-+		};
-+
-+		mdss_sleep: mdss-sleep {
-+			pinmux {
-+				function = "gpio";
-+				pins = "gpio25";
-+			};
-+			pinconf {
-+				pins = "gpio25";
-+				drive-strength = <2>;
-+				bias-pull-down;
-+			};
-+		};
-+	};
- };
- 
- &smd_rpm_regulators {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-index d10f7ac5089f..b46c87289033 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-@@ -7,4 +7,58 @@
- / {
- 	model = "Samsung Galaxy A3U (EUR)";
- 	compatible = "samsung,a3u-eur", "qcom,msm8916";
-+
-+	reg_panel_vdd3: regulator-panel-vdd3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "panel_vdd3";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+
-+		gpio = <&msmgpio 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&panel_vdd3_default>;
-+	};
-+};
-+
-+&dsi0 {
-+	panel@0 {
-+		reg = <0>;
-+
-+		compatible = "samsung,s6e88a0-ams452ef01";
-+
-+		vdd3-supply = <&reg_panel_vdd3>;
-+		vci-supply = <&pm8916_l17>;
-+		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&dsi0_out>;
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			dsi0_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+				data-lanes = <0 1>;
-+			};
-+		};
-+	};
-+};
-+
-+&msmgpio {
-+	panel_vdd3_default: panel-vdd3-default {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio9";
-+		};
-+		pinconf {
-+			pins = "gpio9";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
- };
--- 
-2.24.0
+[1/3] ASoC: tlv320adcx140: Add controls for PDM clk
+      commit: 7cfa610205d95357f9eface292dc70fce7571f65
+[2/3] ASoC: tlv320adcx140: Add device tree property for PDM edges
+      commit: 75b0adbb0806a141b0b5f074cd6bd58bb9870c0d
+[3/3] ASoC: tlv320adcx140: Configure PDM sampling edge
+      commit: 79fc48e41e39d7a98c5f8ae37f613d7ff9953c86
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
