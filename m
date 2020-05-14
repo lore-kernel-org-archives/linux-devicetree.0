@@ -2,65 +2,66 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75D9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E932C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE7E2065D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDEA20675
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 08:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KgIbBmPS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pL+XB6xD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgENIOp (ORCPT
+        id S1725977AbgENIVX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 04:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
+        Thu, 14 May 2020 04:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgENIOo (ORCPT
+        by vger.kernel.org with ESMTP id S1725935AbgENIVW (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 04:14:44 -0400
+        Thu, 14 May 2020 04:21:22 -0400
 Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788EDC061A0C
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:14:44 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id l19so2466619lje.10
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:14:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA79C061A0E
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:21:22 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h4so2469524ljg.12
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 01:21:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4Rzn7cq0RueHKImWKXM7yCKiShW9x1YZUKKs+w//dgo=;
-        b=KgIbBmPSAM5V057UJjswd00GWFSuplgpUczlwr2or1sTvcPJpkGdXn16zcqWrvB7Hq
-         g1nH9gMvbaCxnNdR6eAbMlJGQp7ty5d24X1TtmCjIxLOGZ+PB2n7vlNyzMOBaM/MXgE0
-         NBmeD1JsqKSaPhhcVERmvmVXqDft31wiEG024q05U0/+VnG3ZcG9BzR3fsRqQgnIJJTF
-         e61hISdePjkS9LFo0jJ2tac/wz8U4VbNHVTJxXEIC79E876IAR4nMn6dbFWSIyCMxtih
-         WosQ0N5myIn223ln+nv/RmPqjDaFD3JWqn1sBt5mEIna5hYyy3CgVofylAMRA+P18bee
-         u2hg==
+        bh=ylNyjxPU0jW9A5cG6J8lYn77ZbNao4PuP4byNxuwb40=;
+        b=pL+XB6xDy0cGnanxPxZeCoXI+0/bH/MJrC9FZHLbSFeABMiSHzmaFy/I+vlbadTqdg
+         moVU55iWLxpm1nnhHrCGKzA2uK7DqkWVrHrypLWkQ77O98C65VIQg4eWTACmBhqQAvbe
+         pHSqklAJtsA1BGN8aJrEPgAzkjuaIRy0vNfWRPOiZ0Gx9pkVb9qjr26pYd9MiqLjtOJr
+         54QU9Kl6XwBPNiecFaQ5Q2UN0C0xobJnHAsuUb9l4eWMcWJxS8krPxWVDver5JV680GH
+         IzpZdlsYOHiSkmT8GBGTZ0VfuqV8Pk7Uv4HSe7NIk0lkUADLNFPO/dZ01aPB2TJo4RoU
+         he7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4Rzn7cq0RueHKImWKXM7yCKiShW9x1YZUKKs+w//dgo=;
-        b=Vr9owkKLqP9AEb0SrkFv8PIEn2EcXT2IMMakxhBGyDlRMjCNI8gIAsm1PTvJortedL
-         XEDtaapXpNECxHC87Wl5h2n52F9VQsZLfIWpW7saxBPtpNX8x0Kd9hl1SUHg4giALFnq
-         V6LVKf2EX37buZ09OXRTIjczUZ7WnMw31YOxjwOr9Gi6OK8ESxvZ2suKrAd8q3ZAtjTM
-         J/U1rGABQI42iK8tP6I2MVu7GtFc/4KxloF3VhrOP3UCaxVYabBIEjfzgT7d8Odsp5qL
-         yOTvBGh01AGLO23FiON4zZLiWl3j7JOxekuQ74kzJZaBB95U60bzeKCUQ3jL5bq+R3vi
-         JtJw==
-X-Gm-Message-State: AOAM5312zEbjhcffDcFa0WjbGSIDVvgv3Sl5SM9K6hYSGDLNA8VPW9Jt
-        iLNSjwENg6ZhhIK2C39qI7uQlgm1h3Yp5v++fVWNuw==
-X-Google-Smtp-Source: ABdhPJxicGsmyw6HOfdUXo27l6k92d2nLg/bnWVSnOja2VnXH2wkCfinXIbqKftvHF03hVugro8AJtYkQ2nArGHEyAw=
-X-Received: by 2002:a05:651c:154:: with SMTP id c20mr1842104ljd.99.1589444082846;
- Thu, 14 May 2020 01:14:42 -0700 (PDT)
+        bh=ylNyjxPU0jW9A5cG6J8lYn77ZbNao4PuP4byNxuwb40=;
+        b=ZYOe/z2ckaytBhybwXb1qdYuXZLGWeEqXMSfP0RXzOccWs9by3WOdXcajZPdKt0QlO
+         F1Gy8BMYkKJ96tQBcX6w2guFHVAC4nLetJml6Fu5Av/eXHMps4pHKi5Pbzu+7+pHLq+r
+         pfNEsPVWMr+8krKeeduravyhqEqtAtQ/A7yuJEcJnG4U0WdQZZbO/t3bfrk7boqeKnam
+         AgKK3LhOcKv505ZMkPTviGCICPhY8iUAQTYNjAMGI07BHV6c6Ry4fhvbpd1MM05+cfAS
+         N/PfTRVmwbT3KHF8tWTnmPd1knrDGFcI6lMvv34NzHK2Z8uKCOX4yliUMtqbsESXp3tw
+         Kz6Q==
+X-Gm-Message-State: AOAM531gBoXDRUlIjp2s1MRxEX3SpWJdAWwb3Ge02wq8pAyHPfbF1wt8
+        QrAlq9IW/TRCfCwXHaP33b0b1xluA6842p4F7JSDpw==
+X-Google-Smtp-Source: ABdhPJyRERMIh+MQZPItj7QatuGXtUx06mgJ88uloHfqTCykxSiONeYCm+tNHIHuv9MC+hs2Hr0mPlFfLP8XGnr3zRA=
+X-Received: by 2002:a2e:531e:: with SMTP id h30mr1125043ljb.168.1589444480845;
+ Thu, 14 May 2020 01:21:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com> <1589267017-17294-6-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1589267017-17294-6-git-send-email-dillon.minfei@gmail.com>
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com> <1589267017-17294-3-git-send-email-dillon.minfei@gmail.com>
+In-Reply-To: <1589267017-17294-3-git-send-email-dillon.minfei@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 14 May 2020 10:14:31 +0200
-Message-ID: <CACRpkdbZoMDC-D12CByKJUZbu4shqixC=QrKwJUd8x=nyK7seQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] drm/panel: Add ilitek ili9341 driver
+Date:   Thu, 14 May 2020 10:21:09 +0200
+Message-ID: <CACRpkdZUyRh0KZzRxsdfFU_L-F=Ns0j1d3eR-ermhx2Gb0Zrgg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: display: panel: Add ilitek ili9341
+ panel bindings
 To:     dillon.minfei@gmail.com
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -84,236 +85,16 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dillon,
+On Tue, May 12, 2020 at 9:03 AM <dillon.minfei@gmail.com> wrote:
 
-thanks for your patch! Overall this looks like a good start.
+> From: dillon min <dillon.minfei@gmail.com>
+>
+> Add documentation for "ilitek,ili9341" panel.
+>
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
 
-On Tue, May 12, 2020 at 9:04 AM <dillon.minfei@gmail.com> wrote:
-
-> #define ILI9341_SLEEP_OUT            0x11   /* Sleep out register */
-
-This is not a register, also just use MIPI_DCS_EXIT_SLEEP_MODE
-in the code.
-
-> +#define ILI9341_DFC                  0xb6   /* Display Function Control
-> +                                            * register
-> +                                            */
-
-This commenting style doesn't work, either just put it after /* the define */
-and don't care if the line gets a bit long and checkpatch complains,
-or
-
-/*
- * Put it above the define like this
- */
-#define FOO 0x00
-
-> +/**
-> + * struct ili9341_config - the system specific ILI9341 configuration
-
-Nice with this per-system config, it makes the driver easy to maintain
-for new users.
-
-> +static int ili9341_dpi_init(struct ili9341 *ili)
-> +{
-> +       ili9341_command(ili, 0xca, 0xc3, 0x08, 0x50);
-
-This stuff is a bit hard to understand, don't you think?
-
-But given that register 0xCA seems undocumented I don't
-know if there is anything more you can do, so it is OK
-I suppose.
-
-> +       ili9341_command(ili, ILI9341_POWERB, 0x00, 0xc1, 0x30);
-
-This command is described in the manual  page 196.
-Version: V1.11
-Document No.: ILI9341_DS_V1.11.pdf
-https://dflund.se/~triad/ILI9341_v1.11.pdf
-
-And this goes for all the below commands. Please add some more defines
-from the datasheet and have less magic numbers in the driver.
-
-> +       ili9341_command(ili, ILI9341_POWER_SEQ, 0x64, 0x03, 0x12, 0x81);
-> +       ili9341_command(ili, ILI9341_DTCA, 0x85, 0x00, 0x78);
-> +       ili9341_command(ili, ILI9341_POWERA, 0x39, 0x2c, 0x00, 0x34, 0x02);
-> +       ili9341_command(ili, ILI9341_PRC, 0x20);
-> +       ili9341_command(ili, ILI9341_DTCB, 0x00, 0x00);
-> +       ili9341_command(ili, ILI9341_FRC, 0x00, 0x1b);
-> +       ili9341_command(ili, ILI9341_DFC, 0x0a, 0xa2);
-> +       ili9341_command(ili, ILI9341_POWER1, 0x10);
-> +       ili9341_command(ili, ILI9341_POWER2, 0x10);
-> +       ili9341_command(ili, ILI9341_VCOM1, 0x45, 0x15);
-> +       ili9341_command(ili, ILI9341_VCOM2, 0x90);
-> +       ili9341_command(ili, ILI9341_MAC, 0xc8);
-> +       ili9341_command(ili, ILI9341_3GAMMA_EN, 0x00);
-> +       ili9341_command(ili, ILI9341_RGB_INTERFACE, 0xc2);
-> +       ili9341_command(ili, ILI9341_DFC, 0x0a, 0xa7, 0x27, 0x04);
-> +       ili9341_command(ili, ILI9341_COLUMN_ADDR, 0x00, 0x00, 0x00, 0xef);
-> +       ili9341_command(ili, ILI9341_PAGE_ADDR, 0x00, 0x00, 0x01, 0x3f);
-> +       ili9341_command(ili, ILI9341_INTERFACE, 0x01, 0x00, 0x06);
-> +       if (ili->input == ILI9341_INPUT_PRGB_18_BITS)
-> +               ili9341_command(ili, ILI9341_PIXEL_FORMAT, 0x66);
-> +       else
-> +               ili9341_command(ili, ILI9341_PIXEL_FORMAT, 0x56);
-> +       ili9341_command(ili, ILI9341_GRAM);
-> +       msleep(200);
-
-I think some of the above should not be hardcoded but should instead
-be stored in fields in struct ili9341_config. I know it can be a bit
-tedious but it makes things much more clear.
-
-> +       ili9341_command(ili, ILI9341_GAMMA, 0x01);
-> +       ili9341_command(ili, ILI9341_PGAMMA, 0x0f, 0x29, 0x24, 0x0c, 0x0e,
-> +                                               0x09, 0x4e, 0x78, 0x3c, 0x09,
-> +                                               0x13, 0x05, 0x17, 0x11, 0x00);
-> +       ili9341_command(ili, ILI9341_NGAMMA, 0x00, 0x16, 0x1b, 0x04, 0x11,
-> +                                               0x07, 0x31, 0x33, 0x42, 0x05,
-> +                                               0x0c, 0x0a, 0x28, 0x2f, 0x0f);
-
-This should definately be in ili9341_config, as it is a screen property.
-
-In the long run I would like these panels to support setting gamma
-from userspace etc but it is a big tedious work to get that right
-so hard-coding a default per-variant is fine.
-
-You can check in e.g. panel-novatek-nt35510.c how I encoded
-such sequences in per-variant data.
-
-> +static int ili9341_dpi_power_off(struct ili9341 *ili)
-> +{
-> +       /* Disable power */
-> +       if (!IS_ERR(ili->vcc))
-> +               return regulator_disable(ili->vcc);
-> +
-> +       return 0;
-> +}
-
-Usually you should also assert RESET when disabling
-power.
-
-> +/* This is the only mode listed for parallel RGB in the datasheet */
-> +static const struct drm_display_mode rgb_240x320_mode = {
-> +       .clock = 6100,
-> +       .hdisplay = 240,
-> +       .hsync_start = 240 + 10,
-> +       .hsync_end = 240 + 10 + 10,
-> +       .htotal = 240 + 10 + 10 + 20,
-> +       .vdisplay = 320,
-> +       .vsync_start = 320 + 4,
-> +       .vsync_end = 320 + 4 + 2,
-> +       .vtotal = 320 + 4 + 2 + 2,
-> +       .vrefresh = 60,
-> +       .flags = 0,
-> +       .width_mm = 65,
-> +       .height_mm = 50,
-
-The width and height should certainly be om the ili9341_config
-as it is a per-panel property. You can just fill in in in
-the below .get_modes() function. Or assign the whole
-mode as part of the ili9341_config if that is easier.
-
-> +       return drm_panel_add(&ili->panel);
-> +}
-> +
-> +
-> +
-
-Surplus whitespace here.
-
-> +       mipi_dbi_command(dbi, MIPI_DCS_SET_DISPLAY_OFF);
-> +
-> +       mipi_dbi_command(dbi, ILI9341_POWERB, 0x00, 0xc1, 0x30);
-> +       mipi_dbi_command(dbi, ILI9341_POWER_SEQ, 0x64, 0x03, 0x12, 0x81);
-
-Some of these are just copies of the above init sequence, so it makes
-even more sense to just have these settings stored in
-ili9341_config.
-
-> +       mipi_dbi_command(dbi, ILI9341_DTCA, 0x85, 0x00, 0x78);
-> +       mipi_dbi_command(dbi, ILI9341_POWERA, 0x39, 0x2c, 0x00, 0x34, 0x02);
-> +       mipi_dbi_command(dbi, ILI9341_PRC, 0x20);
-> +       mipi_dbi_command(dbi, ILI9341_DTCB, 0x00, 0x00);
-> +
-> +       /* Power Control */
-> +       mipi_dbi_command(dbi, ILI9341_POWER1, 0x23);
-> +       mipi_dbi_command(dbi, ILI9341_POWER2, 0x10);
-> +       /* VCOM */
-> +       mipi_dbi_command(dbi, ILI9341_VCOM1, 0x3e, 0x28);
-> +       mipi_dbi_command(dbi, ILI9341_VCOM2, 0x86);
-> +
-> +       /* Memory Access Control */
-> +       mipi_dbi_command(dbi, MIPI_DCS_SET_PIXEL_FORMAT,
-> +                               MIPI_DCS_PIXEL_FMT_16BIT);
-> +
-> +       /* Frame Rate */
-> +       mipi_dbi_command(dbi, ILI9341_FRC, 0x00, 0x1b);
-> +
-> +       /* Gamma */
-> +       mipi_dbi_command(dbi, ILI9341_3GAMMA_EN, 0x00);
-> +       mipi_dbi_command(dbi, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
-> +       mipi_dbi_command(dbi, ILI9341_PGAMMA,
-> +                        0x0f, 0x31, 0x2b, 0x0c, 0x0e, 0x08, 0x4e, 0xf1,
-> +                        0x37, 0x07, 0x10, 0x03, 0x0e, 0x09, 0x00);
-> +       mipi_dbi_command(dbi, ILI9341_NGAMMA,
-> +                        0x00, 0x0e, 0x14, 0x03, 0x11, 0x07, 0x31, 0xc1,
-> +                        0x48, 0x08, 0x0f, 0x0c, 0x31, 0x36, 0x0f);
-
-It seems to be copies of the stuff above, but why is there a different
-gamma if you use DBI?
-
-I suspect only one of them is really needed and it is not even
-necessary to set if up in two places.
-
-> +out_enable:
-> +       switch (dbidev->rotation) {
-> +       default:
-> +               addr_mode = ILI9341_MADCTL_MX;
-> +               break;> +out_enable:
-> +       switch (dbidev->rotation) {
-> +       default:
-> +               addr_mode = ILI9341_MADCTL_MX;
-> +               break;
-> +       case 90:
-> +               addr_mode = ILI9341_MADCTL_MV;
-> +               break;
-> +       case 180:
-> +               addr_mode = ILI9341_MADCTL_MY;
-> +               break;
-> +       case 270:
-> +               addr_mode = ILI9341_MADCTL_MV | ILI9341_MADCTL_MY |
-> +                           ILI9341_MADCTL_MX;
-> +               break;
-> +       }
-> +       addr_mode |= ILI9341_MADCTL_BGR;
-> +       mipi_dbi_command(dbi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
-> +       mipi_dbi_enable_flush(dbidev, crtc_state, plane_state);
-> +       DRM_DEBUG_KMS("initialized display serial interface\n");
-> +out_exit:
-> +       drm_dev_exit(idx);
-> +}
-> +
-
-> +       case 90:
-> +               addr_mode = ILI9341_MADCTL_MV;
-> +               break;
-> +       case 180:
-> +               addr_mode = ILI9341_MADCTL_MY;
-> +               break;
-> +       case 270:
-> +               addr_mode = ILI9341_MADCTL_MV | ILI9341_MADCTL_MY |
-> +                           ILI9341_MADCTL_MX;
-> +               break;
-> +       }
-> +       addr_mode |= ILI9341_MADCTL_BGR;
-> +       mipi_dbi_command(dbi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
-
-Since you use MIPI_DCS_* define here, check if this applies
-to more of the commands above so you don't need custom
-defines for them. e.g.
-ILI9341_SLEEP_OUT 0x11 = MIPI_DCS_EXIT_SLEEP_MODE
-and that isn't even a register right, it is just a command?
-(Noted in the beginning.)
+This looks good to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
