@@ -2,113 +2,129 @@ Return-Path: <SRS0=mbMJ=64=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801FFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 18:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8D9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 18:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD3E2054F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 18:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589481120;
-	bh=lTUj03v63iH1ao9L+hPlNAjXZaTpeM2w8inlsrO+Jz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g4lsnX60e4uL/I2m9kz9uFB/AYxqObgGHAVVCu9EzU6B6owl2G2dCRvgcLrHKkMik
-	 2mZ1EMoqubw7uIZiUhagypPM+zXTMb0YETS89/2RiyOP/iPaIKOYZxTK9ceQZOyOnK
-	 4QMPmNUy+trYTllfwNcoYGuGS382q90TiS+PKgVI=
+	by mail.kernel.org (Postfix) with ESMTP id 680FC20657
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 18:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uyVvJKrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgENSb4 (ORCPT
+        id S1727029AbgENSjU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 14:31:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38556 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgENSb4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 14:31:56 -0400
-Received: by mail-oi1-f196.google.com with SMTP id j145so3583990oib.5;
-        Thu, 14 May 2020 11:31:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/ZdOo8qTYydr7gpNlz9VEjrBle34EZ628Ie0y7qEL/0=;
-        b=ranJhHybyWIi9UvAbpb0MyY6TkhPGXR9JnqhNpFy5UYpe/JfZhv/3cRnFOe4cwiiuq
-         uyhIdQ1yPFzkOyInXsWU2/Zv0axUpMtGMbRiMYBuSddcYtLpwAbZ5mDkq4m6CU0gK16t
-         PZTRwJGdlofBFYwRChqM6brx9Rt2b0G5lv0B5CmQSWZYIP3WyANIhAWgDS0+sGNvD3qa
-         2tPBMr8LvkEjyRplMGWObSr6JS4AOE7uEy7T57dCSAua1Qn6rTLopW8sOFZVGoMJrCLq
-         /ezN1k+ZHr9rrI/Zmol/qHkUJEoZ3i5EDbJG5FtuSchZ1QlAI4xTgICKikvSMMIwWt0V
-         98eA==
-X-Gm-Message-State: AGi0PuYSbvU7PUZRQwwZ10SSQhVNyGzkcbgh3EANXOgTLV6ETwZc1M9h
-        SX08VAelHguj8+OGvfrXaw==
-X-Google-Smtp-Source: APiQypJb/IrkasWWL0KzBECbQGQmU9ovfrPx2nw3JgBo31OcpHjNbpKZH/E7kal8pID5YeWdCQI4Hg==
-X-Received: by 2002:aca:fd12:: with SMTP id b18mr32276044oii.158.1589481112173;
-        Thu, 14 May 2020 11:31:52 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h24sm978584otj.25.2020.05.14.11.31.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 11:31:51 -0700 (PDT)
-Received: (nullmailer pid 24946 invoked by uid 1000);
-        Thu, 14 May 2020 18:31:50 -0000
-Date:   Thu, 14 May 2020 13:31:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-pm@vger.kernel.org,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Brown <broonie@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 03/20] dt-bindings: Add vendor prefix for Baikal
- Electronics, JSC
-Message-ID: <20200514183150.GA24713@bogus>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
+        Thu, 14 May 2020 14:39:20 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60834 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbgENSjT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 14:39:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=gupvsLoI2EPTbCeDlomiVkEb9QRYW3zBFnUQWK4fPE4=; b=uyVvJKrrD/p1T/m5Bb74qBnCzQ
+        auVHibpRub8C3s343/Oc3+N1Jsnbmy9fV5yfn7yMhB6GnTyOsCJyHzcFYntm0Na8w22GXjC9JI3nJ
+        WhvkjmIm92B3rIlwXuBTkoLdR/1d1CbW4cM3BjKP+5GRdNjdLEaJ1kEGadEz2rnXSLtk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jZIlE-002JT7-AS; Thu, 14 May 2020 20:39:12 +0200
+Date:   Thu, 14 May 2020 20:39:12 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        robh@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH net-next 1/2] dt-bindings: net: dp83822: Add TI dp83822
+ phy
+Message-ID: <20200514183912.GW499265@lunn.ch>
+References: <20200514173055.15013-1-dmurphy@ti.com>
+ <20200514173055.15013-2-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200514173055.15013-2-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 6 May 2020 20:42:21 +0300,  wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Thu, May 14, 2020 at 12:30:54PM -0500, Dan Murphy wrote:
+> Add a dt binding for the TI dp83822 ethernet phy device.
 > 
-> Add "BAIKAL ELECTRONICS, JSC" to the list of devicetree vendor prefixes
-> as "baikal".
-> 
-> Website: http://www.baikalelectronics.com
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
+>  .../devicetree/bindings/net/ti,dp83822.yaml   | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
 > 
-> Changelog v2:
-> - Fix author and SoB emails mismatch.
-> - Add 'baikal' vendor prefix instead of ambiguous 'be'.
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> new file mode 100644
+> index 000000000000..60afd43ad3b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/net/ti,dp83822.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI DP83822 ethernet PHY
+> +
+> +allOf:
+> +  - $ref: "ethernet-controller.yaml#"
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  The DP83822 is a low-power, single-port, 10/100 Mbps Ethernet PHY. It
+> +  provides all of the physical layer functions needed to transmit and receive
+> +  data over standard, twisted-pair cables or to connect to an external,
+> +  fiber-optic transceiver. Additionally, the DP83822 provides flexibility to
+> +  connect to a MAC through a standard MII, RMII, or RGMII interface
 
-Applied, thanks!
+Hi Dan
+
+You say 10/100 Mbps Ethernet PHY, but then list RGMII?
+
+> +
+> +  Specifications about the charger can be found at:
+> +    http://www.ti.com/lit/ds/symlink/dp83822i.pdf
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ti,signal-polarity-low:
+> +    type: boolean
+> +    description: |
+> +       DP83822 PHY in Fiber mode only.
+> +       Sets the DP83822 to detect a link drop condition when the signal goes
+> +       high.  If not set then link drop will occur when the signal goes low.
+
+Are we talking about the LOS line from the SFP cage? In the SFF/SFP
+binding we have:
+
+- los-gpios : GPIO phandle and a specifier of the Receiver Loss of Signal
+  Indication input gpio signal, active (signal lost) high
+
+It would be nice to have a consistent naming.
+
+Is it required the LOS signal is connected to the PHY? Russell King
+has some patches which allows the Marvell PHY to be used as a media
+converter. In that setting, i think the SFP signals are connected to
+GPIOs not the PHY. The SFP core can then control the transmit disable,
+module insertion detection etc. So i'm wondering if you need a
+property to indicate the LOS is not connected to the PHY?
+
+	 Andrew
