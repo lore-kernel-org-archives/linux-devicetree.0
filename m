@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DC2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB65C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB9322054F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173912054F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 May 2020 01:37:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bmJQH7uR"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nHOcYkTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgENBhc (ORCPT
+        id S1726022AbgENBh6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 May 2020 21:37:32 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51468 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgENBhb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 May 2020 21:37:31 -0400
+        Wed, 13 May 2020 21:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725925AbgENBh6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 May 2020 21:37:58 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B408C061A0C
+        for <devicetree@vger.kernel.org>; Wed, 13 May 2020 18:37:58 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C807E51F;
-        Thu, 14 May 2020 03:37:29 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A007C51F;
+        Thu, 14 May 2020 03:37:56 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589420250;
-        bh=AZvfkT/3qOUK0pEh61PQ1h6H54uQqgG9FuCVwwTWtqU=;
+        s=mail; t=1589420276;
+        bh=N4lCU0zXsWxvmQtZ5sTeg28V0mz07vTG0n3Pl7thUAI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bmJQH7uRpm7kKV/n2mhcUI/9VCqmpuykmeG9q5pJqwgU40PBQEFxIU1XHFh++ggVY
-         Y84bkYR4/cKygjDfFbMRjHV69E42fivEHhsDVTnAWE1rmjMxghgq/IyDuZtoXsNb3y
-         /bjlbUGvwerR53+amcYxkbmNf2WIdWD/8kFSZh8o=
-Date:   Thu, 14 May 2020 04:37:23 +0300
+        b=nHOcYkTdSgwwQsJPKR14GXEeCVquu35YFxuIuwcpmvPc0j6ZDUAjXgWCOcp0FI8iW
+         8Y80lJ1EH8hq+/lfvytj/VR1y9BTsuaTKzo7vdHoulLb8d101K/hLxgMYNtZZGYZJC
+         BtkBqX+AP7RYCLMs0wZhtauVlisqaw7wsWQdGwt4=
+Date:   Thu, 14 May 2020 04:37:50 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
 Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, geert+renesas@glider.be,
         robh+dt@kernel.org, xuwei5@hisilicon.com
-Subject: Re: [PATCH v2 4/6] arm64: dts: hisilicon: hikey: fixes to comply
- with adi,adv7533 DT binding
-Message-ID: <20200514013723.GD7425@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v2 5/6] ARM: dts: iwg20d-q7-dbcm-ca: remove unneeded
+ properties in hdmi@39
+Message-ID: <20200514013750.GE7425@pendragon.ideasonboard.com>
 References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
- <20200511110611.3142-5-ricardo.canuelo@collabora.com>
+ <20200511110611.3142-6-ricardo.canuelo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200511110611.3142-5-ricardo.canuelo@collabora.com>
+In-Reply-To: <20200511110611.3142-6-ricardo.canuelo@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -57,63 +61,31 @@ Hi Ricardo,
 
 Thank you for the patch.
 
-On Mon, May 11, 2020 at 01:06:09PM +0200, Ricardo Cañuelo wrote:
-> hi3660-hikey960.dts:
->   Define a 'ports' node for 'adv7533: adv7533@39' and the
->   'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
->   binding.
-> 
->   This fills the requirements to meet the binding requirements,
->   remote endpoints are not defined.
-> 
-> hi6220-hikey.dts:
->   Change property name s/pd-gpio/pd-gpios, gpio properties should be
->   plural. This is just a cosmetic change.
+On Mon, May 11, 2020 at 01:06:10PM +0200, Ricardo Cañuelo wrote:
+> Remove the adi,input-style and adi,input-justification properties of
+> hdmi@39 to make it compliant with the "adi,adv7511w" DT binding.
 > 
 > Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 > ---
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
->  2 files changed, 12 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index e035cf195b19..8c4bfbaf3a80 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -530,6 +530,17 @@
->  		status = "ok";
->  		compatible = "adi,adv7533";
->  		reg = <0x39>;
-> +		adi,dsi-lanes = <4>;
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			port@0 {
-> +				reg = <0>;
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +			};
-> +		};
->  	};
->  };
+> diff --git a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+> index ede2e0c999b1..e10f99278c77 100644
+> --- a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+> +++ b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+> @@ -72,8 +72,6 @@
+>  		adi,input-depth = <8>;
+>  		adi,input-colorspace = "rgb";
+>  		adi,input-clock = "1x";
+> -		adi,input-style = <1>;
+> -		adi,input-justification = "evenly";
 >  
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> index c14205cd6bf5..3e47150c05ec 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> @@ -516,7 +516,7 @@
->  		reg = <0x39>;
->  		interrupt-parent = <&gpio1>;
->  		interrupts = <1 2>;
-> -		pd-gpio = <&gpio0 4 0>;
-> +		pd-gpios = <&gpio0 4 0>;
->  		adi,dsi-lanes = <4>;
->  		#sound-dai-cells = <0>;
->  
+>  		ports {
+>  			#address-cells = <1>;
 
 -- 
 Regards,
