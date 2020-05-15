@@ -2,188 +2,137 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4A0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C663FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60CFA20657
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B8520758
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgEON05 (ORCPT
+        id S1726168AbgEONcv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 09:26:57 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43696 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgEON05 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 09:26:57 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: evelikov)
-        with ESMTPSA id B1F332A2B8B
-Date:   Fri, 15 May 2020 14:24:16 +0100
-From:   Emil Velikov <emil.velikov@collabora.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv1 1/2] power: supply: gpio-charger: add
- charge-current-limit feature
-Message-ID: <20200515132416.GA2836808@arch-x1c3>
-References: <20200513115601.360642-1-sebastian.reichel@collabora.com>
+        Fri, 15 May 2020 09:32:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:39195 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgEONcu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 09:32:50 -0400
+Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N8GIa-1j4jqL03iy-0148bL; Fri, 15 May 2020 15:32:49 +0200
+Received: by mail-qv1-f54.google.com with SMTP id p4so1036078qvr.10;
+        Fri, 15 May 2020 06:32:48 -0700 (PDT)
+X-Gm-Message-State: AOAM533LC1JhRL8lBvEYosRM/J8mL0QJapJt9PSOWop9bWdP0bC6/eRk
+        yd+VsM6iU/j2hJQvBX0zTgy6w+UKWY+IFV6U63I=
+X-Google-Smtp-Source: ABdhPJxRaY7zY8QTvNzuxerWSaqGbHKOK4FIyf/5qJLFxDuhmkrh8pWdFCVTHGQsHaBEpA8LvsOh8UJboFLS9sON+fo=
+X-Received: by 2002:a0c:eb11:: with SMTP id j17mr3448680qvp.197.1589549567720;
+ Fri, 15 May 2020 06:32:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513115601.360642-1-sebastian.reichel@collabora.com>
+References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
+In-Reply-To: <20200514075942.10136-11-brgl@bgdev.pl>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 15 May 2020 15:32:31 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
+Message-ID: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:/5ofnXw9mU5dIgLefv/eRsDvP8+vTrIU+kLDXUGITnkQuWac4Lv
+ lCUzHqRE2GvIKbgKOqokob5YjwHyKX97w0rAAWhXtQOfANy41OWqbOBppqecviSzLFkmNz+
+ 2baHX4ARSd0lXB90Re+J/7eya76FB9t4m55bGplGQ+RfBZSx9IL4TuVFvxJp5ov/6iHHmpn
+ 4slNhioblUkWT2Ewt3K6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PSBO+4J/98g=:gGROTXY0ptE/pYUSwwvuox
+ LQJix53g2u4f43J6wPGIlXEN9Sfdb91HjNyChil2D95CJzrRnaWlVruZOo55mgKhe92Ohy/yg
+ 87OxKYoBj1Mb2P4J3L/V3fwqP/gav9cVeaxsCo20ZFaZKoDvkYvfSlIPYU3uurK/xeEFAMAbt
+ qTjRN9SdEVq/n4qttKKMYTG9tw1Shau5JApHNfoB7BxtG3qf9SbAGxOsqaARuc47qUYax1dZ6
+ 1578a9XMcwHoKjC8rsWVu3m9WcdNS0qVH9VIH+rzArN+G81B1CaboTmEgNF2cPqd9xRvMp/Oz
+ 7EA5phTtB26zA7YNb5q6Zv55A0kKSfzPK571gneJm4rDtsS8/J3JbjXme+g8hKNmUH4xQN2yS
+ iDZLbWuwlWzjeKIeMxXkK8QMGCaN0sHeY0/LtUgY8BVQ+unPpjmLQC3ry/CyVIKmEZkrWEkGR
+ Xce+CMpI83rqIg857MjSgpzciN7wok2nNy0BPk8DJZb9HOjlpUxE0szWAxIn5VjzOsVZhTSLi
+ 3m/Z6AUId97YB+eqRUNSHlLaam1G55PHrKKd80C8B0vLof15lLICwSnOQi33wDKI8vO4/WT/t
+ BGRcMNIu1vThyBFAC2NRdPVihx7d37eDljyoIJRK4o1OpPhV/daih5x8HZQkE4ftEFRFBNcwe
+ vtAgLAJdJcS/SsDR+JCwKabWvHHbCJItJfZT0uRLp71Imow6FV5+a3LR7CMEKbFSVfv3U8p7F
+ rhiCgx08UIIgJbUEGAZm4+lL+yaVY+NZPwhReHOUocFaLcjNfELZBJkcAbWJ+Qiicg08kgcv/
+ xV8uJmISTCGfylAtb0x0tUGlBv+WL8b/dblBJFamBW0aVbHB00=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
+> +                                struct mtk_mac_ring_desc_data *desc_data)
 
-I've left a few trivial suggestions, although I suspect only one of them
-really matters. Namely - I think as-is the code changes the legacy behaviour
-when OF is missing.
+I took another look at this function because of your comment on the locking
+the descriptor updates, which seemed suspicious as the device side does not
+actually use the locks to access them
 
-Mind you, this is my third time skimming through power/supply, so take it with
-a grain of salt.
-
-On 2020/05/13, Sebastian Reichel wrote:
-> Add new charge-current-limit feature to gpio-charger. This also
-> makes the online status GPIO optional, since hardware might only
-> expose the charge-current-limit feature and there is no good reason
-> to have it mandatory now that different GPIOs are supported.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/power/supply/gpio-charger.txt    |  11 +-
->  drivers/power/supply/gpio-charger.c           | 176 ++++++++++++++++--
->  2 files changed, 174 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> index 0fb33b2c62a6..dbfd29029f69 100644
-> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> @@ -2,8 +2,6 @@ gpio-charger
->  
->  Required properties :
->   - compatible : "gpio-charger"
-> - - gpios : GPIO indicating the charger presence.
-> -   See GPIO binding in bindings/gpio/gpio.txt .
->   - charger-type : power supply type, one of
->       unknown
->       battery
-> @@ -15,7 +13,13 @@ Required properties :
->       usb-aca (USB accessory charger adapter)
->  
->  Optional properties:
-> + - gpios : GPIO indicating the charger presence.
-> +   See GPIO binding in bindings/gpio/gpio.txt .
->   - charge-status-gpios: GPIO indicating whether a battery is charging.
-> + - charge-current-limit-gpios: Output GPIOs specifiers for limiting the charge current
-> + - charge-current-limit-mapping: List of touples with current in uA and a GPIO bitmap (in this order).
-> +                                The GPIOs are encoded in the same order as specified in charge-current-limit-gpios.
-> +				The touples must be provided in descending order of the current limit.
-
-Minor tweaks:
-
-	List of tuples with current in uA and a GPIO bitmap.
-	Tuples must be sorted in descending order of the current limit.
-	GPIOs are encoded in the order as specified in charge-current-limit-gpios.
-
-
-> +static int init_charge_current_limit(struct device *dev,
-> +				    struct gpio_charger *gpio_charger)
 > +{
-> +	int i, len;
-> +	u32 cur_limit = U32_MAX;
+> +       struct mtk_mac_ring_desc *desc = &ring->descs[ring->tail];
+> +       unsigned int status;
 > +
-> +	gpio_charger->current_limit_gpios = devm_gpiod_get_array_optional(dev,
-> +		"charge-current-limit", GPIOD_OUT_LOW);
-> +	if (IS_ERR(gpio_charger->current_limit_gpios)) {
-> +		dev_err(dev, "error getting current-limit GPIOs\n");
-> +		return PTR_ERR(gpio_charger->current_limit_gpios);
-> +	}
+> +       /* Let the device release the descriptor. */
+> +       dma_rmb();
+> +       status = desc->status;
+> +       if (!(status & MTK_MAC_DESC_BIT_COWN))
+> +               return -1;
+
+The dma_rmb() seems odd here, as I don't see which prior read
+is being protected by this.
+
+> +       desc_data->len = status & MTK_MAC_DESC_MSK_LEN;
+> +       desc_data->flags = status & ~MTK_MAC_DESC_MSK_LEN;
+> +       desc_data->dma_addr = ring->dma_addrs[ring->tail];
+> +       desc_data->skb = ring->skbs[ring->tail];
 > +
-> +	if (!gpio_charger->current_limit_gpios)
-> +		return 0;
+> +       desc->data_ptr = 0;
+> +       desc->status = MTK_MAC_DESC_BIT_COWN;
+> +       if (status & MTK_MAC_DESC_BIT_EOR)
+> +               desc->status |= MTK_MAC_DESC_BIT_EOR;
 > +
-> +	len = device_property_read_u32_array(dev, "charge-current-limit-mapping",
-> +		NULL, 0);
-> +	if (len < 0)
+> +       /* Flush writes to descriptor memory. */
+> +       dma_wmb();
 
-The properly is optional, although I'm not sure if having an 'empty' properly
-(len == 0) should be considered an error as indicated by -ENOMEM below or not.
+The comment and the barrier here seem odd as well. I would have expected
+a barrier after the update to the data pointer, and only a single store
+but no read of the status flag instead of the read-modify-write,
+something like
 
-Worth documenting that, unless it's covered already.
+      desc->data_ptr = 0;
+      dma_wmb(); /* make pointer update visible before status update */
+      desc->status = MTK_MAC_DESC_BIT_COWN | (status & MTK_MAC_DESC_BIT_EOR);
 
-> +		return len;
-> +
-> +	if (len % 2) {
-> +		dev_err(dev, "invalid charge-current-limit-mapping length\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	gpio_charger->current_limit_map = devm_kmalloc_array(dev,
-> +		len / 2, sizeof(*gpio_charger->current_limit_map), GFP_KERNEL);
-> +	if (!gpio_charger->current_limit_map)
-> +		return -ENOMEM;
-> +
-> +	gpio_charger->current_limit_map_size = len / 2;
-> +
-> +	len = device_property_read_u32_array(dev, "charge-current-limit-mapping",
-> +		(u32*) gpio_charger->current_limit_map, len);
-> +	if (len < 0)
-> +		return len;
-> +
-> +	for (i=0; i < gpio_charger->current_limit_map_size; i++) {
-> +		if (gpio_charger->current_limit_map[i].limit_ua > cur_limit) {
-> +			dev_err(dev, "invalid charge-current-limit-mapping\n");
-Would make sense to use something more descriptive than "invalid". Say "not
-sorted by current descending order"?
+> +       ring->tail = (ring->tail + 1) % MTK_MAC_RING_NUM_DESCS;
+> +       ring->count--;
 
+I would get rid of the 'count' here, as it duplicates the information
+that is already known from the difference between head and tail, and you
+can't update it atomically without holding a lock around the access to
+the ring. The way I'd do this is to have the head and tail pointers
+in separate cache lines, and then use READ_ONCE/WRITE_ONCE
+and smp barriers to access them, with each one updated on one
+thread but read by the other.
 
-> @@ -137,18 +270,19 @@ static int gpio_charger_probe(struct platform_device *pdev)
-
->  	/*
->  	 * If this fails and we're not using device tree, try the
->  	 * legacy platform data method.
->  	 */
-> -	if (IS_ERR(gpio_charger->gpiod) && !dev->of_node) {
-> +	if (!gpio_charger->gpiod && !dev->of_node) {
-The original code will attempt the legacy code for ... (from the doc)
-
- * ..., -ENOENT if no GPIO has been assigned to the requested function, or
- * another IS_ERR() code if an error occurred while trying to acquire the GPIO.
-
-While the new code will only consider -ENOENT.
-
-Using IS_ERR_OR_NULL(gpio_charger->gpiod) should preserve the original
-behaviour.
-
-
->  		/* Non-DT: use legacy GPIO numbers */
->  		if (!gpio_is_valid(pdata->gpio)) {
->  			dev_err(dev, "Invalid gpio pin in pdata\n");
-> @@ -173,18 +307,38 @@ static int gpio_charger_probe(struct platform_device *pdev)
->  		return PTR_ERR(gpio_charger->gpiod);
->  	}
->  
-> +	if (gpio_charger->gpiod &&
-> +	    num_props < ARRAY_SIZE(gpio_charger_properties)) {
-> +		gpio_charger_properties[num_props] = POWER_SUPPLY_PROP_ONLINE;
-The ARRAY_SIZE() check here (and below) are always true, albeit not dead code.
-
-IMHO the beefy comment above gpio_charger_properties, plus review process is
-enough to catch these issues, so it can be dropped.
-
-
->  	charger_desc = &gpio_charger->charger_desc;
->  	charger_desc->properties = gpio_charger_properties;
-
-Aside: any particular reason why power_supply_desc::properties isn't const?
-
--Emil
+     Arnd
