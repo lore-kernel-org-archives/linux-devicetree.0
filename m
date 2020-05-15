@@ -2,137 +2,94 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521E7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84008C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391A6207C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C96207C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgEOPIV (ORCPT
+        id S1726240AbgEOPJK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 11:08:21 -0400
-Received: from mga06.intel.com ([134.134.136.31]:30332 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgEOPIV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 11:08:21 -0400
-IronPort-SDR: 03KPQs3+8c13VIvq/NtdVP3rq732cgCH+NnjvI2mK9bJmLaSymBZUcKI9/8Y/TuzLIlfhVz58g
- wuiCCLosyTRA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 08:08:21 -0700
-IronPort-SDR: KN+Wg87nK8SnMqebrA5QJEz/3xsD/rYTEyQsxaeuNjYdmePiwQbiGrKQN3c/S0v5063fyk0q1N
- z8hCmYZjdaSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="253813911"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 08:08:16 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZbwg-006tV6-Bb; Fri, 15 May 2020 18:08:18 +0300
-Date:   Fri, 15 May 2020 18:08:18 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Jay Fang <f.fangjian@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 17/19] spi: dw: Add DMA support to the DW SPI MMIO
- driver
-Message-ID: <20200515150818.GP1634618@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-18-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-18-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Fri, 15 May 2020 11:09:10 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:21397 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726219AbgEOPJK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 11:09:10 -0400
+X-IronPort-AV: E=Sophos;i="5.73,395,1583161200"; 
+   d="scan'208";a="47188317"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 16 May 2020 00:09:07 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AC0BB400D4CD;
+        Sat, 16 May 2020 00:09:03 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/17] RZ/G1H describe I2C, IIC, MMC0, SATA, AVB, RWDT and APMU nodes
+Date:   Fri, 15 May 2020 16:08:40 +0100
+Message-Id: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:56PM +0300, Serge Semin wrote:
-> Since the common code in the spi-dw-dma.c driver is ready to be used
-> by the MMIO driver and now provides a method to generically (on any
-> DT or ACPI-based platforms) retrieve the Tx/Rx DMA channel handlers,
-> we can use it and a set of the common DW SPI DMA callbacks to enable
-> DMA at least for generic "snps,dw-apb-ssi" and "snps,dwc-ssi-1.01a"
-> devices.
+Hi All,
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This patch series describes i2c, iic, mmc0, sdhi, sata, AVB, apmu and
+RWDT on R8A7742 SoC.
 
-> 
-> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  drivers/spi/spi-dw-mmio.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-> index 0894b4c09496..e23d0c53a664 100644
-> --- a/drivers/spi/spi-dw-mmio.c
-> +++ b/drivers/spi/spi-dw-mmio.c
-> @@ -149,6 +149,8 @@ static int dw_spi_dw_apb_init(struct platform_device *pdev,
->  	/* Register hook to configure CTRLR0 */
->  	dwsmmio->dws.update_cr0 = dw_spi_update_cr0;
->  
-> +	dw_spi_dma_setup_generic(&dwsmmio->dws);
-> +
->  	return 0;
->  }
->  
-> @@ -158,6 +160,8 @@ static int dw_spi_dwc_ssi_init(struct platform_device *pdev,
->  	/* Register hook to configure CTRLR0 */
->  	dwsmmio->dws.update_cr0 = dw_spi_update_cr0_v1_01a;
->  
-> +	dw_spi_dma_setup_generic(&dwsmmio->dws);
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.25.1
-> 
+Cheers,
+Prabhakar
+
+Lad Prabhakar (17):
+  dt-bindings: i2c: renesas,i2c: Document r8a7742 support
+  dt-bindings: i2c: renesas,iic: Document r8a7742 support
+  ARM: dts: r8a7742: Add I2C and IIC support
+  dt-bindings: mmc: renesas,sdhi: Document r8a7742 support
+  mmc: renesas_sdhi_sys_dmac: Add support for r8a7742 SoC
+  ARM: dts: r8a7742: Add SDHI nodes
+  ARM: dts: r8a7742: Add MMC0 node
+  dt-bindings: ata: renesas,rcar-sata: Add r8a7742 support
+  ARM: dts: r8a7742: Add sata nodes
+  dt-bindings: net: renesas,ravb: Add support for r8a7742 SoC
+  dt-bindings: net: renesas,ether: Document R8A7742 SoC
+  ARM: dts: r8a7742: Add Ethernet AVB support
+  ARM: dts: r8a7742: Add Ether support
+  dt-bindings: power: renesas,apmu: Document r8a7742 support
+  ARM: dts: r8a7742: Add APMU nodes
+  dt-bindings: watchdog: renesas,wdt: Document r8a7742 support
+  ARM: dts: r8a7742: Add RWDT node
+
+ .../devicetree/bindings/ata/renesas,rcar-sata.yaml |   1 +
+ .../devicetree/bindings/i2c/renesas,i2c.txt        |   1 +
+ .../devicetree/bindings/i2c/renesas,iic.txt        |   1 +
+ .../devicetree/bindings/mmc/renesas,sdhi.txt       |   1 +
+ .../devicetree/bindings/net/renesas,ether.yaml     |   1 +
+ .../devicetree/bindings/net/renesas,ravb.txt       |   1 +
+ .../devicetree/bindings/power/renesas,apmu.yaml    |   1 +
+ .../devicetree/bindings/watchdog/renesas,wdt.txt   |   1 +
+ arch/arm/boot/dts/r8a7742.dtsi                     | 270 +++++++++++++++++++++
+ drivers/mmc/host/renesas_sdhi_sys_dmac.c           |   1 +
+ 10 files changed, 279 insertions(+)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.7.4
 
