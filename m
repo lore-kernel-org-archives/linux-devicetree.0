@@ -2,255 +2,237 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED86C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC25C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D29720759
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6586A206B6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:32:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXEYEEqc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcmQAMrE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgEOK2y (ORCPT
+        id S1728361AbgEOKcb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 06:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
+        Fri, 15 May 2020 06:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbgEOK2x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 06:28:53 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1762FC05BD0A
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 03:28:53 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j5so2949994wrq.2
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 03:28:52 -0700 (PDT)
+        with ESMTP id S1728144AbgEOKca (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 06:32:30 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F754C061A0C;
+        Fri, 15 May 2020 03:32:29 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id h10so2074784iob.10;
+        Fri, 15 May 2020 03:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
-        b=CXEYEEqcvkty6QbjHU8IC9+4m00nYkEX+SNv9RcxVR5/SFF+YXke+BvJ6oVoOabQdZ
-         zNfD971SDDWzHM8i6tMy7Ide1qyTwoimukooCDQG010KoMF5GvG2qiwCDrJzTOJ/ST1J
-         prbm8Ynnzt8vqseddRKMMZbinTDqtdohbq4rUwGgpc6TUwZFSsD+mzok7VbjTnaA+NPE
-         7SxmiCj38OP6B2dbzDqJc0ZqywE58/rTxvAnd+HOSQ/e7PuK5vIet7N3V1P5fBuJTFqx
-         810hQ3AwpINxJ1EOF2q5K54I50ZckVeqd/fsfxWyzTJVbsxau3rGuKWQxQF/tGuS+Hp3
-         egGA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mp1O72Xdq00O8JgDXWC/mDotxQHEbyc0hg/iAsVvAgY=;
+        b=vcmQAMrEzsV4FG1L5QpLXkqBOrQ5OWuYdGlR8+ygcxJg+F5fPgRqdFWYKvqJJgU4mT
+         zG2aAW2Aaxx8HmPIlfVGBlGU+Tu3x3HW3wNhOb0imgignadU5yAYy5edOXWWGXi/0Na4
+         0SCSsnOjKh6NZ89GJ/Z1th6BYn3bZVjgPzwjCcYTGdFvmRZ+d8292zz6Fa+rLu1nDRVS
+         nqtULSE9iytN1Ux/XqwoX0F6IiuTkU6cBgvLoTaXjmrYNhB/2fbpLk/00zSQBHvVF91s
+         Hv+b2E+JxXaSCT1p0PXKvweG2iD7xl6BSOXRJs6N8uGBGhhsdZ7fLsuZ6pWRxwXozdGD
+         zlCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
-        b=oJf+npdS8uw73Kba/xZ1Mpd3rQjNuS4tTeiFPQIHGNG9F0HMGwRO4PbJtcmTRk0yUH
-         whQh+M6qcPfGxtKX3FAiOLxNFoGcqGwl46VPrXoQifyaq4nsIQz0H1ZJiwMYhpuJHGen
-         9PjQI5oi5YQnS0kO69cvFIziumn105nA+Vs4DbhG8Ko4m1wgnZgCmKQBCiIIjnZZwGD7
-         /gQQ7h7LYUmNHdhxl4RsGp0BpFQNpPW2yhHp14hqEnJl4Y+dZW/Wk4P/0ahjEBWFzR5E
-         /V00RvdLEE+0CUm2aePFFMdWWIRmNe7eeNUAy70W0H/rGktYrYrEsuXWYM/84xDEpd0x
-         P5SQ==
-X-Gm-Message-State: AOAM53374kusnbgxGyjBrHQ/oLGesRncuUP+wrMczaosViBCJnKoTGWK
-        sGmEvxfKjz85IAgleByDMJPAFw==
-X-Google-Smtp-Source: ABdhPJxTv+9YnkgoMuYBGuW3wQDNEiVk0bNzw09WJsjwgIV7JP0J+YUnU47dJL1yqsEb92xCMVOBXw==
-X-Received: by 2002:adf:a1d7:: with SMTP id v23mr3514719wrv.155.1589538531500;
-        Fri, 15 May 2020 03:28:51 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id j16sm2878629wru.13.2020.05.15.03.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 03:28:50 -0700 (PDT)
-Date:   Fri, 15 May 2020 11:28:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200515102848.GH271301@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mp1O72Xdq00O8JgDXWC/mDotxQHEbyc0hg/iAsVvAgY=;
+        b=tIxLynNDKCBNNubK2SV154a6aqgDs+TLD79/uYoyXwykQBAl08x80bK1Rzbpg09eMf
+         Lw0EYB9dGstitqYlA1JgmGr3yuXNnFOW4vm9gV62UYLT1/+/xow9EOje4kT8US1LXB9M
+         O5DFGNDpeLtdpx1YAOE1wtcubFaVGjqXKul+aoXG+0LNFmYV2eNTfE4bg+hTL7kS7KAk
+         TMAm8pWVN6gkakdyEkBEQ1XVmsgGL+xyzu2yJucpsAYVZgstbT92kGd9b3b8Gx6zV909
+         N/g92dAjO6zyeSD6BptW1cxk1zhs4PGMsiW4sSFUGspqMHr60lwFbRhNClYYTrSty+4R
+         5SuA==
+X-Gm-Message-State: AOAM530dhGc5N3Vtd8zmP2vyWO8UeqfMo+DNxoWhAjTk1k4INdNDbJZC
+        TbX4JPAPpbo682l9DibMZt3kL1PJZJmeOLQCkYM=
+X-Google-Smtp-Source: ABdhPJySFDwer7KjH89ACOdbQCrAFJYmz3PmcTnEmry2cPWkqSChoUu+TiNgN9tnSrdVOfv81ypAYcyv/WXFLRq7XEE=
+X-Received: by 2002:a02:ac1:: with SMTP id 184mr2566280jaw.137.1589538748835;
+ Fri, 15 May 2020 03:32:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+ <1589267017-17294-5-git-send-email-dillon.minfei@gmail.com> <158949014721.215346.12197373767247910756@swboyd.mtv.corp.google.com>
+In-Reply-To: <158949014721.215346.12197373767247910756@swboyd.mtv.corp.google.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Fri, 15 May 2020 18:31:52 +0800
+Message-ID: <CAL9mu0J7t5Qbe2VQexn8=ZDbcOiCzc0cSnfZRKTjeM5Uyi_x-A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] clk: stm32: Fix stm32f429 ltdc driver loading hang
+ in clk set rate. keep ltdc clk running after kernel startup
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Dave Airlie <airlied@linux.ie>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>, thierry.reding@gmail.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Apr 2020, Michael Walle wrote:
+Hi Stephen,
 
-> Hi Lee,
-> 
-> Am 2020-04-23 19:45, schrieb Michael Walle:
-> > There might be multiple children with the device tree compatible, for
-> > example if a MFD has multiple instances of the same function. In this
-> > case only the first is matched and the other children get a wrong
-> > of_node reference.
-> > Add a new option to match also against the unit address of the child
-> > node. Additonally, a new helper OF_MFD_CELL_REG is added.
-> 
-> 
-> Do you think this is feasible? I guess this is the biggest uncertainty
-> for me at the moment in this patch series.
+thanks for reviewing.
 
-I think it sounds fine in principle.  So long as it doesn't change the
-existing behaviour when of_reg isn't set.
+On Fri, May 15, 2020 at 5:02 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting dillon.minfei@gmail.com (2020-05-12 00:03:36)
+> > From: dillon min <dillon.minfei@gmail.com>
+> >
+> > as store stm32f4_rcc_register_pll return to the wrong offset of clks,
+>
+> Use () on functions, i.e. stm32f4_rcc_register_pll().
+ok
+>
+> > so ltdc gate clk is null. need change clks[PLL_VCO_SAI] to clks[PLL_SAI]
+>
+> And quote variables like 'clks[PLL_VCO_SAI]'
+ok
+>
+> >
+> > add CLK_IGNORE_UNUSED for ltdc to make sure clk not be freed by
+> > clk_disable_unused
+>
+> clk_disable_unused() doesn't free anything. Why does ltdc not need to be
+> turned off if it isn't used? Is it critical to system operation? Should
+> it be marked with the critical clk flag then? The CLK_IGNORE_UNUSED flag
+> is almost always wrong to use.
 
-> > Signed-off-by: Michael Walle <michael@walle.cc>
+Yes, you are right. thanks. CLK_IGNORE_UNUSED just hide the root
+cause. after deeper debugging.
+i need to drop the last changes , they are not the root cause.
+
+post diff and analyse here first, i will resubmit clk's changes in
+next patchset with gyro and ili9341.
+
+--- a/drivers/clk/clk-stm32f4.c
++++ b/drivers/clk/clk-stm32f4.c
+@@ -129,8 +129,6 @@ static const struct stm32f4_gate_data
+stm32f429_gates[] __initconst = {
+        { STM32F4_RCC_APB2ENR, 20,      "spi5",         "apb2_div" },
+        { STM32F4_RCC_APB2ENR, 21,      "spi6",         "apb2_div" },
+        { STM32F4_RCC_APB2ENR, 22,      "sai1",         "apb2_div" },
+-       { STM32F4_RCC_APB2ENR, 26,      "ltdc",         "apb2_div",
+-               CLK_IGNORE_UNUSED },
+ };
+
+ static const struct stm32f4_gate_data stm32f469_gates[] __initconst = {
+@@ -558,13 +556,13 @@ static const struct clk_div_table post_divr_table[] = {
+
+ #define MAX_POST_DIV 3
+ static const struct stm32f4_pll_post_div_data  post_div_data[MAX_POST_DIV] = {
+-       { CLK_I2SQ_PDIV, PLL_I2S, "plli2s-q-div", "plli2s-q",
++       { CLK_I2SQ_PDIV, PLL_VCO_I2S, "plli2s-q-div", "plli2s-q",
+                CLK_SET_RATE_PARENT, STM32F4_RCC_DCKCFGR, 0, 5, 0, NULL},
+
+-       { CLK_SAIQ_PDIV, PLL_SAI, "pllsai-q-div", "pllsai-q",
++       { CLK_SAIQ_PDIV, PLL_VCO_SAI, "pllsai-q-div", "pllsai-q",
+                CLK_SET_RATE_PARENT, STM32F4_RCC_DCKCFGR, 8, 5, 0, NULL },
+
+-       { NO_IDX, PLL_SAI, "pllsai-r-div", "pllsai-r", CLK_SET_RATE_PARENT,
++       { NO_IDX, PLL_VCO_SAI, "pllsai-r-div", "pllsai-r", CLK_SET_RATE_PARENT,
+                STM32F4_RCC_DCKCFGR, 16, 2, 0, post_divr_table },
+ };
+
+@@ -1758,7 +1756,7 @@ static void __init stm32f4_rcc_init(struct
+device_node *np)
+        clks[PLL_VCO_I2S] = stm32f4_rcc_register_pll("vco_in",
+                        &data->pll_data[1], &stm32f4_clk_lock);
+
+-       clks[PLL_SAI] = stm32f4_rcc_register_pll("vco_in",
++       clks[PLL_VCO_SAI] = stm32f4_rcc_register_pll("vco_in",
+                        &data->pll_data[2], &stm32f4_clk_lock);
+
+        for (n = 0; n < MAX_POST_DIV; n++) {
+
+issue 1: ili9341 hang in clk set rate, the root cause should be
+PLL_VCO_SAI, PLL_SAI mismatch
+for 'clks[]'
+
+1, first at stm32f4_rcc_init() ,
+    clks[PLL_VCO_SAI] = stm32f4_rcc_register_pll("vco_in",
+                        &data->pll_data[2], &stm32f4_clk_lock);
+   the clk_hw from stm32f4_rcc_register_pll() is store to 'clks[7]', defined in
+   'include/dt-bindings/clock/stm32fx-clock.h'
+
+2, next
+hw = clk_register_pll_div(post_div->name,
+                                post_div->parent,
+                                post_div->flag,
+                                base + post_div->offset,
+                                post_div->shift,
+                                post_div->width,
+                                post_div->flag_div,
+                                post_div->div_table,
+                                clks[post_div->pll_num],
+                                &stm32f4_clk_lock);
+the 'clks[post_div->pll_num]', the pll_num is PLL_SAI, the value is 2,
+defined at
+enum {
+        PLL,
+        PLL_I2S,
+        PLL_SAI,
+};
+'post_div_data[]'
+
+so 7 != 2 offset of 'clks[]', input the wrong 'clks[]' to
+clk_register_pll_div. cause to_clk_gate result is null,
+crashed in ltdc driver's loading.
+
+issue 2: clk_disable_unused() turn off ltdc clock.
+1, ltdc clk is defined in 'stm32f429_gates[]', register to clk core,
+but there is no user to use it.
+    ltdc driver use dts binding name "lcd", connect to CLK_LCD, then
+aux clk 'lcd-tft '
+2, as no one use 'stm32f429_gates[]' s ltdc clock , so the
+enable_count is zero, after kernel startup
+    it's been turn off by clk_disable_unused() is fine.
+
+my chages for this is remove the ltdc from 'stm32f429_gates[]'
+but this modification still need 'clk-stm32f4.c''s maintainer to check
+if there is side effect.
+
+>
+> >
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
 > > ---
-> >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
-> >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
-> >  2 files changed, 40 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > index e735565969b3..4ecb376338f7 100644
-> > --- a/drivers/mfd/mfd-core.c
-> > +++ b/drivers/mfd/mfd-core.c
-> > @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, int
-> > id,
-> >  	struct device_node *np = NULL;
-> >  	int ret = -ENOMEM;
-> >  	int platform_id;
-> > +	u32 of_reg;
-> >  	int r;
-> > 
-> >  	if (id == PLATFORM_DEVID_AUTO)
-> > @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent,
-> > int id,
-> > 
-> >  	if (parent->of_node && cell->of_compatible) {
-> >  		for_each_child_of_node(parent->of_node, np) {
-> > -			if (of_device_is_compatible(np, cell->of_compatible)) {
-> > -				if (!of_device_is_available(np)) {
-> > -					/* Ignore disabled devices error free */
-> > -					ret = 0;
-> > -					goto fail_alias;
-> > -				}
-> > -				pdev->dev.of_node = np;
-> > -				pdev->dev.fwnode = &np->fwnode;
-> > -				break;
-> > +			if (!of_device_is_compatible(np, cell->of_compatible))
-> > +				continue;
-> > +
-> > +			/* also match the unit address if set */
-
-Please use correct grammar in comments (leaving off the full-stop).
-
-> > +			if (cell->of_reg & MFD_OF_REG_VALID) {
-> > +				if (of_property_read_u32(np, "reg", &of_reg))
-> > +					continue;
-> > +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
-> > +					continue;
-> >  			}
-> > +
-> > +			if (!of_device_is_available(np)) {
-> > +				/* Ignore disabled devices error free */
-> > +				ret = 0;
-> > +				goto fail_alias;
-> > +			}
-> > +
-> > +			pdev->dev.of_node = np;
-> > +			pdev->dev.fwnode = &np->fwnode;
-> > +			break;
-> >  		}
-> >  	}
-> > 
-> > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> > index d01d1299e49d..c2c0ad6b14f3 100644
-> > --- a/include/linux/mfd/core.h
-> > +++ b/include/linux/mfd/core.h
-> > @@ -13,8 +13,11 @@
-> >  #include <linux/platform_device.h>
-> > 
-> >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
-> > +#define MFD_OF_REG_VALID	BIT(31)
-
-What about 64bit platforms?
-
-> > +#define MFD_OF_REG_MASK		GENMASK(30, 0)
-> > 
-> > -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,
-> > _match)\
-> > +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     _of_reg, _match)					\
-> >  	{								\
-> >  		.name = (_name),					\
-> >  		.resources = (_res),					\
-> > @@ -22,24 +25,32 @@
-> >  		.platform_data = (_pdata),				\
-> >  		.pdata_size = (_pdsize),				\
-> >  		.of_compatible = (_compat),				\
-> > +		.of_reg = (_of_reg),					\
-> >  		.acpi_match = (_match),					\
-> >  		.id = (_id),						\
-> >  	}
-> > 
-> > +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +			_of_reg)					\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
-> > +
-> >  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     0, NULL)						\
-> > 
-> >  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
-> > +		     _match)						\
-> > 
-> >  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
-> > 
-> >  #define MFD_CELL_RES(_name, _res)					\
-> > -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
-> > +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
-> > 
-> >  #define MFD_CELL_NAME(_name)						\
-> > -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
-> > +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
-> > 
-> >  struct irq_domain;
-> >  struct property_entry;
-> > @@ -78,6 +89,9 @@ struct mfd_cell {
-> >  	 */
-> >  	const char		*of_compatible;
-> > 
-> > +	/* matching the reg property if set */
-
-Proper grammar please.
-
-"OF unit address for device matching"
-
-> > +	unsigned int		of_reg;
-> > +
-> >  	/* Matches ACPI */
-> >  	const struct mfd_cell_acpi_match	*acpi_match;
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> >  drivers/clk/clk-stm32f4.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+> > index 18117ce..0ba73de 100644
+> > --- a/drivers/clk/clk-stm32f4.c
+> > +++ b/drivers/clk/clk-stm32f4.c
+> > @@ -129,7 +129,8 @@ static const struct stm32f4_gate_data stm32f429_gates[] __initconst = {
+> >         { STM32F4_RCC_APB2ENR, 20,      "spi5",         "apb2_div" },
+> >         { STM32F4_RCC_APB2ENR, 21,      "spi6",         "apb2_div" },
+> >         { STM32F4_RCC_APB2ENR, 22,      "sai1",         "apb2_div" },
+> > -       { STM32F4_RCC_APB2ENR, 26,      "ltdc",         "apb2_div" },
+> > +       { STM32F4_RCC_APB2ENR, 26,      "ltdc",         "apb2_div",
+> > +               CLK_IGNORE_UNUSED },
+> >  };
+> >
+> >  static const struct stm32f4_gate_data stm32f469_gates[] __initconst = {
+> > @@ -1757,7 +1758,7 @@ static void __init stm32f4_rcc_init(struct device_node *np)
+> >         clks[PLL_VCO_I2S] = stm32f4_rcc_register_pll("vco_in",
+> >                         &data->pll_data[1], &stm32f4_clk_lock);
+> >
+> > -       clks[PLL_VCO_SAI] = stm32f4_rcc_register_pll("vco_in",
+> > +       clks[PLL_SAI] = stm32f4_rcc_register_pll("vco_in",
+> >                         &data->pll_data[2], &stm32f4_clk_lock);
+> >
+> >         for (n = 0; n < MAX_POST_DIV; n++) {
