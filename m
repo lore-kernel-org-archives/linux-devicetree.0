@@ -2,90 +2,110 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697B1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 03:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAECC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 03:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 337B02054F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 03:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589512631;
-	bh=4C4ycRUntkh87efB5sE/tm70yuxj1hXuChLPADysSzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UUfFrksTin+a3umv27vzOdO14YnGRt6suWj2SrFluQctKAezpl3RbSWDdYAjVE+pa
-	 cnip5mhn2ILiOVTh/UCkgHrSz1KURLYtnR1hVPPHI6ESrz67VpIQzzU4e17JSE4zY9
-	 APwfMcK2wzqbcee4C1ew88iWtybE2QfawkBN4qrE=
+	by mail.kernel.org (Postfix) with ESMTP id 660B8206DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 03:57:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZGcHekf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgEODRK (ORCPT
+        id S1728345AbgEOD5R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 23:17:10 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44252 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726176AbgEODRK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 May 2020 23:17:10 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a2so982801oia.11;
-        Thu, 14 May 2020 20:17:10 -0700 (PDT)
+        Thu, 14 May 2020 23:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728119AbgEOD5Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 May 2020 23:57:16 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52AF6C05BD0B
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 20:57:16 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id x5so1201020ioh.6
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 20:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nOIJwK9iadOQS8VS9oX0d0eobJTm/S5dRf232DfhV2Q=;
+        b=jZGcHekf36InUx+/RT41yJ39LwB4eBQd7vT66ue0xAbo5xTuZa/i0CJGeuQo7uasFj
+         KWR4W7zbDPi+yq6TlwQ/zf00VGEQsa9I4hgKLRy95YYxTa/7/vLLZ4zckSK3fiLThmnp
+         7APyzonChcoUD6QuyiXT4zmroeoUonhrx7iX00yfVl9XCl3PDxXPwMf1n6VJgz6HgOY+
+         A99tLzeweiB5AaZ9lVTuw1dif9/03YSktMiID+xWBMBqbu3KL5JcKrJE0YqaeoLj+OtY
+         31xcKDIp1GOlgt95Lo/67hHz6ooA4vlcpH+Xi4ndyRh2QHgKM65UGQ6Ra684eiFjo8Jq
+         6sig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cg886WtTenbgiEe14/3Z+QrAl6uqIU+XFzLFxY3ocVs=;
-        b=fjTqqSS92WA9hF4Aa0iRejQO16D7VCKVCq3BHcjK8/wR5ktp83930mGyTZ2/ja0Wpi
-         YdP59XR7zqsKg8ma6YnDtkNSlmrEAQ9SDliLvRuvWVjuk6n6kPE6cN0DenFDICMNXU3n
-         BHF0nX20+8T715PU8x2A/6DfBi3BpJ3OZBbHpxNZVSk46onublNeofuUyrwgXNAmuDf0
-         skzaVPEuVbrwZHSpg/QTm1Y3Hu5FlVrVhXvG20a51cZpB0Zh9JLjZdh5CIK8OKHiCMBm
-         DsRRkD5xzAX6mCRyRfSJ1wkszMl+ZddlNnKsfeO0pKxWDuh6D2Lxup7MfhYFzJRm4E8L
-         YmDQ==
-X-Gm-Message-State: AOAM531im3KAY82UK7vAKWX48CLkJIdzgALExdrU/JCJaFb6RaKt5JBa
-        N/tGbfr1ctsJL+sUE3XuHw==
-X-Google-Smtp-Source: ABdhPJx86g0hoTKASew6ChT92rGRrKIzjg4EHMkFeMEsNXruUCeUNgVuswoc+pEB6xTa8PwJBz7ZJA==
-X-Received: by 2002:aca:b2c1:: with SMTP id b184mr769083oif.57.1589512629659;
-        Thu, 14 May 2020 20:17:09 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p18sm120917oth.2.2020.05.14.20.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 20:17:09 -0700 (PDT)
-Received: (nullmailer pid 4527 invoked by uid 1000);
-        Fri, 15 May 2020 03:17:08 -0000
-Date:   Thu, 14 May 2020 22:17:08 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v3 20/20] dt-bindings: ehci/ohci: Allow iommus property
-Message-ID: <20200515031708.GA4452@bogus>
-References: <20200513103016.130417-1-andre.przywara@arm.com>
- <20200513103016.130417-21-andre.przywara@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nOIJwK9iadOQS8VS9oX0d0eobJTm/S5dRf232DfhV2Q=;
+        b=JU+ItgySTv/rtFz4YF9aiB92e3YxUXPtPSNJacqSQZZROf/SEW9l7zoC5iz96nptKV
+         0AqM3FzT0Iw30G26mAA5P0cAHBD9FYGoN+Pt74wrnr4UMgilagIk9CCptoVy1KtuhwHw
+         uMcknbusr4+x5fZNeShHY4Cu+z+u7cHAtP80Ek6WlsMFz2bPRwbg5WVkgL+r2tC7LXqv
+         3GA3bzIfTadNKiP9Hdl0mhZ4pxMk2/ISpSmck+wKX6BVDKA1udtmYXGq6SQK7a0PyIHB
+         rSb80mzMxoI0b128oSfus5bWUrBWx9VviKIHAkaDN9JC2DbEJ39RfqU0ssOH+HRJtLvh
+         2qng==
+X-Gm-Message-State: AOAM532Vdn6HeyL4Niq6dlfAOa/SgfGzcUXBrpIBgy5uhWj/e+GuZmji
+        DPdTCTSFtlNjQZ3ii0RPkAaV/DHIoPqFU/f/VYDoFA==
+X-Google-Smtp-Source: ABdhPJz4yECgbKlvcTa70WHzfNcxbCgYqFO0xfvcC6KgNtx0n8f7dausExrVZi/vmEvOALHEs8Dq89VdSz06od9lItk=
+X-Received: by 2002:a6b:e60b:: with SMTP id g11mr1143301ioh.96.1589515035477;
+ Thu, 14 May 2020 20:57:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513103016.130417-21-andre.przywara@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org> <878shu4uwk.fsf@kernel.org>
+ <875zcy4uuj.fsf@kernel.org> <20200514171352.GP4525@google.com> <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org>
+In-Reply-To: <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Fri, 15 May 2020 09:27:03 +0530
+Message-ID: <CAKohpon+JBpV3fC7j=rhc1R4gi_mVG6teBDrE8Yryd4QXfw9bw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 11:30:16 +0100, Andre Przywara wrote:
-> A OHCI/EHCI controller could be behind an IOMMU, in which case an iommus
-> property assigns the stream ID for this device.
-> 
-> Allow that property in the DT bindings to fix a complaint about the Arm Juno
-> board's DTS file.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  Documentation/devicetree/bindings/usb/generic-ehci.yaml | 3 +++
->  Documentation/devicetree/bindings/usb/generic-ohci.yaml | 3 +++
->  2 files changed, 6 insertions(+)
-> 
+On Fri, 15 May 2020 at 02:33, Georgi Djakov <georgi.djakov@linaro.org> wrote:
 
-Applied, thanks!
+> ---8<---
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 206caa0ea1c6..6661788b1a76 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
+>         tristate "Qualcomm Platform"
+>         depends on ARCH_QCOM || COMPILE_TEST
+>         depends on EXTCON || !EXTCON
+> +       depends on INTERCONNECT || !INTERCONNECT
+
+Again, as I said yesterday. This looks incorrect and may not fix the problem..
+
+With this we will be able to select USB_DWC3_QCOM even when INTERCONNECT=m.
+
+What we perhaps need here is:
+depends on INTERCONNECT != m
+
+--
+viresh
