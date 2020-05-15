@@ -2,102 +2,150 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914E6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 19:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D7FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 20:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB0E2073E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 19:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15236205CB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 20:16:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WOdBZxkO"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="rasFNY6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgEOTxw (ORCPT
+        id S1726223AbgEOUQz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 15:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726212AbgEOTxw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 15:53:52 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDE6C05BD09
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 12:53:52 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id r22so1472678pga.12
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 12:53:52 -0700 (PDT)
+        Fri, 15 May 2020 16:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbgEOUQz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 16:16:55 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05174C05BD09
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 13:16:53 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b6so3607317ljj.1
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 13:16:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5qtf7blhXztbp1/La11Bf9xlOpWMwbs2y8ergkt/b1Y=;
-        b=WOdBZxkO9ZlChGU9oTzTvFnzf5mUvWnxclG7T4JezJMXnEFbeWIBYnzv0c5jwu2xR9
-         Ua3N7q+nFby1Wl8Ij1gOb/0WxV2Lt/MvTh2s4lrob2lxAcR9KO41fQ13sdSZlN1Y3XVh
-         OTL4s6x9aG0YSd9i9ndrZNnBrE8K6mg0Mxnms=
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=43o0FGN5Fq1n1m6Sdyu6XN/2q9oPen95HONzGtG8NaI=;
+        b=rasFNY6KlPGGakeCYqdBKvuVpmFObIfbsTH8PsjJcVvMBa5zhm9K6BTFVJAtb7awk+
+         3yqX0uRkv+T5zsLqojPUDnycXDh5+NvsVRpHqVoJeRIA6t+6atb1t2vCeFzX7cY7ifny
+         du2XgSm2pOqgHhxIJP4+L0TYBoppN2GZl5fj+foJRbx4ykI/5TY6HRrwh2Dapx19hHbK
+         6SQdy9bl7cbOxhwtWYvDI+YlVQO3+S+9HunxTJULpJ726fcG1indWvBCE/g+C0dNbxsU
+         QMBwmrB7yMIBlIzQ7GjE84PsuhgAwwDUsn1iG4rbhTLp6qDe7CzSoyUaU9nLpP2YaROi
+         QJvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5qtf7blhXztbp1/La11Bf9xlOpWMwbs2y8ergkt/b1Y=;
-        b=kK1pz6iTIAgz5wSj98tZnWI7gVV+Vwm4Xe4NWbiPenTFs2dBtoORU53juWbFVn2aeX
-         /rW5N8mQtU/h+4aMPTeNRhMGncRLLSXUfpznYPLmgljsj3ESabKoHJePuZRfMxikrJTR
-         jwlGad4bae5mX1GclXr+tsQwdtnjSyIrlmoDEsJNMDQzve/8iB8CjUyPPxgkIY0a5jIL
-         ycjPkrwJsTaVtcMU0OzhqPW7Z85NNVVXxG22kKFdWV1yssN/sd1hm4q+KGBNXqnburSd
-         HbJrmcF+Gg8R1jdJtR2nBuRupp1NGlpX0uUmJsul/0510n7TmqzjuAB4i3EGVrqnLJcn
-         LPVQ==
-X-Gm-Message-State: AOAM533arVRstcDOZ3eFBXMsOiwZZ3OotvbGPS4YTN2RBFqB2HKnIHIh
-        GDHC8HnIhkk9tuorIjNxOyH2xA==
-X-Google-Smtp-Source: ABdhPJwUJ8/mvnjZpuvFRvd7Z7fsk0iW3ySHXxxVPnmOTQBwN+vIWkdIBNf95F25TgFzeLZ3qRQIkg==
-X-Received: by 2002:aa7:9a4c:: with SMTP id x12mr5517509pfj.263.1589572432046;
-        Fri, 15 May 2020 12:53:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h13sm2560838pfk.86.2020.05.15.12.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 12:53:51 -0700 (PDT)
-Date:   Fri, 15 May 2020 12:53:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Petr Mladek <pmladek@suse.com>, Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Benson Leung <bleung@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 5/6] pstore/ram: Introduce max_reason and convert
- dump_oops
-Message-ID: <202005151253.AF4AC00@keescook>
-References: <20200515184434.8470-1-keescook@chromium.org>
- <20200515184434.8470-6-keescook@chromium.org>
- <CA+CK2bCbAb1EN6xa9a-DRfan6Cv3YgZgPJ1buwUaej7jBRv=Kg@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=43o0FGN5Fq1n1m6Sdyu6XN/2q9oPen95HONzGtG8NaI=;
+        b=dmJ80M6SMlyd5uDag83/DIE97pHsA4WsMWRReKP55E3SuUuQ4+M8K1lvVSKr5iaOBO
+         lKmiLW9CAh+LtUHf9y57qCN+NdMHilZ7thaqjqEhztKc6uDemhV2yKRVcXS1CsdHUk6g
+         b0xhZS24baDUaRaMVwDePw5KA7OJ3KSoWRR3zqGQFn8QkDtohOplYI+b3NlRdzlHgYgq
+         hK6nVnX2r1ZMdyrmRHBWum5z2TFo8z1zh1EaEV0HeDGR2HbmGF6EjyShSr0NTZSSjhw8
+         /UVX9FfUPsoeDnKR+R2h4rdjpKUgz4MxqFd7X4dsrasGd1wRM7bY2VHB5EkCbERnbPEo
+         9Qjw==
+X-Gm-Message-State: AOAM5314yyoKmxKjguf/y6QnunKBfk3bMw7Lxsb1Zol+tn0VTGVpl6QK
+        a73tkbVA6pnIq8zM4hxsb6d8KA==
+X-Google-Smtp-Source: ABdhPJzJ0CcrmFTRJgrtQI0QnbyoaIej/mpNW+aorlA8gD+MJtby/F88yLom1QmTf+JS/p+fTH8xog==
+X-Received: by 2002:a2e:8807:: with SMTP id x7mr3331329ljh.173.1589573812303;
+        Fri, 15 May 2020 13:16:52 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:42eb:aebe:5652:2324:c9fa:fb8])
+        by smtp.gmail.com with ESMTPSA id o18sm1623971ljc.73.2020.05.15.13.16.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 May 2020 13:16:51 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] dt-bindings: memory: document Renesas RPC-IF
+ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        linux-mtd@lists.infradead.org
+References: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
+ <116683d1-d402-4d7f-3357-1c8cde807076@cogentembedded.com>
+ <20200501211945.GA15294@bogus>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <52ffabcd-048f-9ba8-a65f-4a22e60866bb@cogentembedded.com>
+Date:   Fri, 15 May 2020 23:16:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CK2bCbAb1EN6xa9a-DRfan6Cv3YgZgPJ1buwUaej7jBRv=Kg@mail.gmail.com>
+In-Reply-To: <20200501211945.GA15294@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:40:14PM -0400, Pavel Tatashin wrote:
->  pdata.dump_oops = dump_oops;
-> > +       /* If "max_reason" is set, its value has priority over "dump_oops". */
-> > +       if (ramoops_max_reason != -1)
-> > +               pdata.max_reason = ramoops_max_reason;
+On 05/02/2020 12:19 AM, Rob Herring wrote:
+
+>> Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
+>> HyperFlash connected to the SoC to be accessed via the external address
+>> space read mode or the manual mode.
+>>
+>> Document the device tree bindings for the Renesas RPC-IF found in the R-Car
+>> gen3 SoCs.
+>>
+>> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>> Changes in version 2:
+>> - rewrote the bindings in YAML.
+>>
+>>  Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml |   88 ++++++++++
+>>  1 file changed, 88 insertions(+)
+>>
 > 
->  (ramoops_max_reason >= 0) might make more sense here, we do not want
-> negative max_reason even if it was provided by the user.
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml:  while scanning a simple key
+>   in "<unicode string>", line 29, column 9
+> could not find expected ':'
+>   in "<unicode string>", line 30, column 1
+> Documentation/devicetree/bindings/Makefile:11: recipe for target 'Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.example.dts] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml: ignoring, error parsing file
+> warning: no schema found in file: Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml: ignoring, error parsing file
+> warning: no schema found in file: Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
+> Makefile:1300: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1280942
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
 
-Yeah, that's a good point. I'll tweak that. Thanks!
+   As I've said on IRC, I have troubles installing from dt-schema.git:
 
--- 
-Kees Cook
+[headless@wasted renesas-devel]$ pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade 
+Collecting git+https://github.com/devicetree-org/dt-schema.git@master
+  Cloning https://github.com/devicetree-org/dt-schema.git (to master) to /tmp/pip-4f91j8zd-build
+Collecting ruamel.yaml>0.15.69 (from dtschema==2020.6.dev4+g6a941d4)
+  Using cached https://files.pythonhosted.org/packages/a6/92/59af3e38227b9cc14520bf1e59516d99ceca53e3b8448094248171e9432b/ruamel.yaml-0.16.10-py2.py3-none-any.whl
+Collecting jsonschema>=3.0.1 (from dtschema==2020.6.dev4+g6a941d4)
+  Using cached https://files.pythonhosted.org/packages/c5/8f/51e89ce52a085483359217bc72cdbf6e75ee595d5b1d4b5ade40c7e018b8/jsonschema-3.2.0-py2.py3-none-any.whl
+Collecting rfc3987 (from dtschema==2020.6.dev4+g6a941d4)
+  Using cached https://files.pythonhosted.org/packages/65/d4/f7407c3d15d5ac779c3dd34fbbc6ea2090f77bd7dd12f207ccf881551208/rfc3987-1.3.8-py2.py3-none-any.whl
+Collecting ruamel.yaml.clib>=0.1.2 (from ruamel.yaml>0.15.69->dtschema==2020.6.dev4+g6a941d4)
+  Using cached https://files.pythonhosted.org/packages/92/28/612085de3fae9f82d62d80255d9f4cf05b1b341db1e180adcf28c1bf748d/ruamel.yaml.clib-0.2.0.tar.gz
+No files/directories in /tmp/pip-build-fwtgubpx/ruamel.yaml.clib/pip-egg-info (from PKG-INFO)
+You are using pip version 8.0.2, however version 20.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+
+MBR, Sergei
