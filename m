@@ -2,87 +2,81 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D261BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FA3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B425F207BB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 094B5207CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgEOPAf (ORCPT
+        id S1726163AbgEOPCc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 11:00:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726174AbgEOPAf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 11:00:35 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 472FFC061A0C;
-        Fri, 15 May 2020 08:00:35 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: evelikov)
-        with ESMTPSA id A7C892A2DB7
-Date:   Fri, 15 May 2020 15:57:55 +0100
-From:   Emil Velikov <emil.velikov@collabora.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Subject: Re: [PATCHv1 15/19] power: supply: sbs-battery: add ability to
- disable charger broadcasts
-Message-ID: <20200515145755.GD2836808@arch-x1c3>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
- <20200513185615.508236-16-sebastian.reichel@collabora.com>
+        Fri, 15 May 2020 11:02:32 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:57671 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgEOPCc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 11:02:32 -0400
+Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 18597240009;
+        Fri, 15 May 2020 15:02:28 +0000 (UTC)
+Date:   Fri, 15 May 2020 17:02:28 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     cristian.birsan@microchip.com
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] usb: gadget: udc: atmel: add usb device support
+ for SAM9x60 SoC
+Message-ID: <20200515150228.GW34497@piout.net>
+References: <20200515111631.31210-1-cristian.birsan@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513185615.508236-16-sebastian.reichel@collabora.com>
+In-Reply-To: <20200515111631.31210-1-cristian.birsan@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020/05/13, Sebastian Reichel wrote:
-> From: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-> 
-> In certain designs, it is possible to add a battery on a populated i2c
-> bus without an sbs compliant charger. In that case, the battery will
-> un-necessarily and sometimes un-desirably master the bus trying to write
-> info in the charger.
+Hi,
 
-Nit: s/un-/un/
+On 15/05/2020 14:16:24+0300, cristian.birsan@microchip.com wrote:
+> From: Cristian Birsan <cristian.birsan@microchip.com>
+> 
+> This patch set adds usb device support for SAM9x60 SoC.
+> The DPRAM memory for the USB High Speed Device Port (UDPHS) hardware
+> block was increased and the allocation method is changed. This patch
+> series simplifies the endpoint allocation scheme to acomodate this SoC
+> and the old ones.
+> 
+> Changes in v2:
+> - drop the patch that adds reference to pmc for sam9x60
+> - use dt-bindings: usb prefix
+> - enable usb device in device tree
+> 
+> Claudiu Beznea (1):
+>   usb: gadget: udc: atmel: use of_find_matching_node_and_match
+> 
+> Cristian Birsan (6):
+>   dt-bindings: usb: atmel: Update DT bindings documentation for sam9x60
+>   usb: gadget: udc: atmel: simplify endpoint allocation
+>   usb: gadget: udc: atmel: use 1 bank endpoints for control transfers
+>   usb: gadget: udc: atmel: rename errata into caps
+>   usb: gadget: udc: atmel: update endpoint allocation for sam9x60
+>   ARM: dts: at91: sam9x60ek: enable usb device
 
-> 
-> It is observed in many occasion that these battery "broadcasts" are even
-> corrupting other ongoing master to slave communication. I.e. the
-> multi-master support in the battery is inadequate.
-> 
-> Thankfully, the CHARGER_MODE bit allows designers to disable that SBS
-> battery behaviour.
-> 
-> This needs to be done once when the battery is first seen on the bus.
-> 
-> Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-> [rebased code]
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
+This should probably be rebased on top of
+https://lore.kernel.org/linux-arm-kernel/20200507155651.1094142-1-gregory.clement@bootlin.com/
+so we avoid having to define the endpoints in the device tree in the
+first place.
 
-> @@ -1017,6 +1043,9 @@ static int sbs_probe(struct i2c_client *client,
->  	}
->  	chip->i2c_retry_count = chip->i2c_retry_count + 1;
->  
-> +	chip->charger_broadcasts = !of_property_read_bool(client->dev.of_node,
-> +					"sbs,disable-charger-broadcasts");
-> +
-This patch adds the of_property_read, only for it to be replaced in the next
-patch. Consider flipping the patch order?
-
--Emil
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
