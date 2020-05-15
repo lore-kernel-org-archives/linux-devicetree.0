@@ -2,92 +2,95 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BBCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B83C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E49F62076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:27:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mehKCxEZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5822D2076A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgEOO10 (ORCPT
+        id S1726189AbgEOOap (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 10:27:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726144AbgEOO10 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 10:27:26 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA5FC061A0C;
-        Fri, 15 May 2020 07:27:26 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id a4so1037397pgc.0;
-        Fri, 15 May 2020 07:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=53n0NXxNogGd/faDRXKVA/bWobWfXTC9lWKhBDbKv8I=;
-        b=mehKCxEZtPNkQpDx0oskocLvG7NqA4fkwi1nzfp/DL6XUhZeUGQyhh8OKJqroIdvcc
-         f0Z02rs/kq5fx8LwLA/4HMHsnIWyjjYfp3vMuZrrcjiLZUE6IMugbRUxlLBHlsL7Od64
-         8fqJQnGVKGzQrYU8DXxxzIRJEJ+Q+3uSdg8YOyBL/K9fxgyp26zcPuk/Etkkxnf4PGg2
-         rX36wn8V/tZty5sO4IdIra7L5yyDQ6LTzlr7zjakz/+POV/t0Vo4GcP607WF2ftVXS8L
-         GGAGDKBDF+vsh8P+k9/O9E4Z1xrAa9/X4FylchFHv5pGteJdUJCMl4MvWvaZTM+3CeIB
-         y3MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=53n0NXxNogGd/faDRXKVA/bWobWfXTC9lWKhBDbKv8I=;
-        b=JqpOLdgrZevS8EPikxczfgrl0auX36DRJUN2C8XX2HFAcU9fCJqU2CnwOa0k3dldAC
-         dmD/ux+vq2pOwYspmUrlSiFgAcmimLC0VeUmBqQwcuN8NQZRhX7YJAbe4Z5whMmaFukR
-         6Xlv8ivYNsnBWcjnYNLBx8ovIwu4tVSx60dWoufi15rpAbR4iibYGlTx8V/FvTEYtoFF
-         Wau6B4hNyL8f+TXfGjbnbzLCzVBR2qLwGS7VCtlXM2pylhZN5HLkZTy2++Yt+EwmB8vs
-         +N7t8+gE4FMOlahM+atJ2bkIc7ybofpsJDjYwAQAi3YIqJWN3N0gDN9z34CE7JgKpzUY
-         WTpw==
-X-Gm-Message-State: AOAM532nIXvpLzr3b0PSZDRWtygOayv2LpJdwvmm09atRrjkMPVdgsMn
-        84KRtR62GaO0ja2EGJiLn4UQPiw3EdmnWASUGvw=
-X-Google-Smtp-Source: ABdhPJzS92KlQk6vGXcM8Vw9uXpx1E9E3au/e/+UxJQc18uHeaoAkWxn4K/nuitAUBEbmThwq+nxIpkDbhjQiOMUJLo=
-X-Received: by 2002:a62:f908:: with SMTP id o8mr4096022pfh.170.1589552845598;
- Fri, 15 May 2020 07:27:25 -0700 (PDT)
+        Fri, 15 May 2020 10:30:45 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:50191 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgEOOao (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 10:30:44 -0400
+Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mzydy-1jBtXI2Xgs-00x30o; Fri, 15 May 2020 16:30:42 +0200
+Received: by mail-qk1-f170.google.com with SMTP id g185so2686971qke.7;
+        Fri, 15 May 2020 07:30:42 -0700 (PDT)
+X-Gm-Message-State: AOAM531OacSyEhjr9MnZhauVdXCmOp2RQ//M8wvrjfb3P6Y8XgeWoeJ5
+        OYPXhkPxkfmVJdTbSDGfwALqh9F/u69gJ5uLeio=
+X-Google-Smtp-Source: ABdhPJzWWXgTORWkb4jbrO8K6QMT6N5lPpxFdl5UWPmbpX97RbGZ8EERls9fxqPwUdbnag+Twa+m+oPKAZzZIORJbmw=
+X-Received: by 2002:ae9:ed95:: with SMTP id c143mr3652955qkg.394.1589553041352;
+ Fri, 15 May 2020 07:30:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
  <202005152142.AWvx4xc5%lkp@intel.com> <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
 In-Reply-To: <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 15 May 2020 17:27:19 +0300
-Message-ID: <CAHp75VdUWaEAuStEQZD4yOWcxBT0EkxiX90u1_9vppFb5JniGQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 15 May 2020 16:30:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
+Message-ID: <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
 Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
  LGM SoC
-To:     kbuild test robot <lkp@intel.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        "Ramuthevar,Vadivel MuruganX" 
         <vadivel.muruganx.ramuthevar@linux.intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
         devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
-        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Vignesh R <vigneshr@ti.com>,
         Brendan Higgins <brendanhiggins@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Anders Roxell <anders.roxell@linaro.org>,
         masonccyang@mxic.com.tw
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:fyohI0+hw5ytppZoJZd/XmCfZsfVnsd6n3zCOrkbrMezdv5+tyv
+ X1oZ3f8TWbSVCNojpAAANE3s9hgV+BHNP6LkVn4/ajz1awkSkBB7fedgKs+pvRHGmEspvOQ
+ jIGR32OYo7AlhTB7FgCuUi80L3JUzvCcl+jMKYwZQ6cmhfpfv3ShlvuZJfHT5Byb82ei67p
+ M+8eac3TrEcNMivY2Nepg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Dytqvl0/TSg=:Yo6IWW/ehKu/h4tnfwlLhl
+ RTdaJMBmzma5uU2CHUAkNAZehZJ7HWaQvpUdyYFWBqRmBGLhPklkjexn5yi22aFSwLUsNmNoX
+ 45+joPlil9ynwS7gQN1zx3Z/fxUKGCVbwte8Dp5Hmw0W3DrGUP9XRKHzQ7ryJ031Iu44CLvLH
+ AC4EdILA++cw0ohjiIgMiDHCjUkWXLlhAwolpN/cqEYA9YHFhZG9NiI1k7LeeaHPIb5PE1wsy
+ 5nZxc4/BRJq1myYyh5pcUmdnOuPQa0vhBGBWnAC66+txIjIWUeAO1J/weZpxfOe0k++qj4FLF
+ Y4Vc/YHongNN99E15v2FuD1R1FIQe+T6Hw2JyUIbdb/k4iqULYquhWmcgzwNa+wLf/8rAJOrt
+ hPAd+uAySAIJ/O2i9iG8dkMHoKARFjP20RxkPHvXC5Myz7mjJn5zQ/pFH8KTQbAJm5b6TdOVJ
+ uUrASJLNxT+UEl8SV4OPMPY5ohHWgFkKH/eiUTeelpUOFJbnAudfYe5mazl3xV+zwCDBdxCYg
+ z24uWO/HjqNvxlak7DEbTkqMGb1SddlgBLkFNBn/XnVcZ+KrnulS2TzWEZTAtUbwmfbiBpI/v
+ pKBIZdSvaPK42Lwa8BWGl92uJAUfCeqios+EidpExdk5sYRkP5zk7I+Ymy+QjbH46LWTjDSq2
+ Mfo+T3ldOq0fkMvFwKqxLN3m4LydJclbM9VL5VK4BvgePjZ2VsmEZb7q9jABFJVkxAZbbcoeH
+ Qc8HhilEedCS5g0FJzupglyuhoZ6+ejXfzQlQ5dj1VJzeDCX8TCvC3iOCek2VcS+QH6nMzXzF
+ kmbzD3NbT9kuiC5eZLloP6axx0+u84iQ7UxRwAi75vBOkEjIFk=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:25 PM Andy Shevchenko
+On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
+>
 > On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
-
+>
+> > sparse warnings: (new ones prefixed by >>)
+> >
+> > >> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
+> > >> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    expected unsigned int val
+> > >> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    got restricted __be32 [assigned] [usertype] reg
+> >    drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
+> >    drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    expected unsigned int val
+> >    drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    got restricted __be32 [assigned] [usertype] reg
+> >
 > >    440                  reg = cpu_to_be32(*pdata++);
 > >  > 441                  writel(reg, ebu_host->hsnand + HSNAND_CMSG_0);
 > >    442
@@ -105,8 +108,7 @@ On Fri, May 15, 2020 at 5:25 PM Andy Shevchenko
 > Seems to me that the proper API (if above is intended) should be swab32().
 > But something tells me that above is broken (or my understanding is wrong).
 
-And perhaps it should use lo_hi_writeq() or something like that.
+iowrite_be32() is the correct way to store word into a big-endian mmio register,
+if that is the intention here.
 
--- 
-With Best Regards,
-Andy Shevchenko
+      Arnd
