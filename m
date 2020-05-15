@@ -2,129 +2,84 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489F8C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23A90204EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBF1204EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:19:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OTQ2D3I4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GsgVmhcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgEOLQa (ORCPT
+        id S1725986AbgEOLTo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 07:16:30 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:32902 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgEOLQ2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 07:16:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589541388; x=1621077388;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=/40a+Xw95DGQQJ2+L1yejq9q/M1oXwbhYnFs602PHAg=;
-  b=OTQ2D3I4wkTiz+iRP1UiF+K4PbKvBo2JeCT4inztaV1LHPZXny/wFAFU
-   CB+XlhaNo0F4kRRXRa/WZ9lwRtPAsEf24MoCqgL4qCog59alP2j/s0wVh
-   XRleH52EGOzzc/OY5Nmpd52/py5NO23aOwh0l0k9SKN/GBH+wrHteLXW4
-   QiLfK1cHt30BxSHyBFdYybvYlT2H4NazqelVqndZ4O+eqP7yV6ySGa336
-   +XRlFXuFd2uVe0Ryo6AwDIcqG80tsatkJhy6kzvrWlbWr+vRqVkUrxMD3
-   ZsPAWctTxJOX4m9l0X1AUzJtkMZXVEkv/OeRpLnfpD0ARVqgJFhtIhFt4
-   Q==;
-IronPort-SDR: ZhHdvmBtstDBEEBJRD9Jbcrvs7hNd2Go3Q8JoBEOo3ZuAJJ5DGDu+8hCSDdkNMF7ZcFd15wgLs
- EVsr8Hj/staXk/mfe15ierBCoEiY7sTU9xIj+44a0+ZvNOViKajve5uLPwR6fJQrBOjniQ703N
- RMOLNPnfe/EsGNMyutsOfUmAFU30A/gb5/KX3YiT2lRLURx+8fmqxmT/PyPIaIAtJAentyHn0t
- Oyn0ryQi+3F9/ZtcRWNRLWnxHJFxzHb2R8QvlpMdgCTY+5e+8WqZDQlEFIEE6v6B+Lqm4sUM7c
- rE8=
-X-IronPort-AV: E=Sophos;i="5.73,395,1583218800"; 
-   d="scan'208";a="75380490"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 04:16:26 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 15 May 2020 04:16:26 -0700
-Received: from cristi-P53.lan (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 15 May 2020 04:16:23 -0700
-From:   <cristian.birsan@microchip.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 1/7] usb: gadget: udc: atmel: use of_find_matching_node_and_match
-Date:   Fri, 15 May 2020 14:16:25 +0300
-Message-ID: <20200515111631.31210-2-cristian.birsan@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200515111631.31210-1-cristian.birsan@microchip.com>
-References: <20200515111631.31210-1-cristian.birsan@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 15 May 2020 07:19:44 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15136 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726084AbgEOLTo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 07:19:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589541584; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=G0YIFY7DmGhaD5zdzMpjeUqrJeIdM8P3XbRXyIYmxlI=; b=GsgVmhcGpHGMuQHkpypX9+TuPGewypr8xu10k7ulnlcNGku3UtUnXyT3Cgj73jNjZlNS591o
+ GnyF2BfO14W4q+rzuDxuorIymLXMsg/8ah+loctMaPnfDdHipJQ9jGlUbj8lgH87UDBzqUxG
+ Zu1uSz9PSPbYcEyc9tgoEuDvjbY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebe7ac9.7f337dc55998-smtp-out-n02;
+ Fri, 15 May 2020 11:19:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 89746C433F2; Fri, 15 May 2020 11:19:36 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A952C433D2;
+        Fri, 15 May 2020 11:19:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9A952C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V1 0/3] Internal voltage control for qcom SDHC 
+Date:   Fri, 15 May 2020 16:48:51 +0530
+Message-Id: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+On qcom SD host controllers voltage switching be done after the HW
+is ready for it. The HW informs its readiness through power irq.
+The voltage switching should happen only then.
 
-Instead of trying to match every possible compatible use
-of_find_matching_node_and_match() and pass the compatible array.
+So added support to register voltage regulators from the msm driver
+and use them.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/usb/gadget/udc/atmel_usba_udc.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+This patchset was posted long back but not actively pursued
+https://lore.kernel.org/linux-arm-msm/1539004739-32060-1-git-send-email-vbadigan@codeaurora.org/
+So posting it as fresh patchset.  
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 22200341c8ec..2b154085dc6a 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -2052,6 +2052,13 @@ static const struct of_device_id atmel_udc_dt_ids[] = {
- 
- MODULE_DEVICE_TABLE(of, atmel_udc_dt_ids);
- 
-+static const struct of_device_id atmel_pmc_dt_ids[] = {
-+	{ .compatible = "atmel,at91sam9g45-pmc" },
-+	{ .compatible = "atmel,at91sam9rl-pmc" },
-+	{ .compatible = "atmel,at91sam9x5-pmc" },
-+	{ /* sentinel */ }
-+};
-+
- static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
- 						    struct usba_udc *udc)
- {
-@@ -2067,13 +2074,17 @@ static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
- 		return ERR_PTR(-EINVAL);
- 
- 	udc->errata = match->data;
--	udc->pmc = syscon_regmap_lookup_by_compatible("atmel,at91sam9g45-pmc");
--	if (IS_ERR(udc->pmc))
--		udc->pmc = syscon_regmap_lookup_by_compatible("atmel,at91sam9rl-pmc");
--	if (IS_ERR(udc->pmc))
--		udc->pmc = syscon_regmap_lookup_by_compatible("atmel,at91sam9x5-pmc");
--	if (udc->errata && IS_ERR(udc->pmc))
--		return ERR_CAST(udc->pmc);
-+	if (udc->errata) {
-+		pp = of_find_matching_node_and_match(NULL, atmel_pmc_dt_ids,
-+						     NULL);
-+		if (!pp)
-+			return ERR_PTR(-ENODEV);
-+
-+		udc->pmc = syscon_node_to_regmap(pp);
-+		of_node_put(pp);
-+		if (IS_ERR(udc->pmc))
-+			return ERR_CAST(udc->pmc);
-+	}
- 
- 	udc->num_ep = 0;
- 
+Veerabhadrarao Badiganti (1):
+  dt-bindings: mmc: Supply max load for mmc supplies
+
+Vijay Viswanath (2):
+  mmc: sdhci-msm: Use internal voltage control
+  mmc: sdhci: Allow platform controlled voltage switching
+
+ .../devicetree/bindings/mmc/mmc-controller.yaml    |  16 ++
+ drivers/mmc/host/sdhci-msm.c                       | 215 ++++++++++++++++++++-
+ drivers/mmc/host/sdhci.c                           |  32 +--
+ drivers/mmc/host/sdhci.h                           |   1 +
+ 4 files changed, 243 insertions(+), 21 deletions(-)
+
 -- 
-2.17.1
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
