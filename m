@@ -2,100 +2,106 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE97FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F58C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F0B2076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589534879;
-	bh=cBYlCaqVOLK7rjga9zz23aZJFmIUMwBA4AndNb9TP+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vhDupvnHdjmc3QEkM3We5BBEDrgkwoFBgTkBEOT1wNVx5AXWpnncVhjK6FYP7AX9w
-	 XBK42Df1v65yZRCgHSrnUPs3pEr9P+Z32klTpjnk2HNZzlE8e5Rn9qydlsn3M1tcqq
-	 lrTyBMndyylHCtkQBKsMY2Bmvyv5CcEhp0vdDXE4=
+	by mail.kernel.org (Postfix) with ESMTP id DD73E206F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgEOJ16 (ORCPT
+        id S1727869AbgEOJ2R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 05:27:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33062 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 05:28:17 -0400
+Received: from mx.socionext.com ([202.248.49.38]:29503 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbgEOJ16 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 05:27:58 -0400
-Received: from localhost (p5486CC07.dip0.t-ipconnect.de [84.134.204.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90C1D206F1;
-        Fri, 15 May 2020 09:27:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589534878;
-        bh=cBYlCaqVOLK7rjga9zz23aZJFmIUMwBA4AndNb9TP+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qTcQkoKVYq9u89DpLfBLuI6aTNhRfRXkmyEuEoolBUk2Dirq40P24fs9q7G+Pxw4n
-         XVFUnFoUzpf/j/1kr20mEZqxKXBwSv1iWGRNlmseMRxr5CJ3t9RSW8r+Go8w0zI+JL
-         LUchBeB7nCCsld7f1x3860mXCn8yNsRldQxopU6s=
-Date:   Fri, 15 May 2020 11:27:55 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: eeprom: at24: Fix list of page sizes for
- writing
-Message-ID: <20200515092755.GC2077@ninjato>
-References: <20200512122450.20205-1-geert+renesas@glider.be>
+        id S1727803AbgEOJ2Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 05:28:16 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 15 May 2020 18:28:14 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id E2B71180B60;
+        Fri, 15 May 2020 18:28:14 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 15 May 2020 18:28:14 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 580F41A15C4;
+        Fri, 15 May 2020 18:28:14 +0900 (JST)
+Received: from [10.213.29.28] (unknown [10.213.29.28])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 6BDE612013D;
+        Fri, 15 May 2020 18:28:13 +0900 (JST)
+Subject: Re: [PATCH 5/5] PCI: uniphier: Add error message when failed to get
+ phy
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1589518105-18368-6-git-send-email-hayashi.kunihiko@socionext.com>
+ <202005151454.wRtXzaiY%lkp@intel.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <e41c81f6-837a-e07a-458a-d388f373cb41@socionext.com>
+Date:   Fri, 15 May 2020 18:28:12 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
-Content-Disposition: inline
-In-Reply-To: <20200512122450.20205-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <202005151454.wRtXzaiY%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2020/05/15 15:51, kbuild test robot wrote:
+> Hi Kunihiko,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on pci/next]
+> [also build test WARNING on robh/for-next v5.7-rc5 next-20200514]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Kunihiko-Hayashi/PCI-uniphier-Add-features-for-UniPhier-PCIe-host-controller/20200515-125031
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+> config: i386-allyesconfig (attached as .config)
+> compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+> reproduce:
+>          # save the attached .config to linux build tree
+>          make ARCH=i386
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+> 
+> In file included from include/linux/device.h:15:0,
+> from include/linux/pci.h:37,
+> from drivers/pci/controller/dwc/pcie-uniphier.c:18:
+> drivers/pci/controller/dwc/pcie-uniphier.c: In function 'uniphier_pcie_probe':
+>>> drivers/pci/controller/dwc/pcie-uniphier.c:470:16: warning: format '%d' expects argument of type 'int', but argument 3 has type 'long int' [-Wformat=]
+> dev_err(dev, "Failed to get phy (%d)n", PTR_ERR(priv->phy));
+> ^
+> include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_fmt'
+> #define dev_fmt(fmt) fmt
+> ^~~
+>>> drivers/pci/controller/dwc/pcie-uniphier.c:470:3: note: in expansion of macro 'dev_err'
+> dev_err(dev, "Failed to get phy (%d)n", PTR_ERR(priv->phy));
+> ^~~~~~~
 
---1ccMZA6j1vT5UqiK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This should be fixed. I'll fix it in v2.
 
-On Tue, May 12, 2020 at 02:24:47PM +0200, Geert Uytterhoeven wrote:
-> "258" is an odd power-of-two ;-)
-> Obviously this is a typo, and the intended value is "256".
->=20
-> Fixes: 7f3bf4203774013b ("dt-bindings: at24: convert the binding document=
- to yaml")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks,
 
-Since I have a PR for Linus pending anyhow, I step ahead and apply it to
-my tree. Hope this is fine for everyone. Applied to for-current, thanks!
-
-
---1ccMZA6j1vT5UqiK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6+YJsACgkQFA3kzBSg
-KbaZMw/+NKXHpNfewE9b06Ded1PJF/YxaFIl7FQNhIkC+doQO6fJL80XCwHlNF6M
-MLYTiAX05VJ/7ezfixG/FfXMr7u1J5oUxS9OlUs7wmavTMKFEQcC/vgvEG0pvv/R
-V79ExrkiOOrJv7aeeXX/1UNsuP2ShIbIct5faQ0IvMyovXLPFtOtLcHLmZNn1uaa
-yu3r+rNkz7tLuBFMG6qmhNvwnhCFAD4EFIvMhfrg3up8lJwsMQO0CxZOc+8W0T7t
-R/lWqXI2ikAoxXIK75fU2/DwDtgEzQdgjKhoUcumks8zDTMxKw7XCFx1wujYhUg6
-YAtZHUr91hKZ+USCxVudEBLyyTxxD3H8GIkTaAXi9Vv99zAJ4GSGlwrAfycD/Ib6
-U9Xee00d/i919f4oJqb0GH93w+jaB8CO30220PpD27kixUpP0bHgFzEXY9F2vnJ5
-AlHRL+VnOlp5rrEcZs/oBXd2CKKG2paJuvDJ9BrgThMSEgGPd5rIDpl41j3x6Fyv
-U2I+ZRpSML5Ir/uQ/gcyWXun8dlxZKWrx3v+P3rIzMvOZaMnC1zvuk4ShRShf4l/
-+XcIYft3YUeDxZwMF3DAP7g32IgY2qvyCzVjkJa7obsatWdA7CBf7eFhwIsFrts2
-qOOV93LsAbM99pE5B/tVQ/fgiI57/nvRPLJ9YnQX0MME5KzXrbE=
-=gs0y
------END PGP SIGNATURE-----
-
---1ccMZA6j1vT5UqiK--
+---
+Best Regards
+Kunihiko Hayashi
