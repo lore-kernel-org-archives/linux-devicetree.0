@@ -2,138 +2,282 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513A1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866D1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34098207D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ORLY53TB"
+	by mail.kernel.org (Postfix) with ESMTP id 666BF206C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgEOPww (ORCPT
+        id S1726643AbgEOPzD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 11:52:52 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:10492 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgEOPww (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 11:52:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589557971; x=1621093971;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=DT1liw8u3FiqTUb6GhvHyfaThMNxutoSlfg3fkyelUI=;
-  b=ORLY53TB/xF7YGeQmJxPqtg/L+aq6lXgzHUPlV8IdFYspUIi29OopX/x
-   FcsuCYKAMYE9HOJU1xKZ07OBBLaFn9EnwtG+ImsyHT4STXwLvjJObF2rN
-   E+w3zMsC3BPUTmQIPoT0s1GBFidjnfLM9tN3oW4aDwW1ubLb3m/x2Ktv6
-   sVwgH98Oy1rS7QsEXMskyerXk70wtdmVyuenHepHwD6bBea4GZ/t1bYuN
-   P7xpuxyN0i0B0be7dkmwTE6BGCdxuwmi6UnNEIKucQwFqacRJ6QrV9K/i
-   YByRE1z+F1BX84PIhcZ7xFgoMv/40kZnu2F4DQhg7tGG0EI0In54wWuzL
-   A==;
-IronPort-SDR: ICu01KXEUFTELz9+q4Bnk3/5o0+7ZDR8cNHr+wFVRriw8cMa6LNxnLsS2rUWo/pBqtfDBEUDMh
- UioiNPZw09VcW8U3kSt9Q8b4Duy7/TtvIHtVunCZldj61/DIs6xCf5tYcnjb9od08vPgBz0McP
- JQNO7hWvLo8fRcAeFMicg6+9NhPA8BcJOnOXQ2uQQZ6L+YRD9U4cf1u8MotCTU+gNvd/YtZy8c
- WSIfrz4sVn2eTAIVy3namJZxzY7JQ4YxKOjPnhmBITMNvM7RPLsnndjgQMw1cYjPtRuS1ADJbA
- vOA=
-X-IronPort-AV: E=Sophos;i="5.73,395,1583218800"; 
-   d="scan'208";a="75403050"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 08:52:50 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 15 May 2020 08:52:50 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 15 May 2020 08:52:50 -0700
-References: <20200513125532.24585-10-lars.povlsen@microchip.com> <202005150200.wnjISCrm%lkp@intel.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     kbuild test robot <lkp@intel.com>
-List-Id: <soc.lore.kernel.org>
-CC:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <kbuild-all@lists.01.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        "Steen Hegelund" <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 09/14] pinctrl: ocelot: Add Sparx5 SoC support
-In-Reply-To: <202005150200.wnjISCrm%lkp@intel.com>
-Date:   Fri, 15 May 2020 17:52:46 +0200
-Message-ID: <87y2ptnqk1.fsf@soft-dev15.microsemi.net>
+        Fri, 15 May 2020 11:55:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:58542 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726610AbgEOPzC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 11:55:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B4722F;
+        Fri, 15 May 2020 08:55:01 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C81AE3F305;
+        Fri, 15 May 2020 08:54:59 -0700 (PDT)
+Subject: Re: [PATCH v1 5/9] dt-bindings: dmaengine: convert Actions Semi Owl
+ SoCs bindings to yaml
+To:     Amit Singh Tomar <amittomer25@gmail.com>, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     cristian.ciocaltea@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
+ <1589472657-3930-6-git-send-email-amittomer25@gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <afc0d7f3-d763-b936-988c-d802b86836bc@arm.com>
+Date:   Fri, 15 May 2020 16:54:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1589472657-3930-6-git-send-email-amittomer25@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 14/05/2020 17:10, Amit Singh Tomar wrote:
 
-kbuild test robot writes:
+Hi,
 
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->
-> Hi Lars,
->
-> I love your patch! Perhaps something to improve:
->
-> [auto build test WARNING on robh/for-next]
-> [also build test WARNING on pinctrl/devel clk/clk-next linus/master v5.7-rc5 next-20200512]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Lars-Povlsen/Adding-support-for-Microchip-Sparx5-SoC/20200514-163536
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-> config: powerpc-allyesconfig (attached as .config)
-> compiler: powerpc64-linux-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=powerpc
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
->
->>> drivers/pinctrl/pinctrl-ocelot.c:28: warning: "clrsetbits" redefined
-> 28 | #define clrsetbits(addr, clear, set)          |
-> In file included from include/linux/io.h:13,
-> from include/linux/irq.h:20,
-> from include/linux/gpio/driver.h:7,
-> from drivers/pinctrl/pinctrl-ocelot.c:10:
-> arch/powerpc/include/asm/io.h:849: note: this is the location of the previous definition
-> 849 | #define clrsetbits(type, addr, clear, set)          |
->
-> vim +/clrsetbits +28 drivers/pinctrl/pinctrl-ocelot.c
->
->     27
->   > 28  #define clrsetbits(addr, clear, set) \
->     29          writel((readl(addr) & ~(clear)) | (set), (addr))
->     30
->
-
-I'll change the code to avoid the name clash.
-
-Thanks,
-
-
+> Converts the device tree bindings for the Actions Semi Owl SoCs DMA
+> Controller over to YAML schemas.
+> 
+> It also adds new compatible string "actions,s700-dma" to match
+> the driver.
+> 
+> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> New patch, was not there in RFC.
+> ---
+>  Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 ------------
+>  Documentation/devicetree/bindings/dma/owl-dma.yaml | 84 ++++++++++++++++++++++
+>  2 files changed, 84 insertions(+), 47 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
+> deleted file mode 100644
+> index 03e9bb12b75f..000000000000
+> --- a/Documentation/devicetree/bindings/dma/owl-dma.txt
+> +++ /dev/null
+> @@ -1,47 +0,0 @@
+> -* Actions Semi Owl SoCs DMA controller
+> -
+> -This binding follows the generic DMA bindings defined in dma.txt.
+> -
+> -Required properties:
+> -- compatible: Should be "actions,s900-dma".
+> -- reg: Should contain DMA registers location and length.
+> -- interrupts: Should contain 4 interrupts shared by all channel.
+> -- #dma-cells: Must be <1>. Used to represent the number of integer
+> -              cells in the dmas property of client device.
+> -- dma-channels: Physical channels supported.
+> -- dma-requests: Number of DMA request signals supported by the controller.
+> -                Refer to Documentation/devicetree/bindings/dma/dma.txt
+> -- clocks: Phandle and Specifier of the clock feeding the DMA controller.
+> -
+> -Example:
+> -
+> -Controller:
+> -                dma: dma-controller@e0260000 {
+> -                        compatible = "actions,s900-dma";
+> -                        reg = <0x0 0xe0260000 0x0 0x1000>;
+> -                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> -                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> -                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> -                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+> -                        #dma-cells = <1>;
+> -                        dma-channels = <12>;
+> -                        dma-requests = <46>;
+> -                        clocks = <&clock CLK_DMAC>;
+> -                };
+> -
+> -Client:
+> -
+> -DMA clients connected to the Actions Semi Owl SoCs DMA controller must
+> -use the format described in the dma.txt file, using a two-cell specifier
+> -for each channel.
+> -
+> -The two cells in order are:
+> -1. A phandle pointing to the DMA controller.
+> -2. The channel id.
+> -
+> -uart5: serial@e012a000 {
+> -        ...
+> -        dma-names = "tx", "rx";
+> -        dmas = <&dma 26>, <&dma 27>;
+> -        ...
+> -};
+> diff --git a/Documentation/devicetree/bindings/dma/owl-dma.yaml b/Documentation/devicetree/bindings/dma/owl-dma.yaml
+> new file mode 100644
+> index 000000000000..12e68c0ece67
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/owl-dma.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/owl-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Actions Semi Owl SoCs DMA controller
+> +
+> +description: |
+> +  The OWL DMA is a general-purpose direct memory access controller capable of
+> +  supporting 10 and 12 independent DMA channels for S700 and S900 SoCs
+> +  respectively.
 
--- 
-Lars Povlsen,
-Microchip
+From here on the description is pretty much how DMA controller
+references work in general, so I don't see the point of including this
+in the description here.
+
+> +  DMA clients connected to the Actions Semi Owl SoCs DMA controller must
+> +  use the format described in the owl-dma.yaml file, using a two-cell specifier
+> +  for each channel.
+> +
+> +  The two cells in order are:
+> +  1. A phandle pointing to the DMA controller.
+> +  2. The channel id.
+> +
+> +  uart5: serial@e012a000 {
+> +    ...
+> +    dma-names = "tx", "rx";
+> +    dmas = <&dma 26>, <&dma 27>;
+> +    ...
+> +  };
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - actions,s900-dma
+> +      - actions,s700-dma
+> +
+> +  reg:
+> +    maxItems: 1
+
+Could you replace those "maxItems: 1" here and below with:
+  - description: ...., copying in the explanation from the .txt binding?
+That should serve the same purpose as "maxItems: 1", but is more
+descriptive.
+
+> +
+> +  interrupts:
+> +    maxItems: 4
+
+Please mention that the controller supports 4 interrupts, which are
+freely assignable to the interrupt channels.
+(The kernel chose to use only one, but that's nothing the binding is
+concerned about).
+
+> +
+> +  "#dma-cells":
+> +    const: 1
+> +
+> +  dma-channels:
+> +    maxItems: 1
+> +
+> +  dma-requests:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#dma-cells"
+> +  - dma-channels
+> +  - dma-requests
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/actions,s700-cmu.h>
+
+I would drop this line and replace CLK_DMAC with some number below, to
+keep this *example* as independent as possible.
+
+Cheers,
+Andre
+
+> +    dma: dma-controller@e0260000 {
+> +        compatible = "actions,s900-dma";
+> +        reg = <0x0 0xe0260000 0x0 0x1000>;
+> +        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+> +        #dma-cells = <1>;
+> +        dma-channels = <12>;
+> +        dma-requests = <46>;
+> +        clocks = <&clock CLK_DMAC>;
+> +    };
+> +
+> +...
+> 
+
