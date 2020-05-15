@@ -2,55 +2,55 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BDCC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D79C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B0E206D4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6A3204EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qlabrFSB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0j0v6Tv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgEOLQz (ORCPT
+        id S1726298AbgEOLQl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 07:16:55 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:13950 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbgEOLQn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 07:16:43 -0400
+        Fri, 15 May 2020 07:16:41 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:49123 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbgEOLQi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 07:16:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589541403; x=1621077403;
+  t=1589541397; x=1621077397;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=M8yQNnHZuVdT9r1/rS/M/SeMts6Jhu8mlf3UsJER9oM=;
-  b=qlabrFSBbBXQCPb9TeEVcHWcvyyb1dzLmUHYSiXWw02rlqsHzKX/F5Vv
-   XmqpIKIDDwWox9FAKmF9B34u+jczI2/VzHP0clzCsVHLg53rbA+r963OR
-   GGe1BdLynwOT27MVdiZ0/twDA+VYJ6MsbTJEE62f/iMnxXFeakorTdr6/
-   8f3kmruqeui7i0NlBbYXwoSLbfm2XG7sDcgOwHMVymxUvIYkaOmScHXk/
-   ujf/rZTTEPoj5W3hXZllVLwLH3Z1RC1yk77JtvHygQpYTqWlKVvpRwl+O
-   i94zi4DnSZ4BO9j1lbhPHHYG3AGIEtrvA+s37dx6VXC+CB4AEHnQJLptj
-   A==;
-IronPort-SDR: sxRN6AYyixy98jYK0pJgpAbKE0SS6Fq4rWaqrtp1X5uWuw7wugQBo9ITcaXDwvjShVQhh3PAjL
- aS7CX5Wlx/jlihLj3nnIcJlogL0NgUS6y2iN4bQGoVoHFwHZ5Z8Tx6pL13AUCg/EYCOobp9aMJ
- AJqeAp+34Qw4KFzokv6jYsDQjJGM6gowSfK85lzmyoS5p2QLP1Vfzhu9UziRbbx1EmVAhr/RB8
- 1F4Lzdtm/DWizK5dptepd2kRxw9pkmUNXWVJtipleE/abtsZmKZ/5pTcKYGozFAxkA28YPUp/f
- zPU=
+  bh=fQTNhgyNE/Ii16r6bBKjezIrqfpVvQZb1l6/3n2gUnA=;
+  b=0j0v6Tv1MeaHkwedAqHhlh7RXl789Rp/WdgKc4g/W6+ucrTZX5BPRGTj
+   KEcAsdFbAAoJ1x9q2eRmf08LezKpE+m5O4e5h4p9MJAmB0e6SvremvL2J
+   IBUJYuzBE1/FySdwXtLKLTyle6st7a1rCaREQkoUDRGZcnZw8vw+lz58x
+   trzSWTnMQXdBDL1+2i6ELfUPAceXcTxCigGu5JR/TiO1pQd+qWomo2HeJ
+   lqrauvKnAJ/PY1DfbF1/jjGo/Z5nx+Ow1vfN0ECb0qGtLuGYMWRYk7uBR
+   GhN6Dz7eZ/Kao444p6kke4FqfF27RU112XRG1jhZ17j9R0If92ONLeY/b
+   Q==;
+IronPort-SDR: cV8yZUQw+SbL/upJAS4T328t6SW/J4sycLqrzx7HejvDppIACraQhcL1eWJ7L+OBfbTEBSZzhR
+ /YW36yGSBdkhlrtwEXjDdZETzTQKgODGkUg5VkEB25qSpRkRNaKwh3bwgiW4ei5h80XP4k8Ws6
+ WthDcCIuyO2lYdzlw6srRJNlmrFMCmRoRcdJdq5vss9WDtwmtL9RQdB1suz4G5ZZYb/30CKpZ9
+ cQq82JpG94m/YE6B1Qa7G1UJo8Yiqv5iAojuzGHwRFNSjsHQjUB3BURCJv8SzP8uGBKi1fc3FN
+ Q1Q=
 X-IronPort-AV: E=Sophos;i="5.73,395,1583218800"; 
-   d="scan'208";a="79770140"
+   d="scan'208";a="12492405"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 04:16:42 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 04:16:36 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 15 May 2020 04:16:42 -0700
+ 15.1.1713.5; Fri, 15 May 2020 04:16:36 -0700
 Received: from cristi-P53.lan (10.10.115.15) by chn-vm-ex01.mchp-main.com
  (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 15 May 2020 04:16:39 -0700
+ Transport; Fri, 15 May 2020 04:16:33 -0700
 From:   <cristian.birsan@microchip.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -59,9 +59,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     Cristian Birsan <cristian.birsan@microchip.com>
-Subject: [PATCH v2 6/7] usb: gadget: udc: atmel: update endpoint allocation for sam9x60
-Date:   Fri, 15 May 2020 14:16:30 +0300
-Message-ID: <20200515111631.31210-7-cristian.birsan@microchip.com>
+Subject: [PATCH v2 4/7] usb: gadget: udc: atmel: use 1 bank endpoints for control transfers
+Date:   Fri, 15 May 2020 14:16:28 +0300
+Message-ID: <20200515111631.31210-5-cristian.birsan@microchip.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200515111631.31210-1-cristian.birsan@microchip.com>
 References: <20200515111631.31210-1-cristian.birsan@microchip.com>
@@ -74,91 +74,25 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Cristian Birsan <cristian.birsan@microchip.com>
 
-The DPRAM memory from the USB High Speed Device Port (UDPHS) hardware
-block was increased. This patch updates the endpoint allocation for sam9x60
-to take advantage of this larger memory. At the same time the
-constraint to allocate the endpoints in order was lifted. To handle old
-and new hardware in the same driver the capabilities (caps) structure
-was extended.
+Use 1 bank endpoints for control transfers
 
 Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
 ---
- drivers/usb/gadget/udc/atmel_usba_udc.c | 22 ++++++++++++++++++----
- drivers/usb/gadget/udc/atmel_usba_udc.h |  1 +
- 2 files changed, 19 insertions(+), 4 deletions(-)
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 2b1a0b6df0fe..ecd0fa9823bb 100644
+index beb7246935a8..a73b0e78a357 100644
 --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
 +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -1066,12 +1066,14 @@ static struct usb_ep *atmel_usba_match_ep(struct usb_gadget *gadget,
+@@ -1061,6 +1061,7 @@ static struct usb_ep *atmel_usba_match_ep(struct usb_gadget *gadget,
+ 
+ 		switch (usb_endpoint_type(desc)) {
+ 		case USB_ENDPOINT_XFER_CONTROL:
++			ep->nr_banks = 1;
+ 			break;
  
  		case USB_ENDPOINT_XFER_ISOC:
- 			ep->fifo_size = 1024;
--			ep->nr_banks = 2;
-+			if (ep->udc->caps->ep_prealloc)
-+				ep->nr_banks = 2;
- 			break;
- 
- 		case USB_ENDPOINT_XFER_BULK:
- 			ep->fifo_size = 512;
--			ep->nr_banks = 1;
-+			if (ep->udc->caps->ep_prealloc)
-+				ep->nr_banks = 1;
- 			break;
- 
- 		case USB_ENDPOINT_XFER_INT:
-@@ -1081,7 +1083,8 @@ static struct usb_ep *atmel_usba_match_ep(struct usb_gadget *gadget,
- 			else
- 				ep->fifo_size =
- 				    roundup_pow_of_two(le16_to_cpu(desc->wMaxPacketSize));
--			ep->nr_banks = 1;
-+			if (ep->udc->caps->ep_prealloc)
-+				ep->nr_banks = 1;
- 			break;
- 		}
- 
-@@ -2034,16 +2037,27 @@ static void at91sam9g45_pulse_bias(struct usba_udc *udc)
- 
- static const struct usba_udc_caps at91sam9rl_caps = {
- 	.toggle_bias = at91sam9rl_toggle_bias,
-+	.ep_prealloc = true,
- };
- 
- static const struct usba_udc_caps at91sam9g45_caps = {
- 	.pulse_bias = at91sam9g45_pulse_bias,
-+	.ep_prealloc = true,
-+};
-+
-+static const struct usba_udc_caps sama5d3_caps = {
-+	.ep_prealloc = true,
-+};
-+
-+static const struct usba_udc_caps at91sam9x60_caps = {
-+	.ep_prealloc = false,
- };
- 
- static const struct of_device_id atmel_udc_dt_ids[] = {
- 	{ .compatible = "atmel,at91sam9rl-udc", .data = &at91sam9rl_caps },
- 	{ .compatible = "atmel,at91sam9g45-udc", .data = &at91sam9g45_caps },
--	{ .compatible = "atmel,sama5d3-udc" },
-+	{ .compatible = "atmel,sama5d3-udc", .data = &sama5d3_caps },
-+	{ .compatible = "microchip,sam9x60-udc", .data = &at91sam9x60_caps },
- 	{ /* sentinel */ }
- };
- 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.h b/drivers/usb/gadget/udc/atmel_usba_udc.h
-index 1a0f77bf8d4f..f9239e200e7a 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.h
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.h
-@@ -305,6 +305,7 @@ struct usba_request {
- struct usba_udc_caps {
- 	void (*toggle_bias)(struct usba_udc *udc, int is_on);
- 	void (*pulse_bias)(struct usba_udc *udc);
-+	bool ep_prealloc;
- };
- 
- struct usba_udc {
 -- 
 2.17.1
 
