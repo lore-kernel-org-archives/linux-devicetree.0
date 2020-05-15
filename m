@@ -2,199 +2,112 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2650FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B4EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7A120709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7CC20787
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:15:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hhpHlRaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgEONMs (ORCPT
+        id S1726174AbgEONPJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 09:12:48 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:53528 "EHLO honk.sigxcpu.org"
+        Fri, 15 May 2020 09:15:09 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33974 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbgEONM0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 09:12:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 0CC7DFB05;
-        Fri, 15 May 2020 15:12:24 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id brG_Y9P4LUL8; Fri, 15 May 2020 15:12:20 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 86BB7445AB; Fri, 15 May 2020 15:12:15 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        id S1726140AbgEONPJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 09:15:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=iWit2H79Tb0qaINFisbPojdkHSI5mJJzBhDaFk5Qr7E=; b=hhpHlRaYRjua1uzCeXxgDoEOCt
+        lAV6E7I5b1M2C99iceVmPVZFIdm65z6dBzz+K5ZS0+rYbhvUQzuCN4x3V6Cwe5qMIXraMRRfRqBf4
+        Iof8oT26KglqmqYzlByG4bgcwab347Pa/whj1QTLL/FUnXVS2KAEddTscechzQ91hxpg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jZaB1-002NcN-Fb; Fri, 15 May 2020 15:14:59 +0200
+Date:   Fri, 15 May 2020 15:14:59 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Networking <netdev@vger.kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Peng Fan <peng.fan@nxp.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH 4/6] drm/bridge/nwl-dsi: Drop mux handling
-Date:   Fri, 15 May 2020 15:12:13 +0200
-Message-Id: <951688795f969ebcbf9fb3c38065ccce6f488235.1589548223.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <cover.1589548223.git.agx@sigxcpu.org>
-References: <cover.1589548223.git.agx@sigxcpu.org>
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
+Message-ID: <20200515131459.GQ527401@lunn.ch>
+References: <20200514075942.10136-1-brgl@bgdev.pl>
+ <20200514075942.10136-11-brgl@bgdev.pl>
+ <CAK8P3a3=xgbvqrSpCK5h96eRH32AA7xnoK2ossvT0-cLFLzmXA@mail.gmail.com>
+ <CAMRc=MeypzZBHo6dJGKm4JujYyejqHxtdo7Ts95DXuL0VuMYCw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeypzZBHo6dJGKm4JujYyejqHxtdo7Ts95DXuL0VuMYCw@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This will be handled via the mux-input-bridge.
+On Fri, May 15, 2020 at 09:11:14AM +0200, Bartosz Golaszewski wrote:
+> czw., 14 maj 2020 o 18:19 Arnd Bergmann <arnd@arndb.de> napisał(a):
+> >
+> > On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > >
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
+> > > family. For now we only support full-duplex.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Looks very nice overall. Just a few things I noticed, and some ideas
+> > that may or may not make sense:
+> >
+> > > +/* This is defined to 0 on arm64 in arch/arm64/include/asm/processor.h but
+> > > + * this IP doesn't work without this alignment being equal to 2.
+> > > + */
+> > > +#ifdef NET_IP_ALIGN
+> > > +#undef NET_IP_ALIGN
+> > > +#endif
+> > > +#define NET_IP_ALIGN                           2
+> >
+> > Maybe you should just define your own macro instead of replacing
+> > the normal one then?
+> >
+> 
+> I did in an earlier version and was told to use NET_IP_ALIGN but then
+> found out its value on arm64 doesn't work for me so I did the thing
+> that won't make anybody happy - redefine the existing constant. :)
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- drivers/gpu/drm/bridge/Kconfig   |  1 -
- drivers/gpu/drm/bridge/nwl-dsi.c | 61 --------------------------------
- 2 files changed, 62 deletions(-)
+Hi Bartosz
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 3886c0f41bdd..11444f841e35 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -78,7 +78,6 @@ config DRM_NWL_MIPI_DSI
- 	select DRM_PANEL_BRIDGE
- 	select GENERIC_PHY_MIPI_DPHY
- 	select MFD_SYSCON
--	select MULTIPLEXER
- 	select REGMAP_MMIO
- 	help
- 	  This enables the Northwest Logic MIPI DSI Host controller as
-diff --git a/drivers/gpu/drm/bridge/nwl-dsi.c b/drivers/gpu/drm/bridge/nwl-dsi.c
-index b14d725bf609..8839f333f39c 100644
---- a/drivers/gpu/drm/bridge/nwl-dsi.c
-+++ b/drivers/gpu/drm/bridge/nwl-dsi.c
-@@ -12,7 +12,6 @@
- #include <linux/math64.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
--#include <linux/mux/consumer.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/phy/phy.h>
-@@ -44,9 +43,6 @@ enum transfer_direction {
- 	DSI_PACKET_RECEIVE,
- };
- 
--#define NWL_DSI_ENDPOINT_LCDIF 0
--#define NWL_DSI_ENDPOINT_DCSS 1
--
- struct nwl_dsi_plat_clk_config {
- 	const char *id;
- 	struct clk *clk;
-@@ -94,7 +90,6 @@ struct nwl_dsi {
- 	struct reset_control *rst_esc;
- 	struct reset_control *rst_dpi;
- 	struct reset_control *rst_pclk;
--	struct mux_control *mux;
- 
- 	/* DSI clocks */
- 	struct clk *phy_ref_clk;
-@@ -1018,14 +1013,6 @@ static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
- 	}
- 	dsi->tx_esc_clk = clk;
- 
--	dsi->mux = devm_mux_control_get(dsi->dev, NULL);
--	if (IS_ERR(dsi->mux)) {
--		ret = PTR_ERR(dsi->mux);
--		if (ret != -EPROBE_DEFER)
--			DRM_DEV_ERROR(dsi->dev, "Failed to get mux: %d\n", ret);
--		return ret;
--	}
--
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
-@@ -1073,47 +1060,6 @@ static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
- 	return 0;
- }
- 
--static int nwl_dsi_select_input(struct nwl_dsi *dsi)
--{
--	struct device_node *remote;
--	u32 use_dcss = 1;
--	int ret;
--
--	remote = of_graph_get_remote_node(dsi->dev->of_node, 0,
--					  NWL_DSI_ENDPOINT_LCDIF);
--	if (remote) {
--		use_dcss = 0;
--	} else {
--		remote = of_graph_get_remote_node(dsi->dev->of_node, 0,
--						  NWL_DSI_ENDPOINT_DCSS);
--		if (!remote) {
--			DRM_DEV_ERROR(dsi->dev,
--				      "No valid input endpoint found\n");
--			return -EINVAL;
--		}
--	}
--
--	DRM_DEV_INFO(dsi->dev, "Using %s as input source\n",
--		     (use_dcss) ? "DCSS" : "LCDIF");
--	ret = mux_control_try_select(dsi->mux, use_dcss);
--	if (ret < 0)
--		DRM_DEV_ERROR(dsi->dev, "Failed to select input: %d\n", ret);
--
--	of_node_put(remote);
--	return ret;
--}
--
--static int nwl_dsi_deselect_input(struct nwl_dsi *dsi)
--{
--	int ret;
--
--	ret = mux_control_deselect(dsi->mux);
--	if (ret < 0)
--		DRM_DEV_ERROR(dsi->dev, "Failed to deselect input: %d\n", ret);
--
--	return ret;
--}
--
- static const struct drm_bridge_timings nwl_dsi_timings = {
- 	.input_bus_flags = DRM_BUS_FLAG_DE_LOW,
- };
-@@ -1175,12 +1121,6 @@ static int nwl_dsi_probe(struct platform_device *pdev)
- 	dev_set_drvdata(dev, dsi);
- 	pm_runtime_enable(dev);
- 
--	ret = nwl_dsi_select_input(dsi);
--	if (ret < 0) {
--		mipi_dsi_host_unregister(&dsi->dsi_host);
--		return ret;
--	}
--
- 	drm_bridge_add(&dsi->bridge);
- 	return 0;
- }
-@@ -1189,7 +1129,6 @@ static int nwl_dsi_remove(struct platform_device *pdev)
- {
- 	struct nwl_dsi *dsi = platform_get_drvdata(pdev);
- 
--	nwl_dsi_deselect_input(dsi);
- 	mipi_dsi_host_unregister(&dsi->dsi_host);
- 	drm_bridge_remove(&dsi->bridge);
- 	pm_runtime_disable(&pdev->dev);
--- 
-2.26.1
+I did not realise ARM64 set it to 0. As Arnd suggested, please define
+your own macro.
 
+    Andrew
