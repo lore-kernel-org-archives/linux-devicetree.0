@@ -2,109 +2,125 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96710C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 16:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A561C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 16:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7310E20787
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 16:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589560930;
-	bh=wP6rN+0fcyq9AqNL4mJfVYCMurnxEiNZYbbiBjX71PU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OMdzVI+yZVWphE8/4PrH5d3SV7qLAhYGDex2H+yIkeSgKtH7SwApKHtJLbhTifD+X
-	 FLXICZwMCq7c9XIS1LQNiXchb/MWSRnv18NR69bxsr7mw0VMWHdnr6pDpgM8xA5n51
-	 ybSsW/PuCfW5WHNRrUwQCLZhal87ggD+Siu7WcvM=
+	by mail.kernel.org (Postfix) with ESMTP id 36D13207F9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 16:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jd9ZIIqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgEOQmH (ORCPT
+        id S1726179AbgEOQql (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 12:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgEOQmH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 12:42:07 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67314206C0;
-        Fri, 15 May 2020 16:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589560926;
-        bh=wP6rN+0fcyq9AqNL4mJfVYCMurnxEiNZYbbiBjX71PU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MB7fP4O+o4JDp6I9/D4xpNZ6udvmMRewLpl1ChMf7/zBU/GPuKsrl8ZKkHfAXglfM
-         sOvN9Q9uzqwmnnn890ATCTtg9mN5JeR2MK+xIYNWsU0Yx8X7k98dWRrKjvuP7wz9pC
-         +u3dLgL5MD1B8AKF9x0BoULoQpPL3/aKCaRK8v68=
-Date:   Fri, 15 May 2020 17:42:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/19] spi: dw: Clear DMAC register when done or
- stopped
-Message-ID: <20200515164203.GJ5066@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-4-Sergey.Semin@baikalelectronics.ru>
+        Fri, 15 May 2020 12:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726171AbgEOQql (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 12:46:41 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10759C061A0C;
+        Fri, 15 May 2020 09:46:41 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id k18so3478770ion.0;
+        Fri, 15 May 2020 09:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IMMZB+JJUc5qOhBX30QBDnuLbX4rAj6sJgfoOfzhTFo=;
+        b=jd9ZIIqmnVwcFulPqO2uRcF1lTkQA5Qjj7Pz7UvCRcQNcFp6/T08hPQ8o5XsacIFkM
+         7qe7gg1MRBRkL08HnDdyO6JIxIsnjS7zn/wu9kWXLSSetKntC80LPEf/z7+rer1D2hYW
+         0w8CziOoGZoNwjORGfnl871aV7NgnO6G2a0lKUjhkmoz+grRZN1rmB+UH21bvQX9jxSY
+         T9aWhxkeGHPAExBHJNx9G77/MilqiZEot7ElYC4NgTxp9AOr3UN+Cw3JCjcqblXpfNGk
+         Rvq0HtS1hpo8ju5+/bjCUfIClpB2u0XgGkEZpf8Tp/Tf5i4rO42BIEUaDsbg6m1iY+Jt
+         zdNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IMMZB+JJUc5qOhBX30QBDnuLbX4rAj6sJgfoOfzhTFo=;
+        b=pzF/J89PXNqTpLHk61wiTgiM96qU9FdAGQlLQzZFCvxlSJxrZ6CtikeD7b+LJMzt5z
+         71bk/fe5dmFaOqFUGjL+M8XCl0awVOIJ0sXfA9GN1DDKPRf90P5up0w26QncsArmTNHx
+         Qbxzi1eAkFdB1FTNiwUvFGnHD9tzj1qMx6WbL2NX4nzLHnAy1fB2mViejxgWtFyKg2ke
+         H4tgjSpJ1EgVfuY39Fjg/OcHn1OLS1gC6qN1yq1l6UjWmWN0yY5iozZlfiw+yzI3iWkQ
+         ZIIAzwJMRzAvAwjHTeqwYKunoDy5i7X7tXIL3eeECRp/PcAaZt0it0zjf3hK19DasSxW
+         8eKQ==
+X-Gm-Message-State: AOAM532atvaZxPbR9Alb0l/8EOQvhsKjqoVDLwGVc95+WMAKSHAG0/p/
+        BJyuwi9OHJcAGh7IaQBy/u/dER46RtaHiECgZZ8=
+X-Google-Smtp-Source: ABdhPJzC3X3JusgKAS/v3FgUIMyfhdCffuY2x8sqOBBV7q9YUvBYNbZ+ftC93DN0kkxM1kr6nsLzm7Rn8ArTRZkg/CQ=
+X-Received: by 2002:a02:70c8:: with SMTP id f191mr2113705jac.117.1589561200309;
+ Fri, 15 May 2020 09:46:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/0U0QBNx7JIUZLHm"
-Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-4-Sergey.Semin@baikalelectronics.ru>
-X-Cookie: Avoid contact with eyes.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+In-Reply-To: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Fri, 15 May 2020 11:46:29 -0500
+Message-ID: <CABb+yY1wJMzakpz0h6ZxAh4Z3OB718f+Wq3RP0R4NZ_U=vRMkw@mail.gmail.com>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, May 15, 2020 at 12:17 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> - The hardware gives us the capability to write the register in
+>   parallel, i.e. we can write 0x800 and 0x400 together without any
+>   software locks, and so these 32 bits should be considered as separate
+>   channel even if only one interrupt is issued by the hardware finally.
+>   This shouldn't be called as virtualization of the channels, as the
+>   hardware supports this (as clearly mentioned in the TRM) and it takes
+>   care of handling the signal properly.
+>
+I'll leave this one open to bikeshed arguments.
 
---/0U0QBNx7JIUZLHm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> - With serialization, if we use only one channel as today at every
+>   priority, if there are 5 requests to send signal to the receiver and
+>   the dvfs request is the last one in queue (which may be called from
+>   scheduler's hot path with fast switching), it unnecessarily needs to
+>   wait for the first four transfers to finish due to the software
+>   locking imposed by the mailbox framework. This adds additional delay,
+>   maybe of few ms only, which isn't required by the hardware but just by
+>   the software and few ms can be important in scheduler's hotpath.
+>
+As I asked you yesterday over the call, it may help if you could share
+some numbers to back up the doomsday scenario.
+I don't believe mailbox will be a bottleneck, unless you send commands
+in a while(1) ... but even then you have to compare against the
+virtual-channel implementation. (Not to forget one usually doesn't
+need/want the dvfs, power, clock, hotplug all happening at the _same_
+time)
 
-On Fri, May 15, 2020 at 01:47:42PM +0300, Serge Semin wrote:
-> If DMAC register is left uncleared any further DMAless transfers
-> may cause the DMAC hardware handshaking interface getting activated.
-
-This and patch 4 look good as is but they don't apply against for-5.7
-due to context changes in -next, unfortunately everyone seems to have
-decided that now is the time to start working on this driver which makes
-combinations of new work and fixes awkward.  I'm going to apply these
-for 5.8 but it'd be good if you could send versions based on for-5.7 as
-well so I can apply there - I can sort out the conflicts with 5.8.
+Please note, SCMI... lets not pretend it is not about making scmi work
+with mhu :) ...  itself uses shared-memory transfers and
+wait_for_completion_timeout  in scmi_do_xfer().   If some platform
+_really-really_ faced speed bottlenecks, it would come to want to
+exchange 32-bit encoded command/response over the mhu register,
+asynchronously and totally bypassing shmem... which is possible only
+now.
 
 
---/0U0QBNx7JIUZLHm
-Content-Type: application/pgp-signature; name="signature.asc"
+> - With the current approach it isn't possible to assign different bits
+>   (or doorbell numbers) to clients from DT and the only way of doing
+>   that without adding new bindings is by extending #mbox-cells to accept
+>   a value of 2 as done in this patch.
+>
+I am afraid you are confused. You can use bit/doorbell-6 by passing
+0x40 to mhu as the data to send.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+xloACgkQJNaLcl1U
-h9ABrwf/WQm+mOxb45Hxt0ho5+NLAIHIGJtDEbVnzaKIAHrJ76Kzbfpw1etZeWdL
-NFMGaUa7GJED/7kuBofBOtVn34ZIuNrtS0ljxoxka2Ajcz3nmXxshzzgC8PkiDMG
-sCDtGqBikWu9Yy/GqD7y5BfrZ279aadvlln4JTM0PCAILyQ39kps+aliMjXeHsdc
-UrSJjBUuMePJ9LDjKQ8vzzTmQkrxQ5rKYL7vvIFA6shq3Yn21unkO0UqFfNVRgSQ
-jdwUSiSYndO+lwk2aHH2jHmrwpZMsdiDGCtNX9VAn6D2lYdYmhNKmWPUF0BqeIp9
-5Zvi4BlaUwxZS+41vq5pOJaIEhH4BA==
-=rfwh
------END PGP SIGNATURE-----
-
---/0U0QBNx7JIUZLHm--
+Cheers!
