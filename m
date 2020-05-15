@@ -2,168 +2,129 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01599C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B46C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAEE1207BB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0991207C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:02:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgEOPCj (ORCPT
+        id S1726674AbgEOPCz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 11:02:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:57696 "EHLO foss.arm.com"
+        Fri, 15 May 2020 11:02:55 -0400
+Received: from mga01.intel.com ([192.55.52.88]:37779 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgEOPCj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 11:02:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D0BB2F;
-        Fri, 15 May 2020 08:02:38 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 167523F71E;
-        Fri, 15 May 2020 08:02:36 -0700 (PDT)
-Subject: Re: [PATCH v1 8/9] arm64: dts: actions: Add MMC controller support
- for S700
-To:     Amit Singh Tomar <amittomer25@gmail.com>, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
- <1589472657-3930-9-git-send-email-amittomer25@gmail.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
- xsFNBFNPCKMBEAC+6GVcuP9ri8r+gg2fHZDedOmFRZPtcrMMF2Cx6KrTUT0YEISsqPoJTKld
- tPfEG0KnRL9CWvftyHseWTnU2Gi7hKNwhRkC0oBL5Er2hhNpoi8x4VcsxQ6bHG5/dA7ctvL6
- kYvKAZw4X2Y3GTbAZIOLf+leNPiF9175S8pvqMPi0qu67RWZD5H/uT/TfLpvmmOlRzNiXMBm
- kGvewkBpL3R2clHquv7pB6KLoY3uvjFhZfEedqSqTwBVu/JVZZO7tvYCJPfyY5JG9+BjPmr+
- REe2gS6w/4DJ4D8oMWKoY3r6ZpHx3YS2hWZFUYiCYovPxfj5+bOr78sg3JleEd0OB0yYtzTT
- esiNlQpCo0oOevwHR+jUiaZevM4xCyt23L2G+euzdRsUZcK/M6qYf41Dy6Afqa+PxgMEiDto
- ITEH3Dv+zfzwdeqCuNU0VOGrQZs/vrKOUmU/QDlYL7G8OIg5Ekheq4N+Ay+3EYCROXkstQnf
- YYxRn5F1oeVeqoh1LgGH7YN9H9LeIajwBD8OgiZDVsmb67DdF6EQtklH0ycBcVodG1zTCfqM
- AavYMfhldNMBg4vaLh0cJ/3ZXZNIyDlV372GmxSJJiidxDm7E1PkgdfCnHk+pD8YeITmSNyb
- 7qeU08Hqqh4ui8SSeUp7+yie9zBhJB5vVBJoO5D0MikZAODIDwARAQABzS1BbmRyZSBQcnp5
- d2FyYSAoQVJNKSA8YW5kcmUucHJ6eXdhcmFAYXJtLmNvbT7CwXsEEwECACUCGwMGCwkIBwMC
- BhUIAgkKCwQWAgMBAh4BAheABQJTWSV8AhkBAAoJEAL1yD+ydue63REP/1tPqTo/f6StS00g
- NTUpjgVqxgsPWYWwSLkgkaUZn2z9Edv86BLpqTY8OBQZ19EUwfNehcnvR+Olw+7wxNnatyxo
- D2FG0paTia1SjxaJ8Nx3e85jy6l7N2AQrTCFCtFN9lp8Pc0LVBpSbjmP+Peh5Mi7gtCBNkpz
- KShEaJE25a/+rnIrIXzJHrsbC2GwcssAF3bd03iU41J1gMTalB6HCtQUwgqSsbG8MsR/IwHW
- XruOnVp0GQRJwlw07e9T3PKTLj3LWsAPe0LHm5W1Q+euoCLsZfYwr7phQ19HAxSCu8hzp43u
- zSw0+sEQsO+9wz2nGDgQCGepCcJR1lygVn2zwRTQKbq7Hjs+IWZ0gN2nDajScuR1RsxTE4WR
- lj0+Ne6VrAmPiW6QqRhliDO+e82riI75ywSWrJb9TQw0+UkIQ2DlNr0u0TwCUTcQNN6aKnru
- ouVt3qoRlcD5MuRhLH+ttAcmNITMg7GQ6RQajWrSKuKFrt6iuDbjgO2cnaTrLbNBBKPTG4oF
- D6kX8Zea0KvVBagBsaC1CDTDQQMxYBPDBSlqYCb/b2x7KHTvTAHUBSsBRL6MKz8wwruDodTM
- 4E4ToV9URl4aE/msBZ4GLTtEmUHBh4/AYwk6ACYByYKyx5r3PDG0iHnJ8bV0OeyQ9ujfgBBP
- B2t4oASNnIOeGEEcQ2rjzsFNBFNPCKMBEACm7Xqafb1Dp1nDl06aw/3O9ixWsGMv1Uhfd2B6
- it6wh1HDCn9HpekgouR2HLMvdd3Y//GG89irEasjzENZPsK82PS0bvkxxIHRFm0pikF4ljIb
- 6tca2sxFr/H7CCtWYZjZzPgnOPtnagN0qVVyEM7L5f7KjGb1/o5EDkVR2SVSSjrlmNdTL2Rd
- zaPqrBoxuR/y/n856deWqS1ZssOpqwKhxT1IVlF6S47CjFJ3+fiHNjkljLfxzDyQXwXCNoZn
- BKcW9PvAMf6W1DGASoXtsMg4HHzZ5fW+vnjzvWiC4pXrcP7Ivfxx5pB+nGiOfOY+/VSUlW/9
- GdzPlOIc1bGyKc6tGREH5lErmeoJZ5k7E9cMJx+xzuDItvnZbf6RuH5fg3QsljQy8jLlr4S6
- 8YwxlObySJ5K+suPRzZOG2+kq77RJVqAgZXp3Zdvdaov4a5J3H8pxzjj0yZ2JZlndM4X7Msr
- P5tfxy1WvV4Km6QeFAsjcF5gM+wWl+mf2qrlp3dRwniG1vkLsnQugQ4oNUrx0ahwOSm9p6kM
- CIiTITo+W7O9KEE9XCb4vV0ejmLlgdDV8ASVUekeTJkmRIBnz0fa4pa1vbtZoi6/LlIdAEEt
- PY6p3hgkLLtr2GRodOW/Y3vPRd9+rJHq/tLIfwc58ZhQKmRcgrhtlnuTGTmyUqGSiMNfpwAR
- AQABwsFfBBgBAgAJBQJTTwijAhsMAAoJEAL1yD+ydue64BgP/33QKczgAvSdj9XTC14wZCGE
- U8ygZwkkyNf021iNMj+o0dpLU48PIhHIMTXlM2aiiZlPWgKVlDRjlYuc9EZqGgbOOuR/pNYA
- JX9vaqszyE34JzXBL9DBKUuAui8z8GcxRcz49/xtzzP0kH3OQbBIqZWuMRxKEpRptRT0wzBL
- O31ygf4FRxs68jvPCuZjTGKELIo656/Hmk17cmjoBAJK7JHfqdGkDXk5tneeHCkB411p9WJU
- vMO2EqsHjobjuFm89hI0pSxlUoiTL0Nuk9Edemjw70W4anGNyaQtBq+qu1RdjUPBvoJec7y/
- EXJtoGxq9Y+tmm22xwApSiIOyMwUi9A1iLjQLmngLeUdsHyrEWTbEYHd2sAM2sqKoZRyBDSv
- ejRvZD6zwkY/9nRqXt02H1quVOP42xlkwOQU6gxm93o/bxd7S5tEA359Sli5gZRaucpNQkwd
- KLQdCvFdksD270r4jU/rwR2R/Ubi+txfy0dk2wGBjl1xpSf0Lbl/KMR5TQntELfLR4etizLq
- Xpd2byn96Ivi8C8u9zJruXTueHH8vt7gJ1oax3yKRGU5o2eipCRiKZ0s/T7fvkdq+8beg9ku
- fDO4SAgJMIl6H5awliCY2zQvLHysS/Wb8QuB09hmhLZ4AifdHyF1J5qeePEhgTA+BaUbiUZf
- i4aIXCH3Wv6K
-Organization: ARM Ltd.
-Message-ID: <b2ad8a81-619f-5f35-9596-c2061ae15e4c@arm.com>
-Date:   Fri, 15 May 2020 16:01:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726144AbgEOPCz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 11:02:55 -0400
+IronPort-SDR: u+rA+49iOEPwsbt5dbBxeyPlKRnijZBiXeGfVBdKT/40l157xFP6U+clmRKIuvzI5NgskqgZ3A
+ MG7Yq/MwXv0Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 08:02:55 -0700
+IronPort-SDR: pPF5tDZcqhcLLPzgTY2JMxf40nbuiZdzldG4JbZkozpoJFkWqLEGENyw6lvT2Up2dOxF0YS3Wh
+ d8P87UJjILpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="464752447"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 15 May 2020 08:02:50 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZbrQ-006tS4-AY; Fri, 15 May 2020 18:02:52 +0300
+Date:   Fri, 15 May 2020 18:02:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 14/19] spi: dw: Remove DW DMA code dependency from
+ DW_DMAC_PCI
+Message-ID: <20200515150252.GL1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-15-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <1589472657-3930-9-git-send-email-amittomer25@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515104758.6934-15-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14/05/2020 17:10, Amit Singh Tomar wrote:
+On Fri, May 15, 2020 at 01:47:53PM +0300, Serge Semin wrote:
+> Since there is a generic method available to initialize the DW SPI DMA
+> interface on any DT and ACPI-based platforms, which in general can be
+> designed with not only DW DMAC but with any DMA engine on board, we can
+> freely remove the CONFIG_DW_DMAC_PCI config from dependency list of
+> CONFIG_SPI_DW_DMA. Especially seeing that we don't use anything DW DMAC
+> specific in the new driver.
 
-Hi,
+Right, and used data structures are always available at compile time.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> This commits adds support for MMC controllers present on Actions S700 SoC,
-> there are 3 MMC controllers in this SoC which can be used for accessing
-> SD/EMMC/SDIO cards.
-> 
-> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 > ---
-> Changes since RFC:
-> 	* No change.
-> ---
->  arch/arm64/boot/dts/actions/s700.dtsi | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
+>  drivers/spi/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-> index 56f2f84812cb..3f1fc3e48415 100644
-> --- a/arch/arm64/boot/dts/actions/s700.dtsi
-> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
-> @@ -258,5 +258,38 @@
->  			dma-requests = <44>;
->  			clocks = <&cmu CLK_DMAC>;
->  		};
-> +
-> +		mmc0: mmc@e0210000 {
-> +			compatible = "actions,owl-mmc";
-
-I was wondering if we should add a SoC specific compatible here, to be
-on the safe side. The BSP driver seems to differentiate between S900 and
-S700, although it looks like only to cover some misplaced platform setup.
-
-But if we later find a problem, the DTs stay the same, and the driver
-can easily be fixed.
-
-So, using "actions,s700-mmc", "actions,owl-mmc" here, adding this combo
-to the binding, but leaving the driver alone for now.
-
-Cheers,
-Andre
-
-> +			reg = <0x0 0xe0210000 0x0 0x4000>;
-> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cmu CLK_SD0>;
-> +			resets = <&cmu RESET_SD0>;
-> +			dmas = <&dma 2>;
-> +			dma-names = "mmc";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc1: mmc@e0214000 {
-> +			compatible = "actions,owl-mmc";
-> +			reg = <0x0 0xe0214000 0x0 0x4000>;
-> +			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cmu CLK_SD1>;
-> +			resets = <&cmu RESET_SD1>;
-> +			dmas = <&dma 3>;
-> +			dma-names = "mmc";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc2: mmc@e0218000 {
-> +			compatible = "actions,owl-mmc";
-> +			reg = <0x0 0xe0218000 0x0 0x4000>;
-> +			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cmu CLK_SD2>;
-> +			resets = <&cmu RESET_SD2>;
-> +			dmas = <&dma 4>;
-> +			dma-names = "mmc";
-> +			status = "disabled";
-> +		};
->  	};
->  };
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 03b061975f70..6a84f3dad35c 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -228,7 +228,7 @@ config SPI_DESIGNWARE
+>  
+>  config SPI_DW_DMA
+>  	bool "DMA support for DW SPI controller"
+> -	depends on SPI_DESIGNWARE && DW_DMAC_PCI
+> +	depends on SPI_DESIGNWARE
+>  
+>  config SPI_DW_PCI
+>  	tristate "PCI interface driver for DW SPI core"
+> -- 
+> 2.25.1
 > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
