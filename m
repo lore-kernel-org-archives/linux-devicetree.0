@@ -2,102 +2,106 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8E4C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB524C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E06A20709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45942065C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8YCpftd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgEOJ7U (ORCPT
+        id S1727999AbgEOKCN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 05:59:20 -0400
-Received: from mx.socionext.com ([202.248.49.38]:29835 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728142AbgEOJ7U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 05:59:20 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 15 May 2020 18:59:17 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 2336E180B60;
-        Fri, 15 May 2020 18:59:18 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 15 May 2020 18:59:18 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id C5AD11A12D0;
-        Fri, 15 May 2020 18:59:17 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Fri, 15 May 2020 06:02:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgEOKCM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 06:02:12 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 733C3C061A0C;
+        Fri, 15 May 2020 03:02:12 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id t25so1453533qtc.0;
+        Fri, 15 May 2020 03:02:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IcUXaEpbXUpVL01oFB6hRlgR7PeeYt7QBRNoruvyCbY=;
+        b=r8YCpftd/P5xTvlYz3ynLdKuAbb+OBjgoQ+380Hvgp8upI9U0p29w3r2M23HNeCgny
+         McaR//XORw7nRXahwn89WFF8xUs69HoY61LqdifB+ntJhZBcgCEhRowcUg3hY3cYjKZ0
+         6F59Y/UK6GcZ4mbkdZLbEumgJq5MUdfRZhRLqfiwOq51Dbl3T7F8lYTDBhMspj1vAuvq
+         nJydlHTEGiCKCqeftb0h7NchqDXRkBxaHSPSCfSS0nO5gwg6en13tc786ZnofttzAwsx
+         pTizqaZb2nXkk1NFaVceiuZLCPW0zb3K6jE3itFdgovcgWjul7Fb0avWf1RtyBzW0gE8
+         lonw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IcUXaEpbXUpVL01oFB6hRlgR7PeeYt7QBRNoruvyCbY=;
+        b=BpG7OKdYIbKlUmLKp9XnUqim61O5CBNw5DLumEWAmoBLIY/TKGGYVkPHRMXV5U0BQW
+         aXlKgHS+qz/mYmwax+UuANRLWclMz6YSfxyIqNbNShMdwKtsX45+bifr/FshAAWTdUOE
+         lnxBGriQZ0RC4hvzOZ/ADXDpK2pCtWPrtwzBSO2gcfwzs1qQp1nhXytYxBZSxdih+b/g
+         rZIw7u5iSLBHGpM5TxPcA3kgiefTP+BJm0tMOWryDAloW1ShK15hNmzKkHKBrpKS5WKn
+         FX7O0EHCP3h9n1xXW/OjNK4lTBD7nqfoRCc3bfnIyy8CJfHgRIBkCOHmXrbAa+qtZFnq
+         /wzA==
+X-Gm-Message-State: AOAM531TKXuipdQACI9bRgkNSmnwpHV39gd9IpE/MtP8G6wrfV0K7MXy
+        PP6P1tcCeUzVSgjgO/t9cbrn7lEviTqrLsTh13M=
+X-Google-Smtp-Source: ABdhPJyznFMUdqKh5MEAtGN+Z5aVH5R/r5Mj4195QZGvA37EfsjjNUwLr+rQki1u4TDjULiTD0B2I6/8TxiO06OU3cA=
+X-Received: by 2002:ac8:302f:: with SMTP id f44mr2485555qte.121.1589536931527;
+ Fri, 15 May 2020 03:02:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1588320655.git.shengjiu.wang@nxp.com> <a933bafd2d6a60a69f840d9d4b613337efcf2816.1588320656.git.shengjiu.wang@nxp.com>
+ <20200501102158.GA5276@sirena.org.uk> <CAA+D8ANDHHejFD1rYmFOG24yivpEJa+xO-WpVr=Vzfz9yW9H7g@mail.gmail.com>
+ <CAA+D8ANK+Sd=nPeDZpd_=fQRFOdLtKgvsCmfQ_fRU3RCjMY+rQ@mail.gmail.com> <20200512123801.GG5110@sirena.org.uk>
+In-Reply-To: <20200512123801.GG5110@sirena.org.uk>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Fri, 15 May 2020 18:01:57 +0800
+Message-ID: <CAA+D8ANTv3R-vDki3No0rG++u4OKrNFGh_Eq3DNLSAQ4f=mLwQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ASoC: fsl_esai: Add support for imx8qm
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2 1/5] PCI: dwc: Add msi_host_isr() callback
-Date:   Fri, 15 May 2020 18:58:59 +0900
-Message-Id: <1589536743-6684-2-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds msi_host_isr() callback function support to describe
-SoC-dependent service triggered by MSI.
+On Tue, May 12, 2020 at 8:38 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, May 12, 2020 at 10:48:41AM +0800, Shengjiu Wang wrote:
+> > On Wed, May 6, 2020 at 10:33 AM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
+> > > On Fri, May 1, 2020 at 6:23 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> > > > > EDMA requires the period size to be multiple of maxburst. Otherwise
+> > > > > the remaining bytes are not transferred and thus noise is produced.
+>
+> > > > If this constraint comes from the DMA controller then normally you'd
+> > > > expect the DMA controller integration to be enforcing this - is there no
+> > > > information in the DMA API that lets us know that this constraint is
+> > > > there?
+>
+> > > No, I can't find one API for this.
+> > > Do you have a recommendation?
+>
+> > could you please recommend which DMA API can I use?
+>
+> Not off-hand, you'd probably need to extend the API to export the
+> information.
 
-For example, when AER interrupt is triggered by MSI, the callback function
-reads SoC-dependent registers and detects that the interrupt is from AER,
-and invoke AER interrupts related to MSI.
-
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++----
- drivers/pci/controller/dwc/pcie-designware.h      | 1 +
- 2 files changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 42fbfe2..7dd1021 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -112,13 +112,13 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
- static void dw_chained_msi_isr(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
--	struct pcie_port *pp;
-+	struct pcie_port *pp = irq_desc_get_handler_data(desc);
- 
--	chained_irq_enter(chip, desc);
-+	if (pp->ops->msi_host_isr)
-+		pp->ops->msi_host_isr(pp);
- 
--	pp = irq_desc_get_handler_data(desc);
-+	chained_irq_enter(chip, desc);
- 	dw_handle_msi_irq(pp);
--
- 	chained_irq_exit(chip, desc);
- }
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 656e00f..e741967 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -170,6 +170,7 @@ struct dw_pcie_host_ops {
- 	void (*scan_bus)(struct pcie_port *pp);
- 	void (*set_num_vectors)(struct pcie_port *pp);
- 	int (*msi_host_init)(struct pcie_port *pp);
-+	void (*msi_host_isr)(struct pcie_port *pp);
- };
- 
- struct pcie_port {
--- 
-2.7.4
-
+Thanks.  I will think about if I can find a better solution.
+And I will drop this change and send v2 of this patch-set.
