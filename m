@@ -3,129 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580A8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043B0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE8F20671
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC922078C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgEOOky (ORCPT
+        id S1726171AbgEOOrw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 10:40:54 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28147 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgEOOky (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 10:40:54 -0400
-IronPort-SDR: j7NeS0c8vCQJlJT0B2FckR9uTMK+3uKCEq7fK2xCmYs4hk97gMbrKHdv+5H9ie+moA734p+tll
- iGb0VLQIp54w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:40:54 -0700
-IronPort-SDR: sE4KrJfb+F950VrQYghbTdseYseoCD3GtYpM+afg0mMFUPGBgSSsRVnmo6M9PHNfcRnmX+ydfZ
- w+2wluTqA70Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="263206144"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 15 May 2020 07:40:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZbW6-006tCc-Uq; Fri, 15 May 2020 17:40:50 +0300
-Date:   Fri, 15 May 2020 17:40:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Clement Leger <cleger@kalray.eu>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/19] spi: dw: Fix Rx-only DMA transfers
-Message-ID: <20200515144050.GI1634618@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-13-Sergey.Semin@baikalelectronics.ru>
+        Fri, 15 May 2020 10:47:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44728 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgEOOrw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 10:47:52 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: evelikov)
+        with ESMTPSA id 329E22A238D
+Date:   Fri, 15 May 2020 15:45:12 +0100
+From:   Emil Velikov <emil.velikov@collabora.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCHv1 01/19] kobject: increase allowed number of uevent
+ variables
+Message-ID: <20200515144512.GB2836808@arch-x1c3>
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+ <20200513185615.508236-2-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-13-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200513185615.508236-2-sebastian.reichel@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:51PM +0300, Serge Semin wrote:
-> Tx-only DMA transfers are working perfectly fine since in this case
-> the code just ignores the Rx FIFO overflow interrupts. But it turns
-> out the SPI Rx-only transfers are broken since nothing pushing any
-> data to the shift registers, so the Rx FIFO is left empty and the
-> SPI core subsystems just returns a timeout error. Since DW DMAC
-> driver doesn't support something like cyclic write operations of
-> a single byte to a device register, the only way to support the
-> Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
-> This is what we intend to fix in this commit by setting the
-> SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
-
-I'm fine with this if Mark considers this right thing to do.
-So, conditionally
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
+On 2020/05/13, Sebastian Reichel wrote:
+> SBS battery driver exposes 32 power supply properties now,
+> which will result in uevent failure on (un)plugging the
+> battery. Other drivers (e.g. bq27xxx) are also coming close
+> to this limit, so increase it.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 > ---
->  drivers/spi/spi-dw.c | 1 +
->  1 file changed, 1 insertion(+)
+>  include/linux/kobject.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-> index 1edb8cdd11ee..31607b40147d 100644
-> --- a/drivers/spi/spi-dw.c
-> +++ b/drivers/spi/spi-dw.c
-> @@ -517,6 +517,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
->  			dev_warn(dev, "DMA init failed\n");
->  		} else {
->  			master->can_dma = dws->dma_ops->can_dma;
-> +			master->flags |= SPI_CONTROLLER_MUST_TX;
->  		}
->  	}
+> diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+> index e2ca0a292e21..75e822569e39 100644
+> --- a/include/linux/kobject.h
+> +++ b/include/linux/kobject.h
+> @@ -29,7 +29,7 @@
+>  #include <linux/uidgid.h>
 >  
-> -- 
-> 2.25.1
-> 
+>  #define UEVENT_HELPER_PATH_LEN		256
+> -#define UEVENT_NUM_ENVP			32	/* number of env pointers */
+> +#define UEVENT_NUM_ENVP			64	/* number of env pointers */
 
--- 
-With Best Regards,
-Andy Shevchenko
+To be on the safe side I've checked systemd/udev. It's using ordered hashmap,
+so it's perfectly capable of handling the extra entries.
 
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
 
+-Emil
