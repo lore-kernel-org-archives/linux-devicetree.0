@@ -2,290 +2,175 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E662C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D46C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074612074D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A6D2074D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBp8l35N"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dyDvjz2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgEOKyl (ORCPT
+        id S1726037AbgEOK4I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 06:54:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgEOKyk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 06:54:40 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67AD2C05BD09
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 03:54:40 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id n5so2179526wmd.0
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 03:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=IwrZ0WdoI5tZaZzzOBHL3SSlbNqaieIG8m76ANK/LD8=;
-        b=MBp8l35N8cKa9fTo/EyMr3FAsY3MQBon2114fVllM/wNd3CGTCAFUUlZAphgy5RCCy
-         ghj+obFDAoKbTJqw4oE8AryLhZT6uxGd3xAx4IoKKrPHqLs679Iyvr8k5U6k5o2v3RBr
-         2sV/5PVNAIP1LcYIEg6pqF8Avscb2kMgK6d9/fvRUYWef7VKipRs6M4IQigW01T2boG2
-         Py4huMMZrexFmDFRF6i7bGE8FzueSLDOphT2qW9q9fg+9atNbtT1pIRBMbG9h8N4gYgE
-         moXyl+1xyPlKAVm4JJr+At7nxv+16u9ouH+WSD4ePVjddrzrGB6j7//B0TN4CSapwohb
-         vBPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=IwrZ0WdoI5tZaZzzOBHL3SSlbNqaieIG8m76ANK/LD8=;
-        b=KOwwvVWclg8Crd1ft6yB0IWf2f9AOy37b2ocJXLYaUoQr80H13rcVLlRd31CV//+1X
-         UH54+AGswSNXMgCUMCa78t9b+9edIV/U2NOn18AKX4Qn/zwqzQVWwHx8JRrhjeEZdl2N
-         cHrRHMGfJLVBnCd+wR3zdAQ0/BxjTHWD39YLJfEIWxgC5a2YqLpJe/Zq6+RrMP92Kx5g
-         WPbZvGl14okIjyAhCuoBlIK86gzJdm/rk5Mjg/JotAUDi59yyrk72/9W7kxSaiP7Azg9
-         Fg2cwBGnr62LdP0apUV2z2w5TccIXOAqNFuUehhcNG+4mmsYQ34FMVyl8WVVpMfxtudr
-         yEVg==
-X-Gm-Message-State: AOAM533VbBlDZYfQBlrPFUudxpwpQsGvq+MMT+6kAuycz+d2FvFOq2x2
-        7zGeH2aJCosgtWI12TlAV2YdGg==
-X-Google-Smtp-Source: ABdhPJx+z4WBxH2HwMhoKEV3PPTzm/r8BuYaChb1qiTcaH/Ubdn66OddDUT3aEyOp6gk2w/z6HiMFg==
-X-Received: by 2002:a05:600c:29a:: with SMTP id 26mr3595042wmk.151.1589540078883;
-        Fri, 15 May 2020 03:54:38 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id m82sm3215702wmf.3.2020.05.15.03.54.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 03:54:38 -0700 (PDT)
-Date:   Fri, 15 May 2020 11:54:36 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jones <rjones@gateworks.com>
-Subject: Re: [PATCH v9 2/3] mfd: add Gateworks System Controller core driver
-Message-ID: <20200515105436.GL271301@dell>
-References: <1588259247-15536-1-git-send-email-tharvey@gateworks.com>
- <1588259247-15536-3-git-send-email-tharvey@gateworks.com>
+        Fri, 15 May 2020 06:56:08 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:59782 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726000AbgEOK4I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 06:56:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589540168; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=pVlXqk0xHFLVzrs5HUJtO3mE2JlonL9O1pnYqUk/Gac=;
+ b=dyDvjz2dmbj85MiQ+3vDjnOAkOn8o7OYdX2iRmQtz3gI7wN4fVhXwGEecdK6txQLxkfVxjM8
+ 4p7wxe8h1mUfE3xN7hVNsQCl7NK+txXE4kPMCAKbtTmxBJkBOkg29Z+UYE9FdrRMc+UkQvNP
+ che0MHSGci6HM0mVM0jh1gf0Twk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebe7547.7f277fa72d50-smtp-out-n01;
+ Fri, 15 May 2020 10:56:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B2DAAC432C2; Fri, 15 May 2020 10:56:06 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E62DC433D2;
+        Fri, 15 May 2020 10:55:59 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1588259247-15536-3-git-send-email-tharvey@gateworks.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 15 May 2020 16:25:59 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Support ETMv4 power
+ management
+In-Reply-To: <b0a2ac4ffefe7d3e216a83ab56867620f120ff08.1589539293.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1589539293.git.saiprakash.ranjan@codeaurora.org>
+ <b0a2ac4ffefe7d3e216a83ab56867620f120ff08.1589539293.git.saiprakash.ranjan@codeaurora.org>
+Message-ID: <56a5563205da61c47eb4f8bbf6120e28@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Apr 2020, Tim Harvey wrote:
+Hi Bjorn,
 
-> The Gateworks System Controller (GSC) is an I2C slave controller
-> implemented with an MSP430 micro-controller whose firmware embeds the
-> following features:
->  - I/O expander (16 GPIO's) using PCA955x protocol
->  - Real Time Clock using DS1672 protocol
->  - User EEPROM using AT24 protocol
->  - HWMON using custom protocol
->  - Interrupt controller with tamper detect, user pushbotton
->  - Watchdog controller capable of full board power-cycle
->  - Power Control capable of full board power-cycle
+On 2020-05-15 16:21, Sai Prakash Ranjan wrote:
+> Now that deep idle states are properly supported on SC7180,
+> we need to add "coresight-loses-context-with-cpu" property
+> to avoid failure of trace session because of losing context
+> on entering deep idle states.
 > 
-> see http://trac.gateworks.com/wiki/gsc for more details
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
-> v9:
-> - rebase against 5.7-rc2
-> - cleanup gsc_powerdown() by using BIT(), put_unaligned_le32(), and avoid
->   unnecessary assignments
-> - rename GSC_CTRL_1 SLEEP related defines to simplify
-> - add better description and sub-module info to driver description
-> - whitespace changes per review
-> - remove unused irq_data pointer in ddata
-> - remove unnecesary i2c_set_clientdata
-> - use devm_i2c_new_dummy_device to avoid need of free's
-> - change regsiter definitions to enum
-> - export gsc_{read,write} instead of sharing them via ddata
 > 
-> v8:
-> - whitespace fixes
-> - describe sub-devices in Kconfig
-> - add error print for invalid command
-> - update copyright
-> - use devm_of_platform_populate
-> - use probe_new
-> - move hwmon's regmap init to hwmon
+> Resending this because the last patch sent here -
+> https://lore.kernel.org/patchwork/patch/1230367/
+> seems to have added "coresight-loses-context-with-cpu" to
+> replicator node instead of etm7 node.
 > 
-> v7:
-> - remove irq from private data struct
-> 
-> v6:
-> - remove duplicate signature and fix commit log
-> 
-> v5:
-> - simplify powerdown function
-> 
-> v4:
-> - remove hwmon max reg check/define
-> - fix powerdown function
-> 
-> v3:
-> - rename gsc->gateworks-gsc
-> - remove uncecessary include for linux/mfd/core.h
-> - upercase I2C in comments
-> - remove i2c debug
-> - remove uncecessary comments
-> - don't use KBUILD_MODNAME for name
-> - remove unnecessary v1/v2/v3 tracking
-> - unregister hwmon i2c adapter on remove
-> 
-> v2:
-> - change license comment block style
-> - remove COMPILE_TEST (Randy)
-> - fixed whitespace issues
-> - replaced a printk with dev_err
 > ---
->  MAINTAINERS                 |   8 ++
->  drivers/mfd/Kconfig         |  16 +++
->  drivers/mfd/Makefile        |   1 +
->  drivers/mfd/gateworks-gsc.c | 284 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/gsc.h     |  76 ++++++++++++
->  5 files changed, 385 insertions(+)
->  create mode 100644 drivers/mfd/gateworks-gsc.c
->  create mode 100644 include/linux/mfd/gsc.h
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b816a45..035dfb9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7032,6 +7032,14 @@ F:	kernel/futex.c
->  F:	tools/perf/bench/futex*
->  F:	tools/testing/selftests/futex/
->  
-> +GATEWORKS SYSTEM CONTROLLER (GSC) DRIVER
-> +M:	Tim Harvey <tharvey@gateworks.com>
-> +M:	Robert Jones <rjones@gateworks.com>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
-> +F:	drivers/mfd/gateworks-gsc.c
-> +F:	include/linux/mfd/gsc.h
-> +
->  GASKET DRIVER FRAMEWORK
->  M:	Rob Springer <rspringer@google.com>
->  M:	Todd Poynor <toddpoynor@google.com>
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 0a59249..d7546cd 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -407,6 +407,22 @@ config MFD_EXYNOS_LPASS
->  	  Select this option to enable support for Samsung Exynos Low Power
->  	  Audio Subsystem.
->  
-> +config MFD_GATEWORKS_GSC
-> +	tristate "Gateworks System Controller"
-> +	depends on (I2C && OF)
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	select REGMAP_IRQ
-> +	help
-> +	  Enable support for the Gateworks System Controller (GSC) found
-> +	  on Gateworks Single Board Computers supporting system system
-
-"system"
-
-> +	  functions such as pushbutton monitor, multiple ADC's for voltage
-
-"push-button"
-
-> +	  and temperature, fan controller, and watchdog monitor. This
-
-"voltage and temperature" what?
-
-Monitoring, adjusting, guessing, mixing, matching?
-
-I'd drop the pre-and comma myself.
-
-> +	  driver provides common support for accessing the device and
-
-Turn the "and" into a full-stop.
-
-> +	  additional drivers must be enabled in order to use the
-> +	  functionality of the device:
-> +		gsc-hwmon for ADC readings and fan controller support
-
-What does this line represent?  Is it an example?
-
->  config MFD_MC13XXX
->  	tristate
->  	depends on (SPI_MASTER || I2C)
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index f935d10..ed433ae 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
->  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
->  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
->  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
-> +obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
->  
->  obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
->  obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
-> diff --git a/drivers/mfd/gateworks-gsc.c b/drivers/mfd/gateworks-gsc.c
-> new file mode 100644
-> index 00000000..796effb
-> --- /dev/null
-> +++ b/drivers/mfd/gateworks-gsc.c
-> @@ -0,0 +1,284 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * The Gateworks System Controller (GSC) is a multi-function
-> + * device designed for use in Gateworks Single Board Computers.
-> + * The control interface is I2C, with an interrupt. The device supports
-> + * system functions such as pushbutton monitoring, multiple ADC's for
-> + * voltage and temperature, fan controller, and watchdog monitor.
-
-As above.
-
-> + * Copyright (C) 2020 Gateworks Corporation
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/gsc.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <asm/unaligned.h>
-
-[...]
-
-> +static const struct i2c_device_id gsc_id_table[] = {
-> +	{ "gsc", GSC_MISC },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, gsc_id_table);
-
-Using probe_new means you can omit this unused table.
-
-Once all of the above has been fixed, please add my:
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 4069bb1c93af..8b3707347547 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1656,6 +1656,7 @@
+> 
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+> +			arm,coresight-loses-context-with-cpu;
+> 
+>  			out-ports {
+>  				port {
+> @@ -1674,6 +1675,7 @@
+> 
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+> +			arm,coresight-loses-context-with-cpu;
+> 
+>  			out-ports {
+>  				port {
+> @@ -1692,6 +1694,7 @@
+> 
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+> +			arm,coresight-loses-context-with-cpu;
+> 
+>  			out-ports {
+>  				port {
+> @@ -1710,6 +1713,7 @@
+> 
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+> +			arm,coresight-loses-context-with-cpu;
+> 
+>  			out-ports {
+>  				port {
+> @@ -1728,6 +1732,7 @@
+> 
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+> +			arm,coresight-loses-context-with-cpu;
+> 
+>  			out-ports {
+>  				port {
+> @@ -1746,6 +1751,7 @@
+> 
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+> +			arm,coresight-loses-context-with-cpu;
+> 
+>  			out-ports {
+>  				port {
+> @@ -1764,6 +1770,7 @@
+> 
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+> +			arm,coresight-loses-context-with-cpu;
+> 
+>  			out-ports {
+>  				port {
+> @@ -1782,6 +1789,7 @@
+> 
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+> +			arm,coresight-loses-context-with-cpu;
+> 
+>  			out-ports {
+>  				port {
 
 
-For my own reference (apply this as-is to your sign-off block):
+The previous version of this patch in QCOM tree seems to have added the
+property to replicator node instead of etm7 node, can you please drop
+that from the tree and apply this one?
 
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Thanks,
+Sai
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
