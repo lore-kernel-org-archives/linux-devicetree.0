@@ -2,104 +2,87 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CAFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95882C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C254206F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589535407;
-	bh=EWbnJSdrb2JGQCuwuvhoGws7QKlUIWurGSa53yiFjF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yJ7BjojJaHr2eqFycTzH5GM/0yXi/Mc+buM1cGo4J1BvVwRk5fM/DQVQg5/lwCbbs
-	 pnAA257xkawiHmc8C48QDe6XDfgpRnrkOxfpujLNKaI/11fKk3LeKkScQhb419JUyz
-	 Wii4ze2oteARrPccfX3ehw43dABECTVKPrSwWC1I=
+	by mail.kernel.org (Postfix) with ESMTP id 62F2A206B6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:37:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jzU7nG3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgEOJgq (ORCPT
+        id S1728127AbgEOJho (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 05:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgEOJgq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 05:36:46 -0400
-Received: from localhost (p5486CC07.dip0.t-ipconnect.de [84.134.204.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A45B0206B6;
-        Fri, 15 May 2020 09:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589535406;
-        bh=EWbnJSdrb2JGQCuwuvhoGws7QKlUIWurGSa53yiFjF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tLOl47rkQPTpRDSxAb2MOQFo7uUW/DBsLcviI0dAajmsIBIiACF1p221Mupl5qxsJ
-         vQcsT/dOe6ye2t3u8QhqnYw9wgYeCZN4KUhnF4sgVv519o/TGNhhV1ai4NGAELxtlj
-         Uu3/AbAMYpcyq8s6DlaARflYH7LtqUNgW9ZgEoPI=
-Date:   Fri, 15 May 2020 11:36:43 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: eeprom: at24: Fix list of page sizes for
- writing
-Message-ID: <20200515093643.GE2077@ninjato>
-References: <20200512122450.20205-1-geert+renesas@glider.be>
- <20200515092755.GC2077@ninjato>
+        Fri, 15 May 2020 05:37:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43346 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgEOJhm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 05:37:42 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04F9bLbF036068;
+        Fri, 15 May 2020 04:37:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589535441;
+        bh=oEOAmMlHbDMdqsu88ZGLxuLWEWcpJCtqZ15QYDx+IUw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jzU7nG3RyRqg6BiOsRLMPw7ivW7oO7DL8JhD/D2ayGFbOq74L/3O4lJ784OqebItk
+         opK2uoHt0VsAzV8vSHkmXTK/X2QJ7N5cJnTV7jek8KhrqeOE3Jcjp/1HS8hMyTBytg
+         sA4u68GfCAethfqAYljk4lJLBx7oI48U2G1SOo7k=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04F9bL47130041
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 May 2020 04:37:21 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
+ May 2020 04:37:20 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 15 May 2020 04:37:21 -0500
+Received: from [10.250.151.179] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04F9bHhi005235;
+        Fri, 15 May 2020 04:37:18 -0500
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am654-main: Update otap-del-sel
+ values
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <t-kristo@ti.com>
+References: <20200507181526.12529-1-faiz_abbas@ti.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <ed7068a6-3441-be0c-cf78-63e0988e91af@ti.com>
+Date:   Fri, 15 May 2020 15:07:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
-Content-Disposition: inline
-In-Reply-To: <20200515092755.GC2077@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200507181526.12529-1-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Tero,
 
---DqhR8hV3EnoxUkKN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 07/05/20 11:45 pm, Faiz Abbas wrote:
+> According to the latest AM65x Data Manual[1], a different output tap
+> delay value is optimum for a given speed mode. Update these values.
+> 
+> [1] http://www.ti.com/lit/gpn/am6526
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+> v2: Rebased to the latest mainline kernel
+> 
 
-On Fri, May 15, 2020 at 11:27:55AM +0200, Wolfram Sang wrote:
-> On Tue, May 12, 2020 at 02:24:47PM +0200, Geert Uytterhoeven wrote:
-> > "258" is an odd power-of-two ;-)
-> > Obviously this is a typo, and the intended value is "256".
-> >=20
-> > Fixes: 7f3bf4203774013b ("dt-bindings: at24: convert the binding docume=
-nt to yaml")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->=20
-> Since I have a PR for Linus pending anyhow, I step ahead and apply it to
-> my tree. Hope this is fine for everyone. Applied to for-current, thanks!
+Gentle ping.
 
-Brown paper bag, please. This is in -next only, so I rather leave it for
-Rob because of the dependencies.
-
-
---DqhR8hV3EnoxUkKN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6+YqsACgkQFA3kzBSg
-KbaKNQ/+P6/fFkr0EC7kjwQx/Un37Vf0MS4LoxSQJyos1Il46+b1drcC2Pw2JTuj
-ysDdguvHZm492n17lSX7Qs7LpcbiHRWuOcEdwwNmhnmdY5GnGDCOoQej9eA0JxQ7
-++Fjbmc8kpAjVzA6WmjEPf6+ee6el+sp3U5C/3txHEMvF6XxPLe1Arv8yrVV6SI6
-mQ0RQnFuVjtdvh3kWlrYMnZhUPPRtM4q2x5u2OIjS0uCGULDSMSEkWZR6yPorj2k
-7XIWXq/r8H5LwRHtjFc4CateejuoihqyPwO+PANUTJr2jwfkBR3FNEg7RJlFWjhj
-Ro86qU0d5muF4o4dMeghB/HwqWKE5wdGWbi2ubjImy7rUHJwEPeQ2tYgqjiDxBtR
-SlaCXNuZ2faTvXLH9wx4jipFmRkA099vA2bWwKrt1+4+br3bEo6rVnJ+ja1/mOsn
-L/DRtPRfwO5V0vDXoL1f9BB50BsXpj75rX5pWyAxs1uy9yU/KVQ4crcjI0if79Xz
-VtjyvsLr0qwy9/z0s3uRgAziOdQLdpq0NUrciSFy1CMajDkInbiPExqvSaZKR3if
-26JTu+z6K+Rc6tejG1SYcD2y542+nsLN4fHoZQWjuwbw5EHzS5KlH1rrnRWCS7eV
-RbtcqRZ8lxNxewDEQhPEhUHKPs7eFuWp3onSNgSb+iJ44Wg2Gzo=
-=HPEd
------END PGP SIGNATURE-----
-
---DqhR8hV3EnoxUkKN--
+Thanks,
+Faiz
