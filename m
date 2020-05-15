@@ -2,173 +2,255 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A44C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED86C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABC4206B6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D29720759
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:28:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXEYEEqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgEOKU7 (ORCPT
+        id S1728194AbgEOK2y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 06:20:59 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:52978 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728047AbgEOKUe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 06:20:34 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 872241A068B;
-        Fri, 15 May 2020 12:20:31 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 179421A06A7;
-        Fri, 15 May 2020 12:20:26 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A61F940318;
-        Fri, 15 May 2020 18:20:19 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] ASoC: fsl_esai: introduce SoC specific data
-Date:   Fri, 15 May 2020 18:10:50 +0800
-Message-Id: <c188279975bd216995904f9bf8a84c7887b759a0.1589537601.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1589537601.git.shengjiu.wang@nxp.com>
-References: <cover.1589537601.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1589537601.git.shengjiu.wang@nxp.com>
-References: <cover.1589537601.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 15 May 2020 06:28:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbgEOK2x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 06:28:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1762FC05BD0A
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 03:28:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j5so2949994wrq.2
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 03:28:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
+        b=CXEYEEqcvkty6QbjHU8IC9+4m00nYkEX+SNv9RcxVR5/SFF+YXke+BvJ6oVoOabQdZ
+         zNfD971SDDWzHM8i6tMy7Ide1qyTwoimukooCDQG010KoMF5GvG2qiwCDrJzTOJ/ST1J
+         prbm8Ynnzt8vqseddRKMMZbinTDqtdohbq4rUwGgpc6TUwZFSsD+mzok7VbjTnaA+NPE
+         7SxmiCj38OP6B2dbzDqJc0ZqywE58/rTxvAnd+HOSQ/e7PuK5vIet7N3V1P5fBuJTFqx
+         810hQ3AwpINxJ1EOF2q5K54I50ZckVeqd/fsfxWyzTJVbsxau3rGuKWQxQF/tGuS+Hp3
+         egGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
+        b=oJf+npdS8uw73Kba/xZ1Mpd3rQjNuS4tTeiFPQIHGNG9F0HMGwRO4PbJtcmTRk0yUH
+         whQh+M6qcPfGxtKX3FAiOLxNFoGcqGwl46VPrXoQifyaq4nsIQz0H1ZJiwMYhpuJHGen
+         9PjQI5oi5YQnS0kO69cvFIziumn105nA+Vs4DbhG8Ko4m1wgnZgCmKQBCiIIjnZZwGD7
+         /gQQ7h7LYUmNHdhxl4RsGp0BpFQNpPW2yhHp14hqEnJl4Y+dZW/Wk4P/0ahjEBWFzR5E
+         /V00RvdLEE+0CUm2aePFFMdWWIRmNe7eeNUAy70W0H/rGktYrYrEsuXWYM/84xDEpd0x
+         P5SQ==
+X-Gm-Message-State: AOAM53374kusnbgxGyjBrHQ/oLGesRncuUP+wrMczaosViBCJnKoTGWK
+        sGmEvxfKjz85IAgleByDMJPAFw==
+X-Google-Smtp-Source: ABdhPJxTv+9YnkgoMuYBGuW3wQDNEiVk0bNzw09WJsjwgIV7JP0J+YUnU47dJL1yqsEb92xCMVOBXw==
+X-Received: by 2002:adf:a1d7:: with SMTP id v23mr3514719wrv.155.1589538531500;
+        Fri, 15 May 2020 03:28:51 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id j16sm2878629wru.13.2020.05.15.03.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 03:28:50 -0700 (PDT)
+Date:   Fri, 15 May 2020 11:28:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+Message-ID: <20200515102848.GH271301@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+ <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce a SoC specific data structure which contains the
-differences between the different SoCs.
-This makes it easier to support more differences without having
-to introduce a new if/else each time.
+On Thu, 30 Apr 2020, Michael Walle wrote:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- sound/soc/fsl/fsl_esai.c | 46 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 37 insertions(+), 9 deletions(-)
+> Hi Lee,
+> 
+> Am 2020-04-23 19:45, schrieb Michael Walle:
+> > There might be multiple children with the device tree compatible, for
+> > example if a MFD has multiple instances of the same function. In this
+> > case only the first is matched and the other children get a wrong
+> > of_node reference.
+> > Add a new option to match also against the unit address of the child
+> > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+> 
+> 
+> Do you think this is feasible? I guess this is the biggest uncertainty
+> for me at the moment in this patch series.
 
-diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
-index 84290be778f0..bac65ba7fbad 100644
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -21,6 +21,17 @@
- 				SNDRV_PCM_FMTBIT_S20_3LE | \
- 				SNDRV_PCM_FMTBIT_S24_LE)
- 
-+/**
-+ * fsl_esai_soc_data: soc specific data
-+ *
-+ * @imx: for imx platform
-+ * @reset_at_xrun: flags for enable reset operaton
-+ */
-+struct fsl_esai_soc_data {
-+	bool imx;
-+	bool reset_at_xrun;
-+};
-+
- /**
-  * fsl_esai: ESAI private data
-  *
-@@ -33,6 +44,7 @@
-  * @fsysclk: system clock source to derive HCK, SCK and FS
-  * @spbaclk: SPBA clock (optional, depending on SoC design)
-  * @task: tasklet to handle the reset operation
-+ * @soc: soc specific data
-  * @lock: spin lock between hw_reset() and trigger()
-  * @fifo_depth: depth of tx/rx FIFO
-  * @slot_width: width of each DAI slot
-@@ -44,7 +56,6 @@
-  * @sck_div: if using PSR/PM dividers for SCKx clock
-  * @slave_mode: if fully using DAI slave mode
-  * @synchronous: if using tx/rx synchronous mode
-- * @reset_at_xrun: flags for enable reset operaton
-  * @name: driver name
-  */
- struct fsl_esai {
-@@ -57,6 +68,7 @@ struct fsl_esai {
- 	struct clk *fsysclk;
- 	struct clk *spbaclk;
- 	struct tasklet_struct task;
-+	const struct fsl_esai_soc_data *soc;
- 	spinlock_t lock; /* Protect hw_reset and trigger */
- 	u32 fifo_depth;
- 	u32 slot_width;
-@@ -70,10 +82,24 @@ struct fsl_esai {
- 	bool sck_div[2];
- 	bool slave_mode;
- 	bool synchronous;
--	bool reset_at_xrun;
- 	char name[32];
- };
- 
-+static struct fsl_esai_soc_data fsl_esai_vf610 = {
-+	.imx = false,
-+	.reset_at_xrun = true,
-+};
-+
-+static struct fsl_esai_soc_data fsl_esai_imx35 = {
-+	.imx = true,
-+	.reset_at_xrun = true,
-+};
-+
-+static struct fsl_esai_soc_data fsl_esai_imx6ull = {
-+	.imx = true,
-+	.reset_at_xrun = false,
-+};
-+
- static irqreturn_t esai_isr(int irq, void *devid)
- {
- 	struct fsl_esai *esai_priv = (struct fsl_esai *)devid;
-@@ -85,7 +111,7 @@ static irqreturn_t esai_isr(int irq, void *devid)
- 	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
- 
- 	if ((saisr & (ESAI_SAISR_TUE | ESAI_SAISR_ROE)) &&
--	    esai_priv->reset_at_xrun) {
-+	    esai_priv->soc->reset_at_xrun) {
- 		dev_dbg(&pdev->dev, "reset module for xrun\n");
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
- 				   ESAI_xCR_xEIE_MASK, 0);
-@@ -936,9 +962,11 @@ static int fsl_esai_probe(struct platform_device *pdev)
- 	esai_priv->pdev = pdev;
- 	snprintf(esai_priv->name, sizeof(esai_priv->name), "%pOFn", np);
- 
--	if (of_device_is_compatible(np, "fsl,vf610-esai") ||
--	    of_device_is_compatible(np, "fsl,imx35-esai"))
--		esai_priv->reset_at_xrun = true;
-+	esai_priv->soc = of_device_get_match_data(&pdev->dev);
-+	if (!esai_priv->soc) {
-+		dev_err(&pdev->dev, "failed to get soc data\n");
-+		return -ENODEV;
-+	}
- 
- 	/* Get the addresses and IRQ */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -1063,9 +1091,9 @@ static int fsl_esai_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id fsl_esai_dt_ids[] = {
--	{ .compatible = "fsl,imx35-esai", },
--	{ .compatible = "fsl,vf610-esai", },
--	{ .compatible = "fsl,imx6ull-esai", },
-+	{ .compatible = "fsl,imx35-esai", .data = &fsl_esai_imx35 },
-+	{ .compatible = "fsl,vf610-esai", .data = &fsl_esai_vf610 },
-+	{ .compatible = "fsl,imx6ull-esai", .data = &fsl_esai_imx6ull },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_esai_dt_ids);
+I think it sounds fine in principle.  So long as it doesn't change the
+existing behaviour when of_reg isn't set.
+
+> > Signed-off-by: Michael Walle <michael@walle.cc>
+> > ---
+> >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
+> >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
+> >  2 files changed, 40 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> > index e735565969b3..4ecb376338f7 100644
+> > --- a/drivers/mfd/mfd-core.c
+> > +++ b/drivers/mfd/mfd-core.c
+> > @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, int
+> > id,
+> >  	struct device_node *np = NULL;
+> >  	int ret = -ENOMEM;
+> >  	int platform_id;
+> > +	u32 of_reg;
+> >  	int r;
+> > 
+> >  	if (id == PLATFORM_DEVID_AUTO)
+> > @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent,
+> > int id,
+> > 
+> >  	if (parent->of_node && cell->of_compatible) {
+> >  		for_each_child_of_node(parent->of_node, np) {
+> > -			if (of_device_is_compatible(np, cell->of_compatible)) {
+> > -				if (!of_device_is_available(np)) {
+> > -					/* Ignore disabled devices error free */
+> > -					ret = 0;
+> > -					goto fail_alias;
+> > -				}
+> > -				pdev->dev.of_node = np;
+> > -				pdev->dev.fwnode = &np->fwnode;
+> > -				break;
+> > +			if (!of_device_is_compatible(np, cell->of_compatible))
+> > +				continue;
+> > +
+> > +			/* also match the unit address if set */
+
+Please use correct grammar in comments (leaving off the full-stop).
+
+> > +			if (cell->of_reg & MFD_OF_REG_VALID) {
+> > +				if (of_property_read_u32(np, "reg", &of_reg))
+> > +					continue;
+> > +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
+> > +					continue;
+> >  			}
+> > +
+> > +			if (!of_device_is_available(np)) {
+> > +				/* Ignore disabled devices error free */
+> > +				ret = 0;
+> > +				goto fail_alias;
+> > +			}
+> > +
+> > +			pdev->dev.of_node = np;
+> > +			pdev->dev.fwnode = &np->fwnode;
+> > +			break;
+> >  		}
+> >  	}
+> > 
+> > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> > index d01d1299e49d..c2c0ad6b14f3 100644
+> > --- a/include/linux/mfd/core.h
+> > +++ b/include/linux/mfd/core.h
+> > @@ -13,8 +13,11 @@
+> >  #include <linux/platform_device.h>
+> > 
+> >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+> > +#define MFD_OF_REG_VALID	BIT(31)
+
+What about 64bit platforms?
+
+> > +#define MFD_OF_REG_MASK		GENMASK(30, 0)
+> > 
+> > -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,
+> > _match)\
+> > +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> > +		     _of_reg, _match)					\
+> >  	{								\
+> >  		.name = (_name),					\
+> >  		.resources = (_res),					\
+> > @@ -22,24 +25,32 @@
+> >  		.platform_data = (_pdata),				\
+> >  		.pdata_size = (_pdsize),				\
+> >  		.of_compatible = (_compat),				\
+> > +		.of_reg = (_of_reg),					\
+> >  		.acpi_match = (_match),					\
+> >  		.id = (_id),						\
+> >  	}
+> > 
+> > +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> > +			_of_reg)					\
+> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> > +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
+> > +
+> >  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
+> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
+> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> > +		     0, NULL)						\
+> > 
+> >  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
+> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
+> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
+> > +		     _match)						\
+> > 
+> >  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
+> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
+> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
+> > 
+> >  #define MFD_CELL_RES(_name, _res)					\
+> > -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
+> > +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
+> > 
+> >  #define MFD_CELL_NAME(_name)						\
+> > -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
+> > +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
+> > 
+> >  struct irq_domain;
+> >  struct property_entry;
+> > @@ -78,6 +89,9 @@ struct mfd_cell {
+> >  	 */
+> >  	const char		*of_compatible;
+> > 
+> > +	/* matching the reg property if set */
+
+Proper grammar please.
+
+"OF unit address for device matching"
+
+> > +	unsigned int		of_reg;
+> > +
+> >  	/* Matches ACPI */
+> >  	const struct mfd_cell_acpi_match	*acpi_match;
+
 -- 
-2.21.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
