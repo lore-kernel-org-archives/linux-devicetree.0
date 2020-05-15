@@ -2,45 +2,50 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7430C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBF1204EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F3B204EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GsgVmhcG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IxkDxwcI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725986AbgEOLTo (ORCPT
+        id S1726213AbgEOLUW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 07:19:44 -0400
+        Fri, 15 May 2020 07:20:22 -0400
 Received: from mail27.static.mailgun.info ([104.130.122.27]:15136 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726084AbgEOLTo (ORCPT
+        by vger.kernel.org with ESMTP id S1726219AbgEOLUV (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 07:19:44 -0400
+        Fri, 15 May 2020 07:20:21 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589541584; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=G0YIFY7DmGhaD5zdzMpjeUqrJeIdM8P3XbRXyIYmxlI=; b=GsgVmhcGpHGMuQHkpypX9+TuPGewypr8xu10k7ulnlcNGku3UtUnXyT3Cgj73jNjZlNS591o
- GnyF2BfO14W4q+rzuDxuorIymLXMsg/8ah+loctMaPnfDdHipJQ9jGlUbj8lgH87UDBzqUxG
- Zu1uSz9PSPbYcEyc9tgoEuDvjbY=
+ s=smtp; t=1589541621; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=hed5X6RlvHP5iun0h6cacBLjIzbJ+Q/7Jlx/w5qDseg=; b=IxkDxwcI0gJ7wevDCY1lE1n5uy9qJaigLklpOsQMmxH2Uitx+4zm94me24bqTtHTFZmBfEjU
+ c9wwNqkUVmOvHJQR7HwEquhZSRTMqANs6dWvIGQgl+1rAd3sEVRIBwndu8bFK/DIBxxQ2nd7
+ 4apDjE3KotBkJ+/mamv3Lb/fpU8=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebe7ac9.7f337dc55998-smtp-out-n02;
- Fri, 15 May 2020 11:19:37 -0000 (UTC)
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ebe7aebaefa5a01cc5d628c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 11:20:11
+ GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 89746C433F2; Fri, 15 May 2020 11:19:36 +0000 (UTC)
+        id 8C457C433F2; Fri, 15 May 2020 11:20:10 +0000 (UTC)
 Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A952C433D2;
-        Fri, 15 May 2020 11:19:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9A952C433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DFB8C433D2;
+        Fri, 15 May 2020 11:20:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DFB8C433D2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
 From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
@@ -48,38 +53,51 @@ To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V1 0/3] Internal voltage control for qcom SDHC 
-Date:   Fri, 15 May 2020 16:48:51 +0530
-Message-Id: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+Subject: [PATCH V1 1/3] dt-bindings: mmc: Supply max load for mmc supplies
+Date:   Fri, 15 May 2020 16:48:52 +0530
+Message-Id: <1589541535-8523-2-git-send-email-vbadigan@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On qcom SD host controllers voltage switching be done after the HW
-is ready for it. The HW informs its readiness through power irq.
-The voltage switching should happen only then.
+Supply the max load needed for driving the mmc supplies.
 
-So added support to register voltage regulators from the msm driver
-and use them.
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ .../devicetree/bindings/mmc/mmc-controller.yaml          | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-This patchset was posted long back but not actively pursued
-https://lore.kernel.org/linux-arm-msm/1539004739-32060-1-git-send-email-vbadigan@codeaurora.org/
-So posting it as fresh patchset.  
-
-Veerabhadrarao Badiganti (1):
-  dt-bindings: mmc: Supply max load for mmc supplies
-
-Vijay Viswanath (2):
-  mmc: sdhci-msm: Use internal voltage control
-  mmc: sdhci: Allow platform controlled voltage switching
-
- .../devicetree/bindings/mmc/mmc-controller.yaml    |  16 ++
- drivers/mmc/host/sdhci-msm.c                       | 215 ++++++++++++++++++++-
- drivers/mmc/host/sdhci.c                           |  32 +--
- drivers/mmc/host/sdhci.h                           |   1 +
- 4 files changed, 243 insertions(+), 21 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+index acc9f10..9058b82 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
++++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+@@ -290,6 +290,22 @@ properties:
+     description:
+       Supply for the bus IO line power
+ 
++  vmmc-max-load-microamp:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 1000000
++    description:
++      Maximum load for the card power.
++
++  vqmmc-max-load-microamp:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 1000000
++    description:
++      Maximum load for the bus IO line power.
++
+   mmc-pwrseq:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description:
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+
