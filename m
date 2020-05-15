@@ -2,212 +2,100 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15493C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62204C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54AE20671
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="MHDjPGtz"
+	by mail.kernel.org (Postfix) with ESMTP id 3BDB0206B6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgEOOAQ (ORCPT
+        id S1726174AbgEOOBg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 10:00:16 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:46806 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgEOOAP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 10:00:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589551215; x=1621087215;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RYuYk2nK0gUCJ/sXARflJpI6XX3QksJ6uNvKcChd4mw=;
-  b=MHDjPGtzUEwlEnB7MUuEFW6dC8H+K1ujN40Ih7cV9fJgxfL+8WLwFvms
-   mz8qREtgU/AQeiikkIgVpC6r2KvVjbthg5t/5cN/eUclmDom9sv1DvfdD
-   66fSl3HW6xaqI8avGAKgLiUtjrwDFiRjeGz4I/EYisQnrBrDCR7d1IoDa
-   5TM7VdkzW2s8A7I/lY6XJrHgalHn8gA0wCgNCro7CVvc8G4dtB14Wce5y
-   cw1e4InQ9dn7Qjkw3xfFlPRxSnd0yUsdhPVOMcpD1LP4p6ylho4s95BwA
-   Wxn8aOC3pfQo7Svtpm9v52pffociRb7PaoJnJfos7rv5sEh0/5mIe0fJK
-   g==;
-IronPort-SDR: 7HCBGe2GHURrpUUzzZh6clIGKaIGH3sdDknjInDYLJJfq2nkGRUBKHW/oJQ2VAgNaHMchLJzsl
- xRTeBJ0mS6SKwyZh3ZYSgIVnbtIxdTP+HVzqldccjaKp0jltGJXIiotOHcEnJR5Bw3FjKVZSwG
- g77MnHQUi6SLJ69j/wz7nsuE1WLNClK23BpdSkwGZBylDAiR9PsGHG3CiF2Xcuih7Bhuspm9BN
- jC6AbSo56NQLIIdtYhG/FY81VklLgXZQMbca+cLmZ+2AOQuEg6/PHO4L2blx6YkhyT0/u+2M+E
- OrU=
-X-IronPort-AV: E=Sophos;i="5.73,395,1583218800"; 
-   d="scan'208";a="73579432"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 07:00:10 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 15 May 2020 07:00:13 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 15 May 2020 07:00:05 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH] ARM: dts: at91: Configure I2C SCL gpio as open drain
-Date:   Fri, 15 May 2020 17:00:01 +0300
-Message-ID: <20200515140001.287932-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 15 May 2020 10:01:36 -0400
+Received: from mga18.intel.com ([134.134.136.126]:10555 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726160AbgEOOBg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 10:01:36 -0400
+IronPort-SDR: xB/NYODIL6CrfaxkHe4phBt+W9BS6lHAX3zPlIWwr3GERobISCbVojAeqap/ePiA6MmWc/j9s3
+ shxURgOMvAqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:01:36 -0700
+IronPort-SDR: mO5mOnnaXf+xAHg4vktp5Kso1bd2B6CRlRvudhFB9+5yoE3ifWCEHl2Y26622CqWQ1p/XMoN65
+ HZjJbZ+ffrzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="410470019"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 15 May 2020 07:01:27 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZau1-006smV-Oj; Fri, 15 May 2020 17:01:29 +0300
+Date:   Fri, 15 May 2020 17:01:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/19] spi: dw: Parameterize the DMA Rx/Tx burst length
+Message-ID: <20200515140129.GD1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-10-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515104758.6934-10-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SCL gpio pin used by I2C bus for recovery needs to be configured as
-open drain.
+On Fri, May 15, 2020 at 01:47:48PM +0300, Serge Semin wrote:
+> It isn't good to have numeric literals in the code especially if there
+> are multiple of them and they are related. Moreover in current
+> implementation the Tx DMA transfer activation level isn't optimal,
+> since it's hardwired to be at 16-32 bytes level, while it's better
+> to keep the SPI FIFO buffer as full as possible until all available
+> data is submitted. So lets introduce the DMA burst level
+> parametrization macros with optimal values - issue Rx transfer if at
+> least 16 bytes are available in the buffer and execute Tx transaction
+> if at least 16 bytes room is opened in SPI Tx FIFO.
 
-Fixes: 455fec938bbb ("ARM: dts: at91: sama5d2: add i2c gpio pinctrl")
-Fixes: a4bd8da893a3 ("ARM: dts: at91: sama5d3: add i2c gpio pinctrl")
-Fixes: 8fb82f050cf6 ("ARM: dts: at91: sama5d4: add i2c gpio pinctrl")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts   | 6 +++---
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 6 +++---
- arch/arm/boot/dts/sama5d3.dtsi              | 6 +++---
- arch/arm/boot/dts/sama5d4.dtsi              | 6 +++---
- 4 files changed, 12 insertions(+), 12 deletions(-)
+> -	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
+> -	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
+> +	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
+> +	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - TX_BURST_LEVEL);
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-index 32435ce1dab2..be33483013e7 100644
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -182,7 +182,7 @@ i2c0: i2c@f8028000 {
- 				pinctrl-0 = <&pinctrl_i2c0_default>;
- 				pinctrl-1 = <&pinctrl_i2c0_gpio>;
- 				sda-gpios = <&pioA PIN_PD21 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA PIN_PD22 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA PIN_PD22 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				status = "okay";
- 			};
- 
-@@ -203,7 +203,7 @@ i2c2: i2c@600 {
- 					pinctrl-0 = <&pinctrl_flx0_default>;
- 					pinctrl-1 = <&pinctrl_flx0_gpio>;
- 					sda-gpios = <&pioA PIN_PB28 GPIO_ACTIVE_HIGH>;
--					scl-gpios = <&pioA PIN_PB29 GPIO_ACTIVE_HIGH>;
-+					scl-gpios = <&pioA PIN_PB29 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 					atmel,fifo-size = <16>;
- 					status = "okay";
- 				};
-@@ -234,7 +234,7 @@ i2c1: i2c@fc028000 {
- 				pinctrl-0 = <&pinctrl_i2c1_default>;
- 				pinctrl-1 = <&pinctrl_i2c1_gpio>;
- 				sda-gpios = <&pioA PIN_PC6 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA PIN_PC7 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA PIN_PC7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				status = "okay";
- 
- 				at24@50 {
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index e0c6cff1a312..862bf54376f1 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -185,7 +185,7 @@ i2c0: i2c@f8028000 {
- 				pinctrl-0 = <&pinctrl_i2c0_default>;
- 				pinctrl-1 = <&pinctrl_i2c0_gpio>;
- 				sda-gpios = <&pioA PIN_PD21 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA PIN_PD22 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA PIN_PD22 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				i2c-sda-hold-time-ns = <350>;
- 				status = "okay";
- 
-@@ -390,7 +390,7 @@ i2c2: i2c@600 {
- 					pinctrl-0 = <&pinctrl_flx4_default>;
- 					pinctrl-1 = <&pinctrl_flx4_gpio>;
- 					sda-gpios = <&pioA PIN_PD12 GPIO_ACTIVE_HIGH>;
--					scl-gpios = <&pioA PIN_PD13 GPIO_ACTIVE_HIGH>;
-+					scl-gpios = <&pioA PIN_PD13 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 					atmel,fifo-size = <16>;
- 					i2c-analog-filter;
- 					i2c-digital-filter;
-@@ -408,7 +408,7 @@ i2c1: i2c@fc028000 {
- 				i2c-digital-filter-width-ns = <35>;
- 				pinctrl-1 = <&pinctrl_i2c1_gpio>;
- 				sda-gpios = <&pioA PIN_PD4 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA PIN_PD5 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA PIN_PD5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				status = "okay";
- 
- 				at24@54 {
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index f3ce561b46ab..c53e48445e4d 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -163,7 +163,7 @@ i2c0: i2c@f0014000 {
- 				pinctrl-0 = <&pinctrl_i2c0>;
- 				pinctrl-1 = <&pinctrl_i2c0_gpio>;
- 				sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 31 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 18>;
-@@ -181,7 +181,7 @@ i2c1: i2c@f0018000 {
- 				pinctrl-0 = <&pinctrl_i2c1>;
- 				pinctrl-1 = <&pinctrl_i2c1_gpio>;
- 				sda-gpios = <&pioC 26 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioC 27 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioC 27 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 19>;
-@@ -367,7 +367,7 @@ i2c2: i2c@f801c000 {
- 				pinctrl-0 = <&pinctrl_i2c2>;
- 				pinctrl-1 = <&pinctrl_i2c2_gpio>;
- 				sda-gpios = <&pioA 18 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA 19 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 20>;
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index c9c0316b5b0e..fff679734c9c 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -462,7 +462,7 @@ i2c0: i2c@f8014000 {
- 				pinctrl-0 = <&pinctrl_i2c0>;
- 				pinctrl-1 = <&pinctrl_i2c0_gpio>;
- 				sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 31 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 32>;
-@@ -484,7 +484,7 @@ i2c1: i2c@f8018000 {
- 				pinctrl-0 = <&pinctrl_i2c1>;
- 				pinctrl-1 = <&pinctrl_i2c1_gpio>;
- 				sda-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioE 30 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioE 30 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 33>;
-@@ -529,7 +529,7 @@ i2c2: i2c@f8024000 {
- 				pinctrl-0 = <&pinctrl_i2c2>;
- 				pinctrl-1 = <&pinctrl_i2c2_gpio>;
- 				sda-gpios = <&pioB 29 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioB 30 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioB 30 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 34>;
+...and if FIFO length is less than TX_BURST_LEVEL?
+
+For the patch that introduces definitions, i.e. keeping the last line here as
+
+	dw_writel(dws, DW_SPI_DMATDLR, TX_BURST_LEVEL);
+
+I'm good. You may put your tag in that case. For fifo_len case we need to
+discuss in separate patch, perhaps.
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
