@@ -2,159 +2,101 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B280C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6E8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E12B2074D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:52:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oIAiEmbP"
+	by mail.kernel.org (Postfix) with ESMTP id C708220709
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgEOKwN (ORCPT
+        id S1726037AbgEOKxS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 06:52:13 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42529 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726171AbgEOKwM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 06:52:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589539932; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=WTO64yR7Gyv3bO/7Aolr2Ns3FQUteAECAxwuDLyZ4qg=; b=oIAiEmbPGfRA6DhbdJDAYOpJw5EfsqcALGVtjaYqP9mhIyVu7s/JzgWvMtmgs/jV7arCz87n
- n/lme6l7u2y0Tv0CSuMUvvUEpMcAw7Np4CabBDqdoidpmndf9hfWLOzWp4ARp96mQZ1tSKto
- +mZefEscj5oDa1L29njk4E0/pWA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ebe74548ebbf95ecb8fc81a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 10:52:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BC0EFC4478C; Fri, 15 May 2020 10:52:03 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A776C433D2;
-        Fri, 15 May 2020 10:51:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A776C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 2/2] arm64: dts: qcom: sc7180: Add support to skip powering up of ETM
-Date:   Fri, 15 May 2020 16:21:37 +0530
-Message-Id: <7599d58142dcefbcb08a2eaff71c7f411a1d52b1.1589539293.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1589539293.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1589539293.git.saiprakash.ranjan@codeaurora.org>
+        Fri, 15 May 2020 06:53:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:23818 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725968AbgEOKxS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 06:53:18 -0400
+IronPort-SDR: ZEIiMclK4CAEABoksrY00BYJtZEszQm6oJIz4TqOPd+Uso7A/qffUDWVQXIXRNflsQX+Adfoad
+ SOMw5uegyY5Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 03:53:18 -0700
+IronPort-SDR: Z9jMbhI0bOSAkUctcFuR95gd0AMX/8Mg684Ffh1OGKjfyYJ8M6hkVl1s3Jyl+BbGleFFixE9ab
+ lPkSNLmIyqsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="341946497"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 15 May 2020 03:53:11 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZXxp-006qHS-UQ; Fri, 15 May 2020 13:53:13 +0300
+Date:   Fri, 15 May 2020 13:53:13 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
+ parameter
+Message-ID: <20200515105313.GL185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
+ <20200508112152.GI185537@smile.fi.intel.com>
+ <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
+ <20200512123551.GX185537@smile.fi.intel.com>
+ <20200515061601.GG333670@vkoul-mobl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515061601.GG333670@vkoul-mobl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add "qcom,skip-power-up" property to skip powering up ETM
-on SC7180 SoC to workaround a hardware errata where CPU
-watchdog counter is stopped when ETM power up bit is set
-(i.e., when TRCPDCR.PU = 1).
+On Fri, May 15, 2020 at 11:46:01AM +0530, Vinod Koul wrote:
+> On 12-05-20, 15:35, Andy Shevchenko wrote:
+> > On Tue, May 12, 2020 at 12:16:22AM +0300, Serge Semin wrote:
+> > > On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
+...
 
-Depends on ETM driver change here - https://lore.kernel.org/patchwork/cover/1242100/
+> > My point here that we probably can avoid complications till we have real
+> > hardware where it's different. As I said I don't remember a such, except
+> > *maybe* Intel Medfield, which is quite outdated and not supported for wider
+> > audience anyway.
+> 
+> IIRC Intel Medfield has couple of dma controller instances each one with
+> different parameters *but* each instance has same channel configuration.
 
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+That's my memory too.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 8b3707347547..de4bae4ec224 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1657,6 +1657,7 @@
- 			clocks = <&aoss_qmp>;
- 			clock-names = "apb_pclk";
- 			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
- 
- 			out-ports {
- 				port {
-@@ -1676,6 +1677,7 @@
- 			clocks = <&aoss_qmp>;
- 			clock-names = "apb_pclk";
- 			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
- 
- 			out-ports {
- 				port {
-@@ -1695,6 +1697,7 @@
- 			clocks = <&aoss_qmp>;
- 			clock-names = "apb_pclk";
- 			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
- 
- 			out-ports {
- 				port {
-@@ -1714,6 +1717,7 @@
- 			clocks = <&aoss_qmp>;
- 			clock-names = "apb_pclk";
- 			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
- 
- 			out-ports {
- 				port {
-@@ -1733,6 +1737,7 @@
- 			clocks = <&aoss_qmp>;
- 			clock-names = "apb_pclk";
- 			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
- 
- 			out-ports {
- 				port {
-@@ -1752,6 +1757,7 @@
- 			clocks = <&aoss_qmp>;
- 			clock-names = "apb_pclk";
- 			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
- 
- 			out-ports {
- 				port {
-@@ -1771,6 +1777,7 @@
- 			clocks = <&aoss_qmp>;
- 			clock-names = "apb_pclk";
- 			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
- 
- 			out-ports {
- 				port {
-@@ -1790,6 +1797,7 @@
- 			clocks = <&aoss_qmp>;
- 			clock-names = "apb_pclk";
- 			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
- 
- 			out-ports {
- 				port {
+> I do not recall seeing that we have synthesis parameters per channel
+> basis... But I maybe wrong, it's been a while.
+
+Exactly, that's why I think we better simplify things till we will have real
+issue with it. I.o.w. no need to solve the problem which doesn't exist.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+
 
