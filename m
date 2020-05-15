@@ -2,95 +2,88 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB8CC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7933C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4FB02076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9637207CB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgEOPhm (ORCPT
+        id S1726188AbgEOPnP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 11:37:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45144 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbgEOPhm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 11:37:42 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: evelikov)
-        with ESMTPSA id 560F02A3375
-Date:   Fri, 15 May 2020 16:35:02 +0100
-From:   Emil Velikov <emil.velikov@collabora.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
+        Fri, 15 May 2020 11:43:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38004 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbgEOPnP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 11:43:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4EE888029EC9;
+        Fri, 15 May 2020 15:43:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IQ3PdJDbfO6V; Fri, 15 May 2020 18:43:10 +0300 (MSK)
+Date:   Fri, 15 May 2020 18:43:08 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv1 13/19] power: supply: sbs-battery: add
- POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED support
-Message-ID: <20200515153502.GE2836808@arch-x1c3>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
- <20200513185615.508236-14-sebastian.reichel@collabora.com>
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        <linux-mips@vger.kernel.org>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 01/19] dt-bindings: spi: dw: Add Tx/Rx DMA properties
+Message-ID: <20200515154308.7s3wauq5edwj437y@mobilestation>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-2-Sergey.Semin@baikalelectronics.ru>
+ <20200515115151.GU185537@smile.fi.intel.com>
+ <20200515122715.GC5066@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200513185615.508236-14-sebastian.reichel@collabora.com>
+In-Reply-To: <20200515122715.GC5066@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020/05/13, Sebastian Reichel wrote:
-> Add support for reporting the SBS battery's condition flag
-> to userspace using the new "Calibration required" health status.
+On Fri, May 15, 2020 at 01:27:15PM +0100, Mark Brown wrote:
+> On Fri, May 15, 2020 at 02:51:51PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 15, 2020 at 01:47:40PM +0300, Serge Semin wrote:
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  drivers/power/supply/sbs-battery.c | 27 ++++++++++++++++++++++++---
->  1 file changed, 24 insertions(+), 3 deletions(-)
+> > > Since commit 22d48ad7bfac ("spi: dw: Add Elkhart Lake PSE DMA support")
+> > > the spi-dw-mid.c module supports a platform DMA engine handling the DW APB
+> > > SSI controller requests. Lets alter the DW SPI bindings file to accept the
+> > > Rx and Tx DMA line specifiers.
 > 
-> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-> index 4fa553d61db2..2a2b926ad75c 100644
-> --- a/drivers/power/supply/sbs-battery.c
-> +++ b/drivers/power/supply/sbs-battery.c
-> @@ -23,6 +23,7 @@
->  
->  enum {
->  	REG_MANUFACTURER_DATA,
-> +	REG_BATTERY_MODE,
->  	REG_TEMPERATURE,
->  	REG_VOLTAGE,
->  	REG_CURRENT_NOW,
-> @@ -94,6 +95,8 @@ static const struct chip_data {
->  } sbs_data[] = {
->  	[REG_MANUFACTURER_DATA] =
->  		SBS_DATA(POWER_SUPPLY_PROP_PRESENT, 0x00, 0, 65535),
-> +	[REG_BATTERY_MODE] =
-> +		SBS_DATA(-1, 0x03, 0, 65535),
+> > I'm wondering if these properties are implied by the SPI generic one?
+> > (forgive me if I'm not understanding all DT schema relations)
+> 
+> Which SPI generic DMA bindings are you thinking of here?  There aren't
+> any in spi-controller.yaml.
 
-Fwiw I really like how neatly the driver is split into components. One thing
-which makes me wonder, have you considered reshuffling the sbs_data struct.
+There are default schemas in the dt-core, which defines the dmas and dma-names
+type, but the exact naming and number of phandler+identifiers are implementation
+specific. So it's either supposed to be implemented on the generic SPI controller
+basis (like in someplace of spi-controller.yaml) or in individual controllers DT
+schema. As Mark said we don't have any DMA properties definition in the generic
+SPI controller schema (spi-controller.yaml), so the particular SPI controllers
+DT schemas have got their own DMA properties declared. Most of them BTW use the
+same naming as we do here: "rx" and "tx", but some alas don't.
 
-In particular:
- - index POWER_SUPPLY_PROP, kill off the REG_ enum
-   - sbs_get_property_index() can go, alongside a couple of unreachable paths
-   - replace batter_mode (needs calibration) with with PROP_HEALTH + comment
-   - perhaps even add REG_ADDR_SPEC_INFO 0x1a under POWER_SUPPLY_PROP_PRESENT
- - using the min/max seems wasteful, considering only one register is in s16
-   range while everything else is within u16
-
-
-Regardless of the questions and trivial suggestions, the series looks spot on.
-
-For the lot:
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-
-
--Emil
-P.S. The reg table is nearly complete only 0x01-0x07, 0x0E, 0x11, 0x1d-0x1f
-remain o/
+-Sergey
