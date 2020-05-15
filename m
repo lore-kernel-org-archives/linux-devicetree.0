@@ -2,116 +2,94 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C72C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709EAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96E8F2076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424D62070A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F9gBoT3v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ujlKf2bm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgEOSjy (ORCPT
+        id S1726245AbgEOSlm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 14:39:54 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:20660 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726584AbgEOSjw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 14:39:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589567992; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=mBPBCYFoKWdI3mEJ/ipBvucpCeB6dmeaUNTapAwv4TA=; b=F9gBoT3vYJDT2kKipcCbfGrYgP7+VzsVyM+4Hw/4T1RX3exs/ZNBCOJCu6R/DEZMxEU/detv
- 5PtFXNO+Tfm/t9aPLMLfzifXOQ4JOE8hj9/oK14TyFeSQJr6G9uD2ka4zn1/VH4zfLWJ8CnH
- IRgtfsSX3xYQ4NOta6xDvSI7SmI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebee1f7.7f85bbbcc960-smtp-out-n04;
- Fri, 15 May 2020 18:39:51 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 12CB1C43636; Fri, 15 May 2020 18:39:50 +0000 (UTC)
-Received: from [10.110.50.174] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98FECC433D2;
-        Fri, 15 May 2020 18:39:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98FECC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [RFC 3/3] dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, jackp@codeaurora.org
-References: <1588888768-25315-1-git-send-email-wcheng@codeaurora.org>
- <1588888768-25315-4-git-send-email-wcheng@codeaurora.org>
- <20200515031042.GA25107@bogus>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <10d2109d-cfb7-73d0-a186-4fa5f17feffe@codeaurora.org>
-Date:   Fri, 15 May 2020 11:39:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 14:41:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbgEOSll (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 14:41:41 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A1FC061A0C
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:41:40 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d16so3035232edq.7
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kv5MUGjy/Y9+njlPVWiZ3iEONaGvUB+Gebu1dnu2KGM=;
+        b=ujlKf2bmyqPK5q4p74/GDbGVJ43T0RZnhudgi7n1l3KeJmLjhq9FRvW+ly3rplSZw/
+         SShXcTT1vXathOvlWEpN853Noevit9g2dNWB6aHQOaCM3GbURUAjjNABKHtugKyC7pzp
+         yrc2jGfe+UP0BX7owd0hprTmIB8+dPFvsRZ2z59fYVlOI6dWY9wJqBFNwvMQF6tytc/C
+         J2q8UqC4917gXeX4gvlTV2nZTl2lvRMJp+aqGcW3bG2A4nsFRe0sOmwpoRE6lWWkJQMK
+         zSkTCp3aEtIg/2Vg5023BRydDCthya0H6yD4SwWhzdykq2Vf25NK+U24fYDd5keEbumH
+         lLTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kv5MUGjy/Y9+njlPVWiZ3iEONaGvUB+Gebu1dnu2KGM=;
+        b=LyzuTShLTddiaSYLEXZKfpa/GpWW2oTCPlUTjFuWC+VFQuyRZkXEhygreU3jw6Jajq
+         1Ou6J28fIc2LZ+7A6tYKcf1H5geABhsXlCICeuAt7jNujwVUZcfpdAmHUvxT+a5vAj8y
+         ehe0eMzvvJLhaYc9eHCpC+dUOjdNFmTwMRKS8KY8aG00ETbo2+aSbshItK4thz30sbcg
+         iI78b0gDALxun30jrYr0jZ0sWNDcEjxkFlWzafnoAC/VYYhvb6agJPmx6ZJkgLA/463e
+         OHhnIftmAsiUbYq8EtIRw/5YZ31N+NRbomr0THSeBxZgq//dslOLwyCwvI34iOYkWVXs
+         PW2w==
+X-Gm-Message-State: AOAM531nMvVQB8acczDEgbPNsO5tNXlJk1ljvKRwG/8TpcpTRTgLNTyn
+        liDRR1SZ9YJ3jktVqASKlVDB+PBmyChMatnQBY8=
+X-Google-Smtp-Source: ABdhPJw75eCBt+AI/OMsnjMjqhZaamKLCUTFwu5SGXAJdiwEJWMf0HfnrJS4BYtF3MwaV7yuh1t3Lq3sWs5D+CNlTNk=
+X-Received: by 2002:a05:6402:2208:: with SMTP id cq8mr4347508edb.293.1589568098804;
+ Fri, 15 May 2020 11:41:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200515031042.GA25107@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
+ <1589472657-3930-9-git-send-email-amittomer25@gmail.com> <b2ad8a81-619f-5f35-9596-c2061ae15e4c@arm.com>
+In-Reply-To: <b2ad8a81-619f-5f35-9596-c2061ae15e4c@arm.com>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Sat, 16 May 2020 00:11:02 +0530
+Message-ID: <CABHD4K9+2DKWiLATEvHLNgUj-otD1iNAkkYV1feXX3e-0HPvFQ@mail.gmail.com>
+Subject: Re: [PATCH v1 8/9] arm64: dts: actions: Add MMC controller support
+ for S700
+To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
+> I was wondering if we should add a SoC specific compatible here, to be
+> on the safe side. The BSP driver seems to differentiate between S900 and
+> S700, although it looks like only to cover some misplaced platform setup.
+>
+> But if we later find a problem, the DTs stay the same, and the driver
+> can easily be fixed.
+>
+> So, using "actions,s700-mmc", "actions,owl-mmc" here, adding this combo
+> to the binding, but leaving the driver alone for now.
 
-On 5/14/2020 8:10 PM, Rob Herring wrote:
-> On Thu, May 07, 2020 at 02:59:28PM -0700, Wesley Cheng wrote:
->> Re-introduce the comment for the tx-fifo-resize setting for the DWC3
->> controller.
-> 
-> Why?
-> 
+I think, it can be a good idea to have this extra compatible string that may
+be needed when MMC driver evolves to support more features which requires
+data to be differentiated based on SoC.
 
-Hi Rob,
-
-Initially, the reasoning behind bringing back the DTSI parameter, was to
-address situations where vendors don't require the resizing logic.  I
-was assuming that each vendor has their own HW configuration for the TX
-FIFO size, and some may already have sufficient space to account for
-their endpoint requirements.  However, if Felipe doesn't believe we need
-to have a DTSI parameter for this, then we don't need to re-add this
-back in.
-
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
->> index 9946ff9..489f5da 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->> @@ -105,7 +105,7 @@ Optional properties:
->>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
->>  			enable periodic ESS TX threshold.
->>  
->> - - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->> + - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->>   - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
->>  			register, undefined length INCR burst type enable and INCRx type.
->>  			When just one value, which means INCRX burst mode enabled. When
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks
+Amit
