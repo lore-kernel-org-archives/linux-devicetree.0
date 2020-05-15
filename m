@@ -2,106 +2,78 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F58C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740DFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD73E206F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAE0206F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgEOJ2R (ORCPT
+        id S1728004AbgEOJaE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 05:28:17 -0400
-Received: from mx.socionext.com ([202.248.49.38]:29503 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgEOJ2Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 05:28:16 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 15 May 2020 18:28:14 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id E2B71180B60;
-        Fri, 15 May 2020 18:28:14 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 15 May 2020 18:28:14 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 580F41A15C4;
-        Fri, 15 May 2020 18:28:14 +0900 (JST)
-Received: from [10.213.29.28] (unknown [10.213.29.28])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 6BDE612013D;
-        Fri, 15 May 2020 18:28:13 +0900 (JST)
-Subject: Re: [PATCH 5/5] PCI: uniphier: Add error message when failed to get
- phy
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Fri, 15 May 2020 05:30:04 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:5037 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727803AbgEOJaE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 05:30:04 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 15 May 2020 15:00:01 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 15 May 2020 14:59:37 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id B712728F7; Fri, 15 May 2020 14:59:36 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1589518105-18368-6-git-send-email-hayashi.kunihiko@socionext.com>
- <202005151454.wRtXzaiY%lkp@intel.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <e41c81f6-837a-e07a-458a-d388f373cb41@socionext.com>
-Date:   Fri, 15 May 2020 18:28:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <202005151454.wRtXzaiY%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v6 2/2] dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
+Date:   Fri, 15 May 2020 14:59:20 +0530
+Message-Id: <1589534960-6973-3-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589534960-6973-1-git-send-email-sanm@codeaurora.org>
+References: <1589534960-6973-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020/05/15 15:51, kbuild test robot wrote:
-> Hi Kunihiko,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on pci/next]
-> [also build test WARNING on robh/for-next v5.7-rc5 next-20200514]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Kunihiko-Hayashi/PCI-uniphier-Add-features-for-UniPhier-PCIe-host-controller/20200515-125031
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-> config: i386-allyesconfig (attached as .config)
-> compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-> reproduce:
->          # save the attached .config to linux build tree
->          make ARCH=i386
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> In file included from include/linux/device.h:15:0,
-> from include/linux/pci.h:37,
-> from drivers/pci/controller/dwc/pcie-uniphier.c:18:
-> drivers/pci/controller/dwc/pcie-uniphier.c: In function 'uniphier_pcie_probe':
->>> drivers/pci/controller/dwc/pcie-uniphier.c:470:16: warning: format '%d' expects argument of type 'int', but argument 3 has type 'long int' [-Wformat=]
-> dev_err(dev, "Failed to get phy (%d)n", PTR_ERR(priv->phy));
-> ^
-> include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_fmt'
-> #define dev_fmt(fmt) fmt
-> ^~~
->>> drivers/pci/controller/dwc/pcie-uniphier.c:470:3: note: in expansion of macro 'dev_err'
-> dev_err(dev, "Failed to get phy (%d)n", PTR_ERR(priv->phy));
-> ^~~~~~~
+Add compatible for SC7180 in usb dwc3 bindings.
 
-This should be fixed. I'll fix it in v2.
-
-Thanks,
-
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
-Best Regards
-Kunihiko Hayashi
+ Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+index 074d3cc..1a2bb6f 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+@@ -16,6 +16,7 @@ properties:
+       - enum:
+           - qcom,msm8996-dwc3
+           - qcom,msm8998-dwc3
++          - qcom,sc7180-dwc3
+           - qcom,sdm845-dwc3
+       - const: qcom,dwc3
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
