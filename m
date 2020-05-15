@@ -2,168 +2,109 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05207C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 12:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6202BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 12:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D19DD20657
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 12:06:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vYsNPXt9"
+	by mail.kernel.org (Postfix) with ESMTP id 34BE220767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 12:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589545099;
+	bh=9Dg/geS2WY+PUCSchXgvzv5fjHqTZmz9+jvLFZU/CVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1fCCg+W/kMyObwIC7kJC61X8793PGTqRUsFRr4MCnnvxVavviOk5Mpng1nVwmKHII
+	 nMJXmXdUNrY8AElzF16MgTdUJM0ioXRz7gdz2hOgv4g8nlZI9KSgUjQhWGBzd7emv6
+	 ImTVSATj4guH8cBdA1wGtZX4i9OIp3ZaLvWaCIHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgEOMGQ (ORCPT
+        id S1726135AbgEOMSS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 08:06:16 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:62307 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726229AbgEOMGP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 08:06:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589544374; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=SPYp2YDyVuaw6uCp5OOGpG4DBGumTLBzvLR2arIhqlY=;
- b=vYsNPXt9lM0JAisJRnu3Z5Rp352beVm5nEJT1BAtRZBY/JDotrzDntnZwr9MqhxKFPK1JPlc
- kV42z1OGv6FW6UuOu64BT0MpUQiBDiyiuPCfiX8C6Dc7i3HkJtP30PxqoTGzM3NLuMiMdiNh
- kK6NDQ9QTmnmQpUE8l68gGocmkg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebe85a1.7fd5b5a07768-smtp-out-n03;
- Fri, 15 May 2020 12:05:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 027D7C43636; Fri, 15 May 2020 12:05:52 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 15 May 2020 08:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbgEOMSS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 08:18:18 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D22AC433D2;
-        Fri, 15 May 2020 12:05:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 314F620657;
+        Fri, 15 May 2020 12:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589545097;
+        bh=9Dg/geS2WY+PUCSchXgvzv5fjHqTZmz9+jvLFZU/CVk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CQQTEjckxGY/W83cT10BNBZpSDTjsBfPUY2FAR25YZH/9JWCBOUPJQJwtg6k5cO8B
+         9swqCX90fbexiEfXNmj5VBA6MMcXdsKYCU1I8XywHW4ZlrXOYjz9tXZJYJlZuFIJUV
+         9KFNoM4hPDFlo8tos+IBi17ssR511l4fBOSAByxE=
+Date:   Fri, 15 May 2020 13:18:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/19] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200515121815.GB5066@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-3-Sergey.Semin@baikalelectronics.ru>
+ <20200515120111.GV185537@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 May 2020 17:35:51 +0530
-From:   kalyan_t@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, mkrishn@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        travitej@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>
-Subject: Re: [Freedreno] [PATCH] drm/msm/dpu: ensure device suspend happens
- during PM sleep
-In-Reply-To: <CAD=FV=UJGivCyp=t0J++1DbSFDVf+5zSCcXgh83VZtssBmavjg@mail.gmail.com>
-References: <1588339863-1322-1-git-send-email-kalyan_t@codeaurora.org>
- <CAD=FV=UJGivCyp=t0J++1DbSFDVf+5zSCcXgh83VZtssBmavjg@mail.gmail.com>
-Message-ID: <32c01e9a5277bdbdbab868eb71688184@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
+Content-Disposition: inline
+In-Reply-To: <20200515120111.GV185537@smile.fi.intel.com>
+X-Cookie: Avoid contact with eyes.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-14 21:47, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, May 1, 2020 at 6:31 AM Kalyan Thota <kalyan_t@codeaurora.org> 
-> wrote:
->> 
->> "The PM core always increments the runtime usage counter
->> before calling the ->suspend() callback and decrements it
->> after calling the ->resume() callback"
->> 
->> DPU and DSI are managed as runtime devices. When
->> suspend is triggered, PM core adds a refcount on all the
->> devices and calls device suspend, since usage count is
->> already incremented, runtime suspend was not getting called
->> and it kept the clocks on which resulted in target not
->> entering into XO shutdown.
->> 
->> Add changes to force suspend on runtime devices during pm sleep.
->> 
->> Changes in v1:
->>  - Remove unnecessary checks in the function
->>     _dpu_kms_disable_dpu (Rob Clark).
->> 
->> Changes in v2:
->>  - Avoid using suspend_late to reset the usagecount
->>    as suspend_late might not be called during suspend
->>    call failures (Doug).
->> 
->> Changes in v3:
->>  - Use force suspend instead of managing device usage_count
->>    via runtime put and get API's to trigger callbacks (Doug).
->> 
->> Changes in v4:
->>  - Check the return values of pm_runtime_force_suspend and
->>    pm_runtime_force_resume API's and pass appropriately (Doug).
->> 
->> Changes in v5:
-> 
-> Can you please put the version number properly in your subject?  It's
-> really hard to tell one version of your patch from another.
-> 
-> 
->>  - With v4 patch, test cycle has uncovered issues in device resume.
->> 
->>    On bubs: cmd tx failures were seen as SW is sending panel off
->>    commands when the dsi resources are turned off.
->> 
->>    Upon suspend, DRM driver will issue a NULL composition to the
->>    dpu, followed by turning off all the HW blocks.
->> 
->>    v5 changes will serialize the NULL commit and resource unwinding
->>    by handling them under PM prepare and PM complete phases there by
->>    ensuring that clks are on when panel off commands are being
->>    processed.
-> 
-> I'm still most definitely not an expert in how all the DRM pieces all
-> hook up together, but the solution you have in this patch seems wrong
-> to me.  As far as I can tell the "prepare" state isn't supposed to be
-> actually doing the suspend work and here that's exactly what you're
-> doing.  I think you should find a different solution to ensure
-> ordering is correct.
-> 
-> -Doug
-> 
 
-Hi,
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Prepare and Complete are callbacks defined as part of Sleep and Resume 
-sequence
+On Fri, May 15, 2020 at 03:01:11PM +0300, Andy Shevchenko wrote:
 
-Entering PM SUSPEND the phases are : prepare --> suspend --> 
-suspend_late --> suspend_noirq.
-While leaving PM SUSPEND the phases are: resume_noirq --> resume_early 
---> resume --> complete.
+> General question, doesn't spi core provides us some helpers like
+> spi_delay_exec()?
 
-The reason to push drm suspend handling to PM prepare phase is that 
-parent here will trigger a modeset to turn off the timing and 
-subsequently the panel.
-the child devices should not turn of their clocks before parent unwinds 
-the composition. Hence they are serialized as per the sequence mentioned 
-above.
+Well, nobody wrote one.  It's also a bit tricky to handle given that
+often you're checking some controller specific things while a FIFO in
+the IP drains/fills, though nothing insurmountable.
 
-A similar approach is taken by other driver that use drm framework. In 
-this driver, the device registers for prepare and complete callbacks to 
-handle drm_suspend and drm_resume.
-https://gitlab.freedesktop.org/drm/msm/-/blob/msm-next/drivers/gpu/drm/exynos/exynos_drm_drv.c#L163
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Kalyan
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+iIYACgkQJNaLcl1U
+h9Ai9gf+L810S4G5FCw8xL+m5zD7ORCJcMsd3SyOTjWilDCVqE0lho+9a9VgkUGX
+tXDOyyVkifm7oAFMOZRSyO5AtoP6TT8+YqWhtBeXshAkp3SESd5prUL6RcRyoYOi
+g3LGxYtMxOOs+qXjBzWgv/XVANdxtzIEnFvuXdZyMKernn0/O430Wu8L0KQVTwlG
+379zc5OSsqCCGpYXFFmPFZnUxuDZMQCLwIQXH5YAK5nuNm5OxaAdTL3yGvm8z2Kd
+0HiCxfIEoDkoE3yPE9nRRs9AYrzIBjVFho63Llc4i06PEEkOaxpTJR5cWAxsHsQz
+vbar6grUb1yOarmWFEoQnNo3tdWTQg==
+=oiQY
+-----END PGP SIGNATURE-----
 
-
-_______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+--uZ3hkaAS1mZxFaxD--
