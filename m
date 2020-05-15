@@ -2,79 +2,96 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EFFC433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0978FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA66207C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5699207C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgEOPJh (ORCPT
+        id S1726345AbgEOPON (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 11:09:37 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:61236 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726216AbgEOPJh (ORCPT
+        Fri, 15 May 2020 11:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726188AbgEOPON (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 11:09:37 -0400
-X-IronPort-AV: E=Sophos;i="5.73,395,1583161200"; 
-   d="scan'208";a="47188344"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 16 May 2020 00:09:35 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 01A7040065C1;
-        Sat, 16 May 2020 00:09:31 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 01/17] dt-bindings: i2c: renesas,i2c: Document r8a7742 support
-Date:   Fri, 15 May 2020 16:08:41 +0100
-Message-Id: <1589555337-5498-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 15 May 2020 11:14:13 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B9CC061A0C;
+        Fri, 15 May 2020 08:14:12 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id CBFDA2A3488
+Received: by earth.universe (Postfix, from userid 1000)
+        id C07A63C08C6; Fri, 15 May 2020 17:14:08 +0200 (CEST)
+Date:   Fri, 15 May 2020 17:14:08 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Emil Velikov <emil.velikov@collabora.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCHv1 03/19] power: supply: core: add manufacture date
+ properties
+Message-ID: <20200515151408.vbj75fag6ya5g2bq@earth.universe>
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+ <20200513185615.508236-4-sebastian.reichel@collabora.com>
+ <20200515144732.GC2836808@arch-x1c3>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3xq2l5oxqmhxeqpo"
+Content-Disposition: inline
+In-Reply-To: <20200515144732.GC2836808@arch-x1c3>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document i2c controller for RZ/G1H (R8A7742) SoC, which is compatible
-with R-Car Gen2 SoC family.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- Documentation/devicetree/bindings/i2c/renesas,i2c.txt | 1 +
- 1 file changed, 1 insertion(+)
+--3xq2l5oxqmhxeqpo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/i2c/renesas,i2c.txt b/Documentation/devicetree/bindings/i2c/renesas,i2c.txt
-index c359965..a03f9f5 100644
---- a/Documentation/devicetree/bindings/i2c/renesas,i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/renesas,i2c.txt
-@@ -2,6 +2,7 @@ I2C for R-Car platforms
- 
- Required properties:
- - compatible:
-+	"renesas,i2c-r8a7742" if the device is a part of a R8A7742 SoC.
- 	"renesas,i2c-r8a7743" if the device is a part of a R8A7743 SoC.
- 	"renesas,i2c-r8a7744" if the device is a part of a R8A7744 SoC.
- 	"renesas,i2c-r8a7745" if the device is a part of a R8A7745 SoC.
--- 
-2.7.4
+Hi,
 
+On Fri, May 15, 2020 at 03:47:32PM +0100, Emil Velikov wrote:
+> On 2020/05/13, Sebastian Reichel wrote:
+> > Some smart batteries store their manufacture date, which is
+> > useful to identify the battery and/or to know about the cell
+> > quality.
+> >=20
+> Have you considered exposing this as a single file? Say following
+> the ISO8601 format - YYYY-MM-DD.
+
+Yes. My initial implementation was exactly that. The thing is, that
+I suspect some fuel gauge implementations may only expose the year
+or just year + month. I chose 3 files, since receiving 'YYYY-MM'
+instead of full ISO code might be more unexpected than not having
+the DAY file available. But I don't have a strong opinion on this.
+
+-- Sebastian
+
+--3xq2l5oxqmhxeqpo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6+sbgACgkQ2O7X88g7
++prQgQ/8DObxqwSGq8FRackNMigPfBZos5u1g1+5PprsLQ9E7zb0ibMFybVRGQse
+PJa82uqIwP4lYAyZx6EwFBeOFhI6i9A5sHEugiuarjRAJjXZuyW3YjObCw/UfC54
+eUkVm6F4iy7r3NyucF+be398TDZEEwJ+fqIIOY/YagSurMpxR3Pdemy2mDAxykI9
+ZJXIT5on3/L0X7E0Trdx1IyfeQQfvLjTtJaBV3J+WaIYViIb+pkMpHsSZD1SOLi+
+qOLT31pXXp87D9xicCLU5ayWgdIxi93fGMEQnGHcfIbNjjD8ncGy2BBR/tbsU065
+lqO7edflFoXocf35ZQCLzCXK+AfNkYw1GZw+URAnh5icGK41IHVPNe041YFrySCs
+8qzl7f7/G+WUznezbxFYpqtRpNW2KfThnezhJsV+Istc1zhE6hCCliBVmXlcJjO/
+Ts2FlER/OfePg99I7TRtnr/Ld49gX74S9balftKrrvc18e0U4+J1B8c9cqe0reWo
+8OVpPvQ1b7HQ5/VzsmhJf0QpXp1vG+EHD8toIt5EwCtPfmr9lzHOIo63YdElsCvP
+b1qRVHv9Sc/Rusfg4aE8Lqsor5SnMoE988Tj8lhFpJD5pucK91WxGzfyWtb6qtnp
+QHx0gsVOQCZBQYSSudMEPNSqH9P0qSHTfwtKCnyNSKqo2s37zuU=
+=D2js
+-----END PGP SIGNATURE-----
+
+--3xq2l5oxqmhxeqpo--
