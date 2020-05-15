@@ -6,60 +6,60 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4015AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 19:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED63C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 19:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12D412070A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 19:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B432073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 19:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="FKh4uRFu"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="EQXfVFJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgEOTbF (ORCPT
+        id S1726614AbgEOTkw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 15:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53914 "EHLO
+        Fri, 15 May 2020 15:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbgEOTbF (ORCPT
+        by vger.kernel.org with ESMTP id S1726168AbgEOTkw (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 15:31:05 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0078C061A0C
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 12:31:04 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g16so3178523eds.1
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 12:31:04 -0700 (PDT)
+        Fri, 15 May 2020 15:40:52 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7362C061A0C
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 12:40:51 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g9so3152689edw.10
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 12:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vErvnQoqbf5Meaqtse3zpzTQXTThCj+PlNibNhhv2Uo=;
-        b=FKh4uRFuzk6LWrSXDP88E2gJbQI+bBtvd2Vrw7lgHu5eyGOb+HDjTj2KDYFJxLUWzB
-         PeZd/YkHHi25f64qU7/fLCFVGlERXsCjnxhlPRoAPpUYPCS+rmfQlU95K29FzuDaYRU1
-         DB5aTnj3yrcjckhA/nS5y/+P1iauWWrbkRD5BHYJlSy71m6X61xPbEfO0sKbRrA75lmQ
-         0SV5LPanC51ygC4iYuKyA1gPRqiKOWdHrmIvWhdmUpTWlJnEH8lXicDlYcgQ98lpSm5+
-         cRmYG4HbwPlg1LKXAdiwuFNu/WuRc8kWB33kOw6rB15rTCvWOEmMSbQwGdErqx0Gd1vf
-         3/hQ==
+        bh=HHca1qoV7do/YHj6VhiHa0wv0gL1FKGrqV5m6xaYOco=;
+        b=EQXfVFJ4yz515JshhnvlO7USDVNFwG69NR5tuhWjf7zaSGV2LSZOG/FpNAtUosLSnU
+         9ts0wbGytpuSheRP3ZoyHaJVy+JsQ1Z1Cvaptopb1n0wqaABjBwhlg6Tv1gRZWEWU5N7
+         Xf1NHtzI2/d6wc9/JoXFFotJC6AdETHGlu7ZPHF46mQb5LSagZDXg01u6m6RSJHqGCsX
+         G8zguFhZtGVf+wbDNstxQsF4RSs6m0HY3WenqGd6CGw5+MyM67ss838sKv8JWxkfdLV5
+         BSMpNrRreffqc91pQEzZgU61/CDkmb2Sw9K1pJvrh01opTu3O/0yWLHR5K/QMsJImlTO
+         jHLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vErvnQoqbf5Meaqtse3zpzTQXTThCj+PlNibNhhv2Uo=;
-        b=K5UKaTwNchISNnQYZV2OHILXks4esH1kYBT7IuEMA8LdS8NYUYtazmjwpDyHxT6BUu
-         FhVgzl4xIHaD1SAC3D9jvGdTxUdClvIqiSGgRiyh9x/NCDE2SjzegvAMQ/jjwlqTig4V
-         X+FYCtFDnn69RD2SduixJfuttxooCuTmAgdRzH+xzlVifmy/yXDC4Nzg+IwSJKgK/pc6
-         w5OikMDcKKh0jqa/IE9MkqcxuCyDo65U+kChHVqt5InqNzOxdoamPepStZZGrk0BxB48
-         23WOqAo7R3OJDboWcsfOmjkS6cXSSd4P4NmqGvBK9e9EeRig+GCVdf4SLkJlplgyPKha
-         JxSA==
-X-Gm-Message-State: AOAM531xY8C3UlOtqRszG9REj2FQziOxu9uxGaXMq7fI4iC+pRQX+BuR
-        i7rjtVM6DsF4EKnYJOxbLD4JcRVGtZOzZW4tYZVuQQ==
-X-Google-Smtp-Source: ABdhPJxVNhuoHXSVLn9PLNKxdspcJcNGGfAsekctXnv0fKnHI35D8TQO83ALfAlxb/fVSimNFlN5uGf+30lkrJL6Cxw=
-X-Received: by 2002:aa7:da04:: with SMTP id r4mr4302843eds.346.1589571063296;
- Fri, 15 May 2020 12:31:03 -0700 (PDT)
+        bh=HHca1qoV7do/YHj6VhiHa0wv0gL1FKGrqV5m6xaYOco=;
+        b=FezZacuLc9CUinq0wiaBCvdb2xCYRn365+R33DAi5NJ/IxVPFJkH5xggC5Vbps7KMk
+         guM7LxK6qHpiBRq1W45hnSMbtx+2k1PlnlT0GMbeqJQVYFbDZy+HG+dKeiWKN1bM6VJl
+         pWuVZluIMx07BCS8Yzfsh7AdIRs09c3UqOrO+CMlEKQqOhxETYrm5EHxkR0V/oUVqI8T
+         zrqMboR/NgYqBlP3x3NV4CBELmZcNzq9A+fNQerLljLtjisif0MZhvO8sqEtQOQaeWEm
+         d2ouZLCqUJwFh33HCvZ2u4/0NFzLvuMBv+Y4tpu2AN3IeHUSgDp3uDkvFVN1LYaLjH2h
+         22gg==
+X-Gm-Message-State: AOAM530/P1jFFTfnf23NrmcAS5TX24KAeI3+hEbzELnom4LIyoKuAw6w
+        5xyjF1vsLiOtkdPybrjfT8Vmjs3cor88a6au/3CO0Q==
+X-Google-Smtp-Source: ABdhPJy3hW9KN8C+0k3e1QtNg/q5jcxANsOo4JOf1UIs/QMiOLnU+PzMoJv7/O4icSIDCXxitbkF0rZPLnkBSitoNmc=
+X-Received: by 2002:a05:6402:31b1:: with SMTP id dj17mr4543330edb.142.1589571650510;
+ Fri, 15 May 2020 12:40:50 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200515184434.8470-1-keescook@chromium.org> <20200515184434.8470-6-keescook@chromium.org>
 In-Reply-To: <20200515184434.8470-6-keescook@chromium.org>
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Fri, 15 May 2020 15:30:27 -0400
-Message-ID: <CA+CK2bAvTo1=oLH32-Wdz07F3OP=T+gA6GgzkBH1Q9W8upHkNg@mail.gmail.com>
+Date:   Fri, 15 May 2020 15:40:14 -0400
+Message-ID: <CA+CK2bCbAb1EN6xa9a-DRfan6Cv3YgZgPJ1buwUaej7jBRv=Kg@mail.gmail.com>
 Subject: Re: [PATCH v4 5/6] pstore/ram: Introduce max_reason and convert dump_oops
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Petr Mladek <pmladek@suse.com>, Anton Vorontsov <anton@enomsg.org>,
@@ -83,9 +83,15 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->  #define parse_u32(name, field, default_value) {                                \
->                 ret = ramoops_parse_dt_u32(pdev, name, default_value,   \
+ pdata.dump_oops = dump_oops;
+> +       /* If "max_reason" is set, its value has priority over "dump_oops". */
+> +       if (ramoops_max_reason != -1)
+> +               pdata.max_reason = ramoops_max_reason;
 
-The series seems to be missing the patch where ramoops_parse_dt_size
--> ramoops_parse_dt_u32 get renamed, and updated to handle default
-value.
+ (ramoops_max_reason >= 0) might make more sense here, we do not want
+negative max_reason even if it was provided by the user.
+
+Otherwise the series looks good.
+
+Thank you,
+Pasha
