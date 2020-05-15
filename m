@@ -2,794 +2,135 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD46C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAABC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F6620657
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFCA20657
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgEOIPT (ORCPT
+        id S1728019AbgEOIPj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 04:15:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51084 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgEOIPS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 04:15:18 -0400
-IronPort-SDR: AJlE2Rhz1cKQK946Zj/BwEDKjeAJncVaIHrRuCLYrC1I7pVEgZqNcXpnTa99voZWuWfGj6F1Hp
- aQUEGL9J6KXg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 01:15:15 -0700
-IronPort-SDR: uF8HoJkQrEfCCKajL6TXvv3ep3+Tfgv7XgjFWr3GbwlvtXUP3Xn+R2PWkdSIeMCNgyHMiNcuAt
- VQ0T34h6MQYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
-   d="scan'208";a="251960754"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga007.jf.intel.com with ESMTP; 15 May 2020 01:15:12 -0700
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org,
-        devicetree@vger.kernel.org
-Cc:     robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [RESEND PATCH v8 3/3] phy: intel: Add driver support for ComboPhy
-Date:   Fri, 15 May 2020 16:13:35 +0800
-Message-Id: <87dd88e4649e74585ef802c97936a687efc0217a.1589530082.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1589530082.git.eswara.kota@linux.intel.com>
-References: <cover.1589530082.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1589530082.git.eswara.kota@linux.intel.com>
-References: <cover.1589530082.git.eswara.kota@linux.intel.com>
+        Fri, 15 May 2020 04:15:39 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:51987 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbgEOIPi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 04:15:38 -0400
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 6C5C51BF208;
+        Fri, 15 May 2020 08:15:34 +0000 (UTC)
+Date:   Fri, 15 May 2020 10:15:33 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 5/5] drm/sun4i: mixer: Call of_dma_configure if
+ there's an IOMMU
+Message-ID: <20200515081533.GA2486@aptenodytes>
+References: <cover.b27dedd61e008ffcf55a028ccddda3bb4d21dfc8.1589378833.git-series.maxime@cerno.tech>
+ <9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Disposition: inline
+In-Reply-To: <9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ComboPhy subsystem provides PHYs for various
-controllers like PCIe, SATA and EMAC.
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
-Changes on v8:
-  As per PHY Maintainer's request add description for doing register access
-  through regmap in comments.
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes on v7:
-  Use device_node_to_regmap instead of fwnode_to_regmap
-  
-Changes on v6:
-  No changes
+Hi,
 
-Changes on v5:
- Add changes as per inputs from Andy and Rob:
-    DT node uses phy-mode values as defined in "include/dt-bindings/phy/phy.h",
-     add changes to handle it.
-    ComboPhy no longer has children nodes, and children node properties(reset)
-     moved to parent node, so do the code changes accordingly.
-    Add _xlate() function to pass the appropriate phy handle.
-    Fix couple of nitpicks.
+On Wed 13 May 20, 16:07, Maxime Ripard wrote:
+> The main DRM device is actually a virtual device so it doesn't have the
+> iommus property, which is instead on the DMA masters, in this case the
+> mixers.
+>=20
+> Add a call to of_dma_configure with the mixers DT node but on the DRM
+> virtual device to configure it in the same way than the mixers.
 
-Changes on v4:
- Address review comments
-   Remove dependency on OF config
-   Update copyright to 2019-2020
-   Define register macro PAD_DIS_CFG instead of const variable inside function.
-   Improve the error prints, and error returns.
-   Call put_device(dev), for get_dev_from_fwnode()
-   Move platform_set_drvdata() at the end of the probe().
-   Correct alignment in phy_ops intel_cbphy_ops.
-   Correct commented lines with proper vocabulary and punctuation.
-   Add/remove commas for the required constant arrays and enums.
-   Remove in driver:
-     linux/kernel.h, not required
-     macros: PCIE_PHY_MPLLA_CTRL, PCIE_PHY_MPLLB_CTRL
-     temp variable u32 prop;
-   Change function names:
-     intel_cbphy_iphy_dt_parse() -> intel_cbphy_iphy_fwnode_parse()
-     intel_cbphy_dt_sanity_check() -> intel_cbphy_sanity_check()
-     intel_cbphy_dt_parse() -> intel_cbphy_fwnode_parse()
+Although I'm not very familiar with the DMA API, this looks legit to me and
+matches what's already done in sun4i_backend for the interconnect. So:
 
-Changes on v3:
- Remove intel_iphy_names
- Remove struct phy in struct intel_cbphy_iphy
- Imporve if conditions logic
- Use fwnode_to_regmap()
- Call devm_of_platform_populate() to populate child nodes
- Fix reset sequence during phy_init
- Add SoC specific compatible "intel,combophy-lgm"
- Add description for enums
- Remove default case in switch {} intel_cbphy_set_mode() as it
-  never happens.
- Use mutex_lock to synchronise combophy initialization across
-  two phys.
- Change init_cnt to u32 datatype as it is within mutex lock.
- Correct error handling of
-  fwnode_property_read_u32_array(fwnode, "intel,phy-mode", ...)
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
- drivers/phy/intel/Kconfig           |  14 +
- drivers/phy/intel/Makefile          |   1 +
- drivers/phy/intel/phy-intel-combo.c | 632 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 647 insertions(+)
- create mode 100644 drivers/phy/intel/phy-intel-combo.c
+Cheers,
 
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-index 4ea6a8897cd7..3b40eb7b4fb4 100644
---- a/drivers/phy/intel/Kconfig
-+++ b/drivers/phy/intel/Kconfig
-@@ -2,6 +2,20 @@
- #
- # Phy drivers for Intel Lightning Mountain(LGM) platform
- #
-+config PHY_INTEL_COMBO
-+	bool "Intel ComboPHY driver"
-+	depends on X86 || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	select MFD_SYSCON
-+	select GENERIC_PHY
-+	select REGMAP
-+	help
-+	  Enable this to support Intel ComboPhy.
-+
-+	  This driver configures ComboPhy subsystem on Intel gateway
-+	  chipsets which provides PHYs for various controllers, EMAC,
-+	  SATA and PCIe.
-+
- config PHY_INTEL_EMMC
- 	tristate "Intel EMMC PHY driver"
- 	select GENERIC_PHY
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-index 6b876a75599d..233d530dadde 100644
---- a/drivers/phy/intel/Makefile
-+++ b/drivers/phy/intel/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_INTEL_COMBO)		+= phy-intel-combo.o
- obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-diff --git a/drivers/phy/intel/phy-intel-combo.c b/drivers/phy/intel/phy-intel-combo.c
-new file mode 100644
-index 000000000000..4bc1276ecf23
---- /dev/null
-+++ b/drivers/phy/intel/phy-intel-combo.c
-@@ -0,0 +1,632 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Combo-PHY driver
-+ *
-+ * Copyright (C) 2019-2020 Intel Corporation.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/iopoll.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#include <dt-bindings/phy/phy.h>
-+
-+#define PCIE_PHY_GEN_CTRL	0x00
-+#define PCIE_PHY_CLK_PAD	BIT(17)
-+
-+#define PAD_DIS_CFG		0x174
-+
-+#define PCS_XF_ATE_OVRD_IN_2	0x3008
-+#define ADAPT_REQ_MSK		GENMASK(5, 4)
-+
-+#define PCS_XF_RX_ADAPT_ACK	0x3010
-+#define RX_ADAPT_ACK_BIT	BIT(0)
-+
-+#define CR_ADDR(addr, lane)	(((addr) + (lane) * 0x100) << 2)
-+#define REG_COMBO_MODE(x)	((x) * 0x200)
-+#define REG_CLK_DISABLE(x)	((x) * 0x200 + 0x124)
-+
-+#define COMBO_PHY_ID(x)		((x)->parent->id)
-+#define PHY_ID(x)		((x)->id)
-+
-+#define CLK_100MHZ		100000000
-+#define CLK_156_25MHZ		156250000
-+
-+static const unsigned long intel_iphy_clk_rates[] = {
-+	CLK_100MHZ, CLK_156_25MHZ, CLK_100MHZ,
-+};
-+
-+enum {
-+	PHY_0,
-+	PHY_1,
-+	PHY_MAX_NUM
-+};
-+
-+/*
-+ * Clock Register bit fields to enable clocks
-+ * for ComboPhy according to the mode.
-+ */
-+enum intel_phy_mode {
-+	PHY_PCIE_MODE = 0,
-+	PHY_XPCS_MODE,
-+	PHY_SATA_MODE,
-+};
-+
-+/* ComboPhy mode Register values */
-+enum intel_combo_mode {
-+	PCIE0_PCIE1_MODE = 0,
-+	PCIE_DL_MODE,
-+	RXAUI_MODE,
-+	XPCS0_XPCS1_MODE,
-+	SATA0_SATA1_MODE,
-+};
-+
-+enum aggregated_mode {
-+	PHY_SL_MODE,
-+	PHY_DL_MODE,
-+};
-+
-+struct intel_combo_phy;
-+
-+struct intel_cbphy_iphy {
-+	struct phy		*phy;
-+	struct intel_combo_phy	*parent;
-+	struct reset_control	*app_rst;
-+	u32			id;
-+};
-+
-+struct intel_combo_phy {
-+	struct device		*dev;
-+	struct clk		*core_clk;
-+	unsigned long		clk_rate;
-+	void __iomem		*app_base;
-+	void __iomem		*cr_base;
-+	struct regmap		*syscfg;
-+	struct regmap		*hsiocfg;
-+	u32			id;
-+	u32			bid;
-+	struct reset_control	*phy_rst;
-+	struct reset_control	*core_rst;
-+	struct intel_cbphy_iphy	iphy[PHY_MAX_NUM];
-+	enum intel_phy_mode	phy_mode;
-+	enum aggregated_mode	aggr_mode;
-+	u32			init_cnt;
-+	struct mutex		lock;
-+};
-+
-+static int intel_cbphy_iphy_enable(struct intel_cbphy_iphy *iphy, bool set)
-+{
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	u32 mask = BIT(cbphy->phy_mode * 2 + iphy->id);
-+	u32 val;
-+
-+	/* Register: 0 is enable, 1 is disable */
-+	val = set ? 0 : mask;
-+
-+	return regmap_update_bits(cbphy->hsiocfg, REG_CLK_DISABLE(cbphy->bid),
-+				  mask, val);
-+}
-+
-+static int intel_cbphy_pcie_refclk_cfg(struct intel_cbphy_iphy *iphy, bool set)
-+{
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	u32 mask = BIT(cbphy->id * 2 + iphy->id);
-+	u32 val;
-+
-+	/* Register: 0 is enable, 1 is disable */
-+	val = set ? 0 : mask;
-+
-+	return regmap_update_bits(cbphy->syscfg, PAD_DIS_CFG, mask, val);
-+}
-+
-+static inline void combo_phy_w32_off_mask(void __iomem *base, unsigned int reg,
-+					  u32 mask, u32 val)
-+{
-+	u32 reg_val;
-+
-+	reg_val = readl(base + reg);
-+	reg_val &= ~mask;
-+	reg_val |= FIELD_PREP(mask, val);
-+	writel(reg_val, base + reg);
-+}
-+
-+static int intel_cbphy_iphy_cfg(struct intel_cbphy_iphy *iphy,
-+				int (*phy_cfg)(struct intel_cbphy_iphy *))
-+{
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	int ret;
-+
-+	ret = phy_cfg(iphy);
-+	if (ret)
-+		return ret;
-+
-+	if (cbphy->aggr_mode != PHY_DL_MODE)
-+		return 0;
-+
-+	return phy_cfg(&cbphy->iphy[PHY_1]);
-+}
-+
-+static int intel_cbphy_pcie_en_pad_refclk(struct intel_cbphy_iphy *iphy)
-+{
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	int ret;
-+
-+	ret = intel_cbphy_pcie_refclk_cfg(iphy, true);
-+	if (ret) {
-+		dev_err(cbphy->dev, "Failed to enable PCIe pad refclk\n");
-+		return ret;
-+	}
-+
-+	if (cbphy->init_cnt)
-+		return 0;
-+
-+	combo_phy_w32_off_mask(cbphy->app_base, PCIE_PHY_GEN_CTRL,
-+			       PCIE_PHY_CLK_PAD, 0);
-+
-+	/* Delay for stable clock PLL */
-+	usleep_range(50, 100);
-+
-+	return 0;
-+}
-+
-+static int intel_cbphy_pcie_dis_pad_refclk(struct intel_cbphy_iphy *iphy)
-+{
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	int ret;
-+
-+	ret = intel_cbphy_pcie_refclk_cfg(iphy, false);
-+	if (ret) {
-+		dev_err(cbphy->dev, "Failed to disable PCIe pad refclk\n");
-+		return ret;
-+	}
-+
-+	if (cbphy->init_cnt)
-+		return 0;
-+
-+	combo_phy_w32_off_mask(cbphy->app_base, PCIE_PHY_GEN_CTRL,
-+			       PCIE_PHY_CLK_PAD, 1);
-+
-+	return 0;
-+}
-+
-+static int intel_cbphy_set_mode(struct intel_combo_phy *cbphy)
-+{
-+	enum aggregated_mode aggr = cbphy->aggr_mode;
-+	struct device *dev = cbphy->dev;
-+	enum intel_combo_mode cb_mode;
-+	enum intel_phy_mode mode;
-+	int ret;
-+
-+	mode = cbphy->phy_mode;
-+
-+	switch (mode) {
-+	case PHY_PCIE_MODE:
-+		cb_mode = (aggr == PHY_DL_MODE) ? PCIE_DL_MODE : PCIE0_PCIE1_MODE;
-+		break;
-+
-+	case PHY_XPCS_MODE:
-+		cb_mode = (aggr == PHY_DL_MODE) ? RXAUI_MODE : XPCS0_XPCS1_MODE;
-+		break;
-+
-+	case PHY_SATA_MODE:
-+		if (aggr == PHY_DL_MODE) {
-+			dev_err(dev, "Mode:%u not support dual lane!\n", mode);
-+			return -EINVAL;
-+		}
-+
-+		cb_mode = SATA0_SATA1_MODE;
-+		break;
-+	}
-+
-+	ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
-+	if (ret)
-+		dev_err(dev, "Failed to set ComboPhy mode: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static void intel_cbphy_rst_assert(struct intel_combo_phy *cbphy)
-+{
-+	reset_control_assert(cbphy->core_rst);
-+	reset_control_assert(cbphy->phy_rst);
-+}
-+
-+static void intel_cbphy_rst_deassert(struct intel_combo_phy *cbphy)
-+{
-+	reset_control_deassert(cbphy->core_rst);
-+	reset_control_deassert(cbphy->phy_rst);
-+	/* Delay to ensure reset process is done */
-+	usleep_range(10, 20);
-+}
-+
-+static int intel_cbphy_iphy_power_on(struct intel_cbphy_iphy *iphy)
-+{
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	int ret;
-+
-+	if (!cbphy->init_cnt) {
-+		ret = clk_prepare_enable(cbphy->core_clk);
-+		if (ret) {
-+			dev_err(cbphy->dev, "Clock enable failed!\n");
-+			return ret;
-+		}
-+
-+		ret = clk_set_rate(cbphy->core_clk, cbphy->clk_rate);
-+		if (ret) {
-+			dev_err(cbphy->dev, "Clock freq set to %lu failed!\n",
-+				cbphy->clk_rate);
-+			goto clk_err;
-+		}
-+
-+		intel_cbphy_rst_assert(cbphy);
-+		intel_cbphy_rst_deassert(cbphy);
-+		ret = intel_cbphy_set_mode(cbphy);
-+		if (ret)
-+			goto clk_err;
-+	}
-+
-+	ret = intel_cbphy_iphy_enable(iphy, true);
-+	if (ret) {
-+		dev_err(cbphy->dev, "Failed enabling PHY core\n");
-+		goto clk_err;
-+	}
-+
-+	ret = reset_control_deassert(iphy->app_rst);
-+	if (ret) {
-+		dev_err(cbphy->dev, "PHY(%u:%u) reset deassert failed!\n",
-+			COMBO_PHY_ID(iphy), PHY_ID(iphy));
-+		goto clk_err;
-+	}
-+
-+	/* Delay to ensure reset process is done */
-+	udelay(1);
-+
-+	return 0;
-+
-+clk_err:
-+	clk_disable_unprepare(cbphy->core_clk);
-+
-+	return ret;
-+}
-+
-+static int intel_cbphy_iphy_power_off(struct intel_cbphy_iphy *iphy)
-+{
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	int ret;
-+
-+	ret = reset_control_assert(iphy->app_rst);
-+	if (ret) {
-+		dev_err(cbphy->dev, "PHY(%u:%u) reset assert failed!\n",
-+			COMBO_PHY_ID(iphy), PHY_ID(iphy));
-+		return ret;
-+	}
-+
-+	ret = intel_cbphy_iphy_enable(iphy, false);
-+	if (ret) {
-+		dev_err(cbphy->dev, "Failed disabling PHY core\n");
-+		return ret;
-+	}
-+
-+	if (cbphy->init_cnt)
-+		return 0;
-+
-+	clk_disable_unprepare(cbphy->core_clk);
-+	intel_cbphy_rst_assert(cbphy);
-+
-+	return 0;
-+}
-+
-+static int intel_cbphy_init(struct phy *phy)
-+{
-+	struct intel_cbphy_iphy *iphy = phy_get_drvdata(phy);
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	int ret;
-+
-+	mutex_lock(&cbphy->lock);
-+	ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_on);
-+	if (ret)
-+		goto err;
-+
-+	if (cbphy->phy_mode == PHY_PCIE_MODE) {
-+		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_pcie_en_pad_refclk);
-+		if (ret)
-+			goto err;
-+	}
-+
-+	cbphy->init_cnt++;
-+
-+err:
-+	mutex_unlock(&cbphy->lock);
-+
-+	return ret;
-+}
-+
-+static int intel_cbphy_exit(struct phy *phy)
-+{
-+	struct intel_cbphy_iphy *iphy = phy_get_drvdata(phy);
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	int ret;
-+
-+	mutex_lock(&cbphy->lock);
-+	cbphy->init_cnt--;
-+	if (cbphy->phy_mode == PHY_PCIE_MODE) {
-+		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_pcie_dis_pad_refclk);
-+		if (ret)
-+			goto err;
-+	}
-+
-+	ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_off);
-+
-+err:
-+	mutex_unlock(&cbphy->lock);
-+
-+	return ret;
-+}
-+
-+static int intel_cbphy_calibrate(struct phy *phy)
-+{
-+	struct intel_cbphy_iphy *iphy = phy_get_drvdata(phy);
-+	struct intel_combo_phy *cbphy = iphy->parent;
-+	void __iomem *cr_base = cbphy->cr_base;
-+	int val, ret, id;
-+
-+	if (cbphy->phy_mode != PHY_XPCS_MODE)
-+		return 0;
-+
-+	id = PHY_ID(iphy);
-+
-+	/* trigger auto RX adaptation */
-+	combo_phy_w32_off_mask(cr_base, CR_ADDR(PCS_XF_ATE_OVRD_IN_2, id),
-+			       ADAPT_REQ_MSK, 3);
-+	/* Wait RX adaptation to finish */
-+	ret = readl_poll_timeout(cr_base + CR_ADDR(PCS_XF_RX_ADAPT_ACK, id),
-+				 val, val & RX_ADAPT_ACK_BIT, 10, 5000);
-+	if (ret)
-+		dev_err(cbphy->dev, "RX Adaptation failed!\n");
-+	else
-+		dev_dbg(cbphy->dev, "RX Adaptation success!\n");
-+
-+	/* Stop RX adaptation */
-+	combo_phy_w32_off_mask(cr_base, CR_ADDR(PCS_XF_ATE_OVRD_IN_2, id),
-+			       ADAPT_REQ_MSK, 0);
-+
-+	return ret;
-+}
-+
-+static int intel_cbphy_fwnode_parse(struct intel_combo_phy *cbphy)
-+{
-+	struct device *dev = cbphy->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct fwnode_handle *fwnode = dev_fwnode(dev);
-+	struct fwnode_reference_args ref;
-+	int ret;
-+	u32 val;
-+
-+	cbphy->core_clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(cbphy->core_clk)) {
-+		ret = PTR_ERR(cbphy->core_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Get clk failed:%d!\n", ret);
-+		return ret;
-+	}
-+
-+	cbphy->core_rst = devm_reset_control_get_optional(dev, "core");
-+	if (IS_ERR(cbphy->core_rst)) {
-+		ret = PTR_ERR(cbphy->core_rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Get core reset control err: %d!\n", ret);
-+		return ret;
-+	}
-+
-+	cbphy->phy_rst = devm_reset_control_get_optional(dev, "phy");
-+	if (IS_ERR(cbphy->phy_rst)) {
-+		ret = PTR_ERR(cbphy->phy_rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Get PHY reset control err: %d!\n", ret);
-+		return ret;
-+	}
-+
-+	cbphy->iphy[0].app_rst = devm_reset_control_get_optional(dev, "iphy0");
-+	if (IS_ERR(cbphy->iphy[0].app_rst)) {
-+		ret = PTR_ERR(cbphy->iphy[0].app_rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Get phy0 reset control err: %d!\n", ret);
-+		return ret;
-+	}
-+
-+	cbphy->iphy[1].app_rst = devm_reset_control_get_optional(dev, "iphy1");
-+	if (IS_ERR(cbphy->iphy[1].app_rst)) {
-+		ret = PTR_ERR(cbphy->iphy[1].app_rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Get phy1 reset control err: %d!\n", ret);
-+		return ret;
-+	}
-+
-+	cbphy->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
-+	if (IS_ERR(cbphy->app_base))
-+		return PTR_ERR(cbphy->app_base);
-+
-+	cbphy->cr_base = devm_platform_ioremap_resource_byname(pdev, "core");
-+	if (IS_ERR(cbphy->cr_base))
-+		return PTR_ERR(cbphy->cr_base);
-+
-+	/*
-+	 * syscfg and hsiocfg variables stores the handle of the registers set
-+	 * in which ComboPhy subsytem specific registers are subset. Using
-+	 * Register map framework to access the registers set.
-+	 */
-+	ret = fwnode_property_get_reference_args(fwnode, "intel,syscfg", NULL,
-+						 1, 0, &ref);
-+	if (ret < 0)
-+		return ret;
-+
-+	cbphy->id = ref.args[0];
-+	cbphy->syscfg = device_node_to_regmap(to_of_node(ref.fwnode));
-+	fwnode_handle_put(ref.fwnode);
-+
-+	ret = fwnode_property_get_reference_args(fwnode, "intel,hsio", NULL, 1,
-+						 0, &ref);
-+	if (ret < 0)
-+		return ret;
-+
-+	cbphy->bid = ref.args[0];
-+	cbphy->hsiocfg = device_node_to_regmap(to_of_node(ref.fwnode));
-+	fwnode_handle_put(ref.fwnode);
-+
-+	ret = fwnode_property_read_u32_array(fwnode, "intel,phy-mode", &val, 1);
-+	if (ret)
-+		return ret;
-+
-+	switch (val) {
-+	case PHY_TYPE_PCIE:
-+		cbphy->phy_mode = PHY_PCIE_MODE;
-+		break;
-+
-+	case PHY_TYPE_SATA:
-+		cbphy->phy_mode = PHY_SATA_MODE;
-+		break;
-+
-+	case PHY_TYPE_XPCS:
-+		cbphy->phy_mode = PHY_XPCS_MODE;
-+		break;
-+
-+	default:
-+		dev_err(dev, "Invalid PHY mode: %u\n", val);
-+		return -EINVAL;
-+	}
-+
-+	cbphy->clk_rate = intel_iphy_clk_rates[cbphy->phy_mode];
-+
-+	if (fwnode_property_present(fwnode, "intel,aggregation"))
-+		cbphy->aggr_mode = PHY_DL_MODE;
-+	else
-+		cbphy->aggr_mode = PHY_SL_MODE;
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops intel_cbphy_ops = {
-+	.init		= intel_cbphy_init,
-+	.exit		= intel_cbphy_exit,
-+	.calibrate	= intel_cbphy_calibrate,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static struct phy *intel_cbphy_xlate(struct device *dev,
-+				     struct of_phandle_args *args)
-+{
-+	struct intel_combo_phy *cbphy = dev_get_drvdata(dev);
-+	u32 iphy_id;
-+
-+	if (args->args_count < 1) {
-+		dev_err(dev, "Invalid number of arguments\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	iphy_id = args->args[0];
-+	if (iphy_id >= PHY_MAX_NUM) {
-+		dev_err(dev, "Invalid phy instance %d\n", iphy_id);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (cbphy->aggr_mode == PHY_DL_MODE && iphy_id == PHY_1) {
-+		dev_err(dev, "Invalid. ComboPhy is in Dual lane mode %d\n", iphy_id);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return cbphy->iphy[iphy_id].phy;
-+}
-+
-+static int intel_cbphy_create(struct intel_combo_phy *cbphy)
-+{
-+	struct phy_provider *phy_provider;
-+	struct device *dev = cbphy->dev;
-+	struct intel_cbphy_iphy *iphy;
-+	int i;
-+
-+	for (i = 0; i < PHY_MAX_NUM; i++) {
-+		iphy = &cbphy->iphy[i];
-+		iphy->parent = cbphy;
-+		iphy->id = i;
-+
-+		/* In dual lane mode skip phy creation for the second phy */
-+		if (cbphy->aggr_mode == PHY_DL_MODE && iphy->id == PHY_1)
-+			continue;
-+
-+		iphy->phy = devm_phy_create(dev, NULL, &intel_cbphy_ops);
-+		if (IS_ERR(iphy->phy)) {
-+			dev_err(dev, "PHY[%u:%u]: create PHY instance failed!\n",
-+				COMBO_PHY_ID(iphy), PHY_ID(iphy));
-+
-+			return PTR_ERR(iphy->phy);
-+		}
-+
-+		phy_set_drvdata(iphy->phy, iphy);
-+	}
-+
-+	dev_set_drvdata(dev, cbphy);
-+	phy_provider = devm_of_phy_provider_register(dev, intel_cbphy_xlate);
-+	if (IS_ERR(phy_provider))
-+		dev_err(dev, "Register PHY provider failed!\n");
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static int intel_cbphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_combo_phy *cbphy;
-+	int ret;
-+
-+	cbphy = devm_kzalloc(dev, sizeof(*cbphy), GFP_KERNEL);
-+	if (!cbphy)
-+		return -ENOMEM;
-+
-+	cbphy->dev = dev;
-+	cbphy->init_cnt = 0;
-+	mutex_init(&cbphy->lock);
-+	ret = intel_cbphy_fwnode_parse(cbphy);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, cbphy);
-+
-+	return intel_cbphy_create(cbphy);
-+}
-+
-+static int intel_cbphy_remove(struct platform_device *pdev)
-+{
-+	struct intel_combo_phy *cbphy = platform_get_drvdata(pdev);
-+
-+	intel_cbphy_rst_assert(cbphy);
-+	clk_disable_unprepare(cbphy->core_clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id of_intel_cbphy_match[] = {
-+	{ .compatible = "intel,combo-phy" },
-+	{ .compatible = "intel,combophy-lgm" },
-+	{}
-+};
-+
-+static struct platform_driver intel_cbphy_driver = {
-+	.probe = intel_cbphy_probe,
-+	.remove = intel_cbphy_remove,
-+	.driver = {
-+		.name = "intel-combo-phy",
-+		.of_match_table = of_intel_cbphy_match,
-+	}
-+};
-+
-+module_platform_driver(intel_cbphy_driver);
-+
-+MODULE_DESCRIPTION("Intel Combo-phy driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+Paul
 
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/=
+sun8i_mixer.c
+> index 56cc037fd312..cc4fb916318f 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> @@ -363,6 +363,19 @@ static int sun8i_mixer_bind(struct device *dev, stru=
+ct device *master,
+>  	mixer->engine.ops =3D &sun8i_engine_ops;
+>  	mixer->engine.node =3D dev->of_node;
+> =20
+> +	if (of_find_property(dev->of_node, "iommus", NULL)) {
+> +		/*
+> +		 * This assume we have the same DMA constraints for
+> +		 * all our the mixers in our pipeline. This sounds
+> +		 * bad, but it has always been the case for us, and
+> +		 * DRM doesn't do per-device allocation either, so we
+> +		 * would need to fix DRM first...
+> +		 */
+> +		ret =3D of_dma_configure(drm->dev, dev->of_node, true);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	/*
+>  	 * While this function can fail, we shouldn't do anything
+>  	 * if this happens. Some early DE2 DT entries don't provide
+> --=20
+> git-series 0.9.1
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6+T6UACgkQ3cLmz3+f
+v9H/UAgAkvadU2hkk0g8AzqD7A8wD9HZa1w2iDr5XqyJebfprIsxG8x5MpZWf9BQ
+RTe1YsTxBBAeX49KifKGTI+TxipHj2A0Ebt9nIDUpP6vXQ7q/t24R8VhOeRiFLLM
+Ke2pNX4F6XaV0CHM5YeQOp1OndJgZ1ioWlfqp+296kTRC1+8L7l6BPI1HkT8WVOi
+mi8+8iBF3szadtkUm+h33BwKNxAnkWsybWK06pg+VNUT4dcld6RUH/c+XCFOr39j
+2c617QVi3poan+h3psdcEFwnrbKwGyR8YsqHyBOwAZkW/2l4ItTUE3A6SFLKguca
+BeSlxCAarYm3YuaLzCm6TgeX+7u68w==
+=r6Qc
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
