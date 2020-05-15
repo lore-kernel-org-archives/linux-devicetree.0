@@ -2,94 +2,125 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A045FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D28C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 807AB2076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:19:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="aUgXK6Sj"
+	by mail.kernel.org (Postfix) with ESMTP id 6265620758
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589566888;
+	bh=ckBVg1MJiVxCyn1jj47za/KaV60o81y+aY8hdhxTv+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m0bAv0SExDSm4js2QjksgBc1bCr3cxr3aII2mQgq5rdtCN/cCwBid0Ph9GVmnQbvC
+	 FFObZK/JesaaMtu/j+dsVyNoqWQ5NSMVqTS3gcD5bW9XS1F02FA3hHX11rFw84evpZ
+	 2ITl6NkF9U0QgEl4ojbKIhbI0cCYpezEQD9+mGf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgEOSS4 (ORCPT
+        id S1726525AbgEOSVY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 14:18:56 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:18972 "EHLO rere.qmqm.pl"
+        Fri, 15 May 2020 14:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbgEOSS4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 14:18:56 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49NxW01cC9z7B;
-        Fri, 15 May 2020 20:18:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1589566734; bh=ibTN24of7CC9GYhGpn9w94v7GehPRPTxrrybf7nWK+o=;
+        id S1726191AbgEOSVY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 14:21:24 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C75420728;
+        Fri, 15 May 2020 18:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589566884;
+        bh=ckBVg1MJiVxCyn1jj47za/KaV60o81y+aY8hdhxTv+Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aUgXK6SjBE3skG2RJxmzVo44RCiO+5kz1JeHPog7kjzR/vNVC4kZ8RjBTQ5f0xlYo
-         wg4acm3Ox/HQHEm/nOIzdjcqvL3q3dBJ0Kq5A3kRR7R8pVY1VF5kPB6Gjf6he8Lsrw
-         YTRIjp7tNqoyjgUMXXy1C/EyDAYpvxdtRfXX2wy13z4Hui/m5n6xJ+lHzlIgrrk3uK
-         p22Dg8Koh5e+zKz6PaETkaO2NQtidlG61In2Dsj2+OxzSaBmDtjVs9MTFiFS7e3uhI
-         tJ/cLZReypv7pvN4O0q+KeHlXZk6W5wx7uvyszyYh3L8eRZhCSfIwFJezp/vhjvVNu
-         qEUA2PVpgovRQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 15 May 2020 20:18:47 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Pedro =?iso-8859-2?Q?=C2ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        b=SUFZPl9QG+I4sO2uHgaBRWO0H+NYBBemyg2JiqEHfu24RGQA70mbOne0B1OJdHGHS
+         xLZS7vxraN97lS4WEorIVxzbq69D68YIEDapFNN6Zr50BpVoR+wtpTRMPNEGwzmoGf
+         sfpUPlq3KwdhOB6PUcLXJun7s1kgOTM696A25Th4=
+Date:   Fri, 15 May 2020 19:21:21 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/6] ARM: tegra: Add device-tree for ASUS Google Nexus
- 7
-Message-ID: <20200515181847.GA13860@qmqm.qmqm.pl>
-References: <20200514213654.12834-1-digetx@gmail.com>
- <20200514213654.12834-3-digetx@gmail.com>
+Subject: Re: [PATCH v2 00/19] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200515182121.GP5066@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="o41d8xLWOaLD8vYh"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200514213654.12834-3-digetx@gmail.com>
+In-Reply-To: <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+X-Cookie: Avoid contact with eyes.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:36:50AM +0300, Dmitry Osipenko wrote:
-> There are few hardware variants of NVIDIA Tegra30-based Nexus 7 device:
-> 
-> 1. WiFi-only (named Grouper)
-> 2. GSM (named Tilapia)
-> 3. Using Maxim PMIC (E1565 board ID)
-> 4. Using Ti PMIC (PM269 board ID)
 
-Hi,
+--o41d8xLWOaLD8vYh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I've briefly looked at the PM269 devicetree (PMIC part) and it looks very
-similar, if not the same, to what I deduced from the TF300T kernel.
-Those devices don't look to differ much from original Cardhu tablet
-devkit, so maybe the trees can base off of that?
+On Fri, May 15, 2020 at 01:47:39PM +0300, Serge Semin wrote:
 
-I would also guess that because of this 'ram-code', memory timings would
-be duplicated between devices. I can see small differences between
-ram-code=1 timings of Grouper and TF300T, though they look like arbiter
-tuning differences. I'll have to test if my TF300T works with Grouper's
-settings. In case they work, could you split the memory timings to another
-dtsi file?
+Appled:
 
-BTW, shouldn't EMC timing set match MC? I see more frequencies listed in
-MC than EMC nodes.
+>   dt-bindings: spi: dw: Add Tx/Rx DMA properties
+>   spi: dw: Clear DMAC register when done or stopped
+>   spi: dw: Fix native CS being unset
+>   spi: dw: Initialize paddr in DW SPI MMIO private data
 
-Best Regards,
-Micha³ Miros³aw
+Thanks.  No issues from me with the other patches.
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+--o41d8xLWOaLD8vYh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+3aAACgkQJNaLcl1U
+h9AGPAf/VsoxJ5zaBMEYFMY7L9rknyrkpX4QpC4b+7Dqn/k9fDezq5tQfvzsSRT+
+c53PKsNYEJmdWAa06UJpLHroHf4Tgu/SythyLU5ad2eUg2hHqrtoy2pFDtn4qFKp
+deRuFD01wqSKVe8zgyJ3kVRNOwosZiNYY2odh3t09vp7Xhsm0IBhlus6uRJH7szG
+YkHF44v54fVuQvm5FD5QxTIMLN8inIJk+4oC5Xx+LQ5qf7hCInCmUgg7x/d9I2mC
+HxfMDDegEPXj22WtkOvNlOlnWhL1ddS9VHNXBf7e5QDIoVlwq+9ZyKAKNMWgCYRV
+uefRPVN+eOxdTIDgjo4ftLeW9I6E4g==
+=tbav
+-----END PGP SIGNATURE-----
+
+--o41d8xLWOaLD8vYh--
