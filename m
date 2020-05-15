@@ -2,129 +2,225 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CDFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D888C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E83A520671
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45B1420671
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vU6CM3mu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KF9Evebm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgEOHHg (ORCPT
+        id S1726732AbgEOHKE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 03:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50116 "EHLO
+        Fri, 15 May 2020 03:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726664AbgEOHHf (ORCPT
+        by vger.kernel.org with ESMTP id S1726601AbgEOHKD (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 03:07:35 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F39C061A0C;
-        Fri, 15 May 2020 00:07:35 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id b8so551677plm.11;
-        Fri, 15 May 2020 00:07:35 -0700 (PDT)
+        Fri, 15 May 2020 03:10:03 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61748C061A0C
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 00:10:03 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id z1so620511vsn.11
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 00:10:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=M7hX/J76tBtL7VRebaHJrw9xmZRzEx8WmpLsqjkC1B4=;
-        b=vU6CM3mun5/XIqHsnKuxhXN5MylGXPGNRiXohIC9XPH62/E0+oScClKAlhhdoACQMj
-         BjUjhvgW/ebKfPRMW4RYeYyaIU9XZdnFbRqMSKH+uzdl/J6xxrkLi4nj/HUVKqPKPHjC
-         ALWTTQOEuzQ0dScjO0gQYKo9tHZfP9muBFZQ3KTtgB4SsvbtQlgCtv1LXb/opOzEetcJ
-         QRQhFt2j1+eXJz7nqzZ7UjonlmYlWsNS/YendGw6inJJlF7VMsSd65H0to+xRhDb7BG7
-         irhIkur3UQJQIBz3+T0O6knb0dpMaHdZ9e9HJfhetw2cTnRXAog2dzj+U7iJh+tFEVto
-         m9Lg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S1KNisJsCqChNlKv09ipjuXjD/t4NKsjUgukAjLqwgo=;
+        b=KF9Evebmgk0IOkagk7/RIFUBMr+cPh1F1LPbkWTaNsyUq6b8RMhamq3NMmj2URio+7
+         +frWZsPYuuQBDWNPFG7eOAsO4HkwALGPJ1tpDzAqi7mZP6Y6amz/LU/lFbChXoGq5u5t
+         KbXwuwMjFBMWvu2nPM+eJrhDKuz+7NIpqjdfjS1khs/WHntHd1pW7qgK6i+wbNbs/9lT
+         xFLoXUMCgP+Bz8GgRF5UIehxFkG8irzYVxPNfRjighgWUtQxPJFhGm2gUIu0zje9S/wG
+         5bFaq1hDKWAFT3sxy1xy3aoNxIJ3N9ozNfiBsQkPZyIMl/OxORRYKAd6m3nUE02TbaNR
+         0JeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=M7hX/J76tBtL7VRebaHJrw9xmZRzEx8WmpLsqjkC1B4=;
-        b=rQX9UrjVItD0PB7Kg6bA0ArgLzDi4SM1Gm4RFuX+gM9/8oshfD9NOoAsnDhCVqHNOd
-         YAKUyhj2LGp1i5CmBx1cMO/o9r7ZIiaENU0ZDYmAo2uIY/KzAW8Vh8B46Hc2637XsFxG
-         jkdBxL1JntZq+e3uG31ZScD7ipbXv6Kzu80i7WuehY/Yx3QOYole6GX4kSnLauuu60Do
-         7xhAFO1eiLgNBsr6fxV8sqhXX+yomb+fe9iXGW7Kb6YptrICEiYBXeh69ep5Li29xrEs
-         +V08xjJmN2nswMJbsy+AKTJoiby5qnC3JUeORjnTpqvWI4RAAVZFzvow0iIWeGdt8nP5
-         Zpyw==
-X-Gm-Message-State: AOAM533GQ+n65ucuLH2LMtTeliDhz++MgZxGRy31WpyK5/I3/w5ar7Nm
-        DVdg6mSdAj5Oh9SSg+JllqY=
-X-Google-Smtp-Source: ABdhPJwXZtIr/mXUcf/FXQH02w4WrWzvrLMq+bbqeL4qm+DMH7iqUNEYKh7qJ4BVzN1fNmiewnNSHg==
-X-Received: by 2002:a17:90a:a402:: with SMTP id y2mr1853709pjp.24.1589526455357;
-        Fri, 15 May 2020 00:07:35 -0700 (PDT)
-Received: from localhost.localdomain ([2001:2d8:e99a:364e:d5fe:3ea6:5791:c8e8])
-        by smtp.gmail.com with ESMTPSA id c124sm1062656pfb.187.2020.05.15.00.07.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 00:07:34 -0700 (PDT)
-From:   Steve Lee <steves.lee.maxim@gmail.com>
-X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee@maximintegrated.com, steves.lee.maxim@gmail.com
-Subject: [V5 PATCH 1/2] dt-bindings: Added device tree binding for max98390
-Date:   Fri, 15 May 2020 16:07:01 +0900
-Message-Id: <20200515070701.14102-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S1KNisJsCqChNlKv09ipjuXjD/t4NKsjUgukAjLqwgo=;
+        b=X2DNxnv/AAxw0MQElq3S2bz/47MVCRKGDCIEFSPU38KHbbrFlLK3WZXlEHTQNTlVz8
+         Zt6xMEzCgM9oVCwK2Mn0rMUtlEzl8BwBpP5mtZjPkIHSvOhOqf89XupDSIhaFMDxBKiE
+         nINfhAlWTYZ0ZnahbHMiV/buHOY6/Ka+hAUN1MtiWgnQ4ey31eiHKg0TRG95BGsfPNmO
+         DRtqbUZ6+64cgIoyDMtzbt14fk0AX13XAuWgv9irzLoZxYwiwrTjDEFFBt/dArHYfLUD
+         aCSSNYPEWwPT7iE1tPJXNP6zatwqC6SAsgGRYo0ElJLK6oJn3Q456JNUGwIbCXPFn+E7
+         Wvaw==
+X-Gm-Message-State: AOAM531QQtjSFkexgwvpfzopRzaf6emseFugcCd0ptXXdf7qsLPlMXDD
+        sqeHJwLZ3PZC91xFpxaPS9PHj0Q+Q3U6rfXRV1k0YA==
+X-Google-Smtp-Source: ABdhPJygnTdNDgbwU5IjwBpTpT+E94UNhD0unulxzXkizTZB4BYj5ClHbIbFXY2A/54DrC6ynz4HrgCg7fBD01ytnGc=
+X-Received: by 2002:a67:8b46:: with SMTP id n67mr1453605vsd.35.1589526602387;
+ Fri, 15 May 2020 00:10:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 15 May 2020 09:09:25 +0200
+Message-ID: <CAPDyKFrTxcCy6Py9i4kzgy7gcvpg0dVn-tbuNn-jiKhW=wh4bg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] Amlogic 32-bit Meson SoC SDHC MMC controller driver
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        yinxin_1989@aliyun.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for DT binding of max98390 amplifier driver.
+On Tue, 12 May 2020 at 22:42, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hello,
+>
+> this is the patchset for a driver for the Amlogic "SDHC" MMC controller
+> found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
+>
+> The public S805 (Meson8b) datasheet has some documentation starting on
+> page 74: [0]
+>
+> It's performance is still not as good as the driver from Amlogic's 3.10
+> kernel, but it does not corrupt data anymore (as RFC v1 did).
+>
+> Special thanks to the people who supported me off-list - you are
+> amazing and deserve to be mentioned here:
+> - Xin Yin who helped me fix two more write corruption problems. I am
+>   hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
+> - Jianxin Pan for sharing some of the internal workings of this MMC
+>   controller with me
+> - Wei Wang for spotting the initial write corruption problem and helping
+>   test this driver on his board. I have his permission to add his
+>   Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
+>   up)
+>
+>
+> Changes since v6 at [6]:
+> - both patches: dropped the clock #include from the dt-bindings as well
+>   as #clock-cells = <1> and the self-referencing clock inputs. Instead
+>   the driver will not be registering a clock provider anymore. The
+>   clock references are obtained using "clk_hw.clk" (thus not going
+>   through the dt-bindings anymore) as suggested in [7] until a better
+>   solution is implemented. A TODO comment is also in place so it's
+>   easier to find this temporary workaround when the new helper exists.
+> - dropped Rob's Reviewed-by because I modified the dt-bindings. schema
+>   validation still passes on my build machine.
+> - patch #2: dropped MMC_CAP_ERASE due to the following patch which is
+>   queued in mmc's -next: "mmc: host: Drop redundant MMC_CAP_ERASE"
+> - patch #2: fill all clk_{mux,divider,gate,hw} values in
+>   meson_mx_sdhc_register_clkc instead of using loops and two separate
+>   structs to make the code easier to read. Thanks to Jerome for the
+>   suggestion.
+> - I decided to keep all the Tested-by's because testing was smooth
+>   for me and none of the clock calculation formulas has changed (only
+>   the API how to obtain the clocks).
+>
+> Changes since v5 at [5] (thanks to Ulf and Jerome for the feedback):
+> - changed copyright year to 2020
+> - move register #defines to a separate header file
+> - drop unused include linux/clk-provider.h from meson-mx-sdhc.c
+> - used #defines for regmap_read_poll_timeout timeout/sleep values
+> - set MMC_CAP_WAIT_WHILE_BUSY
+> - move the clock controller code to mmc/host/meson-mx-sdhc-clkc.c and
+>   don't register a separate platform_device for it. This also means
+>   that the driver switched from clk_regmap to the standard
+>   clk_{divider,gate,mux}_ops
+> - dropped ".index = -1" for clk_parent_data with .fw_name
+> - use CLK_SET_RATE_PARENT on all leaf clocks and drop
+>   CLK_SET_RATE_GATE
+> - switch from parent_data.name to parent_hws
+> - use fallthrough; instead of fallthrough comment
+> - added Anand's Tested-by - thank you!
+> - I decided to keep all Tested-by and Reviewed-by because they were
+>   only for the MMC controller part and I have barely touched that with
+>   this update.
+> - Ulf asked if the timeout can be shortened. I believe it can but I
+>   have no documentation for it. Thus I need a test-case to see if my
+>   assumptions are correct - thus I have not addressed this in v6 yet
+>
+> Changes since v4 at [4]:
+> - move the four clkin clock inputs to the start of the clock-names list
+>   as suggested by Rob, affects patch #1
+> - fixed #include statement in dt-bindings example in patch #1
+>
+> Changes since v3 at [3]:
+> - split the clock bits into a separate clock controller driver because
+>   of two reasons: 1) it keeps the MMC controller driver mostly clean of
+>   the clock bits 2) the pure clock controller can use
+>   devm_clk_hw_register() (instead of devm_clk_register(), which is
+>   deprecated) and the MMC controller can act as a pure clock consumer.
+>   This also affects the dt-bindings which is why I dropped Rob's
+>   Reviewed-by. Thanks to Ulf for the suggestions
+>
+> Changes since v2 at [2]:
+> - rebased on top of v5.5-rc1
+> - added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
+> - (note: Kevin had v2 of this series in -next for a few days so the
+>    build test robots could play with it. I haven't received any negative
+>    feedback in that time)
+>
+> Changes since RFC v1 at [1]:
+> - don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
+>   corruption problems. the out-of-tree 3.10 "reference" driver doesn't
+>   set it either
+> - check against data->flags instead of cmd->flags when testing for
+>   MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
+>   another write corruption problem
+> - clear the FIFOs after successfully transferring data as suggested by
+>   Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
+>   another write corruption problem
+> - integrate the clock suggestions from Jianxin Pan so the driver is now
+>   able to set up the clocks correctly for all known cases. documentation
+>   is also added to the patch description. Thank you Jianxin for the
+>   help!
+> - set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
+> - convert the dt-bindings to .yaml (which is why I didn't add Rob's
+>   Reviewed-by)
+> - switch to struct clk_parent_data as part of newer common clock
+>   framework APIs to simplify the clock setup
+> - dropped CMD23 support because it seems to hurt read and write
+>   performance by 10-20% in my tests. it's not clear why, but for now we
+>   can live without this.
+> - use devm_platform_ioremap_resource instead of open-coding it
+>
+>
+> [0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+> [1] https://patchwork.kernel.org/cover/11035505/
+> [2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
+> [3] https://patchwork.kernel.org/cover/11283179/
+> [4] https://patchwork.kernel.org/cover/11329017/
+> [5] https://patchwork.kernel.org/cover/11463341/
+> [6] https://patchwork.kernel.org/cover/11515603/
+> [7] https://lore.kernel.org/linux-clk/158870581453.26370.15255632521260524214@swboyd.mtv.corp.google.com/
+>
+>
+> Martin Blumenstingl (2):
+>   dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
+>   mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
+>
+>  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |  68 ++
+>  drivers/mmc/host/Kconfig                      |  14 +
+>  drivers/mmc/host/Makefile                     |   1 +
+>  drivers/mmc/host/meson-mx-sdhc-clkc.c         | 158 +++
+>  drivers/mmc/host/meson-mx-sdhc.c              | 907 ++++++++++++++++++
+>  drivers/mmc/host/meson-mx-sdhc.h              | 141 +++
+>  6 files changed, 1289 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+>  create mode 100644 drivers/mmc/host/meson-mx-sdhc-clkc.c
+>  create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
+>  create mode 100644 drivers/mmc/host/meson-mx-sdhc.h
+>
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
----
+Applied for next, thanks!
 
-
-Changed since V4:
-	* No changes.
-Changed since V3:
-	* No changes.
-Changed since V2:
-	* No changes.
-Changed since V1:
-	* Modified sample text in example
-
- .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-new file mode 100644
-index 000000000000..0ddd4c6ae55e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/max98390.txt
-@@ -0,0 +1,26 @@
-+Maxim Integrated MAX98390 Speaker Amplifier
-+
-+This device supports I2C.
-+
-+Required properties:
-+
-+ - compatible : "maxim,max98390"
-+
-+ - reg : the I2C address of the device.
-+
-+Optional properties:
-+
-+- maxim,temperature_calib
-+  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-+
-+- maxim,r0_calib
-+  u32. This is r0 calibration data which was measured in factory mode.
-+
-+Example:
-+
-+codec: max98390@38 {
-+	compatible = "maxim,max98390";
-+	reg = <0x38>;
-+	maxim,temperature_calib = <1024>;
-+	maxim,r0_calib = <100232>;
-+};
--- 
-2.17.1
-
+Kind regards
+Uffe
