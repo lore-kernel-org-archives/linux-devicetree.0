@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5551C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8784CC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A20C62076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660A02070A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kFD/V16e"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OF8azeut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgEOSol (ORCPT
+        id S1726813AbgEOSop (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 14:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46636 "EHLO
+        Fri, 15 May 2020 14:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgEOSol (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 14:44:41 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7CF1C05BD0B
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:40 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k7so1286726pjs.5
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:40 -0700 (PDT)
+        with ESMTP id S1726786AbgEOSoo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 14:44:44 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A37C05BD0A
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:44 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id b8so1384349pgi.11
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ma8a3IEAfy5hkhHsO5eKEOmN1t9cPUU6UBCxHjpj29E=;
-        b=kFD/V16eJ50vNYvQlv772jPHRykPYjlwl1Um5D+Hle7uWzCtgZBfQwS/KwK/nZTCfr
-         j7KkvjVgSES0XLwXjE9WlI7wIu/Nf8fUAlNzwExUrzHOkC2R1ilVSTKU/mq7IEzMjFjU
-         4aduh2ic/Jzv/txp6IEmmoGgNg+5FXR5uWH8Y=
+        bh=rZrZZlEq92Pse6AsQBZ3gt5RG0ZPIDCja3ntEc/+5UQ=;
+        b=OF8azeut5MIuxlonteG99mx9a8Av6BpOuIl5byPuyYv0PuO0UXM/SByDvX2ewPXsPg
+         /og5vzn72KRD56TgC3VrKeifwDs395skcMWCdtpGQCKKj5PJMqovDHzFGlQ73nEVgASR
+         oFyOSxGmQZhWbIGuJ7bgbNsyLESS4/HoKrUm4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ma8a3IEAfy5hkhHsO5eKEOmN1t9cPUU6UBCxHjpj29E=;
-        b=PXubVLo5Y4mJjT0qiy1twaKHGD0WjA/1NB+EkixOpYtOFMzlqzVTxpwMX5GusLBbvQ
-         fzm5xCYPc77FEhDV2MRX1nB6GUG0/DLnWpwfTKjrKAUkGkZ1MOesfApgzM6j0AIxXfA2
-         RchW9n9zsLKHwHTt7t8ep1SjnfqnGAIlX3IGqkLgnwIVNOB6xyQ8+M4fQRoYlMc4E4sf
-         fFAqGiroYV1GSWxLqPd7x1fwUM8S7kR91p+5k2t1dDBYqJSIJepj62vjrgaBXdQZYQSl
-         eP82zjV79nj8TNT+UUwKNPNjtoiXi19AH26d+77I96gpr2F9LFH/KleqdTqdyO2YkI11
-         ABiQ==
-X-Gm-Message-State: AOAM531WqAnZAA8Lea9XkLv3b/YhDx29fWB7P37EyV532adbnWXElA6t
-        q/SDvaE01D8OvdLfG/SiRWT8ZQ==
-X-Google-Smtp-Source: ABdhPJxrmBmEg335hMMKhTsZxipJMSKlq5GwMgh5rKfEUwuGPTZ3/FFaBx7j/3lkOTeALmalHA9y/g==
-X-Received: by 2002:a17:90b:41d5:: with SMTP id jm21mr4562657pjb.96.1589568280507;
-        Fri, 15 May 2020 11:44:40 -0700 (PDT)
+        bh=rZrZZlEq92Pse6AsQBZ3gt5RG0ZPIDCja3ntEc/+5UQ=;
+        b=OBJ+ubk1kGWdTEMXlTKUEZuAefqroHS2WHVUF/9M8xuvwmKUigc4rOjRBRyLhacVee
+         ruKYSaOD94Z3RYPb2ew6el0Qff/j1ne5hp/MiFlInQDx9zSzG7g9zuQI1EYGpDn3nHF4
+         9S1fby0KrEu9oZtvD+Tzan8t0aD4UzbOQiX7rYBjcGc6iFlAaAEooui0YeaBYdgoQnYY
+         P1S3E8U8p/SwHAvYWpKXRpKT4QmZjBKR6g+Z9Fp7dywoEFMj6cxStoXkhirGqMz/dMxp
+         uvwUHENDiS7RuiAIP1pO9AxDnpL+mob7es95Fys+yOqncwJcP3IDYvVo5mOhRTP1VVCn
+         TcTw==
+X-Gm-Message-State: AOAM530c1WVarSkWghtp0CcI7wq2sN/LAIXZ0LGqQevgFm1t2QzhQggc
+        3yTiKgFUbmkdKIaha3ETI/uJVQ==
+X-Google-Smtp-Source: ABdhPJy0Km/ifgMEiePh3m/4wFYQO+7PiRxrK/I+HUaIW+MrdLPTJ2yAIsLPOcL7MweyQmOZrjJPtQ==
+X-Received: by 2002:a62:2544:: with SMTP id l65mr5284782pfl.288.1589568284068;
+        Fri, 15 May 2020 11:44:44 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t20sm2075905pjo.13.2020.05.15.11.44.38
+        by smtp.gmail.com with ESMTPSA id a2sm2509003pfl.28.2020.05.15.11.44.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 11:44:38 -0700 (PDT)
+        Fri, 15 May 2020 11:44:43 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Pavel Tatashin <pasha.tatashin@soleen.com>
 Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
@@ -72,9 +72,9 @@ Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v4 4/6] pstore/platform: Pass max_reason to kmesg dump
-Date:   Fri, 15 May 2020 11:44:32 -0700
-Message-Id: <20200515184434.8470-5-keescook@chromium.org>
+Subject: [PATCH v4 6/6] ramoops: Add max_reason optional field to ramoops DT node
+Date:   Fri, 15 May 2020 11:44:34 -0700
+Message-Id: <20200515184434.8470-7-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200515184434.8470-1-keescook@chromium.org>
 References: <20200515184434.8470-1-keescook@chromium.org>
@@ -87,64 +87,48 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-Add a new member to struct pstore_info for passing information about
-kmesg dump maximum reason. This allows a finer control of what kmesg
-dumps are sent to pstore storage backends.
-
-Those backends that do not explicitly set this field (keeping it equal to
-0), get the default behavior: store only Oopses and Panics, or everything
-if the printk.always_kmsg_dump boot param is set.
+Currently, it is possible to dump kmsges for panic, or oops.
+With max_reason it is possible to dump messages for other
+kmesg_dump events, for example reboot, halt, shutdown, kexec.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Link: https://lore.kernel.org/lkml/20200506211523.15077-3-keescook@chromium.org/
-Co-developed-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/lkml/20200506211523.15077-6-keescook@chromium.org/
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/pstore/platform.c   | 4 +++-
- include/linux/pstore.h | 7 +++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/reserved-memory/ramoops.txt | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 5e6c6022deb9..a9e297eefdff 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -595,8 +595,10 @@ int pstore_register(struct pstore_info *psi)
+diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+index 0eba562fe5c6..b7886fea368c 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
++++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+@@ -30,7 +30,7 @@ Optional properties:
+ - ecc-size: enables ECC support and specifies ECC buffer size in bytes
+   (defaults to 0: no ECC)
  
- 	pstore_get_records(0);
+-- record-size: maximum size in bytes of each dump done on oops/panic
++- record-size: maximum size in bytes of each kmsg dump.
+   (defaults to 0: disabled)
  
--	if (psi->flags & PSTORE_FLAGS_DMESG)
-+	if (psi->flags & PSTORE_FLAGS_DMESG) {
-+		pstore_dumper.max_reason = psinfo->max_reason;
- 		pstore_register_kmsg();
-+	}
- 	if (psi->flags & PSTORE_FLAGS_CONSOLE)
- 		pstore_register_console();
- 	if (psi->flags & PSTORE_FLAGS_FTRACE)
-diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-index f6f22b13e04f..eb93a54cff31 100644
---- a/include/linux/pstore.h
-+++ b/include/linux/pstore.h
-@@ -96,6 +96,12 @@ struct pstore_record {
-  *
-  * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
-  * @flags:	bitfield of frontends the backend can accept writes for
-+ * @max_reason:	Used when PSTORE_FLAGS_DMESG is set. Contains the
-+ *		kmsg_dump_reason enum value. KMSG_DUMP_UNDEF means
-+ *		"use existing kmsg_dump() filtering, based on the
-+ *		printk.always_kmsg_dump boot param" (which is either
-+ *		KMSG_DUMP_OOPS when false, or KMSG_DUMP_MAX when
-+ *		true); see printk.always_kmsg_dump for more details.
-  * @data:	backend-private pointer passed back during callbacks
-  *
-  * Callbacks:
-@@ -179,6 +185,7 @@ struct pstore_info {
- 	struct mutex	read_mutex;
+ - console-size: size in bytes of log buffer reserved for kernel messages
+@@ -45,7 +45,16 @@ Optional properties:
+ - unbuffered: if present, use unbuffered mappings to map the reserved region
+   (defaults to buffered mappings)
  
- 	int		flags;
-+	int		max_reason;
- 	void		*data;
+-- no-dump-oops: if present, only dump panics (defaults to panics and oops)
++- max-reason: if present, sets maximum type of kmsg dump reasons to store
++  (defaults to 2: log Oopses and Panics). This can be set to INT_MAX to
++  store all kmsg dumps. See include/linux/kmsg_dump.h KMSG_DUMP_* for other
++  kmsg dump reason values. Setting this to 0 (KMSG_DUMP_UNDEF), means the
++  reason filtering will be controlled by the printk.always_kmsg_dump boot
++  param: if unset, it will be KMSG_DUMP_OOPS, otherwise KMSG_DUMP_MAX.
++
++- no-dump-oops: deprecated, use max_reason instead. If present, and
++  max_reason is not specified, it is equivalent to max_reason = 1
++  (KMSG_DUMP_PANIC).
  
- 	int		(*open)(struct pstore_info *psi);
+ - flags: if present, pass ramoops behavioral flags (defaults to 0,
+   see include/linux/pstore_ram.h RAMOOPS_FLAG_* for flag values).
 -- 
 2.20.1
 
