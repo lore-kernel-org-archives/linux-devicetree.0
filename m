@@ -2,104 +2,111 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6204C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 16:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF52C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82A1B206C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 16:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AFC207F5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:10:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lr3oxQ7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgEOQ4I (ORCPT
+        id S1726231AbgEORKL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 12:56:08 -0400
-Received: from sauhun.de ([88.99.104.3]:37868 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbgEOQ4I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 12:56:08 -0400
-Received: from localhost (p5486CC07.dip0.t-ipconnect.de [84.134.204.7])
-        by pokefinder.org (Postfix) with ESMTPSA id 1297F2C1F6B;
-        Fri, 15 May 2020 18:56:06 +0200 (CEST)
-Date:   Fri, 15 May 2020 18:56:05 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        adamboardman@gmail.com
-Subject: Re: [PATCH 1/4] dt-bindings: i2c: Document I2C controller binding
- for MT6797 SoC
-Message-ID: <20200515165605.GA19423@ninjato>
-References: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
- <20200222162444.11590-2-manivannan.sadhasivam@linaro.org>
- <20200226222330.GA9392@bogus>
- <aa9ea456-dbee-229c-aea0-4860c6eb7adf@gmail.com>
+        Fri, 15 May 2020 13:10:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726144AbgEORKK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 13:10:10 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92FE5C061A0C
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 10:10:10 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f13so3026594wmc.5
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 10:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=K7Aj7pm0vIiZdtyu0H96D9hYnSt0UJrHRYiSk0qWGzY=;
+        b=Lr3oxQ7a/Pj3O9fRDIrp4D6/zqj6Zra5xA4pHYa1RBLvoaiwIjAY/pgD9HR8ZwYIP2
+         z2F38jPejUH4dw4c/TT846IL1ICaITGG+kNOBFw0MPYZScjBP42rR6zyNvzlQoxyjc2C
+         9xxIBD6ASRQ+ELXcYOck4zGZcf000lTT//hSGCSyRlrIBHBNTkiJcScmbT+arSCdWJnG
+         if1ZlHhY2x4lz4VJBNy9DTZ+cO0eY10AEBmvy0wo9797AtFtiU0jkRZzirp1G4zR8/4p
+         BSnXTGCJtlM8MDQvZD8gcHk96H5kvyU0mB3qvkJpg2QpyMFZkMe1myw7UcpUgKCRovFH
+         RC/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K7Aj7pm0vIiZdtyu0H96D9hYnSt0UJrHRYiSk0qWGzY=;
+        b=gkWguRupJHbybFs+96x4f2F91cGshxeYXCIMlZnT4o84Jz0B3Z7KSIlILc0AsPtuMw
+         SEiaqOJf7W0/nts1UwtWK0BS8nh7rp6aOYwof5ccgUrV2t0wTwxyyC3LtA1/6akrLHTY
+         9kgQiYk4P6y/NhWeM4d1nmQ5Q2NM5Gh+KYPZNspbVJXS+ZsZdgwi8pz3StBiF24K1rja
+         ce7D1AwlQxLv6wUCTcGVVinWJDHBC9/heaxpeQBrlYyZsVnIP7ZnSicIoUv+xislzkxU
+         n3SmPmtuyAK8oQY+cLcuXYE2eqEPivN5jpLLS6bdrGDYfo6DPIOdG9Sp3MnCTvTd5eAv
+         4sDg==
+X-Gm-Message-State: AOAM531ZOjwb/06X/2u7D9BrfadskIXSdtzZb2RgQuloC8KpesYcOYwG
+        Q8Pn7SBFDy9IrZ1+hVAgjDWTWw==
+X-Google-Smtp-Source: ABdhPJz6lBYmKIWA9SC3OBG4L5ZlSmxA4dHZtdJw/MjyFZyCRehRhjAJYuQi5z57mb8sP4wzsBQsLg==
+X-Received: by 2002:a1c:dd8b:: with SMTP id u133mr4851573wmg.108.1589562607152;
+        Fri, 15 May 2020 10:10:07 -0700 (PDT)
+Received: from linaro.org ([2a01:e34:ed2f:f020:5450:281:8a7d:dd9a])
+        by smtp.gmail.com with ESMTPSA id q2sm3800278wmq.23.2020.05.15.10.10.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 10:10:06 -0700 (PDT)
+Date:   Fri, 15 May 2020 19:10:04 +0200
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
+ clocksource/sched-clocks usage
+Message-ID: <20200515171004.GA760381@linaro.org>
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aa9ea456-dbee-229c-aea0-4860c6eb7adf@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
+> Currently neither clocksource nor scheduler clock kernel framework
+> support the clocks with variable frequency. Needless to say how many
+> problems may cause the sudden base clocks frequency change. In a
+> simplest case the system time will either slow down or speed up.
+> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
+> with CPU we must set some limitations on using it for these frameworks
+> if CPU frequency may change. First of all it's not safe to have the
+> MIPS GIC used for scheduler timings. So we shouldn't proceed with
+> the clocks registration in the sched-subsystem. Secondly we must
+> significantly decrease the MIPS GIC clocksource rating. This will let
+> the system to use it only as a last resort.
+>
+> Note CM3.x-based systems may also experience the problems with MIPS GIC
+> if the CPU-frequency change is activated for the whole CPU cluster
+> instead of using the individual CPC core clocks divider.
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+May be there is no alternative but the code looks a bit hacksih. Isn't possible
+to do something with the sched_mark_unstable?
 
-On Fri, May 15, 2020 at 04:48:28PM +0200, Matthias Brugger wrote:
-> Hi Wolfram,
->=20
-> On 26/02/2020 23:23, Rob Herring wrote:
-> > On Sat, 22 Feb 2020 21:54:41 +0530, Manivannan Sadhasivam wrote:
-> >> I2C controller driver for MT6577 SoC is reused for MT6797 SoC. Hence,
-> >> document that in DT binding.
-> >>
-> >> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >=20
-> > Acked-by: Rob Herring <robh@kernel.org>
-> >=20
->=20
-> Do you want to take this thorough your tree or are you OK if I take it th=
-orough
-> mine?
-
-The I2C list is neither in the CC field, nor is the patch in patchwork.
-I suggest you take it.
-
-Acked-by: Wolfram Sang <wsa@kernel.org>
-
-
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6+yaEACgkQFA3kzBSg
-KbZzoxAAmChj28HYksgpo/MWV/BUG0pk9pOZqJPw/klKVXwQthuLR5VhB8skNnKX
-ZJK0R4lBqOiTUkt9ASzuuXtA3Is/YlvAfyL6Q53pKcuaMJBIEl3xgf+hJxeUv8tv
-xKv2nXRtIIcnuVCfK3D6WmxR4De3vVYjZmg4YrCmdl6JUzDc/vXRXCPdeGI3HzXV
-S4thVcwulxtW77EVbZtbK7DObPVXQb6CFb8oPYblIBqAQRers0/s+zag9j6suBFF
-nRCr9uNrec1IPhnIwqSqe5uPqsr02kEaVFg0DCyXmR+l4FuM3yu19W9e1Jxxp/1Q
-RqIJ+OfCgiVgoG5SUHREIkOWbivBgy7sAdQ41PEQ91Wxa4Qjmvk+YhBn7SK/12za
-wYfD2FxikaYWlOW2vlMFIlHnXxjXuCQeMZl3BbHejgaNdYtGaxcp1mtFsLsG/acR
-a6VMR635bMGETBg4aN/8c0A4KAKDEhzL/ucn/JtKBK6LwGCdmNnIYpi+VOQ9YfVw
-8q6gVA88+MMK+pfOtPPLXnv8I9UU08oijKG3W+K1WS/ewL/bOI484C95s3yXg25Q
-9gpslUUdYlNy9SQilZ65IjjsjIDmF0v6bbSaygHqw8HWeMaRu4YV6leIOu51+yFK
-4OnklpdFEd+YwLSYVUyPZ3IK+4D2heK9etKViSs8HDCpSTBs1Po=
-=Vxiu
------END PGP SIGNATURE-----
-
---SLDf9lqlvOQaIe6s--
+Or just not use the timer at all ?
