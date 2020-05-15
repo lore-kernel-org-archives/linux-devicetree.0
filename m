@@ -2,266 +2,129 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9ADC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CDFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531A520671
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83A520671
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:07:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vU6CM3mu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgEOHGZ (ORCPT
+        id S1726660AbgEOHHg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 03:06:25 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4847 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726429AbgEOHGY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 03:06:24 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F2B0C63752B1B774BB0;
-        Fri, 15 May 2020 15:06:19 +0800 (CST)
-Received: from [10.57.101.250] (10.57.101.250) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 15 May 2020 15:06:18 +0800
-Subject: Re: [PATCH] dt-bindings: hisilicon: Add CTI bindings for hi-6220
-To:     Mike Leach <mike.leach@linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>
-References: <20200415201259.15831-1-mike.leach@linaro.org>
-CC:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5EBE3F6A.10501@hisilicon.com>
-Date:   Fri, 15 May 2020 15:06:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
-MIME-Version: 1.0
-In-Reply-To: <20200415201259.15831-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+        Fri, 15 May 2020 03:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726664AbgEOHHf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 03:07:35 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F39C061A0C;
+        Fri, 15 May 2020 00:07:35 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id b8so551677plm.11;
+        Fri, 15 May 2020 00:07:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=M7hX/J76tBtL7VRebaHJrw9xmZRzEx8WmpLsqjkC1B4=;
+        b=vU6CM3mun5/XIqHsnKuxhXN5MylGXPGNRiXohIC9XPH62/E0+oScClKAlhhdoACQMj
+         BjUjhvgW/ebKfPRMW4RYeYyaIU9XZdnFbRqMSKH+uzdl/J6xxrkLi4nj/HUVKqPKPHjC
+         ALWTTQOEuzQ0dScjO0gQYKo9tHZfP9muBFZQ3KTtgB4SsvbtQlgCtv1LXb/opOzEetcJ
+         QRQhFt2j1+eXJz7nqzZ7UjonlmYlWsNS/YendGw6inJJlF7VMsSd65H0to+xRhDb7BG7
+         irhIkur3UQJQIBz3+T0O6knb0dpMaHdZ9e9HJfhetw2cTnRXAog2dzj+U7iJh+tFEVto
+         m9Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=M7hX/J76tBtL7VRebaHJrw9xmZRzEx8WmpLsqjkC1B4=;
+        b=rQX9UrjVItD0PB7Kg6bA0ArgLzDi4SM1Gm4RFuX+gM9/8oshfD9NOoAsnDhCVqHNOd
+         YAKUyhj2LGp1i5CmBx1cMO/o9r7ZIiaENU0ZDYmAo2uIY/KzAW8Vh8B46Hc2637XsFxG
+         jkdBxL1JntZq+e3uG31ZScD7ipbXv6Kzu80i7WuehY/Yx3QOYole6GX4kSnLauuu60Do
+         7xhAFO1eiLgNBsr6fxV8sqhXX+yomb+fe9iXGW7Kb6YptrICEiYBXeh69ep5Li29xrEs
+         +V08xjJmN2nswMJbsy+AKTJoiby5qnC3JUeORjnTpqvWI4RAAVZFzvow0iIWeGdt8nP5
+         Zpyw==
+X-Gm-Message-State: AOAM533GQ+n65ucuLH2LMtTeliDhz++MgZxGRy31WpyK5/I3/w5ar7Nm
+        DVdg6mSdAj5Oh9SSg+JllqY=
+X-Google-Smtp-Source: ABdhPJwXZtIr/mXUcf/FXQH02w4WrWzvrLMq+bbqeL4qm+DMH7iqUNEYKh7qJ4BVzN1fNmiewnNSHg==
+X-Received: by 2002:a17:90a:a402:: with SMTP id y2mr1853709pjp.24.1589526455357;
+        Fri, 15 May 2020 00:07:35 -0700 (PDT)
+Received: from localhost.localdomain ([2001:2d8:e99a:364e:d5fe:3ea6:5791:c8e8])
+        by smtp.gmail.com with ESMTPSA id c124sm1062656pfb.187.2020.05.15.00.07.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 00:07:34 -0700 (PDT)
+From:   Steve Lee <steves.lee.maxim@gmail.com>
+X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
+        steves.lee@maximintegrated.com, steves.lee.maxim@gmail.com
+Subject: [V5 PATCH 1/2] dt-bindings: Added device tree binding for max98390
+Date:   Fri, 15 May 2020 16:07:01 +0900
+Message-Id: <20200515070701.14102-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mike,
+Add documentation for DT binding of max98390 amplifier driver.
 
-On 2020/4/16 4:12, Mike Leach wrote:
-> Adds in CTI device tree information for the Hikey620 board.
-> 
-> Tested on Linux 5.7-rc1.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Tested-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+---
 
-Thanks!
-Applied to the hisilicon arm64 dt tree.
 
-Best Regards,
-Wei
+Changed since V4:
+	* No changes.
+Changed since V3:
+	* No changes.
+Changed since V2:
+	* No changes.
+Changed since V1:
+	* Modified sample text in example
 
-> ---
->  .../boot/dts/hisilicon/hi6220-coresight.dtsi  | 130 ++++++++++++++++--
->  1 file changed, 122 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-> index 651771a73ed6..27f067e87601 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-> @@ -213,7 +213,7 @@
->  			};
->  		};
->  
-> -		etm@f659c000 {
-> +		etm0: etm@f659c000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0 0xf659c000 0 0x1000>;
->  
-> @@ -232,7 +232,7 @@
->  			};
->  		};
->  
-> -		etm@f659d000 {
-> +		etm1: etm@f659d000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0 0xf659d000 0 0x1000>;
->  
-> @@ -251,7 +251,7 @@
->  			};
->  		};
->  
-> -		etm@f659e000 {
-> +		etm2: etm@f659e000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0 0xf659e000 0 0x1000>;
->  
-> @@ -270,7 +270,7 @@
->  			};
->  		};
->  
-> -		etm@f659f000 {
-> +		etm3: etm@f659f000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0 0xf659f000 0 0x1000>;
->  
-> @@ -289,7 +289,7 @@
->  			};
->  		};
->  
-> -		etm@f65dc000 {
-> +		etm4: etm@f65dc000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0 0xf65dc000 0 0x1000>;
->  
-> @@ -308,7 +308,7 @@
->  			};
->  		};
->  
-> -		etm@f65dd000 {
-> +		etm5: etm@f65dd000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0 0xf65dd000 0 0x1000>;
->  
-> @@ -327,7 +327,7 @@
->  			};
->  		};
->  
-> -		etm@f65de000 {
-> +		etm6: etm@f65de000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0 0xf65de000 0 0x1000>;
->  
-> @@ -346,7 +346,7 @@
->  			};
->  		};
->  
-> -		etm@f65df000 {
-> +		etm7: etm@f65df000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0 0xf65df000 0 0x1000>;
->  
-> @@ -364,5 +364,119 @@
->  				};
->  			};
->  		};
-> +
-> +		/* System CTIs */
-> +		/* CTI 0 - TMC and TPIU connections */
-> +		cti@f6403000 {
-> +			compatible = "arm,coresight-cti", "arm,primecell";
-> +			reg = <0 0xf6403000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +		};
-> +
-> +		/* CTI - CPU-0 */
-> +		cti@f6598000 {
-> +			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +				     "arm,primecell";
-> +			reg = <0 0xf6598000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&cpu0>;
-> +			arm,cs-dev-assoc = <&etm0>;
-> +		};
-> +
-> +		/* CTI - CPU-1 */
-> +		cti@f6599000 {
-> +			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +				     "arm,primecell";
-> +			reg = <0 0xf6599000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&cpu1>;
-> +			arm,cs-dev-assoc = <&etm1>;
-> +		};
-> +
-> +		/* CTI - CPU-2 */
-> +		cti@f659a000 {
-> +			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +				     "arm,primecell";
-> +			reg = <0 0xf659a000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&cpu2>;
-> +			arm,cs-dev-assoc = <&etm2>;
-> +		};
-> +
-> +		/* CTI - CPU-3 */
-> +		cti@f659b000 {
-> +			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +				     "arm,primecell";
-> +			reg = <0 0xf659b000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&cpu3>;
-> +			arm,cs-dev-assoc = <&etm3>;
-> +		};
-> +
-> +		/* CTI - CPU-4 */
-> +		cti@f65d8000 {
-> +			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +				     "arm,primecell";
-> +			reg = <0 0xf65d8000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&cpu4>;
-> +			arm,cs-dev-assoc = <&etm4>;
-> +		};
-> +
-> +		/* CTI - CPU-5 */
-> +		cti@f65d9000 {
-> +			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +				     "arm,primecell";
-> +			reg = <0 0xf65d9000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&cpu5>;
-> +			arm,cs-dev-assoc = <&etm5>;
-> +		};
-> +
-> +		/* CTI - CPU-6 */
-> +		cti@f65da000 {
-> +			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +				     "arm,primecell";
-> +			reg = <0 0xf65da000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&cpu6>;
-> +			arm,cs-dev-assoc = <&etm6>;
-> +		};
-> +
-> +		/* CTI - CPU-7 */
-> +		cti@f65db000 {
-> +			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> +				     "arm,primecell";
-> +			reg = <0 0xf65db000 0 0x1000>;
-> +
-> +			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&cpu7>;
-> +			arm,cs-dev-assoc = <&etm7>;
-> +		};
->  	};
->  };
-> 
+ .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
+new file mode 100644
+index 000000000000..0ddd4c6ae55e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/max98390.txt
+@@ -0,0 +1,26 @@
++Maxim Integrated MAX98390 Speaker Amplifier
++
++This device supports I2C.
++
++Required properties:
++
++ - compatible : "maxim,max98390"
++
++ - reg : the I2C address of the device.
++
++Optional properties:
++
++- maxim,temperature_calib
++  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
++
++- maxim,r0_calib
++  u32. This is r0 calibration data which was measured in factory mode.
++
++Example:
++
++codec: max98390@38 {
++	compatible = "maxim,max98390";
++	reg = <0x38>;
++	maxim,temperature_calib = <1024>;
++	maxim,r0_calib = <100232>;
++};
+-- 
+2.17.1
+
