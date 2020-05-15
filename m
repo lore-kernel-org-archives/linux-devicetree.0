@@ -2,96 +2,73 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0978FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AF9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5699207C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31C7207C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 15:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgEOPON (ORCPT
+        id S1726731AbgEOPOh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 11:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726188AbgEOPON (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 11:14:13 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B9CC061A0C;
-        Fri, 15 May 2020 08:14:12 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id CBFDA2A3488
-Received: by earth.universe (Postfix, from userid 1000)
-        id C07A63C08C6; Fri, 15 May 2020 17:14:08 +0200 (CEST)
-Date:   Fri, 15 May 2020 17:14:08 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Emil Velikov <emil.velikov@collabora.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv1 03/19] power: supply: core: add manufacture date
- properties
-Message-ID: <20200515151408.vbj75fag6ya5g2bq@earth.universe>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
- <20200513185615.508236-4-sebastian.reichel@collabora.com>
- <20200515144732.GC2836808@arch-x1c3>
+        Fri, 15 May 2020 11:14:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:57954 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726615AbgEOPOh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 11:14:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 924242F;
+        Fri, 15 May 2020 08:14:36 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 549BC3F71E;
+        Fri, 15 May 2020 08:14:35 -0700 (PDT)
+Subject: Re: [PATCH v3 16/20] arm64: dts: juno: Fix GPU interrupt order
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20200513103016.130417-1-andre.przywara@arm.com>
+ <20200513103016.130417-17-andre.przywara@arm.com>
+ <20200513182405.GE27686@bogus>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Organization: ARM Ltd.
+Message-ID: <a1dd3eda-fa8b-630a-a64c-479dcbd053ae@arm.com>
+Date:   Fri, 15 May 2020 16:13:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3xq2l5oxqmhxeqpo"
-Content-Disposition: inline
-In-Reply-To: <20200515144732.GC2836808@arch-x1c3>
+In-Reply-To: <20200513182405.GE27686@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---3xq2l5oxqmhxeqpo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 13/05/2020 19:24, Sudeep Holla wrote:
 
 Hi,
 
-On Fri, May 15, 2020 at 03:47:32PM +0100, Emil Velikov wrote:
-> On 2020/05/13, Sebastian Reichel wrote:
-> > Some smart batteries store their manufacture date, which is
-> > useful to identify the battery and/or to know about the cell
-> > quality.
-> >=20
-> Have you considered exposing this as a single file? Say following
-> the ISO8601 format - YYYY-MM-DD.
+> On Wed, May 13, 2020 at 11:30:12AM +0100, Andre Przywara wrote:
+>> The Mali binding insists on the GPU interrupts to be in ordered as: job,
+>> mmu, gpu.
+>> Sort the GPU interrupts and interrupt-names properties accordingly.
+>>
+> 
+> I assume this is not a bug fix, just clean up to make it 100% binding
+> compliant. Things work just fine without this too. Just for my info.
 
-Yes. My initial implementation was exactly that. The thing is, that
-I suspect some fuel gauge implementations may only expose the year
-or just year + month. I chose 3 files, since receiving 'YYYY-MM'
-instead of full ISO code might be more unexpected than not having
-the DAY file available. But I don't have a strong opinion on this.
+Yes, that's true, it works either way right now.
+Originally I was under the impression that the purpose of
+interrupt-names was to allow any order of interrupts, but according to
+Rob this is just to support optional IRQs (so having a shorter list).
+The bindings require a certain order, and the dt-schema validation
+complains if that differs in the DT.
 
--- Sebastian
-
---3xq2l5oxqmhxeqpo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6+sbgACgkQ2O7X88g7
-+prQgQ/8DObxqwSGq8FRackNMigPfBZos5u1g1+5PprsLQ9E7zb0ibMFybVRGQse
-PJa82uqIwP4lYAyZx6EwFBeOFhI6i9A5sHEugiuarjRAJjXZuyW3YjObCw/UfC54
-eUkVm6F4iy7r3NyucF+be398TDZEEwJ+fqIIOY/YagSurMpxR3Pdemy2mDAxykI9
-ZJXIT5on3/L0X7E0Trdx1IyfeQQfvLjTtJaBV3J+WaIYViIb+pkMpHsSZD1SOLi+
-qOLT31pXXp87D9xicCLU5ayWgdIxi93fGMEQnGHcfIbNjjD8ncGy2BBR/tbsU065
-lqO7edflFoXocf35ZQCLzCXK+AfNkYw1GZw+URAnh5icGK41IHVPNe041YFrySCs
-8qzl7f7/G+WUznezbxFYpqtRpNW2KfThnezhJsV+Istc1zhE6hCCliBVmXlcJjO/
-Ts2FlER/OfePg99I7TRtnr/Ld49gX74S9balftKrrvc18e0U4+J1B8c9cqe0reWo
-8OVpPvQ1b7HQ5/VzsmhJf0QpXp1vG+EHD8toIt5EwCtPfmr9lzHOIo63YdElsCvP
-b1qRVHv9Sc/Rusfg4aE8Lqsor5SnMoE988Tj8lhFpJD5pucK91WxGzfyWtb6qtnp
-QHx0gsVOQCZBQYSSudMEPNSqH9P0qSHTfwtKCnyNSKqo2s37zuU=
-=D2js
------END PGP SIGNATURE-----
-
---3xq2l5oxqmhxeqpo--
+Cheers,
+Andre
