@@ -2,81 +2,80 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD692C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E04EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB5D220727
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE0D20709
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgEOJkR (ORCPT
+        id S1728145AbgEOJ7T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 05:40:17 -0400
-Received: from sauhun.de ([88.99.104.3]:33886 "EHLO pokefinder.org"
+        Fri, 15 May 2020 05:59:19 -0400
+Received: from mx.socionext.com ([202.248.49.38]:29835 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgEOJkR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 05:40:17 -0400
-Received: from localhost (p5486CC07.dip0.t-ipconnect.de [84.134.204.7])
-        by pokefinder.org (Postfix) with ESMTPSA id 3463C2C2051;
-        Fri, 15 May 2020 11:40:15 +0200 (CEST)
-Date:   Fri, 15 May 2020 11:40:14 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Qii Wang <qii.wang@mediatek.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        id S1728032AbgEOJ7T (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 05:59:19 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 15 May 2020 18:59:17 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 9C924180B60;
+        Fri, 15 May 2020 18:59:17 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 15 May 2020 18:59:17 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id D1E971A12D0;
+        Fri, 15 May 2020 18:59:16 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        leilk.liu@mediatek.com
-Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
-Message-ID: <20200515094014.GG2077@ninjato>
-References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
- <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HKEL+t8MFpg/ASTE"
-Content-Disposition: inline
-In-Reply-To: <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 0/5] PCI: uniphier: Add features for UniPhier PCIe host controller
+Date:   Fri, 15 May 2020 18:58:58 +0900
+Message-Id: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series adds some features for UniPhier PCIe host controller.
 
---HKEL+t8MFpg/ASTE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+- Add support for PME and AER invoked by MSI interrupt
+- Add iATU register view support for PCIe version >= 4.80
+- Add an error message when failing to get phy driver
 
-On Thu, May 14, 2020 at 09:09:05PM +0800, Qii Wang wrote:
-> This patch adds a algorithm to calculate some ac-timing parameters
-> which can fully meet I2C Spec.
->=20
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+This adds a new function called by MSI handler in DesignWare PCIe framework,
+that invokes PME and AER funcions to detect the factor from SoC-dependent
+registers.
 
-Applied to for-next, thanks!
+Changes since v1:
+- Add check if struct resource is NULL
+- Fix warning in the type of dev_err() argument
 
+Kunihiko Hayashi (5):
+  PCI: dwc: Add msi_host_isr() callback
+  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+  dt-bindings: PCI: uniphier: Add iATU register description
+  PCI: uniphier: Add iATU register support
+  PCI: uniphier: Add error message when failed to get phy
 
---HKEL+t8MFpg/ASTE
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |  8 +--
+ drivers/pci/controller/dwc/pcie-designware.h       |  1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 67 +++++++++++++++++-----
+ 4 files changed, 60 insertions(+), 17 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.7.4
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6+Y34ACgkQFA3kzBSg
-KbYUSg//XhO3MQxenuSju7wYsEkq/XyaVAfqH+foUu4RPONPXv04M4Owx+6UdCek
-8EjevvFVM5f9Ir47WkKKJkt4mlmsEV8ndKjwZyY7h1A5Ocna2bQ15pGFxpQ20oe1
-DT5X4s/7HsTQIubSWGbDLSujQ8xHjrT3kDFBfEh6HxBGxsuHNLCP6WjLTHZbFN18
-B87VCpVFINlqCHiX/ZAKTHN6HSF00+IwENs3zMCKfE10cVuqF4OaoVNSvQyDS64y
-w9erXur3M7s8ijhnHWgmSz0Vs8xAuPwWmzBlHYFAmh4bJxpFpMkDuPQU8n1aAffT
-IijkylZYp5vuQu93n1tkShlo+MOgHcmEA2uCoCOb9jMJOFO6wM3AeBRzSmpTCtnn
-dZLUNy7asSTYtTrEpXGmaKg2l1gEKDt3Kn99OfV+hrdquJyzljY6+Z4B4WbIDtIN
-BUU+XM0JUVttFDT8Y03LEb/a49c1f+SAtzu3gmHnjwVajXwghG/xXqm1Ux8hKqcZ
-BRowZ2LNDub5N58kfMtRifOXAEfLwl7gsrj6TnO9MkiZ8NpEyBJUaVK2pn3VWc+g
-O8Mye8aADI4A1NPuexyCiF3awZAOiT7iEZOUWJte9VaOULGs51C8ifddMN+RgbLY
-6BnDf0z49UE/IoTvvMNCoxE8/fwXd16eFvqUnq1UgY5lZRG89ls=
-=SLRe
------END PGP SIGNATURE-----
-
---HKEL+t8MFpg/ASTE--
