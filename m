@@ -2,137 +2,137 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C663FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D955BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7B8520758
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F60206D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 13:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgEONcv (ORCPT
+        id S1726141AbgEONoI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 09:32:51 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:39195 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgEONcu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 09:32:50 -0400
-Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N8GIa-1j4jqL03iy-0148bL; Fri, 15 May 2020 15:32:49 +0200
-Received: by mail-qv1-f54.google.com with SMTP id p4so1036078qvr.10;
-        Fri, 15 May 2020 06:32:48 -0700 (PDT)
-X-Gm-Message-State: AOAM533LC1JhRL8lBvEYosRM/J8mL0QJapJt9PSOWop9bWdP0bC6/eRk
-        yd+VsM6iU/j2hJQvBX0zTgy6w+UKWY+IFV6U63I=
-X-Google-Smtp-Source: ABdhPJxRaY7zY8QTvNzuxerWSaqGbHKOK4FIyf/5qJLFxDuhmkrh8pWdFCVTHGQsHaBEpA8LvsOh8UJboFLS9sON+fo=
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr3448680qvp.197.1589549567720;
- Fri, 15 May 2020 06:32:47 -0700 (PDT)
+        Fri, 15 May 2020 09:44:08 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60750 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgEONoH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 09:44:07 -0400
+IronPort-SDR: vgXafYPNrZei6ZKRyO6G8T/q3ZNdA899gAHAf3yARhVafce2xfOc76umBqvjMuDm5CEMluuGKt
+ c/xeyxd0A13A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 06:44:07 -0700
+IronPort-SDR: XUuWNIa/68RF2TL7GYDZ0s/YCiuLMpru58HLd5CXgkXXhAEkeWFMozt3KinDZ4zrLhmR6Dbdkm
+ 2j14CFRSWdTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="464907167"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 15 May 2020 06:44:03 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jZad9-00018C-6A; Fri, 15 May 2020 21:44:03 +0800
+Date:   Fri, 15 May 2020 21:43:26 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com, arnd@arndb.de, brendanhiggins@google.com,
+        tglx@linutronix.de, boris.brezillon@collabora.com,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw
+Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <202005152142.AWvx4xc5%lkp@intel.com>
+References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
-In-Reply-To: <20200514075942.10136-11-brgl@bgdev.pl>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 May 2020 15:32:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
-Message-ID: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
-Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:/5ofnXw9mU5dIgLefv/eRsDvP8+vTrIU+kLDXUGITnkQuWac4Lv
- lCUzHqRE2GvIKbgKOqokob5YjwHyKX97w0rAAWhXtQOfANy41OWqbOBppqecviSzLFkmNz+
- 2baHX4ARSd0lXB90Re+J/7eya76FB9t4m55bGplGQ+RfBZSx9IL4TuVFvxJp5ov/6iHHmpn
- 4slNhioblUkWT2Ewt3K6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PSBO+4J/98g=:gGROTXY0ptE/pYUSwwvuox
- LQJix53g2u4f43J6wPGIlXEN9Sfdb91HjNyChil2D95CJzrRnaWlVruZOo55mgKhe92Ohy/yg
- 87OxKYoBj1Mb2P4J3L/V3fwqP/gav9cVeaxsCo20ZFaZKoDvkYvfSlIPYU3uurK/xeEFAMAbt
- qTjRN9SdEVq/n4qttKKMYTG9tw1Shau5JApHNfoB7BxtG3qf9SbAGxOsqaARuc47qUYax1dZ6
- 1578a9XMcwHoKjC8rsWVu3m9WcdNS0qVH9VIH+rzArN+G81B1CaboTmEgNF2cPqd9xRvMp/Oz
- 7EA5phTtB26zA7YNb5q6Zv55A0kKSfzPK571gneJm4rDtsS8/J3JbjXme+g8hKNmUH4xQN2yS
- iDZLbWuwlWzjeKIeMxXkK8QMGCaN0sHeY0/LtUgY8BVQ+unPpjmLQC3ry/CyVIKmEZkrWEkGR
- Xce+CMpI83rqIg857MjSgpzciN7wok2nNy0BPk8DJZb9HOjlpUxE0szWAxIn5VjzOsVZhTSLi
- 3m/Z6AUId97YB+eqRUNSHlLaam1G55PHrKKd80C8B0vLof15lLICwSnOQi33wDKI8vO4/WT/t
- BGRcMNIu1vThyBFAC2NRdPVihx7d37eDljyoIJRK4o1OpPhV/daih5x8HZQkE4ftEFRFBNcwe
- vtAgLAJdJcS/SsDR+JCwKabWvHHbCJItJfZT0uRLp71Imow6FV5+a3LR7CMEKbFSVfv3U8p7F
- rhiCgx08UIIgJbUEGAZm4+lL+yaVY+NZPwhReHOUocFaLcjNfELZBJkcAbWJ+Qiicg08kgcv/
- xV8uJmISTCGfylAtb0x0tUGlBv+WL8b/dblBJFamBW0aVbHB00=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
-> +                                struct mtk_mac_ring_desc_data *desc_data)
+Hi "Ramuthevar,Vadivel,
 
-I took another look at this function because of your comment on the locking
-the descriptor updates, which seemed suspicious as the device side does not
-actually use the locks to access them
+Thank you for the patch! Perhaps something to improve:
 
-> +{
-> +       struct mtk_mac_ring_desc *desc = &ring->descs[ring->tail];
-> +       unsigned int status;
-> +
-> +       /* Let the device release the descriptor. */
-> +       dma_rmb();
-> +       status = desc->status;
-> +       if (!(status & MTK_MAC_DESC_BIT_COWN))
-> +               return -1;
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on arm-soc/for-next linus/master linux/master v5.7-rc5 next-20200514]
+[cannot apply to mtd/master]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-The dma_rmb() seems odd here, as I don't see which prior read
-is being protected by this.
+url:    https://github.com/0day-ci/linux/commits/Ramuthevar-Vadivel-MuruganX/mtd-rawnand-Add-NAND-controller-support-on-Intel-LGM-SoC/20200515-185904
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-193-gb8fad4bc-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-> +       desc_data->len = status & MTK_MAC_DESC_MSK_LEN;
-> +       desc_data->flags = status & ~MTK_MAC_DESC_MSK_LEN;
-> +       desc_data->dma_addr = ring->dma_addrs[ring->tail];
-> +       desc_data->skb = ring->skbs[ring->tail];
-> +
-> +       desc->data_ptr = 0;
-> +       desc->status = MTK_MAC_DESC_BIT_COWN;
-> +       if (status & MTK_MAC_DESC_BIT_EOR)
-> +               desc->status |= MTK_MAC_DESC_BIT_EOR;
-> +
-> +       /* Flush writes to descriptor memory. */
-> +       dma_wmb();
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
 
-The comment and the barrier here seem odd as well. I would have expected
-a barrier after the update to the data pointer, and only a single store
-but no read of the status flag instead of the read-modify-write,
-something like
 
-      desc->data_ptr = 0;
-      dma_wmb(); /* make pointer update visible before status update */
-      desc->status = MTK_MAC_DESC_BIT_COWN | (status & MTK_MAC_DESC_BIT_EOR);
+sparse warnings: (new ones prefixed by >>)
 
-> +       ring->tail = (ring->tail + 1) % MTK_MAC_RING_NUM_DESCS;
-> +       ring->count--;
+>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
+>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    expected unsigned int val
+>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    got restricted __be32 [assigned] [usertype] reg
+   drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
+   drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    expected unsigned int val
+   drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    got restricted __be32 [assigned] [usertype] reg
 
-I would get rid of the 'count' here, as it duplicates the information
-that is already known from the difference between head and tail, and you
-can't update it atomically without holding a lock around the access to
-the ring. The way I'd do this is to have the head and tail pointers
-in separate cache lines, and then use READ_ONCE/WRITE_ONCE
-and smp barriers to access them, with each one updated on one
-thread but read by the other.
+vim +441 drivers/mtd/nand/raw/intel-nand-controller.c
 
-     Arnd
+   420	
+   421	static int ebu_nand_write_page_hwecc(struct nand_chip *chip, const u8 *buf,
+   422					     int oob_required, int page)
+   423	{
+   424		struct mtd_info *mtd = nand_to_mtd(chip);
+   425		struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
+   426		void __iomem *int_sta = ebu_host->hsnand + HSNAND_INT_STA;
+   427		int ret, val, x;
+   428		__be32 reg;
+   429	
+   430		ebu_nand_trigger(ebu_host, page, NAND_CMD_SEQIN);
+   431	
+   432		ret = ebu_dma_start(ebu_host, DMA_MEM_TO_DEV, buf, mtd->writesize);
+   433		if (ret)
+   434			return ret;
+   435	
+   436		if (oob_required) {
+   437			const u8 *pdata;
+   438	
+   439			pdata = chip->oob_poi;
+   440			reg = cpu_to_be32(*pdata++);
+ > 441			writel(reg, ebu_host->hsnand + HSNAND_CMSG_0);
+   442	
+   443			reg = cpu_to_be32(*pdata);
+   444			writel(reg, ebu_host->hsnand + HSNAND_CMSG_1);
+   445		}
+   446	
+   447		ret = readl_poll_timeout_atomic(int_sta, val,
+   448						!(val & HSNAND_INT_STA_WR_C), 10, 1000);
+   449		if (ret)
+   450			return -EIO;
+   451	
+   452		x = readl(ebu_host->hsnand + HSNAND_CTL);
+   453		x &= ~HSNAND_CTL_GO;
+   454		writel(x, ebu_host->hsnand + HSNAND_CTL);
+   455	
+   456		return 0;
+   457	}
+   458	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
