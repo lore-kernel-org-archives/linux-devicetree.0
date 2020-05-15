@@ -3,60 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0CEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565C3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C48B520787
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375DC2078C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgEOOuM (ORCPT
+        id S1726163AbgEOOvw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 10:50:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726213AbgEOOuM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 10:50:12 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D95C061A0C;
-        Fri, 15 May 2020 07:50:12 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: evelikov)
-        with ESMTPSA id AC17C2A034F
-Date:   Fri, 15 May 2020 15:47:32 +0100
-From:   Emil Velikov <emil.velikov@collabora.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv1 03/19] power: supply: core: add manufacture date
- properties
-Message-ID: <20200515144732.GC2836808@arch-x1c3>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
- <20200513185615.508236-4-sebastian.reichel@collabora.com>
+        Fri, 15 May 2020 10:51:52 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46947 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgEOOvw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 10:51:52 -0400
+X-Originating-IP: 90.65.91.255
+Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id D2319240032;
+        Fri, 15 May 2020 14:51:49 +0000 (UTC)
+Date:   Fri, 15 May 2020 16:51:49 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Tudor.Ambarus@microchip.com
+Cc:     Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Codrin.Ciubotariu@microchip.com
+Subject: Re: [PATCH 00/16] ARM: dts: at91: sama5d2: Rework Flexcom definitions
+Message-ID: <20200515145149.GU34497@piout.net>
+References: <20200514050301.147442-1-tudor.ambarus@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513185615.508236-4-sebastian.reichel@collabora.com>
+In-Reply-To: <20200514050301.147442-1-tudor.ambarus@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sebastian,
-
-On 2020/05/13, Sebastian Reichel wrote:
-> Some smart batteries store their manufacture date, which is
-> useful to identify the battery and/or to know about the cell
-> quality.
+On 14/05/2020 05:03:06+0000, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-Have you considered exposing this as a single file? Say following the ISO8601
-format - YYYY-MM-DD.
+> Rework the sama5d2 SoC flexcom definitions. The Flexcom IPs are
+> in the SoC. Move all the flexcom nodes together with their function
+> definitions in the SoC dtsi. Boards will just fill the pins and enable
+> the desired functions. With this we remove the duplication of the
+> flexcom definitions across the sama5d2 boards.
+> 
+> Round the flexcom support and add the missing flexcom definitions.
+> All the flexcom functions are now defined.
+> 
+> Apart of the aliases and the new flx0 i2c function on sama5d2_xplained,
+> the only functional change that this patch set adds, is that it uart5,
+> uart6 and uart7 inherit the atmel,fifo-size = <32>; optional property.
+> These nodes have both the FIFO size described and the DMA enabled.
+> uart5 was tested on sama5d27-wlsom1-ek. On uart6 and uart7 a
+> Bluetooth module can be connected. Tested BT uart7 on sama5d2-icp.
+> 
+> Tudor Ambarus (16):
+>   ARM: dts: at91: sama5d2: Fix the label numbering for flexcom functions
+>   ARM: dts: at91: sama5d2: Move flx4 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Move flx3 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Move flx2 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Move flx1 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Move flx0 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Specify the FIFO size for the Flexcom UART
+>   ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and UART flx4
+>     functions
+>   ARM: dts: at91: sama5d2: Add DMA bindings for the flx3 SPI function
+>   ARM: dts: at91: sama5d2: Add DMA bindings for the flx1 I2C function
+>   ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and I2C flx0
+>     functions
+>   ARM: dts: at91: sama5d2: Add missing flexcom definitions
+>   ARM: dts: at91: sama5d2: Remove i2s and tcb aliases from SoC dtsi
+>   ARM: dts: at91: sama5d2_xplained: Add alias for DBGU
+>   ARM: dts: at91: sama5d2_xplained: Describe the flx0 I2C function
+>   ARM: dts: at91: sama5d2_ptc_ek: Add comments to describe the aliases
+> 
+Applied, thanks.
 
--Emil
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
