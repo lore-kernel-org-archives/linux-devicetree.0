@@ -2,101 +2,82 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D389DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0ADC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A612D20727
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:21:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="zJ47LGm/"
+	by mail.kernel.org (Postfix) with ESMTP id B40F72076A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgEORVa (ORCPT
+        id S1726188AbgEORWB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 13:21:30 -0400
-Received: from www.zeus03.de ([194.117.254.33]:52618 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbgEORV3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 13:21:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=adq9LskloBWVxoGaRkbsd6/tuspv
-        SCX7tBocarJTm3I=; b=zJ47LGm/c+BK0ZeuYIT/Q9653g8YWowJHaCZe/diPaL7
-        SH1/ofbLOnUC87vezrTIoiuNp/6MKpoKytqrgaRXWzM25eqVsf/X4+sWE9NnJCsa
-        fNBRLEN1Kgx3uL0uTfxWXfj8vr4tKskgs0mErFE00hQLHCai/XE5TwyANyOJrgg=
-Received: (qmail 71890 invoked from network); 15 May 2020 19:14:47 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 May 2020 19:14:47 +0200
-X-UD-Smtp-Session: l3s3148p1@kYtF87KlSqogAwDPXwnHAMSqtBM6FBGP
-Date:   Fri, 15 May 2020 19:14:47 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 02/17] dt-bindings: i2c: renesas,iic: Document r8a7742
- support
-Message-ID: <20200515171447.GD19423@ninjato>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 15 May 2020 13:22:01 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38296 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgEORWB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 13:22:01 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 97B2780005C9;
+        Fri, 15 May 2020 17:21:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9GksroUVuDzB; Fri, 15 May 2020 20:21:57 +0300 (MSK)
+Date:   Fri, 15 May 2020 20:21:55 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/19] spi: dw: Clear DMAC register when done or
+ stopped
+Message-ID: <20200515172155.e4stpr7j66qp332a@mobilestation>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-4-Sergey.Semin@baikalelectronics.ru>
+ <20200515164203.GJ5066@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fOHHtNG4YXGJ0yqR"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1589555337-5498-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200515164203.GJ5066@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, May 15, 2020 at 05:42:03PM +0100, Mark Brown wrote:
+> On Fri, May 15, 2020 at 01:47:42PM +0300, Serge Semin wrote:
+> > If DMAC register is left uncleared any further DMAless transfers
+> > may cause the DMAC hardware handshaking interface getting activated.
+> 
+> This and patch 4 look good as is but they don't apply against for-5.7
+> due to context changes in -next, unfortunately everyone seems to have
+> decided that now is the time to start working on this driver which makes
+> combinations of new work and fixes awkward.  I'm going to apply these
+> for 5.8 but it'd be good if you could send versions based on for-5.7 as
+> well so I can apply there - I can sort out the conflicts with 5.8.
+> 
 
---fOHHtNG4YXGJ0yqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks. I'll send these two patches:
+spi: dw: Clear DMAC register when done or stopped
+spi: dw: Fix native CS being unset
+rebased on top of the for-5.7.
 
-On Fri, May 15, 2020 at 04:08:42PM +0100, Lad Prabhakar wrote:
-> Document IIC controller for RZ/G1H (R8A7742) SoC, which is compatible
-> with R-Car Gen2 SoC family.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
-as.com>
-
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
---fOHHtNG4YXGJ0yqR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6+zgcACgkQFA3kzBSg
-KbYzsA//QsjVzJAZQj+6VEysYmA8plfS9mhsmesCIT6gyU6eHkb4i96kpae0gleW
-7xwPR4lUBC2SVzNgrXfSQGJ2+C/PziGa6/Zqn3Ajt5jhl3qAsQx4O4ou3+t6znCJ
-xEbZ3Yra+L3g97XCnzBeQzFlPl4P1QpyxOQQVMFLKEHTOL9HCmAf7WIjmNBg2RKf
-1JNgFOHTy5DZ3O1GCTwYlaBQnDricRwu9447KJFA6l+un43sJD1VKXMIG+MFHBHC
-arwJeBGo2KnofZ71eSycnE0LfXAQZPmGXAWt/qgXFs+J7/Inn6C5eHb56ues4wtJ
-5XlWAwilp8xN2OPwrA1bhNYZHGS6yTZEzP2lBfZL1jdPQEpjyWNe4QEcUujn69ZR
-W1z58T5rvJ7SPHYwoiiEEae94SqHZETU7Mj3CWkMiOnRq3v34cFjdj4MH3Wfc03C
-FfmwAuxgHTf2AT63lDNj9zC28C2B2X5kaXYnt20r2rF2bXix37wYUiC/jJE5XeTV
-LbnswsyXmUjmGS7bitEs9w48y0UAcCIaMXRRuvtKCiSsffcUaHDYG799VHRKJ+5K
-6gnOtHQN9e3dzOXCBwhz0ZwEggSAJfxKj2SzlpDFd6F/zaYoa6/4At/dilJNoD70
-bru3nGV2PiIFvXZbnPC/ExSez1futM0jpgy4vAKptDSaZRp8tYU=
-=2wZ0
------END PGP SIGNATURE-----
-
---fOHHtNG4YXGJ0yqR--
+-Sergey
