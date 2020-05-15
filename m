@@ -2,62 +2,66 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E30C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 05:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EED2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 05:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208D520671
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 05:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2631220728
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 05:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lvHWU6Ve"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rOovWDSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgEOFfF (ORCPT
+        id S1726532AbgEOFfI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 01:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35686 "EHLO
+        Fri, 15 May 2020 01:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726139AbgEOFfF (ORCPT
+        by vger.kernel.org with ESMTP id S1726341AbgEOFfH (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 01:35:05 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB48EC061A0C
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 22:35:04 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id e44so1233404qta.9
-        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 22:35:04 -0700 (PDT)
+        Fri, 15 May 2020 01:35:07 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE47C05BD09
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 22:35:07 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id p17so1095046qkp.10
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 22:35:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Qx5/VgfsCB/0k5IE7hJvg2xd2TLeiyTwpbJCbmIdWvI=;
-        b=lvHWU6VeXu6KapJJkibDasYRuW+k6b/OfIy63ABvf5/06XyVIw7icDWGXVSOOkM7hL
-         S6vwzrEjQQEtfi6SNZkmBp11uUzyJCuP7CWjecdBDIck4uWCgF9P8NCf4jItObYNDeP7
-         g04ubuy4+WgB0GMQXY1aKTDPvv+xtoysuQbwRn9O9BYtEKx901rHzXNSgdfuYjxBRIGV
-         5JG1us+oGljF3deg6Hx8SJi81zFbyc/RjO/ZKsL28wGWlZoYqlU85740UsvcADKZk/zz
-         evtsHRbTQ9QBny9Svq/nHXX9ZqhL2HBKyrnBxBuQrTEcjoHjCpYZuiD4AkiUSMpc6zd+
-         +hkQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=EZoy6w7ha0DNuHCPHtXM/SP1BLypAsOupCZ9P6v8cMM=;
+        b=rOovWDSJYXWE5Bmy7IlspRdZnHrW3vC8hO0zRosezAonLPXvCkp4SGejQLIRYpLSlv
+         QfdRJ92IBQkIQW188k9n/iXvg4qHBBRuydnWHU1LlPDJfpnfaDdF2WcN96jNPK3XknVN
+         ClYXIl7QaaHGPmUiYUPJZOqBCncHbos5xkyX+i68aMXwhfkmGKjGQ1HyjlobIvmNmhna
+         4+6OZLy3n/1ROIjmOYDG2XgMTFSaARz1ChwsCyhnPfL96S1evSHhST4tjA9s2RapQXna
+         wBgOw9417hZKdE4zXjSNPWBk88p7+sdHK6Q7yRi2pmCfb0iyD/O0jUiI8GPItZDnZFzY
+         aIxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Qx5/VgfsCB/0k5IE7hJvg2xd2TLeiyTwpbJCbmIdWvI=;
-        b=jgiATiLinNXM5u0k6VG2yMRnn7ARHZbXSvqhzEiZhgthgsADAArx2ivq42CekcxWCB
-         Q4IuegmYCAsu/ElkqgfhOsY17GGZZnnhVgeaz6YFvGeCeUxv0VAWvFlW5nLAFDIBQ/Lx
-         IflmxHT7QGuhzhroD8S95/rutThf+T4pFOb8Fh0VBG5J9kiljPPvzVdb4XJUUgvZgnY7
-         dXFfbR8K0v+PbEShGWoZXKandthWq4rNjMIY/HA/Vtcr3cnnNpcabgDYof+wDlhvIsaJ
-         Xk10ddYjpIl8v4gOr5rSSg+FU0pCeUOYkuYGw7GPDdx/Zs0crjjqm09VfTnX69j+Eo74
-         DDWA==
-X-Gm-Message-State: AOAM532ywdUes9J15pWwMEtONX4/bXGAXzMFYKQyrAiJSk0Hyv6RNSRa
-        1C55zcUsFGnLnZF7+FdaE6HfDNzHCiQc4NA=
-X-Google-Smtp-Source: ABdhPJzkZ7NwIirUL48KLBVkTRpO1s4i8GVWXAgGGRuJllEo33MlBuGiIXJOZt5DKrCCh2wbIIR0gtSAnJblP6g=
-X-Received: by 2002:ad4:4c4f:: with SMTP id cs15mr1776465qvb.117.1589520903895;
- Thu, 14 May 2020 22:35:03 -0700 (PDT)
-Date:   Thu, 14 May 2020 22:34:56 -0700
-Message-Id: <20200515053500.215929-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=EZoy6w7ha0DNuHCPHtXM/SP1BLypAsOupCZ9P6v8cMM=;
+        b=qdB1d4TdGgyyLI9LG8JgGMu+AMNKgqdxUPj8ArJNuFwoqg/PfRS5uyS+tnCYXJVH6R
+         ARZ/x4gW9m2lbirxIDcTfqNTNP4/sDB62Pg7cF6rqef2YO+e6Oi1OUJdPsT9OlUz8HYp
+         1bDv1vXCmTC4r4SdFfLaFUb5IQRHv6yUJMIYgmy/lRixfWh4c/42ouuAyBRyQE6Czp9/
+         /NTcG2YPs2z3XJmRaFSQEa7Fc8jTzdzTk0lIBwRN5cUgE3iUswxOGvQHS4NzG4OyUJiE
+         4NweUkK/R1k2F9j/GDm6sZMNb5eb04uJ6L7amlPpbW92dBV8fZcF7RwhKNtnJYCP6DCx
+         Tfsg==
+X-Gm-Message-State: AOAM5329dUl12REaA0oIjr2rLscQKLUeOKKIhWMt8yyjDFIyDAOjql2V
+        WTtf3UtwXj/VFgTkUurX/Cs558GrFU90bdI=
+X-Google-Smtp-Source: ABdhPJwaE6/0XCEsVs67aBW7TEyiScvmgrKOX5Hlong/h0NOfDzB7vfDCEcF3sKLCbo5eLpiZQ6wtkRsTF4+GrQ=
+X-Received: by 2002:a05:6214:70a:: with SMTP id b10mr1910835qvz.186.1589520906395;
+ Thu, 14 May 2020 22:35:06 -0700 (PDT)
+Date:   Thu, 14 May 2020 22:34:57 -0700
+In-Reply-To: <20200515053500.215929-1-saravanak@google.com>
+Message-Id: <20200515053500.215929-2-saravanak@google.com>
 Mime-Version: 1.0
+References: <20200515053500.215929-1-saravanak@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v1 0/4] Optimize fw_devlink parsing
+Subject: [PATCH v1 1/4] driver core: Move code to the right part of the file
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -73,36 +77,92 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When fw_devlink is enabled on hardware with a large number of device
-tree nodes, the initial device addition done in
-of_platform_default_populate_init() can be very inefficient. This is
-because most devices will fail to find all their suppliers when they are
-added and will keep trying to parse their device tree nodes and link to
-any newly added devices
+This commit just moves around code to match the general organization of
+the file.
 
-This was an item on my TODO list that I'm finally getting around to. On
-hardware I'm testing on, this saved 1.216 _seconds_!  Another SoC vendor
-was also able to test a similar but hacky patch series and confirmed
-that it saved them around 1 second.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/core.c | 60 ++++++++++++++++++++++-----------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
 
-Thanks,
-Saravana
-P.S: It took me longer to write the comments than the code!
-
-Saravana Kannan (4):
-  driver core: Move code to the right part of the file
-  driver core: Look for waiting consumers only for a fwnode's primary
-    device
-  driver core: fw_devlink: Add support for batching fwnode parsing
-  of: platform: Batch fwnode parsing when adding all top level devices
-
- drivers/base/base.h    |   1 +
- drivers/base/core.c    | 193 ++++++++++++++++++++++++++++++++---------
- drivers/base/dd.c      |   8 ++
- drivers/of/platform.c  |   2 +
- include/linux/fwnode.h |   2 +
- 5 files changed, 164 insertions(+), 42 deletions(-)
-
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index c9045521596f..2b454aae64b5 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1143,6 +1143,36 @@ static void device_links_purge(struct device *dev)
+ 	device_links_write_unlock();
+ }
+ 
++static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
++static int __init fw_devlink_setup(char *arg)
++{
++	if (!arg)
++		return -EINVAL;
++
++	if (strcmp(arg, "off") == 0) {
++		fw_devlink_flags = 0;
++	} else if (strcmp(arg, "permissive") == 0) {
++		fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
++	} else if (strcmp(arg, "on") == 0) {
++		fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER;
++	} else if (strcmp(arg, "rpm") == 0) {
++		fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER |
++				   DL_FLAG_PM_RUNTIME;
++	}
++	return 0;
++}
++early_param("fw_devlink", fw_devlink_setup);
++
++u32 fw_devlink_get_flags(void)
++{
++	return fw_devlink_flags;
++}
++
++static bool fw_devlink_is_permissive(void)
++{
++	return fw_devlink_flags == DL_FLAG_SYNC_STATE_ONLY;
++}
++
+ /* Device links support end. */
+ 
+ int (*platform_notify)(struct device *dev) = NULL;
+@@ -2345,36 +2375,6 @@ static int device_private_init(struct device *dev)
+ 	return 0;
+ }
+ 
+-static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
+-static int __init fw_devlink_setup(char *arg)
+-{
+-	if (!arg)
+-		return -EINVAL;
+-
+-	if (strcmp(arg, "off") == 0) {
+-		fw_devlink_flags = 0;
+-	} else if (strcmp(arg, "permissive") == 0) {
+-		fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
+-	} else if (strcmp(arg, "on") == 0) {
+-		fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+-	} else if (strcmp(arg, "rpm") == 0) {
+-		fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER |
+-				   DL_FLAG_PM_RUNTIME;
+-	}
+-	return 0;
+-}
+-early_param("fw_devlink", fw_devlink_setup);
+-
+-u32 fw_devlink_get_flags(void)
+-{
+-	return fw_devlink_flags;
+-}
+-
+-static bool fw_devlink_is_permissive(void)
+-{
+-	return fw_devlink_flags == DL_FLAG_SYNC_STATE_ONLY;
+-}
+-
+ /**
+  * device_add - add device to device hierarchy.
+  * @dev: device.
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
