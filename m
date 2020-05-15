@@ -2,84 +2,190 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FC6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B968DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6911F207CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589553386;
-	bh=Veoljy1+igqZX3k6pjqIjP7pIUUoD466ftNFEhbs7K4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VsWbQH2Bd9Xq/DL2jQsOEwZqpXcHiTCAt3k3hwfiweU4Togy30p5n2PVDoXu07NIv
-	 zQ1UZyalbNeSLlOuYAtmfd4Yo27UXGHkGsZgW2fBnMbonltOcRUwhMYUX2tZR7Kik3
-	 Q6Y55Dfh8+ir7pRJKv+M0lw8b6QmsJPW8pTa3Op0=
+	by mail.kernel.org (Postfix) with ESMTP id 9F5AA2078C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 14:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgEOOgZ (ORCPT
+        id S1726257AbgEOOis (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 10:36:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 10:38:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:12181 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbgEOOgZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 10:36:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF58D20671;
-        Fri, 15 May 2020 14:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589553384;
-        bh=Veoljy1+igqZX3k6pjqIjP7pIUUoD466ftNFEhbs7K4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i4M5dSEzsRnlnNkWak0gZ0CjGJmT1XV9eYjJ+dACkmPvRcFdJczuYVCaYanqpnp0N
-         jHXXUESuWdIn7Jv8PEPRazFU/TnOSGbelYlJ9ZQlFYcagPR8ukPn7eiYF9p2dESAd2
-         W3gU7NVIXTkWv96+3dpFG1h0o0TtYN8Aj7/1I/eo=
-Date:   Fri, 15 May 2020 16:36:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>
-Subject: Re: [PATCH v1 0/4] Optimize fw_devlink parsing
-Message-ID: <20200515143622.GA2526356@kroah.com>
-References: <20200515053500.215929-1-saravanak@google.com>
- <CAGETcx-7qnNXug4PGssdXciy0BZrspXP0njJG+GFGFgie_Dwnw@mail.gmail.com>
+        id S1728305AbgEOOiq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 10:38:46 -0400
+IronPort-SDR: VBdJGM+6FEOt7f270+tz0qAc9CQkkNw1/uXBETl1+XoghfSA/tFR/I/cJKvb8JYHR4lsuODwKD
+ ZYB7q8BL2AHw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:38:44 -0700
+IronPort-SDR: PD+AYiubg3C62FfKS8r9a0bj7vD8rH+SxOT6MhaEKi4ZHN5L0aST1DwpDrwFQjE7dmGEMLQQ5M
+ v4NPqCcAXmuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="252392201"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 15 May 2020 07:38:39 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZbU2-006tAz-3l; Fri, 15 May 2020 17:38:42 +0300
+Date:   Fri, 15 May 2020 17:38:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
+ thresholds
+Message-ID: <20200515143842.GG1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGETcx-7qnNXug4PGssdXciy0BZrspXP0njJG+GFGFgie_Dwnw@mail.gmail.com>
+In-Reply-To: <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:52:37AM -0700, Saravana Kannan wrote:
-> On Thu, May 14, 2020 at 10:35 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > When fw_devlink is enabled on hardware with a large number of device
-> > tree nodes, the initial device addition done in
-> > of_platform_default_populate_init() can be very inefficient. This is
-> > because most devices will fail to find all their suppliers when they are
-> > added and will keep trying to parse their device tree nodes and link to
-> > any newly added devices
-> >
-> > This was an item on my TODO list that I'm finally getting around to. On
-> > hardware I'm testing on, this saved 1.216 _seconds_!
-> 
-> Correction. It went from 1.216 _seconds_ to 61 _milliseconds_! So
-> about 95% reduction in time.
+On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
+> Each channel of DMA controller may have a limited length of burst
+> transaction (number of IO operations performed at ones in a single
+> DMA client request). This parameter can be used to setup the most
+> optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
+> overrun we can set the DMA Tx level to be of FIFO depth minus the
+> maximum burst transactions length. To prevent the Rx buffer underflow
+> the DMA Rx level should be set to the maximum burst transactions length.
+> This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
+> in accordance with these rules.
 
-Nice speedups!  All now queued up, thanks.
+It's good one, but see my comments.
 
-greg k-h
+
+I think this patch should go before previous one.
+(and without changes regarding FIFO length)
+
+> +static void mid_spi_maxburst_init(struct dw_spi *dws)
+> +{
+> +	struct dma_slave_caps caps;
+> +	u32 max_burst, def_burst;
+> +	int ret;
+> +
+> +	def_burst = dws->fifo_len / 2;
+> +
+> +	ret = dma_get_slave_caps(dws->rxchan, &caps);
+> +	if (!ret && caps.max_burst)
+> +		max_burst = caps.max_burst;
+> +	else
+> +		max_burst = RX_BURST_LEVEL;
+> +
+
+> +	dws->rxburst = (def_burst > max_burst) ? max_burst : def_burst;
+
+min() ?
+
+> +
+> +	ret = dma_get_slave_caps(dws->txchan, &caps);
+> +	if (!ret && caps.max_burst)
+> +		max_burst = caps.max_burst;
+> +	else
+> +		max_burst = TX_BURST_LEVEL;
+> +
+
+> +	dws->txburst = (def_burst > max_burst) ? max_burst : def_burst;
+
+Ditto.
+
+> +}
+> +
+>  static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+>  {
+>  	struct dw_dma_slave slave = {0};
+> @@ -67,6 +92,8 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+>  	dws->master->dma_rx = dws->rxchan;
+>  	dws->master->dma_tx = dws->txchan;
+>  
+> +	mid_spi_maxburst_init(dws);
+> +
+>  	return 0;
+>  
+>  free_rxchan:
+> @@ -92,6 +119,8 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
+>  	dws->master->dma_rx = dws->rxchan;
+>  	dws->master->dma_tx = dws->txchan;
+>  
+> +	mid_spi_maxburst_init(dws);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -195,7 +224,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+>  	memset(&txconf, 0, sizeof(txconf));
+>  	txconf.direction = DMA_MEM_TO_DEV;
+>  	txconf.dst_addr = dws->dma_addr;
+> -	txconf.dst_maxburst = TX_BURST_LEVEL;
+> +	txconf.dst_maxburst = dws->txburst;
+>  	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+>  	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
+>  	txconf.device_fc = false;
+> @@ -268,7 +297,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+>  	memset(&rxconf, 0, sizeof(rxconf));
+>  	rxconf.direction = DMA_DEV_TO_MEM;
+>  	rxconf.src_addr = dws->dma_addr;
+> -	rxconf.src_maxburst = RX_BURST_LEVEL;
+> +	rxconf.src_maxburst = dws->rxburst;
+>  	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+>  	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
+>  	rxconf.device_fc = false;
+> @@ -293,8 +322,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+>  {
+>  	u16 imr = 0, dma_ctrl = 0;
+>  
+> -	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
+> -	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - TX_BURST_LEVEL);
+> +	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
+> +	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
+>  
+>  	if (xfer->tx_buf) {
+>  		dma_ctrl |= SPI_DMA_TDMAE;
+
+...
+
+>  	/* DMA info */
+>  	struct dma_chan		*txchan;
+> +	u32			txburst;
+>  	struct dma_chan		*rxchan;
+> +	u32			rxburst;
+
+Leave u32 together, it may be optimal on 64-bit architectures where ABIs require padding.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
