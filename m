@@ -2,57 +2,57 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0481EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AF0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D863F2070A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520282070A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dJGXyum4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FepFYDdu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgEOSoq (ORCPT
+        id S1726245AbgEOSop (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 14:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46636 "EHLO
+        Fri, 15 May 2020 14:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgEOSom (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 14:44:42 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51CECC05BD0C
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:42 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n11so1386716pgl.9
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:42 -0700 (PDT)
+        with ESMTP id S1726763AbgEOSon (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 14:44:43 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F15FC05BD09
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:43 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id c75so390053pga.3
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0jdcunXv3pqO3EZGEjVZoYTNjFacyriadazWIgCIza0=;
-        b=dJGXyum44KSJaIJ6ilVk6F+MrANEv/lMa+3vHZEw+Ee/F1S+Khae+6am+JJqjUAiur
-         xBltba6noayGshrr5DxfoWxBOGFddZ2Q6/7usxSbkmXzsQ6VuUbv+3k9rY0wEFNMFtsi
-         hEwaIVZ0ywvmhwEBIyI/X+3TR4cdCOeMAROUM=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aqpEyjmRGymmAkpEVNLXc9rm3KhELEO9r/R/WZVikzc=;
+        b=FepFYDduMkE+0Vc6udG9athvibh6QBvTsQoYsBFI7fTVizPHCZoDeTiA1Qh1GhyRsu
+         KE65oHTsa+hmwdwO4VpPHRts+bXH6NsISs8EGjuR/EukerazV9u0Qpsi4MhsN4Odq6Wa
+         +FNAlLl++yjbjgUKqAnw0ypxXMATy9BiLo+Uw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0jdcunXv3pqO3EZGEjVZoYTNjFacyriadazWIgCIza0=;
-        b=V1d6SzkYVfgz5WwKDWgwsbA18j8Y+xX4pe8wMxufblUiYQCr9OcjWBfJBYMGBxpmQX
-         4WTX7QOIyuH4ZB7QeeXEDK9BnYhB8RhycMuej9mCUUSd7+iQq42wLFE45dF9p0IWEqvB
-         Ihi5tbmS3z0q8F8y5M02TVKphcLTOOCaKST+bv6fEQsBfer2uzYnFLrKPrZdwADOTLPT
-         p+h+BTW29ACUJQiE/5/A2a7YT1x6yZ3jcGddPnqaU1A89poWKUdV50JQVuByouUT5snS
-         mVXvNGKHc0d2m0Kl20Nymq8sqOEiR0dS6IiGVbWI/qHWrJi1xMR8r9CTVbp2F6cfkBIO
-         uwCw==
-X-Gm-Message-State: AOAM533LmcXuQBmwqZM2y93bankLKPfgXTm3b01BmhaMx5KMcecRXr1c
-        5rcNfDJW1hbHlt+ZvlDxX06qrg==
-X-Google-Smtp-Source: ABdhPJzok71/4xx3xqYrVEUNk01rjmmUYSquuxTkQe96RfbVBWJ4Kp4ARtspqkm/dg5KXVU82P9AJA==
-X-Received: by 2002:a63:d60a:: with SMTP id q10mr4555654pgg.37.1589568281921;
-        Fri, 15 May 2020 11:44:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aqpEyjmRGymmAkpEVNLXc9rm3KhELEO9r/R/WZVikzc=;
+        b=Xw4l2Cn23QUHNOHy/FQ3q1U6SJ/lTPWVp1Zu669OHOzQE8kkhRCAxjZMq7DwoFZ4L+
+         6vK8Dal2N45RPGMQbZ/MMJGb7kzpJpHfVkNm/tbihNvjrMZJ2jAmHt7iUDO0BlPFsdzH
+         8T3n9V4lCT6WSEKsj2XzSMuSjCpX/CpKkGrUPl0S5olWHzwf8RWGEsNEO3hqMi4g1SUw
+         QJsfunXoVhhQK+Mqvsn1qPkMpwOcIPG3Aaf0Jl/JymbPBZhdI4WFxZ+Gl/gL2G9nK/B2
+         KV96x9+tFq2mrVqfeIMmr6S3endEcn4aDDSdDhMp6Hs6sncxMAzYnTBex5rI12Z1vEME
+         Wg3Q==
+X-Gm-Message-State: AOAM532ablarkTbEvjcGapx2pKdMHM9lPZUCml41si+TKWvavdCoj/Qw
+        JHFx0oeF5H/mLpdC0nzGFx+0Pg==
+X-Google-Smtp-Source: ABdhPJxDRJnJDZmBecNcZ4uRgeiGUpxX7zgXYIqmKtnUH4FhAIJ11bjo7gZpRkIMVbYw1HRdWk2dWg==
+X-Received: by 2002:a63:2b03:: with SMTP id r3mr4280548pgr.201.1589568282926;
+        Fri, 15 May 2020 11:44:42 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id mu17sm2243430pjb.53.2020.05.15.11.44.38
+        by smtp.gmail.com with ESMTPSA id j26sm2518425pfr.215.2020.05.15.11.44.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 15 May 2020 11:44:38 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -72,12 +72,10 @@ Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v4 2/6] printk: honor the max_reason field in kmsg_dumper
-Date:   Fri, 15 May 2020 11:44:30 -0700
-Message-Id: <20200515184434.8470-3-keescook@chromium.org>
+Subject: [PATCH v4 0/6] allow ramoops to collect all kmesg_dump events
+Date:   Fri, 15 May 2020 11:44:28 -0700
+Message-Id: <20200515184434.8470-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200515184434.8470-1-keescook@chromium.org>
-References: <20200515184434.8470-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -85,64 +83,50 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Hello!
 
-kmsg_dump() allows to dump kmesg buffer for various system events: oops,
-panic, reboot, etc. It provides an interface to register a callback call
-for clients, and in that callback interface there is a field "max_reason"
-which gets ignored unless always_kmsg_dump is passed as kernel parameter.
+I wanted to get the pstore tree nailed down, so here's the v4 of
+Pavel's series, tweaked for the feedback during v3 review.
 
-Allow clients to decide max_reason, and keep the current behavior when
-max_reason is not set.
+-Kees
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Link: https://lore.kernel.org/lkml/20200506211523.15077-2-keescook@chromium.org/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/kmsg_dump.h |  1 +
- kernel/printk/printk.c    | 15 +++++++++++----
- 2 files changed, 12 insertions(+), 4 deletions(-)
+v4:
+- rebase on pstore tree
+- collapse shutdown types into a single dump reason
+  https://lore.kernel.org/lkml/CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com/
+- fix dump_oops vs max_reason module params
+  https://lore.kernel.org/lkml/20200512233504.GA118720@sequoia/
+- typos
+  https://lore.kernel.org/lkml/4cdeaa2af2fe0d6cc2ca8ce3a37608340799df8a.camel@perches.com/
+- rename DT parsing routines ..._size -> ..._u32
+  https://lore.kernel.org/lkml/CA+CK2bCu8eFomiU+NeBjVn-o2dbuECxwRfssNjB3ys3caCbXeA@mail.gmail.com/
+v3: https://lore.kernel.org/lkml/20200506211523.15077-1-keescook@chromium.org/
+v2: https://lore.kernel.org/lkml/20200505154510.93506-1-pasha.tatashin@soleen.com
+v1: https://lore.kernel.org/lkml/20200502143555.543636-1-pasha.tatashin@soleen.com
 
-diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-index 3f82b5cb2d82..9826014771ab 100644
---- a/include/linux/kmsg_dump.h
-+++ b/include/linux/kmsg_dump.h
-@@ -26,6 +26,7 @@ enum kmsg_dump_reason {
- 	KMSG_DUMP_OOPS,
- 	KMSG_DUMP_EMERG,
- 	KMSG_DUMP_SHUTDOWN,
-+	KMSG_DUMP_MAX
- };
- 
- /**
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 9a9b6156270b..a121c2255737 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3157,12 +3157,19 @@ void kmsg_dump(enum kmsg_dump_reason reason)
- 	struct kmsg_dumper *dumper;
- 	unsigned long flags;
- 
--	if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
--		return;
--
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(dumper, &dump_list, list) {
--		if (dumper->max_reason && reason > dumper->max_reason)
-+		enum kmsg_dump_reason max_reason = dumper->max_reason;
-+
-+		/*
-+		 * If client has not provided a specific max_reason, default
-+		 * to KMSG_DUMP_OOPS, unless always_kmsg_dump was set.
-+		 */
-+		if (max_reason == KMSG_DUMP_UNDEF) {
-+			max_reason = always_kmsg_dump ? KMSG_DUMP_MAX :
-+							KMSG_DUMP_OOPS;
-+		}
-+		if (reason > max_reason)
- 			continue;
- 
- 		/* initialize iterator with data about the stored records */
+Kees Cook (3):
+  printk: Collapse shutdown types into a single dump reason
+  printk: Introduce kmsg_dump_reason_str()
+  pstore/ram: Introduce max_reason and convert dump_oops
+
+Pavel Tatashin (3):
+  printk: honor the max_reason field in kmsg_dumper
+  pstore/platform: Pass max_reason to kmesg dump
+  ramoops: Add max_reason optional field to ramoops DT node
+
+ Documentation/admin-guide/ramoops.rst         | 14 +++--
+ .../bindings/reserved-memory/ramoops.txt      | 13 ++++-
+ arch/powerpc/kernel/nvram_64.c                |  4 +-
+ drivers/platform/chrome/chromeos_pstore.c     |  2 +-
+ fs/pstore/platform.c                          | 26 ++-------
+ fs/pstore/ram.c                               | 58 +++++++++++++------
+ include/linux/kmsg_dump.h                     | 12 +++-
+ include/linux/pstore.h                        |  7 +++
+ include/linux/pstore_ram.h                    |  2 +-
+ kernel/printk/printk.c                        | 32 ++++++++--
+ kernel/reboot.c                               |  6 +-
+ 11 files changed, 114 insertions(+), 62 deletions(-)
+
 -- 
 2.20.1
 
