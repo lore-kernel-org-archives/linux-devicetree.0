@@ -2,135 +2,109 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAABC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA69C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFFCA20657
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4C120657
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:30:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BkHQG9c/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgEOIPj (ORCPT
+        id S1727056AbgEOIag (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 04:15:39 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:51987 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbgEOIPi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 04:15:38 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 6C5C51BF208;
-        Fri, 15 May 2020 08:15:34 +0000 (UTC)
-Date:   Fri, 15 May 2020 10:15:33 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 5/5] drm/sun4i: mixer: Call of_dma_configure if
- there's an IOMMU
-Message-ID: <20200515081533.GA2486@aptenodytes>
-References: <cover.b27dedd61e008ffcf55a028ccddda3bb4d21dfc8.1589378833.git-series.maxime@cerno.tech>
- <9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech>
+        Fri, 15 May 2020 04:30:36 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38652 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgEOIag (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 04:30:36 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04F8UYsj117872;
+        Fri, 15 May 2020 03:30:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589531434;
+        bh=FzLqY4zqnh7lT0ruj5ttks18c1pb/faHZFOL7D9hrTU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BkHQG9c/pPB0PBJuGuaqc9zobeXRXr6oUBOoFW15C/HuV8NG/ZX5A4kW03Tmjdx6J
+         6zhCLJwibnPbejNM8lsLUdI1leXlBAEooSGpct9u+jFoSbnZcsSXTuxuo4e1qnWSAn
+         lbjGCg42g4ygoQ5s+cPwZkKDcIfFtgesCZMpswJ0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04F8UYiq012401
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 May 2020 03:30:34 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
+ May 2020 03:30:34 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 15 May 2020 03:30:34 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04F8UWjB117146;
+        Fri, 15 May 2020 03:30:33 -0500
+Subject: Re: [PATCH 3/4] dt-binding: phy: ti,omap-usb2: Add quirk to disable
+ charger detection
+To:     <kishon@ti.com>
+CC:     <robh+dt@kernel.org>, <b-liu@ti.com>, <devicetree@vger.kernel.org>,
+        <vigneshr@ti.com>, <nsekhar@ti.com>
+References: <20200515080518.26870-1-rogerq@ti.com>
+ <20200515080518.26870-4-rogerq@ti.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <3d7a50dd-7764-b6b7-89e6-77fa57a9eca7@ti.com>
+Date:   Fri, 15 May 2020 11:30:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Content-Disposition: inline
-In-Reply-To: <9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech>
+In-Reply-To: <20200515080518.26870-4-rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
 Hi,
 
-On Wed 13 May 20, 16:07, Maxime Ripard wrote:
-> The main DRM device is actually a virtual device so it doesn't have the
-> iommus property, which is instead on the DMA masters, in this case the
-> mixers.
->=20
-> Add a call to of_dma_configure with the mixers DT node but on the DRM
-> virtual device to configure it in the same way than the mixers.
+On 15/05/2020 11:05, Roger Quadros wrote:
+> Add "ti,dis-chg-det-quirk" property to disable the USB2_PHY Charger Detect
+> logic.
 
-Although I'm not very familiar with the DMA API, this looks legit to me and
-matches what's already done in sun4i_backend for the interconnect. So:
+On second thoughts I think it is better to use soc_device_match instead of DT property
+as we are not going to have separate DT for SR1.0 vs SR2.0.
 
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Cheers,
-
-Paul
-
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+cheers,
+-roger
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
->  drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/=
-sun8i_mixer.c
-> index 56cc037fd312..cc4fb916318f 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> @@ -363,6 +363,19 @@ static int sun8i_mixer_bind(struct device *dev, stru=
-ct device *master,
->  	mixer->engine.ops =3D &sun8i_engine_ops;
->  	mixer->engine.node =3D dev->of_node;
-> =20
-> +	if (of_find_property(dev->of_node, "iommus", NULL)) {
-> +		/*
-> +		 * This assume we have the same DMA constraints for
-> +		 * all our the mixers in our pipeline. This sounds
-> +		 * bad, but it has always been the case for us, and
-> +		 * DRM doesn't do per-device allocation either, so we
-> +		 * would need to fix DRM first...
-> +		 */
-> +		ret =3D of_dma_configure(drm->dev, dev->of_node, true);
-> +		if (ret)
-> +			return ret;
-> +	}
+>   Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> index ecfb28f714ea..ec3e85a17bfa 100644
+> --- a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> +++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> @@ -54,6 +54,11 @@ properties:
+>         (deprecated) phandle of the control module used by PHY driver
+>         to power on the PHY. Use syscon-phy-power instead.
+>   
+> +  ti,dis-chg-det-quirk:
+> +    description:
+> +      if present, driver will disable charger detection logic.
+> +    type: boolean
 > +
->  	/*
->  	 * While this function can fail, we shouldn't do anything
->  	 * if this happens. Some early DE2 DT entries don't provide
-> --=20
-> git-series 0.9.1
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>   required:
+>     - compatible
+>     - reg
+> 
 
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6+T6UACgkQ3cLmz3+f
-v9H/UAgAkvadU2hkk0g8AzqD7A8wD9HZa1w2iDr5XqyJebfprIsxG8x5MpZWf9BQ
-RTe1YsTxBBAeX49KifKGTI+TxipHj2A0Ebt9nIDUpP6vXQ7q/t24R8VhOeRiFLLM
-Ke2pNX4F6XaV0CHM5YeQOp1OndJgZ1ioWlfqp+296kTRC1+8L7l6BPI1HkT8WVOi
-mi8+8iBF3szadtkUm+h33BwKNxAnkWsybWK06pg+VNUT4dcld6RUH/c+XCFOr39j
-2c617QVi3poan+h3psdcEFwnrbKwGyR8YsqHyBOwAZkW/2l4ItTUE3A6SFLKguca
-BeSlxCAarYm3YuaLzCm6TgeX+7u68w==
-=r6Qc
------END PGP SIGNATURE-----
-
---vkogqOf2sHV7VnPd--
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
