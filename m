@@ -2,179 +2,93 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D28BC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AD0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF520204EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665442076A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 11:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UEYxWKhr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wKd7R7wU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgEOLUc (ORCPT
+        id S1726046AbgEOLrK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 07:20:32 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:47741 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726260AbgEOLUc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 07:20:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589541631; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=1OX94c5DVErd4QJ5QC03HLjvrFguY5uhejhppx3Mmtw=; b=UEYxWKhrqjporgt4qgRj0jadxotI8GMs/Qsvaul99LYjSnnECLkPllBheN08o7taLDdv2RVp
- ljg6+AAev/ZVz0MBDZoZTxRyuMkkwUvfvlHSI5ufE2b7HDb6HJdBtsmEbIqU3SZSdZUHK61n
- kTDUnXiuXE+aE/dema5BDcKyMGM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ebe7afed915e862f6f6330b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 11:20:30
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E125EC43636; Fri, 15 May 2020 11:20:29 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D269C433D2;
-        Fri, 15 May 2020 11:20:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D269C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V1 3/3] mmc: sdhci: Allow platform controlled voltage switching
-Date:   Fri, 15 May 2020 16:48:54 +0530
-Message-Id: <1589541535-8523-4-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+        Fri, 15 May 2020 07:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgEOLrK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 07:47:10 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF310C05BD0A
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 04:47:09 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 82so1576764lfh.2
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 04:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=45kgRpXG7i03a8aYK/zze6qISAEx5tj2uQAGZ3I6Xt4=;
+        b=wKd7R7wUiPSkGeRLR4bmBvnxjAzoa5bDzea1mQC2TC//iywTDOrnscPWHHwnT2wBRN
+         zG8RPapwFSNe2yLBw1PXmFO6PN9t9xLbL896mRUWVF9opqw2ZHGDnhB6XvEwXjjP5TK0
+         QqouoNlAk0oH0zKaljb+LQkkj3wEL5MnpeBDibbTUc4WMpfg1YGPftPOBoD+6POZn/Oc
+         7XdVcsS1epDgWiiQZNemBG39s5HVAejKAA0uLa+z44cVYvuzj9Itr3dM7DaaBQ6OBq8o
+         wKBXN9qcML/zCSC0xBAXK6bR9aFjkfEPHfdF//RUaPw4ZOlAcA3K95HOsCJonF4js6vA
+         l0fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=45kgRpXG7i03a8aYK/zze6qISAEx5tj2uQAGZ3I6Xt4=;
+        b=kh9tMuZfOCRo451uQV0ZZOHwNHnuDhnqjjW3TxOkL9waUXI+2Bc7bLdowUC3glY7ar
+         6+bvPrnOZGOsnXkB0bqJgcj+c1N0t7nvR2Pq8TkMYyuu+FYnES/MM+dl9+cT24+u34dT
+         yYjZs7D1mqYalYZSb7+7uoAD0hjT7ZhnSpSqP4PPrl1iNCXID379B40G3q2rVb0HhO9u
+         2QcaGlNKC6DQmqXLL36HhSzjJXnpCycwsGthsatwuWXSgBaoWNftuG9eLwbYEttia9sF
+         5/8JzG4qP1i3acIQbr7vOOGty8oaiQTvAtKgviki0l9L+9LCJHDHtaWw0BMUrzS7To4+
+         E6Yw==
+X-Gm-Message-State: AOAM532ONO4A+/D13Bi244W+ZZYxCB+QQ6bUvGNNhzDN4SByxY6vE9LE
+        7m2cRfHafQVQbfOLEyO4cX1Gxm88d+nN30LNnRvPqQ==
+X-Google-Smtp-Source: ABdhPJw9T3ehRz1QGBgsSsq2YD8Ju6RCQuQKhNJM37NZA8yAbN3ISFFjuFeCQtTytOPKHcPPQtpoqw0eVjB0lzPbnI4=
+X-Received: by 2002:ac2:5f7a:: with SMTP id c26mr2071360lfc.4.1589543228067;
+ Fri, 15 May 2020 04:47:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200514204901.3199-1-xc-racer2@live.ca> <BN6PR04MB0660FE5CCD136539A328B29EA3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <BN6PR04MB0660FE5CCD136539A328B29EA3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 15 May 2020 13:46:57 +0200
+Message-ID: <CACRpkdaPWcbbrEP=HFeLu8ZUcxeQray+9o7E62SfL9VNx9jzWw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] iio: accel: Make bma180 conflict with input's bma150
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vijay Viswanath <vviswana@codeaurora.org>
+On Thu, May 14, 2020 at 10:49 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
 
-If vendor platform drivers are controlling whole logic of voltage
-switching, then sdhci driver no need control vqmmc regulator.
-So skip enabling/disable vqmmc from SDHC driver.
+> The bma180 IIO driver is being extended for support for the chips
+> support by input's bma150 driver (bma023, bma150, smb380). Don't
+> allow both drivers to be enabled simultaneously as they're for the
+> same hardware.
+>
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 
-Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
- drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
- drivers/mmc/host/sdhci.h |  1 +
- 2 files changed, 20 insertions(+), 13 deletions(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 1bb6b67..c010823 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -4098,6 +4098,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	unsigned int override_timeout_clk;
- 	u32 max_clk;
- 	int ret;
-+	bool enable_vqmmc = false;
- 
- 	WARN_ON(host == NULL);
- 	if (host == NULL)
-@@ -4111,9 +4112,12 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	 * the host can take the appropriate action if regulators are not
- 	 * available.
- 	 */
--	ret = mmc_regulator_get_supply(mmc);
--	if (ret)
--		return ret;
-+	if (!mmc->supply.vqmmc) {
-+		ret = mmc_regulator_get_supply(mmc);
-+		if (ret)
-+			return ret;
-+		enable_vqmmc  = true;
-+	}
- 
- 	DBG("Version:   0x%08x | Present:  0x%08x\n",
- 	    sdhci_readw(host, SDHCI_HOST_VERSION),
-@@ -4373,7 +4377,15 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		mmc->caps |= MMC_CAP_NEEDS_POLL;
- 
- 	if (!IS_ERR(mmc->supply.vqmmc)) {
--		ret = regulator_enable(mmc->supply.vqmmc);
-+		if (enable_vqmmc) {
-+			ret = regulator_enable(mmc->supply.vqmmc);
-+			if (ret) {
-+				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
-+					mmc_hostname(mmc), ret);
-+				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
-+			}
-+			host->vqmmc_enabled = !ret;
-+		}
- 
- 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
- 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
-@@ -4386,12 +4398,6 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
- 						    3600000))
- 			host->flags &= ~SDHCI_SIGNALING_330;
--
--		if (ret) {
--			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
--				mmc_hostname(mmc), ret);
--			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
--		}
- 	}
- 
- 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
-@@ -4625,7 +4631,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	return 0;
- 
- unreg:
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->vqmmc_enabled)
- 		regulator_disable(mmc->supply.vqmmc);
- undma:
- 	if (host->align_buffer)
-@@ -4643,7 +4649,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
- {
- 	struct mmc_host *mmc = host->mmc;
- 
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->vqmmc_enabled)
- 		regulator_disable(mmc->supply.vqmmc);
- 
- 	if (host->align_buffer)
-@@ -4780,7 +4786,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
- 
- 	destroy_workqueue(host->complete_wq);
- 
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->vqmmc_enabled)
- 		regulator_disable(mmc->supply.vqmmc);
- 
- 	if (host->align_buffer)
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 8d2a096..24d27e1 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -570,6 +570,7 @@ struct sdhci_host {
- 	u32 caps1;		/* CAPABILITY_1 */
- 	bool read_caps;		/* Capability flags have been read */
- 
-+	bool vqmmc_enabled;	/* Vqmmc is enabled */
- 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
- 	unsigned int            ocr_avail_sd;
- 	unsigned int            ocr_avail_mmc;
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
-
+Yours,
+Linus Walleij
