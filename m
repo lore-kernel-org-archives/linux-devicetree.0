@@ -2,337 +2,139 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35677C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA42FC433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03C83206F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9913B20760
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="L/Ca4AQa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="V4rmYoQN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgEOHL1 (ORCPT
+        id S1726525AbgEOHTV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 03:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50740 "EHLO
+        Fri, 15 May 2020 03:19:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726569AbgEOHL0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726434AbgEOHTU (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 03:11:26 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B70CC061A0C
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 00:11:26 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id h10so1503320iob.10
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 00:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tt+z2QXtaemYOTrQbr/BmXHcmpgvLLmy4PAl95FbkpU=;
-        b=L/Ca4AQayrVuzBB8yZyrO3D7tYVpozvH457DvHs352Wp1VSfJKm8r//QF6MSCmpbkH
-         0GwKMVW57C2OfloktcoKGNArORBe5fgunch0drFGQ5xQZvaj+Eo8HRCS7xj+ctvvkO5o
-         2Pe5cGM6oFzxGek6lVJCf1KttKUZYq8neXts0QXNfklSPVsqhXTtB/1JrNepfsrNYga7
-         YpczpMFX1ULJhr9cmxc52UqZwthe1YHTnnpZ+ZjVS9E+vSf2AwDcRprBLx8kSPTvc3Py
-         tBeq6vWaVZbzY8gqnDJ170TbOmDwO8jGNDHUHISIcc04uugvCAXmyyL9uypFw3DHPzIa
-         ReJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tt+z2QXtaemYOTrQbr/BmXHcmpgvLLmy4PAl95FbkpU=;
-        b=Wltx+ysFOOSSE9a1tCYxnyGNFSrK8IDFzgsARCC7sZ6BwrH7wM0VzhGUzs84pWTGdg
-         xV8OPz/LcxBcrEYDJV2BJEZTob8HrYdV4EU3UovAK26ABQPiGNzHCOyhC6yVDszGvSzM
-         ptgbbB/hxEpxKdKLkrY+Cd5t+P45FCouA1iIs8BbeYCzLzRAiswRS59A3QYYzM+2wrKz
-         2TavAG7bDIL+8zEWtDknR8B+/S26rXN8/gBxQquSAdeT0bSKmy4ivgsuQQAVHjTXSun+
-         doPwBaI14mIjALtKAgURDg74oNwFwyRN8rbEVgrk/2YD4s0X3Fwj7JUoeUbeA5hNuZ1D
-         c0Vg==
-X-Gm-Message-State: AOAM532fD3XK+IieOVQuk6dKY2wb4t1oqRl5vBpYApc69LcXqp6HvLTv
-        61vvytWaLJnoCjyQUA1GarKRZcdke68klGv0Z3C7BA==
-X-Google-Smtp-Source: ABdhPJw2UZPqM2c9AdQ/V2iFTXgewM1zVBwPnll86PitN+1yQpAcr0xdHMo5F1vMIZ2tP/UG8KrfG8WtcaA8puMhawg=
-X-Received: by 2002:a02:a60f:: with SMTP id c15mr552139jam.24.1589526685801;
- Fri, 15 May 2020 00:11:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
- <CAK8P3a3=xgbvqrSpCK5h96eRH32AA7xnoK2ossvT0-cLFLzmXA@mail.gmail.com>
-In-Reply-To: <CAK8P3a3=xgbvqrSpCK5h96eRH32AA7xnoK2ossvT0-cLFLzmXA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 15 May 2020 09:11:14 +0200
-Message-ID: <CAMRc=MeypzZBHo6dJGKm4JujYyejqHxtdo7Ts95DXuL0VuMYCw@mail.gmail.com>
-Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 May 2020 03:19:20 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920BCC061A0C;
+        Fri, 15 May 2020 00:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589527155;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=/LlQLnJSjr1dPjlAnAK+u/lQG0tGroGOnAwr3HRIIDg=;
+        b=V4rmYoQNMiSdVNe+dWbLMntZAM4z93rruWDqBl4jIT/149VE95L/x3e6Izb3Bs3eyg
+        tk4HunCz0xxntP2hQvK0O33IO16iO3NAOWHc3cB8Z8OrBMXwXk/yWXFHvPmWk+xX8Ll5
+        dF1YuCJ16hBNa93UGhg1Vh3qjEL0JdM8chtrEPk4SXOOA9AiBdNddJqmOAkHqpwuz2AM
+        1N58+yn/d/9SNgUyZ8GRDkvhQ/ehCXXpQJuWL+H0JVTHKXvfmFeiNUIdgs9FOGJn8FvE
+        dJvnMUo1CiW0KXL9HUGsXmDQ9dv4BC3Cdg0//a56AAyC7WYbePBDs6kpZU0JPm0bhf77
+        xLNQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vtwDOvBTU="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw4F7IYYRg
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 15 May 2020 09:18:34 +0200 (CEST)
+Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <08B861A8-D4C2-48A6-9B05-B8CA43312834@goldelico.com>
+Date:   Fri, 15 May 2020 09:18:33 +0200
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Philipp Rossak <embed3d@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <D1D14684-2532-46A4-ADA0-2F88F4D2228E@goldelico.com>
+References: <cover.1587760454.git.hns@goldelico.com> <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com> <NMCE9Q.LWG45P20NBVJ@crapouillou.net> <28138EC0-0FA5-4F97-B528-3442BF087C7A@goldelico.com> <TEAR9Q.6HI5DFRO5U0I3@crapouillou.net> <3D8B59D6-83E3-4FE6-9C99-E2E5616A8139@goldelico.com> <8EER9Q.C206SXNSICP7@crapouillou.net> <08B861A8-D4C2-48A6-9B05-B8CA43312834@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Burton <paulburton@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-czw., 14 maj 2020 o 18:19 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
->
-> On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
-e:
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
-> > family. For now we only support full-duplex.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Looks very nice overall. Just a few things I noticed, and some ideas
-> that may or may not make sense:
->
-> > +/* This is defined to 0 on arm64 in arch/arm64/include/asm/processor.h=
- but
-> > + * this IP doesn't work without this alignment being equal to 2.
-> > + */
-> > +#ifdef NET_IP_ALIGN
-> > +#undef NET_IP_ALIGN
-> > +#endif
-> > +#define NET_IP_ALIGN                           2
->
-> Maybe you should just define your own macro instead of replacing
-> the normal one then?
->
+Hi Paul & Paul,
 
-I did in an earlier version and was told to use NET_IP_ALIGN but then
-found out its value on arm64 doesn't work for me so I did the thing
-that won't make anybody happy - redefine the existing constant. :)
+> Am 03.05.2020 um 18:41 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> Hi Paul and Paul,
+>=20
+>> Am 03.05.2020 um 16:18 schrieb Paul Cercueil <paul@crapouillou.net>:
+>>=20
+>>=20
+>>=20
+>> Le dim. 3 mai 2020 =E0 15:31, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>>> Hi Paul,
+>>>> Am 03.05.2020 um 14:52 schrieb Paul Cercueil =
+<paul@crapouillou.net>:
+>>>>>> It's possible to forbid the presence of the 'clocks' property on =
+some implementations, and require it on others.
+>>>>> To be precise we have to specify the exact number of clocks =
+(between 0 and 4) for every architecture.
+>>>>> This also contradicts my dream to get rid of the architecture =
+specific components in the long run. My dream (because I can't tell how =
+it can be done) is that we can one day develop something which just =
+needs compatible =3D img,530 or imp,540 or img,544. Then we can't make =
+the number clocks depend on the implementation any more.
+>>>> As we said before, the number of clocks is a property of the GPU =
+and *not* its integration into the SoC.
+>>> Well, it is a not very well documented property of the GPU. We have =
+no data sheet of the standalone GPU. Only several SoC data sheets which =
+give some indications.
+>>=20
+>> Maybe we can nicely ask them?
+>=20
+> There is some (old) answer here:
+>=20
+> =
+https://github.com/MIPS/CI20_linux/blob/ci20-v3.18/arch/mips/boot/dts/jz47=
+80.dtsi#L63
+>=20
+>> I expect Paul Burton to have some contacts at ImgTec. Asking for a =
+doc would be too much, but maybe they can help a bit with the DT =
+bindings.
+>=20
+> Good idea! It is definitively worth to try. Therefore I have moved him =
+from CC: to To:
 
-> > +static void mtk_mac_lock(struct mtk_mac_priv *priv)
-> > +{
-> > +       spin_lock_irqsave(&priv->lock, priv->lock_flags);
-> > +}
-> > +
-> > +static void mtk_mac_unlock(struct mtk_mac_priv *priv)
-> > +{
-> > +       spin_unlock_irqrestore(&priv->lock, priv->lock_flags);
-> > +}
->
-> This looks wrong: you should not have shared 'flags' passed into
-> spin_lock_irqsave(), and I don't even see a need to use the
-> irqsave variant of the lock in the first place.
->
-> Maybe start by open-coding the lock and remove the wrappers
-> above.
->
-> Then see if you can use a cheaper spin_lock_bh() or plain spin_lock()
-> instead of irqsave.
->
+Do we already have an idea if we can get into contact and get help from =
+ImgTec for this topic or if we have to live with what we have?
 
-This is from an earlier version where I did a lot more in hard irq
-context. Now that almost all of the processing happens in soft-irq
-context I guess you're right - I can go with a regular spin_lock().
+BR and thanks,
+Nikolaus
 
-> Finally, see if this can be done in a lockless way by relying on
-> appropriate barriers and separating the writers into separate
-> cache lines. From a brief look at the driver I think it can be done
-> without too much trouble.
->
-
-Unfortunately I do need some locking. Accessing RX and TX descriptors
-at the same time seems to upset the controller. I experimented a lot
-with barriers but it turned out that I got a lot of weird bugs at high
-throughput.
-
-> > +static unsigned int mtk_mac_intr_read_and_clear(struct mtk_mac_priv *p=
-riv)
-> > +{
-> > +       unsigned int val;
-> > +
-> > +       regmap_read(priv->regs, MTK_MAC_REG_INT_STS, &val);
-> > +       regmap_write(priv->regs, MTK_MAC_REG_INT_STS, val);
-> > +
-> > +       return val;
-> > +}
->
-> Do you actually need to read the register? That is usually a relatively
-> expensive operation, so if possible try to use clear the bits when
-> you don't care which bits were set.
->
-
-I do care, I'm afraid. The returned value is being used in the napi
-poll callback to see which ring to process.
-
-> > +/* All processing for TX and RX happens in the napi poll callback. */
-> > +static irqreturn_t mtk_mac_handle_irq(int irq, void *data)
-> > +{
-> > +       struct mtk_mac_priv *priv;
-> > +       struct net_device *ndev;
-> > +
-> > +       ndev =3D data;
-> > +       priv =3D netdev_priv(ndev);
-> > +
-> > +       if (netif_running(ndev)) {
-> > +               mtk_mac_intr_mask_all(priv);
-> > +               napi_schedule(&priv->napi);
-> > +       }
-> > +
-> > +       return IRQ_HANDLED;
->
->
-> > +static int mtk_mac_netdev_start_xmit(struct sk_buff *skb,
-> > +                                    struct net_device *ndev)
-> > +{
-> > +       struct mtk_mac_priv *priv =3D netdev_priv(ndev);
-> > +       struct mtk_mac_ring *ring =3D &priv->tx_ring;
-> > +       struct device *dev =3D mtk_mac_get_dev(priv);
-> > +       struct mtk_mac_ring_desc_data desc_data;
-> > +
-> > +       desc_data.dma_addr =3D mtk_mac_dma_map_tx(priv, skb);
-> > +       if (dma_mapping_error(dev, desc_data.dma_addr))
-> > +               goto err_drop_packet;
-> > +
-> > +       desc_data.skb =3D skb;
-> > +       desc_data.len =3D skb->len;
-> > +
-> > +       mtk_mac_lock(priv);
-> > +       mtk_mac_ring_push_head_tx(ring, &desc_data);
-> > +
-> > +       if (mtk_mac_ring_full(ring))
-> > +               netif_stop_queue(ndev);
-> > +       mtk_mac_unlock(priv);
-> > +
-> > +       mtk_mac_dma_resume_tx(priv);
-> > +
-> > +       return NETDEV_TX_OK;
-> > +
-> > +err_drop_packet:
-> > +       dev_kfree_skb(skb);
-> > +       ndev->stats.tx_dropped++;
-> > +       return NETDEV_TX_BUSY;
-> > +}
->
-> I would always add BQL flow control in new drivers, using
-> netdev_sent_queue here...
->
-
-Ok, will do.
-
-> > +static int mtk_mac_tx_complete_one(struct mtk_mac_priv *priv)
-> > +{
-> > +       struct mtk_mac_ring *ring =3D &priv->tx_ring;
-> > +       struct mtk_mac_ring_desc_data desc_data;
-> > +       int ret;
-> > +
-> > +       ret =3D mtk_mac_ring_pop_tail(ring, &desc_data);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       mtk_mac_dma_unmap_tx(priv, &desc_data);
-> > +       dev_kfree_skb_irq(desc_data.skb);
-> > +
-> > +       return 0;
-> > +}
->
-> ... and netdev_completed_queue()  here.
->
-
-Same here.
-
-> > +static void mtk_mac_tx_complete_all(struct mtk_mac_priv *priv)
-> > +{
-> > +       struct mtk_mac_ring *ring =3D &priv->tx_ring;
-> > +       struct net_device *ndev =3D priv->ndev;
-> > +       int ret;
-> > +
-> > +       for (;;) {
-> > +               mtk_mac_lock(priv);
-> > +
-> > +               if (!mtk_mac_ring_descs_available(ring)) {
-> > +                       mtk_mac_unlock(priv);
-> > +                       break;
-> > +               }
-> > +
-> > +               ret =3D mtk_mac_tx_complete_one(priv);
-> > +               if (ret) {
-> > +                       mtk_mac_unlock(priv);
-> > +                       break;
-> > +               }
-> > +
-> > +               if (netif_queue_stopped(ndev))
-> > +                       netif_wake_queue(ndev);
-> > +
-> > +               mtk_mac_unlock(priv);
-> > +       }
-> > +}
->
-> It looks like most of the stuff inside of the loop can be pulled out
-> and only done once here.
->
-
-I did that in one of the previous submissions but it was pointed out
-to me that a parallel TX path may fill up the queue before I wake it.
-
-> > +static int mtk_mac_poll(struct napi_struct *napi, int budget)
-> > +{
-> > +       struct mtk_mac_priv *priv;
-> > +       unsigned int status;
-> > +       int received =3D 0;
-> > +
-> > +       priv =3D container_of(napi, struct mtk_mac_priv, napi);
-> > +
-> > +       status =3D mtk_mac_intr_read_and_clear(priv);
-> > +
-> > +       /* Clean up TX */
-> > +       if (status & MTK_MAC_BIT_INT_STS_TNTC)
-> > +               mtk_mac_tx_complete_all(priv);
-> > +
-> > +       /* Receive up to $budget packets */
-> > +       if (status & MTK_MAC_BIT_INT_STS_FNRC)
-> > +               received =3D mtk_mac_process_rx(priv, budget);
-> > +
-> > +       /* One of the counter reached 0x8000000 - update stats and rese=
-t all
-> > +        * counters.
-> > +        */
-> > +       if (status & MTK_MAC_REG_INT_STS_MIB_CNT_TH) {
-> > +               mtk_mac_update_stats(priv);
-> > +               mtk_mac_reset_counters(priv);
-> > +       }
-> > +
-> > +       if (received < budget)
-> > +               napi_complete_done(napi, received);
-> > +
-> > +       mtk_mac_intr_unmask_all(priv);
-> > +
-> > +       return received;
-> > +}
->
-> I think you want to leave (at least some of) the interrupts masked
-> if your budget is exhausted, to avoid generating unnecessary
-> irqs.
->
-
-The networking stack shouldn't queue any new TX packets if the queue
-is stopped - is this really worth complicating the code? Looks like
-premature optimization IMO.
-
-> It may also be faster to not mask/unmask at all but just
-> clear the interrupts that you have finished processing
->
-
-Bart
