@@ -2,192 +2,92 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9D1C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3688BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 19:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282692070A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 18:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070242073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 19:05:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FFCdriJS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IP/nxo/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEOSpB (ORCPT
+        id S1726183AbgEOTFy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 14:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46636 "EHLO
+        Fri, 15 May 2020 15:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbgEOSol (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 14:44:41 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C46C05BD0D
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:41 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x10so1256688plr.4
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 11:44:41 -0700 (PDT)
+        with ESMTP id S1726023AbgEOTFy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 15:05:54 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58CCC061A0C
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 12:05:52 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id nv1so3144366ejb.0
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 12:05:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jsyBNCdfoL98sYl7cnpntA0QaiVdKf/pQHgqAm6lCYc=;
-        b=FFCdriJSY7EREhlVw7IxRxRBK6Ih8PscgoyfU0YOxFmw+mYa4P8kbYTdI3Abj2xsbv
-         dSBqe5xNx4EdU6OBEbPL6+Ktp8r1MwV2GC+z42GBSCy/OKACQ/TjY0Z+0HyakSj6TLKK
-         bj22i9zQWZ2HwbBoxp38600+xxhVI0OIEt8ug=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ownehjnT16AeaOm+l2W7DPInUnd4hMg6fuB995cXtKg=;
+        b=IP/nxo/6SfWq7KT7kJmWp4mNJd5k5YCm2N1NtheM85kGUZV7uphToZTGEhsge96QY5
+         t33GhDrF2X14dvzkFcxjwAf63vdNOJEfshNtRj1at//RV2ILdCeefNTwfgtUG5ZQfDpP
+         PEmVpZ1gRnFYaB2vbY09Sr4uMBmtytAbokbaO8xUSjpL6WO3UlgVpY8IPGowF38bldiM
+         kdxtQro62hJG/N0sjnOs2Ny48VKhdA1f6JgvT2dJG1qT+uJqxe1831B3in98+Q08o/cY
+         Yyp2i9lKgcd3jZLGJLaZsInJBKLX7gfvr3rmjgvV7dLMrMxDAaKDMDCZLqMB7xlsmnUT
+         S5ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jsyBNCdfoL98sYl7cnpntA0QaiVdKf/pQHgqAm6lCYc=;
-        b=nhhj8hdFhNePzOTsZj9aSK8o6unuQjL67XqVAndVhwDOEUCXjcMgszgUukJnVIjrPu
-         iVZZnJdhXbAgIjHxXjyuXqFP/nTJmWylF5EqA2pcebHMwWnQz4v3RjFHOCoWVZCsuBIF
-         2bTpCddByhGSAA7VqznqL4HjCAIvw05SypJgRoSxEPRnAavGz4IAKSHNBwRpdrKqsvSC
-         3/PoDtlbTZurOagS2bb8nGJFgYXTr/9KjkrjZxXFnBeXVvh794tS6FI5lF5WfJniAf2z
-         xEkxCoxm6GNv7SjYcwV3ky2c4VKQB7xcjZ+K6uwi+D/WRH3B+XU00jJkcFa+0UsKaI0F
-         wX2Q==
-X-Gm-Message-State: AOAM5329HPx0l9KIn0FO+OLvR38g8oOWWIvluQGcq5utwiSqun0tMSMY
-        bHqx72KtrxK3lD2L/PNsh7oj4A==
-X-Google-Smtp-Source: ABdhPJxBfb/RPReNIGiBtLiME/PRnLfy/gMnbNQWUG6b6p1tr5eRGW/FhmqI7QvZ6RmEUD62weuFvQ==
-X-Received: by 2002:a17:90a:7f83:: with SMTP id m3mr5175792pjl.147.1589568281062;
-        Fri, 15 May 2020 11:44:41 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z190sm2549307pfb.1.2020.05.15.11.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 11:44:38 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Benson Leung <bleung@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v4 3/6] printk: Introduce kmsg_dump_reason_str()
-Date:   Fri, 15 May 2020 11:44:31 -0700
-Message-Id: <20200515184434.8470-4-keescook@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200515184434.8470-1-keescook@chromium.org>
-References: <20200515184434.8470-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ownehjnT16AeaOm+l2W7DPInUnd4hMg6fuB995cXtKg=;
+        b=sKjyPY+3RwY+nxrmScU1geFWEFpdbKrPvJO+rVrDBqDgo1Bd9pMiuuHmxrAp3KYu1C
+         sCtqfoA73ISwYf5hDZuFSS74z+n1Ie10GBDf5IiuGvifPnScc03dU/4NmnhQaglqskUl
+         j/nK9SpAer1J5Ykt78Qtm8u54vWKoNo02huMv1psuUQBiwhFqkm/0NqXEt+HkOWJAuEi
+         ZySWdWhtRskD5BgeQl+Ob37bEXVazJvIdd2141TTvC61lyt1oHiGo9wUt5bc3bekOLIz
+         z1x0PFn/VWWvsQTm96kUA8hicXmjFzlvPR+nfYbcKtNz7wDJotwQ+eMnWhfse6jiTtp6
+         YT0Q==
+X-Gm-Message-State: AOAM5319m8VG+juj963uisNfTccckoqcpSpkBxsvC09xE1yq7tjN2CwJ
+        46FkW8AiiOoL2Ehc2258AZnQo0h+MrioSz6w9p4=
+X-Google-Smtp-Source: ABdhPJx7c4EEMNLReYLEuyFi/aZ+DUocKLS1t2lZ7DCZmV6nAOMT8syRynGCemDJbZJc1BUoOLTY7Wq/5sfXKOPlLss=
+X-Received: by 2002:a17:906:d8c1:: with SMTP id re1mr4438325ejb.184.1589569551527;
+ Fri, 15 May 2020 12:05:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
+ <1589472657-3930-6-git-send-email-amittomer25@gmail.com> <afc0d7f3-d763-b936-988c-d802b86836bc@arm.com>
+In-Reply-To: <afc0d7f3-d763-b936-988c-d802b86836bc@arm.com>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Sat, 16 May 2020 00:35:15 +0530
+Message-ID: <CABHD4K_BpHMSypfdiQKeRfHOgdO8e7ekU0TKBmqisDe_+4hGPg@mail.gmail.com>
+Subject: Re: [PATCH v1 5/9] dt-bindings: dmaengine: convert Actions Semi Owl
+ SoCs bindings to yaml
+To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pstore subsystem already had a private version of this function.
-With the coming addition of the pstore/zone driver, this needs to be
-shared. As it really should live with printk, move it there instead.
+Hi,
 
-Link: https://lore.kernel.org/lkml/20200510202436.63222-8-keescook@chromium.org/
-Acked-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/pstore/platform.c      | 18 +-----------------
- include/linux/kmsg_dump.h |  7 +++++++
- kernel/printk/printk.c    | 17 +++++++++++++++++
- 3 files changed, 25 insertions(+), 17 deletions(-)
+> Could you replace those "maxItems: 1" here and below with:
+>   - description: ...., copying in the explanation from the .txt binding?
+> That should serve the same purpose as "maxItems: 1", but is more
+> descriptive.
 
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 90d74ebaa70a..5e6c6022deb9 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -135,22 +135,6 @@ enum pstore_type_id pstore_name_to_type(const char *name)
- }
- EXPORT_SYMBOL_GPL(pstore_name_to_type);
- 
--static const char *get_reason_str(enum kmsg_dump_reason reason)
--{
--	switch (reason) {
--	case KMSG_DUMP_PANIC:
--		return "Panic";
--	case KMSG_DUMP_OOPS:
--		return "Oops";
--	case KMSG_DUMP_EMERG:
--		return "Emergency";
--	case KMSG_DUMP_SHUTDOWN:
--		return "Shutdown";
--	default:
--		return "Unknown";
--	}
--}
--
- static void pstore_timer_kick(void)
- {
- 	if (pstore_update_ms < 0)
-@@ -403,7 +387,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 	unsigned int	part = 1;
- 	int		ret;
- 
--	why = get_reason_str(reason);
-+	why = kmsg_dump_reason_str(reason);
- 
- 	if (down_trylock(&psinfo->buf_lock)) {
- 		/* Failed to acquire lock: give up if we cannot wait. */
-diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-index 9826014771ab..3378bcbe585e 100644
---- a/include/linux/kmsg_dump.h
-+++ b/include/linux/kmsg_dump.h
-@@ -70,6 +70,8 @@ void kmsg_dump_rewind(struct kmsg_dumper *dumper);
- int kmsg_dump_register(struct kmsg_dumper *dumper);
- 
- int kmsg_dump_unregister(struct kmsg_dumper *dumper);
-+
-+const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason);
- #else
- static inline void kmsg_dump(enum kmsg_dump_reason reason)
- {
-@@ -111,6 +113,11 @@ static inline int kmsg_dump_unregister(struct kmsg_dumper *dumper)
- {
- 	return -EINVAL;
- }
-+
-+static inline const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
-+{
-+	return "Disabled";
-+}
- #endif
- 
- #endif /* _LINUX_KMSG_DUMP_H */
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index a121c2255737..14ca4d05d902 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3144,6 +3144,23 @@ EXPORT_SYMBOL_GPL(kmsg_dump_unregister);
- static bool always_kmsg_dump;
- module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
- 
-+const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
-+{
-+	switch (reason) {
-+	case KMSG_DUMP_PANIC:
-+		return "Panic";
-+	case KMSG_DUMP_OOPS:
-+		return "Oops";
-+	case KMSG_DUMP_EMERG:
-+		return "Emergency";
-+	case KMSG_DUMP_SHUTDOWN:
-+		return "Shutdown";
-+	default:
-+		return "Unknown";
-+	}
-+}
-+EXPORT_SYMBOL_GPL(kmsg_dump_reason_str);
-+
- /**
-  * kmsg_dump - dump kernel log to kernel message dumpers.
-  * @reason: the reason (oops, panic etc) for dumping
--- 
-2.20.1
+But having it under reg: looks bit odd to me, no?
 
+reg:
+   - description: ...
+
+Or did you mean something else ?
+
+Thanks
+-Amit
