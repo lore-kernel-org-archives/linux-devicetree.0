@@ -2,180 +2,155 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709B4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8970C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB1F2065C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589539295;
-	bh=QjfAJaPZ5OOB+YJYFaytKz473Txp1a89ByaiNj93ueQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=yZ8UtQVu8ai3vt5wSNeAwG9+kDA9t4E7SsWD6CGm17BTJ/GnpRRb5QbidDtDBL8uc
-	 7rbIyaTnVDsFuUfYtY5ucedPGrbEl26jN/TamjqqX1JikDwsLzcOucYpsEM6pc+4M0
-	 hxE3e+9xFk2pTJTAiUelFvS3i9e/Qq65p00T/xIo=
+	by mail.kernel.org (Postfix) with ESMTP id C0F8F2065C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 10:43:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="VCM6A/La"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgEOKlb (ORCPT
+        id S1728256AbgEOKnt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 06:41:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbgEOKla (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 06:41:30 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37772C061A0C;
-        Fri, 15 May 2020 03:41:30 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id a4so1383536lfh.12;
-        Fri, 15 May 2020 03:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=IuV69pJbmeb25IQL0aSFJ0UEC0q8gcPDy0lgWN6OqZE=;
-        b=soNtbApqsD+cgPilkRoeQA4ln881xLdHuq6YTIxSaUN+teZMhygQno0fhmf2Ycxih2
-         he2CT4nyTLFpQF3HevAvm+IGS8ooZdqWbv4LmKplMWK4pmwKVRtDUD+7N4CTisZkmJox
-         VBEDsQ3Otj+uQBzMqtXkpfodnZ6p7VqNiFnh2rnsfvFHF/rtQitpJIUKOATLu+Dm5K02
-         BbzFPJXMwdyAS1KIbYCYUZl+wsHUCAbYiMhMb56FN0feEmPSYYE7Ll+KwXxvJQTwiLg5
-         iONb4CIqT9LwmmcC8wNIji33FdHJ1OSu+LuBMih5ytIAhMx0B+3qBCma9ismvU5sU7fR
-         casg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=IuV69pJbmeb25IQL0aSFJ0UEC0q8gcPDy0lgWN6OqZE=;
-        b=PDeD/JhCygDSlJLu0DAsrPuINGry2kX6BOsuTaDkysWwRtAqMG6nLyXsiQh11ciwX4
-         30IKT0r2tcEotkWipCjzJkiQz2B0FtbGSIm2q93GNUZePJzgiR+uJCYG3KapgEoYU+9+
-         pgOw1AOXE0S0SRvZ3rfwsu9uBRQAxNdxouDhwVGZmFVEHddMrmJhYaSdjM1PZOdHuQ6b
-         lFEWi8fN2hRbWjmqwHl/VNMSZfXNYIOa8KEyC+IWQKKDt31KoB9b+4tQ+9jPsvCzPLCv
-         vJepGP8xIvtLl3xG7QAVEHlDZpQaSsmHIH8Xun1c/AcTJ+85hwT8KedXBRynap2t4FkD
-         G+vg==
-X-Gm-Message-State: AOAM5324W/+EVX1VEshGt9Mwbm/z7SNOL6yiusjp17dUw023L6SellHY
-        Sd6GyFo3RT9cTTON0yhh8d8=
-X-Google-Smtp-Source: ABdhPJyyuyuD9RduQc6EDqDlE3JsblyuUG+arIWzoNUFnUhg54klEKgbLEeXrMbzd7IAh9TZXrgSWw==
-X-Received: by 2002:a19:b8d:: with SMTP id 135mr1935506lfl.145.1589539288473;
-        Fri, 15 May 2020 03:41:28 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id r19sm992094ljp.68.2020.05.15.03.41.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 May 2020 03:41:27 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Jun Li <jun.li@nxp.com>, Jun Li <lijun.kernel@gmail.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: RE: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by device controller
-In-Reply-To: <VE1PR04MB65283F16826D2254128073C589BD0@VE1PR04MB6528.eurprd04.prod.outlook.com>
-References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com> <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com> <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com> <87h7wqmwrv.fsf@kernel.org> <CAKgpwJXfWv5=MDqBCADhe2iXf6eiP0GQ13Bwo9fkuU5kGO7dsw@mail.gmail.com> <87imgx35pg.fsf@kernel.org> <VE1PR04MB65283F16826D2254128073C589BD0@VE1PR04MB6528.eurprd04.prod.outlook.com>
-Date:   Fri, 15 May 2020 13:41:23 +0300
-Message-ID: <87d07532gc.fsf@kernel.org>
+        Fri, 15 May 2020 06:43:49 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41384 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728013AbgEOKns (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 06:43:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1589539425; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=LSfDnvsEJIz1J1JIdTi+RPD75P1nIyJJmUoWunmP6sM=;
+        b=VCM6A/LaTaE0jZo38Ia7KdlbNDVbLYUQh1fOPfNZuD5aN7E/BiQZx0E93N1S1RcAf+2uJO
+        WuazfiA/DKpxQ1UJnTlv1m1+vVrDK08II/59JZYG2lpkTO98M2bmXqHcxw1ncapo/1vtes
+        Uolr7r3/BC/45wJYF5L0bnM6+fXjUmo=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     od@zcrc.me, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 1/5] dt-bindings: Document JZ47xx VPU auxiliary processor
+Date:   Fri, 15 May 2020 12:43:36 +0200
+Message-Id: <20200515104340.10473-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+Ingenic is a second Xburst MIPS CPU very similar to the main core.
+This document describes the devicetree bindings for this auxiliary
+processor.
 
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-Hi,
+Notes:
+    v2: Update TCSM0 address in example
+    v3: Change node name to 'video-decoder'
+    v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
+    v5: - Fix 'reg' not in <addr, len> pairs
+    	- Add missing include to devicetree example
+    v6-v7: No change
 
-Jun Li <jun.li@nxp.com> writes:
->> Jun Li <lijun.kernel@gmail.com> writes:
->> >> @@ -397,12 +407,18 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep=
-, unsigned
->> cmd,
->> >>                         dwc3_gadget_ep_get_transfer_index(dep);
->> >>         }
->> >>
->> >> -       if (saved_config) {
->> >> +       if (saved_hs_config) {
->> >>                 reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
->> >> -               reg |=3D saved_config;
->> >> +               reg |=3D saved_hs_config;
->> >>                 dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
->> >>         }
->> >>
->> >> +       if (saved_ss_config) {
->> >> +               reg =3D dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
->> >> +               reg |=3D saved_ss_config;
->> >> +               dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
->> >> +       }
->> >> +
->> >>         return ret;
->> >>  }
->> >
->> > Unfortunately this way can't work, once the SS PHY enters P3, disable
->> > suspend_en can't force SS PHY exit P3, unless do this at the very
->> > beginning to prevent SS PHY entering P3(e.g. add "snps,dis_u3_susphy_q=
-uirk" for
->> test).
->>=20
->> It sounds like you have a quirky PHY.=20
->
-> From what I got from the IC design, the behavior of DWC3_GUSB3PIPECTL_SUS=
-PHY
-> bit should be as what I said, not a quirky.
->
-> Hi Thinh, could you comment this?
->
->> If that's the case, then you probably need
->> to use the flag you mentioned above. Please verify with that.
->
-> With quirk of "snps,dis_u3_susphy_quirk", I had verified it can
-> resolve the problem, but this will make USB3 Super Speed PHY
-> never enter P3, this is a huge impact on USB power consumption.
->
-> The timeout increase has no impact on those platforms which have
-> no this problem, but can give chance for platform with very low
-> supspend clk(like my case 32k) to work.
+ .../bindings/remoteproc/ingenic,vpu.yaml      | 77 +++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
 
-I was under the impression that issuing a command would wake the PHY
-up. I don't have access to DWC3 documentation to verify, but that's as I
-remember. Is that not the case?
+diff --git a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+new file mode 100644
+index 000000000000..c019f9fbe916
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/remoteproc/ingenic,vpu.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Ingenic Video Processing Unit bindings
++
++description:
++  Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
++  Ingenic is a second Xburst MIPS CPU very similar to the main core.
++  This document describes the devicetree bindings for this auxiliary
++  processor.
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  compatible:
++    const: ingenic,jz4770-vpu-rproc
++
++  reg:
++    items:
++      - description: aux registers
++      - description: tcsm0 registers
++      - description: tcsm1 registers
++      - description: sram registers
++
++  reg-names:
++    items:
++      - const: aux
++      - const: tcsm0
++      - const: tcsm1
++      - const: sram
++
++  clocks:
++    items:
++      - description: aux clock
++      - description: vpu clock
++
++  clock-names:
++    items:
++      - const: aux
++      - const: vpu
++
++  interrupts:
++    description: VPU hardware interrupt
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4770-cgu.h>
++
++    vpu: video-decoder@132a0000 {
++      compatible = "ingenic,jz4770-vpu-rproc";
++
++      reg = <0x132a0000 0x20>, /* AUX */
++            <0x132b0000 0x4000>, /* TCSM0 */
++            <0x132c0000 0xc000>, /* TCSM1 */
++            <0x132f0000 0x7000>; /* SRAM */
++      reg-names = "aux", "tcsm0", "tcsm1", "sram";
++
++      clocks = <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
++      clock-names = "aux", "vpu";
++
++      interrupt-parent = <&cpuintc>;
++      interrupts = <3>;
++    };
+-- 
+2.26.2
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6+cdMACgkQzL64meEa
-mQYMMQ//ReGJl+YwiKBw2I8knemHDYhudQuGQSG6s78dfTKTJkH84XJ197AGxIPm
-s4vOk6VAuXpsWmota81ZU57GGC+NZqPLVQMXsrEE08HgFrHjjIriIv6AwoQ8rHfi
-pVQHdma8yaZRFRLYtzpGUf0lEHbgIgcy50gnGpjcQKc/FvChJNCbBNVvp8IVJPIA
-L/Zi5Vsl+lyLYSHYYYIDXU3EhPEbel8GmDYwNqn+N8jgxdDqF+vxwx+t1uXy584S
-EdVTnJZihL6TcTwck7//mrGfvIZ04sLtrGgbaUcmw/QotlfmrkWcmUN1P4as2A51
-A/+z0NcV6FQBIKj8lnDlYUjSL36qYw32mCvb1TTp6JnZ/khMclrYd/5o8C+beRna
-OUS0dhOy2/ygBfuiUiw2x15pe0GQ24EN0ZiLmTWrjd49whqkqheM7PWKNLxtnnmP
-2/10rAdQpD5STJSHiQi6YZSQaMsRPDlQasyVcrlAgOqNBfA3pRXz6rqRYD4NTLL0
-1IGl4EtzZlEfQpIqpZlaLtirz6iPkqMrRXROaTiZC55tHoItwaJ+wqZ47n8QQWyG
-NehsGGD3dk9LyGjiIpXnZ3HIalOTLXKwagEpfD39sgQsTBuzSfexUYER3diNe93k
-X4exS7gdYwhTfbYPiFbY9HcyQqRDckgC5p0k/qEdpeqw+WsQ3MQ=
-=ljzj
------END PGP SIGNATURE-----
---=-=-=--
