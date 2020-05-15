@@ -2,30 +2,30 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC7AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 02:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFDDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 02:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4CD206A5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 02:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DC0206A5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 02:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgEOCjz (ORCPT
+        id S1727882AbgEOCkB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 May 2020 22:39:55 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:31696 "EHLO
+        Thu, 14 May 2020 22:40:01 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:31867 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726176AbgEOCjz (ORCPT
+        by vger.kernel.org with ESMTP id S1728149AbgEOCkB (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 May 2020 22:39:55 -0400
+        Thu, 14 May 2020 22:40:01 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 15 May 2020 08:09:52 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 15 May 2020 08:09:29 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 15 May 2020 08:09:32 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 7422929A7; Fri, 15 May 2020 08:09:28 +0530 (IST)
+        id 817CC29A7; Fri, 15 May 2020 08:09:31 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -38,60 +38,269 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v7 0/4] Add QMP V3 USB3 PHY support for SC7180 
-Date:   Fri, 15 May 2020 08:09:14 +0530
-Message-Id: <1589510358-3865-1-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v7 2/4] dt-bindings: phy: qcom,qmp-usb3-dp: Add dt bindings for USB3 DP PHY
+Date:   Fri, 15 May 2020 08:09:16 +0530
+Message-Id: <1589510358-3865-3-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589510358-3865-1-git-send-email-sanm@codeaurora.org>
+References: <1589510358-3865-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add QMP V3 USB3 PHY entries for SC7180 in phy driver and
-device tree bindings.
+Split out the dt bindings for USB3 DP PHY from qcom,qmp bindings
+for modularity.
 
-changes in v7:
-*As per Matthias comments conversion to yaml and splitting out DP PHY bindings
- patches are separated.
-*PATCH v7 1/4 is for coversion to yaml.
-*PATCH v7 2/4 has splitting out DP PHY bindings and adding as separate yaml
- for DP PHY  bindings.
-*No changes in PATCH v7 3/4 and 4/4.
-
-changes in v6:
-*Added separate yaml file for USB3 DP PHY bindings.
-
-changes in v5:
-*Addressed comments from Matthias in yaml file.
-*Dropped PATCH 4/4 as it is landed in linux-next. 
-
-changes in v4:
-*Addressed comments from Matthias and Rob in yaml file.
-
-changes in v3:
-*Addressed Rob's comments in yaml file.
-*Sepearated the SC7180 support in yaml patch.
-*corrected the phy reset entries in device tree.
-
-changes in v2:
-*Remove global phy reset in QMP PHY.
-*Convert QMP PHY bindings to yaml.
-
-Sandeep Maheswaram (4):
-  dt-bindings: phy: qcom,qmp: Convert QMP PHY bindings to yaml
-  dt-bindings: phy: qcom,qmp-usb3-dp: Add dt bindings for USB3 DP PHY
-  dt-bindings: phy: qcom,qmp-usb3-dp: Add support for SC7180
-  phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
-
- .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 313 +++++++++++++++++++++
- .../bindings/phy/qcom,qmp-usb3-dp-phy.yaml         | 136 +++++++++
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 247 ----------------
- drivers/phy/qualcomm/phy-qcom-qmp.c                |  38 +++
- 4 files changed, 487 insertions(+), 247 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |  51 +++-----
+ .../bindings/phy/qcom,qmp-usb3-dp-phy.yaml         | 135 +++++++++++++++++++++
+ 2 files changed, 150 insertions(+), 36 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
 
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+index dcdb014..973b2d1 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+@@ -27,21 +27,13 @@ properties:
+       - qcom,sdm845-qhp-pcie-phy
+       - qcom,sdm845-qmp-pcie-phy
+       - qcom,sdm845-qmp-ufs-phy
+-      - qcom,sdm845-qmp-usb3-phy
+       - qcom,sdm845-qmp-usb3-uni-phy
+       - qcom,sm8150-qmp-ufs-phy
+       - qcom,sm8250-qmp-ufs-phy
+ 
+   reg:
+-    minItems: 1
+     items:
+       - description: Address and length of PHY's common serdes block.
+-      - description: Address and length of the DP_COM control block.
+-
+-  reg-names:
+-    items:
+-      - const: reg-base
+-      - const: dp_com
+ 
+   "#clock-cells":
+      enum: [ 1, 2 ]
+@@ -110,7 +102,6 @@ allOf:
+         compatible:
+           contains:
+             enum:
+-              - qcom,sdm845-qmp-usb3-phy
+               - qcom,sdm845-qmp-usb3-uni-phy
+     then:
+       properties:
+@@ -284,51 +275,39 @@ allOf:
+         reset-names:
+           items:
+             - const: phy
+-  - if:
+-      properties:
+-        compatible:
+-          contains:
+-            const: qcom,sdm845-qmp-usb3-phy
+-    then:
+-      required:
+-        - reg-names
+ 
+ examples:
+   - |
+     #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+-    usb_1_qmpphy: phy-wrapper@88e9000 {
+-        compatible = "qcom,sdm845-qmp-usb3-phy";
+-        reg = <0 0x088e9000 0 0x18c>,
+-              <0 0x088e8000 0 0x10>;
+-        reg-names = "reg-base", "dp_com";
++    usb_2_qmpphy: phy-wrapper@88eb000 {
++        compatible = "qcom,sdm845-qmp-usb3-uni-phy";
++        reg = <0 0x088eb000 0 0x18c>;
+         #clock-cells = <1>;
+         #address-cells = <2>;
+         #size-cells = <2>;
+ 
+-        clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
++        clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK >,
+                  <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+-                 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
+-                 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
++                 <&gcc GCC_USB3_SEC_CLKREF_CLK>,
++                 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
+         clock-names = "aux", "cfg_ahb", "ref", "com_aux";
+ 
+-        resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
+-                 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
++        resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
++                 <&gcc GCC_USB3_PHY_SEC_BCR>;
+         reset-names = "phy", "common";
+ 
+         vdda-phy-supply = <&vdda_usb2_ss_1p2>;
+         vdda-pll-supply = <&vdda_usb2_ss_core>;
+ 
+-        usb_1_ssphy: phy@88e9200 {
+-                reg = <0 0x088e9200 0 0x128>,
+-                      <0 0x088e9400 0 0x200>,
+-                      <0 0x088e9c00 0 0x218>,
+-                      <0 0x088e9600 0 0x128>,
+-                      <0 0x088e9800 0 0x200>,
+-                      <0 0x088e9a00 0 0x100>;
++        usb_2_ssphy: phy@88eb200 {
++                reg = <0 0x088eb200 0 0x128>,
++                      <0 0x088eb400 0 0x1fc>,
++                      <0 0x088eb800 0 0x218>,
++                      <0 0x088eb600 0 0x70>;
+                 #clock-cells = <0>;
+                 #phy-cells = <0>;
+-                clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
++                clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
+                 clock-names = "pipe0";
+-                clock-output-names = "usb3_phy_pipe_clk_src";
++                clock-output-names = "usb3_uni_phy_pipe_clk_src";
+             };
+         };
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
+new file mode 100644
+index 0000000..6055786
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
+@@ -0,0 +1,135 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom,qmp-usb3-dp-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm QMP USB3 DP PHY controller
++
++maintainers:
++  - Manu Gautam <mgautam@codeaurora.org>
++
++properties:
++  compatible:
++    const:
++      qcom,sdm845-qmp-usb3-phy
++  reg:
++    items:
++      - description: Address and length of PHY's common serdes block.
++      - description: Address and length of the DP_COM control block.
++
++  reg-names:
++    items:
++      - const: reg-base
++      - const: dp_com
++
++  "#clock-cells":
++     enum: [ 1, 2 ]
++
++  "#address-cells":
++    enum: [ 1, 2 ]
++
++  "#size-cells":
++    enum: [ 1, 2 ]
++
++  clocks:
++    items:
++      - description: Phy aux clock.
++      - description: Phy config clock.
++      - description: 19.2 MHz ref clk.
++      - description: Phy common block aux clock.
++
++  clock-names:
++    items:
++      - const: aux
++      - const: cfg_ahb
++      - const: ref
++      - const: com_aux
++
++  resets:
++    items:
++      - description: reset of phy block.
++      - description: phy common block reset.
++
++  reset-names:
++    items:
++      - const: phy
++      - const: common
++
++  vdda-phy-supply:
++    description:
++        Phandle to a regulator supply to PHY core block.
++
++  vdda-pll-supply:
++    description:
++        Phandle to 1.8V regulator supply to PHY refclk pll block.
++
++  vddp-ref-clk-supply:
++    description:
++        Phandle to a regulator supply to any specific refclk
++        pll block.
++
++#Required nodes:
++patternProperties:
++  "^phy@[0-9a-f]+$":
++    type: object
++    description:
++      Each device node of QMP phy is required to have as many child nodes as
++      the number of lanes the PHY has.
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - "#clock-cells"
++  - "#address-cells"
++  - "#size-cells"
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - vdda-phy-supply
++  - vdda-pll-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
++    usb_1_qmpphy: phy-wrapper@88e9000 {
++        compatible = "qcom,sdm845-qmp-usb3-phy";
++        reg = <0 0x088e9000 0 0x18c>,
++              <0 0x088e8000 0 0x10>;
++        reg-names = "reg-base", "dp_com";
++        #clock-cells = <1>;
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
++                 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++                 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
++                 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
++        clock-names = "aux", "cfg_ahb", "ref", "com_aux";
++
++        resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
++                 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
++        reset-names = "phy", "common";
++
++        vdda-phy-supply = <&vdda_usb2_ss_1p2>;
++        vdda-pll-supply = <&vdda_usb2_ss_core>;
++
++        usb_1_ssphy: phy@88e9200 {
++                reg = <0 0x088e9200 0 0x128>,
++                      <0 0x088e9400 0 0x200>,
++                      <0 0x088e9c00 0 0x218>,
++                      <0 0x088e9600 0 0x128>,
++                      <0 0x088e9800 0 0x200>,
++                      <0 0x088e9a00 0 0x100>;
++                #clock-cells = <0>;
++                #phy-cells = <0>;
++                clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
++                clock-names = "pipe0";
++                clock-output-names = "usb3_phy_pipe_clk_src";
++            };
++        };
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
