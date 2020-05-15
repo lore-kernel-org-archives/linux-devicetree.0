@@ -2,267 +2,187 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9385C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439ABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7B620727
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:54:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZS2OBGgV"
+	by mail.kernel.org (Postfix) with ESMTP id 26A46206D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 17:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgEORyg (ORCPT
+        id S1726221AbgEOR5Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 13:54:36 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38876 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgEORyf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 13:54:35 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04FHsXS4026411;
-        Fri, 15 May 2020 12:54:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589565273;
-        bh=Jlv0g4hQTj/sKCmOI61sTWpArHCZ3qjlGMu3SRnCyf8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ZS2OBGgVgyH6ZUGwoYsYkWWLAHj3ueNqpdPyefay9c2N6HNdphgdsQbSRZDGLAT0q
-         7MfLCNM44Zh12IMqQbwl7JWQp8zEj9Q7FyuFWMoEYR+0sD0o6rOZOxWG5p0uLWGEFt
-         hCphkVNQ/r1UrMe/ogiuCrMObw+dAaURDbqLxdrY=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04FHsXMu064200
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 May 2020 12:54:33 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
- May 2020 12:54:33 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 15 May 2020 12:54:33 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FHsXxb097220;
-        Fri, 15 May 2020 12:54:33 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 2/2] power: supply: bq27xxx_battery: Add the BQ27561 Battery monitor
-Date:   Fri, 15 May 2020 12:44:54 -0500
-Message-ID: <20200515174454.21866-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200515174454.21866-1-dmurphy@ti.com>
-References: <20200515174454.21866-1-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 15 May 2020 13:57:16 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:58788 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgEOR5Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 May 2020 13:57:16 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jZeci-0004Pt-5A; Fri, 15 May 2020 17:59:52 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v11 0/3] Add support for the Gateworks System Controller
+Date:   Fri, 15 May 2020 10:57:05 -0700
+Message-Id: <1589565428-28886-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the Texas Instruments BQ27561 battery monitor.  The register address
-map is laid out the same as compared to other devices within the file.
-The battery status register has differing bits to determine if the
-battery is full, discharging or dead.
+This series adds support for the Gateworks System Controller used on Gateworks
+Laguna, Ventana, and Newport product families.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/power/supply/bq27xxx_battery.c     | 68 +++++++++++++++++++++-
- drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
- include/linux/power/bq27xxx_battery.h      |  1 +
- 3 files changed, 70 insertions(+), 1 deletion(-)
+The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+features:
+ - I/O expander (16 GPIO's emulating a PCA955x)
+ - EEPROM (enumating AT24)
+ - RTC (enumating DS1672)
+ - HWMON
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 942c92127b6d..466bbc549799 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -43,6 +43,7 @@
-  * http://www.ti.com/product/bq27411-g1
-  * http://www.ti.com/product/bq27441-g1
-  * http://www.ti.com/product/bq27621-g1
-+ * https://www.ti.com/lit/gpn/bq27z561
-  */
- 
- #include <linux/device.h>
-@@ -79,6 +80,11 @@
- #define BQ27000_FLAG_FC		BIT(5)
- #define BQ27000_FLAG_CHGS	BIT(7) /* Charge state flag */
- 
-+/* BQ27561 has different layout for Flags register */
-+#define BQ27561_FLAG_FDC	BIT(4) /* Battery fully discharged */
-+#define BQ27561_FLAG_FC		BIT(5) /* Battery fully charged */
-+#define BQ27561_FLAG_DIS_CH	BIT(6) /* Battery is discharging */
-+
- /* control register params */
- #define BQ27XXX_SEALED			0x20
- #define BQ27XXX_SET_CFGUPDATE		0x13
-@@ -431,12 +437,32 @@ static u8
- 		[BQ27XXX_REG_DCAP] = 0x3c,
- 		[BQ27XXX_REG_AP] = 0x18,
- 		BQ27XXX_DM_REG_ROWS,
--	};
-+	},
- #define bq27411_regs bq27421_regs
- #define bq27425_regs bq27421_regs
- #define bq27426_regs bq27421_regs
- #define bq27441_regs bq27421_regs
- #define bq27621_regs bq27421_regs
-+	bq27561_regs[BQ27XXX_REG_MAX] = {
-+		[BQ27XXX_REG_CTRL] = 0x00,
-+		[BQ27XXX_REG_TEMP] = 0x06,
-+		[BQ27XXX_REG_INT_TEMP] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_VOLT] = 0x08,
-+		[BQ27XXX_REG_AI] = 0x14,
-+		[BQ27XXX_REG_FLAGS] = 0x0a,
-+		[BQ27XXX_REG_TTE] = 0x16,
-+		[BQ27XXX_REG_TTF] = 0x18,
-+		[BQ27XXX_REG_TTES] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_TTECP] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_NAC] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_FCC] = 0x12,
-+		[BQ27XXX_REG_CYCT] = 0x2a,
-+		[BQ27XXX_REG_AE] = 0x22,
-+		[BQ27XXX_REG_SOC] = 0x2c,
-+		[BQ27XXX_REG_DCAP] = 0x3c,
-+		[BQ27XXX_REG_AP] = 0x22,
-+		BQ27XXX_DM_REG_ROWS,
-+	};
- 
- static enum power_supply_property bq27000_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
-@@ -672,6 +698,25 @@ static enum power_supply_property bq27421_props[] = {
- #define bq27441_props bq27421_props
- #define bq27621_props bq27421_props
- 
-+static enum power_supply_property bq27561_props[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
-+	POWER_SUPPLY_PROP_TIME_TO_FULL_NOW,
-+	POWER_SUPPLY_PROP_TECHNOLOGY,
-+	POWER_SUPPLY_PROP_CHARGE_FULL,
-+	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_CYCLE_COUNT,
-+	POWER_SUPPLY_PROP_POWER_AVG,
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_MANUFACTURER,
-+};
-+
- struct bq27xxx_dm_reg {
- 	u8 subclass_id;
- 	u8 offset;
-@@ -767,11 +812,14 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] = {
- #define bq27621_dm_regs 0
- #endif
- 
-+#define bq27561_dm_regs 0
-+
- #define BQ27XXX_O_ZERO	0x00000001
- #define BQ27XXX_O_OTDC	0x00000002 /* has OTC/OTD overtemperature flags */
- #define BQ27XXX_O_UTOT  0x00000004 /* has OT overtemperature flag */
- #define BQ27XXX_O_CFGUP	0x00000008
- #define BQ27XXX_O_RAM	0x00000010
-+#define BQ27561_O_BITS	0x00000020
- 
- #define BQ27XXX_DATA(ref, key, opt) {		\
- 	.opts = (opt),				\
-@@ -816,6 +864,7 @@ static struct {
- 	[BQ27426]   = BQ27XXX_DATA(bq27426,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
- 	[BQ27441]   = BQ27XXX_DATA(bq27441,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
- 	[BQ27621]   = BQ27XXX_DATA(bq27621,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
-+	[BQ27561]   = BQ27XXX_DATA(bq27561,   0         , BQ27561_O_BITS),
- };
- 
- static DEFINE_MUTEX(bq27xxx_list_lock);
-@@ -1551,6 +1600,8 @@ static bool bq27xxx_battery_dead(struct bq27xxx_device_info *di, u16 flags)
- {
- 	if (di->opts & BQ27XXX_O_ZERO)
- 		return flags & (BQ27000_FLAG_EDV1 | BQ27000_FLAG_EDVF);
-+	else if (di->opts & BQ27561_O_BITS)
-+		return flags & BQ27561_FLAG_FDC;
- 	else
- 		return flags & (BQ27XXX_FLAG_SOC1 | BQ27XXX_FLAG_SOCF);
- }
-@@ -1595,6 +1646,7 @@ void bq27xxx_battery_update(struct bq27xxx_device_info *di)
- 				cache.time_to_empty_avg = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTECP);
- 			if (di->regs[BQ27XXX_REG_TTF] != INVALID_REG_ADDR)
- 				cache.time_to_full = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTF);
-+
- 			cache.charge_full = bq27xxx_battery_read_fcc(di);
- 			cache.capacity = bq27xxx_battery_read_soc(di);
- 			if (di->regs[BQ27XXX_REG_AE] != INVALID_REG_ADDR)
-@@ -1682,6 +1734,13 @@ static int bq27xxx_battery_status(struct bq27xxx_device_info *di,
- 			status = POWER_SUPPLY_STATUS_NOT_CHARGING;
- 		else
- 			status = POWER_SUPPLY_STATUS_DISCHARGING;
-+	} else if (di->opts & BQ27561_O_BITS) {
-+		if (di->cache.flags & BQ27561_FLAG_FC)
-+			status = POWER_SUPPLY_STATUS_FULL;
-+		else if (di->cache.flags & BQ27561_FLAG_DIS_CH)
-+			status = POWER_SUPPLY_STATUS_DISCHARGING;
-+		else
-+			status = POWER_SUPPLY_STATUS_CHARGING;
- 	} else {
- 		if (di->cache.flags & BQ27XXX_FLAG_FC)
- 			status = POWER_SUPPLY_STATUS_FULL;
-@@ -1710,6 +1769,13 @@ static int bq27xxx_battery_capacity_level(struct bq27xxx_device_info *di,
- 			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
- 		else
- 			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
-+	} else if (di->opts & BQ27561_O_BITS) {
-+		if (di->cache.flags & BQ27561_FLAG_FC)
-+			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-+		else if (di->cache.flags & BQ27561_FLAG_DIS_CH)
-+			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
-+		else
-+			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
- 	} else {
- 		if (di->cache.flags & BQ27XXX_FLAG_FC)
- 			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
-index 2677c38a8a42..d0d55e0959d5 100644
---- a/drivers/power/supply/bq27xxx_battery_i2c.c
-+++ b/drivers/power/supply/bq27xxx_battery_i2c.c
-@@ -253,6 +253,7 @@ static const struct i2c_device_id bq27xxx_i2c_id_table[] = {
- 	{ "bq27426", BQ27426 },
- 	{ "bq27441", BQ27441 },
- 	{ "bq27621", BQ27621 },
-+	{ "bq27561", BQ27561 },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, bq27xxx_i2c_id_table);
-@@ -286,6 +287,7 @@ static const struct of_device_id bq27xxx_battery_i2c_of_match_table[] = {
- 	{ .compatible = "ti,bq27426" },
- 	{ .compatible = "ti,bq27441" },
- 	{ .compatible = "ti,bq27621" },
-+	{ .compatible = "ti,bq27561" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, bq27xxx_battery_i2c_of_match_table);
-diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/bq27xxx_battery.h
-index 507c5e214c42..4a319950ea22 100644
---- a/include/linux/power/bq27xxx_battery.h
-+++ b/include/linux/power/bq27xxx_battery.h
-@@ -30,6 +30,7 @@ enum bq27xxx_chip {
- 	BQ27426,
- 	BQ27441,
- 	BQ27621,
-+	BQ27561,
- };
- 
- struct bq27xxx_device_info;
+see http://trac.gateworks.com/wiki/gsc for more details
+
+v11:
+ - mfd: fix compile error
+
+v10:
+ - mfd: fix typo and gramatical errors in Kconfig and comment block
+ - mfd: drop unused i2c device-id table
+ - mfd: added Lee's ack in s-o-b
+
+v9:
+ - rebase against 5.7-rc2
+ - dt-binding: remove allOf: see https://lkml.org/lkml/2020/4/15/1930
+ - dt-binding: encorporate Lee's review comments for item descriptions
+ - dt-binding: added Reviewed-by: Rob Herring <robh@kernel.org>
+ - mfd: cleanup gsc_powerdown() by using BIT(), put_unaligned_le32(), and
+   avoid unnecessary assignments
+ - mfd: rename GSC_CTRL_1 SLEEP related defines to simplify
+ - mfd: add better description and sub-module info to driver description
+ - mfd: whitespace changes per review
+ - mfd: remove unused irq_data pointer in ddata
+ - mfd: remove unnecesary i2c_set_clientdata
+ - mfd: use devm_i2c_new_dummy_device to avoid need of free's
+ - mfd: change regsiter definitions to enum
+ - mfd: export gsc_{read,write} instead of sharing them via ddata
+ - hwmon: use exported gsc_{read,write}
+ - hwmon: added Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+v8:
+ - mfd: whitespace fixes
+ - mfd: describe sub-devices in Kconfig
+ - mfd: add error print for invalid command
+ - mfd: update copyright
+ - mfd: use devm_of_platform_populate
+ - mfd: use probe_new
+ - mfd: move hwmon's regmap init to hwmon
+ - hwmon: move hwmon's regmap init to hwmon
+ - dt-bindings: add register to fan-controller node name
+
+v7:
+ - dt-bindings: change divider from mili-ohms to ohms
+ - dt-bindings: add constraints for voltage divider and offset
+ - dt-bindings: remove unnecessary ref for offset
+ - dt-bindings: renamed fan to fan-controller and changed base prop to reg
+ - mfd:  remove irq from private data struct
+ - hwmon: fix whitespace in Kconfig
+ - hwmon: remove unnecessary device pointer in private data
+ - hwmon: change divider from mili-ohms to ohms
+ - hwmon: move fan base property to reg
+
+v6:
+ - hwmon: fix size of info field
+ - hwmon: improve pwm output control documentation
+ - hwmon: include unit suffix in divider and offset
+ - hwmon: change subnode name to gsc-adc
+ - hwmon: change to fan subnode
+ - hwmon: fix voltage offset
+ - dt-bindings: fix commit message typo
+ - dt-bindings: drop invalid description from #interrupt-cells property
+ - dt-bindings: fix adc pattern property
+ - dt-bindings: add unit suffix
+ - dt-bindings: replace hwmon/adc with adc/channel
+ - dt-bindings: changed adc type to gw,mode
+ - dt-bindings: add unit suffix and drop ref for voltage-divider
+ - dt-bindings: add unit suffix for voltage-offset
+ - dt-bindings: moved fan to its own subnode with base register
+
+v5:
+ - fix checkpatch issues
+ - fix dt_binding_check issues
+ - address feedback from v4
+
+v4:
+ - hwmon: move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - hwmon: remove unncessary resolution/scaling properties for ADCs
+ - bindings: update to yaml Documentation
+ - removed watchdog driver
+
+v3:
+ - removed unnecessary input driver
+ - added wdt driver
+ - bindings: encorporated feedback from mailng list
+ - hwmon:
+ - encoroprated feedback from mailng list
+ - added support for raw ADC voltage input used in newer GSC firmware
+
+v2:
+ - change license comment block style
+ - remove COMPILE_TEST
+ - fixed whitespace issues
+ - replaced a printk with dev_err
+ - remove DEBUG
+ - simplify regmap_bulk_read err check
+ - remove break after returns in switch statement
+ - fix fan setpoint buffer address
+ - remove unnecessary parens
+ - consistently use struct device *dev pointer
+ - add validation for hwmon child node props
+ - move parsing of of to own function
+ - use strlcpy to ensure null termination
+ - fix static array sizes and removed unnecessary initializers
+ - dynamically allocate channels
+ - fix fan input label
+ - support platform data
+
+Tim Harvey (3):
+  dt-bindings: mfd: Add Gateworks System Controller bindings
+  mfd: add Gateworks System Controller core driver
+  hwmon: add Gateworks System Controller support
+
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 196 +++++++++++
+ Documentation/hwmon/gsc-hwmon.rst                  |  53 +++
+ Documentation/hwmon/index.rst                      |   1 +
+ MAINTAINERS                                        |  11 +
+ drivers/hwmon/Kconfig                              |   9 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/gsc-hwmon.c                          | 390 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  15 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/gateworks-gsc.c                        | 277 +++++++++++++++
+ include/linux/mfd/gsc.h                            |  76 ++++
+ include/linux/platform_data/gsc_hwmon.h            |  44 +++
+ 12 files changed, 1074 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+ create mode 100644 Documentation/hwmon/gsc-hwmon.rst
+ create mode 100644 drivers/hwmon/gsc-hwmon.c
+ create mode 100644 drivers/mfd/gateworks-gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+ create mode 100644 include/linux/platform_data/gsc_hwmon.h
+
 -- 
-2.26.2
+2.7.4
 
