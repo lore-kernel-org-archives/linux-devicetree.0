@@ -2,225 +2,337 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D888C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35677C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45B1420671
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C83206F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 07:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KF9Evebm"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="L/Ca4AQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgEOHKE (ORCPT
+        id S1726606AbgEOHL1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 03:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
+        Fri, 15 May 2020 03:11:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726601AbgEOHKD (ORCPT
+        by vger.kernel.org with ESMTP id S1726569AbgEOHL0 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 03:10:03 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61748C061A0C
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 00:10:03 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id z1so620511vsn.11
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 00:10:03 -0700 (PDT)
+        Fri, 15 May 2020 03:11:26 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B70CC061A0C
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 00:11:26 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id h10so1503320iob.10
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 00:11:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S1KNisJsCqChNlKv09ipjuXjD/t4NKsjUgukAjLqwgo=;
-        b=KF9Evebmgk0IOkagk7/RIFUBMr+cPh1F1LPbkWTaNsyUq6b8RMhamq3NMmj2URio+7
-         +frWZsPYuuQBDWNPFG7eOAsO4HkwALGPJ1tpDzAqi7mZP6Y6amz/LU/lFbChXoGq5u5t
-         KbXwuwMjFBMWvu2nPM+eJrhDKuz+7NIpqjdfjS1khs/WHntHd1pW7qgK6i+wbNbs/9lT
-         xFLoXUMCgP+Bz8GgRF5UIehxFkG8irzYVxPNfRjighgWUtQxPJFhGm2gUIu0zje9S/wG
-         5bFaq1hDKWAFT3sxy1xy3aoNxIJ3N9ozNfiBsQkPZyIMl/OxORRYKAd6m3nUE02TbaNR
-         0JeA==
+         :cc:content-transfer-encoding;
+        bh=tt+z2QXtaemYOTrQbr/BmXHcmpgvLLmy4PAl95FbkpU=;
+        b=L/Ca4AQayrVuzBB8yZyrO3D7tYVpozvH457DvHs352Wp1VSfJKm8r//QF6MSCmpbkH
+         0GwKMVW57C2OfloktcoKGNArORBe5fgunch0drFGQ5xQZvaj+Eo8HRCS7xj+ctvvkO5o
+         2Pe5cGM6oFzxGek6lVJCf1KttKUZYq8neXts0QXNfklSPVsqhXTtB/1JrNepfsrNYga7
+         YpczpMFX1ULJhr9cmxc52UqZwthe1YHTnnpZ+ZjVS9E+vSf2AwDcRprBLx8kSPTvc3Py
+         tBeq6vWaVZbzY8gqnDJ170TbOmDwO8jGNDHUHISIcc04uugvCAXmyyL9uypFw3DHPzIa
+         ReJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S1KNisJsCqChNlKv09ipjuXjD/t4NKsjUgukAjLqwgo=;
-        b=X2DNxnv/AAxw0MQElq3S2bz/47MVCRKGDCIEFSPU38KHbbrFlLK3WZXlEHTQNTlVz8
-         Zt6xMEzCgM9oVCwK2Mn0rMUtlEzl8BwBpP5mtZjPkIHSvOhOqf89XupDSIhaFMDxBKiE
-         nINfhAlWTYZ0ZnahbHMiV/buHOY6/Ka+hAUN1MtiWgnQ4ey31eiHKg0TRG95BGsfPNmO
-         DRtqbUZ6+64cgIoyDMtzbt14fk0AX13XAuWgv9irzLoZxYwiwrTjDEFFBt/dArHYfLUD
-         aCSSNYPEWwPT7iE1tPJXNP6zatwqC6SAsgGRYo0ElJLK6oJn3Q456JNUGwIbCXPFn+E7
-         Wvaw==
-X-Gm-Message-State: AOAM531QQtjSFkexgwvpfzopRzaf6emseFugcCd0ptXXdf7qsLPlMXDD
-        sqeHJwLZ3PZC91xFpxaPS9PHj0Q+Q3U6rfXRV1k0YA==
-X-Google-Smtp-Source: ABdhPJygnTdNDgbwU5IjwBpTpT+E94UNhD0unulxzXkizTZB4BYj5ClHbIbFXY2A/54DrC6ynz4HrgCg7fBD01ytnGc=
-X-Received: by 2002:a67:8b46:: with SMTP id n67mr1453605vsd.35.1589526602387;
- Fri, 15 May 2020 00:10:02 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tt+z2QXtaemYOTrQbr/BmXHcmpgvLLmy4PAl95FbkpU=;
+        b=Wltx+ysFOOSSE9a1tCYxnyGNFSrK8IDFzgsARCC7sZ6BwrH7wM0VzhGUzs84pWTGdg
+         xV8OPz/LcxBcrEYDJV2BJEZTob8HrYdV4EU3UovAK26ABQPiGNzHCOyhC6yVDszGvSzM
+         ptgbbB/hxEpxKdKLkrY+Cd5t+P45FCouA1iIs8BbeYCzLzRAiswRS59A3QYYzM+2wrKz
+         2TavAG7bDIL+8zEWtDknR8B+/S26rXN8/gBxQquSAdeT0bSKmy4ivgsuQQAVHjTXSun+
+         doPwBaI14mIjALtKAgURDg74oNwFwyRN8rbEVgrk/2YD4s0X3Fwj7JUoeUbeA5hNuZ1D
+         c0Vg==
+X-Gm-Message-State: AOAM532fD3XK+IieOVQuk6dKY2wb4t1oqRl5vBpYApc69LcXqp6HvLTv
+        61vvytWaLJnoCjyQUA1GarKRZcdke68klGv0Z3C7BA==
+X-Google-Smtp-Source: ABdhPJw2UZPqM2c9AdQ/V2iFTXgewM1zVBwPnll86PitN+1yQpAcr0xdHMo5F1vMIZ2tP/UG8KrfG8WtcaA8puMhawg=
+X-Received: by 2002:a02:a60f:: with SMTP id c15mr552139jam.24.1589526685801;
+ Fri, 15 May 2020 00:11:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 15 May 2020 09:09:25 +0200
-Message-ID: <CAPDyKFrTxcCy6Py9i4kzgy7gcvpg0dVn-tbuNn-jiKhW=wh4bg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] Amlogic 32-bit Meson SoC SDHC MMC controller driver
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
+ <CAK8P3a3=xgbvqrSpCK5h96eRH32AA7xnoK2ossvT0-cLFLzmXA@mail.gmail.com>
+In-Reply-To: <CAK8P3a3=xgbvqrSpCK5h96eRH32AA7xnoK2ossvT0-cLFLzmXA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 15 May 2020 09:11:14 +0200
+Message-ID: <CAMRc=MeypzZBHo6dJGKm4JujYyejqHxtdo7Ts95DXuL0VuMYCw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
         DTML <devicetree@vger.kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 May 2020 at 22:42, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+czw., 14 maj 2020 o 18:19 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
 >
-> Hello,
+> On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
+> > family. For now we only support full-duplex.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> this is the patchset for a driver for the Amlogic "SDHC" MMC controller
-> found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
+> Looks very nice overall. Just a few things I noticed, and some ideas
+> that may or may not make sense:
 >
-> The public S805 (Meson8b) datasheet has some documentation starting on
-> page 74: [0]
+> > +/* This is defined to 0 on arm64 in arch/arm64/include/asm/processor.h=
+ but
+> > + * this IP doesn't work without this alignment being equal to 2.
+> > + */
+> > +#ifdef NET_IP_ALIGN
+> > +#undef NET_IP_ALIGN
+> > +#endif
+> > +#define NET_IP_ALIGN                           2
 >
-> It's performance is still not as good as the driver from Amlogic's 3.10
-> kernel, but it does not corrupt data anymore (as RFC v1 did).
->
-> Special thanks to the people who supported me off-list - you are
-> amazing and deserve to be mentioned here:
-> - Xin Yin who helped me fix two more write corruption problems. I am
->   hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
-> - Jianxin Pan for sharing some of the internal workings of this MMC
->   controller with me
-> - Wei Wang for spotting the initial write corruption problem and helping
->   test this driver on his board. I have his permission to add his
->   Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
->   up)
->
->
-> Changes since v6 at [6]:
-> - both patches: dropped the clock #include from the dt-bindings as well
->   as #clock-cells = <1> and the self-referencing clock inputs. Instead
->   the driver will not be registering a clock provider anymore. The
->   clock references are obtained using "clk_hw.clk" (thus not going
->   through the dt-bindings anymore) as suggested in [7] until a better
->   solution is implemented. A TODO comment is also in place so it's
->   easier to find this temporary workaround when the new helper exists.
-> - dropped Rob's Reviewed-by because I modified the dt-bindings. schema
->   validation still passes on my build machine.
-> - patch #2: dropped MMC_CAP_ERASE due to the following patch which is
->   queued in mmc's -next: "mmc: host: Drop redundant MMC_CAP_ERASE"
-> - patch #2: fill all clk_{mux,divider,gate,hw} values in
->   meson_mx_sdhc_register_clkc instead of using loops and two separate
->   structs to make the code easier to read. Thanks to Jerome for the
->   suggestion.
-> - I decided to keep all the Tested-by's because testing was smooth
->   for me and none of the clock calculation formulas has changed (only
->   the API how to obtain the clocks).
->
-> Changes since v5 at [5] (thanks to Ulf and Jerome for the feedback):
-> - changed copyright year to 2020
-> - move register #defines to a separate header file
-> - drop unused include linux/clk-provider.h from meson-mx-sdhc.c
-> - used #defines for regmap_read_poll_timeout timeout/sleep values
-> - set MMC_CAP_WAIT_WHILE_BUSY
-> - move the clock controller code to mmc/host/meson-mx-sdhc-clkc.c and
->   don't register a separate platform_device for it. This also means
->   that the driver switched from clk_regmap to the standard
->   clk_{divider,gate,mux}_ops
-> - dropped ".index = -1" for clk_parent_data with .fw_name
-> - use CLK_SET_RATE_PARENT on all leaf clocks and drop
->   CLK_SET_RATE_GATE
-> - switch from parent_data.name to parent_hws
-> - use fallthrough; instead of fallthrough comment
-> - added Anand's Tested-by - thank you!
-> - I decided to keep all Tested-by and Reviewed-by because they were
->   only for the MMC controller part and I have barely touched that with
->   this update.
-> - Ulf asked if the timeout can be shortened. I believe it can but I
->   have no documentation for it. Thus I need a test-case to see if my
->   assumptions are correct - thus I have not addressed this in v6 yet
->
-> Changes since v4 at [4]:
-> - move the four clkin clock inputs to the start of the clock-names list
->   as suggested by Rob, affects patch #1
-> - fixed #include statement in dt-bindings example in patch #1
->
-> Changes since v3 at [3]:
-> - split the clock bits into a separate clock controller driver because
->   of two reasons: 1) it keeps the MMC controller driver mostly clean of
->   the clock bits 2) the pure clock controller can use
->   devm_clk_hw_register() (instead of devm_clk_register(), which is
->   deprecated) and the MMC controller can act as a pure clock consumer.
->   This also affects the dt-bindings which is why I dropped Rob's
->   Reviewed-by. Thanks to Ulf for the suggestions
->
-> Changes since v2 at [2]:
-> - rebased on top of v5.5-rc1
-> - added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
-> - (note: Kevin had v2 of this series in -next for a few days so the
->    build test robots could play with it. I haven't received any negative
->    feedback in that time)
->
-> Changes since RFC v1 at [1]:
-> - don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
->   corruption problems. the out-of-tree 3.10 "reference" driver doesn't
->   set it either
-> - check against data->flags instead of cmd->flags when testing for
->   MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
->   another write corruption problem
-> - clear the FIFOs after successfully transferring data as suggested by
->   Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
->   another write corruption problem
-> - integrate the clock suggestions from Jianxin Pan so the driver is now
->   able to set up the clocks correctly for all known cases. documentation
->   is also added to the patch description. Thank you Jianxin for the
->   help!
-> - set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
-> - convert the dt-bindings to .yaml (which is why I didn't add Rob's
->   Reviewed-by)
-> - switch to struct clk_parent_data as part of newer common clock
->   framework APIs to simplify the clock setup
-> - dropped CMD23 support because it seems to hurt read and write
->   performance by 10-20% in my tests. it's not clear why, but for now we
->   can live without this.
-> - use devm_platform_ioremap_resource instead of open-coding it
->
->
-> [0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
-> [1] https://patchwork.kernel.org/cover/11035505/
-> [2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
-> [3] https://patchwork.kernel.org/cover/11283179/
-> [4] https://patchwork.kernel.org/cover/11329017/
-> [5] https://patchwork.kernel.org/cover/11463341/
-> [6] https://patchwork.kernel.org/cover/11515603/
-> [7] https://lore.kernel.org/linux-clk/158870581453.26370.15255632521260524214@swboyd.mtv.corp.google.com/
->
->
-> Martin Blumenstingl (2):
->   dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
->   mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
->
->  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |  68 ++
->  drivers/mmc/host/Kconfig                      |  14 +
->  drivers/mmc/host/Makefile                     |   1 +
->  drivers/mmc/host/meson-mx-sdhc-clkc.c         | 158 +++
->  drivers/mmc/host/meson-mx-sdhc.c              | 907 ++++++++++++++++++
->  drivers/mmc/host/meson-mx-sdhc.h              | 141 +++
->  6 files changed, 1289 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
->  create mode 100644 drivers/mmc/host/meson-mx-sdhc-clkc.c
->  create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
->  create mode 100644 drivers/mmc/host/meson-mx-sdhc.h
+> Maybe you should just define your own macro instead of replacing
+> the normal one then?
 >
 
-Applied for next, thanks!
+I did in an earlier version and was told to use NET_IP_ALIGN but then
+found out its value on arm64 doesn't work for me so I did the thing
+that won't make anybody happy - redefine the existing constant. :)
 
-Kind regards
-Uffe
+> > +static void mtk_mac_lock(struct mtk_mac_priv *priv)
+> > +{
+> > +       spin_lock_irqsave(&priv->lock, priv->lock_flags);
+> > +}
+> > +
+> > +static void mtk_mac_unlock(struct mtk_mac_priv *priv)
+> > +{
+> > +       spin_unlock_irqrestore(&priv->lock, priv->lock_flags);
+> > +}
+>
+> This looks wrong: you should not have shared 'flags' passed into
+> spin_lock_irqsave(), and I don't even see a need to use the
+> irqsave variant of the lock in the first place.
+>
+> Maybe start by open-coding the lock and remove the wrappers
+> above.
+>
+> Then see if you can use a cheaper spin_lock_bh() or plain spin_lock()
+> instead of irqsave.
+>
+
+This is from an earlier version where I did a lot more in hard irq
+context. Now that almost all of the processing happens in soft-irq
+context I guess you're right - I can go with a regular spin_lock().
+
+> Finally, see if this can be done in a lockless way by relying on
+> appropriate barriers and separating the writers into separate
+> cache lines. From a brief look at the driver I think it can be done
+> without too much trouble.
+>
+
+Unfortunately I do need some locking. Accessing RX and TX descriptors
+at the same time seems to upset the controller. I experimented a lot
+with barriers but it turned out that I got a lot of weird bugs at high
+throughput.
+
+> > +static unsigned int mtk_mac_intr_read_and_clear(struct mtk_mac_priv *p=
+riv)
+> > +{
+> > +       unsigned int val;
+> > +
+> > +       regmap_read(priv->regs, MTK_MAC_REG_INT_STS, &val);
+> > +       regmap_write(priv->regs, MTK_MAC_REG_INT_STS, val);
+> > +
+> > +       return val;
+> > +}
+>
+> Do you actually need to read the register? That is usually a relatively
+> expensive operation, so if possible try to use clear the bits when
+> you don't care which bits were set.
+>
+
+I do care, I'm afraid. The returned value is being used in the napi
+poll callback to see which ring to process.
+
+> > +/* All processing for TX and RX happens in the napi poll callback. */
+> > +static irqreturn_t mtk_mac_handle_irq(int irq, void *data)
+> > +{
+> > +       struct mtk_mac_priv *priv;
+> > +       struct net_device *ndev;
+> > +
+> > +       ndev =3D data;
+> > +       priv =3D netdev_priv(ndev);
+> > +
+> > +       if (netif_running(ndev)) {
+> > +               mtk_mac_intr_mask_all(priv);
+> > +               napi_schedule(&priv->napi);
+> > +       }
+> > +
+> > +       return IRQ_HANDLED;
+>
+>
+> > +static int mtk_mac_netdev_start_xmit(struct sk_buff *skb,
+> > +                                    struct net_device *ndev)
+> > +{
+> > +       struct mtk_mac_priv *priv =3D netdev_priv(ndev);
+> > +       struct mtk_mac_ring *ring =3D &priv->tx_ring;
+> > +       struct device *dev =3D mtk_mac_get_dev(priv);
+> > +       struct mtk_mac_ring_desc_data desc_data;
+> > +
+> > +       desc_data.dma_addr =3D mtk_mac_dma_map_tx(priv, skb);
+> > +       if (dma_mapping_error(dev, desc_data.dma_addr))
+> > +               goto err_drop_packet;
+> > +
+> > +       desc_data.skb =3D skb;
+> > +       desc_data.len =3D skb->len;
+> > +
+> > +       mtk_mac_lock(priv);
+> > +       mtk_mac_ring_push_head_tx(ring, &desc_data);
+> > +
+> > +       if (mtk_mac_ring_full(ring))
+> > +               netif_stop_queue(ndev);
+> > +       mtk_mac_unlock(priv);
+> > +
+> > +       mtk_mac_dma_resume_tx(priv);
+> > +
+> > +       return NETDEV_TX_OK;
+> > +
+> > +err_drop_packet:
+> > +       dev_kfree_skb(skb);
+> > +       ndev->stats.tx_dropped++;
+> > +       return NETDEV_TX_BUSY;
+> > +}
+>
+> I would always add BQL flow control in new drivers, using
+> netdev_sent_queue here...
+>
+
+Ok, will do.
+
+> > +static int mtk_mac_tx_complete_one(struct mtk_mac_priv *priv)
+> > +{
+> > +       struct mtk_mac_ring *ring =3D &priv->tx_ring;
+> > +       struct mtk_mac_ring_desc_data desc_data;
+> > +       int ret;
+> > +
+> > +       ret =3D mtk_mac_ring_pop_tail(ring, &desc_data);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       mtk_mac_dma_unmap_tx(priv, &desc_data);
+> > +       dev_kfree_skb_irq(desc_data.skb);
+> > +
+> > +       return 0;
+> > +}
+>
+> ... and netdev_completed_queue()  here.
+>
+
+Same here.
+
+> > +static void mtk_mac_tx_complete_all(struct mtk_mac_priv *priv)
+> > +{
+> > +       struct mtk_mac_ring *ring =3D &priv->tx_ring;
+> > +       struct net_device *ndev =3D priv->ndev;
+> > +       int ret;
+> > +
+> > +       for (;;) {
+> > +               mtk_mac_lock(priv);
+> > +
+> > +               if (!mtk_mac_ring_descs_available(ring)) {
+> > +                       mtk_mac_unlock(priv);
+> > +                       break;
+> > +               }
+> > +
+> > +               ret =3D mtk_mac_tx_complete_one(priv);
+> > +               if (ret) {
+> > +                       mtk_mac_unlock(priv);
+> > +                       break;
+> > +               }
+> > +
+> > +               if (netif_queue_stopped(ndev))
+> > +                       netif_wake_queue(ndev);
+> > +
+> > +               mtk_mac_unlock(priv);
+> > +       }
+> > +}
+>
+> It looks like most of the stuff inside of the loop can be pulled out
+> and only done once here.
+>
+
+I did that in one of the previous submissions but it was pointed out
+to me that a parallel TX path may fill up the queue before I wake it.
+
+> > +static int mtk_mac_poll(struct napi_struct *napi, int budget)
+> > +{
+> > +       struct mtk_mac_priv *priv;
+> > +       unsigned int status;
+> > +       int received =3D 0;
+> > +
+> > +       priv =3D container_of(napi, struct mtk_mac_priv, napi);
+> > +
+> > +       status =3D mtk_mac_intr_read_and_clear(priv);
+> > +
+> > +       /* Clean up TX */
+> > +       if (status & MTK_MAC_BIT_INT_STS_TNTC)
+> > +               mtk_mac_tx_complete_all(priv);
+> > +
+> > +       /* Receive up to $budget packets */
+> > +       if (status & MTK_MAC_BIT_INT_STS_FNRC)
+> > +               received =3D mtk_mac_process_rx(priv, budget);
+> > +
+> > +       /* One of the counter reached 0x8000000 - update stats and rese=
+t all
+> > +        * counters.
+> > +        */
+> > +       if (status & MTK_MAC_REG_INT_STS_MIB_CNT_TH) {
+> > +               mtk_mac_update_stats(priv);
+> > +               mtk_mac_reset_counters(priv);
+> > +       }
+> > +
+> > +       if (received < budget)
+> > +               napi_complete_done(napi, received);
+> > +
+> > +       mtk_mac_intr_unmask_all(priv);
+> > +
+> > +       return received;
+> > +}
+>
+> I think you want to leave (at least some of) the interrupts masked
+> if your budget is exhausted, to avoid generating unnecessary
+> irqs.
+>
+
+The networking stack shouldn't queue any new TX packets if the queue
+is stopped - is this really worth complicating the code? Looks like
+premature optimization IMO.
+
+> It may also be faster to not mask/unmask at all but just
+> clear the interrupts that you have finished processing
+>
+
+Bart
