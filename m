@@ -2,181 +2,164 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E51C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E492C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E55206B6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D3E206F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Opl2LUPY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PJ9Evlic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgEOJDD (ORCPT
+        id S1728013AbgEOJIf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 05:03:03 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13450 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726722AbgEOJDD (ORCPT
+        Fri, 15 May 2020 05:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728000AbgEOJIe (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 05:03:03 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04F8wViO006970;
-        Fri, 15 May 2020 11:02:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=hq0yOpTmRS0k57eXjZHsS0+DHOsIgaIpHyTmBrD4HFk=;
- b=Opl2LUPYsf6vW2IRAL6IE1rzsUXTolLe7tnktfb38zOD5SkHAEUlJ6+2JfLhQCyfDomd
- lJXikqCAu3c5LBiWAi7l8l8xLw4Pj5vl1hgc5sH37vlUt6O3kj+3VSZjlIWc+l7whmbD
- ufh2PmS4QIUZ3L3+Rc5t8TrXABB81F8N21LGtXs/PB41S2Kr9qCOSrUwlzkg7na/JYNU
- 21c/X2T4PIgUEOu6z2LpuYnt+u0PX4AR4QaapWqOgq8rfcwA4VBcq7V9nnXgwFk7o3VS
- aqIImLK7VqWYkLiJmeKFWGm0oRGx81rEinNHJYeFgd0yrpwwipv/q8/4LS6+BEjjT/4P qA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vps1ep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 May 2020 11:02:39 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5EA7910002A;
-        Fri, 15 May 2020 11:02:38 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4216F2A531B;
-        Fri, 15 May 2020 11:02:38 +0200 (CEST)
-Received: from [10.211.11.124] (10.75.127.46) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 May
- 2020 11:02:37 +0200
-Subject: Re: [PATCH v4 06/10] dt-bindings: mtd: update STM32 FMC2 NAND
- controller documentation
-To:     Rob Herring <robh@kernel.org>
-CC:     =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh R <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>
-References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
- <1588756279-17289-7-git-send-email-christophe.kerello@st.com>
- <20200514150028.GB28489@bogus> <9ffc04cf-137f-5ee5-57ff-39a876abfb34@st.com>
- <CAL_JsqLTyDHBHncrQqtPdkCNgKDkEbp+ts7BOeqWmGv64kcAsg@mail.gmail.com>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <3c860c17-f8dd-6130-861b-afccb9202093@st.com>
-Date:   Fri, 15 May 2020 11:02:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 15 May 2020 05:08:34 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D661BC061A0C
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 02:08:32 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h17so2606207wrc.8
+        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 02:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dtYTgXYxfIoUCk4loRWbuFk7VuNlmN02rgGRoj7S0Ao=;
+        b=PJ9EvlicG79uzhFJwbIU3UATGIRW97yWLRhLUOn6ud/9ECe8YeepuMRUm8KNJjBo8V
+         NMlf49pTjcPoPtNR8ULE9IjISzwdMYrENJ3mmF2Zg+l/gVhL+4UbwkhRL6efIk1bNgdp
+         CNelvYyJmG62PVcbZsIwqaerZBmgQkW+n1gHOMTDYot6JN8PeGvRMhh57HR0kA0Thpjw
+         1kNt736a28aieaDLp8LrNzLdszmw4EhFa3lNmLZiNSPL7B0xG12d5t09FtJtnbRAlhwA
+         gewV1hsFRMVJRUamG2DhjwvL3cAAbESswSZKhNEgBbYESIlgs8NOYPUddv8oyNaA/AyD
+         mQaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dtYTgXYxfIoUCk4loRWbuFk7VuNlmN02rgGRoj7S0Ao=;
+        b=FXsR0A3tDmhr+/OYjoog2zVXRq2z7N871NyjfDpGK9OGSVI8fNGEsZ2UMYxJ9lXfXs
+         itfEnsbwgPDDTt0i4A6c76md2/yNAALdXuLh0JXIFPMW/jKu1uqbaYgj9Ja+gL42/pWe
+         0GTRUNTv12ExGua6ukO2+hiATSPi0eDlF1uZ2Hfdchg6gesDZvQuhkAyVIN4oTPcWAI4
+         TwXYMjRZ7h7mGtPiw7VxIdxoG7GltP4JWxdlOCs7ocBazjpTlQZmXM51hgINYMBsPclA
+         R8jz2Mhp75pc8BYrQQ79MT6Hgmz0k5QUiZOAc5MFeoDQApFH1IjJ9UgV7JNZWnxe+UWt
+         LTuw==
+X-Gm-Message-State: AOAM533LP2WpNCmntFihsQFTET6S4o00R4+tXRzjYM5404piSqVKa4MV
+        qZ6armX8/2K+vQJT3iIWz3DHpw==
+X-Google-Smtp-Source: ABdhPJzlPFRglVuF6PYzK/e/6mVvcXfBSVM6Eb646F46YSaOH4YpjKFqonvd0bkXEgMGJHzdh6HVSg==
+X-Received: by 2002:a05:6000:1107:: with SMTP id z7mr3029463wrw.93.1589533710197;
+        Fri, 15 May 2020 02:08:30 -0700 (PDT)
+Received: from localhost.localdomain ([37.120.32.219])
+        by smtp.gmail.com with ESMTPSA id z132sm2834240wmc.29.2020.05.15.02.08.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 02:08:29 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        Robert Foss <robert.foss@linaro.org>
+Subject: [PATCH v2] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm APQ8016 SBC + D3Camera mezzanine
+Date:   Fri, 15 May 2020 11:08:20 +0200
+Message-Id: <20200515090820.1744353-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLTyDHBHncrQqtPdkCNgKDkEbp+ts7BOeqWmGv64kcAsg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-15_03:2020-05-14,2020-05-15 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
+the Dragonboard 410c with the D3Camera mezzanine expansion board.
 
-On 5/14/20 7:55 PM, Rob Herring wrote:
-> On Thu, May 14, 2020 at 11:35 AM Christophe Kerello
-> <christophe.kerello@st.com> wrote:
->>
->> Hi Rob,
->>
->> On 5/14/20 5:00 PM, Rob Herring wrote:
->>> On Wed, May 06, 2020 at 11:11:15AM +0200, Christophe Kerello wrote:
->>>> These bindings can be used on SOCs where the FMC2 NAND controller is
->>>> in standalone. In case that the FMC2 embeds 2 controllers (an external
->>>> bus controller and a raw NAND controller), the register base and the
->>>> clock will be defined in the parent node. It is the reason why the
->>>> register base address and the clock are now optional.
->>>>
->>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->>>> ---
->>>>    .../devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml   | 19 ++++++++++---------
->>>>    1 file changed, 10 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
->>>> index b059267..68fac1a 100644
->>>> --- a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
->>>> +++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
->>>> @@ -18,13 +18,15 @@ properties:
->>>>
->>>>      reg:
->>>>        items:
->>>> -      - description: Registers
->>>> +      - description: Registers (optional)
->>>
->>> The only thing that can be optional are the last entries. You have to do
->>> a 'oneOf' with 6 entries and 7 entries.
->>
->> Ok, so the way to describe the reg property in my case should be:
->>          reg:
->>            oneOf:
->>              - description: FMC2 embeds the NFC controller in standalone.
->>                items:
->>                  - description: Registers
->>                  - description: Chip select 0 data
->>                  - description: Chip select 0 command
->>                  - description: Chip select 0 address space
->>                  - description: Chip select 1 data
->>                  - description: Chip select 1 command
->>                  - description: Chip select 1 address space
->>
->>              - description: FMC2 embeds the NFC controller and the EBI
->>                  controller.
->>                items:
->>                  - description: Chip select 0 data
->>                  - description: Chip select 0 command
->>                  - description: Chip select 0 address space
->>                  - description: Chip select 1 data
->>                  - description: Chip select 1 command
->>                  - description: Chip select 1 address space
->>
->>>
->>> And where's your new compatible string for this different h/w?
->>
->>   From NFC controller point of view, it is the same HW.
-> 
-> That's what everyone says until they have some quirk or integration
-> difference to handle.
-> 
->> In the case that we have 2 controllers embedded, the register base is
->> shared.
->> The NFC driver will check at probe time the compatible string of its
->> parent node.
->> In case that it is "st,stm32mp1-fmc2-ebi", then the driver will find the
->> register base in the parent node (EBI node), otherwise it will find it
->> in the NFC node.
->> Is it better to have 2 compatible strings (one for each reg description)
->> than checking the parent's compatible string and have only one
->> compatible string?
-> 
-> Why not just put the register base into the child node too? While
-> overlapping 'reg' regions for siblings is bad, it's fine for child
-> nodes. I guess since there are chip selects for the child nodes that
-> may not work here.
-> 
-> It doesn't hurt to have another compatible. You can always make the
-> old one a fallback. With different compatibles you can make sure reg
-> has the right number of entries.
-> 
-> Rob
-> 
+The D3Camera mezzanine ships in a kit with a OmniVision 5640 sensor module,
+which is what this DT targets.
 
-I will add a new compatible string to handle the reg property.
-It will be part of v5.
+Signed-off-by: Robert Foss <robert.foss@linaro.org>
+---
 
-Regards,
-Christophe Kerello.
+Changes since v1:
+ - Vinod: Changed license to GPL+BSD
+ - Vinod: Changed copyright year to 2020
+ - Nico: Changed name of mezzanine to d3camera
+
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../boot/dts/qcom/apq8016-sbc-d3camera.dts    | 45 +++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index cc103f7020fd..3f95b522694e 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3camera.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
+new file mode 100644
+index 000000000000..752e5ec47499
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "apq8016-sbc.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3Camera Mezzanine";
++	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
++};
++
++&cci_i2c0 {
++	/delete-node/ camera_rear@3b;
++
++	camera_rear@76 {
++		compatible = "ovti,ov5640";
++		reg = <0x76>;
++
++		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&camera_rear_default>;
++
++		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
++		clock-names = "xclk";
++		clock-frequency = <23880000>;
++
++		vdddo-supply = <&camera_vdddo_1v8>;
++		vdda-supply = <&camera_vdda_2v8>;
++		vddd-supply = <&camera_vddd_1v5>;
++
++		status = "ok";
++
++		port {
++			ov5640_ep: endpoint {
++				clock-lanes = <1>;
++				data-lanes = <0 2>;
++				remote-endpoint = <&csiphy0_ep>;
++			};
++		};
++	};
++};
+-- 
+2.25.1
+
