@@ -2,96 +2,181 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1259C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E51C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD50206F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 08:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E55206B6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 09:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lBrSiIXH"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Opl2LUPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgEOIxP (ORCPT
+        id S1726922AbgEOJDD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 04:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727927AbgEOIxO (ORCPT
+        Fri, 15 May 2020 05:03:03 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13450 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726722AbgEOJDD (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 04:53:14 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C67C05BD0A
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 01:53:14 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id u190so276750ooa.10
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 01:53:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dPqMiI17LOUe2nKh0vdLBm3601Jfamy6/fV1SlLaYgs=;
-        b=lBrSiIXHPPzqbQXkQfMzB4upzKLZwIfjYe3KXVYeeYOku2ihD1cIyXITPTc463DnhK
-         kpzSUi/+CaynNnMyOl3yQnf7TdGJ8qSiUDxrRxdmVdfIh+l2vcbJ3exWnZo6rEJHbvfE
-         xczw8lYq7b4VcW7ZN2GuX91TJvka1HmFx7r7QDM/NXBzNIpBWCJPEypk+KIQfeA/G/Er
-         nI/HxwRHXloYhThPaBdV/UaNr/wf9LZbhygIERuwcD0YEDDBXS7eD+jpq0uNztkBfgq8
-         a87ryFCBz1ULAnCJYLEgz+Z7SUS6+4OUGF7Dymo0ckjKFQDeZ8f1JSE384ncQC3VDtzf
-         noNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dPqMiI17LOUe2nKh0vdLBm3601Jfamy6/fV1SlLaYgs=;
-        b=lF+FsiAAnSQjxmQaqFc3RVovx1EWyTR5xcSyO951K3YDAtYVUQvdyocBs1oT7KCN/H
-         U7RMaM58+wRHHiHPLU2e3gvpJJlWv5EqLwNqzsqT2SrnOZHzTKQISPOqQ1tIxWYt4uoD
-         zmiE9NcLKUbsuBenAvK4UZRgOwZheQoId9YhteUhvpC7clIXmNUziJ/T7QE08bMCr68e
-         ECzL2LWKqWUdDNdjwQSDyDQK7Q79cdslLvgcOGzoHbDIrOjZf4oA7tb2JYDWMenl0afa
-         vmg24uc/i0/mR14Ko/5G1UtzCZ76ifdk3NrMePRYoTxhTUsdx4IV5o58PXk0JheN2Zm3
-         4MtQ==
-X-Gm-Message-State: AOAM530TNkbegfXkeRLKdPLW2Z/LsDNxRJcstKFDu5nj6121N96oDfe3
-        G3yeApqGRD+0gSwziGBVDj1A0tLnJ96lZ8wyBltk6g==
-X-Google-Smtp-Source: ABdhPJyfvXUA8lQ8XP5wykD/if2cBbfoaZJWEKhUEomcApBXwi9LlIMUwePsKHZppv0vzHh+EVrb+lvApcU1PMkJJyQ=
-X-Received: by 2002:a4a:615d:: with SMTP id u29mr1649801ooe.15.1589532793051;
- Fri, 15 May 2020 01:53:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com>
-In-Reply-To: <20200515053500.215929-1-saravanak@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 15 May 2020 01:52:37 -0700
-Message-ID: <CAGETcx-7qnNXug4PGssdXciy0BZrspXP0njJG+GFGFgie_Dwnw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] Optimize fw_devlink parsing
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        Fri, 15 May 2020 05:03:03 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04F8wViO006970;
+        Fri, 15 May 2020 11:02:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=hq0yOpTmRS0k57eXjZHsS0+DHOsIgaIpHyTmBrD4HFk=;
+ b=Opl2LUPYsf6vW2IRAL6IE1rzsUXTolLe7tnktfb38zOD5SkHAEUlJ6+2JfLhQCyfDomd
+ lJXikqCAu3c5LBiWAi7l8l8xLw4Pj5vl1hgc5sH37vlUt6O3kj+3VSZjlIWc+l7whmbD
+ ufh2PmS4QIUZ3L3+Rc5t8TrXABB81F8N21LGtXs/PB41S2Kr9qCOSrUwlzkg7na/JYNU
+ 21c/X2T4PIgUEOu6z2LpuYnt+u0PX4AR4QaapWqOgq8rfcwA4VBcq7V9nnXgwFk7o3VS
+ aqIImLK7VqWYkLiJmeKFWGm0oRGx81rEinNHJYeFgd0yrpwwipv/q8/4LS6+BEjjT/4P qA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3100vps1ep-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 May 2020 11:02:39 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5EA7910002A;
+        Fri, 15 May 2020 11:02:38 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4216F2A531B;
+        Fri, 15 May 2020 11:02:38 +0200 (CEST)
+Received: from [10.211.11.124] (10.75.127.46) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 May
+ 2020 11:02:37 +0200
+Subject: Re: [PATCH v4 06/10] dt-bindings: mtd: update STM32 FMC2 NAND
+ controller documentation
+To:     Rob Herring <robh@kernel.org>
+CC:     =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
         <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+ <1588756279-17289-7-git-send-email-christophe.kerello@st.com>
+ <20200514150028.GB28489@bogus> <9ffc04cf-137f-5ee5-57ff-39a876abfb34@st.com>
+ <CAL_JsqLTyDHBHncrQqtPdkCNgKDkEbp+ts7BOeqWmGv64kcAsg@mail.gmail.com>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <3c860c17-f8dd-6130-861b-afccb9202093@st.com>
+Date:   Fri, 15 May 2020 11:02:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqLTyDHBHncrQqtPdkCNgKDkEbp+ts7BOeqWmGv64kcAsg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-15_03:2020-05-14,2020-05-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:35 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> When fw_devlink is enabled on hardware with a large number of device
-> tree nodes, the initial device addition done in
-> of_platform_default_populate_init() can be very inefficient. This is
-> because most devices will fail to find all their suppliers when they are
-> added and will keep trying to parse their device tree nodes and link to
-> any newly added devices
->
-> This was an item on my TODO list that I'm finally getting around to. On
-> hardware I'm testing on, this saved 1.216 _seconds_!
+Hi Rob,
 
-Correction. It went from 1.216 _seconds_ to 61 _milliseconds_! So
-about 95% reduction in time.
+On 5/14/20 7:55 PM, Rob Herring wrote:
+> On Thu, May 14, 2020 at 11:35 AM Christophe Kerello
+> <christophe.kerello@st.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 5/14/20 5:00 PM, Rob Herring wrote:
+>>> On Wed, May 06, 2020 at 11:11:15AM +0200, Christophe Kerello wrote:
+>>>> These bindings can be used on SOCs where the FMC2 NAND controller is
+>>>> in standalone. In case that the FMC2 embeds 2 controllers (an external
+>>>> bus controller and a raw NAND controller), the register base and the
+>>>> clock will be defined in the parent node. It is the reason why the
+>>>> register base address and the clock are now optional.
+>>>>
+>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>>>> ---
+>>>>    .../devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml   | 19 ++++++++++---------
+>>>>    1 file changed, 10 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+>>>> index b059267..68fac1a 100644
+>>>> --- a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+>>>> +++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+>>>> @@ -18,13 +18,15 @@ properties:
+>>>>
+>>>>      reg:
+>>>>        items:
+>>>> -      - description: Registers
+>>>> +      - description: Registers (optional)
+>>>
+>>> The only thing that can be optional are the last entries. You have to do
+>>> a 'oneOf' with 6 entries and 7 entries.
+>>
+>> Ok, so the way to describe the reg property in my case should be:
+>>          reg:
+>>            oneOf:
+>>              - description: FMC2 embeds the NFC controller in standalone.
+>>                items:
+>>                  - description: Registers
+>>                  - description: Chip select 0 data
+>>                  - description: Chip select 0 command
+>>                  - description: Chip select 0 address space
+>>                  - description: Chip select 1 data
+>>                  - description: Chip select 1 command
+>>                  - description: Chip select 1 address space
+>>
+>>              - description: FMC2 embeds the NFC controller and the EBI
+>>                  controller.
+>>                items:
+>>                  - description: Chip select 0 data
+>>                  - description: Chip select 0 command
+>>                  - description: Chip select 0 address space
+>>                  - description: Chip select 1 data
+>>                  - description: Chip select 1 command
+>>                  - description: Chip select 1 address space
+>>
+>>>
+>>> And where's your new compatible string for this different h/w?
+>>
+>>   From NFC controller point of view, it is the same HW.
+> 
+> That's what everyone says until they have some quirk or integration
+> difference to handle.
+> 
+>> In the case that we have 2 controllers embedded, the register base is
+>> shared.
+>> The NFC driver will check at probe time the compatible string of its
+>> parent node.
+>> In case that it is "st,stm32mp1-fmc2-ebi", then the driver will find the
+>> register base in the parent node (EBI node), otherwise it will find it
+>> in the NFC node.
+>> Is it better to have 2 compatible strings (one for each reg description)
+>> than checking the parent's compatible string and have only one
+>> compatible string?
+> 
+> Why not just put the register base into the child node too? While
+> overlapping 'reg' regions for siblings is bad, it's fine for child
+> nodes. I guess since there are chip selects for the child nodes that
+> may not work here.
+> 
+> It doesn't hurt to have another compatible. You can always make the
+> old one a fallback. With different compatibles you can make sure reg
+> has the right number of entries.
+> 
+> Rob
+> 
 
--Saravana
+I will add a new compatible string to handle the reg property.
+It will be part of v5.
+
+Regards,
+Christophe Kerello.
