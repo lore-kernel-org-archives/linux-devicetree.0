@@ -2,166 +2,150 @@ Return-Path: <SRS0=lCsO=65=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCC8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 06:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EB6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 06:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 370FB20760
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 06:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589524801;
-	bh=93lBsLTBqlQejJikWc3upfa85v4ns9u2hhd3qLSyww0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hnq2MfcXlJafVnFXDduwPIKAeDbFY7owBHOIQ9m24m2sPqla5NOIKgAF9bjLE0ZTQ
-	 NtsWryiwyRUqILFMYJ1WR3rRlFtdB30tdg6XVEMpMWyC/Ip3iwlgTHJgDsm+72NJ6R
-	 CGb911Dx75yomOS468FhTYI8YJs983lKbHxa2Fyc=
+	by mail.kernel.org (Postfix) with ESMTP id 4EE0C2065F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 May 2020 06:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="pD/NsOHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgEOGj5 (ORCPT
+        id S1726371AbgEOGnV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 02:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgEOGj5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 02:39:57 -0400
-Received: from localhost (unknown [122.178.196.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 339DE2065F;
-        Fri, 15 May 2020 06:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589524795;
-        bh=93lBsLTBqlQejJikWc3upfa85v4ns9u2hhd3qLSyww0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1hFvoudcCdvBbJVFrvhJpkAapPz7B/Gc13HDjme8Hcvka9bgKYhZuT7MlPtINkXiG
-         ToOdyuEwEAprJ/1uNeHuZMNSAKzFLEK8VsJ0cL/GHH1RpCwTqcpxHCnpB70EOflmMT
-         HdMOR4/GbLixWrWGuUOLV5TqURAh2vLT6GytoRAw=
-Date:   Fri, 15 May 2020 12:09:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200515063950.GI333670@vkoul-mobl>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
- <20200512191208.GG185537@smile.fi.intel.com>
+        Fri, 15 May 2020 02:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726215AbgEOGnV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 May 2020 02:43:21 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2064AC061A0C
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 23:43:21 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id y13so597169vsk.8
+        for <devicetree@vger.kernel.org>; Thu, 14 May 2020 23:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3u5biufGGoeHTr+TJL8nbm6kBJzdWnn/M3v0cfmw50s=;
+        b=pD/NsOHgg9RiRzrmFZckLGgtKv4FNpjz6MHbVkQ9V5iKpGCmFLdD9+7u8AzgIJdOUx
+         iLCRHKLZI6aJmLhCA4u/iuIgKUKWvgytv6eplSb4xpChzRdJZswwqTH+RGOkhfavvGxG
+         9OqNaw3NjTjZyC88sDBbY/jwaH0osejduH/BQCz1vkUPR5thEUYmREH+nTWqA7nntaIY
+         a91o5rJlHh3HrATc0gEZ14PJ7r4t+orDTaS7hQY6HaL8OQUj7ZESKlpDmHICKJ9Uwlxq
+         TUnqSThoi6EzywAYWhMr/iHqiGIiOxZSwA34a4ST8G9x+/PeaFtKmyUNT/jJUwlFjN+g
+         212Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3u5biufGGoeHTr+TJL8nbm6kBJzdWnn/M3v0cfmw50s=;
+        b=roTN4C1NWFrBUDm05LpbIJ1ZwRrRn9mQ8JbhFaDKBcWBlWBICnh3QQHGbflVnXccJW
+         hFQ+O1i9fH7m6/DdrN1g4ra+j9OM4XV6p76yVcaVfhsgCAX+TSl+zPcPjVIos0mQ/CKg
+         SH5DyNBN2N2JyauMz9bNG/ZkLcHigveW7oF51s2bUgJdhwUT+BF91eFpqzcqhHbBWMC8
+         tiIzkUFcJIXcifFs213rBBMAm/z4RSONR4tPKnaSx5GHvusnwvxnrLEMKYp6L0NGYPBk
+         ehBYvXtrTIjJBxTxJJdlmgug8OwXmjXsBwCSthZgOk1qowi0F1WsIF0GROMaRWMIdZoJ
+         AwWA==
+X-Gm-Message-State: AOAM532es2NctIdjnQa8DZLm/fyotoIoHyIvognEMytGbvhkgQQLfiKv
+        kUer9MZsuYVPfNpKHdGj5HwFKWotwqWsCh9Yi7PznED5
+X-Google-Smtp-Source: ABdhPJz1EnXjRX110fk6oUizGR6vyVuia3mcnLi7d3Ga6JMGWl+PQ5YITnQDF2FwN/zC8y0AEoQFGDiVNZgyE8UHtf8=
+X-Received: by 2002:a67:42c6:: with SMTP id p189mr1528692vsa.9.1589525000316;
+ Thu, 14 May 2020 23:43:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512191208.GG185537@smile.fi.intel.com>
+References: <20200512132613.31507-1-narmstrong@baylibre.com> <20200512132613.31507-2-narmstrong@baylibre.com>
+In-Reply-To: <20200512132613.31507-2-narmstrong@baylibre.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Fri, 15 May 2020 12:12:39 +0530
+Message-ID: <CAHLCerMP2m1BfzNGoOzOe=4_zYr=i-kXOXnJ_WTN-f1L4N7SUg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: add Khadas Microcontroller bindings
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-amlogic@lists.infradead.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12-05-20, 22:12, Andy Shevchenko wrote:
-> On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > > > IP core of the DW DMA controller may be synthesized with different
-> > > > max burst length of the transfers per each channel. According to Synopsis
-> > > > having the fixed maximum burst transactions length may provide some
-> > > > performance gain. At the same time setting up the source and destination
-> > > > multi size exceeding the max burst length limitation may cause a serious
-> > > > problems. In our case the system just hangs up. In order to fix this
-> > > > lets introduce the max burst length platform config of the DW DMA
-> > > > controller device and don't let the DMA channels configuration code
-> > > > exceed the burst length hardware limitation. Depending on the IP core
-> > > > configuration the maximum value can vary from channel to channel.
-> > > > It can be detected either in runtime from the DWC parameter registers
-> > > > or from the dedicated dts property.
-> > > 
-> > > I'm wondering what can be the scenario when your peripheral will ask something
-> > > which is not supported by DMA controller?
-> > 
-> > I may misunderstood your statement, because seeing your activity around my
-> > patchsets including the SPI patchset and sometimes very helpful comments,
-> > this question answer seems too obvious to see you asking it.
-> > 
-> > No need to go far for an example. See the DW APB SSI driver. Its DMA module
-> > specifies the burst length to be 16, while not all of ours channels supports it.
-> > Yes, originally it has been developed for the Intel Midfield SPI, but since I
-> > converted the driver into a generic code we can't use a fixed value. For instance
-> > in our hardware only two DMA channels of total 16 are capable of bursting up to
-> > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-> > burst length. While there are two SPI interfaces, each of which need to have two
-> > DMA channels for communications. So I need four channels in total to allocate to
-> > provide the DMA capability for all interfaces. In order to set the SPI controller
-> > up with valid optimized parameters the max-burst-length is required. Otherwise we
-> > can end up with buffers overrun/underrun.
-> 
-> Right, and we come to the question which channel better to be used by SPI and
-> the rest devices. Without specific filter function you can easily get into a
-> case of inverted optimizations, when SPI got channels with burst = 4, while
-> it's needed 16, and other hardware otherwise. Performance wise it's worse
-> scenario which we may avoid in the first place, right?
+On Tue, May 12, 2020 at 6:56 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+> boards.
+>
+> It has multiple boot control features like password check, power-on
+> options, power-off control and system FAN control on recent boards.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-If one has channels which are different and described as such in DT,
-then I think it does make sense to specify in your board-dt about the
-specific channels you would require...
-> 
-> > > Peripheral needs to supply a lot of configuration parameters specific to the
-> > > DMA controller in use (that's why we have struct dw_dma_slave).
-> > > So, seems to me the feasible approach is supply correct data in the first place.
-> > 
-> > How to supply a valid data if clients don't know the DMA controller limitations
-> > in general?
-> 
-> This is a good question. DMA controllers are quite different and having unified
-> capabilities structure for all is almost impossible task to fulfil. That's why
-> custom filter function(s) can help here. Based on compatible string you can
-> implement whatever customized quirks like two functions, for example, to try 16
-> burst size first and fallback to 4 if none was previously found.
-> 
-> > > If you have specific channels to acquire then you probably need to provide a
-> > > custom xlate / filter functions. Because above seems a bit hackish workaround
-> > > of dynamic channel allocation mechanism.
-> > 
-> > No, I don't have a specific channel to acquire and in general you may use any
-> > returned from the DMA subsystem (though some platforms may need a dedicated
-> > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-> > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-> > their DMA settings must properly and optimally configured. It can be only done
-> > if you know the DMA controller parameters like max burst length, max block-size,
-> > etc.
-> > 
-> > So no. The change proposed by this patch isn't workaround, but a useful feature,
-> > moreover expected to be supported by the generic DMA subsystem.
-> 
-> See above.
-> 
-> > > But let's see what we can do better. Since maximum is defined on the slave side
-> > > device, it probably needs to define minimum as well, otherwise it's possible
-> > > that some hardware can't cope underrun bursts.
-> > 
-> > There is no need to define minimum if such limit doesn't exists except a
-> > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> > added such capability into the generic DMA subsystem so far.
-> 
-> There is a contract between provider and consumer about DMA resource. That's
-> why both sides should participate in fulfilling it. Theoretically it may be a
-> hardware that doesn't support minimum burst available in DMA by a reason. For
-> such we would need minimum to be provided as well.
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Agreed and if required caps should be extended to tell consumer the
-minimum values supported.
-
--- 
-~Vinod
+> ---
+>  .../devicetree/bindings/mfd/khadas,mcu.yaml   | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+> new file mode 100644
+> index 000000000000..a3b976f101e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/khadas,mcu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Khadas on-board Microcontroller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +description: |
+> +  Khadas embeds a microcontroller on their VIM and Edge boards adding some
+> +  system feature as PWM Fan control (for VIM2 rev14 or VIM3), User memory
+> +  storage, IR/Key resume control, system power LED control and more.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - khadas,mcu # MCU revision is discoverable
+> +
+> +  "#cooling-cells": # Only needed for boards having FAN control feature
+> +    const: 2
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      khadas_mcu: system-controller@18 {
+> +        compatible = "khadas,mcu";
+> +        reg = <0x18>;
+> +        #cooling-cells = <2>;
+> +      };
+> +    };
+> --
+> 2.22.0
+>
