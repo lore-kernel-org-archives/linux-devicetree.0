@@ -2,117 +2,91 @@ Return-Path: <SRS0=eLFl=66=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12826C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 02:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709F6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 06:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB190207C4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 02:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4054220709
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 06:28:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KMWk+NQS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="Xr0KtTrK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgEPCna (ORCPT
+        id S1725803AbgEPG2n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 May 2020 22:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726290AbgEPCn3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 May 2020 22:43:29 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3D3C05BD09
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 19:43:29 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q9so1835908pjm.2
-        for <devicetree@vger.kernel.org>; Fri, 15 May 2020 19:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cglgAeogEsYtyEtsWWA7EKVu4oJhwNRDGYnJtkMLvSQ=;
-        b=KMWk+NQSpb/1CpN3DQS0NjXCMJ3eK4oWJD3mIbC84O3JQ9n96BQD6KOyhnPvS5ni1S
-         +LW+Dgeew7NVywcQinZhWtU6ACEpt6oc6Fjk7HDeg16n1/ogtorphBRVCGPnaJ1vZtlw
-         TbKbeHURR9Q1QRxtyEOEjpW0BGcjNbmBJhkKs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cglgAeogEsYtyEtsWWA7EKVu4oJhwNRDGYnJtkMLvSQ=;
-        b=GA1Xlj+s9i2n+Ug/C3nesIs+NqyHsDPM8ccIU4M+b+hYJpBa4Jvq+OMYopb74b5Kda
-         9Kf06TTo8CJjzb7LsvMD3JQcNj0IWHkD+xD/Yu283zvB5wrwyIfM7RpSDVhVEPg/2ce8
-         CGIraP0AmqMcEw2tTOPOh1beQMkA4NFxaYoZ36mU9EQV6ZXaYpRUXLcyLi0rIb78pA25
-         lKw9B14VcxiJoV1KhB/IAzoMwK6Nv6lwCUoa2i1jb09I5+NKVl5xRfeJ7OFZXVM4wABS
-         P/zQVpYAVY5VEwct9FI1pVydltE8X+PF3/iTKz2j7wzAzNejbL3RBZ0Nlpkg1fLQ1Aq1
-         wa8w==
-X-Gm-Message-State: AOAM531BtbPin/dDlnbc5LRa5KLOFjiHd6IPxJB5M7tzTaHQSKWfxx8G
-        EElgXnNuAQcd+9DKkLU3abeR7g==
-X-Google-Smtp-Source: ABdhPJw04lvscjiz+8sKkgyXLJk/uIS3zfg+tcq/GyQDDZrE3MBeGrWUumnrOWcU9/ZqO+7Dv5MOoQ==
-X-Received: by 2002:a17:90a:30ef:: with SMTP id h102mr6727633pjb.110.1589597008980;
-        Fri, 15 May 2020 19:43:28 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a30sm2731879pgm.44.2020.05.15.19.43.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 19:43:27 -0700 (PDT)
-Date:   Fri, 15 May 2020 19:43:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
-        sashal@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] pstore/ram: Introduce max_reason and convert
- dump_oops
-Message-ID: <202005151942.830CDF8E@keescook>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200506211523.15077-5-keescook@chromium.org>
- <20200512233504.GA118720@sequoia>
+        Sat, 16 May 2020 02:28:43 -0400
+Received: from www381.your-server.de ([78.46.137.84]:45214 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgEPG2n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 May 2020 02:28:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=40qmOq9WfLYWjzCfPZdBtFOjcgCKkFGhA5kfOtl5WzQ=; b=Xr0KtTrKfGhKnuItazqelolnhZ
+        MFFE497pTku5X8nZ2FZldeQ+g7Ov6lDouHiktY5K+Eso8WKBhVfmyWX9MQuX36SjcmU7qZ6uV5I1p
+        9cRvpGp8heoz++zED1tEZ7XPWZc6YrZY/G2KkPiCNI7VMqFWdIsg8qNYyvpLVh8nrdrLpjlT9Oo79
+        dL/j6thLZI3sN03L+yPlo5VqMrjrhGnoFQR/zvLA1eB92lXyhZ3kL75mKT5qUgm+SXL2Zuu4Xnz66
+        1g+CV10+VV0kJOFqdm+v9tLuys2yAYMImLlmXZ6AH8GLcPheBvnEK5OlNV7AkWcDrXX7mZkzr9kq8
+        SCjzhODA==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jZqJI-0000CB-Oo; Sat, 16 May 2020 08:28:36 +0200
+Received: from [82.135.78.16] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jZqJI-0008w6-Ey; Sat, 16 May 2020 08:28:36 +0200
+Subject: Re: [PATCH 0/2] iio: adc: Add a current from voltage driver
+To:     Jonathan Bakker <xc-racer2@live.ca>, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linus.walleij@linaro.org
+References: <BN6PR04MB066014AF936EF8ADCBF011A1A3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <d5f785bf-15f5-9ca5-f7f8-863c74447010@metafoo.de>
+Date:   Sat, 16 May 2020 08:28:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512233504.GA118720@sequoia>
+In-Reply-To: <BN6PR04MB066014AF936EF8ADCBF011A1A3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25813/Fri May 15 14:16:29 2020)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 06:35:04PM -0500, Tyler Hicks wrote:
-> On 2020-05-06 14:15:21, Kees Cook wrote:
-> > @@ -954,7 +965,11 @@ static void __init ramoops_register_dummy(void)
-> >  	pdata.console_size = ramoops_console_size;
-> >  	pdata.ftrace_size = ramoops_ftrace_size;
-> >  	pdata.pmsg_size = ramoops_pmsg_size;
-> > -	pdata.dump_oops = dump_oops;
-> > +	/* Parse deprecated module param "dump_oops" into "max_reason". */
-> > +	if (ramoops_dump_oops != -1)
-> > +		pdata.max_reason = ramoops_dump_oops ? KMSG_DUMP_OOPS
-> > +						     : KMSG_DUMP_PANIC;
-> > +	pdata.max_reason = ramoops_max_reason;
-> 
-> This isn't quite right. We're conditionally assigning pdata.max_reason
-> and then immediately re-assigning it.
-> 
-> IIUC, we're just missing an else block and it should look like this:
-> 
-> 	/* Parse deprecated module param "dump_oops" into "max_reason". */
-> 	if (ramoops_dump_oops != -1)
-> 		pdata.max_reason = ramoops_dump_oops ? KMSG_DUMP_OOPS
-> 						     : KMSG_DUMP_PANIC;
-> 	else
-> 		pdata.max_reason = ramoops_max_reason;
+On 5/16/20 4:26 AM, Jonathan Bakker wrote:
+> In the discussion around adding the GP2A002 light driver, there came
+> up the question of what to do when a system emulates a current ADC
+> by using a voltage ADC and a resistor.  Rather than adding it on
+> a per-driver basis, it was suggested(1) to add a minimal IIO driver
+> to support this situation.
+>
+> The new driver is fairly simple - it simply takes a voltage ADC and
+> a resistor value in ohms exposed as the scale and outputs a current.
+>
+> It has been tested on a first-gen Galaxy S device which has the above
+> mentioned GP2A002 chip connected to the voltage ADC resistor complex.
+>
+> 1) https://lore.kernel.org/linux-iio/20200202150843.762c6897@archlinux/
 
-Whoops, I forgot to CC you Tyler! This should be fixed now here:
-https://lore.kernel.org/lkml/20200515184434.8470-6-keescook@chromium.org/
+Hi,
 
--- 
-Kees Cook
+There is afe/iio-rescale.c, which I think already implements this 
+functionality.
+
+- Lars
+
+
