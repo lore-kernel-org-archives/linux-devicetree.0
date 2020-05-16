@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4739C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 18:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AE9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 18:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97754206F4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 18:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6242065C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 18:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjoozG36"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFresJX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgEPSO5 (ORCPT
+        id S1726460AbgEPSUd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 May 2020 14:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
+        Sat, 16 May 2020 14:20:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726341AbgEPSO4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726298AbgEPSUc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sat, 16 May 2020 14:14:56 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F732C061A0C;
-        Sat, 16 May 2020 11:14:56 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j5so7162576wrq.2;
-        Sat, 16 May 2020 11:14:55 -0700 (PDT)
+        Sat, 16 May 2020 14:20:32 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB86C061A0C;
+        Sat, 16 May 2020 11:20:31 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m185so1063998wme.3;
+        Sat, 16 May 2020 11:20:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rNkozC2/4XQayRLOjZzZTyICEbpseyYiz567gMD4qkw=;
-        b=mjoozG36SmELMcrfR6cBAOVKESWhjRc2u3HaqjIVtjkLGtzv74S8PHbowlR1x7aTMb
-         O0jWxI/t1trHvTD+jf+OeTQpetEEKp8Nfh/te/JXF/Ra2Vy6lLOiB+M7M8knDVLSyXcp
-         N/1vG4aOCE7FjWolxQVlOABTra3r5PNwUZjOfwrnIIX+GCQTjyASAsydtojKUkidk41S
-         QoWq//i75zBVlhuWMjCnETyqKzL5d/VNKQq+gNE6Jz2rrbXKF56lkZ/bDWQXALovlBM3
-         y2o93B/7zieKN7BCKv1LbJSfEvBRaLri9wyEGZ83N3vBYJ/qvghPwgzsxAjeBxdH7GH6
-         jbOA==
+        bh=f03xQBgiiAeH1kcJ24CUdU40gYdNHSSonJIv6Jv4ghc=;
+        b=CFresJX9cRznr4i8cKrqEG2ssEXIhCvzcfugnjmAPU6oKyWDbUxCy4EWRZW8lUwkqV
+         RJxHru2tmrW5M6nANEOL4wI+5k99b5Xa8A5DC4WTE7xvWnMQSE8Z4igGRdoxF4j1xnz0
+         krHBdwUBQH0Odn7WNsrichL31cU871jdFjuteFjD8uCRbz9UfkBnzxeHreQZ4g+1e+P0
+         nMurMpMEaxzNLtEvSQv5JhWz9sE4gyty5gx4kALjEqVlI2rZp5loVBqCWn3OzDIzvPJt
+         00GXf5gFy8tWf34SIWWP26HuOaJIqbDuNg15mXg1YHN3N7dhfaVAEGQhj0zTimczxDCc
+         SrPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=rNkozC2/4XQayRLOjZzZTyICEbpseyYiz567gMD4qkw=;
-        b=oNz+9kIBPd6fzz5wpkILDN60zz3E4gZ4qYKhpCaRw/Pj/bvZYkbiuOz0Lgy+LY2IH5
-         aXpPdEZxklMDb1gckd3e7jaoE2tM+qjQ1DAmzyoWgydJy+iEBA+OQMY94UQl5NWogYra
-         reK/MziFuXBvV1k+Mf3wNRPcy5VRsMqYAH2dAWmdk2qFbgPId3+UVpUyNJS6z7sjuPrm
-         YrfPsmtWGrfb/sjyVsYgREsgty5+bVyEE5dnjvcxxEio9zBYjBxPxBYlFy1ErCzT4yVM
-         I5dpXdtbiC7Yb31Ffv0A3JHdmdSZvSRzzaX+rTOmVFRPGUDunNlXaQ3FNBw4U9hbpdHH
-         iLcw==
-X-Gm-Message-State: AOAM5300kwTdNKaA/RU8LacDlqNgznxHvc+tF9pLfpksSouAhF2MUA8C
-        1WQVCjRDu0jMykf+b9eAn0w=
-X-Google-Smtp-Source: ABdhPJwrlGLFgJKroseYg3PmTzCfKf1LVQiRAcakRUGVuDPGJO8+nCe3sZWAIfd5xnR80ZtBXfkuww==
-X-Received: by 2002:adf:ed8d:: with SMTP id c13mr10848377wro.154.1589652894689;
-        Sat, 16 May 2020 11:14:54 -0700 (PDT)
+        bh=f03xQBgiiAeH1kcJ24CUdU40gYdNHSSonJIv6Jv4ghc=;
+        b=TkHApHkJhzk5fSUAg6yfjOw2HbLIW7f9sOXyguBq1AJINyOyPW4qTtZExQ4R0dxUw9
+         FORe3C/hkvWtbmiGJJatNSdzBPgqRJuTBbN/va6ZKdZsYPCODoKPQtZonEeXXm6E7Cw3
+         3p6KBOEwqQj+JeyuIplUwH1Z/HwpPJL163R6N+g2LUM3njcRmj7pBjv8u0dRJ369EWh8
+         peaIhhA2aWBdFMytASb5DDNNq4jmfEd2s8E7wCfPp20TK+w4VoG6iu5QlSSMl/M0eDDQ
+         yoUggdlG0J7sIlAPMl3BifVrt7YiQ7pca20jr+OwQtEDv9tVQdlKbmR1NZD5EahG0igN
+         gisA==
+X-Gm-Message-State: AOAM5315SJWs439vHFsN9ZyLvEC8RpezWiRVRn5Kr2v+hZQO3pLTda7x
+        ix80hXF8FwoK2pi0Axzrthk=
+X-Google-Smtp-Source: ABdhPJzVstPOFEf0kGZflnBsdUbq7l8aF3s+2TZRStxkzJOkcYk4xsvWhZBNQaE8Slwz8KOtF3rnWA==
+X-Received: by 2002:a1c:f606:: with SMTP id w6mr10097764wmc.59.1589653230579;
+        Sat, 16 May 2020 11:20:30 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id z3sm9395638wrm.81.2020.05.16.11.14.53
+        by smtp.gmail.com with ESMTPSA id m1sm9742867wrx.44.2020.05.16.11.20.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 May 2020 11:14:53 -0700 (PDT)
-Subject: Re: [PATCH v5 07/13] soc: mediatek: cmdq: add write_s function
+        Sat, 16 May 2020 11:20:29 -0700 (PDT)
+Subject: Re: [PATCH v5 09/13] soc: mediatek: cmdq: add write_s value function
 To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -78,7 +78,7 @@ Cc:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
         HS Liao <hs.liao@mediatek.com>
 References: <1583664775-19382-1-git-send-email-dennis-yc.hsieh@mediatek.com>
- <1583664775-19382-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+ <1583664775-19382-10-git-send-email-dennis-yc.hsieh@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -154,15 +154,15 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <58575c2c-0b5a-55c0-f3b0-082bfd4b6144@gmail.com>
-Date:   Sat, 16 May 2020 20:14:52 +0200
+Message-ID: <f9fd9ea8-f706-ed4a-4c83-c53ad092035c@gmail.com>
+Date:   Sat, 16 May 2020 20:20:28 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1583664775-19382-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+In-Reply-To: <1583664775-19382-10-git-send-email-dennis-yc.hsieh@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -172,50 +172,26 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On 08/03/2020 11:52, Dennis YC Hsieh wrote:
 > add write_s function in cmdq helper functions which
-> writes value contains in internal register to address
-> with large dma access support.
+> writes a constant value to address with large dma
+> access support.
 > 
 > Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
 > Reviewed-by: CK Hu <ck.hu@mediatek.com>
 > ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 34 +++++++++++++++++++++++-
->  include/linux/mailbox/mtk-cmdq-mailbox.h |  2 ++
->  include/linux/soc/mediatek/mtk-cmdq.h    | 20 ++++++++++++++
->  3 files changed, 55 insertions(+), 1 deletion(-)
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 26 ++++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 14 ++++++++++++++
+>  2 files changed, 40 insertions(+)
 > 
 > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 33153d17c9d9..90f1ff2b4b00 100644
+> index 03c129230cd7..a9ebbabb7439 100644
 > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -18,6 +18,10 @@ struct cmdq_instruction {
->  	union {
->  		u32 value;
->  		u32 mask;
-> +		struct {
-> +			u16 arg_c;
-> +			u16 src_reg;
-> +		};
->  	};
->  	union {
->  		u16 offset;
-> @@ -29,7 +33,7 @@ struct cmdq_instruction {
->  		struct {
->  			u8 sop:5;
->  			u8 arg_c_t:1;
-> -			u8 arg_b_t:1;
-> +			u8 src_t:1;
-
-fixing patch 6/13 please. seems the struct should be added in this patch.
-
->  			u8 dst_t:1;
->  		};
->  	};
-> @@ -222,6 +226,34 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+> @@ -269,6 +269,32 @@ int cmdq_pkt_write_s(struct cmdq_pkt *pkt, u16 high_addr_reg_idx,
 >  }
->  EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  EXPORT_SYMBOL(cmdq_pkt_write_s);
 >  
-> +int cmdq_pkt_write_s(struct cmdq_pkt *pkt, u16 high_addr_reg_idx,
-> +		     u16 addr_low, u16 src_reg_idx, u32 mask)
+> +int cmdq_pkt_write_s_value(struct cmdq_pkt *pkt, u16 high_addr_reg_idx,
+> +			   u16 addr_low, u32 value, u32 mask)
 > +{
 > +	struct cmdq_instruction inst = { {0} };
 > +	int err;
@@ -227,93 +203,50 @@ fixing patch 6/13 please. seems the struct should be added in this patch.
 > +		if (err < 0)
 > +			return err;
 > +
-> +		inst.mask = 0;
 > +		inst.op = CMDQ_CODE_WRITE_S_MASK;
 > +	} else {
 > +		inst.op = CMDQ_CODE_WRITE_S;
 > +	}
 > +
-> +	inst.src_t = CMDQ_REG_TYPE;
-
-Not defined.
-Please make sure that every patch compiles on it's own and does not add a
-regression. This is very helpful if we have to bisect the kernel in the future.
-
 > +	inst.sop = high_addr_reg_idx;
+
+Writing u16 value in a 5 bit wide variable?
+
 > +	inst.offset = addr_low;
-> +	inst.src_reg = src_reg_idx;
+> +	inst.value = value;
 > +
 > +	return cmdq_pkt_append_command(pkt, inst);
 > +}
-> +EXPORT_SYMBOL(cmdq_pkt_write_s);
+> +EXPORT_SYMBOL(cmdq_pkt_write_s_value);
 > +
 >  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
 >  {
 >  	struct cmdq_instruction inst = { {0} };
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index 121c3bb6d3de..8ef87e1bd03b 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -59,6 +59,8 @@ enum cmdq_code {
->  	CMDQ_CODE_JUMP = 0x10,
->  	CMDQ_CODE_WFE = 0x20,
->  	CMDQ_CODE_EOC = 0x40,
-> +	CMDQ_CODE_WRITE_S = 0x90,
-> +	CMDQ_CODE_WRITE_S_MASK = 0x91,
->  	CMDQ_CODE_LOGIC = 0xa0,
->  };
->  
 > diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 83340211e1d3..c72d826d8934 100644
+> index 01b4184af310..fec292aac83c 100644
 > --- a/include/linux/soc/mediatek/mtk-cmdq.h
 > +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -12,6 +12,8 @@
->  #include <linux/timer.h>
->  
->  #define CMDQ_NO_TIMEOUT		0xffffffffu
-> +#define CMDQ_ADDR_HIGH(addr)	((u32)(((addr) >> 16) & GENMASK(31, 0)))
-> +#define CMDQ_ADDR_LOW(addr)	((u16)(addr) | BIT(1))
->  
->  struct cmdq_pkt;
->  
-> @@ -102,6 +104,24 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
->  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
->  			u16 offset, u32 value, u32 mask);
+> @@ -135,6 +135,20 @@ int cmdq_pkt_read_s(struct cmdq_pkt *pkt, u16 high_addr_reg_idx, u16 addr_low,
+>  int cmdq_pkt_write_s(struct cmdq_pkt *pkt, u16 high_addr_reg_idx,
+>  		     u16 addr_low, u16 src_reg_idx, u32 mask);
 >  
 > +/**
-> + * cmdq_pkt_write_s() - append write_s command to the CMDQ packet
+> + * cmdq_pkt_write_s_value() - append write_s command with mask to the CMDQ
+> + *			      packet which write value to a physical address
 > + * @pkt:	the CMDQ packet
 > + * @high_addr_reg_idx:	internal regisger ID which contains high address of pa
 
-s/regisger/register
+register
 
 > + * @addr_low:	low address of pa
-> + * @src_reg_idx:	the CMDQ internal register ID which cache source value
-> + * @mask:	the specified target address mask, use U32_MAX if no need
+> + * @value:	the specified target value
+> + * @mask:	the specified target mask
 > + *
 > + * Return: 0 for success; else the error code is returned
-> + *
-> + * Support write value to physical address without subsys. Use CMDQ_ADDR_HIGH()
-> + * to get high addrees and call cmdq_pkt_assign() to assign value into internal
-
-s/addrees/address
-
-> + * reg. Also use CMDQ_ADDR_LOW() to get low address for addr_low parameterwhen
-
-s/parameterwhen/parameter when
-
-> + * call to this function.
 > + */
-> +int cmdq_pkt_write_s(struct cmdq_pkt *pkt, u16 high_addr_reg_idx,
-> +		     u16 addr_low, u16 src_reg_idx, u32 mask);
+> +int cmdq_pkt_write_s_value(struct cmdq_pkt *pkt, u16 high_addr_reg_idx,
+> +			   u16 addr_low, u32 value, u32 mask);
 > +
-
-In general I wonder if we shouldn't provide two functions, one that writes a
-mask and on for the else case.
-
-Regards,
-Matthias
-
 >  /**
 >   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
 >   * @pkt:	the CMDQ packet
