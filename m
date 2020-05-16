@@ -5,68 +5,80 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D73C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E49FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 16:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C7F20727
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E08E2065C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 16:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJWKENB9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNH9yXgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgEPPhQ (ORCPT
+        id S1726254AbgEPQKX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 May 2020 11:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
+        Sat, 16 May 2020 12:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbgEPPhQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 May 2020 11:37:16 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF06C061A0C;
-        Sat, 16 May 2020 08:37:15 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id q11so4419045oti.6;
-        Sat, 16 May 2020 08:37:15 -0700 (PDT)
+        with ESMTP id S1726206AbgEPQKX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 May 2020 12:10:23 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB15C061A0C;
+        Sat, 16 May 2020 09:10:22 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id z6so1133832ooz.3;
+        Sat, 16 May 2020 09:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QOdQPhactMNYx+K6jcC2qpt1HbOWUydWFj161zelHf8=;
-        b=mJWKENB9adXPcpbGhUYy/BPS7y+JJa1jph/49WJPSWdkPNnhYaBkngSLGt1G44Dm8k
-         D66hR8eLpYiMCTXmGDgJJ5nAGSSdLJRgrQMCGKluTM6TZ+j3KF3157tTagNJmICTwU9Y
-         Xq+1Z3UGFsaU67wBnwwQC6VaojhGzgEragHsdFOOl1qGICJBQeZ161KPxHcFIGoa4pDY
-         hqij0e70YOjRTYfHtwc+gLMkQQE/oIooPD0awE/26gdTS75rZnU3lSeHQBx6RmqMpoz4
-         bra7K1sbti/NP08KEJAlctCq6u+kMnHSX5SpHoj7gvZhxykn3HFiQR/0GvSq2nOS6lH5
-         ptFg==
+        bh=EacKjSDopXWyW8JoiO70qr07SPwYhYpatq/0eY+a1eU=;
+        b=NNH9yXgFK+d5gov4vMTntUA9vwX4zVohtYBOM/gkZPOTtCw+ziH747SpaWnyWW5ylP
+         xHQvxnNPvKxvwXm1PTKaeE4NJjwdfXwkOoV9FyTdFwVxRBVFZVJB0DDUM0fVqtOJxkU+
+         MF+E9iBP4TxCgLIZcej461qTxU4IlQ/8/mA8Wkv0mtklp0N7TmzJFZvQFISavJVKDrGg
+         Q1b7c/5YATICUn6j5uVT2oceL9+9R/KMKPpqPC4t+dQF36s2JMNPP9Z8G2CHBDuNigOd
+         wc5H7vI8XhlEbUAIFqrv3whjtGVXfqaPERduLikNaCIm01wPGpgQk8i5mECUThebO9Pi
+         ygNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=QOdQPhactMNYx+K6jcC2qpt1HbOWUydWFj161zelHf8=;
-        b=NXRbxSTRZrs+sJZp9xzNYWyPbqnB5n2sRfLPvdwHEQRQro7ptIhKTBKPDBitOOO2ue
-         4SmWyDqW9IZTtR9BgrtgF7cfdrvWUsZYDyzOFpeC5W/07Sc+jK/n8IVm+D/3WHWBxjz6
-         eNjAVCfAuB+fYkWzXQv9B7+O+dWz7xlWaTZ8YJsgMty8ebe12uOt66nb3oHsKgqJYw6s
-         8b3dyMjjOLyliEsbKSgO7V3f/KuG29vfb3Fio50fJN8ybZL3FoNnMdJPUPWafD/doShD
-         tjgohXhiDY8FGeUsxAa3O6y6FdWNk0SgfsnSVtoAEZZHPJxCT4+0GdWQV7zZkHvkeV5e
-         ZteA==
-X-Gm-Message-State: AOAM533swgZVM1P1QwgkB03urZb6gYJfh/qosAzCuaCOEz640uGYrumE
-        ijuO+AxKs1LcFdtB38rZthdNjPU3
-X-Google-Smtp-Source: ABdhPJz/dLu2FtR/qvaCVyzCFgiac06bhsJKwhD5V58+PukhVRoDFdBM8Bjtfk9q/USkY05FC0LIfA==
-X-Received: by 2002:a05:6830:1551:: with SMTP id l17mr6413015otp.153.1589643435309;
-        Sat, 16 May 2020 08:37:15 -0700 (PDT)
+        bh=EacKjSDopXWyW8JoiO70qr07SPwYhYpatq/0eY+a1eU=;
+        b=hxSJ+zdsTtxfuNUPTJYgpeLLeJcEce8ECQpYcSmwW0trckgN0qhb+gRALsRqOJEyjx
+         +VDDBF6A4jE7UWZ/zcWS7aTCbGuQ7u74V9Bva81BzUi+eYV+9cXhwy+YnydZviBNQ/b7
+         Z/33v40lQW34/sJIo9HYpXTn9CEk34wtgvX/zehOtbtQ7UmnrE9EWGHVz66I024LUQ8N
+         3SK1DZvKKxYWY9S+A6660YuJEY5vvb4h4lCdAOvSNpyL64PeK3eAnzXko5tyRry7Lnd6
+         /shkMh3FFTMl8gcHUn3Kv//cb6LGDXL96pjF3xq7HYjj3STrYCvp39aElCSFIaAGUhd1
+         TfBw==
+X-Gm-Message-State: AOAM532C30YwaOda3NYgwxyvNx6/eabjQfpFQpbkxo41FtlTdESG/Ihc
+        xFZBlwm13yYPlUp0PzUz/6w=
+X-Google-Smtp-Source: ABdhPJwjoY5UTtSd4WAUE0adW6nCGFeCTzy/hfbySAkry2wU8dbZQNgTsz1ziHIgfXvWtOnd3c9E4w==
+X-Received: by 2002:a4a:956a:: with SMTP id n39mr6703896ooi.64.1589645422115;
+        Sat, 16 May 2020 09:10:22 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id 22sm1438888otc.34.2020.05.16.08.37.12
+        by smtp.gmail.com with ESMTPSA id v8sm1590217oos.0.2020.05.16.09.10.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 May 2020 08:37:14 -0700 (PDT)
-Subject: Re: [RESEND,v2,1/1] arm: dts: mediatek: add mt7629 pwm support
-To:     Sam Shih <sam.shih@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <1581474926-28633-1-git-send-email-sam.shih@mediatek.com>
- <1581474926-28633-2-git-send-email-sam.shih@mediatek.com>
+        Sat, 16 May 2020 09:10:21 -0700 (PDT)
+Subject: Re: [PATCH v5 03/13] mailbox: cmdq: support mt6779 gce platform
+ definition
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        dri-devel@lists.freedesktop.org,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        HS Liao <hs.liao@mediatek.com>
+References: <1583664775-19382-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+ <1583664775-19382-4-git-send-email-dennis-yc.hsieh@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -142,12 +154,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <d59e900b-d0a1-e17a-c948-320eb3f4e343@gmail.com>
-Date:   Sat, 16 May 2020 17:37:11 +0200
+Message-ID: <07f2898b-1e00-cb73-00d1-91910f87a227@gmail.com>
+Date:   Sat, 16 May 2020 18:10:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1581474926-28633-2-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <1583664775-19382-4-git-send-email-dennis-yc.hsieh@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -158,47 +170,33 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 12/02/2020 03:35, Sam Shih wrote:
-> This adds pwm support for MT7629.
-> Used:
-> https://patchwork.kernel.org/patch/11160851/
+On 08/03/2020 11:52, Dennis YC Hsieh wrote:
+> Add gce v4 hardware support with different thread number and shift.
 > 
-> Change since v1:
-> remove unused property num-pwm
-> 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-Applied now to v5.7-next/dts32
-
-Thanks!
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
 > ---
->  arch/arm/boot/dts/mt7629.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  drivers/mailbox/mtk-cmdq-mailbox.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> index 867b88103b9d..ce2a30a24017 100644
-> --- a/arch/arm/boot/dts/mt7629.dtsi
-> +++ b/arch/arm/boot/dts/mt7629.dtsi
-> @@ -241,6 +241,20 @@
->  			status = "disabled";
->  		};
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> index 4dbee9258127..9994ac9426d6 100644
+> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> @@ -572,10 +572,12 @@ static const struct dev_pm_ops cmdq_pm_ops = {
 >  
-> +		pwm: pwm@11006000 {
-> +			compatible = "mediatek,mt7629-pwm";
-> +			reg = <0x11006000 0x1000>;
-> +			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-> +				 <&pericfg CLK_PERI_PWM_PD>,
-> +				 <&pericfg CLK_PERI_PWM1_PD>;
-> +			clock-names = "top", "main", "pwm1";
-> +			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
-> +			assigned-clock-parents =
-> +					<&topckgen CLK_TOP_UNIVPLL2_D4>;
-> +			status = "disabled";
-> +		};
-> +
->  		i2c: i2c@11007000 {
->  			compatible = "mediatek,mt7629-i2c",
->  				     "mediatek,mt2712-i2c";
+>  static const struct gce_plat gce_plat_v2 = {.thread_nr = 16};
+>  static const struct gce_plat gce_plat_v3 = {.thread_nr = 24};
+> +static const struct gce_plat gce_plat_v4 = {.thread_nr = 24, .shift = 3};
+>  
+>  static const struct of_device_id cmdq_of_ids[] = {
+>  	{.compatible = "mediatek,mt8173-gce", .data = (void *)&gce_plat_v2},
+>  	{.compatible = "mediatek,mt8183-gce", .data = (void *)&gce_plat_v3},
+> +	{.compatible = "mediatek,mt6779-gce", .data = (void *)&gce_plat_v4},
+>  	{}
+>  };
+>  
 > 
