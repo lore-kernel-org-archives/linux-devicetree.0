@@ -8,69 +8,65 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCD3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D73C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED2C20756
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C7F20727
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:37:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjR+fgEF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJWKENB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgEPPfY (ORCPT
+        id S1727050AbgEPPhQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 May 2020 11:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44928 "EHLO
+        Sat, 16 May 2020 11:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgEPPfX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 May 2020 11:35:23 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCAFC061A0C;
-        Sat, 16 May 2020 08:35:23 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id 63so4421906oto.8;
-        Sat, 16 May 2020 08:35:23 -0700 (PDT)
+        with ESMTP id S1726695AbgEPPhQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 May 2020 11:37:16 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF06C061A0C;
+        Sat, 16 May 2020 08:37:15 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id q11so4419045oti.6;
+        Sat, 16 May 2020 08:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/GuI5j0F8zuQQcxV/ULqO2KUI6KnIMmelfO0Ywbye2U=;
-        b=ZjR+fgEFmg99/oZKZeWNX6ftxjDJ+WubmSsWdDH4NZOV1qBxCcawaGb1NIJU/C9bGU
-         ti8kCvRZ7F2M165Tll4dcq9VIMh5PtfcfgitdQIXktEyy+vLgvmlJnNTb/rngHfaRnrB
-         XpWWEs2nePOZI5TJqZcYkXWSjwv70zQjlWtmlD65tUuR/IcllzaNLop6PSjFAO/BOO1a
-         hLXRCRKykxZQWYXuoSPYpnlOCHobJsQg5sQjYBKDl0MpVbcw7771/VJIDNHszFKgVrbG
-         0tFvcOkz8jMw4wMmrr73XpMgeRP7B3C95W4bh3YNEf1Wy7/w6kjQPghtx9lOIM1DOYEb
-         Klqw==
+        bh=QOdQPhactMNYx+K6jcC2qpt1HbOWUydWFj161zelHf8=;
+        b=mJWKENB9adXPcpbGhUYy/BPS7y+JJa1jph/49WJPSWdkPNnhYaBkngSLGt1G44Dm8k
+         D66hR8eLpYiMCTXmGDgJJ5nAGSSdLJRgrQMCGKluTM6TZ+j3KF3157tTagNJmICTwU9Y
+         Xq+1Z3UGFsaU67wBnwwQC6VaojhGzgEragHsdFOOl1qGICJBQeZ161KPxHcFIGoa4pDY
+         hqij0e70YOjRTYfHtwc+gLMkQQE/oIooPD0awE/26gdTS75rZnU3lSeHQBx6RmqMpoz4
+         bra7K1sbti/NP08KEJAlctCq6u+kMnHSX5SpHoj7gvZhxykn3HFiQR/0GvSq2nOS6lH5
+         ptFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=/GuI5j0F8zuQQcxV/ULqO2KUI6KnIMmelfO0Ywbye2U=;
-        b=PZYD4DxfRl9naUS13rY1qG7s+mFNTtD/qP4iYVI3lwVN7rwEoLohjSNse7q1MvRUic
-         0yiIRVG7D4tthANoQZpym8tWSB66R0xQoV8eAW0DXluZXjjm0XkjSfD/UbTCIFDRkwBF
-         cBWqBG2CLhdwJef8CaZPhhLSFD9fAXMq2xZsojx3az6rIUihXh0r0ghLIlTxn+pvB7tm
-         8jYFynZHRnum9APoJVgXcBVxHT0Lz3vp8VP23g2zplke7acNdqsCZb70KBuZneV3ye4K
-         W+p5pNsFuXh1q2koPCAoUkXOquEF+yBUsLEQEDmGMldxFxyKCpPrT6PlNPLPcr5J85VT
-         lulA==
-X-Gm-Message-State: AOAM533yvjDmeaMazrDRwBk4jRPYA7Pw+DcS1f7ouDBSZvlpAD8fx0qv
-        NJVx6uYSTdQGNrmd3coAmNQrm0rY
-X-Google-Smtp-Source: ABdhPJwX+o5CfAxYzi43Y0SQF4bpeViXitXKpO2mk7bh22ms/FZilYOcRe4dVdV78XDI9wywsT5dpw==
-X-Received: by 2002:a9d:70d4:: with SMTP id w20mr1746192otj.179.1589643322718;
-        Sat, 16 May 2020 08:35:22 -0700 (PDT)
+        bh=QOdQPhactMNYx+K6jcC2qpt1HbOWUydWFj161zelHf8=;
+        b=NXRbxSTRZrs+sJZp9xzNYWyPbqnB5n2sRfLPvdwHEQRQro7ptIhKTBKPDBitOOO2ue
+         4SmWyDqW9IZTtR9BgrtgF7cfdrvWUsZYDyzOFpeC5W/07Sc+jK/n8IVm+D/3WHWBxjz6
+         eNjAVCfAuB+fYkWzXQv9B7+O+dWz7xlWaTZ8YJsgMty8ebe12uOt66nb3oHsKgqJYw6s
+         8b3dyMjjOLyliEsbKSgO7V3f/KuG29vfb3Fio50fJN8ybZL3FoNnMdJPUPWafD/doShD
+         tjgohXhiDY8FGeUsxAa3O6y6FdWNk0SgfsnSVtoAEZZHPJxCT4+0GdWQV7zZkHvkeV5e
+         ZteA==
+X-Gm-Message-State: AOAM533swgZVM1P1QwgkB03urZb6gYJfh/qosAzCuaCOEz640uGYrumE
+        ijuO+AxKs1LcFdtB38rZthdNjPU3
+X-Google-Smtp-Source: ABdhPJz/dLu2FtR/qvaCVyzCFgiac06bhsJKwhD5V58+PukhVRoDFdBM8Bjtfk9q/USkY05FC0LIfA==
+X-Received: by 2002:a05:6830:1551:: with SMTP id l17mr6413015otp.153.1589643435309;
+        Sat, 16 May 2020 08:37:15 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id g94sm1440356otg.74.2020.05.16.08.35.20
+        by smtp.gmail.com with ESMTPSA id 22sm1438888otc.34.2020.05.16.08.37.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 May 2020 08:35:21 -0700 (PDT)
-Subject: Re: [RESEND PATCH v5 11/11] arm64: dts: mt2712: use non-empty ranges
- for usb-phy
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <bfcf6a4dd6829dfa1bd0119b34043db7364dfd8e.1581389234.git.chunfeng.yun@mediatek.com>
- <0b039294697126edb25a699b8c25b7fcc84eed36.1581389234.git.chunfeng.yun@mediatek.com>
+        Sat, 16 May 2020 08:37:14 -0700 (PDT)
+Subject: Re: [RESEND,v2,1/1] arm: dts: mediatek: add mt7629 pwm support
+To:     Sam Shih <sam.shih@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <1581474926-28633-1-git-send-email-sam.shih@mediatek.com>
+ <1581474926-28633-2-git-send-email-sam.shih@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -146,12 +142,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <dbeb21d5-ece6-5a09-4802-ad5ba3d2b21a@gmail.com>
-Date:   Sat, 16 May 2020 17:35:18 +0200
+Message-ID: <d59e900b-d0a1-e17a-c948-320eb3f4e343@gmail.com>
+Date:   Sat, 16 May 2020 17:37:11 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <0b039294697126edb25a699b8c25b7fcc84eed36.1581389234.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <1581474926-28633-2-git-send-email-sam.shih@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -162,111 +158,47 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 11/02/2020 04:21, Chunfeng Yun wrote:
-> Use non-empty ranges for usb-phy to make the layout of
-> its registers clearer;
-> Replace deprecated compatible by generic
+On 12/02/2020 03:35, Sam Shih wrote:
+> This adds pwm support for MT7629.
+> Used:
+> https://patchwork.kernel.org/patch/11160851/
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Change since v1:
+> remove unused property num-pwm
+> 
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 
-queued for v5.7-next/dts64
+Applied now to v5.7-next/dts32
 
-Thanks a lot
+Thanks!
 
 > ---
-> v3~v5: no changes
+>  arch/arm/boot/dts/mt7629.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> v2: use generic compatible
-> ---
->  arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 42 ++++++++++++-----------
->  1 file changed, 22 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> index 43307bad3f0d..e24f2f2f6004 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> @@ -697,30 +697,31 @@ usb_host0: xhci@11270000 {
->  	};
->  
->  	u3phy0: usb-phy@11290000 {
-> -		compatible = "mediatek,mt2712-u3phy";
-> -		#address-cells = <2>;
-> -		#size-cells = <2>;
-> -		ranges;
-> +		compatible = "mediatek,mt2712-tphy",
-> +			     "mediatek,generic-tphy-v2";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0x11290000 0x9000>;
->  		status = "okay";
->  
-> -		u2port0: usb-phy@11290000 {
-> -			reg = <0 0x11290000 0 0x700>;
-> +		u2port0: usb-phy@0 {
-> +			reg = <0x0 0x700>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
->  			status = "okay";
+> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+> index 867b88103b9d..ce2a30a24017 100644
+> --- a/arch/arm/boot/dts/mt7629.dtsi
+> +++ b/arch/arm/boot/dts/mt7629.dtsi
+> @@ -241,6 +241,20 @@
+>  			status = "disabled";
 >  		};
 >  
-> -		u2port1: usb-phy@11298000 {
-> -			reg = <0 0x11298000 0 0x700>;
-> +		u2port1: usb-phy@8000 {
-> +			reg = <0x8000 0x700>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
->  			status = "okay";
->  		};
->  
-> -		u3port0: usb-phy@11298700 {
-> -			reg = <0 0x11298700 0 0x900>;
-> +		u3port0: usb-phy@8700 {
-> +			reg = <0x8700 0x900>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
-> @@ -760,30 +761,31 @@ usb_host1: xhci@112c0000 {
->  	};
->  
->  	u3phy1: usb-phy@112e0000 {
-> -		compatible = "mediatek,mt2712-u3phy";
-> -		#address-cells = <2>;
-> -		#size-cells = <2>;
-> -		ranges;
-> +		compatible = "mediatek,mt2712-tphy",
-> +			     "mediatek,generic-tphy-v2";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0x112e0000 0x9000>;
->  		status = "okay";
->  
-> -		u2port2: usb-phy@112e0000 {
-> -			reg = <0 0x112e0000 0 0x700>;
-> +		u2port2: usb-phy@0 {
-> +			reg = <0x0 0x700>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
->  			status = "okay";
->  		};
->  
-> -		u2port3: usb-phy@112e8000 {
-> -			reg = <0 0x112e8000 0 0x700>;
-> +		u2port3: usb-phy@8000 {
-> +			reg = <0x8000 0x700>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
->  			status = "okay";
->  		};
->  
-> -		u3port1: usb-phy@112e8700 {
-> -			reg = <0 0x112e8700 0 0x900>;
-> +		u3port1: usb-phy@8700 {
-> +			reg = <0x8700 0x900>;
->  			clocks = <&clk26m>;
->  			clock-names = "ref";
->  			#phy-cells = <1>;
+> +		pwm: pwm@11006000 {
+> +			compatible = "mediatek,mt7629-pwm";
+> +			reg = <0x11006000 0x1000>;
+> +			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&topckgen CLK_TOP_PWM_SEL>,
+> +				 <&pericfg CLK_PERI_PWM_PD>,
+> +				 <&pericfg CLK_PERI_PWM1_PD>;
+> +			clock-names = "top", "main", "pwm1";
+> +			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
+> +			assigned-clock-parents =
+> +					<&topckgen CLK_TOP_UNIVPLL2_D4>;
+> +			status = "disabled";
+> +		};
+> +
+>  		i2c: i2c@11007000 {
+>  			compatible = "mediatek,mt7629-i2c",
+>  				     "mediatek,mt2712-i2c";
 > 
