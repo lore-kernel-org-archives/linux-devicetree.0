@@ -5,82 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512CFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCD3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9FC2065C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED2C20756
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 May 2020 15:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djN4We9V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjR+fgEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgEPPZe (ORCPT
+        id S1726719AbgEPPfY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 May 2020 11:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
+        Sat, 16 May 2020 11:35:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgEPPZe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 May 2020 11:25:34 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6408C061A0C;
-        Sat, 16 May 2020 08:25:32 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k110so4429069otc.2;
-        Sat, 16 May 2020 08:25:32 -0700 (PDT)
+        with ESMTP id S1726663AbgEPPfX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 May 2020 11:35:23 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCAFC061A0C;
+        Sat, 16 May 2020 08:35:23 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id 63so4421906oto.8;
+        Sat, 16 May 2020 08:35:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VcTJY7PqKkXIKUmEOIoaFR4YEtji8JLpj560KQIawUY=;
-        b=djN4We9VD58Bz/NKe+EBtJcVgnExvg71GNlaOtXzYLPx5T9UzMv8f75PHpOExI43Hd
-         vpYH35Epj2qQikFd9jidsB1fWAJ+5pamZUAF3KAqGIGRyd+jrWiI5NsXIDsmiR22JgIO
-         uKTmaVSptM4AfDRgYSSOwGtrPU0JaU2wRAMH8TvioL6VSs3TuefCD8+1LjbYgnQQx6aJ
-         ul3t61mpbegbJtX9TCFylGgE4toh5Wohx7mCeZzgJEHitOjA8J1Ohb2XVSljbfV8kqh/
-         zKrD4H/IDRfOpzvXCEeszOMyv1xBgh05HP/l36AoHTAN4MOBOdC3Vyf2XQaLWVhmbWSb
-         HmGQ==
+        bh=/GuI5j0F8zuQQcxV/ULqO2KUI6KnIMmelfO0Ywbye2U=;
+        b=ZjR+fgEFmg99/oZKZeWNX6ftxjDJ+WubmSsWdDH4NZOV1qBxCcawaGb1NIJU/C9bGU
+         ti8kCvRZ7F2M165Tll4dcq9VIMh5PtfcfgitdQIXktEyy+vLgvmlJnNTb/rngHfaRnrB
+         XpWWEs2nePOZI5TJqZcYkXWSjwv70zQjlWtmlD65tUuR/IcllzaNLop6PSjFAO/BOO1a
+         hLXRCRKykxZQWYXuoSPYpnlOCHobJsQg5sQjYBKDl0MpVbcw7771/VJIDNHszFKgVrbG
+         0tFvcOkz8jMw4wMmrr73XpMgeRP7B3C95W4bh3YNEf1Wy7/w6kjQPghtx9lOIM1DOYEb
+         Klqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=VcTJY7PqKkXIKUmEOIoaFR4YEtji8JLpj560KQIawUY=;
-        b=PxtdSQS0Zov4anxw14BXO/51A4l1JbaMi/wkkyLvi7ocXuUT0VzY+xbHba+adJUKGe
-         KRAyRMWB72+E9sxLUSOTv1Vk5V+flMOfHTX0co8KCHUD7kbU++F13mjsXeOOMa5DsgLo
-         aFqOivevMWRGkHKNuzIaUisSktAJqIUJtJyKlg0VKnPqJQOHirIvRkz7EK38bGzE+Dp2
-         9CQ9XlFWi4/z9NEX46+xtUWnNeaAsDdNgN5jWhqKZXAV1x53evq7ZxZJoIZZcxT6hH6h
-         d/TFOQBXwTQMFJ6cUJ3hOprt+/JDdQyDbM+h4NWpRZbTayIeVEuSLcmpn0eQEuRMXFSK
-         Zdug==
-X-Gm-Message-State: AOAM532DShraH08CFF3/OZNgVD9jOwoyKc1uwwSTb/Ow1rNNia3amohp
-        NBQW+naHS/t+fB6OTiT6FdU=
-X-Google-Smtp-Source: ABdhPJz3N6FNNOmkQp4aAoNyx4CExb3IccdADUvGm7NRJL78JWAwpVbpvI3vx+cN7wi9MCL9t6Gj3w==
-X-Received: by 2002:a9d:4a1:: with SMTP id 30mr3322864otm.319.1589642731996;
-        Sat, 16 May 2020 08:25:31 -0700 (PDT)
+        bh=/GuI5j0F8zuQQcxV/ULqO2KUI6KnIMmelfO0Ywbye2U=;
+        b=PZYD4DxfRl9naUS13rY1qG7s+mFNTtD/qP4iYVI3lwVN7rwEoLohjSNse7q1MvRUic
+         0yiIRVG7D4tthANoQZpym8tWSB66R0xQoV8eAW0DXluZXjjm0XkjSfD/UbTCIFDRkwBF
+         cBWqBG2CLhdwJef8CaZPhhLSFD9fAXMq2xZsojx3az6rIUihXh0r0ghLIlTxn+pvB7tm
+         8jYFynZHRnum9APoJVgXcBVxHT0Lz3vp8VP23g2zplke7acNdqsCZb70KBuZneV3ye4K
+         W+p5pNsFuXh1q2koPCAoUkXOquEF+yBUsLEQEDmGMldxFxyKCpPrT6PlNPLPcr5J85VT
+         lulA==
+X-Gm-Message-State: AOAM533yvjDmeaMazrDRwBk4jRPYA7Pw+DcS1f7ouDBSZvlpAD8fx0qv
+        NJVx6uYSTdQGNrmd3coAmNQrm0rY
+X-Google-Smtp-Source: ABdhPJwX+o5CfAxYzi43Y0SQF4bpeViXitXKpO2mk7bh22ms/FZilYOcRe4dVdV78XDI9wywsT5dpw==
+X-Received: by 2002:a9d:70d4:: with SMTP id w20mr1746192otj.179.1589643322718;
+        Sat, 16 May 2020 08:35:22 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id a6sm1232426oia.19.2020.05.16.08.25.27
+        by smtp.gmail.com with ESMTPSA id g94sm1440356otg.74.2020.05.16.08.35.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 May 2020 08:25:31 -0700 (PDT)
-Subject: Re: [PATCH v13 5/6] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     drinkcat@chromium.org, Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        Sat, 16 May 2020 08:35:21 -0700 (PDT)
+Subject: Re: [RESEND PATCH v5 11/11] arm64: dts: mt2712: use non-empty ranges
+ for usb-phy
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        srv_heupstream@mediatek.com
-References: <1587438012-24832-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1587438012-24832-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+        devicetree@vger.kernel.org
+References: <bfcf6a4dd6829dfa1bd0119b34043db7364dfd8e.1581389234.git.chunfeng.yun@mediatek.com>
+ <0b039294697126edb25a699b8c25b7fcc84eed36.1581389234.git.chunfeng.yun@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -156,12 +146,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <27c107b3-6ea8-e6f9-697c-7c3c4479008c@gmail.com>
-Date:   Sat, 16 May 2020 17:25:26 +0200
+Message-ID: <dbeb21d5-ece6-5a09-4802-ad5ba3d2b21a@gmail.com>
+Date:   Sat, 16 May 2020 17:35:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1587438012-24832-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <0b039294697126edb25a699b8c25b7fcc84eed36.1581389234.git.chunfeng.yun@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -170,135 +160,113 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
 
-On 21/04/2020 05:00, Hsin-Hsiung Wang wrote:
-> From: Ran Bi <ran.bi@mediatek.com>
+
+On 11/02/2020 04:21, Chunfeng Yun wrote:
+> Use non-empty ranges for usb-phy to make the layout of
+> its registers clearer;
+> Replace deprecated compatible by generic
 > 
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
-> driver which only needed by armv7 CPU without ATF.
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-by: Sebastian Reichel <sre@kernel.org>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-We have Acked-by from rtc and reset drivers maintainers. Are you OK to take them
-through your mfd branch?
+queued for v5.7-next/dts64
 
-Are you planning to queue them for v5.8?
-
-Just asking because if so I'd queue patch 6 through my tree.
-
-Regards,
-Matthias
+Thanks a lot
 
 > ---
->  drivers/power/reset/mt6323-poweroff.c |  2 +-
->  drivers/rtc/rtc-mt6397.c              | 18 +++++++++++++++---
->  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
->  3 files changed, 24 insertions(+), 5 deletions(-)
+> v3~v5: no changes
 > 
-> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-> index 1caf43d..0532803 100644
-> --- a/drivers/power/reset/mt6323-poweroff.c
-> +++ b/drivers/power/reset/mt6323-poweroff.c
-> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
->  	int ret;
+> v2: use generic compatible
+> ---
+>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 42 ++++++++++++-----------
+>  1 file changed, 22 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> index 43307bad3f0d..e24f2f2f6004 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> @@ -697,30 +697,31 @@ usb_host0: xhci@11270000 {
+>  	};
 >  
->  	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
-> -	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
-> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
+>  	u3phy0: usb-phy@11290000 {
+> -		compatible = "mediatek,mt2712-u3phy";
+> -		#address-cells = <2>;
+> -		#size-cells = <2>;
+> -		ranges;
+> +		compatible = "mediatek,mt2712-tphy",
+> +			     "mediatek,generic-tphy-v2";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0x11290000 0x9000>;
+>  		status = "okay";
 >  
->  	ret = regmap_read_poll_timeout(pwrc->regmap,
->  					pwrc->base + RTC_BBPU, val,
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index cda238d..f8b1353 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,6 +9,7 @@
->  #include <linux/mfd/mt6397/core.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
-> @@ -20,7 +21,7 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  	int ret;
->  	u32 data;
+> -		u2port0: usb-phy@11290000 {
+> -			reg = <0 0x11290000 0 0x700>;
+> +		u2port0: usb-phy@0 {
+> +			reg = <0x0 0x700>;
+>  			clocks = <&clk26m>;
+>  			clock-names = "ref";
+>  			#phy-cells = <1>;
+>  			status = "okay";
+>  		};
 >  
-> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +	ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
->  	if (ret < 0)
->  		return ret;
+> -		u2port1: usb-phy@11298000 {
+> -			reg = <0 0x11298000 0 0x700>;
+> +		u2port1: usb-phy@8000 {
+> +			reg = <0x8000 0x700>;
+>  			clocks = <&clk26m>;
+>  			clock-names = "ref";
+>  			#phy-cells = <1>;
+>  			status = "okay";
+>  		};
 >  
-> @@ -269,6 +270,8 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
+> -		u3port0: usb-phy@11298700 {
+> -			reg = <0 0x11298700 0 0x900>;
+> +		u3port0: usb-phy@8700 {
+> +			reg = <0x8700 0x900>;
+>  			clocks = <&clk26m>;
+>  			clock-names = "ref";
+>  			#phy-cells = <1>;
+> @@ -760,30 +761,31 @@ usb_host1: xhci@112c0000 {
+>  	};
 >  
-> +	rtc->data = of_device_get_match_data(&pdev->dev);
-> +
->  	rtc->irq = platform_get_irq(pdev, 0);
->  	if (rtc->irq < 0)
->  		return rtc->irq;
-> @@ -325,9 +328,18 @@ static int mt6397_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
+>  	u3phy1: usb-phy@112e0000 {
+> -		compatible = "mediatek,mt2712-u3phy";
+> -		#address-cells = <2>;
+> -		#size-cells = <2>;
+> -		ranges;
+> +		compatible = "mediatek,mt2712-tphy",
+> +			     "mediatek,generic-tphy-v2";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0x112e0000 0x9000>;
+>  		status = "okay";
 >  
-> +static const struct mtk_rtc_data mt6358_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6358,
-> +};
-> +
-> +static const struct mtk_rtc_data mt6397_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6397,
-> +};
-> +
->  static const struct of_device_id mt6397_rtc_of_match[] = {
-> -	{ .compatible = "mediatek,mt6323-rtc", },
-> -	{ .compatible = "mediatek,mt6397-rtc", },
-> +	{ .compatible = "mediatek,mt6323-rtc", .data = &mt6397_rtc_data },
-> +	{ .compatible = "mediatek,mt6358-rtc", .data = &mt6358_rtc_data },
-> +	{ .compatible = "mediatek,mt6397-rtc", .data = &mt6397_rtc_data },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> index 7dfb63b..66989a1 100644
-> --- a/include/linux/mfd/mt6397/rtc.h
-> +++ b/include/linux/mfd/mt6397/rtc.h
-> @@ -18,7 +18,9 @@
->  #define RTC_BBPU_CBUSY         BIT(6)
->  #define RTC_BBPU_KEY            (0x43 << 8)
+> -		u2port2: usb-phy@112e0000 {
+> -			reg = <0 0x112e0000 0 0x700>;
+> +		u2port2: usb-phy@0 {
+> +			reg = <0x0 0x700>;
+>  			clocks = <&clk26m>;
+>  			clock-names = "ref";
+>  			#phy-cells = <1>;
+>  			status = "okay";
+>  		};
 >  
-> -#define RTC_WRTGR              0x003c
-> +#define RTC_WRTGR_MT6358       0x003a
-> +#define RTC_WRTGR_MT6397       0x003c
-> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
+> -		u2port3: usb-phy@112e8000 {
+> -			reg = <0 0x112e8000 0 0x700>;
+> +		u2port3: usb-phy@8000 {
+> +			reg = <0x8000 0x700>;
+>  			clocks = <&clk26m>;
+>  			clock-names = "ref";
+>  			#phy-cells = <1>;
+>  			status = "okay";
+>  		};
 >  
->  #define RTC_IRQ_STA            0x0002
->  #define RTC_IRQ_STA_AL         BIT(0)
-> @@ -65,6 +67,10 @@
->  #define MTK_RTC_POLL_DELAY_US  10
->  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
->  
-> +struct mtk_rtc_data {
-> +	u32                     wrtgr;
-> +};
-> +
->  struct mt6397_rtc {
->  	struct device           *dev;
->  	struct rtc_device       *rtc_dev;
-> @@ -74,6 +80,7 @@ struct mt6397_rtc {
->  	struct regmap           *regmap;
->  	int                     irq;
->  	u32                     addr_base;
-> +	const struct mtk_rtc_data *data;
->  };
->  
->  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
+> -		u3port1: usb-phy@112e8700 {
+> -			reg = <0 0x112e8700 0 0x900>;
+> +		u3port1: usb-phy@8700 {
+> +			reg = <0x8700 0x900>;
+>  			clocks = <&clk26m>;
+>  			clock-names = "ref";
+>  			#phy-cells = <1>;
 > 
