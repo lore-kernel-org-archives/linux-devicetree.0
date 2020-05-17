@@ -2,174 +2,207 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437ECC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B02C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D783207D3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B9D20820
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgEQTiX (ORCPT
+        id S1726278AbgEQTt2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 15:38:23 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:42970 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgEQTiX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 15:38:23 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1DB718030808;
-        Sun, 17 May 2020 19:38:20 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fJXvaHVVcPHl; Sun, 17 May 2020 22:38:19 +0300 (MSK)
-Date:   Sun, 17 May 2020 22:38:18 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200517193818.jaiwgzgz7tutj4mk@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
- <20200512191208.GG185537@smile.fi.intel.com>
- <20200515063950.GI333670@vkoul-mobl>
+        Sun, 17 May 2020 15:49:28 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:52015 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgEQTt1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 15:49:27 -0400
+X-Originating-IP: 195.189.32.242
+Received: from pc.localdomain (unknown [195.189.32.242])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id F08B71BF204;
+        Sun, 17 May 2020 19:49:22 +0000 (UTC)
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v7 1/7] dt-bindings: iio/adc: Convert ingenic-adc docs to YAML.
+Date:   Sun, 17 May 2020 21:48:58 +0200
+Message-Id: <20200517194904.34758-1-contact@artur-rojek.eu>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515063950.GI333670@vkoul-mobl>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:09:50PM +0530, Vinod Koul wrote:
-> On 12-05-20, 22:12, Andy Shevchenko wrote:
-> > On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> > > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > > > > IP core of the DW DMA controller may be synthesized with different
-> > > > > max burst length of the transfers per each channel. According to Synopsis
-> > > > > having the fixed maximum burst transactions length may provide some
-> > > > > performance gain. At the same time setting up the source and destination
-> > > > > multi size exceeding the max burst length limitation may cause a serious
-> > > > > problems. In our case the system just hangs up. In order to fix this
-> > > > > lets introduce the max burst length platform config of the DW DMA
-> > > > > controller device and don't let the DMA channels configuration code
-> > > > > exceed the burst length hardware limitation. Depending on the IP core
-> > > > > configuration the maximum value can vary from channel to channel.
-> > > > > It can be detected either in runtime from the DWC parameter registers
-> > > > > or from the dedicated dts property.
-> > > > 
-> > > > I'm wondering what can be the scenario when your peripheral will ask something
-> > > > which is not supported by DMA controller?
-> > > 
-> > > I may misunderstood your statement, because seeing your activity around my
-> > > patchsets including the SPI patchset and sometimes very helpful comments,
-> > > this question answer seems too obvious to see you asking it.
-> > > 
-> > > No need to go far for an example. See the DW APB SSI driver. Its DMA module
-> > > specifies the burst length to be 16, while not all of ours channels supports it.
-> > > Yes, originally it has been developed for the Intel Midfield SPI, but since I
-> > > converted the driver into a generic code we can't use a fixed value. For instance
-> > > in our hardware only two DMA channels of total 16 are capable of bursting up to
-> > > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-> > > burst length. While there are two SPI interfaces, each of which need to have two
-> > > DMA channels for communications. So I need four channels in total to allocate to
-> > > provide the DMA capability for all interfaces. In order to set the SPI controller
-> > > up with valid optimized parameters the max-burst-length is required. Otherwise we
-> > > can end up with buffers overrun/underrun.
-> > 
-> > Right, and we come to the question which channel better to be used by SPI and
-> > the rest devices. Without specific filter function you can easily get into a
-> > case of inverted optimizations, when SPI got channels with burst = 4, while
-> > it's needed 16, and other hardware otherwise. Performance wise it's worse
-> > scenario which we may avoid in the first place, right?
-> 
-> If one has channels which are different and described as such in DT,
-> then I think it does make sense to specify in your board-dt about the
-> specific channels you would require...
+Convert the textual documentation of Device Tree bindings for the
+Ingenic JZ47xx SoCs ADC controller to YAML.
 
-Well, we do have such hardware. Our DW DMA controller has got different max
-burst lengths assigned to first two and the rest of the channels. But creating
-a functionality of the individual channels assignment is a matter of different
-patchset. Sorry. It's not one of my task at the moment.
+The `interrupts` property is now explicitly listed and marked as
+required. While missing from the previous textual documentation, this
+property has been used with all the boards which probe this driver.
 
-My primary task is to integrate the Baikal-T1 SoC support into the kernel. I've
-refactored a lot of code found in the Baikal-T1 SDK and currently under a pressure
-of a lot of review. Alas there is no time to create new functionality as you
-suggest. In future I may provide such, but not in the framework of this patchset.
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-> > 
-> > > > Peripheral needs to supply a lot of configuration parameters specific to the
-> > > > DMA controller in use (that's why we have struct dw_dma_slave).
-> > > > So, seems to me the feasible approach is supply correct data in the first place.
-> > > 
-> > > How to supply a valid data if clients don't know the DMA controller limitations
-> > > in general?
-> > 
-> > This is a good question. DMA controllers are quite different and having unified
-> > capabilities structure for all is almost impossible task to fulfil. That's why
-> > custom filter function(s) can help here. Based on compatible string you can
-> > implement whatever customized quirks like two functions, for example, to try 16
-> > burst size first and fallback to 4 if none was previously found.
-> > 
-> > > > If you have specific channels to acquire then you probably need to provide a
-> > > > custom xlate / filter functions. Because above seems a bit hackish workaround
-> > > > of dynamic channel allocation mechanism.
-> > > 
-> > > No, I don't have a specific channel to acquire and in general you may use any
-> > > returned from the DMA subsystem (though some platforms may need a dedicated
-> > > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-> > > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-> > > their DMA settings must properly and optimally configured. It can be only done
-> > > if you know the DMA controller parameters like max burst length, max block-size,
-> > > etc.
-> > > 
-> > > So no. The change proposed by this patch isn't workaround, but a useful feature,
-> > > moreover expected to be supported by the generic DMA subsystem.
-> > 
-> > See above.
-> > 
-> > > > But let's see what we can do better. Since maximum is defined on the slave side
-> > > > device, it probably needs to define minimum as well, otherwise it's possible
-> > > > that some hardware can't cope underrun bursts.
-> > > 
-> > > There is no need to define minimum if such limit doesn't exists except a
-> > > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> > > added such capability into the generic DMA subsystem so far.
-> > 
-> > There is a contract between provider and consumer about DMA resource. That's
-> > why both sides should participate in fulfilling it. Theoretically it may be a
-> > hardware that doesn't support minimum burst available in DMA by a reason. For
-> > such we would need minimum to be provided as well.
-> 
-> Agreed and if required caps should be extended to tell consumer the
-> minimum values supported.
+ Changes:
 
-Sorry, it's not required by our hardware. Is there any, which actually has such
-limitation? (minimum burst length)
+ v6: new patch
 
--Sergey
+ v7: - specify `maxItems: 1` for single entry properties
+     - get rid of redundant descriptions of said properties
 
-> 
-> -- 
-> ~Vinod
+ .../bindings/iio/adc/ingenic,adc.txt          | 49 -------------
+ .../bindings/iio/adc/ingenic,adc.yaml         | 71 +++++++++++++++++++
+ 2 files changed, 71 insertions(+), 49 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+deleted file mode 100644
+index cd9048cf9dcf..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
++++ /dev/null
+@@ -1,49 +0,0 @@
+-* Ingenic JZ47xx ADC controller IIO bindings
+-
+-Required properties:
+-
+-- compatible: Should be one of:
+-  * ingenic,jz4725b-adc
+-  * ingenic,jz4740-adc
+-  * ingenic,jz4770-adc
+-- reg: ADC controller registers location and length.
+-- clocks: phandle to the SoC's ADC clock.
+-- clock-names: Must be set to "adc".
+-- #io-channel-cells: Must be set to <1> to indicate channels are selected
+-  by index.
+-
+-ADC clients must use the format described in iio-bindings.txt, giving
+-a phandle and IIO specifier pair ("io-channels") to the ADC controller.
+-
+-Example:
+-
+-#include <dt-bindings/iio/adc/ingenic,adc.h>
+-
+-adc: adc@10070000 {
+-	compatible = "ingenic,jz4740-adc";
+-	#io-channel-cells = <1>;
+-
+-	reg = <0x10070000 0x30>;
+-
+-	clocks = <&cgu JZ4740_CLK_ADC>;
+-	clock-names = "adc";
+-
+-	interrupt-parent = <&intc>;
+-	interrupts = <18>;
+-};
+-
+-adc-keys {
+-	...
+-	compatible = "adc-keys";
+-	io-channels = <&adc INGENIC_ADC_AUX>;
+-	io-channel-names = "buttons";
+-	...
+-};
+-
+-battery {
+-	...
+-	compatible = "ingenic,jz4740-battery";
+-	io-channels = <&adc INGENIC_ADC_BATTERY>;
+-	io-channel-names = "battery";
+-	...
+-};
+diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+new file mode 100644
+index 000000000000..9f414dbdae86
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019-2020 Artur Rojek
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/iio/adc/ingenic,adc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Ingenic JZ47xx ADC controller IIO bindings
++
++maintainers:
++  - Artur Rojek <contact@artur-rojek.eu>
++
++description: >
++  Industrial I/O subsystem bindings for ADC controller found in
++  Ingenic JZ47xx SoCs.
++
++  ADC clients must use the format described in iio-bindings.txt, giving
++  a phandle and IIO specifier pair ("io-channels") to the ADC controller.
++
++properties:
++  compatible:
++    enum:
++      - ingenic,jz4725b-adc
++      - ingenic,jz4740-adc
++      - ingenic,jz4770-adc
++
++  '#io-channel-cells':
++    const: 1
++    description:
++      Must be set to <1> to indicate channels are selected by index.
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: adc
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - '#io-channel-cells'
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4740-cgu.h>
++    #include <dt-bindings/iio/adc/ingenic,adc.h>
++
++    adc@10070000 {
++            compatible = "ingenic,jz4740-adc";
++            #io-channel-cells = <1>;
++
++            reg = <0x10070000 0x30>;
++
++            clocks = <&cgu JZ4740_CLK_ADC>;
++            clock-names = "adc";
++
++            interrupt-parent = <&intc>;
++            interrupts = <18>;
++    };
+-- 
+2.26.2
+
