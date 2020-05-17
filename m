@@ -2,105 +2,90 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A50C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 20:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFB6C433E2
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 20:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0941E20758
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 20:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600B1207D3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 20:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgEQUoN (ORCPT
+        id S1726379AbgEQUx4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 16:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgEQUoN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 16:44:13 -0400
-Received: from mail.bugwerft.de (mail.bugwerft.de [IPv6:2a03:6000:1011::59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB764C061A0C;
-        Sun, 17 May 2020 13:44:12 -0700 (PDT)
-Received: from [192.168.178.106] (pD95EFBE7.dip0.t-ipconnect.de [217.94.251.231])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 70823409EB7;
-        Sun, 17 May 2020 20:41:15 +0000 (UTC)
-Subject: Re: [PATCH 4/4] sc16is7xx: Use threaded IRQ
-To:     Maarten Brock <m.brock@vanmierlo.com>
-Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org, jslaby@suse.com,
-        pascal.huerst@gmail.com, linux-serial-owner@vger.kernel.org
-References: <20200508143757.2609740-1-daniel@zonque.org>
- <20200508143757.2609740-5-daniel@zonque.org>
- <61fdcf12976c924fd86c5203aba673a7@vanmierlo.com>
-From:   Daniel Mack <daniel@zonque.org>
-Message-ID: <584de876-e675-0172-97ed-0c9534eb9526@zonque.org>
-Date:   Sun, 17 May 2020 22:44:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 17 May 2020 16:53:56 -0400
+Received: from sauhun.de ([88.99.104.3]:33272 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbgEQUx4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 May 2020 16:53:56 -0400
+Received: from localhost (p5486C87C.dip0.t-ipconnect.de [84.134.200.124])
+        by pokefinder.org (Postfix) with ESMTPSA id CB6052C049C;
+        Sun, 17 May 2020 22:53:52 +0200 (CEST)
+Date:   Sun, 17 May 2020 22:53:52 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 06/17] ARM: dts: r8a7742: Add SDHI nodes
+Message-ID: <20200517205352.GA1370@kunai>
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <61fdcf12976c924fd86c5203aba673a7@vanmierlo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Content-Disposition: inline
+In-Reply-To: <1589555337-5498-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maarten,
 
-Thanks for your review!
+--pf9I7BMVVzbSWLtt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 5/9/20 2:55 PM, Maarten Brock wrote:
-> On 2020-05-08 16:37, Daniel Mack wrote:
->> Use a threaded IRQ handler to get rid of the irq_work kthread.
->> This also allows for the driver to use interrupts generated by
->> a threaded controller.
->>
->> Signed-off-by: Daniel Mack <daniel@zonque.org>
->> ---
->>  drivers/tty/serial/sc16is7xx.c | 18 +++++-------------
->>  1 file changed, 5 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/tty/serial/sc16is7xx.c
->> b/drivers/tty/serial/sc16is7xx.c
+On Fri, May 15, 2020 at 04:08:46PM +0100, Lad Prabhakar wrote:
+> Add the SDHI devices nodes to the R8A7742 device tree.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
+as.com>
 
->> @@ -1317,8 +1308,9 @@ static int sc16is7xx_probe(struct device *dev,
->>      }
->>
->>      /* Setup interrupt */
->> -    ret = devm_request_irq(dev, irq, sc16is7xx_irq,
->> -                   IRQF_TRIGGER_FALLING, dev_name(dev), s);
->> +    ret = devm_request_threaded_irq(dev, irq, NULL, sc16is7xx_irq,
->> +                    IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->> +                    dev_name(dev), s);
->>      if (!ret)
->>          return 0;
-> 
-> Since UART0 is first handled completely in the for loop before UART1 is
-> handled, a new interrupt may arise on UART0 while UART1 is being handled.
-
-The code in the interrupt handling function loops forever until there is
-no more interrupt bits pending. So if there is a new IRQ happening for
-UART0 while UART1 is being served, it will be handled in the same loop.
-
-And just to be sure I understand correctly: this is unrelated to the
-switch to threaded IRQs, right? Falling edge triggers were always used
-for pdata probed devices.
-
-> The result is a missed interrupt since the IRQ line might not *FALL* again.
-
-It doesn't have to. We only exit the interrupt handler when there is
-nothing left to do, at which point the IRQ line ist back high. So it
-will fall again in case of new events.
-
-> Therefor I suggest to change IRQF_TRIGGER_FALLING to IRQF_TRIGGER_LOW. This
-> way the thread will be retriggered after IRQ_HANDLED is returned.
-
-This doesn't work in my setup unfortunately, as the interrupt controller
-is incapable of handling level IRQs.
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 
-Thanks,
-Daniel
+--pf9I7BMVVzbSWLtt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7BpFsACgkQFA3kzBSg
+KbYmzg/+LfyPZH+2Xfvqm98T/YgjrXFgYlvaudnznG5k4WKw8eE6beap59uIEvyH
+/pxajrNijQtvChZTT1lNirQfdWo3bDZjI89Qy97K5IL8AuITQnFlMbbQhArmonjR
+aWaltkG1oSP/klPzqU41Y7QEGCusffp6UpLg/i3peCvzdBMtxI5VD7elA3lUH/Kv
+/lSPeWKH0tgsh/Ca24X0IatlKnoiv88oe9f+ny+IWu81qe8K/7ZK2RxttXJWW7Cr
+earVX3v+SfOEhb2TQpSEpC/uSDNr8GeIIkX/Z3+EG8/KpAYPXT2W74c42mw4ELui
+4t6TR67bcfoeableOCiXN/mxtxSChNa8qq/I86Y1IxLmylvAoFq0yQt+rzA9rTK1
+WW27wu0YUTlrlooC/LRK0qU0EZMf22x/HcMvqvXPMFwnzHmUnhdKRXfZjsOBaHlz
+DtDP7k2bMRP+Fi2Hv6ixVT3jD5W5FviHenexFEYmHGNaovxthukE1fPyxMQgUkpz
+ft4MzIM1WqMkVXSY0m5XY3dP0A8tre2puottV7eoZwisoBA/Y7k2EEK1RHt6fLvZ
+ylmnS/M6253Cj2F/M0OdCgVVekVBSc4WCy5U/qe/mfQPT+eGIQTqk1adGbLc3GuU
+Xlwj2EafqLI4YzI+BsXvLqCz5acxYme57Rif+kB0d8zLdrzhFMc=
+=RyxU
+-----END PGP SIGNATURE-----
+
+--pf9I7BMVVzbSWLtt--
