@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354FDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 06:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB22C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 06:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 102CC20735
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 06:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D45206D5
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 06:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgEQGMN (ORCPT
+        id S1726753AbgEQGRP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 02:12:13 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:50928 "EHLO
+        Sun, 17 May 2020 02:17:15 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51714 "EHLO
         asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbgEQGMN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 02:12:13 -0400
+        with ESMTP id S1726740AbgEQGRP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 02:17:15 -0400
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 2DD1980513;
-        Sun, 17 May 2020 08:12:07 +0200 (CEST)
-Date:   Sun, 17 May 2020 08:12:05 +0200
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 7C71F8052B;
+        Sun, 17 May 2020 08:17:11 +0200 (CEST)
+Date:   Sun, 17 May 2020 08:17:10 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -33,20 +33,19 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         devicetree@vger.kernel.org, od@zcrc.me,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 01/12] dt-bindings: display: Convert ingenic,lcd.txt to
- YAML
-Message-ID: <20200517061205.GA609600@ravnborg.org>
+Subject: Re: [PATCH 02/12] dt-bindings: display: Add ingenic,ipu.yaml
+Message-ID: <20200517061710.GB609600@ravnborg.org>
 References: <20200516215057.392609-1-paul@crapouillou.net>
+ <20200516215057.392609-2-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200516215057.392609-1-paul@crapouillou.net>
+In-Reply-To: <20200516215057.392609-2-paul@crapouillou.net>
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
         a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
-        a=e5mUnYsNAAAA:8 a=oDXG_uVl-8910JDl3hUA:9 a=CjuIK1q_8ugA:10
-        a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8
+        a=b0PC0ugUiK8WXcUa1NUA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
         a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
         a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
 Sender: devicetree-owner@vger.kernel.org
@@ -54,113 +53,58 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi PAul.
-
-On Sat, May 16, 2020 at 11:50:46PM +0200, Paul Cercueil wrote:
-> Convert the ingenic,lcd.txt to a new ingenic,lcd.yaml file.
-> 
-> In the process, the new ingenic,jz4780-lcd compatible string has been
-> added.
+Hi Paul.
+On Sat, May 16, 2020 at 11:50:47PM +0200, Paul Cercueil wrote:
+> Add documentation of the Device Tree bindings for the Image Processing
+> Unit (IPU) found in most Ingenic SoCs.
 > 
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Looks good.
-Had to read the minItems/maxItems thing twice to get it,
-so I also played a little with the examples, and it worked as expected.
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+For me it fails like this:
+
+/Documentation/devicetree/bindings/display/ingenic,ipu.yaml: ignoring, error in schema: properties: compatible: oneOf: 1: items
+warning: no schema found in file: Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+make[2]: *** [Documentation/devicetree/bindings/Makefile:42: Documentation/devicetree/bindings/processed-schema.yaml] Error 255
+make[2]: *** Waiting for unfinished jobs....
+Documentation/devicetree/bindings/display/ingenic,ipu.yaml: properties:compatible:oneOf:1:items: ['ingenic,jz4770-ipu', 'ingenic,jz4760-ipu'] is not valid under any of the given schemas (Possible causes of the failure):
+	Documentation/devicetree/bindings/display/ingenic,ipu.yaml: properties:compatible:oneOf:1:items: ['ingenic,jz4770-ipu', 'ingenic,jz4760-ipu'] is not of type 'object', 'boolean'
+	Documentation/devicetree/bindings/display/ingenic,ipu.yaml: properties:compatible:oneOf:1:items:0: 'ingenic,jz4770-ipu' is not of type 'object', 'boolean'
+	Documentation/devicetree/bindings/display/ingenic,ipu.yaml: properties:compatible:oneOf:1:items:1: 'ingenic,jz4760-ipu' is not of type 'object', 'boolean'
+
+
+	Sam
 
 > ---
+>  .../bindings/display/ingenic,ipu.yaml         | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,ipu.yaml
 > 
-> Notes:
->     This patch comes from a different patchset so it's effectively a V2.
->     
->     Changes were:
->     - lcd_pclk and lcd clocks are in the correct order now,
->     - Add 'port' and 'ports' properties, and document the valid ports.
-> 
->  .../bindings/display/ingenic,lcd.txt          |  45 -------
->  .../bindings/display/ingenic,lcd.yaml         | 126 ++++++++++++++++++
->  2 files changed, 126 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.txt b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-> deleted file mode 100644
-> index 01e3261defb6..000000000000
-> --- a/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-> +++ /dev/null
-> @@ -1,45 +0,0 @@
-> -Ingenic JZ47xx LCD driver
-> -
-> -Required properties:
-> -- compatible: one of:
-> -  * ingenic,jz4740-lcd
-> -  * ingenic,jz4725b-lcd
-> -  * ingenic,jz4770-lcd
-> -- reg: LCD registers location and length
-> -- clocks: LCD pixclock and device clock specifiers.
-> -	   The device clock is only required on the JZ4740.
-> -- clock-names: "lcd_pclk" and "lcd"
-> -- interrupts: Specifies the interrupt line the LCD controller is connected to.
-> -
-> -Example:
-> -
-> -panel {
-> -	compatible = "sharp,ls020b1dd01d";
-> -
-> -	backlight = <&backlight>;
-> -	power-supply = <&vcc>;
-> -
-> -	port {
-> -		panel_input: endpoint {
-> -			remote-endpoint = <&panel_output>;
-> -		};
-> -	};
-> -};
-> -
-> -
-> -lcd: lcd-controller@13050000 {
-> -	compatible = "ingenic,jz4725b-lcd";
-> -	reg = <0x13050000 0x1000>;
-> -
-> -	interrupt-parent = <&intc>;
-> -	interrupts = <31>;
-> -
-> -	clocks = <&cgu JZ4725B_CLK_LCD>;
-> -	clock-names = "lcd";
-> -
-> -	port {
-> -		panel_output: endpoint {
-> -			remote-endpoint = <&panel_input>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.yaml b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+> diff --git a/Documentation/devicetree/bindings/display/ingenic,ipu.yaml b/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
 > new file mode 100644
-> index 000000000000..d56db1802fad
+> index 000000000000..22fe02ca866d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
-> @@ -0,0 +1,126 @@
+> +++ b/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+> @@ -0,0 +1,65 @@
 > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/display/ingenic,lcd.yaml#
+> +$id: http://devicetree.org/schemas/display/ingenic,ipu.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Ingenic SoCs LCD controller devicetree bindings
+> +title: Ingenic SoCs Image Processing Unit (IPU) devicetree bindings
 > +
 > +maintainers:
 > +  - Paul Cercueil <paul@crapouillou.net>
 > +
 > +properties:
-> +  $nodename:
-> +    pattern: "^lcd-controller@[0-9a-f]+$"
-> +
 > +  compatible:
-> +    enum:
-> +      - ingenic,jz4740-lcd
-> +      - ingenic,jz4725b-lcd
-> +      - ingenic,jz4770-lcd
-> +      - ingenic,jz4780-lcd
+> +    oneOf:
+> +      - enum:
+> +        - ingenic,jz4725b-ipu
+> +        - ingenic,jz4760-ipu
+> +      - items:
+> +        - ingenic,jz4770-ipu
+> +        - ingenic,jz4760-ipu
 > +
 > +  reg:
 > +    maxItems: 1
@@ -169,100 +113,40 @@ Acked-by: Sam Ravnborg <sam@ravnborg.org>
 > +    maxItems: 1
 > +
 > +  clocks:
-> +    items:
-> +      - description: Pixel clock
-> +      - description: Module clock
-> +    minItems: 1
+> +    maxItems: 1
 > +
 > +  clock-names:
-> +    items:
-> +      - const: lcd_pclk
-> +      - const: lcd
-> +    minItems: 1
+> +    const: ipu
 > +
-> +  port:
+> +patternProperties:
+> +  "^ports?$":
 > +    description: OF graph bindings (specified in bindings/graph.txt).
-> +
-> +  ports:
-> +    description: OF graph bindings (specified in bindings/graph.txt).
-> +    type: object
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: DPI output, to interface with TFT panels.
-> +
-> +      port@8:
-> +        type: object
-> +        description: Link to the Image Processing Unit (IPU).
-> +          (See ingenic,ipu.yaml).
-> +
-> +    required:
-> +      - port@0
 > +
 > +required:
-> +    - compatible
-> +    - reg
-> +    - interrupts
-> +    - clocks
-> +    - clock-names
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - ingenic,jz4740-lcd
-> +          - ingenic,jz4780-lcd
-> +then:
-> +  properties:
-> +    clocks:
-> +      minItems: 2
-> +    clock-names:
-> +      minItems: 2
-> +else:
-> +  properties:
-> +    clocks:
-> +      maxItems: 1
-> +    clock-names:
-> +      maxItems: 1
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
 > +
 > +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/clock/jz4740-cgu.h>
-> +    lcd-controller@13050000 {
-> +      compatible = "ingenic,jz4740-lcd";
-> +      reg = <0x13050000 0x1000>;
+> +    #include <dt-bindings/clock/jz4770-cgu.h>
+> +    ipu@13080000 {
+> +      compatible = "ingenic,jz4770-ipu", "ingenic,jz4760-ipu";
+> +      reg = <0x13080000 0x800>;
 > +
 > +      interrupt-parent = <&intc>;
-> +      interrupts = <30>;
+> +      interrupts = <29>;
 > +
-> +      clocks = <&cgu JZ4740_CLK_LCD_PCLK>, <&cgu JZ4740_CLK_LCD>;
-> +      clock-names = "lcd_pclk", "lcd";
-> +
-> +      port {
-> +        endpoint {
-> +          remote-endpoint = <&panel_input>;
-> +        };
-> +      };
-> +    };
-> +
-> +  - |
-> +    #include <dt-bindings/clock/jz4725b-cgu.h>
-> +    lcd-controller@13050000 {
-> +      compatible = "ingenic,jz4725b-lcd";
-> +      reg = <0x13050000 0x1000>;
-> +
-> +      interrupt-parent = <&intc>;
-> +      interrupts = <31>;
-> +
-> +      clocks = <&cgu JZ4725B_CLK_LCD>;
-> +      clock-names = "lcd_pclk";
+> +      clocks = <&cgu JZ4770_CLK_IPU>;
+> +      clock-names = "ipu";
 > +
 > +      port {
-> +        endpoint {
-> +          remote-endpoint = <&panel_input>;
+> +        ipu_ep: endpoint {
+> +          remote-endpoint = <&lcdc_ep>;
 > +        };
 > +      };
 > +    };
