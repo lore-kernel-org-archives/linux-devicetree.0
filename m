@@ -2,106 +2,112 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A927C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 12:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5626C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 12:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 849BC204EC
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 12:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3826204EC
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 12:19:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fuS89dnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgEQMGD (ORCPT
+        id S1727893AbgEQMT1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 08:06:03 -0400
-Received: from h2.fbrelay.privateemail.com ([131.153.2.43]:46679 "EHLO
-        h2.fbrelay.privateemail.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727912AbgEQMGD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 May 2020 08:06:03 -0400
-Received: from MTA-05-3.privateemail.com (mta-05.privateemail.com [198.54.127.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h1.fbrelay.privateemail.com (Postfix) with ESMTPS id 1893C80684;
-        Sun, 17 May 2020 07:54:47 -0400 (EDT)
-Received: from MTA-05.privateemail.com (localhost [127.0.0.1])
-        by MTA-05.privateemail.com (Postfix) with ESMTP id 052666004A;
-        Sun, 17 May 2020 07:54:45 -0400 (EDT)
-Received: from localhost.localdomain (unknown [10.20.151.204])
-        by MTA-05.privateemail.com (Postfix) with ESMTPA id 7C95C60049;
-        Sun, 17 May 2020 11:54:44 +0000 (UTC)
-From:   Eli Riggs <eli@rje.li>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sun, 17 May 2020 08:19:27 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:45644 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727833AbgEQMT1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 08:19:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1589717965; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m6rR31/j2rzqBrfWiu7P6GCD7jhwshKtwnMGtC/OSLY=;
+        b=fuS89dnmSKIjpFcz/qNlJ+E8jHHaHdPlWnM24ibfuN+m1Jqhubn8n0Bh4nKT4jncckq/lQ
+        FWcQUBihGzB60pDmo3T87kL/WrnWkNYFcrYwRsupHAJEDdKNKUTvdCTZgau7p1pudvpXTE
+        gum5raRCQxfIwdDXQNnqai/sCrm6VPk=
+Date:   Sun, 17 May 2020 14:19:14 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 04/12] gpu/drm: ingenic: Fix bogus crtc_atomic_check
+ callback
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, Eli Riggs <eli@rje.li>
-Subject: [PATCH 3/3] arm64: dts: qcom: Add initial support for Xiaomi Redmi Note 8T
-Date:   Sun, 17 May 2020 04:54:08 -0700
-Message-Id: <20200517115410.3374-3-eli@rje.li>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200517115410.3374-1-eli@rje.li>
-References: <20200517115410.3374-1-eli@rje.li>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, od@zcrc.me, dri-devel@lists.freedesktop.org
+Message-Id: <286HAQ.VQDCISW6S4DW2@crapouillou.net>
+In-Reply-To: <20200517061737.GC609600@ravnborg.org>
+References: <20200516215057.392609-1-paul@crapouillou.net>
+        <20200516215057.392609-4-paul@crapouillou.net>
+        <20200517061737.GC609600@ravnborg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds initial device tree for Xiaomi Redmi Note 8T, codename xiaomi-willow.
-It uses the sm6125 SoC. Currently only boots into initrd shell over UART.
-Requires appended DTB with qcom,board-id = <0x22 0x0> and
-qcom,msm-id = <0x18a 0x10000> to actually boot.
+Hi Sam,
 
-Signed-off-by: Eli Riggs <eli@rje.li>
----
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../boot/dts/qcom/sm6125-xiaomi-willow.dts    | 19 +++++++++++++++++++
- 2 files changed, 20 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts
+Le dim. 17 mai 2020 =E0 8:17, Sam Ravnborg <sam@ravnborg.org> a =E9crit :
+> On Sat, May 16, 2020 at 11:50:49PM +0200, Paul Cercueil wrote:
+>>  The code was comparing the SoC's maximum height with the mode's=20
+>> width,
+>>  and vice-versa. D'oh.
+>>=20
+>>  Cc: stable@vger.kernel.org # v5.6
+>>  Fixes: a7c909b7c037 ("gpu/drm: ingenic: Check for display size in=20
+>> CRTC atomic check")
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>=20
+> Looks correct.
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index cc103f7020fd6..060aa98200e47 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-willow.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts
-new file mode 100644
-index 0000000000000..444b32ccb9d48
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (c) 2020, Eli Riggs <eli@rje.li>
-+
-+/dts-v1/;
-+
-+#include "sm6125.dtsi"
-+
-+/ {
-+	model = "Xiaomi Redmi Note 8T";
-+	compatible = "xiaomi,willow", "qcom,sm6125";
-+
-+	aliases {
-+		serial0 = &qupv3_se4_2uart;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
--- 
-2.20.1
+Pushed to drm-misc-fixes, thanks for the review.
+
+-Paul
+
+>>  ---
+>>=20
+>>  Notes:
+>>      This patch was previously sent standalone.
+>>      I marked it as superseded in patchwork.
+>>      Nothing has been changed here.
+>>=20
+>>   drivers/gpu/drm/ingenic/ingenic-drm.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>>  diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
+>> b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  index 632d72177123..0c472382a08b 100644
+>>  --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  @@ -330,8 +330,8 @@ static int ingenic_drm_crtc_atomic_check(struct=20
+>> drm_crtc *crtc,
+>>   	if (!drm_atomic_crtc_needs_modeset(state))
+>>   		return 0;
+>>=20
+>>  -	if (state->mode.hdisplay > priv->soc_info->max_height ||
+>>  -	    state->mode.vdisplay > priv->soc_info->max_width)
+>>  +	if (state->mode.hdisplay > priv->soc_info->max_width ||
+>>  +	    state->mode.vdisplay > priv->soc_info->max_height)
+>>   		return -EINVAL;
+>>=20
+>>   	rate =3D clk_round_rate(priv->pix_clk,
+>>  --
+>>  2.26.2
+>>=20
+>>  _______________________________________________
+>>  dri-devel mailing list
+>>  dri-devel@lists.freedesktop.org
+>>  https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 
