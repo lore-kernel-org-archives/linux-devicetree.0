@@ -2,222 +2,545 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CBAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 16:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D403EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 16:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F1020643
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 16:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589732130;
-	bh=lOxMalPSboreFQo6nowy7ak59+Im6Zg68rOTJJVpKdo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=U2ODHdxKk1sL7JpzUiGK/g1FDkL3HAbysTDbK8FFkbkKt98Y0vp7h+LYUKKGlWB9k
-	 +zKKnmiC4IbtpIrsUJyZkzVOhjGl+PmSsp9Sz1TYujEDrLiLAxE7uy/m+BhW2Bn2IE
-	 Hr+9B5w5eXxNuzkZX/H2mZ9HYoHanssn7n1rJiTU=
+	by mail.kernel.org (Postfix) with ESMTP id AD46220674
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 16:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgEQQP3 (ORCPT
+        id S1728041AbgEQQ1s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 12:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbgEQQP3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 May 2020 12:15:29 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4480207DA;
-        Sun, 17 May 2020 16:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589732128;
-        bh=lOxMalPSboreFQo6nowy7ak59+Im6Zg68rOTJJVpKdo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GO1hXFx0ruK49r0fssOllKsIx+koTJJtlnLn298nBpcZDxskaxfrZz7wJe9NGY9W8
-         SYIx87znZ8S16zXfX5WiOxay8Qvvdukq5cpS7/4H1tlZqHt5zTC6AJdmDOHoYuN7ub
-         A7CWlD7vtfVgeJmlZp2LgGdBpH0MqdaGIY6+hXIQ=
-Date:   Sun, 17 May 2020 17:15:23 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>,
-        Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-Message-ID: <20200517171523.54fa6deb@archlinux>
-In-Reply-To: <b7289aca-f393-faca-f512-a952a77c1e68@metafoo.de>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
-        <20200413082445.17324-6-nuno.sa@analog.com>
-        <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
-        <20200502184010.134eb8b5@archlinux>
-        <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
-        <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
-        <20200503094751.633feda1@archlinux>
-        <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
-        <b7289aca-f393-faca-f512-a952a77c1e68@metafoo.de>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 17 May 2020 12:27:48 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51431 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728035AbgEQQ1s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 12:27:48 -0400
+X-Originating-IP: 91.175.115.186
+Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E27A220006;
+        Sun, 17 May 2020 16:27:44 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] ARM: dts: kirkwood: Add Check Point L-50 board
+In-Reply-To: <20200422150007.29119-1-paweldembicki@gmail.com>
+References: <20200422150007.29119-1-paweldembicki@gmail.com>
+Date:   Sun, 17 May 2020 18:27:44 +0200
+Message-ID: <878shqh6gv.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 3 May 2020 11:12:34 +0200
-Lars-Peter Clausen <lars@metafoo.de> wrote:
+Hello Pawel,
 
-> On 5/3/20 11:07 AM, Lars-Peter Clausen wrote:
-> > On 5/3/20 10:47 AM, Jonathan Cameron wrote: =20
-> >> On Sat, 02 May 2020 21:52:18 +0200
-> >> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
-> >> =20
-> >>> On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen wrote: =20
-> >>>> On 5/2/20 7:40 PM, Jonathan Cameron wrote: =20
-> >>>>> On Mon, 27 Apr 2020 20:06:07 +0200
-> >>>>> Lars-Peter Clausen <lars@metafoo.de> wrote: =20
-> >>>>>> On 4/13/20 10:24 AM, Nuno S=C3=A1 wrote: =20
-> >>>>>>> [...]
-> >>>>>>> +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
-> >>>>>>> +{
-> >>>>>>> [...]
-> >>>>>>> +=C2=A0=C2=A0=C2=A0 __be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
-> >>>>>>> [...]
-> >>>>>>> +
-> >>>>>>> +=C2=A0=C2=A0=C2=A0 iio_push_to_buffers_with_timestamp(indio_dev,=
- data, pf- =20
-> >>>>>>>> timestamp); =20
-> >>>>>> If the timestamp is enabled the IIO core might insert padding
-> >>>>>> between
-> >>>>>> the data channels and the timestamp. If that happens this will
-> >>>>>> disclose
-> >>>>>> kernel stack memory to userspace.
-> >>>>>>
-> >>>>>> This needs either a memset(data, 0x00, sizeof(data)) or maybe put
-> >>>>>> data
-> >>>>>> into the state struct and kzalloc it. =20
-> >>>>> Good spot. Could simply do __be16 data[ADI..] =3D {0}; rather than
-> >>>>> explicit
-> >>>>> memset, but some form of zeroization is needed.
-> >>>>>
-> >>>>> I've fixed up the applied patch with the above approach. =20
-> >>>> There is actually another issue. The stack data is not necessarily
-> >>>> aligned to 64 bit, which causes issues if we try to put the 64-bit =
-=20
-> >>> Oh, this is actually more problematic. Yes, since we have an array of
-> >>> u16, that is not guaranteed to be 64bit aligned. Doing a quick search
-> >>> of `iio_push_to_buffers_with_timestamp()` users and I could quickly
-> >>> find 4/5 drivers with the same problem. I guess the API should clearly
-> >>> state that `data` needs to be __at least__ 64 bits aligned (maybe a
-> >>> future patch). Or we could even check the address and guarantee that =
-it
-> >>> is properly aligned before continuing (though Im guessing this will
-> >>> break a lot of users...) =20
-> >>>> timestamp in it. I think data should really be in the state struct. =
-=20
-> >>> Yes, with a proper __aligned(8) attribute... Or couldn't we just use
-> >>> __aligned(8) on the stack variable? =20
-> >> Forcing alignment on the stack isn't terribly reliable, which is why
-> >> we never do that for dma safe buffers.
-> >>
-> >> Probably better to just move it to the state structure.
-> >> I'll fix it up to do that. Please sanity check what will shortly
-> >> be in the testing branch.
-> >>
-> >> The moment Lars mentioned this I groaned. As you've noted a few other
-> >> drivers have the same problem + the ABI doesn't clearly state
-> >> or check this.
-> >>
-> >> We should certainly fix all the drivers that suffer this problem
-> >> first then we can think about adding a runtime check. =20
-> >
-> > It looks like it is actually quite a few drivers, maybe we should=20
-> > switch to put_unaligned(). We probably got lucky in most cases and the=
-=20
-> > buffer is naturally aligned to 64 bit.
+> This patch adds dts for the Check Point L-50 from 600/1100 series
+> routers.
+>
+> Specification:
+> -CPU: Marvell Kirkwood 88F6821 1200MHz
+> -RAM: 512MB
+> -Flash: NAND 512MB
+> -WiFi: mPCIe card based on Atheros AR9287 b/g/n
+> -WAN: 1 Gigabit Port (Marvell 88E1116R PHY)
+> -LAN: 9 Gigabit Ports (2x Marvell 88E6171(5+4))
+> -USB: 2x USB2.0
+> -Express card slot
+> -SD card slot
+> -Serial console: RJ-45 115200 8n1
+> -Unsupported DSL
+>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-Just a quick update on this.  I've been taking a deeper look and there
-are some 'interesting' cases in here so the put_unaligned is attractive
-unfortunately I don't think we can go that way because it would be
-reasonable for consumers of the buffer to expect it to be appropriately
-aligned.   We need to rework many of these anyway to fix the related
-data leak.
+I've missed there was a v3, so I replaced the v2 patch by this patch.
 
-I've done some of below and will post shortly - a few will take more
-effort and probably need testing rather than just relying on review.
+Gregory
 
-So far the 'interesting ones' are mpu3050 and isl29501.
+> ---
+> Changes in v3:
+> - fix typo and code style issues pointed by OpenWrt guys
+> Changes in v2:
+> - none
+>
+>  arch/arm/boot/dts/Makefile          |   1 +
+>  arch/arm/boot/dts/kirkwood-l-50.dts | 438 ++++++++++++++++++++++++++++
+>  2 files changed, 439 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/kirkwood-l-50.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e8dd99201397..eba030b3ba69 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -279,6 +279,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
+>  	kirkwood-iomega_ix2_200.dtb \
+>  	kirkwood-is2.dtb \
+>  	kirkwood-km_kirkwood.dtb \
+> +	kirkwood-l-50.dtb \
+>  	kirkwood-laplug.dtb \
+>  	kirkwood-linkstation-lsqvl.dtb \
+>  	kirkwood-linkstation-lsvl.dtb \
+> diff --git a/arch/arm/boot/dts/kirkwood-l-50.dts b/arch/arm/boot/dts/kirkwood-l-50.dts
+> new file mode 100644
+> index 000000000000..0d81c43a6a73
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/kirkwood-l-50.dts
+> @@ -0,0 +1,438 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Check Point L-50 Board Description
+> + * Copyright 2020 Pawel Dembicki <paweldembicki@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "kirkwood.dtsi"
+> +#include "kirkwood-6281.dtsi"
+> +
+> +/ {
+> +	model = "Check Point L-50";
+> +	compatible = "checkpoint,l-50", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x20000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8";
+> +		stdout-path = &uart0;
+> +	};
+> +
+> +	ocp@f1000000 {
+> +		pinctrl: pin-controller@10000 {
+> +			pinctrl-0 = <&pmx_led38 &pmx_sysrst &pmx_button29>;
+> +			pinctrl-names = "default";
+> +
+> +			pmx_sysrst: pmx-sysrst {
+> +				marvell,pins = "mpp6";
+> +				marvell,function = "sysrst";
+> +			};
+> +
+> +			pmx_button29: pmx_button29 {
+> +				marvell,pins = "mpp29";
+> +				marvell,function = "gpio";
+> +			};
+> +
+> +			pmx_led38: pmx_led38 {
+> +				marvell,pins = "mpp38";
+> +				marvell,function = "gpio";
+> +			};
+> +
+> +			pmx_sdio_cd: pmx-sdio-cd {
+> +				marvell,pins = "mpp46";
+> +				marvell,function = "gpio";
+> +			};
+> +		};
+> +
+> +		serial@12000 {
+> +			status = "okay";
+> +		};
+> +
+> +		mvsdio@90000 {
+> +			status = "okay";
+> +			cd-gpios = <&gpio1 14 9>;
+> +		};
+> +
+> +		i2c@11000 {
+> +			status = "okay";
+> +			clock-frequency = <400000>;
+> +
+> +			gpio2: gpio-expander@20{
+> +				#gpio-cells = <2>;
+> +				#interrupt-cells = <2>;
+> +				compatible = "semtech,sx1505q";
+> +				reg = <0x20>;
+> +
+> +				gpio-controller;
+> +			};
+> +
+> +			/* Three GPIOs from 0x21 exp. are undescribed in dts:
+> +			 * 1: DSL module reset (active low)
+> +			 * 5: mPCIE reset (active low)
+> +			 * 6: Express card reset (active low)
+> +			 */
+> +			gpio3: gpio-expander@21{
+> +				#gpio-cells = <2>;
+> +				#interrupt-cells = <2>;
+> +				compatible = "semtech,sx1505q";
+> +				reg = <0x21>;
+> +
+> +				gpio-controller;
+> +			};
+> +
+> +			rtc@30 {
+> +				compatible = "s35390a";
+> +				reg = <0x30>;
+> +			};
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		status_green {
+> +			label = "l-50:green:status";
+> +			gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		status_red {
+> +			label = "l-50:red:status";
+> +			gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		wifi {
+> +			label = "l-50:green:wifi";
+> +			gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
+> +			linux,default-trigger = "phy0tpt";
+> +		};
+> +
+> +		internet_green {
+> +			label = "l-50:green:internet";
+> +			gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		internet_red {
+> +			label = "l-50:red:internet";
+> +			gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		usb1_green {
+> +			label = "l-50:green:usb1";
+> +			gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+> +			linux,default-trigger = "usbport";
+> +			trigger-sources = <&hub_port3>;
+> +		};
+> +
+> +		usb1_red {
+> +			label = "l-50:red:usb1";
+> +			gpios = <&gpio2 4 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		usb2_green {
+> +			label = "l-50:green:usb2";
+> +			gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+> +			linux,default-trigger = "usbport";
+> +			trigger-sources = <&hub_port1>;
+> +		};
+> +
+> +		usb2_red {
+> +			label = "l-50:red:usb2";
+> +			gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	usb2_pwr {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb2_pwr";
+> +
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio3 3 GPIO_ACTIVE_LOW>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	usb1_pwr {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb1_pwr";
+> +
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio3 4 GPIO_ACTIVE_LOW>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	mpcie_pwr {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "mpcie_pwr";
+> +
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio3 5 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		regulator-always-on;
+> +	};
+> +
+> +	express_card_pwr {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "express_card_pwr";
+> +
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		regulator-always-on;
+> +	};
+> +
+> +	keys {
+> +		compatible = "gpio-keys";
+> +
+> +		factory_defaults {
+> +			label = "factory_defaults";
+> +			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_RESTART>;
+> +		};
+> +	};
+> +};
+> +
+> +&mdio {
+> +	status = "okay";
+> +
+> +	ethphy8: ethernet-phy@8 {
+> +		reg = <0x08>;
+> +	};
+> +
+> +	switch0: switch@10 {
+> +		compatible = "marvell,mv88e6085";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x10>;
+> +		dsa,member = <0 0>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				label = "lan5";
+> +			};
+> +
+> +			port@1 {
+> +			       reg = <1>;
+> +			       label = "lan1";
+> +			};
+> +
+> +			port@2 {
+> +			       reg = <2>;
+> +			       label = "lan6";
+> +			};
+> +
+> +			port@3 {
+> +			       reg = <3>;
+> +			       label = "lan2";
+> +			};
+> +
+> +			port@4 {
+> +				reg = <4>;
+> +				label = "lan7";
+> +			};
+> +
+> +			switch0port5: port@5 {
+> +				reg = <5>;
+> +				phy-mode = "rgmii-txid";
+> +				link = <&switch1port5>;
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			port@6 {
+> +				reg = <6>;
+> +				label = "cpu";
+> +				phy-mode = "rgmii-id";
+> +				ethernet = <&eth1port>;
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	switch@11 {
+> +		compatible = "marvell,mv88e6085";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x11>;
+> +		dsa,member = <0 1>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				label = "lan3";
+> +			};
+> +
+> +			port@1 {
+> +			       reg = <1>;
+> +			       label = "lan8";
+> +			};
+> +
+> +			port@2 {
+> +			       reg = <2>;
+> +			       label = "lan4";
+> +			};
+> +
+> +			port@3 {
+> +			       reg = <3>;
+> +			       label = "dmz";
+> +			};
+> +
+> +			switch1port5: port@5 {
+> +				reg = <5>;
+> +				phy-mode = "rgmii-txid";
+> +				link = <&switch0port5>;
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			port@6 {
+> +				reg = <6>;
+> +				label = "dsl";
+> +				fixed-link {
+> +					speed = <100>;
+> +					full-duplex;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&eth0 {
+> +	status = "okay";
+> +	ethernet0-port@0 {
+> +		phy-handle = <&ethphy8>;
+> +	};
+> +};
+> +
+> +&eth1 {
+> +	status = "okay";
+> +	ethernet1-port@0 {
+> +		speed = <1000>;
+> +		duplex = <1>;
+> +	};
+> +};
+> +
+> +&nand {
+> +	status = "okay";
+> +	pinctrl-0 = <&pmx_nand>;
+> +	pinctrl-names = "default";
+> +
+> +	partition@0 {
+> +		label = "u-boot";
+> +		reg = <0x00000000 0x000c0000>;
+> +	};
+> +
+> +	partition@a0000 {
+> +		label = "bootldr-env";
+> +		reg = <0x000c0000 0x00040000>;
+> +	};
+> +
+> +	partition@100000 {
+> +		label = "kernel-1";
+> +		reg = <0x00100000 0x00800000>;
+> +	};
+> +
+> +	partition@900000 {
+> +		label = "rootfs-1";
+> +		reg = <0x00900000 0x07100000>;
+> +	};
+> +
+> +	partition@7a00000 {
+> +		label = "kernel-2";
+> +		reg = <0x07a00000 0x00800000>;
+> +	};
+> +
+> +	partition@8200000 {
+> +		label = "rootfs-2";
+> +		reg = <0x08200000 0x07100000>;
+> +	};
+> +
+> +	partition@f300000 {
+> +		label = "default_sw";
+> +		reg = <0x0f300000 0x07900000>;
+> +	};
+> +
+> +	partition@16c00000 {
+> +		label = "logs";
+> +		reg = <0x16c00000 0x01800000>;
+> +	};
+> +
+> +	partition@18400000 {
+> +		label = "preset_cfg";
+> +		reg = <0x18400000 0x00100000>;
+> +	};
+> +
+> +	partition@18500000 {
+> +		label = "adsl";
+> +		reg = <0x18500000 0x00100000>;
+> +	};
+> +
+> +	partition@18600000 {
+> +		label = "storage";
+> +		reg = <0x18600000 0x07a00000>;
+> +	};
+> +};
+> +
+> +&rtc {
+> +	status = "disabled";
+> +};
+> +
+> +&pciec {
+> +	status = "okay";
+> +};
+> +
+> +&pcie0 {
+> +	status = "okay";
+> +};
+> +
+> +&sata_phy0 {
+> +	status = "disabled";
+> +};
+> +
+> +&sata_phy1 {
+> +	status = "disabled";
+> +};
+> +
+> +&usb0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +
+> +	port@1 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <1>;
+> +		#trigger-source-cells = <0>;
+> +
+> +		hub_port1: port@1 {
+> +			reg = <1>;
+> +			#trigger-source-cells = <0>;
+> +		};
+> +
+> +		hub_port3: port@3 {
+> +			reg = <3>;
+> +			#trigger-source-cells = <0>;
+> +		};
+> +	};
+> +};
+> --
+> 2.20.1
+>
 
-J
-
-> >
-> > But the reason I noticed this is because I ran into the issue in the=20
-> > wild where the timestamp ended up at the wrong offset in the buffer,=20
-> > so it does happen.
-> >
-> > The following semantic patch finds affected drivers.
-> >
-> > @@
-> > type T;
-> > identifier buf;
-> > expression N;
-> > expression ts;
-> > expression indio_dev;
-> > @@
-> > *T buf[N];
-> > ...
-> > *iio_push_to_buffers_with_timestamp(indio_dev, buf, ts)
-> >
-> > Matched files:
-> >
-> > --- drivers/iio/health/afe4403.c
-> > --- drivers/iio/health/afe4404.c
-> > --- drivers/iio/gyro/mpu3050-core.c
-> > --- drivers/iio/gyro/itg3200_buffer.c
-> > --- drivers/iio/chemical/ccs811.c
-> > --- drivers/iio/chemical/sps30.c
-> > --- drivers/iio/chemical/pms7003.c
-> > --- drivers/iio/proximity/isl29501.c
-> > --- drivers/iio/proximity/mb1232.c
-> > --- drivers/iio/accel/kxsd9.c
-> > --- drivers/iio/accel/mma8452.c
-> > --- drivers/iio/accel/bmc150-accel-core.c
-> > --- drivers/iio/accel/mma7455_core.c
-> > --- drivers/iio/adc/ti-adc081c.c
-> > --- drivers/iio/adc/ti-adc084s021.c
-> > --- drivers/iio/adc/ti-ads1015.c
-> > --- drivers/iio/adc/ti-ads124s08.c
-> > --- drivers/iio/adc/ina2xx-adc.c
-> > --- drivers/iio/adc/ti-ads8688.c
-> > --- drivers/iio/adc/ti-adc0832.c
-> > --- drivers/iio/adc/ti-adc12138.c
-> > --- drivers/iio/adc/max1118.c
-> > --- drivers/iio/adc/ad_sigma_delta.c
-> > --- drivers/iio/light/si1145.c
-> > --- drivers/iio/light/vcnl4035.c
-> > --- drivers/iio/light/max44000.c
-> > --- drivers/iio/light/rpr0521.c
-> > --- drivers/iio/light/st_uvis25_core.c
-> > --- drivers/iio/light/ltr501.c
-> > --- drivers/iio/magnetometer/ak8974.c
-> > --- drivers/iio/magnetometer/mag3110.c
-> > --- drivers/iio/magnetometer/ak8975.c
-> > --- drivers/iio/humidity/hdc100x.c
-> > --- drivers/iio/humidity/hts221_buffer.c
-> > --- drivers/iio/imu/bmi160/bmi160_core.c
-> > --- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > --- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> > --- drivers/iio/pressure/ms5611_core.c
-> > --- drivers/iio/pressure/mpl3115.c
-> > =20
-> Most of these drivers also seem to have the issue that they leak stack=20
-> memory. Only 11 of them clear the buffer.
->=20
-
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
