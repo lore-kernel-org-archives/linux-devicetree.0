@@ -2,89 +2,142 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DD3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 17:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2F3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 17:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE45E207D4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 17:12:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8Wz1lI4"
+	by mail.kernel.org (Postfix) with ESMTP id 6A686207E8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 17:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgEQRM7 (ORCPT
+        id S1726274AbgEQRrs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 13:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgEQRM7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 13:12:59 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD037C061A0C
-        for <devicetree@vger.kernel.org>; Sun, 17 May 2020 10:12:58 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id g9so6416740edr.8
-        for <devicetree@vger.kernel.org>; Sun, 17 May 2020 10:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KLA7iwxkkZaEe+a5DOe1yKmTHMqLvE482kATUXCfdGA=;
-        b=R8Wz1lI4CLk450TXD3doFzsflzNTAt1RBqQyDAHn+j5SygBY1zsopy/ue3X+2Q7i+R
-         UTQavT9TnpbTzeaxI2Hbc8qdoEN+GaqFpLsAucQA//iRxsSD1FFidqLozPjmdFjcmP55
-         P07ecaG+mLlrqL0F0DaLmt0pxMzc4RhXeQPynfSGYRUjxz5gHM0AsMWM2VJrXz0uqDrY
-         kWrgDQOu5plphuGIRDQ3DwMldJ+peQCSt5gcIc6ectSPoVYBBTJwVRwR9TemZaXetNjA
-         mxt8I8Wyc74PyqKEYmbigNADeoaaclHkfJ1L++ZqRUOlPMtesYERTheahRaRAVaGF2c5
-         PGXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KLA7iwxkkZaEe+a5DOe1yKmTHMqLvE482kATUXCfdGA=;
-        b=q94Vftju++68o2XyC9mnglE/ImePeUk+AJaSV2307yVePBXgMW0Lm6YRyZeH+dBvd9
-         QQEc5KzTARbnJpzzfxgXGok/hLEtUWqP/zb/Npqv+c1fjaElpEqQ/LYGa6zJYRpyxeP3
-         JLlBIAuPAeAapX1cMRv6oysEo9BvwuUnsyDW/SiMPjhOkZPpAJynmKDf5w8kNjRjr9kd
-         rvmtSpVKrxDOmN5aJiU4w2uAAkmrRIhv3EnjpI5iljtQ8SKGVv0DdLm/V2OWYZ1itUcL
-         GdUOp8ucYXHC6PfX/WqKdO2fwav1BKYDpw7P+HP00X7u6re+zagGAjeQt4TlIvELZxDA
-         knZA==
-X-Gm-Message-State: AOAM533V+1IuzeQsYpw5gSCuULT+xSsiCmRUpi1XBpJ4dDOHoEpLMR0x
-        SCP2Ut05PZRkHYmhUpym+LQ+JZY54xpSmmhtahY=
-X-Google-Smtp-Source: ABdhPJw3tYifonZ1qR4I2lbjr/innKLU8dZ6Bg4VrCM7hVSelRH/8a43px/KFbkYjTqXeftsNXB3ymGdFisL7XNLeTc=
-X-Received: by 2002:a50:e607:: with SMTP id y7mr10863209edm.71.1589735576627;
- Sun, 17 May 2020 10:12:56 -0700 (PDT)
+        Sun, 17 May 2020 13:47:48 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:42640 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgEQRrs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 13:47:48 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id EBE5C8030802;
+        Sun, 17 May 2020 17:47:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wvmFBhhOKtqf; Sun, 17 May 2020 20:47:41 +0300 (MSK)
+Date:   Sun, 17 May 2020 20:47:39 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200517174739.uis3wfievdcmtsxj@mobilestation>
+References: <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
+ <20200511210138.GN185537@smile.fi.intel.com>
+ <20200511213531.wnywlljiulvndx6s@mobilestation>
+ <20200512090804.GR185537@smile.fi.intel.com>
+ <20200512114946.x777yb6bhe22ccn5@mobilestation>
+ <20200512123840.GY185537@smile.fi.intel.com>
+ <20200515060911.GF333670@vkoul-mobl>
+ <20200515105137.GK185537@smile.fi.intel.com>
+ <20200515105658.GR333670@vkoul-mobl>
+ <20200515111112.4umynrpgzjnca223@mobilestation>
 MIME-Version: 1.0
-References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
- <1589472657-3930-9-git-send-email-amittomer25@gmail.com> <b2ad8a81-619f-5f35-9596-c2061ae15e4c@arm.com>
- <CABHD4K9yjUGuo0w-RfhdZQJm3Wtj6bU2H4DXcp4Jjp=e0fFeyA@mail.gmail.com> <2cd3cdaf-826e-9d12-9fd4-9f7e2a517ecd@arm.com>
-In-Reply-To: <2cd3cdaf-826e-9d12-9fd4-9f7e2a517ecd@arm.com>
-From:   Amit Tomer <amittomer25@gmail.com>
-Date:   Sun, 17 May 2020 22:42:20 +0530
-Message-ID: <CABHD4K-OaQ4Vf_+dg9FMR97ocLeUkDswyEnChPV=H=VcbyUhkg@mail.gmail.com>
-Subject: Re: [PATCH v1 8/9] arm64: dts: actions: Add MMC controller support
- for S700
-To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200515111112.4umynrpgzjnca223@mobilestation>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> I don't understand what this has to do with the driver, but I asked
-> above to also change the binding, allowing this compatible string
-> combination.
-if we add these two strings "actions,s700-mmc", "actions,owl-mmc" to dts file
-and leave the driver as it. Wouldn't this be mismatch(as driver only
-has "actions,owl-mmc"
-and DTS has two strings).
+On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
+> > On 15-05-20, 13:51, Andy Shevchenko wrote:
+> > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
+> > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
+> > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
+> > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
+> > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> > > 
+> > > ...
+> > > 
+> > > > > I leave it to Rob and Vinod.
+> > > > > It won't break our case, so, feel free with your approach.
+> > > > 
+> > > > I agree the DT is about describing the hardware and looks like value of
+> > > > 1 is not allowed. If allowed it should be added..
+> > > 
+> > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
+> > > synthesizing the IP.
+> > 
+> > Then it should be added ..
+> 
+> Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
+> other" burst length. It's a constant defined at the IP-core synthesis stage and
+> according to the Data Book, MAX burst length can't be 1. The allowed values are
+> exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
+> defines the upper limit of the run-time burst length. So setting it to 1 isn't
+> about describing a hardware, but using DT for the software convenience.
+> 
+> -Sergey
 
-Shouldn't that be concerned about  ?
+Vinod, to make this completely clear. According to the DW DMAC data book:
+- In general, run-time parameter of the DMA transaction burst length (set in
+  the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
+  to the set [1, 4, 8, 16, 32, 64, 128, 256].
+- Actual upper limit of the burst length run-time parameter is limited by a
+  constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
+  and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
+  in this set).
 
-Thanks
--Amit
+So the run-time burst length in a case of particular DW DMA controller belongs
+to the range:
+1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+and
+1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+
+See. No mater which DW DMA controller we get each of them will at least support
+the burst length of 1 and 4 transfer words. This is determined by design of the
+DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
+
+In this patch I suggest to add the max-burst-len property, which specifies
+the upper limit for the run-time burst length. Since the maximum burst length
+capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
+register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
+by the DW DMA IP design), max-burst-len property as being also responsible for
+the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
+thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
+
+So 1 shouldn't be in the enum of the max-burst-len property constraint, because
+hardware doesn't support such limitation by design, while setting 1 as
+max-burst-len would mean incorrect description of the DMA controller.
+
+Vinod, could you take a look at the info I provided above and say your final word
+whether 1 should be really allowed to be in the max-burst-len enum constraints?
+I'll do as you say in the next version of the patchset.
+
+Regards,
+-Sergey
+
+> 
+> > 
+> > -- 
+> > ~Vinod
