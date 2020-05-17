@@ -2,98 +2,120 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010FBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 21:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1EEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 21:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE426206F4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 21:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BF4207E8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 21:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="WXxOTizN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgEQVIk (ORCPT
+        id S1726458AbgEQVV5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 17:08:40 -0400
-Received: from sauhun.de ([88.99.104.3]:33722 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726288AbgEQVIk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 May 2020 17:08:40 -0400
-Received: from localhost (p5486C87C.dip0.t-ipconnect.de [84.134.200.124])
-        by pokefinder.org (Postfix) with ESMTPSA id 59E902C049C;
-        Sun, 17 May 2020 23:08:37 +0200 (CEST)
-Date:   Sun, 17 May 2020 23:08:37 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 17/17] ARM: dts: r8a7742: Add RWDT node
-Message-ID: <20200517210837.GL1370@kunai>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="L1EIGrW/+75u5Nmw"
+        Sun, 17 May 2020 17:21:57 -0400
+Received: from mail-bn8nam11on2050.outbound.protection.outlook.com ([40.107.236.50]:60993
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726372AbgEQVV4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 May 2020 17:21:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BAbQnHkrrw6JfHsgMUxCCOBzOKWdx270ejQF/PrwCLv0jO/hEEQJbOSuppnvA9AzUukIn8ZFNfNqWQeP8Ftzz2QpQKJTbgWvRUpmOCG8CqgDYnpVp6UTeOSKXO0HqRz0KdKTtn5AFYihLTfktr9HLjcQOrYUM3kQLH2398VLoXOMkug2CzBlewNcMPIwx/GTHbOJlBe5K6EYEhmMZGaG0Udt9nZxvF/aDjXeMjxRNgKT0UCBKktqGnHBcbtZIuokomExii2d7n+TwpB9rc3Hisa0sPxtjHKU+dJkGtunulA3070PBb3Hn51QTjV6CWpgS/7ByQKUEzb4Xwi4SssUSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qdgNSkg+XAd8ZntpWnpynryqwUkQu8jQWf7gOa15Smk=;
+ b=odNgd8L1fyu4BcaELXaA9C1UMK42DTxElAFTSvh6T7Z/QTC1KGDrKTDr8GIM7XOlhf4354M5fNtChpHTXr/YCOu3I2M/Vdcjgon6LZXQK0xI8NqodF/AikfTos2Zkgn5Dk8plnvzLB2fEXMK+4q5DHVBJqgg/HljJvmp9aBKSZZDDFMCsVeCUtdz4Zn9D+eIrW/Img1T7agU2nALIR3jUju7/rOaoAt4QRPq7o41lT/DpMG7JFCqcdgLASfu/2yEt6Me56RnSAuarNbPxwmFw4Qf3t12kWkoeGxXXPre1iocR7YVCaVj8xbtKAEYNezt024nAjlJtTApJGqS1Ii2hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qdgNSkg+XAd8ZntpWnpynryqwUkQu8jQWf7gOa15Smk=;
+ b=WXxOTizNRenxXrtnenC6SX9+2eHqlPtgRTfcGGEgmBXe79yAp7DtrwF8b96OPYmUz4DOzEArM0st6z/2fReAOmd7Qj66LfzFKaSs7ZtBJ7joOc+zoBKagtmRSbzdvpqxlFGX+eYKKPMzVJmDhiB/8yWUknrQnbZiCK193MZvy9A=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=labundy.com;
+Received: from SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
+ by SN6PR08MB5390.namprd08.prod.outlook.com (2603:10b6:805:94::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Sun, 17 May
+ 2020 21:21:53 +0000
+Received: from SN6PR08MB5517.namprd08.prod.outlook.com
+ ([fe80::d1f2:9197:cd6:4823]) by SN6PR08MB5517.namprd08.prod.outlook.com
+ ([fe80::d1f2:9197:cd6:4823%7]) with mapi id 15.20.3000.022; Sun, 17 May 2020
+ 21:21:53 +0000
+Date:   Sun, 17 May 2020 16:21:47 -0500
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] input: misc: Add support for Azoteq IQS269A
+Message-ID: <20200517212147.GA2158@labundy.com>
+References: <1587340068-2818-1-git-send-email-jeff@labundy.com>
+ <1587340068-2818-2-git-send-email-jeff@labundy.com>
+ <20200420170930.GO166864@dtor-ws>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589555337-5498-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200420170930.GO166864@dtor-ws>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: SN2PR01CA0023.prod.exchangelabs.com (2603:10b6:804:2::33)
+ To SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from labundy.com (136.49.227.119) by SN2PR01CA0023.prod.exchangelabs.com (2603:10b6:804:2::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend Transport; Sun, 17 May 2020 21:21:52 +0000
+X-Originating-IP: [136.49.227.119]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 02230e65-bb67-458e-6849-08d7faa851a7
+X-MS-TrafficTypeDiagnostic: SN6PR08MB5390:
+X-Microsoft-Antispam-PRVS: <SN6PR08MB5390B7209C93647DE71F4526D3BB0@SN6PR08MB5390.namprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 040655413E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cnxKC7lZPrjXmbFxH3e9e7hZJ7gNJKYYkVL9OGpD1fDtjQUO8gVLMnrPSV3UZPnqsEnYD4b5XGVIvM9trwTJqI9w/Wl4JJOp7ZUrjmTbJ0f5nbyxcbyEIdw7t1zjy943O6wmeCCxNurqHpOi1CKSuv2h43b1syq3EJ/b8h5nbJm3FTiSnAWyxIOcYyN0N2PXpZsr2oC5pKa0TYcUTPuw5jZ5QN/qIi/0fSlkIdmV9usdpHH52D1JtMvJr1k8NwTy+aRuJ7RiOm3VjD38sRqMz/Yn6egNx3GWwXOkvaFLIju/vIb7y0ZuG/jxntXQ4BmxdpgClp/DtB0lJlr5JVOrtYjugN2F4o+yLu/dTiTzqFt8EFHv9dXrIIE60pvL7b8Dvo2Q7dVFP+NfcLFjBPHWchlaF0VjlazEdmrbDpPyCICJXtZBNjegK5DccMh/YwU5xWSRenSfYrXDvMjS9M4/BUa2rpz+aE02HIYhj0SWOUd2+C1jTF677iQ+MGlt2hm0THdhCBoEQG3GmM+TU9sMPw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR08MB5517.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(376002)(346002)(39830400003)(396003)(16526019)(86362001)(6916009)(956004)(186003)(316002)(2616005)(52116002)(7696005)(6666004)(8886007)(66556008)(66476007)(36756003)(66946007)(4326008)(55016002)(508600001)(33656002)(966005)(8936002)(26005)(2906002)(5660300002)(8676002)(1076003)(4744005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: QTcFdbrjYz+hPK5oX4tyiPgAQdRmAz6Aqia7v9DUr9ebQjX3eROVb3ASy5obFiGKDANAVYdhyt0Tcfaxnem/13dF3MpEtakludBxIr9n2mktNH6a8KJxbipzdWDaUSqmNJNclp7QrEjDqpS4blmzT57j2VRhlhPD81OruN8G7B5r3k0eXCPvf1nqhFWm7FfHMCkBBIDgbjZJs6KWFut3XLiM28lrNTBLGWd+vxWRX64iVaDnyh+ZWMWMm8UpQqyBP9NC107vaTAw2l92cnUxGnr1eBujddfqa24heXyw79RVSh7qIr+0Z0nbvavvMUNdeOlJvZO2ufYWucvQ6SQDVOLEkdi5veIH8Bv5oBTC3ZCt6OT4kgA97N2E8kjTPAAS6B3rSFCPF0p3Mi8lm54ZBbH2OLPtM/c/6BoqD7rDa4D/vUSjDmZ42jFdYIMN1LYz7e7Z9BkE6DQkqZ2KjTZ4CiIQrGlhNgt8EvHwZ2uiNrM=
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02230e65-bb67-458e-6849-08d7faa851a7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2020 21:21:53.1157
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NmKFN1Fcx4NNd/fJr7kIaerTWDQPUbgmjd8l2UHtvOXtjAClToNNNtMBALiwm/b1/pYutalRv3EYt6umlBAuIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB5390
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Dmitry,
 
---L1EIGrW/+75u5Nmw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 20, 2020 at 10:09:30AM -0700, Dmitry Torokhov wrote:
+> On Sun, Apr 19, 2020 at 06:47:48PM -0500, Jeff LaBundy wrote:
+> > This patch adds support for the Azoteq IQS269A capacitive touch
+> > controller.
+> > 
+> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> 
+> This looks good, so just need to get Rob's take on the binding...
 
-On Fri, May 15, 2020 at 04:08:57PM +0100, Lad Prabhakar wrote:
-> Add a device node for the Watchdog Timer (RWDT) controller on the Renesas
-> RZ/G1H (r8a7742) SoC.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
-as.com>
+Thank you for the quick turn-around. Last week Rob reviewed the
+binding for v2 [1]; the driver has not changed since your first
+review. Would you consider taking v2 for this cycle?
 
-The DTS change looks fine, I checked it against similar SoCs (like the
-previous patched). So, for that:
+> 
+> Thanks.
+> 
+> -- 
+> Dmitry
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+[1] https://patchwork.kernel.org/patch/11522939/
 
-However, just to make sure, have you checked the WDT (especially reboot)
-with SMP and multiple CPU cores enabled? Some early Gen2 SoCs had issues
-there.
-
-
---L1EIGrW/+75u5Nmw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7Bp9UACgkQFA3kzBSg
-KbYEshAAosauCUFrzQlQlXv4wH1aOYquXgPvrPAxwbdOQrOJ3fJxzVrUgTiaPyGq
-yNcpBusF53fs7P2kVCRY7N3shXgrF8Ypa3C+JuY1Yb6xYATbfF3+XNMLfggcBThs
-htV0h0//jTN88J/2HYCalL31c73sMwBF7ItAMS/EU3KqzAKDMXJ2Sc4MV2FlU+3C
-MyvJKNgdjXYqOj/tdzkcB4BM4MCp9nHwkyS8sWx1jUaLwtenNVHtnJrNaLn5CFo0
-Q0YGgiM9shefCoMpqcuHNdxCT7qBjc+3dz0vYqwtPqthA+uYdkawI6bDMOFwI83n
-3O2Qgf1xeRY/JoI/kGcQies+09BaDN4HZ0NflEtWfetZ3DsIcQBuZ6menbYu8oG+
-D/h2oC9JeamOLn3deWz4Lfhnb8f7HDgzAHDrooFjqHgFetzOgZuj4QLoQH/Tz1T2
-4jRGfiN5qub1LnAI/D/joDp+VAV4UltJTCfM60OtToXX6fV04IWl2tLnCRLwoAIY
-rbRXQba9CBkGQZcerCI+jyy5df+flRx7WUND0lgdcgL8Qwqdz4KOGlSeE7yOZIV5
-zA37gqwG34M0PWpcFTbby4Wjjf99QY9uCvIrgWEqPd7bnouS6CtdGLWxW8KD5CwO
-k0nK6so1jXOIZ0L4XVO2n1muTpw6KN9GmNtOIi2A3nuYHlGROs8=
-=DE4O
------END PGP SIGNATURE-----
-
---L1EIGrW/+75u5Nmw--
+Kind regards,
+Jeff LaBundy
