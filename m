@@ -1,193 +1,105 @@
-Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23C4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 19:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B78C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 11:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80843208DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 19:29:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521397;
-	bh=kHG7Iurp5P4qCpo0FQjFbeSy0sAQuXTKMoEVhW1q9s0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xWTJLR+qfFRrbW4d1V+Qgp6cfTxrPKM/8S8Tnv+kQQ/AysWZPFf/mQ3LFKqxAdSMs
-	 ZKxpd2iVmR7VxoJGFL+L8Q3laBdGJaXPJ/MmprTO1Lz62PG4fHKwlTG6Khe4oK1306
-	 m4Sn+1hMdYmR1maid0opQMqKnaYZpaO+cQYkDVfk=
+	by mail.kernel.org (Postfix) with ESMTP id C016A206D4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 11:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYroECOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404091AbgEZT3x (ORCPT
+        id S1727898AbgEQL1q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 15:29:53 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43207 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403856AbgEZT3v (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 15:29:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id h10so23334523iob.10;
-        Tue, 26 May 2020 12:29:50 -0700 (PDT)
+        Sun, 17 May 2020 07:27:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59966 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727893AbgEQL1q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 07:27:46 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C51BBC061A0C
+        for <devicetree@vger.kernel.org>; Sun, 17 May 2020 04:27:45 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id o10so6370544ejn.10
+        for <devicetree@vger.kernel.org>; Sun, 17 May 2020 04:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=wFo4edMgiMvDCE2ZNhrsI8JxusUUeYELSKbsEkZuweU=;
+        b=eYroECOfkbshRN4UHce19TarI42rYOPdoOO+Ae5Nvz54wRupZXnV/wp734PaIrRK0I
+         Gwbbwr5pIrfyRL71CrZCuQz1hOOrysD7VYolrMJeWbTGk/r/cwk7z2kvL2SFp/NobJs1
+         jbsyODoR/xA4Qtm6Jv3KSg+v8Kyi5Y1L+73MRedIKQkNlNwU41vWNU2jRyiNJbu4pVlJ
+         FRtBNsCL8lK+huBmker8gzIrDYc7PtoP0tbPSF3YeI/99t+S9O+2S9Ax9oCd/Oy4Z/CG
+         4Jf+aZD4U1vLPo64fMAPtSrs3BluE/GSPeaVvERlI0d+l6eHYm/WQhuormaWhcJF6NGc
+         071w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1udivP7wbmjRGQdrVG+bvSIgJ6k6K6sg5R0YTrdV/ZI=;
-        b=t4kC1jI7UiO4MZhJGkDRBUWQHV+9KoeFICr9vrDYhQOaoCuIv1xL9MybaaNyj/hY74
-         slBKtgm+RhZroQTHDrEgfRaJrzlhu0vMeW6j4FT/ld0ZSl3deXO6mHpQT94rXXvJaHt8
-         wG8MSmqWHrl84DeKLkzevdIPtfVfXxON0er/gpV7Zj1RknVLoplOQUx6OWH3h9D6YMYa
-         eMBhdd4JTxUNCdBs5Uxi8yfTVUdjxEGKkV3F0hgusWxPCdqTMuQbeCgf6jgPg/sG0i0k
-         hiR3us/Gq1Gad7DEG+1cQsBeEj+QX6rC+CRANcosBlTmwXthckUewY8Vo0cl4y9It/wR
-         QAKw==
-X-Gm-Message-State: AOAM533VX0b6tEowLTOYYjmVyWNQAgPAEuTdHj0KUOekpDGLMcaOErPq
-        l14RVi5xRDLv7WRbeL3Bs5Z2j3U=
-X-Google-Smtp-Source: ABdhPJyZBBk1sBbHouc7difwqpQlE+8v91JyFKG3/W2+MNks24BN0vbpZp7iptfxgr4ZzF78fd0cYA==
-X-Received: by 2002:a02:dc8:: with SMTP id 191mr2522550jax.95.1590521389948;
-        Tue, 26 May 2020 12:29:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r9sm420424ilm.10.2020.05.26.12.29.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 12:29:49 -0700 (PDT)
-Received: (nullmailer pid 224310 invoked by uid 1000);
-        Tue, 26 May 2020 19:29:47 -0000
-Date:   Tue, 26 May 2020 13:29:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
-        paulburton@kernel.org, jiaxun.yang@flygoat.com, chenhc@lemote.com,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        keescook@chromium.org, paul@crapouillou.net, krzk@kernel.org,
-        hns@goldelico.com, ebiederm@xmission.com,
-        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
-        rick.tyliu@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v8 4/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Message-ID: <20200526192947.GA140311@bogus>
-References: <1589898923-60048-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1589898923-60048-6-git-send-email-zhouyanjie@wanyeetech.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=wFo4edMgiMvDCE2ZNhrsI8JxusUUeYELSKbsEkZuweU=;
+        b=e3Bd1ljIm173zKkbXEjGi7BaqXgydCW4Pf7pAZhMBc0cmORDlHPGyd3KuZOaz81ScP
+         OzuZRfe6FUqFUKh33mU+l/KJ9bhXs0zmkT+k1H0pZczDjjCHglPOT1NyhP0Uf8tVHAym
+         c7ogbHmKupLPBaevDW3kKQN0AGvV1oTqER2ZSsHxztZ6p250v8GbUOj8MvZEzoQ6v1G1
+         vjuK8o29vmVyl3f890RN46B3QJh1891WGJh0Yy+i3RVDj9hQZqwZSc8UHhGA5alLyw6z
+         zw4Zc20H4XeahUwQuvMd9k4wb46JeoiLBN0nvZIFVy07li6S3T258fZ5N9aTjcnk6Gm4
+         TFWQ==
+X-Gm-Message-State: AOAM531VQgT+tm5CRJeZLepCPYIZqJL+1gYkJZ61IZwLhIAm73JD86YX
+        SD52Jmpe96g5QXelW26asl28qJQ9ic1R6cTSca/uva5H
+X-Google-Smtp-Source: ABdhPJzEzPGimMRiyAfg2Ypa5oq0NmZuWJm0dAmlAp0WVhFv98aBqUbL9NK3nj9Y8vhrka8EL/zGBz9rbOgRuDmRLvs=
+X-Received: by 2002:a17:906:4c8e:: with SMTP id q14mr11262106eju.208.1589714864311;
+ Sun, 17 May 2020 04:27:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1589898923-60048-6-git-send-email-zhouyanjie@wanyeetech.com>
+Received: by 2002:ab4:a881:0:0:0:0:0 with HTTP; Sun, 17 May 2020 04:27:43
+ -0700 (PDT)
+From:   Jupiter <jupiter.hce@gmail.com>
+Date:   Sun, 17 May 2020 21:27:43 +1000
+Message-ID: <CAA=hcWQ8ZjjdzdTVtBas42L0_qbhJhayqogz_Gg5wgtDBVo+hg@mail.gmail.com>
+Subject: Issue with 'ubi part' ubi_io_read: error -74 (ECC error)
+To:     linux-mtd <linux-mtd@lists.infradead.org>
+Cc:     u-boot@lists.denx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:35:21PM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Document the available properties for the SoC root node and the
-> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
-> 
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
-> 
-> Notes:
->     v1->v2:
->     Change the two Document from txt to yaml.
->     
->     v2->v3:
->     Fix formatting errors.
->     
->     v3->v4:
->     Fix bugs in the two yaml files.
->     
->     v4->v5:
->     No change.
->     
->     v5->v6:
->     Rewrite the two yaml files.
->     
->     v6->v7:
->     1.Update compatible strings in "ingenic,cpu.yaml".
->     2.Fix formatting errors, and enum for compatible strings.
->     3.Remove unnecessary "ingenic,soc.yaml".
->     
->     v7->v8:
->     No change.
-> 
->  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> new file mode 100644
-> index 00000000..afb0207
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Ingenic XBurst family CPUs
-> +
-> +maintainers:
-> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> +
-> +description:
-> +  Ingenic XBurst family CPUs shall have the following properties.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Ingenic XBurst®1 CPU Cores
-> +        items:
+Sorry for a bit recalcitrant with the issue of calling 'ubi part"
+error -74 -EBADMSG, is it MTD issue or u-boot issue?
 
-This is a single compatible string, right? If so, drop items. 
+I used Linux kernel 4.19 to flash UBIFS volume images ubi.img to
+imx6ull NAND using following command in Linux:
 
-> +          enum:
-> +            - ingenic,xburst-mxu1.0
-> +            - ingenic,xburst-fpu1.0-mxu1.1
-> +            - ingenic,xburst-fpu2.0-mxu2.0
-> +
-> +      - description: Ingenic XBurst®2 CPU Cores
-> +        items:
-> +          enum:
-> +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
+flash_erase /dev/mtd2 0 0
+ubiformat /dev/mtd2 -f ubi.img
 
-Just: const: ingenic,xburst2-fpu2.1-mxu2.1-smt
+The flashing image process went well, not errors, but in NAND booting
+(u-boot version 2018), running "ubi part" stuck following errors:
 
-Continuing to append CPU features isn't going to scale well. Does 
-'xburst2' imply certain features? If so, not really any need to have 
-them be explicit.
+ubi0 error: ubi_io_read: error -74 (ECC error) while reading 64 bytes from PEB 2
+35:0, read 64 bytes
+ubi0 error: ubi_io_read: error -74 (ECC error) while reading 2048 bytes from PEB
+ 235:2048, read 2048 bytes
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - device_type
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    cpus {
-> +    	#address-cells = <1>;
-> +    	#size-cells = <0>;
-> +
-> +    	cpu0: cpu@0 {
-> +    		device_type = "cpu";
-> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
-> +    		reg = <0>;
-> +    	};
-> +
-> +    	cpu1: cpu@1 {
-> +    		device_type = "cpu";
-> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
-> +    		reg = <1>;
-> +    	};
-> +    };
-> +...
-> -- 
-> 2.7.4
-> 
+The document says "The -74 error code is -EBADMSG and means an ECC
+error. In other words, UBI tried to read some data from the flash, but
+the flash driver found that there is an uncorrectable ECC error, and
+returned -EBADMSG."
+
+My question for ubiformat, how does it write ECC to UBIFS volume
+partition when it flashed UBIFS image to NAND?
+
+In NAND booting, how does the "ubi part" read ECC (DTB) from?
+
+Thank you very much, appreciate your kind advice.
+
+- j
+
+
+-- 
+"A man can fail many times, but he isn't a failure until he begins to
+blame somebody else."
+-- John Burroughs
