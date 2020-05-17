@@ -2,108 +2,194 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF3EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 13:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28E8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 14:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25ABA20657
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 13:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C40C207DA
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 14:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589724620;
+	bh=XT/syzd4Ji2A/NzOC4REpBE9YiXAEHBOciMXCiNEquk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gCwLx0EGZg+iVuhmh1vR7ICB6e2bw6Nvf95dL6OJ9rT71wQQaeVwwV/dua5az3gT0
+	 qvVgujuIfbrNIFXJs3I6pFK4mu2XiC1qsjgyfox9RUNao3eJAgwZodFyvVMSg6BE3p
+	 i36pNKTXK2ANEKvnEwQbmSYUnoNXCrCmb53mLlFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgEQN4K (ORCPT
+        id S1727937AbgEQOKU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 09:56:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:63618 "EHLO mga02.intel.com"
+        Sun, 17 May 2020 10:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgEQN4K (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 May 2020 09:56:10 -0400
-IronPort-SDR: 3LRQWAHT6Q7zxGmD87wgS5scuN1/wuYq/DVttWXE9V0+duGa6f1us64Z14CXVZioCjE1A1Zb4Q
- 5B5z3L3VJAFw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 06:56:10 -0700
-IronPort-SDR: +15jN2GeaJoZYfAL8vEPLG3p089NSTilueHLLHONXLtCLXx7LJL5f58V8Y1YodL3gtR308rgg9
- RJiDFxDtEeDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,403,1583222400"; 
-   d="scan'208";a="263694173"
-Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
-  by orsmga003.jf.intel.com with ESMTP; 17 May 2020 06:56:08 -0700
-From:   vineetha.g.jaya.kumaran@intel.com
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        robh+dt@kernel.org
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com,
-        andriy.shevchenko@intel.com, vineetha.g.jaya.kumaran@intel.com
-Subject: [PATCH 3/3] dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
-Date:   Sun, 17 May 2020 21:52:40 +0800
-Message-Id: <1589723560-5734-4-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1589723560-5734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-References: <1589723560-5734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        id S1727893AbgEQOKT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 May 2020 10:10:19 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3448C207BB;
+        Sun, 17 May 2020 14:10:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589724619;
+        bh=XT/syzd4Ji2A/NzOC4REpBE9YiXAEHBOciMXCiNEquk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i8vJ/DrZGKm0VjP5Yj3UfHVhf2C7sBi7wzYNkMryqQQNxTZXltxYC48Il4Gfl05GJ
+         aed+6/wrf684RsVJ68FByBCnIut8zDptu+nzgBOQKZDd6fs/b0k4ugRd+CuCt0taBP
+         ptFDpqYw0afnOVDLEyQHI0PBXg5I/raVvFnjmusk=
+Date:   Sun, 17 May 2020 22:10:12 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     leoyang.li@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [patch v2 1/2] ls1043ardb: add qe node to ls1043ardb
+Message-ID: <20200517141011.GB25973@dragon>
+References: <20200429082052.18519-1-qiang.zhao@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429082052.18519-1-qiang.zhao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
+On Wed, Apr 29, 2020 at 04:20:51PM +0800, Qiang Zhao wrote:
+> From: Zhao Qiang <qiang.zhao@nxp.com>
+> 
+> Add qe node to fsl-ls1043a.dtsi and fsl-ls1043a-rdb.dts
+> 
+> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
 
-Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
+Subject prefix should be like 'arm64: dts: ...'
 
-Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
----
- .../devicetree/bindings/pwm/pwm-keembay.yaml       | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml b/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
-new file mode 100644
-index 0000000..00968d7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2020 Intel Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-keembay.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Keem Bay PWM Device Tree Bindings
-+
-+maintainers:
-+  - Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - intel,keembay-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+        phandle to the reference clock.
-+
-+required:
-+ - compatible
-+ - reg
-+ - clocks
-+
-+examples:
-+  - |
-+    pwm@203200a0 {
-+      compatible = "intel,keembay-pwm";
-+      reg = <0x0 0x203200a0 0x0 0xe8>;
-+      clocks = <&scmi_clk KEEM_BAY_A53_GPIO>;
-+    };
--- 
-1.9.1
+> ---
+> v2:
+> - add commit msg and drop a new blank line
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 65 +++++++++++++++++++++++
+>  2 files changed, 81 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> index 4223a23..96e87ba 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> @@ -96,6 +96,22 @@
+>  	};
+>  };
+>  
+> +&uqe {
 
+Keep labeling node sort alphabetically.
+
+> +	ucc_hdlc: ucc@2000 {
+> +		compatible = "fsl,ucc-hdlc";
+> +		rx-clock-name = "clk8";
+> +		tx-clock-name = "clk9";
+> +		fsl,rx-sync-clock = "rsync_pin";
+> +		fsl,tx-sync-clock = "tsync_pin";
+> +		fsl,tx-timeslot-mask = <0xfffffffe>;
+> +		fsl,rx-timeslot-mask = <0xfffffffe>;
+> +		fsl,tdm-framer-type = "e1";
+> +		fsl,tdm-id = <0>;
+> +		fsl,siram-entry-id = <0>;
+> +		fsl,tdm-interface;
+> +	};
+> +};
+> +
+>  &duart0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index c084c7a4..674e671 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -525,6 +525,71 @@
+>  			#interrupt-cells = <2>;
+>  		};
+>  
+> +		uqe: uqe@2400000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			device_type = "qe";
+
+Is this really needed?  I can not find it in bindings doc qe.txt.
+
+> +			compatible = "fsl,qe", "simple-bus";
+> +			ranges = <0x0 0x0 0x2400000 0x40000>;
+> +			reg = <0x0 0x2400000 0x0 0x480>;
+> +			brg-frequency = <100000000>;
+> +			bus-frequency = <200000000>;
+> +			fsl,qe-num-riscs = <1>;
+> +			fsl,qe-num-snums = <28>;
+> +
+> +			qeic: qeic@80 {
+> +				compatible = "fsl,qe-ic";
+> +				reg = <0x80 0x80>;
+> +				#address-cells = <0>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +				interrupts = <0 77 0x04 0 77 0x04>;
+
+Two identical interrupts?  Also, please use GIC_SPI and
+IRQ_TYPE_LEVEL_HIGH defines.
+
+Shawn
+
+> +			};
+> +
+> +			si1: si@700 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				compatible = "fsl,ls1043-qe-si",
+> +						"fsl,t1040-qe-si";
+> +				reg = <0x700 0x80>;
+> +			};
+> +
+> +			siram1: siram@1000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				compatible = "fsl,ls1043-qe-siram",
+> +						"fsl,t1040-qe-siram";
+> +				reg = <0x1000 0x800>;
+> +			};
+> +
+> +			ucc@2000 {
+> +				cell-index = <1>;
+> +				reg = <0x2000 0x200>;
+> +				interrupts = <32>;
+> +				interrupt-parent = <&qeic>;
+> +			};
+> +
+> +			ucc@2200 {
+> +				cell-index = <3>;
+> +				reg = <0x2200 0x200>;
+> +				interrupts = <34>;
+> +				interrupt-parent = <&qeic>;
+> +			};
+> +
+> +			muram@10000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				compatible = "fsl,qe-muram", "fsl,cpm-muram";
+> +				ranges = <0x0 0x10000 0x6000>;
+> +
+> +				data-only@0 {
+> +					compatible = "fsl,qe-muram-data",
+> +					"fsl,cpm-muram-data";
+> +					reg = <0x0 0x6000>;
+> +				};
+> +			};
+> +		};
+> +
+>  		lpuart0: serial@2950000 {
+>  			compatible = "fsl,ls1021a-lpuart";
+>  			reg = <0x0 0x2950000 0x0 0x1000>;
+> -- 
+> 2.9.5
+> 
