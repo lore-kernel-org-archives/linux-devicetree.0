@@ -2,163 +2,334 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBBFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D787C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E62F320809
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="Q9XKetRy"
+	by mail.kernel.org (Postfix) with ESMTP id 32A7220809
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgEQTHx (ORCPT
+        id S1726297AbgEQTLe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 15:07:53 -0400
-Received: from www381.your-server.de ([78.46.137.84]:40544 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgEQTHx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 15:07:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6GdRbluMtOop2dOM591dUHKtjzX05pFnm683JFJkgFc=; b=Q9XKetRy2CpfL70vyBV268K+tI
-        KCB4YC5yYxc3GQqfYhnqoMzv1U8Ohv8GJtYsfGdoZEieAfJGEKlxlj209giniR7sxF6pvQSDeGmyM
-        0VQ0UqTvjtUaIxsgujpXuxpj4KNtuLczJZncqBNoosstHYlt4QplpZMPomSK6tJT5tsi8LToMP0Fx
-        HeC8SOh3uXKJ24ms5kaa8vaXnbEZ/cXmpIVzyCpD3/2upK5hUVMgDzcAhoY/hFI1BsGZabCQhRa4v
-        BAHHCT8WTdu7ClaPgy0c3g0pUNNnZxdNUUVuUDDPiDGw3tq6E4C+zN5tU5RzWLDkbh2jfssX5LnHG
-        rqM+emsg==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jaOdX-0004Vh-7r; Sun, 17 May 2020 21:07:47 +0200
-Received: from [82.135.68.131] (helo=[192.168.178.20])
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jaOdW-00014g-S6; Sun, 17 May 2020 21:07:46 +0200
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     =?UTF-8?Q?Nuno_S=c3=a1?= <noname.nuno@gmail.com>,
-        =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
- <20200413082445.17324-6-nuno.sa@analog.com>
- <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
- <20200502184010.134eb8b5@archlinux>
- <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
- <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
- <20200503094751.633feda1@archlinux>
- <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
- <b7289aca-f393-faca-f512-a952a77c1e68@metafoo.de>
- <20200517171523.54fa6deb@archlinux>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <3136c4c7-b964-dce4-9e43-4cbbcc9187a1@metafoo.de>
-Date:   Sun, 17 May 2020 21:07:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 17 May 2020 15:11:34 -0400
+Received: from v6.sk ([167.172.42.174]:56860 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbgEQTLe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 May 2020 15:11:34 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 0856C610A8;
+        Sun, 17 May 2020 19:11:30 +0000 (UTC)
+Date:   Sun, 17 May 2020 21:11:28 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 23/28] dt-bindings: interrupt-controller: Convert
+ mrvl,intc to json-schema
+Message-ID: <20200517191128.GC1695525@furthur.local>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-24-lkundrak@v3.sk>
+ <20200327194207.GA1996@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20200517171523.54fa6deb@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25815/Sun May 17 14:16:18 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327194207.GA1996@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/17/20 6:15 PM, Jonathan Cameron wrote:
-> On Sun, 3 May 2020 11:12:34 +0200
-> Lars-Peter Clausen <lars@metafoo.de> wrote:
->
->> On 5/3/20 11:07 AM, Lars-Peter Clausen wrote:
->>> On 5/3/20 10:47 AM, Jonathan Cameron wrote:
->>>> On Sat, 02 May 2020 21:52:18 +0200
->>>> Nuno Sá <noname.nuno@gmail.com> wrote:
->>>>   
->>>>> On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen wrote:
->>>>>> On 5/2/20 7:40 PM, Jonathan Cameron wrote:
->>>>>>> On Mon, 27 Apr 2020 20:06:07 +0200
->>>>>>> Lars-Peter Clausen <lars@metafoo.de> wrote:
->>>>>>>> On 4/13/20 10:24 AM, Nuno Sá wrote:
->>>>>>>>> [...]
->>>>>>>>> +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
->>>>>>>>> +{
->>>>>>>>> [...]
->>>>>>>>> +    __be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
->>>>>>>>> [...]
->>>>>>>>> +
->>>>>>>>> +    iio_push_to_buffers_with_timestamp(indio_dev, data, pf-
->>>>>>>>>> timestamp);
->>>>>>>> If the timestamp is enabled the IIO core might insert padding
->>>>>>>> between
->>>>>>>> the data channels and the timestamp. If that happens this will
->>>>>>>> disclose
->>>>>>>> kernel stack memory to userspace.
->>>>>>>>
->>>>>>>> This needs either a memset(data, 0x00, sizeof(data)) or maybe put
->>>>>>>> data
->>>>>>>> into the state struct and kzalloc it.
->>>>>>> Good spot. Could simply do __be16 data[ADI..] = {0}; rather than
->>>>>>> explicit
->>>>>>> memset, but some form of zeroization is needed.
->>>>>>>
->>>>>>> I've fixed up the applied patch with the above approach.
->>>>>> There is actually another issue. The stack data is not necessarily
->>>>>> aligned to 64 bit, which causes issues if we try to put the 64-bit
->>>>> Oh, this is actually more problematic. Yes, since we have an array of
->>>>> u16, that is not guaranteed to be 64bit aligned. Doing a quick search
->>>>> of `iio_push_to_buffers_with_timestamp()` users and I could quickly
->>>>> find 4/5 drivers with the same problem. I guess the API should clearly
->>>>> state that `data` needs to be __at least__ 64 bits aligned (maybe a
->>>>> future patch). Or we could even check the address and guarantee that it
->>>>> is properly aligned before continuing (though Im guessing this will
->>>>> break a lot of users...)
->>>>>> timestamp in it. I think data should really be in the state struct.
->>>>> Yes, with a proper __aligned(8) attribute... Or couldn't we just use
->>>>> __aligned(8) on the stack variable?
->>>> Forcing alignment on the stack isn't terribly reliable, which is why
->>>> we never do that for dma safe buffers.
->>>>
->>>> Probably better to just move it to the state structure.
->>>> I'll fix it up to do that. Please sanity check what will shortly
->>>> be in the testing branch.
->>>>
->>>> The moment Lars mentioned this I groaned. As you've noted a few other
->>>> drivers have the same problem + the ABI doesn't clearly state
->>>> or check this.
->>>>
->>>> We should certainly fix all the drivers that suffer this problem
->>>> first then we can think about adding a runtime check.
->>> It looks like it is actually quite a few drivers, maybe we should
->>> switch to put_unaligned(). We probably got lucky in most cases and the
->>> buffer is naturally aligned to 64 bit.
-> Just a quick update on this.  I've been taking a deeper look and there
-> are some 'interesting' cases in here so the put_unaligned is attractive
-> unfortunately I don't think we can go that way because it would be
-> reasonable for consumers of the buffer to expect it to be appropriately
-> aligned.   We need to rework many of these anyway to fix the related
-> data leak.
->
-> I've done some of below and will post shortly - a few will take more
-> effort and probably need testing rather than just relying on review.
->
-> So far the 'interesting ones' are mpu3050 and isl29501.
+On Fri, Mar 27, 2020 at 01:42:07PM -0600, Rob Herring wrote:
+> On Tue, Mar 17, 2020 at 10:39:17AM +0100, Lubomir Rintel wrote:
+> > Convert the mrvl,intc binding to DT schema format using json-schema.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  .../interrupt-controller/mrvl,intc.txt        |  64 --------
+> >  .../interrupt-controller/mrvl,intc.yaml       | 144 ++++++++++++++++++
+> >  2 files changed, 144 insertions(+), 64 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
+> > deleted file mode 100644
+> > index a0ed02725a9d7..0000000000000
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
+> > +++ /dev/null
+> > @@ -1,64 +0,0 @@
+> > -* Marvell MMP Interrupt controller
+> > -
+> > -Required properties:
+> > -- compatible : Should be
+> > -               "mrvl,mmp-intc" on Marvel MMP,
+> > -               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 or
+> > -               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
+> > -- reg : Address and length of the register set of the interrupt controller.
+> > -  If the interrupt controller is intc, address and length means the range
+> > -  of the whole interrupt controller. The "marvell,mmp3-intc" controller
+> > -  also has a secondary range for the second CPU core.  If the interrupt
+> > -  controller is mux-intc, address and length means one register. Since
+> > -  address of mux-intc is in the range of intc. mux-intc is secondary
+> > -  interrupt controller.
+> > -- reg-names : Name of the register set of the interrupt controller. It's
+> > -  only required in mux-intc interrupt controller.
+> > -- interrupts : Should be the port interrupt shared by mux interrupts. It's
+> > -  only required in mux-intc interrupt controller.
+> > -- interrupt-controller : Identifies the node as an interrupt controller.
+> > -- #interrupt-cells : Specifies the number of cells needed to encode an
+> > -  interrupt source.
+> > -- mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
+> > -  controller.
+> > -- mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
+> > -  detection first.
+> > -
+> > -Example:
+> > -	intc: interrupt-controller@d4282000 {
+> > -		compatible = "mrvl,mmp2-intc";
+> > -		interrupt-controller;
+> > -		#interrupt-cells = <1>;
+> > -		reg = <0xd4282000 0x1000>;
+> > -		mrvl,intc-nr-irqs = <64>;
+> > -	};
+> > -
+> > -	intcmux4@d4282150 {
+> > -		compatible = "mrvl,mmp2-mux-intc";
+> > -		interrupts = <4>;
+> > -		interrupt-controller;
+> > -		#interrupt-cells = <1>;
+> > -		reg = <0x150 0x4>, <0x168 0x4>;
+> > -		reg-names = "mux status", "mux mask";
+> > -		mrvl,intc-nr-irqs = <2>;
+> > -	};
+> > -
+> > -* Marvell Orion Interrupt controller
+> > -
+> > -Required properties
+> > -- compatible :  Should be "marvell,orion-intc".
+> > -- #interrupt-cells: Specifies the number of cells needed to encode an
+> > -  interrupt source. Supported value is <1>.
+> > -- interrupt-controller : Declare this node to be an interrupt controller.
+> > -- reg : Interrupt mask address. A list of 4 byte ranges, one per controller.
+> > -        One entry in the list represents 32 interrupts.
+> > -
+> > -Example:
+> > -
+> > -	intc: interrupt-controller {
+> > -        	compatible = "marvell,orion-intc", "marvell,intc";
+> > -		interrupt-controller;
+> > -		#interrupt-cells = <1>;
+> > -                reg = <0xfed20204 0x04>,
+> > -		      <0xfed20214 0x04>;
+> > -        };
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+> > new file mode 100644
+> > index 0000000000000..f0644f7d7e1d2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+> > @@ -0,0 +1,144 @@
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/interrupt-controller/mrvl,intc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Marvell MMP/Orion Interrupt controller bindings
+> > +
+> > +maintainers:
+> > +  - devicetree@vger.kernel.org
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/interrupt-controller.yaml#
+> 
+> Drop this. It is already applied based on matching on the node name.
+> 
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          not:
+> > +            contains:
+> > +              const: marvell,orion-intc
+> > +    then:
+> > +      required:
+> > +        - mrvl,intc-nr-irqs
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - mrvl,mmp-intc
+> > +              - mrvl,mmp2-intc
+> > +    then:
+> > +      properties:
+> > +        reg:
+> > +          minItems: 1
+> > +          maxItems: 1
+> 
+> Drop minItems, as just 'maxItems: 1' is enough.
+> 
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - marvell,mmp3-intc
+> > +              - mrvl,mmp2-mux-intc
+> > +    then:
+> > +      properties:
+> > +        reg:
+> > +          minItems: 2
+> > +          maxItems: 2
+> 
+> Just 'minItems: 2'.
+> 
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: marvell,orion-intc
+> > +    then:
+> > +      properties:
+> > +        reg:
+> > +          minItems: 1
+> > +          maxItems: 2
+> 
+> Normally, for a compatible this would not vary...
+> 
+> In any case, move this to the main section and drop this if.
+> 
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: mrvl,mmp2-mux-intc
+> > +    then:
+> > +      properties:
+> > +        interrupts:
+> > +          minItems: 1
+> > +          maxItems: 1
+> 
+> Just 'maxItems'
+> 
+> > +        reg-names:
+> > +          minItems: 2
+> > +          maxItems: 2
+> 
+> These are redundant as 'items' size implies this.
+> 
+> > +          items:
+> > +            - const: 'mux status'
+> > +            - const: 'mux mask'
+> 
+> Move this to the main section.
+> 
+> > +      required:
+> > +        - interrupts
+> > +    else:
+> > +      properties:
+> > +        interrupts: false
+> > +
+> > +properties:
+> > +  '#interrupt-cells':
+> > +    const: 1
+> > +
+> > +  compatible:
+> > +    enum:
+> > +      - mrvl,mmp-intc
+> > +      - mrvl,mmp2-intc
+> > +      - marvell,mmp3-intc
+> > +      - marvell,orion-intc
+> > +      - mrvl,mmp2-mux-intc
+> > +
+> > +  reg: true
+> > +
+> > +  reg-names: true
+> > +
+> > +  interrupts: true
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  mrvl,intc-nr-irqs:
+> > +    description: |
+> > +      Specifies the number of interrupts in the interrupt controller.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> Is there a max number?
 
-isl29501 looks OK to me. mpu3050 is clearly broken, buffer is both 
-unaligned and too small!
+There's none in the original bindings document or enforced by the
+driver.
 
+> > +
+> > +  mrvl,clr-mfp-irq:
+> > +    description: |
+> > +      Specifies the interrupt that needs to clear MFP edge detection first.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> Constraints?
+
+I don't know how should this be constrained and the original bindings
+document is not helpful.
+
+> > +
+> > +required:
+> > +  - '#interrupt-cells'
+> > +  - compatible
+> > +  - reg
+> > +  - interrupt-controller
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    interrupt-controller@d4282000 {
+> > +        compatible = "mrvl,mmp2-intc";
+> > +        interrupt-controller;
+> > +        #interrupt-cells = <1>;
+> > +        reg = <0xd4282000 0x1000>;
+> > +        mrvl,intc-nr-irqs = <64>;
+> > +    };
+> > +
+> > +    interrupt-controller@d4282150 {
+> > +        compatible = "mrvl,mmp2-mux-intc";
+> > +        interrupts = <4>;
+> > +        interrupt-controller;
+> > +        #interrupt-cells = <1>;
+> > +        reg = <0x150 0x4>, <0x168 0x4>;
+> > +        reg-names = "mux status", "mux mask";
+> > +        mrvl,intc-nr-irqs = <2>;
+> > +    };
+> > +  - |
+> > +    interrupt-controller@fed20204 {
+> > +        compatible = "marvell,orion-intc";
+> > +        interrupt-controller;
+> > +        #interrupt-cells = <1>;
+> > +        reg = <0xfed20204 0x04>,
+> > +              <0xfed20214 0x04>;
+> > +    };
+> > +
+> > +...
+> > -- 
+> > 2.25.1
+> > 
