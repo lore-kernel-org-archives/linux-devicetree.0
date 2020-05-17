@@ -2,147 +2,105 @@ Return-Path: <SRS0=ZMZy=67=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068E8C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A50C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 20:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E70B620758
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 19:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0941E20758
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 May 2020 20:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgEQTtb (ORCPT
+        id S1726288AbgEQUoN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 15:49:31 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38733 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgEQTta (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 15:49:30 -0400
-X-Originating-IP: 195.189.32.242
-Received: from pc.localdomain (unknown [195.189.32.242])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1DD951BF208;
-        Sun, 17 May 2020 19:49:25 +0000 (UTC)
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v7 2/7] IIO: Ingenic JZ47xx: Error check clk_enable calls.
-Date:   Sun, 17 May 2020 21:48:59 +0200
-Message-Id: <20200517194904.34758-2-contact@artur-rojek.eu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200517194904.34758-1-contact@artur-rojek.eu>
-References: <20200517194904.34758-1-contact@artur-rojek.eu>
+        Sun, 17 May 2020 16:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgEQUoN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 16:44:13 -0400
+Received: from mail.bugwerft.de (mail.bugwerft.de [IPv6:2a03:6000:1011::59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB764C061A0C;
+        Sun, 17 May 2020 13:44:12 -0700 (PDT)
+Received: from [192.168.178.106] (pD95EFBE7.dip0.t-ipconnect.de [217.94.251.231])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 70823409EB7;
+        Sun, 17 May 2020 20:41:15 +0000 (UTC)
+Subject: Re: [PATCH 4/4] sc16is7xx: Use threaded IRQ
+To:     Maarten Brock <m.brock@vanmierlo.com>
+Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org, jslaby@suse.com,
+        pascal.huerst@gmail.com, linux-serial-owner@vger.kernel.org
+References: <20200508143757.2609740-1-daniel@zonque.org>
+ <20200508143757.2609740-5-daniel@zonque.org>
+ <61fdcf12976c924fd86c5203aba673a7@vanmierlo.com>
+From:   Daniel Mack <daniel@zonque.org>
+Message-ID: <584de876-e675-0172-97ed-0c9534eb9526@zonque.org>
+Date:   Sun, 17 May 2020 22:44:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <61fdcf12976c924fd86c5203aba673a7@vanmierlo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce error checks for the clk_enable calls used in this driver.
-As part of the changes, move clk_enable/clk_disable calls out of
-ingenic_adc_set_config and into respective logic of its callers.
+Hi Maarten,
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-Tested-by: Paul Cercueil <paul@crapouillou.net>
----
+Thanks for your review!
 
- Changes:
+On 5/9/20 2:55 PM, Maarten Brock wrote:
+> On 2020-05-08 16:37, Daniel Mack wrote:
+>> Use a threaded IRQ handler to get rid of the irq_work kthread.
+>> This also allows for the driver to use interrupts generated by
+>> a threaded controller.
+>>
+>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+>> ---
+>>  drivers/tty/serial/sc16is7xx.c | 18 +++++-------------
+>>  1 file changed, 5 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/sc16is7xx.c
+>> b/drivers/tty/serial/sc16is7xx.c
 
- v6: new patch
+>> @@ -1317,8 +1308,9 @@ static int sc16is7xx_probe(struct device *dev,
+>>      }
+>>
+>>      /* Setup interrupt */
+>> -    ret = devm_request_irq(dev, irq, sc16is7xx_irq,
+>> -                   IRQF_TRIGGER_FALLING, dev_name(dev), s);
+>> +    ret = devm_request_threaded_irq(dev, irq, NULL, sc16is7xx_irq,
+>> +                    IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>> +                    dev_name(dev), s);
+>>      if (!ret)
+>>          return 0;
+> 
+> Since UART0 is first handled completely in the for loop before UART1 is
+> handled, a new interrupt may arise on UART0 while UART1 is being handled.
 
- v7: no change
+The code in the interrupt handling function loops forever until there is
+no more interrupt bits pending. So if there is a new IRQ happening for
+UART0 while UART1 is being served, it will be handled in the same loop.
 
- drivers/iio/adc/ingenic-adc.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+And just to be sure I understand correctly: this is unrelated to the
+switch to threaded IRQs, right? Falling edge triggers were always used
+for pdata probed devices.
 
-diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-index 39c0a609fc94..6c3bbba7c44b 100644
---- a/drivers/iio/adc/ingenic-adc.c
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -73,7 +73,6 @@ static void ingenic_adc_set_config(struct ingenic_adc *adc,
- {
- 	uint32_t cfg;
- 
--	clk_enable(adc->clk);
- 	mutex_lock(&adc->lock);
- 
- 	cfg = readl(adc->base + JZ_ADC_REG_CFG) & ~mask;
-@@ -81,7 +80,6 @@ static void ingenic_adc_set_config(struct ingenic_adc *adc,
- 	writel(cfg, adc->base + JZ_ADC_REG_CFG);
- 
- 	mutex_unlock(&adc->lock);
--	clk_disable(adc->clk);
- }
- 
- static void ingenic_adc_enable(struct ingenic_adc *adc,
-@@ -124,6 +122,8 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
- 				 long m)
- {
- 	struct ingenic_adc *adc = iio_priv(iio_dev);
-+	struct device *dev = iio_dev->dev.parent;
-+	int ret;
- 
- 	switch (m) {
- 	case IIO_CHAN_INFO_SCALE:
-@@ -131,6 +131,14 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
- 		case INGENIC_ADC_BATTERY:
- 			if (!adc->soc_data->battery_vref_mode)
- 				return -EINVAL;
-+
-+			ret = clk_enable(adc->clk);
-+			if (ret) {
-+				dev_err(dev, "Failed to enable clock: %d\n",
-+					ret);
-+				return ret;
-+			}
-+
- 			if (val > JZ_ADC_BATTERY_LOW_VREF) {
- 				ingenic_adc_set_config(adc,
- 						       JZ_ADC_REG_CFG_BAT_MD,
-@@ -142,6 +150,9 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
- 						       JZ_ADC_REG_CFG_BAT_MD);
- 				adc->low_vref_mode = true;
- 			}
-+
-+			clk_disable(adc->clk);
-+
- 			return 0;
- 		default:
- 			return -EINVAL;
-@@ -317,6 +328,13 @@ static int ingenic_adc_read_chan_info_raw(struct ingenic_adc *adc,
- 					  int *val)
- {
- 	int bit, ret, engine = (chan->channel == INGENIC_ADC_BATTERY);
-+	struct device *dev = iio_priv_to_dev(adc)->dev.parent;
-+
-+	ret = clk_enable(adc->clk);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable clock: %d\n", ret);
-+		return ret;
-+	}
- 
- 	/* We cannot sample AUX/AUX2 in parallel. */
- 	mutex_lock(&adc->aux_lock);
-@@ -325,7 +343,6 @@ static int ingenic_adc_read_chan_info_raw(struct ingenic_adc *adc,
- 		ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_AUX_MD, bit);
- 	}
- 
--	clk_enable(adc->clk);
- 	ret = ingenic_adc_capture(adc, engine);
- 	if (ret)
- 		goto out;
--- 
-2.26.2
+> The result is a missed interrupt since the IRQ line might not *FALL* again.
 
+It doesn't have to. We only exit the interrupt handler when there is
+nothing left to do, at which point the IRQ line ist back high. So it
+will fall again in case of new events.
+
+> Therefor I suggest to change IRQF_TRIGGER_FALLING to IRQF_TRIGGER_LOW. This
+> way the thread will be retriggered after IRQ_HANDLED is returned.
+
+This doesn't work in my setup unfortunately, as the interrupt controller
+is incapable of handling level IRQs.
+
+
+Thanks,
+Daniel
