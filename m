@@ -2,108 +2,222 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457FEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D780C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 211FF20709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:11:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WfGl7ijc"
+	by mail.kernel.org (Postfix) with ESMTP id 508B620709
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgERKLN (ORCPT
+        id S1726274AbgERKNQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 06:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgERKLN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 06:11:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AC4C05BD09
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 03:11:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x15so4755060pfa.1
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 03:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rcBjffi4kQszuwFLOMY+Y6F9ZFkZd22+sdJvlsBdEYg=;
-        b=WfGl7ijczvb4fyfsojKm6/aNFhV2eCeaQfVNvf5pSUzoQrH5gSc0teZbBMAQD3ifY6
-         8Xq7ffvVEKShSI+Y5D6o9r0g4UEiy/7PCijWdtr59qtwztnsYfjZ5zofrHUdFMsVo4Wu
-         gSqS7ohq6M+QiRNe9MEQAsXtzQ33VBfpwAWKjDh13NM7wmhqm6nDAMFd92NTn3M2oxyH
-         vFeI0ylamQfCiWz4KTU1D+PRZrO2D05P7U2Ob+lSoLnkZGe52tqGlEdhsmpwgIjuGZ85
-         A9JQgrwsUjTvNUgvG25pqMn39fsOoK5hetlUU0Iou4d+M5xy9u68+T0U2Bd2+2LLitfF
-         p2IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rcBjffi4kQszuwFLOMY+Y6F9ZFkZd22+sdJvlsBdEYg=;
-        b=oodRpPoSTdKraYC2oXgsvxyyUma48C1IVsp9ZlBNq6UD9cywvYjiEXpTwuYNaJ7ZY/
-         CQKdNHR6Pc+7eKt+BzB5sw9b7k4tbRFPDiNXuqQIiN4oXG5QOfI8ODLc7P2Pp0oV+hEx
-         AiYGhkOnavVYJS9sxDdJfRUQDobdvYUlMsDNwP1xu4X+VE1XsL7pSC1Mbp6fyYOqvbEV
-         9cTdodW0q/u07bh+ceoB0l1hSG5rImOH/PQehzO3IeiVWqWGtimo8O8rLaI3owyc5H+w
-         WSHSYooHD3mSjI1zsAaZdoRgPPDJSpqUUxKhWleitWbPKtzIMU7BZM0GYkMQDa4AtOt3
-         yekQ==
-X-Gm-Message-State: AOAM53173MVOXaXMmXbXcbSBO9nu3D6FMGlj0tuT14CLk9Sgw62x6R0v
-        eUFaXgya7IHDUI7/Zm7WtQG3qg==
-X-Google-Smtp-Source: ABdhPJzWkRCIO7jgNHpcV82IrfsERhQCBZdR7cCDWFIWDzouKNaN0H/xiCZ6R3hSQValouNWNaYbJA==
-X-Received: by 2002:a62:79c2:: with SMTP id u185mr1949116pfc.159.1589796672606;
-        Mon, 18 May 2020 03:11:12 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id y22sm2305167pfc.132.2020.05.18.03.11.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 03:11:11 -0700 (PDT)
-Date:   Mon, 18 May 2020 15:41:09 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, stable@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
- setting
-Message-ID: <20200518101109.4uggngudy4gfmlvo@vireshk-i7>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-21-Sergey.Semin@baikalelectronics.ru>
- <c5109483-4c14-1a0c-efa9-51edf01c12de@intel.com>
- <20200516125203.et5gkv6ullkerjyd@mobilestation>
- <20200518074142.c6kbofpdlxro2pjz@vireshk-i7>
- <a8dfa493-f858-e35d-7e57-78478be555c4@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8dfa493-f858-e35d-7e57-78478be555c4@intel.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 18 May 2020 06:13:16 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48832 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgERKNQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 06:13:16 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D9583200060;
+        Mon, 18 May 2020 12:13:14 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 759A6200781;
+        Mon, 18 May 2020 12:13:10 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0D20A402A6;
+        Mon, 18 May 2020 18:13:04 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] dt-bindings: reset: Convert i.MX reset to json-schema
+Date:   Mon, 18 May 2020 18:03:32 +0800
+Message-Id: <1589796212-9993-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18-05-20, 11:53, Rafael J. Wysocki wrote:
-> That said if you really only want it to return 0 on success, you may as well
-> add a ret = 0; statement (with a comment explaining why it is needed) after
-> the last break in the loop.
+Convert the i.MX reset binding to DT schema format using json-schema.
 
-That can be done as well, but will be a bit less efficient as the loop
-will execute once for each policy, and so the statement will run
-multiple times. Though it isn't going to add any significant latency
-in the code.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- add the compatible strings per SoC;
+	- use "reset-controller" as node name instead of src;
+	- add interrupt items description.
+---
+ .../devicetree/bindings/reset/fsl,imx-src.txt      | 49 -----------
+ .../devicetree/bindings/reset/fsl,imx-src.yaml     | 98 ++++++++++++++++++++++
+ 2 files changed, 98 insertions(+), 49 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
 
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
+deleted file mode 100644
+index 6ed79e6..0000000
+--- a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
++++ /dev/null
+@@ -1,49 +0,0 @@
+-Freescale i.MX System Reset Controller
+-======================================
+-
+-Please also refer to reset.txt in this directory for common reset
+-controller binding usage.
+-
+-Required properties:
+-- compatible: Should be "fsl,<chip>-src"
+-- reg: should be register base and length as documented in the
+-  datasheet
+-- interrupts: Should contain SRC interrupt and CPU WDOG interrupt,
+-  in this order.
+-- #reset-cells: 1, see below
+-
+-example:
+-
+-src: src@20d8000 {
+-        compatible = "fsl,imx6q-src";
+-        reg = <0x020d8000 0x4000>;
+-        interrupts = <0 91 0x04 0 96 0x04>;
+-        #reset-cells = <1>;
+-};
+-
+-Specifying reset lines connected to IP modules
+-==============================================
+-
+-The system reset controller can be used to reset the GPU, VPU,
+-IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
+-nodes should specify the reset line on the SRC in their resets
+-property, containing a phandle to the SRC device node and a
+-RESET_INDEX specifying which module to reset, as described in
+-reset.txt
+-
+-example:
+-
+-        ipu1: ipu@2400000 {
+-                resets = <&src 2>;
+-        };
+-        ipu2: ipu@2800000 {
+-                resets = <&src 4>;
+-        };
+-
+-The following RESET_INDEX values are valid for i.MX5:
+-GPU_RESET     0
+-VPU_RESET     1
+-IPU1_RESET    2
+-OPEN_VG_RESET 3
+-The following additional RESET_INDEX value is valid for i.MX6:
+-IPU2_RESET    4
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
+new file mode 100644
+index 0000000..7cd6095
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
+@@ -0,0 +1,98 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/fsl,imx-src.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX System Reset Controller
++
++maintainers:
++  - Philipp Zabel <p.zabel@pengutronix.de>
++
++description: |
++  The system reset controller can be used to reset the GPU, VPU,
++  IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
++  nodes should specify the reset line on the SRC in their resets
++  property, containing a phandle to the SRC device node and a
++  RESET_INDEX specifying which module to reset, as described in
++  reset.txt
++
++  The following RESET_INDEX values are valid for i.MX5:
++    GPU_RESET     0
++    VPU_RESET     1
++    IPU1_RESET    2
++    OPEN_VG_RESET 3
++  The following additional RESET_INDEX value is valid for i.MX6:
++    IPU2_RESET    4
++
++properties:
++  compatible:
++    oneOf:
++      - description: on i.MX51 the following compatible must be specified
++        items:
++          - const: "fsl,imx51-src"
++
++      - description: on i.MX50 the following compatibles must be specified
++        items:
++          - const: "fsl,imx50-src"
++          - const: "fsl,imx51-src"
++
++      - description: on i.MX53 the following compatibles must be specified
++        items:
++          - const: "fsl,imx53-src"
++          - const: "fsl,imx51-src"
++
++      - description: on i.MX6Q the following compatibles must be specified
++        items:
++          - const: "fsl,imx6q-src"
++          - const: "fsl,imx51-src"
++
++      - description: on i.MX6SX the following compatibles must be specified
++        items:
++          - const: "fsl,imx6sx-src"
++          - const: "fsl,imx51-src"
++
++      - description: on i.MX6SL the following compatibles must be specified
++        items:
++          - const: "fsl,imx6sl-src"
++          - const: "fsl,imx51-src"
++
++      - description: on i.MX6UL the following compatibles must be specified
++        items:
++          - const: "fsl,imx6ul-src"
++          - const: "fsl,imx51-src"
++
++      - description: on i.MX6SLL the following compatibles must be specified
++        items:
++          - const: "fsl,imx6sll-src"
++          - const: "fsl,imx51-src"
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: SRC interrupt
++      - description: CPU WDOG interrupts out of SRC
++    minItems: 1
++    maxItems: 2
++
++  '#reset-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    reset-controller@73fd0000 {
++        compatible = "fsl,imx51-src";
++        reg = <0x73fd0000 0x4000>;
++        interrupts = <75>;
++        #reset-cells = <1>;
++    };
 -- 
-viresh
+2.7.4
+
