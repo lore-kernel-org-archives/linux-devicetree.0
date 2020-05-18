@@ -2,111 +2,95 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA0FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 20:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5653CC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 20:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F9120758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 20:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C1E2081A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 20:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SxAWC9wD"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="S/V2meIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgERUSa (ORCPT
+        id S1726979AbgERUbz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 16:18:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56172 "EHLO
+        Mon, 18 May 2020 16:31:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgERUS3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 16:18:29 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58441C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 13:18:29 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l17so13355393wrr.4
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 13:18:29 -0700 (PDT)
+        with ESMTP id S1726492AbgERUbz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 16:31:55 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F65C05BD09
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 13:31:54 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id h26so9277561lfg.6
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 13:31:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BuJAIlJzNVfUnKFpYlKJrQaksovEb6r2MOQ70C3Y5sE=;
-        b=SxAWC9wD97Nx9RF3x3Gt/iZfKa8M2cx51v1EjKYupLeGpf+OXQcl28YEfu07NNYBzp
-         oG+fZxxrewBemj4QfFHPCIkMV+hJAXiaAzGtFMWoKqaKX9APTvHFWnpqBpvZStJP6MY5
-         ZJL49q+YvgR1TsQW6DuEjc0vHci857/8g7zyBbXevlDpKtC16cdZUMFYwaSBtu/Azadr
-         hcWfZEHCdEnqumpagVLp+S3vV4xtpbduKy+4NNZEuG21ZOK5ZrWQACre05Eqq834JNCW
-         Tr0rVO6giGivX1D6FKN3hG2Y2HP0AELLOVuUdTe7C7HDFMMswLp//vZnCo7l4qyKIsq0
-         HEGg==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:organization:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
+        b=S/V2meIHX6iNtfRVQH6gN/h2Lyp5uwDpI0DvK0EGXJdBE8jiAkFT97P5mkXdh2m3qW
+         ubkAh6O+D9ZIP0TmMu3wEF23N+L0d1FbplsFxsXfmJkWqBx/FecsnSOhqcbJSZalCmSX
+         ab2E8KVO0NHXnv45BislI93lru50zeVPdIXNKU8o7U2BmVysz3A37I1k07XWaEjHG9tt
+         QCNMsjiHo9N9IDnZAKrkwUP4eE2k4MJ0+/P7m2/02hKLGgbf1HVZsvZVfuDJpKcGOkeU
+         V3Sm5fQgFuy8ce7soIHMMb1eQvOblNhAIkIaWlcnoPIUqVXoXZ0WnYTvkon9naCb3Zky
+         fmmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BuJAIlJzNVfUnKFpYlKJrQaksovEb6r2MOQ70C3Y5sE=;
-        b=UiT3FQT1u/KDXDNCbZgnMmpOB0qnRBKZ72iRFg5SSF09vmhVm+F58uLAIZsGpvMJzF
-         hXxKYdKGWehFAMk3eH91cvSxF63z1pDqkbVRJLBQNcPJvKxBGzoIo+t8DFPgWfFqf4fS
-         4q1aoQhRa/x6nc8nafD8A+efr+Lfb5LyvCwT7RM57PMMBIK0ZQ6xW1qUu1A+aTa6ycT/
-         7b7low2VWcmbkjp7aXNf5RV6lcuxrhuHuEhRWNawcS8p1Iy+djlsZvY/3gCHDinaUO1j
-         JoFpGoA/tpsqOaDJgL9AoYBTGnFDv+vd6ObA5Rkq1/eG4mLmQM5QlaU8RrRY9d52ELIE
-         WMLA==
-X-Gm-Message-State: AOAM531KluAyzKXFFvGt7qdDbCzL5wkrFd6r6r3E6H35D9hPZmEot8MK
-        tdCgaqtCelqUigtyrIrDAWXF6A==
-X-Google-Smtp-Source: ABdhPJwPiPMglSYT2/xaOY59iHe2nTbksNb6WmRUz9mJuUv5IbPqRFkca7BsAXDI/I3ojYQVTFNCww==
-X-Received: by 2002:adf:806e:: with SMTP id 101mr21994991wrk.225.1589833107923;
-        Mon, 18 May 2020 13:18:27 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id z11sm17107463wrr.32.2020.05.18.13.18.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 13:18:27 -0700 (PDT)
-Subject: Re: [PATCH v7 5/6] clocksource: Add Low Power STM32 timers driver
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        fabrice.gasnier@st.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, tglx@linutronix.de
-Cc:     devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Pascal Paillet <p.paillet@st.com>
-References: <20200420121620.2099-1-benjamin.gaignard@st.com>
- <20200420121620.2099-6-benjamin.gaignard@st.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <9f737934-d92c-9ddf-f6fb-3ee64057ea18@linaro.org>
-Date:   Mon, 18 May 2020 22:18:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:from:subject:to:cc:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
+        b=JlP0qpRd9/mPtiMH3myjrQD4WK+jRXPsFM2G+aBuKR+IrwZ+QJqK5wzSv973Xl60Wo
+         QP6rQLKmBGFvGN9U3H06RqFvQ0ZI21tcuoIPE2wrdQ7mWGJ17pVlFza/a2iAmq7rsrS/
+         7CGZSxVE+fQqZyvk1raEzpcYC13aS4Eo43yZpdTOSj8G1NmA2aWR8Yi+pYL/EkptssQg
+         rRwmYjCEZuoARlOuXCHuRnKD+qYTfbJ1adS1tTlkFg4opKPneaEZkGe1wk/3W5TkcQI8
+         OsOPjoRUDJ07c9r2TLn8EUjIh7HYGTCT1PBdT+Woy+iVKCHZsTKhk/eER/nZ6HBdVj97
+         /qMQ==
+X-Gm-Message-State: AOAM532vKp3+ToI5vd6zqjsE0dqViOsvMMnWieAD3TWxgf5iw/TvaaRJ
+        kQVIHq1k0MyUXvDSYdEOfLChfQ==
+X-Google-Smtp-Source: ABdhPJwbeRgWCUksn3Rp9PyliuSUUrgdtDgGrHAVgDph+uCNv8e0tKIc/Q6nrbUUHFC0gCY5cMqmTg==
+X-Received: by 2002:a19:990:: with SMTP id 138mr7817351lfj.135.1589833912488;
+        Mon, 18 May 2020 13:31:52 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:4650:c10:49f1:792f:a411:29a7])
+        by smtp.gmail.com with ESMTPSA id z17sm7136988ljc.81.2020.05.18.13.31.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 May 2020 13:31:51 -0700 (PDT)
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/2] Add Renesas RPC-IF support
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Organization: Cogent Embedded
+Message-ID: <26faf5e8-26eb-cceb-a500-f0fd64609737@cogentembedded.com>
+Date:   Mon, 18 May 2020 23:31:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <20200420121620.2099-6-benjamin.gaignard@st.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20/04/2020 14:16, Benjamin Gaignard wrote:
-> From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> 
-> Implement clock event driver using low power STM32 timers.
-> Low power timer counters running even when CPUs are stopped.
-> It could be used as clock event broadcaster to wake up CPUs but not like
-> a clocksource because each it rise an interrupt the counter restart from 0.
-> 
-> Low power timers have a 16 bits counter and a prescaler which allow to
-> divide the clock per power of 2 to up 128 to target a 32KHz rate.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Signed-off-by: Pascal Paillet <p.paillet@st.com>
+Hello!
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
+to be accessed via the external address space read mode or the manual mode.
+The memory controller driver for RPC-IF registers either SPI or HyperFLash
+subdevice, depending on the contents of the device tree subnode; it also
+provides the abstract "back end" API that can be used by the "front end"
+SPI/MTD drivers to talk to the real hardware...
 
-[ ... ]
+Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+[1/2] dt-bindings: memory: document Renesas RPC-IF bindings
+[2/2] memory: add Renesas RPC-IF driver
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+MBR, Sergei
