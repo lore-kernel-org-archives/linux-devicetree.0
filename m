@@ -2,125 +2,113 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FA0C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1CBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13DD2083E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C63E207FB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgERQnU (ORCPT
+        id S1727938AbgERQ5w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 12:43:20 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48761 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbgERQnU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 12:43:20 -0400
-IronPort-SDR: 0AHFgMZphkospxMAbe/8lyswVtAI8SxiTNhvSVk+vNF7UzvxfHM/xEx0CfgBVIOfCcBdLXd2OR
- ZwVnfPt1ZdEg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:43:18 -0700
-IronPort-SDR: upDKlvNwBdsY1JUgaGgn7G2U8VVN5G1yPIetYSweB5w8b5sStOSfgYfh5535yban1X6ROWpjOW
- Nd09R8pnrSMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="288632001"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 18 May 2020 09:43:15 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jairF-007TA1-UP; Mon, 18 May 2020 19:43:17 +0300
-Date:   Mon, 18 May 2020 19:43:17 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200518164317.GL1634618@smile.fi.intel.com>
-References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
- <20200518133645.19127-4-jonathan.albrieux@gmail.com>
- <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
- <20200518160120.GA21361@ict14-OptiPlex-980>
+        Mon, 18 May 2020 12:57:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbgERQ5w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 12:57:52 -0400
+Received: from mail.bugwerft.de (mail.bugwerft.de [IPv6:2a03:6000:1011::59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9635EC061A0C;
+        Mon, 18 May 2020 09:57:52 -0700 (PDT)
+Received: from [192.168.178.106] (pd95ef567.dip0.t-ipconnect.de [217.94.245.103])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 9B3C340A403;
+        Mon, 18 May 2020 16:54:56 +0000 (UTC)
+Subject: Re: [PATCH 4/4] sc16is7xx: Use threaded IRQ
+To:     Maarten Brock <m.brock@vanmierlo.com>
+Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org, jslaby@suse.com,
+        pascal.huerst@gmail.com, linux-serial-owner@vger.kernel.org
+References: <20200508143757.2609740-1-daniel@zonque.org>
+ <20200508143757.2609740-5-daniel@zonque.org>
+ <61fdcf12976c924fd86c5203aba673a7@vanmierlo.com>
+ <584de876-e675-0172-97ed-0c9534eb9526@zonque.org>
+ <dfafc770e7e308cb6a2db5a1003cd759@vanmierlo.com>
+From:   Daniel Mack <daniel@zonque.org>
+Message-ID: <22116d56-9240-9bfe-1b6f-a94d57a085cf@zonque.org>
+Date:   Mon, 18 May 2020 18:57:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518160120.GA21361@ict14-OptiPlex-980>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <dfafc770e7e308cb6a2db5a1003cd759@vanmierlo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 06:01:20PM +0200, Jonathan Albrieux wrote:
-> On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
-> > On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
-> > <jonathan.albrieux@gmail.com> wrote:
-> > 
-> > > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
-> > 
-> > (1)
-> > 
-> > ...
-> > 
-> > > +       /*
-> > > +        * If reset pin is provided then will be set to high on power on
-> > > +        * and to low on power off according to AK09911 datasheet
-> > > +        */
-> > 
-> > Wording is confusing, perhaps you have to use 'asserted / deasserted'.
+Hi Maarten,
+
+On 5/18/20 1:14 PM, Maarten Brock wrote:
+> On 2020-05-17 22:44, Daniel Mack wrote:
+
+>>> Therefor I suggest to change IRQF_TRIGGER_FALLING to
+>>> IRQF_TRIGGER_LOW. This
+>>> way the thread will be retriggered after IRQ_HANDLED is returned.
+>>
+>> This doesn't work in my setup unfortunately, as the interrupt controller
+>> is incapable of handling level IRQs.
 > 
-> Thank you for the suggestion, I'll be working on rewording as soon as
-> possible.
-> 
-> > Btw, in (1) it's also "high" (asserted). I barely understand how it's
-> > supposed to work in all cases?
-> > 
-> > > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> > > +                                             "reset", GPIOD_OUT_HIGH);
-> > > +       if (IS_ERR(reset_gpiod))
-> > > +               return PTR_ERR(reset_gpiod);
-> > 
-> 
-> I'm sorry but I'm not sure about what you mean by saying all cases.
-> Currently  I'm testing this driver on a msm8916 device having AK09911
-> magnetometer. At the current stage the driver is failing on probe 
-> because reset pin is not connected to VID (as datasheet requires in case
-> of pin not being used). In case of reset pin not asserted, register's
-> reset is triggered resulting in empty registers, leading to probe fail.
-> For this reason pin is asserted during power on in order to have 
-> informations in registers and deasserted before power off triggering
-> a reset.
-> 
-> A workaround that gets AK09911 working on device is by setting the
-> reset pin always high on device tree. This way registers gets reset by
-> a Power On Reset circuit autonomously and reset pin never triggers the
-> reset.
+> That sounds like a lousy interrupt controller to me. 
 
-You need to distinguish electrical level from logical (GPIO flag defines
-logical). So, I'm talking about active-high vs. active-low case.
+While that is true, there are many such controllers around.
 
-Now I re-read above, and see that here you assert the reset signal. But where
-is desertion?
+> Summerizing:
+> - After switching to a threaded IRQ, the trigger could be switched to
+> IRQF_TRIGGER_LOW and with that interrupt sharing can be enabled for
+> this device with IRQF_SHARED.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yes, but we don't need that. As discussed, the UART driver can cope with
+edge IRQs just fine.
+
+> - Some (your) interrupt controllers do not support IRQF_TRIGGER_LOW.
+> For those only IRQF_TRIGGER_FALLING can be used for this device and
+> thus IRQF_SHARED cannot be used.
+
+True. Interrupts cannot be shared for this device then. That's a fair
+limitation, and it has always been like that.
+
+> - The driver for your interrupt controller should be improved to support
+> level IRQs.
+
+It's a controller that sits behind another hardware bus itself, so
+polling is expensive. If the controller would need to check for level
+IRQs it would need to poll, and then we could as well just poll the UART
+directly, that's just as good :)
+
+But again - the UART driver works perfectly fine with edge IRQs as long
+as the interrupt is not shared.
+
+> This makes me wonder if it would be better to let the device tree specify
+> the interrupt configuration.
+
+There can be flags in the 2nd cell of the node, but their meaning is
+specific to the controller. Hence the SPI/I2C layers don't pass that
+information up.
+
+What many drivers do is try with one setting, and if that fails because
+the interrupt controller returns an error, they fall back to something
+else. We could do the same here of course, but it'd be another patch on
+top, as it's unrelated to the concrete change the patch we're commenting
+on is bringing in.
+
+So what I can add is logic that first tries with IRQF_LOW|IRQF_SHARED,
+and if that fails, we fall back to IRQF_FALLING and retry. WDYT?
 
 
+
+Thanks,
+Daniel
