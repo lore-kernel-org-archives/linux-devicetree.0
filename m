@@ -3,162 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0F9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17B1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 343DC207D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFE4207D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgERQa3 convert rfc822-to-8bit (ORCPT
+        id S1727035AbgERQcX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 12:30:29 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2221 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727006AbgERQa2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 12:30:28 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id D4239F39FD155421C674;
-        Mon, 18 May 2020 17:30:22 +0100 (IST)
-Received: from localhost (10.47.85.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 18 May
- 2020 17:30:22 +0100
-Date:   Mon, 18 May 2020 17:29:54 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
-Message-ID: <20200518172954.00005fd8@Huawei.com>
-In-Reply-To: <3136c4c7-b964-dce4-9e43-4cbbcc9187a1@metafoo.de>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
-        <20200413082445.17324-6-nuno.sa@analog.com>
-        <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
-        <20200502184010.134eb8b5@archlinux>
-        <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
-        <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
-        <20200503094751.633feda1@archlinux>
-        <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
-        <b7289aca-f393-faca-f512-a952a77c1e68@metafoo.de>
-        <20200517171523.54fa6deb@archlinux>
-        <3136c4c7-b964-dce4-9e43-4cbbcc9187a1@metafoo.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 18 May 2020 12:32:23 -0400
+Received: from elvis.franken.de ([193.175.24.41]:58105 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbgERQcX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 12:32:23 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jaiga-0006ss-00; Mon, 18 May 2020 18:32:16 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 8F3ACC010D; Mon, 18 May 2020 18:32:06 +0200 (CEST)
+Date:   Mon, 18 May 2020 18:32:06 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200518163206.GA17800@alpha.franken.de>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
+ <20200508154150.GB22247@alpha.franken.de>
+ <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+ <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
+ <20200518134820.wedoumgbsllvhem6@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.47.85.42]
-X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200518134820.wedoumgbsllvhem6@mobilestation>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 17 May 2020 21:07:45 +0200
-Lars-Peter Clausen <lars@metafoo.de> wrote:
-
-> On 5/17/20 6:15 PM, Jonathan Cameron wrote:
-> > On Sun, 3 May 2020 11:12:34 +0200
-> > Lars-Peter Clausen <lars@metafoo.de> wrote:
-> >  
-> >> On 5/3/20 11:07 AM, Lars-Peter Clausen wrote:  
-> >>> On 5/3/20 10:47 AM, Jonathan Cameron wrote:  
-> >>>> On Sat, 02 May 2020 21:52:18 +0200
-> >>>> Nuno Sá <noname.nuno@gmail.com> wrote:
-> >>>>     
-> >>>>> On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen wrote:  
-> >>>>>> On 5/2/20 7:40 PM, Jonathan Cameron wrote:  
-> >>>>>>> On Mon, 27 Apr 2020 20:06:07 +0200
-> >>>>>>> Lars-Peter Clausen <lars@metafoo.de> wrote:  
-> >>>>>>>> On 4/13/20 10:24 AM, Nuno Sá wrote:  
-> >>>>>>>>> [...]
-> >>>>>>>>> +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
-> >>>>>>>>> +{
-> >>>>>>>>> [...]
-> >>>>>>>>> +    __be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
-> >>>>>>>>> [...]
-> >>>>>>>>> +
-> >>>>>>>>> +    iio_push_to_buffers_with_timestamp(indio_dev, data, pf-  
-> >>>>>>>>>> timestamp);  
-> >>>>>>>> If the timestamp is enabled the IIO core might insert padding
-> >>>>>>>> between
-> >>>>>>>> the data channels and the timestamp. If that happens this will
-> >>>>>>>> disclose
-> >>>>>>>> kernel stack memory to userspace.
-> >>>>>>>>
-> >>>>>>>> This needs either a memset(data, 0x00, sizeof(data)) or maybe put
-> >>>>>>>> data
-> >>>>>>>> into the state struct and kzalloc it.  
-> >>>>>>> Good spot. Could simply do __be16 data[ADI..] = {0}; rather than
-> >>>>>>> explicit
-> >>>>>>> memset, but some form of zeroization is needed.
-> >>>>>>>
-> >>>>>>> I've fixed up the applied patch with the above approach.  
-> >>>>>> There is actually another issue. The stack data is not necessarily
-> >>>>>> aligned to 64 bit, which causes issues if we try to put the 64-bit  
-> >>>>> Oh, this is actually more problematic. Yes, since we have an array of
-> >>>>> u16, that is not guaranteed to be 64bit aligned. Doing a quick search
-> >>>>> of `iio_push_to_buffers_with_timestamp()` users and I could quickly
-> >>>>> find 4/5 drivers with the same problem. I guess the API should clearly
-> >>>>> state that `data` needs to be __at least__ 64 bits aligned (maybe a
-> >>>>> future patch). Or we could even check the address and guarantee that it
-> >>>>> is properly aligned before continuing (though Im guessing this will
-> >>>>> break a lot of users...)  
-> >>>>>> timestamp in it. I think data should really be in the state struct.  
-> >>>>> Yes, with a proper __aligned(8) attribute... Or couldn't we just use
-> >>>>> __aligned(8) on the stack variable?  
-> >>>> Forcing alignment on the stack isn't terribly reliable, which is why
-> >>>> we never do that for dma safe buffers.
-> >>>>
-> >>>> Probably better to just move it to the state structure.
-> >>>> I'll fix it up to do that. Please sanity check what will shortly
-> >>>> be in the testing branch.
-> >>>>
-> >>>> The moment Lars mentioned this I groaned. As you've noted a few other
-> >>>> drivers have the same problem + the ABI doesn't clearly state
-> >>>> or check this.
-> >>>>
-> >>>> We should certainly fix all the drivers that suffer this problem
-> >>>> first then we can think about adding a runtime check.  
-> >>> It looks like it is actually quite a few drivers, maybe we should
-> >>> switch to put_unaligned(). We probably got lucky in most cases and the
-> >>> buffer is naturally aligned to 64 bit.  
-> > Just a quick update on this.  I've been taking a deeper look and there
-> > are some 'interesting' cases in here so the put_unaligned is attractive
-> > unfortunately I don't think we can go that way because it would be
-> > reasonable for consumers of the buffer to expect it to be appropriately
-> > aligned.   We need to rework many of these anyway to fix the related
-> > data leak.
-> >
-> > I've done some of below and will post shortly - a few will take more
-> > effort and probably need testing rather than just relying on review.
-> >
-> > So far the 'interesting ones' are mpu3050 and isl29501.  
+On Mon, May 18, 2020 at 04:48:20PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 11:06:47PM +0200, Thomas Bogendoerfer wrote:
+> > On Fri, May 15, 2020 at 10:48:27AM +0300, Serge Semin wrote:
+> > > Thomas,
+> > > Could you take a look at my comment below so I could proceed with the
+> > > patchset v3 development?
+> > 
+> > I can't help, but using r4k clocksource with changing frequency is
+> > probaly only usefull as a random generator. So IMHO the only two
+> > options are disabling it or implement what arch/x86/kernel/tsc.c does.
+> > 
+> > Thomas.
 > 
-> isl29501 looks OK to me. mpu3050 is clearly broken, buffer is both 
-> unaligned and too small!
+> Thomas, could you proceed with the rest of the patches review?
+> â”œâ”€>[PATCH v2 16/20] bus: cdmm: Add MIPS R5 arch support
+> â”œâ”€>[PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
 
-isl29501 reads a pair of 8 bit registers, then writes them to a 32 bit value
-for no particular reason and puts that in the first 32 bits of the buffer
-having declared the channel to have a storage size of 16 bits.
+both are not my call, but look ok to me.
 
-So going to have some fun on one or other of the endian types...
+> â”œâ”€>[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
 
-J
+that's broken. A reg shift of 2 doesn't mean we could use 32bit access
+to the registers on other platforms. As I don't think adding some ifdefery
+makes things nicer, just implement the your prom_putchar in board code.
 
-> 
+> â”œâ”€>[PATCH v2 12/20] mips: MAAR: Add XPA mode support
 
+looks ok so far.
 
+> â”œâ”€>[PATCH v2 10/20] mips: Add CONFIG/CONFIG6/Cause reg fields macro
+
+that is fine
+
+> â””â”€>[PATCH v2 09/20] mips: Add CP0 Write Merge config support
+
+this is IMHO a dangerous change. Enabling write merging for any
+CPU supporting it might triggers bugs. Do it in your board bringup
+code and at the moment I don't see a reason for the rest of that
+patch.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
