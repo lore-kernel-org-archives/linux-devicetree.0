@@ -2,151 +2,174 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D19C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFE4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3741620674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDD6207D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qjxhrtzg"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="y9jCMQ+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgERN7V (ORCPT
+        id S1727943AbgEROHf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:59:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52882 "EHLO
+        Mon, 18 May 2020 10:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgERN7V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:59:21 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D106C05BD0A
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 06:59:20 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 50so11951660wrc.11
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 06:59:20 -0700 (PDT)
+        with ESMTP id S1727782AbgEROHf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:07:35 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 479A2C05BD09
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 07:07:35 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id f4so10639613iov.11
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 07:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Qp3KMqm4FQRyseSw00gSsB5YgPJWvTQnwqqnC4fzNYk=;
-        b=QjxhrtzgoF4UOeAXmKcLvcQXo3nn09VjgwT3pzwmtMt4UHCM4eXIyEKiKQGvfl5PYd
-         5ar6mXkoazv5YLYLkuuFoqM7DPXWgD7ewwKfXdzkrxtG05ZLxLdzDKiUxTAigwZxaN6W
-         DCxDQ7qCjJMugmdWYRpb/+ZQU15iI+b20wQTP/582ApRzoBNgp7xJgDuueFczjwl/B5S
-         +lXXf0JtBQxyRcf4B9w6JvcBfeyoANEdWihQWeYg83qiDyAGSY6akppZPl435dwpHUTG
-         qP5b7zXt1QKCU8HTi0cCR6OrHAFRhKpCb+eBTnR9gr0ARNNFX8JuN7Q9bLHW3k/YYzNF
-         XcuQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=88kserzSxBEIDjdSt5lOO0U4rUg4np+0t0E9MSvOSs4=;
+        b=y9jCMQ+BCO5bCs8V3KsG5KK/VGobVsgkQjY5AVz6q9lOYoUJM+8UK0wcbWXbI8xF3J
+         prvbfUFKweWoR6i7a/sKx8hd+VDVivXpCogr+13TXNGWTzBZpoaT3G04gbQTXtnAwNKm
+         b2zIgm05cKPpwTzQZBzWTIfeMmi6lp+iJJXuFHrQJEVyf70Wd/i8BU+zd33WziDDBQrr
+         1aDDD33/n5PpFBKnqs55DxtGDOKC++20oqW8SMvEt6g64DqxmPH3Ynmu/dkM2TvOboRT
+         smliBL1UFi7+UPGOT4cDY3LUQc1+4WEkr22dkDohlTcdglusE9AOIuhVsW1qLQbe12qf
+         X+2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Qp3KMqm4FQRyseSw00gSsB5YgPJWvTQnwqqnC4fzNYk=;
-        b=bFh2gxnEl9FlEt4S9Ir7SWIdLRXxctxdWdOxt/QW+kDLAg7UYuS/cGIgORwq4rwakE
-         uxauIZp7IRNAeg1d3hK6Fkm2xt6PYSdp7CCa4qytGU7tCwLvPN8xwpkjh0W/XEdJnHN0
-         GVDdb1+ihknZ4UPqD3DiIWpg2DH6Drr9VIxRaf+z+0v+Ljr1rQhADzWi3FpAqzrphzaG
-         pIx5sjxkEb6kDi9uV8ZgeWYCyy5H8LzMRmqeBzjGOSi27lkqxV71Nmd6+9N5z5mgYjnL
-         EolYAAH9PHWvb4upvnMquhEeGqZXbqkMtIrjw2pfPUwovdzRLvBwk5kG63dk+qPS7Pg4
-         gx1Q==
-X-Gm-Message-State: AOAM532TVhfDVYy0vYlAn7a8vwH0hI0K2mUGTTxI0J9IZnfB5jmvx8EE
-        /N7SxDNl5PZ2HL6a+Y9vjSt4Vw==
-X-Google-Smtp-Source: ABdhPJy7x6BVz0Xb+O2uc1Xy1BGI6onEzzHz8JHpWyLqk248mRHXNwXCml8Ac0UNNl6/MtBOQHjuxg==
-X-Received: by 2002:adf:e80e:: with SMTP id o14mr17715940wrm.307.1589810358929;
-        Mon, 18 May 2020 06:59:18 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id 5sm17082716wmd.19.2020.05.18.06.59.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 06:59:18 -0700 (PDT)
-Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
- clocksource/sched-clocks usage
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
- <20200515171004.GA760381@linaro.org>
- <20200516121647.g6jua35kkihmw5r6@mobilestation>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
-Date:   Mon, 18 May 2020 15:59:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=88kserzSxBEIDjdSt5lOO0U4rUg4np+0t0E9MSvOSs4=;
+        b=ZWYt95cuKsjgr16tz3wwVtCAVZajFFynz3Wjx8PHf+PH91tGdsd2BFvzymiolHn/K3
+         biXaLbWU1SP8hAgcZvR82anOYM4t0vji/yLbu9SHouxUY6vzb656NBf7Ymv+PACRP6SL
+         G85aOzNyvO04e+efgvHssNd/aA8o/mrqyOKQGnR3OflBPMNq9KB1J9gYLbaNFP+8H64f
+         ltGp00xLT1etJY3jSwD2+LlpNNayJ/i5B/7xQY7aY/Fntn6Lg/Sfr3DwlA0yhJwbpor2
+         09DVLJo8kFOztGt+jBKh9uCVdl1dppanI8OAX/JKC/MouzioYYyQsi/rjtDWl+vbtMdy
+         o7gA==
+X-Gm-Message-State: AOAM5305uJnnEshRqjOtI9f0LWmbyZFKKuDLXlIuOr9kbk692KO6H91g
+        BmxCQei+EsTEL9/GQlHRpWx7mEzgfN+Z4hpVlWUUKwnl
+X-Google-Smtp-Source: ABdhPJz7TVBqL0o8reZpmOjcpmNU0hBkhjlx8exFERPwwjlGWCDBsQrggYZf+B/u4J3tppWJHADctBPzuEotkI8yI7U=
+X-Received: by 2002:a6b:7c45:: with SMTP id b5mr14815810ioq.31.1589810854135;
+ Mon, 18 May 2020 07:07:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200516121647.g6jua35kkihmw5r6@mobilestation>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
+ <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
+In-Reply-To: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 18 May 2020 16:07:23 +0200
+Message-ID: <CAMRc=MeVyNzTWw_hk=J9kX1NE9reCE_O4P3wrNpMMc9z4xA_DA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16/05/2020 14:16, Serge Semin wrote:
-> Hello Daniel,
-> 
-> Thanks for your comment. My response is below.
-> 
-> On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
->> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
->>> Currently neither clocksource nor scheduler clock kernel framework
->>> support the clocks with variable frequency. Needless to say how many
->>> problems may cause the sudden base clocks frequency change. In a
->>> simplest case the system time will either slow down or speed up.
->>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
->>> with CPU we must set some limitations on using it for these frameworks
->>> if CPU frequency may change. First of all it's not safe to have the
->>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
->>> the clocks registration in the sched-subsystem. Secondly we must
->>> significantly decrease the MIPS GIC clocksource rating. This will let
->>> the system to use it only as a last resort.
->>>
->>> Note CM3.x-based systems may also experience the problems with MIPS GIC
->>> if the CPU-frequency change is activated for the whole CPU cluster
->>> instead of using the individual CPC core clocks divider.
->>
->> May be there is no alternative but the code looks a bit hacksih. Isn't possible
->> to do something with the sched_mark_unstable?
->>
->> Or just not use the timer at all ?
-> 
-> Not using the timer might be better, but not that good alternative either
-> especially in our case due to very slow external timer. Me and Thomas
-> Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
-> available on MIPS:
-> https://lkml.org/lkml/2020/5/11/576
-> 
-> To cut it short, you are right. The solution with using clocksource_mark_unstable()
-> is better alternative spied up in x86 tsc implementation. I'll use a similar
-> approach here and submit the updated patch in v3.
-> 
-> Could you please proceed with the rest of the series review? I'd like to send
-> the next version with as many comments taken into account as possible. The
-> patchset has been submitted a while ago, but except Rob noone have had any
-> comments.(
+pt., 15 maj 2020 o 15:32 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
+>
+> On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+> > +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
+> > +                                struct mtk_mac_ring_desc_data *desc_da=
+ta)
+>
+> I took another look at this function because of your comment on the locki=
+ng
+> the descriptor updates, which seemed suspicious as the device side does n=
+ot
+> actually use the locks to access them
+>
+> > +{
+> > +       struct mtk_mac_ring_desc *desc =3D &ring->descs[ring->tail];
+> > +       unsigned int status;
+> > +
+> > +       /* Let the device release the descriptor. */
+> > +       dma_rmb();
+> > +       status =3D desc->status;
+> > +       if (!(status & MTK_MAC_DESC_BIT_COWN))
+> > +               return -1;
+>
+> The dma_rmb() seems odd here, as I don't see which prior read
+> is being protected by this.
+>
+> > +       desc_data->len =3D status & MTK_MAC_DESC_MSK_LEN;
+> > +       desc_data->flags =3D status & ~MTK_MAC_DESC_MSK_LEN;
+> > +       desc_data->dma_addr =3D ring->dma_addrs[ring->tail];
+> > +       desc_data->skb =3D ring->skbs[ring->tail];
+> > +
+> > +       desc->data_ptr =3D 0;
+> > +       desc->status =3D MTK_MAC_DESC_BIT_COWN;
+> > +       if (status & MTK_MAC_DESC_BIT_EOR)
+> > +               desc->status |=3D MTK_MAC_DESC_BIT_EOR;
+> > +
+> > +       /* Flush writes to descriptor memory. */
+> > +       dma_wmb();
+>
+> The comment and the barrier here seem odd as well. I would have expected
+> a barrier after the update to the data pointer, and only a single store
+> but no read of the status flag instead of the read-modify-write,
+> something like
+>
+>       desc->data_ptr =3D 0;
+>       dma_wmb(); /* make pointer update visible before status update */
+>       desc->status =3D MTK_MAC_DESC_BIT_COWN | (status & MTK_MAC_DESC_BIT=
+_EOR);
+>
+> > +       ring->tail =3D (ring->tail + 1) % MTK_MAC_RING_NUM_DESCS;
+> > +       ring->count--;
+>
+> I would get rid of the 'count' here, as it duplicates the information
+> that is already known from the difference between head and tail, and you
+> can't update it atomically without holding a lock around the access to
+> the ring. The way I'd do this is to have the head and tail pointers
+> in separate cache lines, and then use READ_ONCE/WRITE_ONCE
+> and smp barriers to access them, with each one updated on one
+> thread but read by the other.
+>
 
-For me other patches are ok.
+Your previous solution seems much more reliable though. For instance
+in the above: when we're doing the TX cleanup (we got the TX ready
+irq, we're iterating over descriptors until we know there are no more
+packets scheduled (count =3D=3D 0) or we encounter one that's still owned
+by DMA), a parallel TX path can schedule new packets to be sent and I
+don't see how we can atomically check the count (understood as a
+difference between tail and head) and run a new iteration (where we'd
+modify the head or tail) without risking the other path getting in the
+way. We'd have to always check the descriptor.
 
-I can apply patches 1, 2, 4, 5, 6
+I experimented a bit with this and couldn't come up with anything that
+would pass any stress test.
 
-Will remain patches 3 et 7
+On the other hand: spin_lock_bh() works fine and I like your approach
+from the previous e-mail - except for the work for updating stats as
+we could potentially lose some stats when we're updating in process
+context with RX/TX paths running in parallel in napi context but that
+would be rare enough to overlook it.
 
+I hope v4 will be good enough even with spinlocks. :)
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Bart
