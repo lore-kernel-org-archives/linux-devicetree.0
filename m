@@ -4,85 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7123AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BB5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEA320758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58392067D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TN4Owd/3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIdv6qQc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgERCXN (ORCPT
+        id S1726700AbgERCZk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 22:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
+        Sun, 17 May 2020 22:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgERCXN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 22:23:13 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B4BC061A0C;
-        Sun, 17 May 2020 19:23:13 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id s69so4397340pjb.4;
-        Sun, 17 May 2020 19:23:13 -0700 (PDT)
+        with ESMTP id S1726675AbgERCZk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 22:25:40 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7F1C061A0C;
+        Sun, 17 May 2020 19:25:38 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id e125so5864340lfd.1;
+        Sun, 17 May 2020 19:25:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AECABquhuOQOtjkWWvwJpD/Rbci5f831n0D/HGMDZto=;
-        b=TN4Owd/3xxxwaVocpj98tZTBpFftUNCv2ZSM7l+590xQOOUBUMUhambNtRBlGnDQnq
-         93cM8OkEieGY3MkkySU1fO9kTifhacKxryvlShY6gq6GTHLQeI51IMgE+6bUz+dDmGLQ
-         LAZcG1xoUwWolYAg4ijN4G7qTmJcd00M8xwOgbIvpZ8IeWKn0Hh9u+UT33mRh3G2pJLd
-         cR7WR2d8serdyZZ74rnWslvCXBrjy5YkfDFe1QLTrOlqfh4wQ1bbyuxudUpMhLGE/vT5
-         wed/gGAINxleNOO3TyhXWbiDqk9iHOfHH5yvZb/kDZLkj9+yjetO0u69eNJaUc1ljmok
-         Vj1A==
+        h=from:to:cc:subject:date:message-id;
+        bh=5rfhPys2btHBP3bO1j73TJDJbaY1/Lc3Z3m/cpPLQBs=;
+        b=hIdv6qQcebc249xLUdQL6uLE5N+tSqfaElBQ+qolVIzlD15FiWmnC++UjW1CiHtpeA
+         1Vfsc0JqlB8BBowqlHNKqcbYnFIRJLu5bOYJ23qPAwAzNoDkzRk/kLlMrOmJeKp9dMvk
+         btJJj304foMsxB1h+mrPSXYJzq8QuJ5mMMl2CxSCDaLUWGWSyyL5x4sLC9yjnYioEZX/
+         Du9de/uralDhCVxB3ZDzep/GZXolCoolLZ5iwhHf85vd4Et7WBZ/ysFFpdnH+hK9OkHV
+         5VNKhBWk6SWOt4T7rWQinQQJg3Ps2E5aR5QVir0Uc/UVA+ELFO/60P8P4w7w8FXypcDm
+         aLhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AECABquhuOQOtjkWWvwJpD/Rbci5f831n0D/HGMDZto=;
-        b=WQsXtMKavzzuVQVhhXgyJleoC1RwT5UNQQRNbSGkV97PI5BFGMR76TY1gXKtwokTTY
-         fxfsplvosuBIDgkwvR9D5GgjyweoZSTRI7DCvJEPTdKXvXa7xqJV3qjVu4S1R7933K7F
-         xIA+0WWunTsy+Zj/028L66J5CxyerQ7mzTT555FdbFuMOWupinzHec6lYPy4Xw60VLnl
-         Lm4WcdUoW/6eHXy6Oqe5OjsE8trU48Ul+zNGt/lbfCZxaPyBv6TuFvDNZpy8ioqXou9g
-         vV7Sx5YC0a67EJpQ9bWB0t/ZLQZQyLhreN0b+/C7BKjoAb49TgcZRU0MsKNtRuHzc1l/
-         l86Q==
-X-Gm-Message-State: AOAM531rvBAXiAgwdcOJumMbzsPNQvp9VXohjT2g4C4zuYOoqXquLoEB
-        eQqrUtzg8wuJJPOJP0DraDc=
-X-Google-Smtp-Source: ABdhPJwxt2qo7hcuvDHUGAFZueDaF1Ca0B2/XesLtOmigOsOrQ17yU8w1LPK4agUPI267FBmyRjqFw==
-X-Received: by 2002:a17:90a:ba07:: with SMTP id s7mr16463666pjr.232.1589768593096;
-        Sun, 17 May 2020 19:23:13 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id c2sm6429910pgj.93.2020.05.17.19.23.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5rfhPys2btHBP3bO1j73TJDJbaY1/Lc3Z3m/cpPLQBs=;
+        b=Jeczerg+Q+FuUHdEu1iJb8qdck08b35LWBUtl+6AqEvhqmCO/7gnAvP8Nrlw9vH9x4
+         UjDXLsnMk/QFGr3r37nGmJM89r9c4qh9IEts6hrSsNaS6H5KiIaHvfCRxXwmPYId6skT
+         XOKcJGrs7cBGDLamxqmmxslhXUfKAqel3nCpozPTfKP62HyswA+Uc/UWy5SFpRwfEGry
+         rUNppJibRg3s7iAm6CxrJKIqu24tbqTkdB8lwggJ3z4+LQN9UTW2i9A+yreXPv20TnHk
+         7NQPgpo6XTAQDTtMzDzDS8N38jMBpZivfcobAE37eMuWRiC+cUOs4nOVEN6FAymd+jt1
+         kjKw==
+X-Gm-Message-State: AOAM533yEVI9a8oxLTQIUfeFAoO51vOXTftOfF+O7zOkpxTQ3R4uClJU
+        CNnb5b2tFzAWgDHwT20W1cI=
+X-Google-Smtp-Source: ABdhPJx78gamRe3spCIUTVhwN4EhDyWwwJz8Kr6sgvXe69Oqc33iHr4FBtSY2OvT8S+IEyKJt/Hv8w==
+X-Received: by 2002:a05:6512:1047:: with SMTP id c7mr3079621lfb.12.1589768736906;
+        Sun, 17 May 2020 19:25:36 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id m13sm5997306lfk.12.2020.05.17.19.25.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 19:23:12 -0700 (PDT)
-Date:   Sun, 17 May 2020 19:23:10 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] input: misc: Add support for Azoteq IQS269A
-Message-ID: <20200518022310.GK89269@dtor-ws>
-References: <1588352982-5117-1-git-send-email-jeff@labundy.com>
- <1588352982-5117-2-git-send-email-jeff@labundy.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588352982-5117-2-git-send-email-jeff@labundy.com>
+        Sun, 17 May 2020 19:25:36 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v2 0/5] arm64: dts: meson: add W400 dtsi and GT-King/Pro devices
+Date:   Mon, 18 May 2020 02:25:26 +0000
+Message-Id: <20200518022531.14739-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Oon Fri, May 01, 2020 at 12:09:42PM -0500, Jeff LaBundy wrote:
-> This patch adds support for the Azoteq IQS269A capacitive touch
-> controller.
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+This series combines patch 2 from [1] which converts the existing Ugoos
+AM6 device-tree to a common W400 dtsi and dts, and then reworks the
+Beelink GT-King/GT-King Pro serries from [2] to use the dtsi, but this
+time without the offending common audio dtsi approach. I've carried
+forwards acks on bindings from Rob as these did not change.
 
-Applied, thank you.
+[1] https://patchwork.kernel.org/patch/11497105/
+[2] https://patchwork.kernel.org/project/linux-amlogic/list/?series=273483
+
+Christian Hewitt (4):
+  arm64: dts: meson: convert ugoos-am6 to common w400 dtsi
+  dt-bindings: arm: amlogic: add support for the Beelink GT-King
+  arm64: dts: meson-g12b-gtking: add initial device-tree
+  arm64: dts: meson-g12b-gtking-pro: add initial device-tree
+
+chewitt (1):
+  dt-bindings: arm: amlogic: add support for the Beelink GT-King Pro
+
+ .../devicetree/bindings/arm/amlogic.yaml      |   2 +
+ arch/arm64/boot/dts/amlogic/Makefile          |   2 +
+ .../dts/amlogic/meson-g12b-gtking-pro.dts     | 125 ++++++
+ .../boot/dts/amlogic/meson-g12b-gtking.dts    | 145 ++++++
+ .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 410 +----------------
+ .../boot/dts/amlogic/meson-g12b-w400.dtsi     | 423 ++++++++++++++++++
+ 6 files changed, 698 insertions(+), 409 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gtking-pro.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
 
 -- 
-Dmitry
+2.17.1
+
