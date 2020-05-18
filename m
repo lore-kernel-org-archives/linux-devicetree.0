@@ -6,125 +6,127 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1477CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6E3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4281206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0BB20756
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgEROiq convert rfc822-to-8bit (ORCPT
+        id S1726918AbgEROkw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:38:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:49683 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgEROiq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:38:46 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Ma0HM-1jXTMN436K-00W1bi; Mon, 18 May 2020 16:38:44 +0200
-Received: by mail-qk1-f176.google.com with SMTP id n14so10262052qke.8;
-        Mon, 18 May 2020 07:38:43 -0700 (PDT)
-X-Gm-Message-State: AOAM532gtYvic9MEdHYNR0Qc4moQduEJ+oK/yQsQt9DVOKy9z9UiZ1Kz
-        QKgfp5UJmt7BNvCV1RTs1VLuXeVxj8j/xLXlIaA=
-X-Google-Smtp-Source: ABdhPJxzhsnxVhq8ZSNDtJoBCI07uV5rPB2Xy6wBijq3wixD3dVCpTMzBq7wTOe/KdpPc4bGdgY7xrXJK4eQYms1WB8=
-X-Received: by 2002:a37:aa82:: with SMTP id t124mr15128415qke.3.1589812722617;
- Mon, 18 May 2020 07:38:42 -0700 (PDT)
+        Mon, 18 May 2020 10:40:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48318 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbgEROkv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:40:51 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BAC7F8030875;
+        Mon, 18 May 2020 14:40:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rEoajLcuEEvu; Mon, 18 May 2020 17:40:46 +0300 (MSK)
+Date:   Mon, 18 May 2020 17:40:45 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
+ clocksource/sched-clocks usage
+Message-ID: <20200518144045.v56fajrhbnnrzbpf@mobilestation>
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
+ <20200515171004.GA760381@linaro.org>
+ <20200516121647.g6jua35kkihmw5r6@mobilestation>
+ <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
 MIME-Version: 1.0
-References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
- <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com> <CAMRc=MeVyNzTWw_hk=J9kX1NE9reCE_O4P3wrNpMMc9z4xA_DA@mail.gmail.com>
-In-Reply-To: <CAMRc=MeVyNzTWw_hk=J9kX1NE9reCE_O4P3wrNpMMc9z4xA_DA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 18 May 2020 16:38:25 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1xaWE0gNx-PnJz08XzUkPW6YB7U6NfFS+Y1VXwG+VR+w@mail.gmail.com>
-Message-ID: <CAK8P3a1xaWE0gNx-PnJz08XzUkPW6YB7U6NfFS+Y1VXwG+VR+w@mail.gmail.com>
-Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:OB6VzK2054ZHQfz3CTgEBDfpQ26ehY5iVTYbtEgywu+eoe059Ia
- 155h7+afzU9IY+xpKJNhOOLCYvG+CVCVONbhge2PqpV/n60X2eLhfQhAZBVBHEL/+1R+1nH
- bkHyXDZArv+FJ2Mpb4xmr+JeC+E3em4yPC+eZXrv/hHpQtslM+EM5i1INXSMt3IWXUG7q4G
- CmzKbMVFQg56UvK6vbNHA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vxLiJ7JDE0g=:Up6ARmLIWMk+ak4wsEctGO
- rhiErvnlmZs6qhQQPDdfVywOzmJX7Mptu/6SGVVLaqdaZgtvqCNYjbQi2f4tTXASpL9hz5Arq
- EjfB0c9JxG0/BSAIHQWYto8dP+6fUmMCdGKRBYOS8RjGyTOrbcZN2wKbQxDJs9o4sgDfr/XYV
- byoDT4koyV0n2eYzFUoEVWDXi0s0hHd8htLVXjhybemtTQJosg8ZGke53TKCT0GfwHknHXzV5
- v/XQYMp7KOifvsdCG6DlXQ0o1azXT+QrzWAEIgedTlQq6c+oLQo7AAa+wsatiLz/NJEPOAggz
- GlbHPa6Xf1joz3dWalT7TE55mJRFvdzko0aabkIjts6ejiXIdyq5f0C0RgIlRKJR2HDEimDHu
- nR+FrNmnQV1bmd1IaFCLBlCS9mgkLBy7w3bwMxkOzg0Lu6OF7ubj/gmL1t5CJ5hcrE5pYeUL7
- bwBehMEyVplOBYbGDMn9v0ABdTji3YcYPKLe3nZeiET3FsYgGlsuuzPBnDcMZXdXhA3Ab+oYp
- wUctgNbumAXwoHwazZblpYReqHgMajU54iL5OSr19TlP9j6QUKk4zBkRE1KTx3YIxbkDfOAjC
- ks86QV6Sd6y+OLyrn/r5EA7Ghs05F+dGley2Vb6hskJmDtph+nYnAKbA9Jub0La7nKlE/xi+R
- Xw77Aih4WsE7WxOJOnp7rupPlNn39dwFEs+/ahTkDm3B/YafV6wwekr7ZUVLoKxHquc5kk5WI
- B1SH58SmfbDZkbaMmuVhoNHb//VPRj66Zyjm1MSAWb3bnLk4eIOK2b4VIYCHYhOHUFeD0W40g
- jX11DAu8ta1FlVRrDSBJhl3b1heQbBlno2h0SMSRBngQ3hA2ms=
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 4:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> pt., 15 maj 2020 o 15:32 Arnd Bergmann <arnd@arndb.de> napisał(a):
+Daniel,
 
-> > I would get rid of the 'count' here, as it duplicates the information
-> > that is already known from the difference between head and tail, and you
-> > can't update it atomically without holding a lock around the access to
-> > the ring. The way I'd do this is to have the head and tail pointers
-> > in separate cache lines, and then use READ_ONCE/WRITE_ONCE
-> > and smp barriers to access them, with each one updated on one
-> > thread but read by the other.
-> >
->
-> Your previous solution seems much more reliable though. For instance
-> in the above: when we're doing the TX cleanup (we got the TX ready
-> irq, we're iterating over descriptors until we know there are no more
-> packets scheduled (count == 0) or we encounter one that's still owned
-> by DMA), a parallel TX path can schedule new packets to be sent and I
-> don't see how we can atomically check the count (understood as a
-> difference between tail and head) and run a new iteration (where we'd
-> modify the head or tail) without risking the other path getting in the
-> way. We'd have to always check the descriptor.
+On Mon, May 18, 2020 at 03:59:16PM +0200, Daniel Lezcano wrote:
+> On 16/05/2020 14:16, Serge Semin wrote:
+> > Hello Daniel,
+> > 
+> > Thanks for your comment. My response is below.
+> > 
+> > On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
+> >> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
+> >>> Currently neither clocksource nor scheduler clock kernel framework
+> >>> support the clocks with variable frequency. Needless to say how many
+> >>> problems may cause the sudden base clocks frequency change. In a
+> >>> simplest case the system time will either slow down or speed up.
+> >>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
+> >>> with CPU we must set some limitations on using it for these frameworks
+> >>> if CPU frequency may change. First of all it's not safe to have the
+> >>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
+> >>> the clocks registration in the sched-subsystem. Secondly we must
+> >>> significantly decrease the MIPS GIC clocksource rating. This will let
+> >>> the system to use it only as a last resort.
+> >>>
+> >>> Note CM3.x-based systems may also experience the problems with MIPS GIC
+> >>> if the CPU-frequency change is activated for the whole CPU cluster
+> >>> instead of using the individual CPC core clocks divider.
+> >>
+> >> May be there is no alternative but the code looks a bit hacksih. Isn't possible
+> >> to do something with the sched_mark_unstable?
+> >>
+> >> Or just not use the timer at all ?
+> > 
+> > Not using the timer might be better, but not that good alternative either
+> > especially in our case due to very slow external timer. Me and Thomas
+> > Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
+> > available on MIPS:
+> > https://lkml.org/lkml/2020/5/11/576
+> > 
+> > To cut it short, you are right. The solution with using clocksource_mark_unstable()
+> > is better alternative spied up in x86 tsc implementation. I'll use a similar
+> > approach here and submit the updated patch in v3.
+> > 
+> > Could you please proceed with the rest of the series review? I'd like to send
+> > the next version with as many comments taken into account as possible. The
+> > patchset has been submitted a while ago, but except Rob noone have had any
+> > comments.(
+> 
+> For me other patches are ok.
+> 
+> I can apply patches 1, 2, 4, 5, 6
+> 
+> Will remain patches 3 et 7
 
-It should be enough to read both pointers once at the start of each
-side, then do whatever work you want to do (cleaning, sending,
-receiving, refilling) and finally updating the one pointer that changed.
-If both sides do that, you minimize the cache line bouncing and
-always do a useful amount of work that guarantees forward progress
-and does not interfere with the other side.
+That's be great! Thanks. Is patch 3 supposed to be merged in by Rob or by you?
+I don't see one being in the Rob's repo. He might be waiting for you
+acknowledgment or something.
 
-> I experimented a bit with this and couldn't come up with anything that
-> would pass any stress test.
->
-> On the other hand: spin_lock_bh() works fine and I like your approach
-> from the previous e-mail - except for the work for updating stats as
-> we could potentially lose some stats when we're updating in process
-> context with RX/TX paths running in parallel in napi context but that
-> would be rare enough to overlook it.
->
-> I hope v4 will be good enough even with spinlocks. :)
+I'll send the updated patch 3 shortly today.
 
-Yes, it should be fine. Avoiding all the locks is mainly an optimization
-for the number of CPU cycles spent per packet, the other points
-are more important to get right, in particular the flow control.
+-Sergey
 
-      Arnd
+> 
+> 
+> -- 
+> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
