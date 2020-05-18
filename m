@@ -2,113 +2,131 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3A4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C25C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5E520657
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C158620674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VCHeNapr"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="fIXqnEYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgERNtq (ORCPT
+        id S1726940AbgERNup (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:49:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40954 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgERNtp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:49:45 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnbe5096804;
-        Mon, 18 May 2020 08:49:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589809777;
-        bh=GwQF3k6O8rIzhSQ8vh0/BGxUXW9aYuYmfPlGt47XLWE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VCHeNaprJpzW3fNJuEpINNJ8qSs3LKApqpvpKoEtIcXdV4DqdJvnSr/RKu5gLOLWf
-         gN2/OAJX27+MJgfvK09sskNhrsriORYC0LKY4LNDruVdkVy4Wmu1dgEv7bXa8y2sL+
-         D57a0HTQjBnZtIX5dpyUKLjfW93NaWENPC5fckH4=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnbQN130491;
-        Mon, 18 May 2020 08:49:37 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
- May 2020 08:49:36 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 18 May 2020 08:49:36 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnXZX048504;
-        Mon, 18 May 2020 08:49:34 -0500
-Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
-To:     Dilip Kota <eswara.kota@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh@kernel.org>, <andriy.shevchenko@intel.com>,
-        <cheol.yong.kim@intel.com>, <chuanhua.lei@linux.intel.com>,
-        <qi-ming.wu@intel.com>, <yixin.zhu@intel.com>
-References: <cover.1589530082.git.eswara.kota@linux.intel.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
-Date:   Mon, 18 May 2020 19:19:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 09:50:45 -0400
+Received: from lists.nic.cz ([217.31.204.67]:49056 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726895AbgERNup (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 09:50:45 -0400
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id 3A5A913FB34;
+        Mon, 18 May 2020 15:50:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1589809842; bh=mKx8Rnn8Z17iw+8AFlxVTaPbT4P6vQPBfVaylXnXQEI=;
+        h=Date:From:To;
+        b=fIXqnEYFg6lCSyAhSNCZwFLbz1jywVQpQlh6h9L1S2ju9VaJol4woUgK4UmYZ7Mv7
+         cOga8n5NBLXHC7Wdb1LB0FVjxF2o3S5DivQXGj3iHOE8IGjs/VnIqPKaWfED5LCVTU
+         9LooSz6AHYRItjZGXC/Ry51vkD58ZaId2JnKvTtc=
+Date:   Mon, 18 May 2020 15:50:41 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
+ Compex wifi cards
+Message-ID: <20200518155041.655050b1@nic.cz>
+In-Reply-To: <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
+References: <20200430080625.26070-1-pali@kernel.org>
+        <20200513135643.478ffbda@windsurf.home>
+        <87pnb2h7w1.fsf@FE-laptop>
+        <20200518103004.6tydnad3apkfn77y@pali>
+        <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <cover.1589530082.git.eswara.kota@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dilip,
+On Mon, 18 May 2020 14:46:14 +0100
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
 
-On 5/15/2020 1:43 PM, Dilip Kota wrote:
-> This patch series adds Intel ComboPhy driver, respective yaml schemas
-> 
-> Changes on v8:
->   As per PHY Maintainer's request add description in comments for doing
->   register access through register map framework.
-> 
-> Changes on v7:
->   As per System control driver maintainer's inputs remove
->     fwnode_to_regmap() definition and use device_node_get_regmap()
+> On Mon, May 18, 2020 at 12:30:04PM +0200, Pali Roh=C3=A1r wrote:
+> > On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote: =20
+> > > Hello,
+> > >  =20
+> > > > Hello,
+> > > >
+> > > > On Thu, 30 Apr 2020 10:06:13 +0200
+> > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > =20
+> > > >> Marek Beh=C3=BAn (5):
+> > > >>   PCI: aardvark: Improve link training
+> > > >>   PCI: aardvark: Add PHY support
+> > > >>   dt-bindings: PCI: aardvark: Describe new properties
+> > > >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio fun=
+ction
+> > > >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle proper=
+ty
+> > > >>=20
+> > > >> Pali Roh=C3=A1r (7):
+> > > >>   PCI: aardvark: Train link immediately after enabling training
+> > > >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
+> > > >>     read-only register
+> > > >>   PCI: of: Zero max-link-speed value is invalid
+> > > >>   PCI: aardvark: Issue PERST via GPIO
+> > > >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG ac=
+cess
+> > > >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
+> > > >>     macros
+> > > >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed prope=
+rty =20
+> > > >
+> > > > Thanks a lot for this work. For a number of reasons, I'm less invol=
+ved
+> > > > in Marvell platform support in Linux, but I reviewed your series and
+> > > > followed the discussions around it, and I'm happy to give my:
+> > > >
+> > > > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com> =20
+> > >=20
+> > > With this acked-by for the series, the reviewed-by from Rob on the
+> > > binding and the tested-by, I am pretty confident so I applied the
+> > > patches 10, 11 and 12 on mvebu/dt64.
+> > >=20
+> > > Thanks,
+> > >=20
+> > > Gregory =20
+> >=20
+> > Thank you!
+> >=20
+> > Lorenzo, would you now take remaining patches? =20
+>=20
+> Yes - even though I have reservations about patch (5) and the
+> problem is related to a complete lack of programming model for
+> these host controllers and a clear separation between what's
+> done in the OS vs bootloader, PERST handling in this host
+> bridge is *really* a mess.
+>=20
+> I applied 1-9 to pci/aardvark.
+>=20
+> Lorenzo
 
-Can you fix this warning and resend the patch?
-drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
-uninitialized in this function [-Wmaybe-uninitialized]
-  ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
-  ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
-  enum intel_combo_mode cb_mode;
-                        ^~~~~~~
-
-Thanks
-Kishon
->     
-> Changes on v6:
->   Rebase patches on the latest maintainer's branch
->   https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
-> Dilip Kota (3):
->   dt-bindings: phy: Add PHY_TYPE_XPCS definition
->   dt-bindings: phy: Add YAML schemas for Intel ComboPhy
->   phy: intel: Add driver support for ComboPhy
-> 
->  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
->  drivers/phy/intel/Kconfig                          |  14 +
->  drivers/phy/intel/Makefile                         |   1 +
->  drivers/phy/intel/phy-intel-combo.c                | 632 +++++++++++++++++++++
->  include/dt-bindings/phy/phy.h                      |   1 +
->  5 files changed, 749 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
->  create mode 100644 drivers/phy/intel/phy-intel-combo.c
-> 
+Hooray, thanks, Lorenzo (and everyone else).
