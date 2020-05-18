@@ -4,112 +4,163 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCE2C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E9DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DED220657
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BEB207E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJL0tpth"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z5BVq1sG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgERXZ1 (ORCPT
+        id S1726794AbgERXik (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 19:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57064 "EHLO
+        Mon, 18 May 2020 19:38:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgERXZ0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 19:25:26 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739E2C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 16:25:25 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id z15so475613pjb.0
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 16:25:25 -0700 (PDT)
+        with ESMTP id S1726053AbgERXij (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 19:38:39 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 785B3C05BD09
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 16:38:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r22so5541059pga.12
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 16:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=QVj3nKP5hVtsFAiZ/rRDQZNLBRTHzKzhnx5Wf/64tWM=;
-        b=BJL0tpthaxkWDwWPe/c0HBJCwfPLNka5lv5YeMvjFA2PknXthQh5APJ6GxH9NeB6FQ
-         uysBb/W9wQrmTFs7iAqn5/N1fFPgOTtaNH2tPS0497QTeJXiadpdGoaJzESLIlxJ0Lzc
-         7hdhcG+yaNw8b5NBlNfxl4X+72GvVQHMTEiCymuzCgDSiYqkDVCFo32rUG89oFVI7glj
-         h9pJuxHVgGFu4aYIGOwe27/uRybA6cyxuATU07vQ0PbgfxszkYfbwoEkW7FKRraGYRZT
-         FRoIUJiXIvS/3FLrUv2SDVCbyjtrY/yImGeWFs6Rz6d+YCH0a1wuBBbojDtjV4Zs0lFb
-         7BiA==
+        bh=F7d1y5ToSucIjdzXtTujrTnmegwlCmFucSJBd0QBPjU=;
+        b=z5BVq1sGHv6ySHzBZ/SRmi+zSGXBvELRTb6AhonPJCiKlUOu64rbuyICViU3dVLaNI
+         /N2nyq3E7eBYwTJG+/BgCz+5UTidcIXOs1dlzTcR/HQak01H0DJjlEi6uzJxtpD3q2+V
+         frgrEnMYJurs0APUoF3hpj4rgbqX0mVY8kDiRz3FhoJqPxPRs9I8UlmEsfB1mKL2kZGb
+         7rK5NLxD3KBBCwtX2ZRBzKeJ36zWI8I+MzFuKbi/Oe4XSJc+ojJIJnx3vwkqudKJkl7B
+         VYqBSZonrV+zMSb2o2zYK8Pyzzs/IjTlzXf21Ex/+Zk13eH0LWGqwUJuW/ys8XPRVheG
+         uTjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=QVj3nKP5hVtsFAiZ/rRDQZNLBRTHzKzhnx5Wf/64tWM=;
-        b=relpZQrR6WHyloSh37OaCL9LXQxKfLTAmfhRyUXEMD0xCbY9l5eqtosUMruythUMYv
-         xBgRC3ikBYbDCPS3UfE5fHVSSRoxu7QXdGXFv8ZTTPMx7cKPn9ROgVpY2r20U4dGBLBX
-         CLlmI+TDLVLwf9UB6DzR/FgKsIalngjUBJsNxeRfBt7KGFwZSl5FtwiU42vgjviMPZMW
-         /ObwMSeskBd50+gXnQjWuIeXEREhvkz+je/kJA7AqdS8ZBFWhUWbJGt9mGNvuYcQPNS2
-         +RsnIBrB4XwbDbUFsmv68fNvjco3xEd57Q0zu0m2A4RGccxr0GoezhbqdgmRXbZAGXsw
-         vyZw==
-X-Gm-Message-State: AOAM530ek7r0+wnis3eJhgdzH4ebHoFmNWjgEwWHdsyNDssiznrJQgn9
-        M1tJL9MvxSIdr0iC7pLo9LfPyg==
-X-Google-Smtp-Source: ABdhPJyPioMHQTi0LewvbyOFTMF+xVG03puGiL/AuNe3V8kLdR52K9tEwVHad/53xErvf7okGmWGbQ==
-X-Received: by 2002:a17:90a:bd93:: with SMTP id z19mr1942252pjr.109.1589844324967;
-        Mon, 18 May 2020 16:25:24 -0700 (PDT)
+        bh=F7d1y5ToSucIjdzXtTujrTnmegwlCmFucSJBd0QBPjU=;
+        b=S9EPRgjg1XUIbT4fix1Wx0346wfeEDafKkptt/ahEOI4YUOa8f2TM1Twh3gbW7mVW0
+         +ZctLXvz4h7OAvw8m/zjbNxcff3UENF2JmqdPi1BXw5oUJqr9I1vov7j0YPiVJClLic1
+         h1RLInBquczMmVxzV3+2cXzGvNwDtANhJCZu1wjaP3b4/NwQDmz9af8ZSeEGQlANfPw7
+         oiUoWcUq9DlBshLzoFNw3SS2maCvn2JNE3yZbIsgBsTT9bfQhwWgOTcirjjDiCL4yLMI
+         2a2H995O6RvFNZgxAWac8XmjYyva6/E+vXBWEX9sIRvkaQNwd4Q446RB/fukMin825df
+         q0Sg==
+X-Gm-Message-State: AOAM532IIuwYAf4sIROtDdPTmwqE9ZrS5b9EBWcea/oitgwCZ4TYRCoI
+        mndNL3GLRmAM9w9aOCgKpU+n6Q==
+X-Google-Smtp-Source: ABdhPJyg/L37OU7BLi0Gq3N8kwKVQUiQfF8uH6fniMYogUDFPThmLIwTN0A55ZsEJLNISnRsXxIpcA==
+X-Received: by 2002:aa7:80d9:: with SMTP id a25mr20108929pfn.220.1589845117836;
+        Mon, 18 May 2020 16:38:37 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id co16sm478114pjb.55.2020.05.18.16.25.23
+        by smtp.gmail.com with ESMTPSA id q18sm2726792pgt.74.2020.05.18.16.38.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 16:25:24 -0700 (PDT)
-Date:   Mon, 18 May 2020 16:24:02 -0700
+        Mon, 18 May 2020 16:38:37 -0700 (PDT)
+Date:   Mon, 18 May 2020 16:37:15 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Alex Elder <elder@linaro.org>
 Cc:     agross@kernel.org, evgreen@chromium.org, subashab@codeaurora.org,
         cpratapa@codeaurora.org, robh+dt@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: enable IPA
-Message-ID: <20200518232402.GM2165@builder.lan>
-References: <20200518214834.9630-1-elder@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: add IPA information
+Message-ID: <20200518233715.GG279327@builder.lan>
+References: <20200518214939.9730-1-elder@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518214834.9630-1-elder@linaro.org>
+In-Reply-To: <20200518214939.9730-1-elder@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 18 May 14:48 PDT 2020, Alex Elder wrote:
+On Mon 18 May 14:49 PDT 2020, Alex Elder wrote:
 
-> Enable IPA on the SDM845 MTP.
+> Add IPA-related nodes and definitions to "sc7180.dtsi".
 > 
 > Signed-off-by: Alex Elder <elder@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index 1372fe8601f5..2f942daeb9d1 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -448,6 +448,11 @@
->  	clock-frequency = <400000>;
->  };
->  
-> +&ipa {
-> +	status = "okay";
-> +	modem-init;
 
-modem-init tells the IPA driver that the modem will load the ipa_fws
-firmware, but the MTP is assumed to run "LA" firmware where it's the
-Linux-side's job to do this.
+Applied
 
-Regards,
+Thanks,
 Bjorn
 
-> +};
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 51 ++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index f1280e00b064..9a3686ce73ea 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -461,6 +461,17 @@
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+>  		};
 > +
->  &mdss {
->  	status = "okay";
->  };
+> +		ipa_smp2p_out: ipa-ap-to-modem {
+> +			qcom,entry-name = "ipa";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		ipa_smp2p_in: ipa-modem-to-ap {
+> +			qcom,entry-name = "ipa";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+>  	};
+>  
+>  	psci {
+> @@ -1007,6 +1018,46 @@
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
+>  
+> +		ipa: ipa@1e40000 {
+> +			compatible = "qcom,sc7180-ipa";
+> +
+> +			iommus = <&apps_smmu 0x440 0x3>;
+> +			reg = <0 0x1e40000 0 0x7000>,
+> +			      <0 0x1e47000 0 0x2000>,
+> +			      <0 0x1e04000 0 0x2c000>;
+> +			reg-names = "ipa-reg",
+> +				    "ipa-shared",
+> +				    "gsi";
+> +
+> +			interrupts-extended = <&intc 0 311 IRQ_TYPE_EDGE_RISING>,
+> +					      <&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +					      <&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "ipa",
+> +					  "gsi",
+> +					  "ipa-clock-query",
+> +					  "ipa-setup-ready";
+> +
+> +			clocks = <&rpmhcc RPMH_IPA_CLK>;
+> +			clock-names = "core";
+> +
+> +			interconnects = <&aggre2_noc MASTER_IPA &mc_virt SLAVE_EBI1>,
+> +				        <&aggre2_noc MASTER_IPA &system_noc SLAVE_IMEM>,
+> +					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_IPA_CFG>;
+> +			interconnect-names = "memory",
+> +					     "imem",
+> +					     "config";
+> +
+> +			qcom,smem-states = <&ipa_smp2p_out 0>,
+> +					   <&ipa_smp2p_out 1>;
+> +			qcom,smem-state-names = "ipa-clock-enabled-valid",
+> +						"ipa-clock-enabled";
+> +
+> +			modem-remoteproc = <&remoteproc_mpss>;
+> +
+> +			status = "disabled";
+> +		};
+> +
+>  		tcsr_mutex_regs: syscon@1f40000 {
+>  			compatible = "syscon";
+>  			reg = <0 0x01f40000 0 0x40000>;
 > -- 
 > 2.20.1
 > 
