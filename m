@@ -2,135 +2,121 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 878DAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7B8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67ADA20643
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCDB20643
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826095;
-	bh=D9/3BBn1l+1nc9/Q29Pjw35lnELVjvcMNf8DN1Ygswg=;
+	s=default; t=1589826141;
+	bh=Yc1Xy56CHyGoTxHEkzc4PM0bH46ymqJfwnxAZKlfJWc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XEB+Mye8SEN70YpHKCz+s4PmRAM+gxxH3KXa32NDhhuRBCprMfDIw0r3FC0tqxirv
-	 vzC9cwrUrI6rdfpKVjtpxCfXTp0aSCBl9PfO7l34sWprFecuzlezvZa0T2yWPVjH2x
-	 POlZz/FPYWL+yHHDVKcU+R5R+iHmTs4U6SBR1oGY=
+	b=VC7vmzWXWGpYu41QJjup8j8d2q/zFNFQWkmN8jyrLHMo6xabBKI0OQ1bLXsiu0qS8
+	 /o+JkNxBRk8jgMcd0FMHQrQ7XMGTxUhx3LCRXEFdtulsOtZhlXbMozJK+X5SH3boqA
+	 4xhOHXbSGqph47czdASRqoiyqSsXeULVcMFgUD28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbgERSVY (ORCPT
+        id S1730776AbgERRuo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 14:21:24 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40331 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731473AbgERSVV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:21:21 -0400
-Received: by mail-io1-f65.google.com with SMTP id s10so11690841iog.7;
-        Mon, 18 May 2020 11:21:20 -0700 (PDT)
+        Mon, 18 May 2020 13:50:44 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44791 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729651AbgERRun (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 13:50:43 -0400
+Received: by mail-il1-f194.google.com with SMTP id j3so10689081ilk.11;
+        Mon, 18 May 2020 10:50:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G+w12N+B2PiHESokDoCntmAJD2nRnefuc3D2jDiR3h8=;
-        b=fR9YE5SwKFbgrMXSqvAuaKVTyo2fSwMkEYOZPpwnHAcWQh99N5jXa5ezScA09ihfr7
-         SjJ3IxgXAIgpxEYmzETxgEFeijcnfAcyat+qX3VgFUDPnpBPXM+FRDFhVPkgoli8sVOb
-         IvVdyvxACxEXW8jkfXQNAO3VeywOKq9adpPlR430d2fFgVqfLFklycrN5FFmbK9mRcXS
-         LPGFbxu0rJ7sBX1rPyBlIXumTJRAlL5JUm2AvMJU6D02IS4h/HKUyURdZ65DLKTzV+UD
-         94DaSoWPQYIH7rYxqLVNHO3rNT0I8tymoeop4nL7zvacySvo3eHUZZ79nUpMgyzX9DU4
-         0n6Q==
-X-Gm-Message-State: AOAM530uU6xcDGKiG5D3Nu6A7REI5wG2Ih7Fu0u3o629+vOoFmz3lHyf
-        D3RyGe+Ed6SLkFqbgH53QwkxFto=
-X-Google-Smtp-Source: ABdhPJx72FnMnqBhY0ES/xdixMmYlsaeGaOPaJzpYhhzZYE1ew/CeuMZ+1kDJ3srj1k4VHm7DIoKMA==
-X-Received: by 2002:a6b:dc11:: with SMTP id s17mr15908502ioc.42.1589826079993;
-        Mon, 18 May 2020 11:21:19 -0700 (PDT)
+        bh=QSIx+38T4cvinbqxvrbe5wtA55RL5fnICs68EFHUoBw=;
+        b=PpYGIftnD00BLXtFyZxwyWkHns0QrUgASLj5gphWhzV8Sa3FgPAPr9Pt3y495AZxnq
+         qVgdjFMPwjVV6aZWkgDEUAkzn0yzVbCl0Bwm1LTBAFroUUfsowJr5XvRdE7OA2qv8yyV
+         Xt4/Hk6xPj3kXLNm5b33GG2J+VoDOb6HV/1Qnhna4xJTEkdKTwi3N6e1IwSZ3ieDQMZO
+         0t51RA71lScQQKedDPJUcNq2qYE3GRgQDxATWX2iHqL8s/JxwTdekVvaHcxsW30ywhrU
+         iow2825axxU5a5GhjxZwuf2RNXw4CikvUtlzgKs5AlWeBWN3SmHgXzS51615uWinhzKw
+         3cZg==
+X-Gm-Message-State: AOAM532TkwRyvA2uKWHT7MZjdhHnIxtDXZTQgK9SdYg/LJ5hz8oH5ydp
+        ZuYKMbTcAk+yAboXpniZQg==
+X-Google-Smtp-Source: ABdhPJxZwdHeQqDHyTuNUAv4DR4jH+jc65DamVkkq40xebpBOXF0/bqcjx71aAeYZUSrQFJEnm5dhg==
+X-Received: by 2002:a05:6e02:544:: with SMTP id i4mr17900970ils.266.1589824242573;
+        Mon, 18 May 2020 10:50:42 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id m17sm5062222ilh.51.2020.05.18.11.21.18
+        by smtp.gmail.com with ESMTPSA id 4sm3609176ioy.43.2020.05.18.10.50.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:21:19 -0700 (PDT)
-Received: (nullmailer pid 27724 invoked by uid 1000);
-        Mon, 18 May 2020 18:21:18 -0000
-Date:   Mon, 18 May 2020 12:21:18 -0600
+        Mon, 18 May 2020 10:50:41 -0700 (PDT)
+Received: (nullmailer pid 15694 invoked by uid 1000);
+        Mon, 18 May 2020 17:50:40 -0000
+Date:   Mon, 18 May 2020 11:50:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        tfiga@google.com, pavel@ucw.cz, devicetree@vger.kernel.org
-Subject: Re: [PATCH v11 13/13] dt-bindings: Add media properties
-Message-ID: <20200518182118.GA24090@bogus>
-References: <20200509090456.3496481-1-jacopo@jmondi.org>
- <20200509090456.3496481-14-jacopo@jmondi.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] dt-bindings: dma: dw: Convert DW DMAC to DT
+ binding
+Message-ID: <20200518175040.GA14697@bogus>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509090456.3496481-14-jacopo@jmondi.org>
+In-Reply-To: <20200508105304.14065-2-Sergey.Semin@baikalelectronics.ru>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 09, 2020 at 11:04:56AM +0200, Jacopo Mondi wrote:
-> Add a DT header file to contain definitions for standard media properties.
+On Fri, May 08, 2020 at 01:52:59PM +0300, Serge Semin wrote:
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with dt-schema. This commit replaces the Synopsis
+> Designware DMA controller legacy bare text bindings with YAML file.
+> The only required prorties are "compatible", "reg", "#dma-cells" and
+> "interrupts", which will be used by the driver to correctly find the
+> controller memory region and handle its events. The rest of the properties
+> are optional, since in case if either "dma-channels" or "dma-masters" isn't
+> specified, the driver will attempt to auto-detect the IP core
+> configuration.
 > 
-> The file is named after:
-> Documentation/devicetree/bindings/media/video-interfaces.txt
-> which contains the standard media properties definitions.
-> 
-> Initially add three macros to define the supported 'orientation'
-> property values.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
-> 
-> I currently don't have users in mainline for this, I understand this implies
-> this is probably not going to be accepted. At the same time we don't have a
-> common place for media-related definitions, which support properties defined in
-> video-interfaces.txt
-
-Fine for me with no users if values already defined in binding.
-
-> 
-> I leave it here at the end of the series for discussions, but I'm fine dropping
-> it from the series.
-> 
-> Thanks
->   j
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-mips@vger.kernel.org
 > 
 > ---
->  include/dt-bindings/media/video-interfaces.h | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 include/dt-bindings/media/video-interfaces.h
 > 
-> diff --git a/include/dt-bindings/media/video-interfaces.h b/include/dt-bindings/media/video-interfaces.h
-> new file mode 100644
-> index 0000000000000..404c697d6bd6e
-> --- /dev/null
-> +++ b/include/dt-bindings/media/video-interfaces.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
+> Changelog v2:
+> - Rearrange SoBs.
+> - Move $ref to the root level of the properties. So do do with the
+>   constraints.
+> - Discard default settings defined out of the property enum constraint.
+> - Replace "additionalProperties: false" with "unevaluatedProperties: false"
+>   property.
+> - Remove a label definition from the binding example.
+> ---
+>  .../bindings/dma/snps,dma-spear1340.yaml      | 161 ++++++++++++++++++
+>  .../devicetree/bindings/dma/snps-dma.txt      |  69 --------
+>  2 files changed, 161 insertions(+), 69 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
 
-Dual license please.
-
-> +/*
-> + * include/dt-bindings/media/video-interfaces.h
-> + *
-> + * Copyright (C) 2020 Jacopo Mondi <jacopo@jmondi.org>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-> +#define __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-> +
-> +#define FRONT_CAMERA		<0>
-> +#define BACK_CAMERA		<1>
-> +#define EXTERNAL_CAMERA		<2>
-> +
-> +#endif /* __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__ */
-> --
-> 2.26.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
