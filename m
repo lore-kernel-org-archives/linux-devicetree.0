@@ -2,32 +2,32 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1A5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47803C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B5C2065F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29DAB20756
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgERO51 (ORCPT
+        id S1728152AbgERO5b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:57:27 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56228 "EHLO inva020.nxp.com"
+        Mon, 18 May 2020 10:57:31 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:56358 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbgERO51 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 10:57:27 -0400
+        id S1728115AbgERO5a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 10:57:30 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 718FC1A0B0D;
-        Mon, 18 May 2020 16:57:25 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DF4281A0B13;
+        Mon, 18 May 2020 16:57:28 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3715C1A0B0C;
-        Mon, 18 May 2020 16:57:20 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6D0791A097E;
+        Mon, 18 May 2020 16:57:23 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 593B9402A8;
-        Mon, 18 May 2020 22:57:13 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 138D6402B3;
+        Mon, 18 May 2020 22:57:17 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
         shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
@@ -35,38 +35,119 @@ To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 0/3] Covert i.MX GPT/TPM/SYSCTR timer binding to json-schema
-Date:   Mon, 18 May 2020 22:47:37 +0800
-Message-Id: <1589813260-20036-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 3/3] dt-bindings: timer: Convert i.MX SYSCTR to json-schema
+Date:   Mon, 18 May 2020 22:47:40 +0800
+Message-Id: <1589813260-20036-4-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589813260-20036-1-git-send-email-Anson.Huang@nxp.com>
+References: <1589813260-20036-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series converts i.MX GPT, TPM and system counter timer binding
-to json-schema, test build passed.
+Convert the i.MX SYSCTR binding to DT schema format using json-schema.
 
-Anson Huang (3):
-  dt-bindings: timer: Convert i.MX GPT to json-schema
-  dt-bindings: timer: Convert i.MX TPM to json-schema
-  dt-bindings: timer: Convert i.MX SYSCTR to json-schema
-
- .../devicetree/bindings/timer/fsl,imxgpt.txt       |  45 ---------
- .../devicetree/bindings/timer/fsl,imxgpt.yaml      | 109 +++++++++++++++++++++
- .../devicetree/bindings/timer/nxp,sysctr-timer.txt |  25 -----
- .../bindings/timer/nxp,sysctr-timer.yaml           |  54 ++++++++++
- .../devicetree/bindings/timer/nxp,tpm-timer.txt    |  28 ------
- .../devicetree/bindings/timer/nxp,tpm-timer.yaml   |  63 ++++++++++++
- 6 files changed, 226 insertions(+), 98 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
- create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxgpt.yaml
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/timer/nxp,sysctr-timer.txt | 25 ----------
+ .../bindings/timer/nxp,sysctr-timer.yaml           | 54 ++++++++++++++++++++++
+ 2 files changed, 54 insertions(+), 25 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
  create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
- delete mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.yaml
 
+diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+deleted file mode 100644
+index d576599..0000000
+--- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-NXP System Counter Module(sys_ctr)
+-
+-The system counter(sys_ctr) is a programmable system counter which provides
+-a shared time base to Cortex A15, A7, A53, A73, etc. it is intended for use in
+-applications where the counter is always powered and support multiple,
+-unrelated clocks. The compare frame inside can be used for timer purpose.
+-
+-Required properties:
+-
+-- compatible :      should be "nxp,sysctr-timer"
+-- reg :             Specifies the base physical address and size of the comapre
+-                    frame and the counter control, read & compare.
+-- interrupts :      should be the first compare frames' interrupt
+-- clocks : 	    Specifies the counter clock.
+-- clock-names: 	    Specifies the clock's name of this module
+-
+-Example:
+-
+-	system_counter: timer@306a0000 {
+-		compatible = "nxp,sysctr-timer";
+-		reg = <0x306a0000 0x20000>;/* system-counter-rd & compare */
+-		clocks = <&clk_8m>;
+-		clock-names = "per";
+-		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
+new file mode 100644
+index 0000000..830211c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/nxp,sysctr-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP System Counter Module(sys_ctr)
++
++maintainers:
++  - Bai Ping <ping.bai@nxp.com>
++
++description: |
++  The system counter(sys_ctr) is a programmable system counter
++  which provides a shared time base to Cortex A15, A7, A53, A73,
++  etc. it is intended for use in applications where the counter
++  is always powered and support multiple, unrelated clocks. The
++  compare frame inside can be used for timer purpose.
++
++properties:
++  compatible:
++    const: nxp,sysctr-timer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: per
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    timer@306a0000 {
++        compatible = "nxp,sysctr-timer";
++        reg = <0x306a0000 0x20000>;
++        clocks = <&clk_8m>;
++        clock-names = "per";
++        interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++     };
 -- 
 2.7.4
 
