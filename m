@@ -2,164 +2,92 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EBBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A57C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29CD5207D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A79920756
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgERO5h (ORCPT
+        id S1728215AbgERO6J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:57:37 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56316 "EHLO inva020.nxp.com"
+        Mon, 18 May 2020 10:58:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:42212 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgERO53 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 10:57:29 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0AF6D1A0B12;
-        Mon, 18 May 2020 16:57:28 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8F17E1A0B14;
-        Mon, 18 May 2020 16:57:22 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D0E09402AF;
-        Mon, 18 May 2020 22:57:15 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ping.bai@nxp.com, aisheng.dong@nxp.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        id S1727903AbgERO6J (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 10:58:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B9C4101E;
+        Mon, 18 May 2020 07:58:08 -0700 (PDT)
+Received: from red-moon.cambridge.arm.com (unknown [10.57.25.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED0463F52E;
+        Mon, 18 May 2020 07:58:06 -0700 (PDT)
+Date:   Mon, 18 May 2020 15:57:59 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/3] dt-bindings: timer: Convert i.MX TPM to json-schema
-Date:   Mon, 18 May 2020 22:47:39 +0800
-Message-Id: <1589813260-20036-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589813260-20036-1-git-send-email-Anson.Huang@nxp.com>
-References: <1589813260-20036-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Subject: Re: [PATCH v3 0/4] PCI: cadence: Deprecate inbound/outbound specific
+ bindings
+Message-ID: <20200518145759.GA19714@red-moon.cambridge.arm.com>
+References: <20200508130646.23939-1-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508130646.23939-1-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX TPM binding to DT schema format using json-schema.
+On Fri, May 08, 2020 at 06:36:42PM +0530, Kishon Vijay Abraham I wrote:
+> This series is a result of comments given by Rob Herring @ [1].
+> Patch series changes the DT bindings and makes the corresponding driver
+> changes.
+> 
+> Changes from v2:
+> 1) Changed the order of patches (no solid reason. Just save some
+> rebasing effort for me)
+> 2) Added Acked-by Tom and Rob except for the dma-ranges patch
+> 3) Re-worked dma-ranges patch for it do decode multiple dma-ranges
+>    and configure BAR0, BAR1 and NO_BAR instead of just NO_BAR [2].
+> 
+> Changes from v1:
+> 1) Added Reviewed-by: Rob Herring <robh@kernel.org> for dt-binding patch
+> 2) Fixed nitpick comments from Bjorn Helgaas
+> 3) Added a patch to read 32-bit Vendor ID/Device ID property from DT
+> 
+> [1] -> http://lore.kernel.org/r/20200219202700.GA21908@bogus
+> [2] -> http://lore.kernel.org/r/eb1ffcb3-264f-5174-1f25-b5b2d3269840@ti.com
+> 
+> Kishon Vijay Abraham I (4):
+>   dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+>     bindings
+>   PCI: cadence: Remove "cdns,max-outbound-regions" DT property
+>   PCI: cadence: Fix to read 32-bit Vendor ID/Device ID property from DT
+>   PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
+>     property
+> 
+>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |   2 +-
+>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |   3 +-
+>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml |  25 +++
+>  .../bindings/pci/cdns-pcie-host.yaml          |  10 ++
+>  .../devicetree/bindings/pci/cdns-pcie.yaml    |   8 -
+>  .../controller/cadence/pcie-cadence-host.c    | 151 +++++++++++++++---
+>  drivers/pci/controller/cadence/pcie-cadence.h |  23 ++-
+>  7 files changed, 182 insertions(+), 40 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/timer/nxp,tpm-timer.txt    | 28 ----------
- .../devicetree/bindings/timer/nxp,tpm-timer.yaml   | 63 ++++++++++++++++++++++
- 2 files changed, 63 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.yaml
+I have applied patches 1-3 to pci/cadence (that I think are
+self-contained), waiting for the dma-ranges discussion to wrap up on
+patch 4.
 
-diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
-deleted file mode 100644
-index f82087b..0000000
---- a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--NXP Low Power Timer/Pulse Width Modulation Module (TPM)
--
--The Timer/PWM Module (TPM) supports input capture, output compare,
--and the generation of PWM signals to control electric motor and power
--management applications. The counter, compare and capture registers
--are clocked by an asynchronous clock that can remain enabled in low
--power modes. TPM can support global counter bus where one TPM drives
--the counter bus for the others, provided bit width is the same.
--
--Required properties:
--
--- compatible :	should be "fsl,imx7ulp-tpm"
--- reg :		Specifies base physical address and size of the register sets
--		for the clock event device and clock source device.
--- interrupts :	Should be the clock event device interrupt.
--- clocks :	The clocks provided by the SoC to drive the timer, must contain
--		an entry for each entry in clock-names.
--- clock-names : Must include the following entries: "ipg" and "per".
--
--Example:
--tpm5: tpm@40260000 {
--	compatible = "fsl,imx7ulp-tpm";
--	reg = <0x40260000 0x1000>;
--	interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&clks IMX7ULP_CLK_NIC1_BUS_DIV>,
--		 <&clks IMX7ULP_CLK_LPTPM5>;
--	clock-names = "ipg", "per";
--};
-diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.yaml b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.yaml
-new file mode 100644
-index 0000000..0d34610
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/nxp,tpm-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP Low Power Timer/Pulse Width Modulation Module (TPM)
-+
-+maintainers:
-+  - Dong Aisheng <aisheng.dong@nxp.com>
-+
-+description: |
-+  The Timer/PWM Module (TPM) supports input capture, output compare,
-+  and the generation of PWM signals to control electric motor and power
-+  management applications. The counter, compare and capture registers
-+  are clocked by an asynchronous clock that can remain enabled in low
-+  power modes. TPM can support global counter bus where one TPM drives
-+  the counter bus for the others, provided bit width is the same.
-+
-+properties:
-+  compatible:
-+    const: fsl,imx7ulp-tpm
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: SoC TPM ipg clock
-+      - description: SoC TPM per clock
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: ipg
-+      - const: per
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx7ulp-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    timer@40260000 {
-+        compatible = "fsl,imx7ulp-tpm";
-+        reg = <0x40260000 0x1000>;
-+        interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
-+                 <&pcc2 IMX7ULP_CLK_LPTPM5>;
-+        clock-names = "ipg", "per";
-+    };
--- 
-2.7.4
-
+Lorenzo
