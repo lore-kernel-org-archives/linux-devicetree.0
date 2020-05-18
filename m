@@ -2,111 +2,71 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60641C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1A5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38D8920756
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:56:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H24gkmj4"
+	by mail.kernel.org (Postfix) with ESMTP id B7B5C2065F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgERO4D (ORCPT
+        id S1726989AbgERO51 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:56:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgERO4D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:56:03 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F24C061A0C;
-        Mon, 18 May 2020 07:56:03 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id 5so2137839pjd.0;
-        Mon, 18 May 2020 07:56:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j0vgPkzC0SrMw1LKftBMhKbRArXUYnbbA1/YhTB9uaQ=;
-        b=H24gkmj4DfDfuJCrO+06TCGDojdN1L9EUvpR5Ip3kE+bWfnp24rarC1anGDdbcKBM8
-         hDgd2N7B6rmEETzkobnuyliskxRCTQlzWNrzdQ+PsYY+Q9/zRy23jmiGPHREE1MM0NV/
-         yP2jVkjfW363I9E4dh+FK5deMTF+E5pXAlZ+D0N3ZDO8+wQ2ofNpPS5WNbOQV6zbfx2U
-         LQA+xrE7n3ZnbOLCtZV5e0shXEb4ctn9y91k8CDcZToocRNuweWiDt8nsacjdm8son3A
-         mPSrlUxJzdjMFPkm6wH+ZjHcd3LVWWTbGRdLxOl0fjfT6zRgnDvBBTDOf1gF8bt9auI2
-         zXVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j0vgPkzC0SrMw1LKftBMhKbRArXUYnbbA1/YhTB9uaQ=;
-        b=EdBiMPnk3SSVkr3YM9+sEVoanOs4IO4uhp0LNWSq8OkryJba2VvFlJA9J5b/v2bW0i
-         IZyNYWVdS8hGbUGjtbvb6iFfD9rLe1Y0qpeu7noMhF1GyAqMsi+UhzeX7Wk6BRLFeNwR
-         z+zRwWamhmrK7pWZQpoFN6V2wNofSD+QFY0gyovfBqpvloujyU13U0sfA7fsxro/RxWq
-         PsgOmG3uRHT+uHvmc0qlvOhoZlVEtwF+9J/312rGmx1epsEF/4JaesPfo8hl3UJQ404v
-         julLiSehGgwKEI6hWxH76GQ5ID0/CVqF9KHRrpB57iPSeVEjTyDI76wbCgNJK0MdzYsD
-         ix/g==
-X-Gm-Message-State: AOAM530Sc2U6VNVfKlD7nXpMxbnWhsDWeXUsJFgr6qTzKjDOX9+1uBBX
-        s40/KMg7FUhxcoBwZKuDlk8ElCqXTyPFgNEEHH8=
-X-Google-Smtp-Source: ABdhPJzz4iSJwpMHgi49aKOPdGMYFISG3X9YPDm7J/TYfsTMb/LHGyys39ppu1LINRhi2P3ZQj6t6s08ynYuAvMi11E=
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr15165549plt.18.1589813762929;
- Mon, 18 May 2020 07:56:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200518133645.19127-1-jonathan.albrieux@gmail.com> <20200518133645.19127-4-jonathan.albrieux@gmail.com>
-In-Reply-To: <20200518133645.19127-4-jonathan.albrieux@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 May 2020 17:55:51 +0300
-Message-ID: <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 18 May 2020 10:57:27 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:56228 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726940AbgERO51 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 10:57:27 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 718FC1A0B0D;
+        Mon, 18 May 2020 16:57:25 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3715C1A0B0C;
+        Mon, 18 May 2020 16:57:20 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 593B9402A8;
+        Mon, 18 May 2020 22:57:13 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, ping.bai@nxp.com, aisheng.dong@nxp.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 0/3] Covert i.MX GPT/TPM/SYSCTR timer binding to json-schema
+Date:   Mon, 18 May 2020 22:47:37 +0800
+Message-Id: <1589813260-20036-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
-<jonathan.albrieux@gmail.com> wrote:
+This patch series converts i.MX GPT, TPM and system counter timer binding
+to json-schema, test build passed.
 
-> +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
+Anson Huang (3):
+  dt-bindings: timer: Convert i.MX GPT to json-schema
+  dt-bindings: timer: Convert i.MX TPM to json-schema
+  dt-bindings: timer: Convert i.MX SYSCTR to json-schema
 
-(1)
-
-...
-
-> +       /*
-> +        * If reset pin is provided then will be set to high on power on
-> +        * and to low on power off according to AK09911 datasheet
-> +        */
-
-Wording is confusing, perhaps you have to use 'asserted / deasserted'.
-
-Btw, in (1) it's also "high" (asserted). I barely understand how it's
-supposed to work in all cases?
-
-> +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> +                                             "reset", GPIOD_OUT_HIGH);
-> +       if (IS_ERR(reset_gpiod))
-> +               return PTR_ERR(reset_gpiod);
-
+ .../devicetree/bindings/timer/fsl,imxgpt.txt       |  45 ---------
+ .../devicetree/bindings/timer/fsl,imxgpt.yaml      | 109 +++++++++++++++++++++
+ .../devicetree/bindings/timer/nxp,sysctr-timer.txt |  25 -----
+ .../bindings/timer/nxp,sysctr-timer.yaml           |  54 ++++++++++
+ .../devicetree/bindings/timer/nxp,tpm-timer.txt    |  28 ------
+ .../devicetree/bindings/timer/nxp,tpm-timer.yaml   |  63 ++++++++++++
+ 6 files changed, 226 insertions(+), 98 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxgpt.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.yaml
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+
