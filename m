@@ -2,138 +2,163 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D512FC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0F9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B26E5207C4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:25:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mk9a0EE3"
+	by mail.kernel.org (Postfix) with ESMTP id 343DC207D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 16:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgERQZY (ORCPT
+        id S1727938AbgERQa3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 12:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgERQZX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 12:25:23 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE94C05BD09;
-        Mon, 18 May 2020 09:25:23 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id be9so4810706edb.2;
-        Mon, 18 May 2020 09:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=C9o4dW1opf6PK9dDJU+olx6LivIhnF/LUajcX/auTKM=;
-        b=mk9a0EE30LQPszKX5ot6/btd4Lvv+bgSkXNddm9G/X4xPGhTcYfGn9iToM4kQPb/aU
-         bCDe3NfgCGMurJGVDAnSpPBLaTOXEd/bT2NFKE/v4MuX2/c2VqGk+EFAfp7T2o2JYqMA
-         zsJwIKhZtvZ7nq9HWgQl35cR3+Ew4PlBMq6VU8M0Ii/nrjhC4DWDeqVzm5wmoA02AZHy
-         aHi0JKC+zVh29NEUQL+FyqnIzfROsHeli2W1Lc2Lop/O2qTCY5exQhzQXiRDVaqnRNKF
-         nC62vqaYbx5FkbjCkN6dXtoAEhJxwRuhHYF2cCsn1WJ6lfpVyExb4l1U+fIwjAg1W4AN
-         GfMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=C9o4dW1opf6PK9dDJU+olx6LivIhnF/LUajcX/auTKM=;
-        b=M1zNNeqSHzaJHlA8Ygw1NXYyDMeK8r2DA7jEs2ykoCWjJ0BimjqxJrHO8P/+HWuxuI
-         4AulfHf379MAOT2zt2/B8mqdsjOZpa88XgOHvrvtTI87cYhk31REH7uhPtdDESizq9bW
-         KS6n+8cmH+oqu2Nu9eu0RcpPfINX48Rf6btD/5NyLDUZnAMtXJQfQMXv5anx8pgsOH+y
-         30dYhUQJ53itOhS6tEWmgXI4krT/1vfwfcJ8fis5TgTUxwDQN03+lrvik0k/+VN3EzQG
-         bj4gbxZj1+O4BCcOTYxy3A8wV7RaiU4WpYo3PekQWNMeb3U3QW1mUk/5s9hNCrI9v57E
-         nJfw==
-X-Gm-Message-State: AOAM533rI4c+hclhXg4kVpSFlJDT/+DbhrTYxLwnenoX4K9gbNoDvKC9
-        E3adgO174xa5kDtjjcWE0ejpe3/8E5gZytcLFo0=
-X-Google-Smtp-Source: ABdhPJwYjoPZytoziRsU8pzisjXxK0MKS7CxJZXMVVTHEUikl7yW7jJlqgckmGbHBkbra1XtkUxs8t43eY3HhJcYOUQ=
-X-Received: by 2002:a05:6402:1a29:: with SMTP id be9mr7821163edb.70.1589819121915;
- Mon, 18 May 2020 09:25:21 -0700 (PDT)
+        Mon, 18 May 2020 12:30:29 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2221 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727006AbgERQa2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 12:30:28 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id D4239F39FD155421C674;
+        Mon, 18 May 2020 17:30:22 +0100 (IST)
+Received: from localhost (10.47.85.42) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 18 May
+ 2020 17:30:22 +0100
+Date:   Mon, 18 May 2020 17:29:54 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
+        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v5 5/6] iio: imu: Add support for adis16475
+Message-ID: <20200518172954.00005fd8@Huawei.com>
+In-Reply-To: <3136c4c7-b964-dce4-9e43-4cbbcc9187a1@metafoo.de>
+References: <20200413082445.17324-1-nuno.sa@analog.com>
+        <20200413082445.17324-6-nuno.sa@analog.com>
+        <2418ed60-8407-0c99-bf5d-1afc3964de2b@metafoo.de>
+        <20200502184010.134eb8b5@archlinux>
+        <67202bd8-e0a5-be53-13c6-e01a25e2a85b@metafoo.de>
+        <df0f04296fafccfcf18b08b213bae20ff69c2384.camel@gmail.com>
+        <20200503094751.633feda1@archlinux>
+        <c7c6c4af-826a-d52a-3969-4ccccbff12e9@metafoo.de>
+        <b7289aca-f393-faca-f512-a952a77c1e68@metafoo.de>
+        <20200517171523.54fa6deb@archlinux>
+        <3136c4c7-b964-dce4-9e43-4cbbcc9187a1@metafoo.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
- <1589453659-27581-6-git-send-email-smasetty@codeaurora.org> <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
-In-Reply-To: <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 18 May 2020 09:25:41 -0700
-Message-ID: <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
- set DDR bandwidth
-To:     Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.47.85.42]
+X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
-> > This patches replaces the previously used static DDR vote and uses
-> > dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
-> > GPU frequency.
-> >
-> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> > ---
-> >  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
-> >  1 file changed, 1 insertion(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > index 2d8124b..79433d3 100644
-> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
-> >
-> >       gmu->freq = gmu->gpu_freqs[perf_index];
-> >
-> > -     /*
-> > -      * Eventually we will want to scale the path vote with the frequency but
-> > -      * for now leave it at max so that the performance is nominal.
-> > -      */
-> > -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> > +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
-> >  }
->
-> This adds an implicit requirement that all targets need bandwidth settings
-> defined in the OPP or they won't get a bus vote at all. I would prefer that
-> there be an default escape valve but if not you'll need to add
-> bandwidth values for the sdm845 OPP that target doesn't regress.
->
+On Sun, 17 May 2020 21:07:45 +0200
+Lars-Peter Clausen <lars@metafoo.de> wrote:
 
-it looks like we could maybe do something like:
-
-  ret = dev_pm_opp_set_bw(...);
-  if (ret) {
-      dev_warn_once(dev, "no bandwidth settings");
-      icc_set_bw(...);
-  }
-
-?
-
-BR,
--R
-
-> Jordan
->
-> >  unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
-> > --
-> > 2.7.4
+> On 5/17/20 6:15 PM, Jonathan Cameron wrote:
+> > On Sun, 3 May 2020 11:12:34 +0200
+> > Lars-Peter Clausen <lars@metafoo.de> wrote:
+> >  
+> >> On 5/3/20 11:07 AM, Lars-Peter Clausen wrote:  
+> >>> On 5/3/20 10:47 AM, Jonathan Cameron wrote:  
+> >>>> On Sat, 02 May 2020 21:52:18 +0200
+> >>>> Nuno Sá <noname.nuno@gmail.com> wrote:
+> >>>>     
+> >>>>> On Sat, 2020-05-02 at 20:01 +0200, Lars-Peter Clausen wrote:  
+> >>>>>> On 5/2/20 7:40 PM, Jonathan Cameron wrote:  
+> >>>>>>> On Mon, 27 Apr 2020 20:06:07 +0200
+> >>>>>>> Lars-Peter Clausen <lars@metafoo.de> wrote:  
+> >>>>>>>> On 4/13/20 10:24 AM, Nuno Sá wrote:  
+> >>>>>>>>> [...]
+> >>>>>>>>> +static irqreturn_t adis16475_trigger_handler(int irq, void *p)
+> >>>>>>>>> +{
+> >>>>>>>>> [...]
+> >>>>>>>>> +    __be16 data[ADIS16475_MAX_SCAN_DATA], *buffer;
+> >>>>>>>>> [...]
+> >>>>>>>>> +
+> >>>>>>>>> +    iio_push_to_buffers_with_timestamp(indio_dev, data, pf-  
+> >>>>>>>>>> timestamp);  
+> >>>>>>>> If the timestamp is enabled the IIO core might insert padding
+> >>>>>>>> between
+> >>>>>>>> the data channels and the timestamp. If that happens this will
+> >>>>>>>> disclose
+> >>>>>>>> kernel stack memory to userspace.
+> >>>>>>>>
+> >>>>>>>> This needs either a memset(data, 0x00, sizeof(data)) or maybe put
+> >>>>>>>> data
+> >>>>>>>> into the state struct and kzalloc it.  
+> >>>>>>> Good spot. Could simply do __be16 data[ADI..] = {0}; rather than
+> >>>>>>> explicit
+> >>>>>>> memset, but some form of zeroization is needed.
+> >>>>>>>
+> >>>>>>> I've fixed up the applied patch with the above approach.  
+> >>>>>> There is actually another issue. The stack data is not necessarily
+> >>>>>> aligned to 64 bit, which causes issues if we try to put the 64-bit  
+> >>>>> Oh, this is actually more problematic. Yes, since we have an array of
+> >>>>> u16, that is not guaranteed to be 64bit aligned. Doing a quick search
+> >>>>> of `iio_push_to_buffers_with_timestamp()` users and I could quickly
+> >>>>> find 4/5 drivers with the same problem. I guess the API should clearly
+> >>>>> state that `data` needs to be __at least__ 64 bits aligned (maybe a
+> >>>>> future patch). Or we could even check the address and guarantee that it
+> >>>>> is properly aligned before continuing (though Im guessing this will
+> >>>>> break a lot of users...)  
+> >>>>>> timestamp in it. I think data should really be in the state struct.  
+> >>>>> Yes, with a proper __aligned(8) attribute... Or couldn't we just use
+> >>>>> __aligned(8) on the stack variable?  
+> >>>> Forcing alignment on the stack isn't terribly reliable, which is why
+> >>>> we never do that for dma safe buffers.
+> >>>>
+> >>>> Probably better to just move it to the state structure.
+> >>>> I'll fix it up to do that. Please sanity check what will shortly
+> >>>> be in the testing branch.
+> >>>>
+> >>>> The moment Lars mentioned this I groaned. As you've noted a few other
+> >>>> drivers have the same problem + the ABI doesn't clearly state
+> >>>> or check this.
+> >>>>
+> >>>> We should certainly fix all the drivers that suffer this problem
+> >>>> first then we can think about adding a runtime check.  
+> >>> It looks like it is actually quite a few drivers, maybe we should
+> >>> switch to put_unaligned(). We probably got lucky in most cases and the
+> >>> buffer is naturally aligned to 64 bit.  
+> > Just a quick update on this.  I've been taking a deeper look and there
+> > are some 'interesting' cases in here so the put_unaligned is attractive
+> > unfortunately I don't think we can go that way because it would be
+> > reasonable for consumers of the buffer to expect it to be appropriately
+> > aligned.   We need to rework many of these anyway to fix the related
+> > data leak.
 > >
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> > I've done some of below and will post shortly - a few will take more
+> > effort and probably need testing rather than just relying on review.
+> >
+> > So far the 'interesting ones' are mpu3050 and isl29501.  
+> 
+> isl29501 looks OK to me. mpu3050 is clearly broken, buffer is both 
+> unaligned and too small!
+
+isl29501 reads a pair of 8 bit registers, then writes them to a 32 bit value
+for no particular reason and puts that in the first 32 bits of the buffer
+having declared the channel to have a storage size of 16 bits.
+
+So going to have some fun on one or other of the endian types...
+
+J
+
+> 
+
+
