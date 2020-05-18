@@ -2,111 +2,104 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC231C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1907EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF56C20756
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C6E20756
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgERL1O (ORCPT
+        id S1726855AbgERLbr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 07:27:14 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:53178 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbgERL1O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:27:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1589801230; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tvn5nLaWGrzfShxUOvOGAY+B3v9oKV0REWchgAjg+ps=;
-        b=qIFV6CKF52U3yd4k3ke3sIOnyAJmRhauaGV3FzX3WGiZNmRDhflWKDE0YQRdC5VuFgGyyE
-        31fwL2ACyG91ZYgJ+yMID+k6fILOmdHEnYO+ZsoSFU9aI1lwZyt6tpLWMuEwvj6yTy5NUt
-        aFjUKd/YRQCXMKn4IrMIFDDnuBl89vE=
-Date:   Mon, 18 May 2020 13:26:58 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 11/12] gpu/drm: Ingenic: Add support for the IPU
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, od@zcrc.me,
-        linux-kernel@vger.kernel.org,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Message-Id: <YGYIAQ.7N9YGTBML0143@crapouillou.net>
-In-Reply-To: <CACvgo50q=qJXk3nFSCm+S6JHBMxpY0C_HwH8KGB2EAcKwgL0oQ@mail.gmail.com>
-References: <20200516215057.392609-1-paul@crapouillou.net>
-        <20200516215057.392609-11-paul@crapouillou.net>
-        <CACvgo50q=qJXk3nFSCm+S6JHBMxpY0C_HwH8KGB2EAcKwgL0oQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Mon, 18 May 2020 07:31:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:38570 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726585AbgERLbr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 07:31:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0AC5106F;
+        Mon, 18 May 2020 04:31:46 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6B7FA3F52E;
+        Mon, 18 May 2020 04:31:45 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 00/20] dts/dt-bindings: Fix Arm Ltd. ARMv8 "boards"
+Date:   Mon, 18 May 2020 12:31:32 +0100
+Message-Id: <158980112843.33280.16226851289892007676.b4-ty@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200513103016.130417-1-andre.przywara@arm.com>
+References: <20200513103016.130417-1-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Emil,
+On Wed, 13 May 2020 11:29:56 +0100, Andre Przywara wrote:
+> A few updates compared to v2. The most important is to fix the
+> interrupt-maps, triggered by changing the number of address-cells in
+> the GIC node. For this I split the former patch 07/17 into two (09/20
+> and 10/20), one for the foundation model, the other for Juno.
+> Also I fixed a dtc complaint about device nodes without reg properties
+> being inside simple-bus nodes, those are the new patches 04-06/20.
+> Will took patch 01/17 from v2 already, so I removed this from this
+> series.
+> The rest of the patches stayed the same.
+> -----------------------------------
+> 
+> [...]
 
-Le lun. 18 mai 2020 =E0 11:48, Emil Velikov <emil.l.velikov@gmail.com> a=20
-=E9crit :
-> Hi Paul,
->=20
-> Disclaimer: I don't know much about the hardware :-P
->=20
-> On Sun, 17 May 2020 at 00:31, Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>=20
->>  Add support for the Image Processing Unit (IPU) found in all Ingenic
->>  SoCs.
->>=20
-> Since the IPU is present on all devices supported, does it make sense
-> to have it as separate module?
-> Didn't check closely although I suspect doing that will remove the
-> need for the component patch.
+Hi Andre,
 
-It makes sense to me; you may not want to enable the IPU on platforms=20
-where it doesn't add much, e.g. on the JZ4725B where it only handles=20
-YUV and not RGB.
+Patch 12/20 was missing your Signed-off tags, re-applied adding the same.
 
-Besides, while the older JZ4740 SoC has a IPU, it's mem-to-mem and=20
-cannot output directly to the CRTC, so it cannot be represented as a=20
-plane. On this SoC the current IPU code cannot be used. So the Ingenic=20
-DRM driver must still be able to probe with zero components.
+Applied to scmi-vexpress-juno (for-next/juno), thanks!
 
->>  --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
->>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
->>  @@ -50,7 +50,7 @@ struct jz_soc_info {
->>=20
->>   struct ingenic_drm {
->>          struct drm_device drm;
->>  -       struct drm_plane f0, f1;
->>  +       struct drm_plane f0, f1, *ipu_plane;
->>          struct drm_crtc crtc;
->>          struct drm_encoder encoder;
->>=20
->>  @@ -186,13 +186,16 @@ static void=20
->> ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
->>          regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
->>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16,
->>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16);
->>  +
->>  +       regmap_write(priv->map, JZ_REG_LCD_IPUR, JZ_LCD_IPUR_IPUREN=20
->> |
->>  +                    (ht * vpe / 3) << JZ_LCD_IPUR_IPUR_LSB);
->=20
-> This hunk also indicates that it may be better to merge the IPU within
-> the existing driver.
+[02/20] arm64: dts: fvp/juno: Fix node address fields
+        https://git.kernel.org/sudeep.holla/c/bb5cce12ac
+[03/20] arm64: dts: fvp: Move fixed devices out of bus node
+        https://git.kernel.org/sudeep.holla/c/849bfc3dfc
+[04/20] arm64: dts: vexpress: Move fixed devices out of bus node
+        https://git.kernel.org/sudeep.holla/c/d9258898ad
+[05/20] arm64: dts: fvp: Move fixed clocks out of bus node
+        https://git.kernel.org/sudeep.holla/c/feebdc3f79
+[06/20] arm64: dts: juno: Move fixed devices out of bus node
+        https://git.kernel.org/sudeep.holla/c/948204a1bf
+[07/20] arm64: dts: juno: Fix mem-timer
+        https://git.kernel.org/sudeep.holla/c/0e529dae51
+[08/20] arm64: dts: fvp: Fix GIC compatible names
+        https://git.kernel.org/sudeep.holla/c/336edacfb9
+[09/20] arm64: dts: juno: Fix GIC child nodes
+        https://git.kernel.org/sudeep.holla/c/a78aee9e43
+[10/20] arm64: dts: fvp: Fix GIC child nodes
+        https://git.kernel.org/sudeep.holla/c/78631aecc5
+[11/20] arm64: dts: fvp: Fix ITS node names and #msi-cells
+        https://git.kernel.org/sudeep.holla/c/fac959c93f
+[12/20] arm64: dts: juno: Use proper DT node name for USB
+        https://git.kernel.org/sudeep.holla/c/a66ab61b2c
+[13/20] arm64: dts: fvp/juno: Fix serial node names
+        https://git.kernel.org/sudeep.holla/c/1d33445a19
+[14/20] arm64: dts: fvp: Fix SMMU DT node
+        https://git.kernel.org/sudeep.holla/c/386270bad0
+[15/20] arm64: dts: fvp/juno: Fix bus node names
+        https://git.kernel.org/sudeep.holla/c/48db29f2c9
+[16/20] arm64: dts: juno: Fix GPU interrupt order
+        https://git.kernel.org/sudeep.holla/c/90280c4dc0
+[17/20] arm64: dts: vexpress: Fix VExpress LED names
+        https://git.kernel.org/sudeep.holla/c/dc6e874179
+[18/20] arm64: dts: juno: Fix SCPI shared mem node name
+        https://git.kernel.org/sudeep.holla/c/267c673233
 
-This writes the IPUR register of the CRTC, nothing wrong here.
-
--Paul
-
+--
+Regards,
+Sudeep
 
