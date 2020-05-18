@@ -2,108 +2,88 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E53C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DA3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 906342065F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB8B2067D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:20:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ddgt4qxd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OfjKBwSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbgERMDU (ORCPT
+        id S1726872AbgERMUl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 08:03:20 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44846 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726557AbgERMDT (ORCPT
+        Mon, 18 May 2020 08:20:41 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:48589 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726726AbgERMUk (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 08:03:19 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IC2rku010157;
-        Mon, 18 May 2020 14:02:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=tAbl2axdddZlaaXG2CNspEZUt31JN+F0gHWw9tO/rHM=;
- b=ddgt4qxdT4oWVbfbhnLDLAFXbH9hijDV73qOYcZaPn45NL3bumpy8wLhX3mQ5Ty8Rnwe
- Pw/wCLNK1hvokjk4gya24QRhEdq3qzzhUHo2amAWd+SCgiwsuoJWVOdlG/QND/4+sq3N
- 5jLqzkCN4R7NsLwsozz2ISXgisXhvDnd/YfoWobYpTTwHGLE44CKN6D575ojATSSd8yh
- bAPNfjZdCpCRfQQrS/5nnimfEQtpfn25tR48a6FX/1nC32MjP6wiP6KgKjuygx7erOLx
- GvKmSrG19BHK8PrE2Aa0sR5sntD9/GrYvVY5vQspxGiw/RTUtF0Y+bIuCsta2yWpbh0n zg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3125n3bm24-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 14:02:54 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E74D810002A;
-        Mon, 18 May 2020 14:02:47 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag4node3.st.com [10.75.127.12])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CAC522BF9CF;
-        Mon, 18 May 2020 14:02:47 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG4NODE3.st.com
- (10.75.127.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 14:02:47 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Mon, 18 May 2020 14:02:47 +0200
-From:   Christophe ROULLIER <christophe.roullier@st.com>
-To:     "robh@kernel.org" <robh@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "joabreu@synopsys.com" <joabreu@synopsys.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Peppe CAVALLARO <peppe.cavallaro@st.com>
-CC:     "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-Subject: Re: [PATCH v3 0/1] net: ethernet: stmmac: simplify phy modes
- management for stm32
-Thread-Topic: [PATCH v3 0/1] net: ethernet: stmmac: simplify phy modes
- management for stm32
-Thread-Index: AQHWHHq3aaIPOA/wFEi5Ev+u/GvPiaitvfmA
-Date:   Mon, 18 May 2020 12:02:47 +0000
-Message-ID: <3aaadf75-5399-4961-248a-c77c719155d4@st.com>
-References: <20200427100038.19252-1-christophe.roullier@st.com>
-In-Reply-To: <20200427100038.19252-1-christophe.roullier@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CD3A060E2D09364A9ED8F23EAD3F016B@st.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_05:2020-05-15,2020-05-18 signatures=0
+        Mon, 18 May 2020 08:20:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589804440; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=MAxhP+teqZIXPoeMS5hBv8vDuvdydsbV2LjXEfVR9mM=; b=OfjKBwSa8ndOcRQR5iBOvp31MW6/2Oemsv0zfCja51iXDH3a9b95rCaoYo5jnALNVftktkZO
+ FzGSUpS03xCWXm2irj5tzZHjg2nhzwxAxv7g3qrQnyXGJke8RvRo46SCBYElfM9nN3OQSVmL
+ AHGaoFwf9e80WO77GLz7vYvynkQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec27d8c.7f2e1d21fb20-smtp-out-n05;
+ Mon, 18 May 2020 12:20:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9679EC43637; Mon, 18 May 2020 12:20:28 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5AB9CC432C2;
+        Mon, 18 May 2020 12:20:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5AB9CC432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
+        dianders@chromium.org, Maulik Shah <mkshah@codeaurora.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sc7180: Correct the pdc interrupt ranges
+Date:   Mon, 18 May 2020 17:50:02 +0530
+Message-Id: <1589804402-27130-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQoNCkp1c3QgYSAiZ2VudGxlbWFuIHBpbmciDQoNClJlZ2FyZHMsDQoNCkNocmlzdG9waGUu
-DQoNCk9uIDI3LzA0LzIwMjAgMTI6MDAsIENocmlzdG9waGUgUm91bGxpZXIgd3JvdGU6DQo+IE5v
-IG5ldyBmZWF0dXJlLCBqdXN0IHRvIHNpbXBsaWZ5IHN0bTMyIHBhcnQgdG8gYmUgZWFzaWVyIHRv
-IHVzZS4NCj4gQWRkIGJ5IGRlZmF1bHQgYWxsIEV0aGVybmV0IGNsb2NrcyBpbiBEVCwgYW5kIGFj
-dGl2YXRlIG9yIG5vdCBpbiBmdW5jdGlvbg0KPiBvZiBwaHkgbW9kZSwgY2xvY2sgZnJlcXVlbmN5
-LCBpZiBwcm9wZXJ0eSAic3QsZXh0LXBoeWNsayIgaXMgc2V0IG9yIG5vdC4NCj4gS2VlcCBiYWNr
-d2FyZCBjb21wYXRpYmlsaXR5DQo+DQo+IHZlcnNpb24gMzoNCj4gQWRkIGFja2VkIGZyb20gQWxl
-eGFuZHJlIFRvcmd1ZQ0KPiBSZWJhc2VkIG9uIHRvcCBvZiB2NS43LXJjMg0KPg0KPiBDaHJpc3Rv
-cGhlIFJvdWxsaWVyICgxKToNCj4gICAgbmV0OiBldGhlcm5ldDogc3RtbWFjOiBzaW1wbGlmeSBw
-aHkgbW9kZXMgbWFuYWdlbWVudCBmb3Igc3RtMzINCj4NCj4gICAuLi4vbmV0L2V0aGVybmV0L3N0
-bWljcm8vc3RtbWFjL2R3bWFjLXN0bTMyLmMgfCA3NCArKysrKysrKysrKy0tLS0tLS0tDQo+ICAg
-MSBmaWxlIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KPg==
+Few PDC interrupts do not map to respective parent GIC interrupt.
+Fix this by correcting the pdc interrupt map.
+
+Fixes: 22f185ee81d2 ("arm64: dts: qcom: sc7180: Add pdc interrupt controller")
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index f1280e0..f6b4ee8 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2308,8 +2308,7 @@
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
+-			qcom,pdc-ranges = <0 480 15>, <17 497 98>,
+-					  <119 634 4>, <124 639 1>;
++			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
+ 			#interrupt-cells = <2>;
+ 			interrupt-parent = <&intc>;
+ 			interrupt-controller;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
