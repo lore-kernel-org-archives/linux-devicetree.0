@@ -2,98 +2,148 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713C3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5661C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6E220787
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589811348;
-	bh=cDmMTGcpIk8TMXrBIxqzGCVaaRvA6WDVkUN+CMH86XY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XaEr7FlVoV/diuKKXwpIYKh+MRX5WOw+IV7SR2PHNSB7JiizG7griJDmPNST9laqB
-	 LwHFu090NWifcnZnPeSy6Z3uEvqH+71avot7DfDV58wgi1ViBN8poHaoLzqzwpuHVK
-	 xD+x8O2ysYvtLP7b2qnqjcyFs2w7bI/lxxnvuABI=
+	by mail.kernel.org (Postfix) with ESMTP id 9EB0F207D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgEROPr (ORCPT
+        id S1727036AbgEROQr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:15:47 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37268 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgEROPr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:15:47 -0400
-Received: by mail-il1-f195.google.com with SMTP id n11so9976723ilj.4;
-        Mon, 18 May 2020 07:15:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NiavkdLPqGu3sdeEgEzastsxcKs5S9EbJ8pP8VASFE0=;
-        b=Bk4QBE5MIBwTJ2m0hR0qL4XZyrBXuCpK9loj3X+4GAxsq07UOMIkBLp49a2wt7A/rj
-         JIA5/oz+mQomLz+MXuJMPkYMSnRwu97PehVqbCDocAc4DBBV7sn2OO5BfBaX4y4UVPk3
-         +ORY+7CnmGfaJXNbI2PQqIUO2mvBpVDddlOEIxUUftha29ckkxaGqK4Km2P7ntGWVpD3
-         NoYWPjkIZ2mAtTaDzso3/vmdAme4YKQ0H8HO4WdpDhtoe4f9x660E8kdJta1dXGN+2Hw
-         pHomSbdo9rCr4Fq8r3qE6z1vY3RFEQuuFsWAgnlihlmrfWnyp0ESmK1LiJ4it7y8TMNp
-         jh+A==
-X-Gm-Message-State: AOAM5306q5OT74+5Lcb9nHqBmmrgBsbprGtgEYJABVj+TFECMDzodET/
-        KlsEBCz84Y0CVc+NLGm0SfpPQRM=
-X-Google-Smtp-Source: ABdhPJyWaai1niB/pKI4PDVBUgD6yt6JC62eo2eqfl9jOjznl2OcupHi7LxCPkiaQa7lqygnSoUx+g==
-X-Received: by 2002:a92:8415:: with SMTP id l21mr15997886ild.214.1589811346565;
-        Mon, 18 May 2020 07:15:46 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i27sm495013ilf.79.2020.05.18.07.15.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 07:15:45 -0700 (PDT)
-Received: (nullmailer pid 32260 invoked by uid 1000);
-        Mon, 18 May 2020 14:15:44 -0000
-Date:   Mon, 18 May 2020 08:15:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jeff Chase <jnchase@google.com>
-Cc:     robh+dt@kernel.org, hverkuil-cisco@xs4all.nl, mchehab@kernel.org,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add ch7322 media i2c device
-Message-ID: <20200518141544.GA31928@bogus>
-References: <20200515025159.101081-1-jnchase@google.com>
- <20200515025159.101081-2-jnchase@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515025159.101081-2-jnchase@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 18 May 2020 10:16:47 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45430 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726998AbgEROQq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 10:16:46 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5ADF42009BA;
+        Mon, 18 May 2020 16:16:44 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 069E3200941;
+        Mon, 18 May 2020 16:16:39 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 47DC9402A8;
+        Mon, 18 May 2020 22:16:32 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, Frank.Li@freescale.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: clock: Convert i.MX7D clock to json-schema
+Date:   Mon, 18 May 2020 22:06:59 +0800
+Message-Id: <1589810819-19851-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 14 May 2020 22:51:58 -0400, Jeff Chase wrote:
-> The ch7322 is a Chrontel CEC controller.
-> 
-> Signed-off-by: Jeff Chase <jnchase@google.com>
-> ---
->  .../bindings/media/i2c/chrontel,ch7322.yaml   | 65 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  MAINTAINERS                                   |  7 ++
->  3 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
-> 
+Convert the i.MX7D clock binding to DT schema format using json-schema.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/clock/imx7d-clock.txt      | 13 -----
+ .../devicetree/bindings/clock/imx7d-clock.yaml     | 64 ++++++++++++++++++++++
+ 2 files changed, 64 insertions(+), 13 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.yaml
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/media/i2c/chrontel,ch7322.yaml#
-
-See https://patchwork.ozlabs.org/patch/1290799
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.txt b/Documentation/devicetree/bindings/clock/imx7d-clock.txt
+deleted file mode 100644
+index 9d3026d..0000000
+--- a/Documentation/devicetree/bindings/clock/imx7d-clock.txt
++++ /dev/null
+@@ -1,13 +0,0 @@
+-* Clock bindings for Freescale i.MX7 Dual
+-
+-Required properties:
+-- compatible: Should be "fsl,imx7d-ccm"
+-- reg: Address and length of the register set
+-- #clock-cells: Should be <1>
+-- clocks: list of clock specifiers, must contain an entry for each required
+-  entry in clock-names
+-- clock-names: should include entries "ckil", "osc"
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx7d-clock.h
+-for the full list of i.MX7 Dual clock IDs.
+diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.yaml b/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
+new file mode 100644
+index 0000000..72eb13f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/imx7d-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Clock bindings for Freescale i.MX7 Dual
++
++maintainers:
++  - Frank Li <Frank.Li@freescale.com>
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description: |
++  The clock consumer should specify the desired clock by having the clock
++  ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx7d-clock.h
++  for the full list of i.MX7 Dual clock IDs.
++
++properties:
++  compatible:
++    const: fsl,imx7d-ccm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: CCM interrupt request 1
++      - description: CCM interrupt request 2
++    maxItems: 2
++
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    items:
++      - description: 32k osc
++      - description: 24m osc
++
++  clock-names:
++    items:
++      - const: ckil
++      - const: osc
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - '#clock-cells'
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    clock-controller@30380000 {
++        compatible = "fsl,imx7d-ccm";
++        reg = <0x30380000 0x10000>;
++        interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++        #clock-cells = <1>;
++        clocks = <&ckil>, <&osc>;
++        clock-names = "ckil", "osc";
++    };
+-- 
+2.7.4
 
