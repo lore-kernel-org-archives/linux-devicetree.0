@@ -2,121 +2,113 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7B8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC00EC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCDB20643
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C881F20657
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826141;
-	bh=Yc1Xy56CHyGoTxHEkzc4PM0bH46ymqJfwnxAZKlfJWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VC7vmzWXWGpYu41QJjup8j8d2q/zFNFQWkmN8jyrLHMo6xabBKI0OQ1bLXsiu0qS8
-	 /o+JkNxBRk8jgMcd0FMHQrQ7XMGTxUhx3LCRXEFdtulsOtZhlXbMozJK+X5SH3boqA
-	 4xhOHXbSGqph47czdASRqoiyqSsXeULVcMFgUD28=
+	s=default; t=1589826292;
+	bh=4enFI36R6diBkb+gKGhwExmrDx+XcgPAs342xvS1tyA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NWnxYvRwy8b1w4Bfctv2bU+ETRxi3IHjt+TtcO9kMttBgDadAIWw+YI8o2Si7LiTm
+	 zaU4+PY9N2eNY84xQnsSHKuZi2UP/gyd9tyK4JFU+YkGvMIRl0S5bDJfs11902qsn1
+	 XeklOQBXCu+liMozqbqGu1CU5bBzvDh1Kfd2wIx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730776AbgERRuo (ORCPT
+        id S2387794AbgERSYp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 13:50:44 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44791 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729651AbgERRun (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 13:50:43 -0400
-Received: by mail-il1-f194.google.com with SMTP id j3so10689081ilk.11;
-        Mon, 18 May 2020 10:50:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QSIx+38T4cvinbqxvrbe5wtA55RL5fnICs68EFHUoBw=;
-        b=PpYGIftnD00BLXtFyZxwyWkHns0QrUgASLj5gphWhzV8Sa3FgPAPr9Pt3y495AZxnq
-         qVgdjFMPwjVV6aZWkgDEUAkzn0yzVbCl0Bwm1LTBAFroUUfsowJr5XvRdE7OA2qv8yyV
-         Xt4/Hk6xPj3kXLNm5b33GG2J+VoDOb6HV/1Qnhna4xJTEkdKTwi3N6e1IwSZ3ieDQMZO
-         0t51RA71lScQQKedDPJUcNq2qYE3GRgQDxATWX2iHqL8s/JxwTdekVvaHcxsW30ywhrU
-         iow2825axxU5a5GhjxZwuf2RNXw4CikvUtlzgKs5AlWeBWN3SmHgXzS51615uWinhzKw
-         3cZg==
-X-Gm-Message-State: AOAM532TkwRyvA2uKWHT7MZjdhHnIxtDXZTQgK9SdYg/LJ5hz8oH5ydp
-        ZuYKMbTcAk+yAboXpniZQg==
-X-Google-Smtp-Source: ABdhPJxZwdHeQqDHyTuNUAv4DR4jH+jc65DamVkkq40xebpBOXF0/bqcjx71aAeYZUSrQFJEnm5dhg==
-X-Received: by 2002:a05:6e02:544:: with SMTP id i4mr17900970ils.266.1589824242573;
-        Mon, 18 May 2020 10:50:42 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id 4sm3609176ioy.43.2020.05.18.10.50.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 10:50:41 -0700 (PDT)
-Received: (nullmailer pid 15694 invoked by uid 1000);
-        Mon, 18 May 2020 17:50:40 -0000
-Date:   Mon, 18 May 2020 11:50:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: dma: dw: Convert DW DMAC to DT
- binding
-Message-ID: <20200518175040.GA14697@bogus>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-2-Sergey.Semin@baikalelectronics.ru>
+        Mon, 18 May 2020 14:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729955AbgERSYo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 14:24:44 -0400
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0777B2083E;
+        Mon, 18 May 2020 18:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589826284;
+        bh=4enFI36R6diBkb+gKGhwExmrDx+XcgPAs342xvS1tyA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qMgzXTpgzcX/Oit85pI4z9hKpzqyrwpwUWnordtNIqxN+h2HwZo7eoTNmFui5ft58
+         zblAZ4ImaByNw4dTzjObfyDNCtWPKdoT9C8zO6JjO3XUcynjG32dAXQqfA62cnZZk8
+         UExxla2pZzcwYCkbGBzpUj46i9Ff4k84yCSJ6mv8=
+Received: by mail-oo1-f51.google.com with SMTP id c83so2261330oob.6;
+        Mon, 18 May 2020 11:24:44 -0700 (PDT)
+X-Gm-Message-State: AOAM530QYl6rZNmSik5fwpEROj2dz7/yPTx7RRjfDLaLqOlZ2nKS3vT/
+        2UHtk/h3zMuyyTq8HCmkNmGlgPUyskqEsbZKCA==
+X-Google-Smtp-Source: ABdhPJysCAF2m01NkslVAsSntTiUS/xi7dJDbBIKhlzFQaR4jWhennVyt0j+R7miFuq23VHXoO29v9QPs/K2DAV/BxA=
+X-Received: by 2002:a4a:9285:: with SMTP id i5mr13579789ooh.50.1589826283325;
+ Mon, 18 May 2020 11:24:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508105304.14065-2-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513104615.7905-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200514130321.GB8436@bogus> <3248d380-1d08-3088-8d18-0373a8a5aef9@linux.intel.com>
+In-Reply-To: <3248d380-1d08-3088-8d18-0373a8a5aef9@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 18 May 2020 12:24:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL3g-QYMF0PMSuHeoaZ5x88fg4TbzVbDUO6=ugxEZRpbQ@mail.gmail.com>
+Message-ID: <CAL_JsqL3g-QYMF0PMSuHeoaZ5x88fg4TbzVbDUO6=ugxEZRpbQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: mtd: Add Nand Flash Controller
+ support for Intel LGM SoC
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "hauke.mehrtens" <hauke.mehrtens@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:52:59PM +0300, Serge Semin wrote:
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with dt-schema. This commit replaces the Synopsis
-> Designware DMA controller legacy bare text bindings with YAML file.
-> The only required prorties are "compatible", "reg", "#dma-cells" and
-> "interrupts", which will be used by the driver to correctly find the
-> controller memory region and handle its events. The rest of the properties
-> are optional, since in case if either "dma-channels" or "dma-masters" isn't
-> specified, the driver will attempt to auto-detect the IP core
-> configuration.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-mips@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Move $ref to the root level of the properties. So do do with the
->   constraints.
-> - Discard default settings defined out of the property enum constraint.
-> - Replace "additionalProperties: false" with "unevaluatedProperties: false"
->   property.
-> - Remove a label definition from the binding example.
-> ---
->  .../bindings/dma/snps,dma-spear1340.yaml      | 161 ++++++++++++++++++
->  .../devicetree/bindings/dma/snps-dma.txt      |  69 --------
->  2 files changed, 161 insertions(+), 69 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
+On Thu, May 14, 2020 at 8:06 PM Ramuthevar, Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+>     Thank you for the review comments...
+>
+> On 14/5/2020 9:03 pm, Rob Herring wrote:
+> > On Wed, May 13, 2020 at 06:46:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> >> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>
+> >> Add YAML file for dt-bindings to support NAND Flash Controller
+> >> on Intel's Lightning Mountain SoC.
+> >>
+> >> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >> ---
+> >>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 83 ++++++++++++++++++++++
+> >>   1 file changed, 83 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> >> +      clocks = <&cgu0 125>;
+> >> +      dma-names = "tx", "rx";
+> >> +      #address-cells = <1>;
+> >> +      #size-cells = <0>;
+> >> +      #clock-cells = <1>;
+> >
+> > This is a clock provider too?
+> Yes, it is getting clock from CGU for nand-controller.
+
+That is a clock client (e.g. 'clocks' property), not a provider. The
+CGU is the provider.
+
+Rob
