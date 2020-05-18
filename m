@@ -2,178 +2,152 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2162DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44415C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC4902070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589799968;
-	bh=HDcsOuE3Ghzb6r6hvZf0MfgOYVH9OK8s4lXnp4fAo9A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GoyBNjiOYf2VuPfKKdeqw5Kuqwo9XObcsAyecbERnNh/mTtV+W7nlz1iiscFbOJdI
-	 Pk/Quqoxegar8LWsPYMhVs2RnLDeSNZQTTRrngnPSNNzMVs305KJIDfoY6pMPiWtbX
-	 s8l/6OSqnSR+lfdt2d+sP0LPm4i6sykc2rcgKsJo=
+	by mail.kernel.org (Postfix) with ESMTP id 1A2A62070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:09:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJY3neyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgERLGE (ORCPT
+        id S1726526AbgERLJd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 07:06:04 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40711 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgERLGE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:06:04 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v128so8596347oia.7;
-        Mon, 18 May 2020 04:06:03 -0700 (PDT)
+        Mon, 18 May 2020 07:09:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgERLJd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:09:33 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49ED2C061A0C;
+        Mon, 18 May 2020 04:09:33 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id q24so4883749pjd.1;
+        Mon, 18 May 2020 04:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3zI5HGtvH1cCa06adBLKkRdZTB7qi9iI++h4rVGXoVQ=;
+        b=HJY3neypi3+TIsjpyuiDC8hy4/upfiEWcq40/l0Lp9xQGeWVb0iYXXUoiV32a0UfOx
+         lu5BLDGjNCw2X/o1YuMG4LS/EfeA2LOjChMyzJnIU0Hfrc4LNCibrT8JnOzEw43O+rVW
+         StEU40F1Uk5X9eHlZec6AFvK4eBTxzH7PzPqPJEHpvrLOkKazHs49FgrO8SxREjbBEOp
+         YqXWF7Ys0rR4twTJqIsEddUR3FiPqAxHk1P+Kxigo2oMm7v7/0OtHxaRUTpN3GFz2HzB
+         lIwoNbmDFav/7RevcdwGKQ2mbFRtM8pn6AARVoPJAXb3pud0ltZ2LVv1mShqbzv8IwFo
+         DaXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wmpjxGQuy4tiYJkt2jocarW0R5KqJW68O4d9EnN2j3I=;
-        b=G55yI1py8Mr9nC3KibGyzpC56Rbsg4jJEvADlhXYQyZdwyF0KwBFrJmtatKh9Si4AF
-         0cVgt8yJ/S3Of/m1aNZkqaPcYnBCTFVkIpxeUT/q2hP+u3ieTGcGmPySnAi5c3FsKOaD
-         BmQJWdN8eeztomd9Vs6KbVKnr5Cj/RTxIVaFrsXTbq/YdOLLweG3PRw3ohhdcuMDKR2H
-         k/1FjJ2NNb1bxSLVpCM3RMx1dSogTAGqzTanoDMHATl4U0SG6YLPhkVvwI7yUk0S8Qrd
-         //306H5r92Yv/rP+9/N6ScakqdHV1uDE1PgTw/HGoxpDs6xeKkMfnlbuivqCCGRtqC59
-         YsTg==
-X-Gm-Message-State: AOAM530vz9dquQzhLJngEQxGCQ4D9Rt7vs2aP2WjkErptqhDJryNhZrp
-        6icsRbGpK2/QqWZjBoyLTtz9ybto/8+xBV+7i/sEbA==
-X-Google-Smtp-Source: ABdhPJznA+rHvhTX3YqvDWpLbINkDwCYfOSH6G0S7yviZXUhwGP7FykmSuPBMIvirGe61CZUgklItlvyABYwUvMg6rY=
-X-Received: by 2002:a05:6808:486:: with SMTP id z6mr573511oid.103.1589799962685;
- Mon, 18 May 2020 04:06:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200518102415.k4c5qglodij5ac6h@vireshk-i7> <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
- <5284478.EF2IWm2iUs@kreacher> <20200518104602.mjh2p5iltf2x4wmq@mobilestation>
- <CAJZ5v0imYcL3M80S1snJAqXQ=GsqbChij-6aWx=4L02TKVvrQg@mail.gmail.com> <20200518105649.gcv22l253lsuje7y@mobilestation>
-In-Reply-To: <20200518105649.gcv22l253lsuje7y@mobilestation>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 18 May 2020 13:05:51 +0200
-Message-ID: <CAJZ5v0juP6bsB9TRcned4nTQ=yFEOU5J2M7tt2bokYSYgoPPEg@mail.gmail.com>
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw setting
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3zI5HGtvH1cCa06adBLKkRdZTB7qi9iI++h4rVGXoVQ=;
+        b=q4VYTIu/NtNcUMEoprKYviBcYWPWomWyf1WOxz4iQok0NvEKEFh3ymAmA+FBVdBXrI
+         KXv9x1WZrRWcf2L6aVA6Sd79QsFR2WsaMZdG0J8JqFqg5vmOI9hodrbO1e7xLMdh3OCc
+         rmHE+xfG0q1Sp4Wdga+rD/DX7UYnqQXEs/wmP+Yw424XEDcB1G2F0yqjPOjt9rgi8cW0
+         L29qPxujbm60hLdawPMV0yIlq1E07aqvTKvr4ovj1C9bmqn3lSK5T5ycaQmPA1ZY8tmg
+         6m6/H8Zqv4qCSmlqt61+j6UDWljp3qpk5pRv0iMBLs3/7m9cvasAo4L1KZGJ9fQSLlWt
+         iCYw==
+X-Gm-Message-State: AOAM5318gXvN/3w1qE+3tX82Id4iVdrMLxjML5pd+234/L0ACb/rrv30
+        9RilxlJUDGErAR8jFaQ076s=
+X-Google-Smtp-Source: ABdhPJwsakR+sWqcKZA6S7nkXZrnKWW5pNyRPRmYvzj0mHY2ZT391adIsBf9mDJWpeyUO1sOeAJMOw==
+X-Received: by 2002:a17:902:cb09:: with SMTP id c9mr4315966ply.95.1589800172767;
+        Mon, 18 May 2020 04:09:32 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
+        by smtp.gmail.com with ESMTPSA id a15sm8290630pju.3.2020.05.18.04.09.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 May 2020 04:09:32 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     robh+dt@kernel.org, p.zabel@pengutronix.de,
+        mcoquelin.stm32@gmail.com, broonie@kernel.org,
+        devicetree@vger.kernel.org, alexandre.torgue@st.com,
+        thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
+        daniel@ffwll.ch, mturquette@baylibre.com, sboyd@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH v4 0/8] Enable ili9341 and l3gd20 on stm32f429-disco
+Date:   Mon, 18 May 2020 19:09:17 +0800
+Message-Id: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:56 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> On Mon, May 18, 2020 at 12:51:15PM +0200, Rafael J. Wysocki wrote:
-> > On Mon, May 18, 2020 at 12:46 PM Serge Semin
-> > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >
-> > > On Mon, May 18, 2020 at 12:41:19PM +0200, Rafael J. Wysocki wrote:
-> > > > On Monday, May 18, 2020 12:31:02 PM CEST Serge Semin wrote:
-> > > > > On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
-> > > > > > On 18-05-20, 12:22, Rafael J. Wysocki wrote:
-> > > > > > > On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
-> > > > > > > > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
-> > > > > > > > > That said if you really only want it to return 0 on success, you may as well
-> > > > > > > > > add a ret = 0; statement (with a comment explaining why it is needed) after
-> > > > > > > > > the last break in the loop.
-> > > > > > > >
-> > > > > > > > That can be done as well, but will be a bit less efficient as the loop
-> > > > > > > > will execute once for each policy, and so the statement will run
-> > > > > > > > multiple times. Though it isn't going to add any significant latency
-> > > > > > > > in the code.
-> > > > > > >
-> > > > > > > Right.
-> > > > > > >
-> > > > > > > However, the logic in this entire function looks somewhat less than
-> > > > > > > straightforward to me, because it looks like it should return an
-> > > > > > > error on the first policy without a frequency table (having a frequency
-> > > > > > > table depends on the driver and that is the same for all policies, so it
-> > > > > > > is pointless to iterate any further in that case).
-> > > > > > >
-> > > > > > > Also, the error should not be -EINVAL, because that means "invalid
-> > > > > > > argument" which would be the state value.
-> > > > > > >
-> > > > > > > So I would do something like this:
-> > > > > > >
-> > > > > > > ---
-> > > > > > >  drivers/cpufreq/cpufreq.c |   11 ++++++-----
-> > > > > > >  1 file changed, 6 insertions(+), 5 deletions(-)
-> > > > > > >
-> > > > > > > Index: linux-pm/drivers/cpufreq/cpufreq.c
-> > > > > > > ===================================================================
-> > > > > > > --- linux-pm.orig/drivers/cpufreq/cpufreq.c
-> > > > > > > +++ linux-pm/drivers/cpufreq/cpufreq.c
-> > > > > > > @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
-> > > > > > >  static int cpufreq_boost_set_sw(int state)
-> > > > > > >  {
-> > > > > > >         struct cpufreq_policy *policy;
-> > > > > > > -       int ret = -EINVAL;
-> > > > > > >
-> > > > > > >         for_each_active_policy(policy) {
-> > > > > > > +               int ret;
-> > > > > > > +
-> > > > > > >                 if (!policy->freq_table)
-> > > > > > > -                       continue;
-> > > > > > > +                       return -ENXIO;
-> > > > > > >
-> > > > > > >                 ret = cpufreq_frequency_table_cpuinfo(policy,
-> > > > > > >                                                       policy->freq_table);
-> > > > > > >                 if (ret) {
-> > > > > > >                         pr_err("%s: Policy frequency update failed\n",
-> > > > > > >                                __func__);
-> > > > > > > -                       break;
-> > > > > > > +                       return ret;
-> > > > > > >                 }
-> > > > > > >
-> > > > > > >                 ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-> > > > > > >                 if (ret < 0)
-> > > > > > > -                       break;
-> > > > > > > +                       return ret;
-> > > > > > >         }
-> > > > > > >
-> > > > > > > -       return ret;
-> > > > > > > +       return 0;
-> > > > > > >  }
-> > > > > > >
-> > > > > > >  int cpufreq_boost_trigger_state(int state)
-> > > > > >
-> > > > > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > > >
-> > > > > Ok. Thanks for the comments. Shall I resend the patch with update Rafael
-> > > > > suggests or you'll merge the Rafael's fix in yourself?
-> > > >
-> > > > I'll apply the fix directly, thanks!
-> > >
-> > > Great. Is it going to be available in the repo:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/
-> > > ?
-> >
-> > Yes, it is.  Please see the bleeding-edge branch in there, thanks!
->
-> No credits with at least Reported-by tag? That's sad.(
+From: dillon min <dillon.minfei@gmail.com>
 
-OK, done now, but you are not the only reported of it, so I've added
-the other reporter too.
+According to alexandre torgue's suggestion, combine ili9341 and
+l3gd20's modification on stm32f429-disco board to one patchset.
 
-Thanks!
+Changes:
+
+ili9341:
+
+V4:
+1 update ili9341 panel driver according to Linus's suggestion
+2 drop V1's No.5 patch, sumbit new changes for clk-stm32f4
+3 merge l3gd20's change to this patchset
+
+V3:
+1 merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
+  to support serial spi & parallel rgb interface in one driver.
+2 update ilitek,ili9341.yaml dts binding documentation.
+3 update stm32f429-disco dts binding
+
+V2:
+1 verify ilitek,ili9341.yaml with make O=../linux-stm32
+   dt_binding_check
+   DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+   ilitek,ili9341.yaml
+
+V1:
+1 add ili9341 drm panel driver
+2 add ltdc, spi5 controller for stm32f429-disco
+3 add ltdc, spi5 pin map for stm32f429-disco
+4 add docs about ili9341
+5 fix ltdc driver loading hang in clk set rate bug
+
+
+L3gd20:
+
+V3:
+1, merge stm32f429-disco dtbs binding with ili9341 part
+
+V2:
+1, insert blank line at stm32f420-disco.dts line 143
+2, add more description for l3gd20 in commit message
+
+V1:
+1, enable spi5 controller on stm32f429-disco (dts)
+2, add spi5 pinmap for stm32f429-disco  (dts)
+3, add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+
+dillon min (8):
+  ARM: dts: stm32: Add dma config for spi5
+  ARM: dts: stm32: enable l3gd20 on stm32429-disco board
+  spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+  ARM: dts: stm32: Add pin map for ltdc on stm32f429-disco board
+  dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+  ARM: dts: stm32: enable ltdc binding with ili9341 on stm32429-disco
+    board
+  clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate.
+  drm/panel: Add ilitek ili9341 panel driver
+
+ .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
+ drivers/clk/clk-stm32f4.c                          |    7 +-
+ drivers/gpu/drm/panel/Kconfig                      |   12 +
+ drivers/gpu/drm/panel/Makefile                     |    1 +
+ drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1301 ++++++++++++++++++++
+ drivers/spi/spi-stm32.c                            |   30 +-
+ 9 files changed, 1530 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+
+-- 
+2.7.4
+
