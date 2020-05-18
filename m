@@ -2,196 +2,143 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF388C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6C0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9232F2081A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589837280;
-	bh=q5dlVXtQD3lurrxdAyfl30JujBbLvlebr+YdpIWmh5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GEs8/cEKQis7vRCOrXxuHoTlv3PmthKk/k59vaaaJOi83NqOIiGL4WChFTDUmTgpE
-	 5QdRm9BwqpWCH8nabdAyEQm9MTiqLDacTpcZz1fjycIo7MBzb8UEFpaFiG0Q4CKvg/
-	 dPsCN3VcyuFkbutKknNmrpaO1ln0lUPKE3nM2Zu8=
+	by mail.kernel.org (Postfix) with ESMTP id 62BD5205CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgERV2A (ORCPT
+        id S1727030AbgERVkE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 17:28:00 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42286 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERV17 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 17:27:59 -0400
-Received: by mail-io1-f66.google.com with SMTP id e18so12310744iog.9
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 14:27:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7FQwau3PCqaM/9zZ31O1gXyxqGZu0XGLSVBElgDs3LI=;
-        b=rSmYGz4mhQk8U0chfgWOBKMa8doH/Py3zPduTpdfDmcS/evDBCI6HjtTa3Yez8yx0l
-         +flU/jYosw+VnDZxtiZVw/jH7B4Wid8kGFHSQ1VFeCvyOu05TyWQhrXdkk1GFBXUji7o
-         Hqy3hglwnQZFxVaussZi9W8PWbmHFp4+rLqDwPob9+3CzecQNjLzhC/v23R1aya4WTx+
-         OnD6FjB9ADH/8k7xVK240FkyKpaX5Qo4H5/T0HeQGFx6fVlTlP44prQgeJpErsl7Xh7k
-         TfOqxJATnEf99MWq0An/3pQ2EY6WIhyW37bNHmuQuSd2ZfmgGjdvoH3BTQZZIjPIDQy0
-         iGtQ==
-X-Gm-Message-State: AOAM533E/cYBohntUNGIsoHqbFXykqpyeQmycJP+qlmVVynMok5LwcHI
-        DbrZBciskn8GQQIXJl53I4plaRQ=
-X-Google-Smtp-Source: ABdhPJyP1G2iCjtRxtRLACkM46A2uYvHx8oxBdf8Gy6hJ8mmM56dfpTSJL0ube0FqvJR5rLwIzDkrg==
-X-Received: by 2002:a05:6602:1616:: with SMTP id x22mr15107056iow.70.1589837278706;
-        Mon, 18 May 2020 14:27:58 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c7sm5257708ilf.36.2020.05.18.14.27.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 14:27:58 -0700 (PDT)
-Received: (nullmailer pid 9009 invoked by uid 1000);
-        Mon, 18 May 2020 21:27:57 -0000
-Date:   Mon, 18 May 2020 15:27:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Ricardo =?iso-8859-1?Q?Ca=F1uelo?= 
-        <ricardo.canuelo@collabora.com>, kernel@collabora.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        geert+renesas@glider.be, xuwei5@hisilicon.com
-Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt:
- convert to yaml
-Message-ID: <20200518212757.GA15067@bogus>
-References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
- <20200511110611.3142-7-ricardo.canuelo@collabora.com>
- <20200514015412.GF7425@pendragon.ideasonboard.com>
- <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360>
- <20200514152239.GG5955@pendragon.ideasonboard.com>
+        Mon, 18 May 2020 17:40:04 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:50314 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgERVkE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 17:40:04 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5B9488030875;
+        Mon, 18 May 2020 21:40:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KgkFFm6deoXq; Tue, 19 May 2020 00:39:56 +0300 (MSK)
+Date:   Tue, 19 May 2020 00:39:55 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/12] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C
+ controller
+Message-ID: <20200518213955.wzw26wnvcr3qpnok@mobilestation>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-4-Sergey.Semin@baikalelectronics.ru>
+ <20200518203319.GA14243@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200514152239.GG5955@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200518203319.GA14243@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:22:39PM +0300, Laurent Pinchart wrote:
-> Hi Ricardo,
+On Mon, May 18, 2020 at 02:33:19PM -0600, Rob Herring wrote:
+> On Sun, May 10, 2020 at 12:50:09PM +0300, Serge Semin wrote:
+> > Add the "baikal,bt1-sys-i2c" compatible string to the DW I2C binding and
+> > make sure the reg property isn't required in this case because the
+> > controller is embedded into the Baikal-T1 System Controller. The rest of
+> > the DW APB I2C properties are compatible and can be freely used to describe
+> > the Baikal-T1 I2C controller dts-node.
 > 
-> On Thu, May 14, 2020 at 11:36:17AM +0200, Ricardo Cañuelo wrote:
-> > Hi Laurent, thanks for the thorough review. Some comments below:
-> > 
-> > On jue 14-05-2020 04:54:12, Laurent Pinchart wrote:
-> > > > +description: |
-> > > > +  The ADV7511, ADV7511W and ADV7513 are HDMI audio and video
-> > > > +  transmitters compatible with HDMI 1.4 and DVI 1.0. They support color
-> > > > +  space conversion, S/PDIF, CEC and HDCP. They support RGB input
-> > > > +  interface.
-> > > 
-> > > I would write the last sentence as "The transmitter input is parallel
-> > > RGB or YUV data." as YUV is also supported.
-> > 
-> > Ok.
-> > 
-> > > > +  adi,input-colorspace:
-> > > > +    description: Input color space.
-> > > > +    allOf:
-> > > > +      - $ref: /schemas/types.yaml#/definitions/string
-> > > > +      - enum: [ rgb, yuv422, yuv444 ]
-> > > 
-> > > Isn't string implied ? Can't you write
-> > > 
-> > >   adi,input-colorspace:
-> > >     description: Input color space.
-> > >     enum: [ rgb, yuv422, yuv444 ]
-> > 
-> > example-schema.yaml says that
-> > 
-> >     Vendor specific properties have slightly different schema
-> >     requirements than common properties. They must have at least a type
-> >     definition and 'description'.
-> > 
-> > However, dt_binding_check doesn't seem to enforce this rule for string
-> > properties, and I saw a couple of vendor-specific string properties in
-> > other bindings that don't define the type either, so I'm going to follow
-> > your suggestion but only for string properties, the rest need a type
-> > definition.
-> 
-> I'll defer to Rob to tell the law here :-)
+> Is there not a sub-range of the system controller with the I2C 
+> registers? I'd assume there is, so you can still have 'reg' even if 
+> Linux doesn't use it (currently).
 
-Yes, if you have a string with defined values, then a type isn't needed. 
-That only applies to strings as numeric values need a size.
+Yes, there is a range. It's just three access registers. Is it wrong to make the
+reg property being optional in this case since it can be accessed over syscon
+regmap? Do you suggest to get back the reg property being required for our
+device?
+
+-Sergey
 
 > 
-> > I noticed I can remove the "allOf" keywords from these too.
-
-Yes, that's a recent change. Both forms still work.
-
-
-> > > > +  adi,embedded-sync:
-> > > > +    description:
-> > > > +      The input uses synchronization signals embedded in the data
-> > > > +      stream (similar to BT.656). Defaults to 0 (separate H/V
-> > > > +      synchronization signals).
-> > > > +    allOf:
-> > > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +      - enum: [ 0, 1 ]
-> > > > +      - default: 0
-> > > 
-> > > This be a boolean property (it is read as a bool by the driver, the
-> > > property being absent means false, the property being present means
-> > > true).
 > > 
-> > You're completely right.
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: linux-mips@vger.kernel.org
 > > 
-> > > > +  ports:
-> > > > +    description:
-> > > > +      The ADV7511(W)/13 has two video ports and one audio port. This node
-> > > > +      models their connections as documented in
-> > > > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > > +      Documentation/devicetree/bindings/graph.txt
-> > > > +    type: object
-> > > > +    properties:
-> > > > +      port@0:
-> > > > +        description: Video port for the RGB, YUV or DSI input.
-> > > 
-> > > s/RGB, YUV or DSI/RGB or YUV/
+> > ---
 > > 
-> > Ok.
+> > Rob, I had to remove your acked-by tag because of the changes introduced
+> > in v2 of the patch.
 > > 
-> > > > +if:
-> > > > +  not:
-> > > > +    properties:
-> > > > +      adi,input-colorspace:
-> > > > +        contains:
-> > > > +          enum: [ rgb, yuv444 ]
-> > > > +      adi,input-clock:
-> > > > +        contains:
-> > > > +          const: 1x
-> > > 
-> > > As both properties take a single value, I think you can omit
-> > > "contains:".
+> > Changelog v2:
+> > - Make the reg property being optional if it's Baikal-T1 System I2C DT
+> >   node.
+> > ---
+> >  .../devicetree/bindings/i2c/snps,designware-i2c.yaml | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
 > > 
-> > I think it's required here, removing it makes the test fail.
-> 
-> I thought the following could work:
-> 
-> if:
->   not:
->     properties:
->       adi,input-colorspace:
->         enum: [ rgb, yuv444 ]
->       adi,input-clock:
->         items:
->           - const: 1x
-> 
-> But no big deal, contains: is ok too.
-
-In theory the above should work. However, this is probably a case where 
-we don't fix-up the properties. If you look at the DT yaml encoding, 
-everything is an array (as dtc doesn't know). For schemas, the tooling 
-expands scalars to arrays.
-
-Rob
+> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > index 8d4e5fccbd1c..579964098eb9 100644
+> > --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > @@ -21,6 +21,15 @@ allOf:
+> >        properties:
+> >          reg:
+> >            maxItems: 1
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          not:
+> > +            contains:
+> > +              const: baikal,bt1-sys-i2c
+> > +    then:
+> > +      required:
+> > +        - reg
+> >  
+> >  properties:
+> >    compatible:
+> > @@ -31,6 +40,8 @@ properties:
+> >          items:
+> >            - const: mscc,ocelot-i2c
+> >            - const: snps,designware-i2c
+> > +      - description: Baikal-T1 SoC System I2C controller
+> > +        const: baikal,bt1-sys-i2c
+> >  
+> >    reg:
+> >      minItems: 1
+> > @@ -98,7 +109,6 @@ unevaluatedProperties: false
+> >  
+> >  required:
+> >    - compatible
+> > -  - reg
+> >    - "#address-cells"
+> >    - "#size-cells"
+> >    - interrupts
+> > -- 
+> > 2.25.1
+> > 
