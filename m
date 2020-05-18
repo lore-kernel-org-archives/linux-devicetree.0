@@ -2,110 +2,108 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DD0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E53C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78FCA2065F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906342065F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ddgt4qxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgERL5d (ORCPT
+        id S1726585AbgERMDU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 07:57:33 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:48601 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgERL5c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:57:32 -0400
-Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M1q4e-1jcqFm3dlY-002J7X; Mon, 18 May 2020 13:57:31 +0200
-Received: by mail-qv1-f44.google.com with SMTP id r3so4535612qve.1;
-        Mon, 18 May 2020 04:57:30 -0700 (PDT)
-X-Gm-Message-State: AOAM531FwLcGxSgowINhwEXZGqrWN32MzxhrMcq20nhgg8uxpL1KgD1J
-        tJmhrt3znUP7YWVKGntf1Y4yaCOdgkRq8Kc5cK0=
-X-Google-Smtp-Source: ABdhPJyUnKr4SHUFnJe9QsFvJhBBCNQyLNfjUzwAzO8o0fxqdsPeqZBhu6yQh15LV+E3iObLKOIbnTvte/PqUNqOYLg=
-X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr14567610qvz.210.1589803049670;
- Mon, 18 May 2020 04:57:29 -0700 (PDT)
+        Mon, 18 May 2020 08:03:20 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44846 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726557AbgERMDT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 08:03:19 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IC2rku010157;
+        Mon, 18 May 2020 14:02:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=tAbl2axdddZlaaXG2CNspEZUt31JN+F0gHWw9tO/rHM=;
+ b=ddgt4qxdT4oWVbfbhnLDLAFXbH9hijDV73qOYcZaPn45NL3bumpy8wLhX3mQ5Ty8Rnwe
+ Pw/wCLNK1hvokjk4gya24QRhEdq3qzzhUHo2amAWd+SCgiwsuoJWVOdlG/QND/4+sq3N
+ 5jLqzkCN4R7NsLwsozz2ISXgisXhvDnd/YfoWobYpTTwHGLE44CKN6D575ojATSSd8yh
+ bAPNfjZdCpCRfQQrS/5nnimfEQtpfn25tR48a6FX/1nC32MjP6wiP6KgKjuygx7erOLx
+ GvKmSrG19BHK8PrE2Aa0sR5sntD9/GrYvVY5vQspxGiw/RTUtF0Y+bIuCsta2yWpbh0n zg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3125n3bm24-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 14:02:54 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E74D810002A;
+        Mon, 18 May 2020 14:02:47 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag4node3.st.com [10.75.127.12])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CAC522BF9CF;
+        Mon, 18 May 2020 14:02:47 +0200 (CEST)
+Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG4NODE3.st.com
+ (10.75.127.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 14:02:47 +0200
+Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
+ SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
+ 15.00.1473.003; Mon, 18 May 2020 14:02:47 +0200
+From:   Christophe ROULLIER <christophe.roullier@st.com>
+To:     "robh@kernel.org" <robh@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "joabreu@synopsys.com" <joabreu@synopsys.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Peppe CAVALLARO <peppe.cavallaro@st.com>
+CC:     "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+Subject: Re: [PATCH v3 0/1] net: ethernet: stmmac: simplify phy modes
+ management for stm32
+Thread-Topic: [PATCH v3 0/1] net: ethernet: stmmac: simplify phy modes
+ management for stm32
+Thread-Index: AQHWHHq3aaIPOA/wFEi5Ev+u/GvPiaitvfmA
+Date:   Mon, 18 May 2020 12:02:47 +0000
+Message-ID: <3aaadf75-5399-4961-248a-c77c719155d4@st.com>
+References: <20200427100038.19252-1-christophe.roullier@st.com>
+In-Reply-To: <20200427100038.19252-1-christophe.roullier@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CD3A060E2D09364A9ED8F23EAD3F016B@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <202005152142.AWvx4xc5%lkp@intel.com> <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
- <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
- <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com> <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
-In-Reply-To: <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 18 May 2020 13:57:13 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
-Message-ID: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh R <vigneshr@ti.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        masonccyang@mxic.com.tw
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:aZXMNFxuDqcW7d7dZw64Yqx3tjdzNwT7mq238HcffP43zUt83W1
- d/0DZtOgO3kcF/I9ZugCeXHx9Mr+BnLdHmnagJOE4hHuVTBMxw7e0TSSvRrjGKYCm2/sXce
- BWyeM/sbmKx+rfCKtUZ8GMyPW9MmohWrrTVOD1DrWfg7lukuBLHzN2KJ68jsMVKs894lauB
- 7tl13swvaq4lZnT4y6ChA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:37csoL6+g6A=:yBbzYVNceE2ZVVkrL0BrYB
- DnIBwi3YLiDby6nRphphY39aXjhnijUSCVtVwrikSx+oy+IN4KbGmhhpNVnpSv73J811pybfS
- tPKgD7XMNzUdVKDe6VmRk5Atl/OcpRnzwvJFxSzA640V2uAf9wrUYUG7H36a1AUL9+Z/d6Er0
- OU2G+wxpLzRXhk2ow0HTg6A2QgNFisrf4+12O3pQb/WsN8y0CQMoJpIciel4TRLbyVQuZwRGW
- PU4v5qZqlSQQOQmf3zfV7vh8id76S22HccCLNWCD2GmHZgV3ew7XYbM80dvdKzgr3lXJ/mx6B
- JZ4wbO1DnjE2BzBWqee+/LMSmtOvhWG1izRAJvr55b5/peh1dCDnLBwE6bt4Ra3S7e/ccI5yE
- P2q1Tn8vnHI3zQbKCYhNAhdzMvJKUEN8mvh7bqTdr7rLf529xjr9YUmqU858SFRTavR4LhRrv
- 6K4RndzgkDhIXs+as3TWsEKNq34C+4Qrbxlyoz0LW1yNJIvrDr0HVjwE3M5cL89hi3zMBRedP
- 6gh5M3hOYc+jMPg8w4sEJBXSzwSe1guj1yJW0+TwxdppWakyLf0YPaEZbLAPf4Njv1r21cfpE
- ltaxHeFvKLnKb+bM1K108GXsOHF7E8kLHuRlMtZsC0mkRRYejnxGFvNRrX2SNaG5oU09VqXUR
- ifylmLXr9ag9PJBUSmi0fXQLiz17L3QcjoA9bcf9GeUuoZlRMQIYJe/md+VAV2xukfUiRTXqj
- tdBkRNfpwyzWwoeoiU6fOVWK49CQ47GtLBhBSwHqso7BPvsbZDb8vg2lVQdm5qmED9A+QR/Yn
- zfcfylmN7M7OJKDTQNwk1zHUQDbGM3C8SpnGKOSYfyRl+ygoYE=
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_05:2020-05-15,2020-05-18 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 1:43 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, May 18, 2020 at 2:39 PM Ramuthevar, Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> > On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
-> > > On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > >> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
->
-> > > iowrite_be32() is the correct way to store word into a big-endian mmio register,
-> > > if that is the intention here.
-> > Thank you for suggestions to use iowrite32be(), it suits exactly.
->
-> Can you before doing this comment what is the real intention here?
->
-> And note, if you are going to use iowrite*() / ioread*() in one place,
-> you will probably need to replace all of the read*() / write*() to
-> respective io* API.
-
-The way that ioread/iowrite are defined, they are required to be a superset
-of what readl/writel do and can take __iomem pointers from either
-ioremap() or ioport_map()/pci_iomap() style mappings, while readl/writel
-are only required to work with ioremap().
-
-There is no technical requirement to stick to one set or the other for
-ioremap(), but the overhead of ioread/iowrite is also small enough
-that it generally does not hurt.
-
-       Arnd
+SGksDQoNCkp1c3QgYSAiZ2VudGxlbWFuIHBpbmciDQoNClJlZ2FyZHMsDQoNCkNocmlzdG9waGUu
+DQoNCk9uIDI3LzA0LzIwMjAgMTI6MDAsIENocmlzdG9waGUgUm91bGxpZXIgd3JvdGU6DQo+IE5v
+IG5ldyBmZWF0dXJlLCBqdXN0IHRvIHNpbXBsaWZ5IHN0bTMyIHBhcnQgdG8gYmUgZWFzaWVyIHRv
+IHVzZS4NCj4gQWRkIGJ5IGRlZmF1bHQgYWxsIEV0aGVybmV0IGNsb2NrcyBpbiBEVCwgYW5kIGFj
+dGl2YXRlIG9yIG5vdCBpbiBmdW5jdGlvbg0KPiBvZiBwaHkgbW9kZSwgY2xvY2sgZnJlcXVlbmN5
+LCBpZiBwcm9wZXJ0eSAic3QsZXh0LXBoeWNsayIgaXMgc2V0IG9yIG5vdC4NCj4gS2VlcCBiYWNr
+d2FyZCBjb21wYXRpYmlsaXR5DQo+DQo+IHZlcnNpb24gMzoNCj4gQWRkIGFja2VkIGZyb20gQWxl
+eGFuZHJlIFRvcmd1ZQ0KPiBSZWJhc2VkIG9uIHRvcCBvZiB2NS43LXJjMg0KPg0KPiBDaHJpc3Rv
+cGhlIFJvdWxsaWVyICgxKToNCj4gICAgbmV0OiBldGhlcm5ldDogc3RtbWFjOiBzaW1wbGlmeSBw
+aHkgbW9kZXMgbWFuYWdlbWVudCBmb3Igc3RtMzINCj4NCj4gICAuLi4vbmV0L2V0aGVybmV0L3N0
+bWljcm8vc3RtbWFjL2R3bWFjLXN0bTMyLmMgfCA3NCArKysrKysrKysrKy0tLS0tLS0tDQo+ICAg
+MSBmaWxlIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KPg==
