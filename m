@@ -2,112 +2,119 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA30C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640BDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 566FE2070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5A0207D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:11:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NfE56AHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgERHFF (ORCPT
+        id S1726676AbgERHLU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 03:05:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35969 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgERHFF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 03:05:05 -0400
-Received: by mail-oi1-f193.google.com with SMTP id x23so1575857oic.3;
-        Mon, 18 May 2020 00:05:03 -0700 (PDT)
+        Mon, 18 May 2020 03:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgERHLU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 03:11:20 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60BEC05BD09
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 00:11:19 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id o14so8656238ljp.4
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 00:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vabidfbMFc96pp/HPLlR3jZG3FkUzmqg2LVXthmSJ2M=;
+        b=NfE56AHSj2+vxlz/6yUuJTa3t1IV7WenHpdNYEo7f95qJmJJ7+A+i4PfeTiCIrPiWQ
+         uYSbSUg13aS4vfJaeyo4jtE6ZbrQ6PhWV2nsbkr+ogLPQ30ZHA1EqWD18NJP4hIn6G4P
+         RwcbxQBrPzrrKZXVShOpZv+GAEPFygjSUkP+dLcRxv3Z1CxpQsJhhxVSr+jjv/o4AlLh
+         wsC0H7Rt9LcPnL733Y458Bq+7fnwRXuqfAGhr/q0FVs1dT5VwHflTGdw7X1nGTXtt2Wz
+         7rvUt/oAzPVBSBYkjjaUrZqOR4LyEYN+kZXN7YN1C1gpvVgr4O2aFpkfXBlHUDzpyk8T
+         KNcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mwst2oJ9ZiHpuFTk/EHEIXQxKyuYO4XvyCKHwPLuFvQ=;
-        b=F6Twt1+lKEgrMSMlZD6M2wSFt3wcAAAuYgqpLW2HXf6a7Hw7zBHxR6NaalQhUvdpVC
-         7ntTCGCL4vCf/PKK1SKnaF+jRKwf6W/OxaR7SzFbuAeJJ1K6PSOYIMjydcs03sVbOjmC
-         upzQWs10aDwCrf9TXXbozibdpyXgqhYyXT5/HURKItsUnFO+P46IE63gBPS3Hb9q+qwc
-         syTPYcUjulSZ/ti8vEMVW+r4vATQ+lpPAv1gQc22fhCiDSoyIqXZo3UIFYLZZHLjRLTB
-         mFmXvO0FGyNFOgAcZuZTX3QmS4BE2H0Dgxwg8ulXjz7JE0X7asqHeWIjv4byAqd1+EUU
-         Oatw==
-X-Gm-Message-State: AOAM531ewA8WpCiIVhcsIFahWcLgposEcAI6QMQ4Z6iPOlRBh4uLeP8b
-        wp1w7SetSEGEk7QIJv6KfGpTFJpKVKQR5UA+rbY=
-X-Google-Smtp-Source: ABdhPJy0eVnNyTzrW2/omSLVxGe8kfaMI2pqw3I/+FsC+Cu9/M01gEwxja6I4ke0ixSRPXiGHWR5yNXw9vPFyMYbXzQ=
-X-Received: by 2002:aca:895:: with SMTP id 143mr9591469oii.153.1589785503554;
- Mon, 18 May 2020 00:05:03 -0700 (PDT)
+        bh=vabidfbMFc96pp/HPLlR3jZG3FkUzmqg2LVXthmSJ2M=;
+        b=lbPmqq56JFp43o/G4MVxL2bBFiMLgPd/w+MkcN2BKZcDO36xH8aB9O0pJ7MAfzBveO
+         a/NUelNihbJYPRVHZ22uAM4sPHEcpXpSoDC1RzH8Klz2qt/iPB30QkgQR4VPceY+8ft6
+         Nrgq0Qv0goDAMRIEIVB2mdCgMAvYwOrQNmgC0fK64UvhAtZcqJ6kDels9Kw+0J3EOalw
+         jA0W5QcrzHqTfXPn1JWwQ0okjruxBCtpugdFjxiJG+B1M49Y12PddOEAuQc9ujhApM1o
+         QBuip7y9ei/28XRIuTsVqSwiWx40hPO3ucM45nsfnEmy9ODN/GBoCFgG50H7S0tH4wqC
+         OOsg==
+X-Gm-Message-State: AOAM532oXfxsoW6vz1eqsplAEjX2MH86uYYmmpVUWMXcJ1MYBSWqOcUA
+        kR1j92VWWW+MpfMWj0NVd0YjQSyqVPN8yg9twVEx1A==
+X-Google-Smtp-Source: ABdhPJw9hkh1xdtF0LAYyj2TI1WiZMc9QwdD8Q3PjEibbo2bM2I8adeqiZA3vX+G4exFdZvSrqFJyEySfS8r7g40xpc=
+X-Received: by 2002:a05:651c:154:: with SMTP id c20mr8865566ljd.99.1589785878126;
+ Mon, 18 May 2020 00:11:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200420170204.24541-1-mani@kernel.org> <20200420170204.24541-2-mani@kernel.org>
-In-Reply-To: <20200420170204.24541-2-mani@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 May 2020 09:04:52 +0200
-Message-ID: <CAMuHMdVGem_2BGQK4dqZQb3sOd0LZk+RS_z4SvSRcNECEJHdwA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: serial: Document CTS/RTS gpios in
- STM32 UART
-To:     mani@kernel.org
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
+References: <20200508165821.GA14555@x1>
+In-Reply-To: <20200508165821.GA14555@x1>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 May 2020 09:11:07 +0200
+Message-ID: <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mani,
+On Fri, May 8, 2020 at 6:57 PM Drew Fustini <drew@beagleboard.org> wrote:
 
-On Mon, Apr 20, 2020 at 7:02 PM <mani@kernel.org> wrote:
-> From: Manivannan Sadhasivam <mani@kernel.org>
+> Add gpio-line-names properties to the gpio controller nodes.
+> BeagleBone boards have P8 and P9 headers [0] which expose many the
+> AM3358 SoC balls to stacking expansion boards called "capes", or to
+> other external connections like jumper wires to a breadboard.
 >
-> Document the use of CTS/RTS gpios for flow control in STM32 UART
-> controller. These properties can be used instead of 'st,hw-flow-ctrl'
-> for making use of any gpio pins for flow control instead of dedicated
-> pins. It should be noted that both CTS/RTS and 'st,hw-flow-ctrl'
-> properties cannot co-exist in a design.
+> Many of the P8/P9 header pins can muxed to a gpio line.  The
+> gpio-line-names describe which P8/P9 pin that line goes to and the
+> default mux for that P8/P9 pin.  Some lines are not routed to the
+> P8/P9 headers, but instead are dedicated to some functionality such as
+> status LEDs.  The line name will indicate this.  Some line names are
+> left empty as the corresponding AM3358 balls are not connected.
 >
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-
-> --- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-
-> @@ -55,6 +61,14 @@ properties:
->    linux,rs485-enabled-at-boot-time: true
->    rs485-rx-during-tx: true
+> The goal is to make it easier for a user viewing the output of gpioinfo
+> to determine which P8/P9 pin is connected to a line.  The output of
+> gpioinfo on a BeagleBone Black will now look like this:
 >
-> +if:
-> +  required:
-> +    - st,hw-flow-ctrl
+> gpiochip0 - 32 lines:
+>         line   0:   "ethernet"       unused   input  active-high
+>         line   1:   "ethernet"       unused   input  active-high
 
-Perhaps "st,hw-flow-ctrl" should be deprecated, in favor of the standard
-"uart-has-rtscts" property?
-Of course the driver needs to gain support for the latter first.
+Why are the ethernet lines not tagged with respective signal name
+when right below the SPI lines are explicitly tagged with
+sclk, cs0 etc?
 
-> +then:
-> +  properties:
-> +    cts-gpios: false
-> +    rts-gpios: false
-> +
->  required:
->    - compatible
->    - reg
+Ethernet is usually RGMII and has signal names like
+tx_clk, tx_d0, tx_en etc.
 
-Gr{oetje,eeting}s,
+Also some lines seem to be tagged with the pin number
+like P9_22, P2_21 below, it seems a bit inconsistent
+to have much information on some pins and very sketchy
+information on some.
 
-                        Geert
+>         line  18:        "usb"       unused   input  active-high
+>         line  19:       "hdmi"       unused   input  active-high
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Similar comments for these.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
