@@ -2,117 +2,89 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9537C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5551C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5D2920671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:11:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yezs7gGm"
+	by mail.kernel.org (Postfix) with ESMTP id ACFB420715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825541;
+	bh=NQw4ZObIGoQdINO2P1VDbgPOV1A0PLlO2tt8UT5hEUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KVQq+nan2AgpYagBopaXJw9G33Ts40bx+Ui0c6hhJWNMFQOwuiRD132FWxXGqUlQD
+	 PISVzqCCMtrEzsCa79cJYmHGegWuRie02PP3LBEjfMdRX40Ww258Idg9xaOwcLwLw5
+	 EqC9tY85TY5SgqbeuUSIVoZ7lsRvkZ20fgbSP1TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgERSLV (ORCPT
+        id S1732691AbgERSMU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 14:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732843AbgERSEt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:04:49 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D23C05BD09
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:04:49 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q24so192627pjd.1
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nGHpGwwWCzCJVc7bPHElzmAcZWD6x2usMfgTF/Hyv34=;
-        b=yezs7gGmWNEMQgES7TZ+xcCNcGDm2+5zFxorxpSP+ZD8d645MzsEgn/+ELaoNKXIFF
-         jwt25o2C1yM1vnTI6Hq0qT4rrZeh8aZYdo99QBYcXaJAED8NNz97cHQPfyanqByvOh8p
-         q2P6P9PgOakAS2y/R7ywxQeQLTluzvw4DRj7LTbweDTceoXUwix5YjtjzbpIgwZhWacL
-         u0kJHWnongsmlnxe9x81xW8PMi4x3cfmmaFf76hlMYAh3p7i/SevDZdLWIdwtV+XIvZo
-         HsJG3QBKDPJKTLwyqp0nSxh4qC5QRhrQ6MTB5zCV25Y/P42K/Yk+kupocFQObxdpjLwh
-         mzsw==
+        Mon, 18 May 2020 14:12:20 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:41987 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728848AbgERSMU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:12:20 -0400
+Received: by mail-il1-f195.google.com with SMTP id 18so1874571iln.9
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:12:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nGHpGwwWCzCJVc7bPHElzmAcZWD6x2usMfgTF/Hyv34=;
-        b=TQ4qcacdDrdGEfTnMoU8dF3T9FGUNvz4P3ajzZ2jAX+OUosyWOPoZlrVfqDLBYZ6xj
-         rDlz4uB0L22KxoonzfNu4V71pGtTAckCWTkCGQT0H2EmOjbWRlxzNkTR867ls6osUgKm
-         7sFPNTqdfejEWHzfDDsG5P4PNGcj0rZ07knADQXWMpjQ9A029p4Q1y0iYE1OSFr7omnm
-         b15ECeAghKw0Yg/W4Ks5acMp+PEHZxjcd8GAulTr14DpT+n0ZL3gh9Ar3FtwEEkjTjGH
-         wVRr0b3qSGx6Sc9CVMzDy4fvtXBrYDFhi84RYHXPSzD86Nucb+mX3U7d33BRMNs6Z4da
-         p6Tw==
-X-Gm-Message-State: AOAM531kid+F+HIgTLibwyd5chTwg5iQSChwuASDnWnC5l9zusY+KKPr
-        J21iiN2I4iPFaBaTX0/70e5PDQ==
-X-Google-Smtp-Source: ABdhPJy0os+7IoFCFKg7k+EZgJxjNXzkxcklwepEVVeiJOSzaLYyRQZOx0XwQFhan0Ma7PyXS/9uNQ==
-X-Received: by 2002:a17:90a:bb81:: with SMTP id v1mr605595pjr.168.1589825088878;
-        Mon, 18 May 2020 11:04:48 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c24sm172998pjs.51.2020.05.18.11.04.47
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wza7y0iWSmQunc9aAsvn/ABnmr/MQ8TpkPd34EycxTs=;
+        b=aZ9H9hjtgyELGaNfoeMq0SQlt2/uKdNrAMfnQ/ZsgABYIHejA9bSCudKaEcQygzP0t
+         wTzNfT9BGeVmsnf7NqYxEdVD5eznTe08RyMinkLoHYmatSulTMlJsFa6Zgh5kv0ywtgw
+         qEx53NjmY65rTekRh783PzGPzn8SEbGvvJ6Bd9eyLL/mepymAd6OGfeNBGYbZG0y3k/k
+         CRFt13ndqAu/6aEbgE+rPi4U+T0JbVCQZDAbc60Fx5j+e5bOzjfztrFfnAGeryzlSHoA
+         lJbiwcJkOtCcYYHVY5i9Dl5FuKbtsCuNCCQs/h4XoNetbAuMT9DmpKSvf6TOoipbyy/k
+         mCUQ==
+X-Gm-Message-State: AOAM532otKtBlZU3i6SICcFRds6TisMi8tuTB+z8g2mnSy+x+UuV20Kt
+        zWJ9oMBX2t3LKkMktRFhuw==
+X-Google-Smtp-Source: ABdhPJxRuz2c7uilqkp6Yz7wsrwWTC5DyQruXesuSs2L9u16dXm49HJmPCUrA+N2gnuqLeLFa3yW+w==
+X-Received: by 2002:a92:8cd6:: with SMTP id s83mr18470530ill.133.1589825538604;
+        Mon, 18 May 2020 11:12:18 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p1sm4087313ioh.38.2020.05.18.11.12.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:04:48 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:03:25 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 8/8] arm64: dts: ipq6018: Add a53 pll and apcs clock
-Message-ID: <20200518180325.GB2165@builder.lan>
-References: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
- <1588573224-3038-9-git-send-email-sivaprak@codeaurora.org>
- <20200512202439.GK2165@builder.lan>
- <80039c21-41cf-2ace-939a-ef48fd773aa4@codeaurora.org>
+        Mon, 18 May 2020 11:12:17 -0700 (PDT)
+Received: (nullmailer pid 15457 invoked by uid 1000);
+        Mon, 18 May 2020 18:12:16 -0000
+Date:   Mon, 18 May 2020 12:12:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Naga Sureshkumar Relli <nagasure@xilinx.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-mtd@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 6/8] dt-bindings: mtd: Document ARASAN NAND bindings
+Message-ID: <20200518181216.GA15399@bogus>
+References: <20200508171339.8052-1-miquel.raynal@bootlin.com>
+ <20200508171339.8052-7-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <80039c21-41cf-2ace-939a-ef48fd773aa4@codeaurora.org>
+In-Reply-To: <20200508171339.8052-7-miquel.raynal@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 12 May 20:55 PDT 2020, Sivaprakash Murugesan wrote:
-
-> Hi Bjorn,
+On Fri,  8 May 2020 19:13:37 +0200, Miquel Raynal wrote:
+> Document the Arasan NAND controller bindings.
 > 
-> On 5/13/2020 1:54 AM, Bjorn Andersson wrote:
-> > On Sun 03 May 23:20 PDT 2020, Sivaprakash Murugesan wrote:
-> > 
-> > > add support for apps pll and apcs clock.
-> > > 
-> > > Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> > > ---
-> > >   arch/arm64/boot/dts/qcom/ipq6018.dtsi | 16 +++++++++++++---
-> > >   1 file changed, 13 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> > > index 1aa8d85..af2ceeb 100644
-> > > --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> > > @@ -294,12 +294,22 @@
-> > >   		};
-> > >   		apcs_glb: mailbox@b111000 {
-> > > -			compatible = "qcom,ipq8074-apcs-apps-global";
-> > > -			reg = <0x0b111000 0xc>;
-> > > -
-> > > +			compatible = "qcom,ipq6018-apcs-apps-global";
-> > > +			reg = <0x0b111000 0x1000>;
-> > My documentation states that IPQ8074 indeed has this block at
-> > 0x0b111000, but IPQ6018 it's at 0x6b111000. Can you confirm this is
-> > correct? Same with the pll below.
-> The address 0x6b111000 is how the RPM sees this block. For A53 it is still
-> 0xb111000
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  .../bindings/mtd/arasan,nand-controller.yaml  | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
+> 
 
-Okay, thanks for confirming.
-
-Regards,
-Bjorn
+Reviewed-by: Rob Herring <robh@kernel.org>
