@@ -2,235 +2,175 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B346C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 15:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE36C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 15:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C492207D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 15:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F4D207ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 15:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589815626;
-	bh=bY5C1ZnXcDTSMz5eLcBkEV4unAvnLKEiOPi9t8K4kpg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aedMOUCxKd2RhaYcB/gbCiNJtfsVp6/ZmWGshzs3juJwqSWrJ8ms8B9P+dE0jSKMX
-	 Xlw7u89hj+/1w69fWDWv0gYSZUheV8VOTiFKgPg2+hFf3JKFFymxAKg0WOfLt9gHF/
-	 5B55bnAvCmqYnKGnL8ZWoXVkJldZLyiBBn2U8jCs=
+	s=default; t=1589815861;
+	bh=mOGRIgATXCaoYLlPjTGM7OxQp7Rn0K8nGLavhwaGw/g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mXD9oBjGvX8ijFty/2w7BDhOvETSPVwU12FkrXLT+Irt2L6bc1IngOmQSKL1Oe7GZ
+	 8pGVjaHvL+f5/QZMZGW11lfptVhOOBq2l3dIT1r2CiiYkyoFcHJYo9Zkux3EsOi7Vx
+	 7wqq/zD2jeTZXEhCd5TBZn9CXzJ/60vj79ftaQtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgERP1E (ORCPT
+        id S1727943AbgERPa6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 11:27:04 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38012 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgERP1D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 11:27:03 -0400
-Received: by mail-il1-f194.google.com with SMTP id j2so10230343ilr.5;
-        Mon, 18 May 2020 08:27:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HZk04ZduzeUDiGnoNDxh+Yt+cMSaZzh4xYDIz3+9lbs=;
-        b=WOTz9iDO0UnowOayR/0uOT445UWiGougKnjJSLl/36a91QzYT3COrpnMuoykdAxaRG
-         cpO5qFkRIVeOvGPXNxiE/d9s0HdLpZGjfNn2X2lhoBepEjyqi4ocFOclaVBnrUAGhQpd
-         bhuuSlhBgoCraqsVD1J/l6Snlv3Mo3bVXpv3SxIVun9JKpA7npFakklBUSW89U/kIPQl
-         IaxhGzOVTwSk97lNjwUiQKUeLWo97US27c5nGCa8XBDOaKnKnw8uc97e95r3vlcJfUS9
-         M0KhbK+phrx2CJUkowc8kNwwZIddEcAkV+qbMnH5WbrCv4yUCqzlLOOgl1h7TCqGuzuz
-         4Bkg==
-X-Gm-Message-State: AOAM5329q8GaAPdOWs3dMt6FoRio/D9qHUWSaUI/CJuJM4xIXl1UGqgd
-        oKbQUNOp0Nq4aoDH2i+XVQ==
-X-Google-Smtp-Source: ABdhPJwJ0r+woAN0IPhZDIonASVfIXBFtEtRiQdjcrjSFdjLdu5+X/NuiQSAKb+Zr2O1u6nM8LIznQ==
-X-Received: by 2002:a05:6e02:801:: with SMTP id u1mr17007953ilm.295.1589815621629;
-        Mon, 18 May 2020 08:27:01 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b18sm476861ilh.77.2020.05.18.08.27.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 08:27:01 -0700 (PDT)
-Received: (nullmailer pid 12949 invoked by uid 1000);
-        Mon, 18 May 2020 15:26:59 -0000
-Date:   Mon, 18 May 2020 09:26:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Baikal-T1 System Boot SPI
- Controller binding
-Message-ID: <20200518152659.GA2525@bogus>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-2-Sergey.Semin@baikalelectronics.ru>
+        Mon, 18 May 2020 11:30:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbgERPa6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 11:30:58 -0400
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6A78207ED;
+        Mon, 18 May 2020 15:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589815857;
+        bh=mOGRIgATXCaoYLlPjTGM7OxQp7Rn0K8nGLavhwaGw/g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Lstul7dk5bmGsfDbFN8VWwMAuyU3oipItF/LaWXkWfhnn9aYwUES/qtRsj25CdqbI
+         HTyXMB/Edmia6M4okNtn4PIxXoPD3p3c6188gvqPnuOcYm539BpYxKW5MB++zFE53X
+         OoYgntGRVmBfRWI4aXOAGlzahVx5guUvw/de1fyU=
+Received: by mail-ej1-f51.google.com with SMTP id j21so4465296ejy.1;
+        Mon, 18 May 2020 08:30:56 -0700 (PDT)
+X-Gm-Message-State: AOAM532ilCbtSqznY2kYlBI/EyyO2MVRUjKciZQL31W2C6qDmJnUEun3
+        HamOt8oFx0M7Tss5r2ViqhqCcoIUVDH32F0wgQ==
+X-Google-Smtp-Source: ABdhPJycD95owhAarHRJ4FN02oHjKHI+oZIVAI4p7qeyibBNsTqdoru9JEcc0l+4TBtcPYB7VuZi4PHySGlFopHwhms=
+X-Received: by 2002:a17:906:2503:: with SMTP id i3mr14587876ejb.293.1589815855340;
+ Mon, 18 May 2020 08:30:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508093621.31619-2-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200518113156.25009-1-matthias.bgg@kernel.org>
+In-Reply-To: <20200518113156.25009-1-matthias.bgg@kernel.org>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 18 May 2020 23:30:42 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9-_fy4oGTBLPsXkWJ2ihL7k2hzfwiTorit+YkNi_SeMw@mail.gmail.com>
+Message-ID: <CAAOTY_9-_fy4oGTBLPsXkWJ2ihL7k2hzfwiTorit+YkNi_SeMw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] clk/soc: mediatek: mt8183: Bind clock driver from
+ platform device
+To:     matthias.bgg@kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-clk@vger.kernel.org, Allison Randal <allison@lohutok.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:36:20PM +0300, Serge Semin wrote:
-> Baikal-T1 Boot SPI is a part of the SoC System Controller and is
-> responsible for the system bootup from an external SPI flash. It's a DW
-> APB SSI-based SPI-controller with no interrupts, no DMA, with just one
-> native chip-select available and a single reference clock. Since Baikal-T1
-> SoC is normally booted up from an external SPI flash this SPI controller
-> in most of the cases is supposed to be connected to a single SPI-nor
-> flash. Additionally in order to provide a transparent from CPU point of
-> view initial code execution procedure the system designers created an IP
-> block which physically maps the SPI flash found at CS0 to a memory region.
-> 
-> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: John Garry <john.garry@huawei.com>
-> Cc: Chuanhong Guo <gch981213@gmail.com>
-> Cc: Tomer Maimon <tmaimon77@gmail.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-spi@vger.kernel.org
+Hi, Matthias:
+
+<matthias.bgg@kernel.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=8818=E6=97=A5 =E9=
+=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:32=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: Matthias Brugger <matthias.bgg@gmail.com>
+>
+> The mmsys driver is now the top level entry point for the multimedia
+> system (mmsys), we bind the clock driver by creating a platform device.
+> We also bind the MediaTek DRM driver which is not yet implement and
+> therefor will errror out for now.
+
+You may need to let CONFIG_MTK_MMSYS depends on
+CONFIG_COMMON_CLK_MT8173_MMSYS || CONFIG_COMMON_CLK_MT8183_MMSYS
+
+Regards,
+Chun-Kuang.
+
+>
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 > ---
->  .../bindings/spi/baikal,bt1-sys-ssi.yaml      | 100 ++++++++++++++++++
->  1 file changed, 100 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml b/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
-> new file mode 100644
-> index 000000000000..d9d3257d78f4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
-> @@ -0,0 +1,100 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/baikal,bt1-sys-ssi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+>  drivers/clk/mediatek/clk-mt8183-mm.c | 9 ++-------
+>  drivers/soc/mediatek/mtk-mmsys.c     | 8 ++++++++
+>  2 files changed, 10 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/clk/mediatek/clk-mt8183-mm.c b/drivers/clk/mediatek/=
+clk-mt8183-mm.c
+> index 720c696b506d..9d60e09619c1 100644
+> --- a/drivers/clk/mediatek/clk-mt8183-mm.c
+> +++ b/drivers/clk/mediatek/clk-mt8183-mm.c
+> @@ -84,8 +84,9 @@ static const struct mtk_gate mm_clks[] =3D {
+>
+>  static int clk_mt8183_mm_probe(struct platform_device *pdev)
+>  {
+> +       struct device *dev =3D &pdev->dev;
+> +       struct device_node *node =3D dev->parent->of_node;
+>         struct clk_onecell_data *clk_data;
+> -       struct device_node *node =3D pdev->dev.of_node;
+>
+>         clk_data =3D mtk_alloc_clk_data(CLK_MM_NR_CLK);
+>
+> @@ -95,16 +96,10 @@ static int clk_mt8183_mm_probe(struct platform_device=
+ *pdev)
+>         return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data=
+);
+>  }
+>
+> -static const struct of_device_id of_match_clk_mt8183_mm[] =3D {
+> -       { .compatible =3D "mediatek,mt8183-mmsys", },
+> -       {}
+> -};
+> -
+>  static struct platform_driver clk_mt8183_mm_drv =3D {
+>         .probe =3D clk_mt8183_mm_probe,
+>         .driver =3D {
+>                 .name =3D "clk-mt8183-mm",
+> -               .of_match_table =3D of_match_clk_mt8183_mm,
+>         },
+>  };
+>
+> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-=
+mmsys.c
+> index cacafe23c823..783c3dd008b2 100644
+> --- a/drivers/soc/mediatek/mtk-mmsys.c
+> +++ b/drivers/soc/mediatek/mtk-mmsys.c
+> @@ -92,6 +92,10 @@ static const struct mtk_mmsys_driver_data mt8173_mmsys=
+_driver_data =3D {
+>         .clk_driver =3D "clk-mt8173-mm",
+>  };
+>
+> +static const struct mtk_mmsys_driver_data mt8183_mmsys_driver_data =3D {
+> +       .clk_driver =3D "clk-mt8183-mm",
+> +};
 > +
-> +title: Baikal-T1 System Boot SSI Controller
-> +
-> +description: |
-> +  Baikal-T1 System Controller includes a Boot SPI Controller, which is
-> +  responsible for loading chip bootup code from an external SPI flash. In order
-> +  to do this transparently from CPU point of view there is a dedicated IP block
-> +  mapping the 16MB flash to a dedicated MMIO range. The controller is based on
-> +  the DW APB SSI IP-core but equipped with very limited resources: no IRQ,
-> +  no DMA, a single native CS being necessarily connected to a 16MB SPI flash
-> +  (otherwise the system won't bootup from the flash), internal Tx/Rx FIFO of
-> +  just 8 bytes depth. Access to DW APB SSI controller registers is mutually
-> +  exclusive from normal MMIO interface and from physically mapped SPI Flash
-> +  memory. So either one or another way of using the controller functionality
-> +  can be enabled at a time.
-> +
-> +maintainers:
-> +  - Serge Semin <fancer.lancer@gmail.com>
-> +
-> +allOf:
-> +  - $ref: spi-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: baikal,bt1-sys-ssi
-> +
-> +  reg:
-> +    items:
-> +      - description: Baikal-T1 Boot Controller configuration registers
-> +      - description: Physically mapped SPI flash ROM found at CS0
-> +
-> +  reg-names:
-> +    items:
-> +      - const: config
-> +      - const: map
-> +
-> +  clocks:
-> +    description: SPI Controller reference clock source
-
-Can drop this. 
-
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ssi_clk
-> +
-> +  num-cs:
-> +    const: 1
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 0
-> +
-> +      spi-rx-bus-width:
-> +        const: 1
-> +
-> +      spi-tx-bus-width:
-> +        const: 1
-
-What's the point of these 2 properties if they aren't required?
-
-> +
-> +unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-
-> +  - "#address-cells"
-> +  - "#size-cells"
-
-These 2 are required by spi-controller.yaml, so you can drop here.
-
-> +  - clocks
-> +
-> +examples:
-> +  - |
-> +    spi@1f040000 {
-> +      compatible = "baikal,bt1-sys-ssi";
-> +      reg = <0x1f040000 0x1000>,
-> +            <0x1c000000 0x1000000>;
-> +      reg-names = "config", "map";
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      clocks = <&ccu_sys>;
-> +      clock-names = "ssi_clk";
-> +
-> +      boot_flash: flash@0 {
-> +        compatible = "jedec,spi-nor";
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        reg = <0>;
-> +
-> +        spi-max-frequency = <25000000>;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.25.1
-> 
+>  static unsigned int mtk_mmsys_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>                                           enum mtk_ddp_comp_id next,
+>                                           unsigned int *addr)
+> @@ -339,6 +343,10 @@ static const struct of_device_id of_match_mtk_mmsys[=
+] =3D {
+>                 .compatible =3D "mediatek,mt8173-mmsys",
+>                 .data =3D &mt8173_mmsys_driver_data,
+>         },
+> +       {
+> +               .compatible =3D "mediatek,mt8183-mmsys",
+> +               .data =3D &mt8183_mmsys_driver_data,
+> +       },
+>         { }
+>  };
+>
+> --
+> 2.26.2
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
