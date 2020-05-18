@@ -2,112 +2,128 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B495C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BA9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0347F20853
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825345;
-	bh=LiTBKino9KTbcuGvOtaKKg3BwINswV7yni3pj72+NHA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cZUJoxcQljUn68SqFn+7THFFsy1GLub16LmQgX6dcUsLiE75wySKws7u5CUFFjNHG
-	 D2jTyGGoEUXEXUyUqnuuNDcY2ev1bjyKFgokWUEMlWKA2vyZ1zkA3kXkXnxxIvhaxN
-	 nuMHyLcBXVD5ky8NBXdKZCg3LQhJQ95w6wjWGcms=
+	by mail.kernel.org (Postfix) with ESMTP id 26B8820715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="li91YZRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732153AbgERSJD (ORCPT
+        id S1733152AbgERSGY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 14:09:03 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45850 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729782AbgERSI4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:08:56 -0400
-Received: by mail-io1-f67.google.com with SMTP id w25so11581626iol.12;
-        Mon, 18 May 2020 11:08:55 -0700 (PDT)
+        Mon, 18 May 2020 14:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733130AbgERSGO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:06:14 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43882C05BD09
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:06:13 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id 62so6170656vsi.2
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c3UXUPcrt3P6Bgw39Gw3bWHJNGcf+91G7bjcoOjFILM=;
+        b=li91YZRk4xYKI9MXE0tWUzbZMwcWG60O5oELkyNKU4sTYVNPY20T5Tu/2C4PXO0pSb
+         metKaUg3abydKAsYDkjq5QAPkQqK7PqGeCwzCrjMqbAJG1JvjKQ0vB5xZdrqIZcj7Gph
+         UoleVSIHc/fp4FoD48l5IFZcAOxm20aQrn4GE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gN2kYwYRCkHdI62QPFQF6soqDLltZV49mRfzlQrkSXk=;
-        b=qaT9uxiAmxeH0fvJ67GZL1HRIsaLZlt/EYQZXkI8EUhJ8DI7WnNRRLZiqbUivGbhKx
-         Z2uQmIjlWJQ0Msv2DYhLyfmz+6h/DXE6Hq7hRbw2QroXthKe7hIYqKiOV33vQYaO97bj
-         iOEZNl5j6RdRa9KyZMl4jmlg444pt55mJE0CSVwCVZjK846erLHqRiKzj8yp+2PR7+8Q
-         BCk2epTz1xYfQhKq9iHAHF84LmtZ+Uz4xj5QD+8jT+zh1KLc8/ZDcMHdacet4fCQAUIU
-         noRsU+InqaJjoZrLhLXazFF4kzjPZnM8ephABkJxrHkK+d/mrtJCbCr9NG3cQR1VA6eq
-         rNaA==
-X-Gm-Message-State: AOAM5320VL2Mv7UVyfGSmU5Ho5OJWsThWBDvNDFlYU0ZkQvKB/HvWi0v
-        7SCVk/T/TvMJKL1khaGv6Q==
-X-Google-Smtp-Source: ABdhPJyeaqLaNG693I+N/qeJEJ0zJBdBiVM9Z/LtSt0R3Z6HMlfqY9SzDBPUV2kOoPd+LfA/1DmudQ==
-X-Received: by 2002:a02:ce26:: with SMTP id v6mr15459993jar.40.1589825334724;
-        Mon, 18 May 2020 11:08:54 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s2sm732417ilj.29.2020.05.18.11.08.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:08:54 -0700 (PDT)
-Received: (nullmailer pid 10875 invoked by uid 1000);
-        Mon, 18 May 2020 18:08:53 -0000
-Date:   Mon, 18 May 2020 12:08:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Mack <daniel@zonque.org>
-Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        pascal.huerst@gmail.com
-Subject: Re: [PATCH 1/4] dt-bindings: sc16is7xx: Add flag to activate IrDA
- mode
-Message-ID: <20200518180853.GA18566@bogus>
-References: <20200508143757.2609740-1-daniel@zonque.org>
- <20200508143757.2609740-2-daniel@zonque.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c3UXUPcrt3P6Bgw39Gw3bWHJNGcf+91G7bjcoOjFILM=;
+        b=SKlq6jRjStFHgQ3NqMSg7vfSNvymDsNK1ukAJvrah4yix3oVXkq6hxoNwitc8kvDde
+         wFSUWdl34dERqnt6uFPPqjxGkt0GoGl2rIk812Mk79nkcyUoUP9eHROX5OcqEaPUcRE5
+         n5FCeEgdEPcVidldHioWd77BK99jpfLwS0cTm1d8DqG7wHYRoa0ucXcNq3W4AZzTPQb5
+         GzQRjXzAWDI84UKlrEtZ5hrV9DoFw4QVyQ8WxybNYkQGjMf+a1skFXnGbxJOLno1HGii
+         vhyIKbiWF5l6kA3HHW2AdMdoPlMNBNvjag16d0I1zg4NnJzQR91+S7Hp04xd5PsA50KD
+         /vyg==
+X-Gm-Message-State: AOAM530W1SymVinOqOKEsnMTtXVhAG703w+EHryVLne/G47o8+oos8M6
+        E6063lDo5eWzwdK3L1SeJwNcaR4k0vI=
+X-Google-Smtp-Source: ABdhPJxukKqREoNICFPlCzqqBS/YA6ClDMoJdBEwjYiNZjI3d+PNK4h65VQdh0BAtMHxtI4dje413w==
+X-Received: by 2002:a67:2e45:: with SMTP id u66mr6268786vsu.123.1589825171790;
+        Mon, 18 May 2020 11:06:11 -0700 (PDT)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id f207sm3359951vka.41.2020.05.18.11.06.10
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 11:06:10 -0700 (PDT)
+Received: by mail-vk1-f179.google.com with SMTP id v192so2655357vkd.3
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:06:10 -0700 (PDT)
+X-Received: by 2002:a1f:4e46:: with SMTP id c67mr11262026vkb.92.1589825169814;
+ Mon, 18 May 2020 11:06:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508143757.2609740-2-daniel@zonque.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200507213500.241695-1-dianders@chromium.org>
+ <20200509201511.GD30802@ravnborg.org> <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
+ <CAD=FV=UNuwb+YYJKw9+HNMKUNfuNFxj+Gr+yB9tXANbXAvDgCg@mail.gmail.com> <20200518175939.GA770425@ravnborg.org>
+In-Reply-To: <20200518175939.GA770425@ravnborg.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 18 May 2020 11:05:58 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
+Message-ID: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot
+ Plug Detect
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:37:54PM +0200, Daniel Mack wrote:
-> From: Pascal Huerst <pascal.huerst@gmail.com>
-> 
-> This series of uart controllers is able to work in IrDA mode.
-> This adds a flag to the device tree to enable that feature if needed.
-> 
-> Signed-off-by: Pascal Huerst <pascal.huerst@gmail.com>
-> ---
->  Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> index c1091a923a89..9317c320c82c 100644
-> --- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> +++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> @@ -21,6 +21,8 @@ Optional properties:
->    the second cell is used to specify the GPIO polarity:
->      0 = active high,
->      1 = active low.
-> +- linux,irda-mode-port-0: Use IrDA mode on port #0
-> +- linux,irda-mode-port-1: Use IrDA mode on port #1 (for dual-port devices only)
->  
->  Example:
->          sc16is750: sc16is750@51 {
-> @@ -55,6 +57,8 @@ Optional properties:
->    the second cell is used to specify the GPIO polarity:
->      0 = active high,
->      1 = active low.
-> +- linux,irda-mode-port-0: Use IrDA mode on port #0
-> +- linux,irda-mode-port-1: Use IrDA mode on port #1 (for dual-port devices only)
+Sam,
 
-How about an array of 1 or 2 entries instead?
+On Mon, May 18, 2020 at 10:59 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Douglas.
+>
+> > > Given the previous feedback from Linus W, Stephen, and Laurent I
+> > > expect things are good enough to land now, but it'd be good to get
+> > > confirmation (I removed some of the previous tags just to get
+> > > confirmation).  If we can get review tags early next week maybe it'll
+> > > still be in time to land for 5.8?
+> >
+> > I think all the others have reviews now.  Is there anything blocking
+> > them from getting applied?
+> Applied, including the small fix pointed out by Linus.
 
->  
->  Example:
->  	sc16is750: sc16is750@0 {
-> -- 
-> 2.26.2
-> 
+Thanks!  Ugh, I just realized what the problem was.  I posted a v6
+with this fix but insanely somehow didn't CC you (!!!).  It was here:
+
+https://lore.kernel.org/r/20200513215902.261547-1-dianders@chromium.org
+
+I'm super sorry about that and thanks for fixing the nit.  That was
+the only difference between v5 and v6.  I just checked what you pushed
+and it looks great, thank you.
+
+-Doug
