@@ -2,128 +2,402 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BA9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA78C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26B8820715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C95120671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="li91YZRk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="O9dZDvVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733152AbgERSGY (ORCPT
+        id S1733013AbgERSKY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 14:06:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35390 "EHLO
+        Mon, 18 May 2020 14:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733130AbgERSGO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:06:14 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43882C05BD09
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:06:13 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id 62so6170656vsi.2
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c3UXUPcrt3P6Bgw39Gw3bWHJNGcf+91G7bjcoOjFILM=;
-        b=li91YZRk4xYKI9MXE0tWUzbZMwcWG60O5oELkyNKU4sTYVNPY20T5Tu/2C4PXO0pSb
-         metKaUg3abydKAsYDkjq5QAPkQqK7PqGeCwzCrjMqbAJG1JvjKQ0vB5xZdrqIZcj7Gph
-         UoleVSIHc/fp4FoD48l5IFZcAOxm20aQrn4GE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c3UXUPcrt3P6Bgw39Gw3bWHJNGcf+91G7bjcoOjFILM=;
-        b=SKlq6jRjStFHgQ3NqMSg7vfSNvymDsNK1ukAJvrah4yix3oVXkq6hxoNwitc8kvDde
-         wFSUWdl34dERqnt6uFPPqjxGkt0GoGl2rIk812Mk79nkcyUoUP9eHROX5OcqEaPUcRE5
-         n5FCeEgdEPcVidldHioWd77BK99jpfLwS0cTm1d8DqG7wHYRoa0ucXcNq3W4AZzTPQb5
-         GzQRjXzAWDI84UKlrEtZ5hrV9DoFw4QVyQ8WxybNYkQGjMf+a1skFXnGbxJOLno1HGii
-         vhyIKbiWF5l6kA3HHW2AdMdoPlMNBNvjag16d0I1zg4NnJzQR91+S7Hp04xd5PsA50KD
-         /vyg==
-X-Gm-Message-State: AOAM530W1SymVinOqOKEsnMTtXVhAG703w+EHryVLne/G47o8+oos8M6
-        E6063lDo5eWzwdK3L1SeJwNcaR4k0vI=
-X-Google-Smtp-Source: ABdhPJxukKqREoNICFPlCzqqBS/YA6ClDMoJdBEwjYiNZjI3d+PNK4h65VQdh0BAtMHxtI4dje413w==
-X-Received: by 2002:a67:2e45:: with SMTP id u66mr6268786vsu.123.1589825171790;
-        Mon, 18 May 2020 11:06:11 -0700 (PDT)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id f207sm3359951vka.41.2020.05.18.11.06.10
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 11:06:10 -0700 (PDT)
-Received: by mail-vk1-f179.google.com with SMTP id v192so2655357vkd.3
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:06:10 -0700 (PDT)
-X-Received: by 2002:a1f:4e46:: with SMTP id c67mr11262026vkb.92.1589825169814;
- Mon, 18 May 2020 11:06:09 -0700 (PDT)
+        with ESMTP id S1732991AbgERSKY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:10:24 -0400
+X-Greylist: delayed 65 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 18 May 2020 11:10:23 PDT
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC736C061A0C;
+        Mon, 18 May 2020 11:10:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AbyQlLTgT9N6dnHMOx2feZtNUM31THpZV6Gi5OUra7o=; b=O9dZDvVbze5d5QwrWR1VB6dsos
+        Jvr+FLendqrn2L8zU0c+3f6G/zEqbmrUsAyAVL6+3sANjzvL2zae6NA4TSVDnqPuHc55+lmzPbzTA
+        MtR/4F3WzgjFkJfgdsKrxF6WL0bC22GzbrrcN/1IEEea58rlzCi3oirGz1JSk4Nu6azPVxhkFnDr6
+        rU3tuoLDcf7qBzBH8PX6/cGLZ2eCyuBq7OtAv+YwKvvt1ec8/JjWMmPvSCs3qDNbJQbF8y9M5TQnW
+        ggyGwKVDwnwQrV2SueCO9f6U6Z8juHmKtwdysx3zkwoF4ezFQrk4RVKcyVnXa+3dXj9H6FzxDApjE
+        J7LqM/bA==;
+Received: from [2001:4d48:ad59:1409:4::2] (helo=youmian.o362.us)
+        by the.earth.li with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jakDW-0008Ou-Le; Mon, 18 May 2020 19:10:22 +0100
+Date:   Mon, 18 May 2020 19:10:14 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] ARM: dts: qcom: Add MikroTik RB3011
+Message-ID: <75390e66c9e6e36ddd42dc7f54cac28dfd7a24b9.1589824955.git.noodles@earth.li>
+References: <cover.1589824955.git.noodles@earth.li>
 MIME-Version: 1.0
-References: <20200507213500.241695-1-dianders@chromium.org>
- <20200509201511.GD30802@ravnborg.org> <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
- <CAD=FV=UNuwb+YYJKw9+HNMKUNfuNFxj+Gr+yB9tXANbXAvDgCg@mail.gmail.com> <20200518175939.GA770425@ravnborg.org>
-In-Reply-To: <20200518175939.GA770425@ravnborg.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 18 May 2020 11:05:58 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
-Message-ID: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot
- Plug Detect
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1589824955.git.noodles@earth.li>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sam,
+This patch adds a DTS file for the MikroTik RouterBoard 3011, which is a
+1U rackmount router based on the IPQ8064, supporting the serial UART,
+dual QCA8337 Gigabit ethernet switches, boot loader NOR and user LED
+device.
 
-On Mon, May 18, 2020 at 10:59 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Douglas.
->
-> > > Given the previous feedback from Linus W, Stephen, and Laurent I
-> > > expect things are good enough to land now, but it'd be good to get
-> > > confirmation (I removed some of the previous tags just to get
-> > > confirmation).  If we can get review tags early next week maybe it'll
-> > > still be in time to land for 5.8?
-> >
-> > I think all the others have reviews now.  Is there anything blocking
-> > them from getting applied?
-> Applied, including the small fix pointed out by Linus.
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+---
+ arch/arm/boot/dts/Makefile                |   1 +
+ arch/arm/boot/dts/qcom-ipq8064-rb3011.dts | 308 ++++++++++++++++++++++
+ 2 files changed, 309 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
 
-Thanks!  Ugh, I just realized what the problem was.  I posted a v6
-with this fix but insanely somehow didn't CC you (!!!).  It was here:
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e8dd99201397..e697a4bd7426 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -884,6 +884,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-ipq4019-ap.dk07.1-c1.dtb \
+ 	qcom-ipq4019-ap.dk07.1-c2.dtb \
+ 	qcom-ipq8064-ap148.dtb \
++	qcom-ipq8064-rb3011.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
+ 	qcom-msm8974-fairphone-fp2.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts b/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
+new file mode 100644
+index 000000000000..282b89ce3d45
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
+@@ -0,0 +1,308 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "qcom-ipq8064.dtsi"
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "MikroTik RB3011UiAS-RM";
++	compatible = "mikrotik,rb3011";
++
++	aliases {
++		serial0 = &gsbi7_serial;
++		ethernet0 = &gmac0;
++		ethernet1 = &gmac3;
++		mdio-gpio0 = &mdio0;
++		mdio-gpio1 = &mdio1;
++	};
++
++	chosen {
++		bootargs = "loglevel=8 console=ttyMSM0,115200";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		reg = <0x42000000 0x3e000000>;
++		device_type = "memory";
++	};
++
++	mdio0: mdio@0 {
++		status = "okay";
++		compatible = "virtual,mdio-gpio";
++		gpios = <&qcom_pinmux 1 GPIO_ACTIVE_HIGH>,
++			<&qcom_pinmux 0 GPIO_ACTIVE_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pinctrl-0 = <&mdio0_pins>;
++		pinctrl-names = "default";
++
++		switch0: switch@10 {
++			compatible = "qca,qca8337";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			dsa,member = <0 0>;
++
++			pinctrl-0 = <&sw0_reset_pin>;
++			pinctrl-names = "default";
++
++			reset-gpios = <&qcom_pinmux 16 GPIO_ACTIVE_LOW>;
++			reg = <0x10>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				switch0cpu: port@0 {
++					reg = <0>;
++					label = "cpu";
++					ethernet = <&gmac0>;
++					phy-mode = "rgmii-id";
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "sw1";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "sw2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "sw3";
++				};
++
++				port@4 {
++					reg = <4>;
++					label = "sw4";
++				};
++
++				port@5 {
++					reg = <5>;
++					label = "sw5";
++				};
++			};
++		};
++	};
++
++	mdio1: mdio@1 {
++		status = "okay";
++		compatible = "virtual,mdio-gpio";
++		gpios = <&qcom_pinmux 11 GPIO_ACTIVE_HIGH>,
++			<&qcom_pinmux 10 GPIO_ACTIVE_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pinctrl-0 = <&mdio1_pins>;
++		pinctrl-names = "default";
++
++		switch1: switch@14 {
++			compatible = "qca,qca8337";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			dsa,member = <1 0>;
++
++			pinctrl-0 = <&sw1_reset_pin>;
++			pinctrl-names = "default";
++
++			reset-gpios = <&qcom_pinmux 17 GPIO_ACTIVE_LOW>;
++			reg = <0x10>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				switch1cpu: port@0 {
++					reg = <0>;
++					label = "cpu";
++					ethernet = <&gmac3>;
++					phy-mode = "sgmii";
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "sw6";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "sw7";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "sw8";
++				};
++
++				port@4 {
++					reg = <4>;
++					label = "sw9";
++				};
++
++				port@5 {
++					reg = <5>;
++					label = "sw10";
++				};
++			};
++		};
++	};
++
++	soc {
++		gsbi5: gsbi@1a200000 {
++			qcom,mode = <GSBI_PROT_SPI>;
++			status = "okay";
++
++			spi4: spi@1a280000 {
++				status = "okay";
++				spi-max-frequency = <50000000>;
++
++				pinctrl-0 = <&spi_pins>;
++				pinctrl-names = "default";
++
++				cs-gpios = <&qcom_pinmux 20 GPIO_ACTIVE_HIGH>;
++
++				norflash: s25fl016k@0 {
++					compatible = "jedec,spi-nor";
++					#address-cells = <1>;
++					#size-cells = <1>;
++					spi-max-frequency = <50000000>;
++					reg = <0>;
++
++					partition@0 {
++						label = "RouterBoot";
++						reg = <0x0 0x40000>;
++					};
++				};
++			};
++		};
++
++		gpio_keys {
++			compatible = "gpio-keys";
++			pinctrl-0 = <&buttons_pins>;
++			pinctrl-names = "default";
++
++			button@1 {
++				label = "reset";
++				linux,code = <KEY_RESTART>;
++				gpios = <&qcom_pinmux 66 GPIO_ACTIVE_LOW>;
++				linux,input-type = <1>;
++				debounce-interval = <60>;
++			};
++		};
++
++		leds {
++			compatible = "gpio-leds";
++			pinctrl-0 = <&leds_pins>;
++			pinctrl-names = "default";
++
++			led@7 {
++				label = "rb3011:green:user";
++				gpios = <&qcom_pinmux 33 GPIO_ACTIVE_HIGH>;
++				default-state = "off";
++			};
++		};
++
++	};
++};
++
++&gmac0 {
++	status = "okay";
++
++	phy-mode = "rgmii";
++	qcom,id = <0>;
++	phy-handle = <&switch0cpu>;
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
++
++&gmac3 {
++	status = "okay";
++
++	phy-mode = "sgmii";
++	qcom,id = <3>;
++	phy-handle = <&switch1cpu>;
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
++
++&gsbi7 {
++	status = "okay";
++	qcom,mode = <GSBI_PROT_I2C_UART>;
++};
++
++&gsbi7_serial {
++	status = "okay";
++};
++
++&qcom_pinmux {
++	buttons_pins: buttons_pins {
++		mux {
++			pins = "gpio66";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	leds_pins: leds_pins {
++		mux {
++			pins = "gpio33";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	mdio0_pins: mdio0_pins {
++		mux {
++			pins = "gpio0", "gpio1";
++			function = "gpio";
++			drive-strength = <8>;
++			bias-disable;
++		};
++	};
++
++	mdio1_pins: mdio1_pins {
++		mux {
++			pins = "gpio10", "gpio11";
++			function = "gpio";
++			drive-strength = <8>;
++			bias-disable;
++		};
++	};
++
++	sw0_reset_pin: sw0_reset_pin {
++		mux {
++			pins = "gpio16";
++			drive-strength = <16>;
++			function = "gpio";
++			bias-disable;
++			input-disable;
++		};
++	};
++
++	sw1_reset_pin: sw1_reset_pin {
++		mux {
++			pins = "gpio17";
++			drive-strength = <16>;
++			function = "gpio";
++			bias-disable;
++			input-disable;
++		};
++	};
++};
+-- 
+2.20.1
 
-https://lore.kernel.org/r/20200513215902.261547-1-dianders@chromium.org
-
-I'm super sorry about that and thanks for fixing the nit.  That was
-the only difference between v5 and v6.  I just checked what you pushed
-and it looks great, thank you.
-
--Doug
