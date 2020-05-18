@@ -2,225 +2,196 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B78FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF388C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D82522081A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9232F2081A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589837280;
+	bh=q5dlVXtQD3lurrxdAyfl30JujBbLvlebr+YdpIWmh5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GEs8/cEKQis7vRCOrXxuHoTlv3PmthKk/k59vaaaJOi83NqOIiGL4WChFTDUmTgpE
+	 5QdRm9BwqpWCH8nabdAyEQm9MTiqLDacTpcZz1fjycIo7MBzb8UEFpaFiG0Q4CKvg/
+	 dPsCN3VcyuFkbutKknNmrpaO1ln0lUPKE3nM2Zu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgERV1O (ORCPT
+        id S1727037AbgERV2A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 17:27:14 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50274 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERV1O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 17:27:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 17AE4803080B;
-        Mon, 18 May 2020 21:27:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bfiR3SaEIdOo; Tue, 19 May 2020 00:27:04 +0300 (MSK)
-Date:   Tue, 19 May 2020 00:27:03 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Baikal-T1 System Boot SPI
- Controller binding
-Message-ID: <20200518212703.vju456kd3telctux@mobilestation>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-2-Sergey.Semin@baikalelectronics.ru>
- <20200518152659.GA2525@bogus>
+        Mon, 18 May 2020 17:28:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42286 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgERV17 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 17:27:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id e18so12310744iog.9
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 14:27:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7FQwau3PCqaM/9zZ31O1gXyxqGZu0XGLSVBElgDs3LI=;
+        b=rSmYGz4mhQk8U0chfgWOBKMa8doH/Py3zPduTpdfDmcS/evDBCI6HjtTa3Yez8yx0l
+         +flU/jYosw+VnDZxtiZVw/jH7B4Wid8kGFHSQ1VFeCvyOu05TyWQhrXdkk1GFBXUji7o
+         Hqy3hglwnQZFxVaussZi9W8PWbmHFp4+rLqDwPob9+3CzecQNjLzhC/v23R1aya4WTx+
+         OnD6FjB9ADH/8k7xVK240FkyKpaX5Qo4H5/T0HeQGFx6fVlTlP44prQgeJpErsl7Xh7k
+         TfOqxJATnEf99MWq0An/3pQ2EY6WIhyW37bNHmuQuSd2ZfmgGjdvoH3BTQZZIjPIDQy0
+         iGtQ==
+X-Gm-Message-State: AOAM533E/cYBohntUNGIsoHqbFXykqpyeQmycJP+qlmVVynMok5LwcHI
+        DbrZBciskn8GQQIXJl53I4plaRQ=
+X-Google-Smtp-Source: ABdhPJyP1G2iCjtRxtRLACkM46A2uYvHx8oxBdf8Gy6hJ8mmM56dfpTSJL0ube0FqvJR5rLwIzDkrg==
+X-Received: by 2002:a05:6602:1616:: with SMTP id x22mr15107056iow.70.1589837278706;
+        Mon, 18 May 2020 14:27:58 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c7sm5257708ilf.36.2020.05.18.14.27.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 14:27:58 -0700 (PDT)
+Received: (nullmailer pid 9009 invoked by uid 1000);
+        Mon, 18 May 2020 21:27:57 -0000
+Date:   Mon, 18 May 2020 15:27:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Ricardo =?iso-8859-1?Q?Ca=F1uelo?= 
+        <ricardo.canuelo@collabora.com>, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        geert+renesas@glider.be, xuwei5@hisilicon.com
+Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt:
+ convert to yaml
+Message-ID: <20200518212757.GA15067@bogus>
+References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
+ <20200511110611.3142-7-ricardo.canuelo@collabora.com>
+ <20200514015412.GF7425@pendragon.ideasonboard.com>
+ <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360>
+ <20200514152239.GG5955@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200518152659.GA2525@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200514152239.GG5955@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 09:26:59AM -0600, Rob Herring wrote:
-> On Fri, May 08, 2020 at 12:36:20PM +0300, Serge Semin wrote:
-> > Baikal-T1 Boot SPI is a part of the SoC System Controller and is
-> > responsible for the system bootup from an external SPI flash. It's a DW
-> > APB SSI-based SPI-controller with no interrupts, no DMA, with just one
-> > native chip-select available and a single reference clock. Since Baikal-T1
-> > SoC is normally booted up from an external SPI flash this SPI controller
-> > in most of the cases is supposed to be connected to a single SPI-nor
-> > flash. Additionally in order to provide a transparent from CPU point of
-> > view initial code execution procedure the system designers created an IP
-> > block which physically maps the SPI flash found at CS0 to a memory region.
+On Thu, May 14, 2020 at 06:22:39PM +0300, Laurent Pinchart wrote:
+> Hi Ricardo,
+> 
+> On Thu, May 14, 2020 at 11:36:17AM +0200, Ricardo Cañuelo wrote:
+> > Hi Laurent, thanks for the thorough review. Some comments below:
 > > 
-> > Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> > Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: John Garry <john.garry@huawei.com>
-> > Cc: Chuanhong Guo <gch981213@gmail.com>
-> > Cc: Tomer Maimon <tmaimon77@gmail.com>
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: linux-spi@vger.kernel.org
-> > ---
-> >  .../bindings/spi/baikal,bt1-sys-ssi.yaml      | 100 ++++++++++++++++++
-> >  1 file changed, 100 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
+> > On jue 14-05-2020 04:54:12, Laurent Pinchart wrote:
+> > > > +description: |
+> > > > +  The ADV7511, ADV7511W and ADV7513 are HDMI audio and video
+> > > > +  transmitters compatible with HDMI 1.4 and DVI 1.0. They support color
+> > > > +  space conversion, S/PDIF, CEC and HDCP. They support RGB input
+> > > > +  interface.
+> > > 
+> > > I would write the last sentence as "The transmitter input is parallel
+> > > RGB or YUV data." as YUV is also supported.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml b/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
-> > new file mode 100644
-> > index 000000000000..d9d3257d78f4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
-> > @@ -0,0 +1,100 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/spi/baikal,bt1-sys-ssi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Baikal-T1 System Boot SSI Controller
-> > +
-> > +description: |
-> > +  Baikal-T1 System Controller includes a Boot SPI Controller, which is
-> > +  responsible for loading chip bootup code from an external SPI flash. In order
-> > +  to do this transparently from CPU point of view there is a dedicated IP block
-> > +  mapping the 16MB flash to a dedicated MMIO range. The controller is based on
-> > +  the DW APB SSI IP-core but equipped with very limited resources: no IRQ,
-> > +  no DMA, a single native CS being necessarily connected to a 16MB SPI flash
-> > +  (otherwise the system won't bootup from the flash), internal Tx/Rx FIFO of
-> > +  just 8 bytes depth. Access to DW APB SSI controller registers is mutually
-> > +  exclusive from normal MMIO interface and from physically mapped SPI Flash
-> > +  memory. So either one or another way of using the controller functionality
-> > +  can be enabled at a time.
-> > +
-> > +maintainers:
-> > +  - Serge Semin <fancer.lancer@gmail.com>
-> > +
-> > +allOf:
-> > +  - $ref: spi-controller.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: baikal,bt1-sys-ssi
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: Baikal-T1 Boot Controller configuration registers
-> > +      - description: Physically mapped SPI flash ROM found at CS0
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: config
-> > +      - const: map
-> > +
-> > +  clocks:
-> > +    description: SPI Controller reference clock source
-> 
-> Can drop this.
-
-Ok.
- 
-> 
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: ssi_clk
-> > +
-> > +  num-cs:
-> > +    const: 1
-> > +
-> > +patternProperties:
-> > +  "^.*@[0-9a-f]+":
-> > +    type: object
-> > +    properties:
-> > +      reg:
-> > +        minimum: 0
-> > +        maximum: 0
-> > +
-> > +      spi-rx-bus-width:
-> > +        const: 1
-> > +
-> > +      spi-tx-bus-width:
-> > +        const: 1
-> 
-> What's the point of these 2 properties if they aren't required?
-
-Yes, they are optional, but this is a constraint on the bus-width parameters.
-DW APB SSI provides a single laned Tx and Rx.
-
-> 
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> 
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> 
-> These 2 are required by spi-controller.yaml, so you can drop here.
-
-Yes, "#address-cells" is required, but "#size-cells" isn't. Is this supposed to
-be like that?
-
--Sergey
-
-> 
-> > +  - clocks
-> > +
-> > +examples:
-> > +  - |
-> > +    spi@1f040000 {
-> > +      compatible = "baikal,bt1-sys-ssi";
-> > +      reg = <0x1f040000 0x1000>,
-> > +            <0x1c000000 0x1000000>;
-> > +      reg-names = "config", "map";
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      clocks = <&ccu_sys>;
-> > +      clock-names = "ssi_clk";
-> > +
-> > +      boot_flash: flash@0 {
-> > +        compatible = "jedec,spi-nor";
-> > +        #address-cells = <1>;
-> > +        #size-cells = <1>;
-> > +        reg = <0>;
-> > +
-> > +        spi-max-frequency = <25000000>;
-> > +      };
-> > +    };
-> > +...
-> > -- 
-> > 2.25.1
+> > Ok.
 > > 
+> > > > +  adi,input-colorspace:
+> > > > +    description: Input color space.
+> > > > +    allOf:
+> > > > +      - $ref: /schemas/types.yaml#/definitions/string
+> > > > +      - enum: [ rgb, yuv422, yuv444 ]
+> > > 
+> > > Isn't string implied ? Can't you write
+> > > 
+> > >   adi,input-colorspace:
+> > >     description: Input color space.
+> > >     enum: [ rgb, yuv422, yuv444 ]
+> > 
+> > example-schema.yaml says that
+> > 
+> >     Vendor specific properties have slightly different schema
+> >     requirements than common properties. They must have at least a type
+> >     definition and 'description'.
+> > 
+> > However, dt_binding_check doesn't seem to enforce this rule for string
+> > properties, and I saw a couple of vendor-specific string properties in
+> > other bindings that don't define the type either, so I'm going to follow
+> > your suggestion but only for string properties, the rest need a type
+> > definition.
+> 
+> I'll defer to Rob to tell the law here :-)
+
+Yes, if you have a string with defined values, then a type isn't needed. 
+That only applies to strings as numeric values need a size.
+
+> 
+> > I noticed I can remove the "allOf" keywords from these too.
+
+Yes, that's a recent change. Both forms still work.
+
+
+> > > > +  adi,embedded-sync:
+> > > > +    description:
+> > > > +      The input uses synchronization signals embedded in the data
+> > > > +      stream (similar to BT.656). Defaults to 0 (separate H/V
+> > > > +      synchronization signals).
+> > > > +    allOf:
+> > > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +      - enum: [ 0, 1 ]
+> > > > +      - default: 0
+> > > 
+> > > This be a boolean property (it is read as a bool by the driver, the
+> > > property being absent means false, the property being present means
+> > > true).
+> > 
+> > You're completely right.
+> > 
+> > > > +  ports:
+> > > > +    description:
+> > > > +      The ADV7511(W)/13 has two video ports and one audio port. This node
+> > > > +      models their connections as documented in
+> > > > +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > > +      Documentation/devicetree/bindings/graph.txt
+> > > > +    type: object
+> > > > +    properties:
+> > > > +      port@0:
+> > > > +        description: Video port for the RGB, YUV or DSI input.
+> > > 
+> > > s/RGB, YUV or DSI/RGB or YUV/
+> > 
+> > Ok.
+> > 
+> > > > +if:
+> > > > +  not:
+> > > > +    properties:
+> > > > +      adi,input-colorspace:
+> > > > +        contains:
+> > > > +          enum: [ rgb, yuv444 ]
+> > > > +      adi,input-clock:
+> > > > +        contains:
+> > > > +          const: 1x
+> > > 
+> > > As both properties take a single value, I think you can omit
+> > > "contains:".
+> > 
+> > I think it's required here, removing it makes the test fail.
+> 
+> I thought the following could work:
+> 
+> if:
+>   not:
+>     properties:
+>       adi,input-colorspace:
+>         enum: [ rgb, yuv444 ]
+>       adi,input-clock:
+>         items:
+>           - const: 1x
+> 
+> But no big deal, contains: is ok too.
+
+In theory the above should work. However, this is probably a case where 
+we don't fix-up the properties. If you look at the DT yaml encoding, 
+everything is an array (as dtc doesn't know). For schemas, the tooling 
+expands scalars to arrays.
+
+Rob
