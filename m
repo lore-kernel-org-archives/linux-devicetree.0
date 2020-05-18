@@ -2,152 +2,114 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F2BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCE2C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87C65207F9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589843651;
-	bh=GXR83qtwdDbrZxkBXEKAXiWeE1p5THJydmS7rxH2rjQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q+TvY/OL2TGCsBsNJIhf73AlMhpWACbqpZS3g7yOWhgvOCCfQS52sRZu7YA/sGIM1
-	 yQq+3M9rwhjexuBB9u9v09PqMkVVniKdKvsQ3FTba3rS9zBATpxZmPEVEavnX7jjFm
-	 bjqgjNUQA6+dTBOvaeQDQ65FisnCCzt5jePBnaag=
+	by mail.kernel.org (Postfix) with ESMTP id 0DED220657
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:25:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJL0tpth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgERXOL (ORCPT
+        id S1727990AbgERXZ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 19:14:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgERXOK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 19:14:10 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3E512067D;
-        Mon, 18 May 2020 23:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589843650;
-        bh=GXR83qtwdDbrZxkBXEKAXiWeE1p5THJydmS7rxH2rjQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=c+hwd3Kf46sVo9AuXOkdmcRICchoBV/6eyN4ZrdRt1rfzxUW8MY6zk95oWIn7EYsk
-         A86goNl25PWc20yYMHqP7QaHWfwIq4SLG1rhDKM4U1aN9FTtMMc4IVym5cT2wdqzDX
-         a6wuR7Sa828uQQaPe7FDO7RD42Mh3sFXnPA09FSA=
-Received: by mail-ot1-f54.google.com with SMTP id d26so9659075otc.7;
-        Mon, 18 May 2020 16:14:09 -0700 (PDT)
-X-Gm-Message-State: AOAM531/fir5yj0NYQd0kwZc+6DsIzx7kG5YwHRxtQwA/WJOiHh30kaM
-        g8s8mVsUquuxS6h5p9P8depMy/ltxgdr22E7AQ==
-X-Google-Smtp-Source: ABdhPJz4O9rEWx8T9VergSeE5BZRA92UaUypy77OD9VVs0mDqqxpXBq4sUFpllqi+T5YTfqCIKtUAde6em694OTW+LQ=
-X-Received: by 2002:a9d:1441:: with SMTP id h59mr14200957oth.192.1589843649219;
- Mon, 18 May 2020 16:14:09 -0700 (PDT)
+        Mon, 18 May 2020 19:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbgERXZ0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 19:25:26 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739E2C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 16:25:25 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id z15so475613pjb.0
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 16:25:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QVj3nKP5hVtsFAiZ/rRDQZNLBRTHzKzhnx5Wf/64tWM=;
+        b=BJL0tpthaxkWDwWPe/c0HBJCwfPLNka5lv5YeMvjFA2PknXthQh5APJ6GxH9NeB6FQ
+         uysBb/W9wQrmTFs7iAqn5/N1fFPgOTtaNH2tPS0497QTeJXiadpdGoaJzESLIlxJ0Lzc
+         7hdhcG+yaNw8b5NBlNfxl4X+72GvVQHMTEiCymuzCgDSiYqkDVCFo32rUG89oFVI7glj
+         h9pJuxHVgGFu4aYIGOwe27/uRybA6cyxuATU07vQ0PbgfxszkYfbwoEkW7FKRraGYRZT
+         FRoIUJiXIvS/3FLrUv2SDVCbyjtrY/yImGeWFs6Rz6d+YCH0a1wuBBbojDtjV4Zs0lFb
+         7BiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QVj3nKP5hVtsFAiZ/rRDQZNLBRTHzKzhnx5Wf/64tWM=;
+        b=relpZQrR6WHyloSh37OaCL9LXQxKfLTAmfhRyUXEMD0xCbY9l5eqtosUMruythUMYv
+         xBgRC3ikBYbDCPS3UfE5fHVSSRoxu7QXdGXFv8ZTTPMx7cKPn9ROgVpY2r20U4dGBLBX
+         CLlmI+TDLVLwf9UB6DzR/FgKsIalngjUBJsNxeRfBt7KGFwZSl5FtwiU42vgjviMPZMW
+         /ObwMSeskBd50+gXnQjWuIeXEREhvkz+je/kJA7AqdS8ZBFWhUWbJGt9mGNvuYcQPNS2
+         +RsnIBrB4XwbDbUFsmv68fNvjco3xEd57Q0zu0m2A4RGccxr0GoezhbqdgmRXbZAGXsw
+         vyZw==
+X-Gm-Message-State: AOAM530ek7r0+wnis3eJhgdzH4ebHoFmNWjgEwWHdsyNDssiznrJQgn9
+        M1tJL9MvxSIdr0iC7pLo9LfPyg==
+X-Google-Smtp-Source: ABdhPJyPioMHQTi0LewvbyOFTMF+xVG03puGiL/AuNe3V8kLdR52K9tEwVHad/53xErvf7okGmWGbQ==
+X-Received: by 2002:a17:90a:bd93:: with SMTP id z19mr1942252pjr.109.1589844324967;
+        Mon, 18 May 2020 16:25:24 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id co16sm478114pjb.55.2020.05.18.16.25.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 16:25:24 -0700 (PDT)
+Date:   Mon, 18 May 2020 16:24:02 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Alex Elder <elder@linaro.org>
+Cc:     agross@kernel.org, evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: enable IPA
+Message-ID: <20200518232402.GM2165@builder.lan>
+References: <20200518214834.9630-1-elder@linaro.org>
 MIME-Version: 1.0
-References: <20200508082937.14171-1-rogerq@ti.com> <20200508082937.14171-3-rogerq@ti.com>
- <20200518145133.GA2280@bogus>
-In-Reply-To: <20200518145133.GA2280@bogus>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 18 May 2020 17:13:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL8TTq_bpGvhUSQ92n84rrBrHFt75U2PDKRFjzK5VLAAg@mail.gmail.com>
-Message-ID: <CAL_JsqL8TTq_bpGvhUSQ92n84rrBrHFt75U2PDKRFjzK5VLAAg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] dt-bindings: mdf: ti,j721e-syscon.yaml: Add J721e
- system controller
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Nishanth Menon <nm@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518214834.9630-1-elder@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 8:51 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, May 08, 2020 at 11:29:32AM +0300, Roger Quadros wrote:
-> > Add DT binding schema for J721e system controller.
-> >
-> > Signed-off-by: Roger Quadros <rogerq@ti.com>
-> > ---
-> >  .../bindings/mfd/ti,j721e-syscon.yaml         | 69 +++++++++++++++++++
-> >  1 file changed, 69 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml
->
-> Use the compatible string for filename.
->
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml b/Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml
-> > new file mode 100644
-> > index 000000000000..e832fb43f884
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml
-> > @@ -0,0 +1,69 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mfd/ti,j721e-syscon.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: TI J721e System Controller Registers R/W Device Tree Bindings
-> > +
-> > +description: |
-> > +  This represents the Control Module registers (CTRL_MMR0) on the SoC.
-> > +  System controller node represents a register region containing a set
-> > +  of miscellaneous registers. The registers are not cohesive enough to
-> > +  represent as any specific type of device. The typical use-case is
-> > +  for some other node's driver, or platform-specific code, to acquire
-> > +  a reference to the syscon node (e.g. by phandle, node path, or
-> > +  search using a specific compatible value), interrogate the node (or
-> > +  associated OS driver) to determine the location of the registers,
-> > +  and access the registers directly.
-> > +
-> > +maintainers:
-> > +  - Kishon Vijay Abraham I <kishon@ti.com>
-> > +  - Roger Quadros <rogerq@ti.com
-> > +
-> > +allOf:
-> > +  - $ref: "syscon.yaml#"
->
-> Drop this as it is not needed.
->
-> > +
-> > +properties:
-> > +  compatible:
-> > +    anyOf:
-> > +      - items:
-> > +        - enum:
-> > +          - ti,j721e-system-controller
-> > +
-> > +        - const: syscon
->
-> What about simple-mfd?
->
-> > +
-> > +      - contains:
-> > +          const: syscon
-> > +        additionalItems: true
->
-> Should be dropped.
->
-> You are going to need a 'select' entry or this will match on any syscon
-> or simple-mfd node:
->
-> select:
->   properties:
->     compatible:
->       contains:
->         const: ti,j721e-system-controller
->   required:
->     - compatible
+On Mon 18 May 14:48 PDT 2020, Alex Elder wrote:
 
-Sorry, forget the 'select' part (still should drop the 2nd clause).
-I'd found a bug in what handles this automatically, but it's only when
-you have 'simple-mfd' and not 'syscon'.
+> Enable IPA on the SDM845 MTP.
+> 
+> Signed-off-by: Alex Elder <elder@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index 1372fe8601f5..2f942daeb9d1 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -448,6 +448,11 @@
+>  	clock-frequency = <400000>;
+>  };
+>  
+> +&ipa {
+> +	status = "okay";
+> +	modem-init;
 
-Rob
+modem-init tells the IPA driver that the modem will load the ipa_fws
+firmware, but the MTP is assumed to run "LA" firmware where it's the
+Linux-side's job to do this.
+
+Regards,
+Bjorn
+
+> +};
+> +
+>  &mdss {
+>  	status = "okay";
+>  };
+> -- 
+> 2.20.1
+> 
