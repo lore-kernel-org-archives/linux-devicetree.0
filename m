@@ -4,88 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BE5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 20:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12FEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 20:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12E202075F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 20:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702FE206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 20:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589834509;
-	bh=eW9dA64CVaWgrcSFJ1x7C7dSa95K+pSpazmcCMpWNWY=;
+	s=default; t=1589834615;
+	bh=gi1n1NPoswkYWhy3JROrzppHELrDJN1DCgDqq/4OWbI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WT7iAN0d492HqbmT1KBvjLjE7bFMWVpTRCQVkt3TSgir3aie+UmrqslOrJhYKl6Y0
-	 l8pK2Oxy5w/R5rLQg85WTg/mIzflxAk9GpxGjR5JfAUvGXhcWJtshMT7U2PEK5JMhk
-	 h6xCF1jMWZo41cVrGJwGXOr1BZbCYTq6AEgNUZ2A=
+	b=bTkrfCUzC2stTOfu9thCzvN47S7kb/bixYs6MUzucdDWBi9kc4iWpWckQvqy93eOA
+	 fJSrqPhMynLN9NGfD63nCreOGBxSzlGphNnRRqNmVSIzk4Oa3mWFVsP4O30FIS8+B8
+	 usX5nDE6lZHLiq53G1QOcGh4KJ2u5YWJF8FvWI30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgERUls (ORCPT
+        id S1726525AbgERUnf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 16:41:48 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36016 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgERUls (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 16:41:48 -0400
-Received: by mail-io1-f66.google.com with SMTP id k6so12224530iob.3;
-        Mon, 18 May 2020 13:41:47 -0700 (PDT)
+        Mon, 18 May 2020 16:43:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44901 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbgERUne (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 16:43:34 -0400
+Received: by mail-io1-f68.google.com with SMTP id f4so12169055iov.11;
+        Mon, 18 May 2020 13:43:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gPZ7HwLu+ZKuhC4Z7Pkuo4nBmBsOY1+VIA/NUsuh/DA=;
-        b=hPnl35yePgl8YdiOdSELn7D9E2qQpli8lL7m/SRHQjlBgmELowWFwfnian+6lmNsum
-         4Rcr3bqQ6k117t/0FpH2Ee70WRhVeD5BgDktqDtBudEGe3neJoFQtkefmlA7rb12HS4p
-         4tLlpAWAsoDMTPWVldk4AFIAgNO5EBEXq3ADCUCp0onhMn73lrAMhagzFWKLrF/b5Z1D
-         xrDLY7coe5l3pAqEUfHEJOwQBahMJDJxrdTL9VUbhsSKFixNo0Q41H/Xu6kpJHPbUsU5
-         QSRXe5ic51p1I/xD7Yp/FQ53+bD8doWc4rnhyp4Zo4zK+HR3o4ajLnhU/RvoBs4YAIrt
-         YAtg==
-X-Gm-Message-State: AOAM532AehzK4vLrMtnYBbmpvQ7G4kT8TgeZneAVG8uWbhIABkitYEJQ
-        h6BbwN1j/sVdEH3xH7MHfQ==
-X-Google-Smtp-Source: ABdhPJxEyNCVrlRsyqtmHbcvip7RB0j/NMJOkoIw9BOe8G2f9o9OXhHUrDCilvK3zRKkp7L7ICe24A==
-X-Received: by 2002:a02:1746:: with SMTP id 67mr16973423jah.103.1589834506239;
-        Mon, 18 May 2020 13:41:46 -0700 (PDT)
+        bh=XxCSYRBQHg2fQ234CjMgF6ixZHHxXyujUgSJb+Q5Djs=;
+        b=L5R7YUDWBxKalRk0ITO9BQRK6aVvgCxwC68zvVOw91A27FJTEPmiHe5CvjLJT7IsL4
+         kdhWw3ofxes8o7ua2HMJ11bt68DwCZRyjFszlm1h+++rT8vGG/KEAq5RvDtGseIa/gEJ
+         a0EVPO30OhYJpPwWZX5MWz5IcJ0LMHJkxu9ZBpXvKBK9mRba15PxkA5xVrYjnGqZ0yWG
+         Lrp8O22NYMyYySxvsKl6ia+ZEgrwVmIarduVg3kJ0aZBv/DifEnfpDh/Ei9zFSCaU7SA
+         GFjpUqPSnkBeSW4yShBZRpXS2WMjDYpFxQIHz0MsDQ5SZ5svEo9zroFYiHtOPnD6jrT7
+         b0HA==
+X-Gm-Message-State: AOAM531Q0Aobwwk5N58TaMaezdEbnhpkn+ZdkwwKGpYwgHLqStBTke2p
+        RRhfB6epnsBsuo36fKAZVQ==
+X-Google-Smtp-Source: ABdhPJxwJtVIGcJC/9Eof0tcXkBvMbAy6LDRx8MkkwQ05jU/N4ORpjfLUk+XbSpM4BB0PSUKRW7gJA==
+X-Received: by 2002:a5d:970e:: with SMTP id h14mr15891433iol.117.1589834613971;
+        Mon, 18 May 2020 13:43:33 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s22sm4249181iow.40.2020.05.18.13.41.44
+        by smtp.gmail.com with ESMTPSA id h10sm4327382ioe.3.2020.05.18.13.43.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 13:41:45 -0700 (PDT)
-Received: (nullmailer pid 11333 invoked by uid 1000);
-        Mon, 18 May 2020 20:41:44 -0000
-Date:   Mon, 18 May 2020 14:41:44 -0600
+        Mon, 18 May 2020 13:43:33 -0700 (PDT)
+Received: (nullmailer pid 13972 invoked by uid 1000);
+        Mon, 18 May 2020 20:43:32 -0000
+Date:   Mon, 18 May 2020 14:43:32 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v14 1/2] dt-bindings: proximity: provide vcnl3020 device
- tree binding document
-Message-ID: <20200518204144.GA11276@bogus>
-References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
- <20200510184537.10335-2-i.mikhaylov@yadro.com>
+To:     l4stpr0gr4m@gmail.com
+Cc:     trivial@kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, nsaenzjulienne@suse.de,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH] docs/devicetree/i2c: brcm,bcm2835: fix node id in example
+Message-ID: <20200518204332.GA13919@bogus>
+References: <1589140701-7516-1-git-send-email-l4stpr0gr4m@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200510184537.10335-2-i.mikhaylov@yadro.com>
+In-Reply-To: <1589140701-7516-1-git-send-email-l4stpr0gr4m@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 10 May 2020 21:45:36 +0300, Ivan Mikhaylov wrote:
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
+On Mon, 11 May 2020 04:58:21 +0900,  wrote:
+> From: Kangmin Park <l4stpr0gr4m@gmail.com>
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> This is a trivial patch to fix node id to match the reg in example.
+> 
+> Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
 > ---
->  .../iio/proximity/vishay,vcnl3020.yaml        | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+>  Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
