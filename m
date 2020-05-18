@@ -2,88 +2,193 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8291CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF91C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F2920709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8CB2070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:49:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chu9Reaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgERJsJ (ORCPT
+        id S1726130AbgERJtj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 05:48:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55876 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgERJsI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 05:48:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 655B2AA6F;
-        Mon, 18 May 2020 09:48:10 +0000 (UTC)
-Subject: Re: [PATCH v1 8/9] arm64: dts: actions: Add MMC controller support
- for S700
-To:     =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Amit Tomer <amittomer25@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
- <1589472657-3930-9-git-send-email-amittomer25@gmail.com>
- <b2ad8a81-619f-5f35-9596-c2061ae15e4c@arm.com>
- <CABHD4K9yjUGuo0w-RfhdZQJm3Wtj6bU2H4DXcp4Jjp=e0fFeyA@mail.gmail.com>
- <2cd3cdaf-826e-9d12-9fd4-9f7e2a517ecd@arm.com>
- <CABHD4K-OaQ4Vf_+dg9FMR97ocLeUkDswyEnChPV=H=VcbyUhkg@mail.gmail.com>
- <abbef32c-84d2-7dac-c667-49610d014710@arm.com>
- <CABHD4K-MHs4jhL_9otJJ_xjC1uv1N20mnHqT39b2kob7WjZcVQ@mail.gmail.com>
- <20200518061755.GA25113@mani> <29500523-0fe4-955d-57de-d4b9f11cedb8@arm.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <fceaf802-5923-1be3-d582-59465c6e7369@suse.de>
-Date:   Mon, 18 May 2020 11:48:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 05:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgERJtj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 05:49:39 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D73C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 02:49:39 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id i15so10994228wrx.10
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 02:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=ENajwhYLgh6sOiUIP9e6Xj0EhfOD2GHJT5X8M/vf8Bk=;
+        b=chu9ReajW6HqxpiFU5X/Xq7ycdbAJTYXqrXhd/98jAkFWbBicg3eCnxNwkS81jVo1d
+         9qXWhcMySsBbOn0orMwWV6SbBNZclVKmJ5S22Avx1W8yBWJO9mB3RQYfp/P7zaKT44ht
+         PhyEImaP0Bc0xSGqE3OpaU0M1c34EndgWocJ7zSYMIQmKoTLIKET/bH1Td/X8hT/g9Jn
+         aoZfyWIDZgBc7ZIVrctUbu/HP4PjDd9l/aYVkmv6enQioY8Ms7J6TbY8n/cH8XnKGoEf
+         XO/VKcTbXghBNlFDxM+yYD4Y/i/sHc3sfjjx3kqTG973fFRXDcveox2xsDCoWD70wYfV
+         agUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=ENajwhYLgh6sOiUIP9e6Xj0EhfOD2GHJT5X8M/vf8Bk=;
+        b=bAaDbuOrx1OcVrZPpFeHzYT4hhC7/T6+NYiE6pwgg43wmAB8UrLKtXFA7lBbegvEHZ
+         4MZEpJ7hUE5hYmN/VM2wnC+d2Vyc5qavf1TMU/Yi7Lri/JUm4VJCoVEr3OUUxuQO+cD7
+         rEt3kJoFJXgynxriEQEHeJyQfRPGsHMnURuLF1M7cnXvRZyaGjdym8QlGf5pLyBFLFiZ
+         ZQsum0iIYvXlNA3VgRFdBDxW3RtLm/KeKyt05O0yQvseKYatu0nh+1D6U8g2uxOv3pzB
+         eOSvuFyWDcuJKT/qUFp6P2cah/CAZMpqMdEX8LRQxHy4h8SzIRZDSuq+4MVMLYr4mdvK
+         oUrw==
+X-Gm-Message-State: AOAM5308B3SiyzVjBro7UIIlGPRbzcDMxLDSiuihKoPRfynnbtPLfbv1
+        m9qsmo7yqm+XEyVVHRKK1bE6Sg==
+X-Google-Smtp-Source: ABdhPJx2XKbq7KkL41aumny2mb2gN4FSdUPlh42S2nUjjgI6dDC3vnddICzIiSo0P7gUCnJZQXDTsA==
+X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr20122647wrv.166.1589795377819;
+        Mon, 18 May 2020 02:49:37 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id f128sm16679392wme.1.2020.05.18.02.49.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 May 2020 02:49:37 -0700 (PDT)
+Subject: Re: [PATCH v2 4/7] ASoC: qcom: lpass: Use regmap_field for i2sctl and
+ dmactl registers
+To:     Ajit Pandey <ajitp@codeaurora.org>, broonie@kernel.org,
+        plai@codeaurora.org, bgoswami@codeaurora.org
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: =?UTF-8?Q?=3c=1c1586592171-31644-1-git-send-email-ajitp=40codeau?=
+ =?UTF-8?Q?rora=2eorg=1d=3e_=3c1589474298-29437-1-git-send-email-ajitp=40cod?=
+ =?UTF-8?Q?eaurora=2eorg=3e_=3c1589474298-29437-5-git-send-email-ajitp=40cod?=
+ =?UTF-8?Q?eaurora=2eorg=3e?=
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <a3527251-cafd-6d8f-3f96-0549b220af09@linaro.org>
+Date:   Mon, 18 May 2020 10:49:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <29500523-0fe4-955d-57de-d4b9f11cedb8@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-Am 18.05.20 um 10:29 schrieb André Przywara:
-> On 18/05/2020 07:17, Manivannan Sadhasivam wrote:
->> I don't know if the DT fallback is discouraged or not.
+
+On 14/05/2020 17:38, Ajit Pandey wrote:
+> I2SCTL and DMACTL registers has different bits alignment for newer
+> LPASS variants of SC7180 soc. Instead of adding extra overhead for
+> calculating masks and shifts for newer variants registers layout we
+> changed the approach to use regmap_field_write() API to update bit.
+> Such API's will internally do the required bit shift and mask based
+> on reg_field struct defined for bit fields. We'll define REG_FIELD()
+> macros with bit layout for both lpass variants and use such macros
+> to initialize register fields in variant specific driver callbacks.
+> Also added new bitfieds values for I2SCTL and DMACTL registers and
+> removed shifts and mask macros for such registers from header file.
 > 
-> I don't know if there is an "official" statement on this, but last thing
-> I heard, adding SoC specific compatibles to generic fallback strings was
-> encouraged. Hence my proposal, to add one.
+> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+> ---
+>   sound/soc/qcom/lpass-apq8016.c   |  61 ++++++++++++
+>   sound/soc/qcom/lpass-cpu.c       | 114 +++++++++++++---------
+>   sound/soc/qcom/lpass-lpaif-reg.h | 203 ++++++++++++++++++++++++---------------
+>   sound/soc/qcom/lpass-platform.c  |  86 +++++++++++------
+>   sound/soc/qcom/lpass.h           |  30 ++++++
+>   5 files changed, 340 insertions(+), 154 deletions(-)
+> 
 
-I believe the official guidance would be to never be too generic in the 
-first place. I.e., prefer s500 (oldest model tested) over generic owl.
+Thanks for moving this to regmap fields, looks clean!
+However this patch just removed support to lpass-ipq806x.c variant, 
+which should to be taken care of while doing patches that apply to all 
+variants.
 
-But now that we have it, prepending a more specific one (rather than 
-replacing it) is the only way to go. In that case the binding needs to 
-be changed to allow both the old and the recommended new variant, as 
-André points out. Please add a comment to help bindings readers choose 
-which of the two to adopt then.
 
-Amit, next time please quote errors you see right away, that could've 
-spared a handful of messages discussing about the driver when it was in 
-fact just a bindings issue (which you had been asked to fix by André).
+> diff --git a/sound/soc/qcom/lpass-apq8016.c b/sound/soc/qcom/lpass-apq8016.c
+> index 8210e37..3149645 100644
+> --- a/sound/soc/qcom/lpass-apq8016.c
+> +++ b/sound/soc/qcom/lpass-apq8016.c
+> @@ -124,6 +124,32 @@
+>   	},
+>   };
+>   
+> +static int apq8016_init_dmactl_bitfields(struct lpaif_dmactl *dmactl,
+> +					 struct regmap *map,
+> +					 unsigned int reg)
+> +{
+> +	struct reg_field bursten = DMACTL_BURSTEN_FLD(reg);
+> +	struct reg_field wpscnt = DMACTL_WPSCNT_FLD(reg);
+> +	struct reg_field fifowm = DMACTL_FIFOWM_FLD(reg);
+> +	struct reg_field intf = DMACTL_AUDINTF_FLD(reg);
+> +	struct reg_field enable = DMACTL_ENABLE_FLD(reg);
+> +	struct reg_field dyncclk = DMACTL_DYNCLK_FLD(reg);
+> +
+> +	dmactl->bursten = regmap_field_alloc(map, bursten);
+> +	dmactl->wpscnt = regmap_field_alloc(map, wpscnt);
+> +	dmactl->fifowm = regmap_field_alloc(map, fifowm);
+> +	dmactl->intf = regmap_field_alloc(map, intf);
+> +	dmactl->enable = regmap_field_alloc(map, enable);
+> +	dmactl->dyncclk = regmap_field_alloc(map, dyncclk);
 
-Regards,
-Andreas
+My idea was to move this all regmap fields to variant structure and 
+common code will do the regmap_filed_alloc rather than each variant 
+duplicating the same code for each variant, also am guessing some of the 
+members in the lpass_variant structure tp become redundant due to regmap 
+field which can be removed as well.
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+ex :
+
+struct lpass_variant {
+	...
+	struct reg_field bursten
+	...
+};
+
+in lpass-apq8016.c
+
+we do
+static struct lpass_variant apq8016_data = {
+
+	.bursten = REG_FIELD(reg, 11, 11),
+	...
+}
+
+in lpass-cpu.c we can do the real regmap_field_alloc	
+asoc_qcom_lpass_cpu_platform_probe
+
+
+
+> +
+> +	if (IS_ERR(dmactl->bursten) || IS_ERR(dmactl->wpscnt) ||
+> +	    IS_ERR(dmactl->fifowm) || IS_ERR(dmactl->intf) ||
+> +	    IS_ERR(dmactl->enable) || IS_ERR(dmactl->dyncclk))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+>   static int apq8016_lpass_alloc_dma_channel(struct lpass_data *drvdata,
+>   					   int direction)
+>   {
+> @@ -158,6 +184,39 @@ static int apq8016_lpass_free_dma_channel(struct lpass_data *drvdata, int chan)
+>   	return 0;
+>   }
+>   
+> +static int sc7180_init_i2sctl_bitfields(struct lpaif_i2sctl *i2sctl,
+> +					struct regmap *map, unsigned int reg)
+> +{
+Should this be apq8016_init_i2sctl_bitfields
+
+Please make sure that you compile the code before sending it out!
+
+--srini
+
+> 
