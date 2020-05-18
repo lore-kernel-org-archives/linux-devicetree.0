@@ -2,402 +2,117 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA78C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9537C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C95120671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D2920671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:11:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="O9dZDvVb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yezs7gGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733013AbgERSKY (ORCPT
+        id S1729634AbgERSLV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 14:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
+        Mon, 18 May 2020 14:11:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732991AbgERSKY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:10:24 -0400
-X-Greylist: delayed 65 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 18 May 2020 11:10:23 PDT
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC736C061A0C;
-        Mon, 18 May 2020 11:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
-        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=AbyQlLTgT9N6dnHMOx2feZtNUM31THpZV6Gi5OUra7o=; b=O9dZDvVbze5d5QwrWR1VB6dsos
-        Jvr+FLendqrn2L8zU0c+3f6G/zEqbmrUsAyAVL6+3sANjzvL2zae6NA4TSVDnqPuHc55+lmzPbzTA
-        MtR/4F3WzgjFkJfgdsKrxF6WL0bC22GzbrrcN/1IEEea58rlzCi3oirGz1JSk4Nu6azPVxhkFnDr6
-        rU3tuoLDcf7qBzBH8PX6/cGLZ2eCyuBq7OtAv+YwKvvt1ec8/JjWMmPvSCs3qDNbJQbF8y9M5TQnW
-        ggyGwKVDwnwQrV2SueCO9f6U6Z8juHmKtwdysx3zkwoF4ezFQrk4RVKcyVnXa+3dXj9H6FzxDApjE
-        J7LqM/bA==;
-Received: from [2001:4d48:ad59:1409:4::2] (helo=youmian.o362.us)
-        by the.earth.li with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1jakDW-0008Ou-Le; Mon, 18 May 2020 19:10:22 +0100
-Date:   Mon, 18 May 2020 19:10:14 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] ARM: dts: qcom: Add MikroTik RB3011
-Message-ID: <75390e66c9e6e36ddd42dc7f54cac28dfd7a24b9.1589824955.git.noodles@earth.li>
-References: <cover.1589824955.git.noodles@earth.li>
+        with ESMTP id S1732843AbgERSEt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:04:49 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D23C05BD09
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:04:49 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q24so192627pjd.1
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:04:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nGHpGwwWCzCJVc7bPHElzmAcZWD6x2usMfgTF/Hyv34=;
+        b=yezs7gGmWNEMQgES7TZ+xcCNcGDm2+5zFxorxpSP+ZD8d645MzsEgn/+ELaoNKXIFF
+         jwt25o2C1yM1vnTI6Hq0qT4rrZeh8aZYdo99QBYcXaJAED8NNz97cHQPfyanqByvOh8p
+         q2P6P9PgOakAS2y/R7ywxQeQLTluzvw4DRj7LTbweDTceoXUwix5YjtjzbpIgwZhWacL
+         u0kJHWnongsmlnxe9x81xW8PMi4x3cfmmaFf76hlMYAh3p7i/SevDZdLWIdwtV+XIvZo
+         HsJG3QBKDPJKTLwyqp0nSxh4qC5QRhrQ6MTB5zCV25Y/P42K/Yk+kupocFQObxdpjLwh
+         mzsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nGHpGwwWCzCJVc7bPHElzmAcZWD6x2usMfgTF/Hyv34=;
+        b=TQ4qcacdDrdGEfTnMoU8dF3T9FGUNvz4P3ajzZ2jAX+OUosyWOPoZlrVfqDLBYZ6xj
+         rDlz4uB0L22KxoonzfNu4V71pGtTAckCWTkCGQT0H2EmOjbWRlxzNkTR867ls6osUgKm
+         7sFPNTqdfejEWHzfDDsG5P4PNGcj0rZ07knADQXWMpjQ9A029p4Q1y0iYE1OSFr7omnm
+         b15ECeAghKw0Yg/W4Ks5acMp+PEHZxjcd8GAulTr14DpT+n0ZL3gh9Ar3FtwEEkjTjGH
+         wVRr0b3qSGx6Sc9CVMzDy4fvtXBrYDFhi84RYHXPSzD86Nucb+mX3U7d33BRMNs6Z4da
+         p6Tw==
+X-Gm-Message-State: AOAM531kid+F+HIgTLibwyd5chTwg5iQSChwuASDnWnC5l9zusY+KKPr
+        J21iiN2I4iPFaBaTX0/70e5PDQ==
+X-Google-Smtp-Source: ABdhPJy0os+7IoFCFKg7k+EZgJxjNXzkxcklwepEVVeiJOSzaLYyRQZOx0XwQFhan0Ma7PyXS/9uNQ==
+X-Received: by 2002:a17:90a:bb81:: with SMTP id v1mr605595pjr.168.1589825088878;
+        Mon, 18 May 2020 11:04:48 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c24sm172998pjs.51.2020.05.18.11.04.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 11:04:48 -0700 (PDT)
+Date:   Mon, 18 May 2020 11:03:25 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 8/8] arm64: dts: ipq6018: Add a53 pll and apcs clock
+Message-ID: <20200518180325.GB2165@builder.lan>
+References: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
+ <1588573224-3038-9-git-send-email-sivaprak@codeaurora.org>
+ <20200512202439.GK2165@builder.lan>
+ <80039c21-41cf-2ace-939a-ef48fd773aa4@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1589824955.git.noodles@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <80039c21-41cf-2ace-939a-ef48fd773aa4@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds a DTS file for the MikroTik RouterBoard 3011, which is a
-1U rackmount router based on the IPQ8064, supporting the serial UART,
-dual QCA8337 Gigabit ethernet switches, boot loader NOR and user LED
-device.
+On Tue 12 May 20:55 PDT 2020, Sivaprakash Murugesan wrote:
 
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
----
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/qcom-ipq8064-rb3011.dts | 308 ++++++++++++++++++++++
- 2 files changed, 309 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
+> Hi Bjorn,
+> 
+> On 5/13/2020 1:54 AM, Bjorn Andersson wrote:
+> > On Sun 03 May 23:20 PDT 2020, Sivaprakash Murugesan wrote:
+> > 
+> > > add support for apps pll and apcs clock.
+> > > 
+> > > Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> > > ---
+> > >   arch/arm64/boot/dts/qcom/ipq6018.dtsi | 16 +++++++++++++---
+> > >   1 file changed, 13 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> > > index 1aa8d85..af2ceeb 100644
+> > > --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> > > @@ -294,12 +294,22 @@
+> > >   		};
+> > >   		apcs_glb: mailbox@b111000 {
+> > > -			compatible = "qcom,ipq8074-apcs-apps-global";
+> > > -			reg = <0x0b111000 0xc>;
+> > > -
+> > > +			compatible = "qcom,ipq6018-apcs-apps-global";
+> > > +			reg = <0x0b111000 0x1000>;
+> > My documentation states that IPQ8074 indeed has this block at
+> > 0x0b111000, but IPQ6018 it's at 0x6b111000. Can you confirm this is
+> > correct? Same with the pll below.
+> The address 0x6b111000 is how the RPM sees this block. For A53 it is still
+> 0xb111000
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..e697a4bd7426 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -884,6 +884,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-ipq4019-ap.dk07.1-c1.dtb \
- 	qcom-ipq4019-ap.dk07.1-c2.dtb \
- 	qcom-ipq8064-ap148.dtb \
-+	qcom-ipq8064-rb3011.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb \
- 	qcom-msm8974-fairphone-fp2.dtb \
-diff --git a/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts b/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
-new file mode 100644
-index 000000000000..282b89ce3d45
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
-@@ -0,0 +1,308 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "qcom-ipq8064.dtsi"
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "MikroTik RB3011UiAS-RM";
-+	compatible = "mikrotik,rb3011";
-+
-+	aliases {
-+		serial0 = &gsbi7_serial;
-+		ethernet0 = &gmac0;
-+		ethernet1 = &gmac3;
-+		mdio-gpio0 = &mdio0;
-+		mdio-gpio1 = &mdio1;
-+	};
-+
-+	chosen {
-+		bootargs = "loglevel=8 console=ttyMSM0,115200";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		reg = <0x42000000 0x3e000000>;
-+		device_type = "memory";
-+	};
-+
-+	mdio0: mdio@0 {
-+		status = "okay";
-+		compatible = "virtual,mdio-gpio";
-+		gpios = <&qcom_pinmux 1 GPIO_ACTIVE_HIGH>,
-+			<&qcom_pinmux 0 GPIO_ACTIVE_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pinctrl-0 = <&mdio0_pins>;
-+		pinctrl-names = "default";
-+
-+		switch0: switch@10 {
-+			compatible = "qca,qca8337";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dsa,member = <0 0>;
-+
-+			pinctrl-0 = <&sw0_reset_pin>;
-+			pinctrl-names = "default";
-+
-+			reset-gpios = <&qcom_pinmux 16 GPIO_ACTIVE_LOW>;
-+			reg = <0x10>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				switch0cpu: port@0 {
-+					reg = <0>;
-+					label = "cpu";
-+					ethernet = <&gmac0>;
-+					phy-mode = "rgmii-id";
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "sw1";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "sw2";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "sw3";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "sw4";
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					label = "sw5";
-+				};
-+			};
-+		};
-+	};
-+
-+	mdio1: mdio@1 {
-+		status = "okay";
-+		compatible = "virtual,mdio-gpio";
-+		gpios = <&qcom_pinmux 11 GPIO_ACTIVE_HIGH>,
-+			<&qcom_pinmux 10 GPIO_ACTIVE_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pinctrl-0 = <&mdio1_pins>;
-+		pinctrl-names = "default";
-+
-+		switch1: switch@14 {
-+			compatible = "qca,qca8337";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dsa,member = <1 0>;
-+
-+			pinctrl-0 = <&sw1_reset_pin>;
-+			pinctrl-names = "default";
-+
-+			reset-gpios = <&qcom_pinmux 17 GPIO_ACTIVE_LOW>;
-+			reg = <0x10>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				switch1cpu: port@0 {
-+					reg = <0>;
-+					label = "cpu";
-+					ethernet = <&gmac3>;
-+					phy-mode = "sgmii";
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "sw6";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "sw7";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "sw8";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "sw9";
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					label = "sw10";
-+				};
-+			};
-+		};
-+	};
-+
-+	soc {
-+		gsbi5: gsbi@1a200000 {
-+			qcom,mode = <GSBI_PROT_SPI>;
-+			status = "okay";
-+
-+			spi4: spi@1a280000 {
-+				status = "okay";
-+				spi-max-frequency = <50000000>;
-+
-+				pinctrl-0 = <&spi_pins>;
-+				pinctrl-names = "default";
-+
-+				cs-gpios = <&qcom_pinmux 20 GPIO_ACTIVE_HIGH>;
-+
-+				norflash: s25fl016k@0 {
-+					compatible = "jedec,spi-nor";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					spi-max-frequency = <50000000>;
-+					reg = <0>;
-+
-+					partition@0 {
-+						label = "RouterBoot";
-+						reg = <0x0 0x40000>;
-+					};
-+				};
-+			};
-+		};
-+
-+		gpio_keys {
-+			compatible = "gpio-keys";
-+			pinctrl-0 = <&buttons_pins>;
-+			pinctrl-names = "default";
-+
-+			button@1 {
-+				label = "reset";
-+				linux,code = <KEY_RESTART>;
-+				gpios = <&qcom_pinmux 66 GPIO_ACTIVE_LOW>;
-+				linux,input-type = <1>;
-+				debounce-interval = <60>;
-+			};
-+		};
-+
-+		leds {
-+			compatible = "gpio-leds";
-+			pinctrl-0 = <&leds_pins>;
-+			pinctrl-names = "default";
-+
-+			led@7 {
-+				label = "rb3011:green:user";
-+				gpios = <&qcom_pinmux 33 GPIO_ACTIVE_HIGH>;
-+				default-state = "off";
-+			};
-+		};
-+
-+	};
-+};
-+
-+&gmac0 {
-+	status = "okay";
-+
-+	phy-mode = "rgmii";
-+	qcom,id = <0>;
-+	phy-handle = <&switch0cpu>;
-+
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
-+&gmac3 {
-+	status = "okay";
-+
-+	phy-mode = "sgmii";
-+	qcom,id = <3>;
-+	phy-handle = <&switch1cpu>;
-+
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
-+&gsbi7 {
-+	status = "okay";
-+	qcom,mode = <GSBI_PROT_I2C_UART>;
-+};
-+
-+&gsbi7_serial {
-+	status = "okay";
-+};
-+
-+&qcom_pinmux {
-+	buttons_pins: buttons_pins {
-+		mux {
-+			pins = "gpio66";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	leds_pins: leds_pins {
-+		mux {
-+			pins = "gpio33";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	mdio0_pins: mdio0_pins {
-+		mux {
-+			pins = "gpio0", "gpio1";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+	};
-+
-+	mdio1_pins: mdio1_pins {
-+		mux {
-+			pins = "gpio10", "gpio11";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+	};
-+
-+	sw0_reset_pin: sw0_reset_pin {
-+		mux {
-+			pins = "gpio16";
-+			drive-strength = <16>;
-+			function = "gpio";
-+			bias-disable;
-+			input-disable;
-+		};
-+	};
-+
-+	sw1_reset_pin: sw1_reset_pin {
-+		mux {
-+			pins = "gpio17";
-+			drive-strength = <16>;
-+			function = "gpio";
-+			bias-disable;
-+			input-disable;
-+		};
-+	};
-+};
--- 
-2.20.1
+Okay, thanks for confirming.
 
+Regards,
+Bjorn
