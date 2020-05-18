@@ -2,85 +2,85 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFAAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B69C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 22:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 383F3206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 21:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57C720829
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 22:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589840078;
+	bh=RLcRUJrzBYiJDEKffT7YT45tQ3CDn6bDyuP1fuA1U8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VzMrlxkAPT0tm8LoXOCKBKmnnqB4YkMP2Mb6lX0TYUGQaNcstc562248LSignrMYL
+	 /Fca7ZjUtIOhlHAnSVNC33DL9DYYMJL6QOn3hbIslFFFnPyLpAjYAi3kxc1QW7jZja
+	 T7IBd5DPyblLNH+SbGb2W56sl2dY4/aeZXHnexyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgERVzW (ORCPT
+        id S1726502AbgERWOi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 17:55:22 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50388 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERVzW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 17:55:22 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6A1C1803080B;
-        Mon, 18 May 2020 21:55:19 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KntM-jPn2GzF; Tue, 19 May 2020 00:55:18 +0300 (MSK)
-Date:   Tue, 19 May 2020 00:55:17 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Baikal-T1 System Boot SPI
- Controller binding
-Message-ID: <20200518215517.phusnx3llajik6sm@mobilestation>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-2-Sergey.Semin@baikalelectronics.ru>
- <20200518152659.GA2525@bogus>
+        Mon, 18 May 2020 18:14:38 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46983 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgERWOi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 18:14:38 -0400
+Received: by mail-il1-f193.google.com with SMTP id w18so11450060ilm.13;
+        Mon, 18 May 2020 15:14:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EILzSJQ9ooYrSwPtQmh1JCJ6iFHH9cshXd0l+K0UWUg=;
+        b=nitLYRi2DhE+3ScFShOd22mpPlAvagEKFcVCY/nPk7rnc/h5YIRIk8dJjLTRA8wmVt
+         mESqCWMznttR2dw6nPqvXZ92eCmLzzxeeylWpzVnT7JomjksCcIjxLiJGRx7iUzhFiNa
+         kXnKBekKDyCylo3/QZ+A5m/IHvQb/ARptFVLVIfoM0cQ04ubABDh9AC+lTKNjUw3UgRq
+         qC5xuEu9ypmEOntz13s76m6t10J2oBoEQxiYq8Tb8FKRsr3J+2NsJzGICaH2nI1Z601t
+         RrDCWkjN3loMkgBeJPinrHqCfOz7MbtO/o+UwOcACLrHT7zVtwJLnZxm6g7YYbJd+g/1
+         yMEw==
+X-Gm-Message-State: AOAM532RsnHJzoVa9qnxHQPHVtrT98ob0CIpbCu9bbez+4irsx0xJPL8
+        Dk5M1WV/h7YS6/7U1olk9w==
+X-Google-Smtp-Source: ABdhPJxuDsDG4Q8cCZyp7eSxhiTFEEoCp3gbOuCrmvr18ODcvv037EWI9zIgOwCOuRr5OAWDWsrAAA==
+X-Received: by 2002:a92:5f5a:: with SMTP id t87mr18582791ilb.269.1589840077379;
+        Mon, 18 May 2020 15:14:37 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id r80sm5316136ilk.65.2020.05.18.15.14.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 15:14:36 -0700 (PDT)
+Received: (nullmailer pid 6875 invoked by uid 1000);
+        Mon, 18 May 2020 22:14:35 -0000
+Date:   Mon, 18 May 2020 16:14:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     nikitos.tr@gmail.com
+Cc:     dmurphy@ti.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        pavel@ucw.cz, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Shanghai Awinic
+ Technology Co., Ltd.
+Message-ID: <20200518221435.GA6734@bogus>
+References: <20200511111128.16210-1-nikitos.tr@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518152659.GA2525@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200511111128.16210-1-nikitos.tr@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 09:26:59AM -0600, Rob Herring wrote:
-> On Fri, May 08, 2020 at 12:36:20PM +0300, Serge Semin wrote:
-> > Baikal-T1 Boot SPI is a part of the SoC System Controller and is
-> > responsible for the system bootup from an external SPI flash. It's a DW
-> > APB SSI-based SPI-controller with no interrupts, no DMA, with just one
-> > native chip-select available and a single reference clock. Since Baikal-T1
-> > SoC is normally booted up from an external SPI flash this SPI controller
-> > in most of the cases is supposed to be connected to a single SPI-nor
-> > flash. Additionally in order to provide a transparent from CPU point of
-> > view initial code execution procedure the system designers created an IP
-> > block which physically maps the SPI flash found at CS0 to a memory region.
+On Mon, 11 May 2020 16:11:26 +0500,  wrote:
+> From: Nikita Travkin <nikitos.tr@gmail.com>
+> 
+> Add the "awinic" vendor prefix for Shanghai Awinic Technology Co., Ltd.
+> Website: https://www.awinic.com/
+> 
+> Signed-off-by: Nikita Travkin <nikitos.tr@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-BTW Rob, could you also provide your review for the next patch:
-https://lore.kernel.org/linux-mips/20200515104758.6934-20-Sergey.Semin@baikalelectronics.ru/
-?
-
-We agreed with Mark to merge this driver into the generic DW APB SSI code so to
-be available for another platforms. Since our DW APB SSI IP's got too many
-peculiarities I'll have to provide a new compatible string. It would be great to
-add it into the DW schema binding instead of currently available text-based
-legacy binding file.
-
-[nip]
-
+Reviewed-by: Rob Herring <robh@kernel.org>
