@@ -2,160 +2,152 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A387C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F2BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20009207ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:04:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X8YMwEb7"
+	by mail.kernel.org (Postfix) with ESMTP id 87C65207F9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 23:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589843651;
+	bh=GXR83qtwdDbrZxkBXEKAXiWeE1p5THJydmS7rxH2rjQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q+TvY/OL2TGCsBsNJIhf73AlMhpWACbqpZS3g7yOWhgvOCCfQS52sRZu7YA/sGIM1
+	 yQq+3M9rwhjexuBB9u9v09PqMkVVniKdKvsQ3FTba3rS9zBATpxZmPEVEavnX7jjFm
+	 bjqgjNUQA6+dTBOvaeQDQ65FisnCCzt5jePBnaag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgERXEl (ORCPT
+        id S1726539AbgERXOL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 19:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728445AbgERXEl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 19:04:41 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 638FFC061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 16:04:40 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f23so5521191pgj.4
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 16:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=r1Le0nR4tySg2kT1BHFLkI6EUe6Y+WJSI4SzoGFWd78=;
-        b=X8YMwEb7Lw6MWj/O2T9yVdzE4Qn1LZvj16YoPpFa5Bi9kpMAY6JEpRegNVtbbNZZln
-         KaAi1nbXmSCB4kMjiVjJAR72mczRt1j1ih6NIC8arnMSF3X7aErbEVibKj2suB6EpYAR
-         RG79hUO+hsivoJncAPGCJZq+f0OcKGtG0P49o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r1Le0nR4tySg2kT1BHFLkI6EUe6Y+WJSI4SzoGFWd78=;
-        b=cJPw9Ynbfk4ggQeqCxL3gJjZhA/Bqba057H+29s2Uv4+iP9XFkE1o2Kc1Vxd4vcyZA
-         mN/eKOkh7dUUh5n9N10sxrcAzxTEwDEbgqpO+NjUzhNd72kuBhMV90ticWdBax63Lts7
-         k+eWBGUpX3Qmvwk1O7h04MnuVUZ6BFeLNfGX03ChdK+FWr89PBObndnxUpGaf4llB6nj
-         zKzjLi+maEJNLPzGnzAHcPdWf0GA9Z7WK33DK4obpiR3TzlCvWh1x482POEoHrm/Ug4j
-         iSAEijBcFGe1xfqGzVr13l77+f5CgweKeR1C6gp0EauAM1yw1TIfaP76wd1Z4s0bNvBz
-         zQ4A==
-X-Gm-Message-State: AOAM530pZ7bgTNHFB8255BW0xxhFCRr4qeDAiIwamB8HJ/Q/3hZObWMN
-        +UR4w3vWUAnrLKMu8TjtzTXKlg==
-X-Google-Smtp-Source: ABdhPJxe14AahgZj+S3UqpTlkNaNE8HgOPicSyURsr+inLr9Ituh4PyX3CXubeVAnZK/edydfrJA3Q==
-X-Received: by 2002:a63:ef03:: with SMTP id u3mr3765193pgh.254.1589843079916;
-        Mon, 18 May 2020 16:04:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id mn19sm478872pjb.8.2020.05.18.16.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 16:04:39 -0700 (PDT)
-Date:   Mon, 18 May 2020 16:04:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Benson Leung <bleung@chromium.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v4 6/6] ramoops: Add max_reason optional field to ramoops
- DT node
-Message-ID: <202005181603.C8CBA854@keescook>
-References: <20200515184434.8470-1-keescook@chromium.org>
- <20200515184434.8470-7-keescook@chromium.org>
- <CAL_JsqLVgdUEP74nJOHOBD2abK=3YfCqX9GmL2iXdPNctcRdjw@mail.gmail.com>
+        Mon, 18 May 2020 19:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbgERXOK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 19:14:10 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3E512067D;
+        Mon, 18 May 2020 23:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589843650;
+        bh=GXR83qtwdDbrZxkBXEKAXiWeE1p5THJydmS7rxH2rjQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c+hwd3Kf46sVo9AuXOkdmcRICchoBV/6eyN4ZrdRt1rfzxUW8MY6zk95oWIn7EYsk
+         A86goNl25PWc20yYMHqP7QaHWfwIq4SLG1rhDKM4U1aN9FTtMMc4IVym5cT2wdqzDX
+         a6wuR7Sa828uQQaPe7FDO7RD42Mh3sFXnPA09FSA=
+Received: by mail-ot1-f54.google.com with SMTP id d26so9659075otc.7;
+        Mon, 18 May 2020 16:14:09 -0700 (PDT)
+X-Gm-Message-State: AOAM531/fir5yj0NYQd0kwZc+6DsIzx7kG5YwHRxtQwA/WJOiHh30kaM
+        g8s8mVsUquuxS6h5p9P8depMy/ltxgdr22E7AQ==
+X-Google-Smtp-Source: ABdhPJz4O9rEWx8T9VergSeE5BZRA92UaUypy77OD9VVs0mDqqxpXBq4sUFpllqi+T5YTfqCIKtUAde6em694OTW+LQ=
+X-Received: by 2002:a9d:1441:: with SMTP id h59mr14200957oth.192.1589843649219;
+ Mon, 18 May 2020 16:14:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLVgdUEP74nJOHOBD2abK=3YfCqX9GmL2iXdPNctcRdjw@mail.gmail.com>
+References: <20200508082937.14171-1-rogerq@ti.com> <20200508082937.14171-3-rogerq@ti.com>
+ <20200518145133.GA2280@bogus>
+In-Reply-To: <20200518145133.GA2280@bogus>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 18 May 2020 17:13:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL8TTq_bpGvhUSQ92n84rrBrHFt75U2PDKRFjzK5VLAAg@mail.gmail.com>
+Message-ID: <CAL_JsqL8TTq_bpGvhUSQ92n84rrBrHFt75U2PDKRFjzK5VLAAg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] dt-bindings: mdf: ti,j721e-syscon.yaml: Add J721e
+ system controller
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Nishanth Menon <nm@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 04:45:32PM -0600, Rob Herring wrote:
-> On Fri, May 15, 2020 at 12:44 PM Kees Cook <keescook@chromium.org> wrote:
+On Mon, May 18, 2020 at 8:51 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, May 08, 2020 at 11:29:32AM +0300, Roger Quadros wrote:
+> > Add DT binding schema for J721e system controller.
 > >
-> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
-> 
-> Subject still has 'max_reason'.
-> 
-> >
-> > Currently, it is possible to dump kmsges for panic, or oops.
-> > With max_reason it is possible to dump messages for other
-> 
-> And here.
-
-Ah yeah, this was, I think, describing the internal field name, but I
-see it would be less confusing to refer to this by the DT name. I will
-adjust it. Thanks!
-
--Kees
-
-> 
-> > kmesg_dump events, for example reboot, halt, shutdown, kexec.
-> >
-> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > Link: https://lore.kernel.org/lkml/20200506211523.15077-6-keescook@chromium.org/
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Roger Quadros <rogerq@ti.com>
 > > ---
-> >  .../devicetree/bindings/reserved-memory/ramoops.txt | 13 +++++++++++--
-> >  1 file changed, 11 insertions(+), 2 deletions(-)
+> >  .../bindings/mfd/ti,j721e-syscon.yaml         | 69 +++++++++++++++++++
+> >  1 file changed, 69 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml
+>
+> Use the compatible string for filename.
+>
 > >
-> > diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
-> > index 0eba562fe5c6..b7886fea368c 100644
-> > --- a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
-> > +++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
-> > @@ -30,7 +30,7 @@ Optional properties:
-> >  - ecc-size: enables ECC support and specifies ECC buffer size in bytes
-> >    (defaults to 0: no ECC)
-> >
-> > -- record-size: maximum size in bytes of each dump done on oops/panic
-> > +- record-size: maximum size in bytes of each kmsg dump.
-> >    (defaults to 0: disabled)
-> >
-> >  - console-size: size in bytes of log buffer reserved for kernel messages
-> > @@ -45,7 +45,16 @@ Optional properties:
-> >  - unbuffered: if present, use unbuffered mappings to map the reserved region
-> >    (defaults to buffered mappings)
-> >
-> > -- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-> > +- max-reason: if present, sets maximum type of kmsg dump reasons to store
-> > +  (defaults to 2: log Oopses and Panics). This can be set to INT_MAX to
-> > +  store all kmsg dumps. See include/linux/kmsg_dump.h KMSG_DUMP_* for other
-> > +  kmsg dump reason values. Setting this to 0 (KMSG_DUMP_UNDEF), means the
-> > +  reason filtering will be controlled by the printk.always_kmsg_dump boot
-> > +  param: if unset, it will be KMSG_DUMP_OOPS, otherwise KMSG_DUMP_MAX.
+> > diff --git a/Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml b/Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml
+> > new file mode 100644
+> > index 000000000000..e832fb43f884
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/ti,j721e-syscon.yaml
+> > @@ -0,0 +1,69 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mfd/ti,j721e-syscon.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +- no-dump-oops: deprecated, use max_reason instead. If present, and
-> > +  max_reason is not specified, it is equivalent to max_reason = 1
-> 
-> And here (3 times).
-> 
-> > +  (KMSG_DUMP_PANIC).
-> >
-> >  - flags: if present, pass ramoops behavioral flags (defaults to 0,
-> >    see include/linux/pstore_ram.h RAMOOPS_FLAG_* for flag values).
-> > --
-> > 2.20.1
-> >
+> > +title: TI J721e System Controller Registers R/W Device Tree Bindings
+> > +
+> > +description: |
+> > +  This represents the Control Module registers (CTRL_MMR0) on the SoC.
+> > +  System controller node represents a register region containing a set
+> > +  of miscellaneous registers. The registers are not cohesive enough to
+> > +  represent as any specific type of device. The typical use-case is
+> > +  for some other node's driver, or platform-specific code, to acquire
+> > +  a reference to the syscon node (e.g. by phandle, node path, or
+> > +  search using a specific compatible value), interrogate the node (or
+> > +  associated OS driver) to determine the location of the registers,
+> > +  and access the registers directly.
+> > +
+> > +maintainers:
+> > +  - Kishon Vijay Abraham I <kishon@ti.com>
+> > +  - Roger Quadros <rogerq@ti.com
+> > +
+> > +allOf:
+> > +  - $ref: "syscon.yaml#"
+>
+> Drop this as it is not needed.
+>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    anyOf:
+> > +      - items:
+> > +        - enum:
+> > +          - ti,j721e-system-controller
+> > +
+> > +        - const: syscon
+>
+> What about simple-mfd?
+>
+> > +
+> > +      - contains:
+> > +          const: syscon
+> > +        additionalItems: true
+>
+> Should be dropped.
+>
+> You are going to need a 'select' entry or this will match on any syscon
+> or simple-mfd node:
+>
+> select:
+>   properties:
+>     compatible:
+>       contains:
+>         const: ti,j721e-system-controller
+>   required:
+>     - compatible
 
--- 
-Kees Cook
+Sorry, forget the 'select' part (still should drop the 2nd clause).
+I'd found a bug in what handles this automatically, but it's only when
+you have 'simple-mfd' and not 'syscon'.
+
+Rob
