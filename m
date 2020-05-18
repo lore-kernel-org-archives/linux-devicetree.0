@@ -2,131 +2,89 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6E3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D505BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0BB20756
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF3820756
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:43:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ozieOzdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgEROkw (ORCPT
+        id S1728053AbgEROnv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:40:52 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48318 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbgEROkv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:40:51 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BAC7F8030875;
-        Mon, 18 May 2020 14:40:47 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rEoajLcuEEvu; Mon, 18 May 2020 17:40:46 +0300 (MSK)
-Date:   Mon, 18 May 2020 17:40:45 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
- clocksource/sched-clocks usage
-Message-ID: <20200518144045.v56fajrhbnnrzbpf@mobilestation>
-References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
- <20200515171004.GA760381@linaro.org>
- <20200516121647.g6jua35kkihmw5r6@mobilestation>
- <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
+        Mon, 18 May 2020 10:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgEROnu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:43:50 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD13C061A0C;
+        Mon, 18 May 2020 07:43:50 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x27so8161961lfg.9;
+        Mon, 18 May 2020 07:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DyWQUbdQsaHneMIkUnV+0Uk+0v8VHubO0aOYCQH2OTE=;
+        b=ozieOzdt8X9dRrNZ2ZBFb/NJ0RGMHbQ3G0pKcrAI4K8deYDIHTwEHkizIvfUP2PJf3
+         0jgF4HQmgdaYp1xOhtyN3xLe0Ntm40NsHOIxwe56JxpTa30T4cZvOVlwDhOFBXDOGate
+         Wpenob7UAHBnLuJQ/4BT8tbW1BTo9qk//+WZ1zsA50SUULGQ7H9xeU9IKiQfCwOB+6jq
+         qWuBcMqRn9aVcwpJRUSyfmr2db/NuDRbd1ElsaN/e8NsTaPFme/pjzrcBfrmW0ZESFoh
+         ia6R8Yrf92SS6WwoRdKM+mBeNbDJFizblaBIIi/dWxeEZbpJHHWknoLXa7chPAl+QRsr
+         o9Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DyWQUbdQsaHneMIkUnV+0Uk+0v8VHubO0aOYCQH2OTE=;
+        b=K1bCv8TT+DcDU1dW1O0p0zlW9xQrwxoVt2cJSoKL3p+ntW1YrMYPQIRvVj3bxZrgWO
+         7TLr/7PIXWulpFMqJF0P3aKmDY5NnH+9yQCOENkm5Qw5XYQmf+BQXXmnVLq6sFFVywBr
+         KrSOyp4UGTP63Ohh/32Q+11WmL4iLVIcrY296b0DZicGw0e19ueJ4x2x2ssRy+4x40Im
+         3Zzh/zKs7URhjOPxsGdjvVVDyKeY6xZQ0nc7pPMtXHO77A/V42R6Sk3lcaXNqbB4AdSA
+         DVNxWhtPFbV7tzwMPkrQAesMWXJarviyOlRN6rdn1P6zIFbUujPuRvdH4nOZU/876XTU
+         yVig==
+X-Gm-Message-State: AOAM532wEhQisodktmxy2MNsOFPJkskDQ4IGm8ZBnlmBqCdzdzE4jY3i
+        qrPYz05m0bf6dT8bXzX5WzD2k+9LhBNW8CKV7MHrzlqV
+X-Google-Smtp-Source: ABdhPJzqZ8nVo/dLSyrZUSSg9UbXrWgh7ZRtGhpGbCTSwOmErjkT5zwNhl9/wuvY2EmNrcCww0AbHYRzQN6W515PhCs=
+X-Received: by 2002:a19:c6c2:: with SMTP id w185mr10282694lff.69.1589813028498;
+ Mon, 18 May 2020 07:43:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <1589810819-19851-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1589810819-19851-1-git-send-email-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 18 May 2020 11:45:07 -0300
+Message-ID: <CAOMZO5BeBcvmAwEJTUhHSn=_chx7OVkkxj2oB+50hGH-7H7SfA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clock: Convert i.MX7D clock to json-schema
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Frank Li <Frank.Li@freescale.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Daniel,
+On Mon, May 18, 2020 at 11:16 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-On Mon, May 18, 2020 at 03:59:16PM +0200, Daniel Lezcano wrote:
-> On 16/05/2020 14:16, Serge Semin wrote:
-> > Hello Daniel,
-> > 
-> > Thanks for your comment. My response is below.
-> > 
-> > On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
-> >> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
-> >>> Currently neither clocksource nor scheduler clock kernel framework
-> >>> support the clocks with variable frequency. Needless to say how many
-> >>> problems may cause the sudden base clocks frequency change. In a
-> >>> simplest case the system time will either slow down or speed up.
-> >>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
-> >>> with CPU we must set some limitations on using it for these frameworks
-> >>> if CPU frequency may change. First of all it's not safe to have the
-> >>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
-> >>> the clocks registration in the sched-subsystem. Secondly we must
-> >>> significantly decrease the MIPS GIC clocksource rating. This will let
-> >>> the system to use it only as a last resort.
-> >>>
-> >>> Note CM3.x-based systems may also experience the problems with MIPS GIC
-> >>> if the CPU-frequency change is activated for the whole CPU cluster
-> >>> instead of using the individual CPC core clocks divider.
-> >>
-> >> May be there is no alternative but the code looks a bit hacksih. Isn't possible
-> >> to do something with the sched_mark_unstable?
-> >>
-> >> Or just not use the timer at all ?
-> > 
-> > Not using the timer might be better, but not that good alternative either
-> > especially in our case due to very slow external timer. Me and Thomas
-> > Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
-> > available on MIPS:
-> > https://lkml.org/lkml/2020/5/11/576
-> > 
-> > To cut it short, you are right. The solution with using clocksource_mark_unstable()
-> > is better alternative spied up in x86 tsc implementation. I'll use a similar
-> > approach here and submit the updated patch in v3.
-> > 
-> > Could you please proceed with the rest of the series review? I'd like to send
-> > the next version with as many comments taken into account as possible. The
-> > patchset has been submitted a while ago, but except Rob noone have had any
-> > comments.(
-> 
-> For me other patches are ok.
-> 
-> I can apply patches 1, 2, 4, 5, 6
-> 
-> Will remain patches 3 et 7
+> +maintainers:
+> +  - Frank Li <Frank.Li@freescale.com>
 
-That's be great! Thanks. Is patch 3 supposed to be merged in by Rob or by you?
-I don't see one being in the Rob's repo. He might be waiting for you
-acknowledgment or something.
-
-I'll send the updated patch 3 shortly today.
-
--Sergey
-
-> 
-> 
-> -- 
-> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-> 
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
+The freescale.com e-mail domain is no longer valid for quite some time :-)
