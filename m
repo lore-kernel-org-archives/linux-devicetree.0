@@ -4,129 +4,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C25C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D19C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C158620674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3741620674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="fIXqnEYF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qjxhrtzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgERNup (ORCPT
+        id S1727050AbgERN7V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:50:45 -0400
-Received: from lists.nic.cz ([217.31.204.67]:49056 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbgERNup (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 09:50:45 -0400
-Received: from localhost (unknown [172.20.6.135])
-        by mail.nic.cz (Postfix) with ESMTPSA id 3A5A913FB34;
-        Mon, 18 May 2020 15:50:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1589809842; bh=mKx8Rnn8Z17iw+8AFlxVTaPbT4P6vQPBfVaylXnXQEI=;
-        h=Date:From:To;
-        b=fIXqnEYFg6lCSyAhSNCZwFLbz1jywVQpQlh6h9L1S2ju9VaJol4woUgK4UmYZ7Mv7
-         cOga8n5NBLXHC7Wdb1LB0FVjxF2o3S5DivQXGj3iHOE8IGjs/VnIqPKaWfED5LCVTU
-         9LooSz6AHYRItjZGXC/Ry51vkD58ZaId2JnKvTtc=
-Date:   Mon, 18 May 2020 15:50:41 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-Message-ID: <20200518155041.655050b1@nic.cz>
-In-Reply-To: <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
-References: <20200430080625.26070-1-pali@kernel.org>
-        <20200513135643.478ffbda@windsurf.home>
-        <87pnb2h7w1.fsf@FE-laptop>
-        <20200518103004.6tydnad3apkfn77y@pali>
-        <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 18 May 2020 09:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgERN7V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:59:21 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D106C05BD0A
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 06:59:20 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 50so11951660wrc.11
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 06:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Qp3KMqm4FQRyseSw00gSsB5YgPJWvTQnwqqnC4fzNYk=;
+        b=QjxhrtzgoF4UOeAXmKcLvcQXo3nn09VjgwT3pzwmtMt4UHCM4eXIyEKiKQGvfl5PYd
+         5ar6mXkoazv5YLYLkuuFoqM7DPXWgD7ewwKfXdzkrxtG05ZLxLdzDKiUxTAigwZxaN6W
+         DCxDQ7qCjJMugmdWYRpb/+ZQU15iI+b20wQTP/582ApRzoBNgp7xJgDuueFczjwl/B5S
+         +lXXf0JtBQxyRcf4B9w6JvcBfeyoANEdWihQWeYg83qiDyAGSY6akppZPl435dwpHUTG
+         qP5b7zXt1QKCU8HTi0cCR6OrHAFRhKpCb+eBTnR9gr0ARNNFX8JuN7Q9bLHW3k/YYzNF
+         XcuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qp3KMqm4FQRyseSw00gSsB5YgPJWvTQnwqqnC4fzNYk=;
+        b=bFh2gxnEl9FlEt4S9Ir7SWIdLRXxctxdWdOxt/QW+kDLAg7UYuS/cGIgORwq4rwakE
+         uxauIZp7IRNAeg1d3hK6Fkm2xt6PYSdp7CCa4qytGU7tCwLvPN8xwpkjh0W/XEdJnHN0
+         GVDdb1+ihknZ4UPqD3DiIWpg2DH6Drr9VIxRaf+z+0v+Ljr1rQhADzWi3FpAqzrphzaG
+         pIx5sjxkEb6kDi9uV8ZgeWYCyy5H8LzMRmqeBzjGOSi27lkqxV71Nmd6+9N5z5mgYjnL
+         EolYAAH9PHWvb4upvnMquhEeGqZXbqkMtIrjw2pfPUwovdzRLvBwk5kG63dk+qPS7Pg4
+         gx1Q==
+X-Gm-Message-State: AOAM532TVhfDVYy0vYlAn7a8vwH0hI0K2mUGTTxI0J9IZnfB5jmvx8EE
+        /N7SxDNl5PZ2HL6a+Y9vjSt4Vw==
+X-Google-Smtp-Source: ABdhPJy7x6BVz0Xb+O2uc1Xy1BGI6onEzzHz8JHpWyLqk248mRHXNwXCml8Ac0UNNl6/MtBOQHjuxg==
+X-Received: by 2002:adf:e80e:: with SMTP id o14mr17715940wrm.307.1589810358929;
+        Mon, 18 May 2020 06:59:18 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
+        by smtp.googlemail.com with ESMTPSA id 5sm17082716wmd.19.2020.05.18.06.59.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 06:59:18 -0700 (PDT)
+Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
+ clocksource/sched-clocks usage
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
+ <20200515171004.GA760381@linaro.org>
+ <20200516121647.g6jua35kkihmw5r6@mobilestation>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
+Date:   Mon, 18 May 2020 15:59:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+In-Reply-To: <20200516121647.g6jua35kkihmw5r6@mobilestation>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 18 May 2020 14:46:14 +0100
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+On 16/05/2020 14:16, Serge Semin wrote:
+> Hello Daniel,
+> 
+> Thanks for your comment. My response is below.
+> 
+> On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
+>> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
+>>> Currently neither clocksource nor scheduler clock kernel framework
+>>> support the clocks with variable frequency. Needless to say how many
+>>> problems may cause the sudden base clocks frequency change. In a
+>>> simplest case the system time will either slow down or speed up.
+>>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
+>>> with CPU we must set some limitations on using it for these frameworks
+>>> if CPU frequency may change. First of all it's not safe to have the
+>>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
+>>> the clocks registration in the sched-subsystem. Secondly we must
+>>> significantly decrease the MIPS GIC clocksource rating. This will let
+>>> the system to use it only as a last resort.
+>>>
+>>> Note CM3.x-based systems may also experience the problems with MIPS GIC
+>>> if the CPU-frequency change is activated for the whole CPU cluster
+>>> instead of using the individual CPC core clocks divider.
+>>
+>> May be there is no alternative but the code looks a bit hacksih. Isn't possible
+>> to do something with the sched_mark_unstable?
+>>
+>> Or just not use the timer at all ?
+> 
+> Not using the timer might be better, but not that good alternative either
+> especially in our case due to very slow external timer. Me and Thomas
+> Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
+> available on MIPS:
+> https://lkml.org/lkml/2020/5/11/576
+> 
+> To cut it short, you are right. The solution with using clocksource_mark_unstable()
+> is better alternative spied up in x86 tsc implementation. I'll use a similar
+> approach here and submit the updated patch in v3.
+> 
+> Could you please proceed with the rest of the series review? I'd like to send
+> the next version with as many comments taken into account as possible. The
+> patchset has been submitted a while ago, but except Rob noone have had any
+> comments.(
 
-> On Mon, May 18, 2020 at 12:30:04PM +0200, Pali Roh=C3=A1r wrote:
-> > On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote: =20
-> > > Hello,
-> > >  =20
-> > > > Hello,
-> > > >
-> > > > On Thu, 30 Apr 2020 10:06:13 +0200
-> > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > =20
-> > > >> Marek Beh=C3=BAn (5):
-> > > >>   PCI: aardvark: Improve link training
-> > > >>   PCI: aardvark: Add PHY support
-> > > >>   dt-bindings: PCI: aardvark: Describe new properties
-> > > >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio fun=
-ction
-> > > >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle proper=
-ty
-> > > >>=20
-> > > >> Pali Roh=C3=A1r (7):
-> > > >>   PCI: aardvark: Train link immediately after enabling training
-> > > >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
-> > > >>     read-only register
-> > > >>   PCI: of: Zero max-link-speed value is invalid
-> > > >>   PCI: aardvark: Issue PERST via GPIO
-> > > >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG ac=
-cess
-> > > >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
-> > > >>     macros
-> > > >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed prope=
-rty =20
-> > > >
-> > > > Thanks a lot for this work. For a number of reasons, I'm less invol=
-ved
-> > > > in Marvell platform support in Linux, but I reviewed your series and
-> > > > followed the discussions around it, and I'm happy to give my:
-> > > >
-> > > > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com> =20
-> > >=20
-> > > With this acked-by for the series, the reviewed-by from Rob on the
-> > > binding and the tested-by, I am pretty confident so I applied the
-> > > patches 10, 11 and 12 on mvebu/dt64.
-> > >=20
-> > > Thanks,
-> > >=20
-> > > Gregory =20
-> >=20
-> > Thank you!
-> >=20
-> > Lorenzo, would you now take remaining patches? =20
->=20
-> Yes - even though I have reservations about patch (5) and the
-> problem is related to a complete lack of programming model for
-> these host controllers and a clear separation between what's
-> done in the OS vs bootloader, PERST handling in this host
-> bridge is *really* a mess.
->=20
-> I applied 1-9 to pci/aardvark.
->=20
-> Lorenzo
+For me other patches are ok.
 
-Hooray, thanks, Lorenzo (and everyone else).
+I can apply patches 1, 2, 4, 5, 6
+
+Will remain patches 3 et 7
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
