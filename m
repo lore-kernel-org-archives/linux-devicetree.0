@@ -7,119 +7,112 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3026AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF930C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 070D420709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF999207E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDsKryn7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HszmquuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgERNUX (ORCPT
+        id S1726989AbgERNWP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
+        Mon, 18 May 2020 09:22:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbgERNUW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:20:22 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3E2C061A0C;
-        Mon, 18 May 2020 06:20:22 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x15so4944018pfa.1;
-        Mon, 18 May 2020 06:20:22 -0700 (PDT)
+        with ESMTP id S1726854AbgERNWP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:22:15 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B892C061A0C;
+        Mon, 18 May 2020 06:22:15 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t7so4227869plr.0;
+        Mon, 18 May 2020 06:22:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VOhtb6aDUYF/bby4eFhEdjPKdJJNHZhrs2dy1zRqvRg=;
-        b=rDsKryn799wrGML6USURKvFtsAV/uzTijzNVu9hI6FTQEj3AFhZ911irHK3ovzhsUH
-         gY5LA7X6RURa29N0a9uH5OFLBvFxKgmCVL+S2LHar2ZloaGB+HW7AjVNvR4EFgCBxpsy
-         po8m+4EEsdKOq83PhP0pKwMOFemPBi2NghEI8xaASNmmmpuisFOXxp8CYt4r9RUzxxu1
-         M3GB8LGBpgcFswMHRmJSEf6wc8sgbA4QBO4WBLxXI/N36soCP3yyMdGiZf7r3pEYznqk
-         6vi0oRLO6oAzTU8/YQKG1+FHZVrR4xGNGcqOGbViiKsPYwbG3i5aRhnYKp6FmwbGWmsi
-         ut+A==
+        bh=9JqlTBOeFxsYXY8yGPgTaYilQ1ARPOh44vrjZNdkGyE=;
+        b=HszmquuAQ6p2kVYYydKaErfRawcJaiRS/7CbxuLC9KhmSnKtCqI4+G6vWNB4rgUfFh
+         aZ4VVrQKqwlOO7VBS6OcpnkTtp5dr0WvO+zaTbzgOh2OJZ4mFvIK9nh7yaS0eLQqBvEy
+         4JVyfAZTY8iDycXtAS/+2DGDMOApCrtXCh6tWcduRRy7YZ2sC1i2pb710vwLyYUIBUUQ
+         2tboclUUdVPR8YKqMcfDvt4FNYyNxrlofjhUe0WBT7nA6UxhdXhOQNbWrve8yFwQt/EX
+         mQPFEPm0UHqYhoJ+4DX5F/V4outXYRxdT1+lsmsP16S8SaFo+tMmQWPxIOC+3fx3jJX0
+         TUCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VOhtb6aDUYF/bby4eFhEdjPKdJJNHZhrs2dy1zRqvRg=;
-        b=pJgTHGpUWBLOfOik5MMvYbjSRYYfclikW/Zt/Fc9ihoEBjp0dW/S+idO8QiOxzCW47
-         jkqllKUN1lEmsJnN0et5DRfzQ4A3322qwcIgqG+jObqlzS6m1TIrlSYTEEQnjKUQIGfu
-         c64yCx/SNDD0SQ1ARGQK6XXDQ+HbowC7NLxv5hnthZhBDQvXjzhrJU+irFAg62ikEjWc
-         JJzH/UaPYhjhezCJsqqhgE2O/Jsz7LSdb6QTRgdKrDUHZlJWFf1fdqza/OqBXV8rfRts
-         6he309FNV049jSmnbK0fUoSW3j8dPkRYCZqLVXtVg3kAiRZmTVLuPVHlxmSNPON/6sio
-         JBbg==
-X-Gm-Message-State: AOAM5329nrl/7ygyMHDR6KSrNXHlF+NoxJ6CefEVF7ccDsJaweVIkelr
-        U/B8ar/rvMoqlsNsKIEyENYkvwyd6dTCQZsq0Fc=
-X-Google-Smtp-Source: ABdhPJxEWo37sbtLGrnXVQllcXNP02GCyiWRVMGVtQCaOaZDXATQdRF9Fzdajl4gBo0tRari+NEpX4OkjNg1wYKmxcw=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr15312040pgb.203.1589808022426;
- Mon, 18 May 2020 06:20:22 -0700 (PDT)
+        bh=9JqlTBOeFxsYXY8yGPgTaYilQ1ARPOh44vrjZNdkGyE=;
+        b=VfxQVgjAqxbBRNvgYUauj7X1LCN2bWE55F4Hyj2GYkKpqrNzNi8Lu2WI12kurv83CR
+         BRiIxvp+oF/6CeT2WpdJb8S2YfqYfXARCxGulNkKR/BAp0wbRHeWZqrJ1Q2cgUgMkwiq
+         xYP8ptsdb1cPfpP2yUQuIcB2ZESfTMwzLpAcxiKeFQSCF92s1XfjPWO/WdM0iK3LrpHN
+         BKlzUusRGRkNXOPDQzWM1923YKo9Dbrjfhgeql3GF7giYRJCwa4JD8167JsPyvVC3SGB
+         a7W8nNZWk2J68MqzEmwjA7NvfhPAGlCKZbbZDvTeLE3AqtQGDBzv31JigR55eszUKo+2
+         VOrw==
+X-Gm-Message-State: AOAM533/bsdGcJTEMtTt0MP4au1YWdSRG34B2ycVIrGkewc9usALUPU8
+        iuKsJ1seAvP67nyZcwaeSGOTKuo6psTyOzSVFVk=
+X-Google-Smtp-Source: ABdhPJyQuof7a7R82aHDECbaNCZA+hGhIGZx2TejPySxbPfh5Al8aPTl9+HdTVytT7Yz0G/ynv4siiDFJUHd2c5xzPU=
+X-Received: by 2002:a17:902:930c:: with SMTP id bc12mr16440827plb.255.1589808134848;
+ Mon, 18 May 2020 06:22:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <202005152142.AWvx4xc5%lkp@intel.com> <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
- <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
- <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com> <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
- <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
-In-Reply-To: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru> <20200515104758.6934-7-Sergey.Semin@baikalelectronics.ru>
+ <20200515123422.GZ185537@smile.fi.intel.com> <20200516142030.kburieaxjg4n7c42@mobilestation>
+ <20200518110004.GW1634618@smile.fi.intel.com> <CAHp75Vf268nfwJ4Bm+A+-CsqjBSHgKVmiiON=ffUd79DCOcE8Q@mail.gmail.com>
+ <20200518123242.xoosc4pcj7heo4he@mobilestation>
+In-Reply-To: <20200518123242.xoosc4pcj7heo4he@mobilestation>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 May 2020 16:20:10 +0300
-Message-ID: <CAHp75VfFsdjAT0P4m3O=VQ1e_L7cVyQx6HB7MCN+G_XcFisqZQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh R <vigneshr@ti.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
+Date:   Mon, 18 May 2020 16:22:03 +0300
+Message-ID: <CAHp75Vd3RUYw45i+TZ+R1wJquYJvjR+P3-qWe=v+QBk46C_zRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 06/19] spi: dw: Discard static DW DMA slave structures
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        masonccyang@mxic.com.tw
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 2:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Mon, May 18, 2020 at 1:43 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, May 18, 2020 at 2:39 PM Ramuthevar, Vadivel MuruganX
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> > > On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
-> > > > On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > >> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
-> >
-> > > > iowrite_be32() is the correct way to store word into a big-endian mmio register,
-> > > > if that is the intention here.
-> > > Thank you for suggestions to use iowrite32be(), it suits exactly.
-> >
-> > Can you before doing this comment what is the real intention here?
-> >
-> > And note, if you are going to use iowrite*() / ioread*() in one place,
-> > you will probably need to replace all of the read*() / write*() to
-> > respective io* API.
->
-> The way that ioread/iowrite are defined, they are required to be a superset
-> of what readl/writel do and can take __iomem pointers from either
-> ioremap() or ioport_map()/pci_iomap() style mappings, while readl/writel
-> are only required to work with ioremap().
->
-> There is no technical requirement to stick to one set or the other for
-> ioremap(), but the overhead of ioread/iowrite is also small enough
-> that it generally does not hurt.
+On Mon, May 18, 2020 at 3:32 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Mon, May 18, 2020 at 02:38:13PM +0300, Andy Shevchenko wrote:
+> > On Mon, May 18, 2020 at 2:01 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Sat, May 16, 2020 at 05:20:30PM +0300, Serge Semin wrote:
 
-Right, my suggestion is solely for consistency. It would be a bit
-weird to see readl() along with ioread32() in the same driver (in case
-there are no differentiated callbacks specifically for different type
-of IP).
+...
+
+> > > I'm not talking about stack, it's fine for me, what I'm talking about is *how*
+> > > they are being initialized. Read my message again carefully, please.
+> >
+> > And to avoid additional churn around this, the purpose is to show what
+> > Dreq number is in use actually for these transfers (that's why 0
+> > assignment is explicitly there and no counterpart Dreq filled).
+>
+> Sorry, but nothing persuasive so far. We still can remove their static definition
+> and explicitly assign zero or one to the src and dst request IDs on stack. I'll do
+> this in v3, since I have to send one anyway.
+
+Right, I'm completely fine with it, thanks!
 
 -- 
 With Best Regards,
