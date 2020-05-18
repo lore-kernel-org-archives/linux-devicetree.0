@@ -2,364 +2,237 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02F5C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B55C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B1820709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E3B20671
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YJ6lk1j1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Kj+41nQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgERNJz (ORCPT
+        id S1727020AbgERNLJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgERNJy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:09:54 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF7CFC061A0C;
-        Mon, 18 May 2020 06:09:54 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 23750258;
-        Mon, 18 May 2020 15:09:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589807391;
-        bh=jC3YueleQdlVPRFlrExxveSRBBNo5wz7C8F9L9hQcWA=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YJ6lk1j15lFS5dAFHvppbs9Pojh9sxDvacBENUsji06e/2JwMYcKue4EYRDyNGshT
-         S5AWwsUVWmEge3aPkwtml60ne/B3vvIRFK2BqjDl9THV5K00w6cq2phR8+yPu5HdCV
-         eWFuZztCR7e75NzuflsgTP3wuMjXb7d+UE/Gtq7A=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
- <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
- <20200516215103.GA857@valkosipuli.retiisi.org.uk>
- <930009cd-d887-752a-4f1f-567c795101ee@ideasonboard.com>
- <20200518123810.wsqg2a3lbbme36e7@uno.localdomain>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <e898b72f-f793-6c0d-27a8-5a34c61f763e@ideasonboard.com>
-Date:   Mon, 18 May 2020 14:09:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 09:11:09 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:52879 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726999AbgERNLJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 09:11:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589807468; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=yesEOQOsZepZE5D6yg40ImK6nzOuLsRg9Xtx8I3BpvI=; b=Kj+41nQf//gofImdEQClhoaWM3BclBkuFa+k+m+OSnZ5agfUPx28V/+Lx38h2Td3SPhAaZnw
+ 7755jNPczKDobNCmeyCKyuBvE/rrFeHiaKZtrWH5XHD3s9cnKAGDHJ3flZFzEE/MJou0LY1U
+ InMjFTnijPBLDG6HVSqOqNCwaL0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec28965.7ff19f3df148-smtp-out-n04;
+ Mon, 18 May 2020 13:11:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 93227C433F2; Mon, 18 May 2020 13:11:00 +0000 (UTC)
+Received: from [192.168.0.11] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7EFFFC44BC3;
+        Mon, 18 May 2020 13:10:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7EFFFC44BC3
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V5 6/7] spi: spi-qcom-qspi: Add interconnect support
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org, georgi.djakov@linaro.org
+References: <1588919619-21355-1-git-send-email-akashast@codeaurora.org>
+ <1588919619-21355-7-git-send-email-akashast@codeaurora.org>
+ <20200508185310.GF4525@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <679435ec-612e-2ff7-0edc-deac549a93ce@codeaurora.org>
+Date:   Mon, 18 May 2020 18:40:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200518123810.wsqg2a3lbbme36e7@uno.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <20200508185310.GF4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo, Sakari,
+Hi Matthias,
 
-On 18/05/2020 13:38, Jacopo Mondi wrote:
-> Hi Kieran, Sakari
-> 
-> On Mon, May 18, 2020 at 12:45:18PM +0100, Kieran Bingham wrote:
->> Hi Sakari,
+On 5/9/2020 12:23 AM, Matthias Kaehlcke wrote:
+> On Fri, May 08, 2020 at 12:03:38PM +0530, Akash Asthana wrote:
+>> Get the interconnect paths for QSPI device and vote according to the
+>> current bus speed of the driver.
 >>
->> There are only fairly minor comments here, fix ups will be included in a
->> v10.
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> ---
+>> Changes in V2:
+>>   - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>>     path handle
+>>   - As per Matthias comment, added error handling for icc_set_bw call
 >>
->> Is there anything major blocking integration?
+>> Changes in V3:
+>>   - No Change.
 >>
->> Regards
+>> Changes in V4:
+>>   - As per Mark's comment move peak_bw guess as twice of avg_bw if
+>>     nothing mentioned explicitly to ICC core.
 >>
->> Kieran
+>> Changes in V5:
+>>   - Add icc_enable/disable to power on/off call.
+>>   - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
+>>     from probe so that when resume/icc_enable is called NOC are running at
+>>     some non-zero value.
 >>
+>>   drivers/spi/spi-qcom-qspi.c | 59 ++++++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 58 insertions(+), 1 deletion(-)
 >>
->>
->> On 16/05/2020 22:51, Sakari Ailus wrote:
->>> Hi Kieran,
->>>
->>> Thanks for the update.
->>>
->>> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
->>>
->>> ...
->>>
->>>> +static int max9286_enum_mbus_code(struct v4l2_subdev *sd,
->>>> +				  struct v4l2_subdev_pad_config *cfg,
->>>> +				  struct v4l2_subdev_mbus_code_enum *code)
->>>> +{
->>>> +	if (code->pad || code->index > 0)
->>>> +		return -EINVAL;
->>>> +
->>>> +	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
->>>
->>> Why UYVY8_2X8 and not UYVY8_1X16? In general, the single sample / pixel
->>> variant of the format is generally used on the serial busses. This choice
->>> was made when serial busses were introduced.
->>
->> Ok - I presume this doesn't really have much effect anyway, they just
->> have to match for the transmitter/receiver?
->>
->> But it makes sense to me, so I'll update to the 1x16 variant.
->>
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static struct v4l2_mbus_framefmt *
->>>> +max9286_get_pad_format(struct max9286_priv *priv,
->>>> +		       struct v4l2_subdev_pad_config *cfg,
->>>> +		       unsigned int pad, u32 which)
->>>> +{
->>>> +	switch (which) {
->>>> +	case V4L2_SUBDEV_FORMAT_TRY:
->>>> +		return v4l2_subdev_get_try_format(&priv->sd, cfg, pad);
->>>> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
->>>> +		return &priv->fmt[pad];
->>>> +	default:
->>>> +		return NULL;
->>>> +	}
->>>> +}
->>>> +
->>>> +static int max9286_set_fmt(struct v4l2_subdev *sd,
->>>> +			   struct v4l2_subdev_pad_config *cfg,
->>>> +			   struct v4l2_subdev_format *format)
->>>> +{
->>>> +	struct max9286_priv *priv = sd_to_max9286(sd);
->>>> +	struct v4l2_mbus_framefmt *cfg_fmt;
->>>> +
->>>> +	if (format->pad >= MAX9286_SRC_PAD)
->>>> +		return -EINVAL;
->>>
->>> You can remove these checks; it's been already done by the caller.
->>>
->>
->> Ok.
->>
-> 
-> I think this shold be kept. The core validates that the pad number is
-> valid, but we're here checking that set_fmt has been called on a sink
-> pad [0-3], returning -EINVAL if set_fmt (and get_ftm as well) are
-> called on the source one.
-> 
+>> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+>> index 3c4f83b..6e299f4 100644
+>> --- a/drivers/spi/spi-qcom-qspi.c
+>> +++ b/drivers/spi/spi-qcom-qspi.c
+>> @@ -2,6 +2,7 @@
+>>   // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
+>>   
+>>   #include <linux/clk.h>
+>> +#include <linux/interconnect.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/io.h>
+>>   #include <linux/module.h>
+>> @@ -139,7 +140,10 @@ struct qcom_qspi {
+>>   	struct device *dev;
+>>   	struct clk_bulk_data *clks;
+>>   	struct qspi_xfer xfer;
+>> -	/* Lock to protect xfer and IRQ accessed registers */
+>> +	struct icc_path *icc_path_cpu_to_qspi;
+>> +	unsigned int avg_bw_cpu;
+>> +	unsigned int peak_bw_cpu;
+> There is no point in having two fields, 'peak_bw_cpu' is always assigned
+> to 'avg_bw_cpu' and passed to icc_set_bw(). Just make it a single field
+> 'icc_bw_cpu'.
+Agree that we are not using peak_bw voting as of now but probably we may 
+use it in future, currently we are using only avg_bw for our need but if 
+in future power team shares some data or ask us to reduce our power 
+consumption, then with help of peak_bw we can tune ICC voting where 
+power and performance both can be met as per requirement.
+>
+>> +	/* Lock to protect data accessed by IRQs */
+>>   	spinlock_t lock;
+>>   };
+>>   
+>> @@ -241,6 +245,20 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
+>>   		return ret;
+>>   	}
+>>   
+>> +	/*
+>> +	 * Set BW quota for CPU as driver supports FIFO mode only.
+>> +	 * We don't have explicit peak requirement so keep it equal to avg_bw.
+>> +	 */
+>> +	ctrl->avg_bw_cpu = Bps_to_icc(speed_hz);
+>> +	ctrl->peak_bw_cpu = ctrl->avg_bw_cpu;
+>> +	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, ctrl->avg_bw_cpu,
+>> +		ctrl->peak_bw_cpu);
+>> +	if (ret) {
+>> +		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu\n",
+>> +			__func__);
+> the logging in this patch is inconsistent. Here the error is not printed,
+> at all, in other cases it's "<error>, ret:-42" or "<error> ret:-42".
+> Please stick to a common format (unless there is no error). My
+> suggestion would be "<error>: -42", in my perception "ret:" just adds
+> noise.
 
-Indeed, this is actually preventing get/set format on the intermediate
-(multiplexed) stream. But it is "breaking" link validation (or
-preventing it from happening maybe?), which is defaulting 'open' ...
-that might be a problem we need to look at, but as we don't have a real
-multiplexed stream support implementation then that's perhaps more
-difficult to give a 'correct' answer.
+Okay.
 
+Regards,
 
-> My question now is how does link validation work, if get_fmt() is not
-> allowed on the source pad :/ ? Anyway, I would keep this check for
-> set_fmt (maybe make it an == to address Sakari's comment).
+Akash
 
+>
+>> +		return ret;
+>> +	}
+>> +
+>>   	spin_lock_irqsave(&ctrl->lock, flags);
+>>   
+>>   	/* We are half duplex, so either rx or tx will be set */
+>> @@ -458,6 +476,29 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>>   	if (ret)
+>>   		goto exit_probe_master_put;
+>>   
+>> +	ctrl->icc_path_cpu_to_qspi = devm_of_icc_get(dev, "qspi-config");
+>> +	if (IS_ERR(ctrl->icc_path_cpu_to_qspi)) {
+>> +		ret = PTR_ERR(ctrl->icc_path_cpu_to_qspi);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "Failed to get cpu path, ret:%d\n", ret);
+>> +		goto exit_probe_master_put;
+>> +	}
+>> +	/* Set BW vote for register access */
+>> +	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, Bps_to_icc(1000),
+>> +				Bps_to_icc(1000));
+>> +	if (ret) {
+>> +		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu ret:%d\n",
+>> +				__func__, ret);
+>> +		goto exit_probe_master_put;
+>> +	}
+>> +
+>> +	ret = icc_disable(ctrl->icc_path_cpu_to_qspi);
+>> +	if (ret) {
+>> +		dev_err(ctrl->dev, "%s: ICC disable failed for cpu ret:%d\n",
+>> +				__func__, ret);
+>> +		goto exit_probe_master_put;
+>> +	}
+>> +
+>>   	ret = platform_get_irq(pdev, 0);
+>>   	if (ret < 0)
+>>   		goto exit_probe_master_put;
+>> @@ -511,9 +552,17 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
+>>   {
+>>   	struct spi_master *master = dev_get_drvdata(dev);
+>>   	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+>> +	int ret;
+>>   
+>>   	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
+>>   
+>> +	ret = icc_disable(ctrl->icc_path_cpu_to_qspi);
+>> +	if (ret) {
+>> +		dev_err_ratelimited(ctrl->dev, "%s: ICC disable failed for cpu ret:%d\n",
+>> +			__func__, ret);
+>> +		return ret;
+>> +	}
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -521,6 +570,14 @@ static int __maybe_unused qcom_qspi_runtime_resume(struct device *dev)
+>>   {
+>>   	struct spi_master *master = dev_get_drvdata(dev);
+>>   	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+>> +	int ret;
+>> +
+>> +	ret = icc_enable(ctrl->icc_path_cpu_to_qspi);
+>> +	if (ret) {
+>> +		dev_err_ratelimited(ctrl->dev, "%s: ICC enable failed for cpu ret:%d\n",
+>> +			__func__, ret);
+>> +		return ret;
+>> +	}
+>>   
+>>   	return clk_bulk_prepare_enable(QSPI_NUM_CLKS, ctrl->clks);
+>>   }
 
-Ok - so as long as we return -EINVAL for the MAX9286_SRC_PAD, then
-v4l2_subdev_link_validate() will fail on
-v4l2_subdev_link_validate_get_format() for that pad, which causes a return 0
-
-(v4l2_subdev_link_validate defaulting to success if it can't get both pads)
-
-We could convert this to:
-
-/*
- * \todo: Prevent validation of the source pad, as it represents a
- * multiplexed stream, and we do not have multiplexed stream support in
- * V4L2 yet.
- */
-if (format->pad == MAX9286_SRC_PAD)
-
-
-Or we could call this a blocker. Which will make me sad, as I really
-want to be able to have a baseline for development for this driver, but
-I've been calling out for "What blockers prevent this driver from being
-merged" since February so if this is it - so be it...
-
-
-Sakari - is this a blocking issue for you? Or can we consider this a
-topic that we (already know) needs visiting as part of V4L2 Multiplexed
-stream support.
-
-We already know of course that this driver is taking liberties due to
-the lack of multiplexed stream support, and requires the receiver to
-assume that each camera is on a different (consecutive?) VC.
-
-
-Or perhaps - to enforce validation, we could have the get_fmt call pass
-on the bus format of the first camera link ?
-
-Thoughts anyone?
-
-
-
-> 
-> Thanks
->   j
-> 
->>
->>> ...
->>>
->>>> +static int max9286_parse_dt(struct max9286_priv *priv)
->>>> +{
->>>> +	struct device *dev = &priv->client->dev;
->>>> +	struct device_node *i2c_mux;
->>>> +	struct device_node *node = NULL;
->>>> +	unsigned int i2c_mux_mask = 0;
->>>> +
->>>> +	of_node_get(dev->of_node);
->>>> +	i2c_mux = of_find_node_by_name(dev->of_node, "i2c-mux");
->>>> +	if (!i2c_mux) {
->>>> +		dev_err(dev, "Failed to find i2c-mux node\n");
->>>> +		of_node_put(dev->of_node);
->>>> +		return -EINVAL;
->>>> +	}
->>>> +
->>>> +	/* Identify which i2c-mux channels are enabled */
->>>> +	for_each_child_of_node(i2c_mux, node) {
->>>> +		u32 id = 0;
->>>> +
->>>> +		of_property_read_u32(node, "reg", &id);
->>>> +		if (id >= MAX9286_NUM_GMSL)
->>>> +			continue;
->>>> +
->>>> +		if (!of_device_is_available(node)) {
->>>> +			dev_dbg(dev, "Skipping disabled I2C bus port %u\n", id);
->>>> +			continue;
->>>> +		}
->>>> +
->>>> +		i2c_mux_mask |= BIT(id);
->>>> +	}
->>>> +	of_node_put(node);
->>>> +	of_node_put(i2c_mux);
->>>> +
->>>> +	/* Parse the endpoints */
->>>> +	for_each_endpoint_of_node(dev->of_node, node) {
->>>> +		struct max9286_source *source;
->>>> +		struct of_endpoint ep;
->>>> +
->>>> +		of_graph_parse_endpoint(node, &ep);
->>>> +		dev_dbg(dev, "Endpoint %pOF on port %d",
->>>> +			ep.local_node, ep.port);
->>>> +
->>>> +		if (ep.port > MAX9286_NUM_GMSL) {
->>>> +			dev_err(dev, "Invalid endpoint %s on port %d",
->>>> +				of_node_full_name(ep.local_node), ep.port);
->>>> +			continue;
->>>> +		}
->>>> +
->>>> +		/* For the source endpoint just parse the bus configuration. */
->>>> +		if (ep.port == MAX9286_SRC_PAD) {
->>>> +			struct v4l2_fwnode_endpoint vep = {
->>>> +				.bus_type = V4L2_MBUS_CSI2_DPHY
->>>> +			};
->>>> +			int ret;
->>>> +
->>>> +			ret = v4l2_fwnode_endpoint_parse(
->>>> +					of_fwnode_handle(node), &vep);
->>>> +			if (ret) {
->>>> +				of_node_put(node);
->>>> +				of_node_put(dev->of_node);
->>>> +				return ret;
->>>> +			}
->>>> +
->>>> +			if (vep.bus_type != V4L2_MBUS_CSI2_DPHY) {
->>>
->>> This won't happen, the bus type will stay if you set it to a non-zero
->>> value.
->>
->>
->> Ok - I'll remove this check.
->>
->>
->>>
->>>> +				dev_err(dev,
->>>> +					"Media bus %u type not supported\n",
->>>> +					vep.bus_type);
->>>> +				v4l2_fwnode_endpoint_free(&vep);
->>>> +				of_node_put(node);
->>>> +				of_node_put(dev->of_node);
->>>> +				return -EINVAL;
->>>> +			}
->>>> +
->>>> +			priv->csi2_data_lanes =
->>>> +				vep.bus.mipi_csi2.num_data_lanes;
->>>> +			v4l2_fwnode_endpoint_free(&vep);
->>>
->>> No need to call this unless you use v4l2_fwnode_endpoint_alloc_parse().
->>>
->>> And as you don't, you also won't know which frequencies are known to be
->>> safe to use. That said, perhaps where this device is used having a random
->>> frequency on that bus could not be an issue. Perhaps.
->>
->> Does this generate a range? or a list of static supported frequencies?
->>
->> We configure the pixel clock based upon the number of cameras connected,
->> and their pixel rates etc ...
->>
->> Are you saying that the frequency of this clock should be validated to
->> be a specific range? or are you talking about a different frequency?
->>
->>
->> For now I'll remove the v4l2_fwnode_endpoint_alloc_parse().
->>
->>
->>
->>>> +
->>>> +			continue;
->>>> +		}
->>>> +
->>>> +		/* Skip if the corresponding GMSL link is unavailable. */
->>>> +		if (!(i2c_mux_mask & BIT(ep.port)))
->>>> +			continue;
->>>> +
->>>> +		if (priv->sources[ep.port].fwnode) {
->>>> +			dev_err(dev,
->>>> +				"Multiple port endpoints are not supported: %d",
->>>> +				ep.port);
->>>> +
->>>> +			continue;
->>>> +		}
->>>> +
->>>> +		source = &priv->sources[ep.port];
->>>> +		source->fwnode = fwnode_graph_get_remote_endpoint(
->>>> +						of_fwnode_handle(node));
->>>> +		if (!source->fwnode) {
->>>> +			dev_err(dev,
->>>> +				"Endpoint %pOF has no remote endpoint connection\n",
->>>> +				ep.local_node);
->>>> +
->>>> +			continue;
->>>> +		}
->>>> +
->>>> +		priv->source_mask |= BIT(ep.port);
->>>> +		priv->nsources++;
->>>> +	}
->>>> +	of_node_put(node);
->>>> +	of_node_put(dev->of_node);
->>>> +
->>>> +	priv->route_mask = priv->source_mask;
->>>> +
->>>> +	return 0;
->>>> +}
->>>
->>
-
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
