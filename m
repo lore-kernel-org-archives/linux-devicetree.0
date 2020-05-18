@@ -2,114 +2,90 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3501C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660D2C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF0D20657
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0EA20709
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgERNq2 (ORCPT
+        id S1727819AbgERNsZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:46:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:41026 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbgERNq2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 09:46:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A160D101E;
-        Mon, 18 May 2020 06:46:27 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A48E43F52E;
-        Mon, 18 May 2020 06:46:25 -0700 (PDT)
-Date:   Mon, 18 May 2020 14:46:14 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-Message-ID: <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200513135643.478ffbda@windsurf.home>
- <87pnb2h7w1.fsf@FE-laptop>
- <20200518103004.6tydnad3apkfn77y@pali>
+        Mon, 18 May 2020 09:48:25 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:47810 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbgERNsZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:48:25 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 354B1803080B;
+        Mon, 18 May 2020 13:48:22 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1EWyMC3tE5jO; Mon, 18 May 2020 16:48:21 +0300 (MSK)
+Date:   Mon, 18 May 2020 16:48:20 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200518134820.wedoumgbsllvhem6@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
+ <20200508154150.GB22247@alpha.franken.de>
+ <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+ <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200518103004.6tydnad3apkfn77y@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200515210647.GA22922@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:30:04PM +0200, Pali Roh�r wrote:
-> On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote:
-> > Hello,
-> > 
-> > > Hello,
-> > >
-> > > On Thu, 30 Apr 2020 10:06:13 +0200
-> > > Pali Roh�r <pali@kernel.org> wrote:
-> > >
-> > >> Marek Beh�n (5):
-> > >>   PCI: aardvark: Improve link training
-> > >>   PCI: aardvark: Add PHY support
-> > >>   dt-bindings: PCI: aardvark: Describe new properties
-> > >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
-> > >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
-> > >> 
-> > >> Pali Roh�r (7):
-> > >>   PCI: aardvark: Train link immediately after enabling training
-> > >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
-> > >>     read-only register
-> > >>   PCI: of: Zero max-link-speed value is invalid
-> > >>   PCI: aardvark: Issue PERST via GPIO
-> > >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
-> > >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
-> > >>     macros
-> > >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
-> > >
-> > > Thanks a lot for this work. For a number of reasons, I'm less involved
-> > > in Marvell platform support in Linux, but I reviewed your series and
-> > > followed the discussions around it, and I'm happy to give my:
-> > >
-> > > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> > 
-> > With this acked-by for the series, the reviewed-by from Rob on the
-> > binding and the tested-by, I am pretty confident so I applied the
-> > patches 10, 11 and 12 on mvebu/dt64.
-> > 
-> > Thanks,
-> > 
-> > Gregory
+On Fri, May 15, 2020 at 11:06:47PM +0200, Thomas Bogendoerfer wrote:
+> On Fri, May 15, 2020 at 10:48:27AM +0300, Serge Semin wrote:
+> > Thomas,
+> > Could you take a look at my comment below so I could proceed with the
+> > patchset v3 development?
 > 
-> Thank you!
+> I can't help, but using r4k clocksource with changing frequency is
+> probaly only usefull as a random generator. So IMHO the only two
+> options are disabling it or implement what arch/x86/kernel/tsc.c does.
 > 
-> Lorenzo, would you now take remaining patches?
+> Thomas.
 
-Yes - even though I have reservations about patch (5) and the
-problem is related to a complete lack of programming model for
-these host controllers and a clear separation between what's
-done in the OS vs bootloader, PERST handling in this host
-bridge is *really* a mess.
+Thomas, could you proceed with the rest of the patches review?
+├─>[PATCH v2 16/20] bus: cdmm: Add MIPS R5 arch support
+├─>[PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
+├─>[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
+├─>[PATCH v2 12/20] mips: MAAR: Add XPA mode support
+├─>[PATCH v2 10/20] mips: Add CONFIG/CONFIG6/Cause reg fields macro
+└─>[PATCH v2 09/20] mips: Add CP0 Write Merge config support
 
-I applied 1-9 to pci/aardvark.
+It would be great if I fixed more comments in the next patchset version.
 
-Lorenzo
+-Sergey
+
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
