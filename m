@@ -2,203 +2,208 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174BAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4FBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE21620787
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252DE207D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:07:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nktwUetf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgERIEr (ORCPT
+        id S1727017AbgERIHf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 04:04:47 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40212 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbgERIEr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 04:04:47 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1CD4420096C;
-        Mon, 18 May 2020 10:04:45 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CEA28200977;
-        Mon, 18 May 2020 10:04:41 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AC46C402B4;
-        Mon, 18 May 2020 16:04:37 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        paul.liu@linaro.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: regulator: Convert anatop regulator to json-schema
-Date:   Mon, 18 May 2020 15:55:05 +0800
-Message-Id: <1589788505-18024-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 18 May 2020 04:07:35 -0400
+Received: from mail-am6eur05on2056.outbound.protection.outlook.com ([40.107.22.56]:22799
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726489AbgERIHe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 04:07:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YzitbQrL6e1GvFkWAGWAzBmUspt8IIiAOlrB+L+jPc961+ytFQ0BcS7Io3NVi0wtveDRfWSC/pDHGLSP8eR2hc+WqUI4BQ1E7nLYh473WmmHXh88Ug2Gq50lXjZJ+EA4FH8ecX3JELKMrEI0ZB7nvmyDIj5OvMIVsCuxTU05W8pEwh/GqWpusoo2AtIl9O8OpYgYAi9OCxItjgA/mXDB7Y1tJeGJueC4UDX6wbrLPVunB1tuqcWALBKwgaQ+LwWS1h4cAyFvUKyONmTo9FjxcXpkEUmHsBETeH8KCOlw7A3/ciFmxiw/J/lgdlwNf2H1z8mfsTskwWVEcgtTk5n18A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DCOS9gwkBXcuO112gOfuaLau8F1AMs0PdB8RO7nWtCc=;
+ b=DA2Z1U1qF2iCPx1uDt5zepHq2qvElh10+bEUhNDZA1Fa305m9hS5gP+GCEPS4QQ5o5GeWRfvvNOHYe1pn0Gobvz6FsnhfGvGukToGES2uFkUX2y3rxCCDBz5s3yPJe6y2iDvBmOnKYom9vlSjUpjvsCOKY07WKve8tEVriN8ONdHPW1yp2YmSQe8sRohABOk8FVrxZPbVAvLAVpQU8nUfGpT5ZEyJi/f8OXac9FuMAfjst8MC1LMVYkNIIiAUEbmg2Sh+D1lU/XkNzWHGhh+pETgFtD/6qUEtCMHpxg9+EuWRlkHvPLzzblFiOsQFLo7B5b43LH98/yz4Bf0rkS2gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DCOS9gwkBXcuO112gOfuaLau8F1AMs0PdB8RO7nWtCc=;
+ b=nktwUetfFLaFBSZuIuSAnp9VMvU28DIIIcfIV14RDlYKBZmkiVCyP5HD0NWle0yu1D6x0J1k3vmLWp2Wj6Rynjc/83v73aXzgtZowYNYvK4enDIZMkn+OnUaxuiZQgm2RscqvRLTYGDnxJJwo1DzRh5mXMT/pcBiYYr8VUxzMaA=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB4246.eurprd04.prod.outlook.com (2603:10a6:209:50::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.31; Mon, 18 May
+ 2020 08:07:29 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.033; Mon, 18 May 2020
+ 08:07:29 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2] dt-bindings: interrupt-controller: Convert imx
+ irqsteer to json-schema
+Thread-Topic: [PATCH V2] dt-bindings: interrupt-controller: Convert imx
+ irqsteer to json-schema
+Thread-Index: AQHWLNyjTGaCaY/ZsU6shToLUFtWr6itcWVQ
+Date:   Mon, 18 May 2020 08:07:29 +0000
+Message-ID: <AM6PR04MB4966487B2E1900D09405C12380B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1589782336-17289-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1589782336-17289-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 49efc1c8-064d-4f95-600b-08d7fb0282a4
+x-ms-traffictypediagnostic: AM6PR04MB4246:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB4246E72F46183827F6F8927780B80@AM6PR04MB4246.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 04073E895A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1kTAd6kS1WCv8YvAEpfDRrM+y19xPpoE8oY51gSrNGQDKfbcBKsePug0gv/xDJbGM2AhVSHPUfS8QmVJx2mJdc2SbkPmPCb49AdEo1J/nW7JC5dXU1MKy7DSokS/x1fMam4blGNn3xDv3Lyx6CTKWQoHkw3z7U4XvVzzhDIWcNl0yI0qRnY/kuz5otSGdblPMy2Q4CcMYeq7l8JNZ3H/Oqp8vAtaxX9At05bXtq3MnvJQo+qOS1GQYClQzyrnfxcwvKHlTIn5UIy/sECbjkPPitWSg97ORNDP7lvm6uu76Zyp3Lg6Y66MlDwTWkFyhQelixazfM8tkcwYi971B497sM6Rnl6GxZAKIF1wkozWjC6/594kvxc9K/3JTcjVXk1VxHK87iGW12GN+CjUebkm+SkePvv7PuTvGMw7KyXQwmV5Go0RHv+AYfFPaujhSvC
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(346002)(136003)(39860400002)(396003)(9686003)(71200400001)(186003)(26005)(52536014)(55016002)(44832011)(33656002)(110136005)(316002)(2906002)(4326008)(66946007)(5660300002)(66476007)(66556008)(64756008)(66446008)(76116006)(86362001)(7696005)(478600001)(8936002)(6506007)(8676002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Sm0vdyPh8Gn02lM5AbKKHfd8lEJBqIrgTjJP2RcQW8KqRF9duaXIiKb4tfIACV/tU8Te5RJu4h/wCEuvv8NQfhVszZJAn+Vhb5eBE/TkC2Da6q3NFNLuh8uqANz+Fq/ed31o9/IVKSmRZMom/loSBaeY80SFKjQQHR6u61/HNSvIaRH4TqfW73ToR629GD4hyI6kBtfx4O8nqRn2+6zQssEGKsCoMlx7yKRjAyl4S9Mt4p6w9vkZT7pAH1Z+/kk5gOc3MoPbQqo9fqH+wl9fxCycpT3/+RhCIekxJrN0OJLJse6fhA7H5psqHg815olscr2uVe299vYcgtb3MT1qy6WO74knJZufpQ6mTJSmAnKGdcBpnTtZLmHgjqqfvrEOSxpcYdJmhCgDplY0M29o5iP9OrHqtpvguv4BFT335wp7nrb5X+FPpjqMO1OqJy24htCAwinN7VgYVMucKq6OFE0DpFBWmqep8OZCk/J8rvjrg0IjlIHg+TZAW+Zxd3Qz
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49efc1c8-064d-4f95-600b-08d7fb0282a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 08:07:29.5182
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e0Wy6yTky7bAp4T/bVZ02l0hb/be6zKi44LAIJnBIHBpYKtkUozmLlwCfyNh8Vjw6tI6aB3q9LijrkALD8gJmQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4246
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the anatop regulator binding to DT schema format using json-schema.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../bindings/regulator/anatop-regulator.txt        | 40 ---------
- .../bindings/regulator/anatop-regulator.yaml       | 94 ++++++++++++++++++++++
- 2 files changed, 94 insertions(+), 40 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/anatop-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/anatop-regulator.yaml
-
-diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-deleted file mode 100644
-index a3106c7..0000000
---- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-+++ /dev/null
-@@ -1,40 +0,0 @@
--Anatop Voltage regulators
--
--Required properties:
--- compatible: Must be "fsl,anatop-regulator"
--- regulator-name: A string used as a descriptive name for regulator outputs
--- anatop-reg-offset: Anatop MFD register offset
--- anatop-vol-bit-shift: Bit shift for the register
--- anatop-vol-bit-width: Number of bits used in the register
--- anatop-min-bit-val: Minimum value of this register
--- anatop-min-voltage: Minimum voltage of this regulator
--- anatop-max-voltage: Maximum voltage of this regulator
--
--Optional properties:
--- anatop-delay-reg-offset: Anatop MFD step time register offset
--- anatop-delay-bit-shift: Bit shift for the step time register
--- anatop-delay-bit-width: Number of bits used in the step time register
--- vin-supply: The supply for this regulator
--- anatop-enable-bit: Regulator enable bit offset
--
--Any property defined as part of the core regulator
--binding, defined in regulator.txt, can also be used.
--
--Example:
--
--	regulator-vddpu {
--		compatible = "fsl,anatop-regulator";
--		regulator-name = "vddpu";
--		regulator-min-microvolt = <725000>;
--		regulator-max-microvolt = <1300000>;
--		regulator-always-on;
--		anatop-reg-offset = <0x140>;
--		anatop-vol-bit-shift = <9>;
--		anatop-vol-bit-width = <5>;
--		anatop-delay-reg-offset = <0x170>;
--		anatop-delay-bit-shift = <24>;
--		anatop-delay-bit-width = <2>;
--		anatop-min-bit-val = <1>;
--		anatop-min-voltage = <725000>;
--		anatop-max-voltage = <1300000>;
--	};
-diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.yaml b/Documentation/devicetree/bindings/regulator/anatop-regulator.yaml
-new file mode 100644
-index 0000000..a8c9dd0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/anatop-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Anatop Voltage Regulators
-+
-+maintainers:
-+  - Ying-Chun Liu (PaulLiu) <paul.liu@linaro.org>
-+
-+allOf:
-+  - $ref: "regulator.yaml#"
-+
-+properties:
-+  compatible:
-+    const: fsl,anatop-regulator
-+
-+  regulator-name:
-+    $ref: '/schemas/types.yaml#/definitions/string'
-+    description: string used as a descriptive name for regulator outputs
-+
-+  anatop-reg-offset:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the anatop MFD register offset.
-+
-+  anatop-vol-bit-shift:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the bit shift for the register.
-+
-+  anatop-vol-bit-width:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the number of bits used in the register.
-+
-+  anatop-min-bit-val:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the minimum value of this register.
-+
-+  anatop-min-voltage:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the minimum voltage of this regulator.
-+
-+  anatop-max-voltage:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the maximum voltage of this regulator.
-+
-+  anatop-delay-reg-offset:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the anatop MFD step time register offset.
-+
-+  anatop-delay-bit-shift:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the bit shift for the step time register.
-+
-+  anatop-delay-bit-width:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the number of bits used in the step time register.
-+
-+  anatop-enable-bit:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing regulator enable bit offset.
-+
-+  vin-supply:
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+    description: input supply phandle.
-+
-+required:
-+  - compatible
-+  - regulator-name
-+  - anatop-reg-offset
-+  - anatop-vol-bit-shift
-+  - anatop-vol-bit-width
-+  - anatop-min-bit-val
-+  - anatop-min-voltage
-+  - anatop-max-voltage
-+
-+examples:
-+  - |
-+    regulator-vddpu {
-+        compatible = "fsl,anatop-regulator";
-+        regulator-name = "vddpu";
-+        regulator-min-microvolt = <725000>;
-+        regulator-max-microvolt = <1300000>;
-+        regulator-always-on;
-+        anatop-reg-offset = <0x140>;
-+        anatop-vol-bit-shift = <9>;
-+        anatop-vol-bit-width = <5>;
-+        anatop-delay-reg-offset = <0x170>;
-+        anatop-delay-bit-shift = <24>;
-+        anatop-delay-bit-width = <2>;
-+        anatop-min-bit-val = <1>;
-+        anatop-min-voltage = <725000>;
-+        anatop-max-voltage = <1300000>;
-+    };
--- 
-2.7.4
-
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogTW9uZGF5
+LCBNYXkgMTgsIDIwMjAgMjoxMiBQTQ0KPiANCj4gQ29udmVydCB0aGUgaS5NWCBJUlFTVEVFUiBi
+aW5kaW5nIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNpbmcganNvbi1zY2hlbWEuDQo+IA0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCg0KQSBmZXcgbWlu
+b3IgY29tbWVudHMsIG90aGVyd2lzZToNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hl
+bmcuZG9uZ0BueHAuY29tPg0KDQpCVFcsIHdlIHByb2JhYmx5IGJldHRlciBhZGQgcmVmIHRvIHRo
+ZSBjb21tb24gaW50ZXJydXB0LWNvbnRyb2xsZXIueWFtbCB0byBpbmhlcml0DQp0aGUgY29tbW9u
+IGNvbnN0cmFpbnRzLiBFLmcuIG5vZGVuYW1lLg0KQnV0IEkgbm90ZWQgc29tZSBleGlzdCBiaW5k
+aW5nIGFsc28gZGlkIG5vdCBpbmNsdWRlIGl0LCBzbyBtYXliZSB3ZSBjYW4gd2FpdCBmb3IgUm9i
+J3MNCmNvbW1lbnRzLg0KDQpPdGhlciBtaW5vciBjb21tZW50cyBpbmxpbmUuDQoNCj4gLS0tDQo+
+IENoYW5nZXMgc2luY2UgVjE6DQo+IAktIEFkZCAiZnNsLGlteDhtLWlycXN0ZWVyIiBjb21wYXRp
+YmxlIGJhY2suDQo+IAktIFVzZSAiTXVsdGlwbGV4ZXIiIGluc3RlYWQgb2YgIm11bHRpcGxleGVy
+IiBmb3IgdGl0bGUuDQo+IC0tLQ0KPiAgLi4uL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVy
+L2ZzbCxpcnFzdGVlci50eHQgfCAzNSAtLS0tLS0tLS0NCj4gIC4uLi9pbnRlcnJ1cHQtY29udHJv
+bGxlci9mc2wsaXJxc3RlZXIueWFtbCAgICAgICAgIHwgODkNCj4gKysrKysrKysrKysrKysrKysr
+KysrKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA4OSBpbnNlcnRpb25zKCspLCAzNSBkZWxldGlvbnMo
+LSkgIGRlbGV0ZSBtb2RlIDEwMDY0NA0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvZnNsLGlycXN0ZWVyLnR4dA0KPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29u
+dHJvbGxlci9mc2wsaXJxc3RlZXIueWFtbA0KPiANCj4gZGlmZiAtLWdpdA0KPiBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsaXJxc3Rl
+ZXIudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1j
+b250cm9sbGVyL2ZzbCxpcnFzdGVlci50eHQNCj4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+
+IGluZGV4IDU4Mjk5MWMuLjAwMDAwMDANCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ZzbCxpcnFzdGVlci50eHQNCj4gKysrIC9k
+ZXYvbnVsbA0KPiBAQCAtMSwzNSArMCwwIEBADQo+IC1GcmVlc2NhbGUgSVJRU1RFRVIgSW50ZXJy
+dXB0IG11bHRpcGxleGVyDQo+IC0NCj4gLVJlcXVpcmVkIHByb3BlcnRpZXM6DQo+IC0NCj4gLS0g
+Y29tcGF0aWJsZTogc2hvdWxkIGJlOg0KPiAtCS0gImZzbCxpbXg4bS1pcnFzdGVlciINCj4gLQkt
+ICJmc2wsaW14LWlycXN0ZWVyIg0KPiAtLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQg
+c2l6ZSBvZiByZWdpc3RlcnMuDQo+IC0tIGludGVycnVwdHM6IFNob3VsZCBjb250YWluIHRoZSB1
+cCB0byA4IHBhcmVudCBpbnRlcnJ1cHQgbGluZXMgdXNlZCB0bw0KPiAtICBtdWx0aXBsZXggdGhl
+IGlucHV0IGludGVycnVwdHMuIFRoZXkgc2hvdWxkIGJlIHNwZWNpZmllZCBzZXF1ZW50aWFsbHkN
+Cj4gLSAgZnJvbSBvdXRwdXQgMCB0byA3Lg0KPiAtLSBjbG9ja3M6IFNob3VsZCBjb250YWluIG9u
+ZSBjbG9jayBmb3IgZW50cnkgaW4gY2xvY2stbmFtZXMNCj4gLSAgc2VlIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQNCj4gLS0gY2xvY2st
+bmFtZXM6DQo+IC0gICAtICJpcGciOiBtYWluIGxvZ2ljIGNsb2NrDQo+IC0tIGludGVycnVwdC1j
+b250cm9sbGVyOiBJZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIGludGVycnVwdCBjb250cm9sbGVy
+Lg0KPiAtLSAjaW50ZXJydXB0LWNlbGxzOiBTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBjZWxscyBu
+ZWVkZWQgdG8gZW5jb2RlIGFuDQo+IC0gIGludGVycnVwdCBzb3VyY2UuIFRoZSB2YWx1ZSBtdXN0
+IGJlIDEuDQo+IC0tIGZzbCxjaGFubmVsOiBUaGUgb3V0cHV0IGNoYW5uZWwgdGhhdCBhbGwgaW5w
+dXQgSVJRcyBzaG91bGQgYmUgc3RlZXJlZCBpbnRvLg0KPiAtLSBmc2wsbnVtLWlycXM6IE51bWJl
+ciBvZiBpbnB1dCBpbnRlcnJ1cHRzIG9mIHRoaXMgY2hhbm5lbC4NCj4gLSAgU2hvdWxkIGJlIG11
+bHRpcGxlIG9mIDMyIGlucHV0IGludGVycnVwdHMgYW5kIHVwIHRvIDUxMiBpbnRlcnJ1cHRzLg0K
+PiAtDQo+IC1FeGFtcGxlOg0KPiAtDQo+IC0JaW50ZXJydXB0LWNvbnRyb2xsZXJAMzJlMmQwMDAg
+ew0KPiAtCQljb21wYXRpYmxlID0gImZzbCxpbXg4bS1pcnFzdGVlciIsICJmc2wsaW14LWlycXN0
+ZWVyIjsNCj4gLQkJcmVnID0gPDB4MzJlMmQwMDAgMHgxMDAwPjsNCj4gLQkJaW50ZXJydXB0cyA9
+IDxHSUNfU1BJIDE4IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiAtCQljbG9ja3MgPSA8JmNsayBJ
+TVg4TVFfQ0xLX0RJU1BfQVBCX1JPT1Q+Ow0KPiAtCQljbG9jay1uYW1lcyA9ICJpcGciOw0KPiAt
+CQlmc2wsY2hhbm5lbCA9IDwwPjsNCj4gLQkJZnNsLG51bS1pcnFzID0gPDY0PjsNCj4gLQkJaW50
+ZXJydXB0LWNvbnRyb2xsZXI7DQo+IC0JCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+IC0JfTsN
+Cj4gZGlmZiAtLWdpdA0KPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRl
+cnJ1cHQtY29udHJvbGxlci9mc2wsaXJxc3RlZXIueWFtbA0KPiBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsaXJxc3RlZXIueWFtbA0K
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwLi41MjQyYzk3DQo+IC0tLSAv
+ZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVy
+cnVwdC1jb250cm9sbGVyL2ZzbCxpcnFzdGVlDQo+ICsrKyByLnlhbWwNCj4gQEAgLTAsMCArMSw4
+OSBAQA0KPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0Qt
+Mi1DbGF1c2UpICVZQU1MIDEuMg0KPiArLS0tDQoNClsuLi5dDQoNCj4gK3RpdGxlOiBGcmVlc2Nh
+bGUgSVJRU1RFRVIgSW50ZXJydXB0IE11bHRpcGxleGVyDQo+ICsNCj4gK21haW50YWluZXJzOg0K
+PiArICAtIEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4LmRlPg0KPiArDQo+ICtwcm9w
+ZXJ0aWVzOg0KPiArICBjb21wYXRpYmxlOg0KPiArICAgIGVudW06DQo+ICsgICAgICAtIGZzbCxp
+bXg4bS1pcnFzdGVlcg0KPiArICAgICAgLSBmc2wsaW14LWlycXN0ZWVyDQo+ICsNCg0KT3JpZ2lu
+YWwgY29tcGF0aWJsZSBzdHJpbmcgZGVmaW5pdGlvbiBzZWVtcyBub3QgYWNjdXJhdGUuDQpJdCBk
+b2VzIG5vdCBjb3ZlciB0aGUgY2FzZSBvZiB1c2luZyBib3RoIHRvZ2V0aGVyLg0KQW55d2F5LCB0
+aGF0J3MgZXhpc3QgaXNzdWUsIHlvdSBjYW4gc3VibWl0IGFuIGV4dHJhIHBhdGNoIHRvIGZpeCBp
+dCBsYXRlci4NCg0KPiArICByZWc6DQo+ICsgICAgbWF4SXRlbXM6IDENCj4gKw0KPiArICBpbnRl
+cnJ1cHRzOg0KPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+ICsgICAgICBzaG91bGQgY29udGFpbiB0
+aGUgdXAgdG8gOCBwYXJlbnQgaW50ZXJydXB0IGxpbmVzIHVzZWQgdG8gbXVsdGlwbGV4DQo+ICsg
+ICAgICB0aGUgaW5wdXQgaW50ZXJydXB0cy4gVGhleSBzaG91bGQgYmUgc3BlY2lmaWVkIHNlcXVl
+bnRpYWxseSBmcm9tDQo+ICsgICAgICBvdXRwdXQgMCB0byA3Lg0KPiArICAgIGl0ZW1zOg0KPiAr
+ICAgICAgLSBkZXNjcmlwdGlvbjogaXJxc3RlZXIgY2hhbm5lbCAwDQo+ICsgICAgICAtIGRlc2Ny
+aXB0aW9uOiBpcnFzdGVlciBjaGFubmVsIDENCj4gKyAgICAgIC0gZGVzY3JpcHRpb246IGlycXN0
+ZWVyIGNoYW5uZWwgMg0KPiArICAgICAgLSBkZXNjcmlwdGlvbjogaXJxc3RlZXIgY2hhbm5lbCAz
+DQo+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBpcnFzdGVlciBjaGFubmVsIDQNCj4gKyAgICAgIC0g
+ZGVzY3JpcHRpb246IGlycXN0ZWVyIGNoYW5uZWwgNQ0KPiArICAgICAgLSBkZXNjcmlwdGlvbjog
+aXJxc3RlZXIgY2hhbm5lbCA2DQo+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBpcnFzdGVlciBjaGFu
+bmVsIDcNCg0KJ2NoYW5uZWwnIGlzIGNvbmZ1c2luZyBoZXJlLCBpdCdzIGFjdHVhbGx5IG91dHB1
+dCBpbnRlcnJ1cHQgMC03IGZvciBvbmUgY2hhbm5lbC4NCg0Kcy9pcnFzdGVlciBjaGFubmVsL291
+dHB1dCBpbnRlcnJ1cHQgeA0KDQpSZWdhcmRzDQpBaXNoZW5nDQoNCj4gKyAgICBtaW5JdGVtczog
+MQ0KPiArICAgIG1heEl0ZW1zOiA4DQo+ICsNCj4gKyAgY2xvY2tzOg0KPiArICAgIG1heEl0ZW1z
+OiAxDQo+ICsNCj4gKyAgY2xvY2stbmFtZXM6DQo+ICsgICAgY29uc3Q6IGlwZw0KPiArDQo+ICsg
+IGludGVycnVwdC1jb250cm9sbGVyOiB0cnVlDQo+ICsNCj4gKyAgIiNpbnRlcnJ1cHQtY2VsbHMi
+Og0KPiArICAgIGNvbnN0OiAxDQo+ICsNCj4gKyAgZnNsLGNoYW5uZWw6DQo+ICsgICAgJHJlZjog
+Jy9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMicNCj4gKyAgICBkZXNjcmlw
+dGlvbjogfA0KPiArICAgICAgdTMyIHZhbHVlIHJlcHJlc2VudGluZyB0aGUgb3V0cHV0IGNoYW5u
+ZWwgdGhhdCBhbGwgaW5wdXQgSVJRcyBzaG91bGQgYmUNCj4gKyAgICAgIHN0ZWVyZWQgaW50by4N
+Cj4gKw0KPiArICBmc2wsbnVtLWlycXM6DQo+ICsgICAgJHJlZjogJy9zY2hlbWFzL3R5cGVzLnlh
+bWwjL2RlZmluaXRpb25zL3VpbnQzMicNCj4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiArICAgICAg
+dTMyIHZhbHVlIHJlcHJlc2VudGluZyB0aGUgbnVtYmVyIG9mIGlucHV0IGludGVycnVwdHMgb2Yg
+dGhpcyBjaGFubmVsLA0KPiArICAgICAgc2hvdWxkIGJlIG11bHRpcGxlIG9mIDMyIGlucHV0IGlu
+dGVycnVwdHMgYW5kIHVwIHRvIDUxMiBpbnRlcnJ1cHRzLg0KPiArDQo+ICtyZXF1aXJlZDoNCj4g
+KyAgLSBjb21wYXRpYmxlDQo+ICsgIC0gcmVnDQo+ICsgIC0gaW50ZXJydXB0cw0KPiArICAtIGNs
+b2Nrcw0KPiArICAtIGNsb2NrLW5hbWVzDQo+ICsgIC0gaW50ZXJydXB0LWNvbnRyb2xsZXINCj4g
+KyAgLSAiI2ludGVycnVwdC1jZWxscyINCj4gKyAgLSBmc2wsY2hhbm5lbA0KPiArICAtIGZzbCxu
+dW0taXJxcw0KPiArDQo+ICthZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gKw0KPiArZXhh
+bXBsZXM6DQo+ICsgIC0gfA0KPiArICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9pbXg4
+bXEtY2xvY2suaD4NCj4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRy
+b2xsZXIvYXJtLWdpYy5oPg0KPiArDQo+ICsgICAgaW50ZXJydXB0LWNvbnRyb2xsZXJAMzJlMmQw
+MDAgew0KPiArICAgICAgICBjb21wYXRpYmxlID0gImZzbCxpbXgtaXJxc3RlZXIiOw0KPiArICAg
+ICAgICByZWcgPSA8MHgzMmUyZDAwMCAweDEwMDA+Ow0KPiArICAgICAgICBpbnRlcnJ1cHRzID0g
+PEdJQ19TUEkgMTggSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ICsgICAgICAgIGNsb2NrcyA9IDwm
+Y2xrIElNWDhNUV9DTEtfRElTUF9BUEJfUk9PVD47DQo+ICsgICAgICAgIGNsb2NrLW5hbWVzID0g
+ImlwZyI7DQo+ICsgICAgICAgIGZzbCxjaGFubmVsID0gPDA+Ow0KPiArICAgICAgICBmc2wsbnVt
+LWlycXMgPSA8NjQ+Ow0KPiArICAgICAgICBpbnRlcnJ1cHQtY29udHJvbGxlcjsNCj4gKyAgICAg
+ICAgI2ludGVycnVwdC1jZWxscyA9IDwxPjsNCj4gKyAgICB9Ow0KPiAtLQ0KPiAyLjcuNA0KDQo=
