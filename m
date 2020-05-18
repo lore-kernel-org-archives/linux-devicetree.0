@@ -2,105 +2,200 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA0EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0C6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA4A20674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589811525;
-	bh=wKvMrnjr3pBDMvbV8cMN8c6cFpazGsaAVIwjzhjWZjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H3HqUjvuNn4/4kyEfUSyrqLSXe12zsI43ZkKWbq/oDNHgGuLYf3bfR3+5yCVJLr7U
-	 LFVVPkc+XiVKaIiO/hUo3dmAKPhtMcS5vzC2MDuTAXCBbqtwHAis0U2MC9a3vRm7RS
-	 du9r9Ymp8ubcibWyN6bpYwyV4GguJ8atBaK7PhL4=
+	by mail.kernel.org (Postfix) with ESMTP id 0944220674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:18:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="GGEBGh64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgEROSp (ORCPT
+        id S1727035AbgEROSt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:18:45 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:32821 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgEROSo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:18:44 -0400
-Received: by mail-il1-f194.google.com with SMTP id o67so5327766ila.0;
-        Mon, 18 May 2020 07:18:44 -0700 (PDT)
+        Mon, 18 May 2020 10:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgEROSt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:18:49 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A16C05BD09
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 07:18:48 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z72so10673835wmc.2
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 07:18:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9i/NmzGUZyHVy8CrV429bijHCtljbTyuc/Gf8fVseWQ=;
+        b=GGEBGh64SnKLqIGOCs81pE28wM5CcQJZmRtwf/R1PC/5wlW19wdpbPaiFTc7T+5iof
+         bIQ36TnJAO89g/KFm70VfeKtIYumOOgpk2R7UOg5LL7qLrXNBKEobtO7h0dtZJ7VZbEG
+         EQqQWkJi+T6hAin6wWoi9osXDVnf8pNQMLfs6jNsLYhyHxgimMBiA/iZ6xAW5QAPT3K3
+         3KVRfKaKsZ3yXuCMMCPMGGmmcHY2j8oJ8zulRgINBilU+RyYyxw1WUFoWpwA/1HpxyMe
+         iGZAsHQNkXjzdvfH8nboF45fYhpkUZU4vvupeWZMfgTuH/TMxvKrbk5AhS/aMHXxAW5m
+         hbTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hnYbcDiYIwRZpK5nxVRVHqZ/c+O+PvlmAbbpRYWtFzY=;
-        b=Hd7R652AVaV2gwozb5ELGFyvAECB4pwp5GbuEQhcEv/kmbIUDw+CZIyyiQDXOO6fvd
-         +dI8BLOgud35WJlgGDxzc0QnctY7yP6E4yvZIWeQO80wPBoFg7K3iH2K+OiYRVulVjZ/
-         QejyB01n/lHBObruVapr//ifeQ9U+qIpR/6oKtrNobUqHyxI7x+7kQzmnS8yt6DAwyNm
-         irP4JsxyCLWP7sEepoM18hzCLQ6YvaWbazhHYXNUUh0ofbuQuW0a7bfura2aBaqaPITg
-         aV26bywYfH9wB/0kd//+CCHMqxC0BPmoUdHWGCKfU+Nf1embCil1FgbRA8ETVO4DPWhu
-         rPpQ==
-X-Gm-Message-State: AOAM530j/b6srS8KcgQk8bikhZlM3LpjfaLTF3MXAERe+lEmCf3GaYnX
-        w/Xfv6eI3TSO6e0TeL6Lkw==
-X-Google-Smtp-Source: ABdhPJw2jhVb59il54p7l9FO5I6xjlCWG0g+rmAafwg+mWPaUxQsMLNZEfXGxrK1AecUdVSQe1gXyQ==
-X-Received: by 2002:a92:2a09:: with SMTP id r9mr15979239ile.103.1589811523682;
-        Mon, 18 May 2020 07:18:43 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id 137sm3929056iob.32.2020.05.18.07.18.42
+         :mime-version:content-disposition:in-reply-to;
+        bh=9i/NmzGUZyHVy8CrV429bijHCtljbTyuc/Gf8fVseWQ=;
+        b=KF4nbCK5p97KYTCeDs5cPiqgw4o7MCUt+4ysP9FlLWWrLDMKYF8TsIRe5Eq0i4cWeg
+         QIGkhkaqWVbR1bJPD7iK+qtdAsGhDWzmG56aIG3Ita+vtdvj3zYt+iiH1jPDS/2Mn205
+         sRaibO7RY02RBiu1qB+rsykL0D60ZSled/1/8Hv05XlPjzZT2ZmzdK2/Or/aZZxWqZVY
+         +hHKno+RPxnrwqcprvOR9SLZfbsySgYLvAGWarLsRb7wMPqrZaTtRBtwO4Nm2jmbPIEq
+         lH5fmo8yH73Di29n8B+8IJncWDHhf1t8j2sBI7YaD1Pp9nq/oDiGJ0guI3McaKwz2ao+
+         uJFg==
+X-Gm-Message-State: AOAM531rC0ogtn+6HgQJ2U6WS+ouBOaq+IV9j4bSQd0gcguFI2O2PKN+
+        6NrKenH1tXjU+Hnn1g/HbrTcrQ==
+X-Google-Smtp-Source: ABdhPJz91RdPCR28u3ce21nZCO1uLODcyh8D0iXOkAXhjWsaYOyOaUSpXroGLFNBTeNBNhOWodK4vw==
+X-Received: by 2002:a1c:a74a:: with SMTP id q71mr19554336wme.23.1589811527596;
+        Mon, 18 May 2020 07:18:47 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id v11sm16706014wrv.53.2020.05.18.07.18.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 07:18:43 -0700 (PDT)
-Received: (nullmailer pid 4792 invoked by uid 1000);
-        Mon, 18 May 2020 14:18:42 -0000
-Date:   Mon, 18 May 2020 08:18:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        wan.ahmad.zainie.wan.mohamad@intel.com, robh+dt@kernel.org,
-        linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com,
-        thierry.reding@gmail.com
-Subject: Re: [PATCH 3/3] dt-bindings: pwm: keembay: Add bindings for Intel
- Keem Bay PWM
-Message-ID: <20200518141842.GA3594@bogus>
-References: <1589723560-5734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1589723560-5734-4-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        Mon, 18 May 2020 07:18:46 -0700 (PDT)
+Date:   Mon, 18 May 2020 16:18:43 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
+Message-ID: <20200518141843.GA916914@x1>
+References: <20200508165821.GA14555@x1>
+ <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589723560-5734-4-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 17 May 2020 21:52:40 +0800,  wrote:
-> From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
+On Mon, May 18, 2020 at 09:11:07AM +0200, Linus Walleij wrote:
+> On Fri, May 8, 2020 at 6:57 PM Drew Fustini <drew@beagleboard.org> wrote:
 > 
-> Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
+> > Add gpio-line-names properties to the gpio controller nodes.
+> > BeagleBone boards have P8 and P9 headers [0] which expose many the
+> > AM3358 SoC balls to stacking expansion boards called "capes", or to
+> > other external connections like jumper wires to a breadboard.
+> >
+> > Many of the P8/P9 header pins can muxed to a gpio line.  The
+> > gpio-line-names describe which P8/P9 pin that line goes to and the
+> > default mux for that P8/P9 pin.  Some lines are not routed to the
+> > P8/P9 headers, but instead are dedicated to some functionality such as
+> > status LEDs.  The line name will indicate this.  Some line names are
+> > left empty as the corresponding AM3358 balls are not connected.
+> >
+> > The goal is to make it easier for a user viewing the output of gpioinfo
+> > to determine which P8/P9 pin is connected to a line.  The output of
+> > gpioinfo on a BeagleBone Black will now look like this:
+> >
+> > gpiochip0 - 32 lines:
+> >         line   0:   "ethernet"       unused   input  active-high
+> >         line   1:   "ethernet"       unused   input  active-high
 > 
-> Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-keembay.yaml       | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
+> Why are the ethernet lines not tagged with respective signal name
+> when right below the SPI lines are explicitly tagged with
+> sclk, cs0 etc?
 > 
+> Ethernet is usually RGMII and has signal names like
+> tx_clk, tx_d0, tx_en etc.
+
+Thank you for the feedback, Linus.
+
+My desire is to communicate that the AM3358 balls corresponding to these
+GPIO lines are being used for Ethernet and not exposed to the P8 and P9
+expansion headers.
+
+I am happy to switch these labels to the actual Ethernet signals such as
+RGMII and MDIO signal names if you think that is better.
+
+For example, AM3358 ZCZ ball M17 is both gpio0_0 and mdio_data [0].  On 
+BeagleBone, the ball is routed to the Ethernet PHY and used for MDIO [1]
+Thus gpiochio 0 line 0 is not connected to the P8 or P9 expansion header.
+
+Which of the following line name would be best?
+
+1) "[MDIO_DATA]"
+
+precise signal name, placed in brackets to denote is not possible to 
+use as GPIO on the P8 or P9 headers
+
+2) "[ethernet]" 
+
+instead of the precise signal name, just indicate that it is used for
+Ethernet and is not usable for GPIO on the P8 or P9 headers
+
+3) ""
+
+no label as this gpio line is not connected to the P8/P9 and is
+hardwired in the PCB layout for Ethernet (MDIO).
+
+> Also some lines seem to be tagged with the pin number
+> like P9_22, P2_21 below, it seems a bit inconsistent
+> to have much information on some pins and very sketchy
+> information on some.
+
+The goal for these line names is make it easier for a BeagleBone user to
+identify which GPIO lines are connected to the P8 and P9 expansion
+headers.  Our users are most likely to refer to cape-headers.png [2] as
+it is part of the bone101 out-of-the-box tutorial [3]. 
+
+Some GPIO lines are free to be used for GPIO in the default
+configuration.  For example, gpiochip 1 line 12 is connected to P8_12
+and it is not used by another peripheral by default. I used the label:
+"P8_12 gpio"
+
+However, gpiochip 1 line 0 is connected to P8_25 but is also used by the
+on-board eMMC.  The eMMc is enabled by default so this line can not be
+used for GPIO unless the user modifies the pinmux in the device tree.  
+
+Thus, I used this label: "P8_25 emmc"
+
+Maybe a better label would be "P8_25 [EMMC]"?
+
+> 
+> >         line  18:        "usb"       unused   input  active-high
+> >         line  19:       "hdmi"       unused   input  active-high
+> 
+> Similar comments for these.
 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+These are similar to the Ethernet MDIO example above.  The balls
+corresponding to these GPIO lines are not connected to the P8 or P9 
+headers and are hardwired on the PCB for other peripherals like USB
+and HDMI.
 
-Error: Documentation/devicetree/bindings/pwm/pwm-keembay.example.dts:22.31-32 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/pwm/pwm-keembay.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/pwm/pwm-keembay.example.dt.yaml] Error 1
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+For example, gpiochip 0 line 18 is USB0_DRVVBUS so I simplified it to
+"usb" to indicate it can not be used for GPIO. Maybe "[USB]" is better?
 
-See https://patchwork.ozlabs.org/patch/1292157
+gpiochip 0 line 19 is AM3358 ZCZ ball A15 and the BeagleBone Black
+schematic shows that this is connected to the CEC clock for the HDMI
+framer [4].  I though "hdmi" was a nice way to summarize that this is
+used for HDMI and can not be changed, though maybe "[HDMI]" is better
+or no label at all.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+In conclusion, the motivation of these line names is to be a quick
+reference for a user to find GPIO lines on the P8 and P9 headers.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+Thanks,
+Drew
 
-Please check and re-submit.
+[0] http://www.ti.com/lit/ds/symlink/am3358.pdf
+[1] https://github.com/beagleboard/beaglebone-black/wiki/System-Reference-Manual#ethernet-processor-interface
+[2] http://beagleboard.org/static/images/cape-headers.png
+[3] https://beagleboard.org/Support/bone101
+[4] https://github.com/beagleboard/beaglebone-black/blob/master/BBB_SCH.pdf
 
