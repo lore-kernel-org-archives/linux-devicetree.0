@@ -2,131 +2,129 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0A2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55819C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B47E72065F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE9920709
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfcy4DgN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tNNYBlDg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgERNXn (ORCPT
+        id S1727844AbgERNZc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:23:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47312 "EHLO
+        Mon, 18 May 2020 09:25:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgERNXm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:23:42 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94E42C061A0C;
-        Mon, 18 May 2020 06:23:42 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id z6so2022339ooz.3;
-        Mon, 18 May 2020 06:23:42 -0700 (PDT)
+        with ESMTP id S1726726AbgERNZc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:25:32 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B62C061A0C;
+        Mon, 18 May 2020 06:25:32 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f15so4221310plr.3;
+        Mon, 18 May 2020 06:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DBlvsBNo07SGqI/EUYBm242mZ59YuGTGeckJLd8jOpQ=;
-        b=cfcy4DgNDBCTvF7mVRHlNGMhkmacmQXoOEN7xHQW5RByJmQEOZPVAPyo9YID2+ksAi
-         /afPVXSML+4G3Bw1Av627prEUHM1DSfL+K+x7/YDrloQUeRdA0RHZ/Ci8IiVSn06JvxM
-         ERD+F7OU2G0aYA1jm533gAqjJDTSnLWqrFY36parhqgXEhiSPdgqNwQO5fR9KwIhBQHQ
-         YOpKIOz6q+0B0PXG8v4Biq/vO8dKWXEzyeRa0Y9yjaxmh3OejiceK8lNmw23eVKaKsvC
-         ADaynfCq4eIlVTdkVXFTZbxc33D8fvQN23K/LX+Sx2IBxLRkGYZGb+euiCHZkVjhZq4k
-         d+hQ==
+        bh=881WKNGVvaYzcoBRH7He303GsRzyKlY6cxm3kJ5azqA=;
+        b=tNNYBlDgSTP2D9kQLCS+yD32yAFQhzjeNUBbygGq/jJ85V2ugohrJ/A8bn5SV0J32d
+         lHBDNXRcrfosYqy4B7l0RIlQkPSvPPHUU2pQLD3pKJGZe2n89pnLMqSKjQzfU+E6SNQv
+         JhJ2QXp8WdLE3nZHwZjd4oUPXuaL4ALNbHZMtI8/32YpC7wzQ7FPrsyMpB72QWwmnM2b
+         JznNr+SRgd5Y/mnneu76H01hUS1HjvLN6Vbmkq69ziEDSt99wEUiLeavpkiw0DtHD/kZ
+         Y9EUoaVC+A5xRXduKMk/d2rt6xtdjcs9UFIjMIyrNfP4Nn6sOrQ616oSlhbov2XSg0OC
+         CFrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DBlvsBNo07SGqI/EUYBm242mZ59YuGTGeckJLd8jOpQ=;
-        b=C5iMQe4UU3Tl0hFeiOWzE/StQvqw3Kmh7p8HM5Kkzy1UvxF5PqWz/k7wu4t0rTyzPY
-         CMxoOIf04UWyi68XYs7384GaZ0SDhpamcvEm3DUSeXvXTCSvz8TNuG2WP56smSCovt56
-         LlqUTnVaR1pzC7u533b9RMNGOtMFC53EdchJ8tTGz+X8Pbu2B63z/wB6Cv4WQz4N0awh
-         e3C0lzPdxyXf/MMSZrKtX8mlhLhCgq9UHG3OOHLqnr/cF6btir2AVvf5Fy+kZ9vA3HDe
-         aSP9SRgTWbM0lo0Ff2J+4Hg9k2V29nC2ixYhyQC8MEPefYc472Q2J30Pjz+zm9EdrFRJ
-         ynmw==
-X-Gm-Message-State: AOAM5314CWzbmL/eFVDRRvDaCOQ05xk0e3fqsi6ObjmhfTL0TIsidPmZ
-        51DtjthyxZJynOHhm/5qJ02cGYP78rQsUvYhoDE=
-X-Google-Smtp-Source: ABdhPJxVcUiw42ooaQWea/4dYUB4KCyh0tbeqfXUZvqVqSB4YyCTuhyTbJeCJawG71KxJDG6Rdbo2qnrc9R3IY+DJW4=
-X-Received: by 2002:a4a:b346:: with SMTP id n6mr12858795ooo.18.1589808222002;
- Mon, 18 May 2020 06:23:42 -0700 (PDT)
+        bh=881WKNGVvaYzcoBRH7He303GsRzyKlY6cxm3kJ5azqA=;
+        b=kIB4/BlzWk+nzhkymAz32v4TgL+iy1UnsqwFpinFIIZcYNCSOq9xPgMOwfeFrW8dHN
+         OsPDN1ck5WB5fsVD+fkHjmdKl514n8DpsuhxUZoVXJVh+kFyr6fUvPvnw5/gz4bcXMle
+         wlCJdDEtXILbv3dZoGEHjXOEOAT3dTAZvjrFYj4zJTa+3vTIVpVShJOwLVDLVHtaVHgX
+         2QgZV+gKzGUKtp1gN9/9mT7fjV146WwPcP7mEwBmYWnP03ztpZ1cTo9lfdoqZfGZWMfF
+         hV5q5SgENy5DPfGj+b4Bvif1Fqcp/EkuE/YhnjSP2JDj23XPOvcdHo8wdzhaToLWEqGV
+         ISlA==
+X-Gm-Message-State: AOAM533pFlTzTiGVep5Iwpvx5ttGCjQOTWf+3NpBqCkK09cefSUvc19j
+        o7BKcj1ITn+yb3DkbnEObjeT8boVdn7UlrJWpQU=
+X-Google-Smtp-Source: ABdhPJyrmZovUGrfc1E9QcmoitiLZZUcoVkdNiqoTccxGHzp1nu+vtQYLUmXZxPCs3v4OHOBniR6mA8tEnSet1oT+ys=
+X-Received: by 2002:a17:902:930c:: with SMTP id bc12mr16453398plb.255.1589808331670;
+ Mon, 18 May 2020 06:25:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVV+2HsgmBytCOFg4pri4XinT_SPWT_Ac6n7FMZN3dR3w@mail.gmail.com>
- <CA+V-a8tmG1LKYqbc7feGZQO2Tj5RCpNUHi9e19vPr+bED0KOyQ@mail.gmail.com> <9ab946d2-1076-ed92-0a48-9a95d798d291@cogentembedded.com>
-In-Reply-To: <9ab946d2-1076-ed92-0a48-9a95d798d291@cogentembedded.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 18 May 2020 14:23:15 +0100
-Message-ID: <CA+V-a8uuP9d6dNeRpn3O0_aOc15CqWoh0bbAfYze1_hn0dCh8g@mail.gmail.com>
-Subject: Re: [PATCH 17/17] ARM: dts: r8a7742: Add RWDT node
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru> <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
+ <20200515143842.GG1634618@smile.fi.intel.com> <20200516200133.wmaqnfjbr7234fzo@mobilestation>
+ <20200518110343.GY1634618@smile.fi.intel.com> <20200518125253.r4fpr4mjflclqpym@mobilestation>
+In-Reply-To: <20200518125253.r4fpr4mjflclqpym@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 May 2020 16:25:20 +0300
+Message-ID: <CAHp75VeMcv-hQViCANQARiNh0LwmugsDWk=MF1c5E3t7z5h02Q@mail.gmail.com>
+Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request thresholds
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sergei,
+On Mon, May 18, 2020 at 3:53 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
+> > On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
+> > > On Fri, May 15, 2020 at 05:38:42PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
 
-On Mon, May 18, 2020 at 2:17 PM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->
-> Hello!
->
-> On 18.05.2020 15:27, Lad, Prabhakar wrote:
->
-> >>> Add a device node for the Watchdog Timer (RWDT) controller on the Renesas
-> >>> RZ/G1H (r8a7742) SoC.
-> >>>
-> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >>> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> >>
-> >> Thanks for your patch!
-> >>
-> >>> --- a/arch/arm/boot/dts/r8a7742.dtsi
-> >>> +++ b/arch/arm/boot/dts/r8a7742.dtsi
-> >>> @@ -201,6 +201,16 @@
-> >>>                  #size-cells = <2>;
-> >>>                  ranges;
-> >>>
-> >>> +               rwdt: watchdog@e6020000 {
-> >>> +                       compatible = "renesas,r8a7742-wdt",
-> >>> +                                    "renesas,rcar-gen2-wdt";
-> >>> +                       reg = <0 0xe6020000 0 0x0c>;
-> >>> +                       clocks = <&cpg CPG_MOD 402>;
-> >>> +                       power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-> >>> +                       resets = <&cpg 402>;
-> >>> +                       status = "disabled";
-> >>
-> >> Missing "interrupts" property.
-> >>
-> > "interrupts" property isn't used by rwdt driver  and can be dropped
-> > from bindings file.
->
->     DT describes the hardware, not its driver's abilities.
->
-Agreed will add, I had followed it on similar lines of r8a7743/44.
+...
 
-Cheers,
---Prabhakar
+> > > > >         struct dma_chan         *txchan;
+> > > > > +       u32                     txburst;
+> > > > >         struct dma_chan         *rxchan;
+> > > > > +       u32                     rxburst;
+> > > >
+> > > > Leave u32 together, it may be optimal on 64-bit architectures where ABIs require padding.
+> > >
+> > > It's not like anyone cared about padding in this structure in the first place)
+> >
+> > I think I have been caring (to some extend).
+>
+> Well, If you have then instead of asking to rearrange just two members (which
+> by the way finely grouped by the Tx-Rx affiliation) why not sending a
+> patch, which would refactor the whole structure so to be optimal for the x64
+> platforms? I don't really see why this gets very important for you seeing
+> Mark is Ok with this. My current commit follows the common driver design
+> including the DW SSI data members grouping. On the second thought I'll leave
+> it as is then.
+
+Again same issue here. What is really easy to do for you here, will
+become a burden and additional churn to anybody else.
+So, why not to minimize it in the first place? Same with comma in
+another patch. Sorry, I really don't get it.
+
+-- 
+With Best Regards,
+Andy Shevchenko
