@@ -6,88 +6,135 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72DCC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288AEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D55020826
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0442B207C4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgEROpF (ORCPT
+        id S1728045AbgEROp6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbgEROpF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:45:05 -0400
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f236:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2A2C061A0C;
-        Mon, 18 May 2020 07:45:05 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by mailout3.hostsharing.net (Postfix) with ESMTPS id 37BFB101E6B73;
-        Mon, 18 May 2020 16:45:03 +0200 (CEST)
-Received: from localhost (unknown [87.130.102.138])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id BBB1D626CE30;
-        Mon, 18 May 2020 16:45:02 +0200 (CEST)
-X-Mailbox-Line: From 94c6c800d1ca9fa04766dd1d43a8272c5ad4bedd Mon Sep 17 00:00:00 2001
-Message-Id: <cover.1589811297.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Mon, 18 May 2020 16:45:00 +0200
-Subject: [PATCH v3 0/2] rs485 bus termination GPIO
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+        Mon, 18 May 2020 10:45:58 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48416 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgEROp6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:45:58 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A64258030875;
+        Mon, 18 May 2020 14:45:54 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CMo5xIvaMlt2; Mon, 18 May 2020 17:45:53 +0300 (MSK)
+Date:   Mon, 18 May 2020 17:45:52 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
+ clocksource/sched-clocks usage
+Message-ID: <20200518144552.bjlddhuospgmer4j@mobilestation>
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
+ <20200515171004.GA760381@linaro.org>
+ <20200516121647.g6jua35kkihmw5r6@mobilestation>
+ <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
+ <20200518144045.v56fajrhbnnrzbpf@mobilestation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200518144045.v56fajrhbnnrzbpf@mobilestation>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define a device tree binding for an rs485 bus termination GPIO
-(patch [1/2]), amend the serial core to retrieve the GPIO from
-the device tree and amend the default ->rs485_config() callback
-for 8250 drivers to change the GPIO on request from user space
-(patch [2/2]).
+On Mon, May 18, 2020 at 05:40:46PM +0300, Serge Semin wrote:
+> Daniel,
+> 
+> On Mon, May 18, 2020 at 03:59:16PM +0200, Daniel Lezcano wrote:
+> > On 16/05/2020 14:16, Serge Semin wrote:
+> > > Hello Daniel,
+> > > 
+> > > Thanks for your comment. My response is below.
+> > > 
+> > > On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
+> > >> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
+> > >>> Currently neither clocksource nor scheduler clock kernel framework
+> > >>> support the clocks with variable frequency. Needless to say how many
+> > >>> problems may cause the sudden base clocks frequency change. In a
+> > >>> simplest case the system time will either slow down or speed up.
+> > >>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
+> > >>> with CPU we must set some limitations on using it for these frameworks
+> > >>> if CPU frequency may change. First of all it's not safe to have the
+> > >>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
+> > >>> the clocks registration in the sched-subsystem. Secondly we must
+> > >>> significantly decrease the MIPS GIC clocksource rating. This will let
+> > >>> the system to use it only as a last resort.
+> > >>>
+> > >>> Note CM3.x-based systems may also experience the problems with MIPS GIC
+> > >>> if the CPU-frequency change is activated for the whole CPU cluster
+> > >>> instead of using the individual CPC core clocks divider.
+> > >>
+> > >> May be there is no alternative but the code looks a bit hacksih. Isn't possible
+> > >> to do something with the sched_mark_unstable?
+> > >>
+> > >> Or just not use the timer at all ?
+> > > 
+> > > Not using the timer might be better, but not that good alternative either
+> > > especially in our case due to very slow external timer. Me and Thomas
+> > > Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
+> > > available on MIPS:
+> > > https://lkml.org/lkml/2020/5/11/576
+> > > 
+> > > To cut it short, you are right. The solution with using clocksource_mark_unstable()
+> > > is better alternative spied up in x86 tsc implementation. I'll use a similar
+> > > approach here and submit the updated patch in v3.
+> > > 
+> > > Could you please proceed with the rest of the series review? I'd like to send
+> > > the next version with as many comments taken into account as possible. The
+> > > patchset has been submitted a while ago, but except Rob noone have had any
+> > > comments.(
+> > 
+> > For me other patches are ok.
+> > 
+> > I can apply patches 1, 2, 4, 5, 6
+> > 
+> > Will remain patches 3 et 7
+> 
+> That's be great! Thanks. Is patch 3 supposed to be merged in by Rob or by you?
+> I don't see one being in the Rob's repo. He might be waiting for you
+> acknowledgment or something.
 
+Ah, it's about the MIPS GIC IRQchip bindings conversion. No questions tabout
+patch 3then. I'll ask Thomas about that patch status.
 
-Changes v2 -> v3:
+-Sergey 
 
-* Patch [2/2]:
-  * Drop unnecessary NULL pointer check preceding gpiod_set_value(). (Heiko)
-  * Amend commit message to suggest moving 8250_exar.c to new binding. (Andy)
-    Add Jan to Cc and Andy's R-b tag.
-
-Changes v1 -> v2:
-
-* Patch [2/2]:
-  * Drop unnecessary devm_gpiod_put(). (Andy)
-  * Use GPIOD_OUT_LOW macro for brevity. (Andy)
-  * Document the rationale for disabling termination by default.
-  * Drop nonsensical read of GPIO after setting its direction to out.
-
-
-Link to v2:
-https://lore.kernel.org/linux-serial/cover.1589285873.git.lukas@wunner.de
-
-
-Lukas Wunner (2):
-  dt-bindings: serial: Add binding for rs485 bus termination GPIO
-  serial: 8250: Support rs485 bus termination GPIO
-
- .../devicetree/bindings/serial/rs485.yaml        |  4 ++++
- drivers/tty/serial/8250/8250_port.c              |  3 +++
- drivers/tty/serial/serial_core.c                 | 16 ++++++++++++++++
- include/linux/serial_core.h                      |  2 ++
- 4 files changed, 25 insertions(+)
-
--- 
-2.26.2
-
+> 
+> I'll send the updated patch 3 shortly today.
+> 
+> -Sergey
+> 
+> > 
+> > 
+> > -- 
+> > <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> > 
+> > Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> > <http://twitter.com/#!/linaroorg> Twitter |
+> > <http://www.linaro.org/linaro-blog/> Blog
