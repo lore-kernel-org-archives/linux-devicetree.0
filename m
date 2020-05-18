@@ -2,191 +2,87 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D24C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B09C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F67020758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A070520758
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:23:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDS460nE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgERCUZ (ORCPT
+        id S1726700AbgERCXD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 22:20:25 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50154 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbgERCUY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 May 2020 22:20:24 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 438601A0040;
-        Mon, 18 May 2020 04:20:22 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C5421A00EC;
-        Mon, 18 May 2020 04:20:18 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C1B57402A8;
-        Mon, 18 May 2020 10:20:13 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, l.stach@pengutronix.de,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: interrupt-controller: Convert imx irqsteer to json-schema
-Date:   Mon, 18 May 2020 10:10:41 +0800
-Message-Id: <1589767841-4213-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 17 May 2020 22:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbgERCXC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 22:23:02 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD36EC061A0C;
+        Sun, 17 May 2020 19:23:02 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t40so4289305pjb.3;
+        Sun, 17 May 2020 19:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vjmCWeV4pkTNiLloM/uMdjvnY6JHjdLEXKWtsW4hZb8=;
+        b=SDS460nEAvRUM8R/qoiQAevNXGbO/7Zwhiaejnll0DxPYjuzQSaO1QVp9sUkUi3oG8
+         gipeUho2gquo8K8iiKrIvylMSNr1pwaQ9zud4/XEmLKJfeDm3Hl0v37Q6OjEsuCUvIqg
+         DhMtvQxGLmVjx1hClkxoSS1tYuQKIyikfbAkvwIv80d7NPESGt1vtGr0gxOehJc8VX5R
+         uCFKkZCeoRz+a2HFRhbDv0Zh3HlcLKqNajAAnR1TQZIKpEi1AFUf9h+d9MdgOs4n6beE
+         qT+7h1/PrD6E1vZZ9Gb7BXhnaSdAiyovMf9dvmMAlA0azL24t6sGdjW1PVNfwNEMoXN9
+         MgZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vjmCWeV4pkTNiLloM/uMdjvnY6JHjdLEXKWtsW4hZb8=;
+        b=frpMHhiiVRlG3yB+2Wha3zgVZAsD+sZw3irT6y1jvasIyvpJ/92PPRBavVfX1ow/0B
+         t8PDqAV+PcVZ2OAH5/ckxj1SVkd/TpBc1rwcrrACQ1WrGhCTLP9k71sx+dTx0SbxE11R
+         ccaPycc1yFQi3nMikNIEwz7wrFR4jvMOu52YbpnqiQsLmLnqy6hSxD4qwmFESV8ML1SG
+         LSWxxlCs2kUiyoGRIymd2BUbbJt1Eh21/GwNjgaQ3mcVGLRHQmFQpZUk7aJG95JuSb1c
+         qGtqNZUhWk8kTgd7FRH1kGuNhCGCRok4UhXIru/OykkiG/9502oRau+R3slFs1egRpGM
+         Hc8w==
+X-Gm-Message-State: AOAM530Hdfu/M8aJH6cSUd6XyEWt+AyhgPEJbTpDvC5zH2P58PpH98Uc
+        M7b2gau6rCchYWRXmooCSzZD3/3j
+X-Google-Smtp-Source: ABdhPJwnC72gFKOelZqZ2uvRBCdh52qLdHX6vnsZDuLd7vDWOzno7HYLJNYKXqATB1+oqp43rt7Gww==
+X-Received: by 2002:a17:902:b405:: with SMTP id x5mr4511320plr.31.1589768582192;
+        Sun, 17 May 2020 19:23:02 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id ay15sm7068791pjb.18.2020.05.17.19.23.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 19:23:01 -0700 (PDT)
+Date:   Sun, 17 May 2020 19:22:59 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: input: Add bindings for Azoteq
+ IQS269A
+Message-ID: <20200518022259.GJ89269@dtor-ws>
+References: <1588352982-5117-1-git-send-email-jeff@labundy.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588352982-5117-1-git-send-email-jeff@labundy.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
+On Fri, May 01, 2020 at 12:09:41PM -0500, Jeff LaBundy wrote:
+> This patch adds device tree bindings for the Azoteq IQS269A
+> capacitive touch controller.
+> 
+> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
- .../interrupt-controller/fsl,irqsteer.yaml         | 87 ++++++++++++++++++++++
- 2 files changed, 87 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+Applied, thank you.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-deleted file mode 100644
-index 582991c..0000000
---- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--Freescale IRQSTEER Interrupt multiplexer
--
--Required properties:
--
--- compatible: should be:
--	- "fsl,imx8m-irqsteer"
--	- "fsl,imx-irqsteer"
--- reg: Physical base address and size of registers.
--- interrupts: Should contain the up to 8 parent interrupt lines used to
--  multiplex the input interrupts. They should be specified sequentially
--  from output 0 to 7.
--- clocks: Should contain one clock for entry in clock-names
--  see Documentation/devicetree/bindings/clock/clock-bindings.txt
--- clock-names:
--   - "ipg": main logic clock
--- interrupt-controller: Identifies the node as an interrupt controller.
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source. The value must be 1.
--- fsl,channel: The output channel that all input IRQs should be steered into.
--- fsl,num-irqs: Number of input interrupts of this channel.
--  Should be multiple of 32 input interrupts and up to 512 interrupts.
--
--Example:
--
--	interrupt-controller@32e2d000 {
--		compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
--		reg = <0x32e2d000 0x1000>;
--		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
--		clock-names = "ipg";
--		fsl,channel = <0>;
--		fsl,num-irqs = <64>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-new file mode 100644
-index 0000000..a2bc723
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale IRQSTEER Interrupt multiplexer
-+
-+maintainers:
-+  - Lucas Stach <l.stach@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx-irqsteer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: |
-+      should contain the up to 8 parent interrupt lines used to multiplex
-+      the input interrupts. They should be specified sequentially from
-+      output 0 to 7.
-+    items:
-+      - description: irqsteer channel 0
-+      - description: irqsteer channel 1
-+      - description: irqsteer channel 2
-+      - description: irqsteer channel 3
-+      - description: irqsteer channel 4
-+      - description: irqsteer channel 5
-+      - description: irqsteer channel 6
-+      - description: irqsteer channel 7
-+    minItems: 1
-+    maxItems: 8
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: ipg
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  fsl,channel:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value representing the output channel that all input IRQs should be
-+      steered into.
-+
-+  fsl,num-irqs:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value representing the number of input interrupts of this channel,
-+      should be multiple of 32 input interrupts and up to 512 interrupts.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - fsl,channel
-+  - fsl,num-irqs
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx8mq-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    interrupt-controller@32e2d000 {
-+        compatible = "fsl,imx-irqsteer";
-+        reg = <0x32e2d000 0x1000>;
-+        interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-+        clock-names = "ipg";
-+        fsl,channel = <0>;
-+        fsl,num-irqs = <64>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+    };
 -- 
-2.7.4
-
+Dmitry
