@@ -2,117 +2,135 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63421C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A86C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4454320709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0C2206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgERLja (ORCPT
+        id S1726585AbgERLls (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 07:39:30 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16323 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgERLja (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 07:39:30 -0400
-IronPort-SDR: 5fhgkOlOrUWTpT7XPwNdpeQ8iUOzdrrw1fJ5OWJjQKRHcfxkchrTuuiZaY028y3Rr55BojBH+j
- S8+iOOg0Qmnw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 04:39:28 -0700
-IronPort-SDR: okSFRIVMsoSxIzjGKYjphCgKBJy1oF0hu5qOhb55uD5mIA+RvB3XPP/62fIDUA3B65XpK9N/lJ
- d2vC7LVeQQUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="253038325"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 18 May 2020 04:39:28 -0700
-Received: from [10.214.148.4] (vramuthx-MOBL1.gar.corp.intel.com [10.214.148.4])
-        by linux.intel.com (Postfix) with ESMTP id 151CE580100;
-        Mon, 18 May 2020 04:39:23 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh R <vigneshr@ti.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        masonccyang@mxic.com.tw
-References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <202005152142.AWvx4xc5%lkp@intel.com>
- <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
- <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com>
-Date:   Mon, 18 May 2020 19:39:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 07:41:48 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35366 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgERLls (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:41:48 -0400
+Received: by mail-oi1-f194.google.com with SMTP id o7so8701533oif.2;
+        Mon, 18 May 2020 04:41:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QqReWwa+eOXbiTkJ7H5L2JLijrqxGjQZXWkiXBXsjxo=;
+        b=B0F3R1LI/yrCOe/ZwNVRl0o5oKIgF0vCcKsz2yX/nl4BdEzu0ra6ia1ABvS1bpYvFA
+         bOrHXSKHItmTw1sKCMQKQUqbgY+1FxgkFiFCEBRP81eSsRAI/92RgM6LHwwSZs7KS+oi
+         SFaehDsVMeaEZBfEuTqVqD48eVllQZoMs+hif2uio7JrkQicyjKvloV0BJ4NNJaQFIUF
+         BYppnro0gz7141Avv8rbnmK4hZPRqajFrZXXobFJJpkanBJx/knmdJtykXUoNUIIpQrQ
+         Wy3EY2CqaXzwE9tFhsmS91ka/tosZytiUqKnj9yoyb+rkGpRkb78dtQQ/gqys793LGUE
+         Kt/A==
+X-Gm-Message-State: AOAM533FC8GOk7mgpI0i80CSCsWMv4CT+l4Zez3fG+OiAbYbX6rLAbIp
+        C4HErAtcRBMy91ZvLuFfPdUrYnEgl7Q4+4Z4AvQ=
+X-Google-Smtp-Source: ABdhPJzIwYIkEvuiD2w8vDyPT9D/C6gV3A976p29r7GQ7YCcyQdXeFiyb78DlmVhOcTpbd5AuMhOO07U8ucNsiLsSZM=
+X-Received: by 2002:a05:6808:1:: with SMTP id u1mr6233663oic.54.1589802107215;
+ Mon, 18 May 2020 04:41:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-16-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1589555337-5498-16-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 May 2020 13:41:35 +0200
+Message-ID: <CAMuHMdWdc5P3UyDZs1BPzAXZzkhvmZM8gVSDUnJBf=-dsH=izg@mail.gmail.com>
+Subject: Re: [PATCH 15/17] ARM: dts: r8a7742: Add APMU nodes
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Arnd, Andy,
+Hi Prabhakar,
 
-On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
-> On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->>
->> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
->>
->>> sparse warnings: (new ones prefixed by >>)
->>>
->>>>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
->>>>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    expected unsigned int val
->>>>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    got restricted __be32 [assigned] [usertype] reg
->>>     drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
->>>     drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    expected unsigned int val
->>>     drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    got restricted __be32 [assigned] [usertype] reg
->>>
->>>     440                  reg = cpu_to_be32(*pdata++);
->>>   > 441                  writel(reg, ebu_host->hsnand + HSNAND_CMSG_0);
->>>     442
->>>     443                  reg = cpu_to_be32(*pdata);
->>>     444                  writel(reg, ebu_host->hsnand + HSNAND_CMSG_1);
->>
->> On BE:
->> cpu_to_be32 -> no-op
->> writel() -> converts reg to LE
->>
->> On LE:
->> cpu_to_be32 -> converts to BE
->> writel() -> no-op (in terms of conversion)
->>
->> Seems to me that the proper API (if above is intended) should be swab32().
->> But something tells me that above is broken (or my understanding is wrong).
-> 
-> iowrite_be32() is the correct way to store word into a big-endian mmio register,
-> if that is the intention here.
-Thank you for suggestions to use iowrite32be(), it suits exactly.
+reduced CC list
+added CPUidle people
 
-Regards
-Vadivel
+On Fri, May 15, 2020 at 5:10 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add DT nodes for the Advanced Power Management Units (APMU), and use the
+> enable-method to point out that the APMU should be used for SMP support.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-> 
->        Arnd
-> 
+Thanks for your patch!
+
+> --- a/arch/arm/boot/dts/r8a7742.dtsi
+> +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> @@ -18,6 +18,7 @@
+>         cpus {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> +               enable-method = "renesas,apmu";
+
+According to Documentation/devicetree/bindings/arm/cpus.yaml,
+"enable-method" should be a property of the individual CPU nodes,
+and not of the parent "cpus" container node.
+
+However, so far we always put it in the parents "cpus" node, which works from
+secondary CPU bringup, but may cause issues with CPUidle?
+
+See also "[PATCH/RFC v2] ARM: dts: r8a7791: Move enable-method to CPU nodes"
+https://lore.kernel.org/linux-arm-kernel/20190514085837.18325-1-geert+renesas@glider.be/
+which so far has received no feedback from the DT or CPUidle people.
+
+Thanks!
+
+>                 cpu0: cpu@0 {
+>                         device_type = "cpu";
+> @@ -305,6 +306,18 @@
+>                         #reset-cells = <1>;
+>                 };
+>
+> +               apmu@e6151000 {
+> +                       compatible = "renesas,r8a7742-apmu", "renesas,apmu";
+> +                       reg = <0 0xe6151000 0 0x188>;
+> +                       cpus = <&cpu4 &cpu5 &cpu6 &cpu7>;
+> +               };
+> +
+> +               apmu@e6152000 {
+> +                       compatible = "renesas,r8a7742-apmu", "renesas,apmu";
+> +                       reg = <0 0xe6152000 0 0x188>;
+> +                       cpus = <&cpu0 &cpu1 &cpu2 &cpu3>;
+> +               };
+> +
+>                 rst: reset-controller@e6160000 {
+>                         compatible = "renesas,r8a7742-rst";
+>                         reg = <0 0xe6160000 0 0x0100>;
+
+Regardless:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+and I'll see what I will queue in renesas-devel for v5.9 ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
