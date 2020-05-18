@@ -2,136 +2,166 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DDBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055A9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33847206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589789926;
-	bh=8VB30sxfPma62aYtecln63XBtlWSDmFihvThUfb92Cc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=Qm5DtF8y+K7+oXcox9SEbrP2MA6NhM7bE7Tf0iujjnOBa/1SBiAtKOqjn9NvESAqb
-	 EilJxHgydwdASRRNARIaKASAnvFlhYpdrXnbAbIO//9rM3E3xfPxnhIle3pJ8Uf+UK
-	 y+P97FG4pCueE3RU53RFlwiemY6jqU+RKppWBBlI=
+	by mail.kernel.org (Postfix) with ESMTP id D6B66207D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8DuRMtZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgERISp (ORCPT
+        id S1726976AbgERIVh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 04:18:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56174 "EHLO
+        Mon, 18 May 2020 04:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgERISp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 04:18:45 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0D0C061A0C;
-        Mon, 18 May 2020 01:18:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g4so8836908ljl.2;
-        Mon, 18 May 2020 01:18:45 -0700 (PDT)
+        with ESMTP id S1726292AbgERIVf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 04:21:35 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9F4C05BD0A
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 01:21:34 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m12so8322849wmc.0
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 01:21:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=h+Jor+/LX/T3dOkaHG06o8oKZPP+jxM2LIbLly8QyTw=;
-        b=dGTXtXSHH+MliSmXwudIH+af9C2qYhJaLKRkSgtQZKStsDBbLEn/2aXYsxzK8kRlSv
-         S/eVusPsylrneDLcOr7VBfhLbYnGzxKy2uAxXgC5Gkp6o8mvwctDrhR8K3FcYqEpB3ud
-         EArs0hav78XIBdlOqoD4SuKey4y2IrWbF9gfPAw3iac5u4+qQDikYVlwacjhmcreDOPm
-         wWgKvtysGr5f7vOYZtJ0rDpGiOpqMGeV7ouZ9zycBB2TawIoPmdFWQLuYxp06gguqn/U
-         1LnT++ktzV8YhYA6nTdy5Ih6kASkj5pawH35wNZ26p8kaHXkiP2SjMkeVmCPffYlvebB
-         kkCg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ke8BoO5EmHk4SIG95iemEMZnR5BDFJSAvPbDzk3LsE=;
+        b=y8DuRMtZ5m32J99ssZXJXSq+X+AfOmJ+8dm6KSocF9Z7GTbedT/x+AWJ7/buNAr3pg
+         Lc4iDOZnNKa1b971lpHeSODJhZ4KsL7pg3cd7aNHPsLWp+woLitHcV75oXe/SFMpFWH6
+         mRETIVp45P9yo8Vo9q/avbqmc59f2lnBmAsRsoyJV/oWG0W9PRJE5a53kk1GMfdahNzp
+         h090VIAv9PNzyF+oVrlPFrp3oBdB27BDMGL8b36Wy4DkS9m435f3D3if4j6tR0cRQfhC
+         OnVMJiDqXESB8zrBykPNUJIbFiwQqwRHG2yZRbwCdOYvKuT2iI0SkwgGXHSRhw29Fo9U
+         mGbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=h+Jor+/LX/T3dOkaHG06o8oKZPP+jxM2LIbLly8QyTw=;
-        b=PrVbNaYBS0GG1esbHqLo0RaiFOnTFeA2KrTPzf2JGmMsV800T2BxXbn3uUswtEQAQd
-         Xq/82jSmwEug65i+buRiYkGoYSFV2b0pGXWS+L63iPfgumzx+kLX6UPJU6lPHW+m1qGv
-         FwQnmKz1P2YpsB48maydgfgTQVQtbud8hgnaWsJMOcU/jXgVCka1ThuEWUaCaqJUVkox
-         0UM/tx77tVjo7URkLeRvKStVXfMcv+DYijMvp4GG/LjETse7r98m0kKDMlR0WN3w7ibu
-         TUewxXBWwM9bx8OzSXNGMr4DhPDNkJC/plr7IzXo/9R3DfSFPqSKDJwOnTPh+TVsyyat
-         7SSA==
-X-Gm-Message-State: AOAM533mtOsAvjrwKDeWfbV+9h0xSL6MfGrhzRpE3ZHprJ7WINMUZOEi
-        nl+ljm6jsSX+mLhNK+UvViM=
-X-Google-Smtp-Source: ABdhPJy0lSdsA1WdHayXUZZeXPQ7bF5+JBHivyWS/3sdkBCjRnjpm07VsxjGIxDlo72LLooXcdKdag==
-X-Received: by 2002:a2e:9093:: with SMTP id l19mr1148378ljg.27.1589789923538;
-        Mon, 18 May 2020 01:18:43 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id z5sm383072ljm.64.2020.05.18.01.18.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 May 2020 01:18:42 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Drew Fustini <drew@beagleboard.org>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ke8BoO5EmHk4SIG95iemEMZnR5BDFJSAvPbDzk3LsE=;
+        b=D35wlJHaFxNQ4QOq+OEM6kzMq/Hp+tsqm1ohQhlsb3dQLvJzwq8H7XKdr+EblIQZwJ
+         h3MYIKPABq6aEeAK5rbWBkvYFA4FxRRYoAwIOAwtgs82mBZX7L3P2LMXzRtaNC4do1CP
+         W+LqG+wsUvf16mGt4LUHzW2Y9CVOi3JHCaSBaCOS9/UV5qXlNWw3LEFcCuUtAh84+BSZ
+         3/Q5BxPHsIEVZOs4QhfsDUy4K40NCnpmUrgJS/Kmv2juENrH+K/jGiElAJcAoSGyojr2
+         N8xsxwZPLPeE0Gk1VlbFPQt8Vrb/s9vE/gi5QL/c92VbgpszojBN40oS0WFWZi9aJ+yr
+         gIrA==
+X-Gm-Message-State: AOAM532PJpjHG252+eSvI2SrrcUWZW3uJLboTLG3DUuUNqAfuzFde2RO
+        CMdA5DxW3hO7M+UaVQwR6QOT3Q==
+X-Google-Smtp-Source: ABdhPJz3/vAFGGLjGfXRhTYtndwC2SARogPWWAdkeE9QbQBVTa6G6s3MYYvtL+u+txx74j1Lpr8f7w==
+X-Received: by 2002:a7b:ce01:: with SMTP id m1mr6593049wmc.116.1589790092914;
+        Mon, 18 May 2020 01:21:32 -0700 (PDT)
+Received: from localhost.localdomain ([37.120.32.219])
+        by smtp.gmail.com with ESMTPSA id x184sm15849567wmg.38.2020.05.18.01.21.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 01:21:32 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
-In-Reply-To: <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
-References: <20200508165821.GA14555@x1> <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
-Date:   Mon, 18 May 2020 11:18:38 +0300
-Message-ID: <875zcty7tt.fsf@kernel.org>
+        linux-arm-msm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        Robert Foss <robert.foss@linaro.org>
+Subject: [PATCH v3] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm APQ8016 SBC + D3Camera mezzanine
+Date:   Mon, 18 May 2020 10:21:29 +0200
+Message-Id: <20200518082129.2103683-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
+the Dragonboard 410c with the D3Camera mezzanine expansion board.
 
-Linus Walleij <linus.walleij@linaro.org> writes:
->> gpiochip0 - 32 lines:
->>         line   0:   "ethernet"       unused   input  active-high
->>         line   1:   "ethernet"       unused   input  active-high
->
-> Why are the ethernet lines not tagged with respective signal name
-> when right below the SPI lines are explicitly tagged with
-> sclk, cs0 etc?
->
-> Ethernet is usually RGMII and has signal names like
-> tx_clk, tx_d0, tx_en etc.
->
-> Also some lines seem to be tagged with the pin number
-> like P9_22, P2_21 below, it seems a bit inconsistent
-> to have much information on some pins and very sketchy
-> information on some.
+The D3Camera mezzanine ships in a kit with a OmniVision 5640 sensor module,
+which is what this DT targets.
 
-the pin names match the beagle bone documentation and would help users
-figure out which pins on the expansion headers match to a gpio signal.
+Signed-off-by: Robert Foss <robert.foss@linaro.org>
+---
 
-=2D-=20
-balbi
+Changes since v2:
+ - Vinod: Change copyright assignment to Linaro
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v1:
+ - Vinod: Changed license to GPL+BSD
+ - Vinod: Changed copyright year to 2020
+ - Nico: Changed name of mezzanine to d3camera
 
------BEGIN PGP SIGNATURE-----
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../boot/dts/qcom/apq8016-sbc-d3camera.dts    | 45 +++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7CRN4ACgkQzL64meEa
-mQYTRQ//TUIxIdxJ0j0fQXEyJPGhdqPAmQQqf/oPQNarULsaoObXiAG65YXMZzCz
-G1yUBf7EP10S6fHda72GpvqJj1K+Yhr/CPmyCNmrrU8N1vr19rCQZtZ3qT4IIflz
-StTPQ9PPBdbhAi/g7x+nLMV5Jrer4pNVZ165EUVKE5WJJKdZ6VMOs+xgvnlLVVDk
-XmOqHiwOE21d+EiymWVrPrpZF8XuzCLBFw34y7o8AsAR2qYK2wrrGqftvq+d+eQ3
-YhC3k8JedCBTQkVPNpxSB7hcFezBukCqzyFs957LX/wqULT6xcfmbbfLj9o4jn/k
-pY2hh4ULDaRwxMW8AVtck4li8mdrvM66uyjjibK6sqKBOSIAlRE4y1FZWzPeZOZ2
-KwWZvOw31m0JPBzcNF4GZLKmORfYQQTGMo54anCVDCYe61Fv4/QtS8HK5162icjP
-90RY2N8As0Qo1tHQwBFVsQLLQWK+OT+6Botf34dqgPrM5LZMvgVNvKNE1lB3PQ37
-0n+S+gbKfNFgiBMWlo0Qm37h7x//t5rzGW2K82Icp9YPdmZrOCnRytQmKiJH7gcp
-XIdnCCw3cIfaWz3utE+Z6ytuNNzLlcMmglr7sOY2h3VCQ/ByMZZpAYmL7CRLy7Of
-+uF42QBNHoYcAKfkqhyAqvEK2dVlt3hxLVP4pdTywm+CHc/D2L4=
-=KGpi
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index cc103f7020fd..3f95b522694e 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3camera.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
+new file mode 100644
+index 000000000000..752e5ec47499
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "apq8016-sbc.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3Camera Mezzanine";
++	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
++};
++
++&cci_i2c0 {
++	/delete-node/ camera_rear@3b;
++
++	camera_rear@76 {
++		compatible = "ovti,ov5640";
++		reg = <0x76>;
++
++		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&camera_rear_default>;
++
++		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
++		clock-names = "xclk";
++		clock-frequency = <23880000>;
++
++		vdddo-supply = <&camera_vdddo_1v8>;
++		vdda-supply = <&camera_vdda_2v8>;
++		vddd-supply = <&camera_vddd_1v5>;
++
++		status = "ok";
++
++		port {
++			ov5640_ep: endpoint {
++				clock-lanes = <1>;
++				data-lanes = <0 2>;
++				remote-endpoint = <&csiphy0_ep>;
++			};
++		};
++	};
++};
+-- 
+2.25.1
+
