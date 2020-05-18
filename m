@@ -2,227 +2,111 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79878C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60641C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381BC20756
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D8920756
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:56:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jrc15CIy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H24gkmj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgEROzw (ORCPT
+        id S1728012AbgERO4D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:55:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33582 "EHLO
+        Mon, 18 May 2020 10:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgEROzw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:55:52 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC4EC061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 07:55:51 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id s5so3563228uad.4
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 07:55:51 -0700 (PDT)
+        with ESMTP id S1727005AbgERO4D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:56:03 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F24C061A0C;
+        Mon, 18 May 2020 07:56:03 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id 5so2137839pjd.0;
+        Mon, 18 May 2020 07:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vj5hFUhDBM+WTe+cSvcyWy4V3k81csR6btS7gqnvFts=;
-        b=Jrc15CIyMGrpxchQkoru3VPYc3/uY7cZk9vGSavx2jtBOkFEE38CcYFo1RXr6ZSaQz
-         UvMh+07QfmLmc5fll3AkAs2J22pn7JoeaCJMsHAx6cZwrc1e8qKEhmZ01SMT4yKxWtYL
-         dPM5iIU4kBbNX9E4OKphGUxKVEK2sB8ORdL2A=
+        bh=j0vgPkzC0SrMw1LKftBMhKbRArXUYnbbA1/YhTB9uaQ=;
+        b=H24gkmj4DfDfuJCrO+06TCGDojdN1L9EUvpR5Ip3kE+bWfnp24rarC1anGDdbcKBM8
+         hDgd2N7B6rmEETzkobnuyliskxRCTQlzWNrzdQ+PsYY+Q9/zRy23jmiGPHREE1MM0NV/
+         yP2jVkjfW363I9E4dh+FK5deMTF+E5pXAlZ+D0N3ZDO8+wQ2ofNpPS5WNbOQV6zbfx2U
+         LQA+xrE7n3ZnbOLCtZV5e0shXEb4ctn9y91k8CDcZToocRNuweWiDt8nsacjdm8son3A
+         mPSrlUxJzdjMFPkm6wH+ZjHcd3LVWWTbGRdLxOl0fjfT6zRgnDvBBTDOf1gF8bt9auI2
+         zXVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vj5hFUhDBM+WTe+cSvcyWy4V3k81csR6btS7gqnvFts=;
-        b=tUSrU5wPAD0zjH7ccn2l5aoWtu4H/W5np4b0NY5Z7U4/XaCYuajvF4Kj2n3W/GnBic
-         8JoZTFaFOatAQvIP/LTswy/R/PhYjVDHPz2hto7us8Q+MAPRzsk0lIWwZZBm2RP7DKst
-         MsJ9utqFGkOZDoedby9j+Ji1A6Iq4oUB5SX5jffd5JaQ1B7W1K7NR03Zy3kKlT9YCKOX
-         eZStX8otZ3lSrzw+MlRBzj5Og3kceyjCH097EFoRnpHTfp0+aNyvP5OVzgC+VxkVpwbF
-         +KzGkKXK2IL+kEV58IVHjpK3n9Wgr4o/HiuwgmkNOSBd0AIokqsPb/aLLUGN1gvRUKDy
-         IG2w==
-X-Gm-Message-State: AOAM530Il6k5MXXrcrOtFRotrPZXfzGTFHZKI0u2KDMDmRu8KYg8tVpW
-        3GHRHSY1LV47LEVXfXf3lNM0yzfOWSs=
-X-Google-Smtp-Source: ABdhPJyYrcNIGtsOo5Z/fK+RIZHaTuQp68rvk4qUM+BzOzkf+xcnFlP9bbP7zexuq1kWcWVlbvtIVw==
-X-Received: by 2002:ab0:1e4:: with SMTP id 91mr6690436ual.112.1589813750056;
-        Mon, 18 May 2020 07:55:50 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id 66sm2815771vss.16.2020.05.18.07.55.49
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 07:55:49 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id e10so5711756vsp.12
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 07:55:49 -0700 (PDT)
-X-Received: by 2002:a67:e884:: with SMTP id x4mr7166181vsn.106.1589813441464;
- Mon, 18 May 2020 07:50:41 -0700 (PDT)
+        bh=j0vgPkzC0SrMw1LKftBMhKbRArXUYnbbA1/YhTB9uaQ=;
+        b=EdBiMPnk3SSVkr3YM9+sEVoanOs4IO4uhp0LNWSq8OkryJba2VvFlJA9J5b/v2bW0i
+         IZyNYWVdS8hGbUGjtbvb6iFfD9rLe1Y0qpeu7noMhF1GyAqMsi+UhzeX7Wk6BRLFeNwR
+         z+zRwWamhmrK7pWZQpoFN6V2wNofSD+QFY0gyovfBqpvloujyU13U0sfA7fsxro/RxWq
+         PsgOmG3uRHT+uHvmc0qlvOhoZlVEtwF+9J/312rGmx1epsEF/4JaesPfo8hl3UJQ404v
+         julLiSehGgwKEI6hWxH76GQ5ID0/CVqF9KHRrpB57iPSeVEjTyDI76wbCgNJK0MdzYsD
+         ix/g==
+X-Gm-Message-State: AOAM530Sc2U6VNVfKlD7nXpMxbnWhsDWeXUsJFgr6qTzKjDOX9+1uBBX
+        s40/KMg7FUhxcoBwZKuDlk8ElCqXTyPFgNEEHH8=
+X-Google-Smtp-Source: ABdhPJzz4iSJwpMHgi49aKOPdGMYFISG3X9YPDm7J/TYfsTMb/LHGyys39ppu1LINRhi2P3ZQj6t6s08ynYuAvMi11E=
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr15165549plt.18.1589813762929;
+ Mon, 18 May 2020 07:56:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200507213500.241695-1-dianders@chromium.org>
- <20200509201511.GD30802@ravnborg.org> <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
-In-Reply-To: <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 18 May 2020 07:50:29 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UNuwb+YYJKw9+HNMKUNfuNFxj+Gr+yB9tXANbXAvDgCg@mail.gmail.com>
-Message-ID: <CAD=FV=UNuwb+YYJKw9+HNMKUNfuNFxj+Gr+yB9tXANbXAvDgCg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot
- Plug Detect
-To:     Sam Ravnborg <sam@ravnborg.org>, LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com> <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+In-Reply-To: <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 May 2020 17:55:51 +0300
+Message-ID: <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sam,
+On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
+<jonathan.albrieux@gmail.com> wrote:
 
-On Sat, May 9, 2020 at 3:48 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Sat, May 9, 2020 at 1:15 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > Hi Douglas.
-> >
-> > On Thu, May 07, 2020 at 02:34:54PM -0700, Douglas Anderson wrote:
-> > >
-> > > As talked about in commit c2bfc223882d ("drm/bridge: ti-sn65dsi86:
-> > > Remove the mystery delay"), the normal HPD pin on ti-sn65dsi86 is
-> > > kinda useless, at least for embedded DisplayPort (eDP).  However,
-> > > despite the fact that the actual HPD pin on the bridge is mostly
-> > > useless for eDP, the concept of HPD for eDP still makes sense.  It
-> > > allows us to optimize out a hardcoded delay that many panels need if
-> > > HPD isn't hooked up.  Panel timing diagrams show HPD as one of the
-> > > events to measure timing from and we have to assume the worst case if
-> > > we can't actually read HPD.
-> > >
-> > > One way to use HPD for eDP without using the mostly useless HPD pin on
-> > > ti-sn65dsi86 is to route the panel's HPD somewhere else in the system,
-> > > like to a GPIO.  This works great because eDP panels aren't physically
-> > > hotplugged.  That means the debouncing logic that caused us problems
-> > > wasn't really needed and a raw GPIO works great.
-> > >
-> > > As per the above, a smart board designer would realize the value of
-> > > HPD and choose to route it to a GPIO somewhere on the board to avoid
-> > > the silly sn65dsi86 debouncing.  While said "smart designer" could
-> > > theoretically route HPD anywhere on the board, a really smart designer
-> > > would realize that there are several GPIOs on the bridge itself that
-> > > are nearly useless for anything but this purpose and route HPD to one
-> > > of those.
-> > >
-> > > This series of patches is intended to allow the scenario described
-> > > above.
-> > >
-> > > This patch has been tested on a board that is not yet mainline.  On
-> > > the hardware I have:
-> > > - Panel spec says HPD could take up to 200 ms to come up, so without
-> > >   HPD hooked up we need to delay 200 ms.
-> > > - On my board the panel is powered by the same rail as the
-> > >   touchscreen.  By chance of probe order the touchscreen comes up
-> > >   first.  This means by the time we check HPD in ti_sn_bridge_enable()
-> > >   it's already up.  Thus we can use the panel on 200 ms earlier.
-> > > - If I measure HPD on this pane it comes up ~56 ms after the panel is
-> > >   powered.  This means I can save 144 ms of delay.
-> > >
-> > > Side effects (though not main goals) of this series are:
-> > > - ti-sn65dsi86 GPIOs are now exported in Linux.
-> > > - ti-sn65dsi86 bindings are converted to yaml.
-> > > - Common panel bindings now have "hpd-gpios" listed.
-> > > - The simple-panel driver in Linux can delay in prepare based on
-> > >   "hpd-gpios"
-> > > - ti-sn65dsi86 bindings (and current user) now specifies "no-hpd"
-> > >   if HPD isn't hooked up.
-> > >
-> > > Changes in v5:
-> > > - Use of_xlate so that numbers in dts start at 1, not 0.
-> > > - Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
-> > >
-> > > Changes in v4:
-> > > - Don't include gpio.h
-> > > - Use gpiochip_get_data() instead of container_of() to get data.
-> > > - GPIOF_DIR_XXX => GPIO_LINE_DIRECTION_XXX
-> > > - Use Linus W's favorite syntax to read a bit from a bitfield.
-> > > - Define and use SN_GPIO_MUX_MASK.
-> > > - Add a comment about why we use a bitmap for gchip_output.
-> > > - Tacked on "or is otherwise unusable." to description.
-> > >
-> > > Changes in v3:
-> > > - Becaue => Because
-> > > - Add a kernel-doc to our pdata to clarify double-duty of gchip_output.
-> > > - More comments about how powering off affects us (get_dir, dir_input).
-> > > - Cleanup tail of ti_sn_setup_gpio_controller() to avoid one "return".
-> > > - Use a bitmap rather than rolling my own.
-> > > - Remind how gpio_get_optional() works in the commit message.
-> > > - useful implement => useful to implement
-> > >
-> > > Changes in v2:
-> > > - ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
-> > > - ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
-> > > - ("simple...hpd-gpios") is 1/2 of replacement for ("Allow...bridge GPIOs")
-> > > - specification => specifier.
-> > > - power up => power.
-> > > - Added back missing suspend-gpios.
-> > > - data-lanes and lane-polarities are are the right place now.
-> > > - endpoints don't need to be patternProperties.
-> > > - Specified more details for data-lanes and lane-polarities.
-> > > - Added old example back in, fixing bugs in it.
-> > > - Example i2c bus is just called "i2c", not "i2c1" now.
-> > > - ("dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd") new for v2.
-> > > - ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
-> > >
-> > > Douglas Anderson (6):
-> > >   drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-> > >   dt-bindings: display: Add hpd-gpios to panel-common bindings
-> > >   drm/panel-simple: Support hpd-gpios for delaying prepare()
-> > >   dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
-> > >   dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd
-> > >   arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
-> >
-> > Applied:
-> > >   dt-bindings: display: Add hpd-gpios to panel-common bindings
-> > >   drm/panel-simple: Support hpd-gpios for delaying prepare()
-> > to drm-misc-next.
-> >
-> > The others was missing reviews so we need to wait for feedback.
->
-> Thanks!
->
-> Given the previous feedback from Linus W, Stephen, and Laurent I
-> expect things are good enough to land now, but it'd be good to get
-> confirmation (I removed some of the previous tags just to get
-> confirmation).  If we can get review tags early next week maybe it'll
-> still be in time to land for 5.8?
+> +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
 
-I think all the others have reviews now.  Is there anything blocking
-them from getting applied?
+(1)
 
-Thanks!
+...
 
--Doug
+> +       /*
+> +        * If reset pin is provided then will be set to high on power on
+> +        * and to low on power off according to AK09911 datasheet
+> +        */
+
+Wording is confusing, perhaps you have to use 'asserted / deasserted'.
+
+Btw, in (1) it's also "high" (asserted). I barely understand how it's
+supposed to work in all cases?
+
+> +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> +                                             "reset", GPIOD_OUT_HIGH);
+> +       if (IS_ERR(reset_gpiod))
+> +               return PTR_ERR(reset_gpiod);
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
