@@ -2,140 +2,117 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28F3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63421C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82158206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:38:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXMQfkf2"
+	by mail.kernel.org (Postfix) with ESMTP id 4454320709
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgERLi0 (ORCPT
+        id S1726399AbgERLja (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 07:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgERLiZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:38:25 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA0E6C061A0C;
-        Mon, 18 May 2020 04:38:25 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id s69so5011955pjb.4;
-        Mon, 18 May 2020 04:38:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tFYbOS9O2Ltwi9wFSOezvo7kaD7sfz92gMvItxnnShM=;
-        b=NXMQfkf2JjFCUAex4KRSqSyb1zZG9+lbZ8xVO4CeS037zxqs7aomMFCIYlpeW3sImx
-         XkzoyJhhdsNP/UPSybb/FvWsgsd9o4QwKLhcgzE5jThKXARHk17wvO2Nrpkvtatamd6T
-         eIi8GPXjgouP9M+SBTBrpfn0iHp/EjDr8eVt61m1T1Wm7eYEEQ1ew5rem5iyN2JgpAmY
-         HtaiGQslZ2n0rVoh+Siu3tOJUKJMviRsbz9HEMvCLryUqNUq/V5B8kBQ9IOcaSii+8TI
-         +HKvnKBUumta0nugBBjmBO0DL/J9AxtiGyAzyvGO/telkWEIXOyJb1hzylG0q2AJMiAB
-         jlpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tFYbOS9O2Ltwi9wFSOezvo7kaD7sfz92gMvItxnnShM=;
-        b=q+f5qGJsS71FHi7WhpM2vtWfp2dMGtPXR+rhBQbq/AR1yysGHIt/Uk39F9MirIZYDc
-         7ks/lJaUze/FHrmCLQETABo8KTDr1O8mHsCV29848ohbTUfEZaYHi2SKQJ2yPqIjNXZU
-         JX9cbbmU6DkPJ80WwkZN83IMEU+nbb3wCo1shxPsnY3I5WWaogh0EZKO1oZ05TN2j5YM
-         F508zSfHi+dYY+yTY84Uy2L+gl/qLsUO17PkmgvzE6BOm+WoIXFwV1BzN/7Wf80ZmAuc
-         UaMslS1BIIozaMTlt5VH3DFmXcg7qyn3vSNNRtfEFEHAsMywOW1XDhMYDTAnS32DoUPN
-         16yw==
-X-Gm-Message-State: AOAM533Tm9SRnsrzcpQx1xnp+hRMJyeyXUDKufWSqpibfpglQfm7s9ea
-        MQAViMZnDOh1D9NDIFAp8QQMAMW8tcuSA+ieJXo=
-X-Google-Smtp-Source: ABdhPJynIdw8n9smtcUVVt1+xFJ7nfgBacpNT7rwXVcqHEAHNqbO846my5bVMtqSHbfVdZ6g8cgfW4hm1KY+nSJ1EA4=
-X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr19706098pjb.129.1589801905266;
- Mon, 18 May 2020 04:38:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru> <20200515104758.6934-7-Sergey.Semin@baikalelectronics.ru>
- <20200515123422.GZ185537@smile.fi.intel.com> <20200516142030.kburieaxjg4n7c42@mobilestation>
- <20200518110004.GW1634618@smile.fi.intel.com>
-In-Reply-To: <20200518110004.GW1634618@smile.fi.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 May 2020 14:38:13 +0300
-Message-ID: <CAHp75Vf268nfwJ4Bm+A+-CsqjBSHgKVmiiON=ffUd79DCOcE8Q@mail.gmail.com>
-Subject: Re: [PATCH v2 06/19] spi: dw: Discard static DW DMA slave structures
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mon, 18 May 2020 07:39:30 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16323 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgERLja (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 07:39:30 -0400
+IronPort-SDR: 5fhgkOlOrUWTpT7XPwNdpeQ8iUOzdrrw1fJ5OWJjQKRHcfxkchrTuuiZaY028y3Rr55BojBH+j
+ S8+iOOg0Qmnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 04:39:28 -0700
+IronPort-SDR: okSFRIVMsoSxIzjGKYjphCgKBJy1oF0hu5qOhb55uD5mIA+RvB3XPP/62fIDUA3B65XpK9N/lJ
+ d2vC7LVeQQUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="253038325"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 18 May 2020 04:39:28 -0700
+Received: from [10.214.148.4] (vramuthx-MOBL1.gar.corp.intel.com [10.214.148.4])
+        by linux.intel.com (Postfix) with ESMTP id 151CE580100;
+        Mon, 18 May 2020 04:39:23 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw
+References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <202005152142.AWvx4xc5%lkp@intel.com>
+ <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
+ <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com>
+Date:   Mon, 18 May 2020 19:39:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 2:01 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Sat, May 16, 2020 at 05:20:30PM +0300, Serge Semin wrote:
-> > On Fri, May 15, 2020 at 03:34:22PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 15, 2020 at 01:47:45PM +0300, Serge Semin wrote:
-> > > > Having them declared is redundant since each struct dw_dma_chan has
-> > > > the same structure embedded and the structure from the passed dma_chan
-> > > > private pointer will be copied there as a result of the next calls
-> > > > chain:
-> > > > dma_request_channel() -> find_candidate() -> dma_chan_get() ->
-> > > > device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
-> > > > dw_dma_filter().
-> > > > So just remove the static dw_dma_chan structures and use a locally
-> > > > declared data instance with dst_id/src_id set to the same values as
-> > > > the static copies used to have.
-> > >
-> > > ...
-> > >
-> > > > -static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
-> > > > -static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
-> > >
-> > > > + struct dw_dma_slave slave = {0};
-> > >
-> > > I really would like to leave them separated and as in the original form, i.e.
-> > >
-> > >     struct dw_dma_slave tx = { .dst_id = 1 };
-> > >     struct dw_dma_slave rx = { .src_id = 0 };
-> > >
-> > > those src and dst IDs are put in that form on purpose...
-> >
-> > As long as you don't tell us what purpose it is, my position won't change.
->
-> It's not the way when your changes makes this the older (upstreamed) stuff's
-> issue, it's an opposite. But I will help you here...
->
-> > These structures declared here just hold the static memory and nothing
-> > else. Allocating them on stack is better.
->
-> I'm not talking about stack, it's fine for me, what I'm talking about is *how*
-> they are being initialized. Read my message again carefully, please.
+Hi Arnd, Andy,
 
-And to avoid additional churn around this, the purpose is to show what
-Dreq number is in use actually for these transfers (that's why 0
-assignment is explicitly there and no counterpart Dreq filled).
+On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
+> On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>>
+>> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
+>>
+>>> sparse warnings: (new ones prefixed by >>)
+>>>
+>>>>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
+>>>>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    expected unsigned int val
+>>>>> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    got restricted __be32 [assigned] [usertype] reg
+>>>     drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
+>>>     drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    expected unsigned int val
+>>>     drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    got restricted __be32 [assigned] [usertype] reg
+>>>
+>>>     440                  reg = cpu_to_be32(*pdata++);
+>>>   > 441                  writel(reg, ebu_host->hsnand + HSNAND_CMSG_0);
+>>>     442
+>>>     443                  reg = cpu_to_be32(*pdata);
+>>>     444                  writel(reg, ebu_host->hsnand + HSNAND_CMSG_1);
+>>
+>> On BE:
+>> cpu_to_be32 -> no-op
+>> writel() -> converts reg to LE
+>>
+>> On LE:
+>> cpu_to_be32 -> converts to BE
+>> writel() -> no-op (in terms of conversion)
+>>
+>> Seems to me that the proper API (if above is intended) should be swab32().
+>> But something tells me that above is broken (or my understanding is wrong).
+> 
+> iowrite_be32() is the correct way to store word into a big-endian mmio register,
+> if that is the intention here.
+Thank you for suggestions to use iowrite32be(), it suits exactly.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards
+Vadivel
+
+> 
+>        Arnd
+> 
