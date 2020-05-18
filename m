@@ -2,85 +2,123 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80943C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911C7C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A71E20657
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:27:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="AiY/uLPB"
+	by mail.kernel.org (Postfix) with ESMTP id 7413420826
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826457;
+	bh=vUexAKayig7hoQMTXHum2daB+jiGgP2Hd7w/7txXwSI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fZ47m8H9Z/0gQZiJMzboydI9JNpQGIu9XIqWKngFRdQ7+xI5I/IM2s7mDxnuleamb
+	 La5njy98Lvlwox7fRiI2Tfezu90AXgolY1VneOdcUTadgHiN0hUtiKRr49poQdCMdJ
+	 4ewMCOnGoD6GRw7N1kX/lwEX38gLMSANdAKmFg0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731885AbgERSZV (ORCPT
+        id S2387954AbgERS10 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 14:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730652AbgERSZU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:25:20 -0400
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC64C061A0C;
-        Mon, 18 May 2020 11:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-        References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=OE58ZX5Oa1e7YVFVtcnMs3q7vetLAsEVZFBhervmLAg=; b=AiY/uLPBryeGz2O3iSwnv2CjWr
-        ujQoBLXSfuBBAjlkjq0ulWqpgFLwNekgBcgIXC+S7lHtWIiPtPhm24fzgoXL3vwmYJ7QKjOJPeflM
-        wmcn2q/0JVYMFs3Z1NENUh+ICdIiiag18rd83YQKRX6Nkn9ziafYT+qvBum9gkw3IETWNPZiTgrtG
-        0ZOBICkuZB3uFgRC+RpZCSK7Hm5fIcEndKUwxFB7lCJURSxB5eJRSWXb76EfmdmnW2MsZR5ai90iS
-        MU13u+6ftBh+nVDqcSev6jJt87a66WlnXd5WiXbaCh2xZzjFxN+O2QJVDTFwXy07OMCNlxg8/nGIg
-        SOX5PV6Q==;
-Received: from [2001:4d48:ad59:1409:4::2] (helo=youmian.o362.us)
-        by the.earth.li with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1jakCk-0008Ji-Ac; Mon, 18 May 2020 19:09:34 +0100
-Date:   Mon, 18 May 2020 19:09:31 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: vendor-prefixes: Add MikroTik
-Message-ID: <aae96cddb2d1426482cae7f6fc4d1dc0aecfde5d.1589824955.git.noodles@earth.li>
-References: <cover.1589824955.git.noodles@earth.li>
+        Mon, 18 May 2020 14:27:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731371AbgERS1Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 14:27:25 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B2272065F;
+        Mon, 18 May 2020 18:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589826444;
+        bh=vUexAKayig7hoQMTXHum2daB+jiGgP2Hd7w/7txXwSI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jeqK2OJ6xFtqCNfN1ky7GwcFDsbDnhDlARUGcXd/rWqLG1sHGTSJARhdKe+3y/LCJ
+         iHQseL6fG/6OqBdVnTsWEvNhB2EfPTXY6ZLceYvCD96AeJXHNC9pFJjEvD/JUuZCZd
+         A1LlsKRgjQyaubXUtHLYEOujo3EDZJKJna3WYR0Q=
+Received: by mail-oi1-f169.google.com with SMTP id l6so4016667oic.9;
+        Mon, 18 May 2020 11:27:24 -0700 (PDT)
+X-Gm-Message-State: AOAM530tR//h4pBrj2MsZ7gQmZ9F+cw2JY5PmF1z/eJDmmxADz0RC5fy
+        AXxf9nDEkvr1tzkMXQMJGbBUgellaU+OgbpHYg==
+X-Google-Smtp-Source: ABdhPJx3fgeoOHAumedf5oacXjRoxMizojAOnq9MnOT4ZX6kWsKK8ZqiKg8ShKAj1LLh0Vm4moDpvYl9CG1Oub20DaY=
+X-Received: by 2002:aca:1904:: with SMTP id l4mr523744oii.106.1589826443359;
+ Mon, 18 May 2020 11:27:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1589824955.git.noodles@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513104615.7905-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200514125709.GA8436@bogus> <dc51e6af-bda8-d8b9-1782-f5c4d5d3fed7@linux.intel.com>
+In-Reply-To: <dc51e6af-bda8-d8b9-1782-f5c4d5d3fed7@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 18 May 2020 12:27:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJxqdi2MmyHZteMOpx5yy_o+ZxaqGHMUV7aCknWWQ0ptg@mail.gmail.com>
+Message-ID: <CAL_JsqJxqdi2MmyHZteMOpx5yy_o+ZxaqGHMUV7aCknWWQ0ptg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: mtd: Add Nand Flash Controller
+ support for Intel LGM SoC
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Mason Yang <masonccyang@mxic.com.tw>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+        Vignesh R <vigneshr@ti.com>,
+        "hauke.mehrtens" <hauke.mehrtens@intel.com>,
+        devicetree@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        cheol.yong.kim@intel.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-MikroTik (SIA Mikrotīkls) is a Latvian company who develop routers and
-wireless ISP systems.
+On Thu, May 14, 2020 at 8:08 PM Ramuthevar, Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+> On 14/5/2020 8:57 pm, Rob Herring wrote:
+> > On Wed, 13 May 2020 18:46:14 +0800, Ramuthevar,Vadivel MuruganX wrote:
+> >> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>
+> >> Add YAML file for dt-bindings to support NAND Flash Controller
+> >> on Intel's Lightning Mountain SoC.
+> >>
+> >> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >> ---
+> >>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 83 ++++++++++++++++++++++
+> >>   1 file changed, 83 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+> >>
+> >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: 'dmas' is a dependency of 'dma-names'
+> >
+> > See https://patchwork.ozlabs.org/patch/1289160
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> >
+> > Please check and re-submit.
+> Thank you very much for review comments...
+> I didn't find build errors, successfully built.
 
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+You need to build without DT_SCHEMA_FILES set or be on 5.7-rc (you
+should be on a current -rcX at least for any patch submission). This
+comes from the core schema.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index d3891386d671..d3277fe6640b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -633,6 +633,8 @@ patternProperties:
-     description: Microsoft Corporation
-   "^mikroe,.*":
-     description: MikroElektronika d.o.o.
-+  "^mikrotik,.*":
-+    description: MikroTik
-   "^miniand,.*":
-     description: Miniand Tech
-   "^minix,.*":
--- 
-2.20.1
-
+Rob
