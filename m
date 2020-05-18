@@ -2,111 +2,111 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401D8C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC231C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25997206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF56C20756
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgERLYa (ORCPT
+        id S1726590AbgERL1O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 07:24:30 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40584 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgERLYa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:24:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d26so7695593otc.7;
-        Mon, 18 May 2020 04:24:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+/xJo9DYFV5x/KGWI9bYykM6mq0Xnr1uVyyiFMOM94=;
-        b=Y1TXobsoU2Lmp4U/8L5YGzh0WkqFwCw/MDZ87ObhHLJTWmtMOimQskBr1/pbdWjP75
-         MJzrlD6TnptUtEaImuH9sNuPt4YyZY3kI/HTJ2Up2RSXirs4GYPSz0Fge7nicdEz/GXA
-         QFVOLgiLVF0FCpbcs/Es3B5UpiA2WBiJE6tQOqg0k9esI9Xo0rtm0BDS8NTQRvTC52rI
-         T2MUGuFN/USBlEWEvvu8A7v1EurJ9jMydykR8leyxtxK7z6sN0sRdwm799HfTLh1wBbA
-         R09IycWVjec5eWiT1qKk9BmSI0iz5xpu/HVR2h+lOnPH5CgksqfwPiBu4DvmfixZXtoV
-         hKKQ==
-X-Gm-Message-State: AOAM5312P1nLMyt2BTLykHafZ924Fj7G0tJKVbPDOAEitDbdmca0qxiM
-        EkRPKMopYj89LiZqofOeAGvu6VLLt0g0JqaA9SA=
-X-Google-Smtp-Source: ABdhPJwNoxButZwgH4SDPteHjBuwwMLD1bqxVYkjDcQmRozmQtDNJ0fFE+TRSmeEzroqrNyEaK173xc8SAa+z83VsXs=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr7897454ote.107.1589801068351;
- Mon, 18 May 2020 04:24:28 -0700 (PDT)
+        Mon, 18 May 2020 07:27:14 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:53178 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbgERL1O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:27:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1589801230; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tvn5nLaWGrzfShxUOvOGAY+B3v9oKV0REWchgAjg+ps=;
+        b=qIFV6CKF52U3yd4k3ke3sIOnyAJmRhauaGV3FzX3WGiZNmRDhflWKDE0YQRdC5VuFgGyyE
+        31fwL2ACyG91ZYgJ+yMID+k6fILOmdHEnYO+ZsoSFU9aI1lwZyt6tpLWMuEwvj6yTy5NUt
+        aFjUKd/YRQCXMKn4IrMIFDDnuBl89vE=
+Date:   Mon, 18 May 2020 13:26:58 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 11/12] gpu/drm: Ingenic: Add support for the IPU
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, od@zcrc.me,
+        linux-kernel@vger.kernel.org,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Message-Id: <YGYIAQ.7N9YGTBML0143@crapouillou.net>
+In-Reply-To: <CACvgo50q=qJXk3nFSCm+S6JHBMxpY0C_HwH8KGB2EAcKwgL0oQ@mail.gmail.com>
+References: <20200516215057.392609-1-paul@crapouillou.net>
+        <20200516215057.392609-11-paul@crapouillou.net>
+        <CACvgo50q=qJXk3nFSCm+S6JHBMxpY0C_HwH8KGB2EAcKwgL0oQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200515171754.GF19423@ninjato>
-In-Reply-To: <20200515171754.GF19423@ninjato>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 May 2020 13:24:15 +0200
-Message-ID: <CAMuHMdXgRgP8acDzn-p31wmomEbzFXJ2i2vOW1ppuHP-K6-UpQ@mail.gmail.com>
-Subject: Re: [PATCH 05/17] mmc: renesas_sdhi_sys_dmac: Add support for r8a7742 SoC
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wolfram, Prabhakar,
+Hi Emil,
 
-On Fri, May 15, 2020 at 7:17 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> On Fri, May 15, 2020 at 04:08:45PM +0100, Lad Prabhakar wrote:
-> > Add support for r8a7742 SoC. Renesas RZ/G1H (R8A7742) SDHI is identical to
-> > the R-Car Gen2 family.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> I think we can skip this because of the generic fallback? The other
+Le lun. 18 mai 2020 =E0 11:48, Emil Velikov <emil.l.velikov@gmail.com> a=20
+=E9crit :
+> Hi Paul,
+>=20
+> Disclaimer: I don't know much about the hardware :-P
+>=20
+> On Sun, 17 May 2020 at 00:31, Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>=20
+>>  Add support for the Image Processing Unit (IPU) found in all Ingenic
+>>  SoCs.
+>>=20
+> Since the IPU is present on all devices supported, does it make sense
+> to have it as separate module?
+> Didn't check closely although I suspect doing that will remove the
+> need for the component patch.
 
-Agreed.
+It makes sense to me; you may not want to enable the IPU on platforms=20
+where it doesn't add much, e.g. on the JZ4725B where it only handles=20
+YUV and not RGB.
 
-> entries come from a time when we had a different policy IIRC.
+Besides, while the older JZ4740 SoC has a IPU, it's mem-to-mem and=20
+cannot output directly to the CRTC, so it cannot be represented as a=20
+plane. On this SoC the current IPU code cannot be used. So the Ingenic=20
+DRM driver must still be able to probe with zero components.
 
-Indeed.  Commit c16a854e4463078a ("mmc: renesas_sdhi: Add r8a7743/5
-support") predated commit d6dc425ae595e140 ("mmc: renesas_sdhi:
-implement R-Car Gen[123] fallback compatibility strings").
+>>  --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  @@ -50,7 +50,7 @@ struct jz_soc_info {
+>>=20
+>>   struct ingenic_drm {
+>>          struct drm_device drm;
+>>  -       struct drm_plane f0, f1;
+>>  +       struct drm_plane f0, f1, *ipu_plane;
+>>          struct drm_crtc crtc;
+>>          struct drm_encoder encoder;
+>>=20
+>>  @@ -186,13 +186,16 @@ static void=20
+>> ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
+>>          regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
+>>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16,
+>>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16);
+>>  +
+>>  +       regmap_write(priv->map, JZ_REG_LCD_IPUR, JZ_LCD_IPUR_IPUREN=20
+>> |
+>>  +                    (ht * vpe / 3) << JZ_LCD_IPUR_IPUR_LSB);
+>=20
+> This hunk also indicates that it may be better to merge the IPU within
+> the existing driver.
 
-> > --- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-> > +++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-> > @@ -75,6 +75,7 @@ static const struct of_device_id renesas_sdhi_sys_dmac_of_match[] = {
-> >       { .compatible = "renesas,sdhi-r7s72100", .data = &of_rz_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7778", .data = &of_rcar_gen1_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7779", .data = &of_rcar_gen1_compatible, },
-> > +     { .compatible = "renesas,sdhi-r8a7742", .data = &of_rcar_gen2_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7743", .data = &of_rcar_gen2_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7745", .data = &of_rcar_gen2_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7790", .data = &of_rcar_gen2_compatible, },
+This writes the IPUR register of the CRTC, nothing wrong here.
 
-Gr{oetje,eeting}s,
+-Paul
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
