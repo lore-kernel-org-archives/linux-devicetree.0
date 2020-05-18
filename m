@@ -2,181 +2,166 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82D6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0F2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E0920657
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CC420715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="miOjzMgc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SP6KFNP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgERSbo (ORCPT
+        id S1728572AbgERSgh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 14:31:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39368 "EHLO
+        Mon, 18 May 2020 14:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728798AbgERSbg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:31:36 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B08C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:31:36 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id a11so3820197uah.12
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:31:36 -0700 (PDT)
+        with ESMTP id S1728552AbgERSgg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:36:36 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E5AC05BD0B
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:36:36 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x13so5343644pfn.11
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HQzH3Ik7R7bKVK+hgXPw/UmcsoI9rlOtwmNtQ860cnE=;
-        b=miOjzMgcOpfbeSMWq3Gx1DdS6+h1XPq9+vmLz16SB2L+HvrXn0Vvre3nKBF4+Fu4IU
-         AEMmp2MZ456ArLT88Kgs/axf2lPMVyWQ6S6E/h77iNThxTM28XLkjiCB/5mTXxOiDHke
-         j+4HcCT4TuvKliY7nsOyI4RRrVQCxmcP5rKM8=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gvKKfXKVwXyHM5zyQzU2yfD82YJ/ssxteenCSL12PQo=;
+        b=SP6KFNP8GBJH4Y0iu8AifmlsrJrIDmqF86ly0zVJjsY9edGxCLOGJgRntsHb0RHjQG
+         gATe1S/lNrSEnPx6+nA/9Db0kPWSNByB+aLbETP0I7rvxRd5Pg5ppv5wkwn5hjz58cu/
+         /58rWXz8O5y2llnAhz2PnD1PepCOMtPQz0wlcWd4cCLGYB8YoMdMS4KqF902+qJ/GrWu
+         rYOlTmXrrdAjjv2aIxMNhSrdaKjlbrB4OS5ce1/H/hEo88g4KjJQ31AE7yroPGtfE9G0
+         GSPSNWOTyxVLaXh8veu7K3K0s5sMenbgG1ZDSnf8416Sc5oeIX+1pRsFFZpq8ADiflTg
+         Yiqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HQzH3Ik7R7bKVK+hgXPw/UmcsoI9rlOtwmNtQ860cnE=;
-        b=g1zm1BCfXTGO5fyOeUE1Yd+ZkkFZQ+1kZO/2/ufTgD+SozAQU/7br/wb+tdeZ9D6of
-         ijkv4HJWNb//4+A7TlWvwcImRGU5gmRFBWFmxcBymPuaHP2wJFIM8/olJzUj/fxR6kNn
-         FXCy9r81vwhvaqOf2mfFQVX3e8Q988RMaKbVgHSjB3tKyHJhJS3f4A659cTC3+FkOCC2
-         PYNPsCydID1swtnzbwL4FUyCRr0CJSt2VdSd1Aht/l7WPm34Gp8dq9iNv1otSS9Z5OQ6
-         hBADRZMCtZPHIpgQ1GGq7mVGzrRVktR5g5AHhtmmKd9RHynlOh/V/c0zcu7FQHF1GchC
-         kX9Q==
-X-Gm-Message-State: AOAM533aXgYPRFOyPtmmLewjnTS9oo26I+3PYlgoItvZ878+37O4Sj5i
-        iVSfB1e2FOt2+rxPLlHauEHmYIX/sS0=
-X-Google-Smtp-Source: ABdhPJw2u4UydMuuc95NyfdDSpAO5zMg5cEUJK1jZz2PKqf1ZKCZ9iPMbKn5HcitCFkuCsG4Bddoqw==
-X-Received: by 2002:ab0:6806:: with SMTP id z6mr12531304uar.0.1589826695224;
-        Mon, 18 May 2020 11:31:35 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id a2sm3138047uae.10.2020.05.18.11.31.34
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 11:31:34 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id u7so2963772vsp.7
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:31:34 -0700 (PDT)
-X-Received: by 2002:a67:d199:: with SMTP id w25mr5344534vsi.169.1589826693613;
- Mon, 18 May 2020 11:31:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
- <1589307480-27508-3-git-send-email-rbokka@codeaurora.org> <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
- <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org> <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
- <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org> <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
-In-Reply-To: <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 18 May 2020 11:31:22 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
-Message-ID: <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
-Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gvKKfXKVwXyHM5zyQzU2yfD82YJ/ssxteenCSL12PQo=;
+        b=ojBMGFxLGn+e5IBnZdVpHF15oxaKhSYmiqzO5gYR+3rrg7MBswgXyakBYJNWjlYoUm
+         tHR7f+v3Q4xo/YVmUE2cme+T78ZrQIOfCdBQ1llsBVH6GmymsGJgjcPmEMVvWV5/T0sb
+         +FPT/ZJeESHT3KjQ7BdHKxNXoVSaZYvyLqi+ZdO4/WWdrAbLEBNG7ketasE/qua2wG/k
+         Zfdet1mv1AjQfKo8Hd4sZ9+4y9iOF2bUgLc78R5BVCgiZb0BlswRA+2HTB/2436vWyLk
+         IwzUBQri0P3nq8cmF6MRXMgfgSiyYY8u1n65DMLo3M4wAHeKy1pBC+HOBXLiXMaXAvFi
+         QoOg==
+X-Gm-Message-State: AOAM532W1UKzdlPPaqiLFu3TeNOaWgSnu7tjR5lgH4FFYHYblXcxiuVy
+        hIrIHUjVMxhV7j6uRLXclHmXgQ==
+X-Google-Smtp-Source: ABdhPJwzQPbROOk4HuXutlusmWdCXG1o7ldok+fY8PJ23k2eDMM1tiiAiGoPeKkibIa2gifPhE5rpA==
+X-Received: by 2002:a65:5186:: with SMTP id h6mr17090119pgq.453.1589826995952;
+        Mon, 18 May 2020 11:36:35 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z1sm209932pjn.43.2020.05.18.11.36.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 11:36:35 -0700 (PDT)
+Date:   Mon, 18 May 2020 11:35:12 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200518183512.GE2165@builder.lan>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <878shu4uwk.fsf@kernel.org>
+ <875zcy4uuj.fsf@kernel.org>
+ <20200514171352.GP4525@google.com>
+ <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org>
+ <87tv0h3fpv.fsf@kernel.org>
+ <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org>
+ <87r1vl3e42.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r1vl3e42.fsf@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Thu 14 May 23:29 PDT 2020, Felipe Balbi wrote:
 
-On Mon, May 18, 2020 at 3:45 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
-> On 18/05/2020 11:39, Ravi Kumar Bokka (Temp) wrote:
+> 
+> Hi,
+> 
+> Georgi Djakov <georgi.djakov@linaro.org> writes:
+> >>>>>> Sandeep Maheswaram <sanm@codeaurora.org> writes:
+> >>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+> >>>>>>> +{
+> >>>>>>> +	struct device *dev = qcom->dev;
+> >>>>>>> +	int ret;
+> >>>>>>> +
+> >>>>>>> +	if (!device_is_bound(&qcom->dwc3->dev))
+> >>>>>>> +		return -EPROBE_DEFER;
+> >>>>>>
+> >>>>>> this breaks allmodconfig. I'm dropping this series from my queue for
+> >>>>>> this merge window.
+> >>>>>
+> >>>>> Sorry, I meant this patch ;-)
+> >>>>
+> >>>> I guess that's due to INTERCONNECT being a module. There is currently a
+> >>>
+> >>> I believe it's because of this:
+> >>> ERROR: modpost: "device_is_bound" [drivers/usb/dwc3/dwc3-qcom.ko] undefined!
+> >>>
+> >>>> discussion about this  with Viresh and Georgi in response to another
+> >>>> automated build failure. Viresh suggests changing CONFIG_INTERCONNECT
+> >>>> from tristate to bool, which seems sensible to me given that interconnect
+> >>>> is a core subsystem.
+> >>>
+> >>> The problem you are talking about would arise when INTERCONNECT=m and
+> >>> USB_DWC3_QCOM=y and it definitely exists here and could be triggered with
+> >>> randconfig build. So i suggest to squash also the diff below.
+> >>>
+> >>> Thanks,
+> >>> Georgi
+> >>>
+> >>> ---8<---
+> >>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> >>> index 206caa0ea1c6..6661788b1a76 100644
+> >>> --- a/drivers/usb/dwc3/Kconfig
+> >>> +++ b/drivers/usb/dwc3/Kconfig
+> >>> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
+> >>>  	tristate "Qualcomm Platform"
+> >>>  	depends on ARCH_QCOM || COMPILE_TEST
+> >>>  	depends on EXTCON || !EXTCON
+> >>> +	depends on INTERCONNECT || !INTERCONNECT
+> >> 
+> >> I would prefer to see a patch adding EXPORT_SYMBOL_GPL() to device_is_bound()
 > >
-> > Based on the compatible, do i need to separate probe function for
-> > qfprom-efuse and maintain separate nvmem object to register nvmem
-> > framework. Is this what you are suggesting to implementing this in to
-> > one existing driver?
->
-> Yes for same driver we should add new compatible string and add support
-> to this in existing qfprom driver.
-> Ideally we should allocate nvmem_config object at probe with different
-> parameters based on compatible string.
+> > Agree, but just to clarify, that these are two separate issues that need to
+> > be fixed. The device_is_bound() is the first one and USB_DWC3_QCOM=y combined
+> > with INTERCONNECT=m is the second one.
+> 
+> If INTERCONNECT=m, QCOM3 shouldn't be y. I think the following is
+> enough:
+> 
+> 	depends on INTERCONNECT=y || INTERCONNECT=USB_DWC3_QCOM
+> 
 
-I wish I had better documentation for exactly what was in the SoC
-instead of the heavily redacted stuff Qualcomm provides.  Really the
-answer here is: how do you best describe the hardware?  OK, so I just
-spent the past hour or so trying to patch together all the bits and
-fragments that Qualcomm provided me.  Just like a scavenger hunt!
-Fun!  The best I can patch together is that there is a single QFPROM
-with these ranges:
+This misses the case where INTERCONNECT=n and USB_DWC3_QCOM=[ym] which
+I don't see a reason for breaking.
 
-0x00780000 - 0x007800FF
-QFPROM HW registers, range 1/2
+But if only INTERCONNECT where a bool, then we don't need to specify a
+depends on, because it will either be there, or the stubs will.
+We've come to this conclusion in a lot of different frameworks and I
+don't see why we should do this differently with INTERCONNECT.
 
-0x00780120 - 0x007808FF
-QFPROM "raw" space
-
-0x00782000 - 0x007820FF
-QFPROM HW registers, range 2/2
-
-0x00784120 - 0x007848FF
-QFPROM "corrected" space
-
-0x00786000 - 0x00786FFF
-QFPROM memory range that I don't really understand and maybe we don't
-worry about right now?
-
-Did I get that right?  If so, is there a prize for winning the scavenger hunt?
-
----
-
-If so then, IMO, it wouldn't be insane to actually keep it as two
-drivers and two device tree nodes, as you've done.  I'd defer to
-Srinivas and Rob Herring, though.  The existing driver would be a
-read-only driver and provide access to the "corrected" versions of all
-the registers.  Its node would have "#address-cells = <1>" and
-"#size-cells = <1>" because it's expected that other drivers might
-need to refer to data stored here.
-
-Your new driver would be read-write and provide access to the "raw"
-values.  A read from your new driver would not necessarily equal a
-read from the old driver if the FEC (forward error correction) kicked
-in.  Other drivers should never refer to the non-corrected values so
-you wouldn't have "#address-cells" and "#size-cells".  The only way to
-really read or write it would be through sysfs.
-
-It would be super important to document what's happening, of course.
-...and ideally name them to make it clearer too.
-
----
-
-Another alternative (if Srinivas and/or Rob H prefer it) would be to
-deprecate the old driver and/or bindings and say that there really
-should just be one node and one driver.  In that case you'd replace
-the old node with:
-
-qfprom@780000 {
-  compatible = "qcom,sc7180-qfprom-efuse";
-  reg = <0 0x00780000 0 0x6fff>;
-  #address-cells = <1>;
-  #size-cells = <1>;
-
-  clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-  clock-names = "sec";
-
-  qusb2p_hstx_trim: hstx-trim-primary@25b {
-    reg = <0x25b 0x1>;
-    bits = <1 3>;
-  };
-};
-
-You'd use the of_match_table solution to figure out the relevant
-offsets (0x120, 0x2000, 0x4120, 0x6000) for sc7180 and this new driver
-would be responsible for being able to read the corrected values and
-also for programming.  In this case I'm not sure how (assuming it's
-valuable) you'd provide read access to the uncorrected data.
-
-
--Doug
+Regards,
+Bjorn
