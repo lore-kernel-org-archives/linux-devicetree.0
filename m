@@ -2,127 +2,173 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E78C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 17:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEB5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 17:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C8E20758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 17:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bdA653P/"
+	by mail.kernel.org (Postfix) with ESMTP id E3C6D20829
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 17:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589823008;
+	bh=uvDP+Zsn33HA9UQOZuLaPSQjuf9YyVkv+d1PvzLPl4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BqUlndxiEspeq8m+0b/3N2eq9+VjpT8Acca+xVJrmgOed1TlNO9arWR4NJ68/h3x/
+	 DYzIeYVRqMcN+t8TsyaBLLMqj8L42uzYGNy7hsJA6zxv4c2nAcYkM6KQNoSaLBmx2D
+	 mpGY7PshdZJZ/tY/6DyEX1IXZjwtqil6IR9flb3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgERRBl (ORCPT
+        id S1728490AbgERRaI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 13:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERRBl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 13:01:41 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B74D7C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 10:01:40 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k13so10647548wrx.3
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 10:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A6wVB9L5JuVcZQhVgNV1j0Bavs6H5jtfAqYurATa2Do=;
-        b=bdA653P/QboIHjRsQ/kXQWemQ8gbXJMRQu3sewNP+YlMuTl/p+foWkhrLBStyDO3gs
-         P2xavifo28Zofs/Rb7dMxZhbpgta+7Kk+bqr4BIbGuby4R3WDa5HKRGg2vGBBRVYB4YQ
-         aEDQ+ayplQUHRW1UmsY0tBOxCcGFp4kf4pIW4vhdh0O3Vkmx23NrQLjGIW0bxNe7fNj3
-         V7gc+n4557nQQNW5GXTQMVbWEL++D8cGjwykRK1eXP54o8As3O6011hEi6Ugivsi8Aeo
-         m//EeAkt88jJOpWwhlanVeKgEjGYuzreqBkcqexXZUxp3lcCujAJH3Tu31bBPV06jEiR
-         6l1w==
+        Mon, 18 May 2020 13:30:08 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46463 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgERRaI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 13:30:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id j8so11446468iog.13;
+        Mon, 18 May 2020 10:30:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A6wVB9L5JuVcZQhVgNV1j0Bavs6H5jtfAqYurATa2Do=;
-        b=VlaxUHduxec+txWPF60QHGGMde7WAyyd74XiYLVa4ukM0tmsoDy9gJPv93V04pPPXJ
-         YAiBr7f2zA0+9GIpNbPFD3WuqQsZc/EjDtGa8UQRHess5PMZ+h0tuJYckRtMCCXl2TQD
-         f3MD8P1WxPyfbQJm8FxfSropml/JxSa0ZxnWmKTp4LD6ypUQLhimYDG2Q1YTZxJxPg9k
-         tNUYTQBnmLMV2HapyhxCj4yMbTGJPt2jOkQyftt/GpknoV4myUgmyM5uHSRYnsPr5isu
-         DA9JM5C5oe6dQNZ9ILegzMtl518Wi7DMUtwbq4kyosaqWXOI4x/C1iwYjC4a+4O0z8bd
-         RLHQ==
-X-Gm-Message-State: AOAM530OlLJ/XO2Cgn2TF0rmHfcvsXTdXfwuTukr1r0yDTxW7shiMCtV
-        4/DFnGyyjAuI1nAk/9l8/FLLEQ==
-X-Google-Smtp-Source: ABdhPJxWOh06HcVOViu4DIpbbOhR0OOnnCEwdTI40X9By447kp5WfnRE1ew1W4UPHl9Gn9nhNxTnxg==
-X-Received: by 2002:a5d:6283:: with SMTP id k3mr20606675wru.62.1589821299348;
-        Mon, 18 May 2020 10:01:39 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id m13sm178601wmi.42.2020.05.18.10.01.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 10:01:38 -0700 (PDT)
-Subject: Re: [PATCHv3 00/14] Update omaps to use drivers/clocksource timers
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-References: <20200507172330.18679-1-tony@atomide.com>
- <340cdd4a-d996-073f-127d-89ce6c05f221@linaro.org>
- <20200518170059.GR37466@atomide.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c2404711-af5e-e9a2-29c1-55378522ebd2@linaro.org>
-Date:   Mon, 18 May 2020 19:01:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PTOUdH5q/gBjSGJq+w1TUSNCKtr5l7RbM0PZ63Xd5j8=;
+        b=jj3lOisq5PCegWOA6FiMUZrKwJQATDBOz6vkpBd5S4JFlsjDHQ686xNk+QTQNKBDLv
+         Cje6w/ANIu06epH4y0kOk1GYOpTm6PHyWhfM/L2Me3aB+r8+D7aHgVID+y9e1IunPpo3
+         Qi7NNSJoZKwWfcAr1BIPbW14EY6BanKBnEHW1OBaB9U1hATO1F2O0hH5W8b/kLTzf43M
+         Xuv/x5DqpgkMSYXnZ9X5kQ3du87jGoXTbrBHlrubA9/KKz3YHozZpvHko+dcl7gcqiga
+         pi2wNHVeKT3KOVXrwVixHKzC4ir8z68CMSD52SassV/WDWdNoAJTRj+ZiKDkLt2lgzwc
+         0iyw==
+X-Gm-Message-State: AOAM530k5f/c1XWyy6nMk2xUn5ucrOou65rFQg0TAS3axPGCwrpdMlGn
+        AQoaDaXG5LgWIL6SVvScdA==
+X-Google-Smtp-Source: ABdhPJw0u1Q4n3Qej1lC8o9EuafyzbzxmDa15mtQHzCbN5ErWCc8HFGGdeNFMagt00jnvodcVlJewQ==
+X-Received: by 2002:a02:c959:: with SMTP id u25mr16414471jao.46.1589823006502;
+        Mon, 18 May 2020 10:30:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id e12sm4404457ilr.61.2020.05.18.10.30.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 10:30:05 -0700 (PDT)
+Received: (nullmailer pid 12811 invoked by uid 1000);
+        Mon, 18 May 2020 17:30:03 -0000
+Date:   Mon, 18 May 2020 11:30:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200518173003.GA13764@bogus>
+References: <20200511210138.GN185537@smile.fi.intel.com>
+ <20200511213531.wnywlljiulvndx6s@mobilestation>
+ <20200512090804.GR185537@smile.fi.intel.com>
+ <20200512114946.x777yb6bhe22ccn5@mobilestation>
+ <20200512123840.GY185537@smile.fi.intel.com>
+ <20200515060911.GF333670@vkoul-mobl>
+ <20200515105137.GK185537@smile.fi.intel.com>
+ <20200515105658.GR333670@vkoul-mobl>
+ <20200515111112.4umynrpgzjnca223@mobilestation>
+ <20200517174739.uis3wfievdcmtsxj@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <20200518170059.GR37466@atomide.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517174739.uis3wfievdcmtsxj@mobilestation>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18/05/2020 19:00, Tony Lindgren wrote:
-> * Daniel Lezcano <daniel.lezcano@linaro.org> [200518 16:59]:
->>
->> Hi Tony,
->>
->> On 07/05/2020 19:23, Tony Lindgren wrote:
->>> Hi all,
->>>
->>> Here's v3 series to udpate omaps to use drivers/clocksource timers for
->>> the 32k counter and dmtimer, and to remove the old legacy platform code.
->>> Please review and test.
->>>
->>> I've updated the timer-ti-dm-systimer.c patch based on the comments from
->>> Daniel and Rob, and added support for selecting the preferred timers to
->>> use.
->>>
->>> Then for merging when folks are happy with this series, Daniel if you
->>> can please apply the first three patches into an immutable branch it
->>> would be great.
->>
->> so the clk patch also ?
+On Sun, May 17, 2020 at 08:47:39PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
+> > On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
+> > > On 15-05-20, 13:51, Andy Shevchenko wrote:
+> > > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
+> > > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
+> > > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
+> > > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
+> > > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> > > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> > > > 
+> > > > ...
+> > > > 
+> > > > > > I leave it to Rob and Vinod.
+> > > > > > It won't break our case, so, feel free with your approach.
+> > > > > 
+> > > > > I agree the DT is about describing the hardware and looks like value of
+> > > > > 1 is not allowed. If allowed it should be added..
+> > > > 
+> > > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
+> > > > synthesizing the IP.
+> > > 
+> > > Then it should be added ..
+> > 
+> > Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
+> > other" burst length. It's a constant defined at the IP-core synthesis stage and
+> > according to the Data Book, MAX burst length can't be 1. The allowed values are
+> > exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
+> > defines the upper limit of the run-time burst length. So setting it to 1 isn't
+> > about describing a hardware, but using DT for the software convenience.
+> > 
+> > -Sergey
 > 
-> Oops sorry, just first two are needed as we no longer need the
-> device tree binding changes :)
+> Vinod, to make this completely clear. According to the DW DMAC data book:
+> - In general, run-time parameter of the DMA transaction burst length (set in
+>   the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
+>   to the set [1, 4, 8, 16, 32, 64, 128, 256].
+> - Actual upper limit of the burst length run-time parameter is limited by a
+>   constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
+>   and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
+>   in this set).
+> 
+> So the run-time burst length in a case of particular DW DMA controller belongs
+> to the range:
+> 1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> and
+> 1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> 
+> See. No mater which DW DMA controller we get each of them will at least support
+> the burst length of 1 and 4 transfer words. This is determined by design of the
+> DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
+> 
+> In this patch I suggest to add the max-burst-len property, which specifies
+> the upper limit for the run-time burst length. Since the maximum burst length
+> capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
+> register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
+> by the DW DMA IP design), max-burst-len property as being also responsible for
+> the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
+> thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
+> 
+> So 1 shouldn't be in the enum of the max-burst-len property constraint, because
+> hardware doesn't support such limitation by design, while setting 1 as
+> max-burst-len would mean incorrect description of the DMA controller.
+> 
+> Vinod, could you take a look at the info I provided above and say your final word
+> whether 1 should be really allowed to be in the max-burst-len enum constraints?
+> I'll do as you say in the next version of the patchset.
 
-Ok
+I generally think the synthesis time IP configuration should be implied 
+by the compatible string which is why we have SoC specific compatible 
+strings (Of course I dream for IP vendors to make all that discoverable 
+which is only occasionally the case). There are exceptions to this. If 
+one SoC has the same IP configured in different ways, then we'd probably 
+have properties for the differences.
 
+As to whether h/w configuration is okay in DT, the answer is yes. The 
+question is whether it is determined by SoC, board, OS and also who 
+would set it and how often. Something tuned per board and independent of 
+the OS/user is the ideal example. 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Rob
