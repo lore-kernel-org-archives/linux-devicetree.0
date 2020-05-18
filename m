@@ -2,173 +2,160 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEB5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 17:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419DDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 17:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C6D20829
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 17:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823008;
-	bh=uvDP+Zsn33HA9UQOZuLaPSQjuf9YyVkv+d1PvzLPl4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BqUlndxiEspeq8m+0b/3N2eq9+VjpT8Acca+xVJrmgOed1TlNO9arWR4NJ68/h3x/
-	 DYzIeYVRqMcN+t8TsyaBLLMqj8L42uzYGNy7hsJA6zxv4c2nAcYkM6KQNoSaLBmx2D
-	 mpGY7PshdZJZ/tY/6DyEX1IXZjwtqil6IR9flb3o=
+	by mail.kernel.org (Postfix) with ESMTP id 2598C20853
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 17:43:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrvcABYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgERRaI (ORCPT
+        id S1729167AbgERRns (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 13:30:08 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46463 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgERRaI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 13:30:08 -0400
-Received: by mail-io1-f65.google.com with SMTP id j8so11446468iog.13;
-        Mon, 18 May 2020 10:30:06 -0700 (PDT)
+        Mon, 18 May 2020 13:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729635AbgERRnr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 13:43:47 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1C4C061A0C;
+        Mon, 18 May 2020 10:43:46 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id v12so12818648wrp.12;
+        Mon, 18 May 2020 10:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OHAAyO0W2XsNLLS4j8T1nBDjeOOazd8u5B0nFYGpWJQ=;
+        b=BrvcABYiv83eYdE9kaIBawPuXjcgsvPkrJBjlmIZxpEEFYC7lxAprLa97ClPV9zGaQ
+         5Yrn5O0sPbpYIEGLXawkDvIjkI1VjqNlBk2CAhgUUt4UW38ZVRt4xMmaYt8pcr/35aUc
+         JVZR1K2MwB+TLMkTwz8tDgq9w6DBvS2AfCE1fZMZ+WULzvposjYVV49xwmF/1ZyRsxeW
+         S0Aqc/JN/2n5iTzNlWMydj4aMkfrtY6C6cWTm1CPp/c/OWe8KdiO0KfgimwF1cLJYCb4
+         /UAFmb7WY9XfWMxPO5tzLmSVLPu1JYPJxBBx7+EaOnoApnK/F6ma3IH+xpW6NNjDqEQh
+         7N9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PTOUdH5q/gBjSGJq+w1TUSNCKtr5l7RbM0PZ63Xd5j8=;
-        b=jj3lOisq5PCegWOA6FiMUZrKwJQATDBOz6vkpBd5S4JFlsjDHQ686xNk+QTQNKBDLv
-         Cje6w/ANIu06epH4y0kOk1GYOpTm6PHyWhfM/L2Me3aB+r8+D7aHgVID+y9e1IunPpo3
-         Qi7NNSJoZKwWfcAr1BIPbW14EY6BanKBnEHW1OBaB9U1hATO1F2O0hH5W8b/kLTzf43M
-         Xuv/x5DqpgkMSYXnZ9X5kQ3du87jGoXTbrBHlrubA9/KKz3YHozZpvHko+dcl7gcqiga
-         pi2wNHVeKT3KOVXrwVixHKzC4ir8z68CMSD52SassV/WDWdNoAJTRj+ZiKDkLt2lgzwc
-         0iyw==
-X-Gm-Message-State: AOAM530k5f/c1XWyy6nMk2xUn5ucrOou65rFQg0TAS3axPGCwrpdMlGn
-        AQoaDaXG5LgWIL6SVvScdA==
-X-Google-Smtp-Source: ABdhPJw0u1Q4n3Qej1lC8o9EuafyzbzxmDa15mtQHzCbN5ErWCc8HFGGdeNFMagt00jnvodcVlJewQ==
-X-Received: by 2002:a02:c959:: with SMTP id u25mr16414471jao.46.1589823006502;
-        Mon, 18 May 2020 10:30:06 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id e12sm4404457ilr.61.2020.05.18.10.30.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 10:30:05 -0700 (PDT)
-Received: (nullmailer pid 12811 invoked by uid 1000);
-        Mon, 18 May 2020 17:30:03 -0000
-Date:   Mon, 18 May 2020 11:30:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200518173003.GA13764@bogus>
-References: <20200511210138.GN185537@smile.fi.intel.com>
- <20200511213531.wnywlljiulvndx6s@mobilestation>
- <20200512090804.GR185537@smile.fi.intel.com>
- <20200512114946.x777yb6bhe22ccn5@mobilestation>
- <20200512123840.GY185537@smile.fi.intel.com>
- <20200515060911.GF333670@vkoul-mobl>
- <20200515105137.GK185537@smile.fi.intel.com>
- <20200515105658.GR333670@vkoul-mobl>
- <20200515111112.4umynrpgzjnca223@mobilestation>
- <20200517174739.uis3wfievdcmtsxj@mobilestation>
+        bh=OHAAyO0W2XsNLLS4j8T1nBDjeOOazd8u5B0nFYGpWJQ=;
+        b=a60k7d16Rx/JM9sEHoIeMtBjb0oucxBrU6J0/LwQuB8ezdsKXqIXgUTa2kt4fp+/Sq
+         TA+zh2fUJL7/yGxABJedHUuekULCRMXP+rjvEGhq6MNDHh7n6EUaeA52qsbCI66hGTHW
+         CC3OwmUTCBhhmSjnMKnuwB8oUKoijeI9u8jWt0j75WN9jMZYOBQ5Fbp8KS88EjLNlrj+
+         96iMNOTE/DZotmBaFb37L9vt+yABrZQHrAaHmmIEZih3zLBPSfRH9Yl1aRsyF1YlrhHQ
+         NTzV7C/8fcs/lIr6rFJkFnBFJrSX1A4CQigIKXhsxZd9k9R2Ik6oaXz1ui9W5bHcyEGl
+         quHw==
+X-Gm-Message-State: AOAM532Fw3ttxicufxNvBeVm8VpT6IR/StSTq7D+yJPI2dJ9nm6YdG4t
+        lJlEd5BgZTfwf3MioJw5H+g=
+X-Google-Smtp-Source: ABdhPJySEx6eVHpcSMmLvOS6v6+mWHZOufi95+CGyDrRxcC41LHxo2+wpoZQqfq21qvjsbrPkACr5g==
+X-Received: by 2002:a5d:5404:: with SMTP id g4mr20662433wrv.310.1589823825235;
+        Mon, 18 May 2020 10:43:45 -0700 (PDT)
+Received: from jonathan-N53SV ([151.81.99.112])
+        by smtp.gmail.com with ESMTPSA id u74sm397237wmu.13.2020.05.18.10.43.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 May 2020 10:43:44 -0700 (PDT)
+Date:   Mon, 18 May 2020 19:43:35 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+Message-ID: <20200518174335.GA6392@jonathan-N53SV>
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
+ <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+ <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
+ <20200518160120.GA21361@ict14-OptiPlex-980>
+ <20200518164317.GL1634618@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200517174739.uis3wfievdcmtsxj@mobilestation>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200518164317.GL1634618@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, May 17, 2020 at 08:47:39PM +0300, Serge Semin wrote:
-> On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
-> > On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
-> > > On 15-05-20, 13:51, Andy Shevchenko wrote:
-> > > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
-> > > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
-> > > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
-> > > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
-> > > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
-> > > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
-> > > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
-> > > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> > > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> > > > 
-> > > > ...
-> > > > 
-> > > > > > I leave it to Rob and Vinod.
-> > > > > > It won't break our case, so, feel free with your approach.
-> > > > > 
-> > > > > I agree the DT is about describing the hardware and looks like value of
-> > > > > 1 is not allowed. If allowed it should be added..
-> > > > 
-> > > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
-> > > > synthesizing the IP.
+On Mon, May 18, 2020 at 07:43:17PM +0300, Andy Shevchenko wrote:
+> On Mon, May 18, 2020 at 06:01:20PM +0200, Jonathan Albrieux wrote:
+> > On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
+> > > On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
+> > > <jonathan.albrieux@gmail.com> wrote:
 > > > 
-> > > Then it should be added ..
+> > > > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
+> > > 
+> > > (1)
+> > > 
+> > > ...
+> > > 
+> > > > +       /*
+> > > > +        * If reset pin is provided then will be set to high on power on
+> > > > +        * and to low on power off according to AK09911 datasheet
+> > > > +        */
+> > > 
+> > > Wording is confusing, perhaps you have to use 'asserted / deasserted'.
 > > 
-> > Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
-> > other" burst length. It's a constant defined at the IP-core synthesis stage and
-> > according to the Data Book, MAX burst length can't be 1. The allowed values are
-> > exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
-> > defines the upper limit of the run-time burst length. So setting it to 1 isn't
-> > about describing a hardware, but using DT for the software convenience.
+> > Thank you for the suggestion, I'll be working on rewording as soon as
+> > possible.
 > > 
-> > -Sergey
+> > > Btw, in (1) it's also "high" (asserted). I barely understand how it's
+> > > supposed to work in all cases?
+> > > 
+> > > > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> > > > +                                             "reset", GPIOD_OUT_HIGH);
+> > > > +       if (IS_ERR(reset_gpiod))
+> > > > +               return PTR_ERR(reset_gpiod);
+> > > 
+> > 
+> > I'm sorry but I'm not sure about what you mean by saying all cases.
+> > Currently  I'm testing this driver on a msm8916 device having AK09911
+> > magnetometer. At the current stage the driver is failing on probe 
+> > because reset pin is not connected to VID (as datasheet requires in case
+> > of pin not being used). In case of reset pin not asserted, register's
+> > reset is triggered resulting in empty registers, leading to probe fail.
+> > For this reason pin is asserted during power on in order to have 
+> > informations in registers and deasserted before power off triggering
+> > a reset.
+> > 
+> > A workaround that gets AK09911 working on device is by setting the
+> > reset pin always high on device tree. This way registers gets reset by
+> > a Power On Reset circuit autonomously and reset pin never triggers the
+> > reset.
 > 
-> Vinod, to make this completely clear. According to the DW DMAC data book:
-> - In general, run-time parameter of the DMA transaction burst length (set in
->   the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
->   to the set [1, 4, 8, 16, 32, 64, 128, 256].
-> - Actual upper limit of the burst length run-time parameter is limited by a
->   constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
->   and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
->   in this set).
+> You need to distinguish electrical level from logical (GPIO flag defines
+> logical). So, I'm talking about active-high vs. active-low case.
 > 
-> So the run-time burst length in a case of particular DW DMA controller belongs
-> to the range:
-> 1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
-> and
-> 1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
-> 
-> See. No mater which DW DMA controller we get each of them will at least support
-> the burst length of 1 and 4 transfer words. This is determined by design of the
-> DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
-> 
-> In this patch I suggest to add the max-burst-len property, which specifies
-> the upper limit for the run-time burst length. Since the maximum burst length
-> capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
-> register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
-> by the DW DMA IP design), max-burst-len property as being also responsible for
-> the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
-> thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
-> 
-> So 1 shouldn't be in the enum of the max-burst-len property constraint, because
-> hardware doesn't support such limitation by design, while setting 1 as
-> max-burst-len would mean incorrect description of the DMA controller.
-> 
-> Vinod, could you take a look at the info I provided above and say your final word
-> whether 1 should be really allowed to be in the max-burst-len enum constraints?
-> I'll do as you say in the next version of the patchset.
+> Now I re-read above, and see that here you assert the reset signal. But where
+> is desertion?
 
-I generally think the synthesis time IP configuration should be implied 
-by the compatible string which is why we have SoC specific compatible 
-strings (Of course I dream for IP vendors to make all that discoverable 
-which is only occasionally the case). There are exceptions to this. If 
-one SoC has the same IP configured in different ways, then we'd probably 
-have properties for the differences.
+Oh I see, I'll try explaining by points the proposed approach:
+- reset pin is active low
+- during power on gpio is set to 0 so the reset pin is high, thus no reset
+- during power off gpio is set to 1 so the reset pin becomes low, thus resetting
 
-As to whether h/w configuration is okay in DT, the answer is yes. The 
-question is whether it is determined by SoC, board, OS and also who 
-would set it and how often. Something tuned per board and independent of 
-the OS/user is the ideal example. 
+this is a possible solution but maybe there are other ways to achieve that, 
+do you have suggestions on how to get a better approach for solving this issue?
 
-Rob
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+
+Best regards,
+Jonathan Albrieux
