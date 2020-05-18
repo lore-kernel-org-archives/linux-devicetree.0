@@ -2,117 +2,105 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE0AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA47CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04428207F5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBA2207D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:24:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="drv2mSAu"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Va6hluz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgERJWz (ORCPT
+        id S1726130AbgERJYu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 05:22:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgERJWz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 05:22:55 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85905C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 02:22:53 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k12so8514233wmj.3
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 02:22:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=Z3XlctpSAnbYdb2+5Z7TFNZPigSvZMxY4yX670//TBU=;
-        b=drv2mSAuvezl8uk9ZvXfGTMENTCqHqLeB5OLJuBjylbY9VEyWGnJcxSWFwJQdlPu/F
-         MI0sf0aLcYB3VSz8CAh7zmlYeci5h117eeqYjrXYOCC+4FZogJ+cfjXmN/uxIvzq9fol
-         cFdzZiynTzFtdgY8iDZ6t1CIO4hPrPc3bmZcC9ULjdAW1X/nOAWsI+Yfsh4inCax8R6+
-         ZRcB3gZly/uFkn57tKqXLWK3t3WVpmcdf23zUg1kdMP3INamQ3kTEj4REZR1te4YaMYm
-         sXICAkHLFkf1OhzgL2/WBxfPrH9iJGAAg8735Xtf4myhO321CZ1v7azvSTBhhkrADJZw
-         gnnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=Z3XlctpSAnbYdb2+5Z7TFNZPigSvZMxY4yX670//TBU=;
-        b=bAnuIwrfoGM+77W8hufdPfiU+TpHpL7XrmoUBKUHfWon34sjEHSFK/OX/6KPiI6Fid
-         mAlnHp2kr4cjL+Y6zZocoP/gyVY905LuE2eI1A2BANOLqaUf5RiS//CYdke0ArUj8p++
-         HPDIAtnD4hvS37Qz4KIS0ZU1rdrBSBvAGD9/A2eHK+mJpBR6ortPW9Smmk89RyabmcTU
-         WM1hDxe5rRKnXDOlLfV6DDjPVvjTd9VS457+h3yMl32zgcwdMFGs5eZn/jyJUwRxiYdg
-         FhZ9Yu0jn6rtReKKc0iKXuHW4ranAjv7iqbYvv50xRh3huanCPJETA21laV1cZtEf9Cs
-         XNjg==
-X-Gm-Message-State: AOAM531d3EoTIPh5FA0PCk1PBoazMjneBELHapbm+A0ELa8g0JFNc8A+
-        WpP4Midc2ERUMgUIcT3ZPci7bw==
-X-Google-Smtp-Source: ABdhPJy8I8LDsz/5SOI07W1BDAQYcizOum1eE7aOvMk3UKlv2qSI1RLiOS6YkMJ6LmH6Vrszb+qMJg==
-X-Received: by 2002:a05:600c:14c6:: with SMTP id i6mr18126796wmh.58.1589793772297;
-        Mon, 18 May 2020 02:22:52 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id h133sm16392525wmf.25.2020.05.18.02.22.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 02:22:51 -0700 (PDT)
-Subject: Re: [PATCH v2 5/7] include: dt-bindings: sound: Add sc7180-lpass
- bindings header
-To:     Ajit Pandey <ajitp@codeaurora.org>, broonie@kernel.org,
-        plai@codeaurora.org, bgoswami@codeaurora.org
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: =?UTF-8?Q?=3c=1c1586592171-31644-1-git-send-email-ajitp=40codeau?=
- =?UTF-8?Q?rora=2eorg=1d=3e_=3c1589474298-29437-1-git-send-email-ajitp=40cod?=
- =?UTF-8?Q?eaurora=2eorg=3e_=3c1589474298-29437-6-git-send-email-ajitp=40cod?=
- =?UTF-8?Q?eaurora=2eorg=3e?=
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <e8859fcf-fc00-01fc-b64e-dba086c8155b@linaro.org>
-Date:   Mon, 18 May 2020 10:22:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 18 May 2020 05:24:50 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62365 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726040AbgERJYu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 05:24:50 -0400
+X-UUID: 38ef98bc9db2438b8e621db43415db51-20200518
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0DTYtg7DH/aaZsHajF1M0GEhpPDj6HE4U9Su4EW4ZBg=;
+        b=Va6hluz4/bYSptacD8bkhsa7nqDZ2RFMyTranQOalM8PvJkJFDufyvfFqfxrt16Eu3JTqNK1zXkkWjaYPe4/rTWrbAF32VKsT7VVlBavvczJ9jN19kkFozRrtllCR0Kyh2vL+FHwLlmDezX0unYUnglb0LuuuzxNYqAEFeq5e5w=;
+X-UUID: 38ef98bc9db2438b8e621db43415db51-20200518
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <roger.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1124336748; Mon, 18 May 2020 17:24:48 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 18 May 2020 17:24:45 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 18 May 2020 17:24:45 +0800
+From:   Roger Lu <roger.lu@mediatek.com>
+To:     Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Fan Chen <fan.chen@mediatek.com>,
+        HenryC Chen <HenryC.Chen@mediatek.com>,
+        YT Lee <yt.lee@mediatek.com>,
+        Xiaoqing Liu <Xiaoqing.Liu@mediatek.com>,
+        Charles Yang <Charles.Yang@mediatek.com>,
+        Angus Lin <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>, Roger Lu <roger.lu@mediatek.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: [PATCH v8 0/3] PM / AVS: SVS: Introduce SVS engine
+Date:   Mon, 18 May 2020 17:24:01 +0800
+Message-ID: <20200518092403.22647-1-roger.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 5934DDCDEAF0C437AC4DD8F51EBED5FD5EACA359D2BA842B5D2816D48513A4412000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+MS4gU1ZTIGRyaXZlciB1c2UgT1BQIGFkanVzdCBldmVudCBpbiBbMV0gdG8gdXBkYXRlIE9QUCB0
+YWJsZSB2b2x0YWdlIHBhcnQuDQoyLiBTVlMgZHRzIG5vZGUgcmVmZXJzIHRvIENQVSBvcHAgdGFi
+bGUgWzJdIGFuZCBHUFUgb3BwIHRhYmxlIFszXS4NCjMuIFNWUyBhbmQgdGhlcm1hbCBkdHMgdXNl
+IHRoZSBzYW1lIHRoZXJtYWwgZWZ1c2UgWzRdLg0KNC4gU1ZTIGR0cyBuZWVkcyBwb3dlci1kb21h
+aW4gWzVdWzZdIGFuZCBQTUlDIHJlZ3VsYXRvciBbN10uDQoNClsxXSBodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzExMTkzNTEzLw0KWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
+bC5vcmcvcGF0Y2gvMTEzMDQ5MzUvDQpbM10gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC8xMTQyMzAwOS8NCls0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEx
+MzE2NDk1Lw0KWzVdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjM2
+ODc1Lw0KWzZdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjM2ODc4
+Lw0KWzddIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEyODQ2MTcvDQoNCnBl
+bmRpbmcgZGlzY3Vzc2lvbjoNCi0gU1ZTIHN1Yi1ub2RlIGFyY2hpdGVjdHVyZSBjb25jZXJuIGlu
+IGJlbG93IHBhdGNoLg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEx
+NzU5OTQvDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTE3NTk5NC8N
+Cg0KY2hhbmdlcyBzaW5jZSB2NzoNCi0gQWRkICJtdGtfc3ZzLnlhbWwiIGZvciBkZXZpY2UtdHJl
+ZSBiaW5kaW5nIGRvY3VtZW50Lg0KLSBBZGQgc3ZzX2FkZF90aGVybWFsX2RldmljZV9saW5rKCkg
+aW4gZHJpdmVyIGZvciBzdnMgZGV2aWNlIChjb25zdW1lcikNCnRvIGxpbmsgdGhlcm1hbCBkZXZp
+Y2UgKHN1cHBsaWVyKS4NCi0gcmVwbGFjZSBwbV9xb3NfYWRkX3JlcXVlc3QoKSB3aXRoIGNwdV9s
+YXRlbmN5X3Fvc19hZGRfcmVxdWVzdCgpIGZvcg0KbGV0dGluZyBDUFVzIGxlYXZlIGlkbGUtb2Zm
+IHN0YXRlLg0KDQpSb2dlciBMdSAoMyk6DQogIGR0LWJpbmRpbmdzOiBwb3dlcjogYXZzOiBhZGQg
+bXRrIHN2cyBkdC1iaW5kaW5ncw0KICBhcm02NDogZHRzOiBtdDgxODM6IGFkZCBzdnMgZGV2aWNl
+IGluZm9ybWF0aW9uDQogIFBNIC8gQVZTOiBTVlM6IEludHJvZHVjZSBTVlMgZW5naW5lDQoNCiAu
+Li4vYmluZGluZ3MvcG93ZXIvYXZzL210a19zdnMueWFtbCAgICAgICAgICAgfCAgMTQxICsrDQog
+YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMtZXZiLmR0cyAgIHwgICAxNiArDQog
+YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSAgICAgIHwgICA0MSArDQog
+ZHJpdmVycy9wb3dlci9hdnMvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICAxMCArDQog
+ZHJpdmVycy9wb3dlci9hdnMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAgMSArDQog
+ZHJpdmVycy9wb3dlci9hdnMvbXRrX3N2cy5jICAgICAgICAgICAgICAgICAgIHwgMjExOSArKysr
+KysrKysrKysrKysrKw0KIGluY2x1ZGUvbGludXgvcG93ZXIvbXRrX3N2cy5oICAgICAgICAgICAg
+ICAgICB8ICAgMjMgKw0KIDcgZmlsZXMgY2hhbmdlZCwgMjM1MSBpbnNlcnRpb25zKCspDQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9h
+dnMvbXRrX3N2cy55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcG93ZXIvYXZzL210
+a19zdnMuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L3Bvd2VyL210a19zdnMu
+aA0K
 
-
-On 14/05/2020 17:38, Ajit Pandey wrote:
-> Add header defining dai-id and mclk id for SC7180 lpass soc.
-> 
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> ---
->   include/dt-bindings/sound/sc7180-lpass.h | 10 ++++++++++
-
-Why not reuse or rename include/dt-bindings/sound/apq8016-lpass.h to 
-include/dt-bindings/sound/lpass.h and reuse across all the LPASS variants?
-
---srini
-
->   1 file changed, 10 insertions(+)
->   create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
-> 
-> diff --git a/include/dt-bindings/sound/sc7180-lpass.h b/include/dt-bindings/sound/sc7180-lpass.h
-> new file mode 100644
-> index 0000000..7d988f6
-> --- /dev/null
-> +++ b/include/dt-bindings/sound/sc7180-lpass.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __DT_SC7180_LPASS_H
-> +#define __DT_SC7180_LPASS_H
-> +
-> +#define MI2S_PRIMARY	0
-> +#define MI2S_SECONDARY	1
-> +
-> +#define LPASS_MCLK0	0
-> +
-> +#endif /* __DT_APQ8016_LPASS_H */
-> 
