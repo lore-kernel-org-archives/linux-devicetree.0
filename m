@@ -2,197 +2,112 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BF4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 06:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA30C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54762070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 06:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566FE2070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgERGV7 (ORCPT
+        id S1726729AbgERHFF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 02:21:59 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33094 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgERGV7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 02:21:59 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 32A752007B4;
-        Mon, 18 May 2020 08:21:57 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8D2E220081F;
-        Mon, 18 May 2020 08:21:53 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CCDEA402AD;
-        Mon, 18 May 2020 14:21:48 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, l.stach@pengutronix.de,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: interrupt-controller: Convert imx irqsteer to json-schema
-Date:   Mon, 18 May 2020 14:12:16 +0800
-Message-Id: <1589782336-17289-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 18 May 2020 03:05:05 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35969 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbgERHFF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 03:05:05 -0400
+Received: by mail-oi1-f193.google.com with SMTP id x23so1575857oic.3;
+        Mon, 18 May 2020 00:05:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mwst2oJ9ZiHpuFTk/EHEIXQxKyuYO4XvyCKHwPLuFvQ=;
+        b=F6Twt1+lKEgrMSMlZD6M2wSFt3wcAAAuYgqpLW2HXf6a7Hw7zBHxR6NaalQhUvdpVC
+         7ntTCGCL4vCf/PKK1SKnaF+jRKwf6W/OxaR7SzFbuAeJJ1K6PSOYIMjydcs03sVbOjmC
+         upzQWs10aDwCrf9TXXbozibdpyXgqhYyXT5/HURKItsUnFO+P46IE63gBPS3Hb9q+qwc
+         syTPYcUjulSZ/ti8vEMVW+r4vATQ+lpPAv1gQc22fhCiDSoyIqXZo3UIFYLZZHLjRLTB
+         mFmXvO0FGyNFOgAcZuZTX3QmS4BE2H0Dgxwg8ulXjz7JE0X7asqHeWIjv4byAqd1+EUU
+         Oatw==
+X-Gm-Message-State: AOAM531ewA8WpCiIVhcsIFahWcLgposEcAI6QMQ4Z6iPOlRBh4uLeP8b
+        wp1w7SetSEGEk7QIJv6KfGpTFJpKVKQR5UA+rbY=
+X-Google-Smtp-Source: ABdhPJy0eVnNyTzrW2/omSLVxGe8kfaMI2pqw3I/+FsC+Cu9/M01gEwxja6I4ke0ixSRPXiGHWR5yNXw9vPFyMYbXzQ=
+X-Received: by 2002:aca:895:: with SMTP id 143mr9591469oii.153.1589785503554;
+ Mon, 18 May 2020 00:05:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200420170204.24541-1-mani@kernel.org> <20200420170204.24541-2-mani@kernel.org>
+In-Reply-To: <20200420170204.24541-2-mani@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 May 2020 09:04:52 +0200
+Message-ID: <CAMuHMdVGem_2BGQK4dqZQb3sOd0LZk+RS_z4SvSRcNECEJHdwA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: serial: Document CTS/RTS gpios in
+ STM32 UART
+To:     mani@kernel.org
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
+Hi Mani,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Add "fsl,imx8m-irqsteer" compatible back.
-	- Use "Multiplexer" instead of "multiplexer" for title.
----
- .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
- .../interrupt-controller/fsl,irqsteer.yaml         | 89 ++++++++++++++++++++++
- 2 files changed, 89 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+On Mon, Apr 20, 2020 at 7:02 PM <mani@kernel.org> wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
+>
+> Document the use of CTS/RTS gpios for flow control in STM32 UART
+> controller. These properties can be used instead of 'st,hw-flow-ctrl'
+> for making use of any gpio pins for flow control instead of dedicated
+> pins. It should be noted that both CTS/RTS and 'st,hw-flow-ctrl'
+> properties cannot co-exist in a design.
+>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-deleted file mode 100644
-index 582991c..0000000
---- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--Freescale IRQSTEER Interrupt multiplexer
--
--Required properties:
--
--- compatible: should be:
--	- "fsl,imx8m-irqsteer"
--	- "fsl,imx-irqsteer"
--- reg: Physical base address and size of registers.
--- interrupts: Should contain the up to 8 parent interrupt lines used to
--  multiplex the input interrupts. They should be specified sequentially
--  from output 0 to 7.
--- clocks: Should contain one clock for entry in clock-names
--  see Documentation/devicetree/bindings/clock/clock-bindings.txt
--- clock-names:
--   - "ipg": main logic clock
--- interrupt-controller: Identifies the node as an interrupt controller.
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source. The value must be 1.
--- fsl,channel: The output channel that all input IRQs should be steered into.
--- fsl,num-irqs: Number of input interrupts of this channel.
--  Should be multiple of 32 input interrupts and up to 512 interrupts.
--
--Example:
--
--	interrupt-controller@32e2d000 {
--		compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
--		reg = <0x32e2d000 0x1000>;
--		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
--		clock-names = "ipg";
--		fsl,channel = <0>;
--		fsl,num-irqs = <64>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-new file mode 100644
-index 0000000..5242c97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale IRQSTEER Interrupt Multiplexer
-+
-+maintainers:
-+  - Lucas Stach <l.stach@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx8m-irqsteer
-+      - fsl,imx-irqsteer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: |
-+      should contain the up to 8 parent interrupt lines used to multiplex
-+      the input interrupts. They should be specified sequentially from
-+      output 0 to 7.
-+    items:
-+      - description: irqsteer channel 0
-+      - description: irqsteer channel 1
-+      - description: irqsteer channel 2
-+      - description: irqsteer channel 3
-+      - description: irqsteer channel 4
-+      - description: irqsteer channel 5
-+      - description: irqsteer channel 6
-+      - description: irqsteer channel 7
-+    minItems: 1
-+    maxItems: 8
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: ipg
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  fsl,channel:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value representing the output channel that all input IRQs should be
-+      steered into.
-+
-+  fsl,num-irqs:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value representing the number of input interrupts of this channel,
-+      should be multiple of 32 input interrupts and up to 512 interrupts.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - fsl,channel
-+  - fsl,num-irqs
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx8mq-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    interrupt-controller@32e2d000 {
-+        compatible = "fsl,imx-irqsteer";
-+        reg = <0x32e2d000 0x1000>;
-+        interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-+        clock-names = "ipg";
-+        fsl,channel = <0>;
-+        fsl,num-irqs = <64>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+    };
+> --- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+> +++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+
+> @@ -55,6 +61,14 @@ properties:
+>    linux,rs485-enabled-at-boot-time: true
+>    rs485-rx-during-tx: true
+>
+> +if:
+> +  required:
+> +    - st,hw-flow-ctrl
+
+Perhaps "st,hw-flow-ctrl" should be deprecated, in favor of the standard
+"uart-has-rtscts" property?
+Of course the driver needs to gain support for the latter first.
+
+> +then:
+> +  properties:
+> +    cts-gpios: false
+> +    rts-gpios: false
+> +
+>  required:
+>    - compatible
+>    - reg
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
