@@ -2,164 +2,135 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429DBC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68927C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166C9207ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0jXev1k"
+	by mail.kernel.org (Postfix) with ESMTP id 4353C20801
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589797808;
+	bh=Sf1JheQuxgic/yXSR/EPXNFwtvaoa4Ub/q1l21Oq5jo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZmKpydYImI+Km9u4XrW54V0FQSDO8ybPujrnKS9eo5/mD8YAKIIyx06gIz26jcqOc
+	 ges6agMQoEyB3iTjPqwc68+JmHr7n9ph4aA80gNSMqP3TUDj3mW9O7TgTYfktY7XYk
+	 DRqCL9gA7e626MAol/eNpt1bXYb8v82uQYeV6RL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgERKYU (ORCPT
+        id S1726399AbgERKaH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 06:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgERKYT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 06:24:19 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37711C05BD09
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 03:24:18 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q24so4840350pjd.1
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 03:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MN1cOtvKgI2CDdfH9WOPeSju4XcYLF26UcOgbNUXW2c=;
-        b=s0jXev1kMMyFXAQc2MlxaXXGTQRsM9VMaTox1IL/2+po4rKJvNHbldSkIaPdSsIxZ8
-         5WYkRgFYoASKVv+8qLmV5PRxhu7s1gF+uxWnoL4+oTFtJngKgRLUiJ6MPQg5Ft2zWJZG
-         oOJmSifhMuJsM7gVceeeDadpRmpJdPJoajHSTnUh1LJF+caoQiUfo/7/hfxo6DZjN/BB
-         ROGmQnVN4zeKIDdMfcw3SRZiryVueHB/tbEp9bXUtFd/NRbo++Cv0gc2t/8W89LAWKEa
-         uf3ZKXCHhq+3lDBgXoilWViO008YLPDvSA+lZJF/+6Rz/Oj80isfSAjzuOeXk6FrFZaI
-         9fpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MN1cOtvKgI2CDdfH9WOPeSju4XcYLF26UcOgbNUXW2c=;
-        b=KyLh1Ly3RiaoHcKfU6BR8B/y7c9JU5hqUhsokHK5V1ww0YqliRb2N+vI8shyLPA20m
-         V7/oUa85tXHTVyQkdwIY7s7vh4rhN4rSLVdsKhiVSqJM9iWrnXttN5KHe3YvehqaMLqj
-         Eevm7YiFYsn5VH5/RLivgTvNCF9TOofv1quHRuGR19gS0X54jB/KNR0q2qJA5K0G8RF+
-         DIjrISMBliz3J1xdF/E8O1l7pWXqvqItnYJMVHZfKdjAfI9eBTYESe+2J+VkQSzRZSUz
-         Rk6+cZZkhCjpfnXBbmtFMTlh7t7vZLgAYbVErKOWa456ZFz4Gj7KkFpVp3uAklhcrUHr
-         W0yg==
-X-Gm-Message-State: AOAM5300OhvAZ0xuZIilsN37GSRNcluKDyOGX96bG1PkCclf7NDFhOoN
-        GXXyWSFkP5kLGlpU0m6+0e1KaA==
-X-Google-Smtp-Source: ABdhPJyaVCpDGMjNxk0GylVrK8GjSSgT7/5cRncjKx7m/vJ9/4yisRCzz7X6NNOfN+7/XuycmImE1Q==
-X-Received: by 2002:a17:90a:c201:: with SMTP id e1mr19484028pjt.162.1589797457739;
-        Mon, 18 May 2020 03:24:17 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id y75sm8603768pfb.212.2020.05.18.03.24.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 03:24:17 -0700 (PDT)
-Date:   Mon, 18 May 2020 15:54:15 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, stable@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
- setting
-Message-ID: <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <a8dfa493-f858-e35d-7e57-78478be555c4@intel.com>
- <20200518101109.4uggngudy4gfmlvo@vireshk-i7>
- <10461949.HoJUxHt8jL@kreacher>
+        Mon, 18 May 2020 06:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbgERKaH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 06:30:07 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF8FC207ED;
+        Mon, 18 May 2020 10:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589797806;
+        bh=Sf1JheQuxgic/yXSR/EPXNFwtvaoa4Ub/q1l21Oq5jo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2RSZnkvH3M3vTEJsTumTgFRb/xWah7mnoyzpfX1RsCwszzwCQnrWL/+Z22YZaL5Vx
+         gUMP3eLiOIog+yoyhMDpx31Mce7Xtifss5kcjXvd08M7qZqnHEZrbwMRkbM1TN0ETk
+         zvRJdSZmv869eUhJxKjn8WRLf8tKwniFbUQZp1d0=
+Received: by pali.im (Postfix)
+        id 64D1089D; Mon, 18 May 2020 12:30:04 +0200 (CEST)
+Date:   Mon, 18 May 2020 12:30:04 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
+ Compex wifi cards
+Message-ID: <20200518103004.6tydnad3apkfn77y@pali>
+References: <20200430080625.26070-1-pali@kernel.org>
+ <20200513135643.478ffbda@windsurf.home>
+ <87pnb2h7w1.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <10461949.HoJUxHt8jL@kreacher>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87pnb2h7w1.fsf@FE-laptop>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18-05-20, 12:22, Rafael J. Wysocki wrote:
-> On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
-> > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
-> > > That said if you really only want it to return 0 on success, you may as well
-> > > add a ret = 0; statement (with a comment explaining why it is needed) after
-> > > the last break in the loop.
-> > 
-> > That can be done as well, but will be a bit less efficient as the loop
-> > will execute once for each policy, and so the statement will run
-> > multiple times. Though it isn't going to add any significant latency
-> > in the code.
+On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote:
+> Hello,
 > 
-> Right.
+> > Hello,
+> >
+> > On Thu, 30 Apr 2020 10:06:13 +0200
+> > Pali Rohár <pali@kernel.org> wrote:
+> >
+> >> Marek Behún (5):
+> >>   PCI: aardvark: Improve link training
+> >>   PCI: aardvark: Add PHY support
+> >>   dt-bindings: PCI: aardvark: Describe new properties
+> >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
+> >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
+> >> 
+> >> Pali Rohár (7):
+> >>   PCI: aardvark: Train link immediately after enabling training
+> >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
+> >>     read-only register
+> >>   PCI: of: Zero max-link-speed value is invalid
+> >>   PCI: aardvark: Issue PERST via GPIO
+> >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
+> >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
+> >>     macros
+> >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
+> >
+> > Thanks a lot for this work. For a number of reasons, I'm less involved
+> > in Marvell platform support in Linux, but I reviewed your series and
+> > followed the discussions around it, and I'm happy to give my:
+> >
+> > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 > 
-> However, the logic in this entire function looks somewhat less than
-> straightforward to me, because it looks like it should return an
-> error on the first policy without a frequency table (having a frequency
-> table depends on the driver and that is the same for all policies, so it
-> is pointless to iterate any further in that case).
+> With this acked-by for the series, the reviewed-by from Rob on the
+> binding and the tested-by, I am pretty confident so I applied the
+> patches 10, 11 and 12 on mvebu/dt64.
 > 
-> Also, the error should not be -EINVAL, because that means "invalid
-> argument" which would be the state value.
+> Thanks,
 > 
-> So I would do something like this:
-> 
-> ---
->  drivers/cpufreq/cpufreq.c |   11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> Index: linux-pm/drivers/cpufreq/cpufreq.c
-> ===================================================================
-> --- linux-pm.orig/drivers/cpufreq/cpufreq.c
-> +++ linux-pm/drivers/cpufreq/cpufreq.c
-> @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
->  static int cpufreq_boost_set_sw(int state)
->  {
->  	struct cpufreq_policy *policy;
-> -	int ret = -EINVAL;
->  
->  	for_each_active_policy(policy) {
-> +		int ret;
-> +
->  		if (!policy->freq_table)
-> -			continue;
-> +			return -ENXIO;
->  
->  		ret = cpufreq_frequency_table_cpuinfo(policy,
->  						      policy->freq_table);
->  		if (ret) {
->  			pr_err("%s: Policy frequency update failed\n",
->  			       __func__);
-> -			break;
-> +			return ret;
->  		}
->  
->  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
->  		if (ret < 0)
-> -			break;
-> +			return ret;
->  	}
->  
-> -	return ret;
-> +	return 0;
->  }
->  
->  int cpufreq_boost_trigger_state(int state)
+> Gregory
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Thank you!
 
--- 
-viresh
+Lorenzo, would you now take remaining patches?
+
+> 
+> >
+> > for the whole series. The changes all seem sensible, and have been
+> > tested by several folks.
+> >
+> > Thanks!
+> >
+> > Thomas
+> > -- 
+> > Thomas Petazzoni, CTO, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> 
+> -- 
+> Gregory Clement, Bootlin
+> Embedded Linux and Kernel engineering
+> http://bootlin.com
