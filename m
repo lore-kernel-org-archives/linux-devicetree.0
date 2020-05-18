@@ -2,145 +2,167 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B9FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA49207C4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589811706;
-	bh=hro6TI79yHuBZg5ApL+MZYZAuCd0xvmF3OaUquu162g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ozjFOoTcy8wDfLZNMjYxnR1Oknx1cxEGgIOgxqgaS45sK+cMGw1GIJt6ugn0xNW8r
-	 ACx5Fi/hwPWvsPi0F8ge4gxa1ewq5Ey1amp6ttjiHx9h4WAwVyK0mdoB9jU2gB3nIO
-	 oYB7C0EjXXC/mrAFuZM3V56byr8d8d636p48EHRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 09969207C4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:22:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z8q4xTJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgEROVp (ORCPT
+        id S1726998AbgEROWe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:21:45 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45278 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgEROVp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:21:45 -0400
-Received: by mail-io1-f68.google.com with SMTP id w25so10672488iol.12;
-        Mon, 18 May 2020 07:21:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nw3uL0prCIhvjDfJQqiTECtacq4+z7dFJzYGHhmiGAg=;
-        b=rDhGJnp80LLMqV1MScErNl2UUFphDShzob34opdIz8l/BLeK/MJesFgA/T/YdqJnjK
-         JxivT1zZ96KHxcwvzp/ChP0wd5TZg9KGLAg0iHKq0bRnVT/jPUt+7pn8fx5o7luunTSd
-         6Yre3QQUsdXk7e3riYgBk2bj5Bdljl46M8sq+lcs6+SRrUjO0KeV5bwmMdYg7Ujy2Mht
-         G5t0U94FSSxZb4i/NJIF6UE0Q5wqBgtqLX4YyQs1g3BZOviZ+uXqeQImzo40lNyfo7rV
-         XpGZR3hvMpJBPcx23UIXXMR8RumBbwEKEKRW6Hwu7ZhIO5OkEut9ora2FujT/F4TDNOV
-         Ki1A==
-X-Gm-Message-State: AOAM533Z2SzRvmXqAsoPhMxLtWRABZHBaXyMvsWkXT9LgC9UISmO+MEh
-        D1AoAr1s8ZNNkl4WvN6nqQ==
-X-Google-Smtp-Source: ABdhPJyGUG7N7QD3iSv9jBNJrMrdAvkR+mi7qnLgIzeyksOsexqkUipe1pBU1VDBeFTg0/COJSU2jg==
-X-Received: by 2002:a02:cf13:: with SMTP id q19mr14639139jar.42.1589811704654;
-        Mon, 18 May 2020 07:21:44 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r8sm3870863iob.15.2020.05.18.07.21.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 07:21:44 -0700 (PDT)
-Received: (nullmailer pid 8829 invoked by uid 1000);
-        Mon, 18 May 2020 14:21:43 -0000
-Date:   Mon, 18 May 2020 08:21:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com, andriy.shevchenko@intel.com
-Subject: Re: [PATCH 3/3] dt-bindings: pwm: keembay: Add bindings for Intel
- Keem Bay PWM
-Message-ID: <20200518142143.GB3594@bogus>
-References: <1589723560-5734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1589723560-5734-4-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        Mon, 18 May 2020 10:22:34 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5332 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgEROWe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:22:34 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec2999c0000>; Mon, 18 May 2020 07:20:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 18 May 2020 07:22:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 18 May 2020 07:22:34 -0700
+Received: from [10.25.73.9] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 14:22:30 +0000
+Subject: Re: [PATCH V2] arm64: tegra: Fix flag for 64-bit resources in
+ 'ranges' property
+To:     <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+References: <20200513191627.8533-1-vidyas@nvidia.com>
+ <20200514135437.29814-1-vidyas@nvidia.com>
+ <20200518135006.GB31554@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <e64ccace-d2b9-0e03-db3f-e65ed6f56230@nvidia.com>
+Date:   Mon, 18 May 2020 19:52:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589723560-5734-4-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200518135006.GB31554@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589811612; bh=ygS6whssLxUlGMHQFNVShdRPY01pxJPdCk+7KRT+K0o=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Z8q4xTJrqbT3TqukcpA2boW25MUibTcyZk2LOr4lUfXriS67bB4pwTPESL9FzrzoH
+         CBq3WfjCqgHNVhdgSy98zJInR9G72eOFGdCyesIGYd7Gxrel/XJL4YoDKBOTOri/AX
+         8jmi6Ji88tiLsr3XQy72WCwEsgkcLVmvgJNViG6w71xqOSfEj4b/mlHNCteD4jd1et
+         4rNTIsvA0b5QKkpJrz+NSvbKrx7y2YeEDNM7fMzYuCWoiQJnRopAd2284lIPCe8ajU
+         dm4nndJFKPtCPixdtaGobNjzyviitrQbytJxzPELLLtE6ejE8EhWhulmuUGAI6q3Yo
+         AojcaxMOI5zEA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, May 17, 2020 at 09:52:40PM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
-> From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
+Thanks Lorenzo.
+I've moved linux-pci to BCC and included
+devicetree and linux-tegra mailing lists to CC.
+
+Rob, Could you please review this patch?
+
+Thanks,
+Vidya Sagar
+
+On 18-May-20 7:20 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
 > 
-> Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
 > 
-> Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-keembay.yaml       | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
-
-Use compatible string for filename: intel,keembay-pwn.yaml
-
+> On Thu, May 14, 2020 at 07:24:37PM +0530, Vidya Sagar wrote:
+>> Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
+>> represent 64-bit resources.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> V2:
+>> * Extended the change to cover other controllers as well
+>>
+>>   arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
+>>   1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml b/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
-> new file mode 100644
-> index 0000000..00968d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +# Copyright (C) 2020 Intel Corporation
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-keembay.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Keem Bay PWM Device Tree Bindings
-> +
-> +maintainers:
-> +  - Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - intel,keembay-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description:
-> +        phandle to the reference clock.
-
-How many clocks? (maxItems: 1?)
-
-You can drop the description.
-
-> +
-> +required:
-> + - compatible
-> + - reg
-> + - clocks
-> +
-> +examples:
-> +  - |
-> +    pwm@203200a0 {
-> +      compatible = "intel,keembay-pwm";
-> +      reg = <0x0 0x203200a0 0x0 0xe8>;
-> +      clocks = <&scmi_clk KEEM_BAY_A53_GPIO>;
-> +    };
-> -- 
-> 1.9.1
+> We don't apply DTS patches - so no need to CC linux-pci from now
+> onwards on these. Marked as not-applicable.
 > 
+> Lorenzo
+> 
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+>> index e1ae01c2d039..4bc187a4eacd 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+>> @@ -1405,7 +1405,7 @@
+>>
+>>                bus-range = <0x0 0xff>;
+>>                ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
+>> -                       0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>> +                       0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>>                          0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>>        };
+>>
+>> @@ -1450,7 +1450,7 @@
+>>
+>>                bus-range = <0x0 0xff>;
+>>                ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
+>> -                       0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>> +                       0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>>                          0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>>        };
+>>
+>> @@ -1495,7 +1495,7 @@
+>>
+>>                bus-range = <0x0 0xff>;
+>>                ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
+>> -                       0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>> +                       0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>>                          0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>>        };
+>>
+>> @@ -1540,7 +1540,7 @@
+>>
+>>                bus-range = <0x0 0xff>;
+>>                ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+>> -                       0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>> +                       0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>>                          0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>>        };
+>>
+>> @@ -1585,7 +1585,7 @@
+>>
+>>                bus-range = <0x0 0xff>;
+>>                ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+>> -                       0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>> +                       0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>>                          0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>>        };
+>>
+>> @@ -1634,7 +1634,7 @@
+>>
+>>                bus-range = <0x0 0xff>;
+>>                ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+>> -                       0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>> +                       0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>>                          0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>>        };
+>>
+>> --
+>> 2.17.1
+>>
