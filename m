@@ -2,176 +2,195 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282B6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA04C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A32D20829
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08512207C4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 18:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8f12VYS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dyfhdYXm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgERSqy (ORCPT
+        id S1728679AbgERSwt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 14:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41774 "EHLO
+        Mon, 18 May 2020 14:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgERSqy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:46:54 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D0CC061A0C;
-        Mon, 18 May 2020 11:46:53 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l17so13088288wrr.4;
-        Mon, 18 May 2020 11:46:53 -0700 (PDT)
+        with ESMTP id S1728436AbgERSwt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 14:52:49 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12031C05BD09
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:52:49 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j21so5252399pgb.7
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 11:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ajUUjOWwQ0DqJ5ZMnnC6t+z/SimK+2ZbwTZGGdO/CyY=;
-        b=K8f12VYSqcYyx6phIY6bXX4cN19vPs+9Uv3zg4VH/KQLBDMIpN/gXJkbIqO62vycJm
-         j4tySzxQ4pTnKNepWLErP8Tg/BIQKvFoZsnMB4EHYWT/4D+7NzzHWZ61w3HHKNVMdJjW
-         +96ktIxV7En7owWoDOkgYD9KtTHxtF5aOHj2e86DgYnDR0siDem+KecZ3irdnVPD0OGc
-         MLLznwbf5tGlHLDCcEyp71fOZk8VWrgXXyDCminnWSMaeAYjo2TQ9ze+86Ue+uKewDQo
-         0LWewLgJQjScPAEXskYZTdLxg7jnfjxXgeaJlcM8yNd4uojxe4nj27etFHAGgYFZ4hRj
-         ZXUQ==
+         :content-disposition:in-reply-to;
+        bh=NHsRyL8eiYlYHJa5uCVqQW9LciNEIDRKfuP+gda9x1Y=;
+        b=dyfhdYXm4n0gy9np+W03BFusRSTd7VtjW+8PkcdsGSxtJz4guXAz37sSB8hMWjUGph
+         zbDr6UdFU/HTP8pjg+drIGkkBBSVOQ37ReH9JLvb9yONunabVH65e6e23eGbkbGY19v9
+         GYZEQHhy/JoXqdeSmftdi3L9aSvvTfzlZU/fAwO9dwPfGvDv9hafxxBGfPN/fWmMfVyh
+         82VnVi2KZXkHpXzaJ4jUl/VE7wzOAmR4MdKOPCVflq5/SJemnEyWcSTYPEHQLslG6Lz+
+         Z3ZA3TnxdgplAbEzKzHTm3aKJd+81u90aL+aUWFoGVkXrG15xE7IVQKaOjYT7wydzKos
+         k4pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ajUUjOWwQ0DqJ5ZMnnC6t+z/SimK+2ZbwTZGGdO/CyY=;
-        b=VJmBMnQmhPmcK+KvDMsfMPsDBRiTmZdNdxOFceDn+dmJMKcs4gEUCdUntFw67dioqp
-         mU0PSOGhdGkKldTrCfAmOEzsdISjQTNQdJYlQ0c/oYq849GSSo8OsIFWnNI7nODVogCg
-         dW59kclh/trILf1Cvrr7k76B6udUmPWCAsl42gdIEvPK7xhCFsHnS3OwrHP3ByxCLWep
-         LbnyMhjkRsLwD6Sl5xtXqh7Gp9ctWY9tScyiJq/in+/mAJHX0QrlmfkFEwK+6oUcQ59J
-         cLPSipZp28dhIqKeeqQz46H+G42ym6YDU0+htzQs5gWS2ebpEF2HnfY1TrLOuSespPpk
-         O9tQ==
-X-Gm-Message-State: AOAM530eFpBYrMvxWp9OmVK2KGbQ3PMiVTc4ZOAawRY0FouWI1iv8o+P
-        QunPAxkRtjHpfO+Ht/UTeJQ=
-X-Google-Smtp-Source: ABdhPJyVxBQA1CZQZ8/AbVOfq9TLfBCWGWupFjnKvhmwIohuaUM1Sh1TfEZUavn0bjGxZmtn19VJJQ==
-X-Received: by 2002:a5d:6a01:: with SMTP id m1mr22282524wru.64.1589827612345;
-        Mon, 18 May 2020 11:46:52 -0700 (PDT)
-Received: from jonathan-N53SV ([151.81.99.112])
-        by smtp.gmail.com with ESMTPSA id l11sm595119wmf.28.2020.05.18.11.46.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 May 2020 11:46:50 -0700 (PDT)
-Date:   Mon, 18 May 2020 20:46:47 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200518184647.GB6392@jonathan-N53SV>
-References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
- <20200518133645.19127-4-jonathan.albrieux@gmail.com>
- <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
- <20200518160120.GA21361@ict14-OptiPlex-980>
- <20200518164317.GL1634618@smile.fi.intel.com>
- <20200518174335.GA6392@jonathan-N53SV>
- <CAHp75VcJ+LU_T4jRVNDBed50xaALDLNC_8brxszv5FpUGHF7+A@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=NHsRyL8eiYlYHJa5uCVqQW9LciNEIDRKfuP+gda9x1Y=;
+        b=Zzbcv9/Q2PSjNCWCq5VHp2x2wlkrb4uXqFdRty3PBhrcKGGyMXWkrqiH7B6BDTvUkW
+         djFMLfjZl6M65ETk9+TuoIGj6KyQ64sBVlS0mkolFcgAl0GuamtoFgHWW2suOsMDtP3r
+         vaeZCKu35jM47eYeBaUUgmLZ1Bm13RU/bg9AR65GmdH0/dykd1LjCgA4iqSGAed3U2kX
+         cuagg64madu+diMjBRfSSGVr23dIM8To/LUc8DxzLm98g7qlvgvIyxj67mzc5xEuEQ9O
+         4IyLZ7DP+SG87RzsVvS93kGBk8EgMNLNIZdJ3F2rZhY8pk80i5ppd8P/7SjUsD33gLRP
+         ozOg==
+X-Gm-Message-State: AOAM533BHGBTmymn+nZ/PkHDIB8NMpyGnsMptU6V8Meofs3J11AiOA/8
+        mAj4r8Ig/NDgC+bT6NUczt914Q==
+X-Google-Smtp-Source: ABdhPJwuOK5f/6WvkScgGfZPG6iAsM8lfv6feBqqP52/8AtflODCDgQ3dim7PNYVoCPioH3FmWoAqg==
+X-Received: by 2002:a63:f70e:: with SMTP id x14mr15583487pgh.394.1589827968132;
+        Mon, 18 May 2020 11:52:48 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 3sm9698235pfo.27.2020.05.18.11.52.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 11:52:47 -0700 (PDT)
+Date:   Mon, 18 May 2020 11:51:24 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Support ETMv4 power
+ management
+Message-ID: <20200518185124.GG2165@builder.lan>
+References: <cover.1589539293.git.saiprakash.ranjan@codeaurora.org>
+ <b0a2ac4ffefe7d3e216a83ab56867620f120ff08.1589539293.git.saiprakash.ranjan@codeaurora.org>
+ <56a5563205da61c47eb4f8bbf6120e28@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcJ+LU_T4jRVNDBed50xaALDLNC_8brxszv5FpUGHF7+A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <56a5563205da61c47eb4f8bbf6120e28@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:51:29PM +0300, Andy Shevchenko wrote:
-> On Mon, May 18, 2020 at 8:43 PM Jonathan Albrieux
-> <jonathan.albrieux@gmail.com> wrote:
-> >
-> > On Mon, May 18, 2020 at 07:43:17PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 18, 2020 at 06:01:20PM +0200, Jonathan Albrieux wrote:
-> > > > On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
-> > > > > On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
-> > > > > <jonathan.albrieux@gmail.com> wrote:
-> > > > >
-> > > > > > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
-> > > > >
-> > > > > (1)
-> > > > >
-> > > > > ...
-> > > > >
-> > > > > > +       /*
-> > > > > > +        * If reset pin is provided then will be set to high on power on
-> > > > > > +        * and to low on power off according to AK09911 datasheet
-> > > > > > +        */
-> > > > >
-> > > > > Wording is confusing, perhaps you have to use 'asserted / deasserted'.
-> > > >
-> > > > Thank you for the suggestion, I'll be working on rewording as soon as
-> > > > possible.
-> > > >
-> > > > > Btw, in (1) it's also "high" (asserted). I barely understand how it's
-> > > > > supposed to work in all cases?
-> > > > >
-> > > > > > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> > > > > > +                                             "reset", GPIOD_OUT_HIGH);
-> > > > > > +       if (IS_ERR(reset_gpiod))
-> > > > > > +               return PTR_ERR(reset_gpiod);
-> > > > >
-> > > >
-> > > > I'm sorry but I'm not sure about what you mean by saying all cases.
-> > > > Currently  I'm testing this driver on a msm8916 device having AK09911
-> > > > magnetometer. At the current stage the driver is failing on probe
-> > > > because reset pin is not connected to VID (as datasheet requires in case
-> > > > of pin not being used). In case of reset pin not asserted, register's
-> > > > reset is triggered resulting in empty registers, leading to probe fail.
-> > > > For this reason pin is asserted during power on in order to have
-> > > > informations in registers and deasserted before power off triggering
-> > > > a reset.
-> > > >
-> > > > A workaround that gets AK09911 working on device is by setting the
-> > > > reset pin always high on device tree. This way registers gets reset by
-> > > > a Power On Reset circuit autonomously and reset pin never triggers the
-> > > > reset.
-> > >
-> > > You need to distinguish electrical level from logical (GPIO flag defines
-> > > logical). So, I'm talking about active-high vs. active-low case.
-> > >
-> > > Now I re-read above, and see that here you assert the reset signal. But where
-> > > is desertion?
-> >
-> > Oh I see, I'll try explaining by points the proposed approach:
-> > - reset pin is active low
-> > - during power on gpio is set to 0 so the reset pin is high, thus no reset
-> 
-> deasserted
-> 
-> > - during power off gpio is set to 1 so the reset pin becomes low, thus resetting
-> 
-> asserted
-> 
-> > this is a possible solution but maybe there are other ways to achieve that,
-> > do you have suggestions on how to get a better approach for solving this issue?
-> 
-> I see now, that at requesting reset you wanted to chip be in reset
-> state (asserted) till driver calls power_on().
-> 
-> Seems everything you done is correct. Just correct terminology, please.
+On Fri 15 May 03:55 PDT 2020, Sai Prakash Ranjan wrote:
 
-Will surely do, thank you!
- 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> Hi Bjorn,
+> 
 
-Best regards,
-Jonathan Albrieux
+Hi Sai,
+
+> On 2020-05-15 16:21, Sai Prakash Ranjan wrote:
+> > Now that deep idle states are properly supported on SC7180,
+> > we need to add "coresight-loses-context-with-cpu" property
+> > to avoid failure of trace session because of losing context
+> > on entering deep idle states.
+> > 
+> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > ---
+> > 
+> > Resending this because the last patch sent here -
+> > https://lore.kernel.org/patchwork/patch/1230367/
+> > seems to have added "coresight-loses-context-with-cpu" to
+> > replicator node instead of etm7 node.
+> > 
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 4069bb1c93af..8b3707347547 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -1656,6 +1656,7 @@
+> > 
+> >  			clocks = <&aoss_qmp>;
+> >  			clock-names = "apb_pclk";
+> > +			arm,coresight-loses-context-with-cpu;
+> > 
+> >  			out-ports {
+> >  				port {
+> > @@ -1674,6 +1675,7 @@
+> > 
+> >  			clocks = <&aoss_qmp>;
+> >  			clock-names = "apb_pclk";
+> > +			arm,coresight-loses-context-with-cpu;
+> > 
+> >  			out-ports {
+> >  				port {
+> > @@ -1692,6 +1694,7 @@
+> > 
+> >  			clocks = <&aoss_qmp>;
+> >  			clock-names = "apb_pclk";
+> > +			arm,coresight-loses-context-with-cpu;
+> > 
+> >  			out-ports {
+> >  				port {
+> > @@ -1710,6 +1713,7 @@
+> > 
+> >  			clocks = <&aoss_qmp>;
+> >  			clock-names = "apb_pclk";
+> > +			arm,coresight-loses-context-with-cpu;
+> > 
+> >  			out-ports {
+> >  				port {
+> > @@ -1728,6 +1732,7 @@
+> > 
+> >  			clocks = <&aoss_qmp>;
+> >  			clock-names = "apb_pclk";
+> > +			arm,coresight-loses-context-with-cpu;
+> > 
+> >  			out-ports {
+> >  				port {
+> > @@ -1746,6 +1751,7 @@
+> > 
+> >  			clocks = <&aoss_qmp>;
+> >  			clock-names = "apb_pclk";
+> > +			arm,coresight-loses-context-with-cpu;
+> > 
+> >  			out-ports {
+> >  				port {
+> > @@ -1764,6 +1770,7 @@
+> > 
+> >  			clocks = <&aoss_qmp>;
+> >  			clock-names = "apb_pclk";
+> > +			arm,coresight-loses-context-with-cpu;
+> > 
+> >  			out-ports {
+> >  				port {
+> > @@ -1782,6 +1789,7 @@
+> > 
+> >  			clocks = <&aoss_qmp>;
+> >  			clock-names = "apb_pclk";
+> > +			arm,coresight-loses-context-with-cpu;
+> > 
+> >  			out-ports {
+> >  				port {
+> 
+> 
+> The previous version of this patch in QCOM tree seems to have added the
+> property to replicator node instead of etm7 node, can you please drop
+> that from the tree and apply this one?
+> 
+
+I'm not able to replace the old commit without rewriting the history of
+the branch. So I've applied a patch ontop of the branch to fix this up
+instead.
+
+Please review the branch and let me know if there's any issues.
+
+Regards,
+Bjorn
