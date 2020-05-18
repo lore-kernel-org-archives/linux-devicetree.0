@@ -2,113 +2,198 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3709C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C7AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C08E20787
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:44:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gNzsaVy4"
+	by mail.kernel.org (Postfix) with ESMTP id 599AA20787
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgERIo7 (ORCPT
+        id S1726786AbgERIpk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 04:44:59 -0400
-Received: from mail-eopbgr80054.outbound.protection.outlook.com ([40.107.8.54]:17438
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726285AbgERIo6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 04:44:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L59aOvSnuc2MU3qFmetZR/9uq71ocJetFeAcNpSLTDvW8hbnsQ/AISnokEFCjaIfN/V9SR5P1J/zPVZqJnoxZOYzDU7The3RBixzKPwzxQcz7Eh9ckQRHGRDOx4DPoeshFSOOV48Pa4m4ODScpz/OfXRaK68zVa7ie/3GDlxK9p6zLVes1mxLnFvke19j3fHa7HGkbalLJriG0ehp4/wCbBROhhLNZPYlHMqSCrHoYXdaj7YzHINwlONsDdNPQt+P3fo0GIpNjscKJCN5O4DBoW8KVO+uKNbkZF30S9atN8Z5M8Q3GQDbp3ZyLVnST/1SwuXAsw+zSE1cnMIqNDctA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A4ZfTzF/VHX/IxAp6Vy5mJRh5UMjYzxVxmkiyD/9tOU=;
- b=Ou3H/rPIlcrrE4zTw476RYEX24Yum+YAWa1++jRqRF6S56MDrUk7AKq7EhPPFEoxuElhFfkDiEAc8VWO04Cx/PVondNrqr3NYE0dkDeVb+NOvqHAXNv6k68Zae7+ZzEbUKly1bcexuLOtgNHnsvMUGLDP/S10Kqqt8G5Z0MWm2oMTM9BNgjkm9VXAyXNVvhi7IbUS/787b9u7Q55T2qFkYscxswgBu4SDZMdSo7bBwYXkQicIUhFc6BED+UwTTlOjR5fd/MKANUtis7WKlbvHhcshOxCZy0u1uV0Grle34tgGGvikhc95yvwrk5PoTQDcpzMiFHAYXZ9ZX99nqHhYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A4ZfTzF/VHX/IxAp6Vy5mJRh5UMjYzxVxmkiyD/9tOU=;
- b=gNzsaVy44biKuHZsoqjv5JpDNTYHje4oveKdrw0ovpsgok0sTLWUU+99y21jrWlHRGA1VijF9quD1OKOljOSISwg5kSrWTTdhuIENeR3KXqOC7TjH4nnmjLXKEJmmVnNGZgM2PI/pM37XmCHef38LwLX5dwAXqo9XE6G2YpdHe4=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4120.eurprd04.prod.outlook.com (2603:10a6:209:4b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.31; Mon, 18 May
- 2020 08:44:54 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.033; Mon, 18 May 2020
- 08:44:54 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] ARM: dts: imx6qdl: Use nvmem interface to get fuse
- data
-Thread-Topic: [PATCH 1/2] ARM: dts: imx6qdl: Use nvmem interface to get fuse
- data
-Thread-Index: AQHWKY2Nff+uSdQzb0mgNHq+guQUhKitiANA
-Date:   Mon, 18 May 2020 08:44:54 +0000
-Message-ID: <AM6PR04MB49665A2E7AB525E8C7627F1180B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589418528-26410-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1589418528-26410-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 18c88c78-f904-41f2-8600-08d7fb07bcea
-x-ms-traffictypediagnostic: AM6PR04MB4120:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB41203724686B91EAAF41241080B80@AM6PR04MB4120.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1751;
-x-forefront-prvs: 04073E895A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: p+kgXgWdX7I7gtmm3DGz0jGn5EDxyNtKCr4OsYJHr0f55wykoR2reJcdkejCkdrqthLBvCEcn6xpC+FjwOYCTaWD1MDjgnzFh3UqJy9tmfzgl0HYHeX5i1m7Ph5wPweiwmS0ia2tcmlk7ERm9miSsi2tAvr0nLuHOevDAwA+FvmuIDglF+cqkb9DowSxTYShZ8+C39YlCcQ2Np2pKLDvLwi8B0OTfJ4k3bIhugRE87n8KqGkVWSYfLxjfzmMRcAQjlZQNFuOQnyTJ7aAfsxo8KSMciJXc6lnbCL01NfYT1EpM+TAHDFL/SX6sHO1i7hTcGxTUrFgqeGLWZt1mc8doE4AopiteEBx+eensFcibvORZveZHnMPXMjkGd+fde5Iuj62gsaKTtc4IS09ZDD34XAq8K7PYmmW9OdqlflhO+2gjtEMUry4HfvOo42Mj5Et4A4BMRmLdl4/+QN2adc4AkSQXT2Y6aauj3rTTnq6xET8B6sfskJ368K2rTUmjx1Z
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(66556008)(64756008)(66446008)(66476007)(76116006)(66946007)(86362001)(5660300002)(7696005)(478600001)(4326008)(2906002)(8676002)(6506007)(8936002)(55016002)(44832011)(71200400001)(9686003)(52536014)(26005)(186003)(110136005)(316002)(33656002)(4744005)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: irXoVF3U9ugrN9aSpekwU+39eBrO5Rsht4q9YOE8fhX2wtj32S+KWR7UyFP0/e9t6TAlKASb8Q+mYYm6nLfPlnhzwjO50tCBv1Bp+Zq/3l2fmmhJgqEE1h/f67oJkbk2LVl8yp09stIChx/PraBDWMkfQTGG+VwXucRnGJV2uAHbjtucD1XRHEQ9jcOfheB81T53O0Uq6xpVeRUtHh/68vlQxGPmDD9fcMzyP0wtu0UziFRsmfW2iUVMDirvuoPfSle05tvSyCb5KSGyqdJPFJLYRz+aiRXdQXUW9chgAQ9vnnYz3pxTyWjU+xf/9UAO+EUs5tz4vrRofJGhOVjuuZxelbp76kM0DClzCxbPNo6DMQ85zUgKFZPp7fzbLD4bs+3HFro8tCUrw1d9JmshoTTG8tg7rLZer6PqTTM1ili0GHGaa8vyJi6sVsFBgGIBJVhbcHoUoiNHK8QvTJB6Am3Lwa6m+KtZupeXBVYMJgCuZmcOeEPt05iWL9zhocRn
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18c88c78-f904-41f2-8600-08d7fb07bcea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 08:44:54.7894
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8j7ipcIEMuya2Qk8vAS0Z6gHv/Ldky+h9no9owKdyzwy6KhXbuZbI9T1TwONkg0vMrJs0hQXteAqvAaezX/6bA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4120
+        Mon, 18 May 2020 04:45:40 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:35088 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgERIpj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 04:45:39 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E359220099B;
+        Mon, 18 May 2020 10:45:37 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4938520097C;
+        Mon, 18 May 2020 10:45:34 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A85C6402A8;
+        Mon, 18 May 2020 16:45:29 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, l.stach@pengutronix.de,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3] dt-bindings: interrupt-controller: Convert imx irqsteer to json-schema
+Date:   Mon, 18 May 2020 16:35:57 +0800
+Message-Id: <1589790957-7904-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
-YXksIE1heSAxNCwgMjAyMCA5OjA5IEFNDQo+IA0KPiBBbHRob3VnaCBvY290cCBjbG9jayBpcyBh
-bHdheXMgT04gZm9yIGkuTVg2UURMLCBPQ09UUCBjYW4gYmUgYWNjZXNzZWQNCj4gZGlyZWN0bHks
-IGJ1dCBzaW5jZSBpLk1YNlFETCBudm1lbSBpbnRlcmZhY2UgaXMgc3VwcG9ydGVkLCBhbmQNCj4g
-ZnNsLHRlbXBtb24tZGF0YSBpcyBkZXByZWNhdGVkLCB1c2UgaXQgaW5zdGVhZCBvZiBnZXR0aW5n
-IGZ1c2UgZGF0YSBieSByZWFkaW5nDQo+IG9jb3RwIGRpcmVjdGx5LCB0aGlzIG1ha2VzIGFsbCBp
-Lk1YNiBTb0NzIGFsaWduZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5z
-b24uSHVhbmdAbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5k
-b25nQG54cC5jb20+DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg==
+Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+Changes since V2:
+	- Improve the interrupt items description.
+---
+ .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
+ .../interrupt-controller/fsl,irqsteer.yaml         | 89 ++++++++++++++++++++++
+ 2 files changed, 89 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+deleted file mode 100644
+index 582991c..0000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
++++ /dev/null
+@@ -1,35 +0,0 @@
+-Freescale IRQSTEER Interrupt multiplexer
+-
+-Required properties:
+-
+-- compatible: should be:
+-	- "fsl,imx8m-irqsteer"
+-	- "fsl,imx-irqsteer"
+-- reg: Physical base address and size of registers.
+-- interrupts: Should contain the up to 8 parent interrupt lines used to
+-  multiplex the input interrupts. They should be specified sequentially
+-  from output 0 to 7.
+-- clocks: Should contain one clock for entry in clock-names
+-  see Documentation/devicetree/bindings/clock/clock-bindings.txt
+-- clock-names:
+-   - "ipg": main logic clock
+-- interrupt-controller: Identifies the node as an interrupt controller.
+-- #interrupt-cells: Specifies the number of cells needed to encode an
+-  interrupt source. The value must be 1.
+-- fsl,channel: The output channel that all input IRQs should be steered into.
+-- fsl,num-irqs: Number of input interrupts of this channel.
+-  Should be multiple of 32 input interrupts and up to 512 interrupts.
+-
+-Example:
+-
+-	interrupt-controller@32e2d000 {
+-		compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
+-		reg = <0x32e2d000 0x1000>;
+-		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
+-		clock-names = "ipg";
+-		fsl,channel = <0>;
+-		fsl,num-irqs = <64>;
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+new file mode 100644
+index 0000000..360a575
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale IRQSTEER Interrupt Multiplexer
++
++maintainers:
++  - Lucas Stach <l.stach@pengutronix.de>
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx8m-irqsteer
++      - fsl,imx-irqsteer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      should contain the up to 8 parent interrupt lines used to multiplex
++      the input interrupts. They should be specified sequentially from
++      output 0 to 7.
++    items:
++      - description: output interrupt 0
++      - description: output interrupt 1
++      - description: output interrupt 2
++      - description: output interrupt 3
++      - description: output interrupt 4
++      - description: output interrupt 5
++      - description: output interrupt 6
++      - description: output interrupt 7
++    minItems: 1
++    maxItems: 8
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: ipg
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 1
++
++  fsl,channel:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: |
++      u32 value representing the output channel that all input IRQs should be
++      steered into.
++
++  fsl,num-irqs:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: |
++      u32 value representing the number of input interrupts of this channel,
++      should be multiple of 32 input interrupts and up to 512 interrupts.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - interrupt-controller
++  - "#interrupt-cells"
++  - fsl,channel
++  - fsl,num-irqs
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx8mq-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    interrupt-controller@32e2d000 {
++        compatible = "fsl,imx-irqsteer";
++        reg = <0x32e2d000 0x1000>;
++        interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
++        clock-names = "ipg";
++        fsl,channel = <0>;
++        fsl,num-irqs = <64>;
++        interrupt-controller;
++        #interrupt-cells = <1>;
++    };
+-- 
+2.7.4
+
