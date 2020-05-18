@@ -2,100 +2,96 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996E3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106DDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 03:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6766420787
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 02:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09A220758
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 03:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tK0CbIaI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgzmgDHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgERCzA (ORCPT
+        id S1726739AbgERDGk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 May 2020 22:55:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
+        Sun, 17 May 2020 23:06:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgERCy7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 22:54:59 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34865C061A0C;
-        Sun, 17 May 2020 19:54:58 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g1so8168108ljk.7;
-        Sun, 17 May 2020 19:54:58 -0700 (PDT)
+        with ESMTP id S1726639AbgERDGk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 May 2020 23:06:40 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D590C061A0C
+        for <devicetree@vger.kernel.org>; Sun, 17 May 2020 20:06:40 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id bs4so7227656edb.6
+        for <devicetree@vger.kernel.org>; Sun, 17 May 2020 20:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2jFq9prhAH2wIK8gbzUKR9isfuzYq/gIMJSIzZWYu8E=;
-        b=tK0CbIaIPpHV4gEM+abpdSUOYcpDl4B/nOcUHEziOVj3EUHlB8pHsOITbBcnsbu/tJ
-         S+0SrN0fBP/JoVMkCUENN6b1hmeEVpBqFkCvdU1dddTqvF5J7coZWydu6ngNjw4WHb4f
-         nrM1txpP6q3qhVlWTqG1BqTsXC8jaOBPqLIJK6h7FUtQqTr9P8XdI3t5sMNkZCICfxu0
-         LO69wVLwPqU31KaFbGTQZ+5zzBN/4VHT0P80bj7r3GtBwNqtxD0fpH45w8E0+kinasr4
-         XJDtcoaESd3jQSY4ERTbLzMJ9+zdwfp9IJA3Z6YDm8B37x8wsHSS148tQNUxmutMEZr3
-         BpqA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qNLTrI2ktdnZR+XFpipulQqy84fxpmvLOZOiLyTI6UE=;
+        b=jgzmgDHqUiwNnY3CNyYM96F24BdVx0GZpmKETl49TjRSF/B/NvdytgZioDW53AlpMy
+         JCrsc7TxARWXvesb5i4pDkZy9iVgs6akUlk9MMGKjUwxv7konk/XAClUjVkNF7eJSYnl
+         MN+PnV+RPz0U68T70ydY3Mlbmh/nM/cvc9r5U3k+/SnzZM1cZnKWTqJpPYKxXoDtbZuT
+         fG3DuWTyHYMsQIgCAuCBt6JIf/7wHkFE+1L41dH0jzjLw+Uk1xxnEz7z8yCWKZd+HjuZ
+         hTI8Ys3gG79mdbLHS9R47KmSn1y2xcxkJ/2jVK8DXXNg/VaoDdKJzaxaUzfwefqD3nrf
+         4liA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2jFq9prhAH2wIK8gbzUKR9isfuzYq/gIMJSIzZWYu8E=;
-        b=kdUE2rGTULpzO3hlo+GpW5WPkoygDAwazp23C3P3w+LbzS1EPRpOVIrEXQMdBjcvo5
-         i+T5XDv0QQaCKSxPYTFNSRPWlkPmiYAQZXCRYp1OhHogcIrp5uttb3gs09KFMilswqwd
-         P8kLmujk2pzSOf/Srsk8kCc51qz1XS5uzs941nul1grYMro3J7pTDRn2oVKo9Jn1fNL5
-         h62MyMv/Er0qg6dO+nfS6hyKfyrilI7aMbYZqsR9XGVOH02QOM8ateGyouRnxcXsaZ9D
-         PlL9Dg9J7OEzIsvrsKiRSMkTU+bcvz1r5vpKilrWjKapj+PsEnKJM7QTESLQsVU+62r0
-         HBlw==
-X-Gm-Message-State: AOAM530VfOEb657AkQbuXEbaKq9DxenfKAKmr9xNIOqQILs7JqnB8iIG
-        Z/EjgyTUF/wjKknX+lAqKhI=
-X-Google-Smtp-Source: ABdhPJyYzqTgPOAmvsxyCf7uSX8bDqWTZcSY82RpGn8VgcPggP06JGDFO93AVoCohi3Bqow+954rfA==
-X-Received: by 2002:a2e:9b8d:: with SMTP id z13mr3094942lji.35.1589770496715;
-        Sun, 17 May 2020 19:54:56 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id q21sm6849368lfe.0.2020.05.17.19.54.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 19:54:56 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson: add ethernet interrupt to wetek dtsi
-Date:   Mon, 18 May 2020 02:54:51 +0000
-Message-Id: <20200518025451.16401-1-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qNLTrI2ktdnZR+XFpipulQqy84fxpmvLOZOiLyTI6UE=;
+        b=IFwK5OZbsoutFDlGFq9/ZN5Zl5hGm7E/GR5vikEcSf9KQzEVRcjHgXaIiK8rs4QpbA
+         m2Tgs17aNNxL8j7YJhnBkrGZVrElECSqh988eueVkyH8pEt4REWyy8hKOnlNTBbEvJqn
+         auFSJ2ZPP7ZLJgB04WdUqmsu7Du4xUkRU7PArei33B9j1QEOwKPGk3/52HxtUYygadxv
+         zTQepq3KLN0B1JbbsIAnrldXdcy1pi4ca1QM0XQvRtJ8BdADB5zYNDxC8iVysgkENZC1
+         OJnQKWlzG4W2moYLpchHE4mcJOsL18N5tpoOWhIGlqb4W6w6jPQ2h1HuioWjtBOsIH9T
+         FupA==
+X-Gm-Message-State: AOAM533AtSjfS2ntYBYpqzGFQVOj5Tb2KQWpijTSenX/L+dA+/qWUeSF
+        YT0NIVoK/m3pV5k08cfuM7KjWHFvXwR1zGL1ri0=
+X-Google-Smtp-Source: ABdhPJwNl4SDNDW8cU/QKe2r13hrlZ0nbYymMMWQ1H5rJUFeU/sE9HG+VNCaIRt4Wk6kogQrjLx0YiVfLdsJszFlpis=
+X-Received: by 2002:a05:6402:129a:: with SMTP id w26mr11227671edv.254.1589771198670;
+ Sun, 17 May 2020 20:06:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
+ <1589472657-3930-9-git-send-email-amittomer25@gmail.com> <b2ad8a81-619f-5f35-9596-c2061ae15e4c@arm.com>
+ <CABHD4K9yjUGuo0w-RfhdZQJm3Wtj6bU2H4DXcp4Jjp=e0fFeyA@mail.gmail.com>
+ <2cd3cdaf-826e-9d12-9fd4-9f7e2a517ecd@arm.com> <CABHD4K-OaQ4Vf_+dg9FMR97ocLeUkDswyEnChPV=H=VcbyUhkg@mail.gmail.com>
+ <abbef32c-84d2-7dac-c667-49610d014710@arm.com>
+In-Reply-To: <abbef32c-84d2-7dac-c667-49610d014710@arm.com>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Mon, 18 May 2020 08:36:01 +0530
+Message-ID: <CABHD4K-MHs4jhL_9otJJ_xjC1uv1N20mnHqT39b2kob7WjZcVQ@mail.gmail.com>
+Subject: Re: [PATCH v1 8/9] arm64: dts: actions: Add MMC controller support
+ for S700
+To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Ethernet interrupt details to the WeTek Hub/Play2 dtsi to resolve
-an issue with Ethernet probing in mainline u-boot.
+Hi,
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+> I recommend reading the DT spec, chapter 2.3.1 "compatible":
+> https://github.com/devicetree-org/devicetree-specification/releases/download/v0.3/devicetree-specification-v0.3.pdf
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-index d6133af09d64..ad812854a107 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-@@ -149,6 +149,10 @@
- 			reset-assert-us = <10000>;
- 			reset-deassert-us = <30000>;
- 			reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
-+
-+			interrupt-parent = <&gpio_intc>;
-+			/* MAC_INTR on GPIOZ_15 */
-+			interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
- 		};
- 	};
- };
--- 
-2.17.1
+My point is more about, DT validation is not happy about this situation.
+For instance when I run dt-validate, do see following:
 
+/home/amit/work/kernel_work/linux/arch/arm64/boot/dts/actions/s700-cubieboard7.dt.yaml:
+mmc@e0210000: compatible: Additional items are not allowed
+('actions,s700-mmc' was unexpected)
+
+and I am not sure if this is because DT and driver has different
+number of compatible strings.
+
+Thanks
+Amit
