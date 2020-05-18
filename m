@@ -2,89 +2,110 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4812C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DD0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2ADC2065F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FCA2065F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 11:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgERLxm (ORCPT
+        id S1726557AbgERL5d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 07:53:42 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46306 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgERLxm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:53:42 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g25so2027413otp.13;
-        Mon, 18 May 2020 04:53:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gLeuUEV87rLj5u4SmWtflP3ainpFoOPWlk4LXLyZJY0=;
-        b=nu7bFe/1bGAq5QRQwLPZXJ7glu7LWMz2S/Nm2R3c9xLb6mmpZWiULxMuJDUxsKZhoZ
-         dsSON4pSEOHN/hezBuYGjzqWufCbn7hkFqIE5KQrVr3z6nXA+jACIcJNLN2Lsg6BIlv0
-         SuxeMgXElbK0cPWrjWNwIin/HYnzYh1Z+hCWCNMOGiN8kN4BFxhm9Tsj6/wIPD3sNJZr
-         8jsnHny+yGKq1XZ1bH8WRXEgM0YOsQT/rcNyosnYm0+g5/T6M0u/aOZOP9/SLaOKFNby
-         YLzQKaQiirTmJr0h8maxVHoSoyz+C2cMC+ApkTB5h/K2kygBOEu2CtTKLX9//Ti8N5i+
-         G/1A==
-X-Gm-Message-State: AOAM533UfAJofK4i1y3wuQzT+JovC5Vj+4QF7KSWQbG32WzztpF12Bpe
-        UfuWTlqg4k/oGxe/qZaWR3EvJwaW4pQaMpOmWa4=
-X-Google-Smtp-Source: ABdhPJy2SY7W6jVbtUNnzZ1VzMYJ0FdYvJiXsIT0cAmbcLSkFh2gCqjZ0r6X8r4D785kvRbXEN2EAeyemHuzGc01nfo=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr12000493otw.250.1589802821424;
- Mon, 18 May 2020 04:53:41 -0700 (PDT)
+        Mon, 18 May 2020 07:57:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:48601 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgERL5c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 07:57:32 -0400
+Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M1q4e-1jcqFm3dlY-002J7X; Mon, 18 May 2020 13:57:31 +0200
+Received: by mail-qv1-f44.google.com with SMTP id r3so4535612qve.1;
+        Mon, 18 May 2020 04:57:30 -0700 (PDT)
+X-Gm-Message-State: AOAM531FwLcGxSgowINhwEXZGqrWN32MzxhrMcq20nhgg8uxpL1KgD1J
+        tJmhrt3znUP7YWVKGntf1Y4yaCOdgkRq8Kc5cK0=
+X-Google-Smtp-Source: ABdhPJyUnKr4SHUFnJe9QsFvJhBBCNQyLNfjUzwAzO8o0fxqdsPeqZBhu6yQh15LV+E3iObLKOIbnTvte/PqUNqOYLg=
+X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr14567610qvz.210.1589803049670;
+ Mon, 18 May 2020 04:57:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1589555337-5498-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 May 2020 13:53:30 +0200
-Message-ID: <CAMuHMdW-Z20Ve2zkBBXBpMn-VF5TmXv7H6PMv2vbJf8havanwg@mail.gmail.com>
-Subject: Re: [PATCH 13/17] ARM: dts: r8a7742: Add Ether support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <202005152142.AWvx4xc5%lkp@intel.com> <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
+ <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
+ <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com> <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
+In-Reply-To: <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 18 May 2020 13:57:13 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+Message-ID: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        kbuild test robot <lkp@intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:aZXMNFxuDqcW7d7dZw64Yqx3tjdzNwT7mq238HcffP43zUt83W1
+ d/0DZtOgO3kcF/I9ZugCeXHx9Mr+BnLdHmnagJOE4hHuVTBMxw7e0TSSvRrjGKYCm2/sXce
+ BWyeM/sbmKx+rfCKtUZ8GMyPW9MmohWrrTVOD1DrWfg7lukuBLHzN2KJ68jsMVKs894lauB
+ 7tl13swvaq4lZnT4y6ChA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:37csoL6+g6A=:yBbzYVNceE2ZVVkrL0BrYB
+ DnIBwi3YLiDby6nRphphY39aXjhnijUSCVtVwrikSx+oy+IN4KbGmhhpNVnpSv73J811pybfS
+ tPKgD7XMNzUdVKDe6VmRk5Atl/OcpRnzwvJFxSzA640V2uAf9wrUYUG7H36a1AUL9+Z/d6Er0
+ OU2G+wxpLzRXhk2ow0HTg6A2QgNFisrf4+12O3pQb/WsN8y0CQMoJpIciel4TRLbyVQuZwRGW
+ PU4v5qZqlSQQOQmf3zfV7vh8id76S22HccCLNWCD2GmHZgV3ew7XYbM80dvdKzgr3lXJ/mx6B
+ JZ4wbO1DnjE2BzBWqee+/LMSmtOvhWG1izRAJvr55b5/peh1dCDnLBwE6bt4Ra3S7e/ccI5yE
+ P2q1Tn8vnHI3zQbKCYhNAhdzMvJKUEN8mvh7bqTdr7rLf529xjr9YUmqU858SFRTavR4LhRrv
+ 6K4RndzgkDhIXs+as3TWsEKNq34C+4Qrbxlyoz0LW1yNJIvrDr0HVjwE3M5cL89hi3zMBRedP
+ 6gh5M3hOYc+jMPg8w4sEJBXSzwSe1guj1yJW0+TwxdppWakyLf0YPaEZbLAPf4Njv1r21cfpE
+ ltaxHeFvKLnKb+bM1K108GXsOHF7E8kLHuRlMtZsC0mkRRYejnxGFvNRrX2SNaG5oU09VqXUR
+ ifylmLXr9ag9PJBUSmi0fXQLiz17L3QcjoA9bcf9GeUuoZlRMQIYJe/md+VAV2xukfUiRTXqj
+ tdBkRNfpwyzWwoeoiU6fOVWK49CQ47GtLBhBSwHqso7BPvsbZDb8vg2lVQdm5qmED9A+QR/Yn
+ zfcfylmN7M7OJKDTQNwk1zHUQDbGM3C8SpnGKOSYfyRl+ygoYE=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:10 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Define the generic R8A7742 part of the Ether device node.
+On Mon, May 18, 2020 at 1:43 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> On Mon, May 18, 2020 at 2:39 PM Ramuthevar, Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> > On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
+> > > On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > >> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
+>
+> > > iowrite_be32() is the correct way to store word into a big-endian mmio register,
+> > > if that is the intention here.
+> > Thank you for suggestions to use iowrite32be(), it suits exactly.
+>
+> Can you before doing this comment what is the real intention here?
+>
+> And note, if you are going to use iowrite*() / ioread*() in one place,
+> you will probably need to replace all of the read*() / write*() to
+> respective io* API.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+The way that ioread/iowrite are defined, they are required to be a superset
+of what readl/writel do and can take __iomem pointers from either
+ioremap() or ioport_map()/pci_iomap() style mappings, while readl/writel
+are only required to work with ioremap().
 
-Gr{oetje,eeting}s,
+There is no technical requirement to stick to one set or the other for
+ioremap(), but the overhead of ioread/iowrite is also small enough
+that it generally does not hurt.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+       Arnd
