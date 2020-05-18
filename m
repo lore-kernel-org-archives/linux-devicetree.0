@@ -2,193 +2,111 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF91C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADACC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8CB2070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chu9Reaj"
+	by mail.kernel.org (Postfix) with ESMTP id 82A4720826
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 09:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgERJtj (ORCPT
+        id S1726388AbgERJx3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 05:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgERJtj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 05:49:39 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D73C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 02:49:39 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id i15so10994228wrx.10
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 02:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=ENajwhYLgh6sOiUIP9e6Xj0EhfOD2GHJT5X8M/vf8Bk=;
-        b=chu9ReajW6HqxpiFU5X/Xq7ycdbAJTYXqrXhd/98jAkFWbBicg3eCnxNwkS81jVo1d
-         9qXWhcMySsBbOn0orMwWV6SbBNZclVKmJ5S22Avx1W8yBWJO9mB3RQYfp/P7zaKT44ht
-         PhyEImaP0Bc0xSGqE3OpaU0M1c34EndgWocJ7zSYMIQmKoTLIKET/bH1Td/X8hT/g9Jn
-         aoZfyWIDZgBc7ZIVrctUbu/HP4PjDd9l/aYVkmv6enQioY8Ms7J6TbY8n/cH8XnKGoEf
-         XO/VKcTbXghBNlFDxM+yYD4Y/i/sHc3sfjjx3kqTG973fFRXDcveox2xsDCoWD70wYfV
-         agUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=ENajwhYLgh6sOiUIP9e6Xj0EhfOD2GHJT5X8M/vf8Bk=;
-        b=bAaDbuOrx1OcVrZPpFeHzYT4hhC7/T6+NYiE6pwgg43wmAB8UrLKtXFA7lBbegvEHZ
-         4MZEpJ7hUE5hYmN/VM2wnC+d2Vyc5qavf1TMU/Yi7Lri/JUm4VJCoVEr3OUUxuQO+cD7
-         rEt3kJoFJXgynxriEQEHeJyQfRPGsHMnURuLF1M7cnXvRZyaGjdym8QlGf5pLyBFLFiZ
-         ZQsum0iIYvXlNA3VgRFdBDxW3RtLm/KeKyt05O0yQvseKYatu0nh+1D6U8g2uxOv3pzB
-         eOSvuFyWDcuJKT/qUFp6P2cah/CAZMpqMdEX8LRQxHy4h8SzIRZDSuq+4MVMLYr4mdvK
-         oUrw==
-X-Gm-Message-State: AOAM5308B3SiyzVjBro7UIIlGPRbzcDMxLDSiuihKoPRfynnbtPLfbv1
-        m9qsmo7yqm+XEyVVHRKK1bE6Sg==
-X-Google-Smtp-Source: ABdhPJx2XKbq7KkL41aumny2mb2gN4FSdUPlh42S2nUjjgI6dDC3vnddICzIiSo0P7gUCnJZQXDTsA==
-X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr20122647wrv.166.1589795377819;
-        Mon, 18 May 2020 02:49:37 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id f128sm16679392wme.1.2020.05.18.02.49.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 02:49:37 -0700 (PDT)
-Subject: Re: [PATCH v2 4/7] ASoC: qcom: lpass: Use regmap_field for i2sctl and
- dmactl registers
-To:     Ajit Pandey <ajitp@codeaurora.org>, broonie@kernel.org,
-        plai@codeaurora.org, bgoswami@codeaurora.org
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: =?UTF-8?Q?=3c=1c1586592171-31644-1-git-send-email-ajitp=40codeau?=
- =?UTF-8?Q?rora=2eorg=1d=3e_=3c1589474298-29437-1-git-send-email-ajitp=40cod?=
- =?UTF-8?Q?eaurora=2eorg=3e_=3c1589474298-29437-5-git-send-email-ajitp=40cod?=
- =?UTF-8?Q?eaurora=2eorg=3e?=
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a3527251-cafd-6d8f-3f96-0549b220af09@linaro.org>
-Date:   Mon, 18 May 2020 10:49:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 18 May 2020 05:53:29 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29861 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgERJx2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 05:53:28 -0400
+IronPort-SDR: fOjCcUXM30INFO0ZwLVMQwn3+o3YQtSBOVuGF3mmX3lnNvlIX0vDS3dHB4tjpbW6kaABYLmnlQ
+ 2ezaBRLQDbiA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 02:53:28 -0700
+IronPort-SDR: IPxhcZLdyUPpSJDtRywqmENMCEXb8iNw2LOGME7vov3Pi2g/kBh+2kmc4fcyM75/P26UqVcqln
+ tzZ03x2Y4dtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
+   d="scan'208";a="281919241"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.149.12]) ([10.249.149.12])
+  by orsmga002.jf.intel.com with ESMTP; 18 May 2020 02:53:22 -0700
+Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
+ setting
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, stable@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-21-Sergey.Semin@baikalelectronics.ru>
+ <c5109483-4c14-1a0c-efa9-51edf01c12de@intel.com>
+ <20200516125203.et5gkv6ullkerjyd@mobilestation>
+ <20200518074142.c6kbofpdlxro2pjz@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <a8dfa493-f858-e35d-7e57-78478be555c4@intel.com>
+Date:   Mon, 18 May 2020 11:53:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200518074142.c6kbofpdlxro2pjz@vireshk-i7>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 5/18/2020 9:41 AM, Viresh Kumar wrote:
+> On 16-05-20, 15:52, Serge Semin wrote:
+>> On Fri, May 15, 2020 at 05:58:47PM +0200, Rafael J. Wysocki wrote:
+>>>> @@ -2554,7 +2554,7 @@ static int cpufreq_boost_set_sw(int state)
+>>>>    			break;
+>>>>    	}
+>>>> -	return ret;
+>>>> +	return ret < 0 ? ret : 0;
+>>>>    }
+>>>>    int cpufreq_boost_trigger_state(int state)
+>>> IMO it is better to update the caller of this function to handle the
+>>> positive value possibly returned by it correctly.
+>> Could you elaborate why? Viresh seems to be ok with this solution.
+> And it is absolutely fine for Rafael to not agree with it :)
+>
+>> As I see it the caller doesn't expect the positive value returned by the
+>> original freq_qos_update_request(). It just doesn't need to know whether the
+>> effective policy has been updated or not, it only needs to make sure the
+>> operations has been successful. Moreover the positive value is related only
+>> to the !last! active policy, which doesn't give the caller a full picture
+>> of the policy change anyway. So taking all of these into account I'd leave the
+>> fix as is.
+> Rafael: This function is called via a function pointer, which can call
+> this or a platform dependent routine (like in acpi-cpufreq.c), and it
+> would be reasonable IMO for the return of that callback to only look
+> for 0 or negative values, as is generally done in the kernel.
+
+But it only has one caller that can easily check ret < 0 instead of just 
+ret, so the extra branch can be saved.
+
+That said if you really only want it to return 0 on success, you may as 
+well add a ret = 0; statement (with a comment explaining why it is 
+needed) after the last break in the loop.
+
+Cheers!
 
 
-On 14/05/2020 17:38, Ajit Pandey wrote:
-> I2SCTL and DMACTL registers has different bits alignment for newer
-> LPASS variants of SC7180 soc. Instead of adding extra overhead for
-> calculating masks and shifts for newer variants registers layout we
-> changed the approach to use regmap_field_write() API to update bit.
-> Such API's will internally do the required bit shift and mask based
-> on reg_field struct defined for bit fields. We'll define REG_FIELD()
-> macros with bit layout for both lpass variants and use such macros
-> to initialize register fields in variant specific driver callbacks.
-> Also added new bitfieds values for I2SCTL and DMACTL registers and
-> removed shifts and mask macros for such registers from header file.
-> 
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> ---
->   sound/soc/qcom/lpass-apq8016.c   |  61 ++++++++++++
->   sound/soc/qcom/lpass-cpu.c       | 114 +++++++++++++---------
->   sound/soc/qcom/lpass-lpaif-reg.h | 203 ++++++++++++++++++++++++---------------
->   sound/soc/qcom/lpass-platform.c  |  86 +++++++++++------
->   sound/soc/qcom/lpass.h           |  30 ++++++
->   5 files changed, 340 insertions(+), 154 deletions(-)
-> 
-
-Thanks for moving this to regmap fields, looks clean!
-However this patch just removed support to lpass-ipq806x.c variant, 
-which should to be taken care of while doing patches that apply to all 
-variants.
-
-
-> diff --git a/sound/soc/qcom/lpass-apq8016.c b/sound/soc/qcom/lpass-apq8016.c
-> index 8210e37..3149645 100644
-> --- a/sound/soc/qcom/lpass-apq8016.c
-> +++ b/sound/soc/qcom/lpass-apq8016.c
-> @@ -124,6 +124,32 @@
->   	},
->   };
->   
-> +static int apq8016_init_dmactl_bitfields(struct lpaif_dmactl *dmactl,
-> +					 struct regmap *map,
-> +					 unsigned int reg)
-> +{
-> +	struct reg_field bursten = DMACTL_BURSTEN_FLD(reg);
-> +	struct reg_field wpscnt = DMACTL_WPSCNT_FLD(reg);
-> +	struct reg_field fifowm = DMACTL_FIFOWM_FLD(reg);
-> +	struct reg_field intf = DMACTL_AUDINTF_FLD(reg);
-> +	struct reg_field enable = DMACTL_ENABLE_FLD(reg);
-> +	struct reg_field dyncclk = DMACTL_DYNCLK_FLD(reg);
-> +
-> +	dmactl->bursten = regmap_field_alloc(map, bursten);
-> +	dmactl->wpscnt = regmap_field_alloc(map, wpscnt);
-> +	dmactl->fifowm = regmap_field_alloc(map, fifowm);
-> +	dmactl->intf = regmap_field_alloc(map, intf);
-> +	dmactl->enable = regmap_field_alloc(map, enable);
-> +	dmactl->dyncclk = regmap_field_alloc(map, dyncclk);
-
-My idea was to move this all regmap fields to variant structure and 
-common code will do the regmap_filed_alloc rather than each variant 
-duplicating the same code for each variant, also am guessing some of the 
-members in the lpass_variant structure tp become redundant due to regmap 
-field which can be removed as well.
-
-ex :
-
-struct lpass_variant {
-	...
-	struct reg_field bursten
-	...
-};
-
-in lpass-apq8016.c
-
-we do
-static struct lpass_variant apq8016_data = {
-
-	.bursten = REG_FIELD(reg, 11, 11),
-	...
-}
-
-in lpass-cpu.c we can do the real regmap_field_alloc	
-asoc_qcom_lpass_cpu_platform_probe
-
-
-
-> +
-> +	if (IS_ERR(dmactl->bursten) || IS_ERR(dmactl->wpscnt) ||
-> +	    IS_ERR(dmactl->fifowm) || IS_ERR(dmactl->intf) ||
-> +	    IS_ERR(dmactl->enable) || IS_ERR(dmactl->dyncclk))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
->   static int apq8016_lpass_alloc_dma_channel(struct lpass_data *drvdata,
->   					   int direction)
->   {
-> @@ -158,6 +184,39 @@ static int apq8016_lpass_free_dma_channel(struct lpass_data *drvdata, int chan)
->   	return 0;
->   }
->   
-> +static int sc7180_init_i2sctl_bitfields(struct lpaif_i2sctl *i2sctl,
-> +					struct regmap *map, unsigned int reg)
-> +{
-Should this be apq8016_init_i2sctl_bitfields
-
-Please make sure that you compile the code before sending it out!
-
---srini
-
-> 
