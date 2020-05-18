@@ -2,125 +2,117 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3691AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E45C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC882065F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8131D20787
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 12:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgERMth (ORCPT
+        id S1726854AbgERMxB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 08:49:37 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:54258 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgERMth (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 08:49:37 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DB0552009B8;
-        Mon, 18 May 2020 14:49:34 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 14E5A200844;
-        Mon, 18 May 2020 14:49:31 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 11BBE402AD;
-        Mon, 18 May 2020 20:49:26 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] ARM: dts: imx: make src node name generic
-Date:   Mon, 18 May 2020 20:39:53 +0800
-Message-Id: <1589805593-14164-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 18 May 2020 08:53:01 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:47326 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgERMxA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 08:53:00 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B7B468030875;
+        Mon, 18 May 2020 12:52:55 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id txmeJSYd8bdj; Mon, 18 May 2020 15:52:55 +0300 (MSK)
+Date:   Mon, 18 May 2020 15:52:53 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
+ thresholds
+Message-ID: <20200518125253.r4fpr4mjflclqpym@mobilestation>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
+ <20200515143842.GG1634618@smile.fi.intel.com>
+ <20200516200133.wmaqnfjbr7234fzo@mobilestation>
+ <20200518110343.GY1634618@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200518110343.GY1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Node name should be generic, use "reset-controller" instead of "src" for
-i.MX6/i.MX7 SoCs src nodes.
+On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
+> On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
+> > On Fri, May 15, 2020 at 05:38:42PM +0300, Andy Shevchenko wrote:
+> > > On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
+> > > > Each channel of DMA controller may have a limited length of burst
+> > > > transaction (number of IO operations performed at ones in a single
+> > > > DMA client request). This parameter can be used to setup the most
+> > > > optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
+> > > > overrun we can set the DMA Tx level to be of FIFO depth minus the
+> > > > maximum burst transactions length. To prevent the Rx buffer underflow
+> > > > the DMA Rx level should be set to the maximum burst transactions length.
+> > > > This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
+> > > > in accordance with these rules.
+> 
+> ...
+> 
+> > > >  	/* DMA info */
+> > > >  	struct dma_chan		*txchan;
+> > > > +	u32			txburst;
+> > > >  	struct dma_chan		*rxchan;
+> > > > +	u32			rxburst;
+> > > 
+> > > Leave u32 together, it may be optimal on 64-bit architectures where ABIs require padding.
+> > 
+> > It's not like anyone cared about padding in this structure in the first place)
+> 
+> I think I have been caring (to some extend).
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
- arch/arm/boot/dts/imx6sl.dtsi  | 2 +-
- arch/arm/boot/dts/imx6sx.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi  | 2 +-
- arch/arm/boot/dts/imx7s.dtsi   | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+Well, If you have then instead of asking to rearrange just two members (which
+by the way finely grouped by the Tx-Rx affiliation) why not sending a
+patch, which would refactor the whole structure so to be optimal for the x64
+platforms? I don't really see why this gets very important for you seeing
+Mark is Ok with this. My current commit follows the common driver design
+including the DW SSI data members grouping. On the second thought I'll leave
+it as is then.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 1763c2b..39d4afd 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -858,7 +858,7 @@
- 				interrupts = <0 57 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
--			src: src@20d8000 {
-+			src: reset-controller@20d8000 {
- 				compatible = "fsl,imx6q-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index fcb84fe..911d8cf 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -678,7 +678,7 @@
- 				interrupts = <0 57 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
--			src: src@20d8000 {
-+			src: reset-controller@20d8000 {
- 				compatible = "fsl,imx6sl-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index d6f8317..e031337 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -754,7 +754,7 @@
- 				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
--			src: src@20d8000 {
-+			src: reset-controller@20d8000 {
- 				compatible = "fsl,imx6sx-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 2ccf67c..35e7301 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -676,7 +676,7 @@
- 				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
--			src: src@20d8000 {
-+			src: reset-controller@20d8000 {
- 				compatible = "fsl,imx6ul-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 76e3ffb..8bac491 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -624,7 +624,7 @@
- 				clock-names = "ckil", "osc";
- 			};
- 
--			src: src@30390000 {
-+			src: reset-controller@30390000 {
- 				compatible = "fsl,imx7d-src", "syscon";
- 				reg = <0x30390000 0x10000>;
- 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.7.4
+-Sergey
 
+> 
+> > Though if v3 is required I'll group these members together.
+> 
+> From what I see v3 is what Mark and me are waiting for. Mark, are we on the
+> same page here?
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
