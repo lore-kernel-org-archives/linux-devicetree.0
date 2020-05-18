@@ -2,130 +2,151 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08559C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 15:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D50C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 15:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E00207ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 15:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACA4207C4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 15:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgERPAG (ORCPT
+        id S1727006AbgERPCW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 11:00:06 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48704 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERPAF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 11:00:05 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B6998803080B;
-        Mon, 18 May 2020 15:00:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IRxMeP9Dze5J; Mon, 18 May 2020 18:00:00 +0300 (MSK)
-Date:   Mon, 18 May 2020 17:59:58 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
- thresholds
-Message-ID: <20200518145958.gb55qtrc6gdpq2d4@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
- <20200515143842.GG1634618@smile.fi.intel.com>
- <20200516200133.wmaqnfjbr7234fzo@mobilestation>
- <20200518110343.GY1634618@smile.fi.intel.com>
- <20200518125253.r4fpr4mjflclqpym@mobilestation>
- <CAHp75VeMcv-hQViCANQARiNh0LwmugsDWk=MF1c5E3t7z5h02Q@mail.gmail.com>
- <20200518134306.7rvydoasv7pmxwxl@mobilestation>
- <20200518144834.GD1634618@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200518144834.GD1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Mon, 18 May 2020 11:02:22 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37808 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgERPCV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 11:02:21 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6344A200941;
+        Mon, 18 May 2020 17:02:19 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 290352009C2;
+        Mon, 18 May 2020 17:02:14 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6D2F9402AF;
+        Mon, 18 May 2020 23:02:07 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, Frank.Li@nxp.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] dt-bindings: clock: Convert i.MX7D clock to json-schema
+Date:   Mon, 18 May 2020 22:52:34 +0800
+Message-Id: <1589813554-20929-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 05:48:34PM +0300, Andy Shevchenko wrote:
-> On Mon, May 18, 2020 at 04:43:06PM +0300, Serge Semin wrote:
-> > On Mon, May 18, 2020 at 04:25:20PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 18, 2020 at 3:53 PM Serge Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > > On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
-> > > > > On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
-> > > > > > On Fri, May 15, 2020 at 05:38:42PM +0300, Andy Shevchenko wrote:
-> > > > > > > On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
-> 
-> ...
-> 
-> > > > > > It's not like anyone cared about padding in this structure in the first place)
-> > > > >
-> > > > > I think I have been caring (to some extend).
-> > > >
-> > > > Well, If you have then instead of asking to rearrange just two members (which
-> > > > by the way finely grouped by the Tx-Rx affiliation) why not sending a
-> > > > patch, which would refactor the whole structure so to be optimal for the x64
-> > > > platforms? I don't really see why this gets very important for you seeing
-> > > > Mark is Ok with this. My current commit follows the common driver design
-> > > > including the DW SSI data members grouping. On the second thought I'll leave
-> > > > it as is then.
-> > > 
-> > > Again same issue here. What is really easy to do for you here, will
-> > > become a burden and additional churn to anybody else.
-> > > So, why not to minimize it in the first place? Same with comma in
-> > > another patch. Sorry, I really don't get it.
-> > 
-> > If comma is more or less understandable (though adding it is absolutely
-> > redundant there and doesn't worth even a bit of time spending for the
-> > discussion), here you consider the patch from padding point of view.
-> > The driver developer didn't care about it, but did care about grouping the
-> > members in a corresponding way. The padding burden will be there anyway and
-> > should be fixed for the whole structure in an additional patch. Until then
-> > the way of grouping should be preserved.
-> 
-> Like you said, we spent already much more time than that simple change can be
-> satisfied. And like you said, "deleloper ... did care about groupping members
-> in a corresponding way". So, if we look at this in the original code, my
-> suggestion, besides padding benefit, is consistent with existing pattern in
-> that data structure.
+Convert the i.MX7D clock binding to DT schema format using json-schema.
 
-What pattern do you mean? As I see it, my implementation is consistent with
-current structure structure, while yours is not.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- Update maintainer's e-mail address.
+---
+ .../devicetree/bindings/clock/imx7d-clock.txt      | 13 -----
+ .../devicetree/bindings/clock/imx7d-clock.yaml     | 64 ++++++++++++++++++++++
+ 2 files changed, 64 insertions(+), 13 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.yaml
 
--Sergey
+diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.txt b/Documentation/devicetree/bindings/clock/imx7d-clock.txt
+deleted file mode 100644
+index 9d3026d..0000000
+--- a/Documentation/devicetree/bindings/clock/imx7d-clock.txt
++++ /dev/null
+@@ -1,13 +0,0 @@
+-* Clock bindings for Freescale i.MX7 Dual
+-
+-Required properties:
+-- compatible: Should be "fsl,imx7d-ccm"
+-- reg: Address and length of the register set
+-- #clock-cells: Should be <1>
+-- clocks: list of clock specifiers, must contain an entry for each required
+-  entry in clock-names
+-- clock-names: should include entries "ckil", "osc"
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx7d-clock.h
+-for the full list of i.MX7 Dual clock IDs.
+diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.yaml b/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
+new file mode 100644
+index 0000000..8cd0573
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/imx7d-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Clock bindings for Freescale i.MX7 Dual
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description: |
++  The clock consumer should specify the desired clock by having the clock
++  ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx7d-clock.h
++  for the full list of i.MX7 Dual clock IDs.
++
++properties:
++  compatible:
++    const: fsl,imx7d-ccm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: CCM interrupt request 1
++      - description: CCM interrupt request 2
++    maxItems: 2
++
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    items:
++      - description: 32k osc
++      - description: 24m osc
++
++  clock-names:
++    items:
++      - const: ckil
++      - const: osc
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - '#clock-cells'
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    clock-controller@30380000 {
++        compatible = "fsl,imx7d-ccm";
++        reg = <0x30380000 0x10000>;
++        interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++        #clock-cells = <1>;
++        clocks = <&ckil>, <&osc>;
++        clock-names = "ckil", "osc";
++    };
+-- 
+2.7.4
 
-> 
-> Note, I agree on extern keyword change can be postponed (it was in the original
-> code), but here you introduce a new code...
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
