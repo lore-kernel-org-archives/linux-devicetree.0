@@ -2,120 +2,197 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8808C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 06:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BF4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 06:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8045220715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 06:18:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DHnstMwQ"
+	by mail.kernel.org (Postfix) with ESMTP id D54762070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 06:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgERGSG (ORCPT
+        id S1726395AbgERGV7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 02:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgERGSG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 02:18:06 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0DBEC061A0C
-        for <devicetree@vger.kernel.org>; Sun, 17 May 2020 23:18:04 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so4529647pjb.3
-        for <devicetree@vger.kernel.org>; Sun, 17 May 2020 23:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M5n9pR8YrcNGB5Twdpxaglw1ExqBVeZzm3ypCn0PPMc=;
-        b=DHnstMwQFGeIHpwRXsQCLJAkSNRVmDDGdUFKxiLJy74upnbawfn7dQnkZM0IiIiaZO
-         i2YohVkDOY5B4KNM9xk5sHADOEWJ3IJz0/fRzPCg+kkRimTJU7qOC0obJwLQbkIPxYJ6
-         omDZifamvwez3z2PdiCJE7dBhU2ziZ69HD+gPhojclA/renBHrtSD9rOqBxvOsV78ry3
-         nr/ITYcrlOxaDiCSIsaw7v/f1r/aAs1EsEpgbn2UGyLl6CxmGFsdisCXgYhWwOHY3Z9M
-         +rkfi0jokBWL+sbXsv79kBIsE5Ee5cD+Bf4CGbmDTYJUe2EY6Nm+vjSty9VjUny9zwc5
-         h5Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M5n9pR8YrcNGB5Twdpxaglw1ExqBVeZzm3ypCn0PPMc=;
-        b=M877MfoQqNh23+R47QuRJZOPMEH8xoumoyHGStAIg0uLSW3cUszpm0IB5X7ni0Cr6R
-         IdUAErw/4uTvb3CkcXH+Q0/N50MXtPkYIRrimoj8uGaoZWBw3ODz4FVyzcd6ICg3jnoT
-         9PgdqM/rrqrFUBm+JJ13ddiMl7xR6mrj3c6uS1OXuU9d9jV8+jfvXw+4+k5uTmu+dmCg
-         yvUYLtwDof7erKgkUbRMa3MK9Ci81NG9J1X/S70Nta8J6yepDaLGXL4CvAfN1ycMAvbq
-         XYQTGKtFILjHAX9ciDmMJYjhIhiLfcVWG6MbdAunUNWVItGt/ALbfCn4LoeeaKBi1Obi
-         ZGSQ==
-X-Gm-Message-State: AOAM533hBivcSabQg6RLewGcEVQhrBhLugMhh1jWnO7bxCmR59mbwuhe
-        RXLu4PumCcH+zchtwlgiO+meQhsnLA==
-X-Google-Smtp-Source: ABdhPJyxTNnwHhkx79KytdDT7I/oyy+aWpUyx9e1VX+AOmVzNnaJnertusFfu8KQ0oRzutonEF1f/Q==
-X-Received: by 2002:a17:90a:dd44:: with SMTP id u4mr16383713pjv.132.1589782684078;
-        Sun, 17 May 2020 23:18:04 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id w7sm7468032pfw.82.2020.05.17.23.18.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 May 2020 23:18:03 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:47:55 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Amit Tomer <amittomer25@gmail.com>
-Cc:     =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 8/9] arm64: dts: actions: Add MMC controller support
- for S700
-Message-ID: <20200518061755.GA25113@mani>
-References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
- <1589472657-3930-9-git-send-email-amittomer25@gmail.com>
- <b2ad8a81-619f-5f35-9596-c2061ae15e4c@arm.com>
- <CABHD4K9yjUGuo0w-RfhdZQJm3Wtj6bU2H4DXcp4Jjp=e0fFeyA@mail.gmail.com>
- <2cd3cdaf-826e-9d12-9fd4-9f7e2a517ecd@arm.com>
- <CABHD4K-OaQ4Vf_+dg9FMR97ocLeUkDswyEnChPV=H=VcbyUhkg@mail.gmail.com>
- <abbef32c-84d2-7dac-c667-49610d014710@arm.com>
- <CABHD4K-MHs4jhL_9otJJ_xjC1uv1N20mnHqT39b2kob7WjZcVQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABHD4K-MHs4jhL_9otJJ_xjC1uv1N20mnHqT39b2kob7WjZcVQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 18 May 2020 02:21:59 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:33094 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbgERGV7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 02:21:59 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 32A752007B4;
+        Mon, 18 May 2020 08:21:57 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8D2E220081F;
+        Mon, 18 May 2020 08:21:53 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CCDEA402AD;
+        Mon, 18 May 2020 14:21:48 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, l.stach@pengutronix.de,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] dt-bindings: interrupt-controller: Convert imx irqsteer to json-schema
+Date:   Mon, 18 May 2020 14:12:16 +0800
+Message-Id: <1589782336-17289-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 0518, Amit Tomer wrote:
-> Hi,
-> 
-> > I recommend reading the DT spec, chapter 2.3.1 "compatible":
-> > https://github.com/devicetree-org/devicetree-specification/releases/download/v0.3/devicetree-specification-v0.3.pdf
-> 
-> My point is more about, DT validation is not happy about this situation.
-> For instance when I run dt-validate, do see following:
-> 
-> /home/amit/work/kernel_work/linux/arch/arm64/boot/dts/actions/s700-cubieboard7.dt.yaml:
-> mmc@e0210000: compatible: Additional items are not allowed
-> ('actions,s700-mmc' was unexpected)
-> 
-> and I am not sure if this is because DT and driver has different
-> number of compatible strings.
-> 
+Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
 
-Yeah, the DT YAML validation tool doesn't allow this. And there were patches
-removing the additional compatible from DTS.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- Add "fsl,imx8m-irqsteer" compatible back.
+	- Use "Multiplexer" instead of "multiplexer" for title.
+---
+ .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
+ .../interrupt-controller/fsl,irqsteer.yaml         | 89 ++++++++++++++++++++++
+ 2 files changed, 89 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
 
-I don't know if the DT fallback is discouraged or not.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+deleted file mode 100644
+index 582991c..0000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
++++ /dev/null
+@@ -1,35 +0,0 @@
+-Freescale IRQSTEER Interrupt multiplexer
+-
+-Required properties:
+-
+-- compatible: should be:
+-	- "fsl,imx8m-irqsteer"
+-	- "fsl,imx-irqsteer"
+-- reg: Physical base address and size of registers.
+-- interrupts: Should contain the up to 8 parent interrupt lines used to
+-  multiplex the input interrupts. They should be specified sequentially
+-  from output 0 to 7.
+-- clocks: Should contain one clock for entry in clock-names
+-  see Documentation/devicetree/bindings/clock/clock-bindings.txt
+-- clock-names:
+-   - "ipg": main logic clock
+-- interrupt-controller: Identifies the node as an interrupt controller.
+-- #interrupt-cells: Specifies the number of cells needed to encode an
+-  interrupt source. The value must be 1.
+-- fsl,channel: The output channel that all input IRQs should be steered into.
+-- fsl,num-irqs: Number of input interrupts of this channel.
+-  Should be multiple of 32 input interrupts and up to 512 interrupts.
+-
+-Example:
+-
+-	interrupt-controller@32e2d000 {
+-		compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
+-		reg = <0x32e2d000 0x1000>;
+-		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
+-		clock-names = "ipg";
+-		fsl,channel = <0>;
+-		fsl,num-irqs = <64>;
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+new file mode 100644
+index 0000000..5242c97
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale IRQSTEER Interrupt Multiplexer
++
++maintainers:
++  - Lucas Stach <l.stach@pengutronix.de>
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx8m-irqsteer
++      - fsl,imx-irqsteer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      should contain the up to 8 parent interrupt lines used to multiplex
++      the input interrupts. They should be specified sequentially from
++      output 0 to 7.
++    items:
++      - description: irqsteer channel 0
++      - description: irqsteer channel 1
++      - description: irqsteer channel 2
++      - description: irqsteer channel 3
++      - description: irqsteer channel 4
++      - description: irqsteer channel 5
++      - description: irqsteer channel 6
++      - description: irqsteer channel 7
++    minItems: 1
++    maxItems: 8
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: ipg
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 1
++
++  fsl,channel:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: |
++      u32 value representing the output channel that all input IRQs should be
++      steered into.
++
++  fsl,num-irqs:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: |
++      u32 value representing the number of input interrupts of this channel,
++      should be multiple of 32 input interrupts and up to 512 interrupts.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - interrupt-controller
++  - "#interrupt-cells"
++  - fsl,channel
++  - fsl,num-irqs
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx8mq-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    interrupt-controller@32e2d000 {
++        compatible = "fsl,imx-irqsteer";
++        reg = <0x32e2d000 0x1000>;
++        interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
++        clock-names = "ipg";
++        fsl,channel = <0>;
++        fsl,num-irqs = <64>;
++        interrupt-controller;
++        #interrupt-cells = <1>;
++    };
+-- 
+2.7.4
 
-Anyway, is enough investigation done to justify that we need SoC specific tweaks
-in the driver? I think I did look into the downstream code for s700/s500 while
-upstreaming this driver and convinced myself that the same driver could be
-reused without modifications.
-
-Thanks,
-Mani
-
-> Thanks
-> Amit
