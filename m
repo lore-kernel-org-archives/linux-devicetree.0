@@ -2,218 +2,129 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E323C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1477CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1621B20671
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589812325;
-	bh=jJDQXjoVTehX6Qsa4fGIHIVNnXnyq//hBSoAvSLiNGo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iTJSsYJQAM72/NSPD0KQ1jIQWn+sCdnGd12uL1wH1P18bJKO0krIEQhrpTzjqTH1d
-	 ++shv6Gcm1yXnG9afTh1q0qTjg1eIrmZV2Ep+TnqrperqjWuxZGiMqyN9106yMV5DO
-	 lqmyiQE5e7V3qHceAo1uHZVM6jrHE7yLzEGyFuNE=
+	by mail.kernel.org (Postfix) with ESMTP id E4281206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 14:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgEROcE (ORCPT
+        id S1727007AbgEROiq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 10:32:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42089 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbgEROcE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:32:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id e18so10757739iog.9;
-        Mon, 18 May 2020 07:32:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MpT+nu7nNOLKspYEkQrWYjY1RVTqlNGjWcECXgpB5yE=;
-        b=GZ3i6CI9ed60lGAQFs0OVx5yGlTdb9DojYPEEG2V3PCs7aZaUfcCzTeySERozIRctv
-         Q9epOsM1pa7z79UhB/2KUamv4oLQwR5R6SweK4DKNaQRXKENZKDSKmpnueyUzHhyn2S3
-         CTs3M87xdUNlbbsZVdqAnXlVSdI/ndHkFDlXKnouFzDJMQmteFPc7iaMQk/OavGk/mu6
-         Ef1CZrKr358w/JgvQB/zeN8frECVhz1XAs6yOEOr0S1Sr6NweiaVGgtSC9SCcun5njoJ
-         pG4vq65BRWa+M7AW/eHLhXr/Lh3N/GRr8HoT/9BvHZ8Ek3SYH7qvKZW2MqYZKPjJBJN2
-         PhRg==
-X-Gm-Message-State: AOAM530uDJ/U71TMYSk/0MMD13EIvd1p7/RGVXi9JQw2gtborZsenvo5
-        lx/7XkAVs8GR2uCsCAnWMw==
-X-Google-Smtp-Source: ABdhPJwvbWX1i1YobTWJ2sW5L/vNBdw/cQ7LkbFo2JKkW8/BcRUhpnwK4wzuSXXypB3KuWClTxgjbA==
-X-Received: by 2002:a6b:500e:: with SMTP id e14mr13295274iob.47.1589812322692;
-        Mon, 18 May 2020 07:32:02 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a17sm1572365ild.31.2020.05.18.07.31.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 07:31:49 -0700 (PDT)
-Received: (nullmailer pid 24775 invoked by uid 1000);
-        Mon, 18 May 2020 14:31:48 -0000
-Date:   Mon, 18 May 2020 08:31:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
-        <shengnan.wang@mediatek.com>
-Subject: Re: [V6, 1/2] media: dt-bindings: media: i2c: Document DW9768
- bindings
-Message-ID: <20200518143148.GA18032@bogus>
-References: <20200518132731.20855-1-dongchun.zhu@mediatek.com>
- <20200518132731.20855-2-dongchun.zhu@mediatek.com>
- <CAAFQd5Byvc8Fb0f3_81xSKsuyvsQJm-8g8y1Kx2aUcC=PwpS7w@mail.gmail.com>
+        Mon, 18 May 2020 10:38:46 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:49683 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgEROiq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 10:38:46 -0400
+Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Ma0HM-1jXTMN436K-00W1bi; Mon, 18 May 2020 16:38:44 +0200
+Received: by mail-qk1-f176.google.com with SMTP id n14so10262052qke.8;
+        Mon, 18 May 2020 07:38:43 -0700 (PDT)
+X-Gm-Message-State: AOAM532gtYvic9MEdHYNR0Qc4moQduEJ+oK/yQsQt9DVOKy9z9UiZ1Kz
+        QKgfp5UJmt7BNvCV1RTs1VLuXeVxj8j/xLXlIaA=
+X-Google-Smtp-Source: ABdhPJxzhsnxVhq8ZSNDtJoBCI07uV5rPB2Xy6wBijq3wixD3dVCpTMzBq7wTOe/KdpPc4bGdgY7xrXJK4eQYms1WB8=
+X-Received: by 2002:a37:aa82:: with SMTP id t124mr15128415qke.3.1589812722617;
+ Mon, 18 May 2020 07:38:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5Byvc8Fb0f3_81xSKsuyvsQJm-8g8y1Kx2aUcC=PwpS7w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
+ <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com> <CAMRc=MeVyNzTWw_hk=J9kX1NE9reCE_O4P3wrNpMMc9z4xA_DA@mail.gmail.com>
+In-Reply-To: <CAMRc=MeVyNzTWw_hk=J9kX1NE9reCE_O4P3wrNpMMc9z4xA_DA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 18 May 2020 16:38:25 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1xaWE0gNx-PnJz08XzUkPW6YB7U6NfFS+Y1VXwG+VR+w@mail.gmail.com>
+Message-ID: <CAK8P3a1xaWE0gNx-PnJz08XzUkPW6YB7U6NfFS+Y1VXwG+VR+w@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:OB6VzK2054ZHQfz3CTgEBDfpQ26ehY5iVTYbtEgywu+eoe059Ia
+ 155h7+afzU9IY+xpKJNhOOLCYvG+CVCVONbhge2PqpV/n60X2eLhfQhAZBVBHEL/+1R+1nH
+ bkHyXDZArv+FJ2Mpb4xmr+JeC+E3em4yPC+eZXrv/hHpQtslM+EM5i1INXSMt3IWXUG7q4G
+ CmzKbMVFQg56UvK6vbNHA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vxLiJ7JDE0g=:Up6ARmLIWMk+ak4wsEctGO
+ rhiErvnlmZs6qhQQPDdfVywOzmJX7Mptu/6SGVVLaqdaZgtvqCNYjbQi2f4tTXASpL9hz5Arq
+ EjfB0c9JxG0/BSAIHQWYto8dP+6fUmMCdGKRBYOS8RjGyTOrbcZN2wKbQxDJs9o4sgDfr/XYV
+ byoDT4koyV0n2eYzFUoEVWDXi0s0hHd8htLVXjhybemtTQJosg8ZGke53TKCT0GfwHknHXzV5
+ v/XQYMp7KOifvsdCG6DlXQ0o1azXT+QrzWAEIgedTlQq6c+oLQo7AAa+wsatiLz/NJEPOAggz
+ GlbHPa6Xf1joz3dWalT7TE55mJRFvdzko0aabkIjts6ejiXIdyq5f0C0RgIlRKJR2HDEimDHu
+ nR+FrNmnQV1bmd1IaFCLBlCS9mgkLBy7w3bwMxkOzg0Lu6OF7ubj/gmL1t5CJ5hcrE5pYeUL7
+ bwBehMEyVplOBYbGDMn9v0ABdTji3YcYPKLe3nZeiET3FsYgGlsuuzPBnDcMZXdXhA3Ab+oYp
+ wUctgNbumAXwoHwazZblpYReqHgMajU54iL5OSr19TlP9j6QUKk4zBkRE1KTx3YIxbkDfOAjC
+ ks86QV6Sd6y+OLyrn/r5EA7Ghs05F+dGley2Vb6hskJmDtph+nYnAKbA9Jub0La7nKlE/xi+R
+ Xw77Aih4WsE7WxOJOnp7rupPlNn39dwFEs+/ahTkDm3B/YafV6wwekr7ZUVLoKxHquc5kk5WI
+ B1SH58SmfbDZkbaMmuVhoNHb//VPRj66Zyjm1MSAWb3bnLk4eIOK2b4VIYCHYhOHUFeD0W40g
+ jX11DAu8ta1FlVRrDSBJhl3b1heQbBlno2h0SMSRBngQ3hA2ms=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 04:12:28PM +0200, Tomasz Figa wrote:
-> Hi Dongchun,
-> 
-> On Mon, May 18, 2020 at 3:29 PM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+On Mon, May 18, 2020 at 4:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> pt., 15 maj 2020 o 15:32 Arnd Bergmann <arnd@arndb.de> napisał(a):
+
+> > I would get rid of the 'count' here, as it duplicates the information
+> > that is already known from the difference between head and tail, and you
+> > can't update it atomically without holding a lock around the access to
+> > the ring. The way I'd do this is to have the head and tail pointers
+> > in separate cache lines, and then use READ_ONCE/WRITE_ONCE
+> > and smp barriers to access them, with each one updated on one
+> > thread but read by the other.
 > >
-> > Add DeviceTree binding documentation for Dongwoon Anatech DW9768 voice
-> > coil actuator.
-> 
-> Thanks for the patch. Please see my comments below.
-> 
-> >
-> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> This version includes significant changes, so the reviewed-by tag
-> shouldn't have been carried out.
-> 
-> > ---
-> >  .../bindings/media/i2c/dongwoon,dw9768.yaml        | 105 +++++++++++++++++++++
-> >  MAINTAINERS                                        |   7 ++
-> >  2 files changed, 112 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
-> > new file mode 100644
-> > index 0000000..b909e83
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
-> > @@ -0,0 +1,105 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright (c) 2020 MediaTek Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/dongwoon,dw9768.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Dongwoon Anatech DW9768 Voice Coil Motor (VCM) Lens Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > +
-> > +description: |-
-> > +  The Dongwoon DW9768 is a single 10-bit digital-to-analog (DAC) converter
-> > +  with 100 mA output current sink capability. VCM current is controlled with
-> > +  a linear mode driver. The DAC is controlled via a 2-wire (I2C-compatible)
-> > +  serial interface that operates at clock rates up to 1MHz. This chip
-> > +  integrates Advanced Actuator Control (AAC) technology and is intended for
-> > +  driving voice coil lenses in camera modules.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      # for DW9768 VCM
-> > +      - dongwoon,dw9768
-> > +      # for GT9769 VCM
-> > +      - giantec,gt9769
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  vin-supply:
-> > +    description:
-> > +      Definition of the regulator used as I2C I/O interface power supply.
-> > +
-> > +  vdd-supply:
-> > +    description:
-> > +      Definition of the regulator used as VCM chip power supply.
-> > +
-> > +  dongwoon,aac-mode:
-> > +    description:
-> > +      Indication of AAC mode select.
-> > +    allOf:
-> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > +      - enum:
-> > +          - 0    #  Direct (default)
+>
+> Your previous solution seems much more reliable though. For instance
+> in the above: when we're doing the TX cleanup (we got the TX ready
+> irq, we're iterating over descriptors until we know there are no more
+> packets scheduled (count == 0) or we encounter one that's still owned
+> by DMA), a parallel TX path can schedule new packets to be sent and I
+> don't see how we can atomically check the count (understood as a
+> difference between tail and head) and run a new iteration (where we'd
+> modify the head or tail) without risking the other path getting in the
+> way. We'd have to always check the descriptor.
 
-Default can be expressed as 'default: 0'.
+It should be enough to read both pointers once at the start of each
+side, then do whatever work you want to do (cleaning, sending,
+receiving, refilling) and finally updating the one pointer that changed.
+If both sides do that, you minimize the cache line bouncing and
+always do a useful amount of work that guarantees forward progress
+and does not interfere with the other side.
 
-> > +          - 1    #  AAC2 (operation time# 0.48 x Tvib)
-> > +          - 2    #  AAC3 (operation time# 0.70 x Tvib)
-> > +          - 3    #  AAC4 (operation time# 0.75 x Tvib)
-> > +          - 4    #  Reserved
-> > +          - 5    #  AAC8 (operation time# 1.13 x Tvib)
-> > +          - 6    #  Reserved
-> > +          - 7    #  Reserved
-> 
-> I'll ultimately leave it to DT maintainers, but is there any reason to
-> define the reserved values?
+> I experimented a bit with this and couldn't come up with anything that
+> would pass any stress test.
+>
+> On the other hand: spin_lock_bh() works fine and I like your approach
+> from the previous e-mail - except for the work for updating stats as
+> we could potentially lose some stats when we're updating in process
+> context with RX/TX paths running in parallel in napi context but that
+> would be rare enough to overlook it.
+>
+> I hope v4 will be good enough even with spinlocks. :)
 
-No.
+Yes, it should be fine. Avoiding all the locks is mainly an optimization
+for the number of CPU cycles spent per packet, the other points
+are more important to get right, in particular the flow control.
 
-> 
-> > +
-> > +  dongwoon,aac-timing:
-> > +    description:
-> > +      Indication of AAC Timing count, unit of 0.1 milliseconds.
-
-Why not just use standard units (-us)?
-
-> > +      Valid values vary from 0 to 63 (default 32).
-
-Looks like constraints.
-
-> > +    allOf:
-> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > +
-> > +  dongwoon,clock-dividing-rate:
-> > +    description:
-> > +      Indication of VCM internal clock dividing rate select, as one multiple
-> > +      factor to calculate VCM ring periodic time Tvib.
-> > +    allOf:
-> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > +      - enum:
-> > +          - 0    #  Dividing Rate -  2
-> > +          - 1    #  Dividing Rate -  1 (default)
-> > +          - 2    #  Dividing Rate -  1/2
-> > +          - 3    #  Dividing Rate -  1/4
-> > +          - 4    #  Dividing Rate -  8
-> > +          - 5    #  Dividing Rate -  4
-> > +          - 6    #  Dividing Rate -  Reserved
-> > +          - 7    #  Dividing Rate -  Reserved
-> 
-> Ditto.
-> 
-> Best regards,
-> Tomasz
+      Arnd
