@@ -6,124 +6,99 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5AEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92638C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA8720825
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66926207D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 07:42:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TmBG6giW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ewfOGWB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgERHlr (ORCPT
+        id S1726876AbgERHmt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 03:41:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
+        Mon, 18 May 2020 03:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgERHlr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 03:41:47 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEFB7C05BD0B
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 00:41:45 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x13so4562010pfn.11
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 00:41:45 -0700 (PDT)
+        with ESMTP id S1726729AbgERHms (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 03:42:48 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3CA9C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 00:42:48 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id q8so2763689pfu.5
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 00:42:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=vl/yNZjcMD1c/8w4IMtaECL/pvXnUWzfoZmc+ar026A=;
-        b=TmBG6giWbwVIC9tUDSKwKQOc4eTIGJj/0THBrYvUXtbMCfasbOJRefuXD05s/PdWbG
-         vcdMKoExWaqNYfmgWV50I9uKpVjT42WbvR4GsvbfEZTXY5nklrevHHtWcgls9BoAbaj3
-         S2YXt5PljMFoycc63XMFNy1sYf4C4nNR1YYvllTLMQU8L5JMqUhApGllKocQU5ia74Ct
-         fx5k+HIRPX5cvfeAQ0x2tnZhQF1Hyly1PCjR/CydVJMBKsKKWpMiIw9KaWzbNpXVzcAs
-         0bVI27oGcFakKTl26QXyJKfFsBy0yK8FwdKsrf0g3e4Dji9QGEQ/KGIKK7D+hFlBnubC
-         8aZg==
+        bh=H6Fz3grvmOGwKwIiO4rhQMwdNkIsWum4LGUtO8Cm5uw=;
+        b=ewfOGWB6Q7IULYGZK2jjnw3iboiuUrKM4DhV+jFlpFQFbRA5okIM4q8ZPinJzBHjXj
+         mZ8stSwg+I6/BDqQjXwU4TW+9EeA+Q7dqV33iVJT0cve85sXWZG2GKOpnbC0nazeavQW
+         uD2K/aYltBH+aRgSHhQ1GL6tt1ZIiWAL4BbjgulNzJDXYao6iYmk+zspziWyeRWKizew
+         1t4Gx5iG9noNUfjxFQFcIDzuUeLU5VzKWkU1jnKq1/hM4tpV42WBA0gJAyuNTAXhKrFY
+         RYMcv8p3mlOBIESVYnhQ6bKiAIpTClAWAFOGYdQn8AgUml92+/lQy217nSP+eIF6Mf1L
+         XuYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vl/yNZjcMD1c/8w4IMtaECL/pvXnUWzfoZmc+ar026A=;
-        b=gfSOoL/kptYxaQZjumMLPzhpi00BEN8E8HYX8jBcSxPOzjTT9BpR9BSIw8pASZhkAA
-         cCitWw9PKtCFCE37YO/sBGvkk5P5AoxcK1t6hF5GWWVb9G7Rszm8XJHpFvHQCsB4L2ud
-         F06hfIRj38Zk1kEVQaf/XMhfWtylXtTrBuQRLXJsm51iatlGr0rfFwmuulh0YZeWyhEH
-         DmDedt/Izi8C/4epTkOaDqLmq2PjVCIPSGaHp3tLTT9oaaVFsP+8k3oDNnoVbYF97sEd
-         eKwzzo4H+TkIIYxnkQpoa4UdHc8eJT1ovOE1ow4FOu0jhYQkYAPPfLqVBioDCk1kUQ/Y
-         PGKg==
-X-Gm-Message-State: AOAM532Tg7K3PCaEP3yNvEWLJHVyzchPiSmGxl5IsD/qLQCc65xot3e7
-        S660C/cidyB5TT/sDvMFmBFbQg==
-X-Google-Smtp-Source: ABdhPJxzGzk9dwqPrwn0vS7w9SSlMvWCIUihqqEg7nXaXOZHfOXoO1dVlbeIPRntGnTxGam1CoQggA==
-X-Received: by 2002:a63:de0c:: with SMTP id f12mr13551773pgg.172.1589787705397;
-        Mon, 18 May 2020 00:41:45 -0700 (PDT)
+        bh=H6Fz3grvmOGwKwIiO4rhQMwdNkIsWum4LGUtO8Cm5uw=;
+        b=DjMO9g1cm0WmHajcsxHzmVa1u49MLE3YaLlG+MbB9wa8hm7qjPRYxKe7hSAqWvy6og
+         SJCtoOyAjRFHWfn5Z/CZZ0f2r8vvxC9Y7nf4d/zWsar5fTJqd57LkAQ3nliz5XrP3ZnU
+         Gw8oMb6PTf/SojWdUMSl+E+8KYScKQiTDri5q30CwOckLs4PNeg0nMx57NKg9As6sR3E
+         QYc0572nNaaJzi/arTDhX2lkLLWddo8rkkNzsPp1h+3wK6UUETUVjxL+n6hrVzulP4jD
+         VUT8MCila0a7F5OL9ULfZVFmj1BofSdF/Qd8xEnEwwJdAjXypXjWncStZ+LTvRWfpX73
+         OL9g==
+X-Gm-Message-State: AOAM532vNIT80LWoSwx5f6zOsY2ibKdIxkGtMhUWOcRmANdxVq1AvxUU
+        F9Nj3EGkYwvhW8VVY30ALDAsRhK1C7c=
+X-Google-Smtp-Source: ABdhPJxwPIzeEsdVfsAIZTCk/Z/xP8GEG1alivNq3g2OZ4I1NIJDYth9EiNk49gcYQ9Lcgb+XKFKAw==
+X-Received: by 2002:a17:902:bcc4:: with SMTP id o4mr13873074pls.275.1589787317608;
+        Mon, 18 May 2020 00:35:17 -0700 (PDT)
 Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id p62sm7994891pfb.93.2020.05.18.00.41.44
+        by smtp.gmail.com with ESMTPSA id b74sm7021330pga.31.2020.05.18.00.35.16
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 00:41:44 -0700 (PDT)
-Date:   Mon, 18 May 2020 13:11:42 +0530
+        Mon, 18 May 2020 00:35:16 -0700 (PDT)
+Date:   Mon, 18 May 2020 13:05:14 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, stable@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
- setting
-Message-ID: <20200518074142.c6kbofpdlxro2pjz@vireshk-i7>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-21-Sergey.Semin@baikalelectronics.ru>
- <c5109483-4c14-1a0c-efa9-51edf01c12de@intel.com>
- <20200516125203.et5gkv6ullkerjyd@mobilestation>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200518073514.tjodf6qxg3wjzyb4@vireshk-i7>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <CABb+yY1wJMzakpz0h6ZxAh4Z3OB718f+Wq3RP0R4NZ_U=vRMkw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200516125203.et5gkv6ullkerjyd@mobilestation>
+In-Reply-To: <CABb+yY1wJMzakpz0h6ZxAh4Z3OB718f+Wq3RP0R4NZ_U=vRMkw@mail.gmail.com>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16-05-20, 15:52, Serge Semin wrote:
-> On Fri, May 15, 2020 at 05:58:47PM +0200, Rafael J. Wysocki wrote:
-> > > @@ -2554,7 +2554,7 @@ static int cpufreq_boost_set_sw(int state)
-> > >   			break;
-> > >   	}
-> > > -	return ret;
-> > > +	return ret < 0 ? ret : 0;
-> > >   }
-> > >   int cpufreq_boost_trigger_state(int state)
-> > 
-> > IMO it is better to update the caller of this function to handle the
-> > positive value possibly returned by it correctly.
-> 
-> Could you elaborate why? Viresh seems to be ok with this solution.
+On 15-05-20, 11:46, Jassi Brar wrote:
+> As I asked you yesterday over the call, it may help if you could share
+> some numbers to back up the doomsday scenario.
 
-And it is absolutely fine for Rafael to not agree with it :)
+Yes, I have already asked Sudeep to get some numbers for this. He will
+get back to us.
 
-> As I see it the caller doesn't expect the positive value returned by the
-> original freq_qos_update_request(). It just doesn't need to know whether the
-> effective policy has been updated or not, it only needs to make sure the
-> operations has been successful. Moreover the positive value is related only
-> to the !last! active policy, which doesn't give the caller a full picture
-> of the policy change anyway. So taking all of these into account I'd leave the
-> fix as is.
+> > - With the current approach it isn't possible to assign different bits
+> >   (or doorbell numbers) to clients from DT and the only way of doing
+> >   that without adding new bindings is by extending #mbox-cells to accept
+> >   a value of 2 as done in this patch.
+> >
+> I am afraid you are confused. You can use bit/doorbell-6 by passing
+> 0x40 to mhu as the data to send.
 
-Rafael: This function is called via a function pointer, which can call
-this or a platform dependent routine (like in acpi-cpufreq.c), and it
-would be reasonable IMO for the return of that callback to only look
-for 0 or negative values, as is generally done in the kernel. And so
-this solution looked okay to me as the positive return is coming from
-the implementation detail here.
+That's how the code will do it, right I agree. What I was asking was
+the way this information is passed from DT.
 
 -- 
 viresh
