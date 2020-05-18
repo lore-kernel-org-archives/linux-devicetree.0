@@ -2,129 +2,110 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55819C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065AAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE9920709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BDC207D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:29:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tNNYBlDg"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="l7XVTTa5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgERNZc (ORCPT
+        id S1726957AbgERN3I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:25:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgERNZc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:25:32 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B62C061A0C;
-        Mon, 18 May 2020 06:25:32 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f15so4221310plr.3;
-        Mon, 18 May 2020 06:25:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=881WKNGVvaYzcoBRH7He303GsRzyKlY6cxm3kJ5azqA=;
-        b=tNNYBlDgSTP2D9kQLCS+yD32yAFQhzjeNUBbygGq/jJ85V2ugohrJ/A8bn5SV0J32d
-         lHBDNXRcrfosYqy4B7l0RIlQkPSvPPHUU2pQLD3pKJGZe2n89pnLMqSKjQzfU+E6SNQv
-         JhJ2QXp8WdLE3nZHwZjd4oUPXuaL4ALNbHZMtI8/32YpC7wzQ7FPrsyMpB72QWwmnM2b
-         JznNr+SRgd5Y/mnneu76H01hUS1HjvLN6Vbmkq69ziEDSt99wEUiLeavpkiw0DtHD/kZ
-         Y9EUoaVC+A5xRXduKMk/d2rt6xtdjcs9UFIjMIyrNfP4Nn6sOrQ616oSlhbov2XSg0OC
-         CFrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=881WKNGVvaYzcoBRH7He303GsRzyKlY6cxm3kJ5azqA=;
-        b=kIB4/BlzWk+nzhkymAz32v4TgL+iy1UnsqwFpinFIIZcYNCSOq9xPgMOwfeFrW8dHN
-         OsPDN1ck5WB5fsVD+fkHjmdKl514n8DpsuhxUZoVXJVh+kFyr6fUvPvnw5/gz4bcXMle
-         wlCJdDEtXILbv3dZoGEHjXOEOAT3dTAZvjrFYj4zJTa+3vTIVpVShJOwLVDLVHtaVHgX
-         2QgZV+gKzGUKtp1gN9/9mT7fjV146WwPcP7mEwBmYWnP03ztpZ1cTo9lfdoqZfGZWMfF
-         hV5q5SgENy5DPfGj+b4Bvif1Fqcp/EkuE/YhnjSP2JDj23XPOvcdHo8wdzhaToLWEqGV
-         ISlA==
-X-Gm-Message-State: AOAM533pFlTzTiGVep5Iwpvx5ttGCjQOTWf+3NpBqCkK09cefSUvc19j
-        o7BKcj1ITn+yb3DkbnEObjeT8boVdn7UlrJWpQU=
-X-Google-Smtp-Source: ABdhPJyrmZovUGrfc1E9QcmoitiLZZUcoVkdNiqoTccxGHzp1nu+vtQYLUmXZxPCs3v4OHOBniR6mA8tEnSet1oT+ys=
-X-Received: by 2002:a17:902:930c:: with SMTP id bc12mr16453398plb.255.1589808331670;
- Mon, 18 May 2020 06:25:31 -0700 (PDT)
+        Mon, 18 May 2020 09:29:08 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:39161 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726775AbgERN3I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:29:08 -0400
+X-UUID: 7fa473ba96a9451c88b54261dcbf2e0c-20200518
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0oPHPt5pIb7KHZdlyVqoLRWJ+ikzXZ8b5EsBL/Pps+M=;
+        b=l7XVTTa5BNIRmYHaMG7Yv9ZpVnRhAg0ziJbNDCqBuRC9jjisumcugGycJmwGC9eLatM0aosoONyuzC8zJX58twVjqoebz6yR9uilzpsdiAuM1Ru2WeO0Xz69+Bw1SH6fIfBkVCscZMRsB7BnvsjdG8fC51CXM6EnVktPpWo27RE=;
+X-UUID: 7fa473ba96a9451c88b54261dcbf2e0c-20200518
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 728150184; Mon, 18 May 2020 21:29:02 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 18 May 2020 21:29:01 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 18 May 2020 21:28:59 +0800
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
+        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
+        <bingbu.cao@intel.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>,
+        <dongchun.zhu@mediatek.com>
+Subject: [V6, 0/2] media: i2c: Add support for DW9768 VCM driver
+Date:   Mon, 18 May 2020 21:27:29 +0800
+Message-ID: <20200518132731.20855-1-dongchun.zhu@mediatek.com>
+X-Mailer: git-send-email 2.9.2
 MIME-Version: 1.0
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru> <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
- <20200515143842.GG1634618@smile.fi.intel.com> <20200516200133.wmaqnfjbr7234fzo@mobilestation>
- <20200518110343.GY1634618@smile.fi.intel.com> <20200518125253.r4fpr4mjflclqpym@mobilestation>
-In-Reply-To: <20200518125253.r4fpr4mjflclqpym@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 May 2020 16:25:20 +0300
-Message-ID: <CAHp75VeMcv-hQViCANQARiNh0LwmugsDWk=MF1c5E3t7z5h02Q@mail.gmail.com>
-Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request thresholds
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 3:53 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
-> > On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
-> > > On Fri, May 15, 2020 at 05:38:42PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
+SGVsbG8sDQoNClRoaXMgc2VyaWVzIGFkZHMgRFQgYmluZGluZ3MgaW4gWUFNTCBhbmQgVjRMMiBz
+dWItZGV2aWNlIGRyaXZlciBmb3IgRFc5NzY4DQpsZW5zIHZvaWNlIGNvaWwgbW90b3IoVkNNKSwg
+d2hpY2ggaXMgYSAxMC1iaXQgREFDIHdpdGggMTAwbUEgb3V0cHV0IGN1cnJlbnQNCnNpbmsgY2Fw
+YWJpbGl0eSBmcm9tIERvbmd3b29uLg0KDQpUaGUgZHJpdmVyIGlzIGRlc2lnbmVkIGZvciBsaW5l
+YXIgY29udHJvbCBvZiB2b2ljZSBjb2lsIG1vdG9yLA0KYW5kIGNvbnRyb2xsZWQgdmlhIElJQyBz
+ZXJpYWwgaW50ZXJmYWNlIHRvIHNldCB0aGUgZGVzaXJlZCBmb2N1cy4NCkl0IGNvbnRyb2xzIHRo
+ZSBwb3NpdGlvbiB3aXRoIDEwLWJpdCBEQUMgZGF0YSBEWzk6MF0gYW5kIHNlcGVyYXRlcw0KdHdv
+IDgtYml0IHJlZ3MgdG8gY29udHJvbCB0aGUgVkNNIHBvc2l0aW9uIGFzIGJlbG93cy4NCkRBQ19N
+U0I6IERbOTo4XShBRERSOiAweDAzKToNCiAgICAgKy0tLSstLS0rLS0tKy0tLSstLS0rLS0tKy0t
+LSstLS0rDQogICAgIHwtLS18LS0tfC0tLXwtLS18LS0tfC0tLXxEMDl8RDA4fA0KICAgICArLS0t
+Ky0tLSstLS0rLS0tKy0tLSstLS0rLS0tKy0tLSsNCkRBQ19MU0I6IERbNzowXShBRERSOiAweDA0
+KToNCiAgICAgKy0tLSstLS0rLS0tKy0tLSstLS0rLS0tKy0tLSstLS0rDQogICAgIHxEMDd8RDA2
+fEQwNXxEMDR8RDAzfEQwMnxEMDF8RDAwfA0KICAgICArLS0tKy0tLSstLS0rLS0tKy0tLSstLS0r
+LS0tKy0tLSsNCg0KVGhpcyBkcml2ZXIgc3VwcG9ydHM6DQogLSBzZXQgRFc5NzY4IHRvIHN0YW5k
+YnkgbW9kZSBvbmNlIHN1c3BlbmQgYW5kIHR1cm4gaXQgYmFjayB0byBhY3RpdmUgaWYgcmVzdW1l
+DQogLSBzZXQgdGhlIGRlc2lyZWQgZm9jdXMgdmlhIFY0TDJfQ0lEX0ZPQ1VTX0FCU09MVVRFIGN0
+cmwNCg0KUHJldmlvdXMgdmVyc2lvbnMgb2YgdGhpcyBwYXRjaC1zZXQgY2FuIGJlIGZvdW5kIGhl
+cmU6DQp2NTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtbWVkaWEvMjAyMDA1MDIxNjE3
+MjcuMzA0NjMtMS1kb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tLw0KdjQ6IGh0dHBzOi8vbG9yZS5r
+ZXJuZWwub3JnL2xpbnV4LW1lZGlhLzIwMjAwMzMwMTIzNjM0LjM2My0xLWRvbmdjaHVuLnpodUBt
+ZWRpYXRlay5jb20vDQp2MzogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtbWVkaWEvMjAy
+MDAyMjgxNTU5NTguMjA2NTctMS1kb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tLw0KdjI6IGh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LW1lZGlhLzIwMTkwOTA1MDcyMTQyLjE0NjA2LTEtZG9u
+Z2NodW4uemh1QG1lZGlhdGVrLmNvbS8NCnYxOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51
+eC1tZWRpYS8yMDE5MDcwODEwMDY0MS4yNzAyLTEtZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbS8N
+Cg0KTWFpbmx5IGNoYW5nZXMgb2YgdjYgYXJlIGFkZHJlc3NpbmcgY29tbWVudHMgZnJvbSBSb2Is
+IFNha2FyaSwgVG9tYXN6Lg0KQ29tcGFyZWQgdG8gdjU6DQogLSBBZGQgYSBzZWNvbmQgY29tcGF0
+aWJsZSBzdHJpbmcgZm9yIHRoZSBHaWFudGVjIGRldmljZQ0KIC0gRG9jdW1lbnQgb3B0aW9uYWwg
+cHJvcGVydGllczogImRvbmd3b29uLGFhYy1tb2RlIiwgImRvbmd3b29uLGFhYy10aW1pbmciIGFu
+ZA0KICAgImRvbmd3b29uLGNsb2NrLWRpdmlkaW5nLXJhdGUiIGZvciBsZW5zIHNwZWNpZmljIHJl
+ZyBzZXR0aW5ncw0KIC0gQWRqdXN0IEtjb25maWcgdG8gbWF0Y2ggdGhlIGN1cnJlbnQgbWVkaWEg
+dHJlZSBtYXN0ZXIgYnJhbmNoDQogLSBVc2UgY29udGFpbmVyX29mKCkgZGlyZWN0bHkgdG8gcmVw
+bGFjZSBvZiBkZWZpbmluZyBtYWNybyBmdW5jdGlvbg0KDQpQbGVhc2UgaGVscCByZXZpZXcuDQpU
+aGFua3MuDQoNCkRvbmdjaHVuIFpodSAoMik6DQogIG1lZGlhOiBkdC1iaW5kaW5nczogbWVkaWE6
+IGkyYzogRG9jdW1lbnQgRFc5NzY4IGJpbmRpbmdzDQogIG1lZGlhOiBpMmM6IGR3OTc2ODogQWRk
+IERXOTc2OCBWQ00gZHJpdmVyDQoNCiAuLi4vYmluZGluZ3MvbWVkaWEvaTJjL2Rvbmd3b29uLGR3
+OTc2OC55YW1sICAgICAgICB8IDEwNSArKysrKw0KIE1BSU5UQUlORVJTICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA4ICsNCiBkcml2ZXJzL21lZGlhL2kyYy9LY29u
+ZmlnICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMyArDQogZHJpdmVycy9tZWRpYS9pMmMv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvbWVkaWEv
+aTJjL2R3OTc2OC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgNTE1ICsrKysrKysrKysrKysr
+KysrKysrKw0KIDUgZmlsZXMgY2hhbmdlZCwgNjQyIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9kb25n
+d29vbixkdzk3NjgueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL2kyYy9k
+dzk3NjguYw0KDQotLSANCjIuOS4yDQo=
 
-...
-
-> > > > >         struct dma_chan         *txchan;
-> > > > > +       u32                     txburst;
-> > > > >         struct dma_chan         *rxchan;
-> > > > > +       u32                     rxburst;
-> > > >
-> > > > Leave u32 together, it may be optimal on 64-bit architectures where ABIs require padding.
-> > >
-> > > It's not like anyone cared about padding in this structure in the first place)
-> >
-> > I think I have been caring (to some extend).
->
-> Well, If you have then instead of asking to rearrange just two members (which
-> by the way finely grouped by the Tx-Rx affiliation) why not sending a
-> patch, which would refactor the whole structure so to be optimal for the x64
-> platforms? I don't really see why this gets very important for you seeing
-> Mark is Ok with this. My current commit follows the common driver design
-> including the DW SSI data members grouping. On the second thought I'll leave
-> it as is then.
-
-Again same issue here. What is really easy to do for you here, will
-become a burden and additional churn to anybody else.
-So, why not to minimize it in the first place? Same with comma in
-another patch. Sorry, I really don't get it.
-
--- 
-With Best Regards,
-Andy Shevchenko
