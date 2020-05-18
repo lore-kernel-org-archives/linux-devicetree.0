@@ -2,108 +2,157 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DCBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE276C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8E4520674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ITPUUWy1"
+	by mail.kernel.org (Postfix) with ESMTP id 9A68320674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 08:30:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgERIXK (ORCPT
+        id S1727012AbgERIal (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 04:23:10 -0400
-Received: from mail-eopbgr60059.outbound.protection.outlook.com ([40.107.6.59]:31462
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726053AbgERIXK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 04:23:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kYul8KkOaV5+rQYNeVhZMNJOp7gwSbl5x2R8ddnSm44y1l60yZvhc6/olRgskfudINIbkcJ9+W5njtiVk3j5+8x7KsmgWLTi7xfPI7DhFOimUgTsPlcxxx0f19f8MiGdzSxg9ncTtZDPfCsMwDOJDD/TSrKKktM84Ccrfl4U622sNHaPGDw7hC8zsMgmuZlRQjtgqRlVIRrasXPNquXaEJ4Q15sxR9k4EoN/HteNIPjeYzqVTmNuUL3r3x5RKDmzILE2RbP7zVkmzg2WZn1jbibjn638/R1QPndVr4fUzoU8C4F2i2cEpdzbMZRHn3guHKW1BZiorHly7eF4R93tWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=64JYowUwd/A5KUmz5cNjCaTYiWkFTBF/uBX/C2NIYjs=;
- b=cmuDpPe0lbYU8FHOKq3qGfDyyw1HepfHKLIzWO1IOYx1g9ZbZqiWhc/K4nb0nOoh9lnqM+Pr7hIjL0RDIHaCmKheVfEJFW/YZpA3w5yXHRNpMTMfQXgzp3HD3Bv/wFUUtZiNH7HupuRafGXDV/s82E3YjcNOx+NKsikvuAvP7OuKGtDOpAn6sfmeQLDzvU/TLIkynZoFomUifpJQJsZCMAKSfHdYIKMIVCsb5C3U+iENZ6tImz/JIed/Q3/MixNiKYahGf/pLi7rGUY43B8dtT620xX9Yn0x4YWh4wPPLi/t5wS4H0t0sWJPrri97Jweh4LKlpq0qPJTQtDwOD2cTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=64JYowUwd/A5KUmz5cNjCaTYiWkFTBF/uBX/C2NIYjs=;
- b=ITPUUWy1dnQwHF2qK/s3y/KrdTF4PZzrxTRPsx7OlJnqer70dFyNooTO4tUxYk+1AyiQsHilOK3h7xS5UatPkCSuDq+CutemXQBWkoyjlglndbhbWli6Jf4GOkXogwDVPxHh52zNmfeLo0gw8jP6PQux4FE5fHTHilZLbUYKDoY=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB5062.eurprd04.prod.outlook.com (2603:10a6:20b:11::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24; Mon, 18 May
- 2020 08:23:06 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.033; Mon, 18 May 2020
- 08:23:06 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "tremyfr@gmail.com" <tremyfr@gmail.com>,
-        "p.bruenn@beckhoff.com" <p.bruenn@beckhoff.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/2] dt-bindings: rtc: Convert MXC RTC V2 to json-schema
-Thread-Topic: [PATCH 2/2] dt-bindings: rtc: Convert MXC RTC V2 to json-schema
-Thread-Index: AQHWKbgdOQb+NRe5ikO0cYaurWM5Xqith2WA
-Date:   Mon, 18 May 2020 08:23:06 +0000
-Message-ID: <AM6PR04MB4966F61A94DE5C392DA0B23A80B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589436805-22923-1-git-send-email-Anson.Huang@nxp.com>
- <1589436805-22923-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1589436805-22923-2-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 20e94edf-95bb-4179-3068-08d7fb04b11b
-x-ms-traffictypediagnostic: AM6PR04MB5062:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5062CE121BD24B46EA183B9680B80@AM6PR04MB5062.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:949;
-x-forefront-prvs: 04073E895A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OaWy+ituiZzcE/Y/c7QqaxaG9g1j+tXLcg5ZnO1vQ6r7O5vOAC05iWXM3Hb6X98bfuQ2KfjUU8ybOE01IIbtwD7pBbUwIU4mCpc/8N6x3aQYTtCAos14ETtj9GnkSpHupkgAIGn/kkfhjLIXMDYhHwsacI+rEiQ/nRQE/88W+UC8DwxeK1dKcVv5FBQRV725ElATrlIx+GVdhMJSVXcFGyIjsdGfiMC+jiv9OoS8JUXRo6npEIj1x0Y+mxBaYDzalgyV5MzSuohctYFKxTJps2nJGdConYvC0XB90+IilLObeyeqs/aunPcl4KyLTdC3aFSrIVqhP/BWrOrpH6Tl7cGRyJhicHOXYjWMeZGoybqJFkt9U4+mMlStiTHasmQKooBQooTQLltsLpF1HSVYidn6C1YTNfGrza8zCNnFmx0NZlnhSU0JNZSYm7Fkdrve
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(44832011)(8676002)(64756008)(66446008)(66476007)(8936002)(66946007)(86362001)(52536014)(66556008)(316002)(478600001)(110136005)(186003)(26005)(4326008)(2906002)(71200400001)(76116006)(9686003)(558084003)(33656002)(55016002)(6506007)(7696005)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 2wSF44wMnSuerzUCjQB9/wtagq5Zo5/sufhtVCycOdkJD731btCINxQhF17W6t14dpPcIuTEC7L2x3iQ27yWQrv4p8ZHm6Gm8xj3kQ3NcACdqAanpJFsJ2nwWXRvHnTOtTkQgyJMaqhFBaBQYhV9pWSCw26HsCC45sveA9afLsmcvWuoVj807rjb6kEJZIZsGVJkuMG4yg+khMDeBAuz48P1mO9TlCPHcAdIVyzFgOV5xQyhx1dw4ziENAHlUcowgLRWs+7wf1e+tLLHsDZr1U+POxfaVXe7aoXIKKq+91wrew/rJhwyIxQShgorv38qgEXW3nIAhDgaEt6m4VLqiy/Qt4HslP/eXo300hKW7HQhYEs45nJ8EUfHcNNlcQQG/dnP4PZbkZikd4j69iF96W7Bm8JspCAtYQ5/Hzex+wP0uouJOmdDNCJDPdLeafm5h2sxqu03Z0SLUWvNdzTE7wZq2UFWeWvxHjsIGhuFLX1bptR0l1oppdWHil4xQp5U
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 04:30:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:35796 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726997AbgERIal (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 04:30:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CD87106F;
+        Mon, 18 May 2020 01:30:40 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 138073F305;
+        Mon, 18 May 2020 01:30:38 -0700 (PDT)
+Subject: Re: [PATCH v1 8/9] arm64: dts: actions: Add MMC controller support
+ for S700
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Amit Tomer <amittomer25@gmail.com>
+Cc:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+References: <1589472657-3930-1-git-send-email-amittomer25@gmail.com>
+ <1589472657-3930-9-git-send-email-amittomer25@gmail.com>
+ <b2ad8a81-619f-5f35-9596-c2061ae15e4c@arm.com>
+ <CABHD4K9yjUGuo0w-RfhdZQJm3Wtj6bU2H4DXcp4Jjp=e0fFeyA@mail.gmail.com>
+ <2cd3cdaf-826e-9d12-9fd4-9f7e2a517ecd@arm.com>
+ <CABHD4K-OaQ4Vf_+dg9FMR97ocLeUkDswyEnChPV=H=VcbyUhkg@mail.gmail.com>
+ <abbef32c-84d2-7dac-c667-49610d014710@arm.com>
+ <CABHD4K-MHs4jhL_9otJJ_xjC1uv1N20mnHqT39b2kob7WjZcVQ@mail.gmail.com>
+ <20200518061755.GA25113@mani>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <29500523-0fe4-955d-57de-d4b9f11cedb8@arm.com>
+Date:   Mon, 18 May 2020 09:29:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20e94edf-95bb-4179-3068-08d7fb04b11b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 08:23:06.5614
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VBZxiIakuTNf2J/bzllc5RP4CRSkRa1BMGFYGlnbg/a7XJRi4+kG/72cY2Qr+w2G9M3RJiu9H8Sz4L/Mj6xKGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5062
+In-Reply-To: <20200518061755.GA25113@mani>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
-YXksIE1heSAxNCwgMjAyMCAyOjEzIFBNDQo+IA0KPiBDb252ZXJ0IHRoZSBNWEMgUlRDIFYyIGJp
-bmRpbmcgdG8gRFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVtYS4NCj4gDQo+IFNpZ25l
-ZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KDQpSZXZpZXdlZC1i
-eTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVnYXJkcw0KQWlzaGVu
-Zw0K
+On 18/05/2020 07:17, Manivannan Sadhasivam wrote:
+> On 0518, Amit Tomer wrote:
+>> Hi,
+>>
+>>> I recommend reading the DT spec, chapter 2.3.1 "compatible":
+>>> https://github.com/devicetree-org/devicetree-specification/releases/download/v0.3/devicetree-specification-v0.3.pdf
+>>
+>> My point is more about, DT validation is not happy about this situation.
+>> For instance when I run dt-validate, do see following:
+>>
+>> /home/amit/work/kernel_work/linux/arch/arm64/boot/dts/actions/s700-cubieboard7.dt.yaml:
+>> mmc@e0210000: compatible: Additional items are not allowed
+>> ('actions,s700-mmc' was unexpected)
+>>
+>> and I am not sure if this is because DT and driver has different
+>> number of compatible strings.
+
+This has nothing to do with the driver or the actual .dts(i), that's
+purely a binding issue.
+
+> Yeah, the DT YAML validation tool doesn't allow this. And there were patches
+> removing the additional compatible from DTS.
+
+There are tons of examples of how this is done in the .yaml bindings:
+properties:
+  compatible:
+    oneOf:
+      - const: actions,owl-mmc
+      - items:
+         - const: action,s700-mmc
+         - const: actions,owl-mmc
+
+Adding more alternatives would replace the lines after items:
+         - enum
+            - action,s700-mmc
+            - action,s900-mmc
+         - const: actions,owl-mmc
+
+> I don't know if the DT fallback is discouraged or not.
+
+I don't know if there is an "official" statement on this, but last thing
+I heard, adding SoC specific compatibles to generic fallback strings was
+encouraged. Hence my proposal, to add one.
+
+> Anyway, is enough investigation done to justify that we need SoC specific tweaks
+> in the driver? I think I did look into the downstream code for s700/s500 while
+> upstreaming this driver and convinced myself that the same driver could be
+> reused without modifications.
+
+It wouldn't be the first time some tiny incompatibility would be
+discovered later, also there is always the chance of a hardware errata.
+So better safe than sorry.
+
+Cheers,
+Andre.
