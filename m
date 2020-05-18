@@ -2,112 +2,125 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAA6C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3026AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E00EF206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070D420709
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 13:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bae+kLlW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDsKryn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgERNTU (ORCPT
+        id S1727917AbgERNUX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 09:19:20 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:48582 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726775AbgERNTU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 09:19:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589807959; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/vpx/m8pDfBLAbCOs2E0+YfNBsuZAzWzTkmXxzLVrpo=; b=Bae+kLlW0UQUhfVjiQv8aV72beSsDiV520x62YU9wbZs05eVNRXHHJkwfMNFtuqB3glzJT9E
- CHmNLso2tpFYOYvnTASQ/PLyOleXRi4cwkJbSGB5bKcpmV/ZfmJ2GKLn+SGm/oPTZOQHK3bs
- M0y5eJlIKkBvT3pIdMI+GJAAlyM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec28b4c.7f67d74a74c8-smtp-out-n04;
- Mon, 18 May 2020 13:19:08 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2392CC432C2; Mon, 18 May 2020 13:19:08 +0000 (UTC)
-Received: from [192.168.0.11] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A269C433F2;
-        Mon, 18 May 2020 13:19:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A269C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V6 3/3] dt-bindings: serial: Add binding for UART pin swap
-To:     Rob Herring <robh@kernel.org>
-Cc:     gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mgautam@codeaurora.org, rojay@codeaurora.org,
-        skakit@codeaurora.org, mka@chromium.org
-References: <1588863647-17240-1-git-send-email-akashast@codeaurora.org>
- <1588863647-17240-4-git-send-email-akashast@codeaurora.org>
- <20200515030133.GA11479@bogus>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <884f8277-715c-3377-12b2-c9d9a8413842@codeaurora.org>
-Date:   Mon, 18 May 2020 18:49:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 09:20:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbgERNUW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 09:20:22 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3E2C061A0C;
+        Mon, 18 May 2020 06:20:22 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so4944018pfa.1;
+        Mon, 18 May 2020 06:20:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VOhtb6aDUYF/bby4eFhEdjPKdJJNHZhrs2dy1zRqvRg=;
+        b=rDsKryn799wrGML6USURKvFtsAV/uzTijzNVu9hI6FTQEj3AFhZ911irHK3ovzhsUH
+         gY5LA7X6RURa29N0a9uH5OFLBvFxKgmCVL+S2LHar2ZloaGB+HW7AjVNvR4EFgCBxpsy
+         po8m+4EEsdKOq83PhP0pKwMOFemPBi2NghEI8xaASNmmmpuisFOXxp8CYt4r9RUzxxu1
+         M3GB8LGBpgcFswMHRmJSEf6wc8sgbA4QBO4WBLxXI/N36soCP3yyMdGiZf7r3pEYznqk
+         6vi0oRLO6oAzTU8/YQKG1+FHZVrR4xGNGcqOGbViiKsPYwbG3i5aRhnYKp6FmwbGWmsi
+         ut+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VOhtb6aDUYF/bby4eFhEdjPKdJJNHZhrs2dy1zRqvRg=;
+        b=pJgTHGpUWBLOfOik5MMvYbjSRYYfclikW/Zt/Fc9ihoEBjp0dW/S+idO8QiOxzCW47
+         jkqllKUN1lEmsJnN0et5DRfzQ4A3322qwcIgqG+jObqlzS6m1TIrlSYTEEQnjKUQIGfu
+         c64yCx/SNDD0SQ1ARGQK6XXDQ+HbowC7NLxv5hnthZhBDQvXjzhrJU+irFAg62ikEjWc
+         JJzH/UaPYhjhezCJsqqhgE2O/Jsz7LSdb6QTRgdKrDUHZlJWFf1fdqza/OqBXV8rfRts
+         6he309FNV049jSmnbK0fUoSW3j8dPkRYCZqLVXtVg3kAiRZmTVLuPVHlxmSNPON/6sio
+         JBbg==
+X-Gm-Message-State: AOAM5329nrl/7ygyMHDR6KSrNXHlF+NoxJ6CefEVF7ccDsJaweVIkelr
+        U/B8ar/rvMoqlsNsKIEyENYkvwyd6dTCQZsq0Fc=
+X-Google-Smtp-Source: ABdhPJxEWo37sbtLGrnXVQllcXNP02GCyiWRVMGVtQCaOaZDXATQdRF9Fzdajl4gBo0tRari+NEpX4OkjNg1wYKmxcw=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr15312040pgb.203.1589808022426;
+ Mon, 18 May 2020 06:20:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200515030133.GA11479@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <202005152142.AWvx4xc5%lkp@intel.com> <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
+ <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
+ <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com> <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
+ <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+In-Reply-To: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 May 2020 16:20:10 +0300
+Message-ID: <CAHp75VfFsdjAT0P4m3O=VQ1e_L7cVyQx6HB7MCN+G_XcFisqZQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 5/15/2020 8:31 AM, Rob Herring wrote:
-> On Thu, May 07, 2020 at 08:30:47PM +0530, Akash Asthana wrote:
->> Add documentation to support RX-TX & CTS-RTS GPIO pin swap in HW.
->>
->> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/serial/serial.yaml | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/serial/serial.yaml b/Documentation/devicetree/bindings/serial/serial.yaml
->> index 53204d9..e657dd6 100644
->> --- a/Documentation/devicetree/bindings/serial/serial.yaml
->> +++ b/Documentation/devicetree/bindings/serial/serial.yaml
->> @@ -67,6 +67,12 @@ properties:
->>         (wired and enabled by pinmux configuration).  This depends on both the
->>         UART hardware and the board wiring.
->>   
->> +  rx-tx-swap:
->> +    description: RX and TX pins are swapped.
->> +
->> +  cts-rts-swap:
->> +    description: CTS and RTS pins are swapped.
-> Need 'type: boolean' on both of these.
-
-okay, will correct in next version
-
-Regards,
-
-Akash
-
+On Mon, May 18, 2020 at 2:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, May 18, 2020 at 1:43 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, May 18, 2020 at 2:39 PM Ramuthevar, Vadivel MuruganX
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> > > On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
+> > > > On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > >> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
+> >
+> > > > iowrite_be32() is the correct way to store word into a big-endian mmio register,
+> > > > if that is the intention here.
+> > > Thank you for suggestions to use iowrite32be(), it suits exactly.
+> >
+> > Can you before doing this comment what is the real intention here?
+> >
+> > And note, if you are going to use iowrite*() / ioread*() in one place,
+> > you will probably need to replace all of the read*() / write*() to
+> > respective io* API.
 >
->> +
->>   if:
->>     required:
->>       - uart-has-rtscts
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> The way that ioread/iowrite are defined, they are required to be a superset
+> of what readl/writel do and can take __iomem pointers from either
+> ioremap() or ioport_map()/pci_iomap() style mappings, while readl/writel
+> are only required to work with ioremap().
+>
+> There is no technical requirement to stick to one set or the other for
+> ioremap(), but the overhead of ioread/iowrite is also small enough
+> that it generally does not hurt.
+
+Right, my suggestion is solely for consistency. It would be a bit
+weird to see readl() along with ioread32() in the same driver (in case
+there are no differentiated callbacks specifically for different type
+of IP).
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+With Best Regards,
+Andy Shevchenko
