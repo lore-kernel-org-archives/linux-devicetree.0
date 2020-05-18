@@ -2,89 +2,84 @@ Return-Path: <SRS0=92uP=7A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91D3C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C796C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A933C2081A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B90B20801
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 May 2020 10:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgERKAY (ORCPT
+        id S1726919AbgERKF2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 06:00:24 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39665 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgERKAW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 06:00:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d7so1163275ote.6;
-        Mon, 18 May 2020 03:00:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nZUgb7w2eqqvzVlgOR0PO/JtnnaWsf26I9iu2kr6czM=;
-        b=Spf0QPPZLHEANz5oIJKERFlVEcbRkXAuOKYvvVqxTqLinkxML5xGOQ8ftFpURwz6V3
-         NBrBDEIsYtoyf2FFvDah/8BsLg9JcIPoo7nq6Tk0k7K20fXTmWB+zZQnQuN+Syd7+mZa
-         VOXURsv2vMWc1I0Xyhae3v7f9EBoVaxLUGNDb1iFxv9tQbeKUsiLC63JhdG9eu3ySg4E
-         aBeskM2FxZgioRgk3py7E9/pxEdTcbUPup6k0e923gSFPRAOW6gcg9S5sytLjR5R1KGZ
-         0uRmykl0GGPumyNG/8iFKLGWpdH9He0K8UDMhZ4Dpt/0sB2MUH1ghgPQwNeqk5pch5OZ
-         W/3Q==
-X-Gm-Message-State: AOAM533bGK0wSIvZdq5z24nSWhEflGLWBxx0Fv0tYbq/+kY2cIuLthhw
-        /n66EYWGLc7v870avV+2B9q/qdUdu9nBEW8+VTM=
-X-Google-Smtp-Source: ABdhPJxk7+cEhfYJg/No1t+pmLbnKMxymTQIyJUVCUlGNn22SWJB1SFO49l1Ln9tKTSycPbC4qQtZsNmvlHboxJD7Co=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr11386119otp.145.1589796020640;
- Mon, 18 May 2020 03:00:20 -0700 (PDT)
+        Mon, 18 May 2020 06:05:28 -0400
+Received: from mx.socionext.com ([202.248.49.38]:2449 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726274AbgERKF1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 06:05:27 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 18 May 2020 19:05:25 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 26634180B84;
+        Mon, 18 May 2020 19:05:26 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 18 May 2020 19:05:26 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id DEC7D41C5A;
+        Mon, 18 May 2020 19:05:25 +0900 (JST)
+Received: from [10.213.31.127] (unknown [10.213.31.127])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 26A161207BB;
+        Mon, 18 May 2020 19:05:25 +0900 (JST)
+Subject: Re: [PATCH v2 4/5] PCI: uniphier: Add iATU register support
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1589536743-6684-5-git-send-email-hayashi.kunihiko@socionext.com>
+ <DM5PR12MB1276D6181D86C8DF0F98427ADABD0@DM5PR12MB1276.namprd12.prod.outlook.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <e3c5a841-7098-542d-cf71-9591fd24db5c@socionext.com>
+Date:   Mon, 18 May 2020 19:05:24 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1589555337-5498-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 May 2020 11:59:56 +0200
-Message-ID: <CAMuHMdWZ_MWBeb-TYs3A_T0+PkWng+oSW_BRQtzCd-DaYyCrew@mail.gmail.com>
-Subject: Re: [PATCH 02/17] dt-bindings: i2c: renesas,iic: Document r8a7742 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <DM5PR12MB1276D6181D86C8DF0F98427ADABD0@DM5PR12MB1276.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:09 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document IIC controller for RZ/G1H (R8A7742) SoC, which is compatible
-> with R-Car Gen2 SoC family.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Hi Gustavo,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 2020/05/15 22:16, Gustavo Pimentel wrote:
+> Hi Kunihiko,
+> 
+> On Fri, May 15, 2020 at 10:59:2, Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com> wrote:
+> 
+>> This gets iATU register area from reg property. In Synopsis DWC version
+> 
+> s/Synopsis/Synopsys
+> in all patches
+Thank you for pointing out.
+I'll fix and be careful about this.
 
-Gr{oetje,eeting}s,
+Thank you,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+---
+Best Regards
+Kunihiko Hayashi
