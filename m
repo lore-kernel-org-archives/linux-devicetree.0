@@ -2,176 +2,84 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4349C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36009C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD812075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZE0elzVT"
+	by mail.kernel.org (Postfix) with ESMTP id 1E7592075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589912670;
+	bh=etgePzPVcg1jqcxKadMrwsUE+8r3oPlhw/kaXggxmYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wbUVP/HHqfZRaUYBlRypC4hYCo+ruDsn6aoLaWx+dvigwFKSxoHdxYdHymBPTZ02b
+	 Ox3o4Qj8W11ENPG69y6/udh7WZfsijWeHbOmdevXF10BG59+6Wkkfq/YNNkQgvgxE7
+	 L6gdej/d9pK7sxn41ttvv+7fexIOAibBb96a+aFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgESSYR (ORCPT
+        id S1728934AbgESSY3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 14:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgESSYQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:24:16 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E759DC08C5C0;
-        Tue, 19 May 2020 11:24:15 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ci23so45677pjb.5;
-        Tue, 19 May 2020 11:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=a2sCpqRPJKFXTOs8Et/zawWwVxFdgwLHPGf2S2DawfM=;
-        b=ZE0elzVTcE6MBXWntbFKeB7UHR2K/ret1k59birCBC5fFiGZRD9PyR4eGSQKYe+WM0
-         I5XOjGwHJDBhgPlzw5WBxk8Jh27W5apmYYKbioAFzH5IZBxead09h1cv2/M8JmaKMkAT
-         2mKrHODj7LJN8Yi21l62NVQp/9gJOvIBPj3EsmMwA+e9xHhTovXgzRoNDP+gYfwxSHsY
-         wGRHq/2CqVrjC9OamIC0lSHX17Uy1zblfKdvAIeINnIjpx47LUec+uE8DRTEHW6QkTvV
-         wDuAmEG2Oo0soBWa7TtDSXGiK80B+UGy8nhOgkNPtKO14HRs4E+yserLKSlg4M6I9SuO
-         XUqg==
+        Tue, 19 May 2020 14:24:29 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:39194 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESSY2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:24:28 -0400
+Received: by mail-il1-f196.google.com with SMTP id c20so363431ilk.6
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:24:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=a2sCpqRPJKFXTOs8Et/zawWwVxFdgwLHPGf2S2DawfM=;
-        b=kEaZrm0zTxz+eITRseV18CaDtPgV0kEhtQ03OxXTAHIK3zTK+iWp1mXQko0pArLW6D
-         h0bvD5gx22JiqKRi65m+WAz+yf9VdflY63J6fRZhpEkX0WT0r2fSPpcXx8qxZR+ku2S6
-         LAOHu4QWBanE8ET4iXqTudNTULuAvb56CjBtBygU2IomYuMiAzR6CjIsqmEwk49UC/uk
-         UOuGJtD+dehqotOIs8s0bwMBp6BzLNZigXHiSg8ovAoWAjhQCW5MnqTT+zX40ICkm94Y
-         qrq8Fb4QJ+n2tDace2rYoH2Pw26Urw+r+on4lPjcaGgyFUYn9FMmnyWOwhu1cdA4/KRS
-         Tjaw==
-X-Gm-Message-State: AOAM5334KVvkR4L7tg/W95T16qSPBijcIy8a5HLwjErMPP2lMlFT3R2d
-        z3SAmKJLClP14lHP+Y2SAjM=
-X-Google-Smtp-Source: ABdhPJz1IRNtvIpLO0Z+w4B2JGOtTrJbXAf0lbOnSkLHJTgGXw2wv4FC0Zcqw1+qUPkuzXTZjXUUoQ==
-X-Received: by 2002:a17:902:549:: with SMTP id 67mr717666plf.115.1589912655377;
-        Tue, 19 May 2020 11:24:15 -0700 (PDT)
-Received: from localhost.localdomain ([223.235.145.232])
-        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.24.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 May 2020 11:24:14 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 10/10] arm64: dts: actions: Add uSD support for Cubieboard7
-Date:   Tue, 19 May 2020 23:49:28 +0530
-Message-Id: <1589912368-480-11-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
-References: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xT09u8dEvKu+XyjEYZmIAHwHovsLj8ADhN/tUxbGRY8=;
+        b=j/4W9RvjmYBzpS9GOi1A5MIF/tZcT6YebwJrAwlujiMud3HbUAh7OSUOJtupyK2KVC
+         XeGm7TyiJrNKOc8RTbKPteVs4MFSk6pL67dF1Dqj4Njw5pSsy6E9f5KKG/u2VoJ8u8aO
+         Li/HLI/3/bUpxwmHIGfUyBeaBfW5AZm+HLStEHKArUQrUZNidoQnpCBNEgekO+Dy0kkQ
+         UaSBOEZk6bc/UYXzaEWCTKYmYOvudY2TBQechXguneY0PWIDurLhehPmnyib0AD3YD0H
+         7m2UHBx3FV/rFjgyoYOruBuePoW67xceoNEC0xPiTb5ZcyXy+08rTu/76cd1tzBdX1F3
+         VzCA==
+X-Gm-Message-State: AOAM530piyQQyU1b++E6RV+56H27THZM1LLAEH5MxVBorgSLMbbcTSUW
+        iRB71Q8kyR8PM5JyDNfcUw==
+X-Google-Smtp-Source: ABdhPJzFEuKffzdVCSm0YyWY4IiHhMKZxTZV43hefjBbI46QKAk3OWS1rEltse9D/nsN3rYL6CsJRg==
+X-Received: by 2002:a92:3954:: with SMTP id g81mr306898ila.105.1589912667636;
+        Tue, 19 May 2020 11:24:27 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c13sm92805ilu.81.2020.05.19.11.24.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 11:24:27 -0700 (PDT)
+Received: (nullmailer pid 418276 invoked by uid 1000);
+        Tue, 19 May 2020 18:24:26 -0000
+Date:   Tue, 19 May 2020 12:24:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     qiwuchen55@gmail.com
+Cc:     devicetree@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>,
+        robh+dt@kernel.org, frowand.list@gmail.com
+Subject: Re: [PATCH] drivers/of: keep description of function consistent with
+ function name
+Message-ID: <20200519182426.GA418146@bogus>
+References: <1589209497-13945-1-git-send-email-qiwuchen55@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589209497-13945-1-git-send-email-qiwuchen55@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds uSD support for Cubieboard7 board based on Actions Semi
-S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
-added yet, fixed regulator has been used as a regulator node.
+On Mon, 11 May 2020 23:04:57 +0800,  wrote:
+> From: chenqiwu <chenqiwu@xiaomi.com>
+> 
+> Currently, there are some descriptions of function not
+> consistent with function name, fixing them will make
+> the code more readable.
+> 
+> Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+> ---
+>  drivers/of/fdt.c             |  2 +-
+>  drivers/of/of_reserved_mem.c | 10 +++++-----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v1:
-	* No change.
-Changes since RFC:
-        * No change.
----
- arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
- arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
- 2 files changed, 42 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-index 63e375cd9eb4..ec117eb12f3a 100644
---- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-+++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-@@ -13,6 +13,7 @@
- 
- 	aliases {
- 		serial3 = &uart3;
-+		mmc0 = &mmc0;
- 	};
- 
- 	chosen {
-@@ -28,6 +29,23 @@
- 		device_type = "memory";
- 		reg = <0x1 0xe0000000 0x0 0x0>;
- 	};
-+
-+	/* Fixed regulator used in the absence of PMIC */
-+	vcc_3v1: vcc-3v1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.1V";
-+		regulator-min-microvolt = <3100000>;
-+		regulator-max-microvolt = <3100000>;
-+	};
-+
-+	/* Fixed regulator used in the absence of PMIC */
-+	sd_vcc: sd-vcc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.1V";
-+		regulator-min-microvolt = <3100000>;
-+		regulator-max-microvolt = <3100000>;
-+		regulator-always-on;
-+	};
- };
- 
- &i2c0 {
-@@ -81,6 +99,14 @@
- 			bias-pull-up;
- 		};
- 	};
-+
-+	mmc0_default: mmc0_default {
-+		pinmux {
-+			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-+				 "sd0_cmd_mfp", "sd0_clk_mfp";
-+			function = "sd0";
-+		};
-+	};
- };
- 
- &timer {
-@@ -90,3 +116,18 @@
- &uart3 {
- 	status = "okay";
- };
-+
-+/* uSD */
-+&mmc0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_default>;
-+	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-+	no-sdio;
-+	no-mmc;
-+	no-1-8-v;
-+	bus-width = <4>;
-+	vmmc-supply = <&sd_vcc>;
-+	vqmmc-supply = <&sd_vcc>;
-+};
-+
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 0d3ff315b00e..18700aeb8d2b 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/clock/actions,s700-cmu.h>
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/actions,s700-reset.h>
- 
--- 
-2.7.4
-
+Applied, thanks!
