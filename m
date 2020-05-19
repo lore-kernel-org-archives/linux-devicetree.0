@@ -2,62 +2,62 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24798C43458
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A88AC4345D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0543B207E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6F7207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="So7Eogxn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y4EdnjwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgESSB6 (ORCPT
+        id S1729210AbgESSCB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 14:01:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33432 "EHLO
+        Tue, 19 May 2020 14:02:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbgESSB5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:01:57 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9EAC08C5C1
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:01:57 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so394319wra.7
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:01:57 -0700 (PDT)
+        with ESMTP id S1728898AbgESSCB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:02:01 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAF55C08C5C1
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:02:00 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id n18so196236wmj.5
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:02:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rPFP+XSmwtDIJpKjZiU0jJKfdQHahwlQlRnbrboG7I4=;
-        b=So7EogxnWPnyqhO64JPh7O6frGGlyO91fqLOLBPXR0dn/5jApKq9M+VsRHbZd/gKBM
-         4nXwTn/bNqIPbGcDGxr88BsOQ1S0MIIPpRT787yK2jMGFyVMOYjAc5nJVLRzEWPfsawQ
-         FrqWHYBTynb1AUGbjBd7P13XXBv5p4/ZPfe+oMsd/nmQ2t74d5gyur7K+hXOqwJyWJWt
-         +I8pg2EPGjIi5pP4vo3oA/tpwqxWvFu65rBVvacZT+0v1T8RHDNlaefAIh8pfxrtOGyd
-         FticOHftQsCqrK3lGsEx9TO5b09uIokFdBZuodKmYSJIEQntMPL+10+SE4Bof6A3eMci
-         xKOw==
+        bh=w0kdAS+3V4p7jXN1k79MYNGRv9Y+4JMnAcNVoiF0l70=;
+        b=Y4EdnjwYGiovh5kRncy2PI1+5V23I9EidrfOm90dz7a75obSThtBtY4iz/6hLBVCho
+         5gutgO9+jYJaqa3AP50b579CyD3Xo8Os+g5ZMtz+rvzj3KIv4+JVix3pPmzIdWGBJpUr
+         mRdFDzxwXg8P6rMBwMIB7hmJCUHwiDSjb9udlALkBO4crYuf5bUdIRrst4t2//W5+BIr
+         qDjRWz0EZjqj5ojI8fljkyY6ePbeArnslKBHUJdWTLeNiK8/mjqfUvalHtpMS9aAXXYY
+         1FNHNPtwsiFRQScSD/UobANFMpQMISm2uWThO2evgtfehAQl/p6SzjFc3OPNw3sSLGHi
+         TQ7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rPFP+XSmwtDIJpKjZiU0jJKfdQHahwlQlRnbrboG7I4=;
-        b=s8/5apOv/y7o/tMSklAO3lTGbgPF2fZEwzhYg9u2oaNS3M+XWh3H2qG4gl4fM+0In2
-         8pTLmzJkOfWK+abqWS1a+mKtY16kEnwo72k/iccI926BXgob757Tf2IZUWo8GdoyZBTK
-         6DGLzDpA/QBcXOun6tdCRSyJuNNHmaEWHzso5hbfK+LxM0B70R0RxD7Sc1iq4BgyKAJr
-         UtqM+PZRqJ2NVhuayzz7NUKryxMG+olnKgBtwH1vMgg2W7sTUf91MqlduUTgQ8B0artx
-         +717CaP5kIDeEpW3Qo9LEktS2sj95pfRb+rMN7vhxKnwHPgP9ya/5GaGkzoCaiwBHgfa
-         hx4Q==
-X-Gm-Message-State: AOAM5308/g7KrdzGYB3WNuSZvHq3iK2XRnSEkDZu8f5kvZzobFufyVsJ
-        EAH/P/Qqm5nupwlyxiycy5xTXA==
-X-Google-Smtp-Source: ABdhPJw3gfTsmN48kh35c601/VY98K8twsKocsBo5zm8+aGJjwNqVw9d6YhYJUmNMGaJ0XaIWI3HKQ==
-X-Received: by 2002:adf:face:: with SMTP id a14mr69347wrs.397.1589911315828;
-        Tue, 19 May 2020 11:01:55 -0700 (PDT)
+        bh=w0kdAS+3V4p7jXN1k79MYNGRv9Y+4JMnAcNVoiF0l70=;
+        b=IuKuvf6osJS/D1etlNRtQ1K5Gq5BpBJg4YZJH2W2jizoQ6G0fPeSs4SV6/JRvDb6nu
+         tBxLs7ivf7FyIU2GAjdhy+GN5YT70PF5zy8IpP1UPMXxAoD8U86uGEJSbPbjiy5FPj8n
+         GtBl7Ffls2b3gvu1SJkzjT34+g1nvt4cd9l4ABemQTSkyb2bGZOrnucn46FDpOPYEqfC
+         5FhHl9titezqkl70Zj7ZLyJDgtmw3SXJfSNL8QcT2L3H7+98/3gBA4n45HyTPI9umaGs
+         bEhLaLmzK1IH1pQ/qM9S/+tdU3oC9QMMll11F/4qrQonBVe7wSqGM3lsuIJI2jd6mDnB
+         3Fxg==
+X-Gm-Message-State: AOAM5312/olWT7wJITe+qDqNK30vm8LLg3HC8W1FJp75mSrY9vY2hdGm
+        Kq0ewpBOUtn+A2w+MTPwqgs+CQ==
+X-Google-Smtp-Source: ABdhPJxiur973rQO7P0is4n9bTcqUoLADPVJgaczJU1ETHTcZpVacHBincB+tnOWfVKyZnCnndXCAg==
+X-Received: by 2002:a7b:c3da:: with SMTP id t26mr575120wmj.146.1589911319392;
+        Tue, 19 May 2020 11:01:59 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id 1sm510496wmz.13.2020.05.19.11.01.54
+        by smtp.gmail.com with ESMTPSA id 1sm510496wmz.13.2020.05.19.11.01.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:01:55 -0700 (PDT)
+        Tue, 19 May 2020 11:01:58 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
         xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v7 12/24] iommu/arm-smmu-v3: Add support for VHE
-Date:   Tue, 19 May 2020 19:54:50 +0200
-Message-Id: <20200519175502.2504091-13-jean-philippe@linaro.org>
+Subject: [PATCH v7 15/24] iommu/arm-smmu-v3: Add SVA device feature
+Date:   Tue, 19 May 2020 19:54:53 +0200
+Message-Id: <20200519175502.2504091-16-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519175502.2504091-1-jean-philippe@linaro.org>
 References: <20200519175502.2504091-1-jean-philippe@linaro.org>
@@ -82,137 +82,185 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ARMv8.1 extensions added Virtualization Host Extensions (VHE), which allow
-to run a host kernel at EL2. When using normal DMA, Device and CPU address
-spaces are dissociated, and do not need to implement the same
-capabilities, so VHE hasn't been used in the SMMU until now.
-
-With shared address spaces however, ASIDs are shared between MMU and SMMU,
-and broadcast TLB invalidations issued by a CPU are taken into account by
-the SMMU. TLB entries on both sides need to have identical exception level
-in order to be cleared with a single invalidation.
-
-When the CPU is using VHE, enable VHE in the SMMU for all STEs. Normal DMA
-mappings will need to use TLBI_EL2 commands instead of TLBI_NH, but
-shouldn't be otherwise affected by this change.
+Implement the IOMMU device feature callbacks to support the SVA feature.
+At the moment dev_has_feat() returns false since I/O Page Faults isn't
+yet implemented.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 124 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 124 insertions(+)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 403871d36438..7e1933e7e35f 100644
+index a9f6f1d7014e..b016b61cee23 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -13,6 +13,7 @@
- #include <linux/acpi_iort.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
-+#include <linux/cpufeature.h>
- #include <linux/crash_dump.h>
- #include <linux/delay.h>
- #include <linux/dma-iommu.h>
-@@ -482,6 +483,8 @@ struct arm_smmu_cmdq_ent {
- 		#define CMDQ_OP_TLBI_NH_ASID	0x11
- 		#define CMDQ_OP_TLBI_NH_VA	0x12
- 		#define CMDQ_OP_TLBI_EL2_ALL	0x20
-+		#define CMDQ_OP_TLBI_EL2_ASID	0x21
-+		#define CMDQ_OP_TLBI_EL2_VA	0x22
- 		#define CMDQ_OP_TLBI_S12_VMALL	0x28
- 		#define CMDQ_OP_TLBI_S2_IPA	0x2a
- 		#define CMDQ_OP_TLBI_NSNH_ALL	0x30
-@@ -654,6 +657,7 @@ struct arm_smmu_device {
- #define ARM_SMMU_FEAT_STALL_FORCE	(1 << 13)
- #define ARM_SMMU_FEAT_VAX		(1 << 14)
- #define ARM_SMMU_FEAT_RANGE_INV		(1 << 15)
-+#define ARM_SMMU_FEAT_E2H		(1 << 16)
- 	u32				features;
+@@ -703,6 +703,8 @@ struct arm_smmu_master {
+ 	u32				*sids;
+ 	unsigned int			num_sids;
+ 	bool				ats_enabled;
++	bool				sva_enabled;
++	struct list_head		bonds;
+ 	unsigned int			ssid_bits;
+ };
  
- #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
-@@ -927,6 +931,8 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
- 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_NUM, ent->tlbi.num);
- 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_SCALE, ent->tlbi.scale);
- 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
-+		/* Fallthrough */
-+	case CMDQ_OP_TLBI_EL2_VA:
- 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
- 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
- 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_TTL, ent->tlbi.ttl);
-@@ -948,6 +954,9 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
- 	case CMDQ_OP_TLBI_S12_VMALL:
- 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
- 		break;
-+	case CMDQ_OP_TLBI_EL2_ASID:
-+		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
-+		break;
- 	case CMDQ_OP_ATC_INV:
- 		cmd[0] |= FIELD_PREP(CMDQ_0_SSV, ent->substream_valid);
- 		cmd[0] |= FIELD_PREP(CMDQ_ATC_0_GLOBAL, ent->atc.global);
-@@ -1541,7 +1550,8 @@ static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
- static void arm_smmu_tlb_inv_asid(struct arm_smmu_device *smmu, u16 asid)
- {
- 	struct arm_smmu_cmdq_ent cmd = {
--		.opcode = CMDQ_OP_TLBI_NH_ASID,
-+		.opcode	= smmu->features & ARM_SMMU_FEAT_E2H ?
-+			CMDQ_OP_TLBI_EL2_ASID : CMDQ_OP_TLBI_NH_ASID,
- 		.tlbi.asid = asid,
- 	};
+@@ -3013,6 +3015,19 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 	master = dev_iommu_priv_get(dev);
+ 	smmu = master->smmu;
  
-@@ -2084,13 +2094,16 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
- 	}
- 
- 	if (s1_cfg) {
-+		int strw = smmu->features & ARM_SMMU_FEAT_E2H ?
-+			STRTAB_STE_1_STRW_EL2 : STRTAB_STE_1_STRW_NSEL1;
-+
- 		BUG_ON(ste_live);
- 		dst[1] = cpu_to_le64(
- 			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
- 			 FIELD_PREP(STRTAB_STE_1_S1CIR, STRTAB_STE_1_S1C_CACHE_WBRA) |
- 			 FIELD_PREP(STRTAB_STE_1_S1COR, STRTAB_STE_1_S1C_CACHE_WBRA) |
- 			 FIELD_PREP(STRTAB_STE_1_S1CSH, ARM_SMMU_SH_ISH) |
--			 FIELD_PREP(STRTAB_STE_1_STRW, STRTAB_STE_1_STRW_NSEL1));
-+			 FIELD_PREP(STRTAB_STE_1_STRW, strw));
- 
- 		if (smmu->features & ARM_SMMU_FEAT_STALLS &&
- 		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
-@@ -2486,7 +2499,8 @@ static void arm_smmu_tlb_inv_range(unsigned long iova, size_t size,
- 		return;
- 
- 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
--		cmd.opcode	= CMDQ_OP_TLBI_NH_VA;
-+		cmd.opcode	= smmu->features & ARM_SMMU_FEAT_E2H ?
-+				  CMDQ_OP_TLBI_EL2_VA : CMDQ_OP_TLBI_NH_VA;
- 		cmd.tlbi.asid	= smmu_domain->s1_cfg.cd.asid;
- 	} else {
- 		cmd.opcode	= CMDQ_OP_TLBI_S2_IPA;
-@@ -3805,7 +3819,11 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
- 	writel_relaxed(reg, smmu->base + ARM_SMMU_CR1);
- 
- 	/* CR2 (random crap) */
--	reg = CR2_PTM | CR2_RECINVSID | CR2_E2H;
-+	reg = CR2_PTM | CR2_RECINVSID;
-+
-+	if (smmu->features & ARM_SMMU_FEAT_E2H)
-+		reg |= CR2_E2H;
-+
- 	writel_relaxed(reg, smmu->base + ARM_SMMU_CR2);
- 
- 	/* Stream table */
-@@ -3963,8 +3981,11 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
- 	if (reg & IDR0_MSI)
- 		smmu->features |= ARM_SMMU_FEAT_MSI;
- 
--	if (reg & IDR0_HYP)
-+	if (reg & IDR0_HYP) {
- 		smmu->features |= ARM_SMMU_FEAT_HYP;
-+		if (cpus_have_cap(ARM64_HAS_VIRT_HOST_EXTN))
-+			smmu->features |= ARM_SMMU_FEAT_E2H;
++	/*
++	 * Checking that SVA is disabled ensures that this device isn't bound to
++	 * any mm, and can be safely detached from its old domain. Bonds cannot
++	 * be removed concurrently since we're holding the group mutex.
++	 */
++	mutex_lock(&sva_lock);
++	if (master->sva_enabled) {
++		mutex_unlock(&sva_lock);
++		dev_err(dev, "cannot attach - SVA enabled\n");
++		return -EBUSY;
 +	}
++	mutex_unlock(&sva_lock);
++
+ 	arm_smmu_detach_dev(master);
  
- 	/*
- 	 * The coherency feature as set by FW is used in preference to the ID
+ 	mutex_lock(&smmu_domain->init_mutex);
+@@ -3161,6 +3176,7 @@ static int arm_smmu_add_device(struct device *dev)
+ 	master->smmu = smmu;
+ 	master->sids = fwspec->ids;
+ 	master->num_sids = fwspec->num_ids;
++	INIT_LIST_HEAD(&master->bonds);
+ 	dev_iommu_priv_set(dev, master);
+ 
+ 	/* Check the SIDs are in range of the SMMU and our stream table */
+@@ -3230,6 +3246,7 @@ static void arm_smmu_remove_device(struct device *dev)
+ 
+ 	master = dev_iommu_priv_get(dev);
+ 	smmu = master->smmu;
++	WARN_ON(master->sva_enabled);
+ 	arm_smmu_detach_dev(master);
+ 	iommu_group_remove_device(dev);
+ 	iommu_device_unlink(&smmu->iommu, dev);
+@@ -3349,6 +3366,109 @@ static void arm_smmu_get_resv_regions(struct device *dev,
+ 	iommu_dma_get_resv_regions(dev, head);
+ }
+ 
++static bool arm_smmu_iopf_supported(struct arm_smmu_master *master)
++{
++	return false;
++}
++
++static bool arm_smmu_dev_has_feature(struct device *dev,
++				     enum iommu_dev_features feat)
++{
++	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
++
++	if (!master)
++		return false;
++
++	switch (feat) {
++	case IOMMU_DEV_FEAT_SVA:
++		if (!(master->smmu->features & ARM_SMMU_FEAT_SVA))
++			return false;
++
++		/* SSID and IOPF support are mandatory for the moment */
++		return master->ssid_bits && arm_smmu_iopf_supported(master);
++	default:
++		return false;
++	}
++}
++
++static bool arm_smmu_dev_feature_enabled(struct device *dev,
++					 enum iommu_dev_features feat)
++{
++	bool enabled = false;
++	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
++
++	if (!master)
++		return false;
++
++	switch (feat) {
++	case IOMMU_DEV_FEAT_SVA:
++		mutex_lock(&sva_lock);
++		enabled = master->sva_enabled;
++		mutex_unlock(&sva_lock);
++		return enabled;
++	default:
++		return false;
++	}
++}
++
++static int arm_smmu_dev_enable_sva(struct device *dev)
++{
++	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
++
++	mutex_lock(&sva_lock);
++	master->sva_enabled = true;
++	mutex_unlock(&sva_lock);
++
++	return 0;
++}
++
++static int arm_smmu_dev_disable_sva(struct device *dev)
++{
++	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
++
++	mutex_lock(&sva_lock);
++	if (!list_empty(&master->bonds)) {
++		dev_err(dev, "cannot disable SVA, device is bound\n");
++		mutex_unlock(&sva_lock);
++		return -EBUSY;
++	}
++	master->sva_enabled = false;
++	mutex_unlock(&sva_lock);
++
++	return 0;
++}
++
++static int arm_smmu_dev_enable_feature(struct device *dev,
++				       enum iommu_dev_features feat)
++{
++	if (!arm_smmu_dev_has_feature(dev, feat))
++		return -ENODEV;
++
++	if (arm_smmu_dev_feature_enabled(dev, feat))
++		return -EBUSY;
++
++	switch (feat) {
++	case IOMMU_DEV_FEAT_SVA:
++		return arm_smmu_dev_enable_sva(dev);
++	default:
++		return -EINVAL;
++	}
++}
++
++static int arm_smmu_dev_disable_feature(struct device *dev,
++					enum iommu_dev_features feat)
++{
++	if (!arm_smmu_dev_feature_enabled(dev, feat))
++		return -EINVAL;
++
++	switch (feat) {
++	case IOMMU_DEV_FEAT_SVA:
++		return arm_smmu_dev_disable_sva(dev);
++	default:
++		return -EINVAL;
++	}
++}
++
+ static struct iommu_ops arm_smmu_ops = {
+ 	.capable		= arm_smmu_capable,
+ 	.domain_alloc		= arm_smmu_domain_alloc,
+@@ -3367,6 +3487,10 @@ static struct iommu_ops arm_smmu_ops = {
+ 	.of_xlate		= arm_smmu_of_xlate,
+ 	.get_resv_regions	= arm_smmu_get_resv_regions,
+ 	.put_resv_regions	= generic_iommu_put_resv_regions,
++	.dev_has_feat		= arm_smmu_dev_has_feature,
++	.dev_feat_enabled	= arm_smmu_dev_feature_enabled,
++	.dev_enable_feat	= arm_smmu_dev_enable_feature,
++	.dev_disable_feat	= arm_smmu_dev_disable_feature,
+ 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+ };
+ 
 -- 
 2.26.2
 
