@@ -2,106 +2,78 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B593AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 19:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29981C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 19:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96896207FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 19:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30DA206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 19:03:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8FZpf9Q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GDwmkcDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgESTBB (ORCPT
+        id S1726801AbgESTDX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 15:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgESTBA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 15:01:00 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF04C08C5C0;
-        Tue, 19 May 2020 12:01:00 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id ci23so81626pjb.5;
-        Tue, 19 May 2020 12:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4feI+F4dRQodabQ0vztzMEpXoHHqdtslcAebc48QhuQ=;
-        b=V8FZpf9QB5HvMPWR4n2yipk9nAHt9lzvzrk6aQhYx4qGZGtM8zGW1kD1vlNBWhqXZD
-         UPT+1NbzpBylVFdJmd8Q3sh0r5J+rSQ8xaecm827s7eZ6aWHsPfJUB07EMSWZTkH2Dgl
-         kSEa40EoyZYqiUZQxNeTFf5JrRXjZ2grV/m5Hua+0lvcXNZ2uhdupCi/eN1jQltTJnVi
-         C1vPOZ8S8IqyFZu8i1Z1zvPJtgSRX9mRcWgZ8dqpnaJujEOu0u7QyWykd8c6KZGoCoy1
-         aSwRfyDC0sGTpFfPXRJn++C+NI0w5ouPjaCuWxY9box11Dzy10potOHKjUcOKCOgA6GS
-         LkVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=4feI+F4dRQodabQ0vztzMEpXoHHqdtslcAebc48QhuQ=;
-        b=iZ7Z4ZgFG1xLS3/qkez3YztjprLsXjTCfV4LkRkdfj6cSwLC9IcLz4ypEM2gmAxlyi
-         TfBGyF7KuyMzjKt28EqzzBNcKLu7by7zOlODkZn/mUk5SYgYBnx3QqHpecqjh5VTzg0z
-         5WEIeFf6VVlzxqJUIypv5Oa4CuI+qZ0dn05XHsUCgQppQPX/yvR8foD+DycqfjnX+i+n
-         xzULBfyOiIqZVA8h1CFxB2uiAhmOZrZuEYRAR3UAz1wrpSHm4zZ15GQWhZS2T1mze0Jh
-         493IaN2KsR2UyZpu54vwv2zjODFdVC/hR/WOGGdcCCT2yAYFMj/+KOvv+YMFla4hARao
-         qwuw==
-X-Gm-Message-State: AOAM533TMmsU1wFihVgksKjiR9G8GN+R5WF3N4pBEOHpGIl+om0QhpjB
-        3p0xjoqD/rAVhye1psFhZAA=
-X-Google-Smtp-Source: ABdhPJyiZ6GUF3NCEj+eBq7SSQdZCUNXewKkRllO1OxTLTo3bNYNftWhBN68lnt53o3fngDWu1RNpQ==
-X-Received: by 2002:a17:902:465:: with SMTP id 92mr836874ple.227.1589914859887;
-        Tue, 19 May 2020 12:00:59 -0700 (PDT)
-Received: from localhost.localdomain ([223.235.145.232])
-        by smtp.gmail.com with ESMTPSA id k65sm196128pfd.156.2020.05.19.12.00.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 May 2020 12:00:58 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 07/10] dt-bindings: reset: s700: Add binding constants for mmc
-Date:   Wed, 20 May 2020 00:30:34 +0530
-Message-Id: <1589914834-1728-1-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589912368-480-8-git-send-email-amittomer25@gmail.com>
-References: <1589912368-480-8-git-send-email-amittomer25@gmail.com>
+        Tue, 19 May 2020 15:03:23 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39584 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbgESTDX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 15:03:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=9A+5GLQ4ZvDD5R6P8r1Zmt+li9/vFkdMpJLubAsAUJM=; b=GDwmkcDsZTEbdZnUdW4xyG49Bq
+        mUeLP+79BCgs5oXv6W9Fy9JcP/IG1S+Cqg3c7/I6IqaEysybIXxuUVkqTTCQwzezGIvde8IrlPAAj
+        rJWFDNWXhpVeMIL0NLNiKXDhvpgZxu1gFmG5RMG33+noqU9IYG68dbgqx6QTlUqIiZfE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jb7WG-002jqs-Vy; Tue, 19 May 2020 21:03:16 +0200
+Date:   Tue, 19 May 2020 21:03:16 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
+Message-ID: <20200519190316.GA652285@lunn.ch>
+References: <20200519141813.28167-1-dmurphy@ti.com>
+ <20200519141813.28167-3-dmurphy@ti.com>
+ <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200519182916.GM624248@lunn.ch>
+ <c45bae32-d26f-cbe5-626b-2afae4a557b3@ti.com>
+ <20200519114843.34e65bcc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <5d6d799f-f7b6-566a-5038-5901590f2e7b@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d6d799f-f7b6-566a-5038-5901590f2e7b@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds device tree binding reset constants for mmc controller
-present on Actions S700 Soc.
+On Tue, May 19, 2020 at 01:59:16PM -0500, Dan Murphy wrote:
+> Jakub
+> 
+> On 5/19/20 1:48 PM, Jakub Kicinski wrote:
+> > On Tue, 19 May 2020 13:41:40 -0500 Dan Murphy wrote:
+> > > > Is this now a standard GCC warning? Or have you turned on extra
+> > > > checking?
+> > > I still was not able to reproduce this warning with gcc-9.2.  I would
+> > > like to know the same
+> > W=1 + gcc-10 here, also curious to know which one of the two makes
+> > the difference :)
+> 
+> W=1 made the difference I got the warning with gcc-9.2
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v1:
-	* No change.
-Changes since RFC:
-        * added Rob's acked-by tag
----
- include/dt-bindings/reset/actions,s700-reset.h | 3 +++
- 1 file changed, 3 insertions(+)
+I wonder if we should turn on this specific warning by default in
+drivers/net/phy? I keep making the same mistake, and it would be nice
+if GCC actually told me.
 
-diff --git a/include/dt-bindings/reset/actions,s700-reset.h b/include/dt-bindings/reset/actions,s700-reset.h
-index 5e3b16b8ef53..a3118de6d7aa 100644
---- a/include/dt-bindings/reset/actions,s700-reset.h
-+++ b/include/dt-bindings/reset/actions,s700-reset.h
-@@ -30,5 +30,8 @@
- #define RESET_UART4				20
- #define RESET_UART5				21
- #define RESET_UART6				22
-+#define RESET_SD0				23
-+#define RESET_SD1				24
-+#define RESET_SD2				25
- 
- #endif /* __DT_BINDINGS_ACTIONS_S700_RESET_H */
--- 
-2.7.4
-
+   Andrew
