@@ -2,218 +2,173 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D302C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CD9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0942070A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:11:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N5Wq74V9"
+	by mail.kernel.org (Postfix) with ESMTP id 1989D2070A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgESHLq (ORCPT
+        id S1728380AbgESHOi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 03:11:46 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:60007 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgESHLq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 03:11:46 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200519071144euoutp01f583ddabbf153bfe476ce5c0baef1a3b~QXG--1dKn0338603386euoutp01S
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 07:11:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200519071144euoutp01f583ddabbf153bfe476ce5c0baef1a3b~QXG--1dKn0338603386euoutp01S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589872304;
-        bh=wUifd9mNGCqS+cJ3EIdbirIVh2WMlKdLwIt+fOi2nlc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=N5Wq74V9nPLHA5l+LpuuvFip8RsoVVfPwIVH0YclG1DrG55S9RefjBD6PNpLQpPpI
-         zNNimhISU3qbMf5Z6lMabK8ArxZq7G0/PCi+jDVnoTsJHkOSIwfhZFspWWnAd7g1oS
-         d96uHyNV03NYm+2hkX2pKqgxMReINB6AQm5W3Wis=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200519071144eucas1p247d683cf2d7f582b9d4cd3fedc77df6e~QXG-ul06t0169201692eucas1p2N;
-        Tue, 19 May 2020 07:11:44 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id D4.CD.60679.0B683CE5; Tue, 19
-        May 2020 08:11:44 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200519071143eucas1p11ddbfc41e96d1a3a7bdf37995515e940~QXG-doInZ0145301453eucas1p1y;
-        Tue, 19 May 2020 07:11:43 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200519071143eusmtrp2ee03f555c8a52fb4d89ed6205a32a6b2~QXG-c5yf52589025890eusmtrp2L;
-        Tue, 19 May 2020 07:11:43 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-a4-5ec386b0a98f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id F8.9F.08375.FA683CE5; Tue, 19
-        May 2020 08:11:43 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200519071143eusmtip25d3d33dc8bbf98ff2aef0e100387a4d7~QXG_yiWyI1140611406eusmtip2V;
-        Tue, 19 May 2020 07:11:43 +0000 (GMT)
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding
- all top level devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <18332705-dd61-9a0e-d931-ae610c8fb600@samsung.com>
-Date:   Tue, 19 May 2020 09:11:45 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+        Tue, 19 May 2020 03:14:38 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40736 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgESHOi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 03:14:38 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v128so11445571oia.7;
+        Tue, 19 May 2020 00:14:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TwCQPIVjOeXgiPme8eAiiVzkt9402jNeI90NBkXCFv8=;
+        b=tOnHjT9NQrw/4DHYntFE6y14DLiPoN2eVzn6tqfUjt6kLan7sO0xjVoUzxWhfKQhVX
+         6nDu73RqJc/JncKZJxWXfPVqhWI0H48wUlTCdUm4W8UJtzq9KR9aujjGeD6ItX1KpV37
+         rngM0njlUc8DYxcf7VqXzgpL9tvwDdSFOX1V1mCW/YbB3NC1Cw20195WLU8kukMhuJyN
+         eZsej2a99ytc1emCweqbm8WUijlTlfPs9wVBaOxnZabKoVBz+p8U6bjvOiQ9rpmvgWTa
+         CtkUA3794EaRuMRZwCRlFLwrbnND5NAASB3/4c0MOSPgSJqks+t8LpOYwkUKTXBlCP0D
+         g5AQ==
+X-Gm-Message-State: AOAM532CgRKFM37dRiRhoY2FGqvHLRC3/1/sLnDDvXeXqEyiduFHdQaE
+        MJhb3dNkFVwT8U4pQ4W6iV8xLB5F3ynw8p2hK0Q=
+X-Google-Smtp-Source: ABdhPJzEx85PiYVtErTopPhUEJtAuIq0qK2XpMHBFrrin1JGOJsWb/O3ZzhWo+FahHzulYroimH7reXMovFJNlrID2Q=
+X-Received: by 2002:aca:895:: with SMTP id 143mr2104387oii.153.1589872477377;
+ Tue, 19 May 2020 00:14:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGETcx_FOGgHdaNY8Dd-4rgT28U7_OHYeLsazbUE-1hyuatRSg@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0gUYRTl25mdGc2VcVX2YmWxUKDgs5LBaqkIml+R0gMMzVUHFdcHOz6y
-        onwluolZZuniq4w0s7Q11LU025V8xZppGmWRZqCm9lB7iGa7Tpb/zjn3nO/eAx+FSZ+JnajI
-        mHhOHaNUyQlrvOHpr163ukxjkOdQti1T1m4SM0VTywSTXlFLMIXD7STT1OjA6EemCaay9SJi
-        +puLzXpvq4gpmSvAmPMtZofGsETssWEbHjaIWb32LcmW6xJYXXU2wT4uqSHZ+zNNInZW53yI
-        DLDeFcapIhM5tYci2DpivmZ33HXnk2X5o2QKGgUNsqKA3g767ipSg6wpKV2FIDcnCxfIHIJH
-        g7lIILMIJppTsdVIVsawWBhUImj7+V0kkM8IlrpumSMUZU+HwI8rtpaAA+0KusEPK89idAYO
-        b4pKCcuAoL1AM61ZwRJaAcVTOciCcXoLVA0ZRBbsSAdCT0U9Ejx20FU0hluwFe0H34yfVi7C
-        6E3QOF38F8vg9VjZykFAvyNhsvwCLpy9H1K+DogFbA+THQ9IAW+AZf1qIB3BiOkuKZAcBP1p
-        hUhw7YRh0wJhqYbRLlDb7CHIe6E+NR+3yEDbwqtpO+EIW7jccA0TZAlkZUoF91bQdtz7t/bJ
-        8xdYHpJr11TTrqmjXVNH+39vOcKrkYxL4KPDOd47hkty55XRfEJMuHtobLQOmf9Yz++OuSbU
-        vBhiQDSF5DaS4FhDkFSsTOSTow0IKEzuIMkbN0uSMGXyKU4de0KdoOJ4A1pP4XKZZNuNiUAp
-        Ha6M56I4Lo5Tr05FlJVTClrn7a87rSdDk7qOv3Q3Dki4jeE2E0c1UYWN/pK53i+Lrlm+vA87
-        GmDwmWmbf3/Yxeaj1UL90OY7l1i/I05M5zHfxCm3+OzAptI0ZePZ3gCPsX0FfTsUrV43+2QH
-        bpuyvc/Jna8Oq1JlTuMHO+sdx0pEQ2cqC4zdLQr3ziKDwrNOjvMRSi9XTM0r/wCXShu5XwMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsVy+t/xe7rr2w7HGVzcYm4x/8g5VouZb/6z
-        WTQvXs9mMePOEXaLHdtFLHY+fMtmsXxfP6PF5V1zgOLn9zFZzP0yldmidS9QRdehv2wOPB7b
-        dm9j9dg56y67x4JNpR6bVnWyeeyfu4bdY+O7HUwenzfJBbBH6dkU5ZeWpCpk5BeX2CpFG1oY
-        6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GV8XWNbsFCuYv7kR+wNjI8kuhg5OSQE
-        TCQ6Wu6wdjFycQgJLGWUmLFyNxtEQkbi5LQGVghbWOLPtS6wuJDAW0aJn3Mkuxg5OIQFkiQe
-        zLMECYsIaElsuvaYBWQOs0Abi8Sh+ceh6nczSby+zA5iswkYSnS9hZjDK2AnMedNDyOIzSKg
-        KrHi+iEmEFtUIFZi9bVWRogaQYmTM5+wgNicAoESnw6/ZgaxmQXMJOZtfghly0tsfzsHyhaX
-        uPVkPtMERqFZSNpnIWmZhaRlFpKWBYwsqxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQJjdtux
-        n5t3MF7aGHyIUYCDUYmHNyH/UJwQa2JZcWXuIUYJDmYlEd4JL4BCvCmJlVWpRfnxRaU5qcWH
-        GE2BnpvILCWanA9MJ3kl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODil
-        GhjdymIteY4U/JH9ccGrZerqYoObuxczpG8IOnT96y9Pw8adPk9Ur9/tk4076cT2aNNdvhOt
-        ntunNFTEnnC32NM0STstSLvDTmZBktd0wYOmhmbrT187MbuE7eF25X5RBf6WtSGPmzVlrXkW
-        lVT/m6n6qzigVMlIy5RLlW0n3/terulHJz6+u0uJpTgj0VCLuag4EQC7zRpB7wIAAA==
-X-CMS-MailID: 20200519071143eucas1p11ddbfc41e96d1a3a7bdf37995515e940
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200519062510eucas1p27bc59da66e1b77534855103a27f87452
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200519062510eucas1p27bc59da66e1b77534855103a27f87452
-References: <20200515053500.215929-1-saravanak@google.com>
-        <CGME20200519062510eucas1p27bc59da66e1b77534855103a27f87452@eucas1p2.samsung.com>
-        <20200515053500.215929-5-saravanak@google.com>
-        <e0f9211d-9cf6-a12d-eb63-df06910920ed@samsung.com>
-        <CAGETcx_FOGgHdaNY8Dd-4rgT28U7_OHYeLsazbUE-1hyuatRSg@mail.gmail.com>
+References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
+ <1589461844-15614-3-git-send-email-qii.wang@mediatek.com> <CAMuHMdXjLakWDDEy=02prC7XjAs_xBnt2mArPFNwyHgUoWw6-g@mail.gmail.com>
+ <1589857073.25512.34.camel@mhfsdcap03>
+In-Reply-To: <1589857073.25512.34.camel@mhfsdcap03>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 May 2020 09:14:25 +0200
+Message-ID: <CAMuHMdXgp85PVteunxrHYcMTqFgQWHmXXCVJM_KX76xkCADMpw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     Joe Perches <joe@perches.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, srv_heupstream@mediatek.com,
+        Wolfram Sang <wsa@the-dreams.de>, leilk.liu@mediatek.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Saravana,
+Hi Qii,
 
-On 19.05.2020 08:48, Saravana Kannan wrote:
-> On Mon, May 18, 2020 at 11:25 PM Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
->> On 15.05.2020 07:35, Saravana Kannan wrote:
->>> The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
->>> parsing of the device tree nodes when a lot of devices are added. This
->>> will significantly cut down parsing time (as much a 1 second on some
->>> systems). So, use them when adding devices for all the top level device
->>> tree nodes in a system.
->>>
->>> Signed-off-by: Saravana Kannan <saravanak@google.com>
->> This patch recently landed in linux-next 20200518. Sadly, it causes
->> regression on Samsung Exynos5433-based TM2e board:
->>
->> s3c64xx-spi 14d30000.spi: Failed to get RX DMA channel
->> s3c64xx-spi 14d50000.spi: Failed to get RX DMA channel
->> s3c64xx-spi 14d30000.spi: Failed to get RX DMA channel
->> s3c64xx-spi 14d50000.spi: Failed to get RX DMA channel
->> s3c64xx-spi 14d30000.spi: Failed to get RX DMA channel
->>
->> Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
->> Modules linked in:
->> CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
->> Hardware name: Samsung TM2E board (DT)
->> Workqueue: events deferred_probe_work_func
->> pstate: 60000005 (nZCv daif -PAN -UAO)
->> pc : samsung_i2s_probe+0x768/0x8f0
->> lr : samsung_i2s_probe+0x688/0x8f0
->> ...
->> Call trace:
->>    samsung_i2s_probe+0x768/0x8f0
->>    platform_drv_probe+0x50/0xa8
->>    really_probe+0x108/0x370
->>    driver_probe_device+0x54/0xb8
->>    __device_attach_driver+0x90/0xc0
->>    bus_for_each_drv+0x70/0xc8
->>    __device_attach+0xdc/0x140
->>    device_initial_probe+0x10/0x18
->>    bus_probe_device+0x94/0xa0
->>    deferred_probe_work_func+0x70/0xa8
->>    process_one_work+0x2a8/0x718
->>    worker_thread+0x48/0x470
->>    kthread+0x134/0x160
->>    ret_from_fork+0x10/0x1c
->> Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
->> ---[ end trace ccf721c9400ddbd6 ]---
->> Kernel panic - not syncing: Fatal exception
->> SMP: stopping secondary CPUs
->> Kernel Offset: disabled
->> CPU features: 0x090002,24006087
->> Memory Limit: none
->>
->> ---[ end Kernel panic - not syncing: Fatal exception ]---
->>
->> Both issues, the lack of DMA for SPI device and Synchronous abort in I2S
->> probe are new after applying this patch. I'm trying to investigate which
->> resources are missing and why. The latter issue means typically that the
->> registers for the given device has been accessed without enabling the
->> needed clocks or power domains.
-> Did you try this copy-pasta fix that I sent later?
-> https://lore.kernel.org/lkml/20200517173453.157703-1-saravanak@google.com/
+On Tue, May 19, 2020 at 4:59 AM Qii Wang <qii.wang@mediatek.com> wrote:
+> On Mon, 2020-05-18 at 17:44 +0200, Geert Uytterhoeven wrote:
+> > On Thu, May 14, 2020 at 3:13 PM Qii Wang <qii.wang@mediatek.com> wrote:
+> > > This patch adds a algorithm to calculate some ac-timing parameters
+> > > which can fully meet I2C Spec.
+> > >
+> > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > > ---
+> > >  drivers/i2c/busses/i2c-mt65xx.c | 328 +++++++++++++++++++++++++++++++++-------
+> > >  1 file changed, 277 insertions(+), 51 deletions(-)
+> > >
+> > > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> > > index 0ca6c38a..7020618 100644
+> > > --- a/drivers/i2c/busses/i2c-mt65xx.c
+> > > +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> >
+> > > +/*
+> > > + * Check and Calculate i2c ac-timing
+> > > + *
+> > > + * Hardware design:
+> > > + * sample_ns = (1000000000 * (sample_cnt + 1)) / clk_src
+> > > + * xxx_cnt_div =  spec->min_xxx_ns / sample_ns
+> > > + *
+> > > + * Sample_ns is rounded down for xxx_cnt_div would be greater
+> > > + * than the smallest spec.
+> > > + * The sda_timing is chosen as the middle value between
+> > > + * the largest and smallest.
+> > > + */
+> > > +static int mtk_i2c_check_ac_timing(struct mtk_i2c *i2c,
+> > > +                                  unsigned int clk_src,
+> > > +                                  unsigned int check_speed,
+> > > +                                  unsigned int step_cnt,
+> > > +                                  unsigned int sample_cnt)
+> > > +{
+> > > +       const struct i2c_spec_values *spec;
+> > > +       unsigned int su_sta_cnt, low_cnt, high_cnt, max_step_cnt;
+> > > +       unsigned int sda_max, sda_min, clk_ns, max_sta_cnt = 0x3f;
+> > > +       long long sample_ns = (1000000000 * (sample_cnt + 1)) / clk_src;
+> >
+> > So sample_ns is a 64-bit value. Is that really needed?
+> >
 >
-> Not every system would need it (my test setup didn't), but it helps some cases.
->
-> If that fix doesn't help, then some tips for debugging the failing drivers.
-> What this pause/resume patch effectively (not explicitly) does is:
-> 1. Doesn't immediately probe the devices as they are added in
-> of_platform_default_populate_init()
-> 2. Adds them in order to the deferred probe list.
-> 3. Then kicks off deferred probe on them in the order they were added.
->
-> These drivers are just not handling -EPROBE_DEFER correctly or
-> assuming probe order and that's causing these issues.
->
-> So, we can either fix that or you can try adding some code to flush
-> the deferred probe workqueue at the end of fw_devlink_resume().
->
-> Let me know how it goes.
+> (1000000000 * (sample_cnt + 1)) / clk_src value is a 32-bit, (1000000000
+> * (sample_cnt + 1)) will over 32-bit if sample_cnt is 7.
 
-So far it looks that your patch revealed a hidden issue in exynos5433 
-clocks configuration, because adding clk_ignore_unused parameter to 
-kernel command line fixes the boot. I'm still investigating it, so 
-probable you can ignore my regression report. I will let you know asap I 
-finish checking it.
+The intermediate value will indeed not fit in 32-bit.
+But that doesn't mean the end result won't fit in 32-bit.
+As you divide spec->min_low_ns and spec->min_su_dat_ns (which I assume
+are small numbers) by sample_ns below, sample_ns cannot be very large,
+or the quotient will be zero anyway.
+So just doing the multiplication in 64-bit, followed by a 64-by-32
+division is probably fine:
 
-Best regards
+    unsigned int sample_ns = div_u64(1000000000ULL * (sample_cnt + 1), clk_src);
+
+You may want to take precautions for the case where the passed value of
+clk_src is a small number (can that happen?).
+
+BTW, clk_get_rate() returns "unsigned long", while mtk_i2c_set_speed()
+takes an "unsigned int" parent_clk, which may cause future issues.
+You may want to change that to "unsigned long", along the whole
+propagation path, and use div64_ul() instead of div_u64() above.
+
+> I think 1000000000 and clk_src is too big, maybe I can reduce then with
+> be divided all by 1000.
+> example:
+>
+> unsigned int sample_ns;
+> unsigned int clk_src_khz = clk_src / 1000;
+
+That may cause too much loss of precision.
+
+>
+> if(clk_src_khz)
+>         sample_ns = (1000000 * (sample_cnt + 1)) / clk_src_khz;
+> else
+>         return -EINVAL;
+>
+> > > +       if (!i2c->dev_comp->timing_adjust)
+> > > +               return 0;
+> > > +
+> > > +       if (i2c->dev_comp->ltiming_adjust)
+> > > +               max_sta_cnt = 0x100;
+> > > +
+> > > +       spec = mtk_i2c_get_spec(check_speed);
+> > > +
+> > > +       if (i2c->dev_comp->ltiming_adjust)
+> > > +               clk_ns = 1000000000 / clk_src;
+> > > +       else
+> > > +               clk_ns = sample_ns / 2;
+> > > +
+> > > +       su_sta_cnt = DIV_ROUND_UP(spec->min_su_sta_ns, clk_ns);
+> > > +       if (su_sta_cnt > max_sta_cnt)
+> > > +               return -1;
+> > > +
+> > > +       low_cnt = DIV_ROUND_UP(spec->min_low_ns, sample_ns);
+> >
+> > So this is a 32-bit by 64-bit division (indeed, not 64-by-32!)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
