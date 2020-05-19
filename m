@@ -2,67 +2,68 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF54C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 08:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4C3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 08:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F0220709
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 08:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52EC20709
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 08:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BcjxOhbu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EbYPn7i5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgESIWb (ORCPT
+        id S1726388AbgESI3N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 04:22:31 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47128 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgESIWb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 04:22:31 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J8MRrE114448;
-        Tue, 19 May 2020 03:22:27 -0500
+        Tue, 19 May 2020 04:29:13 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55896 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgESI3N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 04:29:13 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J8T9oa106526;
+        Tue, 19 May 2020 03:29:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589876547;
-        bh=0IW1CINnzDCPy46zXwT1kRP9nRJw5/Ixb4bt+1ipkao=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=BcjxOhbuYDUwXr+E3p1KnVpYrSP6OydIIt42my7tZad2+EhCISYIMbQFT4PWkguvK
-         vJRcay/eq7wtbj5au0hohRIplZVveFQuKJLz6dtM64/hFbx4CikRkK0FXaZoDBOtOn
-         Ht+bw8DuMzj4MtSSvd0cArWQgkAQTNuowtjDKM/k=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04J8MRXq047160
+        s=ti-com-17Q1; t=1589876949;
+        bh=ZiduhVOg5MMMMQdQPVOx0auXP9xGjDBpjLfphpPRrss=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EbYPn7i53B1QGcA2r/+RQRlTWtyxlor4rw10b0cp8uhtGkE8HL93a7eUlZlwNSoFL
+         Fx0guQY6HuTlr638BDdIXyqmFdMtP6gSXLorQBqud0plwxDEcKKkSYdQXypm4YCsZl
+         qh1CZyLHE70MsG/ywJJmNVUORye1yP1pHI9p02FU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04J8T9sJ091602
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 03:22:27 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 19 May 2020 03:29:09 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 03:22:27 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 03:29:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 03:22:27 -0500
-Received: from [10.250.232.87] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J8MOEG021758;
-        Tue, 19 May 2020 03:22:25 -0500
-Subject: Re: [PATCH v2] arm: dts: Move am33xx and am43xx mmc nodes to
- sdhci-omap driver
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <robh+dt@kernel.org>,
-        <bcousson@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-References: <20200512203804.9340-1-faiz_abbas@ti.com>
- <20200513162327.GM37466@atomide.com>
- <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
-Message-ID: <53c815db-dd7d-e6e1-f81a-cf05ef340c71@ti.com>
-Date:   Tue, 19 May 2020 13:52:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Frontend Transport; Tue, 19 May 2020 03:29:08 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J8T5Vj037768;
+        Tue, 19 May 2020 03:29:06 -0500
+Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+ <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <eaeba80e-9082-2eeb-8c66-7ef28b7fb895@ti.com>
+Date:   Tue, 19 May 2020 13:59:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
+In-Reply-To: <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,46 +73,170 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tony,
 
-On 15/05/20 3:04 pm, Faiz Abbas wrote:
-> Hi Tony,
-> 
-> On 13/05/20 9:53 pm, Tony Lindgren wrote:
->> * Faiz Abbas <faiz_abbas@ti.com> [200512 13:39]:
->>> Move mmc nodes to be compatible with the sdhci-omap driver. The following
->>> modifications are required for omap_hsmmc specific properties:
->>>
->>> ti,non-removable: convert to the generic mmc non-removable
->>> ti,needs-special-reset:  co-opted into the sdhci-omap driver
->>> ti,dual-volt: removed. Legacy property not used in am335x or am43xx
->>> ti,needs-special-hs-handling: removed. Legacy property not used in am335x
->>> or am43xx
->>>
->>> Also since the sdhci-omap driver does not support runtime PM, explicitly
->>> disable the mmc3 instance in the dtsi.
->>>
->>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>> ---
->>>
->>> v2: Rebased to latest mainline where all kernel dependancies have been merged.
->>>
->>> Suspend/Resume is now supported in the sdhci-omap driver.
->>
->> Great, thanks for updating it.
->>
->> Keerthy, care to test for am3 and am4?
->>
-> 
-> Suspend/resume on am43xx-gpevm is broken right now in mainline and the regression looks
-> like it is caused by the display subsystem. I have reported this to Tomi and
-> its being investigated.
-> 
-> Meanwhile I have tested this patch with display configs disabled and Keerthy's
-> suspend/resume tests pass on both am3 and am4.
-> 
 
-Can this patch be picked up? I would really like this to be merged by v5.8
+On 5/13/2020 10:52 PM, Laurent Pinchart wrote:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> 
+> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> Processing System Gigabit Transceiver which provides PHY capabilities to
+> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
+> 
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thanks,
-Faiz
+Need RobH Ack for this to be merged.
+
+Thanks
+Kishon
+> ---
+> Changes since v7:
+> 
+> - Switch to GPL-2.0-only OR BSD-2-Clause
+> 
+> Changes since v6:
+> 
+> - Fixed specification of compatible-dependent xlnx,tx-termination-fix
+>   property
+> - Dropped status property from example
+> - Use 4 spaces to indent example
+> 
+> Changes since v5:
+> 
+> - Document clocks and clock-names properties
+> - Document resets and reset-names properties
+> - Replace subnodes with an additional entry in the PHY cells
+> - Drop lane frequency PHY cell, replaced by reference clock phandle
+> - Convert bindings to YAML
+> - Reword the subject line
+> - Drop Rob's R-b as the bindings have significantly changed
+> - Drop resets and reset-names properties
+> ---
+>  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                 |   1 +
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> new file mode 100644
+> index 000000000000..09e3cde7ebca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> @@ -0,0 +1,105 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+> +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
+> +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
+> +  Ethernet SGMII controllers.
+> +
+> +properties:
+> +  "#phy-cells":
+> +    const: 4
+> +    description: |
+> +      The cells contain the following arguments.
+> +
+> +      - description: The GTR lane
+> +        minimum: 0
+> +        maximum: 3
+> +      - description: The PHY type
+> +        enum:
+> +          - PHY_TYPE_DP
+> +          - PHY_TYPE_PCIE
+> +          - PHY_TYPE_SATA
+> +          - PHY_TYPE_SGMII
+> +          - PHY_TYPE_USB
+> +      - description: The PHY instance
+> +        minimum: 0
+> +        maximum: 1 # for DP, SATA or USB
+> +        maximum: 3 # for PCIE or SGMII
+> +      - description: The reference clock number
+> +        minimum: 0
+> +        maximum: 3
+> +
+> +  compatible:
+> +    enum:
+> +      - xlnx,zynqmp-psgtr-v1.1
+> +      - xlnx,zynqmp-psgtr
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 4
+> +    description: |
+> +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
+> +      inputs shall not have an entry.
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+> +      pattern: "^ref[0-3]$"
+> +
+> +  reg:
+> +    items:
+> +      - description: SERDES registers block
+> +      - description: SIOU registers block
+> +
+> +  reg-names:
+> +    items:
+> +      - const: serdes
+> +      - const: siou
+> +
+> +  xlnx,tx-termination-fix:
+> +    description: |
+> +      Include this for fixing functional issue with the TX termination
+> +      resistance in GT, which can be out of spec for the XCZU9EG silicon
+> +      version.
+> +    type: boolean
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      const: xlnx,zynqmp-psgtr-v1.1
+> +
+> +then:
+> +  properties:
+> +    xlnx,tx-termination-fix: false
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    phy: phy@fd400000 {
+> +        compatible = "xlnx,zynqmp-psgtr-v1.1";
+> +        reg = <0x0 0xfd400000 0x0 0x40000>,
+> +              <0x0 0xfd3d0000 0x0 0x1000>;
+> +        reg-names = "serdes", "siou";
+> +        clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
+> +        clock-names = "ref1", "ref2", "ref3";
+> +        #phy-cells = <4>;
+> +    };
+> +
+> +...
+> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+> index 1f3f866fae7b..f6bc83b66ae9 100644
+> --- a/include/dt-bindings/phy/phy.h
+> +++ b/include/dt-bindings/phy/phy.h
+> @@ -17,5 +17,6 @@
+>  #define PHY_TYPE_USB3		4
+>  #define PHY_TYPE_UFS		5
+>  #define PHY_TYPE_DP		6
+> +#define PHY_TYPE_SGMII		7
+>  
+>  #endif /* _DT_BINDINGS_PHY */
+> 
