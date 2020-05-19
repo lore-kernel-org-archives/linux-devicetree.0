@@ -2,99 +2,249 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1510C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AB7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81C3020578
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24DC20578
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZVcNchBu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v5UbAXUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgESXHq (ORCPT
+        id S1727915AbgESXIf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 19:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53572 "EHLO
+        Tue, 19 May 2020 19:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgESXHp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 19:07:45 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B46C061A0F
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 16:07:44 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id m185so975607wme.3
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 16:07:43 -0700 (PDT)
+        with ESMTP id S1727801AbgESXIe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 19:08:34 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506FCC08C5C0
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 16:08:33 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d10so548522pgn.4
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 16:08:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=gtjA7rUrWvV/zWcpmtzFkkNrqaPYsU7iu5jd2njww+Y=;
-        b=ZVcNchBuWC7ldH8aoRdu2LHqvs149CFaBuKaCLDqmTfS+32DVhNFKXNF/ycPayjar8
-         nEnMHUME+wzXCQplMaJsIjuEG11AZRdohuMcjo8ekJRwQn8aXmJ8Fs0ZkswTqlTtZrlU
-         Rr+G4dwVnuZ9jvZqlkuZZiaBTPNhEolichzmqEd3r0YJmP5sE65ximX0bXJbh+CRfqbe
-         hdD9RoQ1cKMeLScbPTh8FURrNlGbbYYJdbQY7iqMmQAq3W5Dp+7sVz2wC8IZ6OBIeL56
-         McRCVSE6W0h2PgjhGdDYvZsZblH939zKdMI+QnPC7SbMnUmupj+ARduQpYrz/DXMNI5n
-         ZSdw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ixiNo870L0O1tt3XKRzXP6CLMwM6qsLZGdg3orveJ2c=;
+        b=v5UbAXUn670k0FjId5F7YzbW0fcW5cn2gHPMS0Gj4Zk2ddoPIrDhWCG7BFXfHcji2d
+         9LX2nlqhy+empqSs9qr1M35ULuuyLPYvUYG7Tbf4PVaBY4Nu9i/W1gUlKp9Vwx/CBjec
+         iIWCw++l2BQz6VVpT3Xyl3dQM/XP0WROJLw+H1ij4R0yVTgAamijl2PiJCB4/zrDfRnP
+         geemSmsmxETLj6rBBVRrr/CRr1BMSZhlFKNotBYD1mhC83pJUYVWfSq3N2Z7MFlCj4Df
+         2IjyfPkGLOn0+otKJQg13e2mxEhOHEGItzW0N4V/cnGE+xihULDKasBxnz2PPBYl0cVc
+         +71g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=gtjA7rUrWvV/zWcpmtzFkkNrqaPYsU7iu5jd2njww+Y=;
-        b=O/15O/BLKitniRakmoVd/VRkaDbIjCcOhjbNc4qYXIEywbkqyfGSQEpSEfNKO7IM06
-         /s81LzaElOmoPE3lvT3I137j1Mm6jxI27GGdgbdSLA6gkhyZ3dN2r+dvAwC8yRUBFxz+
-         u4xY40YN0a7IXMJ1dOVMGq/I/n0WlbN6x8829MMuei4VRexRNR2kO/jfboc1EwXCqVA8
-         lFpSRFITohPz+oHBxR9rc4/SRAtfteXV84qc+vBHTZ5h6WNiMPATXXwSPig6YAHfTCg/
-         jMBajqfNRxPDEiv5I1bQn+EbjvyOr9k59rVse0jxMKqBVjT2Fvy2c2F4kL5n8D/P/ToC
-         GHdQ==
-X-Gm-Message-State: AOAM5305DOfm/ftYJoz6fw2UivCplYvVql3372siH1e1wCA3dZOoTkU+
-        CHkZkkjNWjVpwZyADqWLwUhWig==
-X-Google-Smtp-Source: ABdhPJy6NqRygJRgngTo1yF6jvvyMz1ITIgNjTcTPD+fMJ3UDtjsVqYza5H1OiV60sFHYarrPm7FEA==
-X-Received: by 2002:a05:600c:22c9:: with SMTP id 9mr1645458wmg.162.1589929662556;
-        Tue, 19 May 2020 16:07:42 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id p10sm968872wrn.10.2020.05.19.16.07.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ixiNo870L0O1tt3XKRzXP6CLMwM6qsLZGdg3orveJ2c=;
+        b=cLxsNxXoquPXy0oV2cA0XaMDYBkK6LQTSmSJGOUHwO/6dpofeK809uQPopmllbN9jN
+         8HO4tBsR5evD2rAS6C/3OJw6TGqClH5g5owcmowtBt89C6OL5KV7UppuGQtxyq0YHTdO
+         YGL+QFXrQrsrBLgDOh//EMphWXrXLTQaRCmoDxaO+Vk1tb6z7ls3t5xJblOJV/kSeKua
+         4+aG2i+ZFFowoyDbPgCwYnrvbdEBiysGj1SERPlDl51PNadzWNC8by0dU6B8WVSEhKhk
+         RokjUc+Qe1QW7p63EcN6vviXAU3sw00fnEpCNYbfuweswiVFsng0vSm84XDQSplnBqb3
+         Bvmw==
+X-Gm-Message-State: AOAM533zXE5AM6IwzFwblAQag5+rhrTaIzg8tN92DSbD0NpNa7eBeh9/
+        6A9DyA2j0n+i/AUKr+v3/4iZKg==
+X-Google-Smtp-Source: ABdhPJy4iShtU5/wNSK+muUCjJJiWMFIu8UWIc2FJeUgJAW9SJxYJlBqTPoFYjHiqMJzayVauVdzWA==
+X-Received: by 2002:a65:68d2:: with SMTP id k18mr1413767pgt.110.1589929712508;
+        Tue, 19 May 2020 16:08:32 -0700 (PDT)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p6sm391805pgl.26.2020.05.19.16.08.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 16:07:41 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     robh+dt@kernel.org, narmstrong@baylibre.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v4 0/4] meson-ee-pwrc: support for Meson8/8b/8m2 and GX
-In-Reply-To: <20200515204709.1505498-1-martin.blumenstingl@googlemail.com>
-References: <20200515204709.1505498-1-martin.blumenstingl@googlemail.com>
-Date:   Tue, 19 May 2020 16:07:39 -0700
-Message-ID: <7hv9krttfo.fsf@baylibre.com>
+        Tue, 19 May 2020 16:08:31 -0700 (PDT)
+Date:   Tue, 19 May 2020 16:07:59 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     rishabhb@codeaurora.org
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] remoteproc: qcom: Update PIL relocation info on
+ load
+Message-ID: <20200519230759.GA3008945@ripper>
+References: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
+ <20200513055641.1413100-4-bjorn.andersson@linaro.org>
+ <3ff29ccc94d3097fb39b7df377754af6@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ff29ccc94d3097fb39b7df377754af6@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+On Tue 19 May 11:14 PDT 2020, rishabhb@codeaurora.org wrote:
 
-> This series adds support for all "older" SoCs to the meson-ee-pwrc
-> driver. I wanted to compare as much as I could between my Meson8b EC-100
-> (Endless Mini) and the Le Potato board so I added support for GXBB, GXL
-> and GXM as well as for the SoCs that I'm actually working on. I will
-> send the ARM64 dts patches once all of this is reviewed and merged.
->
-> I successfully tested the Meson8b part on EC-100 where u-boot does not
-> initialize the VPU controller. So this the board where I have been
-> struggling most.
->
-> Kevin, I'm not sure if this can still make it into v5.8. If the
-> series as a whole can't make it for some reason then I'd appreciate if
-> patches #1 and #2 could end in v5.8 so I can push the .dts patches for
-> v5.9.
+> On 2020-05-12 22:56, Bjorn Andersson wrote:
+> > Update the PIL relocation information in IMEM with information about
+> > where the firmware for various remoteprocs are loaded.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > Changes since v4:
+> > - Dropped unnecessary comment about ignoring return value.
+> > 
+> >  drivers/remoteproc/Kconfig          |  3 +++
+> >  drivers/remoteproc/qcom_q6v5_adsp.c | 16 +++++++++++++---
+> >  drivers/remoteproc/qcom_q6v5_mss.c  |  3 +++
+> >  drivers/remoteproc/qcom_q6v5_pas.c  | 15 ++++++++++++---
+> >  drivers/remoteproc/qcom_q6v5_wcss.c | 14 +++++++++++---
+> >  drivers/remoteproc/qcom_wcnss.c     | 14 +++++++++++---
+> >  6 files changed, 53 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> > index 8088ca4dd6dc..6bd42a411ca8 100644
+> > --- a/drivers/remoteproc/Kconfig
+> > +++ b/drivers/remoteproc/Kconfig
+> > @@ -126,6 +126,7 @@ config QCOM_Q6V5_ADSP
+> >  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+> >  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+> >  	select MFD_SYSCON
+> > +	select QCOM_PIL_INFO
+> >  	select QCOM_MDT_LOADER
+> >  	select QCOM_Q6V5_COMMON
+> >  	select QCOM_RPROC_COMMON
+> > @@ -158,6 +159,7 @@ config QCOM_Q6V5_PAS
+> >  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+> >  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+> >  	select MFD_SYSCON
+> > +	select QCOM_PIL_INFO
+> >  	select QCOM_MDT_LOADER
+> >  	select QCOM_Q6V5_COMMON
+> >  	select QCOM_RPROC_COMMON
+> > @@ -209,6 +211,7 @@ config QCOM_WCNSS_PIL
+> >  	depends on QCOM_SMEM
+> >  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+> >  	select QCOM_MDT_LOADER
+> > +	select QCOM_PIL_INFO
+> >  	select QCOM_RPROC_COMMON
+> >  	select QCOM_SCM
+> >  	help
+> > diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c
+> > b/drivers/remoteproc/qcom_q6v5_adsp.c
+> > index d2a2574dcf35..c539e89664cb 100644
+> > --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> > +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> > @@ -26,6 +26,7 @@
+> >  #include <linux/soc/qcom/smem_state.h>
+> > 
+> >  #include "qcom_common.h"
+> > +#include "qcom_pil_info.h"
+> >  #include "qcom_q6v5.h"
+> >  #include "remoteproc_internal.h"
+> > 
+> > @@ -82,6 +83,7 @@ struct qcom_adsp {
+> >  	unsigned int halt_lpass;
+> > 
+> >  	int crash_reason_smem;
+> > +	const char *info_name;
+> > 
+> >  	struct completion start_done;
+> >  	struct completion stop_done;
+> > @@ -164,10 +166,17 @@ static int qcom_adsp_shutdown(struct qcom_adsp
+> > *adsp)
+> >  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+> >  {
+> >  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+> > +	int ret;
+> > +
+> > +	ret = qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
+> > +				    adsp->mem_region, adsp->mem_phys,
+> > +				    adsp->mem_size, &adsp->mem_reloc);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_size);
+> > 
+> > -	return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
+> > -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> > -			     &adsp->mem_reloc);
+> > +	return 0;
+> >  }
+> > 
+> >  static int adsp_start(struct rproc *rproc)
+> > @@ -436,6 +445,7 @@ static int adsp_probe(struct platform_device *pdev)
+> >  	adsp = (struct qcom_adsp *)rproc->priv;
+> >  	adsp->dev = &pdev->dev;
+> >  	adsp->rproc = rproc;
+> > +	adsp->info_name = desc->sysmon_name;
+> >  	platform_set_drvdata(pdev, adsp);
+> > 
+> >  	ret = adsp_alloc_memory_region(adsp);
+> > diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
+> > b/drivers/remoteproc/qcom_q6v5_mss.c
+> > index c4936f4d1e80..fdbcae11ae64 100644
+> > --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> > +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> > @@ -29,6 +29,7 @@
+> > 
+> >  #include "remoteproc_internal.h"
+> >  #include "qcom_common.h"
+> > +#include "qcom_pil_info.h"
+> >  #include "qcom_q6v5.h"
+> > 
+> >  #include <linux/qcom_scm.h>
+> > @@ -1221,6 +1222,8 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+> >  	else if (ret < 0)
+> >  		dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
+> > 
+> > +	qcom_pil_info_store("modem", mpss_reloc, qproc->mpss_size);
+> > +
+> >  release_firmware:
+> >  	release_firmware(fw);
+> >  out:
+> > diff --git a/drivers/remoteproc/qcom_q6v5_pas.c
+> > b/drivers/remoteproc/qcom_q6v5_pas.c
+> > index 3bb69f58e086..84cb19231c35 100644
+> > --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> > +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> > @@ -25,6 +25,7 @@
+> >  #include <linux/soc/qcom/smem_state.h>
+> > 
+> >  #include "qcom_common.h"
+> > +#include "qcom_pil_info.h"
+> >  #include "qcom_q6v5.h"
+> >  #include "remoteproc_internal.h"
+> > 
+> > @@ -64,6 +65,7 @@ struct qcom_adsp {
+> >  	int pas_id;
+> >  	int crash_reason_smem;
+> >  	bool has_aggre2_clk;
+> > +	const char *info_name;
+> > 
+> >  	struct completion start_done;
+> >  	struct completion stop_done;
+> > @@ -117,11 +119,17 @@ static void adsp_pds_disable(struct qcom_adsp
+> > *adsp, struct device **pds,
+> >  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+> >  {
+> >  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+> > +	int ret;
+> > 
+> > -	return qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
+> > -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> > -			     &adsp->mem_reloc);
+> > +	ret = qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
+> > +			    adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> > +			    &adsp->mem_reloc);
+> > +	if (ret)
+> > +		return ret;
+> > 
+> > +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_size);
+> mem_reloc is used to calculate  offset and then we again add that offset to
+> the
+> ioremapped region base. So we should pass adsp->mem_phys as start here?
 
-Queuing for v5.8,
+You're correct, I will respin this.
 
-Thanks Martin!
-
-Kevin
+Thanks,
+Bjorn
