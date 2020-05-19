@@ -2,190 +2,161 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD36BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 14:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B91C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 14:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB00520835
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 14:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15012083E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 14:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaFH1PZr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWtb4SEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgESOKo (ORCPT
+        id S1728795AbgESOOZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 10:10:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53772 "EHLO
+        Tue, 19 May 2020 10:14:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgESOKn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 10:10:43 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607B3C08C5C0;
-        Tue, 19 May 2020 07:10:42 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id z4so3226042wmi.2;
-        Tue, 19 May 2020 07:10:42 -0700 (PDT)
+        with ESMTP id S1728633AbgESOOY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 10:14:24 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5B1C08C5C0;
+        Tue, 19 May 2020 07:14:24 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y18so6587184pfl.9;
+        Tue, 19 May 2020 07:14:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/vBiI8HSYFghhdNbWQeuQjoMgCPNyaEsWTxbMy9JazA=;
-        b=UaFH1PZrTHTNtl22w3CpD5YcdegG908dyzoB8HeUqEsmee8OaZP4ln7Rh+eG28umiB
-         k0rshqwhsaNTC60gmMvUCYHaiBKuqdlMLLeRbY+bm9FMT+ZhuZM7fgudkyKSvvFu/b2e
-         NWjdHulKAIjQJLkGiRIdkbXE/du+5G13bx24+gXk+virFEQ3L3mKjI+7zDsAwUVX5S5A
-         K6yEmCSNQf6qPjSPlOY97LG9dKBxiTCWcNHNAPwU0Kkb8IaJdnLI02AjkxPn6RWF6BBg
-         WOmgfTRq3eXcm//mMSGpIakULWMtxpsK7E9uCyXAwPHtmMSZfnuP19nJp4f7Gbt80m+I
-         qnGQ==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n6nj99MT5VnMbYi4sa2axsK+PhJ/0czyZ6v4F5+mrN4=;
+        b=RWtb4SEG8i0H0GB5ehrZhaZFULdBlGuy/FVGgAsK0UypYLvGekDBIPPnHiRlwdcy/o
+         brYsQzMk7bk589ceCKORt3RjKKqkmUnia9bXTEGpJL8SQ78MnztdT2Hq8P2prxuZwYLY
+         IyGUZNSliSPfNbB6HauCRIYXhx+/t3xzuEiBqi8hHBi8W3REm7UkcDY+A1LMEC4nPAgv
+         2ikySlzx9+cMcbJIXt5bdzYXo1ogYprq/5kYzbd0sP6cBkwhH/xnOvNf6vDVKylM4k0I
+         5ouLqGsCp1dawhG2jyoKQSsZurmvcvuIQBW+xgpRaLvIfUG2YdZ7vU1QoaDkNUFBGA6t
+         BvEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/vBiI8HSYFghhdNbWQeuQjoMgCPNyaEsWTxbMy9JazA=;
-        b=CZbY7jCKo7pwfxQVspj3ErUwtRRNOeComtefbPniDwPg12vDvRsdF9O6JZd0vuf69q
-         1C8pMS28GPvPXZPP45qiyV+oNFcrEg26rMx93yfrLao20LfQzBjvs3FYTcBHr3MS4vBO
-         bEPl6fKEHxXdcWHf4cg1qD4vBxvGJZD2nIKs1ao52IdO2vDUs1yDVWzbN5p7wemqmeZx
-         SpvplZAWPdtQtJOwdOaaWeUKEUX2wsvnbBlDalp5kgBgcttQSgcnGOkZ7256ioPQSqJy
-         dlLodNbSCdQJbajte1QmQ//Hpunsc/dumhYKLXGDVUUKX18qysc4Grwy+Bm6znu34ZKE
-         y4yA==
-X-Gm-Message-State: AOAM5338ww1VVOZeUcsJ+ylzRDkWGuc10oIQ9We6cWWBmSxzdYcfHZtu
-        BtWC2R/BtEhbvvXGNlY6c0g=
-X-Google-Smtp-Source: ABdhPJw68Iaq3pKI7k2MLFKJ2+F/WVBsAbMnziGJ/0VWd6onxmBUtZZmQEwHiwEWOQDSB1bNMlqSKw==
-X-Received: by 2002:a1c:a102:: with SMTP id k2mr5967856wme.39.1589897440972;
-        Tue, 19 May 2020 07:10:40 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id 18sm3908165wmj.19.2020.05.19.07.10.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 07:10:40 -0700 (PDT)
-Date:   Tue, 19 May 2020 16:10:37 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH v3 4/4] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519141037.GD30573@ict14-OptiPlex-980>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-5-jonathan.albrieux@gmail.com>
- <20200519132512.GC4623@gerhold.net>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=n6nj99MT5VnMbYi4sa2axsK+PhJ/0czyZ6v4F5+mrN4=;
+        b=kL/coXYVahBqs1QjGGbmGIyFrYJzWo77T93EiA5sWLw1B7bhXDMTE+546Lup6Xng0j
+         IBqR+nFh47AyKmax2nJKnTYMKRp06e+qqwDUNa+P8kZgrDeZZuFBUnkHSyqmVH1Yf5H5
+         dxJd7QPeUnBVpjBwA33u7nYgWYABTlWdGjHlAmOEvI7SSS2CAlPoZNkScPvvaT+WPzwr
+         Tur26OFmkpo9RJfSj9NumB3ZKvre4W+pVrNqtadJJCVDd5FXiB54PYggzJbWSZ5m2TZS
+         MMwqaD43yaYXx3hNlRkbGCgx4cEjP4rFebtYQO0WCJDP5ux07pAhHbQ1JZP/7hbzDpVU
+         4P4w==
+X-Gm-Message-State: AOAM533iTfVDoE7o9lFWgYhm36z9pWz75fsu313gutzGFs6qi0tMqUNG
+        m+yoObDoyyXREvkAzMGyI3OCIFX9
+X-Google-Smtp-Source: ABdhPJw+/1fyKAecOwG0xlf74llbkA5RFHYrrZTT7Yh3CkRkUjWTQKL3et5fc/ZDAyV51S+581CK+A==
+X-Received: by 2002:a05:6a00:d2:: with SMTP id e18mr12656822pfj.252.1589897664103;
+        Tue, 19 May 2020 07:14:24 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t64sm10598398pgd.24.2020.05.19.07.14.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 07:14:22 -0700 (PDT)
+Subject: Re: [PATCH 3/3] hwmon: (ina2xx) Add support for ina260
+To:     Michal Simek <michal.simek@xilinx.com>,
+        Franz Forstmayr <forstmayr.franz@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20200224232647.29213-1-forstmayr.franz@gmail.com>
+ <20200224232647.29213-3-forstmayr.franz@gmail.com>
+ <a78bbb40-9a0c-8acc-841e-7a51447d4dbc@roeck-us.net>
+ <bfa786b6-fe62-a5fb-718f-bb9e95b1f051@xilinx.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <616f7b6e-0e11-7c76-3baa-5b90a0967a91@roeck-us.net>
+Date:   Tue, 19 May 2020 07:14:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519132512.GC4623@gerhold.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <bfa786b6-fe62-a5fb-718f-bb9e95b1f051@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:25:12PM +0200, Stephan Gerhold wrote:
-> On Tue, May 19, 2020 at 02:43:54PM +0200, Jonathan Albrieux wrote:
-> > According to AK09911 datasheet, if reset gpio is provided then
-> > deassert reset on ak8975_power_on() and assert reset on ak8975_power_off().
-> > 
-> > Without reset's deassertion during ak8975_power_on(), driver's probe fails
-> > on ak8975_who_i_am while() checking for device identity for AK09911 chip.
-> > 
-> > AK09911 has an active low reset gpio to handle register's reset.
-> > AK09911 datasheed says that, if not used, reset pin should be connected
+On 5/18/20 10:21 PM, Michal Simek wrote:
+> On 26. 02. 20 3:16, Guenter Roeck wrote:
+>> On 2/24/20 3:26 PM, Franz Forstmayr wrote:
+>>> Add initial support for INA260 power monitor with integrated shunt.
+>>> Registers are different from other INA2xx devices, that's why a small
+>>> translation table is used.
+>>>
+>>> Signed-off-by: Franz Forstmayr <forstmayr.franz@gmail.com>
+>>
+>> I think the chip is sufficiently different to other chips that a separate
+>> driver would make much more sense than adding support to the existing
+>> driver.
+>> There is no calibration, registers are different, the retry logic is
+>> not needed. A new driver could use the with_info API and would be much
+>> simpler while at the same time not messing up the existing driver.
 > 
-> Another minor typo: datasheed -> datasheet
-> 
-> In any case, FWIW:
-> Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-> 
-> > to VID. This patch emulates this situation.
-> > 
-> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > ---
-> >  drivers/iio/magnetometer/ak8975.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-> > index fd368455cd7b..a23422aad97d 100644
-> > --- a/drivers/iio/magnetometer/ak8975.c
-> > +++ b/drivers/iio/magnetometer/ak8975.c
-> > @@ -358,6 +358,7 @@ struct ak8975_data {
-> >  	u8			asa[3];
-> >  	long			raw_to_gauss[3];
-> >  	struct gpio_desc	*eoc_gpiod;
-> > +	struct gpio_desc	*reset_gpiod;
-> >  	int			eoc_irq;
-> >  	wait_queue_head_t	data_ready_queue;
-> >  	unsigned long		flags;
-> > @@ -384,6 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
-> >  			 "Failed to enable specified Vid supply\n");
-> >  		return ret;
-> >  	}
-> > +
-> > +	gpiod_set_value_cansleep(data->reset_gpiod, 0);
-> > +
-> >  	/*
-> >  	 * According to the datasheet the power supply rise time is 200us
-> >  	 * and the minimum wait time before mode setting is 100us, in
-> > @@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
-> >  /* Disable attached power regulator if any. */
-> >  static void ak8975_power_off(const struct ak8975_data *data)
-> >  {
-> > +	gpiod_set_value_cansleep(data->reset_gpiod, 1);
-> > +
-> >  	regulator_disable(data->vid);
-> >  	regulator_disable(data->vdd);
-> >  }
-> > @@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
-> >  	struct ak8975_data *data;
-> >  	struct iio_dev *indio_dev;
-> >  	struct gpio_desc *eoc_gpiod;
-> > +	struct gpio_desc *reset_gpiod;
-> >  	const void *match;
-> >  	unsigned int i;
-> >  	int err;
-> > @@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
-> >  	if (eoc_gpiod)
-> >  		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
-> >  
-> > +	/*
-> > +	 * According to AK09911 datasheet, if reset GPIO is provided then
-> > +	 * deassert reset on ak8975_power_on() and assert reset on
-> > +	 * ak8975_power_off().
-> > +	 */
-> > +	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> > +					      "reset", GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(reset_gpiod))
-> > +		return PTR_ERR(reset_gpiod);
-> > +
-> >  	/* Register with IIO */
-> >  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> >  	if (indio_dev == NULL)
-> > @@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
-> >  
-> >  	data->client = client;
-> >  	data->eoc_gpiod = eoc_gpiod;
-> > +	data->reset_gpiod = reset_gpiod;
-> >  	data->eoc_irq = 0;
-> >  
-> >  	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
-> > -- 
-> > 2.17.1
+> Isn't it also better to switch to IIO framework?
+> As we discussed in past there are two ina226 drivers. One in hwmon and
+> second based on IIO framework (more advance one?) and would be good to
+> deprecate hwmon one.
 
-Thank you, will fix that typo too,
+"More advanced" is relative. The ina2xx driver in iio doesn't support
+alert limits (which is queued in the hwmon driver for 5.8), and the
+iio->hwmon bridge doesn't support it either. On top of that, there are
+existing users of the hwmon driver, which would have to be converted
+first. As for ina260, it would be up to the implementer to determine
+if alert limit support is needed or not, and which API would be
+appropriate for the intended use case.
 
-Best regards,
-Jonathan Albrieux
+Guenter
