@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF18FC433ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A85C4346B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D60D0207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE0520826
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HkelvqOK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vNeBBYBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgESSBy (ORCPT
+        id S1729322AbgESSCI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 14:01:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
+        Tue, 19 May 2020 14:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728290AbgESSBx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:01:53 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F18CC08C5C0
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:01:53 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id 50so367351wrc.11
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:01:53 -0700 (PDT)
+        with ESMTP id S1729276AbgESSCH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:02:07 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F887C08C5C0
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:02:06 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h17so389310wrc.8
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 11:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tdr2nbJDVREjEd6opf3N1PUExNDbBuhp6Y6q/Aa2PEk=;
-        b=HkelvqOK2ASLLh8prk/cDS5hZTdQU9xrr2V3ZxvDu0Sq7ohsTnzBnIMz0gnehYydrd
-         QbNe0r28o6KsNU4c8jG6/OECzBTt1dgbKqKBO3Hy9R096LEbCLBtm5fJCXyPcoLUqC7z
-         nJYdYMckvaByveD0Pss3OR0UJ2rAqvk1aa9NiHwQWgUQzWYyPlH/WdC5rnr0FA7nXTHT
-         wUy4E18JFZwuckNo0n2C9EJ91f2GqeXNIr2Vo1ubIjolcQVPov+bsWVCo6uVm3u+gguw
-         ifDXz+1XuUSPfCuU2aV4GnReJ1qkGO0jRWJcKZ8SusFCa4UK2engyDtkMxBFLorw/oqX
-         3ZVQ==
+        bh=dZJbr50yu+A1rXxxZjmC6b+njrvRrh11YfdOdR6ZavM=;
+        b=vNeBBYBtO1MlCmDZi2omuq7p6WTCEFIBil9Pkec1SF9TMZYl+5lkItE0NF2u/qYIuQ
+         lmiLB2BA7h9SazxYMZa9UBVoHEOQr4wCAHMfevxQ9L1X/+IrzF+9AJDv4i0tTWPDAPTj
+         R24F/zikAzERUXO99pzh2SbcaRuLVAJVylsiMvyzYXlDXzVD7qdGPxLdrArZ2a9Fa0DD
+         tJ4iYGE24E6fSgpJoDafwrRiS6x7MHRLQZhCqeikxTta1o4hPuWTzr3g6mQNeLPJGu1P
+         XJaUy1uTviXVQiXLA23Ad5Y8iT2b7HJYh1gU9tQqZgCnMpA2o1xg9WrZMzpMIeAczTQ/
+         oNlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tdr2nbJDVREjEd6opf3N1PUExNDbBuhp6Y6q/Aa2PEk=;
-        b=rHmAGDa676Hjkw6E0ESO4ttlc1hoGZtoYvxdTQK4LhcIHiyRbeY+ETdEH0GTOdAC3V
-         203yaw52X9RgCV7BQe73EehK6ykvtqFFExjXTKq03U8sJZAPf1m1F0+miCE8bVfyVmux
-         6DwV4xoR/jiXlpMuwZ5Io8oVuIFpODONsCYdaJnoi/1ylrg4Kpp2US29sBL40GC/yQ2B
-         aUzf5x+uPaDUscfj5qx9SoieMhl2gwUqS2Cc2Q21kLVKT9u7WuKKgIk+Br1YYcdPopn6
-         GpHs73DApHRZp6zkL+VQVzerxFO12qx+G+ZHpkaEhUMRGzVHgQZiMVt1YrMtbjY2UdbO
-         rgvg==
-X-Gm-Message-State: AOAM530C9++DA6KgvZlK0DtPE/NUw1I4m86Gg7vuwnkgpLychvoHYWOp
-        M+CBEQF0RmCC0QIyqJJy9h2Uug==
-X-Google-Smtp-Source: ABdhPJynWLyIUGdI5MUqsN8GOzUd3ADLnVQan+95nD7CN0va9fcQVLO9UHUTvmOnyfYBlYSmz6uVWQ==
-X-Received: by 2002:adf:c508:: with SMTP id q8mr125580wrf.4.1589911312245;
-        Tue, 19 May 2020 11:01:52 -0700 (PDT)
+        bh=dZJbr50yu+A1rXxxZjmC6b+njrvRrh11YfdOdR6ZavM=;
+        b=dNKYLSOYw5vCLp5AcyAlwJjfaGiwc243EKrHBdfv9J0DPsbL8fIymhc7QmUPcM4qSI
+         DRV51dsoIXmBEKXOYhLvmhJzwrWuIqCgJ29aWESQP1mlILom57C2QOd3ggKx0EcyF2lF
+         fAFT6uDjJ/RyPX8JhevYR0MumjDFGwBiXtYAj0TM+6ockGAAgPYFYgE1d/AF6Z3rNR4X
+         r6IFbrPLoXXXOHNdDYG72Imt7C4g28NhscLk065r87+XI5pchDpoBaVQidTrYXzkkeX5
+         pgQEi2rD8Rn73a+/bdq40tgbTnglz5gBPdm0JxGpNL7U1FyRmFIN+C7XVGtHA6gSqTR+
+         k8Pg==
+X-Gm-Message-State: AOAM531otgV9/ug640VpthYMo5lliFFblSW3xmwhkGRDY3bFxpyDGriZ
+        zsG8z/TwkKIm14hUKVQQqEFGrw==
+X-Google-Smtp-Source: ABdhPJwT8Eq7gpqVQWpnFuRyfkFTyMRHoxv//ACSK89NpoGnC1siz7BSfxh+oXZVDA+VgnaA+xgUGA==
+X-Received: by 2002:a5d:6108:: with SMTP id v8mr109324wrt.286.1589911325064;
+        Tue, 19 May 2020 11:02:05 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id 1sm510496wmz.13.2020.05.19.11.01.51
+        by smtp.gmail.com with ESMTPSA id 1sm510496wmz.13.2020.05.19.11.02.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:01:51 -0700 (PDT)
+        Tue, 19 May 2020 11:02:04 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,10 +69,10 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
         xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
         Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v7 09/24] arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
-Date:   Tue, 19 May 2020 19:54:47 +0200
-Message-Id: <20200519175502.2504091-10-jean-philippe@linaro.org>
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 20/24] dt-bindings: document stall property for IOMMU masters
+Date:   Tue, 19 May 2020 19:54:58 +0200
+Message-Id: <20200519175502.2504091-21-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519175502.2504091-1-jean-philippe@linaro.org>
 References: <20200519175502.2504091-1-jean-philippe@linaro.org>
@@ -83,28 +83,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SMMUv3 driver would like to read the MMFR0 PARANGE field in order to
-share CPU page tables with devices. Allow the driver to be built as
-module by exporting the read_sanitized_ftr_reg() cpufeature symbol.
+On ARM systems, some platform devices behind an IOMMU may support stall,
+which is the ability to recover from page faults. Let the firmware tell us
+when a device supports stall.
 
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- arch/arm64/kernel/cpufeature.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/iommu/iommu.txt        | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9fac745aa7bb..5f6adbf4ae89 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -841,6 +841,7 @@ u64 read_sanitised_ftr_reg(u32 id)
- 	BUG_ON(!regp);
- 	return regp->sys_val;
- }
-+EXPORT_SYMBOL_GPL(read_sanitised_ftr_reg);
+diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
+index 3c36334e4f94..26ba9e530f13 100644
+--- a/Documentation/devicetree/bindings/iommu/iommu.txt
++++ b/Documentation/devicetree/bindings/iommu/iommu.txt
+@@ -92,6 +92,24 @@ Optional properties:
+   tagging DMA transactions with an address space identifier. By default,
+   this is 0, which means that the device only has one address space.
  
- #define read_sysreg_case(r)	\
- 	case r:		return read_sysreg_s(r)
++- dma-can-stall: When present, the master can wait for a transaction to
++  complete for an indefinite amount of time. Upon translation fault some
++  IOMMUs, instead of aborting the translation immediately, may first
++  notify the driver and keep the transaction in flight. This allows the OS
++  to inspect the fault and, for example, make physical pages resident
++  before updating the mappings and completing the transaction. Such IOMMU
++  accepts a limited number of simultaneous stalled transactions before
++  having to either put back-pressure on the master, or abort new faulting
++  transactions.
++
++  Firmware has to opt-in stalling, because most buses and masters don't
++  support it. In particular it isn't compatible with PCI, where
++  transactions have to complete before a time limit. More generally it
++  won't work in systems and masters that haven't been designed for
++  stalling. For example the OS, in order to handle a stalled transaction,
++  may attempt to retrieve pages from secondary storage in a stalled
++  domain, leading to a deadlock.
++
+ 
+ Notes:
+ ======
 -- 
 2.26.2
 
