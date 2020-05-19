@@ -2,166 +2,144 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C928C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E821EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE78205CB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B6820809
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589928253;
-	bh=KV1br4RP62dfaY+YojzIIXCxa+4QL84xTnfa3sI135I=;
+	s=default; t=1589929412;
+	bh=MjTnNfF36TKpmvZOb7ouFby36GXdZ3ADfFP9GFuUwq8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l318sG32XT16xJExKRhnpaifPApd9VnnI/vxt0qQRRAsW+iZdZy5dA8dpLV24cqnZ
-	 0pzrMlIEnU9D8lvKsGR9SSq8vD4F+6dq+BWYmgZEEKgBGQzHpq29/g6BBWpHeiL38G
-	 sIArpO9h3IvxMMgdCIcWkzTwH+OTVZs1yLqxzlyk=
+	b=ZEyyoR8JU50VsSOxkgBJ4arKYDeBkIfcjW6wPytB5M9mTT0+1D2+S+INnFo8FyEQB
+	 04gr2l3mATpSoNOxnQCXw2fE/i2Nt7LNrEeLq4sjdMjKRjWYyTLoC41hIiBAr+BhUx
+	 cEQ/XoIUZ53Dxf13bqCiIDpa0VGiRgUuzBj0vNf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgESWoN (ORCPT
+        id S1726352AbgESXD3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 18:44:13 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37324 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgESWoN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 18:44:13 -0400
-Received: by mail-io1-f67.google.com with SMTP id t15so1043888ios.4;
-        Tue, 19 May 2020 15:44:12 -0700 (PDT)
+        Tue, 19 May 2020 19:03:29 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39054 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgESXD3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 19:03:29 -0400
+Received: by mail-il1-f195.google.com with SMTP id c20so1174170ilk.6;
+        Tue, 19 May 2020 16:03:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N1lmJuXT33q6aZH18d7DfYmv0StosYI0OPktchqqKbA=;
-        b=OtUsF+RqRV1tX9pbf5h7C6lMXhObFIJe4jmotw3LJPDpxAtsNGhbvo5tmcpmdcXaQS
-         C37YIE4vnrUNaY9BijeQPF+ZhJ8lB1RrTVkulGWHZLleOtlFZwGjjAAjgifljgSiJge8
-         KGNc4tHwR9ASBDAVUmJxJhugByWm47bggakCs14unNpmWngcwdk0ncubZIDQYn5WqY3B
-         q4t2ECyNl0HSCDb3xh4IaM6bPXGhrbA9QroZxH2hRcHQUI6FH6g/D3UZLeKrdp8g5EKa
-         scDu0UOVRXs2ckwFiMjLpqLURfQlXKbJtsrLjrZZGWg7i7EB9GT0eLBuLSoYGT4mkSd1
-         yXbQ==
-X-Gm-Message-State: AOAM533PNk+0kb5xu+0IFsgg2m74VgjV+BNfEW0y/1/Ln3qh596JxtFM
-        KuZvoJwq+meJIBF3r7pW2A==
-X-Google-Smtp-Source: ABdhPJxKQ/TzQq03uf2VEzCewTAUROD8cEguB2dRtrUO2bJaC96i0KsUN7VLp2Hv2j6a2B1DjXP6BA==
-X-Received: by 2002:a02:76c4:: with SMTP id z187mr1922106jab.72.1589928252182;
-        Tue, 19 May 2020 15:44:12 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YYKFcBn0SXqCqC3JTj/787nlEe7iveNyNWOYE196YMU=;
+        b=Xbf0jlX6sHLBrqwwJbTOMOoYtl/ZUk4SxbhnMVvDRX0TALwNtvEtw8ojFgKp6hIlro
+         /osxA4Fnkp7Fs5XcrO8V7gXoY0p1Lcy5JvUhyF77ekwsqWMz7B1gCunk/EI5AoZmg7+n
+         33e8hah6Kwb/YCX6aI00f0Vq7ryp9eprXsx6JNMF40kAck2rqw5VMgebXTF4T/Or34mQ
+         mmljt8saimpHgfVZnvmKgTJySJr/As+EQNKtIyDBv+LOJWazH5uRPr5vrmGSL1Slc9g+
+         QEUCj1MeUH7m42qSbqiyjBuEucrW+o8V4mZ+1BaGkqU8W5xvunVZ2Ac3axaCeb7xgd4o
+         yHEQ==
+X-Gm-Message-State: AOAM532B8XwHIJtR2wEYmIrnvYsrR7K1dgxxtdZWgXmsjxd7M9YX+ReR
+        RfS1OyCJ5d+HUnGXRJtVaA==
+X-Google-Smtp-Source: ABdhPJxrdBDMRZsMfXlcAqqKCF6SJxDXpeObfQ7NHHULwBA3poGnWuC12jMRJg/9rKFDPnbTK5zxqw==
+X-Received: by 2002:a92:2801:: with SMTP id l1mr1515644ilf.132.1589929407929;
+        Tue, 19 May 2020 16:03:27 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b7sm366733ioq.40.2020.05.19.15.44.10
+        by smtp.gmail.com with ESMTPSA id h10sm412676ioe.3.2020.05.19.16.03.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 15:44:11 -0700 (PDT)
-Received: (nullmailer pid 827084 invoked by uid 1000);
-        Tue, 19 May 2020 22:44:10 -0000
-Date:   Tue, 19 May 2020 16:44:10 -0600
+        Tue, 19 May 2020 16:03:27 -0700 (PDT)
+Received: (nullmailer pid 857175 invoked by uid 1000);
+        Tue, 19 May 2020 23:03:26 -0000
+Date:   Tue, 19 May 2020 17:03:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
-Subject: Re: [PATCH v8 7/8] tpm: Add YAML schema for TPM TIS I2C options
-Message-ID: <20200519224410.GA824372@bogus>
-References: <20200512141431.83833-1-amirmizi6@gmail.com>
- <20200512141431.83833-8-amirmizi6@gmail.com>
+To:     Stephen Warren <swarren@wwwdotorg.org>
+Cc:     Mian Yousaf Kaukab <ykaukab@suse.de>, robin.murphy@arm.com,
+        devicetree@vger.kernel.org, talho@nvidia.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, afaerber@suse.de,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Subject: Re: [PATCH 2/4] dt-bindings: sram: add documentation for
+ reserved-only flag
+Message-ID: <20200519230326.GA827289@bogus>
+References: <20200512144803.24344-1-ykaukab@suse.de>
+ <20200512144803.24344-2-ykaukab@suse.de>
+ <52f099e4-5c03-2141-f049-cd3adeb04c5b@wwwdotorg.org>
+ <20200513104127.GA2309@suse.de>
+ <efcc6b5e-423c-8ae1-8a46-d6a06c1a1bab@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200512141431.83833-8-amirmizi6@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <efcc6b5e-423c-8ae1-8a46-d6a06c1a1bab@wwwdotorg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 05:14:30PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
+On Tue, May 19, 2020 at 10:16:43AM -0600, Stephen Warren wrote:
+> On 5/13/20 4:41 AM, Mian Yousaf Kaukab wrote:
+> > On Tue, May 12, 2020 at 01:45:28PM -0600, Stephen Warren wrote:
+> >> On 5/12/20 8:48 AM, Mian Yousaf Kaukab wrote:
+> >>> Add documentation for the new optional flag added for SRAM driver.
+> >>
+> >>> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
+> >>
+> >>> +  reserved-only:
+> >>> +    description:
+> >>> +      The flag indicating, that only SRAM reserved regions have to be remapped.
+> >>> +      remapping type is selected depending upon no-memory-wc as usual.
+> >>> +    type: boolean
+> >>
+> >> This feels a bit like a SW flag rather than a HW description, so I'm not
+> >> sure it's appropriate to put it into DT.
+> > 
+> > Reserved regions themselves are software descriptions, no? Then we have 'pool'
+> > flag which is again a software flag and so on. This flag falls into same
+> > category and nothing out of ordinary.
 > 
-> Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
-> PTP based physical layer.
+> I suppose that's true to some extent. This is indeed a description of
+> the system environment presented to the SW that consumes the DT, which
+> is a bit more than pure HW description but still a description of
+> something imposed externally rather than describing something that's up
+> to the discretion of the consuming SW. So, go ahead.
 > 
-> This patch adds the documentation for corresponding device tree bindings of
-> I2C based Physical TPM.
-> Refer to the 'I2C Interface Definition' section in
-> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
-> for specification.
+> >> Are there any cases where the SW should map all of the SRAM, i.e. where
+> >> we wouldn't expect to set reserved-only? [...]
+> > 
+> > Yes, here are a few examples:
+> > arch/arm/boot/dts/aspeed-g*.dtsi
+> > arch/arm/boot/dts/at91*.dtsi
+> > arch/arm/boot/dts/bcm7445.dtsi
+> > Then arch/arm/boot/dts/dra7.dtsi is an example where we should map everything
+> > except the reserved region.
+> > 
+> >> [...] I'd expect reserved-only to be
+> >> the default, and perhaps only, mode of operation for the SRAM driver.
+> > 
+> > It will break compatibility with existing dtbs.
+> > 
+> >> If we can't do that because some SW currently expects to be able to map
+> >> arbitrary portions of the SRAM, shouldn't that SW be fixed to tell the
+> >> SRAM driver which parts it's using, hence still allowing the driver to
+> >> only map in-use portions?
+> > 
+> > User doesn’t need sram driver in that case. It can use genalloc api directly.
 > 
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> ---
->  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-> new file mode 100644
-> index 0000000..628c8f3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> This sounds a bit odd. Without a driver for the reserved region, nothing
+> should be touching it, since otherwise there's no code that owns an
+> manages the region. If any code needs to consume the region, it should
+> obtain info about the region from some form of provider code that can
+> handle both the allocation and mapping. Anything else sounds like some
+> consumer code directly making use of DT nodes it doesn't own. But since
+> I'm not familiar enough with the SRAM driver and genalloc code that you
+> mention to fully understand the allocation paths I guess I won't object
+> for now, although it does still sound fishy.
 
-Dual license new bindings please:
+I'm fine with the concept, but I don't think a single flag is adequate. 
+If there are reserved regions within the SRAM, then define child nodes 
+to mark those regions reserved. I don't think you need a new flag. Just 
+a 'reg' property and nothing else.
 
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: I2C PTP based TPM Device Tree Bindings
-> +
-> +maintainers:
-> +  - Amir Mizinski <amirmizi6@gmail.com>
-> +
-> +description:
-> +  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-
-You don't need 'oneOf'.
-
-> +          - enum:
-> +              # Nuvoton's Trusted Platform Module (TPM) (NPCT75x)
-> +              - nuvoton,npct75x
-> +          - const: tcg,tpm-tis-i2c
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt:
-> +    maxItems: 1
-> +
-> +  crc-checksum:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Set this flag to enable CRC checksum.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      tpm_tis@2e {
-
-tpm@2e
-
-> +        compatible = "nuvoton,npct75x", "tcg,tpm-tis-i2c";
-> +        reg = <0x2e>;
-> +        crc-checksum;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.7.4
-> 
+Rob
