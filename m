@@ -2,116 +2,192 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AF6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9074C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF10C207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83678206BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="XX3ksfK6"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UVRs57Az"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgESK0D (ORCPT
+        id S1727057AbgESKcf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 06:26:03 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:14134 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgESK0D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 06:26:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589883962; x=1621419962;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=rt0ifteO2Q6DmuLLDH31oRBTPIJqimPHw4gnMaEY94M=;
-  b=XX3ksfK61swSxk7LMN3CUZrvaY6rZn9wOcizo2zbnqLs9yukDaEf9ONp
-   yzrCK3Qu9CchLM1oBUch0nYb7VMyYZJm64vxiYI1D6MOIZN7/O/1yl81e
-   KR4unUuxgKF1AwO6gULYXIuQULDl8SnsA9yLj4FBCW/0myiYOruB/7MC3
-   IS7u46vv4pbfNtficjITtI+x4jqpTuXT2Cq6+vgoAvD/zfWj7y8pjvqad
-   aywIi6QVlht4B9CiZyPAtMrBNHZykFQaNQzGh5YhItlPwQMCulsp2O0Rf
-   yemIRy44DuKFCdWvedKMGV/GYh7iDLEDB4m2Km+eRrHH7kHLuWvUJqU4V
-   A==;
-IronPort-SDR: LdawkTFAm4n+RjRpzDLC2tUtB0nKBzLCfIAS+HLACuFeo7EkFgeCPl1TGx7GUd8jVy5JPcJRoq
- h/N3cUP2rlzaCgREWQ6bhD/rT/bYVm0EJNb+aFMriMbVsT4nhQUVhsjy7FgtejdcKvlJvxaTOm
- nTA8KGU9DjkqTLHL12uyrW/QbJk+y8HTtedTDOG8Lqgv9CweSedF6YVOR6HMoBdmlw3T4fGhjq
- 3Z5EcZAamvESE2WYI0ThqVgKztDp32U/40OiaTIh/vOaxaI6hotPkDE0d/m0S4Ln3AImXxlhYz
- bY4=
-X-IronPort-AV: E=Sophos;i="5.73,409,1583218800"; 
-   d="scan'208";a="77149472"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2020 03:26:02 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 19 May 2020 03:26:03 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 19 May 2020 03:26:01 -0700
-References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-2-lars.povlsen@microchip.com> <CAHp75VcA-oDboufsDNx1ZR4+HBwYt7LdLOpbfs7-bM9ByucKJA@mail.gmail.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no IRQ specified in DT
-In-Reply-To: <CAHp75VcA-oDboufsDNx1ZR4+HBwYt7LdLOpbfs7-bM9ByucKJA@mail.gmail.com>
-Date:   Tue, 19 May 2020 12:25:58 +0200
-Message-ID: <87a724p6fd.fsf@soft-dev15.microsemi.net>
+        Tue, 19 May 2020 06:32:35 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:34645 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgESKce (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 06:32:34 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200519103232euoutp02b89446be60352e18a3dc198425b4aef5~QZ2Uf2Wmq0553105531euoutp02P
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 10:32:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200519103232euoutp02b89446be60352e18a3dc198425b4aef5~QZ2Uf2Wmq0553105531euoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589884352;
+        bh=8aqTPyb+75966luDR2CZdhE8lWVOMDbEHkMTToW0Gdw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=UVRs57AznvQOXUgb5s5z3+UVfOW1EGUps9dAtKqHklAIhRbvcXm1nnwBYuzjJxOSP
+         qyJQ3uFLEJdjHLrurTC+epApaWtG+fLxQYXNsks3f3/2DVNZVak+B/ZZu+Ac9ghSk0
+         hLvuvaXwtP+RXnc/gT4WhD3iZlZ6AoEdv3oRTKbI=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200519103232eucas1p194e62333f8c5f252d962d95915630bcb~QZ2UKu4ga1478214782eucas1p1m;
+        Tue, 19 May 2020 10:32:32 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 9E.10.60679.0C5B3CE5; Tue, 19
+        May 2020 11:32:32 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200519103231eucas1p105f6b8b68a285536795e726a4e98bee9~QZ2TxWUkR1516315163eucas1p1p;
+        Tue, 19 May 2020 10:32:31 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200519103231eusmtrp1db3cd1b337f0a47dd218d8a5924c6d3a~QZ2Twp9Dt0843608436eusmtrp16;
+        Tue, 19 May 2020 10:32:31 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-3f-5ec3b5c03e45
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F6.4D.07950.FB5B3CE5; Tue, 19
+        May 2020 11:32:31 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200519103231eusmtip25924103fd58f2427f9171da4f4a01fbd~QZ2TLBGAi0462804628eusmtip2k;
+        Tue, 19 May 2020 10:32:31 +0000 (GMT)
+Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding
+ all top level devices
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Ji Luo <ji.luo@nxp.com>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>
+Message-ID: <8dd9ecc2-0c61-49b7-d485-b169eb721712@samsung.com>
+Date:   Tue, 19 May 2020 12:32:30 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <18332705-dd61-9a0e-d931-ae610c8fb600@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjtt3t37505+bksv7QXi8qkLK3oRmFZCiNUhP4TNK95UdE52d3s
+        QYVmZQ1JyZY6NSWh0qzhNJ2GpisUGflI6KWJmrCK1ggNU7JyXi3/O98553sc+BhCYZf6MakZ
+        Ol6bwaUrKQ+yqWumb2fHk+fxu/PMUrbyRa+ULf36h2Jzq80UWzL8gmatzT5sy5iTYu+3FyB2
+        sLV8nu9rl7AVU0aCvdI27zDY5qgjnqqmp01SVYvpA62qsuhVltrrlOpZRR2tqv9mlagmLRti
+        6FiPQ0l8emoWr90VmuCRkl3jIjO/+Jwxu4x0NnJgA5IxgPeCo/G7xIA8GAV+gGBmLp8WiykE
+        n3/MEmIxicBRbyOWWoYKRhZd9xG4vhVSbkGBXQja6nYYEMOswokwfcvLTVM4GAxOw4LFBweC
+        5fVH0t1L4MskDJXeWRDkOBQqi9yCjCHxFnhg70JuvBrHgb26AYkeb+gpnVjwyPBhGCibot2Y
+        wBuh2VlOiNgX3k9ULuQBPE6D42Wf1H0Q4HCoGFCIAVbBl+5GWsTrwF6UT4r+XARjvY9oschH
+        MHipBImugzDcO0u5BxF4O5hbd4l0GDTkFJHifC946/QWb/CCm03FhEjL4drVxbVbwdT9+N/a
+        zv5XRCFSmpYlMy1LY1qWxvR/bxUia5EvrxfUybwQksGfDhI4taDPSA46pVFb0PyL2X93T1lR
+        669EG8IMUnrKEzS2eIWUyxLOqm0IGELpIy/8NE/Jk7iz53it5qRWn84LNuTPkEpf+Z67n+MU
+        OJnT8Wk8n8lrl1QJI/PLRoXJP/1vCCsnj24TnpjD5HlKijOE90QZnQ8ZMvbC6LG8yPdZz+tP
+        rKiaHo8eDx+I2LwpKqCdOp8Qva8M9Q+YWhreBB0/GTJaYyFG7lVNrinWlSUJaRp8um9oLuVA
+        lzmnM+y2itPNFKRbDfq9kWvfGY2SAMf2hhj5/oiOi0PW9UpSSOGCAwmtwP0FXJ+ck14DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xe7r7tx6OM1jWo2kx/8g5VouZb/6z
+        WTQvXs9mMePOEXaLHdtFLHY+fMtmsXxfP6PF5V1zgOLn9zFZzP0yldmidS9QRdehv2wOPB7b
+        dm9j9dg56y67x4JNpR6bVnWyeeyfu4bdY+O7HUwenzfJBbBH6dkU5ZeWpCpk5BeX2CpFG1oY
+        6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GU0rHzPUvBKpGL9+6nsDYzPBboYOTkk
+        BEwkbvffY+9i5OIQEljKKPHo+XIWiISMxMlpDawQtrDEn2tdbBBFbxklfs85xdTFyMEhLJAk
+        8WCeJUgNm4ChRNdbkBpODhEBLYlN1x6zgNQzC7SxSByafxyq+QOTxOzNJ5hAqngF7CTmT34M
+        to1FQFVixeljjCC2qECsxOprrYwQNYISJ2c+AavhFLCXuDj7CzuIzSxgJjFv80NmCFteYvvb
+        OVC2uMStJ/OZJjAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltspFecmFtcmpeul5yfu4kR
+        GLnbjv3csoOx613wIUYBDkYlHt6E/ENxQqyJZcWVuYcYJTiYlUR4J7wACvGmJFZWpRblxxeV
+        5qQWH2I0BXpuIrOUaHI+MKnklcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLp
+        Y+LglGpg9LFxi3+awPd1gaBy+4RvLxrMTlR6f/ryhtnd8KhedOSjDxzhUQyFD0R+vrmUtC7/
+        VBXv5+qXi/Na93wtqrn5bZslk+KHX5bSQqyt0y4tdcyYef6Q3ZVnws+fbDPb0GBW9l/09rGq
+        xYckRXzl/TlOXvvWPTPo1xqmCZcvJkaJTYqtt58tPlfhrRJLcUaioRZzUXEiAGA0T7HyAgAA
+X-CMS-MailID: 20200519103231eucas1p105f6b8b68a285536795e726a4e98bee9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200519062510eucas1p27bc59da66e1b77534855103a27f87452
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200519062510eucas1p27bc59da66e1b77534855103a27f87452
+References: <20200515053500.215929-1-saravanak@google.com>
+        <CGME20200519062510eucas1p27bc59da66e1b77534855103a27f87452@eucas1p2.samsung.com>
+        <20200515053500.215929-5-saravanak@google.com>
+        <e0f9211d-9cf6-a12d-eb63-df06910920ed@samsung.com>
+        <CAGETcx_FOGgHdaNY8Dd-4rgT28U7_OHYeLsazbUE-1hyuatRSg@mail.gmail.com>
+        <18332705-dd61-9a0e-d931-ae610c8fb600@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi
 
-Andy Shevchenko writes:
-
-> On Wed, May 13, 2020 at 5:03 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+On 19.05.2020 09:11, Marek Szyprowski wrote:
+> On 19.05.2020 08:48, Saravana Kannan wrote:
+>> On Mon, May 18, 2020 at 11:25 PM Marek Szyprowski
+>> <m.szyprowski@samsung.com> wrote:
+>>> On 15.05.2020 07:35, Saravana Kannan wrote:
+>>>> The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
+>>>> parsing of the device tree nodes when a lot of devices are added. This
+>>>> will significantly cut down parsing time (as much a 1 second on some
+>>>> systems). So, use them when adding devices for all the top level 
+>>>> device
+>>>> tree nodes in a system.
+>>>>
+>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>>> This patch recently landed in linux-next 20200518. Sadly, it causes
+>>> regression on Samsung Exynos5433-based TM2e board:
+>>>
+>>> ...
+>>>
+>>> Both issues, the lack of DMA for SPI device and Synchronous abort in 
+>>> I2S
+>>> probe are new after applying this patch. I'm trying to investigate 
+>>> which
+>>> resources are missing and why. The latter issue means typically that 
+>>> the
+>>> registers for the given device has been accessed without enabling the
+>>> needed clocks or power domains.
+>> Did you try this copy-pasta fix that I sent later?
+>> https://lore.kernel.org/lkml/20200517173453.157703-1-saravanak@google.com/ 
 >>
->> With this change a SPI controller can be added without having a IRQ
->> associated, and causing all transfers to be polled. For SPI controllers
->> without DMA, this can significantly improve performance by less
->> interrupt handling overhead.
+>>
+>> Not every system would need it (my test setup didn't), but it helps 
+>> some cases.
+>>
+>> If that fix doesn't help, then some tips for debugging the failing 
+>> drivers.
+>> What this pause/resume patch effectively (not explicitly) does is:
+>> 1. Doesn't immediately probe the devices as they are added in
+>> of_platform_default_populate_init()
+>> 2. Adds them in order to the deferred probe list.
+>> 3. Then kicks off deferred probe on them in the order they were added.
+>>
+>> These drivers are just not handling -EPROBE_DEFER correctly or
+>> assuming probe order and that's causing these issues.
+>>
+>> So, we can either fix that or you can try adding some code to flush
+>> the deferred probe workqueue at the end of fw_devlink_resume().
+>>
+>> Let me know how it goes.
 >
-> ...
+> So far it looks that your patch revealed a hidden issue in exynos5433 
+> clocks configuration, because adding clk_ignore_unused parameter to 
+> kernel command line fixes the boot. I'm still investigating it, so 
+> probable you can ignore my regression report. I will let you know asap 
+> I finish checking it.
 >
->> +#define VALID_IRQ(i) (i >= 0)
->
-> drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
->
-> Candidate to be in include/linux/irq.h ?
->
-> ...
->
->> +       if (VALID_IRQ(dws->irq))
->> +               free_irq(dws->irq, master);
->
-> Isn't free_irq() aware of invalid ones (not found IRQ in the tree or
-> any other backend container won't do anything)?
->
->
->>  err_free_master:
->>         spi_controller_put(master);
->>         return ret;
->> --
->> 2.26.2
+Okay, I confirm that the issue is in the Exynos I2S driver and 
+Exynos5433 clock provider. I've posted a quick workaround. I'm sorry for 
+the noise, your patch is fine.
 
-I'll rework this with Serge.
-
-Thank you!
-
+Best regards
 -- 
-Lars Povlsen,
-Microchip
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
