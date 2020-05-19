@@ -2,122 +2,158 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0FAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD88C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74AFD2070A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9436D2070A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BGCCEXGc"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Zn9YfODW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgESUeq (ORCPT
+        id S1726977AbgESUeu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 16:34:46 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:34958 "EHLO
+        Tue, 19 May 2020 16:34:50 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:35014 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725885AbgESUep (ORCPT
+        by vger.kernel.org with ESMTP id S1726890AbgESUeu (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 16:34:45 -0400
+        Tue, 19 May 2020 16:34:50 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 02B4730D7BF;
-        Tue, 19 May 2020 13:33:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 02B4730D7BF
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id E86B430D7F8;
+        Tue, 19 May 2020 13:33:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com E86B430D7F8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1589920402;
-        bh=yuPEfulO+iRK9pTGrG+3vEVTPxwnaY2RYoFKfJNpl/4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BGCCEXGcLPBUG5WcSDFpUnH7X6Scj2cn6JSilSFImuyVpUvNUEbcGLaTqCiJFjL3K
-         RC/aTNSU30qAdciwtiidWHRIF/dypocgc+fxv9lyMCer+wWJgYag7fmkpvdu32QtpX
-         rTr1Zk1rKZs1p0VraKIQ5wSOx8XgHzb84gj4JsY0=
+        s=dkimrelay; t=1589920405;
+        bh=Jx9o5q4rqWknWAh3A4r4svxcqnZqLuGqWP4hNMHmQCo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Zn9YfODWzOH0uHaMv04NukeJVIuRjyqPhQSegAxObvpQGSlBLEpdC9K5UvcRCmnlf
+         vyG9ydpgzeOnIYU1wyDVruyLnUVS1b9La8L7KcsbdLgcMD2x1bulfwfPzcyBYo6B0F
+         06Ck7xFgW0oZeS80K674Xj8Xvk+wx3jRteSYkyvU=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 4463514008B;
-        Tue, 19 May 2020 13:34:42 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id F2042140069;
+        Tue, 19 May 2020 13:34:46 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     james.quinlan@broadcom.com,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        Dan Williams <dan.j.williams@intel.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE), Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        iommu@lists.linux-foundation.org (open list:DMA MAPPING HELPERS),
-        Julien Grall <julien.grall@arm.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
-        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
-        ENDPOINT DRIVERS),
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE), Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 00/15] PCI: brcmstb: enable PCIe for STB chips
-Date:   Tue, 19 May 2020 16:33:58 -0400
-Message-Id: <20200519203419.12369-1-james.quinlan@broadcom.com>
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 03/15] dt-bindings: PCI: Add bindings for more Brcmstb chips
+Date:   Tue, 19 May 2020 16:34:01 -0400
+Message-Id: <20200519203419.12369-4-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200519203419.12369-1-james.quinlan@broadcom.com>
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset expands the usefulness of the Broadcom Settop Box PCIe
-controller by building upon the PCIe driver used currently by the
-Raspbery Pi.  Other forms of this patchset were submitted by me years
-ago and not accepted; the major sticking point was the code required
-for the DMA remapping needed for the PCIe driver to work [1].
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-There have been many changes to the DMA and OF subsystems since that
-time, making a cleaner and less intrusive patchset possible.  This
-patchset implements a generalization of "dev->dma_pfn_offset", except
-that instead of a single scalar offset it provides for multiple
-offsets via a function which depends upon the "dma-ranges" property of
-the PCIe host controller.  This is required for proper functionality
-of the BrcmSTB PCIe controller and possibly some other devices.
+- Add compatible strings for three more Broadcom STB chips:
+  7278, 7216, 7211 (STB version of RPi4).
+- add new property 'brcm,scb-sizes'
+- add new property 'resets'
+- add new property 'reset-names'
+- allow 'ranges' and 'dma-ranges' to have more than one item
+  and update the example to show this.
 
-[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+---
+ .../bindings/pci/brcm,stb-pcie.yaml           | 40 +++++++++++++++++--
+ 1 file changed, 36 insertions(+), 4 deletions(-)
 
-Jim Quinlan (15):
-  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
-  ahci_brcm: fix use of BCM7216 reset controller
-  dt-bindings: PCI: Add bindings for more Brcmstb chips
-  PCI: brcmstb: Add compatibily of other chips
-  PCI: brcmstb: Add suspend and resume pm_ops
-  PCI: brcmstb: Asserting PERST is different for 7278
-  PCI: brcmstb: Add control of rescal reset
-  of: Include a dev param in of_dma_get_range()
-  device core: Add ability to handle multiple dma offsets
-  dma-direct: Invoke dma offset func if needed
-  arm: dma-mapping: Invoke dma offset func if needed
-  PCI: brcmstb: Set internal memory viewport sizes
-  PCI: brcmstb: Accommodate MSI for older chips
-  PCI: brcmstb: Set bus max burst side by chip type
-  PCI: brcmstb: add compatilbe chips to match list
-
- .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
- arch/arm/include/asm/dma-mapping.h            |  17 +-
- drivers/ata/ahci_brcm.c                       |  14 +-
- drivers/of/address.c                          |  54 ++-
- drivers/of/device.c                           |   2 +-
- drivers/of/of_private.h                       |   8 +-
- drivers/pci/controller/Kconfig                |   4 +-
- drivers/pci/controller/pcie-brcmstb.c         | 403 +++++++++++++++---
- include/linux/device.h                        |   9 +-
- include/linux/dma-direct.h                    |  16 +
- include/linux/dma-mapping.h                   |  44 ++
- kernel/dma/Kconfig                            |  12 +
- 12 files changed, 542 insertions(+), 81 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 8680a0f86c5a..66a7df45983d 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -14,7 +14,13 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++    items:
++      - enum:
++          - brcm,bcm2711-pcie # The Raspberry Pi 4
++          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
++          - brcm,bcm7278-pcie # Broadcom 7278 Arm
++          - brcm,bcm7216-pcie # Broadcom 7216 Arm
++          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+ 
+   reg:
+     maxItems: 1
+@@ -34,10 +40,12 @@ properties:
+       - const: msi
+ 
+   ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
+ 
+   dma-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 6
+ 
+   clocks:
+     maxItems: 1
+@@ -58,8 +66,30 @@ properties:
+ 
+   aspm-no-l0s: true
+ 
++  resets:
++    description: for "brcm,bcm7216-pcie", must be a valid reset
++      phandle pointing to the RESCAL reset controller provider node.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++  reset-names:
++    items:
++      - const: rescal
++
++  brcm,scb-sizes:
++    description: (u32, u32) tuple giving the 64bit PCIe memory
++      viewport size of a memory controller.  There may be up to
++      three controllers, and each size must be a power of two
++      with a size greater or equal to the amount of memory the
++      controller supports.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - items:
++          minItems: 2
++          maxItems: 6
++
+ required:
+   - reg
++  - ranges
+   - dma-ranges
+   - "#interrupt-cells"
+   - interrupts
+@@ -93,7 +123,9 @@ examples:
+                     msi-parent = <&pcie0>;
+                     msi-controller;
+                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+-                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
++                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
++                    brcm,scb-sizes = <0x0 0x80000000 0x0 0x80000000>;
+             };
+     };
 -- 
 2.17.1
 
