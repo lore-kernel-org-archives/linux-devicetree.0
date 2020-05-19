@@ -2,120 +2,133 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648D8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5325EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4980D206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589909823;
-	bh=AEz7ujCs8OrEehwROrXdW4IkUmcTdY16kiEaZUjJA9o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PzN6lNQvJjYBpjnfasznkK7aiTpUSp4TBe4joDQLhH5RjuYSW6J/Xqm2JYpqc/XW0
-	 B3iv7ImIxd6kbFXqhadO/JYMMM4nhFZseiGS7wgwMv8EH/qkCQEcZm/VMWb6G6Yv5I
-	 W/CbJwibShQYFpjmhfTy+XIFD23qfa2N03iKfksI=
+	by mail.kernel.org (Postfix) with ESMTP id 4030D20708
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgESRhC (ORCPT
+        id S1729317AbgESRhg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 13:37:02 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37155 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgESRhC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 13:37:02 -0400
-Received: by mail-io1-f67.google.com with SMTP id t15so40477ios.4;
-        Tue, 19 May 2020 10:37:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XTPJr0RoCtcKkiWN8fbDLRyRDQpXZpviGSZLqL/Da5g=;
-        b=LW41viB7s8Sjv6KJfEB+P/EXQE5HrneqawvZL60GZiOu2fGYVtsz1GnXeh1nti8J6j
-         S5fJ5W8DW51OMK6u0TZALywnnC5lx77tkrnYVF6Nyfx9p8t8Fgd07G0QdzIIUYcpYZU2
-         +vOBVFCEPBPzMZqcqANgDIaQn7c+PL2HYpQNeCNKEQXtTeUwPhisK5nlUGcdnZuHjQlu
-         Xu9xwzuF/1lY2103vKFLFjnfU+f3U4vSr28ZYyqQKYzvwGn7SExphnxR1zFlNRKBQkyx
-         +O4At3463i46J61TAq5yoQ8GXCUixXB35cj0OpdUW988uZ6eRvtWEYvJl4SvDEyQJxEe
-         W2ZQ==
-X-Gm-Message-State: AOAM530pvKjFMEYVsotyA5XAhPnoGxxnvq8QCi9UtEOdE0h0TiTfjcUv
-        U6fj0N0f09hnDGCsteSXBWqD3FA=
-X-Google-Smtp-Source: ABdhPJwH2K7ECQ4/Q1DUnIHStWxaucXWvfJTMS0U8iF4gW6tfpn8mAiwZOMeQ4V6tSAqwn3rTWkewQ==
-X-Received: by 2002:a6b:d219:: with SMTP id q25mr41096iob.202.1589909821031;
-        Tue, 19 May 2020 10:37:01 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h9sm127992ioa.6.2020.05.19.10.36.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 10:37:00 -0700 (PDT)
-Received: (nullmailer pid 341666 invoked by uid 1000);
-        Tue, 19 May 2020 17:36:58 -0000
-Date:   Tue, 19 May 2020 11:36:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Mason Yang <masonccyang@mxic.com.tw>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        Tue, 19 May 2020 13:37:36 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2224 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729001AbgESRhg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 13:37:36 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 66C6BCE8FBF4D674BAFD;
+        Tue, 19 May 2020 18:37:33 +0100 (IST)
+Received: from localhost (10.47.86.149) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 19 May
+ 2020 18:37:32 +0100
+Date:   Tue, 19 May 2020 18:37:05 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        <linux-kernel@vger.kernel.org>,
+        <~postmarketos/upstreaming@lists.sr.ht>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: memory: document Renesas RPC-IF
- bindings
-Message-ID: <20200519173658.GA340788@bogus>
-References: <26faf5e8-26eb-cceb-a500-f0fd64609737@cogentembedded.com>
- <f998fe6c-c586-17cb-9343-30460ce0bf9d@cogentembedded.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200519183705.000040e5@Huawei.com>
+In-Reply-To: <20200519164433.GA8726@ict14-OptiPlex-980>
+References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+        <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+        <20200519132207.GA4623@gerhold.net>
+        <20200519140354.GB30573@ict14-OptiPlex-980>
+        <20200519160137.GJ1634618@smile.fi.intel.com>
+        <20200519164433.GA8726@ict14-OptiPlex-980>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f998fe6c-c586-17cb-9343-30460ce0bf9d@cogentembedded.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.86.149]
+X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 18 May 2020 23:33:15 +0300, Sergei Shtylyov wrote:
-> Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
-> HyperFlash connected to the SoC to be accessed via the external address
-> space read mode or the manual mode.
+On Tue, 19 May 2020 18:44:33 +0200
+Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+
+> On Tue, May 19, 2020 at 07:01:37PM +0300, Andy Shevchenko wrote:
+> > On Tue, May 19, 2020 at 04:03:54PM +0200, Jonathan Albrieux wrote:  
+> > > On Tue, May 19, 2020 at 03:22:07PM +0200, Stephan Gerhold wrote:  
+> > > > On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:  
+> > 
+> > ...
+> >   
+> > > > > +maintainers:
+> > > > > +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>  
+> > > > 
+> > > > Should probably add someone here, although I'm not sure who either.
+> > > >   
+> > > 
+> > > Yep I couldn't find a maintainer for that driver..what to do in this case?  
+> > 
+> > Volunteer yourself!
+> >   
 > 
-> Document the device tree bindings for the Renesas RPC-IF found in the R-Car
-> gen3 SoCs.
-> 
-> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
-> Changes in version 3:
-> - fixed up the whitespace and added hyphens in the "compatible" prop text, also
->   removed the comments;
-> - specified the subnode name as "flash", and used "enum" in the subnode text;
-> - fixed up the SPDX-License-Identifier: tag.
-> 
-> Changes in version 2:
-> - rewrote the bindings in YAML.
-> 
->  Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml |   88 ++++++++++
->  1 file changed, 88 insertions(+)
-> 
+> While I'd really like to, I have to decline the offer as I currently don't have
+> enought knowledge to become a maintainer :-) but thank you! (Who knows, maybe in
+> a couple of year!) Now I'll make the final edits and will submit a new
+> patchset soon with all the changes
+
+Don't be so hard on yourself.  We all get thrown in at the deep end :)
+
+Note that being a driver maintainer (or even just the binding) really
+just means you get cc'd on the patches and I'll make sure you've had time
+to review them if you wish.   Best of all, if you have hardware (and time)
+being able to test them, that is extremely useful (whether you are
+maintaining the driver or not!) 
+
+I closely review the majority of stuff that comes through IIO and in
+the case of bindings we also have Rob and co. doing an amazing job.
+We have some excellent additional reviewers who review IIO stuff all the
+time, some of which have reviewed your patch I see.  Without them I'd
+never survive the deluge.
+
+Of course it's entirely your decision, but I'd definitely encourage you
+to give it a go.
+
+Thanks,
+
+Jonathan
 
 
-My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml: patternProperties:flash@[0-9a-f]+$:properties:compatible: [{'enum': ['cfi-flash', 'jedec,spi-nor']}] is not of type 'object', 'boolean'
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1292811
+> 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
+> > 
+> >   
+> 
+> Best regards,
+> Jonathan Albrieux
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
 
