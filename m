@@ -2,95 +2,137 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59425C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEE7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECE420826
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAFF6207E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZIPUfQX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iMBY+L1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgESUDp (ORCPT
+        id S1726447AbgESUHr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 16:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52876 "EHLO
+        Tue, 19 May 2020 16:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgESUDp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 16:03:45 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351BBC08C5C0;
-        Tue, 19 May 2020 13:03:45 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z26so392101pfk.12;
-        Tue, 19 May 2020 13:03:45 -0700 (PDT)
+        with ESMTP id S1726369AbgESUHr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 16:07:47 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E67C08C5C2
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:07:47 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id i89so419096uad.5
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VClIq2B9DplbSOKi1zTCsffgA/r+9JDCQ+/Oexq2Kbk=;
-        b=KZIPUfQXpnCxNG32pxX147DeR6D91Kdr+r0m2x4aGxjDVGgQTL2+v1HSt2ZL67zpC3
-         /tW2rHERtgL/AQMlVG1VQcmUqJwvPy36j/pfpUBJ5dc5nAbx6nAmH5MkkxyAMFKmvJhx
-         0D0rzfdpdd2CPak1QIt70MAUD8tSVnzLf4Yo28Ijwy34ZtiSTHbFGaJWBQS4TKbFJQ4n
-         AaHerd7Ug/YPmUEA62/AIZOqtuE8w5pDQwofasje25X9FH4ut4nLAGutvpfBwjHH4rrg
-         Beqeuj18UmQ4vCgONCQcAwiG0lTFx6bMnRArEfqzym9uID+meL/sPOIZ4uyergWaPz+9
-         OI1Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UXbwGQX7NBj93macBQks6TpgCaCAqI85y6U/Eho5NaA=;
+        b=iMBY+L1k7S2P7A4yIvSJy4MuZVOr4X+yr4pt1EqaJLCp6UcTm+kmuYjI5XDEe9FOP2
+         SumGBT1xC3NYhOGo+zSCsVuJcjHpynQ2q6oJ45AVzmudv6qxVEOkF4nnIgDJqe8LeQwJ
+         yB5S7v/Ar4tfTj9fY0v9m2ouNF1hwJw9OzKyk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VClIq2B9DplbSOKi1zTCsffgA/r+9JDCQ+/Oexq2Kbk=;
-        b=cPo0Xw18P8kGMn/pdFmNz/KLgsuo1aqCqQjGqCIdXHp6vBYat3xXug8d7YV4DHueGQ
-         QABZQz2MX20b2ulre3/B7im5Jj9ZA9Ynsdk519dSo23qyI6R5O8rPM46OfL1s0Lg5OgB
-         uKNYmPr4efbOBTB5wsgUZM+KwdkrfYTaaF5FnURpUmzR23/YBlOVRMb7+c5rcNw0Z7nd
-         sUl1cePWWDUqgd4SxtDYKWWfz7NoaGa3fEG4sCkgPH3cjcoSyXdnw3cywXv41gAIJNd0
-         dxT4EbInSbfH5xS6VY1w5GT051CYkcX/dp1FIqNmREEBm3BXVBp/rtI5NLLoRs4imXpx
-         l9IQ==
-X-Gm-Message-State: AOAM533b4kuBzVnCLnSb8Qqf+vr4p9oMgRBdaxyhZJ8c18xr+I6U0+Fd
-        jUECmhplYC8WgOh/gDBPSpFY5WKD
-X-Google-Smtp-Source: ABdhPJy9ijc7fEmAwfNBZJGPHO63gmZjhFXdGzWAQS6rK1iFl0YpaplVO/GUwUsLu9q/nrTUCnEltQ==
-X-Received: by 2002:a63:dd11:: with SMTP id t17mr856548pgg.348.1589918624178;
-        Tue, 19 May 2020 13:03:44 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z29sm268534pff.120.2020.05.19.13.03.42
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UXbwGQX7NBj93macBQks6TpgCaCAqI85y6U/Eho5NaA=;
+        b=NsSRHSfMYHEb7ofC3w42w/92QA+51XX6/pAfVDHPlcUOXI5bIniROfXVDXaAth/6ZJ
+         RKkGgVVwc+lQUSXY+vcLqgOVg/ECNZdc/sS5k9vLpkVzqGqFRkb7HZIFAwEgMtshth8y
+         LXtGqHBH7GyoOd/zKsufXQF62HWs2uZlEc9GYRtAgW1jN0kmxR8YoRGCuGJsMHFCPabI
+         rusfXAoZ8QKTS+u36Z+dNJCFqywYzk/mMgKD0SbRWKdrzosQLTj0k3Sy3pN55O5Q1v+Z
+         xpN9GgJv+SKM5xuzwz+KV5C5JhRZkM1E9ZF71vUhcbGwOFR+ZKOLvSe4V6qyiEQEQq3S
+         TJ6A==
+X-Gm-Message-State: AOAM530lKbtRSwW/3U7K6eT3K5FqTAvyEla6PlwcBYSoZHO7PkmNPSZO
+        Qw8lAph/96O8p+1pOkKdynBOJm9F/kM=
+X-Google-Smtp-Source: ABdhPJw27XntE823KyS5nOOl2c8qnEfBY6Ny0ozR8bppup6hHYKFig0zkPTGreVJcEtNvbJIh00elA==
+X-Received: by 2002:ab0:6688:: with SMTP id a8mr935795uan.93.1589918865821;
+        Tue, 19 May 2020 13:07:45 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id n17sm178836vkn.29.2020.05.19.13.07.44
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 13:03:43 -0700 (PDT)
-Subject: Re: [PATCH net-next 1/4] net: phy: dp83869: Update port-mirroring to
- read straps
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200519141813.28167-1-dmurphy@ti.com>
- <20200519141813.28167-2-dmurphy@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <fad928ae-93cb-2ce8-98ab-68acb7bb02b8@gmail.com>
-Date:   Tue, 19 May 2020 13:03:42 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Tue, 19 May 2020 13:07:45 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id k3so406320ual.8
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:07:44 -0700 (PDT)
+X-Received: by 2002:ab0:b13:: with SMTP id b19mr945772uak.91.1589918864128;
+ Tue, 19 May 2020 13:07:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200519141813.28167-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1589914405-6674-1-git-send-email-pillair@codeaurora.org>
+In-Reply-To: <1589914405-6674-1-git-send-email-pillair@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 19 May 2020 13:07:32 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XXRhh-1cWH5rMPq4W_Dh4yE=++sga_aJ8cwFkKkrAXbg@mail.gmail.com>
+Message-ID: <CAD=FV=XXRhh-1cWH5rMPq4W_Dh4yE=++sga_aJ8cwFkKkrAXbg@mail.gmail.com>
+Subject: Re: [PATCH v10] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
+ device node
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
+On Tue, May 19, 2020 at 11:53 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
+>
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on sc7180 soc.
+>
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+> Changes from v9:
+> - Place the wlan_fw_mem under reserved-memory node
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 4e9149d..38b102e 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -389,6 +389,13 @@
+>         };
+>  };
+>
+> +&wifi {
+> +       status = "okay";
+> +       wifi-firmware {
+> +               iommus = <&apps_smmu 0xc2 0x1>;
+> +       };
+> +};
+> +
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>
+>  &qspi_clk {
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index f1280e0..19bd7d0 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -106,6 +106,11 @@
+>                         no-map;
+>                 };
+>
+> +               wlan_fw_mem: memory@94100000 {
+> +                       reg = <0 0x94100000 0 0x200000>;
+> +                       no-map;
+> +               };
+> +
+>                 rmtfs_mem: memory@84400000 {
+>                         compatible = "qcom,rmtfs-mem";
+>                         reg = <0x0 0x84400000 0x0 0x200000>;
 
-On 5/19/2020 7:18 AM, Dan Murphy wrote:
-> The device tree may not have the property set for port mirroring
-> because the hardware may have it strapped. If the property is not in the
-> DT then check the straps and set the port mirroring bit appropriately.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+This is less wrong than v9, but still a little wrong.  You should be
+keeping these ordered by unit address.  94100000 comes after 84400000.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+-Doug
