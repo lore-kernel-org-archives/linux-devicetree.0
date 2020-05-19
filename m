@@ -2,91 +2,100 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09118C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD16C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C58432070A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589872602;
-	bh=fpXw8UjrNLsw42ZqREF1astOwgPtPId8PMNmuvmW9iU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gYZ6p7VwfHJ1x2Y8RmXkzLgygW2lPsqjofIcJaRZeEKIptl3OPBRkFFu5zlP8/6UF
-	 lLISMA9RLrKu5ILszy01kQOMaKM3ityc5bwrMipXypWukDUb+LulgEJNBpCW6xHJlD
-	 yV4IEnysGFCvPyIdj28X59t4zLgzzcvYeWGAkTXE=
+	by mail.kernel.org (Postfix) with ESMTP id EEE8520826
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:26:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ixqFKudG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgESHQm convert rfc822-to-8bit (ORCPT
+        id S1728248AbgESH0T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 03:16:42 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:46976 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgESHQm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 03:16:42 -0400
-Received: by mail-ej1-f67.google.com with SMTP id e2so10866155eje.13;
-        Tue, 19 May 2020 00:16:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=czw5XAHuVQyeo0GaaGsHjL+iNsEvTVJwYFnML7pk990=;
-        b=g8Tl14Sniix92Mwgl3vIi4ITFl4rjPY31bEwq5NobtmN7+B9wrsCoew19K73VDXD76
-         ++T63ZgEijGrvR0oYozjTtXSeYaq57c83D2Ef6P4StKBAnhGHfKUWUnmecVY3F8W2ZvO
-         13z0u5KmQfFnnt1Xf9HcetHKFG0Nts0J2WhLzGeb49nzwW3gugm1/uqT4oDODxsRkTrl
-         dTgjhRfSJCM1tnixGzSIib9vAHsIRMF7p8smOdRVbGsjjG5hqWmgBknHmZk6WFHYwrWX
-         iKAtm7boPcm3D+UBiIGq1m1I88+1iUCwKU6Bp1BtS2EGuU02ek9PD8yR45Extib9Pwe6
-         0Pdw==
-X-Gm-Message-State: AOAM530dMzKdDX/M/7uKEKBgCdFmGrGwQe/P1sXLyDvgOHqwVQlkJT1T
-        EmBQEOOwe4du3R9e7gvXRkg=
-X-Google-Smtp-Source: ABdhPJzIRX+Uvac/mFboWQ4qXwL71U8FW6fLVGH+Y+7thPaQdu49D8AiTD5v1+LcEq4/Lq5C6URTog==
-X-Received: by 2002:a17:906:3048:: with SMTP id d8mr18239949ejd.97.1589872599602;
-        Tue, 19 May 2020 00:16:39 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.188])
-        by smtp.googlemail.com with ESMTPSA id o21sm18954edr.68.2020.05.19.00.16.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 00:16:38 -0700 (PDT)
-Date:   Tue, 19 May 2020 09:16:36 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-scsi@vger.kernel.org, avri.altman@wdc.com,
-        martin.petersen@oracle.com, kwmad.kim@samsung.com,
-        stanley.chu@mediatek.com, cang@codeaurora.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 10/10] arm64: dts: Add node for ufs exynos7
-Message-ID: <20200519071636.GA6971@kozik-lap>
-References: <20200514003914.26052-1-alim.akhtar@samsung.com>
- <CGME20200514005313epcas5p3eac58d00d9f617b860a3ac607c8413ec@epcas5p3.samsung.com>
- <20200514003914.26052-11-alim.akhtar@samsung.com>
+        Tue, 19 May 2020 03:26:19 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:20534 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726893AbgESH0T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 03:26:19 -0400
+X-UUID: 09d982d37b6a4b5fbc457764b860d5af-20200519
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FbqUYE08FGkqqB1QZrjAMNDs1rvIDDVUkM2pRn3j0rs=;
+        b=ixqFKudGjDZm10mqOtgNocT+85wz33WUeYWypRfsXQKNIhm/2mSQhO8QnwlKSfzc0wUDpujsopNcl5pZ+RQZIzmXP7XBj4bpnJ6QSnbnwCujiQxvf1kfAVHj8eLQuPkh5K2yOw7I2CilvYUJJd8Y6X1fpqixvWF/TwOW7Wgw8qs=;
+X-UUID: 09d982d37b6a4b5fbc457764b860d5af-20200519
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1872474913; Tue, 19 May 2020 15:26:14 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 19 May 2020 15:26:12 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 19 May 2020 15:26:12 +0800
+Message-ID: <1589873173.513.0.camel@mtksdaap41>
+Subject: Re: [PATCH v14 2/2] i2c: core: support bus regulator controlling in
+ adapter
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-i2c@vger.kernel.org>, <tfiga@chromium.org>,
+        <drinkcat@chromium.org>, <srv_heupstream@mediatek.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Date:   Tue, 19 May 2020 15:26:13 +0800
+In-Reply-To: <20200519065937.GD1094@ninjato>
+References: <20200428061813.27072-1-bibby.hsieh@mediatek.com>
+         <20200428061813.27072-3-bibby.hsieh@mediatek.com>
+         <20200519065937.GD1094@ninjato>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200514003914.26052-11-alim.akhtar@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:09:14AM +0530, Alim Akhtar wrote:
-> Adding dt node foe UFS and UFS-PHY for exynos7 SoC.
-> 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> Tested-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  .../boot/dts/exynos/exynos7-espresso.dts      |  4 ++
->  arch/arm64/boot/dts/exynos/exynos7.dtsi       | 43 ++++++++++++++++++-
->  2 files changed, 45 insertions(+), 2 deletions(-)
+SGksIFdvbGZyYW0sDQoNClRoYW5rcyBmb3IgdGhlIHJldmlld2luZywgSSB3aWxsIHNlbnQgbmV4
+dCB2ZXJzaW9uIGZvciBmaXhpbmcgdXAgdGhlbS4NCg0KQmliYnkNCg0KT24gVHVlLCAyMDIwLTA1
+LTE5IGF0IDA4OjU5ICswMjAwLCBXb2xmcmFtIFNhbmcgd3JvdGU6DQo+IE9uIFR1ZSwgQXByIDI4
+LCAyMDIwIGF0IDAyOjE4OjEzUE0gKzA4MDAsIEJpYmJ5IEhzaWVoIHdyb3RlOg0KPiA+IEFsdGhv
+dWdoIGluIHRoZSBtb3N0IHBsYXRmb3JtcywgdGhlIGJ1cyBwb3dlciBvZiBpMmMNCj4gPiBhcmUg
+YWx3YXkgb24sIHNvbWUgcGxhdGZvcm1zIGRpc2FibGUgdGhlIGkyYyBidXMgcG93ZXINCj4gPiBp
+biBvcmRlciB0byBtZWV0IGxvdyBwb3dlciByZXF1ZXN0Lg0KPiA+IA0KPiA+IFdlIGdldCBhbmQg
+ZW5hYmxlIGJ1bGsgcmVndWxhdG9yIGluIGkyYyBhZGFwdGVyIGRldmljZS4NCj4gPiANCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBCaWJieSBIc2llaCA8YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiA+
+IC0tLQ0KPiA+ICBkcml2ZXJzL2kyYy9pMmMtY29yZS1iYXNlLmMgfCA4MiArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvbGludXgvaTJjLmggICAgICAg
+ICB8ICAyICsNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA4NCBpbnNlcnRpb25zKCspDQo+ID4gDQo+
+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYyBiL2RyaXZlcnMvaTJj
+L2kyYy1jb3JlLWJhc2UuYw0KPiA+IGluZGV4IDVjYzBiMGVjNTU3MC4uZjgxYjQyYTRlZDA3IDEw
+MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYw0KPiA+IEBAIC0zMTMsNiArMzEzLDcgQEAgc3RhdGlj
+IGludCBpMmNfc21idXNfaG9zdF9ub3RpZnlfdG9faXJxKGNvbnN0IHN0cnVjdCBpMmNfY2xpZW50
+ICpjbGllbnQpDQo+ID4gIHN0YXRpYyBpbnQgaTJjX2RldmljZV9wcm9iZShzdHJ1Y3QgZGV2aWNl
+ICpkZXYpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBpMmNfY2xpZW50CSpjbGllbnQgPSBpMmNfdmVy
+aWZ5X2NsaWVudChkZXYpOw0KPiA+ICsJc3RydWN0IGkyY19hZGFwdGVyCSphZGFwID0gY2xpZW50
+LT5hZGFwdGVyOw0KPiANCj4gWW91IGFyZSBhY2Nlc3NpbmcgY2xpZW50IGJlZm9yZSB0aGUgTlVM
+TCBwb2ludGVyIGNoZWNrLg0KPiANCj4gDQo+ID4gQEAgLTQxNCw2ICs0MjEsNyBAQCBzdGF0aWMg
+aW50IGkyY19kZXZpY2VfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICBzdGF0aWMgaW50
+IGkyY19kZXZpY2VfcmVtb3ZlKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiAgew0KPiA+ICAJc3Ry
+dWN0IGkyY19jbGllbnQJKmNsaWVudCA9IGkyY192ZXJpZnlfY2xpZW50KGRldik7DQo+ID4gKwlz
+dHJ1Y3QgaTJjX2FkYXB0ZXIgICAgICAqYWRhcCA9IGNsaWVudC0+YWRhcHRlcjsNCj4gDQo+IFNh
+bWUgaGVyZS4NCj4gDQo+ID4gK3N0YXRpYyBpbnQgaTJjX3N1c3BlbmRfbGF0ZShzdHJ1Y3QgZGV2
+aWNlICpkZXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSBpMmNf
+dmVyaWZ5X2NsaWVudChkZXYpOw0KPiA+ICsJc3RydWN0IGkyY19hZGFwdGVyICphZGFwID0gY2xp
+ZW50LT5hZGFwdGVyOw0KPiA+ICsJaW50IGVycjsNCj4gPiArDQo+ID4gKwllcnIgPSBwbV9nZW5l
+cmljX3N1c3BlbmRfbGF0ZSgmY2xpZW50LT5kZXYpOw0KPiA+ICsJaWYgKGVycikNCj4gPiArCQly
+ZXR1cm4gZXJyOw0KPiA+ICsNCj4gPiArCWlmICghcG1fcnVudGltZV9zdGF0dXNfc3VzcGVuZGVk
+KCZjbGllbnQtPmRldikpDQo+ID4gKwkJcmV0dXJuIHJlZ3VsYXRvcl9kaXNhYmxlKGFkYXAtPmJ1
+c19yZWd1bGF0b3IpOw0KPiA+ICsNCj4gPiArCXJldHVybiBlcnI7DQo+IA0KPiBDYW4gYmUgJ3Jl
+dHVybiAwJy4NCj4gDQoNCg==
 
-I will pick it up after all bindings get Rob's ack (or are picked up as
-well).  The second bindings patch are still pending on that.
-
-Best regards,
-Krzysztof
