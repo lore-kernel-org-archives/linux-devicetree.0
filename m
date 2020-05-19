@@ -2,238 +2,161 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15299C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7492C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA05E204EA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C570F204EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="nnj0J0Uf"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="P5GGg8FT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgESNXc (ORCPT
+        id S1727910AbgESNYF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 09:23:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46336 "EHLO
+        Tue, 19 May 2020 09:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgESNXc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 09:23:32 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C44C08C5C0;
-        Tue, 19 May 2020 06:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589894608;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ICGCVm2uLS51x4Eyn+JU2NynH5F5RrXUuBeWf2MLNAs=;
-        b=nnj0J0UfG5aTSOZx3SaksqiVAO8mbmMkp6aoQ2OC8Zw7zedAVga2ytZsJfxVIEEwLF
-        nuiBvGur2VWmMXLzOMJ0JCL8dBZ2QpwlKCI7nELyjI13B8hWH7E7asF6XbmLYysH+mMx
-        h9D1sIfQ/PLBQuWvoZ0ZkzSpZkaUxli6FcCA7KvzfvvQPGEhb47QUTKPXNC+EAOWpqZX
-        SlzZDUwgXf15WPIbC5PjR3906cMddXGc987HCZv21M6pzvK02ZZnGb3p6bAb6omWlY4T
-        KvzBZnQCCEleYD1OwiG9bIOFIQ7xEooSMrOdf1ucXWRSwObmnL3EaO8BrP9wRWyFdpXa
-        11Ew==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j9IczFaoo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id 60b02dw4JDMDl0g
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 19 May 2020 15:22:13 +0200 (CEST)
-Date:   Tue, 19 May 2020 15:22:07 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
- txt format to yaml
-Message-ID: <20200519132207.GA4623@gerhold.net>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+        with ESMTP id S1726471AbgESNYF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 09:24:05 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A31C08C5C2
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 06:24:03 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x27so11096742lfg.9
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 06:24:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=J1EagSeqT/3hRw9PlSOk/6Jo3bCIp/4AjuBFz8qTGQo=;
+        b=P5GGg8FTAebv5YHBzDwy/NA+Pb0/hhk5tGhHN/6Zp35VJvAyb2VNannMq+B9Gky3rB
+         TGTu+1BOjz8xRPMmJ3vlPBcFvlV192DO/UxajGeDKfgTD6bfKqBmegQbXLHAa6rINe05
+         YbRFZ/AH4i+2GZ4rAOCYBsMpAFM0I5P4av+SdCVYUrhLolCa+j6qEAgbWHYLy9l0RW8O
+         atIn2xCgeQS8U+6VO18HirD8WfWsMWgTaKABHicANTgapLgQDFzslokXMZ9qUBz7Gpvo
+         e7c8FzuIQT1uiJkX24OxVb6YXu4ZP07P2CCI9GtIawRld5ALutKcxm8lVJrK6ZYUs085
+         07IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=J1EagSeqT/3hRw9PlSOk/6Jo3bCIp/4AjuBFz8qTGQo=;
+        b=E2iI9YT2vyRjfvuKTrWDG7PF+tuufW1tU5Ig4bZw7/1zy9mfoXD2ZCtpWkB5lwwsdG
+         +coS4aBaBBbiQW6K2UfTgyvm3m8qi12eRNsPGr4mpZ1TUs9nukU9yg42kCA5cPLKJ9hd
+         AG7ynnVWyYsDP2YE1Bnth8lFk5YDjBGz6TL7iDxnbpE0PtGTBP+4mlo54qS7xQVGydzP
+         QduNSiJhf4lbpgxxPxN321mqrRYhHNZ7KRRo/BcW4Gx6zK41+kzH68GJCpY58iDCraEH
+         suoMAX0yno72I5CO5PbWNSt0Idk/r/kbmx/ieFqyq0KQy1copkh956vDFYRHIEYV268X
+         7UQA==
+X-Gm-Message-State: AOAM533p+Tnw4kNOAQubKzAbkHxHVbLa1P90mk842K7VzaKVzKVKXBmd
+        tSRJtIhV8bXrk9lpeX73FnhTng==
+X-Google-Smtp-Source: ABdhPJwHiLIqIrqU451dZhunm6Wgq2SvF8KYkSJemlDv966oh3Pe4JnO+at5+ht1brskAcIWPtJMLw==
+X-Received: by 2002:a19:c751:: with SMTP id x78mr10756302lff.82.1589894641624;
+        Tue, 19 May 2020 06:24:01 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id y8sm7435855ljh.83.2020.05.19.06.24.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 06:24:00 -0700 (PDT)
+Date:   Tue, 19 May 2020 15:24:00 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: serial: Add renesas,em-uart bindings
+Message-ID: <20200519132400.GC470768@oden.dyn.berto.se>
+References: <20200519080945.28798-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519080945.28798-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:
-> Converts documentation from txt format to yaml.
+Hi Geert,
+
+Thanks for your work.
+
+On 2020-05-19 10:09:45 +0200, Geert Uytterhoeven wrote:
+> Document Device Tree bindings for the Renesas EMMA Mobile UART
+> Interface.
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
 > ---
->  .../bindings/iio/magnetometer/ak8975.txt      | 30 ---------
->  .../bindings/iio/magnetometer/ak8975.yaml     | 66 +++++++++++++++++++
->  2 files changed, 66 insertions(+), 30 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
+>  .../bindings/serial/renesas,em-uart.yaml      | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/renesas,em-uart.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> deleted file mode 100644
-> index aa67ceb0d4e0..000000000000
-> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> +++ /dev/null
-> @@ -1,30 +0,0 @@
-> -* AsahiKASEI AK8975 magnetometer sensor
-> -
-> -Required properties:
-> -
-> -  - compatible : should be "asahi-kasei,ak8975"
-> -  - reg : the I2C address of the magnetometer
-> -
-> -Optional properties:
-> -
-> -  - gpios : should be device tree identifier of the magnetometer DRDY pin
-> -  - vdd-supply: an optional regulator that needs to be on to provide VDD
-> -  - mount-matrix: an optional 3x3 mounting rotation matrix
-> -
-> -Example:
-> -
-> -ak8975@c {
-> -        compatible = "asahi-kasei,ak8975";
-> -        reg = <0x0c>;
-> -        gpios = <&gpj0 7 0>;
-> -        vdd-supply = <&ldo_3v3_gnss>;
-> -        mount-matrix = "-0.984807753012208",  /* x0 */
-> -                       "0",                   /* y0 */
-> -                       "-0.173648177666930",  /* z0 */
-> -                       "0",                   /* x1 */
-> -                       "-1",                  /* y1 */
-> -                       "0",                   /* z1 */
-> -                       "-0.173648177666930",  /* x2 */
-> -                       "0",                   /* y2 */
-> -                       "0.984807753012208";   /* z2 */
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,em-uart.yaml b/Documentation/devicetree/bindings/serial/renesas,em-uart.yaml
 > new file mode 100644
-> index 000000000000..86e3efa693a8
+> index 0000000000000000..82aefdb0d45e5f1a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/serial/renesas,em-uart.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/iio/magnetometer/ak8975.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +$id: "http://devicetree.org/schemas/serial/renesas,em-uart.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +title: AsahiKASEI AK8975 magnetometer sensor
+> +title: Renesas EMMA Mobile UART Interface
 > +
 > +maintainers:
-> +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>
-
-Should probably add someone here, although I'm not sure who either.
-
+> +  - Magnus Damm <magnus.damm@gmail.com>
+> +
+> +allOf:
+> +  - $ref: serial.yaml#
 > +
 > +properties:
 > +  compatible:
-> +    enum:
-> +      - "asahi-kasei,ak8975"
-> +      - "ak8975"
-> +      - "asahi-kasei,ak8963"
-> +      - "ak8963"
-> +      - "asahi-kasei,ak09911"
-> +      - "ak09911"
-> +      - "asahi-kasei,ak09912"
-> +      - "ak09912"
+> +    const: renesas,em-uart
 > +
-
-I wonder if the ones without vendor prefix (asahi-kasei,) should be
-marked as deprecated somehow?
-
-Looking at some other schemas I see either a "# deprecated" comment, or:
-
-properties:
-  compatible:
-    oneOf:
-      - const: asahi-kasei,ak8975
-      - const: asahi-kasei,ak8963
-      - const: asahi-kasei,ak09911
-      - const: asahi-kasei,ak09912
-      - const: ak8975
-        deprecated: true
-      - const: ak8963
-        deprecated: true
-      - const: ak09911
-        deprecated: true
-      - const: ak09912
-        deprecated: true
-
-(e.g. in Documentation/devicetree/bindings/sound/samsung,odroid.yaml)
-I guess this one is preferred since it allows parsing those
-compatibles as deprecated?
-
 > +  reg:
 > +    maxItems: 1
-> +    description: the I2C address of the magnetometer
 > +
-> +  gpios:
-> +    description: should be device tree identifier of the magnetometer DRDY pin
-> +
-> +  vdd-supply:
+> +  interrupts:
 > +    maxItems: 1
-> +    description: |
-> +      an optional regulator that needs to be on to provide VDD power to
-> +      the sensor.
 > +
-> +  mount-matrix:
-> +    description: an optional 3x3 mounting rotation matrix
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: sclk
 > +
 > +required:
 > +  - compatible
 > +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    i2c@78b7000 {
-> +        reg = <0x78b6000 0x600>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ak8975@c {
-
-Per device tree specification this should preferably use a generic name
-describing the function of the device, i.e. magnetometer@c.
-
-> +            compatible = "asahi-kasei,ak8975";
-> +            reg = <0x0c>;
-> +            gpios = <&gpj0 7 0>;
-
-I think using the dt-bindings constants for the GPIO flags is preferred
-now, i.e. gpios = <&gpj0 7 GPIO_ACTIVE_HIGH>.
-
-> +            vdd-supply = <&ldo_3v3_gnss>;
-> +            mount-matrix = "-0.984807753012208",  /* x0 */
-> +                           "0",                   /* y0 */
-> +                           "-0.173648177666930",  /* z0 */
-> +                           "0",                   /* x1 */
-> +                           "-1",                  /* y1 */
-> +                           "0",                   /* z1 */
-> +                           "-0.173648177666930",  /* x2 */
-> +                           "0",                   /* y2 */
-> +                           "0.984807753012208";   /* z2 */
-> +        };
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    uart0: serial@e1020000 {
+> +            compatible = "renesas,em-uart";
+> +            reg = <0xe1020000 0x38>;
+> +            interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&usia_u0_sclk>;
+> +            clock-names = "sclk";
 > +    };
 > -- 
 > 2.17.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
