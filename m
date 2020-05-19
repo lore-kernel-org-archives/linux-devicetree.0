@@ -2,90 +2,124 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB8AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 19:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078EDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 19:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A55742075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 19:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589917992;
-	bh=rdizb6054sUWQ6fZD+89J2wGwwMQkGnOG0/yiHK/LbE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=GAL/A03Wi6cSHXPzc8JSGN/35N5yn/FUqqmPqfXbX3Z4sKmolpLHAMAU2q73SpnvZ
-	 VWJ8O8KqH+z7nxOrW0eM+Eq/dqSdg3354LPJyrArF/ZxuCjJkCgeKkh38wEJfpZMnl
-	 9I5vM6O2dxs0/PL5PPFc4mXRIG7/axj/A3JT7ygU=
+	by mail.kernel.org (Postfix) with ESMTP id BFE102075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 19:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+43DCJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgESTxE (ORCPT
+        id S1726407AbgEST5r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 15:53:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbgESTxB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 15:53:01 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BCD3207E8;
-        Tue, 19 May 2020 19:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589917981;
-        bh=rdizb6054sUWQ6fZD+89J2wGwwMQkGnOG0/yiHK/LbE=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ZKhevx5QN2OPN7XottC5bZLJlVfh5Rg8EfQxBPu3lxMvDVX6sXczyiVzISI71VjLL
-         k1gSSXozLucDwKGyaSo4zyvh8jAmRxyTB9p8TSuGonDZnKCHl2NKFO4P5U1DuCHRqZ
-         DNn+LI1kutOg3GO4GnQIaJA4Ody/rIKlZmAUjl1k=
-Date:   Tue, 19 May 2020 20:52:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Tue, 19 May 2020 15:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgEST5r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 15:57:47 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42D4C08C5C1
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 12:57:46 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id s139so238089oos.1
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 12:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8iNeQP5ee6psuw10GRS3UP54RfEa+IGu/iBWGhrLxKw=;
+        b=N+43DCJQN8eRl4QR709SgnvQJDPivxRNw908Qr+hkSugZJHzk/eCoGdncp5dkhCKM2
+         iSFGue4ic/IGMTuIaptNEzw8jROo2A6izzos64C+mUufZLyjPQDW1mIEHj71ky5+QwyA
+         oAfI+5edsFHUxJfdmN9shXYeKyYNPMwdvmFfnu4g3TwVm2URiBp6DQetqEffDHPmACQu
+         G8NlrDXE0/gWk7R+nYgf4bpC+Hzb2MtCWaQdCAJzZ11mxtqRFTZg9ZNs2v950dYR7NoC
+         8D1Rfg/+C23GfTOnQAaz7cD08zjRs68dmKrkfJ4sa9YzLiV5gvghZNNVLHATF4s/oB/o
+         RszQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8iNeQP5ee6psuw10GRS3UP54RfEa+IGu/iBWGhrLxKw=;
+        b=UaF308jxeT7FVtpp6kqqHb7yTRy1o4bB/wURsZO/XZUIghyk59y44a6uDrjrJOC2yf
+         F42L+cdL2stB+l9NPSbTd7YuDgWKEunl4NzRBo+D9tHBpSmcbfvLBCJ5BCNLVSYb3Di7
+         91x+IcZdH+K8fjdOr2Q8b208tX+YXCcoacuyfoza8z0apd4y/jQH88veClsyXOlpTkMf
+         zezR4AaxIh3i3Ddkuxpcu36vnczObdiiHG4OC8CKbe2lc4ES4AkLZcPJZkzw+gJwDHwf
+         JiGVRtnet1I5TBstjEj+gKppB6VhU+asdzZnlQK64IRW7aFlmFCzUaNU2gwRiU6BMECL
+         V2Ig==
+X-Gm-Message-State: AOAM531l4fo0jDSQhCO0wwBsjBP31lgUqDw/6cwuLqD2cRrmroFjTWoe
+        pbr7vwH6WMfMFPvqat6JqOmi7q6eUYdQFdn5QH4lgQ==
+X-Google-Smtp-Source: ABdhPJzjHSQQr1SlJ5IQ6LUFgUIMFmZsvjjUAG5WFib50tVK5ijRaPJrWzmIkn2S4Imd7hxzqW7QZ0STrMI3Ehc5DLQ=
+X-Received: by 2002:a4a:615d:: with SMTP id u29mr668618ooe.15.1589918265798;
+ Tue, 19 May 2020 12:57:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-10-georgi.djakov@linaro.org> <20200519185836.GA469006@bogus>
+In-Reply-To: <20200519185836.GA469006@bogus>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 19 May 2020 12:57:09 -0700
+Message-ID: <CAGETcx8+NZYT863ySLf6XvgLBm8PM_4euue2=zbDscgmDFh+7g@mail.gmail.com>
+Subject: Re: [PATCH v8 09/10] dt-bindings: interconnect: Add interconnect-tags bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org
-In-Reply-To: <20200511210134.1224532-2-lkundrak@v3.sk>
-References: <20200511210134.1224532-1-lkundrak@v3.sk> <20200511210134.1224532-2-lkundrak@v3.sk>
-Subject: Re: [PATCH 01/11] ASoC: mmp-sspa: Flip SNDRV_PCM_FMTBIT_S24_3LE on
-Message-Id: <158991797896.23137.453146749205778028.b4-ty@kernel.org>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 May 2020 23:01:24 +0200, Lubomir Rintel wrote:
-> The hw_params() callback handles the 3-byte format, not
-> SNDRV_PCM_FMTBIT_S24_LE.
+On Tue, May 19, 2020 at 11:58 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, May 12, 2020 at 03:53:26PM +0300, Georgi Djakov wrote:
+> > From: Sibi Sankar <sibis@codeaurora.org>
+> >
+> > Add interconnect-tags bindings to enable passing of optional
+> > tag information to the interconnect framework.
+> >
+> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> > ---
+> > v8:
+> > * New patch, picked from here:
+> >   https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
+> >
+> >  .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > index 6f5d23a605b7..c1a226a934e5 100644
+> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > @@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
+> >                        * dma-mem: Path from the device to the main memory of
+> >                                   the system
+> >
+> > +interconnect-tags : List of interconnect path tags sorted in the same order as the
+> > +                 interconnects property. Consumers can append a specific tag to
+> > +                 the path and pass this information to the interconnect framework
+> > +                 to do aggregation based on the attached tag.
+>
+> Why isn't this information in the 'interconnect' arg cells?
+>
+> We have 'interconnect-names' because strings don't mix with cells. An
+> expanding list of 'interconnect-.*' is not a good pattern IMO.
 
-Applied to
+Also, is there an example for interconnect-tags that I missed? Is it a
+list of strings, numbers, etc?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
-
-Thanks!
-
-[1/2] ASoC: Add Marvell MMP SSPA binding
-      commit: d81bb8726c247c3e7719d21bf213c5400de29e03
-[2/2] ASoC: mmp-sspa: Add Device Tree support
-      commit: a97e384ba78fd8bf7ba8c32718424d8a7536416e
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-Saravana
