@@ -2,166 +2,238 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3F5C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15299C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E775320823
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA05E204EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:23:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tiq9bVFD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="nnj0J0Uf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgESNN2 (ORCPT
+        id S1728052AbgESNXc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 09:13:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
+        Tue, 19 May 2020 09:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgESNN2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 09:13:28 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C933CC08C5C0;
-        Tue, 19 May 2020 06:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=i57lkD9cnLd3mYhYTL44RTjdfNu1CHhYUTKlZbuE/qA=; b=tiq9bVFD1bBw9CjMczu/C5+9G
-        bekr4ojvKSr9XU8l7UAgzNAV3iIPTKZgkWw+WXIXehnHY6OzYtb3rtlXmb0baQdjXQ8tmTI+wQ+72
-        wp7x/L+k1T9iFH9OqqYguznUKcSQ2DyMLA9ft+kyB/LbeJLkglwpZMF/5tA9xGiu/NQMT1Z4QE3Wl
-        gpI7DZ9y8RFAiM0DWosfvfD/h3H5ccvJZeP0+ePaj+cFA3s3kYb+vWy7nh83piSmOAZtoBRqhhzSF
-        5lGCsyQHoXMdHQR5KDfZHvdxbIzKqaIhvF2pSwhaF1lTMk/8iCQn58HvUS0bbAtuHaOaSw4sqGQx2
-        3j3A88luQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34192)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jb23I-0005RT-7a; Tue, 19 May 2020 14:13:00 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jb23A-0005l3-T5; Tue, 19 May 2020 14:12:52 +0100
-Date:   Tue, 19 May 2020 14:12:52 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Miao <eric.miao@nvidia.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        with ESMTP id S1726471AbgESNXc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 09:23:32 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C44C08C5C0;
+        Tue, 19 May 2020 06:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589894608;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=ICGCVm2uLS51x4Eyn+JU2NynH5F5RrXUuBeWf2MLNAs=;
+        b=nnj0J0UfG5aTSOZx3SaksqiVAO8mbmMkp6aoQ2OC8Zw7zedAVga2ytZsJfxVIEEwLF
+        nuiBvGur2VWmMXLzOMJ0JCL8dBZ2QpwlKCI7nELyjI13B8hWH7E7asF6XbmLYysH+mMx
+        h9D1sIfQ/PLBQuWvoZ0ZkzSpZkaUxli6FcCA7KvzfvvQPGEhb47QUTKPXNC+EAOWpqZX
+        SlzZDUwgXf15WPIbC5PjR3906cMddXGc987HCZv21M6pzvK02ZZnGb3p6bAb6omWlY4T
+        KvzBZnQCCEleYD1OwiG9bIOFIQ7xEooSMrOdf1ucXWRSwObmnL3EaO8BrP9wRWyFdpXa
+        11Ew==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j9IczFaoo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id 60b02dw4JDMDl0g
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 19 May 2020 15:22:13 +0200 (CEST)
+Date:   Tue, 19 May 2020 15:22:07 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Grant Likely <grant.likely@arm.com>
-Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
-Message-ID: <20200519131252.GD1551@shell.armlinux.org.uk>
-References: <20200519122706.GC1551@shell.armlinux.org.uk>
- <CGME20200519125008eucas1p2fe9f14c8f785e956a15097d1eca491c7@eucas1p2.samsung.com>
- <dleftjzha43x8q.fsf%l.stelmach@samsung.com>
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200519132207.GA4623@gerhold.net>
+References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+ <20200519124402.26076-2-jonathan.albrieux@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dleftjzha43x8q.fsf%l.stelmach@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200519124402.26076-2-jonathan.albrieux@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 02:49:57PM +0200, Lukasz Stelmach wrote:
-> It was <2020-05-19 wto 13:27>, when Russell King - ARM Linux admin wrote:
-> > On Tue, May 19, 2020 at 02:20:25PM +0200, Lukasz Stelmach wrote:
-> >> It was <2020-05-19 wto 12:43>, when Russell King - ARM Linux admin wrote:
-> >>> On Tue, May 19, 2020 at 01:21:09PM +0200, Geert Uytterhoeven wrote:
-> >>>> On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
-> >>>> <linux@armlinux.org.uk> wrote:
-> >>>>> On Tue, May 19, 2020 at 11:44:17AM +0200, Geert Uytterhoeven wrote:
-> >>>>>> On Tue, May 19, 2020 at 10:54 AM Lukasz Stelmach <l.stelmach@samsung.com> wrote:
-> >>>>>>> It was <2020-04-29 śro 10:21>, when Geert Uytterhoeven wrote:
-> >>>>>>>> Currently, the start address of physical memory is obtained by masking
-> >>>>>>>> the program counter with a fixed mask of 0xf8000000.  This mask value
-> >>>>>>>> was chosen as a balance between the requirements of different platforms.
-> >>>>>>>> However, this does require that the start address of physical memory is
-> >>>>>>>> a multiple of 128 MiB, precluding booting Linux on platforms where this
-> >>>>>>>> requirement is not fulfilled.
-> >>>>>>>>
-> >>>>>>>> Fix this limitation by obtaining the start address from the DTB instead,
-> >>>>>>>> if available (either explicitly passed, or appended to the kernel).
-> >>>>>>>> Fall back to the traditional method when needed.
-> [...]
-> >>>>>>> Apparently reading physical memory layout from DTB breaks crashdump
-> >>>>>>> kernels. A crashdump kernel is loaded into a region of memory, that is
-> >>>>>>> reserved in the original (i.e. to be crashed) kernel. The reserved
-> >>>>>>> region is large enough for the crashdump kernel to run completely inside
-> >>>>>>> it and don't modify anything outside it, just read and dump the remains
-> >>>>>>> of the crashed kernel. Using the information from DTB makes the
-> >>>>>>> decompressor place the kernel outside of the dedicated region.
-> >>>>>>>
-> >>>>>>> The log below shows that a zImage and DTB are loaded at 0x18eb8000 and
-> >>>>>>> 0x193f6000 (physical). The kernel is expected to run at 0x18008000, but
-> >>>>>>> it is decompressed to 0x00008000 (see r4 reported before jumping from
-> >>>>>>> within __enter_kernel). If I were to suggest something, there need to be
-> >>>>>>> one more bit of information passed in the DTB telling the decompressor
-> >>>>>>> to use the old masking technique to determain kernel address. It would
-> >>>>>>> be set in the DTB loaded along with the crashdump kernel.
-> [...]
-> >>>>>> Describing "to use the old masking technique" sounds a bit hackish to me.
-> >>>>>> I guess it cannot just restrict the /memory node to the reserved region,
-> >>>>>> as the crashkernel needs to be able to dump the remains of the crashed
-> >>>>>> kernel, which lie outside this region.
-> >>>>>
-> >>>>> Correct.
-> >>>>>
-> >>>>>> However, something under /chosen should work.
-> >>>>>
-> >>>>> Yet another sticky plaster...
-> >>>> 
-> >>>> IMHO the old masking technique is the hacky solution covered by
-> >>>> plasters.
-> >>>
-> >>> One line of code is not "covered by plasters".  There are no plasters.
-> >>> It's a solution that works for 99.99% of people, unlike your approach
-> >>> that has had a stream of issues over the last four months, and has
-> >>> required many reworks of the code to fix each one.  That in itself
-> >>> speaks volumes about the suitability of the approach.
-> >> 
-> >> As I have been working with kexec code (patches soon) I would like to
-> >> defend the DT approach a bit. It allows to avoid zImage relocation when
-> >> a decompressed kernel is larger than ~128MiB. In such case zImage isn't
-> >> small either and moving it around takes some time.
-> >
-> > ... which is something that has been supported for a very long time,
-> > before the days of DT.
+On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:
+> Converts documentation from txt format to yaml.
 > 
-> How? If a decompressed kernel requires >128M and a bootloader would like
-> to put a zImage high enough to *avoid* copying it once again, then the
-> decompressor can't see any memory below the 128M window it starts in and
-> can't decompress the kernel there.
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> ---
+>  .../bindings/iio/magnetometer/ak8975.txt      | 30 ---------
+>  .../bindings/iio/magnetometer/ak8975.yaml     | 66 +++++++++++++++++++
+>  2 files changed, 66 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> deleted file mode 100644
+> index aa67ceb0d4e0..000000000000
+> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -* AsahiKASEI AK8975 magnetometer sensor
+> -
+> -Required properties:
+> -
+> -  - compatible : should be "asahi-kasei,ak8975"
+> -  - reg : the I2C address of the magnetometer
+> -
+> -Optional properties:
+> -
+> -  - gpios : should be device tree identifier of the magnetometer DRDY pin
+> -  - vdd-supply: an optional regulator that needs to be on to provide VDD
+> -  - mount-matrix: an optional 3x3 mounting rotation matrix
+> -
+> -Example:
+> -
+> -ak8975@c {
+> -        compatible = "asahi-kasei,ak8975";
+> -        reg = <0x0c>;
+> -        gpios = <&gpj0 7 0>;
+> -        vdd-supply = <&ldo_3v3_gnss>;
+> -        mount-matrix = "-0.984807753012208",  /* x0 */
+> -                       "0",                   /* y0 */
+> -                       "-0.173648177666930",  /* z0 */
+> -                       "0",                   /* x1 */
+> -                       "-1",                  /* y1 */
+> -                       "0",                   /* z1 */
+> -                       "-0.173648177666930",  /* x2 */
+> -                       "0",                   /* y2 */
+> -                       "0.984807753012208";   /* z2 */
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
+> new file mode 100644
+> index 000000000000..86e3efa693a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/magnetometer/ak8975.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: AsahiKASEI AK8975 magnetometer sensor
+> +
+> +maintainers:
+> +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>
 
-Do you have such a large kernel?  It would be rather inefficient as
-branch instructions could not be used; every function call would have
-to be indirect.  The maximum is +/- 32MB for a branch.
+Should probably add someone here, although I'm not sure who either.
 
-> If we do not care about copying
-> zImage, then, indeed, everything works fine as it is today. You are
-> most probably right 99% doesn't require 128M kernel, but the case is
-> IMHO obvious enough, that it should be adressed somehow.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - "asahi-kasei,ak8975"
+> +      - "ak8975"
+> +      - "asahi-kasei,ak8963"
+> +      - "ak8963"
+> +      - "asahi-kasei,ak09911"
+> +      - "ak09911"
+> +      - "asahi-kasei,ak09912"
+> +      - "ak09912"
+> +
 
-If I have a kernel in excess of 4GB... "it should be addressed somehow"!
+I wonder if the ones without vendor prefix (asahi-kasei,) should be
+marked as deprecated somehow?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+Looking at some other schemas I see either a "# deprecated" comment, or:
+
+properties:
+  compatible:
+    oneOf:
+      - const: asahi-kasei,ak8975
+      - const: asahi-kasei,ak8963
+      - const: asahi-kasei,ak09911
+      - const: asahi-kasei,ak09912
+      - const: ak8975
+        deprecated: true
+      - const: ak8963
+        deprecated: true
+      - const: ak09911
+        deprecated: true
+      - const: ak09912
+        deprecated: true
+
+(e.g. in Documentation/devicetree/bindings/sound/samsung,odroid.yaml)
+I guess this one is preferred since it allows parsing those
+compatibles as deprecated?
+
+> +  reg:
+> +    maxItems: 1
+> +    description: the I2C address of the magnetometer
+> +
+> +  gpios:
+> +    description: should be device tree identifier of the magnetometer DRDY pin
+> +
+> +  vdd-supply:
+> +    maxItems: 1
+> +    description: |
+> +      an optional regulator that needs to be on to provide VDD power to
+> +      the sensor.
+> +
+> +  mount-matrix:
+> +    description: an optional 3x3 mounting rotation matrix
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c@78b7000 {
+> +        reg = <0x78b6000 0x600>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ak8975@c {
+
+Per device tree specification this should preferably use a generic name
+describing the function of the device, i.e. magnetometer@c.
+
+> +            compatible = "asahi-kasei,ak8975";
+> +            reg = <0x0c>;
+> +            gpios = <&gpj0 7 0>;
+
+I think using the dt-bindings constants for the GPIO flags is preferred
+now, i.e. gpios = <&gpj0 7 GPIO_ACTIVE_HIGH>.
+
+> +            vdd-supply = <&ldo_3v3_gnss>;
+> +            mount-matrix = "-0.984807753012208",  /* x0 */
+> +                           "0",                   /* y0 */
+> +                           "-0.173648177666930",  /* z0 */
+> +                           "0",                   /* x1 */
+> +                           "-1",                  /* y1 */
+> +                           "0",                   /* z1 */
+> +                           "-0.173648177666930",  /* x2 */
+> +                           "0",                   /* y2 */
+> +                           "0.984807753012208";   /* z2 */
+> +        };
+> +    };
+> -- 
+> 2.17.1
