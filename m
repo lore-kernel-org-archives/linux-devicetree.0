@@ -2,115 +2,85 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62B2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D619CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF455207C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:22:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/RAtZBA"
+	by mail.kernel.org (Postfix) with ESMTP id C9076207C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgESSWD (ORCPT
+        id S1729519AbgESSWF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 14:22:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729244AbgESSWC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:22:02 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC780C08C5C0;
-        Tue, 19 May 2020 11:22:02 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p21so197638pgm.13;
-        Tue, 19 May 2020 11:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nIw/Wm1p9mhtngU9JT40imNSzxd+hOjNvy14i5Yi/sk=;
-        b=m/RAtZBA268ogWyV0zd+y7ddhFSa2wnf7yzaJGsJZPgcu4Du5QqE5dNnUqY8YAsO8V
-         Ab8otkj74dK65n0oUJwIgKaUa8CW7RR+coQo2VaFpAnrxXUog/AVlPPx3uEUAvsAS2J1
-         uJk8BGHatFyX4+oEEeq/mJQDeG1tHArO3XRSzKNuGyqWpy2HY30MTP/Rqn5VxB6kw8hq
-         KfXBWO+8OYMDvuzmYzWYisQuKxYsL1BY5RY7fNCoDldvNe+I3opBCLypYGPXhEvSfOBd
-         sFCqlDW+mLZz6Q2DVjgIYXIVYos1D2xQI3SM8359abyfNPKCl2NA2DA6bwz0LpX/m4d8
-         ursA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=nIw/Wm1p9mhtngU9JT40imNSzxd+hOjNvy14i5Yi/sk=;
-        b=fWecNGSiYYdF2fVlaOIGIdu1iuzD1YX3t2pwjvZDuW5igo5XjDczmpNQrrqLyDo9GP
-         k9qyUwQ29I/XgiZ52RIBVA5Z4fUSiHnNsMld3ypxPcvvbatC6pkgFHx4oiSxemKqjnVH
-         1skYqXW8Tob1+BLjpW4yyhU/S8k4ikOdETfZUxMSgqiMLsHLKPwL83FKsrmEmOAgXSec
-         Wbyov4JMFaTZxVekfQRz7IMDCry2Vrim2a+f4e2cgS6h6iDiReIDUGCGT5ltIvzOAow4
-         Hqa5plegF3ZfVYpRrnAPghe5yb5FjCkIhrokj/KXyXqbKP+rAuTDLCpjEVCmWCO/6+yE
-         WdpQ==
-X-Gm-Message-State: AOAM531vwU8449bJSbihXg0ShxXVCud1U2DSHLidhISG+yNivJLno3sb
-        wIN9ToASMKiMmMdgpwQgzt8=
-X-Google-Smtp-Source: ABdhPJy0U1J+zwnKEq+EV027rYJd4hOUnGCdZisBhQTKyjZoAWY9B1JJ1MqYTpbjWgwZSDs/yhPqXQ==
-X-Received: by 2002:aa7:8b12:: with SMTP id f18mr363582pfd.81.1589912522309;
-        Tue, 19 May 2020 11:22:02 -0700 (PDT)
-Received: from localhost.localdomain ([223.235.145.232])
-        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.21.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 May 2020 11:22:01 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 04/10] arm64: dts: actions: *do not merge* disable sps node from S700
-Date:   Tue, 19 May 2020 23:49:22 +0530
-Message-Id: <1589912368-480-5-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
-References: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
+        Tue, 19 May 2020 14:22:05 -0400
+Received: from mail.bugwerft.de ([46.23.86.59]:40474 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729508AbgESSWE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 14:22:04 -0400
+Received: from zenbar.fritz.box (pd95ef292.dip0.t-ipconnect.de [217.94.242.146])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 643D540AEC5;
+        Tue, 19 May 2020 18:19:04 +0000 (UTC)
+From:   Daniel Mack <daniel@zonque.org>
+To:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org, jslaby@suse.com,
+        jringle@gridpoint.com, m.brock@vanmierlo.com,
+        pascal.huerst@gmail.com, Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 6/6] sc16is7xx: Read the LSR register for basic device presence check
+Date:   Tue, 19 May 2020 20:21:47 +0200
+Message-Id: <20200519182147.218713-7-daniel@zonque.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200519182147.218713-1-daniel@zonque.org>
+References: <20200519182147.218713-1-daniel@zonque.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
-Actions Semi S700") following error has been observed while booting
-Linux on Cubieboard7-lite(based on S700 SoC).
+Currently, the driver probes just fine and binds all its resources even
+if the physical device is not present.
 
-[    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
-resource [mem 0xe01b0000-0xe01b0fff]
-[    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
+As the device lacks an identification register, let's at least read the
+LSR register to check whether a device at the configured address responds
+to the request at all.
 
-This is due to the fact that memory range for "sps" power domain controller
-clashes with pinctrl.
-
-This commit disable "sps" to avoid this conflict and let us test DMA and MMC
-related changes.
-
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 ---
-Changes since v1:
-	* No change.
-Changes since RFC:
-        * kept as do not merge.
----
- arch/arm64/boot/dts/actions/s700.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/sc16is7xx.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 2006ad5424fa..0397c5dd3dec 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -220,6 +220,7 @@
- 			compatible = "actions,s700-sps";
- 			reg = <0x0 0xe01b0100 0x0 0x100>;
- 			#power-domain-cells = <1>;
-+			status = "disabled";
- 		};
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 7e2360f8e393..5e84ed5938af 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -1181,6 +1181,7 @@ static int sc16is7xx_probe(struct device *dev,
+ {
+ 	struct sched_param sched_param = { .sched_priority = MAX_RT_PRIO / 2 };
+ 	unsigned long freq = 0, *pfreq = dev_get_platdata(dev);
++	unsigned int val;
+ 	u32 uartclk = 0;
+ 	int i, ret;
+ 	struct sc16is7xx_port *s;
+@@ -1188,6 +1189,16 @@ static int sc16is7xx_probe(struct device *dev,
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
  
- 		timer: timer@e024c000 {
++	/*
++	 * This device does not have an identification register that would
++	 * tell us if we are really connected to the correct device.
++	 * The best we can do is to check if communication is at all possible.
++	 */
++	ret = regmap_read(regmap,
++			  SC16IS7XX_LSR_REG << SC16IS7XX_REG_SHIFT, &val);
++	if (ret < 0)
++		return ret;
++
+ 	/* Alloc port structure */
+ 	s = devm_kzalloc(dev, struct_size(s, p, devtype->nr_uart), GFP_KERNEL);
+ 	if (!s) {
 -- 
-2.7.4
+2.26.2
 
