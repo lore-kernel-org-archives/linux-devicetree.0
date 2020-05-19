@@ -2,200 +2,123 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E44C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB11C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3710520823
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792EA20823
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 23:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyFWCJ1j"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vTfMJ8Pt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgESX0F (ORCPT
+        id S1726535AbgESXmm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 19:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56458 "EHLO
+        Tue, 19 May 2020 19:42:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbgESX0F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 19:26:05 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A435C08C5C0
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 16:26:05 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ci21so387070pjb.3
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 16:26:05 -0700 (PDT)
+        with ESMTP id S1725998AbgESXml (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 19:42:41 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67FB7C061A0E
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 16:42:41 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s8so1229575wrt.9
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 16:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=o1nk3e7Hsby7x4Ub20aIHxa82tR9fW/umMvTM9rKISk=;
-        b=hyFWCJ1ji28KGi7XMbjo2ZeeZD9a4yQ3KrtWD0u9ykevNP52LvLwXh0wfok0MP56km
-         pEKk9ZSP4HEpLOWsEX1apDTwk/+Uc8bXuDbiYRaRZTwtTSXYWD35qFT9E8XPWJtqm8B8
-         VNjzUCl57jqbgGeUX06EhWqfO+b3qhoONqJmEcrldnVVSPYftOWl+imwh7jPXAyOhuOe
-         7AX7QH5RZ6bDFIiUIeWcNjAyQ9Bd0soIsGrZPWf9wp8xkbM1JMaPFpaVphJMswuIwiLF
-         jVfCFDKg8LN13dAJH/pQ7wNsnlAMS80pwFrQbIyYWUIaG08ccDoJD78Dc+TM++spUHUE
-         dv2g==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:date:message-id:mime-version;
+        bh=MmIqjO1PtTVd+rdNu9nNb4mADvKA71b2ZrcUks1uRJo=;
+        b=vTfMJ8PtHJc/TjzQRTrRhPNVRyHHYycwdoNu7rn6SwqPvWLZ6+03X7Pq1xlTAqKfbq
+         pSkz8erEmZbl5NEC7ffg1vjDBeV91vWIi/UpMblVVUXG7fICkxan3TIDYjBEiTzCKrUw
+         qVb0ilGsCIYZu/z62LoRz/O/WEvNJUKhVB5XjQyTGwvbc4x6bXh9Iqiq500D+DFFVuBw
+         XiFkgIHC3IELUdOO7nHfyfTiYvRDM/6Gaj0O0ZJynaFsDQR93goRr1Ox957iafchATMC
+         74fwNFO/J48rEQSFBTg7/aNrT89cUvNxZYrb076WOjRmwcY4hot6ljnVFsjINyEJnk9s
+         Q7gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=o1nk3e7Hsby7x4Ub20aIHxa82tR9fW/umMvTM9rKISk=;
-        b=jygdZaIpJhE6ZOFjRzZmJ53SxmpI6edwc0C91+UqukbaK16OUei+BrTPt70jahlMaG
-         8K+96vyyJ/XZ5pSZWs1vGNKbN4Ei4h9HbnW2E5klZW2L5oOCscV2DFTazPSC/OR7ucPw
-         /CL/csQ0URc7t4Sf3wQLpjwnrVsIG0K8l1XBKaZuCb4vl42NGUuq3czpvrDtEaCiQBfw
-         czlx3sY9kMoFl7kuKxUWPsvVA7hohLm8PEMTpsRtPa8vMkuSDskEHHLQECbJaAAFXgOG
-         ZQBmzj2O8w2oqBIN10KkeZjsvYag15TEj9Laa/jiaDbpfv3lHF7pxbLzs1e+vyZfCFm5
-         ZnCg==
-X-Gm-Message-State: AOAM53347ZY5zfV3uarPbUvbEeFHFj2l1F1CWopPwHxizQHPFsqZDiTF
-        V84q+1ryqNIlHa2MIBD231GDzA==
-X-Google-Smtp-Source: ABdhPJwIaUrLIl1h4oKC2Zpxord9bh4XxK3fZAdVQpeaxzA/bI1iAMfOCqAsvKQsdp773VOcn7w60g==
-X-Received: by 2002:a17:902:ba8e:: with SMTP id k14mr1730650pls.85.1589930764297;
-        Tue, 19 May 2020 16:26:04 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o11sm443867pfd.195.2020.05.19.16.26.02
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=MmIqjO1PtTVd+rdNu9nNb4mADvKA71b2ZrcUks1uRJo=;
+        b=rZzxsGnA1wQOy5uC8M+PYncLrpr+48Bu0wh2BKeZtLUFtdgFQWtV1/GsMoqVkp4kUA
+         5ET8kHIWCLY5SZ3XB1CSyCZLgfCPCJMaf2/3sdbkoxam5X0lqQh24NvoiAiOqUjHggrQ
+         i6G663A22E4OuXusQIX277IkCnsdUTvNoW1E51bk7Y4c5ExtJr5IriJoX5snQFqJoEez
+         fFM+9g4Dmi0j9uVjQleX65vylyJX3dSZnb3NgCB6WbtvPIe0f6Gf4+ni0bBDgH4Nh9FX
+         92t5sbE5MjSTW/ad5IcYnvRRhp9p1Z4kwKKNAqdmeeNatNkE2+ZmAfpqr+QXL8LNQVGQ
+         wzpA==
+X-Gm-Message-State: AOAM533FDqYLKpwW/Nl031WKPwOoing6TgvkejmgRxixGQAFTuXqdigT
+        FtYkTW32bl0+Y2uy2/lwe7Cs2A==
+X-Google-Smtp-Source: ABdhPJzYYXY2GYO9fXGwE5+SEib2GsKVQjkMTferPikSHMR/G5SF/9GqcN7uN6IzDDLc5LOSCjL3Dw==
+X-Received: by 2002:adf:f102:: with SMTP id r2mr1249229wro.376.1589931759860;
+        Tue, 19 May 2020 16:42:39 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id n17sm1010174wrr.42.2020.05.19.16.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 16:26:03 -0700 (PDT)
-Date:   Tue, 19 May 2020 16:24:42 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
+        Tue, 19 May 2020 16:42:39 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Subject: Re: [PATCH v3] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm
- APQ8016 SBC + D3Camera mezzanine
-Message-ID: <20200519232442.GE2165@builder.lan>
-References: <20200518082129.2103683-1-robert.foss@linaro.org>
- <20200519102256.GB8114@Mani-XPS-13-9360>
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH v3 0/5] arm64: dts: meson: add W400 dtsi and GT-King/Pro devices
+In-Reply-To: <20200518023404.15166-1-christianshewitt@gmail.com>
+Date:   Tue, 19 May 2020 16:42:36 -0700
+Message-ID: <7hmu63trtf.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519102256.GB8114@Mani-XPS-13-9360>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 19 May 03:22 PDT 2020, Manivannan Sadhasivam wrote:
+Hi Christian,
 
-> Hi Robert,
-> 
-> On Mon, May 18, 2020 at 10:21:29AM +0200, Robert Foss wrote:
-> > Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
-> > the Dragonboard 410c with the D3Camera mezzanine expansion board.
-> > 
-> > The D3Camera mezzanine ships in a kit with a OmniVision 5640 sensor module,
-> > which is what this DT targets.
-> > 
-> 
-> What is the motivation behind adding this new dts? We have been using the
-> userspace tool [1] for applying this as an overlay for some time. But if we
-> start adding dts for mezzanines then for sure we'll end up with some good
-> numbers which will flood arch/{..}/qcom directory.
-> 
-> I could understand that one of the motivation is to provide nice user experience
-> to users but that's also taken care by the dt-update tool IMO.
-> 
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
-The motivation for posting this was to provoke a response like yours.
+> This series combines patch 2 from [1] which converts the existing Ugoos
+> AM6 device-tree to a common W400 dtsi and dts, and then reworks the
+> Beelink GT-King/GT-King Pro serries from [2] to use the dtsi, but this
+> time without the offending common audio dtsi approach. I've carried
+> forwards acks on bindings from Rob as these did not change.
 
-I knew about [1], but not that it included the overlays. I'm okay with
-using overlays and the dt-update tool. But I would have preferred that
-the dts files didn't live out of tree, given that this approach breaks
-if I change the name of a node you depend on upstream.
+This looks good to me, thank you very much for reworking into a
+w400-based include.
+
+Unfortunately, it no longer applies on top of all the other stuff I have
+queued for v5.8.
+
+Could you please do a rebase on top of my v5.8/dt64 branch[1], and I'll
+queue for v5.8.
 
 Thanks,
-Bjorn
 
-> Thanks,
-> Mani
-> 
-> [1] https://github.com/96boards/dt-update
-> 
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > ---
-> > 
-> > Changes since v2:
-> >  - Vinod: Change copyright assignment to Linaro
-> > 
-> > Changes since v1:
-> >  - Vinod: Changed license to GPL+BSD
-> >  - Vinod: Changed copyright year to 2020
-> >  - Nico: Changed name of mezzanine to d3camera
-> > 
-> >  arch/arm64/boot/dts/qcom/Makefile             |  1 +
-> >  .../boot/dts/qcom/apq8016-sbc-d3camera.dts    | 45 +++++++++++++++++++
-> >  2 files changed, 46 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> > index cc103f7020fd..3f95b522694e 100644
-> > --- a/arch/arm64/boot/dts/qcom/Makefile
-> > +++ b/arch/arm64/boot/dts/qcom/Makefile
-> > @@ -1,5 +1,6 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
-> > +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3camera.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
-> > diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-> > new file mode 100644
-> > index 000000000000..752e5ec47499
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-> > @@ -0,0 +1,45 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> > +/*
-> > + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "apq8016-sbc.dtsi"
-> > +
-> > +/ {
-> > +	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3Camera Mezzanine";
-> > +	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
-> > +};
-> > +
-> > +&cci_i2c0 {
-> > +	/delete-node/ camera_rear@3b;
-> > +
-> > +	camera_rear@76 {
-> > +		compatible = "ovti,ov5640";
-> > +		reg = <0x76>;
-> > +
-> > +		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-> > +		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&camera_rear_default>;
-> > +
-> > +		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-> > +		clock-names = "xclk";
-> > +		clock-frequency = <23880000>;
-> > +
-> > +		vdddo-supply = <&camera_vdddo_1v8>;
-> > +		vdda-supply = <&camera_vdda_2v8>;
-> > +		vddd-supply = <&camera_vddd_1v5>;
-> > +
-> > +		status = "ok";
-> > +
-> > +		port {
-> > +			ov5640_ep: endpoint {
-> > +				clock-lanes = <1>;
-> > +				data-lanes = <0 2>;
-> > +				remote-endpoint = <&csiphy0_ep>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > -- 
-> > 2.25.1
-> > 
+Kevin
+
+> v3 - amend author full-name on bindings patch
+>
+> [1] https://patchwork.kernel.org/patch/11497105/
+> [2] https://patchwork.kernel.org/project/linux-amlogic/list/?series=273483
+>
+> Christian Hewitt (5):
+>   arm64: dts: meson: convert ugoos-am6 to common w400 dtsi
+>   dt-bindings: arm: amlogic: add support for the Beelink GT-King
+>   arm64: dts: meson-g12b-gtking: add initial device-tree
+>   dt-bindings: arm: amlogic: add support for the Beelink GT-King Pro
+>   arm64: dts: meson-g12b-gtking-pro: add initial device-tree
+>
+>  .../devicetree/bindings/arm/amlogic.yaml      |   2 +
+>  arch/arm64/boot/dts/amlogic/Makefile          |   2 +
+>  .../dts/amlogic/meson-g12b-gtking-pro.dts     | 125 ++++++
+>  .../boot/dts/amlogic/meson-g12b-gtking.dts    | 145 ++++++
+>  .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 410 +----------------
+>  .../boot/dts/amlogic/meson-g12b-w400.dtsi     | 423 ++++++++++++++++++
+>  6 files changed, 698 insertions(+), 409 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gtking-pro.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
+>
+> -- 
+> 2.17.1
