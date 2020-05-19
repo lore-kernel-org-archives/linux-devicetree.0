@@ -2,155 +2,140 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CED6C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 04:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B17C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 04:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8531C204EF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 04:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD4F206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 04:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725791AbgESEFp (ORCPT
+        id S1726307AbgESEjK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 00:05:45 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38130 "EHLO inva020.nxp.com"
+        Tue, 19 May 2020 00:39:10 -0400
+Received: from mga02.intel.com ([134.134.136.20]:9584 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726881AbgESEFp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 00:05:45 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 465721A0013;
-        Tue, 19 May 2020 06:05:42 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CAF4F1A010C;
-        Tue, 19 May 2020 06:05:36 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DBAD340318;
-        Tue, 19 May 2020 12:05:26 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ping.bai@nxp.com, aisheng.dong@nxp.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 3/3] dt-bindings: timer: Convert i.MX SYSCTR to json-schema
-Date:   Tue, 19 May 2020 11:55:47 +0800
-Message-Id: <1589860547-3207-4-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589860547-3207-1-git-send-email-Anson.Huang@nxp.com>
-References: <1589860547-3207-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726045AbgESEjK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 00:39:10 -0400
+IronPort-SDR: zfqGls+3QlCzr8mRyuP8kYzhUujwrRGUDWkJlNGdhH6V7X4yPSS5p/sScZn6KBEupY9rwTbEZz
+ ejS8tGlW+Jtg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 21:39:09 -0700
+IronPort-SDR: 8mFOiM+39VuBxWASAysHXewTpOtidiceoOSqLjXv/IycC3xyWZ/8jD6ZhN0sEBxUR9J+FJiaC1
+ MRng08Znjv9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
+   d="scan'208";a="264180100"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga003.jf.intel.com with ESMTP; 18 May 2020 21:39:04 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v8 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Tue, 19 May 2020 12:37:48 +0800
+Message-Id: <20200519043750.47789-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX SYSCTR binding to DT schema format using json-schema.
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-No changes.
----
- .../devicetree/bindings/timer/nxp,sysctr-timer.txt | 25 ----------
- .../bindings/timer/nxp,sysctr-timer.yaml           | 54 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
-diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-deleted file mode 100644
-index d576599..0000000
---- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--NXP System Counter Module(sys_ctr)
--
--The system counter(sys_ctr) is a programmable system counter which provides
--a shared time base to Cortex A15, A7, A53, A73, etc. it is intended for use in
--applications where the counter is always powered and support multiple,
--unrelated clocks. The compare frame inside can be used for timer purpose.
--
--Required properties:
--
--- compatible :      should be "nxp,sysctr-timer"
--- reg :             Specifies the base physical address and size of the comapre
--                    frame and the counter control, read & compare.
--- interrupts :      should be the first compare frames' interrupt
--- clocks : 	    Specifies the counter clock.
--- clock-names: 	    Specifies the clock's name of this module
--
--Example:
--
--	system_counter: timer@306a0000 {
--		compatible = "nxp,sysctr-timer";
--		reg = <0x306a0000 0x20000>;/* system-counter-rd & compare */
--		clocks = <&clk_8m>;
--		clock-names = "per";
--		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
-new file mode 100644
-index 0000000..830211c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/nxp,sysctr-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP System Counter Module(sys_ctr)
-+
-+maintainers:
-+  - Bai Ping <ping.bai@nxp.com>
-+
-+description: |
-+  The system counter(sys_ctr) is a programmable system counter
-+  which provides a shared time base to Cortex A15, A7, A53, A73,
-+  etc. it is intended for use in applications where the counter
-+  is always powered and support multiple, unrelated clocks. The
-+  compare frame inside can be used for timer purpose.
-+
-+properties:
-+  compatible:
-+    const: nxp,sysctr-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: per
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    timer@306a0000 {
-+        compatible = "nxp,sysctr-timer";
-+        reg = <0x306a0000 0x20000>;
-+        clocks = <&clk_8m>;
-+        clock-names = "per";
-+        interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+     };
+NAND controller also supports in-built HW ECC engine.
+
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
+
+Thanks Boris, Andy and Arnd for the review comments and suggestions.
+---
+v8:
+  - fix the kbuild bot warnings
+  - correct the typo's
+v7:
+  - indentation issue is fixed
+  - add error check for retrieve the resource from dt
+  - Rob's review comments addressed
+  - dt-schema build issue fixed with upgraded dt-schema
+v6:
+  - update EBU_ADDR_SELx register base value build it from DT
+  - Add tabs in in Kconfig
+  - Rob's review comments addressed in YAML file
+  - add addr_sel0 and addr_sel1 reg-names in YAML example
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+  - add the example in YAML file
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - YAML compatible string update to intel, lgm-nand-controller
+  - add MIPS maintainers and xway_nand driver author in CC
+
+v1:
+ - initial version
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  91 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 743 +++++++++++++++++++++
+ 4 files changed, 843 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
+
 -- 
-2.7.4
+2.11.0
 
