@@ -2,127 +2,1066 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F80C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74863C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54308207ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589884371;
-	bh=APWdI/sKggcPUHM2EoqZ+F9oniCqmilI7u/Eu8rmUKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RntV1QiFHiYsJsip7s3XjV2M8X00bbis26E7BmsDuL+f0DO/FkmebQdGvEdygeNCs
-	 ETmdFFYi50epimr+bwyJx82yInPJVDAuDNNrA3wU/+G9Zz1KWtzMGIPDrnZ/+RX3v7
-	 /xAvx+zTqOkk61TpK9155B8XOLMZUpW9tnEjAsDw=
+	by mail.kernel.org (Postfix) with ESMTP id 36487206BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ImA/TGm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgESKcv (ORCPT
+        id S1726735AbgESKeB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 06:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgESKcu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 06:32:50 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D6E206BE;
-        Tue, 19 May 2020 10:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589884369;
-        bh=APWdI/sKggcPUHM2EoqZ+F9oniCqmilI7u/Eu8rmUKo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bb28hbkXTcnwyAr3AkQbQd7zAtdLWJXiwF/dtuByEyX/N6X+HswiTH+JVTDGBxke9
-         PRaBWt7ep0OcLP0hk1XvvEZBbrGuzZtn0CFZ5SqDVCMU8CkMuKgVJvzlMPWmK1ng2s
-         mB1xyHCzSfVJvy6NpiLF0vKH/DThsK16CNtbWd+U=
-Date:   Tue, 19 May 2020 11:32:47 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200519103247.GA4611@sirena.org.uk>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <20200508113751.GD4820@sirena.org.uk>
- <20200510002039.hwahqasnnceowskz@mobilestation>
- <20200511212506.GA23852@sirena.org.uk>
- <20200518000542.ohtpem3lo2pbixbu@mobilestation>
- <20200518151946.GH8699@sirena.org.uk>
- <20200518211727.jrzo6tn7slqzxoyl@mobilestation>
+        Tue, 19 May 2020 06:34:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbgESKeA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 06:34:00 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B80F6C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 03:33:59 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id m12so2532733wmc.0
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 03:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=yhYwMplwaedErSloP0W67eXhMkoDhq8klaezQCPn2dg=;
+        b=ImA/TGm67JZ9hjGEr8NJoSRybbdXZeoF/VUNjeU5I3sCxTpqcvKh68z7nbRJ38LSyo
+         YIBSYCkLedGTuNkeRqjanWcHAFODBCI9tWj3xBV1Wp/xY7YzWsDoyKNEwQ3QPfQzbthJ
+         A7h29PG8MqvEAf3o59eHHhTwla3urytevhjdFTHbTKLMzfFkXv1bgY0lrDAah4rWgtYj
+         n5BuLwMAw58Sq4WDt2WUQwElHX5PqRHdhDeIgAEx6hnOdMBL9OKCYvGwOLNG/QJez72c
+         LphjV4wNJYXqpgKIN9jvsXfVrVfAmfDbhAZrBxK5z7fR5lY4RuchM2ix3J1/HPIXhc0N
+         fT6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yhYwMplwaedErSloP0W67eXhMkoDhq8klaezQCPn2dg=;
+        b=HIKGl9K95PN66vWAdAkGbDfxO03T95Eh9172UKcizL0EbIH8DTgjKrtkFEl+agYsYE
+         twaPY+d39TiXnNvDQyOwYYWDcH1wrXLiyhCStq7gzc7GGsbqogrslZxBAEG0h59ZBOjW
+         PuJYc+cjDjYX7W1wIDZJNdWfSJuEZOBYu2nGPW63NNR292Ttl3Z96uc8PRT4RiJb2hET
+         pD0OrvF4dnlssMDbjes7+Ja9NTmMIiWtNS/w+iOq1S3DZs4kD1VYkI32T+TlmMhWR2sh
+         nJihw1zGaDt5LeBCr62at0K+66Zyd+runf1sJm6PIhEvcrjXs/DMRI7G3SYNBJbqrGYe
+         hXrQ==
+X-Gm-Message-State: AOAM530AwFvr9Ytw6I7Mt2sS9QyP5liH0LPLtTKekhbX2tx47hnUWasS
+        8tKD0wKfBGrDxGBao5lVj/rvDA==
+X-Google-Smtp-Source: ABdhPJxm1AWDhRx/G5tDFGTV6mLDCOhbgcggU8uIYSSRNFX/avdqn5R3mA1jIXiDPMLCyBP0RYPcTQ==
+X-Received: by 2002:a7b:cc92:: with SMTP id p18mr4877566wma.174.1589884438166;
+        Tue, 19 May 2020 03:33:58 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id r9sm10830750wra.52.2020.05.19.03.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 03:33:57 -0700 (PDT)
+Date:   Tue, 19 May 2020 11:33:55 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org
+Subject: Re: [PATCH 2/2] mfd: Introduce QTI I2C PMIC controller
+Message-ID: <20200519103355.GU271301@dell>
+References: <cover.1588037638.git.gurus@codeaurora.org>
+ <041dd80e01d1bf86da2edc2747e922c473b50509.1588037638.git.gurus@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200518211727.jrzo6tn7slqzxoyl@mobilestation>
-X-Cookie: Do not write below this line.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <041dd80e01d1bf86da2edc2747e922c473b50509.1588037638.git.gurus@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+[Adding IRQ chaps]
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Seeing as a vast portion of this driver is IRQ domain related, I see
+good reason to separate it out into a driver in its own right.  At the
+very least it will require an IRQ *-by tag.
 
-On Tue, May 19, 2020 at 12:17:27AM +0300, Serge Semin wrote:
+On Mon, 27 Apr 2020, Guru Das Srinagesh wrote:
 
-> Here is what we need to do to perform the EEPROM-read operation:
-> 1) Enable EEPROM-read mode.
-> 2) Initialize a corresponding registers with a number of SPI transfer words
->    (with bits-per-word taken into account) to read.
-> 3) Push opcode + address + dummy bytes into the Tx FIFO. When it's done and
->    the Tx FIFO is empty, the controller will proceed with read operations by
->    pushing zeros (or ones, don't remember what level it's by default) to MOSI
->    and pulling data from MISO into the RX FIFO.
-> 4) Keep up with getting data from the Rx FIFO so one wouldn't get overflown.
+> The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
+> multi-function PMIC devices which communicate over the I2C bus.  The
+> controller enumerates all child nodes as platform devices, and
+> instantiates a regmap interface for them to communicate over the I2C
+> bus.
+> 
+> The controller also controls interrupts for all of the children platform
+> devices.  The controller handles the summary interrupt by deciphering
+> which peripheral triggered the interrupt, and which of the peripheral
+> interrupts were triggered.  Finally, it calls the interrupt handlers for
+> each of the virtual interrupts that were registered.
 
-> Regarding programming write each time. Well, it's up to the driver implementation.
-> If opcode, address, dummy bytes and number of words to read are the same as before,
-> then re-programming isn't required.
+> Nicholas Troast is the original author of this driver.
+> 
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+>  drivers/mfd/Kconfig         |  11 +
+>  drivers/mfd/Makefile        |   1 +
+>  drivers/mfd/qcom-i2c-pmic.c | 737 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 749 insertions(+)
+>  create mode 100644 drivers/mfd/qcom-i2c-pmic.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 54b6aa4..bf112eb 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1002,6 +1002,17 @@ config MFD_PM8XXX
+>  	  Say M here if you want to include support for PM8xxx chips as a
+>  	  module. This will build a module called "pm8xxx-core".
+>  
+> +config MFD_I2C_PMIC
 
-Ah, nice.  This should be useful for far more than just flash - most
-register reads will also be able to take advantage of this, they follow
-a similar write then read pattern.
+"I2C PMIC" is too generic.
 
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	tristate "QTI I2C PMIC support"
 
------BEGIN PGP SIGNATURE-----
+I don't see QTI used very often.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7DtcwACgkQJNaLcl1U
-h9BprQf/X3CrvqOEDZw4gFuSifMWeN7xtcsAEMLPFliUUq9vUY170vk9WBvEWXcU
-8+KvebwsMCXWGekf3ySdQN5xQlLrIZ86/mMpntqTMg2Gsvxm7TsoCyW+K0JO/6Ef
-2I+nIT+t92zUZhPbyzk7kmeKmC/Jsgg9zwHQpyN0+XjQlCUy0lCYhdR/P1y/5qsV
-By+n3t6C5Vi6Dnz2wrYL+gqoH6quWA/wGQe3o0xtFyZuQIVgKogTOrgFOFW8fSBK
-NUFEEZjIMctowJ27+FDhh5NXoJXqDUUkbzKOYGEf2Nja+Kk47clbgF/tDwfMlX/3
-2duleovaghp6/F5OsQSe05zjfEutIg==
-=0tWj
------END PGP SIGNATURE-----
+What's the difference between "QTI" and "QCOM"?
 
---KsGdsel6WgEHnImy--
+> +	depends on I2C && OF
+> +	select IRQ_DOMAIN
+> +	select REGMAP_I2C
+> +	help
+> +	  This enables support for controlling Qualcomm Technologies, Inc.
+> +	  PMICs over I2C. The driver controls interrupts, and provides register
+> +	  access for all of the device's peripherals.  Some QTI PMIC chips
+> +	  support communication over both I2C and SPMI.
+> +
+>  config MFD_QCOM_RPM
+>  	tristate "Qualcomm Resource Power Manager (RPM)"
+>  	depends on ARCH_QCOM && OF
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 7761f84..26f0b80 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -199,6 +199,7 @@ obj-$(CONFIG_MFD_SI476X_CORE)	+= si476x-core.o
+>  obj-$(CONFIG_MFD_CS5535)	+= cs5535-mfd.o
+>  obj-$(CONFIG_MFD_OMAP_USB_HOST)	+= omap-usb-host.o omap-usb-tll.o
+>  obj-$(CONFIG_MFD_PM8XXX) 	+= qcom-pm8xxx.o ssbi.o
+> +obj-$(CONFIG_MFD_I2C_PMIC)     += qcom-i2c-pmic.o
+>  obj-$(CONFIG_MFD_QCOM_RPM)	+= qcom_rpm.o
+>  obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
+>  obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
+> diff --git a/drivers/mfd/qcom-i2c-pmic.c b/drivers/mfd/qcom-i2c-pmic.c
+> new file mode 100644
+> index 0000000..d0f600a
+> --- /dev/null
+> +++ b/drivers/mfd/qcom-i2c-pmic.c
+> @@ -0,0 +1,737 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+
+This is out of date.
+
+No author tag?
+
+> + */
+> +
+> +#define pr_fmt(fmt) "I2C PMIC: %s: " fmt, __func__
+
+Outside of in-development code I don't see a reason for adding the
+function name to system log entries.  IMHO, it just dirties the log on
+production/released H/W.  Please considering removing this
+altogether in from plain device drivers.
+
+> +#include <linux/bitops.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+
+I'm going to skip all of the IRQ code until we know what we're doing
+with it.
+
+ #########
+<-- IRQ -->
+ #########
+
+> +#define I2C_INTR_STATUS_BASE	0x0550
+> +#define INT_RT_STS_OFFSET	0x10
+> +#define INT_SET_TYPE_OFFSET	0x11
+> +#define INT_POL_HIGH_OFFSET	0x12
+> +#define INT_POL_LOW_OFFSET	0x13
+> +#define INT_LATCHED_CLR_OFFSET	0x14
+> +#define INT_EN_SET_OFFSET	0x15
+> +#define INT_EN_CLR_OFFSET	0x16
+> +#define INT_LATCHED_STS_OFFSET	0x18
+> +#define INT_PENDING_STS_OFFSET	0x19
+> +#define INT_MID_SEL_OFFSET	0x1A
+> +#define INT_MID_SEL_MASK	GENMASK(1, 0)
+> +#define INT_PRIORITY_OFFSET	0x1B
+> +#define INT_PRIORITY_BIT	BIT(0)
+> +
+> +enum {
+> +	IRQ_SET_TYPE = 0,
+> +	IRQ_POL_HIGH,
+> +	IRQ_POL_LOW,
+> +	IRQ_LATCHED_CLR, /* not needed but makes life easy */
+> +	IRQ_EN_SET,
+> +	IRQ_MAX_REGS,
+> +};
+> +
+> +struct i2c_pmic_periph {
+> +	void		*data;
+> +	u16		addr;
+> +	u8		cached[IRQ_MAX_REGS];
+> +	u8		synced[IRQ_MAX_REGS];
+> +	u8		wake;
+> +	struct mutex	lock;
+> +};
+> +
+> +struct i2c_pmic {
+> +	struct device		*dev;
+> +	struct regmap		*regmap;
+> +	struct irq_domain	*domain;
+> +	struct i2c_pmic_periph	*periph;
+> +	struct pinctrl		*pinctrl;
+> +	struct mutex		irq_complete;
+> +	const char		*pinctrl_name;
+> +	int			num_periphs;
+> +	int			summary_irq;
+> +	bool			resume_completed;
+> +	bool			irq_waiting;
+> +};
+> +
+> +static void i2c_pmic_irq_bus_lock(struct irq_data *d)
+> +{
+> +	struct i2c_pmic_periph *periph = irq_data_get_irq_chip_data(d);
+> +
+> +	mutex_lock(&periph->lock);
+> +}
+> +
+> +static void i2c_pmic_sync_type_polarity(struct i2c_pmic *chip,
+> +			       struct i2c_pmic_periph *periph)
+> +{
+> +	int rc;
+> +
+> +	/* did any irq type change? */
+> +	if (periph->cached[IRQ_SET_TYPE] ^ periph->synced[IRQ_SET_TYPE]) {
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_SET_TYPE_OFFSET,
+> +				  periph->cached[IRQ_SET_TYPE]);
+> +		if (rc < 0) {
+> +			pr_err("Couldn't set periph 0x%04x irqs 0x%02x type rc=%d\n",
+> +				periph->addr, periph->cached[IRQ_SET_TYPE], rc);
+> +			return;
+> +		}
+> +
+> +		periph->synced[IRQ_SET_TYPE] = periph->cached[IRQ_SET_TYPE];
+> +	}
+> +
+> +	/* did any polarity high change? */
+> +	if (periph->cached[IRQ_POL_HIGH] ^ periph->synced[IRQ_POL_HIGH]) {
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_POL_HIGH_OFFSET,
+> +				  periph->cached[IRQ_POL_HIGH]);
+> +		if (rc < 0) {
+> +			pr_err("Couldn't set periph 0x%04x irqs 0x%02x polarity high rc=%d\n",
+> +				periph->addr, periph->cached[IRQ_POL_HIGH], rc);
+> +			return;
+> +		}
+> +
+> +		periph->synced[IRQ_POL_HIGH] = periph->cached[IRQ_POL_HIGH];
+> +	}
+> +
+> +	/* did any polarity low change? */
+> +	if (periph->cached[IRQ_POL_LOW] ^ periph->synced[IRQ_POL_LOW]) {
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_POL_LOW_OFFSET,
+> +				  periph->cached[IRQ_POL_LOW]);
+> +		if (rc < 0) {
+> +			pr_err("Couldn't set periph 0x%04x irqs 0x%02x polarity low rc=%d\n",
+> +				periph->addr, periph->cached[IRQ_POL_LOW], rc);
+> +			return;
+> +		}
+> +
+> +		periph->synced[IRQ_POL_LOW] = periph->cached[IRQ_POL_LOW];
+> +	}
+> +}
+> +
+> +static void i2c_pmic_sync_enable(struct i2c_pmic *chip,
+> +				 struct i2c_pmic_periph *periph)
+> +{
+> +	u8 en_set, en_clr;
+> +	int rc;
+> +
+> +	/* determine which irqs were enabled and which were disabled */
+> +	en_clr = periph->synced[IRQ_EN_SET] & ~periph->cached[IRQ_EN_SET];
+> +	en_set = ~periph->synced[IRQ_EN_SET] & periph->cached[IRQ_EN_SET];
+> +
+> +	/* were any irqs disabled? */
+> +	if (en_clr) {
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_EN_CLR_OFFSET, en_clr);
+> +		if (rc < 0) {
+> +			pr_err("Couldn't disable periph 0x%04x irqs 0x%02x rc=%d\n",
+> +				periph->addr, en_clr, rc);
+> +			return;
+> +		}
+> +	}
+> +
+> +	/* were any irqs enabled? */
+> +	if (en_set) {
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_EN_SET_OFFSET, en_set);
+> +		if (rc < 0) {
+> +			pr_err("Couldn't enable periph 0x%04x irqs 0x%02x rc=%d\n",
+> +				periph->addr, en_set, rc);
+> +			return;
+> +		}
+> +	}
+> +
+> +	/* irq enabled status was written to hardware */
+> +	periph->synced[IRQ_EN_SET] = periph->cached[IRQ_EN_SET];
+> +}
+> +
+> +static void i2c_pmic_irq_bus_sync_unlock(struct irq_data *d)
+> +{
+> +	struct i2c_pmic_periph *periph = irq_data_get_irq_chip_data(d);
+> +	struct i2c_pmic *chip = periph->data;
+> +
+> +	i2c_pmic_sync_type_polarity(chip, periph);
+> +	i2c_pmic_sync_enable(chip, periph);
+> +	mutex_unlock(&periph->lock);
+> +}
+> +
+> +static void i2c_pmic_irq_disable(struct irq_data *d)
+> +{
+> +	struct i2c_pmic_periph *periph = irq_data_get_irq_chip_data(d);
+> +
+> +	periph->cached[IRQ_EN_SET] &= ~d->hwirq & 0xFF;
+> +}
+> +
+> +static void i2c_pmic_irq_enable(struct irq_data *d)
+> +{
+> +	struct i2c_pmic_periph *periph = irq_data_get_irq_chip_data(d);
+> +
+> +	periph->cached[IRQ_EN_SET] |= d->hwirq & 0xFF;
+> +}
+> +
+> +static int i2c_pmic_irq_set_type(struct irq_data *d, unsigned int irq_type)
+> +{
+> +	struct i2c_pmic_periph *periph = irq_data_get_irq_chip_data(d);
+> +
+> +	switch (irq_type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		periph->cached[IRQ_SET_TYPE] |= d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_HIGH] |= d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_LOW] &= ~d->hwirq & 0xFF;
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		periph->cached[IRQ_SET_TYPE] |= d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_HIGH] &= ~d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_LOW] |= d->hwirq & 0xFF;
+> +		break;
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		periph->cached[IRQ_SET_TYPE] |= d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_HIGH] |= d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_LOW] |= d->hwirq & 0xFF;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		periph->cached[IRQ_SET_TYPE] &= ~d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_HIGH] |= d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_LOW] &= ~d->hwirq & 0xFF;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		periph->cached[IRQ_SET_TYPE] &= ~d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_HIGH] &= ~d->hwirq & 0xFF;
+> +		periph->cached[IRQ_POL_LOW] |= d->hwirq & 0xFF;
+> +		break;
+> +	default:
+> +		pr_err("irq type 0x%04x is not supported\n", irq_type);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int i2c_pmic_irq_set_wake(struct irq_data *d, unsigned int on)
+> +{
+> +	struct i2c_pmic_periph *periph = irq_data_get_irq_chip_data(d);
+> +
+> +	if (on)
+> +		periph->wake |= d->hwirq & 0xFF;
+> +	else
+> +		periph->wake &= ~d->hwirq & 0xFF;
+> +
+> +	return 0;
+> +}
+> +#else
+> +#define i2c_pmic_irq_set_wake NULL
+> +#endif
+> +
+> +static struct irq_chip i2c_pmic_irq_chip = {
+> +	.name			= "i2c_pmic_irq_chip",
+> +	.irq_bus_lock		= i2c_pmic_irq_bus_lock,
+> +	.irq_bus_sync_unlock	= i2c_pmic_irq_bus_sync_unlock,
+> +	.irq_disable		= i2c_pmic_irq_disable,
+> +	.irq_enable		= i2c_pmic_irq_enable,
+> +	.irq_set_type		= i2c_pmic_irq_set_type,
+> +	.irq_set_wake		= i2c_pmic_irq_set_wake,
+> +};
+> +
+> +static struct i2c_pmic_periph *i2c_pmic_find_periph(struct i2c_pmic *chip,
+> +						    irq_hw_number_t hwirq)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < chip->num_periphs; i++)
+> +		if (chip->periph[i].addr == (hwirq & 0xFF00))
+> +			return &chip->periph[i];
+> +
+> +	pr_err_ratelimited("Couldn't find periph struct for hwirq 0x%04lx\n",
+> +			   hwirq);
+> +	return NULL;
+> +}
+> +
+> +static int i2c_pmic_domain_map(struct irq_domain *d, unsigned int virq,
+> +			irq_hw_number_t hwirq)
+> +{
+> +	struct i2c_pmic *chip = d->host_data;
+> +	struct i2c_pmic_periph *periph = i2c_pmic_find_periph(chip, hwirq);
+> +
+> +	if (!periph)
+> +		return -ENODEV;
+> +
+> +	irq_set_chip_data(virq, periph);
+> +	irq_set_chip_and_handler(virq, &i2c_pmic_irq_chip, handle_level_irq);
+> +	irq_set_nested_thread(virq, 1);
+> +	irq_set_noprobe(virq);
+> +	return 0;
+> +}
+> +
+> +static int i2c_pmic_domain_xlate(struct irq_domain *d,
+> +				 struct device_node *ctrlr, const u32 *intspec,
+> +				 unsigned int intsize, unsigned long *out_hwirq,
+> +				 unsigned int *out_type)
+> +{
+> +	if (intsize != 3)
+> +		return -EINVAL;
+> +
+> +	if (intspec[0] > 0xFF || intspec[1] > 0x7 ||
+> +					intspec[2] > IRQ_TYPE_SENSE_MASK)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Interrupt specifiers are triplets
+> +	 * <peripheral-address, irq-number, IRQ_TYPE_*>
+> +	 *
+> +	 * peripheral-address - The base address of the peripheral
+> +	 * irq-number	      - The zero based bit position of the peripheral's
+> +	 *			interrupt registers corresponding to the irq
+> +	 *			where the LSB is 0 and the MSB is 7
+> +	 * IRQ_TYPE_*	      - Please refer to linux/irq.h
+> +	 */
+> +	*out_hwirq = intspec[0] << 8 | BIT(intspec[1]);
+> +	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops i2c_pmic_domain_ops = {
+> +	.map	= i2c_pmic_domain_map,
+> +	.xlate	= i2c_pmic_domain_xlate,
+> +};
+> +
+> +static void i2c_pmic_irq_ack_now(struct i2c_pmic *chip, u16 hwirq)
+> +{
+> +	int rc;
+> +
+> +	rc = regmap_write(chip->regmap,
+> +			  (hwirq & 0xFF00) | INT_LATCHED_CLR_OFFSET,
+> +			  hwirq & 0xFF);
+> +	if (rc < 0)
+> +		pr_err_ratelimited("Couldn't ack 0x%04x rc=%d\n", hwirq, rc);
+> +}
+> +
+> +static void i2c_pmic_irq_disable_now(struct i2c_pmic *chip, u16 hwirq)
+> +{
+> +	struct i2c_pmic_periph *periph = i2c_pmic_find_periph(chip, hwirq);
+> +	int rc;
+> +
+> +	if (!periph)
+> +		return;
+> +
+> +	mutex_lock(&periph->lock);
+> +	periph->cached[IRQ_EN_SET] &= ~hwirq & 0xFF;
+> +
+> +	rc = regmap_write(chip->regmap,
+> +			  (hwirq & 0xFF00) | INT_EN_CLR_OFFSET,
+> +			  hwirq & 0xFF);
+> +	if (rc < 0) {
+> +		pr_err_ratelimited("Couldn't disable irq 0x%04x rc=%d\n",
+> +				   hwirq, rc);
+> +		goto unlock;
+> +	}
+> +
+> +	periph->synced[IRQ_EN_SET] = periph->cached[IRQ_EN_SET];
+> +
+> +unlock:
+> +	mutex_unlock(&periph->lock);
+> +}
+> +
+> +static void i2c_pmic_periph_status_handler(struct i2c_pmic *chip,
+> +					   u16 periph_address, u8 periph_status)
+> +{
+> +	unsigned int hwirq, virq;
+> +	int i;
+> +
+> +	while (periph_status) {
+> +		i = ffs(periph_status) - 1;
+> +		periph_status &= ~BIT(i);
+> +		hwirq = periph_address | BIT(i);
+> +		virq = irq_find_mapping(chip->domain, hwirq);
+> +		if (virq == 0) {
+> +			pr_err_ratelimited("Couldn't find mapping; disabling 0x%04x\n",
+> +					   hwirq);
+> +			i2c_pmic_irq_disable_now(chip, hwirq);
+> +			continue;
+> +		}
+> +
+> +		handle_nested_irq(virq);
+> +		i2c_pmic_irq_ack_now(chip, hwirq);
+> +	}
+> +}
+> +
+> +static void i2c_pmic_summary_status_handler(struct i2c_pmic *chip,
+> +					    struct i2c_pmic_periph *periph,
+> +					    u8 summary_status)
+> +{
+> +	unsigned int periph_status;
+> +	int rc, i;
+> +
+> +	while (summary_status) {
+> +		i = ffs(summary_status) - 1;
+> +		summary_status &= ~BIT(i);
+> +
+> +		rc = regmap_read(chip->regmap,
+> +				 periph[i].addr | INT_LATCHED_STS_OFFSET,
+> +				 &periph_status);
+> +		if (rc < 0) {
+> +			pr_err_ratelimited("Couldn't read 0x%04x | INT_LATCHED_STS rc=%d\n",
+> +					   periph[i].addr, rc);
+> +			continue;
+> +		}
+> +
+> +		i2c_pmic_periph_status_handler(chip, periph[i].addr,
+> +					       periph_status);
+> +	}
+> +}
+> +
+> +static irqreturn_t i2c_pmic_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct i2c_pmic *chip = dev_id;
+> +	struct i2c_pmic_periph *periph;
+> +	unsigned int summary_status;
+> +	int rc, i;
+> +
+> +	mutex_lock(&chip->irq_complete);
+> +	chip->irq_waiting = true;
+> +	if (!chip->resume_completed) {
+> +		pr_debug("IRQ triggered before device-resume\n");
+> +		disable_irq_nosync(irq);
+> +		mutex_unlock(&chip->irq_complete);
+> +		return IRQ_HANDLED;
+> +	}
+> +	chip->irq_waiting = false;
+> +
+> +	for (i = 0; i < DIV_ROUND_UP(chip->num_periphs, BITS_PER_BYTE); i++) {
+> +		rc = regmap_read(chip->regmap, I2C_INTR_STATUS_BASE + i,
+> +				&summary_status);
+> +		if (rc < 0) {
+> +			pr_err_ratelimited("Couldn't read I2C_INTR_STATUS%d rc=%d\n",
+> +					   i, rc);
+> +			continue;
+> +		}
+> +
+> +		if (summary_status == 0)
+> +			continue;
+> +
+> +		periph = &chip->periph[i * 8];
+> +		i2c_pmic_summary_status_handler(chip, periph, summary_status);
+> +	}
+> +
+> +	mutex_unlock(&chip->irq_complete);
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+ #########
+<-- IRQ -->
+ #########
+
+> +static int i2c_pmic_parse_dt(struct i2c_pmic *chip)
+> +{
+> +	struct device_node *node = chip->dev->of_node;
+
+s/node/np/
+
+> +	int rc, i;
+> +	u32 temp;
+
+Temp is seldom good nomenclature.
+
+"periph_addr"
+
+> +	if (!node) {
+> +		pr_err("missing device tree\n");
+
+Why are you using pr_err() over dev_err()?
+
+Please use proper grammar (less full-stops) in prints and comments.
+
+The above goes for all - I won't mention it again.
+
+> +		return -EINVAL;
+> +	}
+
+Can this happen.
+
+> +	chip->num_periphs = of_property_count_u32_elems(node,
+> +							"qcom,periph-map");
+
+Prefer the break after the '='.
+
+If you change 's/node/np' you don't need to break at all.
+
+> +	if (chip->num_periphs < 0) {
+> +		pr_err("missing qcom,periph-map property rc=%d\n",
+
+Prefer it if you use plain English for user facing comments.
+
+  "Peripheral map not defined"
+
+> +			chip->num_periphs);
+> +		return chip->num_periphs;
+> +	}
+> +
+> +	if (chip->num_periphs == 0) {
+> +		pr_err("qcom,periph-map must contain at least one address\n");
+
+"Peripheral map is empty"
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	chip->periph = devm_kcalloc(chip->dev, chip->num_periphs,
+> +				     sizeof(*chip->periph), GFP_KERNEL);
+> +	if (!chip->periph)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < chip->num_periphs; i++) {
+> +		rc = of_property_read_u32_index(node, "qcom,periph-map",
+> +						i, &temp);
+> +		if (rc < 0) {
+> +			pr_err("Couldn't read qcom,periph-map[%d]
+> rc=%d\n",
+
+"Peripheral map entry %d is invalid"
+
+> +			       i, rc);
+> +			return rc;
+> +		}
+> +
+> +		chip->periph[i].addr = (u16)(temp << 8);
+
+Worth a comment I think.
+
+> +		chip->periph[i].data = chip;
+
+'data' is also not a great variable name, if you can avoid it.
+
+> +		mutex_init(&chip->periph[i].lock);
+> +	}
+> +
+> +	of_property_read_string(node, "pinctrl-names", &chip->pinctrl_name);
+> +
+> +	return rc;
+
+Why return rc here?
+
+> +}
+> +
+> +#define MAX_I2C_RETRIES	3
+
+Why 3?
+
+> +static int i2c_pmic_read(struct regmap *map, unsigned int reg, void *val,
+> +			size_t val_count)
+> +{
+> +	int rc, retries = 0;
+> +
+> +	do {
+> +		rc = regmap_bulk_read(map, reg, val, val_count);
+> +	} while (rc == -ENOTCONN && retries++ < MAX_I2C_RETRIES);
+> +
+> +	if (retries > 1)
+> +		pr_err("i2c_pmic_read failed for %d retries, rc = %d\n",
+> +			retries - 1, rc);
+
+Is this always an error?
+
+Why would the user care if it failed once, then succeeded?
+
+> +	return rc;
+> +}
+> +
+> +static int i2c_pmic_determine_initial_status(struct i2c_pmic *chip)
+> +{
+> +	int rc, i;
+> +
+> +	for (i = 0; i < chip->num_periphs; i++) {
+> +		rc = i2c_pmic_read(chip->regmap,
+> +				chip->periph[i].addr | INT_SET_TYPE_OFFSET,
+> +				chip->periph[i].cached, IRQ_MAX_REGS);
+> +		if (rc < 0) {
+> +			pr_err("Couldn't read irq data rc=%d\n", rc);
+
+"IRQ"
+
+> +			return rc;
+> +		}
+> +
+> +		memcpy(chip->periph[i].synced, chip->periph[i].cached,
+> +		       IRQ_MAX_REGS * sizeof(*chip->periph[i].synced));
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct regmap_config i2c_pmic_regmap_config = {
+> +	.reg_bits	= 16,
+> +	.val_bits	= 8,
+> +	.max_register	= 0xFFFF,
+> +};
+> +
+> +static int i2c_pmic_probe(struct i2c_client *client,
+> +			  const struct i2c_device_id *id)
+> +{
+> +	struct i2c_pmic *chip;
+
+We usually call this ddata.  Especially relevant as you are storing it
+in *driver_data for reclaim in the functions above.
+
+> +	int rc = 0;
+
+'ret' is by far the more common name for this.
+
+$ git grep "int ret[;\|,]" | wc -l
+39365
+$ git grep "int rc[;\|,]" | wc -l
+6761
+
+Let's keep things as consistent as possible please.
+
+> +	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+> +	if (!chip)
+> +		return -ENOMEM;
+> +
+> +	chip->dev = &client->dev;
+> +	chip->regmap = devm_regmap_init_i2c(client, &i2c_pmic_regmap_config);
+> +	if (!chip->regmap)
+> +		return -ENODEV;
+> +
+> +	i2c_set_clientdata(client, chip);
+
+'\n'
+
+> +	if (!of_property_read_bool(chip->dev->of_node, "interrupt-controller"))
+> +		goto probe_children;
+> +
+> +	chip->domain = irq_domain_add_tree(client->dev.of_node,
+> +					   &i2c_pmic_domain_ops, chip);
+> +	if (!chip->domain) {
+> +		rc = -ENOMEM;
+> +		goto cleanup;
+> +	}
+> +
+> +	rc = i2c_pmic_parse_dt(chip);
+> +	if (rc < 0) {
+
+If you return an error or 0 here, you can change this to:
+
+if (rc)
+
+> +		pr_err("Couldn't parse device tree rc=%d\n", rc);
+
+Looks like you already have prints in i2c_pmic_parse_dt().
+
+No need for an additional one.
+
+> +		goto cleanup;
+> +	}
+> +
+> +	rc = i2c_pmic_determine_initial_status(chip);
+> +	if (rc < 0) {
+> +		pr_err("Couldn't determine initial status rc=%d\n", rc);
+
+As above.
+
+> +		goto cleanup;
+> +	}
+> +
+> +	if (chip->pinctrl_name) {
+> +		chip->pinctrl = devm_pinctrl_get_select(chip->dev,
+> +							chip->pinctrl_name);
+> +		if (IS_ERR(chip->pinctrl)) {
+> +			pr_err("Couldn't select %s pinctrl rc=%ld\n",
+> +				chip->pinctrl_name, PTR_ERR(chip->pinctrl));
+> +			rc = PTR_ERR(chip->pinctrl);
+
+Do this before the print, then you only need to do it once.
+
+> +			goto cleanup;
+> +		}
+> +	}
+> +
+> +	chip->resume_completed = true;
+
+Why can't you disable interrupts before suspending?
+
+> +	mutex_init(&chip->irq_complete);
+> +
+> +	rc = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> +				       i2c_pmic_irq_handler,
+> +				       IRQF_ONESHOT | IRQF_SHARED,
+> +				       "i2c_pmic_stat_irq", chip);
+> +	if (rc < 0) {
+> +		pr_err("Couldn't request irq %d rc=%d\n", client->irq, rc);
+
+"IRQ"
+
+> +		goto cleanup;
+> +	}
+> +
+> +	chip->summary_irq = client->irq;
+> +	enable_irq_wake(client->irq);
+> +
+> +probe_children:
+> +	of_platform_populate(chip->dev->of_node, NULL, NULL, chip->dev);
+
+devm_*?
+
+> +	pr_info("I2C PMIC probe successful\n");
+
+This is superfluous, please remove it.
+
+'\n' here.
+
+> +	return rc;
+> +
+> +cleanup:
+> +	if (chip->domain)
+> +		irq_domain_remove(chip->domain);
+> +	i2c_set_clientdata(client, NULL);
+
+'\n' here.
+
+> +	return rc;
+> +}
+> +
+> +static int i2c_pmic_remove(struct i2c_client *client)
+> +{
+> +	struct i2c_pmic *chip = i2c_get_clientdata(client);
+> +
+> +	of_platform_depopulate(chip->dev);
+
+If you use devm_* this becomes superfluous.
+
+> +	if (chip->domain)
+> +		irq_domain_remove(chip->domain);
+
+'\n' here.
+
+> +	i2c_set_clientdata(client, NULL);
+
+'\n' here.
+
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int i2c_pmic_suspend_noirq(struct device *dev)
+> +{
+> +	struct i2c_pmic *chip = dev_get_drvdata(dev);
+> +
+> +	if (chip->irq_waiting) {
+> +		pr_err_ratelimited("Aborting suspend, an interrupt was detected while suspending\n");
+> +		return -EBUSY;
+
+I haven't seen this before.  Why does this platform require it?
+
+What happens when you return early from .suspend_noirq?
+
+Does this system just resume?
+
+> +	}
+
+'\n' here.
+
+> +	return 0;
+> +}
+> +
+> +static int i2c_pmic_suspend(struct device *dev)
+> +{
+> +	struct i2c_pmic *chip = dev_get_drvdata(dev);
+> +	struct i2c_pmic_periph *periph;
+> +	int rc = 0, i;
+> +
+> +	for (i = 0; i < chip->num_periphs; i++) {
+> +		periph = &chip->periph[i];
+> +
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_EN_CLR_OFFSET, 0xFF);
+> +		if (rc < 0) {
+> +			pr_err_ratelimited("Couldn't clear 0x%04x irqs rc=%d\n",
+
+"IRQs"
+
+Same goes for all the other mentions of it.
+
+> +				periph->addr, rc);
+> +			continue;
+> +		}
+> +
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_EN_SET_OFFSET,
+> +				  periph->wake);
+> +		if (rc < 0)
+> +			pr_err_ratelimited("Couldn't enable 0x%04x wake irqs 0x%02x rc=%d\n",
+> +			       periph->addr, periph->wake, rc);
+> +	}
+
+'\n' here.
+
+> +	if (!rc) {
+> +		mutex_lock(&chip->irq_complete);
+> +		chip->resume_completed = false;
+> +		mutex_unlock(&chip->irq_complete);
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +static int i2c_pmic_resume(struct device *dev)
+> +{
+> +	struct i2c_pmic *chip = dev_get_drvdata(dev);
+> +	struct i2c_pmic_periph *periph;
+> +	int rc = 0, i;
+> +
+> +	for (i = 0; i < chip->num_periphs; i++) {
+> +		periph = &chip->periph[i];
+> +
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_EN_CLR_OFFSET, 0xFF);
+> +		if (rc < 0) {
+> +			pr_err("Couldn't clear 0x%04x irqs rc=%d\n",
+> +				periph->addr, rc);
+> +			continue;
+> +		}
+> +
+> +		rc = regmap_write(chip->regmap,
+> +				  periph->addr | INT_EN_SET_OFFSET,
+> +				  periph->synced[IRQ_EN_SET]);
+> +		if (rc < 0)
+> +			pr_err("Couldn't restore 0x%04x synced irqs 0x%02x rc=%d\n",
+> +			       periph->addr, periph->synced[IRQ_EN_SET], rc);
+> +	}
+> +
+> +	mutex_lock(&chip->irq_complete);
+> +	chip->resume_completed = true;
+
+'\n' here.
+
+> +	if (chip->irq_waiting) {
+> +		mutex_unlock(&chip->irq_complete);
+
+Move this above the if(), then you can remove it from the else too.
+
+> +		/* irq was pending, call the handler */
+> +		i2c_pmic_irq_handler(chip->summary_irq, chip);
+> +		enable_irq(chip->summary_irq);
+> +	} else {
+> +		mutex_unlock(&chip->irq_complete);
+> +	}
+> +
+> +	return rc;
+> +}
+> +#else
+> +static int i2c_pmic_suspend(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +static int i2c_pmic_resume(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +static int i2c_pmic_suspend_noirq(struct device *dev)
+> +{
+> +	return 0
+> +}
+> +#endif
+> +static const struct dev_pm_ops i2c_pmic_pm_ops = {
+> +	.suspend	= i2c_pmic_suspend,
+> +	.suspend_noirq	= i2c_pmic_suspend_noirq,
+> +	.resume		= i2c_pmic_resume,
+> +};
+
+See how drivers/mfd/arizona-core.c removes all of this boilerplate.
+
+> +static const struct of_device_id i2c_pmic_match_table[] = {
+> +	{ .compatible = "qcom,i2c-pmic", },
+> +	{ },
+> +};
+> +static const struct i2c_device_id i2c_pmic_id[] = {
+> +	{ "i2c-pmic", 0 },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(i2c, i2c_pmic_id);
+
+If you use probe_new, you can remove this table altogether.
+
+> +static struct i2c_driver i2c_pmic_driver = {
+> +	.driver		= {
+> +		.name		= "i2c_pmic",
+> +		.pm		= &i2c_pmic_pm_ops,
+> +		.of_match_table	= i2c_pmic_match_table,
+> +	},
+> +	.probe		= i2c_pmic_probe,
+> +	.remove		= i2c_pmic_remove,
+> +	.id_table	= i2c_pmic_id,
+> +};
+> +
+
+Remove this line.
+
+> +module_i2c_driver(i2c_pmic_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("i2c:i2c_pmic");
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
