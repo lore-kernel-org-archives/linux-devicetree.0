@@ -2,124 +2,75 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52E9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 09:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AC0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 09:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A59207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 09:48:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1M/E+ow"
+	by mail.kernel.org (Postfix) with ESMTP id B23942084C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 09:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgESJsk (ORCPT
+        id S1728279AbgESJyl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 05:48:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41058 "EHLO
+        Tue, 19 May 2020 05:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgESJsj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 05:48:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0F7C061A0C;
-        Tue, 19 May 2020 02:48:39 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j5so15177330wrq.2;
-        Tue, 19 May 2020 02:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TxO8/IXQNqCh0h2e7bYaTvlD1TxQQB6hOMKor8r5w+M=;
-        b=I1M/E+owJV4EfENz4l65z+14J0ht2BSRPF0lESD68h+3VDvnWexWznPnud07EhbS95
-         phb3Z4dBR3BslzYIE3FhThEHuh/xWKovhaNn+x49F1ysIzyeQPWm2kyAmT5/oHfidMlv
-         xgWjnBPSlh9ib2Z6tprfyDuGR9yHz0kVXkDVOucSpxq+fHDa2X1Pgemv2uq7tY9cvlRp
-         bGnF3dcWbA7Q79wzPJDJPKdO1eCU0CTHbrcA0FQtef336JmmzIU/kAzrm1/GALui9uGb
-         eVHhzrRWgia+Dd7bBbFM6r63YR/kHRIlsLxpEmQAUbqZ1z/PvNyZpuVKERCADPJPRsss
-         rjSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TxO8/IXQNqCh0h2e7bYaTvlD1TxQQB6hOMKor8r5w+M=;
-        b=s+lClDz3nVVizjBH5QiDHh4SEjzdxdBwseGkZnAZgTitUHt5fadBpzwwsIfdY9ShgO
-         X9fn99dthuPR9oPp8Ckr2MeZ67I11ts9GrcRn9R+tonEVyjLkMwAj9CftHbx0sD4or7e
-         gPXyJ3j6jAqn4ZryR6+UqIGJ0osaeNpNRTCX8HXCMKFWvsR1gRYp30roA+sEoRM35gPi
-         AHjRdDq/ji8QnuJuEZY9F7X6M1wCyZ54vTbjDmlMF8QOieKCVzLHcVv6vr8sqHFObj1d
-         jewwb0l6YYPLd16exi/+7/9YeRNkBXIHpmtt3OqxyyMHuk42xDMREwQ7S4JI6ip994Zw
-         bAKA==
-X-Gm-Message-State: AOAM531UKvSKNAyX5fsHxbz6HK6onKMh+tea6gaUwWbuKeVhubPTa3Oi
-        GuPMF5wmZXDVitlZQLaPmz4=
-X-Google-Smtp-Source: ABdhPJxHzin111tuyClhSHahzHhjUR9f6GbkrVxzMT/CakjTJ3o6V77M8IpxpTfe7tKVRZAHiY+TWA==
-X-Received: by 2002:a5d:4702:: with SMTP id y2mr23759324wrq.136.1589881718095;
-        Tue, 19 May 2020 02:48:38 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id w13sm19591852wrm.28.2020.05.19.02.48.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 02:48:37 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:48:35 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519094835.GB10391@ict14-OptiPlex-980>
-References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
- <20200519092212.GT1634618@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519092212.GT1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        with ESMTP id S1726055AbgESJyl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 05:54:41 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB74C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 02:54:40 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:918e:b928:22c1:d715])
+        by michel.telenet-ops.be with bizsmtp
+        id gZuY2200L4CPMDc06ZuYlg; Tue, 19 May 2020 11:54:38 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jayxE-0004yB-7b; Tue, 19 May 2020 11:54:32 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jayxE-0001Tr-4y; Tue, 19 May 2020 11:54:32 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Magnus Damm <magnus.damm@gmail.com>
+Cc:     =?UTF-8?q?Andr=C3=A9=20Przywara?= <andre.przywara@arm.com>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: dts: r9a06g032: Correct GIC compatible value order
+Date:   Tue, 19 May 2020 11:54:31 +0200
+Message-Id: <20200519095431.5650-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:22:12PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 08:57:40AM +0200, Jonathan Albrieux wrote:
-> > Convert documentation from txt format to yaml. Add documentation about
-> > reset-gpio. 
-> 
-> Trailing white space (though it doesn't matter here, in cover letter).
-> 
+According to commit 61efb56e30f1c54e ("dt-bindings: arm: gic: Allow
+combining arm,gic-400 compatible strings"), "arm,gic-400" should be
+listed first.
 
-Ok will fix it!
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Aforementioned commit is in robh/for-next.
+---
+ arch/arm/boot/dts/r9a06g032.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Deassert reset on ak8975_power_on, assert reset on ak8975_power_off.
-> > 
-> > Without reset's deassertion during ak8975_power_on, driver's probe fails
-> > on ak8975_who_i_am while checking for device identity for AK09911 chip
-> > 
-> > AK09911 has an active low reset gpio to handle register's reset.
-> > AK09911 datasheed says that, if not used, reset pin should be connected
-> > to VID. This patch emulates this situation
-> 
-> I dunno if it's your first submission to Linux kernel project or other OSS,
-> but here you missed a changelog. Rule of thumb is to provide a summary of
-> the changes done in the history of the evolution of a patch series.
-> 
+diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
+index 4c1ab49c7d39aeed..ee59cc84f2121488 100644
+--- a/arch/arm/boot/dts/r9a06g032.dtsi
++++ b/arch/arm/boot/dts/r9a06g032.dtsi
+@@ -174,7 +174,7 @@
+ 		};
+ 
+ 		gic: interrupt-controller@44101000 {
+-			compatible = "arm,cortex-a7-gic", "arm,gic-400";
++			compatible = "arm,gic-400", "arm,cortex-a7-gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+ 			reg = <0x44101000 0x1000>, /* Distributer */
+-- 
+2.17.1
 
-Oh thank you and sorry for not having included it. 
-
-Does the changelog needs to be added to all patch files or just on the ones
-subject of the changes?
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-
-Best regards,
-Jonathan Albrieux
