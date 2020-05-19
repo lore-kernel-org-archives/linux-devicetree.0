@@ -2,170 +2,200 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DDDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24E8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51652207D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:51:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JEziitFw"
+	by mail.kernel.org (Postfix) with ESMTP id A1C6D2084C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589896633;
+	bh=1ge7GtnAk4d1zwaRewUucQ51+d00fLsHnCTj6b5UyPo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=efy3lnKzFVlEuxA46gZ3arvSA1r8DkU4+wiUnQ+P2iAwB29NZjarO4/3UymCfDiyV
+	 Z5ETTVY+Ssx2L4hp68RjSgmLzB3j+5ZebNm8f7DlXq7mJdBz6Vz897uCajmNfxBL1b
+	 ELH2XRghLn8wIyw4gn0i3BVujpmHCy6oH/34WSm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgESNvk (ORCPT
+        id S1728052AbgESN5N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 09:51:40 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49792 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgESNvj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 09:51:39 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JDpbBu114089;
-        Tue, 19 May 2020 08:51:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589896297;
-        bh=Bd1B8/woIIEIdVYMyBG6viwLVslBpFiPiMxVf/ePN+E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JEziitFwl9AGkzWCfSRGfLHUa1d3vvebG8Jv/0BBS6yesOfQ9hdJUdWYneo055Nbf
-         Et5c4nR3XcHk8t0l770DT+UX3Qljn7NApHRdguqzaEyAgpmct5ExZUqr+Sm9HAUd9W
-         XKGpQMniWsGHMCtXeQNnxtg+PGX7N0MlWumOtX80=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JDpbTF028922
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 08:51:37 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 08:51:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 08:51:37 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JDpZa1010667;
-        Tue, 19 May 2020 08:51:35 -0500
-Subject: Re: [PATCH v4 2/7] dt-bindings: mdf: ti,j721e-system-controller.yaml:
- Add J721e
-To:     <t-kristo@ti.com>, <robh@kernel.org>
-CC:     <kishon@ti.com>, <nm@ti.com>, <nsekhar@ti.com>, <vigneshr@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200508082937.14171-1-rogerq@ti.com>
- <20200508082937.14171-3-rogerq@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <a2d6b4c3-f17f-389b-305e-8be4646aa397@ti.com>
-Date:   Tue, 19 May 2020 16:51:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 09:57:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727904AbgESN5N (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 09:57:13 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 261DB20842;
+        Tue, 19 May 2020 13:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589896632;
+        bh=1ge7GtnAk4d1zwaRewUucQ51+d00fLsHnCTj6b5UyPo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w9c30JTdPhumdFKVx2WLG4ahdfmskibm3/J+VpvUHwCHDwxhKwWf068pSXin5P5W5
+         sq6YVsbx0z10ZWXz4kigPPjLTQzdth1AYxFcExRK24RFiAXIqkLlV8ovdAkMN5l1WA
+         M8mvGtaWJchuBp/Eh7FlgjR1Uss23J7O2tUEAQH4=
+Received: by mail-io1-f50.google.com with SMTP id s10so14589508iog.7;
+        Tue, 19 May 2020 06:57:12 -0700 (PDT)
+X-Gm-Message-State: AOAM533IzhrR/qovi3/2tkjc/kU/KL7rblDWZ3IPzNHFDlnkyQcQNQew
+        A2sapHqwRNoFW8UKKVvDu0yUPj9M2bwo1X7bkNQ=
+X-Google-Smtp-Source: ABdhPJxR1/bZ6OQaZesRjgU+B2k0BoP9B3nyHCz01LxPD8dIW+o5nveijsFfnE7y+oXqf41DyfMUKU6mdLde+phk4Ts=
+X-Received: by 2002:a6b:5008:: with SMTP id e8mr19309744iob.161.1589896631339;
+ Tue, 19 May 2020 06:57:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200508082937.14171-3-rogerq@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CGME20200429082134eucas1p2415c5269202529e6b019f2d70c1b5572@eucas1p2.samsung.com>
+ <20200429082120.16259-1-geert+renesas@glider.be> <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
+ <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com>
+ <20200519094637.GZ1551@shell.armlinux.org.uk> <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+In-Reply-To: <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 19 May 2020 15:56:59 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH_s4qjDfTO03PkGNaiwfjmfkrZ-FE8vTm74QSrgoVt0A@mail.gmail.com>
+Message-ID: <CAMj1kXH_s4qjDfTO03PkGNaiwfjmfkrZ-FE8vTm74QSrgoVt0A@mail.gmail.com>
+Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Lukasz Stelmach <l.stelmach@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Grant Likely <grant.likely@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT binding schema for J721e system controller.
+On Tue, 19 May 2020 at 13:21, Geert Uytterhoeven <geert@linux-m68k.org> wro=
+te:
+>
+> Hi Russell,
+>
+> CC devicetree
+>
+> On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Tue, May 19, 2020 at 11:44:17AM +0200, Geert Uytterhoeven wrote:
+> > > On Tue, May 19, 2020 at 10:54 AM Lukasz Stelmach <l.stelmach@samsung.=
+com> wrote:
+> > > > It was <2020-04-29 =C5=9Bro 10:21>, when Geert Uytterhoeven wrote:
+> > > > > Currently, the start address of physical memory is obtained by ma=
+sking
+> > > > > the program counter with a fixed mask of 0xf8000000.  This mask v=
+alue
+> > > > > was chosen as a balance between the requirements of different pla=
+tforms.
+> > > > > However, this does require that the start address of physical mem=
+ory is
+> > > > > a multiple of 128 MiB, precluding booting Linux on platforms wher=
+e this
+> > > > > requirement is not fulfilled.
+> > > > >
+> > > > > Fix this limitation by obtaining the start address from the DTB i=
+nstead,
+> > > > > if available (either explicitly passed, or appended to the kernel=
+).
+> > > > > Fall back to the traditional method when needed.
+> > > > >
+> > > > > This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of=
+ SDRAM
+> > > > > on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 sp=
+ace),
+> > > > > i.e. not at a multiple of 128 MiB.
+> > > > >
+> > > > > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+> > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+> > > > > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> > > > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> > > > > ---
+> > > >
+> > > > [...]
+> > > >
+> > > > Apparently reading physical memory layout from DTB breaks crashdump
+> > > > kernels. A crashdump kernel is loaded into a region of memory, that=
+ is
+> > > > reserved in the original (i.e. to be crashed) kernel. The reserved
+> > > > region is large enough for the crashdump kernel to run completely i=
+nside
+> > > > it and don't modify anything outside it, just read and dump the rem=
+ains
+> > > > of the crashed kernel. Using the information from DTB makes the
+> > > > decompressor place the kernel outside of the dedicated region.
+> > > >
+> > > > The log below shows that a zImage and DTB are loaded at 0x18eb8000 =
+and
+> > > > 0x193f6000 (physical). The kernel is expected to run at 0x18008000,=
+ but
+> > > > it is decompressed to 0x00008000 (see r4 reported before jumping fr=
+om
+> > > > within __enter_kernel). If I were to suggest something, there need =
+to be
+> > > > one more bit of information passed in the DTB telling the decompres=
+sor
+> > > > to use the old masking technique to determain kernel address. It wo=
+uld
+> > > > be set in the DTB loaded along with the crashdump kernel.
+> > >
+> > > Shouldn't the DTB passed to the crashkernel describe which region of
+> > > memory is to be used instead?
+> >
+> > Definitely not.  The crashkernel needs to know where the RAM in the
+> > machine is, so that it can create a coredump of the crashed kernel.
+>
+> So the DTB should describe both ;-)
+>
+> > > Describing "to use the old masking technique" sounds a bit hackish to=
+ me.
+> > > I guess it cannot just restrict the /memory node to the reserved regi=
+on,
+> > > as the crashkernel needs to be able to dump the remains of the crashe=
+d
+> > > kernel, which lie outside this region.
+> >
+> > Correct.
+> >
+> > > However, something under /chosen should work.
+> >
+> > Yet another sticky plaster...
+>
+> IMHO the old masking technique is the hacky solution covered by
+> plasters.
+>
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
-Changelog:
-v4
--address comments.
+I think debating which solution is the hacky one will not get us anywhere.
 
-  .../mfd/ti,j721e-system-controller.yaml       | 76 +++++++++++++++++++
-  1 file changed, 76 insertions(+)
-  create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+The simple reality is that the existing solution works fine for
+existing platforms, and so any changes in the logic will have to be
+opt-in in one way or the other.
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
-new file mode 100644
-index 000000000000..cb28dc480c4c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/ti,j721e-system-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI J721e System Controller Registers R/W Device Tree Bindings
-+
-+description: |
-+  This represents the Control Module registers (CTRL_MMR0) on the SoC.
-+  System controller node represents a register region containing a set
-+  of miscellaneous registers. The registers are not cohesive enough to
-+  represent as any specific type of device. The typical use-case is
-+  for some other node's driver, or platform-specific code, to acquire
-+  a reference to the syscon node (e.g. by phandle, node path, or
-+  search using a specific compatible value), interrogate the node (or
-+  associated OS driver) to determine the location of the registers,
-+  and access the registers directly.
-+
-+maintainers:
-+  - Kishon Vijay Abraham I <kishon@ti.com>
-+  - Roger Quadros <rogerq@ti.com
-+
-+properties:
-+  compatible:
-+    anyOf:
-+      - items:
-+        - enum:
-+           - ti,j721e-system-controller
-+        - const: syscon
-+        - const: simple-mfd
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges:
-+    description:
-+      Should translate from local addresses to bus addresses.
-+
-+# Optional children
-+
-+  "^serdes-ln-ctrl@[0-9a-f]+$":
-+    type: object
-+    description: |
-+      This is the SERDES lane control mux. It should follow the bindings
-+      specified in
-+      Documentation/devicetree/bindings/mux/reg-mux.txt
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    scm_conf: scm-conf@100000 {
-+        compatible = "ti,j721e-system-controller", "syscon", "simple-mfd";
-+        reg = <0x00100000 0x1c000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        serdes_ln_ctrl: serdes-ln-ctrl@4080 {
-+            compatible = "mmio-mux";
-+            reg = <0x00004080 0x50>;
-+        };
-+    };
-+...
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Since U-boot supports EFI boot these days, one potential option is to
+rely on that. I have some changes implementing this that go on top of
+this patch, but they don't actually rely on it - it was just to
+prevent lexical conflicts.
 
+The only remaining options imo are a kernel command line option, or a
+DT property that tells the decompressor to look at the memory nodes.
+But using the DT memory nodes on all platforms like this patch does is
+obviously just too risky.
 
+On another note, I do think the usable-memory-region property should
+be implemented for ARM as well - relying on this rounding to ensure
+that the decompressor does the right thing is too fragile.
