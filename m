@@ -2,137 +2,92 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEE7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C646FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAFF6207E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1132207E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iMBY+L1k"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="HMbrlclo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgESUHr (ORCPT
+        id S1726474AbgESULT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 16:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53522 "EHLO
+        Tue, 19 May 2020 16:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgESUHr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 16:07:47 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E67C08C5C2
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:07:47 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id i89so419096uad.5
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:07:47 -0700 (PDT)
+        with ESMTP id S1726348AbgESULT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 16:11:19 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4078C08C5C0
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:11:18 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id c12so596194lfc.10
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:11:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UXbwGQX7NBj93macBQks6TpgCaCAqI85y6U/Eho5NaA=;
-        b=iMBY+L1k7S2P7A4yIvSJy4MuZVOr4X+yr4pt1EqaJLCp6UcTm+kmuYjI5XDEe9FOP2
-         SumGBT1xC3NYhOGo+zSCsVuJcjHpynQ2q6oJ45AVzmudv6qxVEOkF4nnIgDJqe8LeQwJ
-         yB5S7v/Ar4tfTj9fY0v9m2ouNF1hwJw9OzKyk=
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:organization:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=umDGCMjOzElaHcpXS1mIHtTsMYu/2vBzFt+CUEWjizA=;
+        b=HMbrlcloN+IuF8m+X22/z5Qp6yEcJ6/5ojLAwp7K0cxSo6/q1KXb8GQhLT/fTN9WqK
+         cdjZ37TPgRBERLVXsLji5ZEugG3SrJhBD+ajhb6d84SS+b2xVIe1c1l/Y47Od+xX3ZCV
+         k04E6b4g7tm/XYCJ1L89uz5jVRKoqxy2rrcQUYRkjS2s6yJbD5dIqQsutNaTJufpd4IV
+         inhzhujqS0ux5QPLhDvJkp7CmLOQVuCFm1ckXtN22p0Me15k4iTJbJGoClZF5oxb3pza
+         NM6tOflb0adiD7r63zyrihEawpLZs12cDm03+U+mpjtpZg1Kh/TxnnTx1P6nM+YOlHNp
+         MdBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UXbwGQX7NBj93macBQks6TpgCaCAqI85y6U/Eho5NaA=;
-        b=NsSRHSfMYHEb7ofC3w42w/92QA+51XX6/pAfVDHPlcUOXI5bIniROfXVDXaAth/6ZJ
-         RKkGgVVwc+lQUSXY+vcLqgOVg/ECNZdc/sS5k9vLpkVzqGqFRkb7HZIFAwEgMtshth8y
-         LXtGqHBH7GyoOd/zKsufXQF62HWs2uZlEc9GYRtAgW1jN0kmxR8YoRGCuGJsMHFCPabI
-         rusfXAoZ8QKTS+u36Z+dNJCFqywYzk/mMgKD0SbRWKdrzosQLTj0k3Sy3pN55O5Q1v+Z
-         xpN9GgJv+SKM5xuzwz+KV5C5JhRZkM1E9ZF71vUhcbGwOFR+ZKOLvSe4V6qyiEQEQq3S
-         TJ6A==
-X-Gm-Message-State: AOAM530lKbtRSwW/3U7K6eT3K5FqTAvyEla6PlwcBYSoZHO7PkmNPSZO
-        Qw8lAph/96O8p+1pOkKdynBOJm9F/kM=
-X-Google-Smtp-Source: ABdhPJw27XntE823KyS5nOOl2c8qnEfBY6Ny0ozR8bppup6hHYKFig0zkPTGreVJcEtNvbJIh00elA==
-X-Received: by 2002:ab0:6688:: with SMTP id a8mr935795uan.93.1589918865821;
-        Tue, 19 May 2020 13:07:45 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id n17sm178836vkn.29.2020.05.19.13.07.44
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 13:07:45 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id k3so406320ual.8
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:07:44 -0700 (PDT)
-X-Received: by 2002:ab0:b13:: with SMTP id b19mr945772uak.91.1589918864128;
- Tue, 19 May 2020 13:07:44 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=umDGCMjOzElaHcpXS1mIHtTsMYu/2vBzFt+CUEWjizA=;
+        b=HRr5UHCrY0i3E/CzZIKZF3HS3eUpFyMNRUoqDEWkCVMpH5W/gRuVGbqPrKx0LdX/US
+         MZwDHCkcrLvlFEf7NMLHh6enVwcYONobdwTVrs5EN5xXusvAnhGLAG7EXncapZ98pr9j
+         Whn/nI+UXn5UGrjBJ/cOob9eI+Z17x4fiRC5fABdaIFv5Q0JwgiWUqDJl1zUd4OC5b1W
+         yW1ClCTwWYslLdrK5ZL2hSK6vPc0PMnWBCnvfT/axayAtY3z22b9BklNiWsWnxgSi/ZC
+         AHkLkFHJg0C//aF8z9oNOdNtPx1Hgb2UxjgqPeJiadKDN3F3UHh4XzZoJyTHeolOV1jP
+         XpEQ==
+X-Gm-Message-State: AOAM531xnSHf6XvnI9MFxIqLm4f9fA8nDk449lcGjfnrJVbdbwtinWIf
+        9t/VoW2CoxdZgUd5P6JSM2vr7w==
+X-Google-Smtp-Source: ABdhPJwClBrtZuLBQYeiUWl5zmIoujH3skYcSgxUFemsMJBlDjLeUwEdruZ3ob5BPq4JnK4QESXa8g==
+X-Received: by 2002:ac2:599e:: with SMTP id w30mr362994lfn.188.1589919076162;
+        Tue, 19 May 2020 13:11:16 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:2c3:baf8:452e:b00:c0e9:c252])
+        by smtp.gmail.com with ESMTPSA id t20sm223975lfl.17.2020.05.19.13.11.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 13:11:15 -0700 (PDT)
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/2] Add R8A77980 RPC-IF support
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>
+Organization: Cogent Embedded
+Message-ID: <850d4a7b-4984-eb0f-de89-e5c39d61d19e@cogentembedded.com>
+Date:   Tue, 19 May 2020 23:11:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-References: <1589914405-6674-1-git-send-email-pillair@codeaurora.org>
-In-Reply-To: <1589914405-6674-1-git-send-email-pillair@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 19 May 2020 13:07:32 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XXRhh-1cWH5rMPq4W_Dh4yE=++sga_aJ8cwFkKkrAXbg@mail.gmail.com>
-Message-ID: <CAD=FV=XXRhh-1cWH5rMPq4W_Dh4yE=++sga_aJ8cwFkKkrAXbg@mail.gmail.com>
-Subject: Re: [PATCH v10] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hello!
 
-On Tue, May 19, 2020 at 11:53 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
->
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on sc7180 soc.
->
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
-> Changes from v9:
-> - Place the wlan_fw_mem under reserved-memory node
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 4e9149d..38b102e 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -389,6 +389,13 @@
->         };
->  };
->
-> +&wifi {
-> +       status = "okay";
-> +       wifi-firmware {
-> +               iommus = <&apps_smmu 0xc2 0x1>;
-> +       };
-> +};
-> +
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
->
->  &qspi_clk {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index f1280e0..19bd7d0 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -106,6 +106,11 @@
->                         no-map;
->                 };
->
-> +               wlan_fw_mem: memory@94100000 {
-> +                       reg = <0 0x94100000 0 0x200000>;
-> +                       no-map;
-> +               };
-> +
->                 rmtfs_mem: memory@84400000 {
->                         compatible = "qcom,rmtfs-mem";
->                         reg = <0x0 0x84400000 0x0 0x200000>;
+Here's the set of 2 patches against Geert's 'renesas-devel.git' repo's
+'renesas-devel-2020-06-18-v5.7-rc6' tag. I'm adding the RPC-IF device node
+for R8A77980 (based on the RPC-IF driver) and describing the QSPI flashes
+connected to RPC-IF on the Condor and V3H Starter Kit boards.
 
-This is less wrong than v9, but still a little wrong.  You should be
-keeping these ordered by unit address.  94100000 comes after 84400000.
+I've removed the R8A77970 parts in this version as the RPC-IF driver support
+for that SoC isn't complete yet.
 
--Doug
+[1/2] arm64: dts: renesas: r8a77980: add RPC-IF support
+[2/2] arm64: dts: renesas: r8a77980: condor/v3hsk: add QSPI flash support
+
+WBR, Sergei
