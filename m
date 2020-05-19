@@ -2,84 +2,107 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB2FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 06:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A61C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 06:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBF3207D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 06:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1B4D20758
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 06:58:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfCP9Jp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgESGxZ (ORCPT
+        id S1728183AbgESG62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 02:53:25 -0400
-Received: from sauhun.de ([88.99.104.3]:50670 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgESGxZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 02:53:25 -0400
-Received: from localhost (p5486ceca.dip0.t-ipconnect.de [84.134.206.202])
-        by pokefinder.org (Postfix) with ESMTPSA id 884E52C1FA8;
-        Tue, 19 May 2020 08:53:23 +0200 (CEST)
-Date:   Tue, 19 May 2020 08:53:23 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c@vger.kernel.org, tfiga@chromium.org,
-        drinkcat@chromium.org, srv_heupstream@mediatek.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v14 1/2] dt-binding: i2c: add bus-supply property
-Message-ID: <20200519065323.GC1094@ninjato>
-References: <20200428061813.27072-1-bibby.hsieh@mediatek.com>
- <20200428061813.27072-2-bibby.hsieh@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WfZ7S8PLGjBY9Voh"
-Content-Disposition: inline
-In-Reply-To: <20200428061813.27072-2-bibby.hsieh@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 19 May 2020 02:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgESG62 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 02:58:28 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFD8C061A0C;
+        Mon, 18 May 2020 23:58:26 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id e16so14533516wra.7;
+        Mon, 18 May 2020 23:58:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6AiFstTGhSyCdoIyVevq1TzhnB979sWMq0QAD1SrSBs=;
+        b=WfCP9Jp+k2orQPgDRRs9SJZG2q/hGIvIbZlFmjqXHN5Fi9T/vfLleNqiVsRhf7NCtl
+         F3OdStA9N02oazimnHm9h+9m0sNJUGOwDgAOsw5XfobrO57VCvyRMt+SPT+Y7e7W71XC
+         R0zQjb5+E6kjP/bZ5txomdxD5uRESteqkt0evAg96Ie4/uXcTApWXmm1+ubQEQPpv2Qu
+         qSvvkVNMTzpLwJVM8hVaVps1wGwK4LED4pQJDa0TWukWwGo01M5JiuFmJziRGiMEuj64
+         /8/WSo7H5J0znyE4VvM3+jQ6/uVcXKpvF7t4rqajkHCnDUIqtB2P7CueglIcl6Zp8MXe
+         SHRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6AiFstTGhSyCdoIyVevq1TzhnB979sWMq0QAD1SrSBs=;
+        b=PslKd/QEnOVpFDJZA2FcBx+bp8YCfLxuzibZXZmK1HofgWoOFX0OG72hBwaHrarwR/
+         jlc4vjFlQvZhMRudcUFvLCsbT/S2pwSmYGXAozvhHTWs8cgJhFNEBUIBkpxyjUms8t/q
+         A09j11+WgNnJFCeremFRt81KYFpDjDURYu0VRViDKwyHwozrqu6+Ly6vAhi7r3RAQ1A/
+         a/6/T7WO5sX2h4WhdFiANO36B//NrvSymYPWnPStTi0+Um4YYrWlcZlBmvhjoa//FRV8
+         Q1emsF+WIIahDwu+WbEQi/wM4Xi++gQaupTYcTbbhqmNl8pahUThD13yWA9RKRWz4Jnv
+         7KAQ==
+X-Gm-Message-State: AOAM533dXi9yL656hROVMDivcllDlQUBxADjZmu7ODgjJOESsAewHvpI
+        YjUh8vuWEZF1Xzy7hLw1SfikxeSDI5A=
+X-Google-Smtp-Source: ABdhPJxfUmPhNp7q/loYzQNsi3pPdXWIjEal6xtNYBxVffPeI0E5IhKWYlQ1EOe4Q43a8VIR9AqHCQ==
+X-Received: by 2002:adf:f783:: with SMTP id q3mr23693925wrp.348.1589871505014;
+        Mon, 18 May 2020 23:58:25 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id p7sm2597550wmc.24.2020.05.18.23.58.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 23:58:23 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 0/3] iio: magnetometer: ak8975: Add gpio reset support
+Date:   Tue, 19 May 2020 08:57:40 +0200
+Message-Id: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert documentation from txt format to yaml. Add documentation about
+reset-gpio. 
 
---WfZ7S8PLGjBY9Voh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Deassert reset on ak8975_power_on, assert reset on ak8975_power_off.
 
-On Tue, Apr 28, 2020 at 02:18:12PM +0800, Bibby Hsieh wrote:
-> In some platforms, they disable the power-supply of i2c due
-> to power consumption reduction. This patch add bus-supply property.
->=20
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Without reset's deassertion during ak8975_power_on, driver's probe fails
+on ak8975_who_i_am while checking for device identity for AK09911 chip
 
-Applied to for-next, thanks! +1 for the comments Rob made, please add
-given tags if you didn't make further changes.
+AK09911 has an active low reset gpio to handle register's reset.
+AK09911 datasheed says that, if not used, reset pin should be connected
+to VID. This patch emulates this situation
 
+Jonathan Albrieux (3):
+  dt-bindings: iio: magnetometer: ak8975: convert txt format to yaml
+  dt-bindings: iio: magnetometer: ak8975: add gpio reset support
+  iio: magnetometer: ak8975: Add gpio reset support
 
---WfZ7S8PLGjBY9Voh
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/iio/magnetometer/ak8975.txt      | 30 --------
+ .../bindings/iio/magnetometer/ak8975.yaml     | 70 +++++++++++++++++++
+ drivers/iio/magnetometer/ak8975.c             | 22 +++++-
+ 3 files changed, 90 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.17.1
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7DgmMACgkQFA3kzBSg
-KbZVjQ/+JwxxOo7eBYPA/lGjh0/+tWpcHvV7u5wD2g7a5jpzB2C4AtOrsNbxZPBg
-R+0VDcMjALqnU9vr5Og8BRVYD55KIUnlzQ5x4lf8BHOOmziUciJKO/yaW5QQbSqS
-wQYeld894w63v4OOjKOaAMFMXuRw9D3/rDOL/Ep/3h0MlIffjowfWFZ/sv9d4SdI
-CL9q0RfrRvQeFGOLRGw8dQGG4V8mtoQQf0o+QF2iJ6wzzFALqomquJZSgRKPEmkC
-Lb1NGXVqGP+cFs3jUzbKBSxVNRjkD+9teck8OQgemMoDj7yiwLTcPx6qsR1x26wS
-9XHybBlm7+G9JZatf8rinzKqTg92wrS+6rXvcv/ypQx6xIB1QylX7Q7G+JFxpPdg
-QSzY/I/L6QyOYn1EIAakqpJZTZX5373uprAAEk54APWPvgkEqGN2OtvHEec/oOab
-ABZEwa20WOqYTEPVwiVusbIQ1X6kGSN101vE58YRqj1kwjN6Dnf4wi35dWMO/Q3B
-3JTdaxos1ZbpCNDcjPwOecI56E4G677wqzUC0Ji9H0/V/K3Iy3qzkB+l7aA5K3Hr
-75o9KDXgohY2+VDFcM5FfHpW+pywQ7UoDRryq5KJRMij6GYR3CA/eXeQuqs3zblm
-I1B/WUAuAn83r0O0kqrAD5wdUHAjkYHeZdAuiIQRmTfeyDy/V3I=
-=Gi5z
------END PGP SIGNATURE-----
-
---WfZ7S8PLGjBY9Voh--
