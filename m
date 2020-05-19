@@ -2,85 +2,104 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC610C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D119CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86275207D4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589913423;
-	bh=tC+hTHz0LxYEoACfJFkeD/YDC2wuPZZcjRBqcqOnLhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=valAgbcq8fv8J84uEgsGG/gxEXKtvzc+J9hTQ3ew+DnyE/foxElet3BTERr8rgwFX
-	 5g9Zyay4ZFG9mB7seNbADb1Fek2QlnF8BjVzKC418j8LAcXqmKLqXsrmpVBqFTSAGC
-	 czfenFwnNfccUn9NMRCu5GTxxKz8Q/7hlFf9wegs=
+	by mail.kernel.org (Postfix) with ESMTP id 9B271207E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:41:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e/KIP5lJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgESShD (ORCPT
+        id S1726939AbgESSlx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 14:37:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36941 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESShC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:37:02 -0400
-Received: by mail-io1-f66.google.com with SMTP id t15so266539ios.4;
-        Tue, 19 May 2020 11:37:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9gkfGJ7KJs1nebEF+m2qI6r0Zpzd4/7HhycMiWKPpMw=;
-        b=Opub0kShFShF8UDNFVKjrW6AN/4qxFYf0IQuXZGdqv5gqfY5ipjtB9IELyQmGXNavr
-         ZvtF70xvppZQhcZH50zn6ujyjtbcQwVb3DRmxr6+R2P5Vd9DCfcyXiW+0gukBSAGCKQB
-         t9ddVBvB5MCzBIYoDXKaI3I8AyvLxsRj2MDXyEPuNteWRsknaE9yEHWX8oIgyusshXGh
-         fnBWCKb5WJxTBIr8b7hmWBdycjRZLz2loxpp4WGAngMfhS552ZoEn+WU3/6TLpYi06qE
-         Hr4kChnaSRxL0TKV/RV4IJ1NOe+W0XGmzITwNFO84qgwmxHQhwj+3e8fLipf8tVlxoDt
-         V/kQ==
-X-Gm-Message-State: AOAM531/jF7ricChrUHkmUKqo4yTGzYvRHovaf+Ap9Z0GIgWAMw+G2ZY
-        msZ49gmR14DKvhxmE82zjmluRuY=
-X-Google-Smtp-Source: ABdhPJyl4q7PFUuNkIc0fWw+vhM8J2A7oPKEXlt3TrTeH8BFs3YwXt5tc+5BYWSxSBiI1ACKn3OxAg==
-X-Received: by 2002:a02:a895:: with SMTP id l21mr1005625jam.82.1589913422004;
-        Tue, 19 May 2020 11:37:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j16sm128705ild.8.2020.05.19.11.37.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:37:01 -0700 (PDT)
-Received: (nullmailer pid 441282 invoked by uid 1000);
-        Tue, 19 May 2020 18:37:00 -0000
-Date:   Tue, 19 May 2020 12:37:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 10/11] dt-bindings: sound: Add Marvell MMP SSPA binding
-Message-ID: <20200519183700.GA441251@bogus>
-References: <20200511210134.1224532-1-lkundrak@v3.sk>
- <20200511210134.1224532-11-lkundrak@v3.sk>
+        Tue, 19 May 2020 14:41:53 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51672 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESSlx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:41:53 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JIfjkO053693;
+        Tue, 19 May 2020 13:41:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589913705;
+        bh=GLDfaTKUNFaww2qeQ7ar1unuT0uERBavkAEEdjsusNs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=e/KIP5lJA1mE1DLItbytQN+Xfjlt3S7jX4LTz+S1WE1By8Q1iWr8cZ2tZAABix1yJ
+         lf8zhJo4/r2lfJ4gVnXFn+1Ti3uoNVKzx0AMY3wLwANtK+49H6AkQ5GK4J3Gs6ZvK3
+         7guPrn9jyd716CHgCGS28zgHZO/pIq+ovoRdUj64=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JIfjjD001933;
+        Tue, 19 May 2020 13:41:45 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 13:41:45 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 13:41:45 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JIfjMK076058;
+        Tue, 19 May 2020 13:41:45 -0500
+Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
+To:     Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200519141813.28167-1-dmurphy@ti.com>
+ <20200519141813.28167-3-dmurphy@ti.com>
+ <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200519182916.GM624248@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c45bae32-d26f-cbe5-626b-2afae4a557b3@ti.com>
+Date:   Tue, 19 May 2020 13:41:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511210134.1224532-11-lkundrak@v3.sk>
+In-Reply-To: <20200519182916.GM624248@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 May 2020 23:01:33 +0200, Lubomir Rintel wrote:
-> Add binding documentation for the audio serial port interface (I2S) on
-> Marvell MMP SoCs.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  .../bindings/sound/marvell,mmp-sspa.yaml      | 122 ++++++++++++++++++
->  1 file changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/marvell,mmp-sspa.yaml
-> 
+Andrew
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 5/19/20 1:29 PM, Andrew Lunn wrote:
+> On Tue, May 19, 2020 at 09:58:18AM -0700, Jakub Kicinski wrote:
+>> On Tue, 19 May 2020 09:18:11 -0500 Dan Murphy wrote:
+>>> If the op-mode for the device is not set in the device tree then set
+>>> the strapped op-mode and store it for later configuration.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ../drivers/net/phy/dp83869.c: In function0 dp83869_set_strapped_mode:
+>> ../drivers/net/phy/dp83869.c:171:10: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+>>    171 |  if (val < 0)
+>>        |          ^
+> Hi Jakub
+>
+> This happens a lot with PHY drivers. The register being read is a u16,
+> so that is what people use.
+
+Yes this is what happened but phy_read_mmd returns an int so the 
+declaration of val should be an int.
+
+I will update that in v2
+
+
+> Is this now a standard GCC warning? Or have you turned on extra
+> checking?
+I still was not able to reproduce this warning with gcc-9.2.  I would 
+like to know the same
+
+
+Dan
+
