@@ -2,83 +2,99 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38ADC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4744C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1DA20756
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BBE206D4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgESKF7 (ORCPT
+        id S1726121AbgESKIQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 06:05:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:58168 "EHLO foss.arm.com"
+        Tue, 19 May 2020 06:08:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27677 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgESKF6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 06:05:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 233C5101E;
-        Tue, 19 May 2020 03:05:58 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C375C3F305;
-        Tue, 19 May 2020 03:05:56 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: r9a06g032: Correct GIC compatible value order
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-References: <20200519095431.5650-1-geert+renesas@glider.be>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Organization: ARM Ltd.
-Message-ID: <4e85d185-c982-1520-82f5-684ee66d7af3@arm.com>
-Date:   Tue, 19 May 2020 11:05:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725911AbgESKIP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 06:08:15 -0400
+IronPort-SDR: 39h6fXfKL68fiT/VW7prhj0KD5UGl8/gTx/C1SKpa9RzzTmCztJiM7ROeTprnC4hTogg6L6hyV
+ 4zdnCNfE2EOA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 03:08:15 -0700
+IronPort-SDR: SjWFqbbimDqnm/TjnWpuDf0o3/YjENl1YCcC2qrTXp05DIM2wcwv1hDb4TRMTYUr8rYBbxnix7
+ URI5O6Ki7tuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
+   d="scan'208";a="264257366"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 03:08:12 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jazAV-007c93-I1; Tue, 19 May 2020 13:08:15 +0300
+Date:   Tue, 19 May 2020 13:08:15 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/3] iio: magnetometer: ak8975: Add gpio reset support
+Message-ID: <20200519100815.GA1634618@smile.fi.intel.com>
+References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
+ <20200519092212.GT1634618@smile.fi.intel.com>
+ <20200519094835.GB10391@ict14-OptiPlex-980>
 MIME-Version: 1.0
-In-Reply-To: <20200519095431.5650-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519094835.GB10391@ict14-OptiPlex-980>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19/05/2020 10:54, Geert Uytterhoeven wrote:
-> According to commit 61efb56e30f1c54e ("dt-bindings: arm: gic: Allow
-> combining arm,gic-400 compatible strings"), "arm,gic-400" should be
-> listed first.
+On Tue, May 19, 2020 at 11:48:35AM +0200, Jonathan Albrieux wrote:
+> On Tue, May 19, 2020 at 12:22:12PM +0300, Andy Shevchenko wrote:
+> > On Tue, May 19, 2020 at 08:57:40AM +0200, Jonathan Albrieux wrote:
 
-Thanks for taking care!
+...
 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-
-Cheers,
-Andre
-
-> ---
-> Aforementioned commit is in robh/for-next.
-> ---
->  arch/arm/boot/dts/r9a06g032.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > I dunno if it's your first submission to Linux kernel project or other OSS,
+> > but here you missed a changelog. Rule of thumb is to provide a summary of
+> > the changes done in the history of the evolution of a patch series.
+> > 
 > 
-> diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-> index 4c1ab49c7d39aeed..ee59cc84f2121488 100644
-> --- a/arch/arm/boot/dts/r9a06g032.dtsi
-> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
-> @@ -174,7 +174,7 @@
->  		};
->  
->  		gic: interrupt-controller@44101000 {
-> -			compatible = "arm,cortex-a7-gic", "arm,gic-400";
-> +			compatible = "arm,gic-400", "arm,cortex-a7-gic";
->  			interrupt-controller;
->  			#interrupt-cells = <3>;
->  			reg = <0x44101000 0x1000>, /* Distributer */
+> Oh thank you and sorry for not having included it. 
 > 
+> Does the changelog needs to be added to all patch files or just on the ones
+> subject of the changes?
+
+Up to you and maintainer of the corresponding subsystem.
+
+My common sense tells me that
+1) if there is a cover letter, just put a joined changelog there
+2) otherwise, put changelog in each patch.
+
+I saw in practice all possible variants, i.e.
+a) cover letter w/o changelog + changelog per patch;
+b) cover letter w/ changelog + changelog per patch;
+c) cover letter w/ changelog.
+
+I think any of it is fine in general.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
