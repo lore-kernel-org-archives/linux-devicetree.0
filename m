@@ -2,148 +2,75 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBC6C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDEDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACE32075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:52:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEAU79mZ"
+	by mail.kernel.org (Postfix) with ESMTP id EDF5A206D4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgESHwI (ORCPT
+        id S1728510AbgESHza (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 03:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
+        Tue, 19 May 2020 03:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgESHwG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 03:52:06 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BAFCC061A0C;
-        Tue, 19 May 2020 00:52:06 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u188so2308564wmu.1;
-        Tue, 19 May 2020 00:52:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EeNFiJ1FC5DZjuSZh9hyKMC8Zinmtds/VmAwu1z5abo=;
-        b=XEAU79mZXQfRvTzivvj9o5mW0XISfJr+VlP/k89iTZp3M2LILtWn/cpe9VuWcMtRDI
-         JtbzVAsUQwzFHQpap+7eSOB48Y8U/zWEXAzdecTqWICRSi4QYTrzch82hze1o9OE/ufy
-         GLTcfNMZh6b/OWy5/wVDZFamRZ3p9991plplToXbjwlwcxaO8xedJDzKqLhbJjv/DA8D
-         ESN8Nf3p+lAWqDdbLiVha0d0XUlvj66KA3yNUzxLB+2uJpV4s20sq5RcxPcjmCLsvzjO
-         zh4fCbUpUHR1HpcbDPIv4RFD6ZESmrVgh9O5cKx+14JI9c+MsxiwdPqvZE6w9wxefRCP
-         Yu3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EeNFiJ1FC5DZjuSZh9hyKMC8Zinmtds/VmAwu1z5abo=;
-        b=ZqCqM91fJyrs10TuMNNdhTDErIQZ/82Z30jzSyYNpqwwjEdY+2iNX4+NqOrkF+wC0f
-         x0721bSqlkhjWv2zCzZcxSBytvbX8YCgJMevpVnmuDQrzr/V1PCjNCRWxaYyYhXCfwQW
-         TL8J0FzaNdx6LaY7nwfnkQjT/xSljVj7GFnxcPuL8gIJidSkHkpvW1eZIC6/rolowhbX
-         yuD6lZXmMhCLwm+eX5JAbVkn1prpJ723128AbzU9fb+9qSss8jg7lFgWV1jDxbrFCqTu
-         4Qw0Sq7+3h+Q10MUX14ANztFZkds/I2SS1Tgo7VxDb1aYCUlQhBkBAZsBYcw5nIMlrhS
-         ks4A==
-X-Gm-Message-State: AOAM5335JrcX8BqzxZtMcBqasZbS3Q7y3pWPK2tvD4mTKlUH+U41y6eV
-        l4+IyhtKqqWplzFVc3apMek8s4FtDB4=
-X-Google-Smtp-Source: ABdhPJyWKQkQVV8QWYuBtxkoXnBwAtWQhLa5GCVcyxRYI/z/Cb4GqcUUbx1v5l09cnCmSiDunxJHMg==
-X-Received: by 2002:a1c:2087:: with SMTP id g129mr3764710wmg.126.1589874724562;
-        Tue, 19 May 2020 00:52:04 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id w18sm20019697wro.33.2020.05.19.00.52.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 00:52:03 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v2 4/4] iio: imu: bmi160: added mount-matrix support
-Date:   Tue, 19 May 2020 09:51:00 +0200
-Message-Id: <20200519075111.6356-5-jonathan.albrieux@gmail.com>
+        with ESMTP id S1728493AbgESHza (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 03:55:30 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C4BC05BD09
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 00:55:29 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:918e:b928:22c1:d715])
+        by laurent.telenet-ops.be with bizsmtp
+        id gXvT220014CPMDc01XvTet; Tue, 19 May 2020 09:55:27 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jax5y-0000DH-VT; Tue, 19 May 2020 09:55:26 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jax5y-0006S0-TO; Tue, 19 May 2020 09:55:26 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: dts: sh73a0: Add missing clocks to sound node
+Date:   Tue, 19 May 2020 09:55:25 +0200
+Message-Id: <20200519075525.24742-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add mount-matrix binding support. As chip could have different orientations
-a mount matrix support is needed to correctly translate these differences
+The device node for the FIFO-buffered Serial Interface sound node lacks
+the "clocks" property, as the DTS file didn't describe any clocks yet at
+its introduction.
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/iio/imu/bmi160/bmi160.h      |  1 +
- drivers/iio/imu/bmi160/bmi160_core.c | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
+To be queued in renesas-fixes for v5.7 or v5.8, to avoid the
+corresponding DT binding update introducing a regression.
 
-diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-index 923c3b274fde..a82e040bd109 100644
---- a/drivers/iio/imu/bmi160/bmi160.h
-+++ b/drivers/iio/imu/bmi160/bmi160.h
-@@ -9,6 +9,7 @@ struct bmi160_data {
- 	struct regmap *regmap;
- 	struct iio_trigger *trig;
- 	struct regulator_bulk_data supplies[2];
-+	struct iio_mount_matrix orientation;
- };
- 
- extern const struct regmap_config bmi160_regmap_config;
-diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-index 9bbe0d8e6720..78c8ca962359 100644
---- a/drivers/iio/imu/bmi160/bmi160_core.c
-+++ b/drivers/iio/imu/bmi160/bmi160_core.c
-@@ -110,6 +110,7 @@
- 		.storagebits = 16,				\
- 		.endianness = IIO_LE,				\
- 	},							\
-+	.ext_info = bmi160_ext_info,				\
- }
- 
- /* scan indexes follow DATA register order */
-@@ -265,6 +266,20 @@ static const struct  bmi160_odr_item bmi160_odr_table[] = {
- 	},
- };
- 
-+static const struct iio_mount_matrix *
-+bmi160_get_mount_matrix(const struct iio_dev *indio_dev,
-+			const struct iio_chan_spec *chan)
-+{
-+	struct bmi160_data *data = iio_priv(indio_dev);
-+
-+	return &data->orientation;
-+}
-+
-+static const struct iio_chan_spec_ext_info bmi160_ext_info[] = {
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmi160_get_mount_matrix),
-+	{ }
-+};
-+
- static const struct iio_chan_spec bmi160_channels[] = {
- 	BMI160_CHANNEL(IIO_ACCEL, X, BMI160_SCAN_ACCEL_X),
- 	BMI160_CHANNEL(IIO_ACCEL, Y, BMI160_SCAN_ACCEL_Y),
-@@ -840,6 +855,11 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
- 		return ret;
- 	}
- 
-+	ret = iio_read_mount_matrix(dev, "mount-matrix",
-+				    &data->orientation);
-+	if (ret)
-+		return ret;
-+
- 	ret = bmi160_chip_init(data, use_spi);
- 	if (ret)
- 		return ret;
+ arch/arm/boot/dts/sh73a0.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index 6688f058087704d3..d7339e511288a4ec 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -601,6 +601,7 @@
+ 		compatible = "renesas,fsi2-sh73a0", "renesas,sh_fsi2";
+ 		reg = <0xec230000 0x400>;
+ 		interrupts = <GIC_SPI 146 0x4>;
++		clocks = <&mstp3_clks SH73A0_CLK_FSI>;
+ 		power-domains = <&pd_a4mp>;
+ 		status = "disabled";
+ 	};
 -- 
 2.17.1
 
