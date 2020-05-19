@@ -2,55 +2,49 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B08C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 11:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FE0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 11:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC0B20758
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 11:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161A220708
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 11:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgESLVX convert rfc822-to-8bit (ORCPT
+        id S1728612AbgESL2q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 07:21:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33656 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgESLVX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 07:21:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id v17so10811822ote.0;
-        Tue, 19 May 2020 04:21:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=C6lb9JZ25g+Kaugzt8krb+iM4CDC/jdUqY0YVxzMNaw=;
-        b=oHZg/6XzIpBDqk3doFlitvzXvATX+uBFkD837gQPTXspx1VereGWGpJJ7jIJC97LBr
-         YYmBIbGtdOuOcjsdIbWuIJgmZm6OyUDvCcuyKu6RTvrASdMfAKjZ0RNmrobIDAA1TbT2
-         54fBy3bDSQH6t2SFzMhJdDh9bVxwRxb0UhCAZvQmm948XAGyD3tTNbvxUcomgYBE+GDq
-         Cte2gu2ym8KI37rMjepl/kv+tnx5uawQkYSRoLskgoknV+xFJKBY920TOANoZYfP2/Vy
-         mh1/zZ/G8F0036UXnd9T3WwWmQr24bri/wV3GkegKXfEuUO9qXHqYQrDpWJKRTYbm+/m
-         Derw==
-X-Gm-Message-State: AOAM533ZpUPpyu0i7ctuiu2ljYUqAnO1517iNBy5KaITEqUkJeHhQAA5
-        RQCJcC1whXfbwNohHm278XmB8xFjpNowh1XrYaU=
-X-Google-Smtp-Source: ABdhPJzQvKCdDSoxUltKaj8LuBKKd6bmonffri7fJu3t4HqC7Gw+4iPEhSPjUsG1MLNa3/nqnoVs2YpZGvTGdKys2wU=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr15339151otp.145.1589887282035;
- Tue, 19 May 2020 04:21:22 -0700 (PDT)
+        Tue, 19 May 2020 07:28:46 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:43685 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgESL2q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 07:28:46 -0400
+Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MD9Kj-1jjZ873ugj-009A98; Tue, 19 May 2020 13:28:43 +0200
+Received: by mail-qv1-f53.google.com with SMTP id g20so6254437qvb.9;
+        Tue, 19 May 2020 04:28:42 -0700 (PDT)
+X-Gm-Message-State: AOAM53169dBAgh8P3wFfy5W3dx7yLlAqSWDOnnio9wJY4xoZEtukxaP9
+        VvoLWZolSj1GxVRlpScsb9ssXo/c0WappXN01Ag=
+X-Google-Smtp-Source: ABdhPJx+Ipnp1De8u1nx4B4U7GgZtHcjTeorwfefYcSy2qSkv9jr1bxjHK/e2HLBvFYfYy1Fq3XFH9dyxPrnUgH7uP8=
+X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr19411615qvz.210.1589887721612;
+ Tue, 19 May 2020 04:28:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <CGME20200429082134eucas1p2415c5269202529e6b019f2d70c1b5572@eucas1p2.samsung.com>
  <20200429082120.16259-1-geert+renesas@glider.be> <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
- <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com> <20200519094637.GZ1551@shell.armlinux.org.uk>
-In-Reply-To: <20200519094637.GZ1551@shell.armlinux.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 19 May 2020 13:21:09 +0200
-Message-ID: <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+ <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com>
+ <20200519094637.GZ1551@shell.armlinux.org.uk> <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+In-Reply-To: <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 19 May 2020 13:28:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3H=7qx+Rz9sScTVCSMKWGwQ_ROnyoyK73A5yUd+_jbTw@mail.gmail.com>
+Message-ID: <CAK8P3a3H=7qx+Rz9sScTVCSMKWGwQ_ROnyoyK73A5yUd+_jbTw@mail.gmail.com>
 Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Lukasz Stelmach <l.stelmach@samsung.com>,
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Lukasz Stelmach <l.stelmach@samsung.com>,
         Dmitry Osipenko <digetx@gmail.com>,
         Nicolas Pitre <nico@fluxnic.net>,
-        Arnd Bergmann <arnd@arndb.de>,
         Eric Miao <eric.miao@nvidia.com>,
         =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
@@ -66,122 +60,73 @@ Cc:     Lukasz Stelmach <l.stelmach@samsung.com>,
         <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Grant Likely <grant.likely@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:CNVN5I2QxgwLHtGhj2XIlWHhA95Ln5IQ59NqTrneFm7uuYeJZ/d
+ UXEYTD0Yz/hqn+uAYntGDrQmvtCB4QsBO9Jif4coYjmud+2+T/QnlKXOPYV7NQmuSOw7+FD
+ lAtNH/7To3qRwMuf7HhGyrDio/xsfkWTHsFoW1PrfNkzbvyi5GC4RaupDdimwTg100a2bWR
+ r3NQcEAF7c/t9uQxmPCtQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l871HVkBlvM=:zHTVIOTzNjei48LbTdIcX/
+ TrSj/+8R6dSKCZlzmqH3864ZfgKmGcOYDYcQB9p69p38pkzdzTVdBWT/eEJa82qJWm2sg35vE
+ LurmOIZfHUxKtpVwK6CidDrOWZeENaxqtLxNVFvFkPATp0kgP9rKBY3/6Q0WNTLISx0DGf4Yl
+ q/7hJVbk5uJuDdEYdFVSBAEhZoHyCniedaa9XW50XHe7tNzICbAoCO/YUzKqo/zrs7k6olayT
+ 4UMut0Diqte95Cc9Ml973Gew1NJLCybZBQkDYC4IbzbZ2DOmubW2tsY/RrCVPm/0QuYThJJwu
+ ReuU/cAh3GSgviy0bd2xuyWdvEhke6EYlt9OkvH9y8hE7bTfnWrFsvA6p8eIzYotef+34HgzW
+ L0JqS8ELWFSp+RCeTaDeEBL3qVN5iuoWkoU9ZSsBV4UyXcU74IWqP7W86swJQLUqRqnR+y2Yc
+ S0sOiQhhfw5xzz4H3CtCCoEtHlLfQuj70zFfsQd8hDA/wdMZcm0P56vRbt+Tt9xhyz3AxvjTs
+ FKJTm2zbvNGmSMuXKFV+LpRqml392FIPtLfGRiC3s0HSmloqlDQm2n9AaeDeb+W1psYnIPz+r
+ L+cOrh2++ep6obIbe01o3DfYoYcmrU6St94x0TVnHLfm8q4FbVB8/9G3OFs9Hgd9gllWRW5DZ
+ 686tid+owAchEhOurHWyAyR9gfPullL8b32xP2Qgj1sWPu5oyXQRRV83Er5UqbGX/pSM1Ogil
+ OAnD3x8eQmjWF7bUFnDt/QYc4BnxfGRYvCLj9DWm/RxEYBClmm49Xwk4DMVoBwhC2oH1JYkm+
+ rVoHTqEIlLBbCiEYO/O3FP+1PbbgajOar0xaov3SQYsrHIpPyg=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Russell,
+On Tue, May 19, 2020 at 1:21 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
 
-CC devicetree
-
-On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
-> On Tue, May 19, 2020 at 11:44:17AM +0200, Geert Uytterhoeven wrote:
-> > On Tue, May 19, 2020 at 10:54 AM Lukasz Stelmach <l.stelmach@samsung.com> wrote:
-> > > It was <2020-04-29 śro 10:21>, when Geert Uytterhoeven wrote:
-> > > > Currently, the start address of physical memory is obtained by masking
-> > > > the program counter with a fixed mask of 0xf8000000.  This mask value
-> > > > was chosen as a balance between the requirements of different platforms.
-> > > > However, this does require that the start address of physical memory is
-> > > > a multiple of 128 MiB, precluding booting Linux on platforms where this
-> > > > requirement is not fulfilled.
-> > > >
-> > > > Fix this limitation by obtaining the start address from the DTB instead,
-> > > > if available (either explicitly passed, or appended to the kernel).
-> > > > Fall back to the traditional method when needed.
-> > > >
-> > > > This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
-> > > > on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
-> > > > i.e. not at a multiple of 128 MiB.
-> > > >
-> > > > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
-> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
-> > > > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> > > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> > > > ---
-> > >
-> > > [...]
-> > >
-> > > Apparently reading physical memory layout from DTB breaks crashdump
-> > > kernels. A crashdump kernel is loaded into a region of memory, that is
-> > > reserved in the original (i.e. to be crashed) kernel. The reserved
-> > > region is large enough for the crashdump kernel to run completely inside
-> > > it and don't modify anything outside it, just read and dump the remains
-> > > of the crashed kernel. Using the information from DTB makes the
-> > > decompressor place the kernel outside of the dedicated region.
-> > >
-> > > The log below shows that a zImage and DTB are loaded at 0x18eb8000 and
-> > > 0x193f6000 (physical). The kernel is expected to run at 0x18008000, but
-> > > it is decompressed to 0x00008000 (see r4 reported before jumping from
-> > > within __enter_kernel). If I were to suggest something, there need to be
-> > > one more bit of information passed in the DTB telling the decompressor
-> > > to use the old masking technique to determain kernel address. It would
-> > > be set in the DTB loaded along with the crashdump kernel.
 > >
-> > Shouldn't the DTB passed to the crashkernel describe which region of
-> > memory is to be used instead?
+> > > However, something under /chosen should work.
+> >
+> > Yet another sticky plaster...
 >
-> Definitely not.  The crashkernel needs to know where the RAM in the
-> machine is, so that it can create a coredump of the crashed kernel.
-
-So the DTB should describe both ;-)
-
-> > Describing "to use the old masking technique" sounds a bit hackish to me.
-> > I guess it cannot just restrict the /memory node to the reserved region,
-> > as the crashkernel needs to be able to dump the remains of the crashed
-> > kernel, which lie outside this region.
+> IMHO the old masking technique is the hacky solution covered by
+> plasters.
 >
-> Correct.
+> DT describes the hardware.  In general, where to put the kernel is a
+> software policy, and thus doesn't belong in DT, except perhaps under
+> /chosen.  But that would open another can of worms, as people usually
+> have no business in specifying where the kernel should be located.
+> In the crashkernel case, there is a clear separation between memory to
+> be used by the crashkernel, and memory to be solely inspected by the
+> crashkernel.
 >
-> > However, something under /chosen should work.
+> Devicetree Specification, Release v0.3, Section 3.4 "/memory node" says:
 >
-> Yet another sticky plaster...
+>     "The client program may access memory not covered by any memory
+>      reservations (see section 5.3)"
+>
+> (Section 5.3 "Memory Reservation Block" only talks about structures in
+> the FDT, not about DTS)
+>
+> Hence according to the above, the crashkernel is rightfully allowed to
+> do whatever it wants with all memory under the /memory node.
+> However, there is also
+> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
+> This suggests the crashkernel should be passed a DTB that contains a
+> /reserved-memory node, describing which memory cannot be used freely.
+> Then the decompressor needs to take this into account when deciding
+> where the put the kernel.
+>
+> Yes, the above requires changing code. But at least it provides a
+> path forward, getting rid of the fragile old masking technique.
 
-IMHO the old masking technique is the hacky solution covered by
-plasters.
+There is an existing "linux,usable-memory-range" property documented
+in Documentation/devicetree/bindings/chosen.txt, which as I understand
+is exactly what you are looking for, except that it is currently only
+documented for arm64.
 
-DT describes the hardware.  In general, where to put the kernel is a
-software policy, and thus doesn't belong in DT, except perhaps under
-/chosen.  But that would open another can of worms, as people usually
-have no business in specifying where the kernel should be located.
-In the crashkernel case, there is a clear separation between memory to
-be used by the crashkernel, and memory to be solely inspected by the
-crashkernel.
+Would extending this to arm work?
 
-Devicetree Specification, Release v0.3, Section 3.4 "/memory node" says:
-
-    "The client program may access memory not covered by any memory
-     reservations (see section 5.3)"
-
-(Section 5.3 "Memory Reservation Block" only talks about structures in
-the FDT, not about DTS)
-
-Hence according to the above, the crashkernel is rightfully allowed to
-do whatever it wants with all memory under the /memory node.
-However, there is also
-Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
-This suggests the crashkernel should be passed a DTB that contains a
-/reserved-memory node, describing which memory cannot be used freely.
-Then the decompressor needs to take this into account when deciding
-where the put the kernel.
-
-Yes, the above requires changing code. But at least it provides a
-path forward, getting rid of the fragile old masking technique.
-
-Thanks for your comments!
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+      Arnd
