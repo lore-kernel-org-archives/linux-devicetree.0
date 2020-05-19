@@ -1,186 +1,169 @@
 Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1438C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 21:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E06C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 21:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E8B2075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 21:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="F4Aafco/"
+	by mail.kernel.org (Postfix) with ESMTP id 077202072C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 21:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbgESVDI (ORCPT
+        id S1726064AbgESVYw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 17:03:08 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:52776 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgESVDI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 17:03:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1589922186; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AYssrVu0EdXtQCut6RKI0Q/slktx5/swJ4iGM1S+aPM=;
-        b=F4Aafco/wu2j6SCR/42PO2SWWsZNMwDACorK4ZocGNHgTHLYesolX8x3ADsIjVRcCaeZJw
-        a5yXWDDmGEllGmsRIvWGFO92zvZOSpoomh8E/dyp8fSIQ3b84t/y6Kfg9TX/LNQX+pRKwZ
-        oPY9+Afv3CTrx52VuqQ3M+tOmXGy35o=
-Date:   Tue, 19 May 2020 23:02:54 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v7 7/7] input: joystick: Add ADC attached joystick driver.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <USJLAQ.SNMLIAX3CX1J2@crapouillou.net>
-In-Reply-To: <CAHp75VcChHOrxrqBM==-_SaTL4vSojKmRWvkNn-CHLH99pcAuQ@mail.gmail.com>
-References: <20200517194904.34758-1-contact@artur-rojek.eu>
-        <20200517194904.34758-7-contact@artur-rojek.eu>
-        <CAHp75VcChHOrxrqBM==-_SaTL4vSojKmRWvkNn-CHLH99pcAuQ@mail.gmail.com>
+        Tue, 19 May 2020 17:24:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57650 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgESVYw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 17:24:52 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 10FDB2A03F5
+Subject: Re: [PATCH v2 2/2] platform/chrome: typec: Register Type C switches
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Heikki Krogerus <heikki.krogerus@intel.linux.com>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200518071707.161843-1-pmalani@chromium.org>
+ <20200518071707.161843-2-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <cb86eb4a-3bce-48d0-5cf9-8126d3517f0e@collabora.com>
+Date:   Tue, 19 May 2020 23:24:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200518071707.161843-2-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Prashant,
 
-Le mar. 19 mai 2020 =E0 23:43, Andy Shevchenko=20
-<andy.shevchenko@gmail.com> a =E9crit :
-> On Sun, May 17, 2020 at 10:49 PM Artur Rojek <contact@artur-rojek.eu>=20
-> wrote:
->>=20
->>  Add a driver for joystick devices connected to ADC controllers
->>  supporting the Industrial I/O subsystem.
->=20
-> ...
->=20
->>  +static int adc_joystick_handle(const void *data, void *private)
->>  +{
->>  +       struct adc_joystick *joy =3D private;
->>  +       enum iio_endian endianness;
->>  +       int bytes, msb, val, i;
->>  +       bool sign;
->>  +
->>  +       bytes =3D joy->chans[0].channel->scan_type.storagebits >> 3;
->>  +
->>  +       for (i =3D 0; i < joy->num_chans; ++i) {
->>  +               endianness =3D=20
->> joy->chans[i].channel->scan_type.endianness;
->>  +               msb =3D joy->chans[i].channel->scan_type.realbits - 1;
->=20
->>  +               sign =3D=20
->> (tolower(joy->chans[i].channel->scan_type.sign) =3D=3D 's');
->=20
-> Do we need tolower()?
+Thank you for the patch.
 
-I'll answer this one:
+On 18/5/20 9:17, Prashant Malani wrote:
+> Register Type C mux and switch handles, when provided via firmware
+> bindings. These will allow the cros-ec-typec driver, and also alternate
+> mode drivers to configure connected Muxes correctly, according to PD
+> information retrieved from the Chrome OS EC.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@intel.linux.com>
 
-The sign can be uppercase to specify that the value is sign-extended in=20
-all the storage bits.
+For my own reference:
 
--Paul
+Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
->>  +
->>  +               switch (bytes) {
->>  +               case 1:
->>  +                       val =3D ((const u8 *)data)[i];
->>  +                       break;
->>  +               case 2:
->>  +                       if (endianness =3D=3D IIO_BE)
->=20
->>  +                               val =3D be16_to_cpu(((const u16=20
->> *)data)[i]);
->=20
-> Yeah, you have to provide bitwise types to satisfy sparse.
-> Maybe using *_to_cpup() will cure this.
->=20
->>  +                       else if (endianness =3D=3D IIO_LE)
->>  +                               val =3D le16_to_cpu(((const u16=20
->> *)data)[i]);
->>  +                       else /* IIO_CPU */
->>  +                               val =3D ((const u16 *)data)[i];
->>  +                       break;
->>  +               default:
->>  +                       return -EINVAL;
->>  +               }
->>  +
->>  +               val >>=3D joy->chans[i].channel->scan_type.shift;
->>  +               if (sign)
->>  +                       val =3D sign_extend32(val, msb);
->>  +               else
->>  +                       val &=3D GENMASK(msb, 0);
->>  +               input_report_abs(joy->input, joy->axes[i].code,=20
->> val);
->>  +       }
->>  +
->>  +       input_sync(joy->input);
->>  +
->>  +       return 0;
->>  +}
->=20
-> ...
->=20
->>  +       /* Count how many channels we got. NULL terminated. */
->>  +       while (joy->chans[joy->num_chans].indio_dev)
->>  +               joy->num_chans++;
->=20
-> I don't see how useful this is. Why not simple do below...
->=20
->>  +       bits =3D joy->chans[0].channel->scan_type.storagebits;
->>  +       if (!bits || (bits > 16)) {
->>  +               dev_err(dev, "Unsupported channel storage size");
->>  +               return -EINVAL;
->>  +       }
->>  +       for (i =3D 1; i < joy->num_chans; ++i)
->>  +               if (joy->chans[i].channel->scan_type.storagebits !=3D=20
->> bits) {
->>  +                       dev_err(dev, "Channels must have equal=20
->> storage size");
->>  +                       return -EINVAL;
->>  +               }
->=20
-> ...something like
->=20
->   for (i =3D 0; joy->chans[i].indio_dev; i++) {
->     bits =3D joy->chans[i].channel->scan_type.storagebits;
->     if (bits ...) {
->       ...error handling...
->     }
->     if (bits !=3D joy->chans[0].channel->scan_type.storagebits) {
->       ...second level of error handling...
->     }
+Patch 1/2 still needs a review from Rob, I'll wait for that before queue the
+patches.
+
+Thanks,
+ Enric
+
+> ---
+> 
+> Changes in v2:
+> - Changed dev_info prints to dev_dbg.
+> 
+>  drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 66b8d21092af..6e79f917314b 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -14,6 +14,8 @@
+>  #include <linux/platform_data/cros_usbpd_notify.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/usb/typec.h>
+> +#include <linux/usb/typec_mux.h>
+> +#include <linux/usb/role.h>
+>  
+>  #define DRV_NAME "cros-ec-typec"
+>  
+> @@ -25,6 +27,9 @@ struct cros_typec_port {
+>  	struct typec_partner *partner;
+>  	/* Port partner PD identity info. */
+>  	struct usb_pd_identity p_identity;
+> +	struct typec_switch *ori_sw;
+> +	struct typec_mux *mux;
+> +	struct usb_role_switch *role_sw;
+>  };
+>  
+>  /* Platform-specific data for the Chrome OS EC Type C controller. */
+> @@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
+>  	return 0;
 >  }
->=20
-> ...
->=20
->>  +static const struct of_device_id adc_joystick_of_match[] =3D {
->>  +       { .compatible =3D "adc-joystick", },
->=20
->>  +       { },
->=20
-> No need comma.
->=20
->>  +};
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-
+>  
+> +static int cros_typec_get_switch_handles(struct cros_typec_port *port,
+> +					 struct fwnode_handle *fwnode,
+> +					 struct device *dev)
+> +{
+> +	port->mux = fwnode_typec_mux_get(fwnode, NULL);
+> +	if (IS_ERR(port->mux)) {
+> +		dev_dbg(dev, "Mux handle not found.\n");
+> +		goto mux_err;
+> +	}
+> +
+> +	port->ori_sw = fwnode_typec_switch_get(fwnode);
+> +	if (IS_ERR(port->ori_sw)) {
+> +		dev_dbg(dev, "Orientation switch handle not found.\n");
+> +		goto ori_sw_err;
+> +	}
+> +
+> +	port->role_sw = fwnode_usb_role_switch_get(fwnode);
+> +	if (IS_ERR(port->role_sw)) {
+> +		dev_dbg(dev, "USB role switch handle not found.\n");
+> +		goto role_sw_err;
+> +	}
+> +
+> +	return 0;
+> +
+> +role_sw_err:
+> +	usb_role_switch_put(port->role_sw);
+> +ori_sw_err:
+> +	typec_switch_put(port->ori_sw);
+> +mux_err:
+> +	typec_mux_put(port->mux);
+> +
+> +	return -ENODEV;
+> +}
+> +
+>  static void cros_unregister_ports(struct cros_typec_data *typec)
+>  {
+>  	int i;
+> @@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
+>  	for (i = 0; i < typec->num_ports; i++) {
+>  		if (!typec->ports[i])
+>  			continue;
+> +		usb_role_switch_put(typec->ports[i]->role_sw);
+> +		typec_switch_put(typec->ports[i]->ori_sw);
+> +		typec_mux_put(typec->ports[i]->mux);
+>  		typec_unregister_port(typec->ports[i]->port);
+>  	}
+>  }
+> @@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+>  			ret = PTR_ERR(cros_port->port);
+>  			goto unregister_ports;
+>  		}
+> +
+> +		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
+> +		if (ret)
+> +			dev_dbg(dev, "No switch control for port %d\n",
+> +				port_num);
+>  	}
+>  
+>  	return 0;
+> 
