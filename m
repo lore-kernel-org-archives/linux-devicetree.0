@@ -2,176 +2,124 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5D1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F45DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE1D20674
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8E22072C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgESWV7 (ORCPT
+        id S1726344AbgESWl7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 18:21:59 -0400
-Received: from v6.sk ([167.172.42.174]:58478 "EHLO v6.sk"
+        Tue, 19 May 2020 18:41:59 -0400
+Received: from v6.sk ([167.172.42.174]:58510 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgESWV7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 18:21:59 -0400
+        id S1726318AbgESWl7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 18:41:59 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 115EA610B0;
-        Tue, 19 May 2020 22:21:26 +0000 (UTC)
-Date:   Wed, 20 May 2020 00:21:22 +0200
+        by v6.sk (Postfix) with ESMTP id 04E49610D3;
+        Tue, 19 May 2020 22:41:57 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Add Marvell MMP Audio Clock
- Controller binding
-Message-ID: <20200519222122.GI1695525@furthur.local>
-References: <20200511195534.1207927-1-lkundrak@v3.sk>
- <20200511195534.1207927-2-lkundrak@v3.sk>
- <158949036750.215346.11234071140104055350@swboyd.mtv.corp.google.com>
+        linux-arm-kernel@lists.infradead.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v3 01/13] clk: mmp: frac: Do not lose last 4 digits of precision
+Date:   Wed, 20 May 2020 00:41:39 +0200
+Message-Id: <20200519224151.2074597-2-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200519224151.2074597-1-lkundrak@v3.sk>
+References: <20200519224151.2074597-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158949036750.215346.11234071140104055350@swboyd.mtv.corp.google.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 02:06:07PM -0700, Stephen Boyd wrote:
-> Quoting Lubomir Rintel (2020-05-11 12:55:33)
-> > diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-> > new file mode 100644
-> > index 000000000000..b86e9fbfa56d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-> > @@ -0,0 +1,73 @@
-> > +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/clock/marvell,mmp2-audio-clock.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Marvell MMP2 Audio Clock Controller
-> > +
-> > +maintainers:
-> > +  - Lubomir Rintel <lkundrak@v3.sk>
-> > +
-> > +description: |
-> > +  The audio clock controller generates and supplies the clocks to the audio
-> > +  codec.
-> > +
-> > +  Each clock is assigned an identifier and client nodes use this identifier
-> > +  to specify the clock which they consume.
-> > +
-> > +  All these identifiers could be found in <dt-bindings/clock/marvell,mmp2.h>.
-> 
-> Is this right? The patch puts them in mmp2-audio.h
-> 
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - marvell,mmp2-audio-clock
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Audio subsystem clock
-> > +      - description: The crystal oscillator clock
-> > +      - description: First I2S clock
-> > +      - description: Second I2S clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: audio
-> > +      - const: vctcxo
-> > +      - const: i2s0
-> > +      - const: i2s1
-> > +
-> > +  '#clock-cells':
-> > +    const: 1
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - '#clock-cells'
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/marvell,mmp2.h>
-> > +    #include <dt-bindings/power/marvell,mmp2.h>
-> > +
-> > +    clocks@d42a0c30 {
-> 
-> clock-controller@d42a0c30
-> 
-> > +      compatible = "marvell,mmp2-audio-clock";
-> > +      reg = <0xd42a0c30 0x10>;
-> 
-> That is a very specific and tiny region. Presumably this is part of a
-> larger hardware block and thus shouldn't be described in DT this way.
-> Instead there should be one clock-controller node and a driver that
-> controls all the clks that it wants to inside that hardware block.
+While calculating the output rate of a fractional divider clock, the
+value is divided and multipled by 10000, discarding the least
+significant digits -- presumably to fit the intermediate value within 32
+bits.
 
-This resides in a block that's entirely separate from SoC's main clock
-controllers ("power management units"). It is inside the audio block,
-separate power island along with two I2S ("SSPA") controllers. The
-addresses are weirdly interleaved, with the clock controller being
-mapped between the two channels of the first SSPA:
+The precision we're losing is, however, not insignificant for things like
+I2S clock. Maybe also elsewhere, now that since commit ea56ad60260e ("clk:
+mmp2: Stop pretending PLL outputs are constant") the parent rates are more
+precise and no longer rounded to 10000s.
 
-  0xd42a0c00 - 0xd42a0c30 SSPA1 RX
-  0xd42a0c30 - 0xd42a0c40 Clock Control
-  0xd42a0c80 - 0xd42a0cb0 SSPA1 TX
-  0xd42a0d00 - 0xd42a0d30 SSPA2 RX
-  0xd42a0d80 - 0xd42a0cb0 SSPA2 TX
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/clk/mmp/clk-frac.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-Despite the addresses being interwoven in this way, the Clock Controller
-is pretty much independent of the SSPAs and deserves a separate device
-node, regardless of how tiny its range is.
+diff --git a/drivers/clk/mmp/clk-frac.c b/drivers/clk/mmp/clk-frac.c
+index fabc09aca6c4..ed9928f5bdc7 100644
+--- a/drivers/clk/mmp/clk-frac.c
++++ b/drivers/clk/mmp/clk-frac.c
+@@ -28,13 +28,15 @@ static long clk_factor_round_rate(struct clk_hw *hw, unsigned long drate,
+ 		unsigned long *prate)
+ {
+ 	struct mmp_clk_factor *factor = to_clk_factor(hw);
+-	unsigned long rate = 0, prev_rate;
++	u64 rate = 0, prev_rate;
+ 	int i;
+ 
+ 	for (i = 0; i < factor->ftbl_cnt; i++) {
+ 		prev_rate = rate;
+-		rate = (((*prate / 10000) * factor->ftbl[i].den) /
+-			(factor->ftbl[i].num * factor->masks->factor)) * 10000;
++		rate = *prate;
++		rate *= factor->ftbl[i].den;
++		do_div(rate, factor->ftbl[i].num * factor->masks->factor);
++
+ 		if (rate > drate)
+ 			break;
+ 	}
+@@ -54,6 +56,7 @@ static unsigned long clk_factor_recalc_rate(struct clk_hw *hw,
+ 	struct mmp_clk_factor *factor = to_clk_factor(hw);
+ 	struct mmp_clk_factor_masks *masks = factor->masks;
+ 	unsigned int val, num, den;
++	u64 rate;
+ 
+ 	val = readl_relaxed(factor->base);
+ 
+@@ -66,8 +69,11 @@ static unsigned long clk_factor_recalc_rate(struct clk_hw *hw,
+ 	if (!den)
+ 		return 0;
+ 
+-	return (((parent_rate / 10000)  * den) /
+-			(num * factor->masks->factor)) * 10000;
++	rate = parent_rate;
++	rate *= den;
++	do_div(rate, num * factor->masks->factor);
++
++	return rate;
+ }
+ 
+ /* Configures new clock rate*/
+@@ -78,12 +84,14 @@ static int clk_factor_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	struct mmp_clk_factor_masks *masks = factor->masks;
+ 	int i;
+ 	unsigned long val;
+-	unsigned long rate = 0;
+ 	unsigned long flags = 0;
++	u64 rate = 0;
+ 
+ 	for (i = 0; i < factor->ftbl_cnt; i++) {
+-		rate = (((prate / 10000) * factor->ftbl[i].den) /
+-			(factor->ftbl[i].num * factor->masks->factor)) * 10000;
++		rate = prate;
++		rate *= factor->ftbl[i].den;
++		do_div(rate, factor->ftbl[i].num * factor->masks->factor);
++
+ 		if (rate > drate)
+ 			break;
+ 	}
+-- 
+2.26.2
 
-> > +      clock-names = "audio", "vctcxo", "i2s0", "i2s1";
-> > +      clocks = <&soc_clocks MMP2_CLK_AUDIO>,
-> > +               <&soc_clocks MMP2_CLK_VCTCXO>,
-> > +               <&soc_clocks MMP2_CLK_I2S0>,
-> > +               <&soc_clocks MMP2_CLK_I2S1>;
-> > +      power-domains = <&soc_clocks MMP2_POWER_DOMAIN_AUDIO>;
-> > +      #clock-cells = <1>;
-> > +    };
-> > diff --git a/include/dt-bindings/clock/marvell,mmp2-audio.h b/include/dt-bindings/clock/marvell,mmp2-audio.h
-> > new file mode 100644
-> > index 000000000000..127b48ec0f0a
-> > --- /dev/null
-> > +++ b/include/dt-bindings/clock/marvell,mmp2-audio.h
-> > @@ -0,0 +1,8 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause) */
-> > +#ifndef __DT_BINDINGS_CLOCK_MARVELL_MMP2_AUDIO_H
-> > +#define __DT_BINDINGS_CLOCK_MARVELL_MMP2_AUDIO_H
-> > +
-> > +#define MMP2_CLK_AUDIO_SYSCLK          1
-> 
-> Any reason to start at 1 vs. 0?
-> 
-> > +#define MMP2_CLK_AUDIO_SSPA0           2
-> > +#define MMP2_CLK_AUDIO_SSPA1           3
-> > +#endif
-> > -- 
-> > 2.26.2
-> >
