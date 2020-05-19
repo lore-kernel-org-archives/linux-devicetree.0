@@ -2,167 +2,158 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381A4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55586C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0BD206BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33461207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 13:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="fwr+dDGE"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="JPl11egi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgESN0e (ORCPT
+        id S1728901AbgESNbj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 09:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
+        Tue, 19 May 2020 09:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgESN0e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 09:26:34 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15F5C08C5C0;
-        Tue, 19 May 2020 06:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589894792;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=/iyQysFjE7xolBZ1naSvo7228GHiugrOaI4sO8bPUTk=;
-        b=fwr+dDGEkpoZpHRFsi8fcLwOsy/sYVESVb8GgLSpv79t4LUto9ST3ru1G2W+/CNwUq
-        jsKGEs64/RRB2TBFLOhxGwgyGUi/0C9R/12t0ttN6ghkc7h7qa4ziOZQH0bTDYb4fIhG
-        zfMC/tbsIUoA8ygDpRE9b0aSD1/Mo1N2L3fKZEfEuJTL1xOZP869A/CZ+/Hulugqnwh6
-        EIWjwN126W3TG9fRQZHxF1QPQaCMFZaD7X7Wc7+TX444DaIfLjlxyxxCLoAx+H17hnAU
-        u5Yauj09xAg7rlIo7bs97bvRPURUeYWWuh/+E7UPFhw770eXxnIwg1CFGQpUJnkc1yNy
-        sJsQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j9IczFaoo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id 60b02dw4JDPDl1o
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 19 May 2020 15:25:13 +0200 (CEST)
-Date:   Tue, 19 May 2020 15:25:12 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
+        with ESMTP id S1726471AbgESNbj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 09:31:39 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D8FC08C5C0
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 06:31:38 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z6so2737628ljm.13
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 06:31:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=zz4KmcfH8bN5ODG0ex5UZiQJD1c8wBCbG4DymCKep+A=;
+        b=JPl11egiC/rpYvWWDESI7HA/BFOmPHzkcaUh+qIBTvnbvsS97QNPgaHNytnZKZc2WS
+         urX7266g5l2HYvhERmRCJEAL36Vot0tCVb9ldLccQUFp7AlOM0T/rKzZHFhB3wIGTY0Y
+         G9suicr/C8ZuoboVVRpFmxUnj/zGJyaXXQR6AByuU6S/5Pw5nCxfNQ2TVucTiC8EBprh
+         RYhHJIGS5ttTrhqQhF9QVM4hgCuAzeMhpnFEvqqZDUBb6xuyhliw+2EMakO9rU/T6met
+         nE4zZmk52U5WvroAp/Lbtyu812WeifFTbzfjq2JuP9JIEw7Zq5Nkw7FZLJ7MN0iWZbV7
+         Y1og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zz4KmcfH8bN5ODG0ex5UZiQJD1c8wBCbG4DymCKep+A=;
+        b=sZNkNsHRTCq/hWWgOoHjS0LcrjJI14OGZuPfSi4I1rSb9/XrSkf+Vnws/GRg50KiK9
+         w4K5gtJWQTfzlqI0PAS3taglfzYg0SnbzwSjgfX7MdX7wHZ7L7T6BUl0OO21vzDYZhIu
+         VfmV8Y5hZaGcU/5gqDJ2IYZLhhsjUL9+tGAv0BzptUtze6jbsmT65WOt3oYG3orwGWo8
+         PsDwCLn7uBX0nbdqlOTPHhtB1pybab6sCjyryPtQUY2IfqSl7cbyqJ2Varxu+puQVXmq
+         PeMpdE87h6+VthPkffkmdORBAkWTItn2CTD+yqjMIV+lUlzS2oWUZRc//6IXjwtUA8ta
+         Maqg==
+X-Gm-Message-State: AOAM531EydCywtpjCqMjiH85h4+NMmHC2UEyVC48r+komrW0nDUjo0AE
+        QR+ZO+0dcUovOc3K6rMHCcbiwrW5UDh9DQ==
+X-Google-Smtp-Source: ABdhPJzb9RGwxu+tVzU1e8nCwzm1ZoYzVXHfqQ/a9+EsosV/wCYQzWZU/Q1MGMK7RV4gEl3OaN7u2Q==
+X-Received: by 2002:a2e:584a:: with SMTP id x10mr13878719ljd.181.1589895097279;
+        Tue, 19 May 2020 06:31:37 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id t30sm8193056lfd.29.2020.05.19.06.31.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 06:31:36 -0700 (PDT)
+Date:   Tue, 19 May 2020 15:31:35 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH v3 4/4] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519132512.GC4623@gerhold.net>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-5-jonathan.albrieux@gmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: timer: Add renesas,em-sti bindings
+Message-ID: <20200519133135.GD470768@oden.dyn.berto.se>
+References: <20200519081101.28973-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200519124402.26076-5-jonathan.albrieux@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519081101.28973-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 02:43:54PM +0200, Jonathan Albrieux wrote:
-> According to AK09911 datasheet, if reset gpio is provided then
-> deassert reset on ak8975_power_on() and assert reset on ak8975_power_off().
-> 
-> Without reset's deassertion during ak8975_power_on(), driver's probe fails
-> on ak8975_who_i_am while() checking for device identity for AK09911 chip.
-> 
-> AK09911 has an active low reset gpio to handle register's reset.
-> AK09911 datasheed says that, if not used, reset pin should be connected
+Hi Geert,
 
-Another minor typo: datasheed -> datasheet
+Thanks for your work.
 
-In any case, FWIW:
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-
-> to VID. This patch emulates this situation.
+On 2020-05-19 10:11:01 +0200, Geert Uytterhoeven wrote:
+> Document Device Tree bindings for the Renesas EMMA Mobile System Timer.
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
 > ---
->  drivers/iio/magnetometer/ak8975.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  .../bindings/timer/renesas,em-sti.yaml        | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
 > 
-> diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-> index fd368455cd7b..a23422aad97d 100644
-> --- a/drivers/iio/magnetometer/ak8975.c
-> +++ b/drivers/iio/magnetometer/ak8975.c
-> @@ -358,6 +358,7 @@ struct ak8975_data {
->  	u8			asa[3];
->  	long			raw_to_gauss[3];
->  	struct gpio_desc	*eoc_gpiod;
-> +	struct gpio_desc	*reset_gpiod;
->  	int			eoc_irq;
->  	wait_queue_head_t	data_ready_queue;
->  	unsigned long		flags;
-> @@ -384,6 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
->  			 "Failed to enable specified Vid supply\n");
->  		return ret;
->  	}
+> diff --git a/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml b/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
+> new file mode 100644
+> index 0000000000000000..233d74d5402cf734
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/renesas,em-sti.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	gpiod_set_value_cansleep(data->reset_gpiod, 0);
+> +title: Renesas EMMA Mobile System Timer
 > +
->  	/*
->  	 * According to the datasheet the power supply rise time is 200us
->  	 * and the minimum wait time before mode setting is 100us, in
-> @@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
->  /* Disable attached power regulator if any. */
->  static void ak8975_power_off(const struct ak8975_data *data)
->  {
-> +	gpiod_set_value_cansleep(data->reset_gpiod, 1);
+> +maintainers:
+> +  - Magnus Damm <magnus.damm@gmail.com>
 > +
->  	regulator_disable(data->vid);
->  	regulator_disable(data->vdd);
->  }
-> @@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
->  	struct ak8975_data *data;
->  	struct iio_dev *indio_dev;
->  	struct gpio_desc *eoc_gpiod;
-> +	struct gpio_desc *reset_gpiod;
->  	const void *match;
->  	unsigned int i;
->  	int err;
-> @@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
->  	if (eoc_gpiod)
->  		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
->  
-> +	/*
-> +	 * According to AK09911 datasheet, if reset GPIO is provided then
-> +	 * deassert reset on ak8975_power_on() and assert reset on
-> +	 * ak8975_power_off().
-> +	 */
-> +	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> +					      "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(reset_gpiod))
-> +		return PTR_ERR(reset_gpiod);
+> +properties:
+> +  compatible:
+> +    const: renesas,em-sti
 > +
->  	/* Register with IIO */
->  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
->  	if (indio_dev == NULL)
-> @@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
->  
->  	data->client = client;
->  	data->eoc_gpiod = eoc_gpiod;
-> +	data->reset_gpiod = reset_gpiod;
->  	data->eoc_irq = 0;
->  
->  	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: sclk
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    timer@e0180000 {
+> +            compatible = "renesas,em-sti";
+> +            reg = <0xe0180000 0x54>;
+> +            interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&sti_sclk>;
+> +            clock-names = "sclk";
+> +    };
 > -- 
 > 2.17.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
