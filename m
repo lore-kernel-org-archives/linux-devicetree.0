@@ -4,44 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FC5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA6EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A6E207D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12EA207D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 07:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgESHmh (ORCPT
+        id S1728027AbgESHt6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 03:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49624 "EHLO
+        Tue, 19 May 2020 03:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgESHmh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 03:42:37 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E8AC061A0C
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 00:42:36 -0700 (PDT)
+        with ESMTP id S1726892AbgESHt6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 03:49:58 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC0CC061A0C
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 00:49:57 -0700 (PDT)
 Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:918e:b928:22c1:d715])
-        by andre.telenet-ops.be with bizsmtp
-        id gXiW2200Q4CPMDc01XiWgj; Tue, 19 May 2020 09:42:34 +0200
+        by michel.telenet-ops.be with bizsmtp
+        id gXpu2200Y4CPMDc06XpuSk; Tue, 19 May 2020 09:49:56 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jawtS-0008Ff-GR; Tue, 19 May 2020 09:42:30 +0200
+        id 1jax0c-0008UA-OA; Tue, 19 May 2020 09:49:54 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jawtS-0005qr-Dv; Tue, 19 May 2020 09:42:30 +0200
+        id 1jax0c-0006L9-LZ; Tue, 19 May 2020 09:49:54 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org,
+Cc:     Simon Horman <horms+renesas@verge.net.au>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: media: Add missing clock domain description
-Date:   Tue, 19 May 2020 09:42:29 +0200
-Message-Id: <20200519074229.22308-1-geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: rtc: rtc-sh: Add missing power-domains property
+Date:   Tue, 19 May 2020 09:49:53 +0200
+Message-Id: <20200519074953.24328-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -50,59 +51,47 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 make dtbs_check:
 
-    arch/arm/boot/dts/r7s72100-genmai.dt.yaml: camera@e8210000: 'clocks', 'power-domains' do not match any of the regexes: 'pinctrl-[0-9]+'
+    arch/arm/boot/dts/r7s72100-rskrza1.dt.yaml: rtc@fcff1000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-Fix this by documenting the missing properties.
+Fix this by documenting the missing power-domains property.
 Update the example to match reality.
 
 Fixes: 7f464532b05dadc8 ("dt-bindings: Add missing 'additionalProperties: false'")
-Fixes: 58361eaa11d561f3 ("dt-bindings: media: renesas,ceu: Convert to yaml")
+Fixes: 7ae8b2f5dfb357f0 ("dt-bindings: rtc: rtc-sh: convert bindings to json-schema")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../devicetree/bindings/media/renesas,ceu.yaml        | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ Documentation/devicetree/bindings/rtc/renesas,sh-rtc.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.yaml b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
-index f2393458814ee08f..c7e1e4fe67e6696b 100644
---- a/Documentation/devicetree/bindings/media/renesas,ceu.yaml
-+++ b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
-@@ -27,6 +27,12 @@ properties:
-   interrupts:
-     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/rtc/renesas,sh-rtc.yaml b/Documentation/devicetree/bindings/rtc/renesas,sh-rtc.yaml
+index b95cb017f469613e..eff9df4b856ac8c2 100644
+--- a/Documentation/devicetree/bindings/rtc/renesas,sh-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/renesas,sh-rtc.yaml
+@@ -43,6 +43,9 @@ properties:
+     items:
+       enum: [ fck, rtc_x1, rtc_x3, extal ]
  
-+  clocks:
-+    maxItems: 1
-+
 +  power-domains:
 +    maxItems: 1
 +
-   port:
-     type: object
-     additionalProperties: false
-@@ -57,6 +63,8 @@ required:
+ required:
    - compatible
    - reg
-   - interrupts
-+  - clocks
+@@ -50,6 +53,7 @@ required:
+   - interrupt-names
+   - clocks
+   - clock-names
 +  - power-domains
-   - port
  
  additionalProperties: false
-@@ -64,11 +72,14 @@ additionalProperties: false
- examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/r7s72100-clock.h>
  
-     ceu: ceu@e8210000 {
-         reg = <0xe8210000 0x209c>;
-         compatible = "renesas,r7s72100-ceu";
-         interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&mstp6_clks R7S72100_CLK_CEU>;
+@@ -68,5 +72,6 @@ examples:
+         interrupt-names = "alarm", "period", "carry";
+         clocks = <&mstp6_clks R7S72100_CLK_RTC>, <&rtc_x1_clk>,
+                  <&rtc_x3_clk>, <&extal_clk>;
 +        power-domains = <&cpg_clocks>;
- 
-         port {
-             ceu_in: endpoint {
+         clock-names = "fck", "rtc_x1", "rtc_x3", "extal";
+     };
 -- 
 2.17.1
 
