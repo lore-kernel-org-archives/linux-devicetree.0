@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EDCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C4BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF7A205CB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F121205CB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 22:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgESWmc (ORCPT
+        id S1728304AbgESWm2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 18:42:32 -0400
-Received: from v6.sk ([167.172.42.174]:58656 "EHLO v6.sk"
+        Tue, 19 May 2020 18:42:28 -0400
+Received: from v6.sk ([167.172.42.174]:58564 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbgESWmc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 18:42:32 -0400
+        id S1728209AbgESWmM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 18:42:12 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 1D9DB610D7;
-        Tue, 19 May 2020 22:42:00 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 6FF4B612FB;
+        Tue, 19 May 2020 22:42:11 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
@@ -30,9 +30,9 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 03/13] dt-bindings: marvell,mmp2: Add clock id for the I2S clocks
-Date:   Wed, 20 May 2020 00:41:41 +0200
-Message-Id: <20200519224151.2074597-4-lkundrak@v3.sk>
+Subject: [PATCH v3 10/13] dt-bindings: marvell,mmp2: Add ids for the power domains
+Date:   Wed, 20 May 2020 00:41:48 +0200
+Message-Id: <20200519224151.2074597-11-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519224151.2074597-1-lkundrak@v3.sk>
 References: <20200519224151.2074597-1-lkundrak@v3.sk>
@@ -43,7 +43,11 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two of these on a MMP2.
+On MMP2 the audio and GPU blocks are on separate power islands. On MMP3
+the camera block's power is also controlled separately.
+
+Add the numbers that we could use to refer to the power domains for
+respective power islands from the device tree.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 Acked-by: Rob Herring <robh@kernel.org>
@@ -52,22 +56,27 @@ Acked-by: Rob Herring <robh@kernel.org>
 Changes since v1:
 - Rob's ack
 
- include/dt-bindings/clock/marvell,mmp2.h | 2 ++
- 1 file changed, 2 insertions(+)
+ include/dt-bindings/power/marvell,mmp2.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 include/dt-bindings/power/marvell,mmp2.h
 
-diff --git a/include/dt-bindings/clock/marvell,mmp2.h b/include/dt-bindings/clock/marvell,mmp2.h
-index 06bb7fe4c62f..5b083f42811e 100644
---- a/include/dt-bindings/clock/marvell,mmp2.h
-+++ b/include/dt-bindings/clock/marvell,mmp2.h
-@@ -29,6 +29,8 @@
- #define MMP3_CLK_PLL1_P			28
- #define MMP3_CLK_PLL2_P			29
- #define MMP3_CLK_PLL3			30
-+#define MMP2_CLK_I2S0			31
-+#define MMP2_CLK_I2S1			32
- 
- /* apb periphrals */
- #define MMP2_CLK_TWSI0			60
+diff --git a/include/dt-bindings/power/marvell,mmp2.h b/include/dt-bindings/power/marvell,mmp2.h
+new file mode 100644
+index 000000000000..c53d2b3e1057
+--- /dev/null
++++ b/include/dt-bindings/power/marvell,mmp2.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __DTS_MARVELL_MMP2_POWER_H
++#define __DTS_MARVELL_MMP2_POWER_H
++
++#define MMP2_POWER_DOMAIN_GPU		0
++#define MMP2_POWER_DOMAIN_AUDIO		1
++#define MMP3_POWER_DOMAIN_CAMERA	2
++
++#define MMP2_NR_POWER_DOMAINS		3
++
++#endif
 -- 
 2.26.2
 
