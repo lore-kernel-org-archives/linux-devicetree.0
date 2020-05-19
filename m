@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33D8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 15:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96494C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 15:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79F49207FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 15:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7382C20829
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 15:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589900783;
-	bh=29TXNGWd/fhmzxIwOPHw0n8O5RIe1LfOq81Iyfco7wA=;
+	s=default; t=1589901025;
+	bh=cDO81NBWR5JNkUDn06ROcvMZX+vtmK43mTmgDiFGwlQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xhiwiVK2HCgno1ERPdE3P+tZ0GXNG7EHWCbCQ5sOYqVNYcToeZTd31PyKZ9NJSP5/
-	 JKzWPLDV/2WpVmMAVQ9o7gvvcEdz+6DWGc4Ao6lI6lfh6xUcKQPA4r/V3zFgaLfyZu
-	 iaNBG3ShWwPqeILALC4mSiynkYuNgRixYaTjFuxo=
+	b=vJ3NnpItfpwJlceV7kxS1E4BBfKFQJa3dMX0jZrvBNg7Cp4Tq0eR2h5WRniVXc14A
+	 Z4X5/VEAP0WRlDro34UbyCQoKyn8kb+qwLHyuyrsNtR2oFhljynrekf3pWL8qjzy+X
+	 k/z/dHmt6Azg+QxCJaUTNWVKHJU2+OA7SDHd1m4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgESPGX (ORCPT
+        id S1729196AbgESPKZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 11:06:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58060 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 11:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727910AbgESPGW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 11:06:22 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        id S1729194AbgESPKY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 11:10:24 -0400
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02EF820842;
-        Tue, 19 May 2020 15:06:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87492207FB;
+        Tue, 19 May 2020 15:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589900782;
-        bh=29TXNGWd/fhmzxIwOPHw0n8O5RIe1LfOq81Iyfco7wA=;
+        s=default; t=1589901023;
+        bh=cDO81NBWR5JNkUDn06ROcvMZX+vtmK43mTmgDiFGwlQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1lncfq4bQRql8j2TS2Wgze6M/ZcGlwO1+fkIQdkV/IW8TfwyMJhtgMCTFcF4VgJ6Z
-         8wrfyiDhSj6IpSkVByeGUSjrJkmtgJPElPcdodb+2Gj+0CJDHVPeiB4KdveoMQj0X/
-         wUhqBT3fvzumGtyJKbV99u7XSH2jt+4vK0BuQ7ks=
-Received: by mail-ej1-f43.google.com with SMTP id x1so12172320ejd.8;
-        Tue, 19 May 2020 08:06:21 -0700 (PDT)
-X-Gm-Message-State: AOAM53009rEustHcqM6mDrqwzasYQu88MuVr30WtxAYF2azZp2yus/Hs
-        qJ3hYLwMD+lxJqeOs5RxuWBywyzc0kxJ4+T2gg==
-X-Google-Smtp-Source: ABdhPJxqywpflae8clvRSoz205FDG3+5j2OG7HiXGl7nWU2mgAQwazM8mHI+SRKZTW7x6x9DfTSufqtqAiC8fcsPHqY=
-X-Received: by 2002:a17:907:724e:: with SMTP id ds14mr13708797ejc.260.1589900780280;
- Tue, 19 May 2020 08:06:20 -0700 (PDT)
+        b=KYO1BVfG+R7kOpXoOmTAywsE0eiQsXss/NsSSgXJJjE3FHVJ9XnLrnHRjI2nXsvYf
+         j1ys4f0Hr2/RAFw/0wbpP0QBwvnC76RP0kBoHkHzXNeyznPxdLUN6+eRLduEyLs0fv
+         zK+V8OYpIDgB3wCdnBU8d7d9VH9tjhJAzhK1Dtfc=
+Received: by mail-ej1-f52.google.com with SMTP id s21so12234207ejd.2;
+        Tue, 19 May 2020 08:10:23 -0700 (PDT)
+X-Gm-Message-State: AOAM530AAiJFq9KvC4ggUKrJbxwe6v9ZeNWMb9XwFuqV3EfelOWAiHt4
+        F7o8EmxFr5GqEYY5dS6Nj5LQcyM5jhxdHTWOJA==
+X-Google-Smtp-Source: ABdhPJyhbV15yj67Zc07chzoIXRKEsVO7rqxl9HErvPnhH7lppKJMsefvURisxOzEimO9K8QU/uJGq8sP+RlLOQJFNs=
+X-Received: by 2002:a17:907:2649:: with SMTP id ar9mr18714534ejc.375.1589901021958;
+ Tue, 19 May 2020 08:10:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200518113156.25009-1-matthias.bgg@kernel.org> <20200518113156.25009-4-matthias.bgg@kernel.org>
-In-Reply-To: <20200518113156.25009-4-matthias.bgg@kernel.org>
+References: <20200518113156.25009-1-matthias.bgg@kernel.org> <20200518113156.25009-3-matthias.bgg@kernel.org>
+In-Reply-To: <20200518113156.25009-3-matthias.bgg@kernel.org>
 From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 19 May 2020 23:06:08 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-Lh=4N2L9ZOrVw+wK1tSrCA=UuOH+7xs0U=12B3Qi7Ug@mail.gmail.com>
-Message-ID: <CAAOTY_-Lh=4N2L9ZOrVw+wK1tSrCA=UuOH+7xs0U=12B3Qi7Ug@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm64: dts: mt6797: Fix mmsys node name
+Date:   Tue, 19 May 2020 23:10:10 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_80D6ZMM5_nEyf_XDjOLaWCOyi3mn9ibWhNX8_ozPK1BQ@mail.gmail.com>
+Message-ID: <CAAOTY_80D6ZMM5_nEyf_XDjOLaWCOyi3mn9ibWhNX8_ozPK1BQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] clk/soc: mediatek: mt6779: Bind clock driver from
+ platform device
 To:     matthias.bgg@kernel.org
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -83,34 +84,87 @@ Hi, Matthias:
 >
 > From: Matthias Brugger <matthias.bgg@gmail.com>
 >
-> Node names are supposed to match the class of the device. The
-> mmsys node is a syscon as it provides more then just a clock controller.
-> Update the name.
-
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-
+> The mmsys driver is now the top level entry point for the multimedia
+> system (mmsys), we bind the clock driver by creating a platform device.
+> We also bind the MediaTek DRM driver which is not yet implement and
+> therefor will errror out for now.
 >
 > Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->
 > ---
 >
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/clk/mediatek/clk-mt6779-mm.c | 9 ++-------
+>  drivers/soc/mediatek/mtk-mmsys.c     | 8 ++++++++
+>  2 files changed, 10 insertions(+), 7 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt6797.dtsi
-> index 136ef9527a0d..3efd032481ce 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> @@ -233,7 +233,7 @@ uart3: serial@11005000 {
->                 status =3D "disabled";
->         };
+> diff --git a/drivers/clk/mediatek/clk-mt6779-mm.c b/drivers/clk/mediatek/=
+clk-mt6779-mm.c
+> index fb5fbb8e3e41..059c1a41ac7a 100644
+> --- a/drivers/clk/mediatek/clk-mt6779-mm.c
+> +++ b/drivers/clk/mediatek/clk-mt6779-mm.c
+> @@ -84,15 +84,11 @@ static const struct mtk_gate mm_clks[] =3D {
+>         GATE_MM1(CLK_MM_DISP_OVL_FBDC, "mm_disp_ovl_fbdc", "mm_sel", 16),
+>  };
 >
-> -       mmsys: mmsys_config@14000000 {
-> +       mmsys: syscon@14000000 {
->                 compatible =3D "mediatek,mt6797-mmsys", "syscon";
->                 reg =3D <0 0x14000000 0 0x1000>;
->                 #clock-cells =3D <1>;
+> -static const struct of_device_id of_match_clk_mt6779_mm[] =3D {
+> -       { .compatible =3D "mediatek,mt6779-mmsys", },
+> -       {}
+> -};
+> -
+>  static int clk_mt6779_mm_probe(struct platform_device *pdev)
+>  {
+> +       struct device *dev =3D &pdev->dev;
+> +       struct device_node *node =3D dev->parent->of_node;
+>         struct clk_onecell_data *clk_data;
+> -       struct device_node *node =3D pdev->dev.of_node;
+>
+>         clk_data =3D mtk_alloc_clk_data(CLK_MM_NR_CLK);
+>
+> @@ -106,7 +102,6 @@ static struct platform_driver clk_mt6779_mm_drv =3D {
+>         .probe =3D clk_mt6779_mm_probe,
+>         .driver =3D {
+>                 .name =3D "clk-mt6779-mm",
+> -               .of_match_table =3D of_match_clk_mt6779_mm,
+>         },
+>  };
+>
+> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-=
+mmsys.c
+> index fee64c8d3020..dc15808cf3a3 100644
+> --- a/drivers/soc/mediatek/mtk-mmsys.c
+> +++ b/drivers/soc/mediatek/mtk-mmsys.c
+> @@ -88,6 +88,10 @@ static const struct mtk_mmsys_driver_data mt2712_mmsys=
+_driver_data =3D {
+>         .clk_driver =3D "clk-mt2712-mm",
+>  };
+>
+> +static const struct mtk_mmsys_driver_data mt6779_mmsys_driver_data =3D {
+> +       .clk_driver =3D "clk-mt6779-mm",
+
+This patch looks good to me, but I've one question: why drm driver
+just use single "mediatek-drm" for sub driver name, but clock driver
+has different name for each SoC?
+Could we just use single name for clock driver such as "mediatek-clk-mm"?
+
+Regards,
+Chun-Kuang.
+
+> +};
+> +
+>  static const struct mtk_mmsys_driver_data mt6797_mmsys_driver_data =3D {
+>         .clk_driver =3D "clk-mt6797-mm",
+>  };
+> @@ -343,6 +347,10 @@ static const struct of_device_id of_match_mtk_mmsys[=
+] =3D {
+>                 .compatible =3D "mediatek,mt2712-mmsys",
+>                 .data =3D &mt2712_mmsys_driver_data,
+>         },
+> +       {
+> +               .compatible =3D "mediatek,mt6779-mmsys",
+> +               .data =3D &mt6779_mmsys_driver_data,
+> +       },
+>         {
+>                 .compatible =3D "mediatek,mt6797-mmsys",
+>                 .data =3D &mt6797_mmsys_driver_data,
 > --
 > 2.26.2
 >
