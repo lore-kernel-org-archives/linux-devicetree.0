@@ -6,108 +6,122 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97175C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02F1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D63206D4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8094120715
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DrMapenF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F+AEHxuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgESD3l (ORCPT
+        id S1727030AbgESDlC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 23:29:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38590 "EHLO
+        Mon, 18 May 2020 23:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgESD3k (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 23:29:40 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65206C05BD0A
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 20:29:40 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id nu7so736514pjb.0
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 20:29:40 -0700 (PDT)
+        with ESMTP id S1726492AbgESDlB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 23:41:01 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A15C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 20:41:00 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id ci21so737585pjb.3
+        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 20:41:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=teKNNdHb4OAKCHGA4AObm/yuMFkkrUmSWGWrFxvkG1w=;
-        b=DrMapenFGkod0r1x7ItV8RkiSd36NSSCW1CcO65eY1VnbtP1Zv6gDs80JS33UbhqLv
-         ynjSLpvNxoCeeyaqii0Sxy70ZA7qprLMi0ZotgtQ0j2EKEkzawlyovllXzsqygRJwUZB
-         MZewekr8sO14kGg+v4ABPYvJ1apXrKL1xk4nTr9V97+QdDUL1HzjdlsURWPS8R/xRZ0/
-         ahjxNcgNEqc+JzGtBZSBtJfCczc8ZhpbuLhARGdQKMVZPBeDo+z4vAYV9orh8L7MO9cU
-         sJSG5+m+jbdleq5elHPUbrHiktliDf426Mq+Fo2Ld0u0/4d4EmEzCN6sfMFZJ5OzDXGw
-         AkKg==
+        bh=CjNWuQJ9v0nVBb91ffdU0D6mxktZAQ032o7BcB0bNE4=;
+        b=F+AEHxuCaRGPIloYgy1mhW3Lfe9dOfLHKUZU9PfFM6Q0ED6ra92Z9qv0lsSJKjefzL
+         /G445Rt2MS+je7xFwaI3GdAaNppQpjtT9DZtZL1M+OFv4qHAM7NbdDZvrZQpYy476bzA
+         qFgVBP+l5L3NYSHQLLu/Kv4IkKI1BZeeHoCwRx11PEdPNVemStjkzdTRV4MbtpajRJQH
+         KY/4gQBQfdGL07373QE/k5YwyLOPIzVyqgueoA6pnQwXx8wUe0QKKoI3d8wNLCT+oYQP
+         MEDCH36FGnkOJNXu58mqL3PjD+FQbyE+D2IL6UiNHtKkxvzRDycr43draHRKBAdCtxgx
+         vfvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=teKNNdHb4OAKCHGA4AObm/yuMFkkrUmSWGWrFxvkG1w=;
-        b=YjlKe8MOoOzj/18X57TTB69b6eNgMt9W7e7kWryYvJjpRH8faffeT4eS1dYLt2sp1i
-         tIY6nVO7VAuWantG2Kw7ADeor9xKAzvus16Sdj/Mo80PSQWnlHVGnx/YQ2VisILYpqP3
-         NvkcM6aPWMrFingRcUy7L+5TbnreRfJm/mAEgFGAJy3KRu1te/JkC4Dr/lDi2EhBulEW
-         9T/muq0JriXf+AwIGUxKOIBrhTzPhK1JWwIQunLDEYNNo0hA9kcuXmZgBu6P82CW9vNu
-         NF1ORsbraK0touDt97AHONW+EBleWATCPVQr+w5uSXS7+Jv61dipaJBjtdFleo+JFG3I
-         ILLQ==
-X-Gm-Message-State: AOAM533vadL2X0yJzphk4zY068K0COSbIEpSV0aKpjmH5XY4W2GS3nje
-        NFCFJu6VVqJCNl2dIXw5scVF3g==
-X-Google-Smtp-Source: ABdhPJwjxI3l6U2qt94l02aexiZPoNOcltypCPfolN3XhTFb4hcyKIrokK75fp0OVGGIT1nEgyCiRA==
-X-Received: by 2002:a17:902:b712:: with SMTP id d18mr19724087pls.304.1589858979832;
-        Mon, 18 May 2020 20:29:39 -0700 (PDT)
+        bh=CjNWuQJ9v0nVBb91ffdU0D6mxktZAQ032o7BcB0bNE4=;
+        b=fEDmt473I/bD0MoowplF/g8/Fncdqgmz0HFOKq2og7d64IEE1UbqcVWWTX8HnPFug0
+         RDRyaEg3cegC8NOSDFNsUT7qt+CDeOliduimiyCGy74vODl965MwbhZ6P0lL0J9glzFj
+         v1iw70L5ntDLmbW32iYowzvHLdpr5QNKG3VH3XVHXMGTQfsT0GCaV14NthirgFxqoyyd
+         0zDYfHMRj8oPRXJND7eK4FV/XhQxoABXVkfPNTWUdmddQCJ7XmZRwFlWw33cVB58ku+g
+         ljOmQlVX5TlR+v9P+r9fJegnlm49XkajFB9ZXpPIh6pwHsEAIqsoy5uHprxncURxhWnO
+         1Kcw==
+X-Gm-Message-State: AOAM533cqZJ3zLnoMTwFDF7xp000uLwZao0EFliWKyKHCxYTLw4g3krw
+        r4RdbD9NtXyJz0+7KK+r6saSPA==
+X-Google-Smtp-Source: ABdhPJy30m1f36llwQe2czJwRgWZ2WYib3wh9j43NkV9xeaRb2PBycPJMqqn/lVk860NFOK6XhPyZQ==
+X-Received: by 2002:a17:90a:1b6c:: with SMTP id q99mr2824172pjq.214.1589859659084;
+        Mon, 18 May 2020 20:40:59 -0700 (PDT)
 Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id z5sm9794188pfz.109.2020.05.18.20.29.38
+        by smtp.gmail.com with ESMTPSA id g1sm9573943pfo.142.2020.05.18.20.40.57
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 20:29:38 -0700 (PDT)
-Date:   Tue, 19 May 2020 08:59:36 +0530
+        Mon, 18 May 2020 20:40:57 -0700 (PDT)
+Date:   Tue, 19 May 2020 09:10:55 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200519032936.jyav3fhopumymo4h@vireshk-i7>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
- <878shu4uwk.fsf@kernel.org>
- <875zcy4uuj.fsf@kernel.org>
- <20200514171352.GP4525@google.com>
- <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org>
- <87tv0h3fpv.fsf@kernel.org>
- <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org>
- <87r1vl3e42.fsf@kernel.org>
- <20200518183512.GE2165@builder.lan>
+        Frank Rowand <frowand.list@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200519034055.hfvifqz442yfduhg@vireshk-i7>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200519012927.GT2165@builder.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518183512.GE2165@builder.lan>
+In-Reply-To: <20200519012927.GT2165@builder.lan>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18-05-20, 11:35, Bjorn Andersson wrote:
-> This misses the case where INTERCONNECT=n and USB_DWC3_QCOM=[ym] which
-> I don't see a reason for breaking.
+On 18-05-20, 18:29, Bjorn Andersson wrote:
+> On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
+> > This stuff has been doing rounds on the mailing list since several years
+> > now with no agreed conclusion by all the parties. And here is another
+> > attempt to get some feedback from everyone involved to close this once
+> > and for ever. Your comments will very much be appreciated.
+> > 
+> > The ARM MHU is defined here in the TRM [1] for your reference, which
+> > states following:
+> > 
+> > 	"The MHU drives the signal using a 32-bit register, with all 32
+> > 	bits logically ORed together. The MHU provides a set of
+> > 	registers to enable software to set, clear, and check the status
+> > 	of each of the bits of this register independently.  The use of
+> > 	32 bits for each interrupt line enables software to provide more
+> > 	information about the source of the interrupt. For example, each
+> > 	bit of the register can be associated with a type of event that
+> > 	can contribute to raising the interrupt."
+> > 
 > 
-> But if only INTERCONNECT where a bool, then we don't need to specify a
-> depends on, because it will either be there, or the stubs will.
-> We've come to this conclusion in a lot of different frameworks and I
-> don't see why we should do this differently with INTERCONNECT.
+> Does this mean that there are 32 different signals and they are all ORed
+> into the same interrupt line to trigger software action when something
+> happens?
+> 
+> Or does it mean that this register is used to pass multi-bit information
+> and when any such information is passed an interrupt will be triggered?
+> If so, what does that information mean? How is it tied into other Linux
+> drivers/subsystems?
 
-INTERCONNECT is a bool now and the patch has been pushed to linux-next
-already.
+I have started to believe the hardware is written badly at this point
+:)
+
+The thing is that the register can be used to send a 32 bit data
+(which the driver already provides), or it can be used by writing
+different bits to the SET register concurrently, without corrupting
+the other bits as writing 0 to a bit has no effect, we have a separate
+CLEAR register for that. And so it says that all the bits are ORed
+together to generate the interrupt, i.e. any bit set will generate an
+interrupt. Which also means that you can't send data 0 with the
+register.
 
 -- 
 viresh
