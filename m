@@ -2,125 +2,96 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE92AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 11:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19BAC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 11:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6B5207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 11:47:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vaTGPRDy"
+	by mail.kernel.org (Postfix) with ESMTP id B1B56207D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 11:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589888958;
+	bh=DirzvNejKZlsxkIQ47WnDC22YWf+1vRMU5Jm1H4pSuk=;
+	h=Date:From:To:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=fUTxSc4FnF5mEWHnb4DhsxW1LlcIy1PeSeUvW0kQ2ncgrNVbV4Tm1d3PFDDLOtrPR
+	 DMPHCo1jc9jV+1C3Pp1NVjh1vXNWH/xPY8KjMjCGR3anOmPldN7eyHhjCZJuZu8xVX
+	 TWaevpNVvEvhzUmqkdrTP79ySdQ5Yjh0wHfXoiGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgESLrl (ORCPT
+        id S1728771AbgESLtS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 07:47:41 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:9643 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgESLrl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 07:47:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589888860; x=1621424860;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+3WpN5wjU7vPXasZ7bMW3p7RrpJuTGFZkKzGqd78wTU=;
-  b=vaTGPRDyfyzUeVHwCEAWhQ/JiOaN+YjoAOXkYPaa0iJl0cTa06A05u3l
-   961k00rzhZN0NxVk8tB7UaziNvONXEmNvoBDOjnAZnjAQ/OBHRaizeeVA
-   E/LmOshFKMLravZbZsc0k+zk3i61rCvFAZ12oeC2pb8+biGdNsbPrGUN2
-   4LQHi6zULd5YK1JzN5TUE8Hqsstaikl38JsjMO+CcCfMkEn08FMvRpdoQ
-   hc/g/6/ILW4+zHCY65rXn8py4+glBbynIriRCuXWaxTNgeZGy5GKjspOY
-   4YSel8yIwhfKWQeaw2ozdUw1d/msa9CRLVnhSdTxePKPuaO5eYHzuYH0c
-   A==;
-IronPort-SDR: CXyWK6XjctxXloaSFb4QoNtDA6Ry52CMtVFwMWGs+0DsQUOSGUMc6G6B38mC5Es2J/SwA9BvfJ
- u2JGPnUnZlU1uhKCvY/i3hMw2dhY46AVqa3O0DaJyS1gj+DNK1eUoNoWXeNcXmFyZPfF1dlxwn
- cpxOIpB5rzwtywt157EitkEBohV4bwaDje/G7gEQzmpRy/Tqt/JjgMsaEHcBEZvD8q3/miLKAW
- oYUGUXzphVQVVBASFzBdtONiFD9Ojr/BOrWdJ9PRRxnYDB2dVNBnBuTrgtt2NGdPeEkwhhHuup
- ZXg=
-X-IronPort-AV: E=Sophos;i="5.73,410,1583218800"; 
-   d="scan'208";a="12828132"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2020 04:47:40 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 19 May 2020 04:47:40 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 19 May 2020 04:47:40 -0700
-Date:   Tue, 19 May 2020 13:47:39 +0200
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>
-Subject: Re: [PATCH 04/10] dt-bindings: spi: Add bindings for spi-dw-mchp
-Message-ID: <20200519114739.GD24801@soft-dev15.microsemi.net>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200513140031.25633-5-lars.povlsen@microchip.com>
- <20200513145213.GJ4803@sirena.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200513145213.GJ4803@sirena.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 19 May 2020 07:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728881AbgESLtQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 07:49:16 -0400
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA36520709;
+        Tue, 19 May 2020 11:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589888956;
+        bh=DirzvNejKZlsxkIQ47WnDC22YWf+1vRMU5Jm1H4pSuk=;
+        h=Date:From:To:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+         From;
+        b=VTEpYSJFNddlQXZ/D7QJRIPPQO5oBZ4UnvrVAmexAuY1LqyA/eC9oQtjOwF3umk9w
+         yTNliMJ3gNJczR6T0nOgvOU2+A1OXkAYuvo9X7fWtwvpV+hpLcqAvYBB0tKRfo1+5k
+         KCIVXVrcvCgJ4ZZSncZJYoJJgQo2x4Fm/EbcJV5Q=
+Date:   Tue, 19 May 2020 11:49:15 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Robert Beckett <bob.beckett@collabora.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCHv1] ARM: dts/imx6q-bx50v3: Set display interface clock parents
+In-Reply-To: <20200514170236.24814-1-sebastian.reichel@collabora.com>
+References: <20200514170236.24814-1-sebastian.reichel@collabora.com>
+Message-Id: <20200519114915.DA36520709@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13/05/20 15:52, Mark Brown wrote:
-> Date: Wed, 13 May 2020 15:52:13 +0100
-> From: Mark Brown <broonie@kernel.org>
-> To: Lars Povlsen <lars.povlsen@microchip.com>
-> Cc: SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>, Microchip
->  Linux Driver Support <UNGLinuxDriver@microchip.com>,
->  linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
->  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
->  Alexandre Belloni <alexandre.belloni@bootlin.com>, Serge Semin
->  <Sergey.Semin@baikalelectronics.ru>, Serge Semin
->  <fancer.lancer@gmail.com>, Andy Shevchenko
->  <andriy.shevchenko@linux.intel.com>, Wan Ahmad Zainie
->  <wan.ahmad.zainie.wan.mohamad@intel.com>
-> Subject: Re: [PATCH 04/10] dt-bindings: spi: Add bindings for spi-dw-mchp
-> User-Agent: Mutt/1.10.1 (2018-07-13)
-> 
-> On Wed, May 13, 2020 at 04:00:25PM +0200, Lars Povlsen wrote:
-> > This add DT bindings for the Microsemi/Microchip SPI controller used
-> > in various SoC's. It describes the "mscc,ocelot-spi" and
-> > "mscc,jaguar2-spi" bindings.
-> 
-> > Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> > ---
-> >  .../bindings/spi/mscc,ocelot-spi.yaml         | 60 +++++++++++++++++++
-> >  .../bindings/spi/snps,dw-apb-ssi.txt          |  7 +--
-> 
-> That's not what this change does.  It is removing the existing binding
-> for Ocelot and Jaguar2 from the free format binding documentation and
-> adds some entirely separate YAML bindings for them.  This conflicts with
-> competing YAML conversions that both Serge Semin and Wan Ahmad Zainie
-> (CCed) have in flight at the minute.  It also doesn't strike me as a
-> good idea to fork the bindings, what's the motivation for doing that?
+Hi
 
-The reason for doing this was due to the fact that I felt adding
-Sparx5 support only cluttered the original driver even more.
+[This is an automated email]
 
-And since I was adding a new driver, I needed to add bindings for it -
-and (re)move the old ones.
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
 
-I have become aware of Serge and Wan Ahmad's work, and will work out
-something on top of that.
+The bot has tested the following trees: v5.6.13, v5.4.41, v4.19.123, v4.14.180, v4.9.223, v4.4.223.
 
+v5.6.13: Build OK!
+v5.4.41: Build OK!
+v4.19.123: Build OK!
+v4.14.180: Failed to apply! Possible dependencies:
+    e26dead44268 ("ARM: dts: imx6q-bx50v3: Add internal switch")
+
+v4.9.223: Failed to apply! Possible dependencies:
+    1d0c7bb20c08 ("ARM: dts: imx: Correct B850v3 clock assignment")
+    e26dead44268 ("ARM: dts: imx6q-bx50v3: Add internal switch")
+
+v4.4.223: Failed to apply! Possible dependencies:
+    15ef03b86247 ("ARM: dts: imx: b450/b650v3: Move ldb_di clk assignment")
+    1d0c7bb20c08 ("ARM: dts: imx: Correct B850v3 clock assignment")
+    2252792b4677 ("ARM: dts: imx: Add support for Advantech/GE B850v3")
+    226d16c80c61 ("ARM: dts: imx: Add support for Advantech/GE Bx50v3")
+    547da6bbcf08 ("ARM: dts: imx: Add support for Advantech/GE B450v3")
+    987e71877ae6 ("ARM: dts: imx: Add support for Advantech/GE B650v3")
+    b492b8744da9 ("ARM: dts: imx6q-b850v3: Update display clock source")
+    e26dead44268 ("ARM: dts: imx6q-bx50v3: Add internal switch")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
