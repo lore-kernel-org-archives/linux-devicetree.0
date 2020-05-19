@@ -2,205 +2,116 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC09C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F97C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4607E206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116D6206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgESDwQ (ORCPT
+        id S1726958AbgESD4p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 23:52:16 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58684 "EHLO inva021.nxp.com"
+        Mon, 18 May 2020 23:56:45 -0400
+Received: from mga18.intel.com ([134.134.136.126]:1478 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgESDwP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 May 2020 23:52:15 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E299B200096;
-        Tue, 19 May 2020 05:52:12 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8AE1E20009B;
-        Tue, 19 May 2020 05:52:08 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E1212402B3;
-        Tue, 19 May 2020 11:52:02 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3] dt-bindings: reset: Convert i.MX reset to json-schema
-Date:   Tue, 19 May 2020 11:42:27 +0800
-Message-Id: <1589859747-12926-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726605AbgESD4p (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 23:56:45 -0400
+IronPort-SDR: 3flFwuEZPmHp1nw+j2k3UBerhlRwCdUjKU6YlEL5SIOL8hQKSFRNk7YF1f0mVC2tr0tOPReENC
+ gOo2ThwUFZmg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 20:56:44 -0700
+IronPort-SDR: QFxRRniFx2tfaqKTiqe2/A9xXbhaFfZ1jvxhEj2bJAnqaKK53FIltX99ThRNHxjpRnNEdjPdPQ
+ ieiRoQO9fuhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
+   d="scan'208";a="264172224"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 18 May 2020 20:56:44 -0700
+Received: from [10.213.130.67] (ekotax-mobl.gar.corp.intel.com [10.213.130.67])
+        by linux.intel.com (Postfix) with ESMTP id 43E8F5802C9;
+        Mon, 18 May 2020 20:56:42 -0700 (PDT)
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <cover.1589530082.git.eswara.kota@linux.intel.com>
+ <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
+Message-ID: <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
+Date:   Tue, 19 May 2020 11:56:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX reset binding to DT schema format using json-schema.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-Changes since V2:
-	- remove unnecessary compatible item descriptions.
----
- .../devicetree/bindings/reset/fsl,imx-src.txt      | 49 -------------
- .../devicetree/bindings/reset/fsl,imx-src.yaml     | 82 ++++++++++++++++++++++
- 2 files changed, 82 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.txt
- create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
+On 5/18/2020 9:49 PM, Kishon Vijay Abraham I wrote:
+> Dilip,
+>
+> On 5/15/2020 1:43 PM, Dilip Kota wrote:
+>> This patch series adds Intel ComboPhy driver, respective yaml schemas
+>>
+>> Changes on v8:
+>>    As per PHY Maintainer's request add description in comments for doing
+>>    register access through register map framework.
+>>
+>> Changes on v7:
+>>    As per System control driver maintainer's inputs remove
+>>      fwnode_to_regmap() definition and use device_node_get_regmap()
+> Can you fix this warning and resend the patch?
+> drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
+> uninitialized in this function [-Wmaybe-uninitialized]
+>    ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
+>    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
+>    enum intel_combo_mode cb_mode;
+>                          ^~~~~~~
+I noticed this warning while preparing the patch.
+It sounds like false warning because:
+1.) "cb_mode" is initialized in the switch case based on the "mode = 
+cbphy->phy_mode;"
+2.) cbphy->phy_mode is initialized during the probe in 
+"intel_cbphy_fwnode_parse()" with one of the 3 values.
+PHY_PCIE_MODE, PHY_SATA_MODE, PHY_XPCS_MODE.
+3.) There is no chance of "cbphy->phy_mode" having different value.
+4.) And "cb_mode" will be initialized according to the "mode = 
+cbphy->phy_mode;"
+5.) Hence, there is no chance of "cb_mode" getting accessed uninitialized.
 
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
-deleted file mode 100644
-index 6ed79e6..0000000
---- a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--Freescale i.MX System Reset Controller
--======================================
--
--Please also refer to reset.txt in this directory for common reset
--controller binding usage.
--
--Required properties:
--- compatible: Should be "fsl,<chip>-src"
--- reg: should be register base and length as documented in the
--  datasheet
--- interrupts: Should contain SRC interrupt and CPU WDOG interrupt,
--  in this order.
--- #reset-cells: 1, see below
--
--example:
--
--src: src@20d8000 {
--        compatible = "fsl,imx6q-src";
--        reg = <0x020d8000 0x4000>;
--        interrupts = <0 91 0x04 0 96 0x04>;
--        #reset-cells = <1>;
--};
--
--Specifying reset lines connected to IP modules
--==============================================
--
--The system reset controller can be used to reset the GPU, VPU,
--IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
--nodes should specify the reset line on the SRC in their resets
--property, containing a phandle to the SRC device node and a
--RESET_INDEX specifying which module to reset, as described in
--reset.txt
--
--example:
--
--        ipu1: ipu@2400000 {
--                resets = <&src 2>;
--        };
--        ipu2: ipu@2800000 {
--                resets = <&src 4>;
--        };
--
--The following RESET_INDEX values are valid for i.MX5:
--GPU_RESET     0
--VPU_RESET     1
--IPU1_RESET    2
--OPEN_VG_RESET 3
--The following additional RESET_INDEX value is valid for i.MX6:
--IPU2_RESET    4
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
-new file mode 100644
-index 0000000..27c5e34
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/reset/fsl,imx-src.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX System Reset Controller
-+
-+maintainers:
-+  - Philipp Zabel <p.zabel@pengutronix.de>
-+
-+description: |
-+  The system reset controller can be used to reset the GPU, VPU,
-+  IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
-+  nodes should specify the reset line on the SRC in their resets
-+  property, containing a phandle to the SRC device node and a
-+  RESET_INDEX specifying which module to reset, as described in
-+  reset.txt
-+
-+  The following RESET_INDEX values are valid for i.MX5:
-+    GPU_RESET     0
-+    VPU_RESET     1
-+    IPU1_RESET    2
-+    OPEN_VG_RESET 3
-+  The following additional RESET_INDEX value is valid for i.MX6:
-+    IPU2_RESET    4
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: "fsl,imx51-src"
-+      - items:
-+          - const: "fsl,imx50-src"
-+          - const: "fsl,imx51-src"
-+      - items:
-+          - const: "fsl,imx53-src"
-+          - const: "fsl,imx51-src"
-+      - items:
-+          - const: "fsl,imx6q-src"
-+          - const: "fsl,imx51-src"
-+      - items:
-+          - const: "fsl,imx6sx-src"
-+          - const: "fsl,imx51-src"
-+      - items:
-+          - const: "fsl,imx6sl-src"
-+          - const: "fsl,imx51-src"
-+      - items:
-+          - const: "fsl,imx6ul-src"
-+          - const: "fsl,imx51-src"
-+      - items:
-+          - const: "fsl,imx6sll-src"
-+          - const: "fsl,imx51-src"
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: SRC interrupt
-+      - description: CPU WDOG interrupts out of SRC
-+    minItems: 1
-+    maxItems: 2
-+
-+  '#reset-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#reset-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    reset-controller@73fd0000 {
-+        compatible = "fsl,imx51-src";
-+        reg = <0x73fd0000 0x4000>;
-+        interrupts = <75>;
-+        #reset-cells = <1>;
-+    };
--- 
-2.7.4
-
+Regards,
+Dilip
+> Thanks
+> Kishon
+>>      
+>> Changes on v6:
+>>    Rebase patches on the latest maintainer's branch
+>>    https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
+>> Dilip Kota (3):
+>>    dt-bindings: phy: Add PHY_TYPE_XPCS definition
+>>    dt-bindings: phy: Add YAML schemas for Intel ComboPhy
+>>    phy: intel: Add driver support for ComboPhy
+>>
+>>   .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
+>>   drivers/phy/intel/Kconfig                          |  14 +
+>>   drivers/phy/intel/Makefile                         |   1 +
+>>   drivers/phy/intel/phy-intel-combo.c                | 632 +++++++++++++++++++++
+>>   include/dt-bindings/phy/phy.h                      |   1 +
+>>   5 files changed, 749 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>>   create mode 100644 drivers/phy/intel/phy-intel-combo.c
+>>
