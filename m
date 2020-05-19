@@ -2,87 +2,177 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935A3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 09:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5509C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 09:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 705E6207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 09:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967CE207C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 09:29:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YYzGnQFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgESJWN (ORCPT
+        id S1727050AbgESJ3V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 05:22:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39906 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgESJWM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 05:22:12 -0400
-IronPort-SDR: a+Zo8fZcTo/WVeqQdOd9OmpMIERmZq7unbZhy01Od9lGvy0+rhfpKDG5IsPqr41fDybxBSCCTc
- Lr0niFdadg6w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 02:22:11 -0700
-IronPort-SDR: 8j68tHuc1QcJNBPZx5GrAM4yqAJBRFFpuCf4oXE/synt8I1biu4iTX9PLv8aTXqXp5xPWJAWqC
- APxMp1AlF1Zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
-   d="scan'208";a="373669435"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 19 May 2020 02:22:09 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jayRw-007bhX-1i; Tue, 19 May 2020 12:22:12 +0300
-Date:   Tue, 19 May 2020 12:22:12 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519092212.GT1634618@smile.fi.intel.com>
-References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
+        Tue, 19 May 2020 05:29:21 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:62993 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbgESJ3U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 05:29:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589880559; x=1621416559;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LaB5Sv8zHtLu9L4Qfmtj8Pn6PDVEZl9Yco0qR/2/0m8=;
+  b=YYzGnQFcyDgaR+Ytrpr7QqA6scscm6Co2xe+05lcFuRaEtXy6smSeGm4
+   Lzp1c7yQJSjo6qs6wMVEgDdt+7ia0AaXuGmmc6gUbtZcor92qEPL5DSlW
+   jN0buoTDkPopA0uEG8CsV98FoVzstwSQ7XFEFQz1Ik6SttIMWQ8fUVp//
+   Ezs6+hu61/WrKCmGCaK9Q+HGH6R+ZB7ieQ3XHocYGGJwiA+f3MiuUEWR+
+   qEeXTSCBYJzLVP6x8sxtcXKfaXFS1W22qAUWWTFVmmYhNfAId9p8nM+ap
+   rvAAHLtu9VO4Gms1WvMkBnjfsCHSORyceyCdTWPFDbyMZGzYBn6djfBN8
+   g==;
+IronPort-SDR: 0jSv+TvDQbzH9lV/jI9Rsy/kQWjkif90PfiWaRgHCo7c/7Z0zqfK/CJ0FFPd2hLgZpn9kIut+b
+ P9e+46l0c/uTZnIWNyHevawBmLAJ+4vxvZVmh3LlmRwKWotrMV5ikDlNy4lEK1+xkR3dbJUOpF
+ QuMevA6pIGc291C+AGZRCdOlQy3zLqKS9ACyLJfseLQagzO3VjDLdhoDkPz6v7wQ6lBhpDPxJy
+ 5o8jC8ZtRYgad7mo+/KkU4VaonnSn2bb6fY3Sd9uqm9hSCe8bC5CjCGlprzB0yMG8/Q5LVk69N
+ ASk=
+X-IronPort-AV: E=Sophos;i="5.73,409,1583218800"; 
+   d="scan'208";a="12818922"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2020 02:29:19 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 19 May 2020 02:29:20 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 19 May 2020 02:29:18 -0700
+Date:   Tue, 19 May 2020 11:29:17 +0200
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Mark Brown <broonie@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     SoC Team <soc@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 07/10] spi: spi-dw-mchp: Add Sparx5 support
+Message-ID: <20200519092917.GB24801@soft-dev15.microsemi.net>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-8-lars.povlsen@microchip.com>
+ <20200514102516.GD5127@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200514102516.GD5127@sirena.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 08:57:40AM +0200, Jonathan Albrieux wrote:
-> Convert documentation from txt format to yaml. Add documentation about
-> reset-gpio. 
 
-Trailing white space (though it doesn't matter here, in cover letter).
+[Sorry about the slight delay on getting back on this]
 
-> Deassert reset on ak8975_power_on, assert reset on ak8975_power_off.
+On 14/05/20 11:25, Mark Brown wrote:
+
+> Date: Thu, 14 May 2020 11:25:16 +0100
+> From: Mark Brown <broonie@kernel.org>
+> To: Lars Povlsen <lars.povlsen@microchip.com>
+> Cc: SoC Team <soc@kernel.org>, Microchip Linux Driver Support
+>  <UNGLinuxDriver@microchip.com>, linux-spi@vger.kernel.org,
+>  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+>  linux-arm-kernel@lists.infradead.org, Alexandre Belloni
+>  <alexandre.belloni@bootlin.com>
+> Subject: Re: [PATCH 07/10] spi: spi-dw-mchp: Add Sparx5 support
+> User-Agent: Mutt/1.10.1 (2018-07-13)
 > 
-> Without reset's deassertion during ak8975_power_on, driver's probe fails
-> on ak8975_who_i_am while checking for device identity for AK09911 chip
+> On Wed, May 13, 2020 at 04:00:28PM +0200, Lars Povlsen wrote:
 > 
-> AK09911 has an active low reset gpio to handle register's reset.
-> AK09911 datasheed says that, if not used, reset pin should be connected
-> to VID. This patch emulates this situation
+> > +static void dw_spi_mchp_set_cs_owner(struct dw_spi_mchp *dwsmchp,
+> > +				     const struct dw_spi_mchp_props *props,
+> > +				     u8 cs, u8 owner)
+> >  {
+> > +	u8 dummy = (owner == MSCC_IF_SI_OWNER_SIBM ?
+> > +		    MSCC_IF_SI_OWNER_SIMC : MSCC_IF_SI_OWNER_SIBM);
+> 
+> Please write normal conditional statements to improve legibility.
+> 
 
-I dunno if it's your first submission to Linux kernel project or other OSS,
-but here you missed a changelog. Rule of thumb is to provide a summary of
-the changes done in the history of the evolution of a patch series.
+I will take your recommendation to heart.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > +static void dw_spi_mchp_set_cs(struct spi_device *spi, bool nEnable)
+> > +{
+> > +	bool enable = !nEnable;	/* This keeps changing in the API... */
+> 
+> No, it doesn't.  The API has not changed for more than a decade.
+> 
 
+I will remove the comment.
+
+I think the comment was related to when we got bitten by the below
+change, but alas.
+
+commit ada9e3fcc175db4538f5b5e05abf5dedf626e550
+Author: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date:   Wed Nov 27 15:39:36 2019 +0000
+
+    spi: dw: Correct handling of native chipselect
+
+    This patch reverts commit 6e0a32d6f376 ("spi: dw: Fix default polarity
+    of native chipselect").
+    
+> > +	} else if (props->ss_force_ena_off) {
+> > +		if (enable) {
+> > +			/* Ensure CS toggles, so start off all disabled */
+> > +			regmap_write(dwsmchp->syscon, props->ss_force_val_off,
+> > +				     ~0);
+> 
+> What's all this force_ena_off stuff about?  The controller should not be
+> making decisions about management of the chip select, this will break
+> users.
+> 
+
+Our controller is not using DMA, but the FIFO interface. And as the DW
+controller drops CS when the FIFO runs empty, this will upset SPI
+devices. The "ss_force" is something the HW designes put on top to
+"override" the CS. We could of course use the GPIO's specifically to
+overcome this - but the "boot" CS 0 is a builtin CS, with no
+underlying GPIO.
+
+Add to this that the HW dept decided to add *2* physical SPI busses to
+the same controller. That we also need to switch between. And ensure
+CS gets dropped correctly before changing tracks...
+
+Long story, lot of grief...
+
+> > +	if (pdev->dev.of_node) {
+> > +		int i;
+> > +
+> > +		for (i = 0; i < dws->num_cs; i++) {
+> > +			int cs_gpio = of_get_named_gpio(pdev->dev.of_node,
+> > +					"cs-gpios", i);
+> > +
+> > +			if (cs_gpio == -EPROBE_DEFER) {
+> > +				ret = cs_gpio;
+> > +				goto out;
+> > +			}
+> > +
+> > +			if (gpio_is_valid(cs_gpio)) {
+> > +				ret = devm_gpio_request(&pdev->dev, cs_gpio,
+> > +						dev_name(&pdev->dev));
+> > +				if (ret)
+> > +					goto out;
+> 
+> Set use_gpio_descriptors and let the core manage the GPIO.
+
+Good suggestion, just the ticket!
+
+And thank you very much for your time & comments.
+
+---Lars
 
