@@ -2,193 +2,238 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15FEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83D6E207D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C13C207D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589908044;
-	bh=pw3JRnvv4LiS9CjnXT7JJ1OaHHlAgFV9RnoBXtjbSWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mhL3jbMrqHDzLeOmCRNj3y/SiS66Q2pljvtZ9XUFonxHnkcTPV29ST235AwK2Mrrl
-	 jFNZuWVbmXRY1mzhiGwi88gYPoFTKNA/85PhsHseC4vlqjzpZqCJjUW9MtnrympTAB
-	 f/GUkk5qss3T3WDeDFD/Pz6ygoQXK6WCvgcHcIPE=
+	s=default; t=1589908317;
+	bh=J1Y30cmsXnTK+NpTbd/xD2zpvVMzNGnZNpopIBUAdOI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qJl56wB2pcBEFSKjbuHsRRQYIrYtBtjwYIEJmQiMyghNNLfusdWSQMZM5Tsf8xyUs
+	 a4Sy07tlYDvf+AON8JZ2I2lXXHXH3StAvzbABgDlsAaX+x7kkJkm8j1zjdJDFbGGfs
+	 NBais6mOZAwn0nTjXMIZBtcWtuZpkFKaMgix3d+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgESRHU (ORCPT
+        id S1729053AbgESRL4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 13:07:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38912 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 13:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728689AbgESRHT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 13:07:19 -0400
-Received: from localhost (unknown [122.182.207.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729001AbgESRL4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 13:11:56 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E93C20709;
-        Tue, 19 May 2020 17:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78AA7207D8;
+        Tue, 19 May 2020 17:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589908038;
-        bh=pw3JRnvv4LiS9CjnXT7JJ1OaHHlAgFV9RnoBXtjbSWg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pJKA64OLl3rmcOsYz0uFiDd5uRBE2khGJ3iiTmJfGnwypwpCn0QsgeQskAfpROgB1
-         lZTwv7Koq0c21yjJsg9H2Lv5hejl8kTK4PxYCn2FvLqQxKHw+UECWv1BLEesp2Ffem
-         aRa9AkWIFMMOJGQb8Ubw0v3hm2/TYbXzKjI6PGik=
-Date:   Tue, 19 May 2020 22:37:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200519170714.GT374218@vkoul-mobl.Dlink>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
- <20200512191208.GG185537@smile.fi.intel.com>
- <20200515063950.GI333670@vkoul-mobl>
- <20200517193818.jaiwgzgz7tutj4mk@mobilestation>
+        s=default; t=1589908315;
+        bh=J1Y30cmsXnTK+NpTbd/xD2zpvVMzNGnZNpopIBUAdOI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TLbCPhb4n0z4OOZth5bBxZ6VeNK677WoS6fBfxN7NTf8lXpCGiYv5YiDEsXfmiT0t
+         XrwIh0sAqkggc1hAxQbSeB6Zi6l+JIgCmwyPx0GHCi9VI9aDsjf/KyS7UgG0Ip79XR
+         lQUV4pbrxKCykGqXmxuD72w2Bid7Uv7Ret2WcZj4=
+Received: by mail-oi1-f176.google.com with SMTP id y85so364629oie.11;
+        Tue, 19 May 2020 10:11:55 -0700 (PDT)
+X-Gm-Message-State: AOAM531FmMnGSLLvn+AcEpondCGO1+N3L3egPZWUs9xrCinSo2sqq+tf
+        Lhi52ZJDwgf0AX5LfVHy2+Om2/PrleGyToBdrQ==
+X-Google-Smtp-Source: ABdhPJyaeG/VOd9sCaHIqKFgnKTdazwA1yv63I0/uCkGphrfwVHO31fj1lCt2eCihWn6JIce5iLdBPaPVV9gZstFRsM=
+X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr347220oie.152.1589908314771;
+ Tue, 19 May 2020 10:11:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517193818.jaiwgzgz7tutj4mk@mobilestation>
+References: <20200508130646.23939-1-kishon@ti.com> <20200508130646.23939-5-kishon@ti.com>
+In-Reply-To: <20200508130646.23939-5-kishon@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 19 May 2020 11:11:43 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
+Message-ID: <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17-05-20, 22:38, Serge Semin wrote:
-> On Fri, May 15, 2020 at 12:09:50PM +0530, Vinod Koul wrote:
-> > On 12-05-20, 22:12, Andy Shevchenko wrote:
-> > > On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> > > > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > > > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > > > > > IP core of the DW DMA controller may be synthesized with different
-> > > > > > max burst length of the transfers per each channel. According to Synopsis
-> > > > > > having the fixed maximum burst transactions length may provide some
-> > > > > > performance gain. At the same time setting up the source and destination
-> > > > > > multi size exceeding the max burst length limitation may cause a serious
-> > > > > > problems. In our case the system just hangs up. In order to fix this
-> > > > > > lets introduce the max burst length platform config of the DW DMA
-> > > > > > controller device and don't let the DMA channels configuration code
-> > > > > > exceed the burst length hardware limitation. Depending on the IP core
-> > > > > > configuration the maximum value can vary from channel to channel.
-> > > > > > It can be detected either in runtime from the DWC parameter registers
-> > > > > > or from the dedicated dts property.
-> > > > > 
-> > > > > I'm wondering what can be the scenario when your peripheral will ask something
-> > > > > which is not supported by DMA controller?
-> > > > 
-> > > > I may misunderstood your statement, because seeing your activity around my
-> > > > patchsets including the SPI patchset and sometimes very helpful comments,
-> > > > this question answer seems too obvious to see you asking it.
-> > > > 
-> > > > No need to go far for an example. See the DW APB SSI driver. Its DMA module
-> > > > specifies the burst length to be 16, while not all of ours channels supports it.
-> > > > Yes, originally it has been developed for the Intel Midfield SPI, but since I
-> > > > converted the driver into a generic code we can't use a fixed value. For instance
-> > > > in our hardware only two DMA channels of total 16 are capable of bursting up to
-> > > > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-> > > > burst length. While there are two SPI interfaces, each of which need to have two
-> > > > DMA channels for communications. So I need four channels in total to allocate to
-> > > > provide the DMA capability for all interfaces. In order to set the SPI controller
-> > > > up with valid optimized parameters the max-burst-length is required. Otherwise we
-> > > > can end up with buffers overrun/underrun.
-> > > 
-> > > Right, and we come to the question which channel better to be used by SPI and
-> > > the rest devices. Without specific filter function you can easily get into a
-> > > case of inverted optimizations, when SPI got channels with burst = 4, while
-> > > it's needed 16, and other hardware otherwise. Performance wise it's worse
-> > > scenario which we may avoid in the first place, right?
-> > 
-> > If one has channels which are different and described as such in DT,
-> > then I think it does make sense to specify in your board-dt about the
-> > specific channels you would require...
-> 
-> Well, we do have such hardware. Our DW DMA controller has got different max
-> burst lengths assigned to first two and the rest of the channels. But creating
-> a functionality of the individual channels assignment is a matter of different
-> patchset. Sorry. It's not one of my task at the moment.
-> 
-> My primary task is to integrate the Baikal-T1 SoC support into the kernel. I've
-> refactored a lot of code found in the Baikal-T1 SDK and currently under a pressure
-> of a lot of review. Alas there is no time to create new functionality as you
-> suggest. In future I may provide such, but not in the framework of this patchset.
+On Fri, May 8, 2020 at 7:07 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+> property to configure the number of bits passed through from PCIe
+> address to internal address in Inbound Address Translation register.
+> This only used the NO MATCH BAR.
+>
+> However standard PCI dt-binding already defines "dma-ranges" to
+> describe the address ranges accessible by PCIe controller. Add support
+> in Cadence PCIe host driver to parse dma-ranges and configure the
+> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
+> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB, so if
+> the dma-ranges specifies a size larger than the maximum allowed, the
+> driver will split and configure the BARs.
 
-Well you need to tell your folks that upstreaming does not work under
-pressure and we can't put a timeline for upstreaming. It needs to do
-what is deemed the right way. Reviews can take time, that needs to be
-comprehended as well!
+Would be useful to know what your dma-ranges contains now.
 
-> > > > > Peripheral needs to supply a lot of configuration parameters specific to the
-> > > > > DMA controller in use (that's why we have struct dw_dma_slave).
-> > > > > So, seems to me the feasible approach is supply correct data in the first place.
-> > > > 
-> > > > How to supply a valid data if clients don't know the DMA controller limitations
-> > > > in general?
-> > > 
-> > > This is a good question. DMA controllers are quite different and having unified
-> > > capabilities structure for all is almost impossible task to fulfil. That's why
-> > > custom filter function(s) can help here. Based on compatible string you can
-> > > implement whatever customized quirks like two functions, for example, to try 16
-> > > burst size first and fallback to 4 if none was previously found.
-> > > 
-> > > > > If you have specific channels to acquire then you probably need to provide a
-> > > > > custom xlate / filter functions. Because above seems a bit hackish workaround
-> > > > > of dynamic channel allocation mechanism.
-> > > > 
-> > > > No, I don't have a specific channel to acquire and in general you may use any
-> > > > returned from the DMA subsystem (though some platforms may need a dedicated
-> > > > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-> > > > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-> > > > their DMA settings must properly and optimally configured. It can be only done
-> > > > if you know the DMA controller parameters like max burst length, max block-size,
-> > > > etc.
-> > > > 
-> > > > So no. The change proposed by this patch isn't workaround, but a useful feature,
-> > > > moreover expected to be supported by the generic DMA subsystem.
-> > > 
-> > > See above.
-> > > 
-> > > > > But let's see what we can do better. Since maximum is defined on the slave side
-> > > > > device, it probably needs to define minimum as well, otherwise it's possible
-> > > > > that some hardware can't cope underrun bursts.
-> > > > 
-> > > > There is no need to define minimum if such limit doesn't exists except a
-> > > > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> > > > added such capability into the generic DMA subsystem so far.
-> > > 
-> > > There is a contract between provider and consumer about DMA resource. That's
-> > > why both sides should participate in fulfilling it. Theoretically it may be a
-> > > hardware that doesn't support minimum burst available in DMA by a reason. For
-> > > such we would need minimum to be provided as well.
-> > 
-> > Agreed and if required caps should be extended to tell consumer the
-> > minimum values supported.
-> 
-> Sorry, it's not required by our hardware. Is there any, which actually has such
-> limitation? (minimum burst length)
 
-IIUC the idea is that you will tell maximum and minimum values supported
-and client can pick the best value. Esp in case of slave transfers
-things like burst, msize are governed by client capability and usage. So
-exposing the set to pick from would make sense
+> Legacy device tree binding compatibility is maintained by retaining
+> support for "cdns,no-bar-match-nbits".
+>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../controller/cadence/pcie-cadence-host.c    | 141 ++++++++++++++++--
+>  drivers/pci/controller/cadence/pcie-cadence.h |  17 ++-
+>  2 files changed, 141 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 6ecebb79057a..2485ecd8434d 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -11,6 +11,12 @@
+>
+>  #include "pcie-cadence.h"
+>
+> +static u64 cdns_rp_bar_max_size[] = {
+> +       [RP_BAR0] = _ULL(128 * SZ_2G),
+> +       [RP_BAR1] = SZ_2G,
+> +       [RP_NO_BAR] = SZ_64T,
+> +};
+> +
+>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>                                int where)
+>  {
+> @@ -106,6 +112,117 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>         return 0;
+>  }
+>
+> +static void cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
+> +                                        enum cdns_pcie_rp_bar bar,
+> +                                        u64 cpu_addr, u32 aperture)
+> +{
+> +       struct cdns_pcie *pcie = &rc->pcie;
+> +       u32 addr0, addr1;
+> +
+> +       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
+> +               (lower_32_bits(cpu_addr) & GENMASK(31, 8));
+> +       addr1 = upper_32_bits(cpu_addr);
+> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
+> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
+> +}
+> +
+> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+> +                                    struct resource_entry *entry,
+> +                                    enum cdns_pcie_rp_bar *index)
+> +{
+> +       u64 cpu_addr, pci_addr, size, winsize;
+> +       struct cdns_pcie *pcie = &rc->pcie;
+> +       struct device *dev = pcie->dev;
+> +       enum cdns_pcie_rp_bar bar;
+> +       unsigned long flags;
+> +       u32 aperture;
+> +       u32 value;
+> +
+> +       cpu_addr = entry->res->start;
+> +       flags = entry->res->flags;
+> +       pci_addr = entry->res->start - entry->offset;
+> +       size = resource_size(entry->res);
+> +       bar = *index;
+> +
+> +       if (entry->offset) {
+> +               dev_err(dev, "Cannot map PCI addr: %llx to CPU addr: %llx\n",
+> +                       pci_addr, cpu_addr);
 
--- 
-~Vinod
+Would be a bit more clear to say PCI addr must equal CPU addr.
+
+> +               return -EINVAL;
+> +       }
+> +
+> +       value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
+> +       while (size > 0) {
+> +               if (bar > RP_NO_BAR) {
+> +                       dev_err(dev, "Failed to map inbound regions!\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               winsize = size;
+> +               if (size > cdns_rp_bar_max_size[bar])
+> +                       winsize = cdns_rp_bar_max_size[bar];
+> +
+> +               aperture = ilog2(winsize);
+> +
+> +               cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, aperture);
+> +
+> +               if (bar == RP_NO_BAR)
+> +                       break;
+> +
+> +               if (winsize + cpu_addr >= SZ_4G) {
+> +                       if (!(flags & IORESOURCE_PREFETCH))
+> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
+> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
+> +               } else {
+> +                       if (!(flags & IORESOURCE_PREFETCH))
+> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
+> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
+> +               }
+> +
+> +               value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
+> +
+> +               size -= winsize;
+> +               cpu_addr += winsize;
+> +               bar++;
+> +       }
+> +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+> +       *index = bar;
+> +
+> +       return 0;
+> +}
+> +
+> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+> +{
+> +       enum cdns_pcie_rp_bar bar = RP_BAR0;
+> +       struct cdns_pcie *pcie = &rc->pcie;
+> +       struct device *dev = pcie->dev;
+> +       struct device_node *np = dev->of_node;
+> +       struct pci_host_bridge *bridge;
+> +       struct resource_entry *entry;
+> +       u32 no_bar_nbits = 32;
+> +       int err;
+> +
+> +       bridge = pci_host_bridge_from_priv(rc);
+> +       if (!bridge)
+> +               return -ENOMEM;
+> +
+> +       if (list_empty(&bridge->dma_ranges)) {
+> +               of_property_read_u32(np, "cdns,no-bar-match-nbits",
+> +                                    &no_bar_nbits);
+> +               cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0, no_bar_nbits);
+> +               return 0;
+> +       }
+> +
+> +       resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+> +               err = cdns_pcie_host_bar_config(rc, entry, &bar);
+
+Seems like this should have some better logic to pick which BAR to
+use. Something like find the biggest region and then find the smallest
+BAR that it fits in. Then get the next biggest...
+
+> +               if (err) {
+> +                       dev_err(dev, "Fail to configure IB using dma-ranges\n");
+> +                       return err;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
