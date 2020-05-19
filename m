@@ -1,117 +1,185 @@
 Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C47C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A2EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45873207C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18462072C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 20:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OWwWqJvj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1AE9fbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgESUik (ORCPT
+        id S1726447AbgESUoC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 16:38:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
+        Tue, 19 May 2020 16:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgESUij (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 16:38:39 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 612B9C08C5C2
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:38:39 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id k4so435169uaq.10
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:38:39 -0700 (PDT)
+        with ESMTP id S1726178AbgESUoB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 16:44:01 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD20C08C5C0;
+        Tue, 19 May 2020 13:44:01 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t7so382972plr.0;
+        Tue, 19 May 2020 13:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tW6EW4cSWh55qYp1WeU6PQVnxEHSMZHc8fHW3A+VMb8=;
-        b=OWwWqJvjeWW5njlNWGf2uPt037V4dYIPW2MnkBt9ha+MFBeJ2Zh5pekuhMEvAdkK/d
-         d9voue+0cyZCDGJ2CAFCUlJ2VxKdotHK1mYnwFQc4n0ITdCEcJ5NyFGYyDEUMs2eW0Oz
-         6mWKRFm0oOYPh+S/Cmr+e2voxCarx5IHw3Vi0=
+        bh=7NKe0dGCLuIFUTSDu/e/oZFqvqubemBEs4EDLcjwgzA=;
+        b=i1AE9fbb1/4A3jewEktdiPlEhm44n+aEzpUF/J6C5L/Vmt4RDWpg5l+3XaTGXPR2pA
+         jYk5iOBvDHwFMaVrwgNve7m/NAowuc6ceW2X3lcl2kZP59FjRMMXrnp847fkHyPRyzrn
+         UhA6HJ+izxCChQA+GOq4qeGv5WoioDVdSyW4BU7HYcc+qrbQW8rRzv+gbAGnSLZSb4f3
+         k1WxMhiBEPV33vNC4h/pD9HAg+wyRr2lHno32blg6wWj18WZ9xUxuCONDAezkJyOlUUr
+         MaQdqTBwSHwq3ZLdk9dN7iQJxhykm4NGX/Bfnws7VGfXepvQYlrCnwxGW025/zgM08Ul
+         jJww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tW6EW4cSWh55qYp1WeU6PQVnxEHSMZHc8fHW3A+VMb8=;
-        b=nm78qXXTr8SY2FuFIPbmZPVaPW21DN8qF3eIg5XdteCA3IMblTbtVOfku0fk0xgvg9
-         1f46sCYImC3iOWdS2/7dHtzZbSWit+TMjT+3JcwzgyU4B6bvESXH2t/+HYGgLdSUVD4R
-         T4fCto8JY0AQdywPSLIxUjG4s4lSuDmCXalruQcFyrM9KPHa2Xxce0s33mZSYL0wwxi/
-         ijNzWS/SL7flvkUVxNlw7qGdIOP6DrY/wBna7HR7RCWwRpPMai/amR+RewSNnTQfdURo
-         U0dn73fji3janXWQZ+jsKm8mBtOnRrYgsh6V+YXmVvXHpW7kv1PhfWCx4l4jUj/eY/xw
-         gguA==
-X-Gm-Message-State: AOAM531Zth97l/WvrdXSBBp5Nzh6e8YbJNQyjQvQQ56gPdPEzpm7PL/Z
-        LTeOu1G/UJz21b8p9B7xlF+DnEVayc0=
-X-Google-Smtp-Source: ABdhPJxdea9CxnxQsrtTBkq/VfRqBDWZ+ZKmzjEFGIJjOYxSE518cHyPBNwgozcBHR1mDjQ1KtViJA==
-X-Received: by 2002:a9f:3244:: with SMTP id y4mr1061350uad.49.1589920718277;
-        Tue, 19 May 2020 13:38:38 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id k16sm95417vsp.12.2020.05.19.13.38.37
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 13:38:37 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id k4so435132uaq.10
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 13:38:37 -0700 (PDT)
-X-Received: by 2002:ab0:b13:: with SMTP id b19mr1046847uak.91.1589920717000;
- Tue, 19 May 2020 13:38:37 -0700 (PDT)
+        bh=7NKe0dGCLuIFUTSDu/e/oZFqvqubemBEs4EDLcjwgzA=;
+        b=WCslaEhlN1HbhQmSOS3zVK6kWkvaw582VrPQ5o3oQG/Q97mtCJr/wcqgdFug8Ou9Xf
+         FMPPafnwyJKMMdjkO6fGTow7whp5nyT/Kksj51dUTgX5n+qInaNsU0cnS8uXSqSuQHJA
+         LFNW+4spMBMwKX+wOFZiJGMUqPSVZ8Jv2bCu+JyveakNfmuLSc3YJY42W566yfBukmji
+         hXgk2A6i9DLvN6AjlGhN80w0KiG/Hh1WIcl7ww/HPnHjWLbrlgs0exwBsugs+VFNErGr
+         b91l4zdzs1cB/mvQhfs6XRmT+rrq9fDdiVtC1Atn5dFHCwkLoDqwFxyT3qO4HCWM6KDf
+         K9pQ==
+X-Gm-Message-State: AOAM533L0MWHQ8Bv3o0WHvyopBdRpSCsNTNhHoQk31dFA8A58mtn6leR
+        /+/eLoZhuPOScsJEKMAQnI9BJEUEVGmKE8siuzQ=
+X-Google-Smtp-Source: ABdhPJyhoLKOvXYwlEtqNyJEFcVPhsytjjZvjtEBaBNriSxQfrCm3qrr6XzTUriBFI1NitA6C5nmn1Lg7mL7k2fxWGA=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr1366526pjd.181.1589921041122;
+ Tue, 19 May 2020 13:44:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589914405-6674-1-git-send-email-pillair@codeaurora.org>
-In-Reply-To: <1589914405-6674-1-git-send-email-pillair@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 19 May 2020 13:38:25 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VEDDm1cHQNLVitMLxMYvGA-pON+mdBj6SGn46yhw0jVQ@mail.gmail.com>
-Message-ID: <CAD=FV=VEDDm1cHQNLVitMLxMYvGA-pON+mdBj6SGn46yhw0jVQ@mail.gmail.com>
-Subject: Re: [PATCH v10] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20200517194904.34758-1-contact@artur-rojek.eu> <20200517194904.34758-7-contact@artur-rojek.eu>
+In-Reply-To: <20200517194904.34758-7-contact@artur-rojek.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 19 May 2020 23:43:44 +0300
+Message-ID: <CAHp75VcChHOrxrqBM==-_SaTL4vSojKmRWvkNn-CHLH99pcAuQ@mail.gmail.com>
+Subject: Re: [PATCH v7 7/7] input: joystick: Add ADC attached joystick driver.
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, May 19, 2020 at 11:53 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
+On Sun, May 17, 2020 at 10:49 PM Artur Rojek <contact@artur-rojek.eu> wrote:
 >
-> +               wifi: wifi@18800000 {
-> +                       compatible = "qcom,wcn3990-wifi";
-> +                       reg = <0 0x18800000 0 0x800000>;
-> +                       reg-names = "membase";
-> +                       iommus = <&apps_smmu 0xc0 0x1>;
-> +                       interrupts =
-> +                               <GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-> +                               <GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-> +                               <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-> +                               <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-> +                               <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-> +                               <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-> +                               <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-> +                               <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-> +                               <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-> +                               <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-> +                               <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-> +                               <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-> +                       memory-region = <&wlan_fw_mem>;
-> +                       status = "disabled";
-> +               };
+> Add a driver for joystick devices connected to ADC controllers
+> supporting the Industrial I/O subsystem.
+
+...
+
+> +static int adc_joystick_handle(const void *data, void *private)
+> +{
+> +       struct adc_joystick *joy = private;
+> +       enum iio_endian endianness;
+> +       int bytes, msb, val, i;
+> +       bool sign;
 > +
->                 config_noc: interconnect@1500000 {
->                         compatible = "qcom,sc7180-config-noc";
->                         reg = <0 0x01500000 0 0x28000>;
+> +       bytes = joy->chans[0].channel->scan_type.storagebits >> 3;
+> +
+> +       for (i = 0; i < joy->num_chans; ++i) {
+> +               endianness = joy->chans[i].channel->scan_type.endianness;
+> +               msb = joy->chans[i].channel->scan_type.realbits - 1;
 
-For completeness sake, I'll also point out that the WiFi node is also
-sorted incorrectly.  0x18800000 comes after 0x01500000.
+> +               sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
 
+Do we need tolower()?
 
--Doug
+> +
+> +               switch (bytes) {
+> +               case 1:
+> +                       val = ((const u8 *)data)[i];
+> +                       break;
+> +               case 2:
+> +                       if (endianness == IIO_BE)
+
+> +                               val = be16_to_cpu(((const u16 *)data)[i]);
+
+Yeah, you have to provide bitwise types to satisfy sparse.
+Maybe using *_to_cpup() will cure this.
+
+> +                       else if (endianness == IIO_LE)
+> +                               val = le16_to_cpu(((const u16 *)data)[i]);
+> +                       else /* IIO_CPU */
+> +                               val = ((const u16 *)data)[i];
+> +                       break;
+> +               default:
+> +                       return -EINVAL;
+> +               }
+> +
+> +               val >>= joy->chans[i].channel->scan_type.shift;
+> +               if (sign)
+> +                       val = sign_extend32(val, msb);
+> +               else
+> +                       val &= GENMASK(msb, 0);
+> +               input_report_abs(joy->input, joy->axes[i].code, val);
+> +       }
+> +
+> +       input_sync(joy->input);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +       /* Count how many channels we got. NULL terminated. */
+> +       while (joy->chans[joy->num_chans].indio_dev)
+> +               joy->num_chans++;
+
+I don't see how useful this is. Why not simple do below...
+
+> +       bits = joy->chans[0].channel->scan_type.storagebits;
+> +       if (!bits || (bits > 16)) {
+> +               dev_err(dev, "Unsupported channel storage size");
+> +               return -EINVAL;
+> +       }
+> +       for (i = 1; i < joy->num_chans; ++i)
+> +               if (joy->chans[i].channel->scan_type.storagebits != bits) {
+> +                       dev_err(dev, "Channels must have equal storage size");
+> +                       return -EINVAL;
+> +               }
+
+...something like
+
+  for (i = 0; joy->chans[i].indio_dev; i++) {
+    bits = joy->chans[i].channel->scan_type.storagebits;
+    if (bits ...) {
+      ...error handling...
+    }
+    if (bits != joy->chans[0].channel->scan_type.storagebits) {
+      ...second level of error handling...
+    }
+ }
+
+...
+
+> +static const struct of_device_id adc_joystick_of_match[] = {
+> +       { .compatible = "adc-joystick", },
+
+> +       { },
+
+No need comma.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
