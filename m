@@ -2,99 +2,126 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018FAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 12:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59124C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 12:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D64FA20825
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 12:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CED206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 12:44:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZiIm4xm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgESMdJ (ORCPT
+        id S1728699AbgESMoS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 08:33:09 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:53612 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgESMdI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 08:33:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 68FF9803087C;
-        Tue, 19 May 2020 12:33:05 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KO-6LsdpDdS1; Tue, 19 May 2020 15:33:03 +0300 (MSK)
-Date:   Tue, 19 May 2020 15:33:02 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
-Message-ID: <20200519123302.2lydamjy62ugkjb6@mobilestation>
-References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
- <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
- <20200506222300.30895-2-Sergey.Semin@baikalelectronics.ru>
- <20200514191318.GA10192@bogus>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200514191318.GA10192@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Tue, 19 May 2020 08:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbgESMoR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 08:44:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91B90C08C5C0;
+        Tue, 19 May 2020 05:44:17 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id v12so15688618wrp.12;
+        Tue, 19 May 2020 05:44:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ILSGLr4PTG4hHuLbl/jfVaGJlNauWt/s2JzJ6o43rnE=;
+        b=tZiIm4xm9TCzSwfdVSICyGr+S5PkpwIVdBUJRglkqoZ9CHvvYvtR2JCKWLfHtkKGrQ
+         sH0CRkKLO29EMlLw2GtfqeFSNlNtJJjQpw4qwOryphHyk64d+q8RuWM2R+OIlTw2HXZ/
+         utDXRmcOG8DRjOttVA2z4kRiQ+ceDB+fkWIBY0Pw85QVqOJ/q//CLKV7ylZ9X6GB5+Sb
+         TmvHhR5dtqooI5I39gZHNPdopov7EIHksQcXlz60JdKRPTGJdCIapoSt2JWZJwo4aZa7
+         R/rtl/NMS0FgndZ/s3A558DyDkB7i6jU43GExsBUeAwwn3EgNdYxGlhGKeK7acEpekmz
+         86Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ILSGLr4PTG4hHuLbl/jfVaGJlNauWt/s2JzJ6o43rnE=;
+        b=hk73Zj9G1/BX0ZGD1+bTBR1Tt4zHjPyjTtgg/P1XNErvj5WQNYKXI+5priZvoyZyx9
+         tN93Djex1pwS9COHyODrKUdWN8mP/8o2XtShiR4wIJoTx+IPzZaOGyeFob9Tc3FFaMBk
+         cIWJc0ScJ60Zk0K88ZQfgwG7mdVmW2yeA7LAxtEGgcoO4ocuLjxbEjKuX5WiHPdb2R5C
+         1QPEWqS0copIg2FxTSrPLUQdL7EQm2XlxxtUZl37bQwwRd8CCiYQS//KkqpAdS5eEM19
+         EdJG2MH5hJIFTHlD7kPMdMakgGAbKqX+dWel5H3OSkXwlcSOLfjpnlFtYEksQwBGmncR
+         uD7Q==
+X-Gm-Message-State: AOAM532oDv14km4Zgg/g76f4wy0Am/IQGynUT2g04xn+rWWb+ZM0vOxO
+        O5dNKIS1Q05GlEufqPPRaHPe5FW1lQyO/g==
+X-Google-Smtp-Source: ABdhPJw629rJE6pDTM+0ibqZS6vtE2fHVU9WkEg3ZszeBcuEB3Gh2NrbKzz43KhI7veIk84LWchXAg==
+X-Received: by 2002:adf:a285:: with SMTP id s5mr28241564wra.60.1589892255688;
+        Tue, 19 May 2020 05:44:15 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id b12sm3953870wmj.0.2020.05.19.05.44.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 05:44:14 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v3 0/4] iio: magnetometer: ak8975: Add gpio reset support
+Date:   Tue, 19 May 2020 14:43:50 +0200
+Message-Id: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 02:13:18PM -0500, Rob Herring wrote:
-> On Thu, May 07, 2020 at 01:22:57AM +0300, Serge Semin wrote:
-> > Baikal-T1 Clocks Control Unit is responsible for transformation of a
-> > signal coming from an external oscillator into clocks of various
-> > frequencies to propagate them then to the corresponding clocks
-> > consumers (either individual IP-blocks or clock domains). In order
-> > to create a set of high-frequency clocks the external signal is
-> > firstly handled by the embedded into CCU PLLs. So the corresponding
-> > dts-node is just a normal clock-provider node with standard set of
-> > properties. Note as being part of the Baikal-T1 System Controller its
-> > DT node is supposed to be a child the system controller node.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: linux-mips@vger.kernel.org
-> > 
-> > ---
-> > 
+v3:
+ - fix patch messages style
+ - align reset gpio comment to kernel doc reccomendation
+ - introduce changelog.
 
-[nip]
+v2:
+ - rewording of reset gpio comment and patch messages to better clarify
+   reset gpio behaviour.
+https://lore.kernel.org/linux-iio/20200518133645.19127-1-jonathan.albrieux@gmail.com/
 
-> > +examples:
-> > +  # Clock Control Unit PLL node:
-> > +  - |
-> > +    clock-controller-pll {
-> > +      compatible = "baikal,bt1-ccu-pll";
-> > +      #clock-cells = <1>;
-> > +
-> > +      clocks = <&clk25m>;
-> > +      clock-names = "ref_clk";
-> 
-> If there's a register range within the system controller for the pll, 
-> then add 'reg' even if Linux doesn't use it.
+v1:
+ - initial patch submission.
+https://lore.kernel.org/linux-iio/20200519065749.4624-1-jonathan.albrieux@gmail.com/
 
-Rob, are you saying that the reg property should be mandatory or optional?
-I've got a similar issue in several other patches you've already took a look.
-In order to fix it there too could you please clarify this to me?
+Convert documentation from txt format to yaml. Add documentation about
+reset-gpio.
 
--Sergey
+Deassert reset on ak8975_power_on(), assert reset on ak8975_power_off().
+
+Without reset's deassertion during ak8975_power_on(), driver's probe fails
+on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+
+AK09911 has an active low reset gpio to handle register's reset.
+AK09911 datasheed says that, if not used, reset pin should be connected
+to VID. This patch emulates this situation.
+
+Jonathan Albrieux (4):
+  dt-bindings: iio: magnetometer: ak8975: convert txt format to yaml
+  dt-bindings: iio: magnetometer: ak8975: add gpio reset support
+  iio: magnetometer: ak8975: Fix typo, uniform measurement unit style
+  iio: magnetometer: ak8975: Add gpio reset support
+
+ .../bindings/iio/magnetometer/ak8975.txt      | 30 --------
+ .../bindings/iio/magnetometer/ak8975.yaml     | 70 +++++++++++++++++++
+ drivers/iio/magnetometer/ak8975.c             | 22 +++++-
+ 3 files changed, 90 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
+
+-- 
+2.17.1
+
