@@ -2,108 +2,95 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3532FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E54C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A07E206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589909866;
-	bh=7v9GoaJsODCxz6ZmftPOhFf1bOkxR2l3wooZAzierb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lsx5ugYy2j4adTuHium5jNBAinEBTNTSs8gtbyU2+N+MpByXxViey1bO275jeb+V6
-	 klY4eJ/9oejwF4VW7yVBtWVzHpdFRmFTtGLXFX7H6xTt0RIVpSw+C7iFfqQ+SnJmZ7
-	 WMgMr//18iaVWSszngsybeKCFN1fbeHbvaa9xsno=
+	by mail.kernel.org (Postfix) with ESMTP id 7BDAA20708
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbgESRhm (ORCPT
+        id S1729335AbgESRh6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 13:37:42 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34023 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgESRhm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 13:37:42 -0400
-Received: by mail-io1-f66.google.com with SMTP id f3so63923ioj.1;
-        Tue, 19 May 2020 10:37:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PzvrAlMTo3QjrszDPhpWXPfC5/eKge0TGeIBkPLaXP8=;
-        b=lS+r7O+E0qg0Rd3qnBsa4U7/i54p2SRYNbjcSMPSRSU4iu4VRYvrxt3YLSabBbK+WQ
-         TD77uec8RYyL7P0C5mFRt1aszleCQE1vioTJ3J0Y7Yt4+LGoSiU7XhXqAbXn0mMxjr+J
-         zjrvGDnki5bAmpwSMAJBpCEU1vL5dEp95yqR3fslRPtSQ/Ru+LQjh0fsaR6She0vHIwN
-         jMj74Q9pWjmaIpbDDbRKMOD+V8fRSZ4ffsHs6lLrcdZQjXnXb3iN4xFIlpGPRHBLn28p
-         oessbRjPnok+glSnqvpVMrNijoE5MXsUrZsp1qKc5hy85BDObxwCfVPmIkQkgH51beO+
-         /ATQ==
-X-Gm-Message-State: AOAM532H0siypnrnq7HvnkBON8VIzpWUuR9AcsGDdaGoV6NeKHnf+rwd
-        Hl1KD9GhL6dgDdzc60uRKg==
-X-Google-Smtp-Source: ABdhPJz58zqeZlv/dD+ROsNtuxzjCBnL3izOh+epsxfI28X04sumVUJ16GKDoaGt4Y3OAF9rK9Gkog==
-X-Received: by 2002:a02:a1c8:: with SMTP id o8mr841870jah.38.1589909860215;
-        Tue, 19 May 2020 10:37:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b1sm111766ioe.46.2020.05.19.10.37.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 10:37:39 -0700 (PDT)
-Received: (nullmailer pid 342793 invoked by uid 1000);
-        Tue, 19 May 2020 17:37:38 -0000
-Date:   Tue, 19 May 2020 11:37:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
- to yaml
-Message-ID: <20200519173738.GA342367@bogus>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
- <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+        Tue, 19 May 2020 13:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729001AbgESRh5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 13:37:57 -0400
+Received: from mail.bugwerft.de (mail.bugwerft.de [IPv6:2a03:6000:1011::59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C37F6C08C5C0;
+        Tue, 19 May 2020 10:37:57 -0700 (PDT)
+Received: from [192.168.178.106] (pd95ef292.dip0.t-ipconnect.de [217.94.242.146])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 1897B40A3F8;
+        Tue, 19 May 2020 17:35:00 +0000 (UTC)
+Subject: Re: [PATCH 4/4] sc16is7xx: Use threaded IRQ
+To:     Maarten Brock <m.brock@vanmierlo.com>
+Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org, jslaby@suse.com,
+        pascal.huerst@gmail.com, linux-serial-owner@vger.kernel.org
+References: <20200508143757.2609740-1-daniel@zonque.org>
+ <20200508143757.2609740-5-daniel@zonque.org>
+ <61fdcf12976c924fd86c5203aba673a7@vanmierlo.com>
+ <584de876-e675-0172-97ed-0c9534eb9526@zonque.org>
+ <dfafc770e7e308cb6a2db5a1003cd759@vanmierlo.com>
+ <22116d56-9240-9bfe-1b6f-a94d57a085cf@zonque.org>
+ <b5d56abc8109fb3a7ef057c89a649f06@vanmierlo.com>
+From:   Daniel Mack <daniel@zonque.org>
+Message-ID: <c03101a9-ea8b-fdff-3f29-fd7c4f400019@zonque.org>
+Date:   Tue, 19 May 2020 19:37:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+In-Reply-To: <b5d56abc8109fb3a7ef057c89a649f06@vanmierlo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 19 May 2020 09:50:57 +0200, Jonathan Albrieux wrote:
-> Converts documentation from txt format to yaml
+On 5/19/20 6:32 PM, Maarten Brock wrote:
+> On 2020-05-18 18:57, Daniel Mack wrote:
+
+>> It's a controller that sits behind another hardware bus itself, so
+>> polling is expensive. If the controller would need to check for level
+>> IRQs it would need to poll, and then we could as well just poll the UART
+>> directly, that's just as good :)
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
->  .../devicetree/bindings/iio/imu/bmi160.yaml   | 84 +++++++++++++++++++
->  2 files changed, 84 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> That depends on the IRQ coming out of the interrupt controller. If that is
+> a level interrupt itself, then it is easy to see if all interrupts are
+> handled. Further polling zooms in on the devices that require attention.
+
+Yeah, I'm familiar with the concept, but it's not like that here,
+unfortunately.
+
+>> But again - the UART driver works perfectly fine with edge IRQs as long
+>> as the interrupt is not shared.
 > 
+> If you would require multiple sc16is7xx devices on I2C would you like to
+> connect multiple interrupt lines? Or just SCL,SDA and *one* IRQ?
+> 
+> OTOH for SPI you would require multiple CS already.
+
+Right. Nevertheless, we can allow sharing the IRQ line for level-trigger
+capable IRQ controllers, you're right.
+
+>> What many drivers do is try with one setting, and if that fails because
+>> the interrupt controller returns an error, they fall back to something
+>> else. We could do the same here of course, but it'd be another patch on
+>> top, as it's unrelated to the concrete change the patch we're commenting
+>> on is bringing in.
+>>
+>> So what I can add is logic that first tries with IRQF_LOW|IRQF_SHARED,
+>> and if that fails, we fall back to IRQF_FALLING and retry. WDYT?
+> 
+> That sounds like a decent plan.
+
+Okay, I'll add a patch to the series then and resend.
 
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Error: Documentation/devicetree/bindings/iio/imu/bmi160.example.dts:37.1-2 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/iio/imu/bmi160.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/iio/imu/bmi160.example.dt.yaml] Error 1
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1293085
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Thanks for your feedback!
+Daniel
