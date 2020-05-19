@@ -2,127 +2,104 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1CDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 16:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21E9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 16:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7617C207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 16:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDCA207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 16:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thnsfHkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgESQdC (ORCPT
+        id S1729205AbgESQok (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 12:33:02 -0400
-Received: from fieber.vanmierlo.com ([84.243.197.177]:58885 "EHLO
-        kerio9.vanmierlo.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726203AbgESQdB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 12:33:01 -0400
-X-Footer: dmFubWllcmxvLmNvbQ==
-Received: from roundcube.vanmierlo.com ([192.168.37.37])
-        (authenticated user m.brock@vanmierlo.com)
-        by kerio9.vanmierlo.com (Kerio Connect 9.2.12 patch 1) with ESMTPA;
-        Tue, 19 May 2020 18:32:32 +0200
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 19 May 2020 18:32:32 +0200
-From:   Maarten Brock <m.brock@vanmierlo.com>
-To:     Daniel Mack <daniel@zonque.org>
-Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org, jslaby@suse.com,
-        pascal.huerst@gmail.com, linux-serial-owner@vger.kernel.org
-Subject: Re: [PATCH 4/4] sc16is7xx: Use threaded IRQ
-In-Reply-To: <22116d56-9240-9bfe-1b6f-a94d57a085cf@zonque.org>
-References: <20200508143757.2609740-1-daniel@zonque.org>
- <20200508143757.2609740-5-daniel@zonque.org>
- <61fdcf12976c924fd86c5203aba673a7@vanmierlo.com>
- <584de876-e675-0172-97ed-0c9534eb9526@zonque.org>
- <dfafc770e7e308cb6a2db5a1003cd759@vanmierlo.com>
- <22116d56-9240-9bfe-1b6f-a94d57a085cf@zonque.org>
-Message-ID: <b5d56abc8109fb3a7ef057c89a649f06@vanmierlo.com>
-X-Sender: m.brock@vanmierlo.com
-User-Agent: Roundcube Webmail/1.3.3
+        Tue, 19 May 2020 12:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbgESQoj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 12:44:39 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D647C08C5C0;
+        Tue, 19 May 2020 09:44:39 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a2so2939807ejb.10;
+        Tue, 19 May 2020 09:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=x55y7NheOCYCR/iiqhGsYzOg4DTF/y3LF/qDoYECs4o=;
+        b=thnsfHkv0gxvjmBc79oOPNa2XSk/2n5KFV9FZB7tOa33jiWBZ1goEgBCBwUdrwZ3gj
+         OTCkcHhoWCeQ1W2Nh125unX/RglfetrAr5DQQzJrz76pUhOC9BTlo31qcxY+eal1Z18J
+         G+eb/Kbx8lFloEz4tj66j3zowbRjicyuqKcaX8cJzzKOgA2in0yampzsSdGccRslDYuP
+         dTxIpS0YXYZjzpLBHS3iLdoE6X1YzfUIsLswsmaQdVOIOdl5adc78Sqbe53kVmau7Lmu
+         Y0OCL23mG7KsKA9JSvccCLbb484dJ+fBfTRBO65FVFIQxgopISt+qn+kqokAxh66IZPV
+         /hNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=x55y7NheOCYCR/iiqhGsYzOg4DTF/y3LF/qDoYECs4o=;
+        b=rZ1oL1ZpH7+U0ZiBM8hfzAZG975YQRKGogOZaRueid/gLAdgHJIyKeuj3m6Ha7afuz
+         ErZx2vL8YO8ZdMjfSO9zACfJ0OZKGTA3jXyKXijGrr7Ec90wPnmfm7d+09soFFqjlfqv
+         GX8DHEHkbJQEnShOShd0ASraBrDTCWnOZ63BnTn93P3z5y7uvmF9HudxURoGw6EBRA3n
+         lBPr2Bf5U7dCU26+G4UtFSFPeX6KLFcgd32+5KMKcv2XWsXCPGceQwFyyGr79ivxd+hg
+         ZWWBvI+JmRovv4DMfqJwrW3U5ObgKZYzClp4k5GIgnYujQ8i+u8DtRgMC1lwlYNVsRn4
+         +pmQ==
+X-Gm-Message-State: AOAM532k9cad84dORSzQtDRcrHRDI681IeonnkKBULrbUJAdKJnIMdaG
+        MBhBx9xmxinmPLX95GbOEoeplFbL6TI=
+X-Google-Smtp-Source: ABdhPJzyeykMTQLiecg5AXfa/nUcuDFcwIRER9TYnQXDCL+XVixes/FbSGKEiL37/S3TIG69RrvBIw==
+X-Received: by 2002:a17:906:f1cf:: with SMTP id gx15mr60051ejb.471.1589906677896;
+        Tue, 19 May 2020 09:44:37 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id b3sm49627ejq.52.2020.05.19.09.44.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 09:44:37 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, maxime.ripard@free-electrons.com,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpu: arm,mali-utgard: add additional properties
+Date:   Tue, 19 May 2020 18:44:25 +0200
+Message-Id: <20200519164425.9729-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-18 18:57, Daniel Mack wrote:
-> Hi Maarten,
-> 
-> On 5/18/20 1:14 PM, Maarten Brock wrote:
->> On 2020-05-17 22:44, Daniel Mack wrote:
-> 
->> Summerizing:
->> - After switching to a threaded IRQ, the trigger could be switched to
->> IRQF_TRIGGER_LOW and with that interrupt sharing can be enabled for
->> this device with IRQF_SHARED.
-> 
-> Yes, but we don't need that. As discussed, the UART driver can cope 
-> with
-> edge IRQs just fine.
-> 
->> - Some (your) interrupt controllers do not support IRQF_TRIGGER_LOW.
->> For those only IRQF_TRIGGER_FALLING can be used for this device and
->> thus IRQF_SHARED cannot be used.
-> 
-> True. Interrupts cannot be shared for this device then. That's a fair
-> limitation, and it has always been like that.
+In the old txt situation we add/describe only properties that are used
+by the driver/hardware itself. With yaml it also filters things in a
+node that are used by other drivers like 'assigned-clocks' and
+'assigned-clock-rates' for some older Rockchip SoCs in 'gpu' nodes,
+so add them to 'arm,mali-utgard.yaml'.
 
-It has always been like that for this driver. But that should be no
-reason why the driver might not be improved. I wonder how the 8250
-handles this. PC's have always shared interrupts for COM1/2/3/4 AFAIK.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
->> - The driver for your interrupt controller should be improved to 
->> support
->> level IRQs.
-> 
-> It's a controller that sits behind another hardware bus itself, so
-> polling is expensive. If the controller would need to check for level
-> IRQs it would need to poll, and then we could as well just poll the 
-> UART
-> directly, that's just as good :)
-
-That depends on the IRQ coming out of the interrupt controller. If that 
-is
-a level interrupt itself, then it is easy to see if all interrupts are
-handled. Further polling zooms in on the devices that require attention.
-
-> But again - the UART driver works perfectly fine with edge IRQs as long
-> as the interrupt is not shared.
-
-If you would require multiple sc16is7xx devices on I2C would you like to
-connect multiple interrupt lines? Or just SCL,SDA and *one* IRQ?
-
-OTOH for SPI you would require multiple CS already.
-
->> This makes me wonder if it would be better to let the device tree 
->> specify
->> the interrupt configuration.
-> 
-> There can be flags in the 2nd cell of the node, but their meaning is
-> specific to the controller. Hence the SPI/I2C layers don't pass that
-> information up.
-> 
-> What many drivers do is try with one setting, and if that fails because
-> the interrupt controller returns an error, they fall back to something
-> else. We could do the same here of course, but it'd be another patch on
-> top, as it's unrelated to the concrete change the patch we're 
-> commenting
-> on is bringing in.
-> 
-> So what I can add is logic that first tries with IRQF_LOW|IRQF_SHARED,
-> and if that fails, we fall back to IRQF_FALLING and retry. WDYT?
-
-That sounds like a decent plan.
-
-> 
-> Thanks,
-> Daniel
-
-Kind regards,
-Maarten
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+index 4869258da..2fc97c544 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+@@ -95,6 +95,12 @@ properties:
+       - const: bus
+       - const: core
+ 
++  assigned-clocks:
++    maxItems: 1
++
++  assigned-clock-rates:
++    maxItems: 1
++
+   memory-region: true
+ 
+   mali-supply: true
+-- 
+2.11.0
 
