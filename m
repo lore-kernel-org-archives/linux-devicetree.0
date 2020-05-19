@@ -2,90 +2,117 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD92EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811E7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEB6206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589914471;
-	bh=fIEq6DFhsxTVEiHlbY6EVVVRHvnCNzJKEOeusLmGMxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=imvrSBEKqCP9+a7AH4UTmx1cGEsJzV6gkXvYhDEXn9x2yNdreulm7dkRjImhR3JNp
-	 FrULzDRoqubSo1kXmtA49xYr/7tUe/tTuWy3qnvZ8DLR+LhBpYrRXOOj7seEIjbc+K
-	 eqnx+BGIFKGgyWttcz1nrYPPl0ceRoVwywX7ISTQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6F09020849
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgESSyb (ORCPT
+        id S1726623AbgESS56 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 14:54:31 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46627 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgESSyb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:54:31 -0400
-Received: by mail-io1-f65.google.com with SMTP id j8so267270iog.13;
-        Tue, 19 May 2020 11:54:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6yvH5f7eUCT+zbMbOyCn4vCw24ZmYs3FmNu5W792pm0=;
-        b=qokbVY5ZiZgqiLVY3ZxvT0ij99Y6mdDqNHYEek7OzvrO0xDNDB6pZrWEPN66WJ8i+b
-         8VWa5zvts4c+sk1OhHN3RyAy+8yhsfTDkCKD9GdZzaDe6Weh8Aiop7GTSNEoqNif22Vz
-         W235Am0hORONUnSbz4cSU32KZ0JK5ePE/wryooaFQ3YTnRrFi/+XVpDDa+IteG3QDOSB
-         4rMobPW4/XUbA7lnSDB4FdUc+b81eWkZnlqOI+PQZccGZCKTLsJs1dlUOacMfCXHoCHl
-         WKYVcIFJyp7zrniAnHMMB9zkGYPjlzAzJtzVutBox9cfKwsqr1phe3WnKtfOdUoL2sOK
-         paTw==
-X-Gm-Message-State: AOAM533FG0KFHApzL8eD33by+zj9/EeXezmOR734nCG/NHn4qw+/fS4E
-        kf0gyEdN3/HxA51gkDHQRQ==
-X-Google-Smtp-Source: ABdhPJwPDjdIGewcxeFramxh57H6SU+K6yPvEAifYkQTl4FsSaib4a/QCfxo70sUCE+/ZCEgwvDkkw==
-X-Received: by 2002:a6b:6a13:: with SMTP id x19mr303517iog.175.1589914468730;
-        Tue, 19 May 2020 11:54:28 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id 7sm176362ion.52.2020.05.19.11.54.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:54:28 -0700 (PDT)
-Received: (nullmailer pid 468859 invoked by uid 1000);
-        Tue, 19 May 2020 18:54:27 -0000
-Date:   Tue, 19 May 2020 12:54:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        linux-arm-kernel@lists.infradead.org, Sekhar Nori <nsekhar@ti.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: soc: ti: add binding for k3
- platforms chipid module
-Message-ID: <20200519185427.GA468784@bogus>
-References: <20200512123449.16517-1-grygorii.strashko@ti.com>
- <20200512123449.16517-2-grygorii.strashko@ti.com>
+        Tue, 19 May 2020 14:57:58 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:35588 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726567AbgESS56 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 14:57:58 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 19 May 2020 11:57:57 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 19 May 2020 11:57:57 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id A91324CCD; Tue, 19 May 2020 11:57:57 -0700 (PDT)
+Date:   Tue, 19 May 2020 11:57:57 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] mfd: Introduce QTI I2C PMIC controller
+Message-ID: <20200519185757.GA13992@codeaurora.org>
+Mail-Followup-To: Lee Jones <lee.jones@linaro.org>,
+        devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+References: <cover.1588115326.git.gurus@codeaurora.org>
+ <5644dea146f8b49a5b827c56392ff916bfb343e9.1588115326.git.gurus@codeaurora.org>
+ <20200429075010.GX3559@dell>
+ <20200501011319.GA28441@codeaurora.org>
+ <20200515104520.GK271301@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512123449.16517-2-grygorii.strashko@ti.com>
+In-Reply-To: <20200515104520.GK271301@dell>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 May 2020 15:34:48 +0300, Grygorii Strashko wrote:
-> Add DT binding for Texas Instruments K3 Multicore SoC platforms chipid
-> module which is represented by CTRLMMR_xxx_JTAGID register and contains
-> information about SoC id and revision.
+On Fri, May 15, 2020 at 11:45:20AM +0100, Lee Jones wrote:
+> On Thu, 30 Apr 2020, Guru Das Srinagesh wrote:
 > 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-> Reviewed-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  .../bindings/soc/ti/k3-socinfo.yaml           | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+> > On Wed, Apr 29, 2020 at 08:50:10AM +0100, Lee Jones wrote:
+> > > On Tue, 28 Apr 2020, Guru Das Srinagesh wrote:
+> > > 
+> > > > The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
+> > > > multi-function PMIC devices which communicate over the I2C bus.  The
+> > > > controller enumerates all child nodes as platform devices, and
+> > > > instantiates a regmap interface for them to communicate over the I2C
+> > > > bus.
+> > > > 
+> > > > The controller also controls interrupts for all of the children platform
+> > > > devices.  The controller handles the summary interrupt by deciphering
+> > > > which peripheral triggered the interrupt, and which of the peripheral
+> > > > interrupts were triggered.  Finally, it calls the interrupt handlers for
+> > > > each of the virtual interrupts that were registered.
+> > > > 
+> > > > Nicholas Troast is the original author of this driver.
+> > > > 
+> > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > > > ---
+> > > >  drivers/mfd/Kconfig         |  11 +
+> > > >  drivers/mfd/Makefile        |   1 +
+> > > >  drivers/mfd/qcom-i2c-pmic.c | 737 ++++++++++++++++++++++++++++++++++++++++++++
+> > > 
+> > > The vast majority of this driver deals with IRQ handling.  Why can't
+> > > this be split out into its own IRQ Chip driver and moved to
+> > > drivers/irqchip?
+> > 
+> > There appear to be quite a few in-tree MFD drivers that register IRQ
+> > controllers, like this driver does:
+> > 
+> > $ grep --exclude-dir=.git -rnE "irq_domain_(add|create).+\(" drivers/mfd | wc -l
+> > 23
+> > 
+> > As a further example, drivers/mfd/stpmic1.c closely resembles this
+> > driver in that it uses both devm_regmap_add_irq_chip() as well as
+> > devm_of_platform_populate().
+> > 
+> > As such, it seems like this driver is in line with some of the
+> > architectural choices that have been accepted in already-merged drivers.
+> > Could you please elaborate on your concerns?
 > 
+> It is true that *basic* IRQ domain support has been added to these
+> drivers in the past.  However, IMHO the support added to this driver
+> goes beyond those realms such that it would justify a driver of its
+> own.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I am exploring an option to see if the regmap-irq APIs may be used in
+this driver, similar to stpmic1.c. Just to let you know, it might be a
+few days before I am able to post my next patchset as I'll have to make
+the necessary changes and test them out first.
+
+Thank you.
+
+Guru Das.
