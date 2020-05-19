@@ -2,149 +2,90 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB27C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 06:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BE8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 06:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA8E92070A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 06:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f4lRrgtU"
+	by mail.kernel.org (Postfix) with ESMTP id 377F1207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 06:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgESGMk (ORCPT
+        id S1726841AbgESGUh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 02:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbgESGMi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 02:12:38 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439EBC061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 23:12:37 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w19so3401481ply.11
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 23:12:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NucwNVkAqqb7Hv4lqQXSBES90B7yxHZZLhQ//c0Ras4=;
-        b=f4lRrgtUvWI0qJ3jX5cXK6OYM5hoLZxi3aJUbDDjAxhDtNaVGOHnPYytvoHQiP5vm5
-         Db72vAc2ERN0BgKyMDcdnogzC1NVXfGqrp9LBTnaIEKE3qqLwuTINoLU0DWfDVbtq3A9
-         9HyFsZmopQ84ovzE1oa/3t7Y56pYcM/AOyf2lS4x7+yBMTrhf7douZGUvnJqwMENy+V2
-         XgsVKBW//XyOQr4p6smXQhFRZi1Cuo7GeLz09Xr+S+H/2haqGPeDdrPewgZXnSMlD0Xo
-         zadd3SGR/SqJs+mcibetxNnHi0uEIpjAZGzqSemmA9+hwGZtFDhr4rb8ZzDGdfhfVKph
-         oKxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NucwNVkAqqb7Hv4lqQXSBES90B7yxHZZLhQ//c0Ras4=;
-        b=jGTvyNxNXQrA/2A0V5DM+yzhreG/0nvZBUE5vYZP3VZLxA3vcka7mRuOUdf99qJR5C
-         Ah4iP7VindOc2JC7RIb90AqQhyJrs66ik1kyeyF6pg61A0Wt7ExGYWTRmzySZ9M4FWX9
-         3m8GvZuJaBJ/rvjt+MKBAqoXqs4j/2IISNb7CmmrBJHiC4BZMTKEVxg213ZOUvj/lhDj
-         3KY80XsQA0gzHKwnfveMsMxOm6QrGdPUeVCBN3Ehyo9L5TRVFd6xpSWJM9y4cw6TFq11
-         F9poL+VnmabZ4Ix7r/SMXan/pPMDviHTXJZFDoPast8M/qdwaqkrvcUWUBuffBuAd2xp
-         AHhA==
-X-Gm-Message-State: AOAM531fTR3mc3Zdjmy156nR4XLmdZkV9ss+BPBh03zJsd1u7YlwKtVy
-        E3ZDQ+u5FXbLT6P9iC95LwGktk1JEQ0=
-X-Google-Smtp-Source: ABdhPJw3/VikrqtOLgds+XntQ5DKyIHUIpkcu4Jk42AWonuOtANw9OWOvvbPlQHYKCVlWlTSX9GdmQ==
-X-Received: by 2002:a17:90a:17ed:: with SMTP id q100mr3089926pja.80.1589868756741;
-        Mon, 18 May 2020 23:12:36 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 135sm10222244pfu.125.2020.05.18.23.12.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 23:12:36 -0700 (PDT)
-Date:   Mon, 18 May 2020 23:11:14 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Eli Riggs <eli@rje.li>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add initial support for Xiaomi
- Redmi Note 8T
-Message-ID: <20200519061114.GC2165@builder.lan>
-References: <20200517115410.3374-1-eli@rje.li>
- <20200517115410.3374-3-eli@rje.li>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517115410.3374-3-eli@rje.li>
+        Tue, 19 May 2020 02:20:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58873 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbgESGUh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 02:20:37 -0400
+IronPort-SDR: B8GVevo2zZ5KICf7e9HMjfqUxmouIW+3DqWbRf/DIpwb1JB7MEhePxcVuI8X+T9mJ8ZP5p1P+r
+ q/tdxlfspjwQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 23:20:36 -0700
+IronPort-SDR: Nf+Du/6M7CmBt2i9fTBEvY+YxJ6xuNV1gd2fVC7ugPPM9iCojGi3YdOe6m5gCKVs5usY8OeLWg
+ iwEQspdsBmVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
+   d="scan'208";a="267779133"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga006.jf.intel.com with ESMTP; 18 May 2020 23:20:33 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v9 0/3] Add Intel ComboPhy driver
+Date:   Tue, 19 May 2020 14:19:18 +0800
+Message-Id: <cover.1589868358.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 17 May 04:54 PDT 2020, Eli Riggs wrote:
+This patch series adds Intel ComboPhy driver, respective yaml schemas
 
-> Adds initial device tree for Xiaomi Redmi Note 8T, codename xiaomi-willow.
-> It uses the sm6125 SoC. Currently only boots into initrd shell over UART.
-> Requires appended DTB with qcom,board-id = <0x22 0x0> and
-> qcom,msm-id = <0x18a 0x10000> to actually boot.
-> 
+Changes on v9:
+Add Acked-By: Vinod Koul <vkoul@kernel.org>
 
-If I read this correctly you need to supply board-id and msm-id in order
-to be able to get this booting?
+Fix compiler warning
+drivers/phy/intel/phy-intel-combo.c:229:6: warning: cb_mode may be used
+uninitialized in this function [-Wmaybe-uninitialized]
+   ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
+   ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/phy/intel/phy-intel-combo.c:204:24: note: cb_mode was declared here
+   enum intel_combo_mode cb_mode;
 
-Even though we don't like them, I would prefer if you just add them in
-the dts file, in this patch.
+Changes on v8:
+  As per PHY Maintainer's request add description in comments for doing
+  register access through register map framework.
 
-> Signed-off-by: Eli Riggs <eli@rje.li>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |  1 +
->  .../boot/dts/qcom/sm6125-xiaomi-willow.dts    | 19 +++++++++++++++++++
->  2 files changed, 20 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index cc103f7020fd6..060aa98200e47 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-willow.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts
-> new file mode 100644
-> index 0000000000000..444b32ccb9d48
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+Changes on v7:
+  As per System control driver maintainer's inputs remove
+    fwnode_to_regmap() definition and use device_node_get_regmap()
+    
+Changes on v6:
+  Rebase patches on the latest maintainer's branch
+  https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
+Dilip Kota (3):
+  dt-bindings: phy: Add PHY_TYPE_XPCS definition
+  dt-bindings: phy: Add YAML schemas for Intel ComboPhy
+  phy: intel: Add driver support for ComboPhy
 
-Please make this GPL/BSD dual license.
+ .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
+ drivers/phy/intel/Kconfig                          |  14 +
+ drivers/phy/intel/Makefile                         |   1 +
+ drivers/phy/intel/phy-intel-combo.c                | 632 +++++++++++++++++++++
+ include/dt-bindings/phy/phy.h                      |   1 +
+ 5 files changed, 749 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+ create mode 100644 drivers/phy/intel/phy-intel-combo.c
 
-Apart from these few remarks your patches looks good, looking forward to
-see more of this platform!
+-- 
+2.11.0
 
-Regards,
-Bjorn
-
-> +// Copyright (c) 2020, Eli Riggs <eli@rje.li>
-> +
-> +/dts-v1/;
-> +
-> +#include "sm6125.dtsi"
-> +
-> +/ {
-> +	model = "Xiaomi Redmi Note 8T";
-> +	compatible = "xiaomi,willow", "qcom,sm6125";
-> +
-> +	aliases {
-> +		serial0 = &qupv3_se4_2uart;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> -- 
-> 2.20.1
-> 
