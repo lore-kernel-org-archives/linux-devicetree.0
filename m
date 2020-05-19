@@ -2,114 +2,113 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65FCC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 05:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE383C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 05:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1E620758
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 05:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C67420709
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 05:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="B2+R53pD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H8Q4t53M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgESFJC (ORCPT
+        id S1726524AbgESFSC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 01:09:02 -0400
-Received: from mail-am6eur05on2057.outbound.protection.outlook.com ([40.107.22.57]:6180
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726272AbgESFJB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 01:09:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LBSzeJPMERKc1JqARQEViZarPnzsUP1pIlnfa2TQ+ou308DCLaqVG5lIRxg6wFaDmYTKrujHzH5dZm9CMqUqHGpQdrbg99Reli/QFQbSRDQmMVmSliFQscM9hoTQNag+xo8AeHBOF2zS7bwAc8DkHxYzHiNwh0sfHALxnjUa5kRcz4/2qx87oi3TgEBjfGdIzDzgu9v6fJmus5rNxZGj/xn+z3F6d/QJqbgIik4AIAzrOvlj0KnSNvnhbX2Sc2aREVu3ZY7+6WKdCAwn3Vunu2NdaH7/JZA2HiNSFuwb2qMEBS63zkQQi4kC++ohFadBv0P685Jcf3PWZUSYCuVifw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91Uc/DfEXaDArSf0XmpGuOK3J/viFCqd3xsfGU8vRpk=;
- b=Ne2O0C/Zk2ApX6fKD/M1Decbgdl+TZJfUk4XjvG2Fzkq4cxusx/vYznOc97As5g/+T4pFEAxRYRY5myqRa0XWsGHdE/oOmUEwaxUj33BxZZn+swFzSM+wxgdL8NlC5siOq8aV6YM3++xyX45CE4DYGucITaVE4OAnfmfREYqyc7nworqPaoVT2sdbMf7PniVYw/aRduWNBM7JcIM6riqiadY58rphIaZ8hC0bwHNVx+W65kI6TJEDyYKqfahjCXYYfeIgglEJ8SGARpQxU/swyVnYkdhrhz9er6IK+4Px47u/i8jdSmsdD8sGe736WvRi7NDVRQalZANWJytHIBOVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91Uc/DfEXaDArSf0XmpGuOK3J/viFCqd3xsfGU8vRpk=;
- b=B2+R53pDmTgyMDhLdBqm3+aHG67x7EXraSjQOhaybf8nmuMziYj3gnMUGIzYsvuf43tjDh91zbP8I1Qz5y6FxkBtRUBqp692wv2fF1uYssb71cylIUqbJPChQx+JvRWPEPjXcmDZPWQsMjl38xNWvyMx4adGBN0/3XKevY2ODEc=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB5031.eurprd04.prod.outlook.com (2603:10a6:20b:f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.31; Tue, 19 May
- 2020 05:08:58 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.034; Tue, 19 May 2020
- 05:08:58 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 1/3] dt-bindings: timer: Convert i.MX GPT to
- json-schema
-Thread-Topic: [PATCH V2 1/3] dt-bindings: timer: Convert i.MX GPT to
- json-schema
-Thread-Index: AQHWLZLAPsM6FoMGIkCRdX41U1i3AKiu29xA
-Date:   Tue, 19 May 2020 05:08:57 +0000
-Message-ID: <AM6PR04MB4966AC2D4664B8A9FE7A205380B90@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589860547-3207-1-git-send-email-Anson.Huang@nxp.com>
- <1589860547-3207-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1589860547-3207-2-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dd0ce018-c9e3-4922-e61a-08d7fbb2bc70
-x-ms-traffictypediagnostic: AM6PR04MB5031:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5031EC23D21BB30D93F77D8180B90@AM6PR04MB5031.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:254;
-x-forefront-prvs: 040866B734
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kyBwzQzeQSstUWFbfkl0Almd7bhURHmkfV1cICnhJsva15ja0jOxkwoXPf18t4zO2SgOQNTWsB5J69CyC/R8ontRfrPv+6VFYEDqBXv76bq7LhSCQDTyUva1D4LK0FehDkslNCoa4nIztnRaqyItzdWVE6r5pENYZVOB5YwK3fA8zIaqLYw5ERI+7iLeVXH81fOtEmuVXkem5k5ejMEcJiNWWXyIhvFZdL0vABIAAGVCsAtoi72L0bHs4W8oJK5cLjouanlEaLAwUUkCuGRcpHlzHvthgahYDNV3uFekrWrNftw4Rd6tpvqq6SpcTF171Ljdz0Iy4N1vlVs8UXpCFOSvMPE3RLAAE+0ORFT6zXD88rI5ODi+o0MeIr3cDkGNpKcqIc0ArzY88bKnvCLz+Fp2jKuhekFpNMX3kKvZ1hS9/TZIa4SNbHkIxzdNdsdYf3R+fFzlB8WpkFd6j1R7uMkYRSOOe0HclO5fOuGXjGo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(396003)(376002)(39860400002)(26005)(316002)(66446008)(64756008)(66556008)(66476007)(66946007)(52536014)(33656002)(8936002)(8676002)(110136005)(2906002)(71200400001)(478600001)(86362001)(7416002)(9686003)(5660300002)(7696005)(4326008)(186003)(55016002)(558084003)(44832011)(6506007)(76116006)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 2IOc59xYbe6FmKTorrXB4MVuD/+TU9sSD9Jf9AKMaTVfgUqkxVZONnHwWAIyXeW5vgL7SCagIO9eR7NZHFBOrwiJA4E5Fe4BIhB4CPRnuWv6HRpGleoUjFY2YV8elpNItl0ihQOdZqn2KdhFtL22VNGwzkwA+q+2bf8tCBKs87VRyQmGU0Jr07Rxk3BweatcWh7qi6yh/QxocU1Z689P2bbSshdJ0MhHP1/IRRSwulOhFr5ogT2T2IY+gbqyw/fcGSXVTt050a4Gcy73mgXoxUDXcO1HCHvirQSJgzWQNmv3crZbhM03OpNKirznCoeUV8s9UONHXe9onxTxUPGazG85FIxVnltyXnAGGIuOctQJ6qbGYfCgMRCK9MkVmeFrXCq73AHUCscewYSWdQEmtaNq2NP4DRsmlrM+J/Cm2vATsuWE/zQ9HXg7l2r/C2PzTRjlPQfDaYBwPSzBfYF+RQcaobEb1cMc4+BdQ0KaUmSw3weI2xD38CXDYdZuysey
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 19 May 2020 01:18:02 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39422 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgESFSB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 01:18:01 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hu3w128117;
+        Tue, 19 May 2020 00:17:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589865476;
+        bh=d/XYFqVdSGUT+50/eTEWr58MI/LZrlOnTqNemlIfRzk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=H8Q4t53Mkf3ONinqGeBDmIA3DgyyKj+4kwch9eqJotd8cnRfMjo1smdtpWEIFJLAv
+         sDFEoppkxzEZDP9fo3gFsP9Ob85EmJHkBMQRqVmtxchh7zGQTIBHEuAumkA9YJiG2V
+         5zkvQHgzDSYI6KMVlGFr9I+WTjsAlslhK7YTgTzs=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hu7F049091;
+        Tue, 19 May 2020 00:17:56 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 00:17:55 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 00:17:55 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hql3092372;
+        Tue, 19 May 2020 00:17:53 -0500
+Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
+To:     Dilip Kota <eswara.kota@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh@kernel.org>, <andriy.shevchenko@intel.com>,
+        <cheol.yong.kim@intel.com>, <chuanhua.lei@linux.intel.com>,
+        <qi-ming.wu@intel.com>, <yixin.zhu@intel.com>
+References: <cover.1589530082.git.eswara.kota@linux.intel.com>
+ <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
+ <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <18a8da3f-4fdf-3da6-2023-c5c66176475d@ti.com>
+Date:   Tue, 19 May 2020 10:47:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd0ce018-c9e3-4922-e61a-08d7fbb2bc70
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2020 05:08:57.7722
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PqEl9lA1NXkU10o0JJeozsZh6Ns2KGANqq/kYzKfjTIUoxxRem4SroqGTFxuTIt0isUVmRdw3x3kdy8e/tYUdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5031
+In-Reply-To: <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVHVlc2Rh
-eSwgTWF5IDE5LCAyMDIwIDExOjU2IEFNDQo+IA0KPiBDb252ZXJ0IHRoZSBpLk1YIEdQVCBiaW5k
-aW5nIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNpbmcganNvbi1zY2hlbWEuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6
-IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQoNClJlZ2FyZHMNCkFpc2hlbmcN
-Cg==
+Dilip,
+
+On 5/19/2020 9:26 AM, Dilip Kota wrote:
+> 
+> On 5/18/2020 9:49 PM, Kishon Vijay Abraham I wrote:
+>> Dilip,
+>>
+>> On 5/15/2020 1:43 PM, Dilip Kota wrote:
+>>> This patch series adds Intel ComboPhy driver, respective yaml schemas
+>>>
+>>> Changes on v8:
+>>>    As per PHY Maintainer's request add description in comments for doing
+>>>    register access through register map framework.
+>>>
+>>> Changes on v7:
+>>>    As per System control driver maintainer's inputs remove
+>>>      fwnode_to_regmap() definition and use device_node_get_regmap()
+>> Can you fix this warning and resend the patch?
+>> drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
+>> uninitialized in this function [-Wmaybe-uninitialized]
+>>    ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
+>>    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
+>>    enum intel_combo_mode cb_mode;
+>>                          ^~~~~~~
+> I noticed this warning while preparing the patch.
+> It sounds like false warning because:
+> 1.) "cb_mode" is initialized in the switch case based on the "mode =
+> cbphy->phy_mode;"
+> 2.) cbphy->phy_mode is initialized during the probe in
+> "intel_cbphy_fwnode_parse()" with one of the 3 values.
+> PHY_PCIE_MODE, PHY_SATA_MODE, PHY_XPCS_MODE.
+> 3.) There is no chance of "cbphy->phy_mode" having different value.
+> 4.) And "cb_mode" will be initialized according to the "mode = cbphy->phy_mode;"
+> 5.) Hence, there is no chance of "cb_mode" getting accessed uninitialized.
+
+Let's try to keep the compiler happy. Please fix this warning.
+
+Thanks
+Kishon
