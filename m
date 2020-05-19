@@ -2,147 +2,105 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC15AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 00:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E671FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 00:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F3C2072C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 00:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9E720578
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 00:54:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbM0FV51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgESAmD (ORCPT
+        id S1726494AbgESAyJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 20:42:03 -0400
-Received: from regular1.263xmail.com ([211.150.70.202]:36314 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgESAmC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 20:42:02 -0400
-X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 May 2020 20:42:02 EDT
-Received: from localhost (unknown [192.168.167.69])
-        by regular1.263xmail.com (Postfix) with ESMTP id 444A5321;
-        Tue, 19 May 2020 08:34:23 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.21.179] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P27331T140437578839808S1589848461574244_;
-        Tue, 19 May 2020 08:34:22 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <33669f1ebadf44b2994914d3681cde90>
-X-RL-SENDER: wxt@rock-chips.com
-X-SENDER: wxt@rock-chips.com
-X-LOGIN-NAME: wxt@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: rk3399: fix pd_tcpc0 and
- pd_tcpc1 node position
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Johan Jonker <jbx6244@gmail.com>, kever.yang@rock-chips.com
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200428203003.3318-1-jbx6244@gmail.com>
- <20200428203003.3318-2-jbx6244@gmail.com> <2978296.PvbIKR7951@diego>
-From:   Caesar Wang <wxt@rock-chips.com>
-Message-ID: <243ee54a-2fb8-86e3-0018-c069147a21c5@rock-chips.com>
-Date:   Tue, 19 May 2020 08:34:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 20:54:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbgESAyJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 20:54:09 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0D6CC061A0C;
+        Mon, 18 May 2020 17:54:07 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id o67so7149762ila.0;
+        Mon, 18 May 2020 17:54:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dnlqiv3s9r+x7AGOyXDQ7LCMC4713kFG+83RL+Dc+6E=;
+        b=XbM0FV51uwjGuwCvfPJ3DtOjj761r2uSKGvL8CQsQEiNIpIeVtHyinNTVL+R5yOr5H
+         3Wf+6utEDu4WuO85gmBKOquLvBXBXZfvJomKt4W45+5J8grRJvo4gBaqCu6Jm3BLskTz
+         sJYZGobiqz4KwPxrGfk8FqIEar/iuTozpPDNRlpb9SQkq3vxm1z2xM/RexOSEoakc1gJ
+         ZkyVqYIera9PQubjhF3XMXr6PLDeEXi/rDbbCoWvr1Wd0Brvb1wiCvciyIRfXS2vVmIN
+         V+QIrj894yWOkex1o9y/WFPIbeWbLAvh4d3RFgEA3XkYn77OnLClN0rvBZq8RH+HCFm7
+         ijmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dnlqiv3s9r+x7AGOyXDQ7LCMC4713kFG+83RL+Dc+6E=;
+        b=gRaG1HLtYH1mqhzORpUTNPI+Y8J8tStLwL5+w/8pMq4MFmB1QuqJYQmHqwVWEE27xa
+         JCRfxK9DCSFQadUivLpHNAUAnix6ZFNjMZmDKUOPRndMeSnXVIu8MZ59mbC4F+XiNsuJ
+         VFFk+mS0xf1qju8jxs0UOfWnq5qpW4aKNdzd0QFp5JBWh5jp1EDs5y+eDdlu7MFN2wtE
+         v+HHLyKAqCmWvvhsmcm1shrvaJjF3Sa8l9pjBUwV+udT39UFSDhu64esWooZjsoI5RJ/
+         A9U8YLnzJphxLEg1UtYALCDcM00vd4LYNDSvjPFDEepfuCGW4W99YuAqEDb/ItMJcx5p
+         M+6g==
+X-Gm-Message-State: AOAM530yLRzoYxmyevfQ4SxTX8kJ9Etfi9/qoiS4E0StUwmy7c3F8mCV
+        C3TJN5Ztqqoahf42ziCtiGU4PnIiXcy6J1a1uww=
+X-Google-Smtp-Source: ABdhPJw+LVAblyqh5WEGkNus4/r02SgA3wpg9ey4+8hSP/xiyYYVwyAG0ahKnzbyqCdSipzburJirP+tAG5rdObJwfA=
+X-Received: by 2002:a92:d40a:: with SMTP id q10mr19896762ilm.87.1589849645488;
+ Mon, 18 May 2020 17:54:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2978296.PvbIKR7951@diego>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <CABb+yY1wJMzakpz0h6ZxAh4Z3OB718f+Wq3RP0R4NZ_U=vRMkw@mail.gmail.com> <20200518073514.tjodf6qxg3wjzyb4@vireshk-i7>
+In-Reply-To: <20200518073514.tjodf6qxg3wjzyb4@vireshk-i7>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Mon, 18 May 2020 19:53:54 -0500
+Message-ID: <CABb+yY0vihfQSi=067AUNZd8sHACJ_4CKvFvsoCfweVuL=RD0g@mail.gmail.com>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-ÔÚ 2020/5/19 ÉÏÎç6:29, Heiko St¨¹bner Ð´µÀ:
-> Hi Kever, Caesar,
+On Mon, May 18, 2020 at 2:42 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> could you double check where the type-c power-domains are located
-> in the power-tree, as Caesar did add them under pd_vio back in 2016.
-
-Johan's patch is correct, the pd_tcpc0 and pd_tcpc1 are grouped by VDD_LOGIC.
-I have a passed test for pd_vio without pd_tcpc*.
-
+> On 15-05-20, 11:46, Jassi Brar wrote:
+> > As I asked you yesterday over the call, it may help if you could share
+> > some numbers to back up the doomsday scenario.
 >
-> Thanks
-> Heiko
+> Yes, I have already asked Sudeep to get some numbers for this. He will
+> get back to us.
 >
-> Am Dienstag, 28. April 2020, 22:30:03 CEST schrieb Johan Jonker:
->> The pd_tcpc0 and pd_tcpc1 nodes are currently a sub node of pd_vio.
->> In the rk3399 TRM figure of the 'Power Domain Partition' and in the
->> table of 'Power Domain and Voltage Domain Summary' these power domains
->> are positioned directly under VD_LOGIC, so fix that in 'rk3399.dtsi'.
->>
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Thanks, current bottleneck numbers and the patch/changes to improve
+that, would help.
 
-
-Reviewed-by: Caesar Wang <wxt@rock-chips.com>
-
-Thanks,
-
--Caesar
-
->> ---
->>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 20 ++++++++++----------
->>   1 file changed, 10 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> index 37279db53..a4dc1bf2e 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -1056,6 +1056,16 @@
->>   				clocks = <&cru HCLK_SDIO>;
->>   				pm_qos = <&qos_sdioaudio>;
->>   			};
->> +			pd_tcpc0@RK3399_PD_TCPD0 {
->> +				reg = <RK3399_PD_TCPD0>;
->> +				clocks = <&cru SCLK_UPHY0_TCPDCORE>,
->> +					 <&cru SCLK_UPHY0_TCPDPHY_REF>;
->> +			};
->> +			pd_tcpc1@RK3399_PD_TCPD1 {
->> +				reg = <RK3399_PD_TCPD1>;
->> +				clocks = <&cru SCLK_UPHY1_TCPDCORE>,
->> +					 <&cru SCLK_UPHY1_TCPDPHY_REF>;
->> +			};
->>   			pd_usb3@RK3399_PD_USB3 {
->>   				reg = <RK3399_PD_USB3>;
->>   				clocks = <&cru ACLK_USB3>;
->> @@ -1088,16 +1098,6 @@
->>   					pm_qos = <&qos_isp1_m0>,
->>   						 <&qos_isp1_m1>;
->>   				};
->> -				pd_tcpc0@RK3399_PD_TCPD0 {
->> -					reg = <RK3399_PD_TCPD0>;
->> -					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
->> -						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
->> -				};
->> -				pd_tcpc1@RK3399_PD_TCPD1 {
->> -					reg = <RK3399_PD_TCPD1>;
->> -					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
->> -						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
->> -				};
->>   				pd_vo@RK3399_PD_VO {
->>   					reg = <RK3399_PD_VO>;
->>   					#address-cells = <1>;
->>
+> > > - With the current approach it isn't possible to assign different bits
+> > >   (or doorbell numbers) to clients from DT and the only way of doing
+> > >   that without adding new bindings is by extending #mbox-cells to accept
+> > >   a value of 2 as done in this patch.
+> > >
+> > I am afraid you are confused. You can use bit/doorbell-6 by passing
+> > 0x40 to mhu as the data to send.
 >
+> That's how the code will do it, right I agree. What I was asking was
+> the way this information is passed from DT.
 >
->
->
->
+That is a client/protocol property and has nothing to do with the
+controller dt node.
 
-
+cheers!
