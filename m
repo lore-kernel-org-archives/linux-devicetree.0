@@ -2,129 +2,103 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4BDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33790C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC38207C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1048B207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 10:21:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j92WI0OI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Sc4kpxm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgESKT5 (ORCPT
+        id S1728612AbgESKVu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 06:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgESKTz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 06:19:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3747C061A0C;
-        Tue, 19 May 2020 03:19:54 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y3so15284608wrt.1;
-        Tue, 19 May 2020 03:19:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pnjDftxxSSPg8a99O3CMzTvnM8zCPLUpID8zm/35UjQ=;
-        b=j92WI0OIbflFRPQPu3EVYEQCvUEHlpg8TNKie8Beddr2IZAmB12I4LVEPNspm91VhN
-         JGjXQtCh/T9GV70oOyMtjSPW0EupYoofuknbthtxs3AQ+wyZAInAArOUkaLuS/XfEdVs
-         cK3coxk8E4uQjdJgipJRssjbq9EiOsN/sYI98xSiOefKyCmr0J/u387xBUphmoHMbkkl
-         VUi/SfYUYd/uRah0Zu9WgsbFLNd+e8tEdu4siwlc+cTMCd5eQ4R3IwkiCSEm+aC6ygB4
-         t2z6egwiRYZ5V5uGKfpyZLY+kratcqS/UBWtS0MdLEKm/UAFvNVZZILxdZK5tDE+9ijZ
-         FMpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pnjDftxxSSPg8a99O3CMzTvnM8zCPLUpID8zm/35UjQ=;
-        b=n+jTHeuBQVIfclbKSmlpZS0Mmmm1lPvYsoEnjVsLCXDgETq+EPj3OqvgfX5Sgg1Khg
-         f0onkM9cTtF6drc0xwOFHONBBAsdE3wWCYATPe4R7PO/GWon8668odYZRKEGszLcCZaj
-         dF6F/sV68so8Wt9arh6cNCZxEBzo1ohaCsa5W+clTyRzajCIByByU0gQj6iCht9jINl4
-         N4kZpv8Fx1HJIDLl1nAy0+1v3FJ+UDLP0jRhskBqh1ThmWfgeLXV7Yt1WojXOUuCUX0l
-         HqfQ0/lVc7BCcKJDkeJzY06Si+I8/ocLIGukhdwiZrhyR8bVqRMwmVtJNzdmMJzIRN9T
-         hK6A==
-X-Gm-Message-State: AOAM530jFtIRWvYcjcdmudYTOp/Fia8oXhSr8XtfSCZ1Q0bUWajK67TI
-        s8okAJ9VeyZ8K2q30wjJK1g=
-X-Google-Smtp-Source: ABdhPJwAAtM0HgwUVFHhrsukc4a3ep+2NwtT5kMvoesLWOhh1z3TGoe3Ra/t6CXKylk7qCMmjyUatg==
-X-Received: by 2002:adf:db52:: with SMTP id f18mr24759961wrj.258.1589883593425;
-        Tue, 19 May 2020 03:19:53 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id g6sm20265410wrp.75.2020.05.19.03.19.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 03:19:52 -0700 (PDT)
-Date:   Tue, 19 May 2020 12:19:50 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519101950.GC10391@ict14-OptiPlex-980>
-References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
- <20200519092212.GT1634618@smile.fi.intel.com>
- <20200519094835.GB10391@ict14-OptiPlex-980>
- <20200519100815.GA1634618@smile.fi.intel.com>
+        Tue, 19 May 2020 06:21:50 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:33550 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgESKVt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 06:21:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589883709; x=1621419709;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CsKj8Kuj1IbnbFOhV7YM/UtfQRXVj8rj3zOQpiZ/WF4=;
+  b=Sc4kpxm63I+jFnn44wpbA2bT/KANQPHi98ZqjcnCe2ibpwhmBkEpj33b
+   DRStKbO7Ki+Ej8Nelh6LObi06fkvdytc8jHNQ4aI8OvgMir2DDdIji9An
+   /5oJpNRpwFAr6K+r33MUtD56HmTOP/8SINMh28x25pc2EMBG/LkVbRnjd
+   hJRq8vdRgKNHUlH6lrOKxYPnLibEPsDM7SLcxIRW0mAiyZ2chhT8OBmVc
+   3Zc8SLucYPcO/rN4nGt0KK89YqPcNYqK5l6w3nWmQkyj52nKcaBsxJURr
+   +W4LT1IbqNJh/AupNDrNs0Q3CzG3M75Vi31amzL4UFF5Djt/yNqlFP4d2
+   w==;
+IronPort-SDR: 9qhl5kGKNOKLh9hl3xxT6jcZB+uwNX1sM4EFvkXp33o6GksLQoD5emk71KwJOdrx0G0m/SvSIw
+ e3AIIUOTP5YNtoLq8y6wP8Sxey/QxM/Bbb+Dgvmp5CDE8rw+sE7fczmwo8qNgUUgAa8WtIED8j
+ YGYn27lafrgcGmss/Bw/zWwCWYup81AaUtUShKDEgjQvJinGXGxFghcDu2ojxR2ieWscHxNIv6
+ TBX0q1oISeeAi3J9vumVlHrPqwYlY2k38q1OKxCQtBsAxUqQwecBjPOdsB8quqi6GnaIIYLPX/
+ pLM=
+X-IronPort-AV: E=Sophos;i="5.73,409,1583218800"; 
+   d="scan'208";a="73862619"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2020 03:21:48 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 19 May 2020 03:21:48 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 19 May 2020 03:21:49 -0700
+Date:   Tue, 19 May 2020 12:21:47 +0200
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Mark Brown <broonie@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     SoC Team <soc@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
+ IRQ specified in DT
+Message-ID: <20200519102147.GC24801@soft-dev15.microsemi.net>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-2-lars.povlsen@microchip.com>
+ <20200513143753.GI4803@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200519100815.GA1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200513143753.GI4803@sirena.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 01:08:15PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 11:48:35AM +0200, Jonathan Albrieux wrote:
-> > On Tue, May 19, 2020 at 12:22:12PM +0300, Andy Shevchenko wrote:
-> > > On Tue, May 19, 2020 at 08:57:40AM +0200, Jonathan Albrieux wrote:
+On 13/05/20 15:37, Mark Brown wrote:
+> Date: Wed, 13 May 2020 15:37:53 +0100
+> From: Mark Brown <broonie@kernel.org>
+> To: Lars Povlsen <lars.povlsen@microchip.com>
+> Cc: SoC Team <soc@kernel.org>, Microchip Linux Driver Support
+>  <UNGLinuxDriver@microchip.com>, linux-spi@vger.kernel.org,
+>  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+>  linux-arm-kernel@lists.infradead.org, Alexandre Belloni
+>  <alexandre.belloni@bootlin.com>
+> Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
+>  IRQ specified in DT
+> User-Agent: Mutt/1.10.1 (2018-07-13)
 > 
-> ...
+> On Wed, May 13, 2020 at 04:00:22PM +0200, Lars Povlsen wrote:
 > 
-> > > I dunno if it's your first submission to Linux kernel project or other OSS,
-> > > but here you missed a changelog. Rule of thumb is to provide a summary of
-> > > the changes done in the history of the evolution of a patch series.
-> > > 
-> > 
-> > Oh thank you and sorry for not having included it. 
-> > 
-> > Does the changelog needs to be added to all patch files or just on the ones
-> > subject of the changes?
+> > +#define VALID_IRQ(i) (i >= 0)
+> > +
 > 
-> Up to you and maintainer of the corresponding subsystem.
-> 
-> My common sense tells me that
-> 1) if there is a cover letter, just put a joined changelog there
-> 2) otherwise, put changelog in each patch.
-> 
-> I saw in practice all possible variants, i.e.
-> a) cover letter w/o changelog + changelog per patch;
-> b) cover letter w/ changelog + changelog per patch;
-> c) cover letter w/ changelog.
-> 
-> I think any of it is fine in general.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> This isn't something that should be defined by an individual driver, it
+> should be in a generic header.
 
-Thank you for the tips, will work on it!
+Thanks, I will work with Serge on getting this integrated right.
 
-Best regards,
-Jonathan Albrieux
+---Lars
+
+
