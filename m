@@ -2,104 +2,317 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D119CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640D6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B271207E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e/KIP5lJ"
+	by mail.kernel.org (Postfix) with ESMTP id 330AD207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 18:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589913896;
+	bh=e9JHpikGI3MbCHFj6CNjiYebYQlJQF/jCufSSU2/thg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T7nFmo1MQ/5VKLrt2sdar6xjq15MqFKutHXLm4DiWsrD9VuKFpOVTMaTgLUCsKWDw
+	 rBTOq6lVvpQ2Pp58J6GMUyliced38cC0bXZc9DsjhUp7DNt9J5gce3C/dHTJSy1NwB
+	 hY+8aiPs0KZa+LXwHmpoQeLgFyeW079dkiTG6Cek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgESSlx (ORCPT
+        id S1726932AbgESSoT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 14:41:53 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51672 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESSlx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:41:53 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JIfjkO053693;
-        Tue, 19 May 2020 13:41:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589913705;
-        bh=GLDfaTKUNFaww2qeQ7ar1unuT0uERBavkAEEdjsusNs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=e/KIP5lJA1mE1DLItbytQN+Xfjlt3S7jX4LTz+S1WE1By8Q1iWr8cZ2tZAABix1yJ
-         lf8zhJo4/r2lfJ4gVnXFn+1Ti3uoNVKzx0AMY3wLwANtK+49H6AkQ5GK4J3Gs6ZvK3
-         7guPrn9jyd716CHgCGS28zgHZO/pIq+ovoRdUj64=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JIfjjD001933;
-        Tue, 19 May 2020 13:41:45 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 13:41:45 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 13:41:45 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JIfjMK076058;
-        Tue, 19 May 2020 13:41:45 -0500
-Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
-To:     Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200519141813.28167-1-dmurphy@ti.com>
- <20200519141813.28167-3-dmurphy@ti.com>
- <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200519182916.GM624248@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c45bae32-d26f-cbe5-626b-2afae4a557b3@ti.com>
-Date:   Tue, 19 May 2020 13:41:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 14:44:19 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33351 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgESSoS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 14:44:18 -0400
+Received: by mail-io1-f67.google.com with SMTP id k18so325628ion.0;
+        Tue, 19 May 2020 11:44:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oKuBz8CT4YNMj4ZnHpQjCUGYGAJGXHvYzlhr9H8ejRA=;
+        b=VvKApy1g052cmGUkI8jjuHcNVTEiReCnlEQBMOlbxZk3x5ShNDMWJJJ+GLSYd6ixMB
+         JkCwv0buwn4q6rek2ia2urmDVlmTwZ1Wd9YiHXl+RBxf4/v7VfEr+nMg9KdV7OpX5IMJ
+         TsoJi/Txm53DQd4Ab1s/FciAgPMS6AIxccFeqWusfea6Lwz2VoiKD68wNHo+v4fshnFA
+         ixG9t20OODD6so9N4byYE9+Canj3pTQd1tF/Ci2Qv6xn6hNhsfVfjC/meC7SQQGdEQDz
+         lTQQO19D94kz5bCEVhZDsbRmyG4ESg9Do07+GFMG7lNzv/b2aJe2DV4EUb2rkPCFFj0C
+         rujQ==
+X-Gm-Message-State: AOAM533yQl4vCTbOX6aVJPZ4WPHDepnwW8nc2gbJwhCex0TMCau3wtwm
+        E2PAU8/ZbFBxOvhEExnsgQ==
+X-Google-Smtp-Source: ABdhPJw2lGHq+eIu05e783dq35VMFsu2OhQXKoEWACYt2JqvIlpVB8GFIMm53lfTjTenTunwatMR+A==
+X-Received: by 2002:a05:6638:44e:: with SMTP id r14mr1046656jap.53.1589913857137;
+        Tue, 19 May 2020 11:44:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k16sm182001iog.14.2020.05.19.11.44.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 11:44:16 -0700 (PDT)
+Received: (nullmailer pid 452653 invoked by uid 1000);
+        Tue, 19 May 2020 18:44:15 -0000
+Date:   Tue, 19 May 2020 12:44:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        vigneshr@ti.com, broonie@kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v1] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+Message-ID: <20200519184415.GA441457@bogus>
+References: <20200512004919.40685-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200519182916.GM624248@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512004919.40685-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Andrew
+On Tue, May 12, 2020 at 08:49:19AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add dt-bindings documentation for Cadence-QSPI controller to support
+> spi based flash memories.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
+>  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
+>  2 files changed, 127 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> deleted file mode 100644
+> index 945be7d5b236..000000000000
+> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> +++ /dev/null
+> @@ -1,67 +0,0 @@
+> -* Cadence Quad SPI controller
+> -
+> -Required properties:
+> -- compatible : should be one of the following:
+> -	Generic default - "cdns,qspi-nor".
+> -	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+> -	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+> -- reg : Contains two entries, each of which is a tuple consisting of a
+> -	physical address and length. The first entry is the address and
+> -	length of the controller register set. The second entry is the
+> -	address and length of the QSPI Controller data area.
+> -- interrupts : Unit interrupt specifier for the controller interrupt.
+> -- clocks : phandle to the Quad SPI clock.
+> -- cdns,fifo-depth : Size of the data FIFO in words.
+> -- cdns,fifo-width : Bus width of the data FIFO in bytes.
+> -- cdns,trigger-address : 32-bit indirect AHB trigger address.
+> -
+> -Optional properties:
+> -- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
+> -- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
+> -  the read data rather than the QSPI clock. Make sure that QSPI return
+> -  clock is populated on the board before using this property.
+> -
+> -Optional subnodes:
+> -Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
+> -custom properties:
+> -- cdns,read-delay : Delay for read capture logic, in clock cycles
+> -- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
+> -                  mode chip select outputs are de-asserted between
+> -		  transactions.
+> -- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
+> -                  de-activated and the activation of another.
+> -- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
+> -                  transaction and deasserting the device chip select
+> -		  (qspi_n_ss_out).
+> -- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+> -                  and first bit transfer.
+> -- resets	: Must contain an entry for each entry in reset-names.
+> -		  See ../reset/reset.txt for details.
+> -- reset-names	: Must include either "qspi" and/or "qspi-ocp".
+> -
+> -Example:
+> -
+> -	qspi: spi@ff705000 {
+> -		compatible = "cdns,qspi-nor";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		reg = <0xff705000 0x1000>,
+> -		      <0xffa00000 0x1000>;
+> -		interrupts = <0 151 4>;
+> -		clocks = <&qspi_clk>;
+> -		cdns,is-decoded-cs;
+> -		cdns,fifo-depth = <128>;
+> -		cdns,fifo-width = <4>;
+> -		cdns,trigger-address = <0x00000000>;
+> -		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
+> -		reset-names = "qspi", "qspi-ocp";
+> -
+> -		flash0: n25q00@0 {
+> -			...
+> -			cdns,read-delay = <4>;
+> -			cdns,tshsl-ns = <50>;
+> -			cdns,tsd2d-ns = <50>;
+> -			cdns,tchsh-ns = <4>;
+> -			cdns,tslch-ns = <4>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> new file mode 100644
+> index 000000000000..28112b38e6a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> @@ -0,0 +1,127 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence QSPI Flash Controller support
+> +
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
+> +
+> +description: |
+> +  Binding Documentation for Cadence QSPI controller,This controller is
+> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
+> +  has been tested On Intel's LGM SoC.
+> +
+> +properties:
+> +  compatible:
+> +     enum:
+> +       - cdns,qspi-nor
+> +       - ti,k2g-qspi
+> +       - ti,am654-ospi
+> +       - intel,lgm-qspi
+> +
+> +  reg:
+> +    maxItems: 2
 
-On 5/19/20 1:29 PM, Andrew Lunn wrote:
-> On Tue, May 19, 2020 at 09:58:18AM -0700, Jakub Kicinski wrote:
->> On Tue, 19 May 2020 09:18:11 -0500 Dan Murphy wrote:
->>> If the op-mode for the device is not set in the device tree then set
->>> the strapped op-mode and store it for later configuration.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ../drivers/net/phy/dp83869.c: In function0 dp83869_set_strapped_mode:
->> ../drivers/net/phy/dp83869.c:171:10: warning: comparison is always false due to limited range of data type [-Wtype-limits]
->>    171 |  if (val < 0)
->>        |          ^
-> Hi Jakub
->
-> This happens a lot with PHY drivers. The register being read is a u16,
-> so that is what people use.
+Need to define what each entry is.
 
-Yes this is what happened but phy_read_mmd returns an int so the 
-declaration of val should be an int.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  cdns,fifo-depth:
+> +    description:
+> +     Depth of hardware FIFOs.
 
-I will update that in v2
+...FIFO in words.
 
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +      - enum: [ 128, 256 ]
+> +      - default: 128
+> +
+> +  cdns,fifo-width:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      4 byte bus width of the data FIFO in bytes.
 
-> Is this now a standard GCC warning? Or have you turned on extra
-> checking?
-I still was not able to reproduce this warning with gcc-9.2.  I would 
-like to know the same
+Constraints? Perhaps:
 
+multipleOf: 4
 
-Dan
+if an enum doesn't work here.
 
+> +
+> +  cdns,trigger-address:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      32-bit indirect AHB trigger address.
+> +
+> +  cdns,rclk-en:
+> +    type: boolean
+> +    description: |
+> +      Flag to indicate that QSPI return clock is used to latch the read data
+> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
+> +      on the board before using this property.
+> +
+> +# subnode's properties
+> +patternProperties:
+> +  "^.*@[0-9a-fa-f]+$":
+
+'a-f' is twice. What's the max number of chip selects? If less than 10, 
+then '@[0-9]$' is enough. '^.*' can be dropped too.
+
+> +    type: object
+> +    description:
+> +      flash device uses the subnodes below defined properties.
+> +
+> +  cdns,read-delay:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Delay for read capture logic, in clock cycles.
+> +
+> +  cdns,tshsl-ns:
+> +    description: |
+> +      Delay in nanoseconds for the length that the master mode chip select
+> +      outputs are de-asserted between transactions.
+> +
+> +  cdns,tsd2d-ns:
+> +    description: |
+> +      Delay in nanoseconds between one chip select being de-activated
+> +      and the activation of another.
+> +
+> +  cdns,tchsh-ns:
+> +    description: |
+> +      Delay in nanoseconds between last bit of current transaction and
+> +      deasserting the device chip select (qspi_n_ss_out).
+> +
+> +  cdns,tslch-ns:
+> +    description: |
+> +      Delay in nanoseconds between setting qspi_n_ss_out low and
+> +      first bit transfer.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - cdns,fifo-depth
+> +  - cdns,fifo-width
+> +  - cdns,trigger-address
+> +
+> +examples:
+> +  - |
+> +    spi@ff705000 {
+> +          compatible = "cdns,qspi-nor";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          reg = <0xff705000 0x1000>,
+> +                <0xffa00000 0x1000>;
+
+Seems kind of small for a data area if this is like most SPI flash 
+controllers.
+
+> +          interrupts = <0 151 4>;
+> +          clocks = <&qspi_clk>;
+> +          cdns,fifo-depth = <128>;
+> +          cdns,fifo-width = <4>;
+> +          cdns,trigger-address = <0x00000000>;
+> +
+> +          flash@0 {
+> +              compatible = "jedec,spi-nor";
+> +              reg = <0x0>;
+> +              cdns,read-delay = <4>;
+> +              cdns,tshsl-ns = <50>;
+> +              cdns,tsd2d-ns = <50>;
+> +              cdns,tchsh-ns = <4>;
+> +              cdns,tslch-ns = <4>;
+> +          };
+> +    };
+> +
+> -- 
+> 2.11.0
+> 
