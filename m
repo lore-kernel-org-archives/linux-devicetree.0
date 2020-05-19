@@ -2,177 +2,110 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A70C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159E4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B618207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B4320674
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:56:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZIhbg0Ed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgESR4E (ORCPT
+        id S1727045AbgESR4w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 13:56:04 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2227 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726059AbgESR4E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 13:56:04 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id D3A42D0D0FE715D87CBA;
-        Tue, 19 May 2020 18:56:02 +0100 (IST)
-Received: from localhost (10.47.86.149) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 19 May
- 2020 18:56:02 +0100
-Date:   Tue, 19 May 2020 18:55:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 3/4] iio: imu: bmi160: added regulator support
-Message-ID: <20200519185535.00003cb7@Huawei.com>
-In-Reply-To: <20200519075111.6356-4-jonathan.albrieux@gmail.com>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
-        <20200519075111.6356-4-jonathan.albrieux@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 19 May 2020 13:56:52 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53706 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgESR4v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 13:56:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JHuj47126716;
+        Tue, 19 May 2020 12:56:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589911005;
+        bh=mZncJCwJdkNq+GLu4yjejDCJIhmYL6I8ymoASj1tNtM=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=ZIhbg0EdUOYCvXcHuoJFXS8/tTki84yCTmmFgfpWz3UPijQ/PfbufhFTcicDCwyy5
+         YWUQILT9xlmHVs0gcvbVuqGrjCd+G4YRuKHfnWAKyU+UYRaTwt+sZapp/l3kw3YfXv
+         RgXz5ARUiCHqNHRdlJtwW/Y8b/6xmez0GLzX5T0I=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JHujYd072096;
+        Tue, 19 May 2020 12:56:45 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 12:56:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 12:56:45 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JHuj3m119856;
+        Tue, 19 May 2020 12:56:45 -0500
+Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200519141813.28167-1-dmurphy@ti.com>
+ <20200519141813.28167-3-dmurphy@ti.com>
+ <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <65e1b5ca-680e-f82d-cde4-3d5a3eb40884@ti.com>
+Message-ID: <459afc6f-a519-43f5-aeb2-e28c362237b3@ti.com>
+Date:   Tue, 19 May 2020 12:56:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.86.149]
-X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+In-Reply-To: <65e1b5ca-680e-f82d-cde4-3d5a3eb40884@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 19 May 2020 09:50:59 +0200
-Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+Jakub
 
-> v2: fixed missing description
+On 5/19/20 12:40 PM, Dan Murphy wrote:
+> Jakub
+>
+> On 5/19/20 11:58 AM, Jakub Kicinski wrote:
+>> On Tue, 19 May 2020 09:18:11 -0500 Dan Murphy wrote:
+>>> If the op-mode for the device is not set in the device tree then set
+>>> the strapped op-mode and store it for later configuration.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ../drivers/net/phy/dp83869.c: In function0 dp83869_set_strapped_mode:
+>> ../drivers/net/phy/dp83869.c:171:10: warning: comparison is always 
+>> false due to limited range of data type [-Wtype-limits]
+>>    171 |  if (val < 0)
+>>        |          ^
+>
+> This looks to be a false positive.
+>
+> phy_read_mmd will return an errno or a value from 0->15
+>
+> So if errno is returned then this will be true.
+>
+> Unless I have to do IS_ERR.
+>
+> I did not get that warning.  But I am using 9.2-gcc.
+>
+> What compiler are you using?
+>
+I see what the issue is val needs to be an int not a u16
 
-Don't put change log here....
-> 
-> Add vdd-supply and vddio-supply support. Without this support vdd and vddio
-> should be set to always-on in device tree
+I will fix it
 
-Kind of the opposite.  If they are always on we don't have to provide them
-in the device tree.
-
-A few trivial things inline.
-
-> 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
-
-Change log goes here so we don't end up keeping it in the git log.
-
->  drivers/iio/imu/bmi160/bmi160.h      |  2 ++
->  drivers/iio/imu/bmi160/bmi160_core.c | 27 ++++++++++++++++++++++++++-
->  2 files changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-> index 621f5309d735..923c3b274fde 100644
-> --- a/drivers/iio/imu/bmi160/bmi160.h
-> +++ b/drivers/iio/imu/bmi160/bmi160.h
-> @@ -3,10 +3,12 @@
->  #define BMI160_H_
->  
->  #include <linux/iio/iio.h>
-> +#include <linux/regulator/consumer.h>
->  
->  struct bmi160_data {
->  	struct regmap *regmap;
->  	struct iio_trigger *trig;
-> +	struct regulator_bulk_data supplies[2];
->  };
->  
->  extern const struct regmap_config bmi160_regmap_config;
-> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-> index 6af65d6f1d28..9bbe0d8e6720 100644
-> --- a/drivers/iio/imu/bmi160/bmi160_core.c
-> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
-> @@ -15,6 +15,7 @@
->  #include <linux/delay.h>
->  #include <linux/irq.h>
->  #include <linux/of_irq.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include <linux/iio/iio.h>
->  #include <linux/iio/triggered_buffer.h>
-> @@ -709,6 +710,12 @@ static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
->  	unsigned int val;
->  	struct device *dev = regmap_get_device(data->regmap);
->  
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = regmap_write(data->regmap, BMI160_REG_CMD, BMI160_CMD_SOFTRESET);
->  	if (ret)
->  		return ret;
-> @@ -793,9 +800,17 @@ int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type)
->  static void bmi160_chip_uninit(void *data)
->  {
->  	struct bmi160_data *bmi_data = data;
-> +	struct device *dev = regmap_get_device(bmi_data->regmap);
-> +	int ret;
->  
->  	bmi160_set_mode(bmi_data, BMI160_GYRO, false);
->  	bmi160_set_mode(bmi_data, BMI160_ACCEL, false);
-> +
-> +	ret = regulator_bulk_disable(ARRAY_SIZE(bmi_data->supplies),
-> +				     bmi_data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to disable regulators: %d\n", ret);
-> +	}
-No need for brackets around a 1 line if block
-
-	if (ret)
-		dev_err(dev, "failed to disable regulators: %d\n", ret);
-
->  }
->  
->  int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> @@ -815,6 +830,16 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
->  	dev_set_drvdata(dev, indio_dev);
->  	data->regmap = regmap;
->  
-> +	data->supplies[0].supply = "vdd";
-> +	data->supplies[1].supply = "vddio";
-> +	ret = devm_regulator_bulk_get(dev,
-> +				      ARRAY_SIZE(data->supplies),
-> +				      data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = bmi160_chip_init(data, use_spi);
->  	if (ret)
->  		return ret;
-> @@ -853,6 +878,6 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
->  }
->  EXPORT_SYMBOL_GPL(bmi160_core_probe);
->  
-> -MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com");
-> +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com>");
-
-Good fix but shouldn't be in this patch.   Put it a separate patch on it's own.
-
->  MODULE_DESCRIPTION("Bosch BMI160 driver");
->  MODULE_LICENSE("GPL v2");
+Dan
 
 
+> Dan
+>
