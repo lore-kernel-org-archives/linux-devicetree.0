@@ -2,116 +2,84 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB2CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BE6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93CAB207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eedoNQJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 393352075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 17:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgESRQA (ORCPT
+        id S1729210AbgESRUW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 13:16:00 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50204 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgESRP7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 13:15:59 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JHFvlQ117977;
-        Tue, 19 May 2020 12:15:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589908557;
-        bh=u9MuVS5Z4dEpCImA8CLdh3VAMXKG5b1PtenlLbgYx2g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eedoNQJ/IZO+PCGyrR4V9EMeFcv//9WuIGa85xRrnU2sywB5fwYjoanqbE5bJv9Fe
-         5ZkVbdjqr0PV5NCl0+TopWps5TvTyuSEigO338o2blSOnKsEFfQFmSTCmOh/NsyPiv
-         Qg+oPTrZJsRufSQz8Jj/lFqeLByzVAL3HwnmBglM=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JHFv5C028049
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 12:15:57 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 12:15:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 12:15:57 -0500
-Received: from [10.250.43.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JHFujx097330;
-        Tue, 19 May 2020 12:15:57 -0500
-Subject: Re: [PATCH v7 3/3] power: supply: bq25150 introduce the bq25150
-To:     "Andrew F. Davis" <afd@ti.com>, Dan Murphy <dmurphy@ti.com>,
-        <sre@kernel.org>
-CC:     <sspatil@android.com>, <linux-pm@vger.kernel.org>,
-        <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200519141916.28282-1-dmurphy@ti.com>
- <20200519141916.28282-4-dmurphy@ti.com>
- <50b9ca3f-36e8-d13b-672c-5e72b6158869@ti.com>
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Message-ID: <1eaa381f-0c05-8bcf-ce30-96104ddd9080@ti.com>
-Date:   Tue, 19 May 2020 12:15:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 19 May 2020 13:20:22 -0400
+Received: from mailrelay4.webfaction.com ([185.20.51.6]:60504 "EHLO
+        mailrelay4.webfaction.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729197AbgESRUW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 13:20:22 -0400
+X-Greylist: delayed 563 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 May 2020 13:20:22 EDT
+Received: from mailrelay3.webfaction.com (mailrelay3.webfaction.com [207.38.93.110])
+        by mailrelay4.webfaction.com (Postfix) with ESMTPS id AA711A6D79;
+        Tue, 19 May 2020 17:10:54 +0000 (UTC)
+Received: from mailrelay1.webfaction.com (mailrelay1.webfaction.com [207.38.86.46])
+        by mailrelay3.webfaction.com (Postfix) with ESMTPS id DEEE32A5088;
+        Tue, 19 May 2020 17:10:52 +0000 (UTC)
+Received: from smtp.webfaction.com (mail6.webfaction.com [31.170.123.134])
+        by mailrelay1.webfaction.com (Postfix) with ESMTPS id EA76E1A0E3D;
+        Tue, 19 May 2020 17:10:51 +0000 (UTC)
+Received: from jeremy.localnet (host-37-191-188-128.lynet.no [37.191.188.128])
+        by smtp.webfaction.com (Postfix) with ESMTPSA id 810DA60038E8E;
+        Tue, 19 May 2020 17:11:01 +0000 (UTC)
+From:   Paul Boddie <paul@boddie.org.uk>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        devicetree <devicetree@vger.kernel.org>, od@zcrc.me,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 11/12] gpu/drm: Ingenic: Add support for the IPU
+Date:   Tue, 19 May 2020 19:10:32 +0200
+Message-ID: <3220152.ycyENPvHUQ@jeremy>
+User-Agent: KMail/4.14.1 (Linux/3.16.0-10-586; KDE/4.14.2; i686; ; )
+In-Reply-To: <YGYIAQ.7N9YGTBML0143@crapouillou.net>
+References: <20200516215057.392609-1-paul@crapouillou.net> <CACvgo50q=qJXk3nFSCm+S6JHBMxpY0C_HwH8KGB2EAcKwgL0oQ@mail.gmail.com> <YGYIAQ.7N9YGTBML0143@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <50b9ca3f-36e8-d13b-672c-5e72b6158869@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Monday 18. May 2020 13.26.58 Paul Cercueil wrote:
+> >>  
+> >>  @@ -186,13 +186,16 @@ static void
+> >> 
+> >> ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
+> >> 
+> >>          regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
+> >>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16,
+> >>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16);
+> >>  
+> >>  +
+> >>  +       regmap_write(priv->map, JZ_REG_LCD_IPUR, JZ_LCD_IPUR_IPUREN
+> >>  +                    (ht * vpe / 3) << JZ_LCD_IPUR_IPUR_LSB);
+> > 
+> > This hunk also indicates that it may be better to merge the IPU within
+> > the existing driver.
+> 
+> This writes the IPUR register of the CRTC, nothing wrong here.
 
-On 5/19/20 9:46 AM, Andrew F. Davis wrote:
-> On 5/19/20 10:19 AM, Dan Murphy wrote:
->> +static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
->> +{
->> +	int i;
->> +
->> +	if (val > BQ2515X_ILIM_MAX || val < BQ2515X_ILIM_MIN)
->> +		return -EINVAL;
-> Clamp to these limits, not reject. Or better, modify the below loop so
-> it clamps to the highest or lowest value in bq2515x_ilim_lvl_values[],
-> then drop these #defines.
->
->> +
->> +	for (i = 0; i < ARRAY_SIZE(bq2515x_ilim_lvl_values); i++) {
->> +		if (val == bq2515x_ilim_lvl_values[i])
->> +			break;
->> +
->> +		if (val > bq2515x_ilim_lvl_values[i - 1] &&
-> Index out of bounds for the i = 0 case.
->
->> +		    val < bq2515x_ilim_lvl_values[i]) {
->> +			if (val - bq2515x_ilim_lvl_values[i - 1] <
->> +			    bq2515x_ilim_lvl_values[i] - val) {
-> You are still missing the case where the value is closer to the [i]
-> element, you check that it is between [i-1] and [i], but only chose
-> [i-1] when it is closer to that than [i] but equal and greater case is
-> missing.
->
-> Given this sets input current limits, would instead always rounding down
-> be the safer option?
->
-> Andrew
-ACK. I am going to rewrite that altogether.
->
->> +				i = i - 1;
->> +				break;
->> +			}
->> +		}
->> +	}
->> +
->> +	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
->> +}
+Since I noticed it in the above patch details, I think the mask when updating 
+the burst setting in the LCD_CTRL register should - in general - involve 
+multiple bits, since the BST field is 3 bits wide on the JZ4780 and 2 bits 
+wide on earlier products. Just setting BURST_16 (0b10) could potentially 
+enable BURST_32 (0b11) or other field values that are not explicitly defined.
+
+Hope this is useful!
+
+Paul
