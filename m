@@ -2,113 +2,145 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE383C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 05:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD16C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 05:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C67420709
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 05:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990E8207D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 05:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H8Q4t53M"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SZpl8IOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgESFSC (ORCPT
+        id S1726554AbgESFVN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 01:18:02 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39422 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgESFSB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 01:18:01 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hu3w128117;
-        Tue, 19 May 2020 00:17:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589865476;
-        bh=d/XYFqVdSGUT+50/eTEWr58MI/LZrlOnTqNemlIfRzk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=H8Q4t53Mkf3ONinqGeBDmIA3DgyyKj+4kwch9eqJotd8cnRfMjo1smdtpWEIFJLAv
-         sDFEoppkxzEZDP9fo3gFsP9Ob85EmJHkBMQRqVmtxchh7zGQTIBHEuAumkA9YJiG2V
-         5zkvQHgzDSYI6KMVlGFr9I+WTjsAlslhK7YTgTzs=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hu7F049091;
-        Tue, 19 May 2020 00:17:56 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 00:17:55 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 00:17:55 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hql3092372;
-        Tue, 19 May 2020 00:17:53 -0500
-Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
-To:     Dilip Kota <eswara.kota@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh@kernel.org>, <andriy.shevchenko@intel.com>,
-        <cheol.yong.kim@intel.com>, <chuanhua.lei@linux.intel.com>,
-        <qi-ming.wu@intel.com>, <yixin.zhu@intel.com>
-References: <cover.1589530082.git.eswara.kota@linux.intel.com>
- <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
- <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <18a8da3f-4fdf-3da6-2023-c5c66176475d@ti.com>
-Date:   Tue, 19 May 2020 10:47:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 01:21:13 -0400
+Received: from mail-mw2nam10on2083.outbound.protection.outlook.com ([40.107.94.83]:49081
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726323AbgESFVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 01:21:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DKU94xMTss1wLiZUUYq0P4CeLlSgT0A61IuwTNWLdctzljWDwansS2RhCb7TGqOY+a/eWFG7TmYVaYPV/exnwuRTGxBDIc3C4toP1FurpE1rFvIv51YdaByEWBX27nRoTly3iQpkngVGHnsPLOJmLUpx1xfYbqiyZZrINjskGprPX9hgs9H1Ovt1HlsjMH+vdLuqasYRsTq6e5kbwcqVSHJiOCh9AkoYpUl8qjhRWxQFyrvpyo/wM69LQFNpRsTR6SvYJLI23AwNV2ojwovchzUEJIjvuPwIqo1vfC61SYiSeUAFcHKYHL5fXPDhpQA9Eg9Ov1DPtiVKPEQzFfCEnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=13KVFf5T8nHUwFjStjhv+0mDcO2r13mojEv5YQLRWvs=;
+ b=nuoff2NFtD5aI3tUEDXf7BhBPP3gu7ST7zNVxtgOa0n2qZZQf8//6/q1Akiq2EV5vSQcj8XteOqVaztabWS2ENglggcPimBsDRj955gIN7LqtNG7QwWjNYmn8M9rsQBt9NwmfQLmkATSQvQocbpTHADABE2XkfGZNbO2ta2o4zEAApPONTlo+WAAc23pIniL69uTMQIrLlq3OhiGwUGsZsIYaz0Z9ttZkMCT7TPcvULj46wWj23rugbiWk5pyAyEMCz1/xD7+y97+bnYRnt9jmDnJJeQMl+bhwhw6kM9zf6lID1qDjOWzttBIiuEz9MTEcxa9yF9UoGohTFRPRGdBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=13KVFf5T8nHUwFjStjhv+0mDcO2r13mojEv5YQLRWvs=;
+ b=SZpl8IOaEsP0/I1s8fp9y6mBy782WGGNWxedwW/COpreoqH8VLdZZGhHB8gRc3FuDyMAYk8dIjMgK269XJsGixV+Ll/FJw7s1673IgQBLA/KnNCsDHLAcrBYXsblJFVE/qRGp8oujAnk/xsRQothkvo8s7Lq2kXMgSUlRafb5LI=
+Received: from BL0PR02CA0025.namprd02.prod.outlook.com (2603:10b6:207:3c::38)
+ by SN6PR02MB5133.namprd02.prod.outlook.com (2603:10b6:805:68::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
+ 2020 05:21:10 +0000
+Received: from BL2NAM02FT064.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:207:3c:cafe::f0) by BL0PR02CA0025.outlook.office365.com
+ (2603:10b6:207:3c::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend
+ Transport; Tue, 19 May 2020 05:21:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT064.mail.protection.outlook.com (10.152.77.119) with Microsoft SMTP
+ Server id 15.20.3000.19 via Frontend Transport; Tue, 19 May 2020 05:21:09
+ +0000
+Received: from [149.199.38.66] (port=45271 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jaugF-0005TM-Lb; Mon, 18 May 2020 22:20:43 -0700
+Received: from localhost ([127.0.0.1] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jauge-0007gg-Rx; Mon, 18 May 2020 22:21:08 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jauge-0007fZ-A7; Mon, 18 May 2020 22:21:08 -0700
+Subject: Re: [PATCH 3/3] hwmon: (ina2xx) Add support for ina260
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Franz Forstmayr <forstmayr.franz@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20200224232647.29213-1-forstmayr.franz@gmail.com>
+ <20200224232647.29213-3-forstmayr.franz@gmail.com>
+ <a78bbb40-9a0c-8acc-841e-7a51447d4dbc@roeck-us.net>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <bfa786b6-fe62-a5fb-718f-bb9e95b1f051@xilinx.com>
+Date:   Tue, 19 May 2020 07:21:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <a78bbb40-9a0c-8acc-841e-7a51447d4dbc@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(136003)(39860400002)(46966005)(5660300002)(6666004)(26005)(36756003)(82740400003)(47076004)(186003)(2616005)(8936002)(44832011)(31686004)(9786002)(70206006)(70586007)(2906002)(7416002)(356005)(82310400002)(81166007)(316002)(110136005)(54906003)(4326008)(336012)(53546011)(478600001)(8676002)(426003)(31696002)(4744005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3d01f397-ec55-4b62-42e1-08d7fbb47050
+X-MS-TrafficTypeDiagnostic: SN6PR02MB5133:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB51333E47A537DD4645CEEA8BC6B90@SN6PR02MB5133.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 040866B734
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: o8vNgVG5J4Luo6jjcaDgay8MdBDWiCFx6t9KxC70KWR908U5t97ZLyZUhKcPjeJlB0q0jLeSWp17h5e72ZDGM3FwCKGSxihMDq196dQ7N56yr34wrusyxwyu+QWWwWbcjoVD+Zp7fyKnQR3Rx35Fa8M0fLWaLOHsGPsidpmDJwkuFKrvPRtDTb3hFknUHqccRuh0WU6Mk6Z9QmxYQEKFfaFafyEJ7VkY9VpSJw+NCYUguncUowsJDd7JCEIt4C6Zui04vjoNHthMZcg7/mfheAxsNnR9p68viPnW2boH3/T6QA8u/zOCnqEdRcy6903ux+eZXWgwGjsF/uMCJQvPefPySlAngyvtAmO8Q8MUaWXjfVaZq4NLVN2a7IHLdPHGehN7xF/anWzcqMJZ0o4p/AEpeqPoshqL19+phYtNtUfAPQkCT2JIfFmWoDEHMs/2mslRQrEPqeAAFGZROl8Q+QUh1rOFsQo9YSR+YfxMgAc30gNOy65UZI3TucegG+WRT27zDx6EDjUjwwF5JcPhk+HFbqht8p1/OrMoeh8CRBo=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 05:21:09.2967
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d01f397-ec55-4b62-42e1-08d7fbb47050
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5133
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dilip,
-
-On 5/19/2020 9:26 AM, Dilip Kota wrote:
-> 
-> On 5/18/2020 9:49 PM, Kishon Vijay Abraham I wrote:
->> Dilip,
+On 26. 02. 20 3:16, Guenter Roeck wrote:
+> On 2/24/20 3:26 PM, Franz Forstmayr wrote:
+>> Add initial support for INA260 power monitor with integrated shunt.
+>> Registers are different from other INA2xx devices, that's why a small
+>> translation table is used.
 >>
->> On 5/15/2020 1:43 PM, Dilip Kota wrote:
->>> This patch series adds Intel ComboPhy driver, respective yaml schemas
->>>
->>> Changes on v8:
->>>    As per PHY Maintainer's request add description in comments for doing
->>>    register access through register map framework.
->>>
->>> Changes on v7:
->>>    As per System control driver maintainer's inputs remove
->>>      fwnode_to_regmap() definition and use device_node_get_regmap()
->> Can you fix this warning and resend the patch?
->> drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
->> uninitialized in this function [-Wmaybe-uninitialized]
->>    ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
->>    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
->>    enum intel_combo_mode cb_mode;
->>                          ^~~~~~~
-> I noticed this warning while preparing the patch.
-> It sounds like false warning because:
-> 1.) "cb_mode" is initialized in the switch case based on the "mode =
-> cbphy->phy_mode;"
-> 2.) cbphy->phy_mode is initialized during the probe in
-> "intel_cbphy_fwnode_parse()" with one of the 3 values.
-> PHY_PCIE_MODE, PHY_SATA_MODE, PHY_XPCS_MODE.
-> 3.) There is no chance of "cbphy->phy_mode" having different value.
-> 4.) And "cb_mode" will be initialized according to the "mode = cbphy->phy_mode;"
-> 5.) Hence, there is no chance of "cb_mode" getting accessed uninitialized.
+>> Signed-off-by: Franz Forstmayr <forstmayr.franz@gmail.com>
+> 
+> I think the chip is sufficiently different to other chips that a separate
+> driver would make much more sense than adding support to the existing
+> driver.
+> There is no calibration, registers are different, the retry logic is
+> not needed. A new driver could use the with_info API and would be much
+> simpler while at the same time not messing up the existing driver.
 
-Let's try to keep the compiler happy. Please fix this warning.
+Isn't it also better to switch to IIO framework?
+As we discussed in past there are two ina226 drivers. One in hwmon and
+second based on IIO framework (more advance one?) and would be good to
+deprecate hwmon one.
+That's why separate driver is necessary.
 
-Thanks
-Kishon
+Thanks,
+Michal
+
