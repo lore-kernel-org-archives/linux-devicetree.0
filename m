@@ -2,126 +2,205 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02F1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC09C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8094120715
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:41:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F+AEHxuC"
+	by mail.kernel.org (Postfix) with ESMTP id 4607E206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 03:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgESDlC (ORCPT
+        id S1726724AbgESDwQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 May 2020 23:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgESDlB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 May 2020 23:41:01 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A15C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 20:41:00 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id ci21so737585pjb.3
-        for <devicetree@vger.kernel.org>; Mon, 18 May 2020 20:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CjNWuQJ9v0nVBb91ffdU0D6mxktZAQ032o7BcB0bNE4=;
-        b=F+AEHxuCaRGPIloYgy1mhW3Lfe9dOfLHKUZU9PfFM6Q0ED6ra92Z9qv0lsSJKjefzL
-         /G445Rt2MS+je7xFwaI3GdAaNppQpjtT9DZtZL1M+OFv4qHAM7NbdDZvrZQpYy476bzA
-         qFgVBP+l5L3NYSHQLLu/Kv4IkKI1BZeeHoCwRx11PEdPNVemStjkzdTRV4MbtpajRJQH
-         KY/4gQBQfdGL07373QE/k5YwyLOPIzVyqgueoA6pnQwXx8wUe0QKKoI3d8wNLCT+oYQP
-         MEDCH36FGnkOJNXu58mqL3PjD+FQbyE+D2IL6UiNHtKkxvzRDycr43draHRKBAdCtxgx
-         vfvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CjNWuQJ9v0nVBb91ffdU0D6mxktZAQ032o7BcB0bNE4=;
-        b=fEDmt473I/bD0MoowplF/g8/Fncdqgmz0HFOKq2og7d64IEE1UbqcVWWTX8HnPFug0
-         RDRyaEg3cegC8NOSDFNsUT7qt+CDeOliduimiyCGy74vODl965MwbhZ6P0lL0J9glzFj
-         v1iw70L5ntDLmbW32iYowzvHLdpr5QNKG3VH3XVHXMGTQfsT0GCaV14NthirgFxqoyyd
-         0zDYfHMRj8oPRXJND7eK4FV/XhQxoABXVkfPNTWUdmddQCJ7XmZRwFlWw33cVB58ku+g
-         ljOmQlVX5TlR+v9P+r9fJegnlm49XkajFB9ZXpPIh6pwHsEAIqsoy5uHprxncURxhWnO
-         1Kcw==
-X-Gm-Message-State: AOAM533cqZJ3zLnoMTwFDF7xp000uLwZao0EFliWKyKHCxYTLw4g3krw
-        r4RdbD9NtXyJz0+7KK+r6saSPA==
-X-Google-Smtp-Source: ABdhPJy30m1f36llwQe2czJwRgWZ2WYib3wh9j43NkV9xeaRb2PBycPJMqqn/lVk860NFOK6XhPyZQ==
-X-Received: by 2002:a17:90a:1b6c:: with SMTP id q99mr2824172pjq.214.1589859659084;
-        Mon, 18 May 2020 20:40:59 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id g1sm9573943pfo.142.2020.05.18.20.40.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 20:40:57 -0700 (PDT)
-Date:   Tue, 19 May 2020 09:10:55 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200519034055.hfvifqz442yfduhg@vireshk-i7>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200519012927.GT2165@builder.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519012927.GT2165@builder.lan>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 18 May 2020 23:52:16 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58684 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbgESDwP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 May 2020 23:52:15 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E299B200096;
+        Tue, 19 May 2020 05:52:12 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8AE1E20009B;
+        Tue, 19 May 2020 05:52:08 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E1212402B3;
+        Tue, 19 May 2020 11:52:02 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3] dt-bindings: reset: Convert i.MX reset to json-schema
+Date:   Tue, 19 May 2020 11:42:27 +0800
+Message-Id: <1589859747-12926-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18-05-20, 18:29, Bjorn Andersson wrote:
-> On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
-> > This stuff has been doing rounds on the mailing list since several years
-> > now with no agreed conclusion by all the parties. And here is another
-> > attempt to get some feedback from everyone involved to close this once
-> > and for ever. Your comments will very much be appreciated.
-> > 
-> > The ARM MHU is defined here in the TRM [1] for your reference, which
-> > states following:
-> > 
-> > 	"The MHU drives the signal using a 32-bit register, with all 32
-> > 	bits logically ORed together. The MHU provides a set of
-> > 	registers to enable software to set, clear, and check the status
-> > 	of each of the bits of this register independently.  The use of
-> > 	32 bits for each interrupt line enables software to provide more
-> > 	information about the source of the interrupt. For example, each
-> > 	bit of the register can be associated with a type of event that
-> > 	can contribute to raising the interrupt."
-> > 
-> 
-> Does this mean that there are 32 different signals and they are all ORed
-> into the same interrupt line to trigger software action when something
-> happens?
-> 
-> Or does it mean that this register is used to pass multi-bit information
-> and when any such information is passed an interrupt will be triggered?
-> If so, what does that information mean? How is it tied into other Linux
-> drivers/subsystems?
+Convert the i.MX reset binding to DT schema format using json-schema.
 
-I have started to believe the hardware is written badly at this point
-:)
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+Changes since V2:
+	- remove unnecessary compatible item descriptions.
+---
+ .../devicetree/bindings/reset/fsl,imx-src.txt      | 49 -------------
+ .../devicetree/bindings/reset/fsl,imx-src.yaml     | 82 ++++++++++++++++++++++
+ 2 files changed, 82 insertions(+), 49 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
 
-The thing is that the register can be used to send a 32 bit data
-(which the driver already provides), or it can be used by writing
-different bits to the SET register concurrently, without corrupting
-the other bits as writing 0 to a bit has no effect, we have a separate
-CLEAR register for that. And so it says that all the bits are ORed
-together to generate the interrupt, i.e. any bit set will generate an
-interrupt. Which also means that you can't send data 0 with the
-register.
-
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
+deleted file mode 100644
+index 6ed79e6..0000000
+--- a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
++++ /dev/null
+@@ -1,49 +0,0 @@
+-Freescale i.MX System Reset Controller
+-======================================
+-
+-Please also refer to reset.txt in this directory for common reset
+-controller binding usage.
+-
+-Required properties:
+-- compatible: Should be "fsl,<chip>-src"
+-- reg: should be register base and length as documented in the
+-  datasheet
+-- interrupts: Should contain SRC interrupt and CPU WDOG interrupt,
+-  in this order.
+-- #reset-cells: 1, see below
+-
+-example:
+-
+-src: src@20d8000 {
+-        compatible = "fsl,imx6q-src";
+-        reg = <0x020d8000 0x4000>;
+-        interrupts = <0 91 0x04 0 96 0x04>;
+-        #reset-cells = <1>;
+-};
+-
+-Specifying reset lines connected to IP modules
+-==============================================
+-
+-The system reset controller can be used to reset the GPU, VPU,
+-IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
+-nodes should specify the reset line on the SRC in their resets
+-property, containing a phandle to the SRC device node and a
+-RESET_INDEX specifying which module to reset, as described in
+-reset.txt
+-
+-example:
+-
+-        ipu1: ipu@2400000 {
+-                resets = <&src 2>;
+-        };
+-        ipu2: ipu@2800000 {
+-                resets = <&src 4>;
+-        };
+-
+-The following RESET_INDEX values are valid for i.MX5:
+-GPU_RESET     0
+-VPU_RESET     1
+-IPU1_RESET    2
+-OPEN_VG_RESET 3
+-The following additional RESET_INDEX value is valid for i.MX6:
+-IPU2_RESET    4
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
+new file mode 100644
+index 0000000..27c5e34
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/fsl,imx-src.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX System Reset Controller
++
++maintainers:
++  - Philipp Zabel <p.zabel@pengutronix.de>
++
++description: |
++  The system reset controller can be used to reset the GPU, VPU,
++  IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
++  nodes should specify the reset line on the SRC in their resets
++  property, containing a phandle to the SRC device node and a
++  RESET_INDEX specifying which module to reset, as described in
++  reset.txt
++
++  The following RESET_INDEX values are valid for i.MX5:
++    GPU_RESET     0
++    VPU_RESET     1
++    IPU1_RESET    2
++    OPEN_VG_RESET 3
++  The following additional RESET_INDEX value is valid for i.MX6:
++    IPU2_RESET    4
++
++properties:
++  compatible:
++    oneOf:
++      - const: "fsl,imx51-src"
++      - items:
++          - const: "fsl,imx50-src"
++          - const: "fsl,imx51-src"
++      - items:
++          - const: "fsl,imx53-src"
++          - const: "fsl,imx51-src"
++      - items:
++          - const: "fsl,imx6q-src"
++          - const: "fsl,imx51-src"
++      - items:
++          - const: "fsl,imx6sx-src"
++          - const: "fsl,imx51-src"
++      - items:
++          - const: "fsl,imx6sl-src"
++          - const: "fsl,imx51-src"
++      - items:
++          - const: "fsl,imx6ul-src"
++          - const: "fsl,imx51-src"
++      - items:
++          - const: "fsl,imx6sll-src"
++          - const: "fsl,imx51-src"
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: SRC interrupt
++      - description: CPU WDOG interrupts out of SRC
++    minItems: 1
++    maxItems: 2
++
++  '#reset-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    reset-controller@73fd0000 {
++        compatible = "fsl,imx51-src";
++        reg = <0x73fd0000 0x4000>;
++        interrupts = <75>;
++        #reset-cells = <1>;
++    };
 -- 
-viresh
+2.7.4
+
