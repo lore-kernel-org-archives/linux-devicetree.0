@@ -2,129 +2,68 @@ Return-Path: <SRS0=7YFh=7B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31A5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 16:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3D6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 16:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 934CA207D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 16:44:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWyV3xqf"
+	by mail.kernel.org (Postfix) with ESMTP id B309020829
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 May 2020 16:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589907501;
+	bh=wON0KBDCS5zMpkAAmFVUnsEOH1a7o5ryClmYvR0Mm+0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iVojV/+iUnD+tmD1EnX9EJe6MBYIfYeS33TQ3BkIWk/CJOc4UDh9CWrc5KGUnffHF
+	 fxxfgNL+qwRzVlMlNYwbbC2/ncXYcCZ0GAjM4ucN2Hh080rTYmYhrq0uUyOQ16SHH0
+	 yIZVvwBH2E3EW0K6IIb8Fr7WaFYOhvlKUne5+/VA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgESQon (ORCPT
+        id S1729001AbgESQ6V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 12:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbgESQom (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 12:44:42 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84672C08C5C0;
-        Tue, 19 May 2020 09:44:42 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l18so143679wrn.6;
-        Tue, 19 May 2020 09:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VqC8rxTTkCeV8e6ysDgNotLUcsV868zIffxxJilbTVg=;
-        b=YWyV3xqfslc9r+swGji8dPqRm1Lfbv3kwe/eMh0BbjbO+6H5AF2bcnTJ8UEqFbe6mx
-         EQkaJ8rJYEmXKxSVFIorQsPnIp6mDtoedIxYUCRoglAfoj2wEbyNU3p/I8XOAqnvtOwS
-         LEqIQTJtyKttjObDOojC9GqgiNJksXGQN8dd521h9IZjpueNsCFSbvAwrbVzZ1qD8tpB
-         oTcvLk2IEZ/OW6VpyiOXrGxRflwQeWI9icXheaUSVFWXKEQJ/Ewa9QgIVHw3vKt+ethK
-         FGT/mLWh6jEcab3W2YWKrsmyFjAIuWnHhTNjtwJVU7d+pqMgfJuRSU2E7kzhaHOXSaW9
-         FiAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VqC8rxTTkCeV8e6ysDgNotLUcsV868zIffxxJilbTVg=;
-        b=Zx/TVhMvHLSDkci/pVsLjZRv4cx3DwDhWKAl68PvI4cQ9ct6O7CsY0rkDZWZc4OCj2
-         4gbzkv/yhgzjSzVWHqNXaQPkU/U/iyb4/aDdNEdVYma0IdnS44V3skWsoR+BlY3E7Ny4
-         hBXm1gHBg33x0DptWcMoTjkeDfvAC56Mw8t+Nj2tEmHp3xEFQIiCQbrWQw3OSvQ0kwye
-         WSW86EnabzgTAn4e7r85h8GdDPY2rFOTXJVNTc1wjyvBDpUry7OoUXplgK3erhBcH6EE
-         SuXXqYUrny1nuffgOouRB4FUEuYWRnj0RnpCD4J8k50xh7PWiEt736QPodOi0CJ8hX30
-         Rs6w==
-X-Gm-Message-State: AOAM532XYrEBygJc0AyndQLe6Qs0aUqov+eAjvoKpaGx4ZugP5s4Qub3
-        DBVLk6VY8CZvXGkb2YPslTg=
-X-Google-Smtp-Source: ABdhPJwSe6JzoKEGUpPYAynD9BDmuOFYIj6qReIqYmiaR8ffpFG20UDn7uYCl9Ig5eN+Td+tCyjfhw==
-X-Received: by 2002:a5d:6144:: with SMTP id y4mr27357671wrt.185.1589906681081;
-        Tue, 19 May 2020 09:44:41 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id j190sm271138wmb.33.2020.05.19.09.44.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 09:44:39 -0700 (PDT)
-Date:   Tue, 19 May 2020 18:44:33 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
- txt format to yaml
-Message-ID: <20200519164433.GA8726@ict14-OptiPlex-980>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-2-jonathan.albrieux@gmail.com>
- <20200519132207.GA4623@gerhold.net>
- <20200519140354.GB30573@ict14-OptiPlex-980>
- <20200519160137.GJ1634618@smile.fi.intel.com>
+        Tue, 19 May 2020 12:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728778AbgESQ6U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 12:58:20 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6C022075F;
+        Tue, 19 May 2020 16:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589907500;
+        bh=wON0KBDCS5zMpkAAmFVUnsEOH1a7o5ryClmYvR0Mm+0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IxwqA0P84DMGAtGNa4obAfFwhbdvqD3Bz5YPObh3hQU3+G7QF/veLi7gsfIjYfnZX
+         /ydynmdSwffGagAYILULpz6y+xAIiBcvxmcax+WzgJ5IkoNLw4dQ1B2eHaVn+W2stk
+         il5tnivohL+/cQxG2HFS1qu+f5LNv3zuJipykdw8=
+Date:   Tue, 19 May 2020 09:58:18 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
+Message-ID: <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200519141813.28167-3-dmurphy@ti.com>
+References: <20200519141813.28167-1-dmurphy@ti.com>
+        <20200519141813.28167-3-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519160137.GJ1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:01:37PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 04:03:54PM +0200, Jonathan Albrieux wrote:
-> > On Tue, May 19, 2020 at 03:22:07PM +0200, Stephan Gerhold wrote:
-> > > On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:
+On Tue, 19 May 2020 09:18:11 -0500 Dan Murphy wrote:
+> If the op-mode for the device is not set in the device tree then set
+> the strapped op-mode and store it for later configuration.
 > 
-> ...
-> 
-> > > > +maintainers:
-> > > > +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>
-> > > 
-> > > Should probably add someone here, although I'm not sure who either.
-> > > 
-> > 
-> > Yep I couldn't find a maintainer for that driver..what to do in this case?
-> 
-> Volunteer yourself!
-> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-While I'd really like to, I have to decline the offer as I currently don't have
-enought knowledge to become a maintainer :-) but thank you! (Who knows, maybe in
-a couple of year!) Now I'll make the final edits and will submit a new
-patchset soon with all the changes
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-
-Best regards,
-Jonathan Albrieux
+../drivers/net/phy/dp83869.c: In function0 dp83869_set_strapped_mode:
+../drivers/net/phy/dp83869.c:171:10: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+  171 |  if (val < 0)
+      |          ^
