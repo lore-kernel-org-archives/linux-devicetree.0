@@ -2,113 +2,107 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEBAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 04:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51FDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 05:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5148820758
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 04:31:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wnFPDkwl"
+	by mail.kernel.org (Postfix) with ESMTP id 7946D207C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 05:43:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589953433;
+	bh=IEc+QC7akchK5eV7/ZYdgqsaG2z+ctbqijAK6mJ6Q98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bK75+M8d9pE8y6wVajFDaRg4R8y7bVb+OI4oeQ9912OsdVl8QMVsNyOnEfdRyusl9
+	 gmISYoAc8kl7Gw37yuEKZ34g140g3zwhYU0DxmXu9hdRrnk2y/3BE2jMtaw4HXRmhd
+	 0jks48ES/2uKqqFhl23c/Kihy9IjOuEEt3udquVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgETEb0 (ORCPT
+        id S1726435AbgETFnx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 00:31:26 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:42551 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgETEb0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 00:31:26 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        Wed, 20 May 2020 01:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbgETFnw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 01:43:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 125F48066C;
-        Wed, 20 May 2020 16:31:24 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1589949084;
-        bh=HYil0aCAK5+cV7uSyh8qqAy3CoMjINfwMnZ5mKZOyJY=;
-        h=From:To:Cc:Subject:Date;
-        b=wnFPDkwlnxE7l21Sb9GAbJZ+A4pZIzashwqsB3ngY6yzLVnI5amSFVPnzR+1dIJEQ
-         Hgt0HzYpPYXR7ndeRDCQ5qzj1OHypN1NVtMrYDdVBV/e6QX5G27dJq9P7A/sXgzIbb
-         Rhoa4owNYgIunsFoyY5JapdSZrS0EnNcz4YgTG7hXKg4FR8FbvY+KeOT75PRcGj9SC
-         EcgEbc9HVATgUlcTcWsc9H7L31SGWvMkwZtfGtGbuSVDJpjcVfMKiMpogi4XypkWIm
-         aT041vMpVGX6l0/HmEnW0nIXh0eLLiEnML0uKzan0AdEWeWfzjDMQ8FYZhBQGbuw04
-         vOIBeoY/EG9Fg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ec4b29b0000>; Wed, 20 May 2020 16:31:23 +1200
-Received: from hamishm-dl.ws.atlnz.lc (hamishm-dl.ws.atlnz.lc [10.33.24.30])
-        by smtp (Postfix) with ESMTP id 7C97D13ED56;
-        Wed, 20 May 2020 16:31:22 +1200 (NZST)
-Received: by hamishm-dl.ws.atlnz.lc (Postfix, from userid 1133)
-        id 761965407CD; Wed, 20 May 2020 16:31:23 +1200 (NZST)
-From:   Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-To:     robh+dt@kernel.org, rjui@broadcom.com, sbranden@broadcom.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        f.fainelli@gmail.com,
-        Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-Subject: [PATCH] ARM: dts: bcm: HR2: Fix PPI interrupt types
-Date:   Wed, 20 May 2020 16:30:42 +1200
-Message-Id: <20200520043042.7281-1-hamish.martin@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.1
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B534C2075F;
+        Wed, 20 May 2020 05:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589953432;
+        bh=IEc+QC7akchK5eV7/ZYdgqsaG2z+ctbqijAK6mJ6Q98=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MV9LOgk3OXP5XC66veg+cLqTxXmgekS2F0K2Lx1avu81cXlkxReu1me2r75MMQ2b+
+         ZE/q6upLQs+FrqRHXAntfRYgsnkgOdGK7p4UiV+dhvyZ4PYwI5dyJMh3rzb1/w81wX
+         vLFfMmab6HO3EzfJeRgK37kwsXkaZoBeGIY6dFJs=
+Date:   Wed, 20 May 2020 07:43:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma
+ offsets
+Message-ID: <20200520054349.GB2180554@kroah.com>
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+ <20200519203419.12369-10-james.quinlan@broadcom.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519203419.12369-10-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These error messages are output when booting on a BCM HR2 system:
-    GIC: PPI11 is secure or misconfigured
-    GIC: PPI13 is secure or misconfigured
+On Tue, May 19, 2020 at 04:34:07PM -0400, Jim Quinlan wrote:
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index ac8e37cd716a..6cd916860b5f 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -493,6 +493,8 @@ struct dev_links_info {
+>   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
+>   *		DMA limit than the device itself supports.
+>   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+> + * @dma_map:	Like dma_pfn_offset but used when there are multiple
+> + *		pfn offsets for multiple dma-ranges.
+>   * @dma_parms:	A low level driver may set these to teach IOMMU code about
+>   * 		segment limitations.
+>   * @dma_pools:	Dma pools (if dma'ble device).
+> @@ -578,7 +580,12 @@ struct device {
+>  					     allocations such descriptors. */
+>  	u64		bus_dma_limit;	/* upstream dma constraint */
+>  	unsigned long	dma_pfn_offset;
+> -
+> +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> +	const void *dma_offset_map;	/* Like dma_pfn_offset, but for
+> +					 * the unlikely case of multiple
+> +					 * offsets. If non-null, dma_pfn_offset
+> +					 * will be 0. */
+> +#endif
+>  	struct device_dma_parameters *dma_parms;
+>  
+>  	struct list_head	dma_pools;	/* dma pools (if dma'ble) */
 
-Per ARM documentation these interrupts are triggered on a rising edge.
-See ARM Cortex A-9 MPCore Technical Reference Manual, Revision r4p1,
-Section 3.3.8 Interrupt Configuration Registers.
+I'll defer to Christoph here, but I thought we were trying to get rid of
+stuff like this from struct device, not add new things to it for dma
+apis.  And why is it a void *?
 
-The same issue was resolved for NSP systems in commit 5f1aa51c7a1e
-("ARM: dts: NSP: Fix PPI interrupt types").
+thanks,
 
-Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
----
- arch/arm/boot/dts/bcm-hr2.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.d=
-tsi
-index 6142c672811e..5e5f5ca3c86f 100644
---- a/arch/arm/boot/dts/bcm-hr2.dtsi
-+++ b/arch/arm/boot/dts/bcm-hr2.dtsi
-@@ -75,7 +75,7 @@ a9pll: arm_clk@0 {
- 		timer@20200 {
- 			compatible =3D "arm,cortex-a9-global-timer";
- 			reg =3D <0x20200 0x100>;
--			interrupts =3D <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts =3D <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>;
- 			clocks =3D <&periph_clk>;
- 		};
-=20
-@@ -83,7 +83,7 @@ twd-timer@20600 {
- 			compatible =3D "arm,cortex-a9-twd-timer";
- 			reg =3D <0x20600 0x20>;
- 			interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
--						  IRQ_TYPE_LEVEL_HIGH)>;
-+						  IRQ_TYPE_EDGE_RISING)>;
- 			clocks =3D <&periph_clk>;
- 		};
-=20
-@@ -91,7 +91,7 @@ twd-watchdog@20620 {
- 			compatible =3D "arm,cortex-a9-twd-wdt";
- 			reg =3D <0x20620 0x20>;
- 			interrupts =3D <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
--						  IRQ_TYPE_LEVEL_HIGH)>;
-+						  IRQ_TYPE_EDGE_RISING)>;
- 			clocks =3D <&periph_clk>;
- 		};
-=20
---=20
-2.25.1
-
+greg k-h
