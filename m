@@ -2,101 +2,67 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A49C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 01:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E769EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 01:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26652075F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 01:43:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKiw2WCd"
+	by mail.kernel.org (Postfix) with ESMTP id B79B620829
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 01:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589939117;
+	bh=2lme2RoM2eTNoqbX0+bCWBeIeWNWaSeDiokWRr0bJNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MppbkdN9VOLGMI0xc5iqRn4J2QRF0lvNzqasnu/BMhwJvKMyQPlFyGGqZnPIZbAuS
+	 HN2e4yKcdq3V8D7n4L20SZXSVuCLiIODCfwOadv92OCmbCfqjMIDXYDkjSdi7FsSlf
+	 /8kWeDIG+ONcr7wEHD9P8lTHCf47/NyxfyfVJ0iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgETBnx (ORCPT
+        id S1726379AbgETBpR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 21:43:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728488AbgETBno (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 21:43:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2076FC061A0E;
-        Tue, 19 May 2020 18:43:44 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l11so1487858wru.0;
-        Tue, 19 May 2020 18:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Mgc/ds3i5rPSJg4nQkW0agG9zLMcqHYeWci5jVpxRbE=;
-        b=gKiw2WCdT80gtPyNeWAzwQflZsVbMe7s3ePl6h5iiT4Gl6OEH8k0yBOwH97pVGS4ZL
-         MjO76cH/DKqUi1Qm7KTwDfuxWalTptIQh1fw6oYPWOsm3DBZ42VWI0YZusr/gkOQKFBB
-         l+fEajCY/jRdzSdWPnyK6DwMgW+Os+9zwCf6G/WPK8i1by3tXOVoiSdGbxxq+AdQgbMR
-         oUQuCYqnLpNpYiwIzpIICiY+VL8Bf+gNcv0QX7WYj2iHjSkNUhwTTpr9I0woD9UlbsZK
-         +oUjy5g7ANH90hZuaLELuI8h99R+uoN5sXJCUYJkdv5owfAMeG/ZMpjulqp1BhyZi5k+
-         jnqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Mgc/ds3i5rPSJg4nQkW0agG9zLMcqHYeWci5jVpxRbE=;
-        b=EIwkn30NVhQNv0XrqnDsfzmkzIyy0z9S9v8CaD3lt7ZnlnguIYK2zQceK+NjhSlDD1
-         9Pl3+XqMjCjLHxvbqAsrpr5bf0KKLkEq2pWu0kjtHQWWRSmQ/YR3NfEYPOAaj6QXDjJn
-         BYxDlZd3+dNl+GxH1ETTt6xGVUmMwcdb3jC0Rg9rICbJfBsLTWYkgaDlL19OQ9GfK6mn
-         U0OQqPwV/dgK0t5ubPt3JxOJSkuEawcFCRsgLevtWbv2vYeyHd/Vb/eoHndaFHUWT7Tw
-         77yy/26ALlsuWFigKuP0YDdabtA7S5tgBO71X/rph5b67n65/KXi41aEGyIyDP6ceVvc
-         TFvQ==
-X-Gm-Message-State: AOAM530h9lJiRZnAFZ9yYgsWOmlf/4AogETydRC7TLPb+CcVBpBY7pe3
-        /osV060LgXWkT9npTxNI6N0+X8gS
-X-Google-Smtp-Source: ABdhPJwXnlsRU3f6ngJsAlED0L79WhGm8IWhfAwGH1W31Ou5U+mb9yYbdccRkvLXtHkRp/6UbpRnBA==
-X-Received: by 2002:a05:6000:8:: with SMTP id h8mr1808632wrx.372.1589939022831;
-        Tue, 19 May 2020 18:43:42 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id z10sm1493351wmi.2.2020.05.19.18.43.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 18:43:42 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v4 4/5] dt-bindings: arm: amlogic: add support for the Beelink GT-King Pro
-Date:   Wed, 20 May 2020 01:43:28 +0000
-Message-Id: <20200520014329.12469-5-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200520014329.12469-1-christianshewitt@gmail.com>
-References: <20200520014329.12469-1-christianshewitt@gmail.com>
+        Tue, 19 May 2020 21:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbgETBpR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 21:45:17 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BD3720709;
+        Wed, 20 May 2020 01:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589939116;
+        bh=2lme2RoM2eTNoqbX0+bCWBeIeWNWaSeDiokWRr0bJNM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H5sIW75VHEsEri4mvDfO+OmOn6SaVit072XrcdA8GrIpw40OYuPDsOgF66jTSC0Vz
+         pKb0SL6Tg1XP1SMqHd8nUUI940Qjl0KdyAk3D7inbT8mJ/fhXwgIwUiLy4KW5yYiI4
+         6tTccPR23F8ayxgn9zpX+SOQB0rMZkjrwZpZwIdo=
+Date:   Wed, 20 May 2020 09:45:11 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] ARM: dts: imx51: Add src node interrupt
+Message-ID: <20200520014510.GM11739@dragon>
+References: <1589250307-29662-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589250307-29662-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Shenzen AZW (Beelink) GT-King Pro is based on the Amlogic W400 reference
-board with an S922X chip.
+On Tue, May 12, 2020 at 10:25:06AM +0800, Anson Huang wrote:
+> Interrupt is a required property according to SRC binding, add
+> it for SRC node.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index cd7a081a4f17..db35e0d0134c 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -150,6 +150,7 @@ properties:
-         items:
-           - enum:
-               - azw,gtking
-+              - azw,gtking-pro
-               - hardkernel,odroid-n2
-               - khadas,vim3
-               - ugoos,am6
--- 
-2.17.1
-
+Applied both, thanks.
