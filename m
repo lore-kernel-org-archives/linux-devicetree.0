@@ -2,119 +2,174 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77894C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B496C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF9420872
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3880820756
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Dzi2kKT2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfnFCgj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgETGuo (ORCPT
+        id S1726488AbgETG4a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 02:50:44 -0400
-Received: from mail-vi1eur05on2045.outbound.protection.outlook.com ([40.107.21.45]:6238
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725998AbgETGuo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 02:50:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g3HJeWxEjk/duUlNl5t2sUJRHL0M1lAFpcRKqJDsZbpEUvLbsKX8QG5nrzc5dkRrEhuBEI8bCcOX8y4HiL1J+kcvRdS336S2sIbD6oTqiJardP9NMFNOoVIcsLLpwpvkNTrp8oOpKMVn98IXtHYZPPw8wer/ST0DSJxUsqeS9hDUFOdQ7K+pizkzZO2jK/cvWYshTWo8gDc5MuYmEJscQaOm5sOB0SNIhmXQ2zlWJpOKDHDBbwQ4LeEigVbC1iDL25Mbv4xvr2zEVHFwlbP3z6wrY/9SJBrMcVyR9BrqApdmDSjpl8MrYtCD3bmDKueBSFQzJQoU0XFqjRnIg8Hqxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UvGDWJ7n9jg0znBDrFbYSyKFI+09F835Y51PBXsd1g0=;
- b=iJFrGPZXjSmX//bm0DMskaI2yNz78PbKv/BOfz2i2KJrOOBGdVFBd/J4Cf16tuxKMcbvwuocmD/YLffGQLBX8jxvZzk8c+/2XUhZ/h2BT3YyySDD+ncZN7tvicf46NZzPC7HMr7oECI2tCyMJjfc/SqMMkruqGZJzAMuLwcqQOs8WGGdcHLNY09mGt5HIbxWRxX/2ZBKhSeAyF2P12oHX7265ZxE2Y0y9NsaaaMFZD6R5Fof/HNfZbMlXhgEO4YtQ+oE5tL+tIyJwIkiXZtVE9MzG6QDNeYUtuTPCVQyNzVwQAW2iDnLlrXNM5HzQNZIGhnIYV7c9zDrLpRevKSC7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UvGDWJ7n9jg0znBDrFbYSyKFI+09F835Y51PBXsd1g0=;
- b=Dzi2kKT2BRICzivhPv5ImO3Dy5mKBju4CHm9XyBJ1iLsCXxrL/i4TbnPZ0zoICfxxbo6RLpHMO2Og1I9L8I1iFAQwoOmM+vPunVCVG/zDm/MV/B38J1mYf5KT5XBOHli5p9ixlhqcyFrar9j3JeTwGe27owqdy/TNU0yT6O29ws=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4935.eurprd04.prod.outlook.com (2603:10a6:20b:7::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Wed, 20 May
- 2020 06:50:40 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.034; Wed, 20 May 2020
- 06:50:40 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>
-CC:     Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
+        Wed, 20 May 2020 02:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgETG4a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 02:56:30 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A24AC061A0E;
+        Tue, 19 May 2020 23:56:30 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so1741088qts.9;
+        Tue, 19 May 2020 23:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TB5FjjudCnoVQlZCNJ7wIvh0DQ8onthhTDmqoaW0vQQ=;
+        b=lfnFCgj5KUFNLZCdbrRAbiYgN4J25MNk1LUL2HnYGLen+N2nwKXDuHtH5CJxpWJk1M
+         iLDjRZUCxkuaDDAcB2K4tUWGe+EeprYuW9HfUu+QCemg7YTMImD/OF9IPjbBnoYnVKyx
+         hfkHtXI68iCtQI8tM270nE9xhucB9ZAg9QZ149HpeFhFVkvaSvTfbMN65We74dhBEl9C
+         lDQG9udVbiattf64yOAkZQFcjH1UoKVsV7Kz7mHWGJ2g/yLDADBj1FTeiFFchP50GAPt
+         CAQbbqDnjW/+SWwymOrCPmDwpAm5xAzhCVfpCLSVXPg2+2sqk0Xyk2nEtOUrDgS2SOn1
+         2qJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TB5FjjudCnoVQlZCNJ7wIvh0DQ8onthhTDmqoaW0vQQ=;
+        b=LN94G3SkYqcCvRYYJL1QKJfLgRGpkGgx7zCcfUdeH02+IJIHQs/sULP3x9r9ITspns
+         JKtuaZJBfTePPT+537bS5FchVahMo0EUEbDtohhk7krXL2PuHa5kED9nWpRxpsNuEV2N
+         YbC1RrYh+5ImuOh0tFw30Y/oYF+TXgN1U6+HzsUd8OdM3kKOqck6JESdNj25E1PUx5nV
+         lXKtoUyc0LI8Z92a3ONYQ+vuGz8rSFed5PpNYSFXqwLCaywvn04g1xy6efKlvFPoSWNG
+         KI4blxeZJJ1fcwCkkfzyVozMzHwzmNOtHt4HXcmN1kVnE3FoKc6X04u3xevaQADFLb3u
+         oBKA==
+X-Gm-Message-State: AOAM532T+C1E+N+UngyMyB1pWXO/wRfeuOaje45pzrhBUV0PrW9WlXx2
+        uH/mayFpyRVLrOT6O+Lu8zU=
+X-Google-Smtp-Source: ABdhPJzZGRauvO9SJPW3cGCfiyGEjVM/OHM40naBh5ery73Gai7ADtfx+kYda7Yzt+XEoE2OZ2O4WA==
+X-Received: by 2002:ac8:302f:: with SMTP id f44mr3722990qte.121.1589957789285;
+        Tue, 19 May 2020 23:56:29 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id l186sm1497247qkf.89.2020.05.19.23.56.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 23:56:28 -0700 (PDT)
+Date:   Wed, 20 May 2020 08:56:06 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
-Subject: RE: [PATCH 3/3] arm64: dts: imx8mp: add mu node
-Thread-Topic: [PATCH 3/3] arm64: dts: imx8mp: add mu node
-Thread-Index: AQHWLkxzMvhtnxfr4kKzRmUZ6iXJ36iwSJ8AgAAAq4CAAAF1AIAAPoMw
-Date:   Wed, 20 May 2020 06:50:40 +0000
-Message-ID: <AM6PR04MB49660EE02F2C41C5320C1F2080B60@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589940278-3680-1-git-send-email-peng.fan@nxp.com>
- <1589940278-3680-4-git-send-email-peng.fan@nxp.com>
- <CAOMZO5BPPRy_XGHHyZfE3eOrmCwW_VytueY-An8qqke6HU06TQ@mail.gmail.com>
- <DB6PR0402MB27602682E90E4CED55244BCC88B60@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <CAOMZO5DmiQbfJjTLKPiv6uUNaQ8ae-0h7uOpPf2J9ZMwDoE+Eg@mail.gmail.com>
-In-Reply-To: <CAOMZO5DmiQbfJjTLKPiv6uUNaQ8ae-0h7uOpPf2J9ZMwDoE+Eg@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a3ebca6a-f723-43cf-bff1-08d7fc8a1c23
-x-ms-traffictypediagnostic: AM6PR04MB4935:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4935207248F037E40C3101D080B60@AM6PR04MB4935.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 04097B7F7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Jpy1MABEuETY9YYIfAAvuoniQKmAaB8PytEE+YN4x8jkG8nUxtjrZMh8Rn+xZre55skfhS9+HN1ETTxwSaxGFB/KY539UOQV9/7Yc98PYDeCllQIlOH+Jw9DBIkBDtUVQonqTjgJcgeqvl4UgeIBNqL7t4DzOahcco4MupCp7kErwFRICzOJ9yZ19h6eFyAZkvA/PpsZwxE6ZQNxBk90vVJjb+si39ECvrxiQTeelKoB+HuXbToQDMAt5S3uQsWOjU7rQPP51gbiMb/03A7NszNeYFG7xsf0naPWe6/DXHzcOcVM0LH6x1TBfPsgdl1MdOXdPjPkuuvu56hNqJ0YFxlnyfDyGPMEplnMHb44y8SqMaLz6xIs5HiC0If1/ILlubWZs+q9WMSzb1V6RpYH7Ti/EU8jFx5mVueLG/WqhiYirZJQcLWxWUFUwgRliEaK1KF8OPKy/zbvQZPsrpBozFCH2qTo0cAiB1DSGDRZA9lofkFX8NcfWC0B6Kxm02UF
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(366004)(376002)(136003)(33656002)(110136005)(26005)(8936002)(4326008)(55016002)(9686003)(6636002)(8676002)(86362001)(5660300002)(478600001)(54906003)(316002)(53546011)(6506007)(4744005)(52536014)(44832011)(7416002)(2906002)(76116006)(66946007)(66446008)(64756008)(66556008)(66476007)(7696005)(71200400001)(186003)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 9Jr++8EIXt813hIUNQNwrlceynUyV69uQ6lWCZ9EcYEGAcMFKn5rGNL4WGfJU/aj0liIHVtvmn8GRSiSZOQO2Hp4ao7kSR+O6VqWZks2e8l25nnGvoHiRMw1PqugOxmeqs5mgh/QFNbRrnufwUp/2WvTpRsctVjj8F2l5/tNMASIfz0vdc5DpcIx8UbZFFSl4mouwQCtX/m2PbtboRGgx0Y2MddBd4+Xes6O8CEz1ubVEVho+wBroXLrryr80C/4srCx4pl6pEKAY+sXQdxu3QY5vmzlbhNjfNjmV0+/BMw3uzh5Q1XGtRkjrk2KJO9I+/iLIrFrWvP2ec1pLI7bunLkKhVEJV4NlpsnVwMMKVbGU4hSokLS2oiRLnvWpx00kp2UpcuXFhE9KwWMoxzZWkGuHkOU8UCOuPWchYmolxpviZNal9t2pTQAsRAqhdZQLmM5mm3feVi7XkRjh70SsJGBi/ESYAwEkCPq/k2TMuSQ09nH28dYNo5vfFrVFpda
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200520065606.GA3361@ict14-OptiPlex-980>
+References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+ <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+ <20200519132207.GA4623@gerhold.net>
+ <20200519140354.GB30573@ict14-OptiPlex-980>
+ <20200519160137.GJ1634618@smile.fi.intel.com>
+ <20200519164433.GA8726@ict14-OptiPlex-980>
+ <20200519183705.000040e5@Huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3ebca6a-f723-43cf-bff1-08d7fc8a1c23
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 06:50:40.2556
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bScXeFZurpaKLgIXCob2R+ik7JZKj4F08Tz4HPNQMimCD7PtCo9gQtmGmfWs7jqfSpeGjecNtdmBr7uXsdC59Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4935
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519183705.000040e5@Huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBGcm9tOiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+DQo+IFNlbnQ6IFdlZG5l
-c2RheSwgTWF5IDIwLCAyMDIwIDExOjA3IEFNDQo+IA0KPiBIaSBQZW5nLA0KPiANCj4gT24gV2Vk
-LCBNYXkgMjAsIDIwMjAgYXQgMTI6MDEgQU0gUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+IHdy
-b3RlOg0KPiANCj4gPiBOb3RoaW5nIHNwZWNpZmljIGluIGkuTVg4TVAgZm9yIHRoZSBtdSBwYXJ0
-LCBzbyBkbyB3ZSByZWFsbHkgbmVlZCBhZGQNCj4gPiAiZnNsLGlteDhtcC1tdSI/DQo+IA0KPiBJ
-dCBpcyBnb29kIHByYWN0aWNlIHRvIGFkZCBhIG1vcmUgc3BlY2lmaWMgb3B0aW9uLg0KPiANCj4g
-TGV0J3Mgc2F5IGluIGZ1dHVyZSBhIGJ1ZyBpcyBmb3VuZCB0aGF0IGFmZmVjdHMgaW14OG1wIE1V
-LCB0aGVuIHlvdSBjb3VsZCBmaXggdGhlDQo+IE1VIGRyaXZlciBhbmQga2VlcCB0aGUgZHRiIGNv
-bXBhdGliaWxpdHkuDQoNCisxDQo=
+On Tue, May 19, 2020 at 06:37:05PM +0100, Jonathan Cameron wrote:
+> On Tue, 19 May 2020 18:44:33 +0200
+> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+> 
+> > On Tue, May 19, 2020 at 07:01:37PM +0300, Andy Shevchenko wrote:
+> > > On Tue, May 19, 2020 at 04:03:54PM +0200, Jonathan Albrieux wrote:  
+> > > > On Tue, May 19, 2020 at 03:22:07PM +0200, Stephan Gerhold wrote:  
+> > > > > On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:  
+> > > 
+> > > ...
+> > >   
+> > > > > > +maintainers:
+> > > > > > +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>  
+> > > > > 
+> > > > > Should probably add someone here, although I'm not sure who either.
+> > > > >   
+> > > > 
+> > > > Yep I couldn't find a maintainer for that driver..what to do in this case?  
+> > > 
+> > > Volunteer yourself!
+> > >   
+> > 
+> > While I'd really like to, I have to decline the offer as I currently don't have
+> > enought knowledge to become a maintainer :-) but thank you! (Who knows, maybe in
+> > a couple of year!) Now I'll make the final edits and will submit a new
+> > patchset soon with all the changes
+> 
+> Don't be so hard on yourself.  We all get thrown in at the deep end :)
+> 
+> Note that being a driver maintainer (or even just the binding) really
+> just means you get cc'd on the patches and I'll make sure you've had time
+> to review them if you wish.   Best of all, if you have hardware (and time)
+> being able to test them, that is extremely useful (whether you are
+> maintaining the driver or not!) 
+> 
+> I closely review the majority of stuff that comes through IIO and in
+> the case of bindings we also have Rob and co. doing an amazing job.
+> We have some excellent additional reviewers who review IIO stuff all the
+> time, some of which have reviewed your patch I see.  Without them I'd
+> never survive the deluge.
+> 
+> Of course it's entirely your decision, but I'd definitely encourage you
+> to give it a go.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+
+Thank you for your encouraging words and for the trust! As a tester I will
+be very pleased to give an help on this hardware but as a maintainer I
+could contribute little to nothing at the moment and I'm not being hard
+with myself but currently I really have to focus on the basic concepts first
+and I'm lucky enought to have willing people helping me to do so :-)
+
+Accepting to become the maintainer after the first contribution let me feels
+like I'm burning some foundamental stage. I really hope you understand!
+
+> 
+> 
+> > 
+> > > -- 
+> > > With Best Regards,
+> > > Andy Shevchenko
+> > > 
+> > >   
+> > 
+> > Best regards,
+> > Jonathan Albrieux
+> 
+> 
+
+Best regards,
+Jonathan Albrieux
