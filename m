@@ -2,108 +2,123 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C87C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBB4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3779207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590006766;
-	bh=cBQJaqL5hdpUynwTPIUnnyHFxgD5XUvMjrGpFvjOll8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qmwASTIB4zuO5xXNKkPmWYsfvsfGnDvoit/p6Mz8+H/DmMzska2g8xsD4f9a/PEqJ
-	 g7pi95aGlzYGZ4kccaZdx2mPWn9xu6gSzIOuYDb86+znELCRadNCdpsH6XOF0dC//H
-	 Wud57cH62WEfOqN7SKFJ5WnmspqVJp+k6vHFzvsQ=
+	by mail.kernel.org (Postfix) with ESMTP id B9B4A20823
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:44:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Dt2BB6xU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgETUcn (ORCPT
+        id S1727067AbgETUob (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 16:32:43 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43315 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgETUcm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 16:32:42 -0400
-Received: by mail-il1-f193.google.com with SMTP id l20so4668213ilj.10;
-        Wed, 20 May 2020 13:32:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eYhFWnym18cK56HOIXrwGvpqXxigL2vp9VHbqJW4HIM=;
-        b=htOs/8YHKrrPhdjiPxNVXL8GzY1/Wp9B/ieEyf+PE37mm4etEgT0k5Z0mSerek1FBK
-         3JpgBwM7YT1/00XWNgqRrAfvX7N1b9G/LWpEY/5WFSGFDt9QBvEtFcUhpp9ct9wYr4iC
-         7B7YuUIls7E+x8+lFllTqZi4mq3dFFCyaF2xyyKzBtClpzzKiclMfFYI3fcn+0LcrbuX
-         LSRdb42bqP+1pSOaIYVnf83yL8BMt4jKs3bxzHS8XzJZ2epLbLRyV2+iUGaASD5hKxFN
-         2glmHm60gWGyOHYqxLCgYdI5vmSjwHM2qvVxaEc5T+UqGV/+kaUR6CybU75WzGC6EpHe
-         u2rw==
-X-Gm-Message-State: AOAM531v45gnk4Sdl9kP3fRneTrDMK57P+jPRLXI1On35oylT5+Lg6Hv
-        Z+B1liG60wVyowZPqd8VWA==
-X-Google-Smtp-Source: ABdhPJy5QvUn+VTDpkuNaZg6Rlk1g9vHBNfouawM73Pe8LYk585UL8czp90286VGTKxtQBwZeP8+kg==
-X-Received: by 2002:a92:c7a2:: with SMTP id f2mr5670636ilk.71.1590006761646;
-        Wed, 20 May 2020 13:32:41 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d12sm1884632ill.80.2020.05.20.13.32.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 13:32:40 -0700 (PDT)
-Received: (nullmailer pid 503923 invoked by uid 1000);
-        Wed, 20 May 2020 20:32:39 -0000
-Date:   Wed, 20 May 2020 14:32:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     roy.zang@nxp.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        Zhiqiang.Hou@nxp.com, jingoohan1@gmail.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com,
-        shawnguo@kernel.org, andrew.murray@arm.com,
-        linux-pci@vger.kernel.org, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, kishon@ti.com,
-        linuxppc-dev@lists.ozlabs.org, amurray@thegoodpenguin.co.uk
-Subject: Re: [PATCH v6 01/11] PCI: designware-ep: Add multiple PFs support
- for DWC
-Message-ID: <20200520203239.GA503864@bogus>
-References: <20200314033038.24844-1-xiaowei.bao@nxp.com>
- <20200314033038.24844-2-xiaowei.bao@nxp.com>
+        Wed, 20 May 2020 16:44:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42046 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726827AbgETUob (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 16:44:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=a6QPITVk+6xXi5kvcJS5iU8GxNuNEtzpnALCwBE2+sA=; b=Dt2BB6xUa2vA74dYY4QxCZ1CYt
+        0inLbZVVBkuw+cf0YPBypgCvHZcj2uc83iAS6HwHOaJIFIQfSHdUOc7krH7JjgIH3jh+NDasWuL1V
+        wHRylaQpP3C7rBxXP5/wk6klOxNfRu/j5nDyQv0XZvJew7Wd0kVh787H9FmpRvLqOckA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jbVZf-002qGB-CY; Wed, 20 May 2020 22:44:23 +0200
+Date:   Wed, 20 May 2020 22:44:23 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, hkallweit1@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+Message-ID: <20200520204423.GA677363@lunn.ch>
+References: <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+ <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+ <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
+ <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
+ <20200520192719.GK652285@lunn.ch>
+ <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200314033038.24844-2-xiaowei.bao@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 14 Mar 2020 11:30:28 +0800, Xiaowei Bao wrote:
-> Add multiple PFs support for DWC, due to different PF have different
-> config space, we use func_conf_select callback function to access
-> the different PF's config space, the different chip company need to
-> implement this callback function when use the DWC IP core and intend
-> to support multiple PFs feature.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
-> v2:
->  - Remove duplicate redundant code.
->  - Reimplement the PF config space access way.
-> v3:
->  - Integrate duplicate code for func_select.
->  - Move PCIE_ATU_FUNC_NUM(pf) (pf << 20) to ((pf) << 20).
->  - Add the comments for func_conf_select function.
-> v4:
->  - Correct the commit message.
-> v5:
->  - No change.
-> v6:
->  - No change.
-> 
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 123 ++++++++++++++++--------
->  drivers/pci/controller/dwc/pcie-designware.c    |  59 ++++++++----
->  drivers/pci/controller/dwc/pcie-designware.h    |  18 +++-
->  3 files changed, 142 insertions(+), 58 deletions(-)
-> 
+> I think adding it in the core would be a bit of a challenge.  I think each
+> PHY driver needs to handle parsing and validating this property on its own
+> (like fifo-depth).  It is a PHY specific setting.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+fifo-depth yes. But some delays follow a common pattern.
+
+e.g.
+Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+
+Device Tree Value     Delay   Pad Skew Register Value
+  -----------------------------------------------------
+        0               -840ps          0000
+        200             -720ps          0001
+        400             -600ps          0010
+        600             -480ps          0011
+        800             -360ps          0100
+        1000            -240ps          0101
+        1200            -120ps          0110
+        1400               0ps          0111
+        1600             120ps          1000
+        1800             240ps          1001
+        2000             360ps          1010
+        2200             480ps          1011
+        2400             600ps          1100
+        2600             720ps          1101
+        2800             840ps          1110
+        3000             960ps          1111
+
+Documentation/devicetree/bindings/net/adi,adin.yaml
+
+ adi,rx-internal-delay-ps:
+    description: |
+      RGMII RX Clock Delay used only when PHY operates in RGMII mode with
+      internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
+    enum: [ 1600, 1800, 2000, 2200, 2400 ]
+    default: 2000
+
+  adi,tx-internal-delay-ps:
+    description: |
+      RGMII TX Clock Delay used only when PHY operates in RGMII mode with
+      internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
+    enum: [ 1600, 1800, 2000, 2200, 2400 ]
+    default: 2000
+
+Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+
+- tx-delay: Delay value for RGMII bridge TX clock.
+            Valid values are between 0 to 7, that maps to
+            417, 717, 1020, 1321, 1611, 1913, 2215, 2514 ps
+            Default value is 4, which corresponds to 1611 ps
+- rx-delay: Delay value for RGMII bridge RX clock.
+            Valid values are between 0 to 7, that maps to
+            273, 589, 899, 1222, 1480, 1806, 2147, 2464 ps
+            Default value is 2, which corresponds to 899 ps
+
+You could implement checking against a table of valid values, which is
+something you need for your PHY. You could even consider making it a
+2D table, and return the register value, not the delay?
+
+	  Andrew
