@@ -2,91 +2,116 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30864C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 21:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95E2C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 21:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EACC0207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 21:06:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590008771;
-	bh=w5pgScQC9IMxAcxRg9tT1fSHc8dCAfMnzhfj/cz82FY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wwVryEvIspS6AnUCBaoHJdTeEveQEVEUoyYGXNM6kc9vwk24K+E6J/mtc9e9mpw0+
-	 LPuFcrJ8zSnxJR56HXwrOpT8C3wAvJoNXjkeyii+JAz6QbLQMiZP0/nAzLudrpNE6L
-	 kZVBpKHptCHVnF9Do+mwxbz6gr5blTwX9c7ZA8OY=
+	by mail.kernel.org (Postfix) with ESMTP id B18C3207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 21:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgETVGK (ORCPT
+        id S1727942AbgETVMG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 17:06:10 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35071 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgETVGJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 17:06:09 -0400
-Received: by mail-io1-f68.google.com with SMTP id 79so4958610iou.2;
-        Wed, 20 May 2020 14:06:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=09WBBiNg8+91WX/1ofp/cbQVZYmY4/wJ7S0gDVoiaZk=;
-        b=fRvpHPjLpveR7b3o/g6KER6z2RT8mpKX+WGNVXPwldKJpm9pSYq5qmmAayHiZAtHk9
-         SsuKs0tyy2tj+p6QK9hp4D+3ovZf8Qy3ap4pn2rLEI+UVlCjSiaazbbkNNhOlSWzMp1h
-         +JgEbYezLHZ07ZimTJcu/TLSb9sX6WHMZ8tnylb0wHppVvIOkCJaucnrEQ+h1aUcEfH2
-         NhfGqpib7KUC0HtNzSFnqSELeCg75pfh0z6mRJJFqjx6Zu57y/TEEutGcNMlg6kbjxly
-         Wy49RBdawLMRBH2LxMqgSGdJSYYTH2YT1nkGargr5LmoPbCHGRX8Rlk03feS8h2V3keM
-         i6Tw==
-X-Gm-Message-State: AOAM532TuZbSA9Ftvw/BwMVo6R0+NraRzrmqyOecmLWniPINdv7Uw/tN
-        x24wyjyx9WlxuEQdMZO4Y3JdMVg=
-X-Google-Smtp-Source: ABdhPJzagkFCHWiZjW5SLGpSt8Lquwvefwmka684NQTnQdAmOG8QYT+tbPEiButaZUh++R9xb/u2hg==
-X-Received: by 2002:a02:c00e:: with SMTP id y14mr938022jai.15.1590008767247;
-        Wed, 20 May 2020 14:06:07 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t18sm1953577ili.24.2020.05.20.14.06.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 14:06:06 -0700 (PDT)
-Received: (nullmailer pid 583652 invoked by uid 1000);
-        Wed, 20 May 2020 21:06:05 -0000
-Date:   Wed, 20 May 2020 15:06:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        Tom Joseph <tjoseph@cadence.com>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 20 May 2020 17:12:06 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60792 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbgETVMF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 17:12:05 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BD7CB803087B;
+        Wed, 20 May 2020 21:12:02 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rm8xPnTOIoPd; Thu, 21 May 2020 00:12:02 +0300 (MSK)
+Date:   Thu, 21 May 2020 00:12:00 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 04/14] PCI: cadence: Add support to start link and
- verify link status
-Message-ID: <20200520210605.GA583572@bogus>
-References: <20200506151429.12255-1-kishon@ti.com>
- <20200506151429.12255-5-kishon@ti.com>
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200520211200.qhfgdz4qnatyloob@mobilestation>
+References: <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
+ <20200518134820.wedoumgbsllvhem6@mobilestation>
+ <20200518163206.GA17800@alpha.franken.de>
+ <20200518205752.txbylbjt2zkwdwwe@mobilestation>
+ <20200519155053.GB15797@alpha.franken.de>
+ <20200520121201.wohv6u646rx5otkf@mobilestation>
+ <20200520133827.GA17714@alpha.franken.de>
+ <20200520134826.pc6si3k6boaexp4i@mobilestation>
+ <20200520183057.GA23855@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200506151429.12255-5-kishon@ti.com>
+In-Reply-To: <20200520183057.GA23855@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 6 May 2020 20:44:19 +0530, Kishon Vijay Abraham I wrote:
-> Add cdns_pcie_ops to start link and verify link status. The registers
-> to start link and to check link status is in Platform specific PCIe
-> wrapper. Add support for platform specific drivers to add callback
-> functions for the PCIe Cadence core to start link and verify link status.
+On Wed, May 20, 2020 at 08:30:57PM +0200, Thomas Bogendoerfer wrote:
+> On Wed, May 20, 2020 at 04:48:26PM +0300, Serge Semin wrote:
+> > On Wed, May 20, 2020 at 03:38:27PM +0200, Thomas Bogendoerfer wrote:
+> > > On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
+> > > > Since you don't like the way I initially fixed it, suppose there we don't have
+> > > > another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
+> > > > parameter to select a proper accessors, like sw in our case, and sb by defaul).
+> > > > Right?
+> > > 
+> > > to be on the safe side it's probably the best thing. But I don't know
+> > > enough about CPS_NS16550 to judge whether shift value correlates with
+> > > possible access width.
+> > 
+> > The base address passed to the _mips_cps_putc() leaf is UART-base address. It
+> > has nothing to do with CPS. See:
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../pci/controller/cadence/pcie-cadence-ep.c  |  8 +++++
->  .../controller/cadence/pcie-cadence-host.c    | 28 +++++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h | 30 +++++++++++++++++++
->  3 files changed, 66 insertions(+)
-> 
+> ok, I'm confused. So this isn't an uart inside CPS hardware, but an uart used
+> by CPS code for debug output, right ? 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Right. It's not CPS, but just UART available on the system. See a comment in the
+arch/mips/kernel/cps-vec-ns16550.S:
+/**
+ * mips_cps_bev_dump() - dump relevant exception state to UART
+ * @a0: pointer to NULL-terminated ASCII string naming the exception
+ *
+ * Write information that may be useful in debugging an exception to the
+ * UART configured by CONFIG_MIPS_CPS_NS16550_*.
+ *...
+ */
+LEAF(mips_cps_bev_dump)
+        move            s0, ra
+        move            s1, a0
+
+        li              t9, CKSEG1ADDR(CONFIG_MIPS_CPS_NS16550_BASE)
+        ...
+
+See the base is just loaded to the t9 register.
+
+> 
+> To solve the issued please add CONFIG_MIPS_CPS_NS16550_WIDTH to select the
+> correct access width.
+
+Ok. Thanks.
+
+-Sergey
+
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
