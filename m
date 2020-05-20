@@ -2,224 +2,91 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE09EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B58C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBEE12075F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D0320829
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589942926;
+	bh=PgpVdWU0GNMRchnHmpGiYCiQjyaUTn2pzx382J/j+gY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mRBZ1PmsXCyF/5drS5wKpqGlHcd0/wwqPiYiRrABBl/q+JuIIyjs4E/WWQOcd3Pww
+	 85JibDcTsbTTuD7Be/m9hkGIM6DN85Ihvp5YDNASyBOG3Jk/IaGTwvvEKH3IfdsYuL
+	 wQajig2HdD8qV0E4PyzEIBXFKx9UJYE84gwpZ5Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgETCon (ORCPT
+        id S1728408AbgETCsn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 22:44:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:39244 "EHLO mga07.intel.com"
+        Tue, 19 May 2020 22:48:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgETCon (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 22:44:43 -0400
-IronPort-SDR: dQ1l4GLjGT3dgTLhn8Con/W1taiut/p+CV5bZlw8pwm16eMFh6dUAf+dO35ZAAAHuZjQEGPIoB
- xLHN+LWfQzmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 19:44:42 -0700
-IronPort-SDR: naRP1FHHVgQRi2pg4BIZBPfHHMYPwM8oOUtgy9YPkYlpXFq9lEIF8UwlQ7xuOTgxO5XifUYTeT
- baK9gMqjn7jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
-   d="scan'208";a="282530639"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga002.jf.intel.com with ESMTP; 19 May 2020 19:44:37 -0700
-Cc:     baolu.lu@linux.intel.com, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org
-Subject: Re: [PATCH v7 03/24] iommu/sva: Add PASID helpers
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-4-jean-philippe@linaro.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <543f7add-d4cf-e2b2-a7d2-e36f1fa8c4e2@linux.intel.com>
-Date:   Wed, 20 May 2020 10:41:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726318AbgETCsm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 22:48:42 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33FCB20578;
+        Wed, 20 May 2020 02:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589942922;
+        bh=PgpVdWU0GNMRchnHmpGiYCiQjyaUTn2pzx382J/j+gY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hpq85SNwch7/Gzo34hPTmn+TNxynle/kDED3bfOky0+zVRpNN5axZE8mKSgu4km1L
+         YGikQ61RMufrW4q7leUjfYIPbml+U8wytN/7hgMzhiI238MeSaH/jRwo/bqRzKpu58
+         uoXS+UjeoOFg119Od8jXwLW6h5J2UPHykMWuWAlI=
+Date:   Wed, 20 May 2020 10:48:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Robert Beckett <bob.beckett@collabora.com>,
+        stable@vger.kernel.org, Ian Ray <ian.ray@ge.com>
+Subject: Re: [PATCHv1] ARM: dts/imx6q-bx50v3: Set display interface clock
+ parents
+Message-ID: <20200520024835.GS11739@dragon>
+References: <20200514170236.24814-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200519175502.2504091-4-jean-philippe@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514170236.24814-1-sebastian.reichel@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/20/20 1:54 AM, Jean-Philippe Brucker wrote:
-> Let IOMMU drivers allocate a single PASID per mm. Store the mm in the
-> IOASID set to allow refcounting and searching mm by PASID, when handling
-> an I/O page fault.
+On Thu, May 14, 2020 at 07:02:37PM +0200, Sebastian Reichel wrote:
+> From: Robert Beckett <bob.beckett@collabora.com>
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->   drivers/iommu/Kconfig     |  5 +++
->   drivers/iommu/Makefile    |  1 +
->   drivers/iommu/iommu-sva.h | 15 +++++++
->   drivers/iommu/iommu-sva.c | 85 +++++++++++++++++++++++++++++++++++++++
->   4 files changed, 106 insertions(+)
->   create mode 100644 drivers/iommu/iommu-sva.h
->   create mode 100644 drivers/iommu/iommu-sva.c
+> Avoid LDB and IPU DI clocks both using the same parent. LDB requires
+> pasthrough clock to avoid breaking timing while IPU DI does not.
 > 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 2ab07ce17abb..d9fa5b410015 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -102,6 +102,11 @@ config IOMMU_DMA
->   	select IRQ_MSI_IOMMU
->   	select NEED_SG_DMA_LENGTH
->   
-> +# Shared Virtual Addressing library
-> +config IOMMU_SVA
-
-This looks too generic. It doesn't match the code it actually controls.
-
-How about IOMMU_SVA_LIB?
-
-> +	bool
-> +	select IOASID > +
->   config FSL_PAMU
->   	bool "Freescale IOMMU support"
->   	depends on PCI
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index 9f33fdb3bb05..40c800dd4e3e 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -37,3 +37,4 @@ obj-$(CONFIG_S390_IOMMU) += s390-iommu.o
->   obj-$(CONFIG_QCOM_IOMMU) += qcom_iommu.o
->   obj-$(CONFIG_HYPERV_IOMMU) += hyperv-iommu.o
->   obj-$(CONFIG_VIRTIO_IOMMU) += virtio-iommu.o
-> +obj-$(CONFIG_IOMMU_SVA) += iommu-sva.o
-> diff --git a/drivers/iommu/iommu-sva.h b/drivers/iommu/iommu-sva.h
-> new file mode 100644
-> index 000000000000..78f806fcacbe
-> --- /dev/null
-> +++ b/drivers/iommu/iommu-sva.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * SVA library for IOMMU drivers
-> + */
-> +#ifndef _IOMMU_SVA_H
-> +#define _IOMMU_SVA_H
-> +
-> +#include <linux/ioasid.h>
-> +#include <linux/mm_types.h>
-> +
-> +int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min, ioasid_t max);
-> +void iommu_sva_free_pasid(struct mm_struct *mm);
-> +struct mm_struct *iommu_sva_find(ioasid_t pasid);
-> +
-> +#endif /* _IOMMU_SVA_H */
-> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
-> new file mode 100644
-> index 000000000000..442644a1ade0
-> --- /dev/null
-> +++ b/drivers/iommu/iommu-sva.c
-> @@ -0,0 +1,85 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Helpers for IOMMU drivers implementing SVA
-> + */
-> +#include <linux/mutex.h>
-> +#include <linux/sched/mm.h>
-> +
-> +#include "iommu-sva.h"
-> +
-> +static DEFINE_MUTEX(iommu_sva_lock);
-> +static DECLARE_IOASID_SET(shared_pasid);
-
-NIT: how about iommu_sva_pasid?
-
-> +
-> +/**
-> + * iommu_sva_alloc_pasid - Allocate a PASID for the mm
-> + * @mm: the mm
-> + * @min: minimum PASID value (inclusive)
-> + * @max: maximum PASID value (inclusive)
-> + *
-> + * Try to allocate a PASID for this mm, or take a reference to the existing one
-> + * provided it fits within the [min, max] range. On success the PASID is
-> + * available in mm->pasid, and must be released with iommu_sva_free_pasid().
-> + *
-> + * Returns 0 on success and < 0 on error.
-> + */
-> +int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min, ioasid_t max)
-> +{
-> +	int ret = 0;
-> +	ioasid_t pasid;
-> +
-> +	if (min == INVALID_IOASID || max == INVALID_IOASID ||
-> +	    min == 0 || max < min)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&iommu_sva_lock);
-> +	if (mm->pasid) {
-> +		if (mm->pasid >= min && mm->pasid <= max)
-> +			ioasid_get(mm->pasid);
-> +		else
-> +			ret = -EOVERFLOW;
-> +	} else {
-> +		pasid = ioasid_alloc(&shared_pasid, min, max, mm);
-> +		if (pasid == INVALID_IOASID)
-> +			ret = -ENOMEM;
-> +		else
-> +			mm->pasid = pasid;
-> +	}
-> +	mutex_unlock(&iommu_sva_lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_sva_alloc_pasid);
-> +
-> +/**
-> + * iommu_sva_free_pasid - Release the mm's PASID
-> + * @mm: the mm.
-> + *
-> + * Drop one reference to a PASID allocated with iommu_sva_alloc_pasid()
-> + */
-> +void iommu_sva_free_pasid(struct mm_struct *mm)
-> +{
-> +	mutex_lock(&iommu_sva_lock);
-> +	if (ioasid_put(mm->pasid))
-> +		mm->pasid = 0;
-> +	mutex_unlock(&iommu_sva_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_sva_free_pasid);
-> +
-> +/* ioasid wants a void * argument */
-> +static bool __mmget_not_zero(void *mm)
-> +{
-> +	return mmget_not_zero(mm);
-> +}
-> +
-> +/**
-> + * iommu_sva_find() - Find mm associated to the given PASID
-> + * @pasid: Process Address Space ID assigned to the mm
-> + *
-> + * On success a reference to the mm is taken, and must be released with mmput().
-> + *
-> + * Returns the mm corresponding to this PASID, or an error if not found.
-> + */
-> +struct mm_struct *iommu_sva_find(ioasid_t pasid)
-> +{
-> +	return ioasid_find(&shared_pasid, pasid, __mmget_not_zero);
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_sva_find);
+> Force IPU DI clocks to use IMX6QDL_CLK_PLL2_PFD0_352M as parent
+> and LDB to use IMX6QDL_CLK_PLL5_VIDEO_DIV.
 > 
+> This fixes an issue where attempting atomic modeset while using
+> HDMI and display port at the same time causes LDB clock programming
+> to destroy the programming of HDMI that was done during the same
+> modeset.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+> [Use IMX6QDL_CLK_PLL2_PFD0_352M instead of IMX6QDL_CLK_PLL2_PFD2_396M
+>  originally chosen by Robert Beckett to avoid affecting eMMC clock
+>  by DRM atomic updates]
+> Signed-off-by: Ian Ray <ian.ray@ge.com>
+> [Squash Robert's and Ian's commits for bisectability, update patch
+>  description and add stable tag]
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Best regards,
-baolu
+Applied, thanks.
