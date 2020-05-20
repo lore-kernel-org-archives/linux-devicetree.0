@@ -2,91 +2,84 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADF3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD09C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D73920671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:26:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="X4Dyq5Ze"
+	by mail.kernel.org (Postfix) with ESMTP id 289B02072C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgETS07 (ORCPT
+        id S1726596AbgETSkg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 14:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgETS06 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 14:26:58 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85AFFC061A0E
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 11:26:58 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id h4so3397381wmb.4
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 11:26:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Y/fdBR4NjwtQDCcpCctgOyCn9js/D87HSWqbK2WjCk=;
-        b=X4Dyq5Ze9JCoNjG3KsaNqU1dDeKCUMh00Xiz7+8OVNwUiocD0n54uYbDAPqVAc+JPG
-         2jr4mRkAj3MRIH3H62IPk0SHcRtbUooIhrXZjOW4OXNF4scXgT5ySHRquY+Lgb61+whu
-         mXsmvrHLfNQ3Jh8mB2zUaH1Hmo2Kd1wMnxKJQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Y/fdBR4NjwtQDCcpCctgOyCn9js/D87HSWqbK2WjCk=;
-        b=koRmctC2t2xpsZfeO+SDYaaYFRP1oOvJapxCjTsknU4x4+wt5fgVamlVqTW+pjSpcG
-         qhGOQv4IG5/UODb/anQNSeWEEk8GRLNscO7CTOnB3LIM3ricbqCLLJz/g6W3mIHzTimP
-         7uXcJPw2CSo6yMjl3vVUTmll2z+smQKllCPoJpLS8uMLAPVe95jbnOy98dSJFiC6zsd9
-         za1OSLT2dQJIuBvZDfB/W2E1qQ2NIWJe7jO9t5kUFFVnnElUT2DA0L7S/6P5PjdnjdF4
-         VJftIm+vGZwzohA4at6e/AYTEB2vFpUVEEnQbXo4hiaC+p2anTP5KwEzx4YwCMWVwmAT
-         m/Jw==
-X-Gm-Message-State: AOAM530AxIBiXYET9+AEy95ZM4et7RMeO8A5xmvmlAFSAk/cMRiYY7c+
-        mlN+3YOK34RknsH1obNYlI0EMHKhdIjhxvt25LPQKQ==
-X-Google-Smtp-Source: ABdhPJyKeMi9gaTkOXDaBSgAZ5jBfQr9fDEE+1qJ1e9vX2WhhGVEmL6fshDM82dD1DyIM9MqcUXl+6DgXk1CBF0SP+Y=
-X-Received: by 2002:a1c:7305:: with SMTP id d5mr5874355wmb.85.1589999217222;
- Wed, 20 May 2020 11:26:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-10-james.quinlan@broadcom.com> <20200520174216.GA11770@lst.de>
-In-Reply-To: <20200520174216.GA11770@lst.de>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Wed, 20 May 2020 14:26:43 -0400
-Message-ID: <CA+-6iNzy_nELB0ptE0vH5KrGMFq4CctFKDipk3ZzXnjnT9hfuQ@mail.gmail.com>
-Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma offsets
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+        Wed, 20 May 2020 14:40:36 -0400
+Received: from elvis.franken.de ([193.175.24.41]:60592 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbgETSkg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 14:40:36 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jbTdq-0005JR-01; Wed, 20 May 2020 20:40:34 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 952F1C0155; Wed, 20 May 2020 20:40:24 +0200 (CEST)
+Date:   Wed, 20 May 2020 20:40:24 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200520184024.GB23855@alpha.franken.de>
+References: <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
+ <20200508154150.GB22247@alpha.franken.de>
+ <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+ <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
+ <20200518134820.wedoumgbsllvhem6@mobilestation>
+ <20200518163206.GA17800@alpha.franken.de>
+ <20200518205752.txbylbjt2zkwdwwe@mobilestation>
+ <20200519155053.GB15797@alpha.franken.de>
+ <20200520115926.lk6ycke75flwzcd2@mobilestation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520115926.lk6ycke75flwzcd2@mobilestation>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sorry, I meant to put you on the to-list for all patches.   The last
-time I sent out this many patches using a collective cc-list for all
-patches I was told to reduce my cc-list.
-Jim
+On Wed, May 20, 2020 at 02:59:26PM +0300, Serge Semin wrote:
+> I think there is a misunderstanding here. In this patch I am not enabling
 
-On Wed, May 20, 2020 at 1:42 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> If you don't Cc me on the whole series I have absolutely no way to
-> review it.  Don't ever do these stupid partial Ccs as they cause nothing
-> but pain.
+you are right, I've missed the fact, that this also needs to be enabled
+in TLB entries. Strange that MIPS added the enable bit while R10k simply
+do uncached acclerated, whenever TLB entry selects it.
+
+> If there is no misunderstanding and you said what you said, that even enabling
+> the feature for utilization might be dangerous, let's at least leave the
+> MIPS_CONF_MM, MIPS_CONF_MM_FULL and MIPS_CONF_MM_SYS_SYSAD fields
+> definition in the "arch/mips/include/asm/mipsregs.h" header. I'll use
+> them to enable the write-merge in my platform code.
+> 
+> What do you think?
+
+I withdraw my concerns and will apply the patch as is.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
