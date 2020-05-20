@@ -2,149 +2,123 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5715DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 19:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACA6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 355F9207D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 19:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E4F207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:02:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sl5Q5x/A"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bX8NyOa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgETTsP (ORCPT
+        id S1727803AbgETUCf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 15:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbgETTsP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 15:48:15 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD22C061A0E;
-        Wed, 20 May 2020 12:48:15 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id m11so4904293qka.4;
-        Wed, 20 May 2020 12:48:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=j9GtLPWP384+mcmNAjX0iJ86SP6E9SyJL2vo8P6h15U=;
-        b=Sl5Q5x/AR2Cz1CAvTwZdOUzSDcS1IoQUjBY1fsHBdcZ5ff2iJLVCx4Wpgo6pWMtppo
-         Qg7bibiXvAe0J8B48njqtDUyPxTy4DEiIxugvAX4yguVlx4js6USdh9R6krQ8K0qMkb4
-         GQXRXRAp7J3Eo4Fjn4o5dxvzoJDqdgAdficdKdEJT+elbKteocf+XSgjeX3HOHQDoilN
-         5SVI+N1BJpSw+t0v/iI9aHQ468Qb8y4xefOE9hRmHUqdQBziUqAWiRnRv3w81Xr1ZKK6
-         mxx3q0LJPp3PybZYh+BNcnfZh2oOgvhWX6+t6hIvlO20GBW/Iok4ZqsJe3PccDdaqTAz
-         gM+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=j9GtLPWP384+mcmNAjX0iJ86SP6E9SyJL2vo8P6h15U=;
-        b=O7Qt2rvhoc0s51IxfywynxLjjbP8qwyjH9ycjOUKGRXFxmdiCkWLMJOiaqhroP3ibm
-         BZ6kHQznw1FocKAFnJFUizxcRTY5SbU0St0y6c710bbdcAY23AGhqH/FOE08haFIQTbA
-         /62o6D9ztOTdGzGLy93Rrf2yy6EASvxgjPADbT1EWt6dDkZhglaHnBLlXq91klu14sJi
-         iFBgkolHFPFvpMubYuBphpO5AkYpT9mRsjDRXaSoNxADY026FYHAGcmttr8WY24H1wEv
-         7f9p6P3WFhqPGzGovQqdUJq7/LyiwCG58Q2PRwAZoxSZ998LgPyhavCrJmTNFMDDSlst
-         tJ3g==
-X-Gm-Message-State: AOAM531XasSpPIIjpQr11kNZEOmS9x1MHvFhZY/P+UrrDVfRE5BzAe5b
-        e753oHku8zGgwRj1wIjeep5R/tQFSH3Z+g==
-X-Google-Smtp-Source: ABdhPJzmmfjnZ7v5lGiG7IP3kli4Yc3gZcR3wRYRHUJSWq/PIhQlU1MF8BbwpjcxK2O6dG5qUal0DA==
-X-Received: by 2002:a37:7347:: with SMTP id o68mr5962002qkc.343.1590004093902;
-        Wed, 20 May 2020 12:48:13 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id m33sm3158419qte.17.2020.05.20.12.48.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 12:48:13 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@nxp.com,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v3 5/5] iio: imu: bmi160: added mount-matrix support
-Date:   Wed, 20 May 2020 21:46:44 +0200
-Message-Id: <20200520194656.16218-6-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200520194656.16218-1-jonathan.albrieux@gmail.com>
-References: <20200520194656.16218-1-jonathan.albrieux@gmail.com>
+        Wed, 20 May 2020 16:02:35 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47190 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbgETUCe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 16:02:34 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KK2Ree059688;
+        Wed, 20 May 2020 15:02:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590004947;
+        bh=Jlv71XRhYvS94aqoB9HV5Z9r9HYEVNg9gj2FL6x/cOU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=bX8NyOa8WhyNk1kme0Ol5d4SFgz4V9Pcvi0kj3nadBNqeURZ08n3uwL4ltrKmUcsY
+         +hSZ01qy6SNvf1vtFrHOV1hZ2lu1r7NgxVx4LY1QMwp12Zt5hb1uqbFZHJIezOi9+E
+         9bAK8kNa+qbB+Ig53lAcB5rDIqVElT4xqVSg9pq4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KK2Rfb071370
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 15:02:27 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 15:02:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 15:02:27 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KK2PFc102988;
+        Wed, 20 May 2020 15:02:25 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+ <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+ <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
+ <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
+ <20200520192719.GK652285@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
+Date:   Wed, 20 May 2020 15:02:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200520192719.GK652285@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add mount-matrix binding support. As chip could have different orientations
-a mount matrix support is needed to correctly translate these differences.
+Andrew
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
----
- drivers/iio/imu/bmi160/bmi160.h      |  1 +
- drivers/iio/imu/bmi160/bmi160_core.c | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
+On 5/20/20 2:27 PM, Andrew Lunn wrote:
+> Hi Dan
+>
+>> UGH I think I just got volunteered to do make them common.
+> There is code you can copy from PHY drivers. :-)
+>
+> What would be kind of nice is if the validate was in the core as
+> well. Pass a list of possible delays in pS, and it will do a
+> phydev_err() if what is in DT does not match one of the listed
+> delays. Take a look around at what current drivers do and see if you
+> can find a nice abstraction which will work for a few drivers. We
+> cannot easily convert existing drivers without breaking DT, but a
+> design which works in theory for what we currently have has a good
+> chance of working for any new PHY driver.
 
-diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-index 923c3b274fde..a82e040bd109 100644
---- a/drivers/iio/imu/bmi160/bmi160.h
-+++ b/drivers/iio/imu/bmi160/bmi160.h
-@@ -9,6 +9,7 @@ struct bmi160_data {
- 	struct regmap *regmap;
- 	struct iio_trigger *trig;
- 	struct regulator_bulk_data supplies[2];
-+	struct iio_mount_matrix orientation;
- };
- 
- extern const struct regmap_config bmi160_regmap_config;
-diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-index d3316ca02fbd..26d586daee26 100644
---- a/drivers/iio/imu/bmi160/bmi160_core.c
-+++ b/drivers/iio/imu/bmi160/bmi160_core.c
-@@ -110,6 +110,7 @@
- 		.storagebits = 16,				\
- 		.endianness = IIO_LE,				\
- 	},							\
-+	.ext_info = bmi160_ext_info,				\
- }
- 
- /* scan indexes follow DATA register order */
-@@ -265,6 +266,20 @@ static const struct  bmi160_odr_item bmi160_odr_table[] = {
- 	},
- };
- 
-+static const struct iio_mount_matrix *
-+bmi160_get_mount_matrix(const struct iio_dev *indio_dev,
-+			const struct iio_chan_spec *chan)
-+{
-+	struct bmi160_data *data = iio_priv(indio_dev);
-+
-+	return &data->orientation;
-+}
-+
-+static const struct iio_chan_spec_ext_info bmi160_ext_info[] = {
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmi160_get_mount_matrix),
-+	{ }
-+};
-+
- static const struct iio_chan_spec bmi160_channels[] = {
- 	BMI160_CHANNEL(IIO_ACCEL, X, BMI160_SCAN_ACCEL_X),
- 	BMI160_CHANNEL(IIO_ACCEL, Y, BMI160_SCAN_ACCEL_Y),
-@@ -839,6 +854,11 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
- 		return ret;
- 	}
- 
-+	ret = iio_read_mount_matrix(dev, "mount-matrix",
-+				    &data->orientation);
-+	if (ret)
-+		return ret;
-+
- 	ret = bmi160_chip_init(data, use_spi);
- 	if (ret)
- 		return ret;
--- 
-2.17.1
+I think adding it in the core would be a bit of a challenge.  I think 
+each PHY driver needs to handle parsing and validating this property on 
+its own (like fifo-depth).  It is a PHY specific setting.
 
+Take the DP83867/9 and the ADIN1200/ADIN1300.
+
+The 8386X devices has a delta granularity of 250pS and the AD devices is 
+200pS per each setting
+
+And the 867/9 has 3x more values (15) vs only 5 for the AD PHY.
+
+And the Atheros AR803x PHY does use rgmii-id in the yaml, which I guess 
+is what you were pointing out, that if set the PHY uses a default 2nS 
+delay and it is not configurable.
+
+Same with the Broadcomm.
+
+Ack to not changing already existing drivers which is only 2 the AD PHY 
+and the DP83867 PHY.  But I can update the yaml for the 83867 and mark 
+the TI specific properties as deprecated in favor of the new properties 
+like I did with fifo-depth.
+
+Dan
+
+
+>       Andrew
