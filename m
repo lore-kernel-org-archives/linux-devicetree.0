@@ -2,90 +2,84 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2DCC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAFCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFEA1206F1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DB2207C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgETMqV (ORCPT
+        id S1726510AbgETN3Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 08:46:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:15615 "EHLO mga14.intel.com"
+        Wed, 20 May 2020 09:29:16 -0400
+Received: from sauhun.de ([88.99.104.3]:37730 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgETMqU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 08:46:20 -0400
-IronPort-SDR: Eu2VlE2GRbcpXYVXmEuRhA+bOmmeTMOpzOtSTH6faSKoXPkPQuPEtLABpnhZHzIusBO1BxXltE
- Kh7+Zj1g2+Lg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:46:16 -0700
-IronPort-SDR: V6E/Ng3sk5KplKOJ4ojalPDdqw5sr7/ivO8RmkZKGAyG8bBoS9rBKNudLOOSWl9jP9CFatvZ/G
- 33VvxL6a2tcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="289337876"
-Received: from mylly.fi.intel.com (HELO [10.237.72.161]) ([10.237.72.161])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 05:46:12 -0700
-Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers glue
- layer interface
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
-Date:   Wed, 20 May 2020 15:46:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726436AbgETN3P (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 09:29:15 -0400
+Received: from localhost (p5486cd24.dip0.t-ipconnect.de [84.134.205.36])
+        by pokefinder.org (Postfix) with ESMTPSA id 98CC72C1FD1;
+        Wed, 20 May 2020 15:29:13 +0200 (CEST)
+Date:   Wed, 20 May 2020 15:29:13 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     qii.wang@mediatek.com
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        leilk.liu@mediatek.com
+Subject: Re: [next] i2c: mediatek: Use div_u64 for 64-bit division to fix
+ 32-bit kernels
+Message-ID: <20200520132913.GB5759@ninjato>
+References: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+Content-Disposition: inline
+In-Reply-To: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
 
-On 5/10/20 12:50 PM, Serge Semin wrote:
-> Seeing the DW I2C platform driver is getting overcomplicated with a lot of
-> vendor-specific configs let's introduce a glue-layer interface so new
-> platforms which equipped with Synopsys Designware APB I2C IP-core would
-> be able to handle their peculiarities in the dedicated objects.
-> 
-Comment to this patch and patches 9/12 and 12/12:
+--ZoaI/ZTpAVc4A5k6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Currently i2c-designware-platdrv.c is about 500 lines of code so I don't 
-think it's too overcomplicated. But I feel we have already too many 
-Kconfig options and source modules for i2c-designware and obviously 
-would like to push back a little from adding more.
+On Wed, May 20, 2020 at 06:31:53PM +0800, qii.wang@mediatek.com wrote:
+> From: Qii Wang <qii.wang@mediatek.com>
+>=20
+> Use div_u64 for 64-bit division, and change sample_ns type to
+> unsigned int. Otherwise, the module will reference __udivdi3
+> under 32-bit kernels, which is not allowed in kernel space.
+>=20
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
 
-I don't think i2c-designware-platdrv.c becomes yet too complicated if 
-Baikal related code is added there, perhaps under #ifdef CONFIG_OF like 
-MSCC Ocelot code is currently.
+Applied to for-next by squashing it into the relevant commit, thanks!
 
--- 
-Jarkko
+
+--ZoaI/ZTpAVc4A5k6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7FMKkACgkQFA3kzBSg
+KbbynRAAmwCukXP9v4Fs9sjBIrxVil2vgnjXCEmpHgr7IZ37e9uoqxlUndj/oHhs
+YuDiSBGBVXU/ZYFP2VDsUdMRBa11pyoNALMiO0uIThiQ4gkn132Ej4DJ+s9o54cz
+nh74h8be69a0EmvvYY99oBfIFZ7ORRtvL5lIktHUaP9h4YvU1CC/neJ5o97q4bVU
+GBugpXgWfXEBApFPyXr3ShOaUyxnCJKYHAFyHShqoEtgIwXlyurDYG9yzkeI3d6w
+U5jKdhAp97EwNf+b1iLj/2EEOpE0G1wEWke8rTL1mjJMJRVCwUQqzeFzPORfGMK+
+YpphdJtvU6mvl2wjnybBcc4gb9WoQP7wRkb7lEdgW9kmlNIqPgzuds7F6ePHMNRD
+GxdMBnOiLFC6UnTih18N4gMnH9AwjX/1Hz4k8g9riHdF1+BGpcytZsosCXXE7n7C
+9rVPE/9HE9juuEWLBTqdonrOje8DOtOtOqX1b7DwEbHotanakMQY1C5xPbX6Wzr3
+QnKeVyuTbd0nUVkLgMCOJP/d9/1mJWWNvJSKdG/7zRyyz2nhOr4C8lJhLLH14Hub
+XKK5/K8qiufXzdhryt/EmiThF5WbhcRHQ4HH+irt9droO08MkBlZfnuW7NT0NPuY
+uk3OkrWasxCtb9udRSUrM6rGmfcueB//OzLR3xiq8GH/AykuwaM=
+=gKRd
+-----END PGP SIGNATURE-----
+
+--ZoaI/ZTpAVc4A5k6--
