@@ -2,99 +2,120 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C28C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E0CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4FDC20842
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CC420842
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sjwc5wdX"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EXmTxOEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgETC5m (ORCPT
+        id S1726379AbgETC70 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 22:57:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgETC5l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 22:57:41 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A4C6C061A0E;
-        Tue, 19 May 2020 19:57:41 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g1so1895402ljk.7;
-        Tue, 19 May 2020 19:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9KC6GGjoH8hnfhD8tdDUja14o6OUOJAOHW0azVQUnXI=;
-        b=sjwc5wdXqJ/WxyozE/wXmrHsKhLNAFb3bRpSeOy331LwXuMTGqG836DVyBaOP6/Wbq
-         Oeo5+wgEw0e/PkaVz7JR+moTkU16FJ3Y6B0vi33gNGrDrb28jHDHzfAsQD2jlBvkm5ok
-         fqXs2mnILImPvEb84vfaxlykXWnoP/R4b6Q7eJ8tBJVMAbTKMVsTiA9CMJLaENAGYHgR
-         aNl94nge9+6wylZDT9dWe8RbMQbIetNoH2kygBWxvj0NwGCz0VzaQcjMOrDu5Gxn093U
-         DdrHix38kXpLE2L9owgtJwpJWRvEjN9vTprpUPUhzX/dv6CTpRTmdYhyOC4u9S73di8+
-         ttlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9KC6GGjoH8hnfhD8tdDUja14o6OUOJAOHW0azVQUnXI=;
-        b=HMnymBDMGYkU9z5tsL98dggYqwxb2b3bxDGGAspjA0uRnHM7uH5CbJ7IyihO6rQbMI
-         CamuFQ8vih1tldSKXF1GEqwjWWdYlUtRyHJQaV46shABMwAt+PVtnmlWfKPlik1Vi92w
-         usHMJDbUt0+uEb1jAmJrA866xbJWPIvxv7ejVMqG9qLtK7SJLwlA+sB4VeWyxSPd2rl6
-         Yj4+K3r/+Ij4ZTdVGovsUqnZ8Z5ANL1i+3T/+8bfcGcb+A0sHtOXg++kAoSW7xyv1wpE
-         OvOkRbxnrlZhYl/+CwynAAsSzAj4eXWDsmPwZZHGETolj5aUkBGpEqVcmbv6UjziJwwR
-         mn9Q==
-X-Gm-Message-State: AOAM532VZG5GOejNnNvmtnGzAYz9sUzD0/58y6wcX4sT8xFVh7+SYdDV
-        iOVjbQ/huJB3qsuabmlkJPs4kh5H+Xc/mkv0C7U=
-X-Google-Smtp-Source: ABdhPJwrTDhzAMOEdHdxMqT7mpDPk3dUGrskOlhpIObxl2pTn9btFcVuWwRV37VDRLjBTmtcxE6FMBvOjbNoa71R6EI=
-X-Received: by 2002:a2e:920e:: with SMTP id k14mr1459145ljg.288.1589943459875;
- Tue, 19 May 2020 19:57:39 -0700 (PDT)
+        Tue, 19 May 2020 22:59:26 -0400
+Received: from mail-eopbgr10087.outbound.protection.outlook.com ([40.107.1.87]:39045
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726318AbgETC70 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 22:59:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PGnxiwfBFEJ20bgCa3X4VHMyxAc8zGFLXLMLs2RVUrQMobF0n/+6c14nwFrkubLE901U7wwmGIQVD0H2uBw8E318gVrn4b54metKzl1ZmwSDNmlLfmIve7MqD3O4RCak3ZkvCoQA0yggDwb4z58WJqTpJ5HSe7reMyNJiSnGt9A3YquKmwdjJCYzRYThL/B8SveQff6LFUsxpFVsoaIw+Af+az5mgqQiE7CldtOwc04vl/CVkS8E8Se5cPKVbNln1b4y44Ms5J9iH5ljgtT7ekWr9ZNB/s2HzJDQrt5OArOKo4JoDbMnv5Q9p2Ix4bU5SjJNlaZI+XoAWl8xKH4WPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fwPV/c+mnU9Evz8xkGeS+nxXmRufqeVzSOhbU2ursvQ=;
+ b=ZHy6GjKtA6YVL7CJOJRsvsq2FbFVJpyGZ5/9k4Li55AnjSD2WvvmkiPQmdO4KmUoDrZ09RRR91UcVG17DmX/YY0euxNvOg80PbNEDPLNoXu08qLAKIylzrBuMiVRk0OF9SG4DjVYqiMwvppdyOPx8dLcNvnuEkTbATYIl0GvkS47d704aqi0qqocyG2iPVUDcpAMW1E1BIIg9fKi/VNVFCS0Sz3lW4Kb+aEY3dPOgEtLjKxc9nR6g/azK44CubrEIE1A8zVpfQ6lp4YAnTtXXjL6uXvX/xn0rY4uzRAH56h4qw5+aPj08Yc3LDdZNl+eR+lCX7y4A/UCaESkM3XYWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fwPV/c+mnU9Evz8xkGeS+nxXmRufqeVzSOhbU2ursvQ=;
+ b=EXmTxOEmUIzUwG7KdLXOSHUyr+nJwNLEWsycR1wO76j63enC3Nh5tLub/pLMKeK88CWaLHqlK4TzThRj5YMEGU5F+kuc01HXeLW/eccZT5W7o+OGlloBu4FdYNao44GlkI6gs/S7OQUnVFVzIIfSRcfBw6Tl51kqC3Nnjretx8s=
+Authentication-Results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
+ by DB8PR04MB6634.eurprd04.prod.outlook.com (2603:10a6:10:10e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Wed, 20 May
+ 2020 02:59:21 +0000
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::2924:94ba:2206:216e]) by DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::2924:94ba:2206:216e%7]) with mapi id 15.20.3000.034; Wed, 20 May 2020
+ 02:59:21 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     john.garry@huawei.com, will@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, shawnguo@kernel.org
+Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/3] perf/imx_ddr: Add system PMU support
+Date:   Wed, 20 May 2020 10:56:16 +0800
+Message-Id: <20200520025619.687-1-qiangqing.zhang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0142.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::22) To DB8PR04MB6795.eurprd04.prod.outlook.com
+ (2603:10a6:10:fa::15)
 MIME-Version: 1.0
-References: <1589940278-3680-1-git-send-email-peng.fan@nxp.com> <1589940278-3680-4-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1589940278-3680-4-git-send-email-peng.fan@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 19 May 2020 23:59:00 -0300
-Message-ID: <CAOMZO5BPPRy_XGHHyZfE3eOrmCwW_VytueY-An8qqke6HU06TQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: imx8mp: add mu node
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.71) by SG2PR01CA0142.apcprd01.prod.exchangelabs.com (2603:1096:4:8f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Wed, 20 May 2020 02:59:17 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.71]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ebcbe17e-44f1-44e1-14e5-08d7fc69cb4d
+X-MS-TrafficTypeDiagnostic: DB8PR04MB6634:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR04MB663457A8FD6F3F2AEC6A65E3E6B60@DB8PR04MB6634.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 04097B7F7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1u+bUvKMd9SORe/DkIhxyodK4HhlcuQPvb2Z2uNaAo5/Z7itGy3UMuvZBUtEMxvyKRT90P88A1241QlfXfxMeYARUdbBHPvIgpHJz/NB6fFW9A5z/n8Rql8GolGJBHKBOg4+m81Z5v2hOFwrsqVyMnB56ZQmTIAd3912qqQtBV8rp4eXw2HUOi0eic5y/W7WkOLrB6ZdwQhy3ojOKA/yVduC/Am/LCgYtT71AjfjfFgJkC5tlMVwpEDDwAkdd4PxQYR/itrtd/6j2TmsoRnuaEs7McZTHLyx8TuByp520ui4imHbfqmUePx8oY31/jWTpB6cC7Y2bUbFctWELJ/9U8UbBu36a6JpD4yadZ1cY/y0ZWJGSAl2BuZVYYwcKBYTr6aEakQt7lSo3u+2p5izYpy0yGTfBeKxhg+oPJ3dqItB9R1coiaRhl89Nn2NBH0rX9FfH0PeDPK0iXkVO+HB1tnxCSn+HVMQaRVBbJejdNJ+2RqtXImv6CR7rarj5iKr
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(8676002)(478600001)(2906002)(6486002)(956004)(4744005)(8936002)(2616005)(36756003)(6506007)(16526019)(5660300002)(66556008)(66476007)(4326008)(26005)(66946007)(1076003)(6512007)(316002)(86362001)(69590400007)(186003)(52116002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 64CSBvKyDyJPydAO8Wd/3ufLi1aQ3bwxZ6hf3Kkn8bgCGYi9OcmU88fqr3VAcLl6Is9lPzDAkeyndSRbiU4YDl2v41pCHScyhoFngVydExn+L8KGoAHwCAmp2bHPMrplLM0NhUJCzUitfcc5wNvoS8/3jyp/tBKgNodlycOOam/iUuVk8ulVUDL3Jy+Vv0UuSNvF8RKw2VdtbA1REjg93oQsqv0yZdgUupGK753vAyd9CiZRaeKL+PX4SF4Ebx+nY0n9LKBMm4jwqAvpStkc26Yr4MwiZAUtAkBPizzO0nvhep+9vSQWu1VZxupof/eg8GtW671xaHP2XNuxuAz+l4y/fd522BLHv65mFrOBTCZQ0NI9bMNKPzehO1bnJZfj8Malbh8PskTpx4JOsy7xrdUxz8RLyWjetJPKU16chD08gIPF4NmGDbuX480ZnnbQUtLwr/bQEmQOK4xBtqINLq7urMQ/1PAI9DinMEcK5r8=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebcbe17e-44f1-44e1-14e5-08d7fc69cb4d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 02:59:21.1922
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Tset2zCvP0/t1qqxFEq/673W/78HyOgzh3KyQ1zwFKZqnzDiUYjlS0POH6D2l6wPXpv9ThP2UCv4zgwJMwoDHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6634
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Peng,
+The patch set adds system PMU support for i.MX8 DDR Perf.
 
-On Tue, May 19, 2020 at 11:15 PM <peng.fan@nxp.com> wrote:
+The sysfs location for userspace to get the PMU identifier under the
+directory:
+	/sys/bus/event_source/devices/<PMU DEVICE>/identifier
 
-> +                       mu: mailbox@30aa0000 {
-> +                               compatible = "fsl,imx6sx-mu";
+ChangeLogs:
+V1 -> V2:
+	*add property in dt instead of changing compatible string.
 
-This should be better described as:
+Joakim Zhang (3):
+  bindings: perf: imx8_ddr: add identifier property
+  perf/imx_ddr: Add system PMU identifier for userspace
+  arm64: dts: imx8/8mm/8mn/8mq: add identifier for DDR perf
 
-compatible = "fsl,imx8mp-mu", "fsl,imx6sx-mu";
+ .../devicetree/bindings/perf/fsl-imx-ddr.txt  |  3 ++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  1 +
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  1 +
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  1 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    |  1 +
+ drivers/perf/fsl_imx8_ddr_perf.c              | 29 +++++++++++++++++++
+ 6 files changed, 36 insertions(+)
 
-From Documentation/devicetree/bindings/mailbox/fsl,mu.txt:
+-- 
+2.17.1
 
-"The "fsl,imx6sx-mu" compatible is seen as generic and should
-be included together with SoC specific compatible."
