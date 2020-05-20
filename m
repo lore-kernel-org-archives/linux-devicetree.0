@@ -2,122 +2,98 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCDBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 16:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23144C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 16:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6772075F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 16:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032E720671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 16:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqYfNJBq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cTN8MLqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgETQDz (ORCPT
+        id S1726439AbgETQPN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 12:03:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42750 "EHLO
+        Wed, 20 May 2020 12:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgETQDz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 12:03:55 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BE56C061A0E;
-        Wed, 20 May 2020 09:03:55 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d10so1640823pgn.4;
-        Wed, 20 May 2020 09:03:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OOwuxWEO/Sl8yx5TsqcCpHvO91TmRIyEZirMBX+Uvb0=;
-        b=tqYfNJBqFCzIdnyTQnESaY2EhitXzArebVnBxAmiWUH31YSwGkyxGT0bxmjdCnNP3I
-         doqAT4kPg0MYs4+BiQ1Z3U1ofhnEK7ta3Pg1xLEAVVEBIzepp2mPu65oNVqpTA9bQB8b
-         BH5ZCfTfUNCJzdtBjLYpmc20KA7BhcXfs8NywHaFaxxnayfjpnQLC9neSD3GFyRNHM89
-         NCu07RBOShh6FI8LU3twTebMt0uAnwfJJTbpsKJHe1sUBcZIRdUKl5PcTpo7c2QFxqZZ
-         QO2rjpg22xaV7mFRc5Iowj9Z6nkp2FIIOKvZ947SgpukLUqvIo+PwalmnOLcrrr6llAB
-         P0Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OOwuxWEO/Sl8yx5TsqcCpHvO91TmRIyEZirMBX+Uvb0=;
-        b=T18iy+PF1ETZQ8uWvFNV2KApObosuFGblXWl9pA8/LSOI4sySzDQpaBHONwST/fvo9
-         lkENUP2EJ2WuvctEtYo/EHNZVuoXqdg3aCjnWc4zEgVE2C4M5YpPCbh4w4FmtEpR8CoD
-         VpErf4N+rba5ef9D0AUeKZDHfObWIzkGyUYBerQI/hBVsgrCyctLq6v1NCFYMSFw3y7N
-         k+CX/ZcL/btsFE9hQxpS1VCVUojq6wy7S80Kpdq3akLOp6FhaolEV0oNJc00TYO0WmfG
-         h66YhiO33gVgzhmZ9I3cdthVZzzX6SocQX/QKbgbZggy5biJpyIvuspTaaM6gLO8lnzl
-         vsQA==
-X-Gm-Message-State: AOAM53257m8vzqvYKfvZD91iF8EKUGMNthUgOYTb1VMKDBFGatFa4EJn
-        3JYAHb4s2j1pGSql+tw7nqMru/sL
-X-Google-Smtp-Source: ABdhPJyzKgk4okw2I5EAYp6yP9oqV+jg1QwGBzglmgRe4hDbyE6yihw912kZx/Hr1COTy0fgNciqFw==
-X-Received: by 2002:a63:2347:: with SMTP id u7mr4590793pgm.183.1589990634413;
-        Wed, 20 May 2020 09:03:54 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w7sm2381841pfw.82.2020.05.20.09.03.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 09:03:53 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-To:     Dan Murphy <dmurphy@ti.com>, Andrew Lunn <andrew@lunn.ch>
-Cc:     hkallweit1@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200520121835.31190-1-dmurphy@ti.com>
- <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
- <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
- <20200520153631.GH652285@lunn.ch>
- <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <0d80a7f6-35a9-9b3f-2a8f-65b793d1ce98@gmail.com>
-Date:   Wed, 20 May 2020 09:03:52 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        with ESMTP id S1726436AbgETQPN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 12:15:13 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2368C061A0E;
+        Wed, 20 May 2020 09:15:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=KUsG4feXigEdZ3QpYALXvpu/1zKdm/ox7vuSCPQehrI=; b=cTN8MLqDM8INSNrXIHuE2+fp09
+        UNc+u5wyrqEtriUMCkNXq63TjVhwN90f8CssOrLD37dfcPJkAW9o2Cgplh5Urq3dBC2NZJVXmUPE4
+        Pn1oQxZYoUQ8NzPVUuB/PB6r3wsG1pao7sGlEs2Z5oG4z4/yCaFGGzaOiRv2YC8u+YwUre+rCPPat
+        DOAKg/QWoTChuBCw8tVTBhqJfhLVAXOGfmvTdJLPVSmjzL+O4fMpqU8EyvwB3kBWbCF3t4N6WUt6r
+        4uusMh5Bpe8D/t4OTl7ulP1uifl9IHKfAW6+3JuRA037ZRPEe84Z9uUZyjPmvLlEjavPow5eycrBO
+        IcHZf5lw==;
+Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbRN6-00083y-Lu; Wed, 20 May 2020 16:15:09 +0000
+Subject: Re: [next] i2c: mediatek: Use div_u64 for 64-bit division to fix
+ 32-bit kernels
+To:     qii.wang@mediatek.com, wsa@the-dreams.de
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        leilk.liu@mediatek.com
+References: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c92c499b-825d-bd28-3c0d-e63076cba1b6@infradead.org>
+Date:   Wed, 20 May 2020 09:15:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+In-Reply-To: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 5/20/20 3:31 AM, qii.wang@mediatek.com wrote:
+> From: Qii Wang <qii.wang@mediatek.com>
+> 
+> Use div_u64 for 64-bit division, and change sample_ns type to
+> unsigned int. Otherwise, the module will reference __udivdi3
+> under 32-bit kernels, which is not allowed in kernel space.
+> 
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+thanks.
+
+> ---
+>  drivers/i2c/busses/i2c-mt65xx.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> index 7020618..deef69e 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -551,7 +551,8 @@ static int mtk_i2c_check_ac_timing(struct mtk_i2c *i2c,
+>  	const struct i2c_spec_values *spec;
+>  	unsigned int su_sta_cnt, low_cnt, high_cnt, max_step_cnt;
+>  	unsigned int sda_max, sda_min, clk_ns, max_sta_cnt = 0x3f;
+> -	long long sample_ns = (1000000000 * (sample_cnt + 1)) / clk_src;
+> +	unsigned int sample_ns = div_u64(1000000000ULL * (sample_cnt + 1),
+> +					 clk_src);
+>  
+>  	if (!i2c->dev_comp->timing_adjust)
+>  		return 0;
+> 
 
 
-On 5/20/2020 8:56 AM, Dan Murphy wrote:
-> Andrew
-> 
-> On 5/20/20 10:36 AM, Andrew Lunn wrote:
->>>> Hi Dan
->>>>
->>>> Having it required with PHY_INTERFACE_MODE_RGMII_ID or
->>>> PHY_INTERFACE_MODE_RGMII_RXID is pretty unusual. Normally these
->>>> properties are used to fine tune the delay, if the default of 2ns does
->>>> not work.
->>> Also if the MAC phy-mode is configured with RGMII-ID and no internal
->>> delay
->>> values defined wouldn't that be counter intuitive?
->> Most PHYs don't allow the delay to be fine tuned. You just pass for
->> example PHY_INTERFACE_MODE_RGMII_ID to the PHY driver and it enables a
->> 2ns delay. That is what people expect, and is documented.
-> 
->> Being able to tune the delay is an optional extra, which some PHYs
->> support, but that is always above and beyond
->> PHY_INTERFACE_MODE_RGMII_ID.
-> 
-> I am interested in knowing where that is documented.  I want to RTM I
-> grepped for a few different words but came up empty
-> 
-> Since this is a tuneable phy we need to program the ID.  2ns is the
-> default value
-> 
-> Maybe I can change it from Required to Configurable or Used.
-
-I do not think this is properly documented, it is an established
-practice, but it should be clearly documented somewhere, I do not know
-whether that belongs in the PHY Device Tree binding or if this belongs
-to the PHY documentation.
 -- 
-Florian
+~Randy
