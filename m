@@ -2,107 +2,106 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAF2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF70C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3AE207FB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461782075F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UgV20lxE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N2PxVTmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgETItV (ORCPT
+        id S1726224AbgETIvq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 04:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59418 "EHLO
+        Wed, 20 May 2020 04:51:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgETItS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 04:49:18 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9A1C05BD43
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 01:49:17 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r22so1100269pga.12
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 01:49:17 -0700 (PDT)
+        with ESMTP id S1726650AbgETIvq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 04:51:46 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14074C05BD43
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 01:51:46 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g12so1089048wrw.1
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 01:51:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5/GPOSvzOGmCtBHrtawLleBNjihEJLwhFje0r/gyBuU=;
-        b=UgV20lxE+m+5SQqLGTghEUwbTUIM9gsx3aohb5041IPILli+i+DueRkw4rs3CjRGxL
-         LZS5e2UCfwkwAMonLsL3niejayYElFI+pPozSt58oS1qocOOL7IlVKiYeT/toB8tkEjV
-         wMz+aKUDq8VAhC0/BzUvqi272zqkPk5rMwZdJKtMR2GOI5HKU8bvFYTTAp/GDmaxI2YO
-         BlQkxKE+5rSWht00tp+BRAjus+zrmgdOja0SNtIMKGtKvCDLJlZOGld8f9lntRvNW1RJ
-         ya2kpYX94mnL0y2m1esWiPualqY7/k5Rqdyh8hlEUOET73J2UFTjSHqL6Yq1vd5DMDWx
-         PtMA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=RfZdfcc2DeqiyN9D4GMHPVwfFuLz1SqPHKWyIxBlRQE=;
+        b=N2PxVTmqc0PIilXf0tfgDq12qP6BuoYEi5jE083XOptOZ4MHgfU8BkVb4Grwgl4NIn
+         fBU6HygqUt0Y7EayYWPUa2VQAXhsfWczsuBjBeatxRBzQqZ4c809mi0qNqhqXbfgz2cs
+         6VkUVcngrKD1QpnKRDvaJyLXNS9LuPKXZsoKRGOPFkFO/fGiLaNKuvdP/ygjFmYfSi+W
+         MPXTMQf5CjoEoYddICmiqJZRujH6+tgZCw/lQSvnA5ravJ9Xb/OJqU0cjm5bOqbn4ySD
+         ytarfMarVW50RynUWKK0VjneG9HpAqs2QYT0NEXaq9tLXm+rrE68QzFKDAQdDnxD3+vN
+         FMKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5/GPOSvzOGmCtBHrtawLleBNjihEJLwhFje0r/gyBuU=;
-        b=VXo9Bmw6y3fxfekvODMStFkR1qZ4SVB6snEBihIT/5lFBXR1hO84ZR/vUEd8Pe/l4j
-         lHYWpDmTncOHauOipEGm7IhuDhX6CKKwOhDQ/Krj1LcVLIeT4Q4uq0257CflNUYvS2dJ
-         dtVAuh4PATMEIHA0oFr/mxNGiMqBKNHkunHIaQ9Yc1mSBG0c+lYVS/BJrxRHkdkan2yE
-         Yu+8teSGhY0EF01xyaROnxtWio/6K8I4Yu3aesmd6Z6jTou72uyp7LAQ1XZhX//8tiLQ
-         VFk5w9CUbT2DZr3jl6eSJt06SPjnb13eaDgi6UJfOdSJaMr0x7yJO4qqg+oCO7J41T4r
-         RttQ==
-X-Gm-Message-State: AOAM532Y/AIUx2X4RJy6Fer90lrfb9oKKCAm4nxqm7CfS+ek6In3FKWR
-        15K/MZNVAss+aLwjx3eF4+a9
-X-Google-Smtp-Source: ABdhPJzj9bk9hZCRxZo8oW53zgCLOrVhCvadLVA3ohiWT2uJcdRzK8qBIb25Ia1yGDIjiBKPe55flw==
-X-Received: by 2002:a63:4b0c:: with SMTP id y12mr3054903pga.56.1589964556662;
-        Wed, 20 May 2020 01:49:16 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:91e:dd0a:7c30:1f7e:ebdb:aa2a])
-        by smtp.gmail.com with ESMTPSA id a5sm1629332pfk.210.2020.05.20.01.49.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=RfZdfcc2DeqiyN9D4GMHPVwfFuLz1SqPHKWyIxBlRQE=;
+        b=C3q+sK56/h14keLFwVVp8yR2c0gPa66htb6zFKd4YC6Fauis5qy8fpuz1DNOq6g3FU
+         GHVd4Qyd3HN+kmqVrUwVz7IEl/sEt4cfRj+aibDi54rMMxAo9Njl3Oj1qnoY+aRnps0v
+         5dk2NikNpklq7z04atob6LI1p2ZSjHLTIjM3EIAzUmEic/L6o17Kkf+rW8XK6Izoygjd
+         EZFHTrZepmR+52OhGTwYCSMUqDzU+S78vr065wqc9Oo38axBy+KL1kAnU4WoHfg2L+b8
+         tMzs7h3I36I0nTFTJEHqjwkJ6gT0GjI+A44fIU4lFTDJy8XcHHW3lv/NVwDd/mGI1rAO
+         MALA==
+X-Gm-Message-State: AOAM5300riXQBsquO5XgUE6E8xJLKxulpzfDBbUGfXJORBaWYQxz8yJA
+        we36OQTaWn3nxNttxbp4CmPQMA==
+X-Google-Smtp-Source: ABdhPJy7vTQHZlsjHOUjjA1fY46F7xY4npimGLDwSi4Dq1QjAtAOE3tBVQxTxOSuaD03VnTeasE/QA==
+X-Received: by 2002:adf:ee87:: with SMTP id b7mr3292204wro.104.1589964704775;
+        Wed, 20 May 2020 01:51:44 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id l9sm984089wrv.32.2020.05.20.01.51.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 01:49:16 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     jassisinghbrar@gmail.com, robh+dt@kernel.org
-Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 3/3] MAINTAINERS: Add entry for Qualcomm IPCC driver
-Date:   Wed, 20 May 2020 14:18:54 +0530
-Message-Id: <20200520084854.19729-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.26.GIT
-In-Reply-To: <20200520084854.19729-1-manivannan.sadhasivam@linaro.org>
-References: <20200520084854.19729-1-manivannan.sadhasivam@linaro.org>
+        Wed, 20 May 2020 01:51:44 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:51:42 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.co, alexandre.torgue@st.com,
+        linus.walleij@linaro.org, amelie.delaunay@st.com,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Message-ID: <20200520085142.GD271301@dell>
+References: <20200220162246.8334-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220162246.8334-1-benjamin.gaignard@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for Qualcomm IPCC driver and its binding.
+On Thu, 20 Feb 2020, Benjamin Gaignard wrote:
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> Convert stmfx bindings to json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db31497..cc2fb991cc0d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14013,6 +14013,14 @@ L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
- F:	drivers/iommu/qcom_iommu.c
- 
-+QUALCOMM IPCC MAILBOX DRIVER
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+L:	linux-arm-msm@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
-+F:	drivers/mailbox/qcom-ipcc.c
-+F:	include/dt-bindings/mailbox/qcom-ipcc.h
-+
- QUALCOMM RMNET DRIVER
- M:	Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
- M:	Sean Tranchetti <stranche@codeaurora.org>
+>  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
+
+Linus, anything from you?
+
+>  3 files changed, 124 insertions(+), 144 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+
 -- 
-2.26.GIT
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
