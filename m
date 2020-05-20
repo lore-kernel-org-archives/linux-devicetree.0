@@ -2,118 +2,221 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468D0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E185BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14772207C4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:04:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kGPLLIX0"
+	by mail.kernel.org (Postfix) with ESMTP id C4AF720758
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgETMEd (ORCPT
+        id S1726829AbgETMMJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 08:04:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34804 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETMEc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:04:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KC1RLG176850;
-        Wed, 20 May 2020 12:04:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=DsT4BnuEUbk/nScFx27b5DkH7xTb4qeH1YVdy3VSSQM=;
- b=kGPLLIX0Prt6BXOx7Mq8sb8tZW75xBnRbwRphQfNern9VyDgqwBdqxL99NFA0eA5UgwY
- Si9XdEnGFuccYUymIqm/oTyIl4vtrDLx6HHxF3mKhNjAfA4NVB2KFFOFUG/tae0cxhx0
- +khMwq8mXgNiz9KYc67DO99gnSJ2IFcpA7JfbAzTCIToHlzMZxt2pBhw6OG2/e2V07W/
- D7U+WcjzOsjwDEuOF4hkYMgGq8L19e0KpbGKNFRLX9SwHeF8IllT+bCE+CZ8MthredYm
- StqmlblPMWdt11tzUhZPhC/+v0Gqp3Gpxcqew+yix4PC2TlXUrPU1jMkzxo14T0QSyGD pA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31501r97fq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 12:04:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KC2cs7119695;
-        Wed, 20 May 2020 12:04:24 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 313gj3dxae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 12:04:23 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KC4LBe014899;
-        Wed, 20 May 2020 12:04:21 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 May 2020 05:04:20 -0700
-Date:   Wed, 20 May 2020 15:04:14 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] of: Fix a refcounting bug in __of_attach_node_sysfs()
-Message-ID: <20200520120414.GE172354@mwanda>
+        Wed, 20 May 2020 08:12:09 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58300 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgETMMI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:12:08 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0FADA80307C1;
+        Wed, 20 May 2020 12:12:03 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id c8BOnlAs7pZK; Wed, 20 May 2020 15:12:02 +0300 (MSK)
+Date:   Wed, 20 May 2020 15:12:01 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200520121201.wohv6u646rx5otkf@mobilestation>
+References: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
+ <20200508154150.GB22247@alpha.franken.de>
+ <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+ <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
+ <20200518134820.wedoumgbsllvhem6@mobilestation>
+ <20200518163206.GA17800@alpha.franken.de>
+ <20200518205752.txbylbjt2zkwdwwe@mobilestation>
+ <20200519155053.GB15797@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <877dx69az4.fsf@mpe.ellerman.id.au>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
- mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200105
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519155053.GB15797@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The problem in this code is that if kobject_add() fails, then it should
-call of_node_put(np) to drop the reference count.  I've actually moved
-the of_node_get(np) later in the function to avoid needing to do clean
-up.
+On Tue, May 19, 2020 at 05:50:53PM +0200, Thomas Bogendoerfer wrote:
+> On Mon, May 18, 2020 at 11:57:52PM +0300, Serge Semin wrote:
+> > On Mon, May 18, 2020 at 06:32:06PM +0200, Thomas Bogendoerfer wrote:
+> > > On Mon, May 18, 2020 at 04:48:20PM +0300, Serge Semin wrote:
+> > > > On Fri, May 15, 2020 at 11:06:47PM +0200, Thomas Bogendoerfer wrote:
+> > > > > On Fri, May 15, 2020 at 10:48:27AM +0300, Serge Semin wrote:
+> > > > > > Thomas,
+> > > > > > Could you take a look at my comment below so I could proceed with the
+> > > > > > patchset v3 development?
+> > > > > 
+> > > > > I can't help, but using r4k clocksource with changing frequency is
+> > > > > probaly only usefull as a random generator. So IMHO the only two
+> > > > > options are disabling it or implement what arch/x86/kernel/tsc.c does.
+> > > > > 
+> > > > > Thomas.
+> > > > 
+> > > > Thomas, could you proceed with the rest of the patches review?
+> > > > ├─>[PATCH v2 16/20] bus: cdmm: Add MIPS R5 arch support
+> > > > ├─>[PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
+> > > 
+> > > both are not my call, but look ok to me.
+> > 
+> > Can I add your Reviewed-by tag there then?
+> 
+> only for 16/20. 15/20 looks ok to me, but I have not enough insides
+> on the hardware to say this is good.
+> 
+> > > > ├─>[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
+> > > 
+> > > that's broken. A reg shift of 2 doesn't mean we could use 32bit access
+> > > to the registers on other platforms. As I don't think adding some ifdefery
+> > > makes things nicer, just implement the your prom_putchar in board code.
+> > 
+> > I thought about that initially, but then I decided to alter the generic
+> > early_printk_8250 code instead. My version of prom_putchar() would be almost
+> > the same as one implemented in the early_printk_8250 module except minor
+> > modification of replacing readb/writeb methods with readl/writel. So I didn't
+> > want to duplicate the code, but wanted to provide a general way to fix the
+> > problem potentially also for another platforms.
+> > 
+> > Since you don't like this fix alternatively I'd suggest to add the reg_width
+> > parameter passed to the setup_8250_early_printk_port() method like this:
+> > -setup_8250_early_printk_port(unsigned long base, unsigned int reg_shift,
+> > -                             unsigned int timeout)
+> > +setup_8250_early_printk_port(unsigned long base, unsigned int reg_shift,
+> > +                             unsigned int reg_width, unsigned int timeout)
+> > 
+> > By reg_width parameter we could determine the actual width of the register:
+> >  static inline u8 serial_in(int offset)
+> >  {
+> > -       return readb(serial8250_base + (offset << serial8250_reg_shift));
+> > +       u8 ret = 0xFF;
+> > +
+> > +       offset <<= serial8250_reg_shift;
+> > +       switch (serial8250_reg_width) {
+> > +       case 1:
+> > +               ret = readb(serial8250_base + offset);
+> > +               break;
+> > +       case 2:
+> > +               ret = readw(serial8250_base + offset);
+> > +               break;
+> > +       case 4:
+> > +               ret = readl(serial8250_base + offset);
+> > +               break;
+> > +       default:
+> > +               break;
+> > +       }
+> > +
+> > +       return ret;
+> >  }
+> > 
+> > The similar modification will be implemented for serial_out(). I'll also modify
+> 
+> look at the lines of code you are adding. Doing your own prom_putchar will
+> probably have less lines.
+> 
+> > What do you think about this?
+> 
+> please do your own prom_putchar.
 
-Fixes: 5b2c2f5a0ea3 ("of: overlay: add missing of_node_get() in __of_attach_node_sysfs")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-v2: move the of_node_get() instead of doing clean up.  Also the v1 had a
-    confusing typo in the commit message.
+One more time regarding this problem but in appliance to another part of the
+MIPS code. I've missed the patch to draw your attention to:
+[PATCH v2 14/20] mips: Use offset-sized IO-mem accessors in CPS debug printout
 
- drivers/of/kobj.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+There I've applied the same fix as in the patch:
+[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
 
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index c72eef988041..a32e60b024b8 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -134,8 +134,6 @@ int __of_attach_node_sysfs(struct device_node *np)
- 	if (!name)
- 		return -ENOMEM;
- 
--	of_node_get(np);
--
- 	rc = kobject_add(&np->kobj, parent, "%s", name);
- 	kfree(name);
- 	if (rc)
-@@ -144,6 +142,7 @@ int __of_attach_node_sysfs(struct device_node *np)
- 	for_each_property_of_node(np, pp)
- 		__of_add_property_sysfs(np, pp);
- 
-+	of_node_get(np);
- 	return 0;
- }
- 
--- 
-2.26.2
+Since you don't like the way I initially fixed it, suppose there we don't have
+another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
+parameter to select a proper accessors, like sw in our case, and sb by defaul).
+Right?
 
+(Note UART_L is incorrectly created in that patch, I'll remove that macro in
+v3.)
+
+-Sergey
+
+> 
+> 
+> > > 
+> > > > ├─>[PATCH v2 12/20] mips: MAAR: Add XPA mode support
+> > > 
+> > > looks ok so far.
+> > 
+> > Can I add your Reviewed-by tag there then?
+> 
+> As I'm the maintainer of the part, I've simply applied it.
+> 
+> > > 
+> > > > ├─>[PATCH v2 10/20] mips: Add CONFIG/CONFIG6/Cause reg fields macro
+> > > 
+> > > that is fine
+> > 
+> > Can I add your Reviewed-by tag there then?
+> 
+> As this didn't apply cleanly, I'll apply it after you've resent it.
+> IMHO no need for a Reviewed-by.
+> 
+> > > > └─>[PATCH v2 09/20] mips: Add CP0 Write Merge config support
+> > > 
+> > > this is IMHO a dangerous change. Enabling write merging for any
+> > > CPU supporting it might triggers bugs. Do it in your board bringup
+> > > code and at the moment I don't see a reason for the rest of that
+> > > patch.
+> > 
+> > Let's at least leave the mm_config() implementation but without the write-merge
+> > enabling by default. Providing features availability macro
+> > cpu_has_mm_sysad/cpu_has_mm_full and c0 config fields
+> 
+> do you have a user of that ? I'm not introducing code nobody uses.
+> 
+> > I could use them to implement a code pattern like:
+> > 
+> > +	if (cpu_has_mm_full) {
+> > +		unsigned int config0 = read_c0_config();
+> > +               config0 = (config0 & ~MIPS_CONF_MM) | MIPS_CONF_MM_FULL;
+> > +               write_c0_config(config0);
+> > +	}
+> 
+> you know you are running on a R5 core, so you know you have MM_FULL.
+> No need to check this.
+> 
+> > By doing so I can manually enable/disable the MM feature in the
+> > cpu-feature-overrides.h. Without that I'd have to locally define these macro,
+> > which isn't good seeing they are in fact generic and can be useful for other
+> > platforms with SYSAD and FULL MM feature available. What do you think?
+> 
+> To me this is a hardware feature I expect to be done by firmware and
+> Linux shouldn't care about it, if it doesn't have any software
+> implications.
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
