@@ -2,126 +2,219 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7691DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99767C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5496320884
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DCE20758
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:25:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rKomY94B"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JNXV5es6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgETLYx (ORCPT
+        id S1726819AbgETLZh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 07:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55530 "EHLO
+        Wed, 20 May 2020 07:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETLYw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 07:24:52 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D11C061A0E;
-        Wed, 20 May 2020 04:24:52 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n24so3381419ejd.0;
-        Wed, 20 May 2020 04:24:52 -0700 (PDT)
+        with ESMTP id S1726789AbgETLZf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 07:25:35 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9D2C08C5C2
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 04:25:34 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f13so2184174wmc.5
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 04:25:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rM6TuXzAfG+Cg1PeXrhjsnMeCds8hzCLFKNqnazCe1o=;
-        b=rKomY94B3lyOtRSFb4PBs6G9lWDzlV7Pr55EMkHkmhJ+S6ZFBQEGZcgkbns/S8ayYM
-         3WN5IYivoUhkBHTUM39A3jzciphtcJZPKMO4QoqWXFydA7CR2UnzeU4sFepiRFibWqSs
-         GyMukzaJb0O8ApHkOD7aCVCb2cim2PnqzS92lfaCRqJQu3CM1OgSNlF0M2In7IPtzHQW
-         3CRZ5afKX04glhKoa9T+TWzh3yMOk8sjmFXVtFr5gbPXFaDEm3wZXkDQlvi3mxxEulSc
-         AzJye4IS6rC3ZPWGxsbJHMFWkKpZys4WvUFvmgXwCnw/A6bMwoiXf8/mJJ2ueVEuXsPb
-         Yslw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MAzJNRl7denaMJiKd3+TRewxkBzsyKS+1FyrOm5aCWE=;
+        b=JNXV5es6bVnc90JsNslvmJSDVtTWg6voKEZtsMvHPli1CC6BviGCNJs19aTP1ai09t
+         fqgtC4/xo1QX2QKXZKz8VkKEeFn7e/7dGgrlpWl4mHmIg1xbRnP/KpaITQctqjDFxy5h
+         QamSWG1CBpwGBTega0WNOLPVCbyvxduZuqc0kuUu4SzUXgWl839m9RIiqg89wFz0D4DH
+         aOskFeVXLjz9VqXX+WLOQSeIuA5r+yiIDXS1EBW9WuPr+5o7pvUq5BSCvjD79BDICYCJ
+         sUFaWoufIx40GJY4YtMmHXFu4kDfrwlsgnBo5DAny0IMpwZYqe5BSeqgo9A4VtekPGj4
+         XBNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rM6TuXzAfG+Cg1PeXrhjsnMeCds8hzCLFKNqnazCe1o=;
-        b=hiK89ti0GnEnQSruqezmE7xyGWXJHxzdZYuFiOe4xcF1DUnLtkzDVcKnWFOvWXmS5l
-         3Tabo0PvN+l2jS7R2EJATyVXYK4TwG+/WWEihJMUV/O3m5bPwpaSR+KGfzFXJMHnxPkV
-         ILSk4eoGf6ITuo0nTmSxq6Scs7bR8Z5xHvvfvDGNy9W1lrLa7nPFWE8cipaSrKAJtWGp
-         G50krIGiIGpu57epQZK0spdGRodltj0MO/RSb00t9nbqSgZJMmVks5+L9yCE2WCduUgj
-         d1XC11V26jsU92hzVdXx9z6DsOUcnrJgyfks6A13ZfKg3Vx6l34crmaXzGtaWrh8GL4n
-         BV2A==
-X-Gm-Message-State: AOAM5321ajsy+bu10OF/C/wf/ExCbIxrlVZr+Bia8EJ/ThLLmivz3zJB
-        5WtNAilcDmSgXiiRowNgeK8=
-X-Google-Smtp-Source: ABdhPJw5WrhAq1CxpQ+C3vJ7bKyvmoGcaPX59iGGanIN0OAbpabxLUUBjtZNMcV34PqQByDS0PPvBg==
-X-Received: by 2002:a17:907:aae:: with SMTP id bz14mr3119837ejc.521.1589973891012;
-        Wed, 20 May 2020 04:24:51 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id h5sm1733495ejg.124.2020.05.20.04.24.48
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MAzJNRl7denaMJiKd3+TRewxkBzsyKS+1FyrOm5aCWE=;
+        b=kOGf3hpHVaVJRcvmIugQ/95Z46/FCPE6B+70VvUm2Gw9+AFiNTVUVUXiGigwR78LjY
+         qqhFogTIwmoTrjxyVLHArKr8Hb/9mIgahsveGPVVzeeDx9IOOaVqSrs7gipeiXolb7h1
+         /4MBobLXj8z4v/zDmDKD9pm7Zy0Wm+E7jFaw7F3K9W0uTUmDDCZ13D0/xWj8wl5lWymc
+         9ODFklTDCqmt9PSbrn0fzjpz9TY5sJ4qJFgcd1fltQIEAF4Fo/5es/mxE4ji6P2NJEh2
+         2AhxH5JOaBdyTr9NzVSYBFIBl50/uszc8K1J/V1GS4f/WXbpvH7L2euqYqpQOCtaVyc8
+         /xlw==
+X-Gm-Message-State: AOAM5330s9rcHR4uGZVAL+F5CIb6aMSK1iQSfonH6VkN/+rf9MPDeJ+t
+        3qRhp/GSjtnuzBaJE/HqXZ1RLQ==
+X-Google-Smtp-Source: ABdhPJzW5vlDbLSisa2PSw+E6LNVAep4nrZ3vKsnzEHLsDBwF4hpuoLIWC8DU2L9XBtcraMXVql0Bg==
+X-Received: by 2002:a1c:6156:: with SMTP id v83mr4104320wmb.28.1589973933005;
+        Wed, 20 May 2020 04:25:33 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id v22sm2729265wml.21.2020.05.20.04.25.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 04:24:48 -0700 (PDT)
-Date:   Wed, 20 May 2020 13:24:47 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     robh+dt@kernel.org, jonathanh@nvidia.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH V2] arm64: tegra: Fix flag for 64-bit resources in
- 'ranges' property
-Message-ID: <20200520112447.GC2141681@ulmo>
-References: <20200513191627.8533-1-vidyas@nvidia.com>
- <20200514135437.29814-1-vidyas@nvidia.com>
- <20200518135006.GB31554@e121166-lin.cambridge.arm.com>
- <e64ccace-d2b9-0e03-db3f-e65ed6f56230@nvidia.com>
+        Wed, 20 May 2020 04:25:32 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 01/11] dt-bindings: convert the binding document for mediatek PERICFG to yaml
+Date:   Wed, 20 May 2020 13:25:13 +0200
+Message-Id: <20200520112523.30995-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200520112523.30995-1-brgl@bgdev.pl>
+References: <20200520112523.30995-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wxDdMuZNg1r63Hyj"
-Content-Disposition: inline
-In-Reply-To: <e64ccace-d2b9-0e03-db3f-e65ed6f56230@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---wxDdMuZNg1r63Hyj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Convert the DT binding .txt file for MediaTek's peripheral configuration
+controller to YAML. There's one special case where the compatible has
+three positions. Otherwise, it's a pretty normal syscon.
 
-On Mon, May 18, 2020 at 07:52:24PM +0530, Vidya Sagar wrote:
-> Thanks Lorenzo.
-> I've moved linux-pci to BCC and included
-> devicetree and linux-tegra mailing lists to CC.
->=20
-> Rob, Could you please review this patch?
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ .../arm/mediatek/mediatek,pericfg.txt         | 36 -----------
+ .../arm/mediatek/mediatek,pericfg.yaml        | 63 +++++++++++++++++++
+ 2 files changed, 63 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
 
-I don't think there's any need for Rob to review this. It's a simple
-bugfix and I've applied it for v5.8.
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+deleted file mode 100644
+index ecf027a9003a..000000000000
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-Mediatek pericfg controller
+-===========================
+-
+-The Mediatek pericfg controller provides various clocks and reset
+-outputs to the system.
+-
+-Required Properties:
+-
+-- compatible: Should be one of:
+-	- "mediatek,mt2701-pericfg", "syscon"
+-	- "mediatek,mt2712-pericfg", "syscon"
+-	- "mediatek,mt7622-pericfg", "syscon"
+-	- "mediatek,mt7623-pericfg", "mediatek,mt2701-pericfg", "syscon"
+-	- "mediatek,mt7629-pericfg", "syscon"
+-	- "mediatek,mt8135-pericfg", "syscon"
+-	- "mediatek,mt8173-pericfg", "syscon"
+-	- "mediatek,mt8183-pericfg", "syscon"
+-- #clock-cells: Must be 1
+-- #reset-cells: Must be 1
+-
+-The pericfg controller uses the common clk binding from
+-Documentation/devicetree/bindings/clock/clock-bindings.txt
+-The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+-Also it uses the common reset controller binding from
+-Documentation/devicetree/bindings/reset/reset.txt.
+-The available reset outputs are defined in
+-dt-bindings/reset/mt*-resets.h
+-
+-Example:
+-
+-pericfg: power-controller@10003000 {
+-	compatible = "mediatek,mt8173-pericfg", "syscon";
+-	reg = <0 0x10003000 0 0x1000>;
+-	#clock-cells = <1>;
+-	#reset-cells = <1>;
+-};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+new file mode 100644
+index 000000000000..1340c6288024
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/arm/mediatek/mediatek,pericfg.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: MediaTek Peripheral Configuration Controller
++
++maintainers:
++  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
++
++description:
++  The Mediatek pericfg controller provides various clocks and reset outputs
++  to the system.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - mediatek,mt2701-pericfg
++          - mediatek,mt2712-pericfg
++          - mediatek,mt7622-pericfg
++          - mediatek,mt7629-pericfg
++          - mediatek,mt8135-pericfg
++          - mediatek,mt8173-pericfg
++          - mediatek,mt8183-pericfg
++        - const: syscon
++      - items:
++        # Special case for mt7623 for backward compatibility
++        - const: mediatek,mt7623-pericfg
++        - const: mediatek,mt2701-pericfg
++        - const: syscon
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    pericfg@10003000 {
++        compatible = "mediatek,mt8173-pericfg", "syscon";
++        reg = <0x10003000 0x1000>;
++        #clock-cells = <1>;
++        #reset-cells = <1>;
++    };
++
++  - |
++    pericfg@10003000 {
++        compatible =  "mediatek,mt7623-pericfg", "mediatek,mt2701-pericfg", "syscon";
++        reg = <0x10003000 0x1000>;
++        #clock-cells = <1>;
++        #reset-cells = <1>;
++    };
+-- 
+2.25.0
 
-Thanks,
-Thierry
-
---wxDdMuZNg1r63Hyj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7FE38ACgkQ3SOs138+
-s6HPDhAAmLcGCglJvHOKAlrfnKHcEc9ouq1S0D072FzCtpybboX8Pf89sG2s0ME0
-2NTcwWNTwTLFUcGghwzc/AW3fsofQUilwio37IwgFzyHxG1tTnJ5jN86o0niGAlu
-Qq/oNYtnkRNIJ5N4/+2k5Z6Vhek3XcMwX77WNO/84FcT9hwvE6yaT8/5GbQiCA95
-x8Jd2b+hYqfYV6k6qP2tm2oHWlE/VZbwZzMA6Mhgj6APecsKA0tMEwDFcbuQCdsK
-48EBqcaQGsiAvDvWWVdT7tetV+U6EPSEZDSXPflTV434mKkXHPfXhIS8G+nGRcWz
-0eekGbiuHwEH3sWRLW9Cx3bs4XYEGAvOwtpJuJc3GIKFWveTeh1XG0WXu0k1h2HH
-krNJ6NdjZcLQuqbx6Q8M37aD6UT9WsrYfi2LlQB2kUFbyMmaXM7oHdLjXmW75FZR
-kXD5cWKfr5CQp8nJX3WadKEwt3nCDUWE8RnV9rYxc4NqnVfVy/fSDtU+RtxSTH5s
-ZqAyqQKGWASjNEpYzyOuNfGh0IfTDvK+PH7izjcOp5jczFIe9CQVhDF6A7sRz6Tq
-R6+qfzdClObL/MIvGJlE0KRsmGrka7HIv0mBkmkX/UflZ7rIWKpvOO2JS89v1ZpU
-YQcDpForQXpkaHS9szRneb0MNgYmXP95ytItGP8eGvYzIys+rAA=
-=YugZ
------END PGP SIGNATURE-----
-
---wxDdMuZNg1r63Hyj--
