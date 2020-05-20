@@ -2,126 +2,192 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897F5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 03:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E072C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 04:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEA32075F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 03:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487F22075F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 04:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sgwfZ5Dy"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TnDmT1d/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgETD5L (ORCPT
+        id S1725798AbgETEAn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 23:57:11 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:30230 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726938AbgETD5L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 23:57:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589947031; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=oYqkZXvOg2NEoW8d38oiFR6euHSrJZsCm+dRjRv+gVY=; b=sgwfZ5Dyo4zfO3l0+qP/Niysk7XkC/lW3qRRlSw2CeMiSJBe1LgGK+rNXc8QJBB68H72u82K
- u4htvEMaUdetRNX/qrcTsywlzCDoLSNC2YlpngXrHarhvF/0BN32NTVm4o465lNBBLgURHxZ
- aHGV25x9IQhfdlwGHCzPvTSpb+g=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec4aa7d.7f7235a1b6f8-smtp-out-n04;
- Wed, 20 May 2020 03:56:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C08B4C433CA; Wed, 20 May 2020 03:56:44 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 667A5C433C6;
-        Wed, 20 May 2020 03:56:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 667A5C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Wed, 20 May 2020 09:26:36 +0530
-Message-Id: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 20 May 2020 00:00:43 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:11520 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgETEAm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 00:00:42 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200520040038epoutp03fb43e02274531a8eeae5fb6d96c64801~QoJbjI7Nh0700207002epoutp03B
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 04:00:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200520040038epoutp03fb43e02274531a8eeae5fb6d96c64801~QoJbjI7Nh0700207002epoutp03B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589947238;
+        bh=+A93EgRDoz7uCPtvKzScjT7YCC3iGmFF0K5t8LgUfsY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=TnDmT1d/aGi/fTN7+LhlGLDvEc9oqWQsW1+sBqaWJ5vUgw4Gk9REx4oKi84hR24jt
+         XvgD1yS0UmwPEm14kNrDSBTiXit+E3L/9XWnomCxdsih0wY+B09vMQCD2NGBUIHewZ
+         mampQ2YulMmtvsThpZ8yWugeqNifQED3VSvdLiQ4=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200520040037epcas1p3d899d50212fdfb99f0cf0fb08413ddb7~QoJajZThm0716307163epcas1p3m;
+        Wed, 20 May 2020 04:00:37 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49RfDM1TTkzMqYkn; Wed, 20 May
+        2020 04:00:35 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        99.9B.04658.36BA4CE5; Wed, 20 May 2020 13:00:35 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200520040033epcas1p24774bccf513be863ab4a2b5499eb61fd~QoJXKZ9s60392403924epcas1p2x;
+        Wed, 20 May 2020 04:00:33 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200520040033epsmtrp2b8b9163d2e6d734804559d37671ace69~QoJXJIvbC0682106821epsmtrp2k;
+        Wed, 20 May 2020 04:00:33 +0000 (GMT)
+X-AuditID: b6c32a39-a99ff70000001232-72-5ec4ab63a02a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C6.5D.25866.16BA4CE5; Wed, 20 May 2020 13:00:33 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200520040033epsmtip1bf656738f910c076b9f02a7400fa6ce7~QoJWyTxic1684816848epsmtip1W;
+        Wed, 20 May 2020 04:00:33 +0000 (GMT)
+Subject: Re: [PATCH 00/12] Add cpufreq and cci devfreq for mt8183, and SVS
+ support
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <d08c0dc0-5573-6ba0-1d9f-18857c7f6fb6@samsung.com>
+Date:   Wed, 20 May 2020 13:10:46 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEJsWRmVeSWpSXmKPExsWy7bCmrm7y6iNxBod7OCy2r3/BajH14RM2
+        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
+        j7NMFmdOX2K1aN17hN3i37WNLBbT7wpZbPzq4SDksWbeGkaPnbPusntsWtXJ5nHn2h42j81L
+        6j1aTu5n8dhytZ3Fo2/LKkaP4ze2M3l83iQXwBWVbZORmpiSWqSQmpecn5KZl26r5B0c7xxv
+        amZgqGtoaWGupJCXmJtqq+TiE6DrlpkD9JKSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYp
+        tSAlp8CyQK84Mbe4NC9dLzk/18rQwMDIFKgwITtj/q2JjAVzRSqWrelnaWDcztfFyMEhIWAi
+        8fVbQRcjF4eQwA5GiWlX+pkhnE+MEjfezGWBcD4zSjy4v4yxi5ETrOP2z0msEIldjBIf771n
+        h3DeM0r8v9DADFIlLBAisXbHejBbROA2s8SE2SEgRcwCBxklpl+6yASSYBPQktj/4gYbiM0v
+        oChx9cdjsBW8AnYSr689ZAGxWQRUJbbe3AlmiwqESZzc1gJVIyhxcuYTsDingJPE5DPPwGxm
+        AXGJW0/mM0HY8hLb384Be0hCYDKnxJ+XB9khfnCRmNy1mwXCFpZ4dXwLVFxK4vO7vWwQdrXE
+        ypNH2CCaOxgltuy/wAqRMJbYv3QyEyj4mAU0Jdbv0ocIK0rs/D2XEWIxn8S7rz2skBDmleho
+        E4IoUZa4/OAuE4QtKbG4vZNtAqPSLCTvzELywiwkL8xCWLaAkWUVo1hqQXFuemqxYYEpcnRv
+        YgSndy3LHYzHzvkcYhTgYFTi4b2x83CcEGtiWXFl7iFGCQ5mJRHeCS8OxQnxpiRWVqUW5ccX
+        leakFh9iNAWG9kRmKdHkfGDuySuJNzQ1MjY2tjAxNDM1NFQS5516PSdOSCA9sSQ1OzW1ILUI
+        po+Jg1OqgVGUs6ZfzHqb9qPKX0KX+7fLXHJ1m76l7PaFvXaGXzYt1AnI1X535bem6dn3BWev
+        Wy2O/Zvx+5+8733v8Ff7jmWJrzsleuH+1MtLJt7euEmX/21Wxt16Kyl1KW7XKzpmTD/UJZkS
+        WV/UJ0icDijbupTTjdtFzzdM56rvh5WJ4SvtmTuz5XLyNymxFGckGmoxFxUnAgBGfzrDBQQA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsWy7bCSnG7i6iNxBluXKlhsX/+C1WLqwyds
+        FvOPnGO1ONv0ht3i25UOJotNj6+xWlzeNYfN4nLzRUaLz71HGC2WXr/IZNHUYmxxu3EFm8Wb
+        H2eZLM6cvsRq0br3CLvFv2sbWSym3xWy2PjVw0HIY828NYweO2fdZffYtKqTzePOtT1sHpuX
+        1Hu0nNzP4rHlajuLR9+WVYwex29sZ/L4vEkugCuKyyYlNSezLLVI3y6BK2P+rYmMBXNFKpat
+        6WdpYNzO18XIySEhYCJx++ck1i5GLg4hgR2MEo8PbGaDSEhKTLt4lLmLkQPIFpY4fLgYouYt
+        o8S2hglMIDXCAiESa3esZwZJiAjcZ5ZYfvcqG4jDLHCQUeJZ9x92iJapjBIvX61gBmlhE9CS
+        2P/iBtgKfgFFias/HjOC2LwCdhKvrz1kAbFZBFQltt7cCWaLCoRJ7FzymAmiRlDi5MwnYHFO
+        ASeJyWeegdnMAuoSf+ZdYoawxSVuPZnPBGHLS2x/O4d5AqPwLCTts5C0zELSMgtJywJGllWM
+        kqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmbGMGxrqW1g3HPqg96hxiZOBgPMUpwMCuJ8E54
+        cShOiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/XWQvjhATSE0tSs1NTC1KLYLJMHJxSDUyOf27N
+        fFj2fVHePwMjG9vo9NmXlu5fe5tj/5f5209cU1FrzQ12SPOM/BG72iBpwsLje2onfko4+XXl
+        3cmZ6a51H6x0v73QN4gu5NNs33F/5wzHnyJtuj/uSPn/dhDTnCG6/rBlD2/ImrXKhqGHeL+e
+        fXWjtaK8u1h8dTC3X9/UQ6vPqTOwtJUevC0XN+lU02mtHc86VyvuqGpaI5fK/CkrLP/7tUqZ
+        HcypQfGT92pys1p5h29qkY0oncHLJOB9/3//M98TW7Tfn2aplPpfYmgfLG8oKHPq8v7Jdds9
+        BM6uc1VMXm6ZI2C2apc3k/JNjcf/AmYk7NlwdZWyPc+8T3uUJt+ft3ZL384yjv7IsqVKLMUZ
+        iYZazEXFiQAg1dBHZAMAAA==
+X-CMS-MailID: 20200520040033epcas1p24774bccf513be863ab4a2b5499eb61fd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520034324epcas1p3affbd24bd1f3fe40d51baade07c1abba
+References: <CGME20200520034324epcas1p3affbd24bd1f3fe40d51baade07c1abba@epcas1p3.samsung.com>
+        <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device node for the ath10k SNOC platform driver probe
-and add resources required for WCN3990 on sc7180 soc.
+Hi Andrew,
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
-Changes from v10:
-- Corrected the position of wifi node, as per address
-- Removed the wlan_fw_mem from reserved memory, since
-  its already added as reserved memory in board DT file.
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 22 ++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
+Could you explain the base commit of these patches?
+When I tried to apply them to v5.7-rc1 for testing,
+the merge conflict occurs.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 4e9149d..38b102e 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -389,6 +389,13 @@
- 	};
- };
- 
-+&wifi {
-+	status = "okay";
-+	wifi-firmware {
-+		iommus = <&apps_smmu 0xc2 0x1>;
-+	};
-+};
-+
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
- &qspi_clk {
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 6b12c60..da79f8f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2811,6 +2811,28 @@
- 
- 			#freq-domain-cells = <1>;
- 		};
-+
-+		wifi: wifi@18800000 {
-+			compatible = "qcom,wcn3990-wifi";
-+			reg = <0 0x18800000 0 0x800000>;
-+			reg-names = "membase";
-+			iommus = <&apps_smmu 0xc0 0x1>;
-+			interrupts =
-+				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-+				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-+				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-+				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-+				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-+				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-+				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-+				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-+				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-+				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-+				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-+				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-+			memory-region = <&wlan_mem>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	thermal-zones {
--- 
-2.7.4
+Thanks,
+Chanwoo Choi
+
+On 5/20/20 12:42 PM, Andrew-sh.Cheng wrote:
+> MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
+> So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
+> 
+> For SVS support, need OPP_EVENT_ADJUST_VOLTAGE and corresponding reaction.
+> 
+> Change since v5:
+> 	- Changing dt-binding format to yaml.
+> 	- Extending current devfreq passive_governor instead of create a new one.
+> 	- Resend depending patches of Sravana Kannan base on kernel-5.7
+> 
+> 
+> Andrew-sh.Cheng (6):
+>   cpufreq: mediatek: add clock and regulator enable for intermediate
+>     clock
+>   dt-bindings: devfreq: add compatible for mt8183 cci devfreq
+>   devfreq: add mediatek cci devfreq
+>   opp: Modify opp API, dev_pm_opp_get_freq(), find freq in opp, even it
+>     is disabled
+>   cpufreq: mediatek: add opp notification for SVS support
+>   devfreq: mediatek: cci devfreq register opp notification for SVS
+>     support
+> 
+> Saravana Kannan (6):
+>   OPP: Allow required-opps even if the device doesn't have power-domains
+>   OPP: Add function to look up required OPP's for a given OPP
+>   OPP: Improve required-opps linking
+>   PM / devfreq: Cache OPP table reference in devfreq
+>   PM / devfreq: Add required OPPs support to passive governor
+>   PM / devfreq: Add cpu based scaling support to passive_governor
+> 
+>  .../devicetree/bindings/devfreq/mt8183-cci.yaml    |  51 ++++
+>  drivers/cpufreq/mediatek-cpufreq.c                 | 122 ++++++++-
+>  drivers/devfreq/Kconfig                            |  12 +
+>  drivers/devfreq/Makefile                           |   1 +
+>  drivers/devfreq/devfreq.c                          |   6 +
+>  drivers/devfreq/governor_passive.c                 | 298 +++++++++++++++++++--
+>  drivers/devfreq/mt8183-cci-devfreq.c               | 233 ++++++++++++++++
+>  drivers/opp/core.c                                 |  85 +++++-
+>  drivers/opp/of.c                                   | 108 ++++----
+>  drivers/opp/opp.h                                  |   5 +
+>  include/linux/devfreq.h                            |  42 ++-
+>  include/linux/pm_opp.h                             |  11 +
+>  12 files changed, 874 insertions(+), 100 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml
+>  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
+> 
