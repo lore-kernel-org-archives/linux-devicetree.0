@@ -2,210 +2,113 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9379BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 04:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEBAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 04:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 551DA20756
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 04:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5148820758
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 04:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bxVvSUqC"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wnFPDkwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgETEV1 (ORCPT
+        id S1726309AbgETEb0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 00:21:27 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:49302 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgETEV1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 00:21:27 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200520042125euoutp02a5806877ea2d4e77132194b373741435~QoblQFuS70515605156euoutp02d
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 04:21:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200520042125euoutp02a5806877ea2d4e77132194b373741435~QoblQFuS70515605156euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589948485;
-        bh=xiWXMWfNTMDhpyYN6ynqaEoNJ+Fc3bIMAx5GVLMVvWo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=bxVvSUqCDndl8Du69qqiRAAfgUbulItHjsf613JVgWJGI/P1MxvZLTlIisZd63tV0
-         HBpni8DG4f61uPBNqNloGRoIWaf1H/CRdyjFeNLMjYA69y+XRXRUr3BPjio1JTQAXi
-         AXc2YPY2TFwrJoyacya6G+6CHJPEZcgluPc7vcfI=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200520042125eucas1p261681d480f781be6db7485d6b3f328ba~QobktHNkQ2740227402eucas1p2a;
-        Wed, 20 May 2020 04:21:25 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 69.70.60698.540B4CE5; Wed, 20
-        May 2020 05:21:25 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200520042124eucas1p1a848a7353c8cc5183688f9acd189b360~QobkVS_eG2110621106eucas1p1F;
-        Wed, 20 May 2020 04:21:24 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200520042124eusmtrp2cdbe049b0513fdc44ac09ed185f1f0e9~QobkUnVw20913609136eusmtrp2x;
-        Wed, 20 May 2020 04:21:24 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-2a-5ec4b0452ffa
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 75.57.07950.440B4CE5; Wed, 20
-        May 2020 05:21:24 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200520042124eusmtip1e56f8e692b6a8f3e6890b7fb4fcc62e9~QobjrEmBf2685426854eusmtip10;
-        Wed, 20 May 2020 04:21:24 +0000 (GMT)
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding
- all top level devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <f53cee8b-c4e9-fc1c-a340-e8cda7b10311@samsung.com>
-Date:   Wed, 20 May 2020 06:21:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+        Wed, 20 May 2020 00:31:26 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:42551 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgETEb0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 00:31:26 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 125F48066C;
+        Wed, 20 May 2020 16:31:24 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1589949084;
+        bh=HYil0aCAK5+cV7uSyh8qqAy3CoMjINfwMnZ5mKZOyJY=;
+        h=From:To:Cc:Subject:Date;
+        b=wnFPDkwlnxE7l21Sb9GAbJZ+A4pZIzashwqsB3ngY6yzLVnI5amSFVPnzR+1dIJEQ
+         Hgt0HzYpPYXR7ndeRDCQ5qzj1OHypN1NVtMrYDdVBV/e6QX5G27dJq9P7A/sXgzIbb
+         Rhoa4owNYgIunsFoyY5JapdSZrS0EnNcz4YgTG7hXKg4FR8FbvY+KeOT75PRcGj9SC
+         EcgEbc9HVATgUlcTcWsc9H7L31SGWvMkwZtfGtGbuSVDJpjcVfMKiMpogi4XypkWIm
+         aT041vMpVGX6l0/HmEnW0nIXh0eLLiEnML0uKzan0AdEWeWfzjDMQ8FYZhBQGbuw04
+         vOIBeoY/EG9Fg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5ec4b29b0000>; Wed, 20 May 2020 16:31:23 +1200
+Received: from hamishm-dl.ws.atlnz.lc (hamishm-dl.ws.atlnz.lc [10.33.24.30])
+        by smtp (Postfix) with ESMTP id 7C97D13ED56;
+        Wed, 20 May 2020 16:31:22 +1200 (NZST)
+Received: by hamishm-dl.ws.atlnz.lc (Postfix, from userid 1133)
+        id 761965407CD; Wed, 20 May 2020 16:31:23 +1200 (NZST)
+From:   Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+To:     robh+dt@kernel.org, rjui@broadcom.com, sbranden@broadcom.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        f.fainelli@gmail.com,
+        Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+Subject: [PATCH] ARM: dts: bcm: HR2: Fix PPI interrupt types
+Date:   Wed, 20 May 2020 16:30:42 +1200
+Message-Id: <20200520043042.7281-1-hamish.martin@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAGETcx_VtJXCqih4ZadZ0dFVJwKOBEQnnrr9JxxmGNh7HX_vNQ@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDKsWRmVeSWpSXmKPExsWy7djPc7quG47EGUxq47CYf+Qcq8XMN//Z
-        LJoXr2ezmHHnCLvFju0iFjsfvmWzWL6vn9Hi8q45QPHz+5gs5n6ZymzRuheoouvQXzYHHo9t
-        u7exeuycdZfdY8GmUo9NqzrZPPbPXcPusfHdDiaPz5vkAtijuGxSUnMyy1KL9O0SuDJ2bnrA
-        XtAnU9Hf/5mpgbFXvIuRk0NCwERi28V+1i5GLg4hgRWMEpsWz2SDcL4wSvx/3cUCUiUk8JlR
-        YtEZN5iOl0dXQ3UsZ5Q4/P4uE4TznlFi6qV1QO0cHMICSRLfp/CBNIgIaElsuvaYBaSGWaCF
-        ReL2zHlsIAk2AUOJrrddYDavgJ3EhxXrwLaxCKhK/GraxQ5iiwrESpxevJkRokZQ4uTMJ2A1
-        nAKBEmfbTzOD2MwC8hLb386BssUlbj2ZD3aQhMA9domrx2czQpztIjF52z8WCFtY4tXxLewQ
-        tozE/50wDc2MEg/PrWWHcHoYJS43zYDqtpa4c+4X2GvMApoS63fpQ4QdJTY3TmYBCUsI8Enc
-        eCsIcQSfxKRt05khwrwSHW1CENVqErOOr4Nbe/DCJeYJjEqzkLw2C8k7s5C8Mwth7wJGllWM
-        4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiBaez0v+NfdzDu+5N0iFGAg1GJh/fGzsNxQqyJ
-        ZcWVuYcYJTiYlUR4J7w4FCfEm5JYWZValB9fVJqTWnyIUZqDRUmc13jRy1ghgfTEktTs1NSC
-        1CKYLBMHp1QD40Upz19XlIXzlEW5F620Xes6ge+DSVCErXE395wHpuwqR95L2OfF2DreWHT6
-        xflig2ar22f+WwoKnvicqbZB4VN46G9J2bfb2hMX6GaxLeNN2Wj0QfrQtJCvH675qItuY3NP
-        uKlw3+xXzNubZsdXpqgV3Q825sqf8FpgoUzhy/hDn9d/2ct2V4mlOCPRUIu5qDgRACuhKx9f
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xu7ouG47EGVw/qmMx/8g5VouZb/6z
-        WTQvXs9mMePOEXaLHdtFLHY+fMtmsXxfP6PF5V1zgOLn9zFZzP0yldmidS9QRdehv2wOPB7b
-        dm9j9dg56y67x4JNpR6bVnWyeeyfu4bdY+O7HUwenzfJBbBH6dkU5ZeWpCpk5BeX2CpFG1oY
-        6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GXs3PSAvaBPpqK//zNTA2OveBcjJ4eE
-        gInEy6OrWbsYuTiEBJYySrzomsMOkZCRODmtgRXCFpb4c62LDaLoLaPElittQAkODmGBJIkH
-        8yxBakQEtCQ2XXvMAlLDLNDGInFo/nGohjfMEmu2/AabxCZgKNH1FmQSJwevgJ3EhxXrWEBs
-        FgFViV9Nu8A2iwrESqy+1soIUSMocXLmE7AaToFAibPtp5lBbGYBM4l5mx9C2fIS29/OgbLF
-        JW49mc80gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAyN12
-        7OeWHYxd74IPMQpwMCrx8BrsORwnxJpYVlyZe4hRgoNZSYR3wotDcUK8KYmVValF+fFFpTmp
-        xYcYTYGem8gsJZqcD0wqeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4
-        OKUaGJOMGUs4p2h02divUvjp6ua6aoPCwo03FGQrRaPmXnX2+d3z9ml0YP5kS4nJievW8wtH
-        /EhYVeBtfceOReU7X+17wzlbP6Q+07YX0z3I2XVzw/GWR4sW9IXUeDvLlrM5aDvteJ3dEi/l
-        eTXwzUdp4eeXHn87JNJyRlv8eHcQa8f0S0nvanjXKLEUZyQaajEXFScCAIIPUZLyAgAA
-X-CMS-MailID: 20200520042124eucas1p1a848a7353c8cc5183688f9acd189b360
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200519062510eucas1p27bc59da66e1b77534855103a27f87452
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200519062510eucas1p27bc59da66e1b77534855103a27f87452
-References: <20200515053500.215929-1-saravanak@google.com>
-        <CGME20200519062510eucas1p27bc59da66e1b77534855103a27f87452@eucas1p2.samsung.com>
-        <20200515053500.215929-5-saravanak@google.com>
-        <e0f9211d-9cf6-a12d-eb63-df06910920ed@samsung.com>
-        <CAGETcx_FOGgHdaNY8Dd-4rgT28U7_OHYeLsazbUE-1hyuatRSg@mail.gmail.com>
-        <18332705-dd61-9a0e-d931-ae610c8fb600@samsung.com>
-        <8dd9ecc2-0c61-49b7-d485-b169eb721712@samsung.com>
-        <CAGETcx_VtJXCqih4ZadZ0dFVJwKOBEQnnrr9JxxmGNh7HX_vNQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Saravana,
+These error messages are output when booting on a BCM HR2 system:
+    GIC: PPI11 is secure or misconfigured
+    GIC: PPI13 is secure or misconfigured
 
-On 19.05.2020 20:02, Saravana Kannan wrote:
-> On Tue, May 19, 2020 at 3:32 AM Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
->> On 19.05.2020 09:11, Marek Szyprowski wrote:
->>> On 19.05.2020 08:48, Saravana Kannan wrote:
->>>> On Mon, May 18, 2020 at 11:25 PM Marek Szyprowski
->>>> <m.szyprowski@samsung.com> wrote:
->>>>> On 15.05.2020 07:35, Saravana Kannan wrote:
->>>>>> The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
->>>>>> parsing of the device tree nodes when a lot of devices are added. This
->>>>>> will significantly cut down parsing time (as much a 1 second on some
->>>>>> systems). So, use them when adding devices for all the top level
->>>>>> device
->>>>>> tree nodes in a system.
->>>>>>
->>>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
->>>>> This patch recently landed in linux-next 20200518. Sadly, it causes
->>>>> regression on Samsung Exynos5433-based TM2e board:
->>>>>
->>>>> ...
->>>>>
->>>>> Both issues, the lack of DMA for SPI device and Synchronous abort in
->>>>> I2S
->>>>> probe are new after applying this patch. I'm trying to investigate
->>>>> which
->>>>> resources are missing and why. The latter issue means typically that
->>>>> the
->>>>> registers for the given device has been accessed without enabling the
->>>>> needed clocks or power domains.
->>>> Did you try this copy-pasta fix that I sent later?
->>>> https://lore.kernel.org/lkml/20200517173453.157703-1-saravanak@google.com/
->>>>
->>>>
->>>> Not every system would need it (my test setup didn't), but it helps
->>>> some cases.
->>>>
->>>> If that fix doesn't help, then some tips for debugging the failing
->>>> drivers.
->>>> What this pause/resume patch effectively (not explicitly) does is:
->>>> 1. Doesn't immediately probe the devices as they are added in
->>>> of_platform_default_populate_init()
->>>> 2. Adds them in order to the deferred probe list.
->>>> 3. Then kicks off deferred probe on them in the order they were added.
->>>>
->>>> These drivers are just not handling -EPROBE_DEFER correctly or
->>>> assuming probe order and that's causing these issues.
->>>>
->>>> So, we can either fix that or you can try adding some code to flush
->>>> the deferred probe workqueue at the end of fw_devlink_resume().
->>>>
->>>> Let me know how it goes.
->>> So far it looks that your patch revealed a hidden issue in exynos5433
->>> clocks configuration, because adding clk_ignore_unused parameter to
->>> kernel command line fixes the boot. I'm still investigating it, so
->>> probable you can ignore my regression report. I will let you know asap
->>> I finish checking it.
->>>
->> Okay, I confirm that the issue is in the Exynos I2S driver and
->> Exynos5433 clock provider. I've posted a quick workaround. I'm sorry for
->> the noise, your patch is fine.
-> Thanks for debugging and finding the real issue. I tried finding your
-> patches, but couldn't. Can you point me to a lore.kernel.org link? I'm
-> just curious to see what the issue was.
+Per ARM documentation these interrupts are triggered on a rising edge.
+See ARM Cortex A-9 MPCore Technical Reference Manual, Revision r4p1,
+Section 3.3.8 Interrupt Configuration Registers.
 
-https://lore.kernel.org/linux-samsung-soc/f67db8c1-453b-4c70-67b9-59762ac34f64@kernel.org/T/#t
+The same issue was resolved for NSP systems in commit 5f1aa51c7a1e
+("ARM: dts: NSP: Fix PPI interrupt types").
 
-It looks that one more clock has to be enabled to properly read init 
-configuration. So far it worked, because that device was probed much 
-earlier, before the unused clocks are turned off. Your patch changed the 
-probe order, so that device is probed later.
+Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+---
+ arch/arm/boot/dts/bcm-hr2.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> I'm guessing you didn't need to pick up this one?
-> https://lore.kernel.org/lkml/20200517173453.157703-1-saravanak@google.com/
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.d=
+tsi
+index 6142c672811e..5e5f5ca3c86f 100644
+--- a/arch/arm/boot/dts/bcm-hr2.dtsi
++++ b/arch/arm/boot/dts/bcm-hr2.dtsi
+@@ -75,7 +75,7 @@ a9pll: arm_clk@0 {
+ 		timer@20200 {
+ 			compatible =3D "arm,cortex-a9-global-timer";
+ 			reg =3D <0x20200 0x100>;
+-			interrupts =3D <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts =3D <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>;
+ 			clocks =3D <&periph_clk>;
+ 		};
+=20
+@@ -83,7 +83,7 @@ twd-timer@20600 {
+ 			compatible =3D "arm,cortex-a9-twd-timer";
+ 			reg =3D <0x20600 0x20>;
+ 			interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
+-						  IRQ_TYPE_LEVEL_HIGH)>;
++						  IRQ_TYPE_EDGE_RISING)>;
+ 			clocks =3D <&periph_clk>;
+ 		};
+=20
+@@ -91,7 +91,7 @@ twd-watchdog@20620 {
+ 			compatible =3D "arm,cortex-a9-twd-wdt";
+ 			reg =3D <0x20620 0x20>;
+ 			interrupts =3D <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
+-						  IRQ_TYPE_LEVEL_HIGH)>;
++						  IRQ_TYPE_EDGE_RISING)>;
+ 			clocks =3D <&periph_clk>;
+ 		};
+=20
+--=20
+2.25.1
 
