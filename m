@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F95C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 10:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B63C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 10:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C700E207D3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 10:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AA420823
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 10:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2uhBzsm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8AEIbJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgETKxp (ORCPT
+        id S1726435AbgETKy1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 06:53:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50644 "EHLO
+        Wed, 20 May 2020 06:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETKxo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 06:53:44 -0400
+        with ESMTP id S1726403AbgETKy0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 06:54:26 -0400
 Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E5CC061A0E;
-        Wed, 20 May 2020 03:53:44 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 63so2073959oto.8;
-        Wed, 20 May 2020 03:53:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4E9C061A0E;
+        Wed, 20 May 2020 03:54:26 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g25so2041499otp.13;
+        Wed, 20 May 2020 03:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Uo2IvVF99WCeacc6Vvk0OLPGGgAJAoufosXm9+M1IcI=;
-        b=B2uhBzsmyGVsVtF88hh8IoR3qbGAmfEb1EyHXzQ+07LG9CjmeK5aniUJq8r4lDFIZH
-         ReDkh0Z/mWbs/4HxADXFn1QfNryJRNNTMf8wR4HPHwQQmG/xxEHxwOXzFfiOpEXNs5tz
-         rVUCeYPxYXU5w0aOWGHE81T+G1lTRyYQqiQVjbR0Lg6gPBJQ/CrOCE1nwe6WeN3Q6vwK
-         Wp2AV8z1U7VecQXuo6+IFdOCld8OGH3eX4XGdVVWmEpgU/XveXvPsLsLMBCMwpY92Lsy
-         ruW/WQ+rMHcWBIGqgAt4vA0iJU4Xm7oUr/8JA39GAsFa/nUCln2E7Fxk9HwwS36jzlBU
-         M1KA==
+        bh=nqXCwIldH4FavBD4hykx1Fj0fxifKXNdT/BTK4Kwo7U=;
+        b=X8AEIbJLA3DQIY2HkUAkUgsmWfo6rqFMqRLgjKDaWiVM+UzqRC+Z6Xp+kwXPubaEyo
+         JVvy3wM9oouI9BsPwcP52prWe6PHN+2hEAO+Ai74K48KuEKRORSMGLCq+bySouQ0bSeT
+         LblIHgoIycnEnNztT9f1y5byfGJC4e/ikHzFYQRLowPeRklqdIw6i3U18DUQNDH40WEW
+         CY+mlju/lyBdrUwN0EC09PSg9g+hFh6MjGZaaUmlplvb3b7A2bsMmQ09LsB7gvtSz/XG
+         r8V85gmEDHalvISie4Rijec3w6lMnbFP8rzoxGTT2rfphrJU+h2XF8POod4u8SZP4FFG
+         L3Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Uo2IvVF99WCeacc6Vvk0OLPGGgAJAoufosXm9+M1IcI=;
-        b=NB6y4GTqGp+ISAb1QMTCHLOeU8Bbbdz4v8vrrbTtj0lbBT+fbhHR0YrFDDc443Dcln
-         r1hLQrff0/8sft1Zph1PN6kT+whw8HI8MELNV0OMkdzAIPqnsFNzvxWMkC18eSecbErg
-         NF9AsS+S05FH0y172JhjhtTjuMkqgAWCsfi04kpDTHekoVqrPOJnYbIpOlCIYyjEqyFn
-         yqVCar3M1hAopRg0DZAOg/6xRlJ7erfcZcHqfWqD1WkOCD8QqKR3BYpGg2N3W97Qdna6
-         p9T8sJpaQtmXulhA3Gk+Aqf1JT4GJUi9AvvuFj3zVaCNDwShU/RPayL0bJjpv4qRtdGr
-         +YiQ==
-X-Gm-Message-State: AOAM531u2DD25CRloz0oyDAQ/75UwwtAtxBj/0e1Dv6+EQ46PtcF5JJM
-        +5VAvo0tZTOuVDQQcLPDI20=
-X-Google-Smtp-Source: ABdhPJwPQxKPUzMCI/gGmmDXo+bjGOcdHM3EDYwFCekFxABrLQep52XoiwtttDZ8+O9NZ6vCGxAgxQ==
-X-Received: by 2002:a9d:6557:: with SMTP id q23mr2643750otl.93.1589972023011;
-        Wed, 20 May 2020 03:53:43 -0700 (PDT)
+        bh=nqXCwIldH4FavBD4hykx1Fj0fxifKXNdT/BTK4Kwo7U=;
+        b=LwWnLzKIc3fi+gPu+4FsoNb17DF+I07FIjUHtGFpoTduEiOQ41I3a3fdah640+Zcax
+         l5GT3EOUlY/++fzMXgI4ufq2y1zj2LU2WPF43/T3vRzERAavkTsM60azG+VLX9jMfczz
+         LWhSS5XuaVfkeUl585KM42ImqAS997qsvHHSmPZZt7gTx2wV8aNkrPTCpVKo13VLQARp
+         7q06x4pvlIY/Nq9aVp9rbQGAZw8yeYmXPv44nG4sA/t+XTrcvLQ5facwYjQhl9ZydLqp
+         xk2BDXwGeUngRESd9isB8E9kudpNbS+Q6Z0CZ9GcAxgQcXHtpXEZL3anmbOOJTmnX9p6
+         q++A==
+X-Gm-Message-State: AOAM533Hx1pT8u7qF6zr52D5QbaonERGk83KAMlXqnRwWfqZMe4sC4aO
+        oQCfxO5In642LjQshjz+kY8=
+X-Google-Smtp-Source: ABdhPJxfcLMFpOQOl9GprTyZ1tlz6Lk0/vLJSwLGeeX5CKxL+3yEWsvZXmHiK7XoC4kFsyKfeSiLEw==
+X-Received: by 2002:a9d:2041:: with SMTP id n59mr2525764ota.252.1589972062788;
+        Wed, 20 May 2020 03:54:22 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id b17sm708792oop.6.2020.05.20.03.53.39
+        by smtp.gmail.com with ESMTPSA id u45sm677233ooi.41.2020.05.20.03.54.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 03:53:42 -0700 (PDT)
-Subject: Re: [PATCH 1/4] clk/soc: mediatek: mt8183: Bind clock driver from
+        Wed, 20 May 2020 03:54:22 -0700 (PDT)
+Subject: Re: [PATCH 3/4] clk/soc: mediatek: mt6779: Bind clock driver from
  platform device
 To:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -72,7 +72,8 @@ Cc:     mtk01761 <wendell.lin@mediatek.com>, devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20200518113156.25009-1-matthias.bgg@kernel.org>
- <158996969738.215346.5933135216459465754@swboyd.mtv.corp.google.com>
+ <20200518113156.25009-3-matthias.bgg@kernel.org>
+ <158996971719.215346.12802870863066637932@swboyd.mtv.corp.google.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -148,12 +149,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <4e163b03-2dac-b731-6302-cac00e82ed5a@gmail.com>
-Date:   Wed, 20 May 2020 12:53:38 +0200
+Message-ID: <45fcf31f-918b-fbc6-5c55-5fa74e3a7002@gmail.com>
+Date:   Wed, 20 May 2020 12:54:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <158996969738.215346.5933135216459465754@swboyd.mtv.corp.google.com>
+In-Reply-To: <158996971719.215346.12802870863066637932@swboyd.mtv.corp.google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -164,8 +165,8 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 20/05/2020 12:14, Stephen Boyd wrote:
-> Quoting matthias.bgg@kernel.org (2020-05-18 04:31:53)
+On 20/05/2020 12:15, Stephen Boyd wrote:
+> Quoting matthias.bgg@kernel.org (2020-05-18 04:31:55)
 >> From: Matthias Brugger <matthias.bgg@gmail.com>
 >>
 >> The mmsys driver is now the top level entry point for the multimedia
