@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA902C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E66AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 985D02070A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A1A2070A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ea1iryGe"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VMObo72b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgETMSw (ORCPT
+        id S1726917AbgETMTG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 08:18:52 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59128 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgETMSu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:18:50 -0400
+        Wed, 20 May 2020 08:19:06 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49932 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgETMTE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:19:04 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIkbQ111640;
-        Wed, 20 May 2020 07:18:46 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIvIi044180;
+        Wed, 20 May 2020 07:18:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589977126;
-        bh=Flh0goqgDng7jM1nNd4yAiC2nJe1NMBBFdYh80Rm9b0=;
+        s=ti-com-17Q1; t=1589977137;
+        bh=sz1d30oTTh8vMYDylpY9tVGBzny00+8RzK0fIiSFu8Q=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Ea1iryGeWODdNj9JCdj7nd8QCaZSAgIiIBvhc4Ev3zBZwpFWdR4VSzn+Y+/54zPxC
-         Ru1fGNZfph4v4/SNr01vp1KhBlqS8JzRwShtqcvXCm5+BwUGfR1DMKYQjsTgpgbLcp
-         BBoqMh5VYyspMq0DHuQKuW+gPa9n7yP21oO1jpNs=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KCIkui090381
+        b=VMObo72bxw1Enmk2OQyOKaJ3Qpz72S+e2Fd3a9ltCtKiX7bRXypbTbUVLvDfy2Ma1
+         rMv/tC6L6Ys75yKOlLD8EoBD8gGFLRl5t4hMdrn7oVfcvFSH8a25Gfd6s9QE+l+ozk
+         7FUBDXw9xbhoDWR11kl2ZkxkK2Pzu/2U/QCSfvOw=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KCIvVa090469
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 07:18:46 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 20 May 2020 07:18:57 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 07:18:46 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 07:18:56 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 07:18:46 -0500
+ Frontend Transport; Wed, 20 May 2020 07:18:56 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIkHY076844;
-        Wed, 20 May 2020 07:18:46 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIu2c108879;
+        Wed, 20 May 2020 07:18:56 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v2 1/4] net: phy: dp83869: Update port-mirroring to read straps
-Date:   Wed, 20 May 2020 07:18:32 -0500
-Message-ID: <20200520121835.31190-2-dmurphy@ti.com>
+Subject: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal delay for DP83869
+Date:   Wed, 20 May 2020 07:18:34 -0500
+Message-ID: <20200520121835.31190-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200520121835.31190-1-dmurphy@ti.com>
 References: <20200520121835.31190-1-dmurphy@ti.com>
@@ -67,50 +67,77 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The device tree may not have the property set for port mirroring
-because the hardware may have it strapped. If the property is not in the
-DT then check the straps and set the port mirroring bit appropriately.
+Add the internal delay values into the header and update the binding
+with the internal delay properties.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/net/phy/dp83869.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/net/ti,dp83869.yaml    | 16 ++++++++++++++++
+ include/dt-bindings/net/ti-dp83869.h           | 18 ++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index 7996a4aea8d2..073a0f7754a5 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -66,6 +66,7 @@
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+index 5b69ef03bbf7..344015ab9081 100644
+--- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
++++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+@@ -64,6 +64,20 @@ properties:
+        Operational mode for the PHY.  If this is not set then the operational
+        mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
  
- /* STRAP_STS1 bits */
- #define DP83869_STRAP_STS1_RESERVED		BIT(11)
-+#define DP83869_STRAP_MIRROR_ENABLED           BIT(12)
++  ti,rx-internal-delay:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      RGMII Receive Clock Delay - see dt-bindings/net/ti-dp83869.h
++      for applicable values. Required only if interface type is
++      PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_RXID.
++
++  ti,tx-internal-delay:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      RGMII Transmit Clock Delay - see dt-bindings/net/ti-dp83869.h
++      for applicable values. Required only if interface type is
++      PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_TXID.
++
+ required:
+   - reg
  
- /* PHYCTRL bits */
- #define DP83869_RX_FIFO_SHIFT	12
-@@ -191,10 +192,18 @@ static int dp83869_of_init(struct phy_device *phydev)
- 	else if (of_property_read_bool(of_node, "ti,min-output-impedance"))
- 		dp83869->io_impedance = DP83869_IO_MUX_CFG_IO_IMPEDANCE_MIN;
+@@ -80,5 +94,7 @@ examples:
+         ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
+         ti,max-output-impedance = "true";
+         ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
++        ti,rx-internal-delay = <DP83869_RGMIIDCTL_2_25_NS>;
++        ti,tx-internal-delay = <DP83869_RGMIIDCTL_2_75_NS>;
+       };
+     };
+diff --git a/include/dt-bindings/net/ti-dp83869.h b/include/dt-bindings/net/ti-dp83869.h
+index 218b1a64e975..77d104a40f1f 100644
+--- a/include/dt-bindings/net/ti-dp83869.h
++++ b/include/dt-bindings/net/ti-dp83869.h
+@@ -16,6 +16,24 @@
+ #define DP83869_PHYCR_FIFO_DEPTH_6_B_NIB	0x02
+ #define DP83869_PHYCR_FIFO_DEPTH_8_B_NIB	0x03
  
--	if (of_property_read_bool(of_node, "enet-phy-lane-swap"))
-+	if (of_property_read_bool(of_node, "enet-phy-lane-swap")) {
- 		dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
--	else
--		dp83869->port_mirroring = DP83869_PORT_MIRRORING_DIS;
-+	} else {
-+		/* If the lane swap is not in the DT then check the straps */
-+		ret = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_STRAP_STS1);
-+		if (ret < 0)
-+			return ret;
-+		if (ret & DP83869_STRAP_MIRROR_ENABLED)
-+			dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
-+		else
-+			dp83869->port_mirroring = DP83869_PORT_MIRRORING_DIS;
-+	}
- 
- 	if (of_property_read_u32(of_node, "rx-fifo-depth",
- 				 &dp83869->rx_fifo_depth))
++/* RGMIIDCTL internal delay for rx and tx */
++#define	DP83869_RGMIIDCTL_250_PS	0x0
++#define	DP83869_RGMIIDCTL_500_PS	0x1
++#define	DP83869_RGMIIDCTL_750_PS	0x2
++#define	DP83869_RGMIIDCTL_1_NS		0x3
++#define	DP83869_RGMIIDCTL_1_25_NS	0x4
++#define	DP83869_RGMIIDCTL_1_50_NS	0x5
++#define	DP83869_RGMIIDCTL_1_75_NS	0x6
++#define	DP83869_RGMIIDCTL_2_00_NS	0x7
++#define	DP83869_RGMIIDCTL_2_25_NS	0x8
++#define	DP83869_RGMIIDCTL_2_50_NS	0x9
++#define	DP83869_RGMIIDCTL_2_75_NS	0xa
++#define	DP83869_RGMIIDCTL_3_00_NS	0xb
++#define	DP83869_RGMIIDCTL_3_25_NS	0xc
++#define	DP83869_RGMIIDCTL_3_50_NS	0xd
++#define	DP83869_RGMIIDCTL_3_75_NS	0xe
++#define	DP83869_RGMIIDCTL_4_00_NS	0xf
++
+ /* IO_MUX_CFG - Clock output selection */
+ #define DP83869_CLK_O_SEL_CHN_A_RCLK		0x0
+ #define DP83869_CLK_O_SEL_CHN_B_RCLK		0x1
 -- 
 2.26.2
 
