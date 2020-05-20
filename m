@@ -2,101 +2,122 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F585C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCDBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 16:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 213862070A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589990352;
-	bh=tfUk3WoRIXH7obfMejJ0Kq701IZ8v/+bU3yT5/sT9rg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GBWZW09+917MSx9CNkpx4NOEaMWC28ia8e2cPqTzNE7pcJR4GuBL7B316BT/TkgVP
-	 I9T+lob6Atm38Sgx27RO1c8TjNqM5gVTlRBaLtKop7F9JOrPIRUft9XV9wqui3IQhA
-	 OlZloxwG73WltGxnDAjKXiWO6YHm8T3k1T78xF/k=
+	by mail.kernel.org (Postfix) with ESMTP id 2F6772075F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 16:03:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqYfNJBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgETP7L (ORCPT
+        id S1726650AbgETQDz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 11:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgETP7L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 11:59:11 -0400
-Received: from localhost (p5486cd24.dip0.t-ipconnect.de [84.134.205.36])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5456820671;
-        Wed, 20 May 2020 15:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589990351;
-        bh=tfUk3WoRIXH7obfMejJ0Kq701IZ8v/+bU3yT5/sT9rg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=niGJC2QXqGt0SNL5Zmr3nAhnyuh0D427ugNd5VIZ5AZizvC/5C5Bvhi+umM42Km9j
-         he0fbwCsiF7JmxsmNdinFXmXTBmx1b8wCfTO2qWNLUwFBRZVTa9UmBAGRqM00iZ44r
-         z4s4JQWsnzSCCz2Oz+8XIILDwXAQHQYmrSwyDBRE=
-Date:   Wed, 20 May 2020 17:59:07 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     linux-i2c@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        devicetree@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Vladimir Vid <vladimir.vid@sartura.hr>
-Subject: Re: [PATCH] i2c: pxa: implement generic i2c bus recovery
-Message-ID: <20200520155907.GF5759@ninjato>
-References: <E1jYnlI-0002Nw-83@rmk-PC.armlinux.org.uk>
+        Wed, 20 May 2020 12:03:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgETQDz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 12:03:55 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BE56C061A0E;
+        Wed, 20 May 2020 09:03:55 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d10so1640823pgn.4;
+        Wed, 20 May 2020 09:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OOwuxWEO/Sl8yx5TsqcCpHvO91TmRIyEZirMBX+Uvb0=;
+        b=tqYfNJBqFCzIdnyTQnESaY2EhitXzArebVnBxAmiWUH31YSwGkyxGT0bxmjdCnNP3I
+         doqAT4kPg0MYs4+BiQ1Z3U1ofhnEK7ta3Pg1xLEAVVEBIzepp2mPu65oNVqpTA9bQB8b
+         BH5ZCfTfUNCJzdtBjLYpmc20KA7BhcXfs8NywHaFaxxnayfjpnQLC9neSD3GFyRNHM89
+         NCu07RBOShh6FI8LU3twTebMt0uAnwfJJTbpsKJHe1sUBcZIRdUKl5PcTpo7c2QFxqZZ
+         QO2rjpg22xaV7mFRc5Iowj9Z6nkp2FIIOKvZ947SgpukLUqvIo+PwalmnOLcrrr6llAB
+         P0Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OOwuxWEO/Sl8yx5TsqcCpHvO91TmRIyEZirMBX+Uvb0=;
+        b=T18iy+PF1ETZQ8uWvFNV2KApObosuFGblXWl9pA8/LSOI4sySzDQpaBHONwST/fvo9
+         lkENUP2EJ2WuvctEtYo/EHNZVuoXqdg3aCjnWc4zEgVE2C4M5YpPCbh4w4FmtEpR8CoD
+         VpErf4N+rba5ef9D0AUeKZDHfObWIzkGyUYBerQI/hBVsgrCyctLq6v1NCFYMSFw3y7N
+         k+CX/ZcL/btsFE9hQxpS1VCVUojq6wy7S80Kpdq3akLOp6FhaolEV0oNJc00TYO0WmfG
+         h66YhiO33gVgzhmZ9I3cdthVZzzX6SocQX/QKbgbZggy5biJpyIvuspTaaM6gLO8lnzl
+         vsQA==
+X-Gm-Message-State: AOAM53257m8vzqvYKfvZD91iF8EKUGMNthUgOYTb1VMKDBFGatFa4EJn
+        3JYAHb4s2j1pGSql+tw7nqMru/sL
+X-Google-Smtp-Source: ABdhPJyzKgk4okw2I5EAYp6yP9oqV+jg1QwGBzglmgRe4hDbyE6yihw912kZx/Hr1COTy0fgNciqFw==
+X-Received: by 2002:a63:2347:: with SMTP id u7mr4590793pgm.183.1589990634413;
+        Wed, 20 May 2020 09:03:54 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w7sm2381841pfw.82.2020.05.20.09.03.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 09:03:53 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Dan Murphy <dmurphy@ti.com>, Andrew Lunn <andrew@lunn.ch>
+Cc:     hkallweit1@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <0d80a7f6-35a9-9b3f-2a8f-65b793d1ce98@gmail.com>
+Date:   Wed, 20 May 2020 09:03:52 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="juZjCTNxrMaZdGZC"
-Content-Disposition: inline
-In-Reply-To: <E1jYnlI-0002Nw-83@rmk-PC.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---juZjCTNxrMaZdGZC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 13, 2020 at 10:33:12AM +0100, Russell King wrote:
-> Implement generic GPIO-based I2C bus recovery for the PXA I2C driver.
->=20
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+On 5/20/2020 8:56 AM, Dan Murphy wrote:
+> Andrew
+> 
+> On 5/20/20 10:36 AM, Andrew Lunn wrote:
+>>>> Hi Dan
+>>>>
+>>>> Having it required with PHY_INTERFACE_MODE_RGMII_ID or
+>>>> PHY_INTERFACE_MODE_RGMII_RXID is pretty unusual. Normally these
+>>>> properties are used to fine tune the delay, if the default of 2ns does
+>>>> not work.
+>>> Also if the MAC phy-mode is configured with RGMII-ID and no internal
+>>> delay
+>>> values defined wouldn't that be counter intuitive?
+>> Most PHYs don't allow the delay to be fine tuned. You just pass for
+>> example PHY_INTERFACE_MODE_RGMII_ID to the PHY driver and it enables a
+>> 2ns delay. That is what people expect, and is documented.
+> 
+>> Being able to tune the delay is an optional extra, which some PHYs
+>> support, but that is always above and beyond
+>> PHY_INTERFACE_MODE_RGMII_ID.
+> 
+> I am interested in knowing where that is documented.  I want to RTM I
+> grepped for a few different words but came up empty
+> 
+> Since this is a tuneable phy we need to program the ID.  2ns is the
+> default value
+> 
+> Maybe I can change it from Required to Configurable or Used.
 
-Applied to for-next, thanks!
-
-
---juZjCTNxrMaZdGZC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7FU8sACgkQFA3kzBSg
-KbZ/7hAAlQl0voEQHIbOWix4EYWfuOeOT6tsUV6hrmv8ElYXzFE0NowajifXdB0S
-j0qTL5VBiHexnntoQvtUJqPxPAPKwRg/+RsOA9dYIHKQaTepdPQHYFYgq0SYYcYC
-0fKz19pkHyt0/sk/CTJp/VyXdQRup+9h6jIZO9XAczDzIzKEkRaObcb2e524e9Yh
-Jq06xgncVQIsnpe0YLY201j3+d44EAD0YWrvJcmqGSVSPpYJqrRP8R6ctOS/EJrx
-VAg6MbAPL14UeK8UTbVo8CuBOFOpyILj7hO/IKYpID6ZX355jhbPAEER0aQFhNe8
-+B/jIBzr0m6dv9OHeEsqBiOYQtMAGkSl2rLHPck8CtgAga9G1I0z/2y5h2Fiu98B
-ZupxipXjnBejIrTe3xJFrDvceftD3IpFO4WCni2MxcDZk7Zwme5exslGDH3Z+4vU
-9DktI7r3TMyogNEuR7orQb3HQkDNs40BYAYQu32+GpMFfnD1Su1+LUZ5tOUAPeaH
-QNqkzpseDDt7ECrmIf4g4eByB3QBCJ2tbj1IAtxwH8V8/cXMs+XVLKQAwQbEaQcP
-ZzuLHN9vkZ/xVPPqAp+9TOkjvg+QxVhQs92CF4ASz24OVfZcIjUv9QJr/IKS633/
-yZrzU8dbpZL5dJerWB0/AZLyHI/43V9fxT3gVfJi0LvYt0yEF64=
-=kiRu
------END PGP SIGNATURE-----
-
---juZjCTNxrMaZdGZC--
+I do not think this is properly documented, it is an established
+practice, but it should be clearly documented somewhere, I do not know
+whether that belongs in the PHY Device Tree binding or if this belongs
+to the PHY documentation.
+-- 
+Florian
