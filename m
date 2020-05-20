@@ -2,93 +2,105 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C00C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF2CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710CE20709
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88DC20671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:56:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0eTv50D"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IYVriDqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgETPtU (ORCPT
+        id S1726801AbgETP4K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 11:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgETPtT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 11:49:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C7FC061A0E;
-        Wed, 20 May 2020 08:49:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h17so3638074wrc.8;
-        Wed, 20 May 2020 08:49:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qO5KMhvNfzj9bbNCDfA7x6Sp4zrCAtfu4VyOnO2ezqg=;
-        b=R0eTv50DGORz/BclJPmcolpMoipyElicThx6Epo19ngTZoDX+44lPGD/tJr33MWNk3
-         ESymGiErCdjZwsWJPD1YWwRtm2pF8QoTkouxQkZUZI1K6s6x9/o04+82otPixnV/MpF4
-         OnfJik8x08m7bzjOjxHblEhvk7FFcnPmjC9NSBGwi6P6yHkN+DN4dJHTKBju7hkihTkc
-         mYH6SI+Ft1z9vASRliYYXqrhEbKVEQDG9CoVhZb7c7KrL1ygWJ1qjIj60Iv9Yw+dGb/Y
-         938Gy5BzwPQRStM84Z+oS0eXhV1AVq/6uyyXwOqXf5HTYQ+oxr+XvdHlaBHKYdXqdrgM
-         RAZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qO5KMhvNfzj9bbNCDfA7x6Sp4zrCAtfu4VyOnO2ezqg=;
-        b=rwG2ecEzHFjwbu8FWcS8GpmIJV9HALMkACROZWEe1B5yKixUc4BRR7xRJpV8D52yR0
-         jVKzzOjgr2mgwdFQaQWBU8ZtVZdsr7knPYAgcqBS8LE5Ye0ISkWWWnC3bRBh+5bhhebE
-         +i1JKeoPRt5xb4QLc7EHu/nvi/pwYx2Gl72CGwsI5GH0ans0R1nqq+02OwRp22W74riw
-         hpAsqfWb3SsviFnyUIGpcdPbErpSl5hS/XKDyxlAjQ0R+jnsyPetExmqqy+2L6u7fEnv
-         lfs5eP/s/BZKaJK25/yita2FT9J9umOyUw0dtMQ606Duamlrz5RzXBhxJzpz4kcmftuj
-         zkEA==
-X-Gm-Message-State: AOAM531dmlSV3pNC9jNA+ms/Yo59la6FMwgrAVwJKsBQpvUa724hqi+1
-        dX0uefLSDd+kXKIxXkx9lTlTgdc/
-X-Google-Smtp-Source: ABdhPJym+kJeWiwlFXD5FHmX7APmf8B+yHSjHLR97rWIHzV5F8DcSlFRcwMNjvPYn3prx64Xg9Z/hg==
-X-Received: by 2002:a5d:6584:: with SMTP id q4mr5015280wru.12.1589989757686;
-        Wed, 20 May 2020 08:49:17 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id b145sm3728520wme.41.2020.05.20.08.49.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 08:49:16 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 2/4] net: phy: dp83869: Set opmode from straps
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
+        Wed, 20 May 2020 11:56:10 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41956 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgETP4K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 11:56:10 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KFu5kl121964;
+        Wed, 20 May 2020 10:56:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589990165;
+        bh=Z1FghLDYCt9S+tlhl6CoZ8M0XLa4JQ7N0CO0ouJegsA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IYVriDqHuGv8dSt1qh2dSXk38T/6c0V3Mwck06kesJERAoxAQozitXmGF0uFSZvF4
+         V3GxqQ328t33wRZMkDUYZdINBQWTFdwUW3bIXU8BU1gyWxm227aK3rJVBwz2UIvAq0
+         jrMCnIZg4RT/LfbknaoB7GZhIPTqtHwZeosfHCTY=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KFu4FD125889
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 10:56:05 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 10:56:04 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 10:56:05 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KFu4TV130035;
+        Wed, 20 May 2020 10:56:04 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
 References: <20200520121835.31190-1-dmurphy@ti.com>
- <20200520121835.31190-3-dmurphy@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <b19dda18-2d33-34de-b8e2-6ccb6ff685a9@gmail.com>
-Date:   Wed, 20 May 2020 08:49:12 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+Date:   Wed, 20 May 2020 10:56:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200520121835.31190-3-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200520153631.GH652285@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Andrew
+
+On 5/20/20 10:36 AM, Andrew Lunn wrote:
+>>> Hi Dan
+>>>
+>>> Having it required with PHY_INTERFACE_MODE_RGMII_ID or
+>>> PHY_INTERFACE_MODE_RGMII_RXID is pretty unusual. Normally these
+>>> properties are used to fine tune the delay, if the default of 2ns does
+>>> not work.
+>> Also if the MAC phy-mode is configured with RGMII-ID and no internal delay
+>> values defined wouldn't that be counter intuitive?
+> Most PHYs don't allow the delay to be fine tuned. You just pass for
+> example PHY_INTERFACE_MODE_RGMII_ID to the PHY driver and it enables a
+> 2ns delay. That is what people expect, and is documented.
+
+> Being able to tune the delay is an optional extra, which some PHYs
+> support, but that is always above and beyond
+> PHY_INTERFACE_MODE_RGMII_ID.
+
+I am interested in knowing where that is documented.  I want to RTM I 
+grepped for a few different words but came up empty
+
+Since this is a tuneable phy we need to program the ID.  2ns is the 
+default value
+
+Maybe I can change it from Required to Configurable or Used.
+
+Dan
 
 
-On 5/20/2020 5:18 AM, Dan Murphy wrote:
-> If the op-mode for the device is not set in the device tree then set
-> the strapped op-mode and store it for later configuration.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+>       Andrew
