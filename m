@@ -2,102 +2,295 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1C5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 00:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA7BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 00:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC86520674
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 00:25:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ruGAnAg3"
+	by mail.kernel.org (Postfix) with ESMTP id EFB7420708
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 00:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgETAZY (ORCPT
+        id S1728303AbgETAa1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 20:25:24 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41958 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgETAZY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 20:25:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1589934322; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I7AwvCtB1QUal3/NGWrqtWi3IGaVg+1bWt/HFkMKu/E=;
-        b=ruGAnAg3O7kRyBRXucEQgxm2vw3f7nstuQn1Dx6Q63V6jqQ3A8orguyJz+I61tAQI4DTB6
-        cp8ITtjx2l1yFQ6qX4fOb92vzgu+NV3XmYHLLWWh1FRP1xgG0ZS5Nl6Ee875RDW8wy68WB
-        8DWma5botrwtX4Yc/KC+36gSN6aieI4=
-Date:   Wed, 20 May 2020 02:25:12 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mtd: rawnand: ingenic: Clarify the
- active state of the RB pin
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Message-Id: <06TLAQ.BLU7G36K5D91@crapouillou.net>
-In-Reply-To: <20200519232454.374081-1-boris.brezillon@collabora.com>
-References: <20200519232454.374081-1-boris.brezillon@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Tue, 19 May 2020 20:30:27 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:56780 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726178AbgETAa0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 20:30:26 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 948661A0210;
+        Wed, 20 May 2020 02:30:23 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7BF0F1A0237;
+        Wed, 20 May 2020 02:30:18 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2401F402BB;
+        Wed, 20 May 2020 08:30:12 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: gpio: Convert mxs to json-schema
+Date:   Wed, 20 May 2020 08:20:35 +0800
+Message-Id: <1589934035-5309-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+Convert the MXS GPIO binding to DT schema format using json-schema.
 
-This .txt file is going away, so there's no need to apply this one=20
-patch.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/gpio/gpio-mxs.txt          |  88 -------------
+ .../devicetree/bindings/gpio/gpio-mxs.yaml         | 136 +++++++++++++++++++++
+ 2 files changed, 136 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mxs.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
 
-I Cc'd you on the V2 of the patchset that drops this file.
-
--Paul
-
-
-Le mer. 20 mai 2020 =E0 1:24, Boris Brezillon=20
-<boris.brezillon@collabora.com> a =E9crit :
-> Let's make things consistent with other bindings and clarify the
-> expected active state.
->=20
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> ---
-> Changes in v2:
-> * New patch
-> ---
->  Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git=20
-> a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt=20
-> b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> index c02259353327..4cbe13f94564 100644
-> --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> @@ -30,7 +30,8 @@ Optional children node properties:
->  - nand-ecc-strength: ECC strength (max number of correctable bits).
->  - nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw"=20
-> by default
->  - nand-on-flash-bbt: boolean to enable on flash bbt option, if not=20
-> present false
-> -- rb-gpios: GPIO specifier for the busy pin.
-> +- rb-gpios: GPIO specifier for the ready/busy pin. The active state=20
-> (ready)
-> +            should be high unless the signal is inverted.
->  - wp-gpios: GPIO specifier for the write protect pin.
->=20
->  Optional child node of NAND chip nodes:
-> --
-> 2.25.4
->=20
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.txt b/Documentation/devicetree/bindings/gpio/gpio-mxs.txt
+deleted file mode 100644
+index 1e677a4..0000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-mxs.txt
++++ /dev/null
+@@ -1,88 +0,0 @@
+-* Freescale MXS GPIO controller
+-
+-The Freescale MXS GPIO controller is part of MXS PIN controller.  The
+-GPIOs are organized in port/bank.  Each port consists of 32 GPIOs.
+-
+-As the GPIO controller is embedded in the PIN controller and all the
+-GPIO ports share the same IO space with PIN controller, the GPIO node
+-will be represented as sub-nodes of MXS pinctrl node.
+-
+-Required properties for GPIO node:
+-- compatible : Should be "fsl,<soc>-gpio".  The supported SoCs include
+-  imx23 and imx28.
+-- interrupts : Should be the port interrupt shared by all 32 pins.
+-- gpio-controller : Marks the device node as a gpio controller.
+-- #gpio-cells : Should be two.  The first cell is the pin number and
+-  the second cell is used to specify the gpio polarity:
+-      0 = active high
+-      1 = active low
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
+-  The second cell bits[3:0] is used to specify trigger type and level flags:
+-      1 = low-to-high edge triggered.
+-      2 = high-to-low edge triggered.
+-      4 = active high level-sensitive.
+-      8 = active low level-sensitive.
+-
+-Note: Each GPIO port should have an alias correctly numbered in "aliases"
+-node.
+-
+-Examples:
+-
+-aliases {
+-	gpio0 = &gpio0;
+-	gpio1 = &gpio1;
+-	gpio2 = &gpio2;
+-	gpio3 = &gpio3;
+-	gpio4 = &gpio4;
+-};
+-
+-pinctrl@80018000 {
+-	compatible = "fsl,imx28-pinctrl", "simple-bus";
+-	reg = <0x80018000 2000>;
+-
+-	gpio0: gpio@0 {
+-		compatible = "fsl,imx28-gpio";
+-		interrupts = <127>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+-
+-	gpio1: gpio@1 {
+-		compatible = "fsl,imx28-gpio";
+-		interrupts = <126>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+-
+-	gpio2: gpio@2 {
+-		compatible = "fsl,imx28-gpio";
+-		interrupts = <125>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+-
+-	gpio3: gpio@3 {
+-		compatible = "fsl,imx28-gpio";
+-		interrupts = <124>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+-
+-	gpio4: gpio@4 {
+-		compatible = "fsl,imx28-gpio";
+-		interrupts = <123>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+new file mode 100644
+index 0000000..ccf5b50
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+@@ -0,0 +1,136 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-mxs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale MXS GPIO controller
++
++maintainers:
++  - Shawn Guo <shawn.guo@linaro.org>
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description: |
++  The Freescale MXS GPIO controller is part of MXS PIN controller.
++  The GPIOs are organized in port/bank, each port consists of 32 GPIOs.
++  As the GPIO controller is embedded in the PIN controller and all the
++  GPIO ports share the same IO space with PIN controller, the GPIO node
++  will be represented as sub-nodes of MXS pinctrl node.
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx23-pinctrl
++      - fsl,imx28-pinctrl
++
++  '#address-cells':
++    const: 1
++  '#size-cells':
++    const: 0
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  "gpio@[0-9]+$":
++    type: object
++    properties:
++      compatible:
++        enum:
++          - fsl,imx23-gpio
++          - fsl,imx28-gpio
++
++      reg:
++        maxItems: 1
++
++      interrupts:
++        description: Should be the port interrupt shared by all 32 pins.
++        maxItems: 1
++
++      interrupt-controller: true
++
++      "#interrupt-cells":
++        const: 2
++
++      "#gpio-cells":
++        const: 2
++
++      gpio-controller: true
++
++    required:
++      - compatible
++      - reg
++      - interrupts
++      - interrupt-controller
++      - "#interrupt-cells"
++      - "#gpio-cells"
++      - gpio-controller
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - '#address-cells'
++  - '#size-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    pinctrl@80018000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        compatible = "fsl,imx28-pinctrl";
++        reg = <0x80018000 0x2000>;
++
++        gpio@0 {
++                compatible = "fsl,imx28-gpio";
++                reg = <0>;
++                interrupts = <127>;
++                gpio-controller;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++        };
++
++        gpio@1 {
++                compatible = "fsl,imx28-gpio";
++                reg = <1>;
++                interrupts = <126>;
++                gpio-controller;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++        };
++
++        gpio@2 {
++                compatible = "fsl,imx28-gpio";
++                reg = <2>;
++                interrupts = <125>;
++                gpio-controller;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++        };
++
++        gpio@3 {
++                compatible = "fsl,imx28-gpio";
++                reg = <3>;
++                interrupts = <124>;
++                gpio-controller;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++        };
++
++        gpio@4 {
++                compatible = "fsl,imx28-gpio";
++                reg = <4>;
++                interrupts = <123>;
++                gpio-controller;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++        };
++    };
+-- 
+2.7.4
 
