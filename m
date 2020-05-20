@@ -2,151 +2,292 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE440C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C16C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D82E20873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JNEE1o6y"
+	by mail.kernel.org (Postfix) with ESMTP id 8D783205CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgETGjk (ORCPT
+        id S1726545AbgETGkI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 02:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgETGjj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 02:39:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86564C05BD43
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 23:39:39 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id i15so1876749wrx.10
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 23:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=t0COEyXj5D7NvkjtdvydID9BlBfxGe8of0Dfo1AtG48=;
-        b=JNEE1o6yhLVdcuKXhiGY+WKqOeJP/cguKffC8RXamxJeYUzNWMSAf5svkdHabJt3X2
-         fQ/ibhR69Q/0NTu4DHD1BhZyV7yp+1jx/ogls2VBx5Anqks+AxyaB+uFdCiAWepuXPml
-         fU++yx8fB9HPa9iEI3CLdd7jRQ8FEfbiI9/EAAJzPFP8dR3c/XRJncHAWqD0LnIOzUZh
-         U1ES+pAUkLOyI1r5UuXphntFHQOmYJ4LYw9cTLf2lsrZDPH1C0w9p4dv82Isr1hUoaU+
-         xcHPLrBKE0qyoZ45tbz1tXRA7gkPXpD3oBKkI2k0xxQrJ4CHs/8EbN1fojDjeTAKR2lR
-         mqcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=t0COEyXj5D7NvkjtdvydID9BlBfxGe8of0Dfo1AtG48=;
-        b=AdoHIaw9XhHHEkJgKrVR3Dn5pUPfRc/7okpWpnE9O678OJgs3xSSQETRsaI2/QinNH
-         E8U09gOYSDChaZHWTyozJj/YWV0CvDHtmdCFY9t8jIqhXGbyE56EwhjasadFRFQdjZtM
-         6XXSDy9mSG76vc1XHrlh/dWyMaXPcG+bNTQ7VNtaDnGttdT3mvQii78cCwCW0r/4s+Sc
-         DyvMFbeNcrpVmr7M98kt55IEsNf6h7p77vFxiYI4S7Zt9GCMWNkWGBKJX5NEs1vFqWtV
-         RFy1R5XSsMNzZaILVlOVvf5C9SPLg/8ZJhW0OvQH+O9ihpzG0i0EAK/Yl0RFkCt3XR0f
-         vsTg==
-X-Gm-Message-State: AOAM531eTK1+qtIXpRxPGZVe4qmw6uN4J8j5/Rqwpsq328TbUsKstdEK
-        cDeIiYeXRO7khzsvR/2mo1xZrgu6thY=
-X-Google-Smtp-Source: ABdhPJz10hiF6TxXkTZa5JarAelnWM1tRH1Rh9uBwIjHWV9cX2CCPggm62zNbl3YzgDThSkN+F/BhA==
-X-Received: by 2002:a5d:43d1:: with SMTP id v17mr2579195wrr.282.1589956777948;
-        Tue, 19 May 2020 23:39:37 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id z132sm2217692wmc.29.2020.05.19.23.39.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 23:39:37 -0700 (PDT)
-Date:   Wed, 20 May 2020 07:39:35 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
+        Wed, 20 May 2020 02:40:08 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39850 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgETGkG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 02:40:06 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 446571A02DF;
+        Wed, 20 May 2020 08:40:04 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F71C1A02D9;
+        Wed, 20 May 2020 08:40:00 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 181F4402B3;
+        Wed, 20 May 2020 14:39:54 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] mfd: Introduce QTI I2C PMIC controller
-Message-ID: <20200520063935.GZ271301@dell>
-References: <cover.1588115326.git.gurus@codeaurora.org>
- <5644dea146f8b49a5b827c56392ff916bfb343e9.1588115326.git.gurus@codeaurora.org>
- <20200429075010.GX3559@dell>
- <20200501011319.GA28441@codeaurora.org>
- <20200515104520.GK271301@dell>
- <20200519185757.GA13992@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200519185757.GA13992@codeaurora.org>
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] ARM: dts: imx: Make tempmon node as child of anatop node
+Date:   Wed, 20 May 2020 14:30:16 +0800
+Message-Id: <1589956216-22499-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 19 May 2020, Guru Das Srinagesh wrote:
+i.MX6/7 SoCs' temperature sensor is inside anatop module from HW
+perspective, so it should be a child node of anatop.
 
-> On Fri, May 15, 2020 at 11:45:20AM +0100, Lee Jones wrote:
-> > On Thu, 30 Apr 2020, Guru Das Srinagesh wrote:
-> > 
-> > > On Wed, Apr 29, 2020 at 08:50:10AM +0100, Lee Jones wrote:
-> > > > On Tue, 28 Apr 2020, Guru Das Srinagesh wrote:
-> > > > 
-> > > > > The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
-> > > > > multi-function PMIC devices which communicate over the I2C bus.  The
-> > > > > controller enumerates all child nodes as platform devices, and
-> > > > > instantiates a regmap interface for them to communicate over the I2C
-> > > > > bus.
-> > > > > 
-> > > > > The controller also controls interrupts for all of the children platform
-> > > > > devices.  The controller handles the summary interrupt by deciphering
-> > > > > which peripheral triggered the interrupt, and which of the peripheral
-> > > > > interrupts were triggered.  Finally, it calls the interrupt handlers for
-> > > > > each of the virtual interrupts that were registered.
-> > > > > 
-> > > > > Nicholas Troast is the original author of this driver.
-> > > > > 
-> > > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > > > ---
-> > > > >  drivers/mfd/Kconfig         |  11 +
-> > > > >  drivers/mfd/Makefile        |   1 +
-> > > > >  drivers/mfd/qcom-i2c-pmic.c | 737 ++++++++++++++++++++++++++++++++++++++++++++
-> > > > 
-> > > > The vast majority of this driver deals with IRQ handling.  Why can't
-> > > > this be split out into its own IRQ Chip driver and moved to
-> > > > drivers/irqchip?
-> > > 
-> > > There appear to be quite a few in-tree MFD drivers that register IRQ
-> > > controllers, like this driver does:
-> > > 
-> > > $ grep --exclude-dir=.git -rnE "irq_domain_(add|create).+\(" drivers/mfd | wc -l
-> > > 23
-> > > 
-> > > As a further example, drivers/mfd/stpmic1.c closely resembles this
-> > > driver in that it uses both devm_regmap_add_irq_chip() as well as
-> > > devm_of_platform_populate().
-> > > 
-> > > As such, it seems like this driver is in line with some of the
-> > > architectural choices that have been accepted in already-merged drivers.
-> > > Could you please elaborate on your concerns?
-> > 
-> > It is true that *basic* IRQ domain support has been added to these
-> > drivers in the past.  However, IMHO the support added to this driver
-> > goes beyond those realms such that it would justify a driver of its
-> > own.
-> 
-> I am exploring an option to see if the regmap-irq APIs may be used in
-> this driver, similar to stpmic1.c. Just to let you know, it might be a
-> few days before I am able to post my next patchset as I'll have to make
-> the necessary changes and test them out first.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 22 +++++++++++-----------
+ arch/arm/boot/dts/imx6sl.dtsi  | 20 ++++++++++----------
+ arch/arm/boot/dts/imx6sll.dtsi | 20 ++++++++++----------
+ arch/arm/boot/dts/imx6sx.dtsi  | 20 ++++++++++----------
+ arch/arm/boot/dts/imx6ul.dtsi  | 20 ++++++++++----------
+ arch/arm/boot/dts/imx7s.dtsi   | 20 ++++++++++----------
+ 6 files changed, 61 insertions(+), 61 deletions(-)
 
-Take your time.
-
-The next release is due imminently, so you have as long as you need.
-
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 39d4afd..43d44d5 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -69,17 +69,6 @@
+ 		};
+ 	};
+ 
+-	tempmon: tempmon {
+-		compatible = "fsl,imx6q-tempmon";
+-		interrupt-parent = <&gpc>;
+-		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
+-		fsl,tempmon = <&anatop>;
+-		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-		nvmem-cell-names = "calib", "temp_grade";
+-		clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-		#thermal-sensor-cells = <0>;
+-	};
+-
+ 	ldb: ldb {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -795,6 +784,17 @@
+ 					anatop-min-voltage = <725000>;
+ 					anatop-max-voltage = <1450000>;
+ 				};
++
++				tempmon: tempmon {
++					compatible = "fsl,imx6q-tempmon";
++					interrupt-parent = <&gpc>;
++					interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
++					fsl,tempmon = <&anatop>;
++					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++					nvmem-cell-names = "calib", "temp_grade";
++					clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
++					#thermal-sensor-cells = <0>;
++				};
+ 			};
+ 
+ 			usbphy1: usbphy@20c9000 {
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 911d8cf..d8efc0a 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -93,16 +93,6 @@
+ 		};
+ 	};
+ 
+-	tempmon: tempmon {
+-		compatible = "fsl,imx6q-tempmon";
+-		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-parent = <&gpc>;
+-		fsl,tempmon = <&anatop>;
+-		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-		nvmem-cell-names = "calib", "temp_grade";
+-		clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
+-	};
+-
+ 	pmu {
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupt-parent = <&gpc>;
+@@ -628,6 +618,16 @@
+ 					anatop-min-voltage = <725000>;
+ 					anatop-max-voltage = <1450000>;
+ 				};
++
++				tempmon: tempmon {
++					compatible = "fsl,imx6q-tempmon";
++					interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
++					interrupt-parent = <&gpc>;
++					fsl,tempmon = <&anatop>;
++					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++					nvmem-cell-names = "calib", "temp_grade";
++					clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
++				};
+ 			};
+ 
+ 			usbphy1: usbphy@20c9000 {
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index edd3abb..bf7f048 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -105,16 +105,6 @@
+ 		clock-output-names = "ipp_di1";
+ 	};
+ 
+-	tempmon: temperature-sensor {
+-		compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
+-		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-parent = <&gpc>;
+-		fsl,tempmon = <&anatop>;
+-		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-		nvmem-cell-names = "calib", "temp_grade";
+-		clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
+-	};
+-
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -531,6 +521,16 @@
+ 					anatop-max-voltage = <3400000>;
+ 					anatop-enable-bit = <0>;
+ 				};
++
++				tempmon: temperature-sensor {
++					compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
++					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++					interrupt-parent = <&gpc>;
++					fsl,tempmon = <&anatop>;
++					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++					nvmem-cell-names = "calib", "temp_grade";
++					clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
++				};
+ 			};
+ 
+ 			usbphy1: usb-phy@20c9000 {
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index e031337..8c4473b 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -134,16 +134,6 @@
+ 		clock-output-names = "anaclk2";
+ 	};
+ 
+-	tempmon: tempmon {
+-		compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
+-		interrupt-parent = <&gpc>;
+-		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-		fsl,tempmon = <&anatop>;
+-		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-		nvmem-cell-names = "calib", "temp_grade";
+-		clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+-	};
+-
+ 	pmu {
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupt-parent = <&gpc>;
+@@ -696,6 +686,16 @@
+ 					anatop-min-voltage = <725000>;
+ 					anatop-max-voltage = <1450000>;
+ 				};
++
++				tempmon: tempmon {
++					compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
++					interrupt-parent = <&gpc>;
++					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++					fsl,tempmon = <&anatop>;
++					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++					nvmem-cell-names = "calib", "temp_grade";
++					clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
++				};
+ 			};
+ 
+ 			usbphy1: usbphy@20c9000 {
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 35e7301..505fd4f 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -131,16 +131,6 @@
+ 		clock-output-names = "ipp_di1";
+ 	};
+ 
+-	tempmon: tempmon {
+-		compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
+-		interrupt-parent = <&gpc>;
+-		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-		fsl,tempmon = <&anatop>;
+-		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-		nvmem-cell-names = "calib", "temp_grade";
+-		clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
+-	};
+-
+ 	pmu {
+ 		compatible = "arm,cortex-a7-pmu";
+ 		interrupt-parent = <&gpc>;
+@@ -611,6 +601,16 @@
+ 					anatop-min-voltage = <725000>;
+ 					anatop-max-voltage = <1450000>;
+ 				};
++
++				tempmon: tempmon {
++					compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
++					interrupt-parent = <&gpc>;
++					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++					fsl,tempmon = <&anatop>;
++					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++					nvmem-cell-names = "calib", "temp_grade";
++					clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
++				};
+ 			};
+ 
+ 			usbphy1: usbphy@20c9000 {
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 8bac491..3904558 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -147,16 +147,6 @@
+ 		};
+ 	};
+ 
+-	tempmon: tempmon {
+-		compatible = "fsl,imx7d-tempmon";
+-		interrupt-parent = <&gpc>;
+-		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-		fsl,tempmon = <&anatop>;
+-		nvmem-cells = <&tempmon_calib>,	<&fuse_grade>;
+-		nvmem-cell-names = "calib", "temp_grade";
+-		clocks = <&clks IMX7D_PLL_SYS_MAIN_CLK>;
+-	};
+-
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupt-parent = <&intc>;
+@@ -586,6 +576,16 @@
+ 					anatop-max-voltage = <1300000>;
+ 					anatop-enable-bit = <0>;
+ 				};
++
++				tempmon: tempmon {
++					compatible = "fsl,imx7d-tempmon";
++					interrupt-parent = <&gpc>;
++					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++					fsl,tempmon = <&anatop>;
++					nvmem-cells = <&tempmon_calib>,	<&fuse_grade>;
++					nvmem-cell-names = "calib", "temp_grade";
++					clocks = <&clks IMX7D_PLL_SYS_MAIN_CLK>;
++				};
+ 			};
+ 
+ 			snvs: snvs@30370000 {
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
