@@ -2,91 +2,118 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3181FC433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B1DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E41D82070A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831EB206B6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fh02pe9z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ8ZueCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgETRDs (ORCPT
+        id S1727063AbgETRNa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 13:03:48 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41692 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbgETRD2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 13:03:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=5Nq/Qbw+3jcIDdGGvZz/h/9HcUwoFW2MiffJT/Jkch4=; b=fh02pe9zBhFyvy8Q0SyEGgnuOF
-        n3PAAcVM732AOdMf59KhPzQVsE1vAK/D6iJABmW8AZGk5m0ijc1tUebzWyIoRRv2qhTCJedEnw6FX
-        JHeAjytBBgsx69WD7t4Rret+6TTkGrn20H960k5IJmfbHNjHx/CdOHesQKWMXiOkUMCk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jbS7m-002pGj-G1; Wed, 20 May 2020 19:03:22 +0200
-Date:   Wed, 20 May 2020 19:03:22 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     fugang.duan@nxp.com
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        martin.fuzzey@flowbird.group, robh+dt@kernel.org,
-        shawnguo@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net 3/4] ARM: dts: imx6: update fec gpr property to match
- new format
-Message-ID: <20200520170322.GJ652285@lunn.ch>
-References: <1589963516-26703-1-git-send-email-fugang.duan@nxp.com>
- <1589963516-26703-4-git-send-email-fugang.duan@nxp.com>
+        Wed, 20 May 2020 13:13:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbgETRN2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 13:13:28 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBEEC061A0E;
+        Wed, 20 May 2020 10:13:28 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 23so1866245pfy.8;
+        Wed, 20 May 2020 10:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=arFxXWIilJc8yilr6THATlL+mM94NJsqQ+xYHRPI28o=;
+        b=eQ8ZueCAAmKF481dSsTzEfptXR3E56PhUUH9kEaE5lcwybZBOx13OC+Xi9wkqf8yJl
+         eMd1L2e88OjzLZqUwjft5kT4q1ykz42UQV6MVOEia2NuXW7QNNZ7A34YWkJl2fTeKnXd
+         x57lOvCSMymfWq5CIUCMSTFmCQ+QTFXWfQxGIl0MyJIAsxvIWaGoYNiaL9FYDbjjsASH
+         yrczDke/1e9q5QAzunll1NsU34AZd3fkwQAvuZ8SyOMsHhrXwdE+C5ocxHRWMG94nAuo
+         mFEYgVnx+pQB6bpLbpXdPCQm3xxHlbpl8IjeNyIIG5xyCXVHShY2DHAh3VorO1Fq2dCg
+         0CDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=arFxXWIilJc8yilr6THATlL+mM94NJsqQ+xYHRPI28o=;
+        b=P2vjEHQ9VpwPhDtvoFr5CY/Z/Uil7iUvKz0eU+UOO48q1oM+iWteBSQmDqzBOjIBw1
+         dxLbmqEBWWJsa6b7Psk+5GkQcGk4dY9m6wZIFDNFd2XmgxShF21VXw27C9ioXh6ZWFYn
+         iCFeuV2ykQXQE+mM9AieND7fQizRm+xX5NY1BUSxKeCS4h7GRdLwDBVO/kvGGPQpSUyk
+         tuL2Zp0AJuuREaoS34pnFB5jXBX8JXjZsYh8Uk6olVG0G5tKt+wzUep4PgDtGMmgjhqt
+         KrqVYd8ck39aj2OyQ9ZDhMEHQDF+agPPKw+fuNCt+nazZ121qIf7PDZSh6v669KPr9Aw
+         uOxA==
+X-Gm-Message-State: AOAM530wd0LcDgNuhXOoeRM0JhTm/wO5pLtGEA2sU4I34Z5465jafcO7
+        dXsO/xO0pAt8WLLqQyZ3sJg=
+X-Google-Smtp-Source: ABdhPJzPAJW/ATUYvu+6WYxM82y1cMxLnDMGV4gQ97nd84re0gsoxcS0Os/XSLxbUD3hZDiX3Ghrxw==
+X-Received: by 2002:a05:6a00:150e:: with SMTP id q14mr5106146pfu.325.1589994807327;
+        Wed, 20 May 2020 10:13:27 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id e1sm2512647pjv.54.2020.05.20.10.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 10:13:26 -0700 (PDT)
+Date:   Wed, 20 May 2020 10:13:24 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, robh+dt@kernel.org, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg
+ property
+Message-ID: <20200520171324.GS89269@dtor-ws>
+References: <20200520073327.6016-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589963516-26703-4-git-send-email-fugang.duan@nxp.com>
+In-Reply-To: <20200520073327.6016-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 04:31:55PM +0800, fugang.duan@nxp.com wrote:
-> From: Fugang Duan <fugang.duan@nxp.com>
+Hi Johan,
+
+On Wed, May 20, 2020 at 09:33:27AM +0200, Johan Jonker wrote:
+> A test with the command below gives this error:
 > 
-> Update the gpr property to define gpr register offset and
-> bit in DT.
+> arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
+> touchscreen@3e: reg:0:0: 56 was expected
 > 
-> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+> The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
+> was shipped with different addresses then the binding currently allows.
+> Change the reg property that any address will pass.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
+> edt-ft5x06.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->  arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
+>  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 98da446..a4a68b7 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -1045,7 +1045,7 @@
->  					 <&clks IMX6QDL_CLK_ENET>,
->  					 <&clks IMX6QDL_CLK_ENET_REF>;
->  				clock-names = "ipg", "ahb", "ptp";
-> -				gpr = <&gpr>;
-> +				gpr = <&gpr 0x34 27>;
->  				status = "disabled";
->  			};
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> index 383d64a91..baa8e8f7e 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> @@ -42,7 +42,7 @@ properties:
+>        - focaltech,ft6236
+>  
+>    reg:
+> -    const: 0x38
+> +    maxItems: 1
 
-Hi Andy
+Should we have a list of valid addresses instead of allowing any
+address? Controllers usually have only a couple of addresses that they
+support.
 
-This is the same values as hard coded, so no change here.
+Thanks.
 
-The next patch does not use grp at all. So it is unclear to me if you
-actually make use of what you just added. I don't see anywhere
-
-gpr = <&gpr 0x42 24>;
-
-which is the whole point of this change, being able to specify
-different values.
-
-      Andrew
+-- 
+Dmitry
