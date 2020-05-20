@@ -2,167 +2,114 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC77AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 01:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6FFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB3320708
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 01:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065B92081A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FGO/koYG"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YjE1Eqv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgETBvp (ORCPT
+        id S1728297AbgETCMp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 21:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbgETBvp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 21:51:45 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84F0C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 18:51:44 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ci21so524338pjb.3
-        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 18:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lwNCB4Dsry2wZ58/xIrXOOv8YhkYu6cJrmOfJMlkcmo=;
-        b=FGO/koYG5KrQ3cEFeVBk/aC5T5tsFvhsdPbYmeApeHsY1N86CXmNLZfCZRW/x7y5DW
-         CQnPqHgiW5IjtF+sE1w2/7oI2K7WweQUdw+FSniShG8Q+SRER/2bxbIuNrdO28ov4Npn
-         exgg+xPnAA6W8/iOdo1ApNTzOkzp85dDVUivc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lwNCB4Dsry2wZ58/xIrXOOv8YhkYu6cJrmOfJMlkcmo=;
-        b=q/gkVu15lVlkb4hoUP/65ytFMUgnaU96Rd9UOAPBq/IHY3u7MiFhwKwdrpoS30notN
-         xYkhXNSB0Vlyl/Z4Na2rcq8nYgYNVERB4h/o/raXf0+duja/9sMpI507rgJHkLRRaOlS
-         2YMrSnVFVt+1Mq1javBi7DyMXtbO69Zt479NUSgXaX8Kj0FgUcqMgvrcNYtYYALal7l7
-         rcOD1FTxNN5EnIh0FJNLxrJdVuvuErBpTPYAy3TCXcMmX1aspxyQWCFHu+Jm6vsWdLx8
-         yAvd/T8tPlUHFklemYGY/MdeOJX3f8WzQqL4z2LB5SgXnrtVICE6cpk3tWT23v5lzW53
-         v1BQ==
-X-Gm-Message-State: AOAM533FOTJai7OvMEOOI9C+DEFGq71XdPulhCsDuJsXqytCitnNK5b/
-        wlO3EVam9AoLZ5ZcJYFdkZ5V9ozNvns=
-X-Google-Smtp-Source: ABdhPJzmKHgd0Qoj4GNZc0I5UDMFuWG/ClZ4fB0X/0cdU2j+BoKGw+eXgLGIu12XUE18/EZHtA399A==
-X-Received: by 2002:a17:90a:7787:: with SMTP id v7mr2620624pjk.199.1589939504221;
-        Tue, 19 May 2020 18:51:44 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id a16sm610238pff.41.2020.05.19.18.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 18:51:43 -0700 (PDT)
-Date:   Tue, 19 May 2020 18:51:41 -0700
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200520015141.GA124149@google.com>
-References: <20200518071707.161843-1-pmalani@chromium.org>
+        Tue, 19 May 2020 22:12:45 -0400
+Received: from mail-eopbgr140085.outbound.protection.outlook.com ([40.107.14.85]:61919
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726178AbgETCMo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 22:12:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V+KxzhBK9kSFqRzc+syu+R5slMxxnmv9fLmUUQ6qzIrzZ+8pk4RW+jHZhwhnL8P7+Gn7WDVKRVSlBZr/pp5OvXDMDj+f44nj2m9EI+ixPspf/rcVrSFJP9p5Y5ixF8qHiuGvZL4D5dGd6wDla2GeUU8aQRN7D1TxubbUammMMmc7lT5I3TSlUPkSF9dPCO+DGcJAinZdZyyJBEEgvf1zm70RUleieGfNaVnIinGjKQJEzAWTMfqEhvoTs+YiTkwj7TnYRnfZB83C9cE+XMR1wmK9DNIceQ/lhcM2+hp+cRiHp8RjhHCs0mJ8QFRqhQaPgGEgR8BYc1M6Le0rxFJqig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0RnblXTQDwrw8LX5NWOSDTxGQELjPog/KQM1EDqmLzQ=;
+ b=WoZ2wjBcofuMhTeD2lttzUBDFB0+i26a6qAMbfCn3Qg9GkG/XW3JeA/OGx2+r7EyJJ313866FkC5H2hQdXHYwvzrh4DphtjrDV2V2u1H7v5RV3C2xY4i2SM22bzP7dnK8FQ3ebdngmm9/ZgqwcjS25IaUs4+LVmN8+JTha7H4szoIQDb2HCRv7vfZOyFhB0HfpuNRZp9DLIo7wLie2RPQLg54hOhwS3ePJBlu1nh19ytDJVSqmAVcUsTHXqTIlmWBN26EBVgvpspsEBdX9zq1xmv/lfY6jXrQJGz12YPcL/jmX8ytuCIa/EjzBUgxYynjlzWPvg0yIdousxm4fwMfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0RnblXTQDwrw8LX5NWOSDTxGQELjPog/KQM1EDqmLzQ=;
+ b=YjE1Eqv0ZR6yyaA1DvZr9CqmS0NTxu/65MDohTaytp2VxzzB5ali/tEs6PeZgiaF6AZsOKbzLmoDFeRGS5CYqRs8LTQEf+aA0km4zW2dX8gbvfHhZohkyZmTTi9hAiom/Wwcn8lEQOaqmnsZ/EFh5JNt2CyxptnVtpFjICjHsD8=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2741.eurprd04.prod.outlook.com (2603:10a6:4:98::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Wed, 20 May
+ 2020 02:12:41 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3021.020; Wed, 20 May 2020
+ 02:12:40 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de,
+        aisheng.dong@nxp.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        l.stach@pengutronix.de, devicetree@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 0/4] arm64: dts: imx8m: dtb aliases update
+Date:   Wed, 20 May 2020 10:02:42 +0800
+Message-Id: <1589940166-736-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0099.apcprd01.prod.exchangelabs.com
+ (2603:1096:3:15::25) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518071707.161843-1-pmalani@chromium.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0099.apcprd01.prod.exchangelabs.com (2603:1096:3:15::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.23 via Frontend Transport; Wed, 20 May 2020 02:12:36 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 31591d5e-9bcc-403c-505f-08d7fc63460c
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2741:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB2741C54F5CC80208463F57E788B60@DB6PR0402MB2741.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-Forefront-PRVS: 04097B7F7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SZvIT+cNPamcFxqNAELrAYJVVSZynZbro46VYoG/n3YwHr4PhvoWYkRrEHBzqlr+IIoQfswV4rbfywwUIP9m/MNCuU20XKZ/CgFyndC6FwOwiQyeJst/Mnu7/ALF6xqApnSBI/f+2EGdmLCtI97vMyhP2hEI2csnhdsPM+OL51NVzRjJmKd3zLAyfbFioCLmznO3J1zlSZvyYmN/u6kVRvKMtdrPoi2akquTZSSAIkUX3qb+KSVAf+e1XcvYV/t27NUbqshAtttwMOVaL7JcZqlO9CO85z3oT/1Ud8myQoTH4DBEJEyzgO/ZUQ9cvdsVkwwFf7B5YQtZbZzQnwOVtqI0EETmfKXrZLnMLiCkxeElcaBhwTQTKqLK458ecu/kORnasBYGn4KDY91x6suaXHb04mtkNZkvHcHYDiMZlOjp4M824WLECS2dVnSAiUXzu18v4mruOpW9nq3jXFyD9F08W8fuOH49UYyPVpkB5HVB2rRZ6RO8j0Nunu92PzobjgQ0iv3X7C1e/ivKdxFPCA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(36756003)(8676002)(6512007)(86362001)(6666004)(52116002)(9686003)(66946007)(66556008)(66476007)(8936002)(478600001)(316002)(5660300002)(4744005)(15650500001)(26005)(6486002)(69590400007)(6506007)(4326008)(2616005)(956004)(2906002)(186003)(16526019)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: tCyhM1K8IvEyQO6y8iZ+emTcKC94L27RbIQfz6fmG/n7F+shXQ+//V/MwjqzqWB7WxnvCiIGIkLnkdahN42afO4OSwcLf9/ULov2yJpyR95hH8xBsvGIAJDRDBM11lBaIYWx6QiXZP20i0or59bn7PzmByQcIdfN+FvvrGnLF7wuqCtQEZCvgxXkO+rY/8texp7fCtci3uN4YEUEKJ1V+iZmpaAHKdnVZ6s6tAPSjLal7emHTQtq0V4KrBYd9Dh4Czswdf7tU7kewGnwpRTA1zY+3VdHIkUyy/vVMC7dVTdzC+aJ5qHfRwPgkaWupb7s/pQnY6XevHi7sxVnh9RYVjRUQLHNB6TxYFjVLuqsFuCwjRyjcYnxOcGRQ9a7nG4x8R1uNroDjXSJ4TAePY1S6dRFGUk8f3iZgfcFlQakP6ZeV7s/Zosh5EDifjXnLSG/67rsD8eV/hK7qDEsHEZMDK6X9xEOhq87meCZp9wbx5Bhwl8tIgZ5RBwkpdFmiy70
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31591d5e-9bcc-403c-505f-08d7fc63460c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 02:12:40.7386
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: j7/1vRP+eQabKj1pJ/9ZBqoIuhaNxG6MZbc11Vrq8xVzO45nmUlJe8SsYbrzMIk2x8qs3AT3ERkX8p6QTmNJKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2741
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Peng Fan <peng.fan@nxp.com>
 
-On Mon, May 18, 2020 at 12:17:04AM -0700, Prashant Malani wrote:
-> Add properties for mode, orientation and USB data role switches for
-> Type C connectors. When available, these will allow the Type C connector
-> class port driver to configure the various switches according to USB PD
-> information (like orientation, alt mode etc.) provided by the Chrome OS
-> EC controller.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> Acked-By: Benson Leung <bleung@chromium.org>
+Minor patchset to update device tree aliases
 
-Sorry, looks like I made a typo while adding the "Acked-by" from a
-previous version.
+Peng Fan (4):
+  arm64: dts: imx8mq: Add mmc aliases
+  arm64: dts: imx8mq: Add ethernet alias
+  arm64: dts: imx8mm: sort the aliases
+  arm64: dts: imx8mp: add i2c aliases
 
-I have uploaded v3 with this fixed.
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 16 ++++++++--------
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi |  6 ++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi |  3 +++
+ 3 files changed, 17 insertions(+), 8 deletions(-)
 
-Thanks,
+-- 
+2.16.4
 
-> ---
-> 
-> Changes in v2:
-> - Added more text to the switch descriptions, explaining their purpose,
->   and relation to the Type C connector class framework.
-> 
->  .../bindings/chrome/google,cros-ec-typec.yaml | 40 ++++++++++++++++++-
->  1 file changed, 39 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> index 6d7396ab8bee..800c005a0e44 100644
-> --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -21,7 +21,34 @@ properties:
->      const: google,cros-ec-typec
->  
->    connector:
-> -    $ref: /schemas/connector/usb-connector.yaml#
-> +    allOf:
-> +      - $ref: /schemas/connector/usb-connector.yaml#
-> +      - type: object
-> +        properties:
-> +          mode-switch:
-> +            description: Reference to a DT node for the USB Type C Multiplexer
-> +              for this connector. This switch controls the data lines routing
-> +              for this connector for various operation modes, including
-> +              Alternate Modes. This switch is assumed registered with the Type C
-> +              connector class framework by its driver. The Type C connector
-> +              class framework assumes that the mode switch property uses this
-> +              name.
-> +
-> +          orientation-switch:
-> +            description: Reference to a DT node for the USB Type C orientation
-> +              switch for this connector. This switch controls routing the
-> +              correct data pairs depending on the cable plug orientation from
-> +              this connector to the USB / Alternate Mode controllers. This
-> +              switch is assumed registered with the Type C connector class
-> +              framework by its driver. The Type C connector class framework
-> +              assumes that the orientation switch property uses this name.
-> +
-> +          usb-role-switch:
-> +            description: Reference to a DT node for the USB Data role switch
-> +              for this connector. This switch is assumed registered with the
-> +              Type C connector class framework by its driver. The Type C
-> +              connector class framework assumes that the USB role switch
-> +              property uses this name.
->  
->  required:
->    - compatible
-> @@ -49,6 +76,17 @@ examples:
->              data-role = "dual";
->              try-power-role = "source";
->            };
-> +
-> +          connector@1 {
-> +            compatible = "usb-c-connector";
-> +            reg = <1>;
-> +            power-role = "dual";
-> +            data-role = "host";
-> +            try-power-role = "source";
-> +            mode-switch = <&typec_mux>;
-> +            orientation-switch = <&typec_orientation_switch>;
-> +            usb-role-switch = <&typec_mux>;
-> +          };
->          };
->        };
->      };
-> -- 
-> 2.26.2.761.g0e0b3e54be-goog
-> 
