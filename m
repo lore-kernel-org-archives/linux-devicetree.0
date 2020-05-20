@@ -2,104 +2,133 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B725C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0CAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6442F207F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9D5207D4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:50:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CjbbxN8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgETNsc (ORCPT
+        id S1726576AbgETNuv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 09:48:32 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59090 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgETNsc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 09:48:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BE2DE8030875;
-        Wed, 20 May 2020 13:48:28 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 879XwsdEpqBa; Wed, 20 May 2020 16:48:28 +0300 (MSK)
-Date:   Wed, 20 May 2020 16:48:26 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520134826.pc6si3k6boaexp4i@mobilestation>
-References: <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
- <20200520121201.wohv6u646rx5otkf@mobilestation>
- <20200520133827.GA17714@alpha.franken.de>
+        Wed, 20 May 2020 09:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETNuv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 09:50:51 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204BAC061A0E
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 06:50:51 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f134so2613460wmf.1
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 06:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lTWjeswxH0l98lyAxNqRNJAIOGggfbasSyUWJF3O/mI=;
+        b=CjbbxN8hygEVQLVlGrH7l+/V/HdHKau/Ebvqwk35rM13T4gaQNRQy7FepGskwmW3na
+         +RHf7e1uuO7h0fovTB5z0nEvtSTAPxYrR+kFXWhjKT9xQIyhn1hzLCv7DYoGzBdAU2cy
+         /DVgXsWaQCgLoKd3OHE1X0o8+YbdAu18dWgfo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lTWjeswxH0l98lyAxNqRNJAIOGggfbasSyUWJF3O/mI=;
+        b=oZIplTEIHLsEM32oUy3UQCSTMjFRNlu/8s88fruAtWitq9+sgknaU35XkZPsGxGpWo
+         qBXtPOaeRKjPySob9HlO7KZzzv95vQ4CgZgfky+lQS4srozGVvHOMLRdKo1Lj63kFSge
+         UGxRMl/OPS6tcSaWBguNwQwDzC3zSEGkWsyQy0tZRTFUKiHSpVSvwsXLOBYN2YTH0LJ6
+         6FEVVqQQXv0TJXXTsr+Ont7BbFqS/JFvsdwZocfUa6JfHT7EqoT8Z444epC2cIDeWo+/
+         YyegIWwHsdBpIM4ELY9MQ2XQtK0AVQspX0hAe06PulQ4rELBjveLqyVATpa3gTDDvZAj
+         NSiA==
+X-Gm-Message-State: AOAM531CMtmbbkExXEf1nRBI9+DLVEQHC7bItfnkcB7Xtz+5IoRL0Xpw
+        Y8Swl+GwMjWeuhVhjWOvjI/U2jY0g3fTmsQsS+b0WA==
+X-Google-Smtp-Source: ABdhPJyaXGaSNp9tyc7HR3h1s5MPA9ExbrcjOq9FSNfXd4CqVCIoj7d0aI/ZbycoUGoC9EKycGOKogZNdnICVdwHSus=
+X-Received: by 2002:a05:600c:d6:: with SMTP id u22mr4468679wmm.45.1589982649690;
+ Wed, 20 May 2020 06:50:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200520133827.GA17714@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+ <20200519203419.12369-10-james.quinlan@broadcom.com> <20200520054349.GB2180554@kroah.com>
+In-Reply-To: <20200520054349.GB2180554@kroah.com>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Wed, 20 May 2020 09:50:36 -0400
+Message-ID: <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
+Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma offsets
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:38:27PM +0200, Thomas Bogendoerfer wrote:
-> On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
-> > Since you don't like the way I initially fixed it, suppose there we don't have
-> > another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
-> > parameter to select a proper accessors, like sw in our case, and sb by defaul).
-> > Right?
-> 
-> to be on the safe side it's probably the best thing. But I don't know
-> enough about CPS_NS16550 to judge whether shift value correlates with
-> possible access width.
+On Wed, May 20, 2020 at 1:43 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, May 19, 2020 at 04:34:07PM -0400, Jim Quinlan wrote:
+> > diff --git a/include/linux/device.h b/include/linux/device.h
+> > index ac8e37cd716a..6cd916860b5f 100644
+> > --- a/include/linux/device.h
+> > +++ b/include/linux/device.h
+> > @@ -493,6 +493,8 @@ struct dev_links_info {
+> >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
+> >   *           DMA limit than the device itself supports.
+> >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+> > + * @dma_map: Like dma_pfn_offset but used when there are multiple
+> > + *           pfn offsets for multiple dma-ranges.
+> >   * @dma_parms:       A low level driver may set these to teach IOMMU code about
+> >   *           segment limitations.
+> >   * @dma_pools:       Dma pools (if dma'ble device).
+> > @@ -578,7 +580,12 @@ struct device {
+> >                                            allocations such descriptors. */
+> >       u64             bus_dma_limit;  /* upstream dma constraint */
+> >       unsigned long   dma_pfn_offset;
+> > -
+> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > +     const void *dma_offset_map;     /* Like dma_pfn_offset, but for
+> > +                                      * the unlikely case of multiple
+> > +                                      * offsets. If non-null, dma_pfn_offset
+> > +                                      * will be 0. */
+> > +#endif
+> >       struct device_dma_parameters *dma_parms;
+> >
+> >       struct list_head        dma_pools;      /* dma pools (if dma'ble) */
+>
+> I'll defer to Christoph here, but I thought we were trying to get rid of
+> stuff like this from struct device, not add new things to it for dma
+Hi Greg,
 
-The base address passed to the _mips_cps_putc() leaf is UART-base address. It
-has nothing to do with CPS. See:
-/**
- * _mips_cps_putc() - write a character to the UART
- * @a0: ASCII character to write
- * @t9: UART base address
- */
-LEAF(_mips_cps_putc)
-1:      lw              t0, UART_LSR_OFS(t9)
-        andi            t0, t0, UART_LSR_TEMT
-        beqz            t0, 1b
-        sb              a0, UART_TX_OFS(t9)
-        jr              ra
-        END(_mips_cps_putc)
+I wasn't aware of this policy.  I put it in 'struct device' because
+just like the existing dma_pfn_offset; it seemed to be the only way to
+pull this off.  I'll certainly follow any ideas on alternative
+strategies from Christoph et al.
 
-So it's base address must be accessed with proper alignment. On our case it's
-lw/sw instructions. Regarding using lw in the first line of the function. That's
-must be a bug, since further in the same function they use sb to access the UART
-Tx register. So reading a data from UART_LSR register should be also byte-sized
-by using lb.
+> apis.  And why is it a void *?
+Just wanted to minimize the number of lines I've added to device.h, no
+other reason.
 
--Sergey
-
-> 
-> Thomas.
-> 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+Thanks,
+Jim
+>
+> thanks,
+>
+> greg k-h
