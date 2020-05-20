@@ -2,292 +2,111 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C16C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552BEC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D783205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1F220884
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 06:41:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sJORLtI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgETGkI (ORCPT
+        id S1726631AbgETGlV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 02:40:08 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39850 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETGkG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 02:40:06 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 446571A02DF;
-        Wed, 20 May 2020 08:40:04 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F71C1A02D9;
-        Wed, 20 May 2020 08:40:00 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 181F4402B3;
-        Wed, 20 May 2020 14:39:54 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] ARM: dts: imx: Make tempmon node as child of anatop node
-Date:   Wed, 20 May 2020 14:30:16 +0800
-Message-Id: <1589956216-22499-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 20 May 2020 02:41:21 -0400
+Received: from mail-db8eur05on2075.outbound.protection.outlook.com ([40.107.20.75]:45198
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726425AbgETGlR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 02:41:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KK0Fx6MJTxdUMk51B+QQi9bTwSxikBDVyUrntsskU4u8k3F1M08kPW43x+z8ghmasDeJPZat9RhF1UIEd+XeoYz1KlhVwmQQyhYhst0Wm/ykUq7tRGmDD4iTJk1mHC9QV9x/Pmu5FQeMi9TkLuES4xT6nN4jswJhrl/WLd/+JMuefFKgSA3LuyWrlGXwSMUbo1o2cSvXGZyO7acUQgpa6uDj1qC30jIzmXqeidbCqpznkvDSbQyH7+JpFibjlU5p/bo1wEH5Fay85Q4vc1hJCRUS1+u71WXYtkZVoro1/2FL/1HXqT4qwK+wV7EDVNQZY6BdYG/TlY3MjEqBrwgy4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JTMHKX7ai+SeVlCoUMLA4HsyVUYE3FQ3HqF8Tlf35ro=;
+ b=Q6ad3ngrsO49u0K80CWTp2ZqE5IxuEKndLMv7PPlJy6f4wgIwPI+jh/9I8wZHA/5kJaXcVxjn+9PAqrsNxwd9SwBOU6wqpZ099zju6OHf8bLh69ilvLDheQGNteRCuLefICEKS7mmtRxcXaltx3fI63ZNvHhd3Emrhg+teSdK5oVB9CTIBmnTo3hYjwcfIOej+4Q8v/mgkjAMAe1fK6hDySDcFERCYER0rZXsco0ys7NIRgpIIMSbSX3C8B+2dhE9kl7zMQ3MzFV0ePpAmU7klBtMXiZxp14klJkudTEVf3pyIZbXsN1iydsigSnQO/Nil8amBYyt295XKnD0I9Gug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JTMHKX7ai+SeVlCoUMLA4HsyVUYE3FQ3HqF8Tlf35ro=;
+ b=sJORLtI8+77Pv6N0k/jNwVBMVPdLkJLpcURWBZvdT1BVxqwZMLJI77Rz7t8tPuSvV076y8QoNdXOFDZBs5uz9dM5bu6GRrJlkuD2HeiqIViRavnHpSZTwYkPLpGispHBReMSGD7iXY8WEJTDdTkpOqd0F93HZnzszvW9ZxBZVfw=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB4120.eurprd04.prod.outlook.com (2603:10a6:209:4b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Wed, 20 May
+ 2020 06:41:15 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.034; Wed, 20 May 2020
+ 06:41:14 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH 0/4] arm64: dts: imx8m: dtb aliases update
+Thread-Topic: [PATCH 0/4] arm64: dts: imx8m: dtb aliases update
+Thread-Index: AQHWLkwkW+oc0zbvzkitTZ4UpbqnCKiwhm7g
+Date:   Wed, 20 May 2020 06:41:14 +0000
+Message-ID: <AM6PR04MB4966C199450F7EC8665E0C9980B60@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1589940166-736-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1589940166-736-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 016f118e-489b-4a72-df38-08d7fc88cb13
+x-ms-traffictypediagnostic: AM6PR04MB4120:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB41201D0ACE49AF675B83EF2F80B60@AM6PR04MB4120.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-forefront-prvs: 04097B7F7F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EQ6fYvTC8oyLjtnaM+KeR+zygv0YN5AK44m9u1fPkQi7+f+twRbyf3xyYpMonjik8Y6TpbGNGAziSTM45BwGC8N3+RahkN4eujBzvPO2EGQEn4HebMspIGuivVDpps7s/kH+LffIfCc3qVZt+YVKjIikaG5wh+zk5xKsRhBTpnqBfd7B2pSIOQH0jRuLGce3328Xl4W8cZWZTPJeP4grgGiJAE1Ev8E6rtFsoBjKq6rPT+OYlswzHfvqME3UmmlpvVL93qWB3Oee8eeBU/+ccXmNg1HG043uAYgF/oulz0f+4a4u9xidQmzEcDF2nImitqhW85oXUYhX9W6K8gJmksj2kscrECCvDdaWydhWfteed+b97lnpWlCY+TVRPYwN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(33656002)(8936002)(6506007)(15650500001)(186003)(26005)(110136005)(8676002)(316002)(54906003)(86362001)(4326008)(7696005)(66476007)(66556008)(4744005)(66946007)(66446008)(71200400001)(64756008)(52536014)(2906002)(44832011)(478600001)(76116006)(5660300002)(55016002)(9686003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: LfIk+R8H98ou9JPNsXgsSQ93mDMM393t+auEWAGLbDPSBxWCL94PoGqx/Ca9pn7AYxcd0HTqPAZNoOFk09A9lm+vqNUe3FB9E6EmU3GIQE+07QF8E/H7I+RHr7cgm5jIlImsLVRjUO8EuR46+OzfBZqLqGn7M3utNHLGXGgb9Vq8hUQ6zVJ1UXS9zQEUlvuKYtJhCdI61rLjcISRYPGI+yhMaeidUjgtm4i5y4qTOoQrbUYjp7jn0diSp6LVPqyBmq5lby06zUkSJKFIu4pAPJPczEVkVDOPc713O6Tf71WYKlA5G/tDuOQi3A2OSQ0W0cNdm4LKKwitnozHRKOJeHEBXMgAgxa6rYwthlHAm8Av5eb106+ee5hXvjsQEksWi40x/LjTU+6594NhA1h22zBkIAjiWHhShjZqyEWGbIsmsSZ1EeepLR9i/d0hWZScOyhAMWb0IsEu1gjSVaZLBFFGKinPyQ2/3agLxg03iyc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 016f118e-489b-4a72-df38-08d7fc88cb13
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 06:41:14.7754
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xmqhMLpMlxqDPUQxTDeLT2QnaFfPAS7N4Z1UTCWbMzUIoIg9T6kfglDo2Tf2qL22dRDbkjM8y+49BEIFRq+C5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4120
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX6/7 SoCs' temperature sensor is inside anatop module from HW
-perspective, so it should be a child node of anatop.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 22 +++++++++++-----------
- arch/arm/boot/dts/imx6sl.dtsi  | 20 ++++++++++----------
- arch/arm/boot/dts/imx6sll.dtsi | 20 ++++++++++----------
- arch/arm/boot/dts/imx6sx.dtsi  | 20 ++++++++++----------
- arch/arm/boot/dts/imx6ul.dtsi  | 20 ++++++++++----------
- arch/arm/boot/dts/imx7s.dtsi   | 20 ++++++++++----------
- 6 files changed, 61 insertions(+), 61 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 39d4afd..43d44d5 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -69,17 +69,6 @@
- 		};
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx6q-tempmon";
--		interrupt-parent = <&gpc>;
--		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
--		#thermal-sensor-cells = <0>;
--	};
--
- 	ldb: ldb {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -795,6 +784,17 @@
- 					anatop-min-voltage = <725000>;
- 					anatop-max-voltage = <1450000>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx6q-tempmon";
-+					interrupt-parent = <&gpc>;
-+					interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-+					#thermal-sensor-cells = <0>;
-+				};
- 			};
- 
- 			usbphy1: usbphy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 911d8cf..d8efc0a 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -93,16 +93,6 @@
- 		};
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx6q-tempmon";
--		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-parent = <&gpc>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
--	};
--
- 	pmu {
- 		compatible = "arm,cortex-a9-pmu";
- 		interrupt-parent = <&gpc>;
-@@ -628,6 +618,16 @@
- 					anatop-min-voltage = <725000>;
- 					anatop-max-voltage = <1450000>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx6q-tempmon";
-+					interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-parent = <&gpc>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
-+				};
- 			};
- 
- 			usbphy1: usbphy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index edd3abb..bf7f048 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -105,16 +105,6 @@
- 		clock-output-names = "ipp_di1";
- 	};
- 
--	tempmon: temperature-sensor {
--		compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
--		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-parent = <&gpc>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
--	};
--
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -531,6 +521,16 @@
- 					anatop-max-voltage = <3400000>;
- 					anatop-enable-bit = <0>;
- 				};
-+
-+				tempmon: temperature-sensor {
-+					compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
-+					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-parent = <&gpc>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
-+				};
- 			};
- 
- 			usbphy1: usb-phy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index e031337..8c4473b 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -134,16 +134,6 @@
- 		clock-output-names = "anaclk2";
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
--		interrupt-parent = <&gpc>;
--		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
--	};
--
- 	pmu {
- 		compatible = "arm,cortex-a9-pmu";
- 		interrupt-parent = <&gpc>;
-@@ -696,6 +686,16 @@
- 					anatop-min-voltage = <725000>;
- 					anatop-max-voltage = <1450000>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
-+					interrupt-parent = <&gpc>;
-+					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-+				};
- 			};
- 
- 			usbphy1: usbphy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 35e7301..505fd4f 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -131,16 +131,6 @@
- 		clock-output-names = "ipp_di1";
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
--		interrupt-parent = <&gpc>;
--		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
--	};
--
- 	pmu {
- 		compatible = "arm,cortex-a7-pmu";
- 		interrupt-parent = <&gpc>;
-@@ -611,6 +601,16 @@
- 					anatop-min-voltage = <725000>;
- 					anatop-max-voltage = <1450000>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
-+					interrupt-parent = <&gpc>;
-+					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
-+				};
- 			};
- 
- 			usbphy1: usbphy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 8bac491..3904558 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -147,16 +147,6 @@
- 		};
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx7d-tempmon";
--		interrupt-parent = <&gpc>;
--		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>,	<&fuse_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX7D_PLL_SYS_MAIN_CLK>;
--	};
--
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupt-parent = <&intc>;
-@@ -586,6 +576,16 @@
- 					anatop-max-voltage = <1300000>;
- 					anatop-enable-bit = <0>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx7d-tempmon";
-+					interrupt-parent = <&gpc>;
-+					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>,	<&fuse_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX7D_PLL_SYS_MAIN_CLK>;
-+				};
- 			};
- 
- 			snvs: snvs@30370000 {
--- 
-2.7.4
-
+PiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBN
+YXkgMjAsIDIwMjAgMTA6MDMgQU0NCj4gDQo+IE1pbm9yIHBhdGNoc2V0IHRvIHVwZGF0ZSBkZXZp
+Y2UgdHJlZSBhbGlhc2VzDQo+IA0KPiBQZW5nIEZhbiAoNCk6DQo+ICAgYXJtNjQ6IGR0czogaW14
+OG1xOiBBZGQgbW1jIGFsaWFzZXMNCj4gICBhcm02NDogZHRzOiBpbXg4bXE6IEFkZCBldGhlcm5l
+dCBhbGlhcw0KPiAgIGFybTY0OiBkdHM6IGlteDhtbTogc29ydCB0aGUgYWxpYXNlcw0KPiAgIGFy
+bTY0OiBkdHM6IGlteDhtcDogYWRkIGkyYyBhbGlhc2VzDQoNCkZvciB0aGlzIHBhdGNoc2V0LA0K
+DQpSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVn
+YXJkcw0KQWlzaGVuZw0K
