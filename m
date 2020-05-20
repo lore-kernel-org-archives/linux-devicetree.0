@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3637DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 10:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B3FC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 10:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F33F207F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 10:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F6D207C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 10:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589969724;
+	s=default; t=1589970084;
 	bh=S7tsdwkiGlZosauRkq6IW1mxdJPbcPef9De8p/Neb20=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=vr+vyCZeYl4a5OsDdn7RmIH15Bm2YB+cq2CDTXIiYOogexpxxTC96IJah2F7eJ7q5
-	 ZRTbBLqjkmsLddZuMahxED1ZU1zru2ZaK67F50uIz20/3B3Hj1qpFx4l55R8fQaZQU
-	 A29uxytJtFMc8NORy/1oWEJuJBO8mHcdV1e6eQ8Q=
+	b=oMkcEhQec+kue7vX20LEcyY2JObQRU0c0UWWDgEn3Y6lucYfpjr7OSD1Sj4qIMb3C
+	 bu5qmhwgZFkzTWKlditBPeYjsxk7maR1PNrXyzsQf90sNMeOymE1wzv5sFwO+mb+gV
+	 cOB4itdzlHjpF/A7iR4ycWBvHU92J+Db/359/5oQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgETKPT (ORCPT
+        id S1726452AbgETKVP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 06:15:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 06:21:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgETKPS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 06:15:18 -0400
+        id S1726403AbgETKVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 06:21:12 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E04CD207D3;
-        Wed, 20 May 2020 10:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 568C0207C4;
+        Wed, 20 May 2020 10:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589969718;
+        s=default; t=1589970072;
         bh=S7tsdwkiGlZosauRkq6IW1mxdJPbcPef9De8p/Neb20=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=0pCyb1zyk19jmdxxCos7K6R4uS9ZhotAg1FK+1rPLCS327W7CHj4A15YEKyGnwD+F
-         Q9mldUZkjoWWMK+BaW0Kmxzgsvl0goWt+sU+iJvaCtfAQAYDith20wuTcSEqFsesNK
-         bs1AKPoD5s/CrTs5grp91Qs5pdVw0zxr6gofPOyk=
+        b=2KKDky4YfNsdoMUsOT6q866Gu85DZEO5U2zNBrmYAkybjIIujOMSiuwZb+vnRutu/
+         60YwDeoKmU7WyRvP7vfVdBynaEy9BgJzTT12+v/auDjVVh8aHC+KBgNvuTgwAZsw4n
+         HYUiiK2wFmUK+NL0nuwYfd+Mo1hVhhRFaFwANN+s=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -55,8 +55,8 @@ Cc:     mtk01761 <wendell.lin@mediatek.com>, devicetree@vger.kernel.org,
 To:     Matthias Brugger <matthias.bgg@gmail.com>,
         Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>, matthias.bgg@kernel.org
-Date:   Wed, 20 May 2020 03:15:17 -0700
-Message-ID: <158996971719.215346.12802870863066637932@swboyd.mtv.corp.google.com>
+Date:   Wed, 20 May 2020 03:21:11 -0700
+Message-ID: <158997007160.215346.10358796743530839745@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
