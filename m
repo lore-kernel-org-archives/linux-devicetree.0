@@ -2,123 +2,108 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACA6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C87C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E4F207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:02:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bX8NyOa8"
+	by mail.kernel.org (Postfix) with ESMTP id B3779207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 20:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590006766;
+	bh=cBQJaqL5hdpUynwTPIUnnyHFxgD5XUvMjrGpFvjOll8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qmwASTIB4zuO5xXNKkPmWYsfvsfGnDvoit/p6Mz8+H/DmMzska2g8xsD4f9a/PEqJ
+	 g7pi95aGlzYGZ4kccaZdx2mPWn9xu6gSzIOuYDb86+znELCRadNCdpsH6XOF0dC//H
+	 Wud57cH62WEfOqN7SKFJ5WnmspqVJp+k6vHFzvsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgETUCf (ORCPT
+        id S1727799AbgETUcn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 16:02:35 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47190 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgETUCe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 16:02:34 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KK2Ree059688;
-        Wed, 20 May 2020 15:02:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590004947;
-        bh=Jlv71XRhYvS94aqoB9HV5Z9r9HYEVNg9gj2FL6x/cOU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bX8NyOa8WhyNk1kme0Ol5d4SFgz4V9Pcvi0kj3nadBNqeURZ08n3uwL4ltrKmUcsY
-         +hSZ01qy6SNvf1vtFrHOV1hZ2lu1r7NgxVx4LY1QMwp12Zt5hb1uqbFZHJIezOi9+E
-         9bAK8kNa+qbB+Ig53lAcB5rDIqVElT4xqVSg9pq4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KK2Rfb071370
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 15:02:27 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 15:02:27 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 15:02:27 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KK2PFc102988;
-        Wed, 20 May 2020 15:02:25 -0500
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200520121835.31190-1-dmurphy@ti.com>
- <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
- <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
- <20200520153631.GH652285@lunn.ch>
- <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
- <20200520164313.GI652285@lunn.ch>
- <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
- <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
- <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
- <20200520192719.GK652285@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
-Date:   Wed, 20 May 2020 15:02:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 16:32:43 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43315 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgETUcm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 16:32:42 -0400
+Received: by mail-il1-f193.google.com with SMTP id l20so4668213ilj.10;
+        Wed, 20 May 2020 13:32:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eYhFWnym18cK56HOIXrwGvpqXxigL2vp9VHbqJW4HIM=;
+        b=htOs/8YHKrrPhdjiPxNVXL8GzY1/Wp9B/ieEyf+PE37mm4etEgT0k5Z0mSerek1FBK
+         3JpgBwM7YT1/00XWNgqRrAfvX7N1b9G/LWpEY/5WFSGFDt9QBvEtFcUhpp9ct9wYr4iC
+         7B7YuUIls7E+x8+lFllTqZi4mq3dFFCyaF2xyyKzBtClpzzKiclMfFYI3fcn+0LcrbuX
+         LSRdb42bqP+1pSOaIYVnf83yL8BMt4jKs3bxzHS8XzJZ2epLbLRyV2+iUGaASD5hKxFN
+         2glmHm60gWGyOHYqxLCgYdI5vmSjwHM2qvVxaEc5T+UqGV/+kaUR6CybU75WzGC6EpHe
+         u2rw==
+X-Gm-Message-State: AOAM531v45gnk4Sdl9kP3fRneTrDMK57P+jPRLXI1On35oylT5+Lg6Hv
+        Z+B1liG60wVyowZPqd8VWA==
+X-Google-Smtp-Source: ABdhPJy5QvUn+VTDpkuNaZg6Rlk1g9vHBNfouawM73Pe8LYk585UL8czp90286VGTKxtQBwZeP8+kg==
+X-Received: by 2002:a92:c7a2:: with SMTP id f2mr5670636ilk.71.1590006761646;
+        Wed, 20 May 2020 13:32:41 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id d12sm1884632ill.80.2020.05.20.13.32.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 13:32:40 -0700 (PDT)
+Received: (nullmailer pid 503923 invoked by uid 1000);
+        Wed, 20 May 2020 20:32:39 -0000
+Date:   Wed, 20 May 2020 14:32:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     roy.zang@nxp.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        Zhiqiang.Hou@nxp.com, jingoohan1@gmail.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com,
+        shawnguo@kernel.org, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, kishon@ti.com,
+        linuxppc-dev@lists.ozlabs.org, amurray@thegoodpenguin.co.uk
+Subject: Re: [PATCH v6 01/11] PCI: designware-ep: Add multiple PFs support
+ for DWC
+Message-ID: <20200520203239.GA503864@bogus>
+References: <20200314033038.24844-1-xiaowei.bao@nxp.com>
+ <20200314033038.24844-2-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520192719.GK652285@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200314033038.24844-2-xiaowei.bao@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Andrew
+On Sat, 14 Mar 2020 11:30:28 +0800, Xiaowei Bao wrote:
+> Add multiple PFs support for DWC, due to different PF have different
+> config space, we use func_conf_select callback function to access
+> the different PF's config space, the different chip company need to
+> implement this callback function when use the DWC IP core and intend
+> to support multiple PFs feature.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+> v2:
+>  - Remove duplicate redundant code.
+>  - Reimplement the PF config space access way.
+> v3:
+>  - Integrate duplicate code for func_select.
+>  - Move PCIE_ATU_FUNC_NUM(pf) (pf << 20) to ((pf) << 20).
+>  - Add the comments for func_conf_select function.
+> v4:
+>  - Correct the commit message.
+> v5:
+>  - No change.
+> v6:
+>  - No change.
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 123 ++++++++++++++++--------
+>  drivers/pci/controller/dwc/pcie-designware.c    |  59 ++++++++----
+>  drivers/pci/controller/dwc/pcie-designware.h    |  18 +++-
+>  3 files changed, 142 insertions(+), 58 deletions(-)
+> 
 
-On 5/20/20 2:27 PM, Andrew Lunn wrote:
-> Hi Dan
->
->> UGH I think I just got volunteered to do make them common.
-> There is code you can copy from PHY drivers. :-)
->
-> What would be kind of nice is if the validate was in the core as
-> well. Pass a list of possible delays in pS, and it will do a
-> phydev_err() if what is in DT does not match one of the listed
-> delays. Take a look around at what current drivers do and see if you
-> can find a nice abstraction which will work for a few drivers. We
-> cannot easily convert existing drivers without breaking DT, but a
-> design which works in theory for what we currently have has a good
-> chance of working for any new PHY driver.
-
-I think adding it in the core would be a bit of a challenge.  I think 
-each PHY driver needs to handle parsing and validating this property on 
-its own (like fifo-depth).  It is a PHY specific setting.
-
-Take the DP83867/9 and the ADIN1200/ADIN1300.
-
-The 8386X devices has a delta granularity of 250pS and the AD devices is 
-200pS per each setting
-
-And the 867/9 has 3x more values (15) vs only 5 for the AD PHY.
-
-And the Atheros AR803x PHY does use rgmii-id in the yaml, which I guess 
-is what you were pointing out, that if set the PHY uses a default 2nS 
-delay and it is not configurable.
-
-Same with the Broadcomm.
-
-Ack to not changing already existing drivers which is only 2 the AD PHY 
-and the DP83867 PHY.  But I can update the yaml for the 83867 and mark 
-the TI specific properties as deprecated in favor of the new properties 
-like I did with fifo-depth.
-
-Dan
-
-
->       Andrew
+Reviewed-by: Rob Herring <robh@kernel.org>
