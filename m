@@ -2,107 +2,123 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B589C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDCDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08202206F1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589988240;
-	bh=7wy/mzhmsxhrZOkUPW+Q83t2ryAQte3LPn1zb7E6KSs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=el+uLxKtWPgbIIiuQmlDkgXr+DN0TJJdgs14VWiims8K7Yjk9J6ixHO3RUse7Oqrd
-	 lNxNiimP7gBzO+BQHdyUC7m4RllBHQz2wZhHwT+YPFzSkEev+YZRa3AGYMO8KcS1zq
-	 jD9MZyjNL7uv+wzWem66gqgVcuROzvicK+mncneA=
+	by mail.kernel.org (Postfix) with ESMTP id DDA75206F1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:28:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YRMQKKXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgETPX6 (ORCPT
+        id S1726729AbgETP2M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 11:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbgETPXy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 11:23:54 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 313A62072C;
-        Wed, 20 May 2020 15:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589988234;
-        bh=7wy/mzhmsxhrZOkUPW+Q83t2ryAQte3LPn1zb7E6KSs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZHYnAgMI7PZ4+geTufcIKRIYu1aGFliDnWFIqieVb7ktqvP33yfjeA6ZijQJ+2Z2t
-         fMYOVGmazaAg0f5uRc4b6ptsRCtXBXHoRNBGLnojOriBvwAnqMNoG4655kl1OX3B3A
-         uHOzBgWaHpnHR4ARCvfPSbMcyPRjP4VRfJMz71T0=
-Received: by mail-ot1-f53.google.com with SMTP id v17so2803927ote.0;
-        Wed, 20 May 2020 08:23:54 -0700 (PDT)
-X-Gm-Message-State: AOAM530MAjO6maIktxYWScd7XCMNoYmU8mDsuuJSWxJ7/iDpNlYwRIzp
-        JFrAIuq/m+ZyZW2wv7pRVKkwXnTc1894c56PJQ==
-X-Google-Smtp-Source: ABdhPJxCSCVhZ52I7f5Mgyr0p3dZzcPmtENYVoGA47tZ3xVBr8Qbn/tvizgFDJa4B/xU3JfWxOsateh74q2peWJNOEA=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr3328433ote.107.1589988233456;
- Wed, 20 May 2020 08:23:53 -0700 (PDT)
+        Wed, 20 May 2020 11:28:12 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44734 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETP2M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 11:28:12 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KFS6FU098205;
+        Wed, 20 May 2020 10:28:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589988486;
+        bh=tBAns3HGKrxisURUC9dI4iWKJEWm82ibC3wN0/+MQf0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YRMQKKXsTZ7w4eqlLvumdYksuQ/2bBW/mKnZdfZtFz52OOfkpALPFti2VeMGL0ycs
+         ZJxJWFsisXFJvOStFGPpt+25+jKOT7i6VC1O2IkdepNlvmpsugmXF4ksPY4FbciYHe
+         kuiFHWV3yZXhaS5M9ljBbSJuV2htjjVOcl6eokGE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KFS6vK016981;
+        Wed, 20 May 2020 10:28:06 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 10:28:05 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 10:28:05 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KFS5PO041327;
+        Wed, 20 May 2020 10:28:05 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+Date:   Wed, 20 May 2020 10:28:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
- <20200512073115.14177-2-qiangqing.zhang@nxp.com> <20200519185125.GB453195@bogus>
- <20200520073304.GA23534@willie-the-truck>
-In-Reply-To: <20200520073304.GA23534@willie-the-truck>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 20 May 2020 09:23:41 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJfQ0PFy5mmwSG4aM91ghq5xiAEPR2YZOymws+BfGa+uA@mail.gmail.com>
-Message-ID: <CAL_JsqJfQ0PFy5mmwSG4aM91ghq5xiAEPR2YZOymws+BfGa+uA@mail.gmail.com>
-Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier for userspace
-To:     Will Deacon <will@kernel.org>
-Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        John Garry <john.garry@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200520135624.GC652285@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 1:33 AM Will Deacon <will@kernel.org> wrote:
+Andrew
+
+On 5/20/20 8:56 AM, Andrew Lunn wrote:
+> On Wed, May 20, 2020 at 07:18:34AM -0500, Dan Murphy wrote:
+>> Add the internal delay values into the header and update the binding
+>> with the internal delay properties.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../devicetree/bindings/net/ti,dp83869.yaml    | 16 ++++++++++++++++
+>>   include/dt-bindings/net/ti-dp83869.h           | 18 ++++++++++++++++++
+>>   2 files changed, 34 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+>> index 5b69ef03bbf7..344015ab9081 100644
+>> --- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+>> +++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+>> @@ -64,6 +64,20 @@ properties:
+>>          Operational mode for the PHY.  If this is not set then the operational
+>>          mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
+>>   
+>> +  ti,rx-internal-delay:
+>> +    $ref: /schemas/types.yaml#definitions/uint32
+>> +    description: |
+>> +      RGMII Receive Clock Delay - see dt-bindings/net/ti-dp83869.h
+>> +      for applicable values. Required only if interface type is
+>> +      PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_RXID.
+> Hi Dan
 >
-> On Tue, May 19, 2020 at 12:51:25PM -0600, Rob Herring wrote:
-> > On Tue, May 12, 2020 at 03:31:13PM +0800, Joakim Zhang wrote:
-> > > +static ssize_t ddr_perf_identifier_show(struct device *dev,
-> > > +                                   struct device_attribute *attr,
-> > > +                                   char *page)
-> > > +{
-> > > +   struct ddr_pmu *pmu = dev_get_drvdata(dev);
-> > > +
-> > > +   return sprintf(page, "%s\n", pmu->devtype_data->identifier);
-> >
-> > Why do we need yet another way to identify the SoC from userspace?
+> Having it required with PHY_INTERFACE_MODE_RGMII_ID or
+> PHY_INTERFACE_MODE_RGMII_RXID is pretty unusual. Normally these
+> properties are used to fine tune the delay, if the default of 2ns does
+> not work.
+
+Also if the MAC phy-mode is configured with RGMII-ID and no internal 
+delay values defined wouldn't that be counter intuitive?
+
+The driver will error out if the RGMII-ID is used and there was no 
+internal delay defined for either rx or tx making either one required.
+
+The MAC node needs to indicate to use the internal delay for RGMII other 
+wise the driver should ignore the internal delay programming as these 
+internal delays are not applicable to SGMII or MII modes.  The RGMII 
+mode can be used if the default 2ns delay is acceptable.
+
+Thus why we are documenting in the binding when the internal delay is 
+required as putting these under "required" is not correct.
+
+Dan
+
 >
-> I also really dislike this. What's the preferred way to identify the SoC
-> from userspace?
-
-/proc/cpuinfo? ;)
-
-For an non-firmware specific case, I'd say soc_device should be. I'd
-guess ACPI systems don't use it and for them it's dmidecode typically.
-The other problem I have with soc_device is it is optional.
-
-> It's needed so that the perf userspace tool can describe
-> perf events that are supported for the PMU, as this isn't probe-able
-> directly from the hardware. We have the same issue with the SMMUv3 PMCG [1],
-> and so we need to solve the problem for both DT and ACPI.
->
-> Will
->
-> [1] https://lore.kernel.org/r/1587120634-19666-1-git-send-email-john.garry@huawei.com
-
-At a minimum, it seems like 'identifier' should be moved into the perf
-core if that's an attr we want to keep.
-
-Rob
+>      Andrew
