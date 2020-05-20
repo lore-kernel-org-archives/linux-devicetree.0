@@ -2,142 +2,121 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24137C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EBFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A44206C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E66207D3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="N9EBPQ4Q"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rmzEe+Zq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgETI1I (ORCPT
+        id S1726650AbgETIgq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 04:27:08 -0400
-Received: from mail-vi1eur05on2066.outbound.protection.outlook.com ([40.107.21.66]:18913
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        Wed, 20 May 2020 04:36:46 -0400
+Received: from mail-eopbgr60053.outbound.protection.outlook.com ([40.107.6.53]:18053
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726403AbgETI1I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 04:27:08 -0400
+        id S1726224AbgETIgq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 04:36:46 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YSlpMrV4ffkf5G9DzMOVOW5EIJQWwNOQt0dOovskyRxEqGfh5LtnOY3JTVV5wRe4DGGVN0/mYT/hoYEf0941IfCddUUYRfgbSji4t/wRGhdBkBC4V75sMRwWyv6AhFNSH60CUk0hD/wlf/wTnEIQGfg/+6u6Nkui1G/DVlL5q+5P0qzeQ1aWdttkH1wBN1I2eeeY4Gy20ekuhThM5boDhxGsz6sY6wy7RHBq2y9+dMFB0vjAxn5pvFrUEr1kASn08jxIiXE+VGOTkXi3mB2j9uRzwKUCqleA0RVC3RKMxc1+C/5UoxtzGk+uahWdMZtqD3NZu/BYdYeWn0BNIy+eYg==
+ b=VOGTLGzHkf4FAiwRg48W+qlPypgfNRF2OwofBD6xpiUuvrhsMjmzlaLahcpZHYyex1DAJSOxeBQRBFRZJYyyMqlPPBtVy8Z/jcZ90J3rb3nNvssjCRJe0h+gdz96sKkiSRKjPXjBx0+u/QE2Fp0E1RfrNnPQKag/UgUwKhrvWmfx/BwNWdVi8Avp30DVCGoesTk3AlV11E6CzK0jJIV8h1TIRoDXQDBshruJA7hEUXom51Ft/n5CHroroxjwfmRnEXWeSsHPNkF4yfjdhcQLj7MN4tgoXoqzh9S0TdUrbm15n42EIzH63zFUGG4CCXP3Qhm/mSJKbYCUVp7TX2xzzA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LAr05cAZBlGb/Kx7rhymPd0KK7Jug2gaZNj7/d8gNRg=;
- b=agYLjUY5XppttxixuocFjO65FQqWYynIABLfYBHIKKTd9PyusSDmipvqdBmTI7tSJZsb7LE2ZqwTOcEA+TseLZ/t3d3CBnkQQBMeRvxr1GbJVJ8ShNP3Yp3LL7h+PDKvqjfIuQYsC1v+8X2sxPRGoA1+JeMWf+rDvfuLjhVINu/27lEyCef+RVnd3z1zZiyqqHZ8SnVpCE8ETg6FJVoyc6ScEGbJl91/Q3993cDe9ik+lrr/+dk3qluHnaWP6f5ipcdz1aUBodF9iXsnse4ghKmTVZmG86aKMrzT0XCu7VYodMPxOhh2oN+Zo92IpSxf/Wempj4N5gxz0K+ER+pZ5g==
+ bh=/gbgYCiCXSoVdEaEF8JtK+o7WpHgZV6uyU3PW34MvcY=;
+ b=ARbWVtzzIVzJQL6wxNk8VI6akE/hx2rq7Jg6Ye5THpdOfzqf2oWFmXdIqDWNGh19XvaqAkPEu3a7FrVE73Y1rstWYf5yN5BJphONz8sZtmuyzAzox+JdneyH868wOcRCBLw+AQDn5VjJbONSUGpxGDLeCU33HaTx86devo1OcESu+9b/E8bN9fbn0X7+eT0dkJlLilOk8wyGM0yUP2jnr9B3dVWE7D3vbPsbwGjFGD93BAE+EigH33dYtFd1wFOUsJiR8j8GpnspmOWa4UCOYDLYURaUwwjvZkgZFWBSC1GBg4wEUxmK9CYojgCBckg1+amg/oQdrXk3jUlf64AUDA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LAr05cAZBlGb/Kx7rhymPd0KK7Jug2gaZNj7/d8gNRg=;
- b=N9EBPQ4QjAhnBdtvBOhsFdvZ3Dk9oEtlUZ7/ZoeUKh5q0ZTu8dI4MOYmmTp/cnoldfb8IXJIpceuBrrTnVhfUL98STYmlcOUtlhQZyMGT8RQwWMpWwxcEpD6qNk2xyNt9J8qNE5xI8NNjjbOGgvtGs1guuIFIZP+gZTTQkl0sm4=
-Received: from VI1PR0401MB2446.eurprd04.prod.outlook.com
- (2603:10a6:800:4e::21) by VI1PR0401MB2576.eurprd04.prod.outlook.com
- (2603:10a6:800:56::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Wed, 20 May
- 2020 08:27:04 +0000
-Received: from VI1PR0401MB2446.eurprd04.prod.outlook.com
- ([fe80::10d3:8526:1631:142b]) by VI1PR0401MB2446.eurprd04.prod.outlook.com
- ([fe80::10d3:8526:1631:142b%9]) with mapi id 15.20.3000.034; Wed, 20 May 2020
- 08:27:04 +0000
-From:   "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
-CC:     Ran Wang <ran.wang_1@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiafei Pan <jiafei.pan@nxp.com>
-Subject: RE: [RESEND 1/4] arm64: dts: lx2160a: add ftm_alarm0 DT node
-Thread-Topic: [RESEND 1/4] arm64: dts: lx2160a: add ftm_alarm0 DT node
-Thread-Index: AQHWJRwNdMV78TX1sk6N7IDGhrQGaKieAICAgAUFi4CADcLJEA==
-Date:   Wed, 20 May 2020 08:27:04 +0000
-Message-ID: <VI1PR0401MB244628B9AED7B46862E63E2E8FB60@VI1PR0401MB2446.eurprd04.prod.outlook.com>
-References: <20200407064251.39244-1-biwen.li@oss.nxp.com>
- <20200426131751.GC30501@dragon>
- <DB6PR0401MB2438A8B634DBE15FADD3CFB18FA20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
- <20200511141649.GA26831@dragon>
-In-Reply-To: <20200511141649.GA26831@dragon>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0c9e1003-dd42-4127-6ed9-08d7fc9793fa
-x-ms-traffictypediagnostic: VI1PR0401MB2576:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0401MB2576A8344007467D5EDC9C4ECEB60@VI1PR0401MB2576.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 04097B7F7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: f8y4eJLDF7Qn2/OEUkndCfuJ8UN/4b9kIDLUEFGo5LHxIQKWP6BhxmFeqny9b+uNcIqmLdxmPLPEECAf1hsUJNoRpliCWr/Ht5c8DgunXtV/h19RVxEbW4aWVSDMUvmyeabvhOr9n6gyuHDYoeu14CoZqrCYF+gdo38gsFPKxsk7m737QNKIdGXJNQuk9X1ntodbpRYqkVjmJp8C/REyLIqjIPZB6K7CoUg7EPIK6LZAmggEeRtmMPG+7MNLyWkbe+OM/ylJUXNDZAm48vfPZ/JjGMmPEA5sa1wLFZ2UeoLhtY1SWWQ2L0GasxFuNeFVyVH3cXdnosBNUbs68+ntAXVXh6eMSe4MoC84d/OTyu9Hc1H/twKIKP9lH0ooTWpg5quLsFcinXWT1b9MzZv1eFTlDWnZux9B2i7jXaHEBjWmpYQ8C8nJ3HWA+K2B/D0P
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2446.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(346002)(39860400002)(376002)(7696005)(8936002)(76116006)(52536014)(186003)(9686003)(8676002)(86362001)(55016002)(71200400001)(26005)(5660300002)(54906003)(64756008)(4326008)(66946007)(2906002)(66556008)(316002)(110136005)(6506007)(33656002)(478600001)(66446008)(66476007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: T6x3m/8rNBhgUc/KOPpZQ5THWAem1GDj+rbx8KPcusTdnHEojnGr8iqAoxG7kepu/lC6WWPL/uUoKzmN4PduvlT01m0bKTmQGlaCYkRV3xD61D38T6Om2TYCGz2JzeB7KoypQeG+JjSESK5OIdRinCjr9Kt69wZ0YUBs+TQ6q21O9c38dyNkVnV+NjFSPMV2sC+qJTWO93LA4J0PDacao8a15p1pCDLz77HzBpNjCwtpvobTMomoStMHe4Td3DCDA6C5+s+myZZo7U2k5nQtSR5jHIexN4+5lwqt9+1dL1zpc6ltB0ZGNGpWD8IjAPjwFbrnE/JX2waSt5gtJLJzFdDN42ygJ+SzNGWV5kr9QhD/iQ0bOjuYbD5MZi7uAAbZDbLAyGqhMFLye7nOqEgoUb3v/sUMHqu4DBNawAYKNpaxeLAsk8e3OiTgaIJ7q+2hE9TtbXekQDK6b6gTH17B7oKsX/OUNfLI9qwn9Nl96Jo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=/gbgYCiCXSoVdEaEF8JtK+o7WpHgZV6uyU3PW34MvcY=;
+ b=rmzEe+ZqkKgk6nW6ydq5ePN89u8R05H44ty8IIrO9H3Pwe5CJCq/upe5zXFheDRGG57sq7cYW36MBLMeMPUxmfDX6GAlKr3zt6Wi5CprS7ipwy6O/pO0J11OYtuXQIaPZWzdp1cfRre2CcbxUYgHMvMKJfqWEAKhCd3lvt++3ac=
+Authentication-Results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM6PR0402MB3926.eurprd04.prod.outlook.com
+ (2603:10a6:209:23::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Wed, 20 May
+ 2020 08:36:43 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3000.034; Wed, 20 May 2020
+ 08:36:43 +0000
+From:   fugang.duan@nxp.com
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, martin.fuzzey@flowbird.group,
+        robh+dt@kernel.org, shawnguo@kernel.org,
+        devicetree@vger.kernel.org, fugang.duan@nxp.com
+Subject: [PATCH net 0/4] net: ethernet: fec: move GPR reigster offset and bit into DT
+Date:   Wed, 20 May 2020 16:31:52 +0800
+Message-Id: <1589963516-26703-1-git-send-email-fugang.duan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0233.apcprd06.prod.outlook.com
+ (2603:1096:4:ac::17) To AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18)
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c9e1003-dd42-4127-6ed9-08d7fc9793fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 08:27:04.7529
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from b38611.ap.freescale.net (119.31.174.66) by SG2PR06CA0233.apcprd06.prod.outlook.com (2603:1096:4:ac::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.23 via Frontend Transport; Wed, 20 May 2020 08:36:40 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 363a9351-3053-45ab-8711-08d7fc98ec76
+X-MS-TrafficTypeDiagnostic: AM6PR0402MB3926:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR0402MB3926BA40A404EDB12CDCB4A0FFB60@AM6PR0402MB3926.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:608;
+X-Forefront-PRVS: 04097B7F7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4Nxl2fDMYolcMfwTOobA/ktUFqfA26iKbychz4fWEORkJmSnUajzmccwhDov8Rtf5bd5oj5ueDYG1A+5PU8759Y1U6eR1PujmRtf7tLVBAq97rBIszK1dThC2GOtLCyx3o5iW/MBRhYaWJVZv9CJm484e1Qq3W24bY35D8faABCPkuB67T7YVFudosmIS786zD8pJo1mFoQQ4RSTKnKlbNgnF5Dk54IhzgPFggvutowY5bg1vWpXW2xvWpxqqcUHwzSOuqIWi/es1dMA7LiBz9dQNDo7bWITdnnaSGq4x+jjdo73KFw4qDKzQq0ECi4fvfjdygeS0Z0Ch2Da4M/3L/dPE8ys/ShJnHRPYMA/L06agudP8GSllMGI872WwUtr0lBooI3Tvju+Fsfu/pX2jeWW9Cw00wNmaY4rrS2yS0QUx6XW7oxwPpr92pPaTBkC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(6916009)(8936002)(66476007)(8676002)(66946007)(86362001)(66556008)(316002)(2616005)(16526019)(478600001)(186003)(36756003)(26005)(4326008)(956004)(6512007)(6666004)(6486002)(9686003)(52116002)(6506007)(2906002)(5660300002)(4744005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: pt9zuJ9k4Rv8yngVvc6UYskV0fMyXGnn01uM1FivUypmZFR7KHp2weYR1ZjJ7225zzDO0TfDbDNsSBWsvlFrpuREwjOq8xtI5oK1MAzbEf2aBbvMBeev2avNsY2cGLZsCMbTgOJFhP17se0aNtuKNeDEH4RdsHZr1c646moq1chc16IfANhJ2CI+MiLycy/rV3bv7tNh5Jji2umABw3Z0XQDO9i+02ACsBpGXYHbRJw0RzhXwqjwrEtFSnAJ/YJ51s6B7dMK9KYBkZFly58tXwyNsG4zBzQAfs5jcNi6bjHNjx8fdyYWMymRW5VOnLIo4YZitbRfpaO3QARejEvw1BPt4iPu7aC3ZmOc88SVTcFXuFVdY+LIZl3hnbdWK8DAaXR9s09kdt0ThIS1w/Aq8UAVQ5dMW5JeBXH/yQqLdV4OjXCu1B+2F2EFjBDpDoOT5dOO7GfiQ4+8aKUlZvyDBx5xOIKIy5IzJ7vgMuDbZxM=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 363a9351-3053-45ab-8711-08d7fc98ec76
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 08:36:43.2971
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: APVf6m6l2ohCvky14rec/NQoSKiMpQxSUXG+qWdeoLL9NCUkjU43I6B7NKMs1YuRPvaXm/Cm4+9lDyKgBZGH8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2576
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yMITiMAz5rcI+U260VePbUW2NT/AAorzwdoa3y+HHaBQ6PiMaM8L7yTaObK2Cxgw7ZHHHxi0oLzWW7u0WsCi3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3926
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Fugang Duan <fugang.duan@nxp.com>
+
+The commit da722186f654(net: fec: set GPR bit on suspend by DT configuration)
+set the GPR reigster offset and bit in driver for wake on lan feature.
+
+It bring trouble to enable wake-on-lan feature on other i.MX platforms
+because imx6ul/imx7d/imx8 has two instances, they have different gpr bit.
+
+So to support wake-on-lan feature on other i.MX platforms, it should
+configure the GPR reigster offset and bit from DT.
 
 
-> > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > > > b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > > > index e5ee5591e52b..e0d8d68ce070 100644
-> > > > --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > > > +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > > > @@ -16,6 +16,10 @@
-> > > >  	#address-cells =3D <2>;
-> > > >  	#size-cells =3D <2>;
-> > > >
-> > > > +	aliases {
-> > > > +		rtc1 =3D &ftm_alarm0;
-> > > > +	};
-> > > > +
-> > > >  	cpus {
-> > > >  		#address-cells =3D <1>;
-> > > >  		#size-cells =3D <0>;
-> > > > @@ -768,6 +772,20 @@
-> > > >  			timeout-sec =3D <30>;
-> > > >  		};
-> > > >
-> > > > +		rcpm: rcpm@1e34040 {
-> > >
-> > > Keep the node sort in unit-address.  Also, try to use a generic node =
-name.
-> > Hi Shawn,
-> > Sorry for late reply.
-> > The node sort will be updated in v2.
-> > rcpm is called as Run Control and Power Management. Don't Have a
-> > generic node name, any suggestions?
->=20
-> It sounds like some sort of power controller, so maybe 'power-controller'=
-?
-Okay, How about replace it with "rcpm: power-controller@1e34040 {"?
->=20
-> Shawn
+Fugang Duan (4):
+  net: ethernet: fec: move GPR register offset and bit into DT
+  dt-bindings: fec: update the gpr property
+  ARM: dts: imx6: update fec gpr property to match new format
+  ARM: dts: imx6qdl-sabresd: enable fec wake-on-lan
+
+ Documentation/devicetree/bindings/net/fsl-fec.txt |  7 ++++++-
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi            |  1 +
+ arch/arm/boot/dts/imx6qdl.dtsi                    |  2 +-
+ drivers/net/ethernet/freescale/fec_main.c         | 22 +++++++++++-----------
+ 4 files changed, 19 insertions(+), 13 deletions(-)
+
+-- 
+2.7.4
+
