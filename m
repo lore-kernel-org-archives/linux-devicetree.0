@@ -2,159 +2,129 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F31EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3CAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B19204EA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C44207F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="V/VtpAw8";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="s9UgaaP0"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="iA7PIL9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgETLnr (ORCPT
+        id S1726937AbgETLoZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 07:43:47 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:58226 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgETLnq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 07:43:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589975025; x=1621511025;
-  h=from:to:subject:date:message-id:content-id:
-   content-transfer-encoding:mime-version;
-  bh=2ChmDyqOD5shMER9Cc6SOKnul7BS0X9ukO4f5gQ2tFc=;
-  b=V/VtpAw8frmpWGB53KOisHkazDUNtTXhJBbf1z7BdWG8ZbBJ/Dsvu9KD
-   zwquTewAr/2eRYNk87mV2lt0F5NVScMsop79FKWgl7TGjFmAZ0qGRVxai
-   hlB733dT+WvOt4YvnasvLCXXzjIT0zRtLsJCFCeMHGO+Rg4JEjd7iKspS
-   FRgBXMbc9wZyrc6QS9yTCZ1iIzxkxQQp+Dt0gI9V13KfrO5U0RdhuFnWs
-   Tr0SqMJNU4PewX/Gl6dbus9g7xBEH/mepIMVc2ZH5u9ISkr0tRq8v4zOa
-   wtQQbOT0CskikScHiz5hFnyOfSqGphPLSVUbwxOaPmr0Uo3UefG8Lzood
-   g==;
-IronPort-SDR: 4NKn7NOcU02UVr1cbAr++1trrAPBABl4tZv5TVGtSxzTJ0jIUJRk76tl/tUfGQG0uQsSF2HuQb
- nUYR/neOWVtwAdOI/27PCcgZLPAkLGUsAlxglR9Y1BCemSknfqiNJBSsB2antMUoNlTsshE5k9
- 1bqbhRv+g8v8R1poNADhdcR5y3GIWGCi/oa31nFx1Wq2wcITN22B+m1Ffq2mf7bDxjBXSD/Qgm
- OmfmWv3ehDSU3gNVKw4r2IozrzIbwKejHxAcD1OAbPj5F7VLNE91/+lNcwLJ34bP9rxYYu1WV/
- w68=
-X-IronPort-AV: E=Sophos;i="5.73,413,1583218800"; 
-   d="scan'208";a="75865105"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 May 2020 04:43:44 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 20 May 2020 04:43:44 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 20 May 2020 04:43:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eAiUGh4XgNDPl+ScCRIVYBIhcB47pw+fmyqGNpChbOSOXqzUbcIp0epDRhDn2+YU4jKZufLZQYCOXnTJRGlXc0QrrJrAKIgGgvVQ7SU6NOW2CzxrypwFJx0puykXeLUvztxTMPtKTmahjrn57fF9s3oPQcogCkQHxdfdICvRynswALPk20hgIZ/euzjx3cpLHXs3zvle0RFxY2vmW6KQVWmE5dToReBlOY1LGQN6kT68XsitlxrbWivEVsceSwcuT52ooBIDUAOTL3vsQby4pSq9pmj58ukHy4BNMpmUlomFlV5W8Tx+PJDTamN/2wkxBN7aFGLOJHZdMlCclLC8YA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ChmDyqOD5shMER9Cc6SOKnul7BS0X9ukO4f5gQ2tFc=;
- b=JFT/nbzioevowIjk9WTI1HPDJ31C9FZAlIVsJdYvWfniX/KA/VhFFTy4J6DjcFiYOW+ifIFVYHlbUDXCgY9oKsPgBHHJFT2K0zSUVeGAAnQt5BYe2ALzgDaVqm+JorcTTHY4U18/BSq37sBIYuKKUvIdzGXdiXyDqNCsdN7OHuynpXPQSpQ2LhJTGmYUGhtx1pIk5fNcX7SJBdIMpgYs4G4dsGuW0r5QC+BN+EUqhzzDjhNSObH4oStcf4AryIIygEgAPZKLzqvRmeZomYWbTU2EPgT3JjlWqLQCz7NqfxGE7CfgG9aHhJQqTfbOLoGEUQnaqoiG7pKKlsWz96FzCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Wed, 20 May 2020 07:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgETLoY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 07:44:24 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F02FC05BD43
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 04:44:23 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id w64so2517832wmg.4
+        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 04:44:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ChmDyqOD5shMER9Cc6SOKnul7BS0X9ukO4f5gQ2tFc=;
- b=s9UgaaP0TMxgHYeNPEvvoiz7DZwOvh8zSidtwFfQBcpr57ehRELgQ7OWLIZQCaKl0BnyEovByoFkf/sb3XalNlfFHXboEMHNVTq/lgsq0fPf3nF54qVlNnJGTLALqmcpE7cpzwDlD9JQLYKXIoCrEi/WX0pAnXRiAxQTiZE7l0c=
-Received: from MN2PR11MB4269.namprd11.prod.outlook.com (2603:10b6:208:190::32)
- by MN2PR11MB3872.namprd11.prod.outlook.com (2603:10b6:208:13f::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Wed, 20 May
- 2020 11:43:43 +0000
-Received: from MN2PR11MB4269.namprd11.prod.outlook.com
- ([fe80::8d6f:606b:5ddc:d5cb]) by MN2PR11MB4269.namprd11.prod.outlook.com
- ([fe80::8d6f:606b:5ddc:d5cb%2]) with mapi id 15.20.3021.024; Wed, 20 May 2020
- 11:43:43 +0000
-From:   <Daire.McNamara@microchip.com>
-To:     <amurray@thegoodpenguin.co.uk>, <lorenzo.pieralisi@arm.com>,
-        <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
-        <robh-dt@kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v9 0/2] PCI: Microchip: Add host driver for Microchip PCIe
- controller
-Thread-Topic: [PATCH v9 0/2] PCI: Microchip: Add host driver for Microchip
- PCIe controller
-Thread-Index: AQHWLpvp1ZBYgsGiuUWn27zXTFm/xA==
-Date:   Wed, 20 May 2020 11:43:43 +0000
-Message-ID: <d7b32f86783f0e4883dbf917146f1c2bdb9f9589.camel@microchip.com>
-Accept-Language: en-IE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: thegoodpenguin.co.uk; dkim=none (message not signed)
- header.d=none;thegoodpenguin.co.uk; dmarc=none action=none
- header.from=microchip.com;
-x-originating-ip: [89.101.219.210]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d60a0b58-b255-491e-02f4-08d7fcb30c66
-x-ms-traffictypediagnostic: MN2PR11MB3872:
-x-microsoft-antispam-prvs: <MN2PR11MB38729E42DFC05802CD11D34496B60@MN2PR11MB3872.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:663;
-x-forefront-prvs: 04097B7F7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: blirjKjeuA6ZVsBBLm8fAngoKI5dhFHtCKGP7Q1dWoXOr/mUCu+XQSRHrHRKvqTeTzEMMi5xO7Mzs5QtVw8bYuIp7Ckp3Youx7UsNfz6Vm+RU8HtNfYcZCxz7XCEjeS4rfOe23pO2Lt+SR9aWbwZ4lTARjfEDG1K2pUglLXll13asy1p1GfYOaRc4a3qmCcTNILChzZUxv2yUPi8I5RMArBzL6BPNbgWTETHZaiZYhXQalIth0pUlr2Z7n95ir57PDnEbaEflLJ5FQ9JYFgGVFKnZEnVDEH6oH5wFLso0R2skZR0/JGLKpLIBaAdaWt6tM94EPnWiyBN0tWy/qfnCFKDptzpQ3OueERYjuUzj4Kg8rb12vChZ9zKZbut0Q0CxbU1NI6tHXPNMSnZfIjTq5RYOAi6jszBOwxaZMAwC5+hf8TgUl6ylmBtq37pdagg
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4269.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(396003)(39860400002)(346002)(366004)(110136005)(66476007)(316002)(66946007)(66446008)(64756008)(66556008)(76116006)(91956017)(2906002)(5660300002)(26005)(71200400001)(6506007)(186003)(2616005)(6486002)(8676002)(8936002)(36756003)(86362001)(6512007)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: tVkyjC5cp8JnK0bJEGgb/W4+MtFaoPqF6lPbLdD3Fflj9eZf5qYn+0iptEbR6k253uZN/3CYc5JjCckUT48T67oCUEjfwoefrYreorv9eF117h6B0IJXT7trsaPjwMg8CL5TsS1MT6dPWISed42OKPw1ewcHLUqzkcFupvA5TrMXAaYLCfZvbKuY8MJUzrLRpGXu5iOzCMTsrDYe0R4h8N3o3FZ1XbKtZlcO1xxUC6ishg8jvG6oY9SQiMpxTq/WH1AXemG69FpfoKj3CbjlbcnFYzMoLr+rraOUmPELJ15Fc55qLjDzPnAgJlm7KMZgMGEWWzDRiyBo1Kjjes85KJhUq9D0j/NKjES/GGTH/ySM44tYYx6dLGmyqd5sATlQ/hOJe7qsu8CbC+6eF9ERj58otQfAkRNImBa5MjEeW3NmGYoepmvJGQfzqzx5lHCqGD97PRHfHj0djND3+mbOKh9/so+psdKpVqkzhoMwgFGLYPNIilJDYy8iLqHNAu/s
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9AE6A554F1B92B4E8BBA1211018B306A@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6UO8846LBADOFjPscf273ixSDXaAAOc6agORXCpe8H8=;
+        b=iA7PIL9mvAGiJIzT2Pq6EhZQNK50yl9l6lgYY6TkjfmiyQO+FovVbAOv/7wzEq+1X9
+         mk2kx8kVrndLXYGlYRob3K37sWxWbqbnI8GWDIJLCTr5oUVIejD7J+mx3gMpB4DTpKoA
+         FaRG8wrpDNLkbm99XKF5izs/ettSvwFAAZmYaIAIsUjyqyNHUMtk4Qx46M6ANLR+w5F6
+         ezbE69fQTXSyyZKnlQbLkm9Hz8B7xUbu2oIoAQM7RfA9ZciAbdiNho0I/X5IwEbO3PFa
+         0jKUay9jsKzznzMRBfuWpuhc5UJyj2/R8Ql6/EQ+pOSBZzl4zjCE2czpVX94eI+feqOM
+         A9+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6UO8846LBADOFjPscf273ixSDXaAAOc6agORXCpe8H8=;
+        b=hyGzf+abM6x0/6Hz1Lmcj2U1NZlB3AkGsewxRq7Cf+hdq95SurgJwbdBFUIv3lhevQ
+         +Ph+k21tKfvRL/wY7SBsPETKBp5K0afy41hVJZC6PEe4wwwsiNQYS1Mb2QZWEKUNSAjA
+         5yHLI9/WRm6riJ361XTUuKp7HJQqbdcRK3LwW80LtrQz0rnrQl6QWjBbxD9eq/18MEhP
+         3ZZKWuNKhYTCcGBEweb5IIYysTfgHnjASACvVKqgdqODEA6ZBUuKD+KDU0ikizPCKzso
+         a/oPysvdS2siIzm4/osQzAeQvng+f6s28q145EUp8dzrvTA+E+NSKD6W5MQhyw4xUGBq
+         K9lw==
+X-Gm-Message-State: AOAM531ggUn9SqdfpJEJuJz1U2HeNW8vHjGRQufbPXcv3FEMB8yxj0dw
+        fHTAdPUFsc5qplYcc7F3GJOS1w==
+X-Google-Smtp-Source: ABdhPJzM9bN56A7SVl3pNrO/Ahl7zhy4npY69zCHarKqOc0WKvc7Va3/fmdS0rKJeLhFamtGgdLgcQ==
+X-Received: by 2002:a05:600c:147:: with SMTP id w7mr4321322wmm.89.1589975062340;
+        Wed, 20 May 2020 04:44:22 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id q2sm2530782wrx.60.2020.05.20.04.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 04:44:21 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 0/5] net: provide a devres variant of register_netdev()
+Date:   Wed, 20 May 2020 13:44:10 +0200
+Message-Id: <20200520114415.13041-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d60a0b58-b255-491e-02f4-08d7fcb30c66
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 11:43:43.1953
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v2Gl+Hc030PvzTjsgknpzs1uL+6xlIwFtgKCz5qVsAF2la2s9TK1xw+YrED2Z6LG2rEczo1FnwQRQwZbgUg2AUdL6xhPdzohGShUGtO1NXM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3872
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpUaGlzIHY5IHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdGhlIE1pY3JvY2hpcCBQQ0llIFBvbGFy
-RmlyZSBQQ0llDQpjb250cm9sbGVyIHdoZW4gY29uZmlndXJlZCBpbiBob3N0IChSb290IENvbXBs
-ZXgpIG1vZGUuDQoNClVwZGF0ZXMgc2luY2Ugdjg6DQoqIFJlZmFjdG9yZWQgYXMgcGVyIFJvYiBI
-ZXJyaW5nJ3MgY29tbWVudHM6DQogIC0gYmluZGluZ3MgaW4gc2NoZW1hIGZvcm1hdA0KICAtIEFk
-anVzdGVkIGxpY2VuY2UgdG8gR1BMdjIuMA0KICAtIFJlZmFjdG9yZWQgYWNjZXNzIHRvIGNvbmZp
-ZyBzcGFjZSBiZXR3ZWVuIGRyaXZlciBhbmQgY29tbW9uIGVDQU0gY29kZQ0KICAtIEFkb3B0ZWQg
-cGNpX2hvc3RfcHJvYmUoKQ0KICAtIE1pc2NlbGxhbm91cyBvdGhlciBpbXByb3ZlbWVudHMNCg0K
-VXBkYXRlcyBzaW5jZSB2NzoNCiogQnVpbGQgZm9yIDY0Yml0IFJJU0NWIGFyY2hpdGVjdHVyZSBv
-bmx5DQoNClVwZGF0ZXMgc2luY2UgdjY6DQoqIFJlZmFjdG9yZWQgdG8gdXNlIGNvbW1vbiBlQ0FN
-IGRyaXZlcg0KKiBVcGRhdGVkIHRvIENPTkZJR19QQ0lFX01JQ1JPQ0hJUF9IT1NUIGV0Yw0KKiBG
-b3JtYXR0aW5nIGltcHJvdmVtZW50cw0KKiBSZW1vdmVkIGNvZGUgZm9yIHNlbGVjdGlvbiBiZXR3
-ZWVuIGJyaWRnZSAwIGFuZCAxDQoNClVwZGF0ZXMgc2luY2UgdjU6DQoqIEZpeGVkIEtjb25maWcg
-dHlwbyBub3RlZCBieSBSYW5keSBEdW5sYXANCiogVXBkYXRlZCB3aXRoIGNvbW1lbnRzIGZyb20g
-Qmpvcm4gSGVsZ2Fhcw0KDQpVcGRhdGVzIHNpbmNlIHY0Og0KKiBGaXggY29tcGlsZSBpc3N1ZXMu
-DQoNClVwZGF0ZXMgc2luY2UgdjM6DQoqIFVwZGF0ZSBhbGwgcmVmZXJlbmNlcyB0byBNaWNyb3Nl
-bWkgdG8gTWljcm9jaGlwDQoqIFNlcGFyYXRlIE1TSSBmdW5jdGlvbmFsaXR5IGZyb20gbGVnYWN5
-IFBDSWUgaW50ZXJydXB0IGhhbmRsaW5nIGZ1bmN0aW9uYWxpdHkNCg0KVXBkYXRlcyBzaW5jZSB2
-MjoNCiogU3BsaXQgb3V0IERUIGJpbmRpbmdzIGFuZCBWZW5kb3IgSUQgdXBkYXRlcyBpbnRvIHRo
-ZWlyIG93biBwYXRjaA0KICBmcm9tIFBDSWUgZHJpdmVyLg0KKiBVcGRhdGVkIENoYW5nZSBMb2cN
-Cg0KVXBkYXRlcyBzaW5jZSB2MToNCiogSW5jb3Jwb3JhdGUgZmVlZGJhY2sgZnJvbSBCam9ybiBI
-ZWxnYWFzDQoNCkRhaXJlIE1jTmFtYXJhICgyKToNCiAgUENJOiBNaWNyb2NoaXA6IEFkZCBob3N0
-IGRyaXZlciBmb3IgTWljcm9jaGlwIFBDSWUgY29udHJvbGxlcg0KICBQQ0k6IE1pY3JvY2hpcDog
-QWRkIGhvc3QgZHJpdmVyIGZvciBNaWNyb2NoaXAgUENJZSBjb250cm9sbGVyDQoNCiAuLi4vYmlu
-ZGluZ3MvcGNpL21pY3JvY2hpcCxwY2llLWhvc3QueWFtbCAgICAgfCAgOTQgKysrDQogZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9LY29uZmlnICAgICAgICAgICAgICAgIHwgICA5ICsNCiBkcml2ZXJz
-L3BjaS9jb250cm9sbGVyL01ha2VmaWxlICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvcGNpZS1taWNyb2NoaXAtaG9zdC5jICB8IDY2NCArKysrKysrKysrKysr
-KysrKysNCiA0IGZpbGVzIGNoYW5nZWQsIDc2OCBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWljcm9jaGlwLHBj
-aWUtaG9zdC55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-cGNpZS1taWNyb2NoaXAtaG9zdC5jDQoNCg0KYmFzZS1jb21taXQ6IGMwY2MyNzExNzNiMmUxYzJk
-OGQwY2VhZWYxNGU0ZGZhNzllZWZjMGQNCi0tIA0KMi4xNy4xDQoNCg==
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+This series applies on top of my mtk-eth-mac series[1].
+
+Using devres helpers allows to shrink the probing code, avoid memory leaks in
+error paths make sure the order in which resources are freed is the exact
+opposite of their allocation. This series proposes to add a devres variant
+of register_netdev() that will only work with net_device structures whose
+memory is also managed.
+
+First we add the missing documentation entry for the only other networking
+devres helper: devm_alloc_etherdev().
+
+Next we move devm_alloc_etherdev() into a separate source file.
+
+We then use a proxy structure in devm_alloc_etherdev() to improve readability.
+
+Last: we implement devm_register_netdev() and use it in mtk-eth-mac driver.
+
+[1] https://lkml.org/lkml/2020/5/20/507
+
+Bartosz Golaszewski (5):
+  Documentation: devres: add a missing section for networking helpers
+  net: move devres helpers into a separate source file
+  net: devres: define a separate devres structure for
+    devm_alloc_etherdev()
+  net: devres: provide devm_register_netdev()
+  net: ethernet: mtk_eth_mac: use devm_register_netdev()
+
+ .../driver-api/driver-model/devres.rst        |  5 +
+ drivers/net/ethernet/mediatek/mtk_eth_mac.c   | 17 +---
+ include/linux/netdevice.h                     |  2 +
+ net/Makefile                                  |  2 +-
+ net/devres.c                                  | 95 +++++++++++++++++++
+ net/ethernet/eth.c                            | 28 ------
+ 6 files changed, 104 insertions(+), 45 deletions(-)
+ create mode 100644 net/devres.c
+
+-- 
+2.25.0
+
