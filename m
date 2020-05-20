@@ -2,118 +2,114 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B1DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9283DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831EB206B6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9D82075F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:21:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ8ZueCA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A1K4+hLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgETRNa (ORCPT
+        id S1726560AbgETRVF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 13:13:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgETRN2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 13:13:28 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBEEC061A0E;
-        Wed, 20 May 2020 10:13:28 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 23so1866245pfy.8;
-        Wed, 20 May 2020 10:13:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=arFxXWIilJc8yilr6THATlL+mM94NJsqQ+xYHRPI28o=;
-        b=eQ8ZueCAAmKF481dSsTzEfptXR3E56PhUUH9kEaE5lcwybZBOx13OC+Xi9wkqf8yJl
-         eMd1L2e88OjzLZqUwjft5kT4q1ykz42UQV6MVOEia2NuXW7QNNZ7A34YWkJl2fTeKnXd
-         x57lOvCSMymfWq5CIUCMSTFmCQ+QTFXWfQxGIl0MyJIAsxvIWaGoYNiaL9FYDbjjsASH
-         yrczDke/1e9q5QAzunll1NsU34AZd3fkwQAvuZ8SyOMsHhrXwdE+C5ocxHRWMG94nAuo
-         mFEYgVnx+pQB6bpLbpXdPCQm3xxHlbpl8IjeNyIIG5xyCXVHShY2DHAh3VorO1Fq2dCg
-         0CDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=arFxXWIilJc8yilr6THATlL+mM94NJsqQ+xYHRPI28o=;
-        b=P2vjEHQ9VpwPhDtvoFr5CY/Z/Uil7iUvKz0eU+UOO48q1oM+iWteBSQmDqzBOjIBw1
-         dxLbmqEBWWJsa6b7Psk+5GkQcGk4dY9m6wZIFDNFd2XmgxShF21VXw27C9ioXh6ZWFYn
-         iCFeuV2ykQXQE+mM9AieND7fQizRm+xX5NY1BUSxKeCS4h7GRdLwDBVO/kvGGPQpSUyk
-         tuL2Zp0AJuuREaoS34pnFB5jXBX8JXjZsYh8Uk6olVG0G5tKt+wzUep4PgDtGMmgjhqt
-         KrqVYd8ck39aj2OyQ9ZDhMEHQDF+agPPKw+fuNCt+nazZ121qIf7PDZSh6v669KPr9Aw
-         uOxA==
-X-Gm-Message-State: AOAM530wd0LcDgNuhXOoeRM0JhTm/wO5pLtGEA2sU4I34Z5465jafcO7
-        dXsO/xO0pAt8WLLqQyZ3sJg=
-X-Google-Smtp-Source: ABdhPJzPAJW/ATUYvu+6WYxM82y1cMxLnDMGV4gQ97nd84re0gsoxcS0Os/XSLxbUD3hZDiX3Ghrxw==
-X-Received: by 2002:a05:6a00:150e:: with SMTP id q14mr5106146pfu.325.1589994807327;
-        Wed, 20 May 2020 10:13:27 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id e1sm2512647pjv.54.2020.05.20.10.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 10:13:26 -0700 (PDT)
-Date:   Wed, 20 May 2020 10:13:24 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, robh+dt@kernel.org, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg
- property
-Message-ID: <20200520171324.GS89269@dtor-ws>
-References: <20200520073327.6016-1-jbx6244@gmail.com>
+        Wed, 20 May 2020 13:21:05 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40542 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETRVE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 13:21:04 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KHKwHq020773;
+        Wed, 20 May 2020 12:20:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589995258;
+        bh=yrKwbAO5uhLlt/mQiD0EoGYC+VF09O7pczsKToEZH94=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=A1K4+hLRPyQxIGoro61sk9hld7QVYHYIQ39iV7K7YLq2iusgjGI99agLUY9uFUq4a
+         N76y38HGtQmugA0vaOnlLLCVyQ5v5/V04asTE1ND8x5vM9vT3d/Xsxo4xBZS03lr2a
+         GR01Y4d+580V16HR/P22TGZejnEu+geq+2JKOQY4=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KHKvpo014522
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 12:20:57 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 12:20:36 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 12:20:36 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KHKaEO089527;
+        Wed, 20 May 2020 12:20:36 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+Date:   Wed, 20 May 2020 12:20:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520073327.6016-1-jbx6244@gmail.com>
+In-Reply-To: <20200520164313.GI652285@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Johan,
+Andrew/Florian
 
-On Wed, May 20, 2020 at 09:33:27AM +0200, Johan Jonker wrote:
-> A test with the command below gives this error:
-> 
-> arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
-> touchscreen@3e: reg:0:0: 56 was expected
-> 
-> The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
-> was shipped with different addresses then the binding currently allows.
-> Change the reg property that any address will pass.
-> 
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
-> edt-ft5x06.yaml
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> index 383d64a91..baa8e8f7e 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> @@ -42,7 +42,7 @@ properties:
->        - focaltech,ft6236
->  
->    reg:
-> -    const: 0x38
-> +    maxItems: 1
+On 5/20/20 11:43 AM, Andrew Lunn wrote:
+>> I am interested in knowing where that is documented.  I want to RTM I
+>> grepped for a few different words but came up empty
+> Hi Dan
+>
+> It probably is not well documented, but one example would be
+>
+> Documentation/devicetree/bindings/net/ethernet-controller.yaml
+>
+> says:
+>
+>        # RX and TX delays are added by the MAC when required
+>        - rgmii
+>
+>        # RGMII with internal RX and TX delays provided by the PHY,
+>        # the MAC should not add the RX or TX delays in this case
+>        - rgmii-id
+>
+>        # RGMII with internal RX delay provided by the PHY, the MAC
+>        # should not add an RX delay in this case
+>        - rgmii-rxid
+>
+>        # RGMII with internal TX delay provided by the PHY, the MAC
+>        # should not add an TX delay in this case
+>
+>        Andrew
 
-Should we have a list of valid addresses instead of allowing any
-address? Controllers usually have only a couple of addresses that they
-support.
+OKI I read that.  I also looked at a couple other drivers too.
 
-Thanks.
+I am wondering if rx-internal-delay and tx-internal-delay should become 
+a common property like tx/rx fifo-depth
 
--- 
-Dmitry
+And properly document how to use it or at least the expectation on use.
+
+Dan
+
