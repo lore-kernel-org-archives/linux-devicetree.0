@@ -2,88 +2,99 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34BBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3990FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8484A206D4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208E62072C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgETSki (ORCPT
+        id S1726846AbgETSmG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 14:40:38 -0400
-Received: from elvis.franken.de ([193.175.24.41]:60593 "EHLO elvis.franken.de"
+        Wed, 20 May 2020 14:42:06 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:43262 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgETSkg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 14:40:36 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jbTdq-0005JR-00; Wed, 20 May 2020 20:40:34 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id ABE3CC0153; Wed, 20 May 2020 20:30:57 +0200 (CEST)
-Date:   Wed, 20 May 2020 20:30:57 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520183057.GA23855@alpha.franken.de>
-References: <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
- <20200520121201.wohv6u646rx5otkf@mobilestation>
- <20200520133827.GA17714@alpha.franken.de>
- <20200520134826.pc6si3k6boaexp4i@mobilestation>
+        id S1726966AbgETSmG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 14:42:06 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jbTfE-00040R-0g; Wed, 20 May 2020 20:42:00 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Johan Jonker <jbx6244@gmail.com>, robh+dt@kernel.org,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg property
+Date:   Wed, 20 May 2020 20:41:59 +0200
+Message-ID: <4727344.YYj2SkWT1V@diego>
+In-Reply-To: <20200520171324.GS89269@dtor-ws>
+References: <20200520073327.6016-1-jbx6244@gmail.com> <20200520171324.GS89269@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520134826.pc6si3k6boaexp4i@mobilestation>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 04:48:26PM +0300, Serge Semin wrote:
-> On Wed, May 20, 2020 at 03:38:27PM +0200, Thomas Bogendoerfer wrote:
-> > On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
-> > > Since you don't like the way I initially fixed it, suppose there we don't have
-> > > another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
-> > > parameter to select a proper accessors, like sw in our case, and sb by defaul).
-> > > Right?
-> > 
-> > to be on the safe side it's probably the best thing. But I don't know
-> > enough about CPS_NS16550 to judge whether shift value correlates with
-> > possible access width.
+Hi Dmitry,
+
+Am Mittwoch, 20. Mai 2020, 19:13:24 CEST schrieb Dmitry Torokhov:
+> Hi Johan,
 > 
-> The base address passed to the _mips_cps_putc() leaf is UART-base address. It
-> has nothing to do with CPS. See:
+> On Wed, May 20, 2020 at 09:33:27AM +0200, Johan Jonker wrote:
+> > A test with the command below gives this error:
+> > 
+> > arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
+> > touchscreen@3e: reg:0:0: 56 was expected
+> > 
+> > The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
+> > was shipped with different addresses then the binding currently allows.
+> > Change the reg property that any address will pass.
+> > 
+> > make ARCH=arm dtbs_check
+> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
+> > edt-ft5x06.yaml
+> > 
+> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> > index 383d64a91..baa8e8f7e 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> > @@ -42,7 +42,7 @@ properties:
+> >        - focaltech,ft6236
+> >  
+> >    reg:
+> > -    const: 0x38
+> > +    maxItems: 1
+> 
+> Should we have a list of valid addresses instead of allowing any
+> address? Controllers usually have only a couple of addresses that they
+> support.
 
-ok, I'm confused. So this isn't an uart inside CPS hardware, but an uart used
-by CPS code for debug output, right ? 
+from what I've read, the fdt touchscreen controllers are just a generic
+cpu with device-specific (or better panel-specific) firmware, which seems
+to include the address as well - so it looks to be variable.
 
-To solve the issued please add CONFIG_MIPS_CPS_NS16550_WIDTH to select the
-correct access width.
+But of course that is only 2nd hand knowledge for me ;-)
 
-Thomas.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+But also, the i2c address is something you cannot really mess up,
+either it is correct and your touchscreen works, or it isn't and and
+adding entries to this list every time a new address variant pops up
+feels clumsy.
+
+
+Heiko
+
+
