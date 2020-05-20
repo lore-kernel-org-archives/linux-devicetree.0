@@ -2,173 +2,83 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115B2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1822DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E48EA205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:32:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1cnWShy"
+	by mail.kernel.org (Postfix) with ESMTP id E0192207D3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589959992;
+	bh=wubkXTV9YfNSZFkVpKAM6nS+N7G81auN5xKELhErTmY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kp8f4sbi9wax5cdHuFlFas7ndKkrsjypYVK7hpnA0PUW6g/TC9Odolj2SG8i60MOt
+	 3uyS6ZK/o0W80O5W8Se71yhyU8brtjfpFzQXw/alWaZCYrA+f7SO2bqnxnc8Vhydzg
+	 Mm2aJ4CKU7PsjQHtvAezl1LLUFWvzTZkgDuvAQO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgETHcI (ORCPT
+        id S1726655AbgETHdL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 03:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgETHcI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 03:32:08 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05FD2C061A0E;
-        Wed, 20 May 2020 00:32:08 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f83so2561902qke.13;
-        Wed, 20 May 2020 00:32:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ru/VedSe7R+1+BFX/X1C1fyozp4gv15sJxfe6kqv7eI=;
-        b=l1cnWShyzk9WpD7pyxlfhmMLb+wtc9wEg7fKABXKL/TGoaRZcNmK/zMBcIYoeR6i1z
-         MoPSYxpn0RWpHFxdLsov2rafdry6nwoXRqwT7RGGO4sUfLnijEr8z0iuWO2tzL5rpfoz
-         NkaN2nsHS+ys+9WijxzaQ9NbAZMHx2zFoH+k5Br4QDWBJQxzHL1GjwubVZUq4koT5tRv
-         918czWDtlyduHSTwLlIlMMzIUP95ZPbzXikLUjvsI1js7e1hbAFMjudPiabmflNlzgoh
-         ewTQk/+0xHvKmI6ZFdAqgm8FzL86Tlk7RZ8zv7qJnaWPXo2TBTg9r7GtI6e3Pq/v8Oce
-         KgvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ru/VedSe7R+1+BFX/X1C1fyozp4gv15sJxfe6kqv7eI=;
-        b=abcP7ddrTDv2ba6kHQL3AoJYWD95X3sA3ZLlTi3Q0evtE7IeUJdpUa0IDdnnpHFhQw
-         9d48Abn7SfBbSojRvBRPecVzsrMugjTBbfYOfp4ex9rByqvtxdoid6jHE51GVN6InFs5
-         2OwK3ooecWqIvROvcC+IOjbnkqYAvGAV8aP8BlBYETRkGpippdu+5j4kzpgT93EGRnxr
-         82CzKvmYaQx00ro+TDlujx5n0rX1iMIRgy0yzuw32/Qw7bvq7sqLfhwB/N+qQE9PKPiL
-         OzNhRh2veheOrRXyslQohUiQUeKS8Y7XWlRE/Z4frCsaJVZ9F5zl9tiruUfy1gmSSsXz
-         NyKA==
-X-Gm-Message-State: AOAM532WJSO6YksjaEW85Ytmdg+x1EsENl7ipGTJCQH6jKuCJ+xtM6EP
-        D6GGB66vEYy9Xnowq5Yrlaxdt4A1NryxqA==
-X-Google-Smtp-Source: ABdhPJzpfHTP0qAcbJMP7wqThG01HGbMM7NnPaLg9RG8U068gUNRZKc+3qgpT9Ut6IWTF5fkFwqkWQ==
-X-Received: by 2002:a37:628a:: with SMTP id w132mr3234893qkb.294.1589959926837;
-        Wed, 20 May 2020 00:32:06 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id w9sm1702540qtn.29.2020.05.20.00.32.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 00:32:06 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v4 4/4] iio: magnetometer: ak8975: Add gpio reset support
-Date:   Wed, 20 May 2020 09:31:16 +0200
-Message-Id: <20200520073125.30808-5-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200520073125.30808-1-jonathan.albrieux@gmail.com>
-References: <20200520073125.30808-1-jonathan.albrieux@gmail.com>
+        Wed, 20 May 2020 03:33:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbgETHdK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 03:33:10 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26ABF205CB;
+        Wed, 20 May 2020 07:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589959989;
+        bh=wubkXTV9YfNSZFkVpKAM6nS+N7G81auN5xKELhErTmY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yc/605SUMUJFs9TJLBPK2N5ck7U+Xa/E8+UxOiI7rgE3jsziwIwsk2ilHury9s9E2
+         pTi8zsr9ZsOdemB7gI4Lu3oSp6U9/zDqz0PuAkVPzm4Smr6sumxAV0qmwbH5wb3vON
+         SxPzkYN+kKYXfWbahrcv+B36uCRmn6Sj+4UJgtoU=
+Date:   Wed, 20 May 2020 08:33:04 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>, john.garry@huawei.com,
+        mark.rutland@arm.com, shawnguo@kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier
+ for userspace
+Message-ID: <20200520073304.GA23534@willie-the-truck>
+References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
+ <20200512073115.14177-2-qiangqing.zhang@nxp.com>
+ <20200519185125.GB453195@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519185125.GB453195@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to AK09911 datasheet, if reset gpio is provided then
-deassert reset on ak8975_power_on() and assert reset on ak8975_power_off().
+On Tue, May 19, 2020 at 12:51:25PM -0600, Rob Herring wrote:
+> On Tue, May 12, 2020 at 03:31:13PM +0800, Joakim Zhang wrote:
+> > +static ssize_t ddr_perf_identifier_show(struct device *dev,
+> > +					struct device_attribute *attr,
+> > +					char *page)
+> > +{
+> > +	struct ddr_pmu *pmu = dev_get_drvdata(dev);
+> > +
+> > +	return sprintf(page, "%s\n", pmu->devtype_data->identifier);
+> 
+> Why do we need yet another way to identify the SoC from userspace?
 
-Without reset's deassertion during ak8975_power_on(), driver's probe fails
-on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+I also really dislike this. What's the preferred way to identify the SoC
+from userspace? It's needed so that the perf userspace tool can describe
+perf events that are supported for the PMU, as this isn't probe-able
+directly from the hardware. We have the same issue with the SMMUv3 PMCG [1],
+and so we need to solve the problem for both DT and ACPI.
 
-AK09911 has an active low reset gpio to handle register's reset.
-AK09911 datasheet says that, if not used, reset pin should be connected
-to VID. This patch emulates this situation.
+Will
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
----
- drivers/iio/magnetometer/ak8975.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-index fd368455cd7b..a23422aad97d 100644
---- a/drivers/iio/magnetometer/ak8975.c
-+++ b/drivers/iio/magnetometer/ak8975.c
-@@ -358,6 +358,7 @@ struct ak8975_data {
- 	u8			asa[3];
- 	long			raw_to_gauss[3];
- 	struct gpio_desc	*eoc_gpiod;
-+	struct gpio_desc	*reset_gpiod;
- 	int			eoc_irq;
- 	wait_queue_head_t	data_ready_queue;
- 	unsigned long		flags;
-@@ -384,6 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
- 			 "Failed to enable specified Vid supply\n");
- 		return ret;
- 	}
-+
-+	gpiod_set_value_cansleep(data->reset_gpiod, 0);
-+
- 	/*
- 	 * According to the datasheet the power supply rise time is 200us
- 	 * and the minimum wait time before mode setting is 100us, in
-@@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
- /* Disable attached power regulator if any. */
- static void ak8975_power_off(const struct ak8975_data *data)
- {
-+	gpiod_set_value_cansleep(data->reset_gpiod, 1);
-+
- 	regulator_disable(data->vid);
- 	regulator_disable(data->vdd);
- }
-@@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
- 	struct ak8975_data *data;
- 	struct iio_dev *indio_dev;
- 	struct gpio_desc *eoc_gpiod;
-+	struct gpio_desc *reset_gpiod;
- 	const void *match;
- 	unsigned int i;
- 	int err;
-@@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
- 	if (eoc_gpiod)
- 		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
- 
-+	/*
-+	 * According to AK09911 datasheet, if reset GPIO is provided then
-+	 * deassert reset on ak8975_power_on() and assert reset on
-+	 * ak8975_power_off().
-+	 */
-+	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-+					      "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpiod))
-+		return PTR_ERR(reset_gpiod);
-+
- 	/* Register with IIO */
- 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
- 	if (indio_dev == NULL)
-@@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
- 
- 	data->client = client;
- 	data->eoc_gpiod = eoc_gpiod;
-+	data->reset_gpiod = reset_gpiod;
- 	data->eoc_irq = 0;
- 
- 	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
--- 
-2.17.1
-
+[1] https://lore.kernel.org/r/1587120634-19666-1-git-send-email-john.garry@huawei.com
