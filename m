@@ -2,62 +2,60 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20039C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434CFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1F572070A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150B020657
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:20:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PzyjGIP9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Wn27GW7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgETMS6 (ORCPT
+        id S1726525AbgETMUf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 08:18:58 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43944 "EHLO
+        Wed, 20 May 2020 08:20:35 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44090 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgETMS5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:18:57 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIqdj060823;
-        Wed, 20 May 2020 07:18:52 -0500
+        with ESMTP id S1726224AbgETMUf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:20:35 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCKXtV061137;
+        Wed, 20 May 2020 07:20:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589977132;
-        bh=LS36fzbKZ/Gxra5Y004Yo3U0C0ZMBz2aBiM5mswkmoQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PzyjGIP9FfS0dJZzdll/ToTngU5dCXga59VTyPF3T801TAVQHjShJYvkNvMle/far
-         RAisSpP+YZ+rHumWKruJQQS3ztk/7aM7gRv7bD3ePJfNJe3/mDxBSd8mxA8aLA+K6A
-         ROAZvOqXzDg+V9jFrNUWn0DpPsyVjEoVu3PtZsWU=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KCIq2r064069
+        s=ti-com-17Q1; t=1589977233;
+        bh=/vs8Gq9YQ5Dc/ZEYvAlM2ob1iJ0palS32T3aRszrMWU=;
+        h=From:To:CC:Subject:Date;
+        b=Wn27GW7iT2gSXI+t7YUwim8oXLJqxvJZ3MzZbHLclpvyCnE+CbwnvavZLdEZ4TS4l
+         JKCQSSN3GQwepPWPcpYV/wLfezkoaCuAahm8xWUhri8nk0SdbdPkEIOpFD1W1u3dt9
+         sNJAlKHlTPQvnd438qpgyPoClzEMlBSx8MCgUZco=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KCKXgU069601
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 07:18:52 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 07:18:51 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+        Wed, 20 May 2020 07:20:33 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
  (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 07:20:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 07:18:51 -0500
+ Frontend Transport; Wed, 20 May 2020 07:20:32 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIpG8046771;
-        Wed, 20 May 2020 07:18:51 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCKWtd112464;
+        Wed, 20 May 2020 07:20:32 -0500
 From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v2 2/4] net: phy: dp83869: Set opmode from straps
-Date:   Wed, 20 May 2020 07:18:33 -0500
-Message-ID: <20200520121835.31190-3-dmurphy@ti.com>
+To:     <sre@kernel.org>
+CC:     <sspatil@android.com>, <dmurphy@ti.com>,
+        <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v8 0/3] Add JEITA properties and introduce the bq2515x charger
+Date:   Wed, 20 May 2020 07:20:24 -0500
+Message-ID: <20200520122027.31320-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520121835.31190-1-dmurphy@ti.com>
-References: <20200520121835.31190-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -67,70 +65,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If the op-mode for the device is not set in the device tree then set
-the strapped op-mode and store it for later configuration.
+Hello,
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+This patchset adds additional health properties to the power_supply header.
+These additional properties are taken from the JEITA specification. This
+patchset also introduces the bq2515x family of charging ICs.
 
-v2 - Fixed val declaration from u16 to int
+Dan Murphy (1):
+  power_supply: Add additional health properties to the header
 
- drivers/net/phy/dp83869.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Ricardo Rivera-Matos (2):
+  Add the bindings for the bq25150 and bq25155 500mA charging ICs from
+    Texas Instruments.
+  power: supply: bq25150 introduce the bq25150
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index 073a0f7754a5..cfb22a21a2e6 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -65,6 +65,7 @@
- #define DP83869_RGMII_RX_CLK_DELAY_EN		BIT(0)
- 
- /* STRAP_STS1 bits */
-+#define DP83869_STRAP_OP_MODE_MASK		GENMASK(2, 0)
- #define DP83869_STRAP_STS1_RESERVED		BIT(11)
- #define DP83869_STRAP_MIRROR_ENABLED           BIT(12)
- 
-@@ -161,6 +162,20 @@ static int dp83869_config_port_mirroring(struct phy_device *phydev)
- 					  DP83869_CFG3_PORT_MIRROR_EN);
- }
- 
-+static int dp83869_set_strapped_mode(struct phy_device *phydev)
-+{
-+	struct dp83869_private *dp83869 = phydev->priv;
-+	int val;
-+
-+	val = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_STRAP_STS1);
-+	if (val < 0)
-+		return val;
-+
-+	dp83869->mode = val & DP83869_STRAP_OP_MODE_MASK;
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_OF_MDIO
- static int dp83869_of_init(struct phy_device *phydev)
- {
-@@ -185,6 +200,10 @@ static int dp83869_of_init(struct phy_device *phydev)
- 		if (dp83869->mode < DP83869_RGMII_COPPER_ETHERNET ||
- 		    dp83869->mode > DP83869_SGMII_COPPER_ETHERNET)
- 			return -EINVAL;
-+	} else {
-+		ret = dp83869_set_strapped_mode(phydev);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	if (of_property_read_bool(of_node, "ti,max-output-impedance"))
-@@ -218,7 +237,7 @@ static int dp83869_of_init(struct phy_device *phydev)
- #else
- static int dp83869_of_init(struct phy_device *phydev)
- {
--	return 0;
-+	return dp83869_set_strapped_mode(phydev);
- }
- #endif /* CONFIG_OF_MDIO */
- 
+ Documentation/ABI/testing/sysfs-class-power   |    2 +-
+ .../bindings/power/supply/bq2515x.yaml        |  106 ++
+ drivers/power/supply/Kconfig                  |   13 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bq2515x_charger.c        | 1159 +++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c     |    2 +-
+ include/linux/power_supply.h                  |    3 +
+ 7 files changed, 1284 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+ create mode 100644 drivers/power/supply/bq2515x_charger.c
+
 -- 
 2.26.2
 
