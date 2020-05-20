@@ -2,133 +2,99 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0CAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253DDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9D5207D4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:50:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CjbbxN8h"
+	by mail.kernel.org (Postfix) with ESMTP id 0B54620849
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgETNuv (ORCPT
+        id S1726818AbgETNyD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 09:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETNuv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 09:50:51 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204BAC061A0E
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 06:50:51 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f134so2613460wmf.1
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 06:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lTWjeswxH0l98lyAxNqRNJAIOGggfbasSyUWJF3O/mI=;
-        b=CjbbxN8hygEVQLVlGrH7l+/V/HdHKau/Ebvqwk35rM13T4gaQNRQy7FepGskwmW3na
-         +RHf7e1uuO7h0fovTB5z0nEvtSTAPxYrR+kFXWhjKT9xQIyhn1hzLCv7DYoGzBdAU2cy
-         /DVgXsWaQCgLoKd3OHE1X0o8+YbdAu18dWgfo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lTWjeswxH0l98lyAxNqRNJAIOGggfbasSyUWJF3O/mI=;
-        b=oZIplTEIHLsEM32oUy3UQCSTMjFRNlu/8s88fruAtWitq9+sgknaU35XkZPsGxGpWo
-         qBXtPOaeRKjPySob9HlO7KZzzv95vQ4CgZgfky+lQS4srozGVvHOMLRdKo1Lj63kFSge
-         UGxRMl/OPS6tcSaWBguNwQwDzC3zSEGkWsyQy0tZRTFUKiHSpVSvwsXLOBYN2YTH0LJ6
-         6FEVVqQQXv0TJXXTsr+Ont7BbFqS/JFvsdwZocfUa6JfHT7EqoT8Z444epC2cIDeWo+/
-         YyegIWwHsdBpIM4ELY9MQ2XQtK0AVQspX0hAe06PulQ4rELBjveLqyVATpa3gTDDvZAj
-         NSiA==
-X-Gm-Message-State: AOAM531CMtmbbkExXEf1nRBI9+DLVEQHC7bItfnkcB7Xtz+5IoRL0Xpw
-        Y8Swl+GwMjWeuhVhjWOvjI/U2jY0g3fTmsQsS+b0WA==
-X-Google-Smtp-Source: ABdhPJyaXGaSNp9tyc7HR3h1s5MPA9ExbrcjOq9FSNfXd4CqVCIoj7d0aI/ZbycoUGoC9EKycGOKogZNdnICVdwHSus=
-X-Received: by 2002:a05:600c:d6:: with SMTP id u22mr4468679wmm.45.1589982649690;
- Wed, 20 May 2020 06:50:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-10-james.quinlan@broadcom.com> <20200520054349.GB2180554@kroah.com>
-In-Reply-To: <20200520054349.GB2180554@kroah.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Wed, 20 May 2020 09:50:36 -0400
-Message-ID: <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
-Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma offsets
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        Wed, 20 May 2020 09:54:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:23368 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726747AbgETNyD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 09:54:03 -0400
+IronPort-SDR: 75lVHhzPn9QnptwYMXyaM2trYBp6kZ1yhvgZC+4XH7uhS95H3WW/E2NMUm8hViFN19M6VPYBJb
+ 1jB+vzwBFgfQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 06:54:02 -0700
+IronPort-SDR: CfjYfYOwGlo7W6hJLSBMB0qq5wkFJd1BYMJO7ohBoc5KzC2dSiRqBuZe3dJC/oK2ZyY7gdK7u6
+ 5fTK8VVCG0ZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="466532442"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 20 May 2020 06:53:58 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jbPAX-007qnD-8s; Wed, 20 May 2020 16:54:01 +0300
+Date:   Wed, 20 May 2020 16:54:01 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Allison Randal <allison@lohutok.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200520135401.GS1634618@smile.fi.intel.com>
+References: <20200520073125.30808-1-jonathan.albrieux@gmail.com>
+ <20200520073125.30808-2-jonathan.albrieux@gmail.com>
+ <CAHp75VcWBe=3j68t9pmRk=xigsym_f_EHG4HLLKe_cmQi5E6mA@mail.gmail.com>
+ <20200520134416.GA6875@ict14-OptiPlex-980>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520134416.GA6875@ict14-OptiPlex-980>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 1:43 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, May 19, 2020 at 04:34:07PM -0400, Jim Quinlan wrote:
-> > diff --git a/include/linux/device.h b/include/linux/device.h
-> > index ac8e37cd716a..6cd916860b5f 100644
-> > --- a/include/linux/device.h
-> > +++ b/include/linux/device.h
-> > @@ -493,6 +493,8 @@ struct dev_links_info {
-> >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-> >   *           DMA limit than the device itself supports.
-> >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-> > + * @dma_map: Like dma_pfn_offset but used when there are multiple
-> > + *           pfn offsets for multiple dma-ranges.
-> >   * @dma_parms:       A low level driver may set these to teach IOMMU code about
-> >   *           segment limitations.
-> >   * @dma_pools:       Dma pools (if dma'ble device).
-> > @@ -578,7 +580,12 @@ struct device {
-> >                                            allocations such descriptors. */
-> >       u64             bus_dma_limit;  /* upstream dma constraint */
-> >       unsigned long   dma_pfn_offset;
-> > -
-> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
-> > +     const void *dma_offset_map;     /* Like dma_pfn_offset, but for
-> > +                                      * the unlikely case of multiple
-> > +                                      * offsets. If non-null, dma_pfn_offset
-> > +                                      * will be 0. */
-> > +#endif
-> >       struct device_dma_parameters *dma_parms;
+On Wed, May 20, 2020 at 03:44:16PM +0200, Jonathan Albrieux wrote:
+> On Wed, May 20, 2020 at 11:23:18AM +0300, Andy Shevchenko wrote:
+> > On Wed, May 20, 2020 at 10:32 AM Jonathan Albrieux
+> > <jonathan.albrieux@gmail.com> wrote:
+> > 
+> > > +maintainers:
+> > > +  - can't find a maintainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+> > 
+> > Alas, you'll never go forward with this.
+> > One (easiest way) is to drop this patch completely if you won't be a
+> > maintainer of the binding.
 > >
-> >       struct list_head        dma_pools;      /* dma pools (if dma'ble) */
->
-> I'll defer to Christoph here, but I thought we were trying to get rid of
-> stuff like this from struct device, not add new things to it for dma
-Hi Greg,
+> 
+> That's too bad. How can I be a maintainer of the binding?
 
-I wasn't aware of this policy.  I put it in 'struct device' because
-just like the existing dma_pfn_offset; it seemed to be the only way to
-pull this off.  I'll certainly follow any ideas on alternative
-strategies from Christoph et al.
+Put your name there as Jonathan and me suggested. :-)
 
-> apis.  And why is it a void *?
-Just wanted to minimize the number of lines I've added to device.h, no
-other reason.
+maintainers:
+  - Jonathan Albrieux <jonathan.albrieux@gmail.com>
 
-Thanks,
-Jim
->
-> thanks,
->
-> greg k-h
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
