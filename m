@@ -2,126 +2,130 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A85DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1F2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5187C207F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D64D20823
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:56:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Hg+A7Gzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgETHtD (ORCPT
+        id S1726439AbgETH4u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 03:49:03 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:50957 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETHtC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 03:49:02 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 82797FF813;
-        Wed, 20 May 2020 07:48:57 +0000 (UTC)
-Date:   Wed, 20 May 2020 09:52:17 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>, tfiga@google.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v11 13/13] dt-bindings: Add media properties
-Message-ID: <20200520075217.zxpirx5migumekwx@uno.localdomain>
-References: <20200509090456.3496481-1-jacopo@jmondi.org>
- <20200509090456.3496481-14-jacopo@jmondi.org>
- <6a8add4e-c1f6-bd08-8928-3c8884eeda2c@xs4all.nl>
+        Wed, 20 May 2020 03:56:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETH4u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 03:56:50 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8543FC061A0E;
+        Wed, 20 May 2020 00:56:49 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id se13so2350236ejb.9;
+        Wed, 20 May 2020 00:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TM96ZHCzhyp+IMhZ6Z75lYPm5gdlMX8BZHHPWt0v1GU=;
+        b=Hg+A7Gzg/Q9IUJWAhYj6TttJDCfB71JAEvU9yzBrmtI6MQ4j9SdaK+8Cb0ueOvShUk
+         ZeILkCdW14a69wCKx8GYO2pKAOx9NQEqQJs6NWj6WfR03GplnDe1ohP9uKBZHbS63JQi
+         RCyeiMvnFFO6wKuundvxgbJVWBLr2u/W6XzSs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TM96ZHCzhyp+IMhZ6Z75lYPm5gdlMX8BZHHPWt0v1GU=;
+        b=Pg8u0cOj574ZZw2JFKtSxzvwpz2WbDFGYqVM8GZztcRpZwx7fWm99IZGlhvNi9kqKq
+         RGUnLSKvbtHMnyNUvmGpQjMD95M4rNXS5QAIHE5/adLYMmVldMPFv9e9SnMBDN7vEJW6
+         j6ZAVZwueEJC43a42mhr+9FdrOcalcj55yGDyNMrYCLtX4aRKu4XToHEThgnn/T1O607
+         5MpEe/G0G+hJ3SRYMtMjHBLpD0M1ok9b9FFEes+aFJ9ZlLLEGyh25XNp+eGsrG0CSdpT
+         mnn/R1wX0GXLNAKDTnn41bSWq8lbiQMlKFIDKea4ckDaSYlFZbSfgTYw0gc0abn55k/Q
+         b7HA==
+X-Gm-Message-State: AOAM531MW/oYe6fYXxFgFrb1qS+ibCMfSazwpN/1A52unTGlNKGa/FAz
+        xpy/2fgHVJ3CTR8tzIhL4kvVqXLZ2QpFQOmhiUc=
+X-Google-Smtp-Source: ABdhPJxJE6COXv9ebzHWeN3sR5bO6sS2ZHeZ6Q88KZKIN+0/qbeKCz5d2HqYeZYbtFX+I0QevihfOewUDj9RsAGt8fk=
+X-Received: by 2002:a17:906:ce39:: with SMTP id sd25mr2771415ejb.477.1589961408183;
+ Wed, 20 May 2020 00:56:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6a8add4e-c1f6-bd08-8928-3c8884eeda2c@xs4all.nl>
+References: <20200507091008.1bd38185@canb.auug.org.au> <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
+ <CACPK8XcUydETZvJEkWPvLnLXatAg3D-MfA1yeDzE0epc-hisJQ@mail.gmail.com> <CAL_JsqJWXH4JMZgRQa9r_aPLW6Muz6BRtf_NmeqJv21Aefji1A@mail.gmail.com>
+In-Reply-To: <CAL_JsqJWXH4JMZgRQa9r_aPLW6Muz6BRtf_NmeqJv21Aefji1A@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 20 May 2020 07:56:36 +0000
+Message-ID: <CACPK8Xd4651vtBTbBoGk0G7daunmF2CCOsDZ-ceto7Yu6A5z5g@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the aspeed tree
+To:     Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Vijay Khemka <vkhemka@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hans,
+On Mon, 11 May 2020 at 15:19, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, May 8, 2020 at 1:40 AM Joel Stanley <joel@jms.id.au> wrote:
+> >
+> > On Wed, 6 May 2020 at 23:13, Joel Stanley <joel@jms.id.au> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > On Wed, 6 May 2020 at 23:10, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > >
+> > > > Hi all,
+> > > >
+> > > > After merging the aspeed tree, today's linux-next build (arm
+> > > > multi_v7_defconfig) produced this warning:
+> > >
+> > > Thanks Stephen.
+> > >
+> > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus unit address format error, expected "40000010"
+> > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bus unit address format error, expected "40000010"
+> > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bus unit address format error, expected "40000010"
+> > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bus unit address format error, expected "40000010"
+> > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> > >
+> > > These are IPMB nodes with the SLAVE_ADDRESS bit set:
+> > >
+> > > +&i2c5 {
+> > > +       //Host3 IPMB bus
+> > > +       status = "okay";
+> > > +       multi-master;
+> > > +       ipmb5@10 {
+> > > +               compatible = "ipmb-dev";
+> > > +               reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
+> > > +               i2c-protocol;
+> > > +       };
+> > >
+> > > This is a correct entry, so dtc should not warn about it.
+> >
+> > I sent a patch for dtc here:
+> > https://lore.kernel.org/lkml/20200508063904.60162-1-joel@jms.id.au/
+>
+> Patches for dtc need to be against upstream dtc. There's already a
+> similar patch posted for it which I commented on and never saw a
+> respin.
 
-On Mon, May 11, 2020 at 09:27:57AM +0200, Hans Verkuil wrote:
-> On 09/05/2020 11:04, Jacopo Mondi wrote:
-> > Add a DT header file to contain definitions for standard media properties.
-> >
-> > The file is named after:
-> > Documentation/devicetree/bindings/media/video-interfaces.txt
-> > which contains the standard media properties definitions.
-> >
-> > Initially add three macros to define the supported 'orientation'
-> > property values.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> >
-> > I currently don't have users in mainline for this, I understand this implies
-> > this is probably not going to be accepted. At the same time we don't have a
-> > common place for media-related definitions, which support properties defined in
-> > video-interfaces.txt
-> >
-> > I leave it here at the end of the series for discussions, but I'm fine dropping
-> > it from the series.
-> >
-> > Thanks
-> >   j
-> >
-> > ---
-> >  include/dt-bindings/media/video-interfaces.h | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >  create mode 100644 include/dt-bindings/media/video-interfaces.h
-> >
-> > diff --git a/include/dt-bindings/media/video-interfaces.h b/include/dt-bindings/media/video-interfaces.h
-> > new file mode 100644
-> > index 0000000000000..404c697d6bd6e
-> > --- /dev/null
-> > +++ b/include/dt-bindings/media/video-interfaces.h
-> > @@ -0,0 +1,15 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * include/dt-bindings/media/video-interfaces.h
-> > + *
-> > + * Copyright (C) 2020 Jacopo Mondi <jacopo@jmondi.org>
-> > + */
-> > +
-> > +#ifndef __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-> > +#define __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
-> > +
-> > +#define FRONT_CAMERA		<0>
-> > +#define BACK_CAMERA		<1>
-> > +#define EXTERNAL_CAMERA		<2>
->
-> Uh, shouldn't that be 0, 1 and 2 instead of <0>, <1> and <2> ?
+Can I suggest some instructions in scsripts/dtc explaining that you
+don't take patches in the kernel tree for this code?
 
-I used that notation to be able to write
-        orientation = FRONT_CAMERA
-in place of
-        orientation = <FRONT_CAMERA>
+I've sent the patch so it applies to the dtc tree. It would be good to
+see that change propagate over to -next as others have reported this
+warning.
 
-Do you think it's wrong ?
+Cheers,
 
-Thanks
-  j
-
->
-> I'm skipping this patch for the PR.
->
-> Regards,
->
-> 	Hans
->
-> > +
-> > +#endif /* __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__ */
-> > --
-> > 2.26.1
-> >
->
+Joel
