@@ -2,102 +2,241 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E79B6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457C4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4AC9207FB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:23:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVhCmGX5"
+	by mail.kernel.org (Postfix) with ESMTP id 1D886206BE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 08:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgETIXb (ORCPT
+        id S1726435AbgETI0y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 04:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETIXa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 04:23:30 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4432C061A0E;
-        Wed, 20 May 2020 01:23:30 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ci23so905568pjb.5;
-        Wed, 20 May 2020 01:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ydJr1FI/eDhp6ARKNzCABXniNl9l6KBQGwfYvbwjzD4=;
-        b=WVhCmGX5+bbu2oNKUHCJMjgJVZwHDvqEyXVHcxsbWR3VIz9AfzMHjjRpXnSCRKz8f4
-         Ku+Ea9yzFJSt6uljgh+evfBdgKBAnUfp00LPRHXg0VbCtBJNDR0TykAU5vd/hRcF8Vki
-         a3RiBdTVnURtwQHzNed2Gb7Ik1XNr8DzOG6dL+bzf6qDTsHTNx3IZ9I5XZUbM6KfjDGy
-         M4WPpwpJsQUos+wGjK1i72k2SFftXoj4QvDA5lT1xQ9B2eZ4YjNk+9N8E7RiIMwGt78f
-         TvvwZr7GbZ2BsNJyc4N6EaWJXrXODxHl+Y5ds4Brg4hX+xQHWU2AgDiKNqkz9LB3hdCH
-         F9tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ydJr1FI/eDhp6ARKNzCABXniNl9l6KBQGwfYvbwjzD4=;
-        b=sEu2+3RskjWzLTBbWq0b9ghNWOd4u0w/Sn76nz0CPNjKgfV7OWOu9kubiQPzPMZVAS
-         hJ1uDGY1t9vcJbI0ROCdAhaln6XbR3924IYg7vqSzdaVDOJ9p3Xe9Kx7z6x9NJTtiWh5
-         sx7fNuSV9HpiinvBOJV0V6oBQVGL5Z/rNqFVn04WhlRHfEl5bQPpG+VY+4mgEF24GJSo
-         o4QV1PGaUYMwtO9WYZs9lJknXRn628YcqdvApEGdq4Se37CyzTBN6lgZcwiOdi2IHg/e
-         FkMK7IoY3VZKugW8I8vLRVAsW3X28ixRuQHHVsd+ojuGIhqdzp/++chCDniDrtQuV7u+
-         XqjA==
-X-Gm-Message-State: AOAM530nIR+34kqTlECt2Xdt4VP6TvC9EB0VlKmGPjEx0bGdg+HiwrC0
-        T2FLCPL5aP5TJHAY8ydCY65kegzWBcnOdRHVTqlsldaNKyo=
-X-Google-Smtp-Source: ABdhPJx1cbItXqm/dq+8SPg/JJ59McZbevS+5zuzZUw+JrFXOf1S9QaDE+zP72JnAbxSTImWrgH1IaIfNuliCSXK1Rk=
-X-Received: by 2002:a17:90b:113:: with SMTP id p19mr4126093pjz.129.1589963010284;
- Wed, 20 May 2020 01:23:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200520073125.30808-1-jonathan.albrieux@gmail.com> <20200520073125.30808-2-jonathan.albrieux@gmail.com>
-In-Reply-To: <20200520073125.30808-2-jonathan.albrieux@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 20 May 2020 11:23:18 +0300
-Message-ID: <CAHp75VcWBe=3j68t9pmRk=xigsym_f_EHG4HLLKe_cmQi5E6mA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: iio: magnetometer: ak8975: convert
- txt format to yaml
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 May 2020 04:26:54 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39624 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbgETI0y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 04:26:54 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9481D1A02DC;
+        Wed, 20 May 2020 10:26:51 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 276F11A02DD;
+        Wed, 20 May 2020 10:26:46 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 692A540299;
+        Wed, 20 May 2020 16:26:39 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3] dt-bindings: thermal: Convert i.MX to json-schema
+Date:   Wed, 20 May 2020 16:16:59 +0800
+Message-Id: <1589962619-28256-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:32 AM Jonathan Albrieux
-<jonathan.albrieux@gmail.com> wrote:
+Convert the i.MX thermal binding to DT schema format using json-schema
 
-> +maintainers:
-> +  - can't find a maintainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V2:
+	- remove unnecessary property in compatible;
+	- add detail description for interrupts;
+	- add description for each item of nvmem-cells;
+	- add more detail for "fsl,tempmon" description.
+---
+ .../devicetree/bindings/thermal/imx-thermal.txt    |  61 ------------
+ .../devicetree/bindings/thermal/imx-thermal.yaml   | 102 +++++++++++++++++++++
+ 2 files changed, 102 insertions(+), 61 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
 
-Alas, you'll never go forward with this.
-One (easiest way) is to drop this patch completely if you won't be a
-maintainer of the binding.
-
-
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+deleted file mode 100644
+index 823e417..0000000
+--- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
+-
+-Required properties:
+-- compatible : must be one of following:
+-  - "fsl,imx6q-tempmon" for i.MX6Q,
+-  - "fsl,imx6sx-tempmon" for i.MX6SX,
+-  - "fsl,imx7d-tempmon" for i.MX7S/D.
+-- interrupts : the interrupt output of the controller:
+-  i.MX6Q has one IRQ which will be triggered when temperature is higher than high threshold,
+-  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
+-  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
+-  is higher than panic threshold, system will auto reboot by SRC module.
+-- fsl,tempmon : phandle pointer to system controller that contains TEMPMON
+-  control registers, e.g. ANATOP on imx6q.
+-- nvmem-cells: A phandle to the calibration cells provided by ocotp.
+-- nvmem-cell-names: Should be "calib", "temp_grade".
+-
+-Deprecated properties:
+-- fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
+-  calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+-  can be found in SoC Reference Manual.
+-
+-Direct access to OCOTP via fsl,tempmon-data is incorrect on some newer chips
+-because it does not handle OCOTP clock requirements.
+-
+-Optional properties:
+-- clocks : thermal sensor's clock source.
+-
+-Example:
+-ocotp: ocotp@21bc000 {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	compatible = "fsl,imx6sx-ocotp", "syscon";
+-	reg = <0x021bc000 0x4000>;
+-	clocks = <&clks IMX6SX_CLK_OCOTP>;
+-
+-	tempmon_calib: calib@38 {
+-		reg = <0x38 4>;
+-	};
+-
+-	tempmon_temp_grade: temp-grade@20 {
+-		reg = <0x20 4>;
+-	};
+-};
+-
+-tempmon: tempmon {
+-	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
+-	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-	fsl,tempmon = <&anatop>;
+-	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-	nvmem-cell-names = "calib", "temp_grade";
+-	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+-};
+-
+-Legacy method (Deprecated):
+-tempmon {
+-	compatible = "fsl,imx6q-tempmon";
+-	fsl,tempmon = <&anatop>;
+-	fsl,tempmon-data = <&ocotp>;
+-	clocks = <&clks 172>;
+-};
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+new file mode 100644
+index 0000000..8bfd9f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+@@ -0,0 +1,102 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP i.MX Thermal Binding
++
++maintainers:
++  - Shawn Guo <shawn.guo@linaro.org>
++  - Anson Huang <Anson.Huang@nxp.com>
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx6q-tempmon
++      - fsl,imx6sx-tempmon
++      - fsl,imx7d-tempmon
++
++  interrupts:
++    description: |
++      The interrupt output of the controller, i.MX6Q has IRQ_HIGH which
++      will be triggered when temperature is higher than high threshold,
++      i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW
++      and the other is IRQ_PANIC, when temperature is lower than low
++      threshold, IRQ_LOW will be triggered, when temperature is higher
++      than panic threshold, IRQ_PANIC will be triggered, and system can
++      be configured to auto reboot by SRC module for IRQ_PANIC. IRQ_HIGH,
++      IRQ_LOW and IRQ_PANIC share same interrupt output of controller.
++    maxItems: 1
++
++  nvmem-cells:
++    items:
++      - description: Phandle to the calibration data provided by ocotp
++      - description: Phandle to the temperature grade provided by ocotp
++
++  nvmem-cell-names:
++    items:
++      - const: calib
++      - const: temp_grade
++
++  fsl,tempmon:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: Phandle to the temperature sensor register map node.
++
++  fsl,tempmon-data:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Deprecated property, phandle pointer to fuse controller that contains
++      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
++      calibration data can be found in SoC Reference Manual.
++    deprecated: true
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - interrupts
++  - fsl,tempmon
++  - nvmem-cells
++  - nvmem-cell-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx6sx-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    efuse@21bc000 {
++         #address-cells = <1>;
++         #size-cells = <1>;
++         compatible = "fsl,imx6sx-ocotp", "syscon";
++         reg = <0x021bc000 0x4000>;
++         clocks = <&clks IMX6SX_CLK_OCOTP>;
++
++         tempmon_calib: calib@38 {
++             reg = <0x38 4>;
++         };
++
++         tempmon_temp_grade: temp-grade@20 {
++             reg = <0x20 4>;
++         };
++    };
++
++    anatop@20c8000 {
++        compatible = "fsl,imx6q-anatop", "syscon", "simple-mfd";
++        reg = <0x020c8000 0x1000>;
++        interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>,
++                     <0 54 IRQ_TYPE_LEVEL_HIGH>,
++                     <0 127 IRQ_TYPE_LEVEL_HIGH>;
++
++        tempmon {
++             compatible = "fsl,imx6sx-tempmon";
++             interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++             fsl,tempmon = <&anatop>;
++             nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++             nvmem-cell-names = "calib", "temp_grade";
++             clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
++        };
++    };
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+
