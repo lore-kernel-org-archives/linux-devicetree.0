@@ -2,107 +2,142 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF513C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B89FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D17C205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMMvxKw9"
+	by mail.kernel.org (Postfix) with ESMTP id 17EBA207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 07:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589960521;
+	bh=lF7qPacJPzgODON1dCxvm8X9ZeJrLrmX+CSPXciqLRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YEND1OV4AT6U0E4eBN5iE8leEQRRetGQHDIcS91QfUE03AQaxdEifN3yzxQq5l/jN
+	 eOvgY1g1ycrxarXUXPHMRYNf4nd7Bdx2tllRu0vZ7hi1jwbHu89XetaKOzcLVFmOYm
+	 cnJ0pn+qr3WSO9Yl2Z/SFvmstDC2labmiwFdzYs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgETHdg (ORCPT
+        id S1726688AbgETHmA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 03:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgETHdf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 03:33:35 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8EBC061A0E;
-        Wed, 20 May 2020 00:33:35 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id k19so1819936edv.9;
-        Wed, 20 May 2020 00:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JhMvQ6wT2z/w9jJ1AFzBZlKrPInU1Ytn40KkatChIbI=;
-        b=OMMvxKw98HtRI0PuS3gCbRt7U0oBV+X/jYhUXMOzZtBBWsa/2zBaiAzySqnvgAbuUi
-         rXiyqAkfovsELMtD4msd6trgfju0pOHGSoBT8VZCDGNAT9XjF3ah2vTD9OM2tgYxED/z
-         4joKMkb917LW6jRKmKdPT6OHqdRIL5Zo3Pc8DqqCiKCb4Y06YOtLsdpG8s7JPa6+QHNB
-         k7cxDzlzU8ASGhhBQERLxZYTsEsEROjs+YYtrC46x8k5nl6CtAp3k4uGaMcaa5zV+kAo
-         J+VMdZa5vjFOJcp8nW/y73ommkh2dISrDXYp7hr+UhhVopWkTZ5VlGnZt1WKydQHDQus
-         wE1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JhMvQ6wT2z/w9jJ1AFzBZlKrPInU1Ytn40KkatChIbI=;
-        b=H6lKsKOsL7tAg/69FTKQLY0wHTV8mUxKaJ+2Wxjln8r6gBUmHxzLFNIN0RreYBRo5A
-         FHK/RrlZ7leu5lQVe6tErZGKwWTlGk1kFlpQjVOogPpFVA70TWQhRUYH1ksiS8RLCG1V
-         A4w2LMOWX2dLr1PGNAYgKRg4IHu8BaQ12d0BV9TiS77spyCOqK12lr+SMwaxOHPX5uuh
-         SeBiaQZ0a425oyQ4rvyvPzxkOvmujbbL2yGAPo7K7PwxTxXRw3HfM/9ZTDnagDiMQnrG
-         K1dm0c93PoeRiwz4fPaYgTsQvUFboAFqHi8vAW8XpL28K5BeJpb1WJVFj9FcyoT+tYrh
-         aOXA==
-X-Gm-Message-State: AOAM531aQvIGib+HJizwwpmpU90ry+kbMxvaAkK39Gg1TDd0mXMJ0NVd
-        UaCuN6wMXi+mRnBJ9ZdzoqxV5xi+c9c=
-X-Google-Smtp-Source: ABdhPJwB4O0WJOY8eMzSBtHOUZMdLBdwqnBOUTE9viaGo0ldgqm4CzJ5o972WDJ7A+EM4U1tBXuh0Q==
-X-Received: by 2002:aa7:c4da:: with SMTP id p26mr2186573edr.184.1589960013840;
-        Wed, 20 May 2020 00:33:33 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u10sm1057252edb.65.2020.05.20.00.33.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 May 2020 00:33:33 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg property
-Date:   Wed, 20 May 2020 09:33:27 +0200
-Message-Id: <20200520073327.6016-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 20 May 2020 03:42:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgETHmA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 03:42:00 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0B8D207D3;
+        Wed, 20 May 2020 07:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589960519;
+        bh=lF7qPacJPzgODON1dCxvm8X9ZeJrLrmX+CSPXciqLRk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ia0TwmQnc6ZZdJmV24OWMsg7Vr8OSYGwWaXu49hX7APgJbDlXdtnE8XRmdPZjh+Td
+         mFYmbVMbkVbN3pv+cP8dO4Et3zp18+lTpVb30ob/KP+nfQxSRhq06XtSKbJJr8Yi5M
+         GeVUWLlfMFOIL0vYqmCLv4LzDGdHbWIH2bBizYf0=
+Date:   Wed, 20 May 2020 08:41:54 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc:     john.garry@huawei.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        shawnguo@kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/3] perf/imx_ddr: Add system PMU identifier for
+ userspace
+Message-ID: <20200520074154.GA23818@willie-the-truck>
+References: <20200520025619.687-1-qiangqing.zhang@nxp.com>
+ <20200520025619.687-3-qiangqing.zhang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520025619.687-3-qiangqing.zhang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives this error:
+On Wed, May 20, 2020 at 10:56:18AM +0800, Joakim Zhang wrote:
+> The DDR Perf for i.MX8 is a system PMU whose axi id would different from
+> SoC to SoC. Need expose system PMU identifier for userspace which refer
+> to /sys/bus/event_source/devices/<PMU DEVICE>/identifier.
+> 
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> ---
+>  drivers/perf/fsl_imx8_ddr_perf.c | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+> index 90884d14f95f..ba523a94f4d7 100644
+> --- a/drivers/perf/fsl_imx8_ddr_perf.c
+> +++ b/drivers/perf/fsl_imx8_ddr_perf.c
+> @@ -76,6 +76,7 @@ struct ddr_pmu {
+>  	unsigned int cpu;
+>  	struct	hlist_node node;
+>  	struct	device *dev;
+> +	const char *identifier;
+>  	struct perf_event *events[NUM_COUNTERS];
+>  	int active_events;
+>  	enum cpuhp_state cpuhp_state;
+> @@ -84,6 +85,27 @@ struct ddr_pmu {
+>  	int id;
+>  };
+>  
+> +static ssize_t ddr_perf_identifier_show(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *page)
+> +{
+> +	struct ddr_pmu *pmu = dev_get_drvdata(dev);
+> +
+> +	return sprintf(page, "%s\n", pmu->identifier);
+> +}
+> +
+> +static struct device_attribute ddr_perf_identifier_attr =
+> +	__ATTR(identifier, 0444, ddr_perf_identifier_show, NULL);
+> +
+> +static struct attribute *ddr_perf_identifier_attrs[] = {
+> +	&ddr_perf_identifier_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group ddr_perf_identifier_attr_group = {
+> +	.attrs = ddr_perf_identifier_attrs,
+> +};
+> +
+>  enum ddr_perf_filter_capabilities {
+>  	PERF_CAP_AXI_ID_FILTER = 0,
+>  	PERF_CAP_AXI_ID_FILTER_ENHANCED,
+> @@ -237,6 +259,7 @@ static const struct attribute_group *attr_groups[] = {
+>  	&ddr_perf_format_attr_group,
+>  	&ddr_perf_cpumask_attr_group,
+>  	&ddr_perf_filter_cap_attr_group,
+> +	&ddr_perf_identifier_attr_group,
+>  	NULL,
+>  };
+>  
+> @@ -601,6 +624,7 @@ static int ddr_perf_probe(struct platform_device *pdev)
+>  	struct ddr_pmu *pmu;
+>  	struct device_node *np;
+>  	void __iomem *base;
+> +	const char *identifier = NULL;
+>  	char *name;
+>  	int num;
+>  	int ret;
+> @@ -620,6 +644,11 @@ static int ddr_perf_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, pmu);
+>  
+> +	ret = of_property_read_string(np, "identifier", &identifier);
+> +	if (ret < 0)
+> +		dev_warn(&pdev->dev, "Failed to get identifier\n");
+> +	pmu->identifier = identifier;
 
-arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
-touchscreen@3e: reg:0:0: 56 was expected
+I think this is exactly what Rob was objecting to when he said "yet another
+way to identify the SoC from userspace". I've asked him on the other thread
+as to what the best way to do this is.
 
-The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
-was shipped with different addresses then the binding currently allows.
-Change the reg property that any address will pass.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
-edt-ft5x06.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-index 383d64a91..baa8e8f7e 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-@@ -42,7 +42,7 @@ properties:
-       - focaltech,ft6236
- 
-   reg:
--    const: 0x38
-+    maxItems: 1
- 
-   interrupts:
-     maxItems: 1
--- 
-2.11.0
-
+Will
