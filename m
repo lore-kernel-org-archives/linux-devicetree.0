@@ -2,52 +2,69 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CCDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 03:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4ADC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 03:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5342070A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 03:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E2320578
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 03:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bpoz9Svh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXWaUVl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgETDB1 (ORCPT
+        id S1728474AbgETDFS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 23:01:27 -0400
-Received: from mail-eopbgr150042.outbound.protection.outlook.com ([40.107.15.42]:35212
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726352AbgETDB0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 23:01:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jVPPuJZCZTB7h+R77HFt3RjVCzsgbRJcJHmF+9zY72UO4klUxfKJKT0XatKKHXU8Ptreb6SwqXtx594jXGO7nF7lHd1Q0A26hRmyINh501mMBCG8VK15d3Wt0vTkCFmPO26jjUxEOQzouVAFlYESg5F2AaLKP1cxpHGYGCMnwtuPxqmyR7pchxMovlY+d1noNhhAjNygpMz7wePpDJ6hGtYFUw+adeWrIoBsg0HnQP8iN0gw2xM+Vzz2IGLXMtEkwy5L9RNNaFZEHElw2KRQLIqMtR1CzKj3oRCXuwfO32Xz/hhK1OpodbqJdVcqdHwTqi44IEXnSGcnYWko9tmAkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FqYx3Ua7kL60hAsLDKtyrWzaWQwaY6lSxmbTkwtYS6Q=;
- b=lraI2zMe5FCOWPHiapU35YMjjK01xybZLaWk1p3sC8D7Hh1fAYAMywv3Dhy3hFJ7iN9hxpv7T6dgNNPToLNYO90Rfi6XsW75VKwDcbDaGbBYWQ/gDEdfdNUYYTev6Prg0SAKTTVcqx4upHjo6z0F0KV581ip3ob104Ndou43KztZN72rOI/owdtySso5TlGy8d3y/37fDniRLaJjwYBtq9ErSMyzpjYYKemyPV414vjVvUryjP3pvEyFCWs3YbZls/bEbqIODKihbSeZMEinR2RhtZMj2pIbNsn9c+vcFQZKLRo+ZV/e9UtBbXcHumae2GEg+fsw3GqqtpBaVSYnSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FqYx3Ua7kL60hAsLDKtyrWzaWQwaY6lSxmbTkwtYS6Q=;
- b=bpoz9Svh3rqja2uWy+turxh3HZ3WV8TNEoTbQNEQ88s63eoLcWuus7BQZCFG/mPLAdrUEtIAjX3o1BK6YxaHg8Ugk6s0trM1pN4cmBSoRgO/XBeZ8XrqmyoEvnEf+qyyCJ6OtK3JL67ecG5aSVgu0DN3l4FqHkgHTCY9AqpbW1k=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2870.eurprd04.prod.outlook.com (2603:10a6:4:9a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.31; Wed, 20 May
- 2020 03:01:23 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3021.020; Wed, 20 May 2020
- 03:01:23 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     Shawn Guo <shawnguo@kernel.org>,
+        Tue, 19 May 2020 23:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728433AbgETDFS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 23:05:18 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4F7DC061A0E;
+        Tue, 19 May 2020 20:05:17 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id l15so1553729lje.9;
+        Tue, 19 May 2020 20:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HoeSq/8pPr91BzAJhNOgffpepxPbgET+ZXok/fBudck=;
+        b=gXWaUVl9AECOIaCl0Fcc+xIuo4vo2rEIF5DT5q2sv+aXAEEHz28fli9wQX7i4ZL0vd
+         OTMHmhNz8TAFAW+eEa4bcvhbiIu5W4TKrw/tR8wq4t6xZR6Ed2hk+0PNmkujpnyDWgvc
+         s7tPAX538te6tQJPButCPQupE1SOrMPA/IVar+zT+v5TIELfDPahdw4HGt8fdOeVrY0J
+         i2LbrOe9t80DtGsd00VNOZshUUf2oNbffcVgAzIrNwv2ZnsFdYSy5fOnGSuVECXxNRbs
+         10VLvYUYyRv5pXPhGbClPwhJc8VvC7G2u30dXXZh2SByvRn1fWehU7xco2tsGt7/dpXo
+         sAIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HoeSq/8pPr91BzAJhNOgffpepxPbgET+ZXok/fBudck=;
+        b=tqiDpz9UkzHmRIq7vmRyW7yWgfL0uJZYIZHsrj/wZAHWu3w9ofw4+KzCrGk24YycZG
+         RKFvyQPKdZaSwCtFoQwqPKs6DXuiK9r4EF+dUUWkaDDkeFX5q/qq0ZNW8GIW9aULKHAa
+         XDbRps0sWud55hF4HMUzZEO5yUPEMDkTf0sEeIYxugub6gUdBEpiXhuMbeKTqlCuSekJ
+         C3aXUUPWFImiXwNxHi82vD6b7Ida3f6FXXl53sZSaFJmdhJNsgdBqw58dViut3ogjyfr
+         YzRT18/HbXlDYAJIGMrI48nrRRw0HeRW+4XfsRViQolzq0SJ6JaGPBV/Bk4vKMNC+adh
+         wvyg==
+X-Gm-Message-State: AOAM533Mh8Q//t+MEYma4JRhzcL0Qnk5kDPmNUYydI61QNRo0S3js6Jf
+        YRoq9hfNwX2J4HRZChwpGr+GUCowPXfbx1HgbkM=
+X-Google-Smtp-Source: ABdhPJxUgi5dbYAyeOHZlGuF5KVl0KkfJn5CPaaSvjLesR7QA9yJpSBV50lArSyjN0Eg4earSj4hHAa4IsUApfKwREg=
+X-Received: by 2002:a2e:920e:: with SMTP id k14mr1474641ljg.288.1589943916318;
+ Tue, 19 May 2020 20:05:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <1589940278-3680-1-git-send-email-peng.fan@nxp.com>
+ <1589940278-3680-4-git-send-email-peng.fan@nxp.com> <CAOMZO5BPPRy_XGHHyZfE3eOrmCwW_VytueY-An8qqke6HU06TQ@mail.gmail.com>
+ <DB6PR0402MB27602682E90E4CED55244BCC88B60@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR0402MB27602682E90E4CED55244BCC88B60@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 20 May 2020 00:06:36 -0300
+Message-ID: <CAOMZO5DmiQbfJjTLKPiv6uUNaQ8ae-0h7uOpPf2J9ZMwDoE+Eg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: imx8mp: add mu node
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
         Fabio Estevam <fabio.estevam@nxp.com>,
         Sascha Hauer <kernel@pengutronix.de>,
         Aisheng Dong <aisheng.dong@nxp.com>,
@@ -62,61 +79,20 @@ CC:     Shawn Guo <shawnguo@kernel.org>,
         Lucas Stach <l.stach@pengutronix.de>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
-Subject: RE: [PATCH 3/3] arm64: dts: imx8mp: add mu node
-Thread-Topic: [PATCH 3/3] arm64: dts: imx8mp: add mu node
-Thread-Index: AQHWLkxzkzQ2vaqxukCIUytKVqWONKiwSJ8A////3aA=
-Date:   Wed, 20 May 2020 03:01:23 +0000
-Message-ID: <DB6PR0402MB27602682E90E4CED55244BCC88B60@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1589940278-3680-1-git-send-email-peng.fan@nxp.com>
- <1589940278-3680-4-git-send-email-peng.fan@nxp.com>
- <CAOMZO5BPPRy_XGHHyZfE3eOrmCwW_VytueY-An8qqke6HU06TQ@mail.gmail.com>
-In-Reply-To: <CAOMZO5BPPRy_XGHHyZfE3eOrmCwW_VytueY-An8qqke6HU06TQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [221.225.35.13]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dbf9c2b1-5829-421f-0a2b-08d7fc6a1452
-x-ms-traffictypediagnostic: DB6PR0402MB2870:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB287057010F5D3F677029785D88B60@DB6PR0402MB2870.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 04097B7F7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zLrs44IBw3cjkIBR7hY28CJkK0qJaBMdssG+pATxcdckMm0YfM50bouUMh708emDxyBxF349i606e7+/wC4e3MFjhDUEvUoJqFNlKGW5zM0xM+IXVvAOkrDjifuv0Cagz8gUw05UhOrFIV3yPNoNsszbq2RiNt01jUp6rbbqm5XY26mF+4oxbyvnbVPE6QCzFNVJTWreidJLnj58bDs6rzDnXUqDnDJoRmDSJpsp8JcSwOrckBEVwv0rXmRA0yUq4IHits1KyXMUQF7fpSSAlMsgwqBoQiBbogW5CfEjjIOXpGfLJaQ73xqGJXm5oWZbnlbxvyXNZE5C5XAtS0wfBD3Y8uzA9nE18RzA4mcJ2x7sL25OP1fvjxtVVsGV+w5jhyg5UhiGl6bnvpANWnKamceCdFNINTIkHIXVrU+3oJns5WELeJF7uk2WqQzQLZX6AbCCWe9I+HN/x5tZKcpmXGaI8gwrklcA+Q2iRIXuH6rKzqs6A0pIx5aYNMWHVeIG
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(366004)(346002)(39860400002)(136003)(54906003)(5660300002)(66446008)(64756008)(4326008)(66556008)(66476007)(66946007)(8936002)(44832011)(8676002)(76116006)(4744005)(33656002)(53546011)(86362001)(316002)(7696005)(7416002)(6916009)(478600001)(26005)(9686003)(55016002)(6506007)(71200400001)(52536014)(2906002)(186003)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: i2B83DEH4q6QyvA0r+yWv5Nz1Xxd8LSIcSN+GMdZt7lKmMTu0Juk6UXmqcMMRi1OOZfbpkPWPcHHlOBGeXlqrm304EpsTeU4ltAyO6dbFL/25PUs2wh2uctUCeNwiAP4rGplXzS4T9GhlV9IEijB5R+bBMlGBzO58zknxcilz7cgI/D9mX9IkIaPxXxkxoRB7IR07qWXAUKaM7Oe6LAvr3kSXEA8GG36WH490fZksaT6IkLAgl0vM5uROhfSxB5i9ncGqoAS4+WKNn99u/HHn2+yewd6KZ8XJKYKaBnA9/qVGyy/X2GJzAYlAmiFlui6aOqXF/ROVhCNuC9k1LdFxD9dkciowGYFua/K6UO7ivL6huCdKQhqXV9btrDZSaLrZaGMDC1BpGuztre86/CObs1pV0cW94ZuP0YpCGSIm3vH1io+jQVurNT4rqdmpiNXOQrgUCZvVdW84l5sHA/Qp3MHqqWWMjQMdSo3PVw0kow8+7p1rmys90LYfq9WEMTS
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbf9c2b1-5829-421f-0a2b-08d7fc6a1452
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 03:01:23.2808
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g5HQDgh+hQdURzQwxCaWZlMRW33VXRtOZs6K7nTO+ayRHu4gnfgp/l8IjRd8xp9SO6aZNv1+94zcKlpj/nKnHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2870
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gYXJtNjQ6IGR0czogaW14OG1wOiBhZGQgbXUgbm9k
-ZQ0KPiANCj4gSGkgUGVuZywNCj4gDQo+IE9uIFR1ZSwgTWF5IDE5LCAyMDIwIGF0IDExOjE1IFBN
-IDxwZW5nLmZhbkBueHAuY29tPiB3cm90ZToNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgbXU6IG1haWxib3hAMzBhYTAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14NnN4LW11IjsNCj4gDQo+IFRoaXMgc2hvdWxkIGJl
-IGJldHRlciBkZXNjcmliZWQgYXM6DQo+IA0KPiBjb21wYXRpYmxlID0gImZzbCxpbXg4bXAtbXUi
-LCAiZnNsLGlteDZzeC1tdSI7DQo+IA0KPiBGcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tYWlsYm94L2ZzbCxtdS50eHQ6DQo+IA0KPiAiVGhlICJmc2wsaW14NnN4LW11IiBj
-b21wYXRpYmxlIGlzIHNlZW4gYXMgZ2VuZXJpYyBhbmQgc2hvdWxkIGJlIGluY2x1ZGVkDQo+IHRv
-Z2V0aGVyIHdpdGggU29DIHNwZWNpZmljIGNvbXBhdGlibGUuIg0KDQpOb3RoaW5nIHNwZWNpZmlj
-IGluIGkuTVg4TVAgZm9yIHRoZSBtdSBwYXJ0LCBzbyBkbyB3ZSByZWFsbHkgbmVlZA0KYWRkICJm
-c2wsaW14OG1wLW11Ij8NCg0KVGhhbmtzLA0KUGVuZy4NCg==
+Hi Peng,
+
+On Wed, May 20, 2020 at 12:01 AM Peng Fan <peng.fan@nxp.com> wrote:
+
+> Nothing specific in i.MX8MP for the mu part, so do we really need
+> add "fsl,imx8mp-mu"?
+
+It is good practice to add a more specific option.
+
+Let's say in future a bug is found that affects imx8mp MU, then you
+could fix the MU driver and keep the dtb compatibility.
