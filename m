@@ -2,92 +2,74 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D667DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 21:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE86C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 21:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B297220873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 21:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD592088E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 21:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgETVNO (ORCPT
+        id S1728023AbgETVNq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 17:13:14 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60824 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgETVNO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 17:13:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id DFFF580307C1;
-        Wed, 20 May 2020 21:13:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vhE8g358omkw; Thu, 21 May 2020 00:13:10 +0300 (MSK)
-Date:   Thu, 21 May 2020 00:13:09 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520211309.y4phl4unnkbvztfe@mobilestation>
-References: <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
- <20200520115926.lk6ycke75flwzcd2@mobilestation>
- <20200520184024.GB23855@alpha.franken.de>
+        Wed, 20 May 2020 17:13:46 -0400
+Received: from muru.com ([72.249.23.125]:55306 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727018AbgETVNp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 17:13:45 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 279DF819C;
+        Wed, 20 May 2020 21:14:34 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     "Andrew F . Davis" <afd@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/6] dt-bindings: omap: Update PRM binding for genpd
+Date:   Wed, 20 May 2020 14:13:29 -0700
+Message-Id: <20200520211334.61814-2-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200520211334.61814-1-tony@atomide.com>
+References: <20200520211334.61814-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200520184024.GB23855@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:40:24PM +0200, Thomas Bogendoerfer wrote:
-> On Wed, May 20, 2020 at 02:59:26PM +0300, Serge Semin wrote:
-> > I think there is a misunderstanding here. In this patch I am not enabling
-> 
-> you are right, I've missed the fact, that this also needs to be enabled
-> in TLB entries. Strange that MIPS added the enable bit while R10k simply
-> do uncached acclerated, whenever TLB entry selects it.
-> 
-> > If there is no misunderstanding and you said what you said, that even enabling
-> > the feature for utilization might be dangerous, let's at least leave the
-> > MIPS_CONF_MM, MIPS_CONF_MM_FULL and MIPS_CONF_MM_SYS_SYSAD fields
-> > definition in the "arch/mips/include/asm/mipsregs.h" header. I'll use
-> > them to enable the write-merge in my platform code.
-> > 
-> > What do you think?
-> 
-> I withdraw my concerns and will apply the patch as is.
+The PRM (Power and Reset Module) has registers to enable and disable
+power domains, so let's update the binding for that.
 
-Great! Thanks.
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ Documentation/devicetree/bindings/arm/omap/prm-inst.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
--Sergey
-
-> 
-> Thomas.
-> 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+--- a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
++++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+@@ -18,6 +18,7 @@ Required properties:
+ 		(base address and length)
+ 
+ Optional properties:
++- #power-domain-cells:	Should be 0 if the PRM instance is a power domain.
+ - #reset-cells:	Should be 1 if the PRM instance in question supports resets.
+ 
+ Example:
+@@ -25,5 +26,6 @@ Example:
+ prm_dsp2: prm@1b00 {
+ 	compatible = "ti,dra7-prm-inst", "ti,omap-prm-inst";
+ 	reg = <0x1b00 0x40>;
++	#power-domain-cells = <0>;
+ 	#reset-cells = <1>;
+ };
+-- 
+2.26.2
