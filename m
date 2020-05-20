@@ -2,142 +2,101 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F243EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F585C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2B6F20671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="el2iAQUk"
+	by mail.kernel.org (Postfix) with ESMTP id 213862070A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 15:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589990352;
+	bh=tfUk3WoRIXH7obfMejJ0Kq701IZ8v/+bU3yT5/sT9rg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GBWZW09+917MSx9CNkpx4NOEaMWC28ia8e2cPqTzNE7pcJR4GuBL7B316BT/TkgVP
+	 I9T+lob6Atm38Sgx27RO1c8TjNqM5gVTlRBaLtKop7F9JOrPIRUft9XV9wqui3IQhA
+	 OlZloxwG73WltGxnDAjKXiWO6YHm8T3k1T78xF/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgETP4l (ORCPT
+        id S1726785AbgETP7L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 11:56:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgETP4l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 11:56:41 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0F1C061A0E
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 08:56:40 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 5so1507659pjd.0
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 08:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hOwD4KDmO4c54eHC+Ps5e7+C9BlvcIc1+wZ5clo9GBI=;
-        b=el2iAQUkBGchfrlbgxzUCLqjga7+Ob0EEoW20tub+n9btv1zPGHLURO13+XF+P9/HC
-         aN+914Hwt6YrWpA3iI2e+NVuOdYIy1bAs3i2iwIWSVsdz1p3dU0q2VssY5514UEwlTWn
-         VC5OIcKBaQGkQidMaUyPFd7b0i7h/5cs11KjD5FrYuBfHm6IxW1HYgw1vsHTNcGpI1hd
-         uSYsIni/J1PhCfznnYnCMDnkuMLK3cm+SKZLfEu157InBY30/jk8ZHb2e6Va+TRL5GvP
-         zgasJCyxJyAyPYR1usWzAMHCBo0mGgyPdvggYsEV8LCMF1AnwnV/Vub9UAifR1tLLEIn
-         hoPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hOwD4KDmO4c54eHC+Ps5e7+C9BlvcIc1+wZ5clo9GBI=;
-        b=R854sF2xLUxj+ILxqyMfTseJw/m2NPj9/yIt4Oi6C14UcEKFOlbTNZ4SAp0us/GC+h
-         80gk4mRy5baB0aMOc2wUNvMHfyUJQqisEvclSphz6s7iDWpb/dLQQuRgExuynrGyD6Ww
-         PyumxelBwy8RVsVFL79fad6YqKyjvEliODj6j9h8XROnP8359VSr0DWMf0JoGZ0kH679
-         r3Wr4T4htFCmLMOOIpnIZm+Ia9EsYZciASTa4/9yUFWUDc+rwc1fq+CQLzrztXvEHbL+
-         by8FK+O2Jsv2Qno6UFYlTRVux/JBLIdOHya4J25/I7/RuHgFckzyoNyLJHJPxjKo4F5M
-         phwA==
-X-Gm-Message-State: AOAM5308gZvAgI/Tp/XWlzxYItKsKQeB0EYHtZ7mbqGL6I2oX6m+MMlV
-        QwHEFGZhijJknKpR0NYPbS4=
-X-Google-Smtp-Source: ABdhPJwEo2UcjRjR81rH/5WnV+UzjCPf8Krxexr6Grt7MJHVm0iEcnG4e4+TfhxI6Ptd1DKhH6nU7g==
-X-Received: by 2002:a17:90a:db0c:: with SMTP id g12mr6058124pjv.5.1589990200391;
-        Wed, 20 May 2020 08:56:40 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x62sm2450278pfc.46.2020.05.20.08.56.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 08:56:39 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: bcm: HR2: Fix PPI interrupt types
-To:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        robh+dt@kernel.org, rjui@broadcom.com, sbranden@broadcom.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200520043042.7281-1-hamish.martin@alliedtelesis.co.nz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <685f412c-5c52-ef56-bf9d-e42b72b3b993@gmail.com>
-Date:   Wed, 20 May 2020 08:56:37 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Wed, 20 May 2020 11:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726560AbgETP7L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 11:59:11 -0400
+Received: from localhost (p5486cd24.dip0.t-ipconnect.de [84.134.205.36])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5456820671;
+        Wed, 20 May 2020 15:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589990351;
+        bh=tfUk3WoRIXH7obfMejJ0Kq701IZ8v/+bU3yT5/sT9rg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=niGJC2QXqGt0SNL5Zmr3nAhnyuh0D427ugNd5VIZ5AZizvC/5C5Bvhi+umM42Km9j
+         he0fbwCsiF7JmxsmNdinFXmXTBmx1b8wCfTO2qWNLUwFBRZVTa9UmBAGRqM00iZ44r
+         z4s4JQWsnzSCCz2Oz+8XIILDwXAQHQYmrSwyDBRE=
+Date:   Wed, 20 May 2020 17:59:07 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     linux-i2c@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        devicetree@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Vladimir Vid <vladimir.vid@sartura.hr>
+Subject: Re: [PATCH] i2c: pxa: implement generic i2c bus recovery
+Message-ID: <20200520155907.GF5759@ninjato>
+References: <E1jYnlI-0002Nw-83@rmk-PC.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200520043042.7281-1-hamish.martin@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="juZjCTNxrMaZdGZC"
+Content-Disposition: inline
+In-Reply-To: <E1jYnlI-0002Nw-83@rmk-PC.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+--juZjCTNxrMaZdGZC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 5/19/2020 9:30 PM, Hamish Martin wrote:
-> These error messages are output when booting on a BCM HR2 system:
->     GIC: PPI11 is secure or misconfigured
->     GIC: PPI13 is secure or misconfigured
-> 
-> Per ARM documentation these interrupts are triggered on a rising edge.
-> See ARM Cortex A-9 MPCore Technical Reference Manual, Revision r4p1,
-> Section 3.3.8 Interrupt Configuration Registers.
-> 
-> The same issue was resolved for NSP systems in commit 5f1aa51c7a1e
-> ("ARM: dts: NSP: Fix PPI interrupt types").
-> 
-> Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+On Wed, May 13, 2020 at 10:33:12AM +0100, Russell King wrote:
+> Implement generic GPIO-based I2C bus recovery for the PXA I2C driver.
+>=20
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-Thanks Hamish, this should also have a:
+Applied to for-next, thanks!
 
-Fixes: b9099ec754b5 ("ARM: dts: Add Broadcom Hurricane 2 DTS include file")
 
-I will take care of adding it while applying, thanks!
+--juZjCTNxrMaZdGZC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> ---
->  arch/arm/boot/dts/bcm-hr2.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.dtsi
-> index 6142c672811e..5e5f5ca3c86f 100644
-> --- a/arch/arm/boot/dts/bcm-hr2.dtsi
-> +++ b/arch/arm/boot/dts/bcm-hr2.dtsi
-> @@ -75,7 +75,7 @@ a9pll: arm_clk@0 {
->  		timer@20200 {
->  			compatible = "arm,cortex-a9-global-timer";
->  			reg = <0x20200 0x100>;
-> -			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&periph_clk>;
->  		};
->  
-> @@ -83,7 +83,7 @@ twd-timer@20600 {
->  			compatible = "arm,cortex-a9-twd-timer";
->  			reg = <0x20600 0x20>;
->  			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
-> -						  IRQ_TYPE_LEVEL_HIGH)>;
-> +						  IRQ_TYPE_EDGE_RISING)>;
->  			clocks = <&periph_clk>;
->  		};
->  
-> @@ -91,7 +91,7 @@ twd-watchdog@20620 {
->  			compatible = "arm,cortex-a9-twd-wdt";
->  			reg = <0x20620 0x20>;
->  			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
-> -						  IRQ_TYPE_LEVEL_HIGH)>;
-> +						  IRQ_TYPE_EDGE_RISING)>;
->  			clocks = <&periph_clk>;
->  		};
->  
-> 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Florian
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7FU8sACgkQFA3kzBSg
+KbZ/7hAAlQl0voEQHIbOWix4EYWfuOeOT6tsUV6hrmv8ElYXzFE0NowajifXdB0S
+j0qTL5VBiHexnntoQvtUJqPxPAPKwRg/+RsOA9dYIHKQaTepdPQHYFYgq0SYYcYC
+0fKz19pkHyt0/sk/CTJp/VyXdQRup+9h6jIZO9XAczDzIzKEkRaObcb2e524e9Yh
+Jq06xgncVQIsnpe0YLY201j3+d44EAD0YWrvJcmqGSVSPpYJqrRP8R6ctOS/EJrx
+VAg6MbAPL14UeK8UTbVo8CuBOFOpyILj7hO/IKYpID6ZX355jhbPAEER0aQFhNe8
++B/jIBzr0m6dv9OHeEsqBiOYQtMAGkSl2rLHPck8CtgAga9G1I0z/2y5h2Fiu98B
+ZupxipXjnBejIrTe3xJFrDvceftD3IpFO4WCni2MxcDZk7Zwme5exslGDH3Z+4vU
+9DktI7r3TMyogNEuR7orQb3HQkDNs40BYAYQu32+GpMFfnD1Su1+LUZ5tOUAPeaH
+QNqkzpseDDt7ECrmIf4g4eByB3QBCJ2tbj1IAtxwH8V8/cXMs+XVLKQAwQbEaQcP
+ZzuLHN9vkZ/xVPPqAp+9TOkjvg+QxVhQs92CF4ASz24OVfZcIjUv9QJr/IKS633/
+yZrzU8dbpZL5dJerWB0/AZLyHI/43V9fxT3gVfJi0LvYt0yEF64=
+=kiRu
+-----END PGP SIGNATURE-----
+
+--juZjCTNxrMaZdGZC--
