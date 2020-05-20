@@ -2,118 +2,104 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B68C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B725C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5278720829
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWIF3URj"
+	by mail.kernel.org (Postfix) with ESMTP id 6442F207F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgETNob (ORCPT
+        id S1726443AbgETNsc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 09:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgETNoa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 09:44:30 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468FAC061A0E;
-        Wed, 20 May 2020 06:44:29 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id d1so1317858qvl.6;
-        Wed, 20 May 2020 06:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3vK3nsBFTUox5VtXfjXHT3m8C9Ys2vrzWellcEOT1UA=;
-        b=fWIF3URjdiqbEqnnNsEITEtGMuDoHZJukdB+4gulXXy0hu6od4l6l4n1FWjj+iNu9h
-         M+28gRKWO3EWVw0ALS7pP1nE9rLI5f7pM6eqerSXIR3EpX4ZEikYFY4CHGbCjYpf0G6e
-         vW/qW2TRCfc8wPB2LijF6j8pa18sEw6U5MPlxAZdL4OAymMEdvb3X305E/W5rEa9CqWt
-         KI2o2CoPw6SsOr23dg0XGeN8HVijlmOHndcP8jm9PycsGrpZ8jqEKaWMzu0BurLGIALj
-         PMYW8q2ARjuM7CjHvuxHx9l/kUQayoFK7olj0uELaEY1IWoo/IHhIY77ZHUoQp6ZuoKi
-         pKdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3vK3nsBFTUox5VtXfjXHT3m8C9Ys2vrzWellcEOT1UA=;
-        b=iefnIUUvJjjZAA5pOzddaHumMHUpvwfQNmP3N8c2vY6/P5G7hVyjKgR8fvSECAH5LH
-         RoUfxvSvZ9H2c4Ne7GD7EvS1CM+RR8I+lhgXUqPQNGCWTFWpY5MqJzjjDxNiJrgujFke
-         tFJjt0mu+vyTTKrEJK42k37cIJGpqsqu6PXB5A4/tbvFERT1CT3D4xbTmGOuT2ADHBmV
-         BvhWw9DTCZAv/OQuqBd5/EyDHT6Kl5QlqlWa8XLwm0QPNRD9jo0tqjanhkVHR92Ei31/
-         ySUu6CSl52Rb+u4JcgTvA2VnRHGMiLaFui3DvQwDWZEXE/iED/j9psROsR79ddxZTp4P
-         +99g==
-X-Gm-Message-State: AOAM530f2GOsucYGQvYtY+DIGQVHf8p2KQBHqh9Up2d9MWYPJUe0ENfs
-        vIDLoPq9PgFPM11GE39SOYg=
-X-Google-Smtp-Source: ABdhPJyX9D4tU8jsRgHl5ZmQSrl6CZAtPsiMfgqBGdwxfHZJmZillxmWXIsxInkdJ6RKFMwWzeciZg==
-X-Received: by 2002:a0c:9e53:: with SMTP id z19mr4905737qve.47.1589982268293;
-        Wed, 20 May 2020 06:44:28 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id i5sm2311091qtp.66.2020.05.20.06.44.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 May 2020 06:44:27 -0700 (PDT)
-Date:   Wed, 20 May 2020 15:44:16 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Wed, 20 May 2020 09:48:32 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59090 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgETNsc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 09:48:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BE2DE8030875;
+        Wed, 20 May 2020 13:48:28 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 879XwsdEpqBa; Wed, 20 May 2020 16:48:28 +0300 (MSK)
+Date:   Wed, 20 May 2020 16:48:26 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: iio: magnetometer: ak8975: convert
- txt format to yaml
-Message-ID: <20200520134416.GA6875@ict14-OptiPlex-980>
-References: <20200520073125.30808-1-jonathan.albrieux@gmail.com>
- <20200520073125.30808-2-jonathan.albrieux@gmail.com>
- <CAHp75VcWBe=3j68t9pmRk=xigsym_f_EHG4HLLKe_cmQi5E6mA@mail.gmail.com>
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200520134826.pc6si3k6boaexp4i@mobilestation>
+References: <20200508154150.GB22247@alpha.franken.de>
+ <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+ <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
+ <20200518134820.wedoumgbsllvhem6@mobilestation>
+ <20200518163206.GA17800@alpha.franken.de>
+ <20200518205752.txbylbjt2zkwdwwe@mobilestation>
+ <20200519155053.GB15797@alpha.franken.de>
+ <20200520121201.wohv6u646rx5otkf@mobilestation>
+ <20200520133827.GA17714@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcWBe=3j68t9pmRk=xigsym_f_EHG4HLLKe_cmQi5E6mA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200520133827.GA17714@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:23:18AM +0300, Andy Shevchenko wrote:
-> On Wed, May 20, 2020 at 10:32 AM Jonathan Albrieux
-> <jonathan.albrieux@gmail.com> wrote:
+On Wed, May 20, 2020 at 03:38:27PM +0200, Thomas Bogendoerfer wrote:
+> On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
+> > Since you don't like the way I initially fixed it, suppose there we don't have
+> > another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
+> > parameter to select a proper accessors, like sw in our case, and sb by defaul).
+> > Right?
 > 
-> > +maintainers:
-> > +  - can't find a maintainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+> to be on the safe side it's probably the best thing. But I don't know
+> enough about CPS_NS16550 to judge whether shift value correlates with
+> possible access width.
+
+The base address passed to the _mips_cps_putc() leaf is UART-base address. It
+has nothing to do with CPS. See:
+/**
+ * _mips_cps_putc() - write a character to the UART
+ * @a0: ASCII character to write
+ * @t9: UART base address
+ */
+LEAF(_mips_cps_putc)
+1:      lw              t0, UART_LSR_OFS(t9)
+        andi            t0, t0, UART_LSR_TEMT
+        beqz            t0, 1b
+        sb              a0, UART_TX_OFS(t9)
+        jr              ra
+        END(_mips_cps_putc)
+
+So it's base address must be accessed with proper alignment. On our case it's
+lw/sw instructions. Regarding using lw in the first line of the function. That's
+must be a bug, since further in the same function they use sb to access the UART
+Tx register. So reading a data from UART_LSR register should be also byte-sized
+by using lb.
+
+-Sergey
+
 > 
-> Alas, you'll never go forward with this.
-> One (easiest way) is to drop this patch completely if you won't be a
-> maintainer of the binding.
->
-
-That's too bad. How can I be a maintainer of the binding?
-
+> Thomas.
 > 
 > -- 
-> With Best Regards,
-> Andy Shevchenko
-
-Thank you,
-Best regards,
-Jonathan Albrieux
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
