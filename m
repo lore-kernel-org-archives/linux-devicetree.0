@@ -2,144 +2,124 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434C5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29563C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019F2206B6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8478206B6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 17:53:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i0uk6f50"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dyYg60zw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgETRuq (ORCPT
+        id S1726835AbgETRxE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 13:50:46 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:50043 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726729AbgETRuq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 13:50:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589997045; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=MuJ6OyHDNvTOOsmTlh/Zlq7+mR2mQh3vcMAegcKB7GI=;
- b=i0uk6f504cX6FbsXjqRo2FZHbfFqOneXmdxvY5GDr/wpPx8tRAj6ItxQVf9VzMkGdP81uExx
- glzfqog5kKdYiRPfPHc3hUmOh9zF4H8Ag3kzXgXpw6YJlM9E2ZW89NgGNbQ/YoYm6CxqvX4Y
- wg4Y3PBygDpTTb1g1QWF+nvadfM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ec56de47171b6d7e444b843 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 17:50:28
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B6C92C433C6; Wed, 20 May 2020 17:50:27 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C1FCC433C8;
-        Wed, 20 May 2020 17:50:27 +0000 (UTC)
+        Wed, 20 May 2020 13:53:04 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38238 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgETRxE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 13:53:04 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KHqxnO082673;
+        Wed, 20 May 2020 12:52:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589997179;
+        bh=SMQCS5BSmnxFa3H5C1NH1s5D+HnAPmg4JMl1668xgyk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dyYg60zw1ySiaIyZRM5p11q9kuuiMv8NHWPI4TdTk63YMLiREgGYPxMEXmyRXoPfO
+         PFrRJCD23iboJFkIrXzbziBc6O59UMetynvTUjUBXqVytAdEwRoUjKEJXp6xkvmg/G
+         xMWR0ZllagvfR9c9ul+z5B9SCkUzKRoYi3PEerTU=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KHqwVi036168
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 12:52:59 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 12:52:58 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 12:52:58 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KHqw5O074199;
+        Wed, 20 May 2020 12:52:58 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+CC:     <hkallweit1@gmail.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+ <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+ <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
+Date:   Wed, 20 May 2020 12:52:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 May 2020 23:20:27 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-In-Reply-To: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
-References: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
-Message-ID: <2174d6b5ab066cf6fd080b5d3c27609f@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-20 09:26, Rakesh Pillai wrote:
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on sc7180 soc.
-> 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
-> Changes from v10:
-> - Corrected the position of wifi node, as per address
-> - Removed the wlan_fw_mem from reserved memory, since
->   its already added as reserved memory in board DT file.
+Florian
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+On 5/20/20 12:45 PM, Florian Fainelli wrote:
+>
+> On 5/20/2020 10:20 AM, Dan Murphy wrote:
+>> Andrew/Florian
+>>
+>> On 5/20/20 11:43 AM, Andrew Lunn wrote:
+>>>> I am interested in knowing where that is documented.  I want to RTM I
+>>>> grepped for a few different words but came up empty
+>>> Hi Dan
+>>>
+>>> It probably is not well documented, but one example would be
+>>>
+>>> Documentation/devicetree/bindings/net/ethernet-controller.yaml
+>>>
+>>> says:
+>>>
+>>>         # RX and TX delays are added by the MAC when required
+>>>         - rgmii
+>>>
+>>>         # RGMII with internal RX and TX delays provided by the PHY,
+>>>         # the MAC should not add the RX or TX delays in this case
+>>>         - rgmii-id
+>>>
+>>>         # RGMII with internal RX delay provided by the PHY, the MAC
+>>>         # should not add an RX delay in this case
+>>>         - rgmii-rxid
+>>>
+>>>         # RGMII with internal TX delay provided by the PHY, the MAC
+>>>         # should not add an TX delay in this case
+>>>
+>>>         Andrew
+>> OKI I read that.  I also looked at a couple other drivers too.
+>>
+>> I am wondering if rx-internal-delay and tx-internal-delay should become
+>> a common property like tx/rx fifo-depth
+>>> And properly document how to use it or at least the expectation on use.
+> Yes they should, and they should have an unit associated with the name.
 
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 22 ++++++++++++++++++++++
->  2 files changed, 29 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 4e9149d..38b102e 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -389,6 +389,13 @@
->  	};
->  };
-> 
-> +&wifi {
-> +	status = "okay";
-> +	wifi-firmware {
-> +		iommus = <&apps_smmu 0xc2 0x1>;
-> +	};
-> +};
-> +
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
-> 
->  &qspi_clk {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 6b12c60..da79f8f 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -2811,6 +2811,28 @@
-> 
->  			#freq-domain-cells = <1>;
->  		};
-> +
-> +		wifi: wifi@18800000 {
-> +			compatible = "qcom,wcn3990-wifi";
-> +			reg = <0 0x18800000 0 0x800000>;
-> +			reg-names = "membase";
-> +			iommus = <&apps_smmu 0xc0 0x1>;
-> +			interrupts =
-> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-> +			memory-region = <&wlan_mem>;
-> +			status = "disabled";
-> +		};
->  	};
-> 
->  	thermal-zones {
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+UGH I think I just got volunteered to do make them common.
+
+Dan
+
