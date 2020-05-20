@@ -2,84 +2,77 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAFCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83A9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6DB2207C4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D4D207D3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 13:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgETN3Q (ORCPT
+        id S1726818AbgETNik (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 09:29:16 -0400
-Received: from sauhun.de ([88.99.104.3]:37730 "EHLO pokefinder.org"
+        Wed, 20 May 2020 09:38:40 -0400
+Received: from elvis.franken.de ([193.175.24.41]:60382 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETN3P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 09:29:15 -0400
-Received: from localhost (p5486cd24.dip0.t-ipconnect.de [84.134.205.36])
-        by pokefinder.org (Postfix) with ESMTPSA id 98CC72C1FD1;
-        Wed, 20 May 2020 15:29:13 +0200 (CEST)
-Date:   Wed, 20 May 2020 15:29:13 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     qii.wang@mediatek.com
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        leilk.liu@mediatek.com
-Subject: Re: [next] i2c: mediatek: Use div_u64 for 64-bit division to fix
- 32-bit kernels
-Message-ID: <20200520132913.GB5759@ninjato>
-References: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
+        id S1726436AbgETNij (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 09:38:39 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jbOvd-0002ik-00; Wed, 20 May 2020 15:38:37 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id D8600C014D; Wed, 20 May 2020 15:38:27 +0200 (CEST)
+Date:   Wed, 20 May 2020 15:38:27 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200520133827.GA17714@alpha.franken.de>
+References: <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
+ <20200508154150.GB22247@alpha.franken.de>
+ <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+ <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
+ <20200518134820.wedoumgbsllvhem6@mobilestation>
+ <20200518163206.GA17800@alpha.franken.de>
+ <20200518205752.txbylbjt2zkwdwwe@mobilestation>
+ <20200519155053.GB15797@alpha.franken.de>
+ <20200520121201.wohv6u646rx5otkf@mobilestation>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200520121201.wohv6u646rx5otkf@mobilestation>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
+> Since you don't like the way I initially fixed it, suppose there we don't have
+> another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
+> parameter to select a proper accessors, like sw in our case, and sb by defaul).
+> Right?
 
---ZoaI/ZTpAVc4A5k6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+to be on the safe side it's probably the best thing. But I don't know
+enough about CPS_NS16550 to judge whether shift value correlates with
+possible access width.
 
-On Wed, May 20, 2020 at 06:31:53PM +0800, qii.wang@mediatek.com wrote:
-> From: Qii Wang <qii.wang@mediatek.com>
->=20
-> Use div_u64 for 64-bit division, and change sample_ns type to
-> unsigned int. Otherwise, the module will reference __udivdi3
-> under 32-bit kernels, which is not allowed in kernel space.
->=20
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+Thomas.
 
-Applied to for-next by squashing it into the relevant commit, thanks!
-
-
---ZoaI/ZTpAVc4A5k6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7FMKkACgkQFA3kzBSg
-KbbynRAAmwCukXP9v4Fs9sjBIrxVil2vgnjXCEmpHgr7IZ37e9uoqxlUndj/oHhs
-YuDiSBGBVXU/ZYFP2VDsUdMRBa11pyoNALMiO0uIThiQ4gkn132Ej4DJ+s9o54cz
-nh74h8be69a0EmvvYY99oBfIFZ7ORRtvL5lIktHUaP9h4YvU1CC/neJ5o97q4bVU
-GBugpXgWfXEBApFPyXr3ShOaUyxnCJKYHAFyHShqoEtgIwXlyurDYG9yzkeI3d6w
-U5jKdhAp97EwNf+b1iLj/2EEOpE0G1wEWke8rTL1mjJMJRVCwUQqzeFzPORfGMK+
-YpphdJtvU6mvl2wjnybBcc4gb9WoQP7wRkb7lEdgW9kmlNIqPgzuds7F6ePHMNRD
-GxdMBnOiLFC6UnTih18N4gMnH9AwjX/1Hz4k8g9riHdF1+BGpcytZsosCXXE7n7C
-9rVPE/9HE9juuEWLBTqdonrOje8DOtOtOqX1b7DwEbHotanakMQY1C5xPbX6Wzr3
-QnKeVyuTbd0nUVkLgMCOJP/d9/1mJWWNvJSKdG/7zRyyz2nhOr4C8lJhLLH14Hub
-XKK5/K8qiufXzdhryt/EmiThF5WbhcRHQ4HH+irt9droO08MkBlZfnuW7NT0NPuY
-uk3OkrWasxCtb9udRSUrM6rGmfcueB//OzLR3xiq8GH/AykuwaM=
-=gKRd
------END PGP SIGNATURE-----
-
---ZoaI/ZTpAVc4A5k6--
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
