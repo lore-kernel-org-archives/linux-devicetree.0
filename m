@@ -2,105 +2,115 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D4CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8307AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDFAE20758
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589978614;
-	bh=Achw6u2biUSzYpt7lckAtUxEhj9ckmJi3eP9xb6WHM8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mpdIlxUtm+hK3ESLO0mobs682MkgZMhYHUDD2Opho5+vbNjwwRioi4Vh0grOxkwIw
-	 47Ik4xtNXnQQLelJLvCADNs6v74wB2Izz1UAiMda361tOx+Cj8SfHJfO9Hyc6dj/aM
-	 Q3jtziH8lO1ve8vr2zVB0S26RiL66oKSOLBlm7Pk=
+	by mail.kernel.org (Postfix) with ESMTP id 5CBEB206C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:45:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AC/4+qe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgETMnd (ORCPT
+        id S1726747AbgETMp3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 08:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgETMnd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 08:43:33 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9FB7207C4;
-        Wed, 20 May 2020 12:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589978612;
-        bh=Achw6u2biUSzYpt7lckAtUxEhj9ckmJi3eP9xb6WHM8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sHUEOW2Tvnp1JASks+INQpiCZxdRRlpi7pMkV2c3FlYjsMlLlMU4WAh9mIFLtuZNd
-         Ck1KI6uFONv+G7ViQs+cZ9Sv3/Ars8HUbL3YbReqMQWoLEArdvnKjMNB2LFAcNsOfI
-         Qu1e2EmwbdB/uz+Dlc+qffoS9PCwskOnBEHYbKKY=
-Date:   Wed, 20 May 2020 13:43:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, vigneshr@ti.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-Message-ID: <20200520124329.GF4823@sirena.org.uk>
-References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Wed, 20 May 2020 08:45:29 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33258 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgETMp2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:45:28 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCj4u6006194;
+        Wed, 20 May 2020 07:45:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589978704;
+        bh=DSQyTV6RPft8ES2rKanADExaA3NQzNExDitFNNZo7Mc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=AC/4+qe4DbkkcTBrmO+MxtLeDaZqxd6pbpOWchslMUkc4+RnA/nChtnDoGFOTU2HY
+         GMSeDsEOJAjb4ekgTdr17r9ljEk0CSq4zj1RdLhCcLuYBxsOP0MQ6squL06Y4JsU/5
+         UONUJz7MzdTptnl4MAtPyAEYLVXfepoeSbn1We+8=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KCj4YU103664
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 07:45:04 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 07:45:04 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 07:45:04 -0500
+Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCiuvL026764;
+        Wed, 20 May 2020 07:45:00 -0500
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH 01/12] firmware: ti_sci: Drop the device id to resource type translation
+Date:   Wed, 20 May 2020 18:14:43 +0530
+Message-ID: <20200520124454.10532-2-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200520124454.10532-1-lokeshvutla@ti.com>
+References: <20200520124454.10532-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oFbHfjnMgUMsrGjO"
-Content-Disposition: inline
-In-Reply-To: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Cookie: You can't get there from here.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+With ABI 3.0, sysfw deprecated special resource types used for AM65x
+SoC. Instead started using device id as resource type similar to the
+convention used in J721E SOC.
 
---oFbHfjnMgUMsrGjO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+ drivers/firmware/ti_sci.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-On Wed, May 20, 2020 at 08:36:12PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel=
-=2Ecom>
->=20
-> Add dt-bindings documentation for Cadence-QSPI controller to support
-> spi based flash memories.
->=20
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@li=
-nux.intel.com>
-> ---
->  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
->  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 133 +++++++++++++++=
-++++++
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 4126be9e3216..930a65ed78ad 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -3355,16 +3355,6 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
+ 	.rm_type_map = NULL,
+ };
+ 
+-static struct ti_sci_rm_type_map ti_sci_am654_rm_type_map[] = {
+-	{.dev_id = 56, .type = 0x00b}, /* GIC_IRQ */
+-	{.dev_id = 179, .type = 0x000}, /* MAIN_NAV_UDMASS_IA0 */
+-	{.dev_id = 187, .type = 0x009}, /* MAIN_NAV_RA */
+-	{.dev_id = 188, .type = 0x006}, /* MAIN_NAV_UDMAP */
+-	{.dev_id = 194, .type = 0x007}, /* MCU_NAV_UDMAP */
+-	{.dev_id = 195, .type = 0x00a}, /* MCU_NAV_RA */
+-	{.dev_id = 0, .type = 0x000}, /* end of table */
+-};
+-
+ /* Description for AM654 */
+ static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
+ 	.default_host_id = 12,
+@@ -3373,7 +3363,7 @@ static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
+ 	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
+ 	.max_msgs = 20,
+ 	.max_msg_size = 60,
+-	.rm_type_map = ti_sci_am654_rm_type_map,
++	.rm_type_map = NULL,
+ };
+ 
+ static const struct of_device_id ti_sci_of_match[] = {
+-- 
+2.17.1
 
-The changelog says this is adding a new binding but the actual change is
-mostly a conversion to YAML.  Please split the additions out into a
-separate change, ideally doing that before the conversion since there is
-a backlog on review of YAML conversions.
-
---oFbHfjnMgUMsrGjO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7FJfEACgkQJNaLcl1U
-h9Dl3Qf+LTw6kS7EVKhUNveex8WPCXk8hJiM52SWUTX/njGNYrVCplAyGQd9Hnvk
-bTc+7RDW6mAQ7Hum+CIJzNb7DgJQGCV9MEQ4V/f+/lhDAvNI5x0QSPBLZp9DOI1b
-RA/tyCJfh4hwm9RtoK1HT4sDhvFGQR3Sb/nMpVlkZPLd1Jpox5zuuDaCOJEJHAKb
-Gss5uyXiON9Qk5ee4vwrIykntpBN/snP1b/FBZf8d0xzw01nfm2lsrAHQMk6n4CJ
-oxSL8dArY7vq1ZkNUKNE5qkn0Y6VRjohPZzzc8evRtLR3xaQl+FwAsllDH5VMWTP
-oa4tOoSbipP93UpzOvMah+tPGuguUA==
-=IU1B
------END PGP SIGNATURE-----
-
---oFbHfjnMgUMsrGjO--
