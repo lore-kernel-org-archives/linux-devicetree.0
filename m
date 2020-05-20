@@ -2,50 +2,51 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B428CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F79DC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83DE420758
+	by mail.kernel.org (Postfix) with ESMTP id F2C5E206F1
 	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 12:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c3cWrTEr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hrmJDtRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgETMpc (ORCPT
+        id S1726570AbgETMpc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 20 May 2020 08:45:32 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33262 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726570AbgETMpb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:45:31 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCj0uD006158;
-        Wed, 20 May 2020 07:45:00 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47536 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgETMpc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 08:45:32 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCjG1s067949;
+        Wed, 20 May 2020 07:45:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589978700;
-        bh=8nwhAbh5OTRkKkm30f70KfL0dIF8WSriIhQIaxxmJpc=;
-        h=From:To:CC:Subject:Date;
-        b=c3cWrTEriFZcDIzEnZoHtBYNDTpzG4pcB4hT1aAvivjOmT1CpuXa5nen6Y0x/4lHV
-         jdaXxB8Z2MfdpoqbcPqbbmenJRWIASwvZ7Cfr8K025YOKWy6+aluCLzPy9DT2nMLfu
-         8/Jdudu8utktIk+0DbDINqQuUoCsXuqpD+SOU574=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCj0LG048681;
-        Wed, 20 May 2020 07:45:00 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1589978716;
+        bh=oK3hM/zFeC+mIJrz3R+My3WJaaX6WdrHZO4CX5W//aU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=hrmJDtRfyC4LGMler90+rfAyk7CMjZ3GFN0+XvPNj9ub7GUFFKjeiRcF2mtX4i8mM
+         M+5+Hm4mEyLaDj1aQ6Ru81yR2FQSFrONdJvo8DrbF7QrxXRZ6g3S8ueoaQmDW71gz6
+         Yt+7B1G515+axOBKj4GjfltZvAgWA2FoWN1xf1jc=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KCjGHc001304
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 07:45:16 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 07:45:00 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 07:45:16 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 07:45:00 -0500
+ Frontend Transport; Wed, 20 May 2020 07:45:15 -0500
 Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCiuvK026764;
-        Wed, 20 May 2020 07:44:57 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCiuvO026764;
+        Wed, 20 May 2020 07:45:12 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
 CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
@@ -57,10 +58,12 @@ CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>,
         Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 00/12] irqchip: ti,sci-intr/inta: Update the dt bindings to accept different interrupt parents
-Date:   Wed, 20 May 2020 18:14:42 +0530
-Message-ID: <20200520124454.10532-1-lokeshvutla@ti.com>
+Subject: [PATCH 04/12] dt-bindings: irqchip: ti,sci-intr: Update bindings to drop the usage of gic as parent
+Date:   Wed, 20 May 2020 18:14:46 +0530
+Message-ID: <20200520124454.10532-5-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200520124454.10532-1-lokeshvutla@ti.com>
+References: <20200520124454.10532-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -69,61 +72,73 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marc,
-	This is continuation of the RFC patches[0] regarding the driver
-updates to support for following interrupt parent connection:
-- INTR -> INTR
-- INTA -> GICv3
-The current existing driver assumes that INTR is always connected to
-GICv3 and INTA is always connected to INTR.
+Drop the firmware related dt-bindings and use the hardware specified
+interrupt numbers within Interrupt Router. This ensures interrupt router
+DT node need not assume any interrupt parent type.
 
-As discussed this change breaks the DT backward compatibility but it
-allows to not depend on TISCI firmware properties in DT node. IMHO, this
-will ensure that any future changes will not effect DT properties.
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+ .../interrupt-controller/ti,sci-intr.txt      | 31 ++++++++++---------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-[0] https://lore.kernel.org/linux-arm-kernel/20190923042405.26064-1-lokeshvutla@ti.com/
-
-Thanks and regards,
-Lokesh
-
-Lokesh Vutla (12):
-  firmware: ti_sci: Drop the device id to resource type translation
-  firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
-  firmware: ti_sci: Add support for getting resource with subtype
-  dt-bindings: irqchip: ti,sci-intr: Update bindings to drop the usage
-    of gic as parent
-  dt-bindings: irqchip: Convert ti,sci-intr bindings to yaml
-  irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
-  dt-bindings: irqchip: ti,sci-inta: Update docs to support different
-    parent.
-  dt-bindings: irqchip: Convert ti,sci-inta bindings to yaml
-  irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
-  arm64: dts: k3-j721e: ti-sci-inta/intr: Update to latest bindings
-  arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
-  arm64: dts: k3-am65: Update the RM resource types
-
- .../interrupt-controller/ti,sci-inta.txt      |  66 --------
- .../interrupt-controller/ti,sci-inta.yaml     | 104 ++++++++++++
- .../interrupt-controller/ti,sci-intr.txt      |  82 ---------
- .../interrupt-controller/ti,sci-intr.yaml     | 113 +++++++++++++
- MAINTAINERS                                   |   4 +-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  34 ++--
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  12 +-
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |   8 +-
- .../arm64/boot/dts/ti/k3-am654-base-board.dts |   4 +-
- .../dts/ti/k3-j721e-common-proc-board.dts     |  10 +-
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     |  41 ++---
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  12 +-
- drivers/firmware/ti_sci.c                     | 155 ++++++++----------
- drivers/irqchip/irq-ti-sci-inta.c             |  90 ++++++++--
- drivers/irqchip/irq-ti-sci-intr.c             | 150 ++++++++++-------
- include/linux/soc/ti/ti_sci_protocol.h        |  13 ++
- 16 files changed, 527 insertions(+), 371 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+index 1a8718f8855d..8b56b2de1c73 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+@@ -44,15 +44,17 @@ Required Properties:
+ 			4: If intr supports level triggered interrupts.
+ - interrupt-controller:	Identifies the node as an interrupt controller
+ - #interrupt-cells:	Specifies the number of cells needed to encode an
+-			interrupt source. The value should be 2.
+-			First cell should contain the TISCI device ID of source
+-			Second cell should contain the interrupt source offset
+-			within the device.
++			interrupt source. The value should be 1.
++			First cell should contain interrupt router input number
++			as specified by hardware.
+ - ti,sci:		Phandle to TI-SCI compatible System controller node.
+-- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
+-- ti,sci-rm-range-girq:	Array of TISCI subtype ids representing the host irqs
+-			assigned to this interrupt router. Each subtype id
+-			corresponds to a range of host irqs.
++- ti,sci-dev-id:	TISCI device id of interrupt controller.
++- ti,interrupt-ranges:	Set of triplets containing ranges that convert
++			the INTR output interrupt numbers to parent's
++			interrupt number. Each triplet has following entries:
++			- First entry specifies the base for intr output irq
++			- Second entry specifies the base for parent irqs
++			- Third entry specifies the limit
+ 
+ For more details on TISCI IRQ resource management refer:
+ http://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
+@@ -62,21 +64,20 @@ Example:
+ The following example demonstrates both interrupt router node and the consumer
+ node(main gpio) on the AM654 SoC:
+ 
+-main_intr: interrupt-controller0 {
++main_gpio_intr: interrupt-controller0 {
+ 	compatible = "ti,sci-intr";
+ 	ti,intr-trigger-type = <1>;
+ 	interrupt-controller;
+ 	interrupt-parent = <&gic500>;
+-	#interrupt-cells = <2>;
++	#interrupt-cells = <1>;
+ 	ti,sci = <&dmsc>;
+-	ti,sci-dst-id = <56>;
+-	ti,sci-rm-range-girq = <0x1>;
++	ti,sci-dev-id = <131>;
++	ti,interrupt-ranges = <0 360 32>;
+ };
+ 
+ main_gpio0: gpio@600000 {
+ 	...
+-	interrupt-parent = <&main_intr>;
+-	interrupts = <57 256>, <57 257>, <57 258>,
+-		     <57 259>, <57 260>, <57 261>;
++	interrupt-parent = <&main_gpio_intr>;
++	interrupts = <192>, <193>, <194>, <195>, <196>, <197>;
+ 	...
+ };
 -- 
 2.17.1
 
