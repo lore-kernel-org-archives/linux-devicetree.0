@@ -2,99 +2,143 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3990FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F3DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208E62072C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52CDB207D4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 18:51:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SjtW4KSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgETSmG (ORCPT
+        id S1726510AbgETSvZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 14:42:06 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:43262 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726966AbgETSmG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 14:42:06 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jbTfE-00040R-0g; Wed, 20 May 2020 20:42:00 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Johan Jonker <jbx6244@gmail.com>, robh+dt@kernel.org,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg property
-Date:   Wed, 20 May 2020 20:41:59 +0200
-Message-ID: <4727344.YYj2SkWT1V@diego>
-In-Reply-To: <20200520171324.GS89269@dtor-ws>
-References: <20200520073327.6016-1-jbx6244@gmail.com> <20200520171324.GS89269@dtor-ws>
+        Wed, 20 May 2020 14:51:25 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:34598 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726566AbgETSvZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 14:51:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590000684; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=iDZjJDD859EkBfV9Fuaq6zQVkAKwZb8CaDaTamqjkpI=;
+ b=SjtW4KSe2iTXTjZ2WpiMKUURbkJTobSGcq/5767j6j8yj1lBwFubbXkv7pXs3d786+nYwi+/
+ P581wR6x03KwLd7Tx3CbxMssYEp78uXLJc3kPrv3ePzgteUYoFh+JHbV+uvFIKcyN9oLw8wu
+ KKeOZEGzs98xqu/NRllSGuoMd3s=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ec57c2462ee3a3497a7c6ee (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 18:51:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 47CCFC43395; Wed, 20 May 2020 18:51:15 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 57FC7C433C8;
+        Wed, 20 May 2020 18:51:14 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 21 May 2020 00:21:14 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 09/10] dt-bindings: interconnect: Add interconnect-tags
+ bindings
+In-Reply-To: <CAGETcx8+NZYT863ySLf6XvgLBm8PM_4euue2=zbDscgmDFh+7g@mail.gmail.com>
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-10-georgi.djakov@linaro.org>
+ <20200519185836.GA469006@bogus>
+ <CAGETcx8+NZYT863ySLf6XvgLBm8PM_4euue2=zbDscgmDFh+7g@mail.gmail.com>
+Message-ID: <3a392629be195fa6bebca18309efffab@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
+On 2020-05-20 01:27, Saravana Kannan wrote:
+> On Tue, May 19, 2020 at 11:58 AM Rob Herring <robh@kernel.org> wrote:
+>> 
+>> On Tue, May 12, 2020 at 03:53:26PM +0300, Georgi Djakov wrote:
+>> > From: Sibi Sankar <sibis@codeaurora.org>
+>> >
+>> > Add interconnect-tags bindings to enable passing of optional
+>> > tag information to the interconnect framework.
+>> >
+>> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> > ---
+>> > v8:
+>> > * New patch, picked from here:
+>> >   https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
+>> >
+>> >  .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
+>> >  1 file changed, 5 insertions(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>> > index 6f5d23a605b7..c1a226a934e5 100644
+>> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>> > @@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
+>> >                        * dma-mem: Path from the device to the main memory of
+>> >                                   the system
+>> >
+>> > +interconnect-tags : List of interconnect path tags sorted in the same order as the
+>> > +                 interconnects property. Consumers can append a specific tag to
+>> > +                 the path and pass this information to the interconnect framework
+>> > +                 to do aggregation based on the attached tag.
+>> 
+>> Why isn't this information in the 'interconnect' arg cells?
+>> 
+>> We have 'interconnect-names' because strings don't mix with cells. An
+>> expanding list of 'interconnect-.*' is not a good pattern IMO.
 
-Am Mittwoch, 20. Mai 2020, 19:13:24 CEST schrieb Dmitry Torokhov:
-> Hi Johan,
+Rob,
+Currently the interconnect paths
+assume a default tag and only few
+icc paths require tags that differ
+from the default ones. Encoding the
+tags in the interconnect arg cells
+would force all paths to specify
+the tags. I guess that's okay.
+
+
 > 
-> On Wed, May 20, 2020 at 09:33:27AM +0200, Johan Jonker wrote:
-> > A test with the command below gives this error:
-> > 
-> > arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
-> > touchscreen@3e: reg:0:0: 56 was expected
-> > 
-> > The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
-> > was shipped with different addresses then the binding currently allows.
-> > Change the reg property that any address will pass.
-> > 
-> > make ARCH=arm dtbs_check
-> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
-> > edt-ft5x06.yaml
-> > 
-> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> > index 383d64a91..baa8e8f7e 100644
-> > --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> > @@ -42,7 +42,7 @@ properties:
-> >        - focaltech,ft6236
-> >  
-> >    reg:
-> > -    const: 0x38
-> > +    maxItems: 1
+> Also, is there an example for interconnect-tags that I missed? Is it a
+> list of strings, numbers, etc?
+
+Saravana,
+https://patchwork.kernel.org/patch/11527589/
+^^ is an example of interconnect-tag useage.
+
 > 
-> Should we have a list of valid addresses instead of allowing any
-> address? Controllers usually have only a couple of addresses that they
-> support.
+> -Saravana
 
-from what I've read, the fdt touchscreen controllers are just a generic
-cpu with device-specific (or better panel-specific) firmware, which seems
-to include the address as well - so it looks to be variable.
-
-But of course that is only 2nd hand knowledge for me ;-)
-
-
-But also, the i2c address is something you cannot really mess up,
-either it is correct and your touchscreen works, or it isn't and and
-adding entries to this list every time a new address variant pops up
-feels clumsy.
-
-
-Heiko
-
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
