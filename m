@@ -2,108 +2,187 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643DDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 14:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552B6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 14:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4446F207C4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 14:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ZsaZMuyU"
+	by mail.kernel.org (Postfix) with ESMTP id 35FC32072C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 14:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589985802;
+	bh=93xiZdfQmazN0EU3A6j+wlLxKCqDuPGLCkRTQ2Xp2Dk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kkK0bBKmCVIhSF9Q0t/R7h47MQFuYjJDKdrX6cAOrEpNdE4nqs/Ievk3LbaoA7l2i
+	 yTLlpVkphFUrFn42VTXIHe2o8nYQMckGF90S95UVDq8Ul1lsaq1uOyWq9eCDxryfAW
+	 ZbQTylD4sVufKaJ+hVTboMJxovnTiT3wfHBidmGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgETOi1 (ORCPT
+        id S1726439AbgETOnQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 10:38:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgETOi1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 10:38:27 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A20C061A0E
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 07:38:26 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id e125so2475732lfd.1
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 07:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=znHUMaP0WqalUm3z5ilzUoUiYdwHWCOzV+xNGyMse2E=;
-        b=ZsaZMuyUG/c63T71KQnutZMRMecTwOQ9e+xZo1mwtMXh/HnEKFNpg6iTh0kD/x2p5P
-         R+bkxFYJyI7Rb+p865Qe8h6ykpOUJMNvSyu0U3V/pLTMtebveBAZzBJLA2YlswiT/HiW
-         3JEGWZi825qVMDTxy3uqUD51ogVTMWXV4IvuxYVsspGIrM68xA5o+KYz3ArvMqW0Ejp+
-         Q+fj6ENz3L28xOqXgMxs5JyrVfE4PGh2nI/xLwkHNxbruBYJxETKiI00SYx4eAZZL5CG
-         pwLHe19EutHqmeSHTOSnis/KoZgVnrqJ7j07FAeJdcUIsXQEcjZbolyR1Bkbb0uQhsn9
-         RMQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=znHUMaP0WqalUm3z5ilzUoUiYdwHWCOzV+xNGyMse2E=;
-        b=RxQSGnZByLSOtdOfINNWI8j8rffid80N4p7zX80oZYjGecJ/OBEIbC5u/pu18U1Jys
-         WJcp0ZBoh0Iec0plhWvDgxAbFKNlPnNnl2Qc18WRn1dwP5VQT2/VyKgenWIJ+Q4LY6qf
-         Re8XVw+Jtn7OGUUIScjG2gw2nnzHnqFCo6WeD7dvtIcor0+rXpao31orKwG3pOt6akii
-         sK5Z0xwDH3Wh8Rqdxf07Ep2JIx3pWrOvjueoNdtdOahfxNwrNx+5hsZbrzn0Sp/kYS8L
-         54xYYpCsyvWKT6ZoNDCq6l86pi9xD9Vp5LkESl727LE4VTIJYhThUfRV4/+avlkfBK0S
-         QzOA==
-X-Gm-Message-State: AOAM532ZS1Usd4VlWmT/eOhm0X8GquzEW81M1eylH5v771v7JzRAibzI
-        NyQ2OfUMk7SV8+wzmlWTN+TfQg==
-X-Google-Smtp-Source: ABdhPJycRSmEi00KXgljA417fS6M4KKf8K3xhBn/6ZZOQ6UlRRZvGO2YKvURO4P1Mi9nL2IPvfdrUg==
-X-Received: by 2002:ac2:414c:: with SMTP id c12mr2685185lfi.47.1589985505282;
-        Wed, 20 May 2020 07:38:25 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:4e2:ae96:6d06:66d1:d6f1:88dc? ([2a00:1fa0:4e2:ae96:6d06:66d1:d6f1:88dc])
-        by smtp.gmail.com with ESMTPSA id s8sm1116394lfc.83.2020.05.20.07.38.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 07:38:22 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] dt-bindings: memory: document Renesas RPC-IF
- bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
-        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
-        linux-mtd@lists.infradead.org
-References: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
- <116683d1-d402-4d7f-3357-1c8cde807076@cogentembedded.com>
- <20200501212547.GB15294@bogus>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <5359d5a2-5d28-058e-ce37-bc91e1aa7988@cogentembedded.com>
-Date:   Wed, 20 May 2020 17:38:12 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 20 May 2020 10:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgETOnQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 10:43:16 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D60D20884;
+        Wed, 20 May 2020 14:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589985795;
+        bh=93xiZdfQmazN0EU3A6j+wlLxKCqDuPGLCkRTQ2Xp2Dk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zqJjU+Pe293oZ6ocassxcPcA2DVflYdbghR2e84eL9bvigCMGhmQkEOCWyB9x9qMk
+         tqfg3MOzrmqIwWdyGsSFsZlCwfR41ZaBdF245d85c681C2Dl3glo6eQhgQz0uzWQtO
+         S6isGeYhInUenMyUNLrWaEyxfF/HwQyFKs4eh/rE=
+Received: by mail-oi1-f169.google.com with SMTP id j145so3145628oib.5;
+        Wed, 20 May 2020 07:43:15 -0700 (PDT)
+X-Gm-Message-State: AOAM531+BIqNCKzDa8kyNYT9iHKcVz+hzG9LYtYjVpkvzmCpW0ZWbXK8
+        2Wk1MTbzsQyze6n4fZOoZw17xvzizvpj3f2hZA==
+X-Google-Smtp-Source: ABdhPJzyaxh/SnkAwbz5oRVIMrIQtReCF6vMmwmfUuuZxVCZFWwPmcpMMg2xoPSi8xvODJyqRQJXHWuqYsTq1+BbBwk=
+X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr3499546oie.152.1589985794742;
+ Wed, 20 May 2020 07:43:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200501212547.GB15294@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <20191203174229.GA1721849@ulmo> <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
+ <20191204091703.d32to5omdm3eynon@vireshk-i7> <20191204093339.GA2784830@ulmo>
+ <20191204095138.rrul5vxnkprfwmku@vireshk-i7> <20200407100520.GA1720957@ulmo>
+In-Reply-To: <20200407100520.GA1720957@ulmo>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 20 May 2020 08:43:03 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+rMYAZ=ub0U7qdHSsWgbQugodhvigFCxrFm49HwrCmAQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+rMYAZ=ub0U7qdHSsWgbQugodhvigFCxrFm49HwrCmAQ@mail.gmail.com>
+Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
+ get BPMP data
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mikko Perttunen <cyndis@kapsi.fi>,
+        Sumit Gupta <sumitg@nvidia.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        bbasu@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 02.05.2020 0:25, Rob Herring wrote:
+On Tue, Apr 7, 2020 at 4:05 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Wed, Dec 04, 2019 at 03:21:38PM +0530, Viresh Kumar wrote:
+> > On 04-12-19, 10:33, Thierry Reding wrote:
+> > > Yeah, the code that registers this device is in drivers/base/cpu.c in
+> > > register_cpu(). It even retrieves the device tree node for the CPU from
+> > > device tree and stores it in cpu->dev.of_node, so we should be able to
+> > > just pass &cpu->dev to tegra_bpmp_get() in order to retrieve a reference
+> > > to the BPMP.
+> > >
+> > > That said, I'm wondering if perhaps we could just add a compatible
+> > > string to the /cpus node for cases like this where we don't have an
+> > > actual device representing the CPU complex. There are a number of CPU
+> > > frequency drivers that register dummy devices just so that they have
+> > > something to bind a driver to.
+> > >
+> > > If we allow the /cpus node to represent the CPU complex (if no other
+> > > "device" does that yet), we can add a compatible string and have the
+> > > cpufreq driver match on that.
+> > >
+> > > Of course this would be slightly difficult to retrofit into existing
+> > > drivers because they'd need to remain backwards compatible with existing
+> > > device trees. But it would allow future drivers to do this a little more
+> > > elegantly. For some SoCs this may not matter, but especially once you
+> > > start depending on additional resources this would come in handy.
+> > >
+> > > Adding Rob and the device tree mailing list for feedback on this idea.
+> >
+> > Took some time to find this thread, but something around this was
+> > suggested by Rafael earlier.
+> >
+> > https://lore.kernel.org/lkml/8139001.Q4eV8YG1Il@vostro.rjw.lan/
+>
+> I gave this a try and came up with the following:
+>
+> --- >8 ---
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> index f4ede86e32b4..e4462f95f0b3 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> @@ -1764,6 +1764,9 @@ bpmp_thermal: thermal {
+>         };
+>
+>         cpus {
+> +               compatible = "nvidia,tegra194-ccplex";
+> +               nvidia,bpmp = <&bpmp>;
 
->> Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
->> HyperFlash connected to the SoC to be accessed via the external address
->> space read mode or the manual mode.
->>
->> Document the device tree bindings for the Renesas RPC-IF found in the R-Car
->> gen3 SoCs.
->>
->> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->> Changes in version 2:
->> - rewrote the bindings in YAML.
->>
->>   Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml |   88 ++++++++++
-> 
-> Not where we normally put SPI flash controllers...
+Is there more than 1 bpmp? If not you don't need this. Just lookup the
+node by compatible.
 
-    RPC-IF is not exactly SPI flash controller, it's bimodal.
 
-MBR, Sergei
+> +
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+> --- >8 ---
+>
+> Now I can do something rougly like this, although I have a more complete
+> patch locally that also gets rid of all the global variables because we
+> now actually have a struct platform_device that we can anchor everything
+> at:
+>
+> --- >8 ---
+> static const struct of_device_id tegra194_cpufreq_of_match[] = {
+>         { .compatible = "nvidia,tegra194-ccplex", },
+>         { /* sentinel */ }
+> };
+> MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
+>
+> static struct platform_driver tegra194_ccplex_driver = {
+>         .driver = {
+>                 .name = "tegra194-cpufreq",
+>                 .of_match_table = tegra194_cpufreq_of_match,
+>         },
+>         .probe = tegra194_cpufreq_probe,
+>         .remove = tegra194_cpufreq_remove,
+> };
+> module_platform_driver(tegra194_ccplex_driver);
+> --- >8 ---
+>
+> I don't think that's exactly what Rafael (Cc'ed) had in mind, since the
+> above thread seems to have mostly talked about binding a driver to each
+> individual CPU.
+>
+> But this seems a lot better than having to instantiate a device from
+> scratch just so that a driver can bind to it and it allows additional
+> properties to be associated with the CCPLEX device.
+
+What additional properties? A continual stream of properties added 1
+by 1 would negatively affect my opinion of this.
+
+> Rob, any thoughts on this from a device tree point of view? The /cpus
+> bindings don't mention the compatible property, but there doesn't seem
+> to be anything in the bindings that would prohibit its use.
+
+What happens when you have more than one cpu related driver in
+addition to cpufreq? You may still have to end up creating child
+platform devices and then gained very little.
+
+You could solve this without DT changes. You can bind on node names.
+The driver probe can then check the parent compatible and return if
+not matching. I'm not sure if you could get module auto loading to
+work in that case. It would have to be based on the root compatible
+(rather than the driver match table) and be able to load multiple
+matching modules.
+
+Rob
