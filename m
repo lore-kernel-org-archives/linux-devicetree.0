@@ -2,169 +2,100 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 00:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 00:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDE1207C4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 00:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FBD20823
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 00:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Un58eWjK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgETAHo (ORCPT
+        id S1728188AbgETAHv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 20:07:44 -0400
-Received: from mga06.intel.com ([134.134.136.31]:22055 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726938AbgETAHo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 20:07:44 -0400
-IronPort-SDR: R7B/zGlWiSTPUPWTDRq+dO68UFpdWnVbCQ9TQrvb2S1IBwMDmbfp98yQdVgzXKpJFsn4cDO8ea
- giR/sxswb3Vw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 17:07:43 -0700
-IronPort-SDR: pCUSU9dEYq4OPUxpYx+DFjmCkFm939CEi270QNV83poy3kDJAP1/EJT/jDAu2nQyJ9gWTvXWDO
- WDmiLL9cD8xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,411,1583222400"; 
-   d="scan'208";a="268068547"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga006.jf.intel.com with ESMTP; 19 May 2020 17:07:39 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [RESENDPATCH v8 1/2] dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
-Date:   Wed, 20 May 2020 08:06:20 +0800
-Message-Id: <20200520000621.49152-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200520000621.49152-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200520000621.49152-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Tue, 19 May 2020 20:07:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728353AbgETAHv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 May 2020 20:07:51 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8CFC061A0F
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 17:07:50 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s69so424916pjb.4
+        for <devicetree@vger.kernel.org>; Tue, 19 May 2020 17:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=7E+96xLWXR0/8hTuHXZFZz8+gdr1UiuXEJRZqhXw6X8=;
+        b=Un58eWjKctefrHRqJ7dvLIb7h0CPEt1iuXzxR4n6qCP42XpGpHDwdTrRBb8PUXaAQg
+         RhZKNOwt+EIDA2KgD0SaK8LdZNQoP5sJrMbj7Y7Zq0E0V78tPE0/lRWWYF5QX2c2bikH
+         1FIhVCjJGAAbPHuYgUelWXSgf4gKjJSGu3XBaBBsjuZi0BuZ9qdywxDNVGK/AYtr/hOH
+         uy9nwtgdpyyFM+uk1CRZCJEn59m+0tfqRpdHwerg5gK1G/Vb+oSrlru5xR86WxFzNat7
+         XgZ9n1GZAEuOty9dXFkbRVOcYUXb492Fyay+gUFKaQytL0zjwZ3/Wdd+PczxxDQ/0jjL
+         5yFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7E+96xLWXR0/8hTuHXZFZz8+gdr1UiuXEJRZqhXw6X8=;
+        b=NGM2XSzEBpgLSVEQC/McC18tiRm4tIldNiJZnQXcP5agQlGit2lDrokEB1P4MUWiHw
+         UZxR5X84Kpz/WUqd4GcNclT5rJxDszGXqrEK+A5c97ji/PaSEKXI7BpOJ5+TEUX77eIT
+         cl1mF9z5jJAX/HcfSgjXUt8Gp5xQze3Rk04RjXo/YZSjN0MCvvty9HXymZlYnNa45XqM
+         CknDPv9fKrg7Z4ER1XG6VvdDYvGGkLnXRXbCEOCwKFry7QPrXbhAF6LBowo7ih9FeGCg
+         JYe0GWn0n0vnwFXSQOoGtD5oSCZEY2Wj2j0gwWM1FqKmmRKnONMbvgRQuLnVvyxUPqYt
+         rSSw==
+X-Gm-Message-State: AOAM530PDHoKUM2fJH5qJjHJui43ycTGlyzO1ZC3xLP9PJQT9Hd7oGDg
+        4taYAUUgdDcBMC9vRSfX0+q7HA==
+X-Google-Smtp-Source: ABdhPJwJXapV3XSyLdWBlyJa/j1Qrxy4J3disNJEFzP9hMGHSRWKAhJBD6HgUG+V+BJQnf+U8c014w==
+X-Received: by 2002:a17:90a:2a03:: with SMTP id i3mr2158657pjd.29.1589933270413;
+        Tue, 19 May 2020 17:07:50 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id y13sm501497pfq.107.2020.05.19.17.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 17:07:49 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH v8 0/3] arm64: dts: meson: add dts/bindings for SmartLabs SML-5442TW
+Date:   Tue, 19 May 2020 17:07:44 -0700
+Message-Id: <158993320300.34448.2467899478322210990.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510124129.31575-1-christianshewitt@gmail.com>
+References: <20200510124129.31575-1-christianshewitt@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Sun, 10 May 2020 12:41:26 +0000, Christian Hewitt wrote:
+> This series adds new bindings and a device-tree file for the Smartlabs
+> SML-5442TW set-top box which is based on the P231 reference design.
+> 
+> As requested, I have reworked the device-tree on the p23x-q20x dtsi. I
+> have also re-added the BT device with new bindings that have now  been
+> merged in bluetooth-next for inclusion in Linux 5.8. See [1].
+> 
+> [...]
 
-Add YAML file for dt-bindings to support NAND Flash Controller
-on Intel's Lightning Mountain SoC.
+Applied, thanks!
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 91 ++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+[1/3] dt-bindings: add vendor prefix for Smartlabs LLC
+      commit: bc15895e142396fed5ebf1f60139d9ca9a56a4e4
+[2/3] dt-bindings: arm: amlogic: add support for the Smartlabs SML-5442TW
+      commit: 341e85047bdbc0196c91ccb4612ffab87bae9cfe
+[3/3] arm64: dts: meson: add support for the Smartlabs SML-5442TW
+      commit: 1d6ece87b750cf26fed4eb794ea0b2fc7ff2be10
 
-diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-new file mode 100644
-index 000000000000..cd4e983a449e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel LGM SoC NAND Controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+maintainers:
-+  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-nand-controller
-+
-+  reg:
-+    items:
-+       - description: ebunand registers
-+       - description: hsnand registers
-+       - description: nand_cs0 external flash access
-+       - description: nand_cs1 external flash access
-+       - description: addr_sel0 memory region enable and access
-+       - description: addr_sel1 memory region enable and access
-+
-+  clocks:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+patternProperties:
-+  "^nand@[a-f0-9]+$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 7
-+
-+      nand-ecc-mode: true
-+
-+      nand-ecc-algo:
-+        const: hw
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    nand-controller@e0f00000 {
-+      compatible = "intel,lgm-nand";
-+      reg = <0xe0f00000 0x100>,
-+            <0xe1000000 0x300>,
-+            <0xe1400000 0x8000>,
-+            <0xe1c00000 0x1000>,
-+            <0x17400000 0x4>,
-+            <0x17c00000 0x4>;
-+      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1",
-+        "addr_sel0","addr_sel1";
-+      clocks = <&cgu0 125>;
-+      dmas = <&dma0 8>, <&dma0 9>;
-+      dma-names = "tx", "rx";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      #clock-cells = <1>;
-+
-+      nand@0 {
-+        reg = <0>;
-+        nand-on-flash-bbt;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+      };
-+    };
-+
-+...
+Best regards,
 -- 
-2.11.0
-
+Kevin Hilman <khilman@baylibre.com>
