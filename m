@@ -2,157 +2,121 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF42C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CCDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 03:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 936EA20842
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 02:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5342070A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 03:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L/VWIYrH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bpoz9Svh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgETC7g (ORCPT
+        id S1728329AbgETDB1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 May 2020 22:59:36 -0400
-Received: from mail-am6eur05on2074.outbound.protection.outlook.com ([40.107.22.74]:11521
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        Tue, 19 May 2020 23:01:27 -0400
+Received: from mail-eopbgr150042.outbound.protection.outlook.com ([40.107.15.42]:35212
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728702AbgETC7f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 May 2020 22:59:35 -0400
+        id S1726352AbgETDB0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 May 2020 23:01:26 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LgWayIxBwWXTxh77VoNlBJ0N4wnGAfQ0CKAHq4ZvmQGfRtPpjB3LMWY5Xf4tz2YAtcbY9PTlUqcKa9wFRHmXGECxew22/3YZ5idCHM2MVP2o6isflP56kDwNbe4NVweTaava+NPCgsfYAMTWAVnAFP0Fp408jG6UaE2npA5lRIFk7Gzjiujo5+plnw3rqiu603VwHkdjhvOq7EQ+YLqP5p++oBJ/OunIq+ovZu1yKzXuXNKQH7GAyH5NKAhqgNphrtjyR9cQz32oEcSXot+Fz40BHA3O30EOPSkwgbgBDz1TER3hgIqc4kD0SwEC1nkwjMg38dkbj2nbOe7uNIwuAg==
+ b=jVPPuJZCZTB7h+R77HFt3RjVCzsgbRJcJHmF+9zY72UO4klUxfKJKT0XatKKHXU8Ptreb6SwqXtx594jXGO7nF7lHd1Q0A26hRmyINh501mMBCG8VK15d3Wt0vTkCFmPO26jjUxEOQzouVAFlYESg5F2AaLKP1cxpHGYGCMnwtuPxqmyR7pchxMovlY+d1noNhhAjNygpMz7wePpDJ6hGtYFUw+adeWrIoBsg0HnQP8iN0gw2xM+Vzz2IGLXMtEkwy5L9RNNaFZEHElw2KRQLIqMtR1CzKj3oRCXuwfO32Xz/hhK1OpodbqJdVcqdHwTqi44IEXnSGcnYWko9tmAkQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T5zCrxqrYdDhwlKvQaiCmennCqm9k07OLzQSm95LsW4=;
- b=f0UOPf5pva13C9RTo8Rn3Q5rnuch3aPLppNaxWabWTuBAOq7aUUk9/ctj+wr1YJVgj4qzGVEfaEeOjKZrc8WDSk9wIGNhyqGjizI9/pN6+BqrS6ysYZCf7CG2Hz/A6GEZAq0ATp8mi6zKmggS7sAYxGNfoq4+yo2HM5OC2XjwXp9WZz5yW3JOE+hsR76vX7W8Psl+qxmET7h3Erq6+okN8X8yDLs/BG6zpp2Ao8WvhOYdnbR1Cv49xpbNkMwxsLdDisC/vdc3dWI51cfDT6XuUpX/mTkFModqq1cZhnNESh8Q2VkA9yUI0K0pNhphwMsLNIDOvLZHOCIrJaxmiAFaQ==
+ bh=FqYx3Ua7kL60hAsLDKtyrWzaWQwaY6lSxmbTkwtYS6Q=;
+ b=lraI2zMe5FCOWPHiapU35YMjjK01xybZLaWk1p3sC8D7Hh1fAYAMywv3Dhy3hFJ7iN9hxpv7T6dgNNPToLNYO90Rfi6XsW75VKwDcbDaGbBYWQ/gDEdfdNUYYTev6Prg0SAKTTVcqx4upHjo6z0F0KV581ip3ob104Ndou43KztZN72rOI/owdtySso5TlGy8d3y/37fDniRLaJjwYBtq9ErSMyzpjYYKemyPV414vjVvUryjP3pvEyFCWs3YbZls/bEbqIODKihbSeZMEinR2RhtZMj2pIbNsn9c+vcFQZKLRo+ZV/e9UtBbXcHumae2GEg+fsw3GqqtpBaVSYnSg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T5zCrxqrYdDhwlKvQaiCmennCqm9k07OLzQSm95LsW4=;
- b=L/VWIYrH1iM4xPe0R7PU677ZkR1tyXacxr5rG1CT9MZMaQ3YqvE5nnViju3SYPuFtFzEU22UkNDEArga189jG06GjTX4A+XLuYUud3Z9lXUVOdzGd0tJyeDToz+yydU1E/o/14v7rtb0todXinhmUwiqQlGT2H2epB9w7ENnJKI=
-Authentication-Results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
-Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
- by DB8PR04MB6634.eurprd04.prod.outlook.com (2603:10a6:10:10e::17) with
+ bh=FqYx3Ua7kL60hAsLDKtyrWzaWQwaY6lSxmbTkwtYS6Q=;
+ b=bpoz9Svh3rqja2uWy+turxh3HZ3WV8TNEoTbQNEQ88s63eoLcWuus7BQZCFG/mPLAdrUEtIAjX3o1BK6YxaHg8Ugk6s0trM1pN4cmBSoRgO/XBeZ8XrqmyoEvnEf+qyyCJ6OtK3JL67ecG5aSVgu0DN3l4FqHkgHTCY9AqpbW1k=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2870.eurprd04.prod.outlook.com (2603:10a6:4:9a::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Wed, 20 May
- 2020 02:59:31 +0000
-Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
- ([fe80::2924:94ba:2206:216e]) by DB8PR04MB6795.eurprd04.prod.outlook.com
- ([fe80::2924:94ba:2206:216e%7]) with mapi id 15.20.3000.034; Wed, 20 May 2020
- 02:59:31 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     john.garry@huawei.com, will@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, shawnguo@kernel.org
-Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 3/3] arm64: dts: imx8/8mm/8mn/8mq: add identifier for DDR perf
-Date:   Wed, 20 May 2020 10:56:19 +0800
-Message-Id: <20200520025619.687-4-qiangqing.zhang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200520025619.687-1-qiangqing.zhang@nxp.com>
-References: <20200520025619.687-1-qiangqing.zhang@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0142.apcprd01.prod.exchangelabs.com
- (2603:1096:4:8f::22) To DB8PR04MB6795.eurprd04.prod.outlook.com
- (2603:10a6:10:fa::15)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.31; Wed, 20 May
+ 2020 03:01:23 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3021.020; Wed, 20 May 2020
+ 03:01:23 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Subject: RE: [PATCH 3/3] arm64: dts: imx8mp: add mu node
+Thread-Topic: [PATCH 3/3] arm64: dts: imx8mp: add mu node
+Thread-Index: AQHWLkxzkzQ2vaqxukCIUytKVqWONKiwSJ8A////3aA=
+Date:   Wed, 20 May 2020 03:01:23 +0000
+Message-ID: <DB6PR0402MB27602682E90E4CED55244BCC88B60@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <1589940278-3680-1-git-send-email-peng.fan@nxp.com>
+ <1589940278-3680-4-git-send-email-peng.fan@nxp.com>
+ <CAOMZO5BPPRy_XGHHyZfE3eOrmCwW_VytueY-An8qqke6HU06TQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5BPPRy_XGHHyZfE3eOrmCwW_VytueY-An8qqke6HU06TQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [221.225.35.13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dbf9c2b1-5829-421f-0a2b-08d7fc6a1452
+x-ms-traffictypediagnostic: DB6PR0402MB2870:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB287057010F5D3F677029785D88B60@DB6PR0402MB2870.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 04097B7F7F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zLrs44IBw3cjkIBR7hY28CJkK0qJaBMdssG+pATxcdckMm0YfM50bouUMh708emDxyBxF349i606e7+/wC4e3MFjhDUEvUoJqFNlKGW5zM0xM+IXVvAOkrDjifuv0Cagz8gUw05UhOrFIV3yPNoNsszbq2RiNt01jUp6rbbqm5XY26mF+4oxbyvnbVPE6QCzFNVJTWreidJLnj58bDs6rzDnXUqDnDJoRmDSJpsp8JcSwOrckBEVwv0rXmRA0yUq4IHits1KyXMUQF7fpSSAlMsgwqBoQiBbogW5CfEjjIOXpGfLJaQ73xqGJXm5oWZbnlbxvyXNZE5C5XAtS0wfBD3Y8uzA9nE18RzA4mcJ2x7sL25OP1fvjxtVVsGV+w5jhyg5UhiGl6bnvpANWnKamceCdFNINTIkHIXVrU+3oJns5WELeJF7uk2WqQzQLZX6AbCCWe9I+HN/x5tZKcpmXGaI8gwrklcA+Q2iRIXuH6rKzqs6A0pIx5aYNMWHVeIG
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(366004)(346002)(39860400002)(136003)(54906003)(5660300002)(66446008)(64756008)(4326008)(66556008)(66476007)(66946007)(8936002)(44832011)(8676002)(76116006)(4744005)(33656002)(53546011)(86362001)(316002)(7696005)(7416002)(6916009)(478600001)(26005)(9686003)(55016002)(6506007)(71200400001)(52536014)(2906002)(186003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: i2B83DEH4q6QyvA0r+yWv5Nz1Xxd8LSIcSN+GMdZt7lKmMTu0Juk6UXmqcMMRi1OOZfbpkPWPcHHlOBGeXlqrm304EpsTeU4ltAyO6dbFL/25PUs2wh2uctUCeNwiAP4rGplXzS4T9GhlV9IEijB5R+bBMlGBzO58zknxcilz7cgI/D9mX9IkIaPxXxkxoRB7IR07qWXAUKaM7Oe6LAvr3kSXEA8GG36WH490fZksaT6IkLAgl0vM5uROhfSxB5i9ncGqoAS4+WKNn99u/HHn2+yewd6KZ8XJKYKaBnA9/qVGyy/X2GJzAYlAmiFlui6aOqXF/ROVhCNuC9k1LdFxD9dkciowGYFua/K6UO7ivL6huCdKQhqXV9btrDZSaLrZaGMDC1BpGuztre86/CObs1pV0cW94ZuP0YpCGSIm3vH1io+jQVurNT4rqdmpiNXOQrgUCZvVdW84l5sHA/Qp3MHqqWWMjQMdSo3PVw0kow8+7p1rmys90LYfq9WEMTS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.71) by SG2PR01CA0142.apcprd01.prod.exchangelabs.com (2603:1096:4:8f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Wed, 20 May 2020 02:59:28 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.71]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b0d37a41-12dd-4457-ba5e-08d7fc69d15b
-X-MS-TrafficTypeDiagnostic: DB8PR04MB6634:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR04MB6634564660549414F9252D87E6B60@DB8PR04MB6634.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:843;
-X-Forefront-PRVS: 04097B7F7F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: V6tnQ/Y0TIULIZwzear2fnHPLLQAMiPw4m95v8ZM1YPVY0jqpu/ID5SwN+NApStu9c/jtynpq0UEfZyOl12Vjh56pmg1ZWAfodl3PiivEvZVYxG8fZnOmXVzDqty+QF5IOqMkr3lr3YZVREN1cyv6L3EdjnMp2j7plu+8DDddPMFfYKvwvDwvDgvfpnglE7bC87cE0rmpMoeOFFqoBmZXuUlc80j7MzIfFZKVe+bdQ4jNDjlOjBP0+eRF2hhSGQnVHzReERMF8LvNneE90jN3KupaMoLjpvQw69QUwb+h6OSKxEQ9LTbXzmqlCOOPcz4zWh/SPUQPVnHG1Tz2696Z83wGzXGFNUL8bksI06XYW36yX0a0oWO5HYwr6XK7JfGS2ASHfUpDOrARB8YsaE+9ZwrrcCLMuRIUkqhCiCXmHjAuM5rJ1/gGuuwczMzVPZaQXMC+vPaUdLKcZ4B7OXD64g7BIM4EF7XYFzDst4CkwdP4yUrRJpzAchmcC2qELLt
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(8676002)(478600001)(2906002)(6486002)(956004)(8936002)(6666004)(2616005)(36756003)(6506007)(16526019)(5660300002)(66556008)(66476007)(4326008)(26005)(66946007)(1076003)(6512007)(316002)(86362001)(69590400007)(186003)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: CHe32/Bhg5qY8LRRCSeNJe9LnmA4dRWIa9VTyW1v4akUEupOO889gRgnyBUg7U1285l/AMlqJ83NByff5LQ3Jc7GtjWyxnz8gwfSIxBr8rIDQH3zSMGOoPkF2qvEK9ZGlprH27KFg/JLr4+5iZMrE1xjL0S0HeY4211mhQDCQAqEzS0yC7qhuZmtR0AZntl828tSy582J5ri8irOFy9wdgAheBIvhTIui0PKEaUgSZs/3QSfMlPTJTMSdJu5ZQMH2Gm+GpSKohxjXUutxjgxMuOEM3ZEe3cr5W2u6WyvZps5viM+gEf0c5m8eLy33gS0UZtyrbUtgH1wUi0GjJIhebH4GpWA5mtN6Kt8hfOn4UUoKTqzlz0QhemvWj21ET8bmerbYMrDzXueSd1kLTJ40/FYAJ2F7TppH9W8JHvmouNSkPeGXIz47J+3f0eBOV8CChNJ9AJxpdHXVSeB6w9iViCdCB9C+J0iTk+uMCkNdFk=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0d37a41-12dd-4457-ba5e-08d7fc69d15b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 02:59:31.2650
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbf9c2b1-5829-421f-0a2b-08d7fc6a1452
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 03:01:23.2808
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MZS6VTlagS7bwuMKBofRKpPGqxM+J6c8+gz4gqawg/xhQrMXjq2VZq6xmda6A/xZbgQm+iUXvLrvpsLnaeqVmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6634
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g5HQDgh+hQdURzQwxCaWZlMRW33VXRtOZs6K7nTO+ayRHu4gnfgp/l8IjRd8xp9SO6aZNv1+94zcKlpj/nKnHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2870
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add identifier property for DDR perf.
-
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi  | 1 +
- arch/arm64/boot/dts/freescale/imx8mn.dtsi  | 1 +
- arch/arm64/boot/dts/freescale/imx8mq.dtsi  | 1 +
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 1 +
- 4 files changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 1e5e11592f7b..ee14a6ecdb93 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -898,6 +898,7 @@
- 			reg = <0x3d800000 0x400000>;
- 			interrupt-parent = <&gic>;
- 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			identifier = "i.mx8mm";
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index a44b5438e842..b93e56ebf9a7 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -796,6 +796,7 @@
- 			compatible = "fsl,imx8mn-ddr-pmu", "fsl,imx8m-ddr-pmu";
- 			reg = <0x3d800000 0x400000>;
- 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			identifier = "i.mx8mn";
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 6a1e83922c71..38cc93af35ac 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -1217,6 +1217,7 @@
- 			reg = <0x3d800000 0x400000>;
- 			interrupt-parent = <&gic>;
- 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			identifier = "i.mx8mq";
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index fb5f752b15fe..0c294b549806 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -436,6 +436,7 @@
- 			compatible = "fsl,imx8-ddr-pmu";
- 			reg = <0x5c020000 0x10000>;
- 			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+			identifier = "i.mx8";
- 		};
- 	};
- 
--- 
-2.17.1
-
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gYXJtNjQ6IGR0czogaW14OG1wOiBhZGQgbXUgbm9k
+ZQ0KPiANCj4gSGkgUGVuZywNCj4gDQo+IE9uIFR1ZSwgTWF5IDE5LCAyMDIwIGF0IDExOjE1IFBN
+IDxwZW5nLmZhbkBueHAuY29tPiB3cm90ZToNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgbXU6IG1haWxib3hAMzBhYTAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14NnN4LW11IjsNCj4gDQo+IFRoaXMgc2hvdWxkIGJl
+IGJldHRlciBkZXNjcmliZWQgYXM6DQo+IA0KPiBjb21wYXRpYmxlID0gImZzbCxpbXg4bXAtbXUi
+LCAiZnNsLGlteDZzeC1tdSI7DQo+IA0KPiBGcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tYWlsYm94L2ZzbCxtdS50eHQ6DQo+IA0KPiAiVGhlICJmc2wsaW14NnN4LW11IiBj
+b21wYXRpYmxlIGlzIHNlZW4gYXMgZ2VuZXJpYyBhbmQgc2hvdWxkIGJlIGluY2x1ZGVkDQo+IHRv
+Z2V0aGVyIHdpdGggU29DIHNwZWNpZmljIGNvbXBhdGlibGUuIg0KDQpOb3RoaW5nIHNwZWNpZmlj
+IGluIGkuTVg4TVAgZm9yIHRoZSBtdSBwYXJ0LCBzbyBkbyB3ZSByZWFsbHkgbmVlZA0KYWRkICJm
+c2wsaW14OG1wLW11Ij8NCg0KVGhhbmtzLA0KUGVuZy4NCg==
