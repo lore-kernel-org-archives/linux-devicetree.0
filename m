@@ -2,126 +2,129 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F42C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 14:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3152CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 14:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94697207D3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 14:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589983404;
-	bh=QuXivJWfSCHoFejw2WGsuzr9GwmENzgWc4fknuN2hVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gjScgOEwueGebFEwEZm0v56e4favZ09ZM9rALiPM1Twq3uLDcJQ+B2kQGDf/3h7GK
-	 NJJLEJAmjcf1ZRpgqy5CJ4P+jMkPYAixKeGHVpMz4aVejK8UNMCEGp17RxUTm7f4JD
-	 EIh9l4XVMBG6CTTs6SW3VNe1wWXMZCH1EWvTuZE4=
+	by mail.kernel.org (Postfix) with ESMTP id 10624205CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 14:30:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qGcAh6zK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgETODY (ORCPT
+        id S1726839AbgETOaK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 10:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgETODX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 10:03:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E20D320756;
-        Wed, 20 May 2020 14:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589983403;
-        bh=QuXivJWfSCHoFejw2WGsuzr9GwmENzgWc4fknuN2hVw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eiyArFOnyS9XWPVzx2pT9OR3PB51ouV4SYNXBJ/MysL4g4tA60zrn+LXVy2btR79O
-         RI9k8qrNOLyJ2r26YpfZ9DWI8NVapbA8kStc2j9iMBOnMPrz+iik1p9pAf++tpwLEf
-         mcWbA0DiSjTiLMPuGXhTXbwNZHh9ZjMLZ0mML4wI=
-Date:   Wed, 20 May 2020 16:03:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        Wed, 20 May 2020 10:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgETOaK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 10:30:10 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA62BC061A0E;
+        Wed, 20 May 2020 07:30:09 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 142so3714352qkl.6;
+        Wed, 20 May 2020 07:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wnlZoevgT2PApLtssSG5/dDA/6NMSDx5IuYHuh8rwQQ=;
+        b=qGcAh6zKpxjPoqmOHri3tXoMSOSyjaMG9ePXTwJBItYxsEIB6i1R9UAXx4KrVWcFbB
+         pS+BDbRLq08x3uozXcjZf0xUZSa6XDlyhA67H2IYsxj3VZRFA8sATk3O9C/QJV+ipVO3
+         zFppRGiOu4JDc4UtTkumPi0BB4ytaMqXlwX2pEXGRD5Tj2AIRY2ZxLdm9oXasnAFmUdz
+         C5eB7YatIYW3oYH+xyBufZA7c2keh26EkYQ6u+zie6QfjdAsrTi38gpNEVS4Z0VAm+qz
+         sPKYwv3VjnrcAT/yCwcfElaKpQ871WKU2VSLHyOqKoVaBSCi7VJ1TMqkgw39xEjn1+MY
+         YCWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wnlZoevgT2PApLtssSG5/dDA/6NMSDx5IuYHuh8rwQQ=;
+        b=TyyZzYpZxkAfDvo0b/Ug7CFGwnX7XM9e1CnAm9SylLawVROJlv9rYMgyuGCrKp67aX
+         U/ZjRQda1craPgeB1s79k6Pnnp/ixF27FHTtqSXIIynTZoNFeVSB4DvWG58WnhOj4L+f
+         1E/QcB1HnglowaA8FQnVmoQhXwH5/Bj0Q9lybJQWvC40vL4JMd965F1KghykwInTNc30
+         o4TpkY8DAk2ajDQ7h1leYZfm0HhqTHwr8USBY8IahuH4svV/aCcdF0GegNw/pAXNf4hF
+         ZcgBujDv9zOdUDzza5yjd7Roca54o9eMCOWRf/s31kAexMMSNPnxaWzxThrYn1KFl1uD
+         V/6w==
+X-Gm-Message-State: AOAM533XwSMnzArhFdu7l+XC/eOzhLvlx5pEWZA/kip9DvpwR/huAPe2
+        GNQGlkKp7OfGyxQ72kxadkw=
+X-Google-Smtp-Source: ABdhPJzA6/XHH/E6E8lr686JCngM6pwIMIniACTyHxdAXyEDE3MaXy/JRhRp2sZiDeEhGG9f7XYdDw==
+X-Received: by 2002:a05:620a:1379:: with SMTP id d25mr4972883qkl.173.1589985008726;
+        Wed, 20 May 2020 07:30:08 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id n7sm2347513qtr.40.2020.05.20.07.30.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 May 2020 07:30:07 -0700 (PDT)
+Date:   Wed, 20 May 2020 16:29:50 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Allison Randal <allison@lohutok.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma
- offsets
-Message-ID: <20200520140320.GA3624154@kroah.com>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-10-james.quinlan@broadcom.com>
- <20200520054349.GB2180554@kroah.com>
- <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200520142950.GA22222@ict14-OptiPlex-980>
+References: <20200520073125.30808-1-jonathan.albrieux@gmail.com>
+ <20200520073125.30808-2-jonathan.albrieux@gmail.com>
+ <CAHp75VcWBe=3j68t9pmRk=xigsym_f_EHG4HLLKe_cmQi5E6mA@mail.gmail.com>
+ <20200520134416.GA6875@ict14-OptiPlex-980>
+ <20200520135401.GS1634618@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
+In-Reply-To: <20200520135401.GS1634618@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 09:50:36AM -0400, Jim Quinlan wrote:
-> On Wed, May 20, 2020 at 1:43 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, May 19, 2020 at 04:34:07PM -0400, Jim Quinlan wrote:
-> > > diff --git a/include/linux/device.h b/include/linux/device.h
-> > > index ac8e37cd716a..6cd916860b5f 100644
-> > > --- a/include/linux/device.h
-> > > +++ b/include/linux/device.h
-> > > @@ -493,6 +493,8 @@ struct dev_links_info {
-> > >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-> > >   *           DMA limit than the device itself supports.
-> > >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-> > > + * @dma_map: Like dma_pfn_offset but used when there are multiple
-> > > + *           pfn offsets for multiple dma-ranges.
-> > >   * @dma_parms:       A low level driver may set these to teach IOMMU code about
-> > >   *           segment limitations.
-> > >   * @dma_pools:       Dma pools (if dma'ble device).
-> > > @@ -578,7 +580,12 @@ struct device {
-> > >                                            allocations such descriptors. */
-> > >       u64             bus_dma_limit;  /* upstream dma constraint */
-> > >       unsigned long   dma_pfn_offset;
-> > > -
-> > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
-> > > +     const void *dma_offset_map;     /* Like dma_pfn_offset, but for
-> > > +                                      * the unlikely case of multiple
-> > > +                                      * offsets. If non-null, dma_pfn_offset
-> > > +                                      * will be 0. */
-> > > +#endif
-> > >       struct device_dma_parameters *dma_parms;
+On Wed, May 20, 2020 at 04:54:01PM +0300, Andy Shevchenko wrote:
+> On Wed, May 20, 2020 at 03:44:16PM +0200, Jonathan Albrieux wrote:
+> > On Wed, May 20, 2020 at 11:23:18AM +0300, Andy Shevchenko wrote:
+> > > On Wed, May 20, 2020 at 10:32 AM Jonathan Albrieux
+> > > <jonathan.albrieux@gmail.com> wrote:
+> > > 
+> > > > +maintainers:
+> > > > +  - can't find a maintainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+> > > 
+> > > Alas, you'll never go forward with this.
+> > > One (easiest way) is to drop this patch completely if you won't be a
+> > > maintainer of the binding.
 > > >
-> > >       struct list_head        dma_pools;      /* dma pools (if dma'ble) */
-> >
-> > I'll defer to Christoph here, but I thought we were trying to get rid of
-> > stuff like this from struct device, not add new things to it for dma
-> Hi Greg,
+> > 
+> > That's too bad. How can I be a maintainer of the binding?
 > 
-> I wasn't aware of this policy.  I put it in 'struct device' because
-> just like the existing dma_pfn_offset; it seemed to be the only way to
-> pull this off.  I'll certainly follow any ideas on alternative
-> strategies from Christoph et al.
+> Put your name there as Jonathan and me suggested. :-)
 > 
-> > apis.  And why is it a void *?
-> Just wanted to minimize the number of lines I've added to device.h, no
-> other reason.
+> maintainers:
+>   - Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
-How would using a real type make this more lines?  Never use a void *
-unless you have to, we want the compiler to check our errors for us :)
+Ok I'll prepare a new patch then :-)
 
-thanks,
-
-greg k-h
+Thank you!!
+Best regards,
+Jonathan Albrieux
