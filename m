@@ -2,149 +2,105 @@ Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8DEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8D7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8923C20758
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD3120671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 11:38:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fj9sgLib"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDYEU8Kf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgETLeT (ORCPT
+        id S1726525AbgETLiS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 07:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57062 "EHLO
+        Wed, 20 May 2020 07:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbgETLeS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 07:34:18 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED88C08C5C0
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 04:34:18 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id p139so663416vkd.7
-        for <devicetree@vger.kernel.org>; Wed, 20 May 2020 04:34:18 -0700 (PDT)
+        with ESMTP id S1726224AbgETLiR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 07:38:17 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1CE0C061A0E;
+        Wed, 20 May 2020 04:38:16 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id y17so531431ilg.0;
+        Wed, 20 May 2020 04:38:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DgmfyzVYzscCx4dDlPSqr1e5ZR4oYBcUr/7sbyuRQZI=;
-        b=fj9sgLib8MofXTKe1dMs13C6gyONXHS2rDtjzx7S78uHk74FIhLqglDxqTQHQeXLNH
-         cn9OrhwXtAvlsvj+bD0DF44mdrGPzntlqBDCPaH360Hj60rTxrFpv0OEKADDEpdzAvf7
-         G2UFqzj3z+OA/EzQGbEigdKtC/5xvhK4UQJfVHNFrht0Xl3TmzmMYuwC9SFpWVcHW3h7
-         2jMRDd9X7bRKcX8gluJMAxGQzr+VfvU1yIfLoSYhN6n7xY6jkLN+YSzwb33A7z8PmVX/
-         szyPVtLJ6L3HLMOeanuO2IOMvah1a154/lGdG37E8Vtn9n9GeL7R6t4b2UifiJ3fEnnK
-         hDWA==
+        bh=c5gCsCCg2ZktsI6WZTvCyt/N51Rkad6rw/S1dWQ5wyk=;
+        b=FDYEU8Kf25iQOG7H8v613iXDN7QVeKL+0wv2HcOeF3sRFNk3N1B5Cj24Fdas4AojmV
+         83ap1eulAyUn1LZ5nsiDzO+e3qjZQ72rCeWIvmDI8e5NrJ3A2s04Hn0hMfPzG09/LjfE
+         gczizyQkl0jM38snWj1UiWDG8IJXx9A2WNViJ/tBAAhg7tjx/0FpNTEctqnmSk6zURU6
+         lwIcIdDyV7ZfwERvH29YUZeFXb+ypnDYTR/m27s3oA27eDWbIVi6ClpiQ5sCMDwDERnq
+         QfoXC+QUT+qIwn70lhjesnxV5QsDVWCLDIFh2jw5OirunO2h65o6ZOLB53sqQKhDKGQJ
+         reVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DgmfyzVYzscCx4dDlPSqr1e5ZR4oYBcUr/7sbyuRQZI=;
-        b=UHyjwnJNilvPIkb/6zNndjDHeWE4qR38Cnkgg3Kn18zUHZ0XomjZ2k5BdqkVoJ2h3n
-         DdxQp4hUJkK6sJMRDvoOxRxHKRn0uLxdKGyIt/w+rbNma4Vf8EicYcv/0jcehI3Fq6F/
-         pyeUS1LlGVPQvDGQ3imniwRY1ke8vI+XM22Z26td5PL/IH3Ayi+P4gJqudphX0MH7K59
-         HdkUl3Uy1pyvH2f1TLgfdTtZWrY2J4DWAUHQ2x8am9SHoOqOkYlYyH7bvX50+iUka5x0
-         EcqWzOYKSLa1eM5/eJ8YPp8S9/AQzjcsBHwEFbAOdv8eYLnzgW918ERVKGK8rM509CMh
-         oHAA==
-X-Gm-Message-State: AOAM531q4sSgp8aV2cEQJa0iVFYf4yBRkKl+NPCitpbQ30HX1Nq6mHR/
-        TKsQQaXaFSx0CguLRd83VB8sxhEtEjuFCjt4qW9grQ==
-X-Google-Smtp-Source: ABdhPJxKuVUpB+U+VNKWEGX391HdkT4mDSF1Cg8zQZh7p+i+ndcZwRmQL7rhoJt2wQSfYPd+IGT2+LG8GsbHywt+4g8=
-X-Received: by 2002:a1f:25d7:: with SMTP id l206mr3353792vkl.53.1589974457487;
- Wed, 20 May 2020 04:34:17 -0700 (PDT)
+        bh=c5gCsCCg2ZktsI6WZTvCyt/N51Rkad6rw/S1dWQ5wyk=;
+        b=oIjCT0xr9tkZydAhR+x/ioOgig/3rq3fm5QTNdJGyknY4DjkXCnIQGSWUNCSuYwPUU
+         KZt98LlH9tbD/eDco2TwDjMX/5iKIj9IYsirubmjJEhK7VCtyfuV2f4hBjGXxjPNXSKN
+         vSilUlpDXYtjVDykvK7mZU/M/U3/zrxTUvF4LGnI8+Au3vx6ykuaAMG7bxFCY3L7h9cg
+         q+Mm8dnlMUBlHUPTQ2wptUpBZvBXmFXB9z1ZJh3KZQ0EkcZOQCgeKgv1u9IJaYbncQAt
+         ZcIk7/dVLVl+fmXMezrrMKyBAm/bub+tgm4PnaH7Zaa/eR8/5ke4MXLqtxlz5qpdb9TF
+         pgmg==
+X-Gm-Message-State: AOAM531Q9VkwIsxR5XslQ3Ekga6sK3u8YSijFIztzPMelKr95yo1QkbO
+        AH7bDs55kcurITeEZyoYCH81ihEmqJJ1TMo7FA==
+X-Google-Smtp-Source: ABdhPJzKJP/cGNNac1kUPgTwPlLIWOHe6TrixFNrwaMIGkK58srY1G5ZeYUEIcAgtqSbV0sC4psNaRowIFiZqCXO4ME=
+X-Received: by 2002:a92:8c8a:: with SMTP id s10mr3283841ill.220.1589974696422;
+ Wed, 20 May 2020 04:38:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org> <1588838535-6050-2-git-send-email-sartgarg@codeaurora.org>
-In-Reply-To: <1588838535-6050-2-git-send-email-sartgarg@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 20 May 2020 13:33:41 +0200
-Message-ID: <CAPDyKFoSz2f+t=-S-K_Qwkd07y4BC+ne-kiqNk+Zpjbe_rN-oA@mail.gmail.com>
-Subject: Re: [PATCH V1 1/7] dt-bindings: mmc: Add information for DLL register properties
-To:     Sarthak Garg <sartgarg@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+References: <20200520095113.185414-1-tali.perry1@gmail.com>
+ <20200520095113.185414-3-tali.perry1@gmail.com> <20200520102452.GP1634618@smile.fi.intel.com>
+In-Reply-To: <20200520102452.GP1634618@smile.fi.intel.com>
+From:   Avi Fishman <avifishman70@gmail.com>
+Date:   Wed, 20 May 2020 14:37:13 +0300
+Message-ID: <CAKKbWA5L_n7iC6-d22Am62SOoDBwNWO87+sXtRbwxwuVdjmRYA@mail.gmail.com>
+Subject: Re: [PATCH v11 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Tali Perry <tali.perry1@gmail.com>, ofery@google.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Tomer Maimon <tmaimon77@gmail.com>, kfting@nuvoton.com,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Rob Herring <robh+dt@kernel.org>, wsa@the-dreams.de,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-i2c@vger.kernel.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 May 2020 at 10:03, Sarthak Garg <sartgarg@codeaurora.org> wrote:
->
-> Add information regarding DLL register properties for getting target
-> specific configurations. These DLL register settings may vary from
-> target to target.
->
-> Also new compatible string value for sm8250 target.
+Thanks Andy,
+Question below:
 
-As Rob indicated, it's a bit confusing to understand the bindings. I
-think the word "target" is what makes this confusing.
+On Wed, May 20, 2020 at 1:24 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, May 20, 2020 at 12:51:12PM +0300, Tali Perry wrote:
+> > Add Nuvoton NPCM BMC I2C controller driver.
+>
+> ...
+>
+> > +#ifdef CONFIG_DEBUG_FS
+>
+> Why?!
 
-I would suggest splitting this patch into two pieces. One that adds
-the new compatible string for the new variant and another patch that
-adds the *board specific* dll bindings. That should clarify this.
-
-Kind regards
-Uffe
+It is made to save code size if CONFIG_DEBUG_FS is not defined?
+We see a lot of kernel code that is doing it.
+So could you elaborate what is the problem?
 
 >
-> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 5445931..b8e1d2b 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -17,6 +17,7 @@ Required properties:
->                 "qcom,msm8916-sdhci", "qcom,sdhci-msm-v4"
->                 "qcom,msm8992-sdhci", "qcom,sdhci-msm-v4"
->                 "qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
-> +               "qcom,sm8250-sdhci", "qcom,sdhci-msm-v5"
->                 "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
->                 "qcom,qcs404-sdhci", "qcom,sdhci-msm-v5"
->                 "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-> @@ -46,6 +47,13 @@ Required properties:
->         "cal"   - reference clock for RCLK delay calibration (optional)
->         "sleep" - sleep clock for RCLK delay calibration (optional)
->
-> +- qcom,ddr-config: Certain chipsets and platforms require particular settings
-> +       for the DDR_CONFIG register. Use this field to specify the register
-> +       value as per the Hardware Programming Guide.
-> +
-> +- qcom,dll-config: Chipset and Platform specific value. Use this field to
-> +       specify the DLL_CONFIG register value as per Hardware Programming Guide.
-> +
->  Example:
->
->         sdhc_1: sdhci@f9824900 {
-> @@ -63,6 +71,9 @@ Example:
->
->                 clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
->                 clock-names = "core", "iface";
-> +
-> +               qcom,dll-config = <0x000f642c>;
-> +               qcom,ddr-config = <0x80040868>;
->         };
->
->         sdhc_2: sdhci@f98a4900 {
-> @@ -80,4 +91,7 @@ Example:
->
->                 clocks = <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
->                 clock-names = "core", "iface";
-> +
-> +               qcom,dll-config = <0x0007642c>;
-> +               qcom,ddr-config = <0x80040868>;
->         };
-> --
-> 2.7.4
+> > +#include <linux/debugfs.h>
+> > +#endif
 >
