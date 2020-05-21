@@ -2,180 +2,114 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B610FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0818CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8076D20671
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C529520748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590071918;
+	bh=OiPs36foL9u2qM53WH6N6taB239fXx9YwYNRpOR+uc8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RIvelQ78RwruOvEXx97BFEXhtRfMAPTVv3xaw5JvdJ6s/E8kY9xtutkCdFtfwfReo
+	 XieVNSO/V5Bs1dvU3FjLqdDpzPt5b13ijdmoU6fE4vXxkAKZuB3iYM9z88eiwV3zNB
+	 tguQbkuwG2+Exd8hoM1noYTvVx3CMMRMW3B2PvDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbgEUOgh (ORCPT
+        id S1727889AbgEUOii (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 10:36:37 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63186 "EHLO mga05.intel.com"
+        Thu, 21 May 2020 10:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729844AbgEUOgh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 10:36:37 -0400
-IronPort-SDR: ae5p9ncrVuiXxW5wezmyun+odlx5FOb3wtTOjd9rhwM+LRRF2Cm3OrWj0XBMmnuFwu3uTM+IPY
- ROiaoZN4x5CQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 07:36:36 -0700
-IronPort-SDR: 7b8ROu2A3A9XEgh3Fs2Y+Q285e1ifd91EOCucSW4KwbQ1BCx/+VNxN++j7SoDTWYquT7uYB9YF
- J8sQKRBNJxAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
-   d="scan'208";a="343862381"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 21 May 2020 07:36:32 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jbmJH-0082yZ-GB; Thu, 21 May 2020 17:36:35 +0300
-Date:   Thu, 21 May 2020 17:36:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     ofery@google.com, brendanhiggins@google.com,
-        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        robh+dt@kernel.org, wsa@the-dreams.de,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 3/3] i2c: npcm7xx: Add support for slave mode for
- Nuvoton
-Message-ID: <20200521143635.GN1634618@smile.fi.intel.com>
-References: <20200521110910.45518-1-tali.perry1@gmail.com>
- <20200521110910.45518-4-tali.perry1@gmail.com>
+        id S1726973AbgEUOii (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 10:38:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D32A20671;
+        Thu, 21 May 2020 14:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590071917;
+        bh=OiPs36foL9u2qM53WH6N6taB239fXx9YwYNRpOR+uc8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IOEcaexAkIOaBlLyjmM4y4cc/lI+AvTt2XG3MJSe97tPOOBgmi21ZXYe/wbygmmAv
+         5aXAD0JnBq4smiwKKP0tkBFg6mfmBK9KQxomojoIgqFlfdKP3EZ7WzahgMAIQfnPLY
+         ixdP2n51XBJE02yNEqT0nnudoDksFaXfwPwqR4lA=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jbmLD-00EFyF-AE; Thu, 21 May 2020 15:38:35 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521110910.45518-4-tali.perry1@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 21 May 2020 15:38:35 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
+        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org
+Subject: Re: [PATCH v7 13/24] iommu/arm-smmu-v3: Enable broadcast TLB
+ maintenance
+In-Reply-To: <20200521141730.GJ6608@willie-the-truck>
+References: <20200519175502.2504091-1-jean-philippe@linaro.org>
+ <20200519175502.2504091-14-jean-philippe@linaro.org>
+ <20200521141730.GJ6608@willie-the-truck>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <0c896ad27b43b2de554cf772f9453d0a@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: will@kernel.org, jean-philippe@linaro.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com, robin.murphy@arm.com, kevin.tian@intel.com, baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com, christian.koenig@amd.com, felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:09:10PM +0300, Tali Perry wrote:
-> Add support for slave mode for Nuvoton
-> NPCM BMC I2C controller driver.
+On 2020-05-21 15:17, Will Deacon wrote:
+> [+Marc]
+> 
+> On Tue, May 19, 2020 at 07:54:51PM +0200, Jean-Philippe Brucker wrote:
+>> The SMMUv3 can handle invalidation targeted at TLB entries with shared
+>> ASIDs. If the implementation supports broadcast TLB maintenance, 
+>> enable it
+>> and keep track of it in a feature bit. The SMMU will then be affected 
+>> by
+>> inner-shareable TLB invalidations from other agents.
+>> 
+>> A major side-effect of this change is that stage-2 translation 
+>> contexts
+>> are now affected by all invalidations by VMID. VMIDs are all shared 
+>> and
+>> the only ways to prevent over-invalidation, since the stage-2 page 
+>> tables
+>> are not shared between CPU and SMMU, are to either disable BTM or 
+>> allocate
+>> different VMIDs. This patch does not address the problem.
+> 
+> This sounds like a potential performance issue, particularly as we 
+> expose
+> stage-2 contexts via VFIO directly. Maybe we could reserve some portion 
+> of
+> VMID space for the SMMU? Marc, what do you reckon?
 
-...
+Certainly doable when we have 16bits VMIDs. With smaller VMID spaces 
+(like on
+v8.0), this is a bit more difficult (we do have pretty large v8.0 
+systems
+around). How many VMID bits are we talking about?
 
-> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
-> +/*
-> + * npcm_i2caddr array:
-> + * The module supports having multiple own slave addresses.
-> + * Since the addr regs are sprinkled all over the address space,
-> + * use this array to get the address or each register.
-> + */
-> +#define I2C_NUM_OWN_ADDR 10
-> +const int  npcm_i2caddr[I2C_NUM_OWN_ADDR] = {NPCM_I2CADDR1, NPCM_I2CADDR2,
-
-Extra spaces.
-On top. please start assignment from the new line.
-
-> +					     NPCM_I2CADDR3, NPCM_I2CADDR4,
-> +					     NPCM_I2CADDR5, NPCM_I2CADDR6,
-> +					     NPCM_I2CADDR7, NPCM_I2CADDR8,
-
-> +					     NPCM_I2CADDR9, NPCM_I2CADDR10};
-
-Split }; to new line and leave comma with the last member.
-
-> +#endif
-
-...
-
-> +static int  npcm_i2c_slave_enable(struct npcm_i2c *bus, enum i2c_addr addr_type,
-> +				  u8 addr, bool enable)
-
-Extra spaces. Check entire patch for that and fix accordingly.
-
-> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
-> +	if (bus->slave)
-
-> +		npcm_i2c_slave_enable(bus, I2C_SLAVE_ADDR1, bus->slave->addr,
-> +				      true);
-
-I would leave this on one line.
-
-> +#endif
-
-...
-
-> +static void npcm_i2c_write_fifo_slave(struct npcm_i2c *bus, u16 max_bytes)
-> +{
-> +	u8 size_free_fifo;
-
-+ blank line.
-
-> +	/*
-> +	 * Fill the FIFO, while the FIFO is not full and there are more bytes
-> +	 * to write
-> +	 */
-> +	npcm_i2c_clear_fifo_int(bus);
-> +	npcm_i2c_clear_tx_fifo(bus);
-> +	iowrite8(0, bus->reg + NPCM_I2CTXF_CTL);
-
-> +	size_free_fifo = I2C_HW_FIFO_SIZE - npcm_i2c_fifo_usage(bus);
-
-Dup, move into loop.
-
-> +	while (max_bytes-- && size_free_fifo) {
-> +		if (bus->slv_wr_size > 0) {
-> +			bus->slv_wr_ind = bus->slv_wr_ind % I2C_HW_FIFO_SIZE;
-> +			npcm_i2c_wr_byte(bus, bus->slv_wr_buf[bus->slv_wr_ind]);
-> +			bus->slv_wr_ind++;
-> +			bus->slv_wr_ind = bus->slv_wr_ind % I2C_HW_FIFO_SIZE;
-> +			bus->slv_wr_size--;
-> +			size_free_fifo = I2C_HW_FIFO_SIZE -
-> +					 npcm_i2c_fifo_usage(bus);
-> +		} else {
-> +			break;
-> +		}
-> +	}
-
-	while (...) {
-		if (...)
-			break;
-		...
-	}
-
-> +}
-
-...
-
-> +static int npcm_i2c_slave_get_wr_buf(struct npcm_i2c *bus)
-> +{
-> +	int i;
-
-> +	u8 value = 0;
-
-Redundant assignment.
-
-> +	int ind;
-> +	int ret = bus->slv_wr_ind;
-> +
-> +	/* fill a cyclic buffer */
-> +	for (i = 0; i < I2C_HW_FIFO_SIZE; i++) {
-> +		if (bus->slv_wr_size >= I2C_HW_FIFO_SIZE)
-> +			break;
-> +		i2c_slave_event(bus->slave, I2C_SLAVE_READ_REQUESTED, &value);
-> +		ind = (bus->slv_wr_ind + bus->slv_wr_size) % I2C_HW_FIFO_SIZE;
-> +		bus->slv_wr_buf[ind] = value;
-> +		bus->slv_wr_size++;
-> +		i2c_slave_event(bus->slave, I2C_SLAVE_READ_PROCESSED, &value);
-> +	}
-> +	return I2C_HW_FIFO_SIZE - ret;
-> +}
-
+         M.
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jazz is not dead. It just smells funny...
