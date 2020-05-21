@@ -2,159 +2,127 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D93C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CBCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2C420823
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE6C20826
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590091039;
-	bh=3GAvSfAMUddifLPCHvTDvFY432iF5D80Ue+hjq5ma/k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Tben1L+bPYpasMRCXewJIt6+M1emY1ebDwPiqC3O9txlF+vWd7jpDIsG8s+CY4qGv
-	 oiyNSSloRa2QGcSL8WDIsuXjqmvTMjkIEn4TIQGyXLm9lpdfZNJtCDHo1zOlLBsUkO
-	 acw0z9ak2xtkiPZT9JDQLaaKYB4XTi5R5GpuJQfY=
+	s=default; t=1590091073;
+	bh=hYC1vjaGETl/3CgA0n/a57NPosACCQiHCX0L1n9aqOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RDzDI2rNM9vxk2LEysf/5xVe5zzlsr+0huRvmM648H/uVbVuS6g87meGKHfea5Uvw
+	 E2yd+YtSSXwvY91V5jT/oKWdS3/9Mi1NQT0btLXfq3LVuCYnuvirMjV3XyP0+qJJq8
+	 uKCQL41gRwxA90sjyRrFTUULtseTerT6lfJwA6Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgEUT5T (ORCPT
+        id S1729373AbgEUT5w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 15:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgEUT5R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 15:57:17 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E75DF20738;
-        Thu, 21 May 2020 19:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590091037;
-        bh=3GAvSfAMUddifLPCHvTDvFY432iF5D80Ue+hjq5ma/k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gLbu0zhdPVgG7Aa7IJPzjZ012leZ59yB44+hm4Djnqe8e9igB7XrDDOqwRrCvIVps
-         VGzPP6kAzLHPckkBWX0D0Xq9iZwTRZN5nDCIv9E4wOlxFcjK/Q0L66P9VnXc+BbvIF
-         b1FuHaozN67QS9jwH61wycwEOTtGQA/LP4ZnnrZo=
-Date:   Thu, 21 May 2020 14:57:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 21 May 2020 15:57:52 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46184 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728635AbgEUT5w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 15:57:52 -0400
+Received: by mail-il1-f193.google.com with SMTP id w18so8408092ilm.13;
+        Thu, 21 May 2020 12:57:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OAy8ldgBATiWXiqryhQTwFQBaNcYrHCCh+yz1e4niZQ=;
+        b=L36FnRruIWci6VHq5N1626IrG24qkuWsOcOLNyQDbDVmsB6WGF2kSCVQ3nkO+mS7im
+         lP4RWzQYg8tSSjSLdyPeMPhMSssebJImN8XImM7EvegdMvq6Sk5sYI1cseDpkHtjmAx+
+         KQ3kKYKQWnTmwuLQtSXYozUx5X3q0ixqmo7trPvviAw9IwetroRqeNQRX6EQj3DmniPP
+         Cplbi501y/sdKs/o9PqMrR/zEg+rdKwPjHqAmGcaQoFDkwXJ9LCMw9Am4W9dy2LrNxHt
+         CT9NcvyE+DKpF/0e3hD/YZaVO3FKUP4NiwwZiGC2o4I9yOvYjS988ABiDRtov6zsTaSY
+         i6xw==
+X-Gm-Message-State: AOAM532cNkElnCtjPgq1RmVwIOpaAyIAdp2vTNbZdVSx3ZH87i9UtXi4
+        DaeAywptdkZShfQKWfiR1PDmmJU=
+X-Google-Smtp-Source: ABdhPJwHyDis2WG1KGFNitaZrgzusOwKaK2iwSdk9rFkjUCecu87kyYn6kFxi+8OsazkPT2U1tEWWw==
+X-Received: by 2002:a92:ce01:: with SMTP id b1mr9931451ilo.55.1590091071311;
+        Thu, 21 May 2020 12:57:51 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l3sm2919083iow.55.2020.05.21.12.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 12:57:50 -0700 (PDT)
+Received: (nullmailer pid 2796469 invoked by uid 1000);
+        Thu, 21 May 2020 19:57:48 -0000
+Date:   Thu, 21 May 2020 13:57:48 -0600
+From:   robh@kernel.org
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Marc Zyngier <maz@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH 08/12] of/irq: make of_msi_map_get_device_domain() bus
- agnostic
-Message-ID: <20200521195715.GA1171267@bjorn-Precision-5520>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/9] dt-bindings: gpio: Convert mrvl-gpio to
+ json-schema
+Message-ID: <20200521195748.GA2795626@bogus>
+References: <20200521091356.2211020-1-lkundrak@v3.sk>
+ <20200521091356.2211020-3-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521130008.8266-9-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20200521091356.2211020-3-lkundrak@v3.sk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:00:04PM +0100, Lorenzo Pieralisi wrote:
-> From: Diana Craciun <diana.craciun@oss.nxp.com>
+On Thu, 21 May 2020 11:13:49 +0200, Lubomir Rintel wrote:
+> This converts the mrvl-gpio binding to DT schema format using json-schema.
 > 
-> of_msi_map_get_device_domain() is PCI specific but it need not be and
-> can be easily changed to be bus agnostic in order to be used by other
-> busses by adding an IRQ domain bus token as an input parameter.
+> Various fixes were done during the conversion, such as adding more
+> properties that are in fact mandatory or extending the examples to
+> include child nodes with extra GPIO blocks.
 > 
-> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci/msi.c
-
+> The compatible strings are a mess. It is not clear why so many of them
+> are needed; the driver doesn't really seem to differentiate between the
+> models. Some of them, like marvell,pxa93x-gpio and marvell,pxa1928-gpio
+> are not used at all, so it's not known how many interrupts they utilize.
+> On the other hand, mrvl,pxa-gpio has been seen in the tree, but it
+> doesn't end up in any actual DTB file.
+> 
+> In any case -- the schema merely copies whatever was in the original
+> binding document, so it's hopefully no more wrong that the original.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
 > ---
->  drivers/of/irq.c       | 8 +++++---
->  drivers/pci/msi.c      | 2 +-
->  include/linux/of_irq.h | 5 +++--
->  3 files changed, 9 insertions(+), 6 deletions(-)
+> Changes since v1:
+> - Drop marvell,pxa1928-gpio
+> - Drop ranges from example with no gcb child nodes
+> - Add default GPL-2.0-only license tag
+> - Fill in maintainers from MAINTAINERS file
 > 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index a296eaf52a5b..48a40326984f 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -613,18 +613,20 @@ u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
->   * of_msi_map_get_device_domain - Use msi-map to find the relevant MSI domain
->   * @dev: device for which the mapping is to be done.
->   * @rid: Requester ID for the device.
-> + * @bus_token: Bus token
->   *
->   * Walk up the device hierarchy looking for devices with a "msi-map"
->   * property.
->   *
->   * Returns: the MSI domain for this device (or NULL on failure)
->   */
-> -struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 rid)
-> +struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 id,
-> +						u32 bus_token)
->  {
->  	struct device_node *np = NULL;
->  
-> -	__of_msi_map_rid(dev, &np, rid);
-> -	return irq_find_matching_host(np, DOMAIN_BUS_PCI_MSI);
-> +	__of_msi_map_rid(dev, &np, id);
-> +	return irq_find_matching_host(np, bus_token);
->  }
->  
->  /**
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 74a91f52ecc0..9532e1d12d3f 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1556,7 +1556,7 @@ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
->  	u32 rid = pci_dev_id(pdev);
->  
->  	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
-> -	dom = of_msi_map_get_device_domain(&pdev->dev, rid);
-> +	dom = of_msi_map_get_device_domain(&pdev->dev, rid, DOMAIN_BUS_PCI_MSI);
->  	if (!dom)
->  		dom = iort_get_device_domain(&pdev->dev, rid,
->  					     DOMAIN_BUS_PCI_MSI);
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 1214cabb2247..7142a3722758 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -52,7 +52,8 @@ extern struct irq_domain *of_msi_get_domain(struct device *dev,
->  					    struct device_node *np,
->  					    enum irq_domain_bus_token token);
->  extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
-> -						       u32 rid);
-> +							u32 id,
-> +							u32 bus_token);
->  extern void of_msi_configure(struct device *dev, struct device_node *np);
->  u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
->  #else
-> @@ -85,7 +86,7 @@ static inline struct irq_domain *of_msi_get_domain(struct device *dev,
->  	return NULL;
->  }
->  static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
-> -							      u32 rid)
-> +						u32 id, u32 bus_token)
->  {
->  	return NULL;
->  }
-> -- 
-> 2.26.1
+>  .../devicetree/bindings/gpio/mrvl-gpio.txt    |  48 -----
+>  .../devicetree/bindings/gpio/mrvl-gpio.yaml   | 174 ++++++++++++++++++
+>  2 files changed, 174 insertions(+), 48 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
 > 
+
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/mrvl-gpio.example.dt.yaml: gpio@40e00000: 'ranges' is a required property
+
+See https://patchwork.ozlabs.org/patch/1295044
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
