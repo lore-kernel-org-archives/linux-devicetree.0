@@ -3,96 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84184C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 12:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D7EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6737B2078B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 12:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812402072C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgEUM65 (ORCPT
+        id S1726802AbgEUNAS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 08:58:57 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37640 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbgEUM64 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 08:58:56 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D145E803078D;
-        Thu, 21 May 2020 12:58:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IIkDM5PcshWY; Thu, 21 May 2020 15:58:53 +0300 (MSK)
-Date:   Thu, 21 May 2020 15:58:51 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        David Lechner <david@lechnology.com>,
-        John Garry <john.garry@huawei.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Sameer Pujar <spujar@nvidia.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 11/14] bus: cdmm: Add MIPS R5 arch support
-Message-ID: <20200521125851.5upamjd7ldirj57a@mobilestation>
-References: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
- <20200521003443.11385-12-Sergey.Semin@baikalelectronics.ru>
- <9ad8383b-8199-1006-cf91-d760bace705e@cogentembedded.com>
+        Thu, 21 May 2020 09:00:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:45974 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726762AbgEUNAR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 09:00:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D010ED6E;
+        Thu, 21 May 2020 06:00:16 -0700 (PDT)
+Received: from red-moon.arm.com (unknown [10.57.29.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AC5A3F305;
+        Thu, 21 May 2020 06:00:14 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH 00/12] ACPI/OF: Upgrade MSI/IOMMU ID mapping APIs
+Date:   Thu, 21 May 2020 13:59:56 +0100
+Message-Id: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9ad8383b-8199-1006-cf91-d760bace705e@cogentembedded.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 01:25:21PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 21.05.2020 3:34, Serge Semin wrote:
-> 
-> > CDMM may be available not only MIPS R2 architectures, but also in
->                                 ^ on              -re, it's singular
+Firmware bindings provided in the ACPI IORT table[1] and device tree
+bindings define rules to carry out input/output ID mappings - ie
+retrieving an IOMMU/MSI controller input ID for a device with a given
+ID.
 
-Thanks, Sergey. Got it. I'll fix it in the next revision.
+At the moment these firmware bindings are used exclusively for PCI
+devices and their requester ID to IOMMU/MSI id mapping but there is
+nothing PCI specific in the ACPI and devicetree bindings that prevent
+the firmware and kernel from using the firmware bindings to traslate
+device IDs for any bus that requires its devices to carry out
+input/output id translations.
 
-> 
-> > newer MIPS R5 chips. For instance our P5600 chip has one. Lets mark
-Probably also:                                                ^ Let's
-Right?
+The Freescale FSL bus is an example whereby the input/output ID
+translation kernel code put in place for PCI can be reused for devices
+attached to the bus that are not PCI devices.
 
--Sergey
+This series updates the kernel code to make the MSI/IOMMU input/output
+ID translation PCI agnostic and apply the resulting changes to the
+device ID space provided by the Freescale FSL bus.
 
-> > the CDMM bus being supported for that MIPS arch too.
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
 
-> > 
-> > Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Reviewed-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Olof Johansson <olof@lixom.net>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> [...]
-> 
-> MBR, Sergei
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "Joerg Roedel <joro@8bytes.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+
+Diana Craciun (3):
+  of/irq: make of_msi_map_get_device_domain() bus agnostic
+  bus/fsl-mc: Refactor the MSI domain creation in the DPRC driver
+  bus: fsl-mc: Add ACPI support for fsl-mc
+
+Laurentiu Tudor (1):
+  dt-bindings: arm: fsl: Add msi-map device-tree binding for fsl-mc bus
+
+Lorenzo Pieralisi (8):
+  ACPI/IORT: Make iort_match_node_callback walk the ACPI namespace for
+    NC
+  ACPI/IORT: Make iort_get_device_domain IRQ domain agnostic
+  ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
+  ACPI/IORT: Remove useless PCI bus walk
+  ACPI/IORT: Add an input ID to acpi_dma_configure()
+  of/iommu: Make of_map_rid() PCI agnostic
+  of/device: Add input id to of_dma_configure()
+  of/irq: Make of_msi_map_rid() PCI bus agnostic
+
+ .../devicetree/bindings/misc/fsl,qoriq-mc.txt |  30 ++++-
+ drivers/acpi/arm64/iort.c                     | 108 ++++++++++++------
+ drivers/acpi/scan.c                           |   8 +-
+ drivers/bus/fsl-mc/dprc-driver.c              |  31 ++---
+ drivers/bus/fsl-mc/fsl-mc-bus.c               |  79 +++++++++----
+ drivers/bus/fsl-mc/fsl-mc-msi.c               |  36 ++++--
+ drivers/bus/fsl-mc/fsl-mc-private.h           |   6 +-
+ drivers/iommu/of_iommu.c                      |  53 ++++++---
+ drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c   |  88 +++++++++++++-
+ drivers/of/base.c                             |  42 +++----
+ drivers/of/device.c                           |   8 +-
+ drivers/of/irq.c                              |  34 +++---
+ drivers/pci/msi.c                             |   5 +-
+ include/acpi/acpi_bus.h                       |   9 +-
+ include/linux/acpi.h                          |   7 ++
+ include/linux/acpi_iort.h                     |  26 +++--
+ include/linux/of.h                            |  17 ++-
+ include/linux/of_device.h                     |  16 ++-
+ include/linux/of_iommu.h                      |   6 +-
+ include/linux/of_irq.h                        |  19 ++-
+ 20 files changed, 451 insertions(+), 177 deletions(-)
+
+-- 
+2.26.1
+
