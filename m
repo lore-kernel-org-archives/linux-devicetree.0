@@ -2,122 +2,187 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1724C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1323C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D92206F6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B9F20748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hkPi3G6+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iR3pZfkK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgEUPyH (ORCPT
+        id S1728330AbgEUP4X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 11:54:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39960 "EHLO
+        Thu, 21 May 2020 11:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728350AbgEUPyF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 11:54:05 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57681C05BD43
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:54:05 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id w18so7496989ilm.13
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:54:05 -0700 (PDT)
+        with ESMTP id S1727098AbgEUP4W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 11:56:22 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3B1C061A0F
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:56:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h17so7127827wrc.8
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BfWoobLVAKfzMCiMZcNvEFreCxWJpDiylD9YHTs2DM8=;
-        b=hkPi3G6+ffqyy54W13omYGNYelo1z8fPDbEUIslyzE6p6/MRNAcoFKAll6dV0rPZz/
-         PLNHi8p7h/L1GdxnH8/vwJ7NSNrlNRk7ApAZoyU/lC1q6V+dfUtYlfBOp933NFKHP+Fb
-         0atY4zRCNh71xBRkXSsNFrl6eb2bihQL9IuAT2tgeLH6NTGE4gsYD/e5f82DT3SCKUM3
-         F574RYdrLYgihpu0nk9vJ1yksIcajeqrWo4Tev1/KKpd9LEIXu+ZVbTukPwYHjYqIoCV
-         j2TWKcnqMoSgTNTpRO/+kxvWzZI4fsioPJ2IjGzsk96RppbCTPeLa07Og0UZY2vZcj78
-         f2Ww==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uLCMRTyOXjE9erVUxBDc3PTKU9Yt55p8AR+4yWGIsbg=;
+        b=iR3pZfkKbiToIz1N7ufbr2Ugkp9DSrnwW2AOdbebzNhEOZ7YdsnlO9drTxWjtbxpfL
+         BuXCNhnKsSaB+XWrfXNOIWyGeT19lgVwoEqDobqhDWNIabOOj65L55nGxewmeylThkmR
+         lFBgxEJsbafCqXo1njqHmm7SsBEHYG30/1s7aPy1O+04VDrALmmv/vDzJxohtyxo8lqb
+         Vjrv71oCYP4DHJo+dJbZiV/lLn/QvPEMPda0hMvOE3IfPQgJMtBfvYHNYFKZDDCRPD4U
+         2eKE7djjuKS49cG4Db9rPchi+xDoEEtjuLW6PoN42cTLWcKlBWtiCi33inM1sQW7EhQn
+         0azQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BfWoobLVAKfzMCiMZcNvEFreCxWJpDiylD9YHTs2DM8=;
-        b=WBhLm8w5b9zBzdvu4uewE5f7Q+F20eGF93VmEKcNjVKkrS6GLVPFEW3fV3YhHwv6bB
-         d4IKtV/GNNz7d/brBe2h9+T/NRNUxLxmRxsY8v6ytAOXsmxtwt0YJ5gyNsAq/fJpYZeg
-         8uWPrii7oy5oOByuDJ21sYrEb4oUIzXMiv5N4NCQqTOvz+O4rHpTBsgiztAiyCpOgRkX
-         xvK+XUa4hco4TSwnG9H4Oh6YbSWR0lbjlLR0pmq8ZvFEKM177dAno4BYs+BIaAKDVb8W
-         MOMH/Fyy2T00p0m0NpWrVU+lB/nD635bRBT6O/EJqBIxbsC7+b9YaR+oJHHOpef6LLtI
-         m2ug==
-X-Gm-Message-State: AOAM530ZZA/zbDoqSI4MnbLf9znaRctebhby6BpC+dMoBbTH+3z2Uk7d
-        66YN0CrqbZ7MxCsffo5vHxZC/5xXsaXk4w1eYU2iag==
-X-Google-Smtp-Source: ABdhPJxSeqc9p+cZk7hCXVAfU51UL+rEUcfznzd6rZk0t9zdDUQgpdG5YvcK8wwCvzBe2YCoqfVICx4SnejEqjj53MI=
-X-Received: by 2002:a92:89cf:: with SMTP id w76mr8990688ilk.57.1590076444041;
- Thu, 21 May 2020 08:54:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1589558615.git.saiprakash.ranjan@codeaurora.org> <7b69c9752713ce22f04688e83ec78f8aa67c63dc.1589558615.git.saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <7b69c9752713ce22f04688e83ec78f8aa67c63dc.1589558615.git.saiprakash.ranjan@codeaurora.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 21 May 2020 09:53:53 -0600
-Message-ID: <CANLsYkx9FsCXPYPzXhR5C6rFKEvBrYr5A6Reu=zAnLG_HVk7AQ@mail.gmail.com>
-Subject: Re: [PATCHv3 2/2] dt-bindings: arm: coresight: Add support to skip
- trace unit power up
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uLCMRTyOXjE9erVUxBDc3PTKU9Yt55p8AR+4yWGIsbg=;
+        b=Ultk+ypuNHSvA5bZ1VXhQcYMQOR6h8EgAcJmGTDMXRBLdThqSJYftlyYJTc7slcvnl
+         ///XVr6POPNEWXIKfDNGB32SkoZeaU4yH2XOVJaPLzc9wk5ZUAj3ZOOZO+5unxFqfkhe
+         3TXCxxnMCPOiSDrbHZz1UXFnrfLIdHbAih0gIomc4DZ/C9EY5FYR3D30Xj8m/msGo66M
+         rAs3uXGC7JdzPi5DiXD93ki8FQx9Er7EaquUwgwfC1PJtOdqmWDNKjpUy8sHTbSUqLlh
+         jk1u5AJfw6+RkFmN51ppTKmFYrBr+EDdSgBLYqx9qUkPtUjnsrB1cVhXEIEw/NTSgNzJ
+         iVDA==
+X-Gm-Message-State: AOAM531Xl9i2bBSDOYXrEcRHp9tDkTe8aX+OwagJv/u4SZqtTjAQh5u7
+        zfzsauwn18FxXq8it8YZqIT8cA==
+X-Google-Smtp-Source: ABdhPJxrMTmt7fxRkq9YsSfm7JKgRhRnDtp9kr90marbvWZjRQ6V/3vd0FugA1b6W6TJcs6AhSlm1g==
+X-Received: by 2002:a5d:4c49:: with SMTP id n9mr2020191wrt.266.1590076551258;
+        Thu, 21 May 2020 08:55:51 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id m3sm6778597wrn.96.2020.05.21.08.55.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 May 2020 08:55:50 -0700 (PDT)
+Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse
+ support
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Coresight ML <coresight@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org
+References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
+ <1589307480-27508-3-git-send-email-rbokka@codeaurora.org>
+ <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
+ <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org>
+ <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
+ <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org>
+ <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
+ <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
+ <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org>
+ <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
+ <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org>
+ <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <9ecb5790-47fe-583b-6fc3-8f4f3ce7860e@linaro.org>
+Date:   Thu, 21 May 2020 16:55:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 15 May 2020 at 10:23, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> From: Tingwei Zhang <tingwei@codeaurora.org>
->
-> Add "qcom,skip-power-up" property to identify systems which can
-> skip powering up of trace unit since they share the same power
-> domain as their CPU core. This is required to identify such
-> systems with hardware errata which stops the CPU watchdog counter
-> when the power up bit is set (TRCPDCR.PU).
->
-> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index 846f6daae71b..e4b2eda0b53b 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -108,6 +108,13 @@ its hardware characteristcs.
->         * arm,cp14: must be present if the system accesses ETM/PTM management
->           registers via co-processor 14.
->
-> +       * qcom,skip-power-up: boolean. Indicates that an implementation can
-> +         skip powering up the trace unit. TRCPDCR.PU does not have to be set
-> +         on Qualcomm Technologies Inc. systems since ETMs are in the same power
-> +         domain as their CPU cores. This property is required to identify such
-> +         systems with hardware errata where the CPU watchdog counter is stopped
-> +         when TRCPDCR.PU is set.
-> +
->  * Optional property for TMC:
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
->
->         * arm,buffer-size: size of contiguous buffer space for TMC ETR
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+On 21/05/2020 16:10, Doug Anderson wrote:
+>> On 20/05/2020 23:48, Doug Anderson wrote:
+>>>> Is this only applicable for corrected address space?
+>>> I guess I was proposing a two dts-node / two drive approach here.
+>>>
+>>> dts node #1:just covers the memory range for accessing the FEC-corrected data
+>>> driver #1: read-only and reads the FEC-corrected data
+>>>
+>>> dts node #2: covers the memory range that's_not_  the FEC-corrected
+>>> memory range.
+>>> driver #2: read-write.  reading reads uncorrected data
+>>>
+>>> Does that seem sane?
+>> I see your point but it does not make sense to have two node for same thing.
+> OK, so that sounds as if we want to go with the proposal where we
+> "deprecate the old driver and/or bindings and say that there really
+> should just be one node and one driver".
+> 
+> Would this be acceptable to you?
+> 
+> 1. Officially mark the old bindings as deprecated.
+
+Possibly Yes for some reasons below!
+
+> 
+> 2. Leave the old driver there to support the old deprecated bindings,
+> at least until everyone can be transferred over.  There seem to be
+> quite a few existing users of "qcom,qfprom" and we're supposed to make
+> an attempt at keeping the old device trees working, at least for a
+> little while.  Once everyone is transferred over we could decide to
+> delete the old driver.
+we could consider "qcom,qfrom" to be only passing corrected address 
+space. Till we transition users to new bindings!
+
+> 
+Yes.
+
+> 3. We will have a totally new driver here.
+No, we should still be using the same driver. But the exiting driver 
+seems to incorrect and is need of fixing.
+
+Having a look at the memory map for old SoCs like msm8996 and msm8916 
+shows that memory map that was passed to qfprom driver is corrected 
+address space. Writes will not obviously work!
+
+This should also be true with sdm845 or sc7180
+
+That needs to be fixed first!
+
+> 
+> 4. A given device tree will_not_  be allowed to have both
+> "qcom,qfprom" specified and "qcom,SOC-qfprom" specified.  ...and by
+> "qcom,SOC-qfprom" I mean that SOC should be replaced by the SoC name,
+> so "qcom,sc7180-qfprom" or "qcom,sdm845-qfprom".  So once you switch
+> to the new node it replaces the old node.
+
+Secondly, this IP is clearly an integral part of Secure Control Block, 
+which clearly has versioning information.
+
+Versioning information should be part of compatible string in msm8996 it 
+should be "qcom,qfprom-5.1.0"
+for msm8916 it should be "qcom,qfprom-4.0.0" this translates to 
+"qcom,qfprom-<MAJOR-NUMBER>-<MINOR-NUMBER>-<STEP>"
+
+Thirdly we should be able to have common read for all these as they tend 
+to just read from corrected address space.
+
+Offsets to corrected address space seems to always constant across SoCs too.
+
+platform specific device tree nodes should also be able to specify 
+"read-only" property to not allow writes on to this raw area.
+
+Does this make sense ?
+
+Thanks,
+srini
+> 
+> 
+>> Isn't the raw address space reads used to for blowing and checking the
+>> fuses if they are blown correctly or not and software usage of these
+>> fuses should only be done from correct address space?
+>>
+>> the read interface to user should be always from corrected address space
+>> and write interface should be to raw address space.
+> Great.  That sounds right to me.  Presumably the driver could add some
+> sort of "debugfs" access to read the raw address space if needed.
