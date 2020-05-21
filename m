@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888CEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CDCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5148C20874
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5DC2075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qrtnEqSf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j5nY4h4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgEUAK2 (ORCPT
+        id S1726890AbgEUAK3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 20:10:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48446 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbgEUAKY (ORCPT
+        Wed, 20 May 2020 20:10:29 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54946 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgEUAKY (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 20:10:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04L0AGhP039962;
-        Wed, 20 May 2020 19:10:16 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04L0AEkZ119704;
+        Wed, 20 May 2020 19:10:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590019816;
-        bh=fyj/A44wMsZ1NeWYNrpqdgs9QWSsqWp9lY0ct4O7634=;
+        s=ti-com-17Q1; t=1590019815;
+        bh=rZ+8zvFrOMMd6Sfqc+RIPegMwahThkjdiCU2NtPnWxU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qrtnEqSfflYjpW2c8oN2FLWREcAGnEN++eZZnv6g9r4tKfyf0b+v1oB68RcK4bpaO
-         suMGanqz+WY5asH/4KFtxUbHISWSuNInUFmXEui0X6nM9UGJ2vxWKw0SvxcAWUQwJe
-         AwdxzxOF0AtpbHJTnPngx0luk0RuK5xh3UHDuSzE=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04L0AGhl034567
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 19:10:16 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=j5nY4h4lWHas1G60DhhXm7eXxaxT2tX4/ugT5Gj/91kF12ukWKpRIeiqtGN3J5uNX
+         d4NOOgdewVjqRqfbyr2VEzl1ShbBUo6UfJ2tKJcHg9iUdgtHtJAkA/sfVqlTgM1uXx
+         xEuJGx/Opd3ujyTRhxuq5UuCWCINCc9a9GEixhdA=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L0AEt5070841;
+        Wed, 20 May 2020 19:10:14 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 19:10:16 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 19:10:14 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 19:10:16 -0500
+ Frontend Transport; Wed, 20 May 2020 19:10:14 -0500
 Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L0AGQK003730;
-        Wed, 20 May 2020 19:10:16 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L0AETl025062;
+        Wed, 20 May 2020 19:10:14 -0500
 Received: from localhost ([10.250.48.148])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 04L0AGc6084900;
-        Wed, 20 May 2020 19:10:16 -0500
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 04L0AEmq084893;
+        Wed, 20 May 2020 19:10:14 -0500
 From:   Suman Anna <s-anna@ti.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -58,9 +57,9 @@ CC:     Lokesh Vutla <lokeshvutla@ti.com>,
         <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2 4/4] remoteproc/k3-dsp: Add support for L2RAM loading on C66x DSPs
-Date:   Wed, 20 May 2020 19:10:06 -0500
-Message-ID: <20200521001006.2725-5-s-anna@ti.com>
+Subject: [PATCH v2 2/4] dt-bindings: remoteproc: Add bindings for C66x DSPs on TI K3 SoCs
+Date:   Wed, 20 May 2020 19:10:04 -0500
+Message-ID: <20200521001006.2725-3-s-anna@ti.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200521001006.2725-1-s-anna@ti.com>
 References: <20200521001006.2725-1-s-anna@ti.com>
@@ -73,153 +72,222 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The resets for the DSP processors on K3 SoCs are managed through the
-Power and Sleep Controller (PSC) module. Each DSP typically has two
-resets - a global module reset for powering on the device, and a local
-reset that affects only the CPU while allowing access to the other
-sub-modules within the DSP processor sub-systems.
-
-The C66x DSPs have two levels of internal RAMs that can be used to
-boot from, and the firmware loading into these RAMs require the
-local reset to be asserted with the device powered on/enabled using
-the module reset. Enhance the K3 DSP remoteproc driver to add support
-for loading into the internal RAMs. The local reset is deasserted on
-SoC power-on-reset, so logic has to be added in probe in remoteproc
-mode to balance the remoteproc state-machine.
-
-Note that the local resets are a no-op on C71x cores, and the hardware
-does not supporting loading into its internal RAMs.
+Some Texas Instruments K3 family of SoCs have one of more Digital Signal
+Processor (DSP) subsystems that are comprised of either a TMS320C66x
+CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
+Add the device tree bindings document for the C66x DSP devices on these
+SoCs. The added example illustrates the DT nodes for the first C66x DSP
+device present on the K3 J721E family of SoCs.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
 v2:
- - Dropped the local-reset no-op checks from k3_dsp_rproc_prepare/unprepare()
-   callbacks. The logic will be adjusted back in the C71 patch series.
- - The C71 local reset references are also removed from the comments for the
-   k3_dsp_rproc_prepare() function.
-v1: https://patchwork.kernel.org/patch/11458579/
+ - Updated the example to include the root-node to fix the bot errors from v1
+ - Added maxItems to resets, mboxes, memory-region, sram properties
+ - Changed the ti,sci-proc-ids $ref to uint-array from uint-matrix
+ - Addressed the minor review comments from Mathieu
+v1: https://patchwork.kernel.org/patch/11458571/
 
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 72 +++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 190 ++++++++++++++++++
+ 1 file changed, 190 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
 
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index e4036f5992fe..610fbbf85ee6 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -174,6 +174,9 @@ static int k3_dsp_rproc_reset(struct k3_dsp_rproc *kproc)
- 		return ret;
- 	}
- 
-+	if (kproc->data->uses_lreset)
-+		return ret;
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+new file mode 100644
+index 000000000000..cdf649655838
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+@@ -0,0 +1,190 @@
++# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
- 						    kproc->ti_sci_id);
- 	if (ret) {
-@@ -191,6 +194,9 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
- 	struct device *dev = kproc->dev;
- 	int ret;
- 
-+	if (kproc->data->uses_lreset)
-+		goto lreset;
++title: TI K3 DSP devices
 +
- 	ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
- 						    kproc->ti_sci_id);
- 	if (ret) {
-@@ -198,6 +204,7 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
- 		return ret;
- 	}
- 
-+lreset:
- 	ret = reset_control_deassert(kproc->reset);
- 	if (ret) {
- 		dev_err(dev, "local-reset deassert failed, ret = %d\n", ret);
-@@ -209,6 +216,53 @@ static int k3_dsp_rproc_release(struct k3_dsp_rproc *kproc)
- 	return ret;
- }
- 
-+/*
-+ * The C66x DSP cores have a local reset that affects only the CPU, and a
-+ * generic module reset that powers on the device and allows the DSP internal
-+ * memories to be accessed while the local reset is asserted. This function is
-+ * used to release the global reset on C66x DSPs to allow loading into the DSP
-+ * internal RAMs. The .prepare() ops is invoked by remoteproc core before any
-+ * firmware loading, and is followed by the .start() ops after loading to
-+ * actually let the C66x DSP cores run.
-+ */
-+static int k3_dsp_rproc_prepare(struct rproc *rproc)
-+{
-+	struct k3_dsp_rproc *kproc = rproc->priv;
-+	struct device *dev = kproc->dev;
-+	int ret;
++maintainers:
++  - Suman Anna <s-anna@ti.com>
 +
-+	ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
-+						    kproc->ti_sci_id);
-+	if (ret)
-+		dev_err(dev, "module-reset deassert failed, cannot enable internal RAM loading, ret = %d\n",
-+			ret);
++description: |
++  The TI K3 family of SoCs usually have one or more TI DSP Core sub-systems
++  that are used to offload some of the processor-intensive tasks or algorithms,
++  for achieving various system level goals.
 +
-+	return ret;
-+}
++  These processor sub-systems usually contain additional sub-modules like
++  L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
++  controller, a dedicated local power/sleep controller etc. The DSP processor
++  cores in the K3 SoCs are usually either a TMS320C66x CorePac processor or a
++  TMS320C71x CorePac processor.
 +
-+/*
-+ * This function implements the .unprepare() ops and performs the complimentary
-+ * operations to that of the .prepare() ops. The function is used to assert the
-+ * global reset on applicable C66x cores. This completes the second portion of
-+ * powering down the C66x DSP cores. The cores themselves are only halted in the
-+ * .stop() callback through the local reset, and the .unprepare() ops is invoked
-+ * by the remoteproc core after the remoteproc is stopped to balance the global
-+ * reset.
-+ */
-+static int k3_dsp_rproc_unprepare(struct rproc *rproc)
-+{
-+	struct k3_dsp_rproc *kproc = rproc->priv;
-+	struct device *dev = kproc->dev;
-+	int ret;
++  Each DSP Core sub-system is represented as a single DT node. Each node has a
++  number of required or optional properties that enable the OS running on the
++  host processor (Arm CorePac) to perform the device management of the remote
++  processor and to communicate with the remote processor.
 +
-+	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
-+						    kproc->ti_sci_id);
-+	if (ret)
-+		dev_err(dev, "module-reset assert failed, ret = %d\n", ret);
++properties:
++  compatible:
++    const: ti,j721e-c66-dsp
++    description:
++      Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
 +
-+	return ret;
-+}
++  reg:
++    description: |
++      Should contain an entry for each value in 'reg-names'.
++      Each entry should have the memory region's start address
++      and the size of the region, the representation matching
++      the parent node's '#address-cells' and '#size-cells' values.
++    minItems: 3
++    maxItems: 3
 +
- /*
-  * Power up the DSP remote processor.
-  *
-@@ -352,6 +406,8 @@ static void *k3_dsp_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
- }
- 
- static const struct rproc_ops k3_dsp_rproc_ops = {
-+	.prepare	= k3_dsp_rproc_prepare,
-+	.unprepare	= k3_dsp_rproc_unprepare,
- 	.start		= k3_dsp_rproc_start,
- 	.stop		= k3_dsp_rproc_stop,
- 	.kick		= k3_dsp_rproc_kick,
-@@ -614,6 +670,22 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
- 		goto release_tsp;
- 	}
- 
-+	/*
-+	 * ensure the DSP local reset is asserted to ensure the DSP doesn't
-+	 * execute bogus code in .prepare() when the module reset is released.
-+	 */
-+	if (data->uses_lreset) {
-+		ret = reset_control_status(kproc->reset);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to get reset status, status = %d\n",
-+				ret);
-+			goto release_mem;
-+		} else if (ret == 0) {
-+			dev_warn(dev, "local reset is deasserted for device\n");
-+			k3_dsp_rproc_reset(kproc);
-+		}
-+	}
++  reg-names:
++    description: |
++      Should contain strings with the names of the specific internal
++      memory regions, and should be defined in this order
++    maxItems: 3
++    items:
++      - const: l2sram
++      - const: l1pram
++      - const: l1dram
 +
- 	ret = rproc_add(rproc);
- 	if (ret) {
- 		dev_err(dev, "failed to add register device with remoteproc core, status = %d\n",
++  ti,sci:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Should be a phandle to the TI-SCI System Controller node
++
++  ti,sci-dev-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Should contain the TI-SCI device id corresponding to the DSP core.
++      Please refer to the corresponding System Controller documentation
++      for valid values for the DSP cores.
++
++  ti,sci-proc-ids:
++    description: Should contain a single tuple of <proc_id host_id>.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - maxItems: 1
++        items:
++          items:
++            - description: TI-SCI processor id for the DSP core device
++            - description: TI-SCI host id to which processor control
++                           ownership should be transferred to
++
++  resets:
++    description: |
++      Should contain the phandle to the reset controller node
++      managing the local resets for this device, and a reset
++      specifier. Please refer to the following reset bindings
++      for the reset argument specifier,
++      Documentation/devicetree/bindings/reset/ti,sci-reset.txt
++    maxItems: 1
++
++  firmware-name:
++    description: |
++      Should contain the name of the default firmware image
++      file located on the firmware search path
++
++  mboxes:
++    description: |
++      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
++      communication with the remote processor. This property should match
++      with the sub-mailbox node used in the firmware image. The specifier
++      format is as per the bindings,
++      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
++    maxItems: 1
++
++  memory-region:
++    minItems: 2
++    maxItems: 8
++    description: |
++      phandle to the reserved memory nodes to be associated with the remoteproc
++      device. There should be at least two reserved memory nodes defined - the
++      first one would be used for dynamic DMA allocations like vrings and vring
++      buffers, and the remaining ones used for the firmware image sections. The
++      reserved memory nodes should be carveout nodes, and should be defined as
++      per the bindings in
++      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++
++# Optional properties:
++# --------------------
++
++  sram:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    minItems: 1
++    maxItems: 4
++    description: |
++      phandles to one or more reserved on-chip SRAM regions. The regions
++      should be defined as child nodes of the respective SRAM node, and
++      should be defined as per the generic bindings in,
++      Documentation/devicetree/bindings/sram/sram.yaml
++
++required:
++ - compatible
++ - reg
++ - reg-names
++ - ti,sci
++ - ti,sci-dev-id
++ - ti,sci-proc-ids
++ - resets
++ - firmware-name
++ - mboxes
++ - memory-region
++
++additionalProperties: false
++
++examples:
++  - |
++    / {
++        model = "Texas Instruments K3 J721E SoC";
++        compatible = "ti,j721e";
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        /* DSP Carveout reserved memory nodes */
++        reserved-memory {
++            #address-cells = <2>;
++            #size-cells = <2>;
++            ranges;
++
++            c66_0_dma_memory_region: c66-dma-memory@a6000000 {
++                compatible = "shared-dma-pool";
++                reg = <0x00 0xa6000000 0x00 0x100000>;
++                no-map;
++            };
++
++            c66_0_memory_region: c66-memory@a6100000 {
++                compatible = "shared-dma-pool";
++                reg = <0x00 0xa6100000 0x00 0xf00000>;
++                no-map;
++            };
++        };
++
++        cbass_main: bus@100000 {
++            compatible = "simple-bus";
++            #address-cells = <2>;
++            #size-cells = <2>;
++            ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
++                     <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
++                     <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
++
++            /* J721E C66_0 DSP node */
++            c66_0: dsp@4d80800000 {
++                compatible = "ti,j721e-c66-dsp";
++                reg = <0x4d 0x80800000 0x00 0x00048000>,
++                      <0x4d 0x80e00000 0x00 0x00008000>,
++                      <0x4d 0x80f00000 0x00 0x00008000>;
++                reg-names = "l2sram", "l1pram", "l1dram";
++                ti,sci = <&dmsc>;
++                ti,sci-dev-id = <142>;
++                ti,sci-proc-ids = <0x03 0xFF>;
++                resets = <&k3_reset 142 1>;
++                firmware-name = "j7-c66_0-fw";
++                memory-region = <&c66_0_dma_memory_region>,
++                                <&c66_0_memory_region>;
++                mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
++            };
++        };
++    };
 -- 
 2.26.0
 
