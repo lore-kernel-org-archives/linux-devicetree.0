@@ -2,110 +2,122 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C5FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1724C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A5D20748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590076310;
-	bh=mO0PzgDMdpQ32+Tp34GeQLw4brmQwyU7HhvPc3aXfRc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KX+nNkseCG51EcF0wIXpKHEcD8tA7kDcjd4Vakhqvy7J3oUaFkUi/5aRxHScTFr3t
-	 Jgx6tOPdHiZQ5H0v9AsWf2xgbvvGhcadSCUEsKgRKeecyJz/vY/WXgFkpfVYClSr/d
-	 rQx0sieLiJmW4JP+MqpF7yvO7RMlWneg1OuDCuO0=
+	by mail.kernel.org (Postfix) with ESMTP id 81D92206F6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:54:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hkPi3G6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgEUPvr (ORCPT
+        id S1728871AbgEUPyH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 11:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgEUPvq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 11:51:46 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E5C7206F6;
-        Thu, 21 May 2020 15:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590076306;
-        bh=mO0PzgDMdpQ32+Tp34GeQLw4brmQwyU7HhvPc3aXfRc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yB9mC01ohdIgpEdwUtfCboqeKzlvDlz3L1WEsOyI/5TSYkGjP5dxxtcvEVObFbTdn
-         ciBuprt1AS/qB1bOWmpGsXRwzfnorXUw/X9fOmqrqTFcAQxvK1wWKM7BwqVL70cmjx
-         DBxceZD7Ojt4PP+Tlpj7ukfiuraFYVmV/3PM4kxw=
-Date:   Thu, 21 May 2020 16:51:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
-Message-ID: <20200521155143.GE4770@sirena.org.uk>
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
- <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com>
- <20200521121228.aqplh6eftylnys3p@mobilestation>
+        Thu, 21 May 2020 11:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728350AbgEUPyF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 11:54:05 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57681C05BD43
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:54:05 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id w18so7496989ilm.13
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BfWoobLVAKfzMCiMZcNvEFreCxWJpDiylD9YHTs2DM8=;
+        b=hkPi3G6+ffqyy54W13omYGNYelo1z8fPDbEUIslyzE6p6/MRNAcoFKAll6dV0rPZz/
+         PLNHi8p7h/L1GdxnH8/vwJ7NSNrlNRk7ApAZoyU/lC1q6V+dfUtYlfBOp933NFKHP+Fb
+         0atY4zRCNh71xBRkXSsNFrl6eb2bihQL9IuAT2tgeLH6NTGE4gsYD/e5f82DT3SCKUM3
+         F574RYdrLYgihpu0nk9vJ1yksIcajeqrWo4Tev1/KKpd9LEIXu+ZVbTukPwYHjYqIoCV
+         j2TWKcnqMoSgTNTpRO/+kxvWzZI4fsioPJ2IjGzsk96RppbCTPeLa07Og0UZY2vZcj78
+         f2Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BfWoobLVAKfzMCiMZcNvEFreCxWJpDiylD9YHTs2DM8=;
+        b=WBhLm8w5b9zBzdvu4uewE5f7Q+F20eGF93VmEKcNjVKkrS6GLVPFEW3fV3YhHwv6bB
+         d4IKtV/GNNz7d/brBe2h9+T/NRNUxLxmRxsY8v6ytAOXsmxtwt0YJ5gyNsAq/fJpYZeg
+         8uWPrii7oy5oOByuDJ21sYrEb4oUIzXMiv5N4NCQqTOvz+O4rHpTBsgiztAiyCpOgRkX
+         xvK+XUa4hco4TSwnG9H4Oh6YbSWR0lbjlLR0pmq8ZvFEKM177dAno4BYs+BIaAKDVb8W
+         MOMH/Fyy2T00p0m0NpWrVU+lB/nD635bRBT6O/EJqBIxbsC7+b9YaR+oJHHOpef6LLtI
+         m2ug==
+X-Gm-Message-State: AOAM530ZZA/zbDoqSI4MnbLf9znaRctebhby6BpC+dMoBbTH+3z2Uk7d
+        66YN0CrqbZ7MxCsffo5vHxZC/5xXsaXk4w1eYU2iag==
+X-Google-Smtp-Source: ABdhPJxSeqc9p+cZk7hCXVAfU51UL+rEUcfznzd6rZk0t9zdDUQgpdG5YvcK8wwCvzBe2YCoqfVICx4SnejEqjj53MI=
+X-Received: by 2002:a92:89cf:: with SMTP id w76mr8990688ilk.57.1590076444041;
+ Thu, 21 May 2020 08:54:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Q8BnQc91gJZX4vDc"
-Content-Disposition: inline
-In-Reply-To: <20200521121228.aqplh6eftylnys3p@mobilestation>
-X-Cookie: Keep your laws off my body!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1589558615.git.saiprakash.ranjan@codeaurora.org> <7b69c9752713ce22f04688e83ec78f8aa67c63dc.1589558615.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <7b69c9752713ce22f04688e83ec78f8aa67c63dc.1589558615.git.saiprakash.ranjan@codeaurora.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 21 May 2020 09:53:53 -0600
+Message-ID: <CANLsYkx9FsCXPYPzXhR5C6rFKEvBrYr5A6Reu=zAnLG_HVk7AQ@mail.gmail.com>
+Subject: Re: [PATCHv3 2/2] dt-bindings: arm: coresight: Add support to skip
+ trace unit power up
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, 15 May 2020 at 10:23, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> From: Tingwei Zhang <tingwei@codeaurora.org>
+>
+> Add "qcom,skip-power-up" property to identify systems which can
+> skip powering up of trace unit since they share the same power
+> domain as their CPU core. This is required to identify such
+> systems with hardware errata which stops the CPU watchdog counter
+> when the power up bit is set (TRCPDCR.PU).
+>
+> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index 846f6daae71b..e4b2eda0b53b 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -108,6 +108,13 @@ its hardware characteristcs.
+>         * arm,cp14: must be present if the system accesses ETM/PTM management
+>           registers via co-processor 14.
+>
+> +       * qcom,skip-power-up: boolean. Indicates that an implementation can
+> +         skip powering up the trace unit. TRCPDCR.PU does not have to be set
+> +         on Qualcomm Technologies Inc. systems since ETMs are in the same power
+> +         domain as their CPU cores. This property is required to identify such
+> +         systems with hardware errata where the CPU watchdog counter is stopped
+> +         when TRCPDCR.PU is set.
+> +
+>  * Optional property for TMC:
 
---Q8BnQc91gJZX4vDc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-On Thu, May 21, 2020 at 03:12:28PM +0300, Serge Semin wrote:
-
-> Well, for me both solutions are equal except mine consumes less stack memory.
-> The only reason why your solution might be better is that if DW DMA driver or
-> the DMA engine subsystem changed the dw_dma_slave structure instance passed to
-> the dma_request_channel() method, which non of them do. So I'll leave this for
-> Mark to decide. Mark, could you give us your final word about this?
-
-Honestly I'm struggling to care either way.  I guess saving a bit of
-stack is potentially useful.
-
---Q8BnQc91gJZX4vDc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Go44ACgkQJNaLcl1U
-h9ARkgf+MntLj5Do0nvBWAqICSlgK/Xn8rMj1fR5eJDBdfgclFhZsPYUHPbZHr6I
-/U2aWUFEslX7Gq/QAu2JNA+uYp3p798aYv1u/h+Ss858qzbkBsRWNVAVFzNph0Dk
-qiruZrmFMuDqF0O/ofqHI4yiOqlJnT4KixjR7tKDoHlW4IxXrsHCCR6mAFmunYpY
-5XEIolhWrMiP6dN5vmAMwRt6My2zESwY3of8eW2lApg0n6tR2SFnWz5++CR7K04b
-TO73tMeXtI1lBogjeYz7iuC0joI16cg5aaDq5Lt6lMdbK6qhH5ZLjAynCRQLKE4C
-F/qLatJ9ve0BIC069lF4Tznzsq8NIg==
-=1v3o
------END PGP SIGNATURE-----
-
---Q8BnQc91gJZX4vDc--
+>
+>         * arm,buffer-size: size of contiguous buffer space for TMC ETR
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
