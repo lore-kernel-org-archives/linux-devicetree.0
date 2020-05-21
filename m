@@ -3,121 +3,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F3AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA543C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBD12070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BA620759
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgEUJKC (ORCPT
+        id S1728802AbgEUJMB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 05:10:02 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41068 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728545AbgEUJKC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 05:10:02 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 63so4957827oto.8;
-        Thu, 21 May 2020 02:10:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zsv1Lh0K7M59VV4w388XD6WcsG+ryCs8PrcoBNRfD4M=;
-        b=X7r2YGNSu7W81D5sXhBazL0VT8ZKFlbTBI5lYTFrUHKc4adJZt52e+hI8ctQE+4pvT
-         dWsZl4gfDgcDFBbm5m6YzDrZEQa50dyzmPxJi2cQFG+61Aaw0hBGvuCejr2EYYSCAhct
-         Fa9ZC/mDu21gz0w+C1KOI7PjAtG0ZeVh8TdJ+baD0yxUT2Nzcqo//qxCKcVzDTGYLqFl
-         CSI/OfvaVweBgHmxg6n0iwwj/k/h+oFwVjHIX85Oucl8Ew5B5IyALgmOeKh9j4DmY4DN
-         JAji6Cy8EPa6MJ0YPtO9J+YYmuk+2G5NkBMLa+DMG24gFUvk/AFGqJ2XTTWxm7/ubdUs
-         4jbQ==
-X-Gm-Message-State: AOAM5313VpUr7UzPdLeZeFzBexmmGL7Gusbj9yngE+omFoPRnyKnNkt9
-        jeqi1wU/RYyHpOBC9WUZFErG+4h/0cUR1rGKWWQ=
-X-Google-Smtp-Source: ABdhPJwm5hpnt7eWP1EGK7Mtgxjgzq8Xk87gNuPRLtNpSmjQNXuMv1lV/nvEbiXSLKYWEk/r7B5rKl5rIAchj2hnwqo=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr6210653otp.145.1590052201359;
- Thu, 21 May 2020 02:10:01 -0700 (PDT)
+        Thu, 21 May 2020 05:12:01 -0400
+Received: from mail.bugwerft.de ([46.23.86.59]:59118 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728761AbgEUJMA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 05:12:00 -0400
+Received: from zenbar.fritz.box (pd95ef28a.dip0.t-ipconnect.de [217.94.242.138])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 1DF19407CBA;
+        Thu, 21 May 2020 09:09:00 +0000 (UTC)
+From:   Daniel Mack <daniel@zonque.org>
+To:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org, jslaby@suse.com,
+        jringle@gridpoint.com, m.brock@vanmierlo.com,
+        pascal.huerst@gmail.com, Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v3 0/6] sc16is7xx: IrDA mode and threaded IRQs
+Date:   Thu, 21 May 2020 11:11:46 +0200
+Message-Id: <20200521091152.404404-1-daniel@zonque.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200521005321.12129-1-Sergey.Semin@baikalelectronics.ru> <20200521005321.12129-8-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200521005321.12129-8-Sergey.Semin@baikalelectronics.ru>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 21 May 2020 11:09:50 +0200
-Message-ID: <CAMuHMdW5TqfDTZZCscXCK-Fkd7Gq1Ciyu1_sDzzR0B+_W-2hfg@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] clocksource: mips-gic-timer: Mark GIC timer as
- unstable if ref clock changes
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-rtc@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Serge,
+This is v3 of the series.
 
-On Thu, May 21, 2020 at 2:54 AM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> Currently clocksource framework doesn't support the clocks with variable
-> frequency. Since MIPS GIC timer ticks rate might be unstable on some
-> platforms, we must make sure that it justifies the clocksource
-> requirements. MIPS GIC timer is incremented with the CPU cluster reference
-> clocks rate. So in case if CPU frequency changes, the MIPS GIC tick rate
-> changes synchronously. Due to this the clocksource subsystem can't rely on
-> the timer to measure system clocks anymore. This commit marks the MIPS GIC
-> based clocksource as unstable if reference clock (normally it's a CPU
-> reference clocks) rate changes. The clocksource will execute a watchdog
-> thread, which lowers the MIPS GIC timer rating to zero and fallbacks to a
-> new stable one.
->
-> Note we don't need to set the CLOCK_SOURCE_MUST_VERIFY flag to the MIPS
-> GIC clocksource since normally the timer is stable. The only reason why
-> it gets unstable is due to the ref clock rate change, which event we
-> detect here in the driver by means of the clocks event notifier.
->
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+v3:
 
-Thanks for your patch!
+ * Add my s-o-b to the first two patches
 
-> --- a/drivers/clocksource/mips-gic-timer.c
-> +++ b/drivers/clocksource/mips-gic-timer.c
-> @@ -24,6 +24,9 @@
->  static DEFINE_PER_CPU(struct clock_event_device, gic_clockevent_device);
->  static int gic_timer_irq;
->  static unsigned int gic_frequency;
-> +static bool __read_mostly gic_clock_unstable;
-> +
-> +static void git_clocksource_unstable(char *reason);
+v2:
 
-gic_clocksource_unstable? (everywhere)
+ * Change single bool properties into an array
+   (suggested by Rob Herring)
+ * Add a patch first try TRIGGER_LOW and SHARED interrupts, and then
+   fall back to FALLING edge if the IRQ controller fails to provide the
+   former (suggested by Maarten Brock)
+ * Add a patch to check for the device presence
 
-Gr{oetje,eeting}s,
+Daniel Mack (4):
+  sc16is7xx: Always use falling edge IRQ
+  sc16is7xx: Use threaded IRQ
+  sc16is7xx: Allow sharing the IRQ line
+  sc16is7xx: Read the LSR register for basic device presence check
 
-                        Geert
+Pascal Huerst (2):
+  dt-bindings: sc16is7xx: Add flag to activate IrDA mode
+  sc16is7xx: Add flag to activate IrDA mode
+
+ .../bindings/serial/nxp,sc16is7xx.txt         |  4 +
+ drivers/tty/serial/sc16is7xx.c                | 73 +++++++++++++------
+ 2 files changed, 56 insertions(+), 21 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
