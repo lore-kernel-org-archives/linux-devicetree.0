@@ -2,134 +2,92 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C97C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73395C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 168DE20823
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:06:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eW6v38ZR"
+	by mail.kernel.org (Postfix) with ESMTP id 4807D20826
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590084683;
+	bh=NOalaYPbHEwoE5ZwTM1xPd8ZRFEsjARJSOjT4Et8B6E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OAAyt98OXqopTT2kVZ8MhGnLRdyFb38G0PSkegZd6bkDdlL2Ctgoja3dqk/ciI1ZU
+	 5Jrw9m2CC2i7jl8D1d56xVBqcGQbZ+WkSYizU8tICkh/blNtjKcOeXflLYUtExKt8l
+	 Ofo2EpfFlg7QiznSEV6+d/c4FSrGQuoN5F81TcF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgEUSG1 (ORCPT
+        id S1728455AbgEUSLT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 14:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbgEUSG0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 14:06:26 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B26C061A0E;
-        Thu, 21 May 2020 11:06:26 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so3534280pgb.7;
-        Thu, 21 May 2020 11:06:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YcuxEZQUpOQDQ5Lr0xl9z9r81E55lsgED1E3qnSscDk=;
-        b=eW6v38ZRp+Glo1cdTZumTfkrEClDxGIGVQPUmVnS3h2bbdkhB2hZydHePX9NH5h1WJ
-         57JjQzpjr7Rvf30dSJISe8wjDElqD8mdf5NF/ma+HS8eVRio7mqNIoty+w+x26mZ2wgW
-         plEeZSv+UOcBad23gyytHzH5bYQLYi3uTMdSPubu6JyoxOXWfmNQQ+HtaXJxDuai6ObI
-         7zS0UO/REoAWWzt5XuERqrg0uPzqtUPLi4w4HvBkWzpe4/i39HYb15wITV+hCH7XFXab
-         HDWQ92eOQIkbgvNn345fJ8VetC1Mxabbt/pp4Ib6lQLqbtR3hJ32fVdh/ED7udF8mma6
-         yYMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YcuxEZQUpOQDQ5Lr0xl9z9r81E55lsgED1E3qnSscDk=;
-        b=Z6acBqBJaje/4lu0rl2r0Ewas6v7on76ABMOpagdWCj5xOMYmvjkS4ATW/QDpHzPee
-         ragObhdrj1qrpiWLaZuBdo3IGd9sBu/Rdwg2pvcugdJPeKpkJvVEOm8I7RBqZZxbLfr3
-         J0lmUtLrO4WVhk5kBQPts0SGxfzrGv/lPFiD6URlw8r5gKysbdQHEVuP3YunhVaF+fMZ
-         6iiMLZZWIEvuFEsnuvXNKioPOFfbqq/Rxa1+Iz+6KyigVfwFwXBYFFjsvK8o91bzHiDJ
-         MAvOanXnThOF13FVgjo1UL96jf8DFK2ZVs0eMmyEFWg58kR/eryRQb+amyQZYXtoM9/P
-         qBew==
-X-Gm-Message-State: AOAM533eWfxwDzz4HWyx9u5gpsen5W8cyMHa27Pu+4tzjIss7gLL25sC
-        6h3UhszKsuIzDQ9HgVyMGfao65Qo
-X-Google-Smtp-Source: ABdhPJznGe2UNZ5jAmqKiPtGqZfklEpUjBlndvAcPOFCKX2xEIJyAGsymq18z1F10/gOSMmTbJvXjQ==
-X-Received: by 2002:a63:d918:: with SMTP id r24mr10175031pgg.119.1590084385623;
-        Thu, 21 May 2020 11:06:25 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x13sm4910062pjr.20.2020.05.21.11.06.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 11:06:24 -0700 (PDT)
-Subject: Re: [RFC PATCH net-next 1/4] dt-bindings: net: Add tx and rx internal
- delays
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
-        davem@davemloft.net, robh@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200521174834.3234-1-dmurphy@ti.com>
- <20200521174834.3234-2-dmurphy@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a293624e-bbab-4f9e-3e59-470bff5a90f9@gmail.com>
-Date:   Thu, 21 May 2020 11:06:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Thu, 21 May 2020 14:11:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbgEUSLT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 14:11:19 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB60207D3;
+        Thu, 21 May 2020 18:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590084679;
+        bh=NOalaYPbHEwoE5ZwTM1xPd8ZRFEsjARJSOjT4Et8B6E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=U0NkA7rt95CF4hYXq7w3C0KfgPKrRQmZ9hvTM3IK+GjltmwQJY1+qpnF5hlVaovXz
+         8XPyTmj8Q/SaYkb/8qWLYqW710oKX72UijSwzzw3jJs+Kux/VGlB/whlV9CYUMF3pq
+         cdQiFLSeJO+yAQFh1kg6HtwWAOi9HNl/w5BrUmTE=
+Date:   Thu, 21 May 2020 19:11:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v14 1/2] dt-bindings: proximity: provide vcnl3020 device
+ tree binding document
+Message-ID: <20200521191114.6b454ab9@archlinux>
+In-Reply-To: <20200518204144.GA11276@bogus>
+References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
+        <20200510184537.10335-2-i.mikhaylov@yadro.com>
+        <20200518204144.GA11276@bogus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200521174834.3234-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, 18 May 2020 14:41:44 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-
-On 5/21/2020 10:48 AM, Dan Murphy wrote:
-> tx-internal-delays and rx-internal-delays are a common setting for RGMII
-> capable devices.
+> On Sun, 10 May 2020 21:45:36 +0300, Ivan Mikhaylov wrote:
+> > Mostly standard i2c driver with some additional led-current option
+> > for vcnl3020.
+> > 
+> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> > ---
+> >  .../iio/proximity/vishay,vcnl3020.yaml        | 62 +++++++++++++++++++
+> >  1 file changed, 62 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> >   
 > 
-> These properties are used when the phy-mode or phy-controller is set to
-> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
-> controller that the PHY will add the internal delay for the connection.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../bindings/net/ethernet-controller.yaml          | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> index ac471b60ed6a..3f25066c339c 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> @@ -143,6 +143,20 @@ properties:
->        Specifies the PHY management type. If auto is set and fixed-link
->        is not specified, it uses MDIO for management.
->  
-> +  rx-internal-delay:
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Please name this 'rx-internal-delay-ps'
 
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
-> +      PHY's that have configurable RX internal delays.  This property is only
-> +      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-rxid.
-> +
-> +  tx-internal-delay:
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Likewise
+Thanks,
 
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +      RGMII Transmit PHY Clock Delay defined in pico seconds.  This is used for
-> +      PHY's that have configurable TX internal delays.  This property is only
-> +      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-txid.
-> +
->    fixed-link:
->      allOf:
->        - if:
-> 
+Jonathan
 
--- 
-Florian
+
