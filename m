@@ -2,63 +2,139 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B2BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 08:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEC1C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 08:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D18D520759
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 08:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E18462070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 08:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZH+kMTmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgEUITX (ORCPT
+        id S1728481AbgEUI3x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 04:19:23 -0400
-Received: from verein.lst.de ([213.95.11.211]:53614 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728436AbgEUITX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 04:19:23 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B9A0D68BEB; Thu, 21 May 2020 10:19:19 +0200 (CEST)
-Date:   Thu, 21 May 2020 10:19:19 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma
- offsets
-Message-ID: <20200521081919.GA7532@lst.de>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com> <20200519203419.12369-10-james.quinlan@broadcom.com> <20200520174216.GA11770@lst.de> <CA+-6iNzy_nELB0ptE0vH5KrGMFq4CctFKDipk3ZzXnjnT9hfuQ@mail.gmail.com> <CAPcyv4jOGE0F4wCFM+cC8g=SofiXaNCBfAEPumUv=7nCM6KJ6Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jOGE0F4wCFM+cC8g=SofiXaNCBfAEPumUv=7nCM6KJ6Q@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Thu, 21 May 2020 04:29:53 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:35125 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728571AbgEUI3x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 04:29:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590049792; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=aDTruvvA2yePzBgcjAz1JobS/TI/kW3lC4X5OmuJpOA=; b=ZH+kMTmYJm96/+k8t9KIzZaRdd+wQX7c0JRVmXlVqYanfwj7ALHNOkZLpt7rp/jIgvkOmMGV
+ pW/rEVF5PyBcmMNlycb810xUva79M8M0ilQPQrY/j06ZD4tHbbdVkCJs0oNz39kXutTrK3ua
+ BoZcW2hJJucK+wjWGyOalb6R108=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec63bfe.7ff0d5c669d0-smtp-out-n02;
+ Thu, 21 May 2020 08:29:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A7F3AC433C9; Thu, 21 May 2020 08:29:50 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 46A6CC433C6;
+        Thu, 21 May 2020 08:29:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 46A6CC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, msavaliy@codeaurora.org,
+        evgreen@chromium.org, Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V6 0/7] [PATCH V5 0/7] Add interconnect support to QSPI and QUP drivers
+Date:   Thu, 21 May 2020 13:59:17 +0530
+Message-Id: <1590049764-20912-1-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:36:16PM -0700, Dan Williams wrote:
-> Certainly blindly cc'ing everyone recommended by
-> scripts/get_maintainers.pl is overkill, but finding that subset is a
-> bit of an art.
+V5 depend on below patches.
+ - https://lore.kernel.org/patchwork/patch/1237642/ [Add helpers
+   for enabling/disabling a path]
+ - https://patchwork.kernel.org/patch/11491027/ [Add devm_of_icc_get()
+   as exported API for users ]
 
-Yes.  But I'd rather be not Cced and just find the complete thread on
-a list.  But all the lists I'm on and have managed to read through
-yesterday didn't have the full series either.
+dt-binding patch for QUP drivers.
+ - https://patchwork.kernel.org/patch/11534149/ [Convert QUP bindings
+        to YAML and add ICC, pin swap doc]
+
+High level design:
+ - QUP wrapper/common driver.
+   Vote for QUP core on behalf of earlycon from probe.
+   Remove BW vote during earlycon exit call
+
+ - SERIAL driver.
+   Vote only for CPU/CORE path because driver is in FIFO mode only
+   Vote/unvote from qcom_geni_serial_pm func.
+   Bump up the CPU vote from set_termios call based on real time need
+
+ - I2C driver.
+   Vote for CORE/CPU/DDR path
+   Vote/unvote from runtime resume/suspend callback
+   As bus speed for I2C is fixed from probe itself no need for bump up.
+
+ - SPI QUP driver.
+   Vote only for CPU/CORE path because driver is in FIFO mode only
+   Vote/unvote from runtime resume/suspend callback
+   Bump up CPU vote based on real time need per transfer.
+
+ - QSPI driver.
+   Vote only for CPU path
+   Vote/unvote from runtime resume/suspend callback
+   Bump up CPU vote based on real time need per transfer.
+
+Changes in V2:
+ - Add devm_of_icc_get() API interconnect core.
+ - Add ICC support to common driver to fix earlyconsole crash.
+
+Changes in V3:
+ - Define common ICC APIs in geni-se driver and use it across geni based
+   I2C,SPI and UART driver.
+
+Changes in V4:
+ - Add a patch to ICC core to scale peak requirement
+   as twice of average if it is not mentioned explicilty.
+
+Changes in V5:
+ - As per Georgi's suggestion removed patch from ICC core for assuming
+   peak_bw as twice of average when it's not mentioned, instead assume it
+   equall to avg_bw and keep this assumption in ICC client itself.
+ - As per Matthias suggestion use enum for GENI QUP ICC paths.
+
+Changes in V6:
+ - No Major change
+
+Akash Asthana (7):
+  soc: qcom: geni: Support for ICC voting
+  soc: qcom-geni-se: Add interconnect support to fix earlycon crash
+  i2c: i2c-qcom-geni: Add interconnect support
+  spi: spi-geni-qcom: Add interconnect support
+  tty: serial: qcom_geni_serial: Add interconnect support
+  spi: spi-qcom-qspi: Add interconnect support
+  arm64: dts: sc7180: Add interconnect for QUP and QSPI
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi  | 127 +++++++++++++++++++++++++++
+ drivers/i2c/busses/i2c-qcom-geni.c    |  29 +++++-
+ drivers/soc/qcom/qcom-geni-se.c       | 160 ++++++++++++++++++++++++++++++++++
+ drivers/spi/spi-geni-qcom.c           |  31 ++++++-
+ drivers/spi/spi-qcom-qspi.c           |  59 ++++++++++++-
+ drivers/tty/serial/qcom_geni_serial.c |  38 +++++++-
+ include/linux/qcom-geni-se.h          |  44 ++++++++++
+ 7 files changed, 482 insertions(+), 6 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
