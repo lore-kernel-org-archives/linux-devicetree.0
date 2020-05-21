@@ -2,132 +2,112 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED593C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0033C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 10:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCAB320826
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pu4rceYV"
+	by mail.kernel.org (Postfix) with ESMTP id A79F72072C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 10:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgEUJ5f (ORCPT
+        id S1728395AbgEUKQa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 05:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgEUJ5f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 05:57:35 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B15C061A0E;
-        Thu, 21 May 2020 02:57:33 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id w19so2629291ply.11;
-        Thu, 21 May 2020 02:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ltjPOCU9A538igJqlQC+KDjFjSNLYyghW5XAjlV0EQI=;
-        b=pu4rceYVK6Lihnp83v+yc225cXHJm6lSy6vbEjEHturjUCei0W1hvCJmTDioKSPvJI
-         OSBAM7jlX9gl5xaYxJ5HvCF1SQ6mrm9cN3btWB6BgifgTY4sJZt1TBzgThmwMTl47Zdh
-         AMcraqWfMI02Jt/vFZjYUIaeaeRd5y/OraiOQVFe5NCH3dYK+8+5M1vTL0GUkbWl9muY
-         Elp78zjWwXYcNWzaKdgodX+Zjxf+cnpajpvtR1Uv+eTp8p+73hAqhT0z+8YCeA0MTljf
-         wxROOPCKgug260TPkmD7emTonRwFOBSPqNw2PA9kDuOylV+T4qifM+7zCN83rMt8YPpT
-         fUTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ltjPOCU9A538igJqlQC+KDjFjSNLYyghW5XAjlV0EQI=;
-        b=cXMcZbGUSxO4/G6sz8D94W9kJBILZP2Mzl7Aptrfdi78/N0F3dFaU0bfvE/uz60EEM
-         KA79CIiPtNX1mAb0knZfSjtrwmvo7JbDlWAwGhy2pIweUfKKDNlWgzB0nw45IQFDyq4g
-         28EeEh8hixUuHuSbfVA3tNqH7W3VxD3a9mrCCt1kpOUN7n+G34xr2HDnLWN3NFiZmA29
-         HYWHETlT+6r1RrIPTjkHL9O2XN1ypRgBAGaxcVqRHffoPouU2e/yPd/pB1MqvOnq79HT
-         03eoob7J8PibJjn11I5bzHQCO6q5RAfJVsL4sj0SQTn9u3EQoasF1UQSTwqJH9Vs3R7G
-         reQA==
-X-Gm-Message-State: AOAM533UJH/5N5DQC1KiGGk8lUCOnt4PZZ5uFV9uE2TiA4QsRBG0FHZn
-        kHC6tzskRUF4p0L4vWfdOXuqHmKh3k9O7Ax0a2U=
-X-Google-Smtp-Source: ABdhPJx4ebqcn9Ni6XbCgdV990I5/qzjx21xek5LX0qUfdKIo169E5pSe+gPowt99bXNUOjhLG135va1VeEt5wtiZTc=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr10186753pjd.181.1590055053473;
- Thu, 21 May 2020 02:57:33 -0700 (PDT)
+        Thu, 21 May 2020 06:16:30 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:36607 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728030AbgEUKQ3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 06:16:29 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MYe6H-1jWzOK1H0t-00VkSJ; Thu, 21 May 2020 12:16:27 +0200
+Received: by mail-qk1-f177.google.com with SMTP id i14so6600881qka.10;
+        Thu, 21 May 2020 03:16:26 -0700 (PDT)
+X-Gm-Message-State: AOAM530DifCmGMR7y9BEpyEIqVzhQugXIb8cf7wNozVDCSJKD03eOxtQ
+        hTwja+7TnyKyfRF31GnkdzzkC2BJshtG/9O4FSo=
+X-Google-Smtp-Source: ABdhPJzG0yZLoO02lBv/GjHkHvx0xY0LzpxpTesxhUjbNmnX8hm9pN92rchECm8L89+atAf/Z7jq0U8pXKnfGDJcMoo=
+X-Received: by 2002:a37:434b:: with SMTP id q72mr9600780qka.352.1590056185859;
+ Thu, 21 May 2020 03:16:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru> <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 21 May 2020 12:57:17 +0300
-Message-ID: <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com>
+In-Reply-To: <20200513125532.24585-1-lars.povlsen@microchip.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 21 May 2020 12:16:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0wYbVcerL9OEfAs+jJ-9xR7ryZwmsvi4Kt4yXOHaNefw@mail.gmail.com>
+Message-ID: <CAK8P3a0wYbVcerL9OEfAs+jJ-9xR7ryZwmsvi4Kt4yXOHaNefw@mail.gmail.com>
+Subject: Re: [PATCH 00/14] Adding support for Microchip Sparx5 SoC
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mu+e+kbYTEnKpI2tlcVsOeSxZO5G1rR6VAhSMX0JEEfW+3f9d/I
+ UjAUyLgeyHw7AgZuSEDfn5BL2g23N+YkjbFG2fPieOPyPuaoRiuWMYanrBmZjZcTZ6NI52L
+ jYDQHGLLLIXBSrXw1Tm0pmP5+LQKJXaNS+BOU4CRmtdCiJy4peqV4UZTGNbTNp07paoERlT
+ PoxtjQUUtxmv1GgJsP+qQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KTa0gpbTUK0=:xKT6TgWW7YqukhFqwtI4+h
+ AngOvVkzdZFoEEv8uJGKiYdRPWBNZ+HlLeh23V0ldjsORekLJLyGsb1cuIypaB1Pi0QkTbX5a
+ yr+c2KsipfGniVhCVIFWq3VbyUpBX1kT5jf7+tzTNZTkEZKXDwoajtAlDMkZN1aq1h4ywIUVz
+ 6WausWDDBZjVSwWuYPf4hI5PP+qHOm2Qbb5pZBzc0AyIFv6RaxfiEIOf2COVV9D1wDrBF4IHM
+ 0ULshmunA3BhrfgKam0Q3GCeyDvr40PJA5EI0wiEW9ran+JP0UuiJKe6PcRcdfvvw3PqtWpPv
+ hUAh6qChjvsqzPZx0Qpp703X7xe2UbDU2zHP9F10EH8If26ayMNUs0/vV4RHpk/SLqD/m0oHU
+ pSJ80QRC8mHCGzPnTtQg/Hej7Ivym+sCuXR23zYnPnJUvzjbwHFq6F6OJ0bqELl37iO/u5eHC
+ T5yYr3z3UbtJlcoXw9AD9vuDLNo5sIhWdN1N8VP5v/aQJJT7aZR4w1JRCix0JeDZTC3396a+5
+ 4MtySEzaru1mYcmowAv59Tk6CPqzK273nD2R1aMJ49X7LpCaiKLKQmi0eP3YYc3wR8DRnk4WE
+ MVdy+BkA12Ji+XhLPBmltGm/emcCmafrXu4pg3Ms2fm08I93Zrbjm9feksSIHrCd+wOi2S8du
+ O4/459gpWBoW/5Y5rSVWPrY2Jru/q368v0ClrgfEsuSvoPzyNeFgGFCdUDR4yMo80z53xNjIf
+ JjIfiG6MazCkZ3h+De66rig97e9yhY5idWfKP9h4ioaYz9htVaoyervOd6W/H30V/suzQva4R
+ /5IZ9dTnDaSPQ75WXm3scgBsVLmkhd0VyB5WJrnF2mjDJKeWmQ=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 4:23 AM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
+On Wed, May 13, 2020 at 2:55 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 >
-> Having them declared is redundant since each struct dw_dma_chan has
-> the same structure embedded and the structure from the passed dma_chan
-> private pointer will be copied there as a result of the next calls
-> chain:
-> dma_request_channel() -> find_candidate() -> dma_chan_get() ->
-> device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
-> dw_dma_filter().
-> So just remove the static dw_dma_chan structures and use a locally
-> declared data instance with dst_id/src_id set to the same values as
-> the static copies used to have.
+> This patch series adds support for Microchip Sparx5 SoC, the CPU
+> system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+> x 2 CPU core (A53).
+>
+> Although this is an ARM core, it shares some peripherals with the
+> Microsemi Ocelot SoC.
+>
+> This is the first official revision of the series.
 
-...
+I see you sent multiple series to soc@kernel.org for review. This is the
+correct address for getting the initial soc support merged, but as the patches
+are still being reviewed by subsystem maintainers, please leave it off
+for now, until you are confident that they are ready to get merged for the
+following merge window and have received the appropriate Acks.
 
-> - Explicitly initialize the dw_dma_slave members on stack.
+For each subsystem, there is generally the choice between merging
+code through the subsystem maintainer tree, or through the soc tree
+on an initial submission, as going through multiple trees is particularly
+hard to do for the devicetree files.
 
-Thanks for an update, but that's not what I asked for...
+For the moment, I have marked all sparx5 patches as "Not Applicable"
+in patchwork at https://patchwork.kernel.org/project/linux-soc/list/
+as it is still unclear who is merging which parts, and they are under
+active review, but please do send them again after the review is
+complete.
 
-> -static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
-> -static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
+If you have a lot of patches, sending pull requests is sometimes easier,
+but it also takes a bit of practice to know how exactly to structure
+those. Let me know if you have questions about them. You an also
+contact me and most of the other maintainers on IRC using the
+#armlinux channel on irc.freenode.net.
 
->  static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
->  {
-> +       struct dw_dma_slave slave = {
-> +               .src_id = 0,
-> +               .dst_id = 0
-> +       };
+Sorry for not having been able to review the patches myself yet, I
+hope to get to that soon.
 
-(It's member, and not memberS)
-
-> -       struct dw_dma_slave *tx = dws->dma_tx;
-> -       struct dw_dma_slave *rx = dws->dma_rx;
-
-May we simple do
-
-struct dw_dma_slave tx = { .dst_id = 1 };
-struct dw_dma_slave rx = { .src_id = 0 };
-
-please?
-
--- 
-With Best Regards,
-Andy Shevchenko
+     Arnd
