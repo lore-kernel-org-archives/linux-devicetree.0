@@ -2,57 +2,134 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6428C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CAFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A46207C4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DEE820748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgEUARd (ORCPT
+        id S1726837AbgEUAew (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 20:17:33 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:45466 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgEUARd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 20:17:33 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jbYtq-0005Re-SD; Thu, 21 May 2020 02:17:26 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: fix pinctrl-names for gpio-leds node on rk3326-odroid-go2
-Date:   Thu, 21 May 2020 02:17:25 +0200
-Message-Id: <159002021954.2754417.8270198597807714801.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200519111444.2208-1-jbx6244@gmail.com>
-References: <20200519111444.2208-1-jbx6244@gmail.com>
+        Wed, 20 May 2020 20:34:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:32890 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgEUAev (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 20:34:51 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0E1B580307CB;
+        Thu, 21 May 2020 00:34:50 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZW7iqmW8Mb-Y; Thu, 21 May 2020 03:34:49 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 01/14] dt-bindings: power: Convert mti,mips-cpc to DT schema
+Date:   Thu, 21 May 2020 03:34:30 +0300
+Message-ID: <20200521003443.11385-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 19 May 2020 13:14:44 +0200, Johan Jonker wrote:
-> The 'pinctrl-names' property should contain a list of names
-> to the assigned states. The value 'led_pins' in the gpio-leds
-> node on rk3326-odroid-go2 is not a state that is normally used,
-> so change it the common name 'default'.
+It's a Cluster Power Controller embedded into the MIPS IP cores.
+Currently the corresponding dts node is supposed to have compatible
+and reg properties.
 
-Applied, thanks!
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 
-[1/1] arm64: dts: rockchip: fix pinctrl-names for gpio-leds node on rk3326-odroid-go2
-      commit: b2cb68e864222eb3cc1d7c3c06edc40469699983
+---
 
-Best regards,
+Changelog v2:
+- Reword the changelog summary - use shorter version.
+- Lowercase the example hex'es.
+---
+ .../bindings/power/mti,mips-cpc.txt           |  8 -----
+ .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
+ 2 files changed, 35 insertions(+), 8 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+ create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+deleted file mode 100644
+index c6b82511ae8a..000000000000
+--- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
++++ /dev/null
+@@ -1,8 +0,0 @@
+-Binding for MIPS Cluster Power Controller (CPC).
+-
+-This binding allows a system to specify where the CPC registers are
+-located.
+-
+-Required properties:
+-compatible : Should be "mti,mips-cpc".
+-regs: Should describe the address & size of the CPC register region.
+diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+new file mode 100644
+index 000000000000..9cd92a57130c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/mti,mips-cpc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MIPS Cluster Power Controller
++
++description: |
++  Defines a location of the MIPS Cluster Power Controller registers.
++
++maintainers:
++  - Paul Burton <paulburton@kernel.org>
++
++properties:
++  compatible:
++    const: mti,mips-cpc
++
++  reg:
++    description: |
++      Base address and size of an unoccupied memory region, which will be
++      used to map the MIPS CPC registers block.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    cpc@1bde0000 {
++      compatible = "mti,mips-cpc";
++      reg = <0 0x1bde0000 0 0x8000>;
++    };
++...
 -- 
-Heiko Stuebner <heiko@sntech.de>
+2.25.1
+
