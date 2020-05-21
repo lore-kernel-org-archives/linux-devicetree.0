@@ -2,214 +2,122 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D511C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 23:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2469C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 23:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023E1208A9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 23:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590103070;
-	bh=EyK2DMGY1yaM+F8516LQrBIpk2NNn0s0Z37DLtuZPEA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GZ83aZqAojdlCaz1BP1LeIb+LfMnRXqd/vZKiqEssDXxK6LYsA5sJJ9agmPFemYWE
-	 VirxJYS4eXeJqc8D0iD8H5Q86GLHAwemX01wBfGSvUwozRtQZgriOXLjliNegXyxlm
-	 rwHBP2Wd4h5uChymMCvpr4j7EpwZX1nO8Rlxwpaw=
+	by mail.kernel.org (Postfix) with ESMTP id D6A7F20825
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 23:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbgEUXRt (ORCPT
+        id S1729161AbgEUXdd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 19:17:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730716AbgEUXRt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 19:17:49 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 693222100A;
-        Thu, 21 May 2020 23:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590103068;
-        bh=EyK2DMGY1yaM+F8516LQrBIpk2NNn0s0Z37DLtuZPEA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CLhLY45tfjDzW/4QzoCLzjzXDitprZjeX6jCl/TTiDNf1smTgNixutkYBE1Ltk7N+
-         bGuj4VCEQRCeGfsupUKY8MgwYvf2v3r3ry5ehzBBz2Vd9XnvyT50v3+/1fYDziASsk
-         an0rGuPaYsEVmZTE5CauU7LzvZWPFnLZ8bU6LsLs=
-Received: by mail-ot1-f53.google.com with SMTP id 63so6893002oto.8;
-        Thu, 21 May 2020 16:17:48 -0700 (PDT)
-X-Gm-Message-State: AOAM531oK31t74ap52p2EU9xCDgZmV0OibQTBzdK8ZPFlcpa+pPQk0NM
-        xNyF4QMq5u61oots8DalIcTpLv615yH7G6zylA==
-X-Google-Smtp-Source: ABdhPJxVgcCXhuH2DfTXSUau1TIQTXIwHoWhmRU4UZnxmjy/ftT6A+o4gIk78ZAgFUEU2gCUM+w/Etpe/R6HZFsyFVk=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr8467347ote.107.1590103067633;
- Thu, 21 May 2020 16:17:47 -0700 (PDT)
+        Thu, 21 May 2020 19:33:33 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41044 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728554AbgEUXdd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 19:33:33 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C74088030809;
+        Thu, 21 May 2020 23:33:29 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mzndbVe0uaYh; Fri, 22 May 2020 02:33:29 +0300 (MSK)
+Date:   Fri, 22 May 2020 02:33:27 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Alan Cox <alan@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200521233327.o5siot6dyftgz7gu@mobilestation>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com> <20200521130008.8266-11-lorenzo.pieralisi@arm.com>
-In-Reply-To: <20200521130008.8266-11-lorenzo.pieralisi@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 21 May 2020 17:17:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLTBxX_3KjiEqMfw0qMaTmj_DdPD3j-yMUvrvONPBSvjg@mail.gmail.com>
-Message-ID: <CAL_JsqLTBxX_3KjiEqMfw0qMaTmj_DdPD3j-yMUvrvONPBSvjg@mail.gmail.com>
-Subject: Re: [PATCH 10/12] of/irq: Make of_msi_map_rid() PCI bus agnostic
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        PCI <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 7:00 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> There is nothing PCI bus specific in the of_msi_map_rid()
-> implementation other than the requester ID tag for the input
-> ID space. Rename requester ID to a more generic ID so that
-> the translation code can be used by all busses that require
-> input/output ID translations.
->
-> Leave a wrapper function of_msi_map_rid() in place to keep
-> existing PCI code mapping requester ID syntactically unchanged.
->
-> No functional change intended.
->
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/of/irq.c       | 28 ++++++++++++++--------------
->  include/linux/of_irq.h | 14 ++++++++++++--
->  2 files changed, 26 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 48a40326984f..25d17b8a1a1a 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -576,43 +576,43 @@ void __init of_irq_init(const struct of_device_id *matches)
->         }
->  }
->
-> -static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
-> -                           u32 rid_in)
-> +static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
-> +                           u32 id_in)
->  {
->         struct device *parent_dev;
-> -       u32 rid_out = rid_in;
-> +       u32 id_out = id_in;
->
->         /*
->          * Walk up the device parent links looking for one with a
->          * "msi-map" property.
->          */
->         for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
-> -               if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
-> -                               "msi-map-mask", np, &rid_out))
-> +               if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
-> +                               "msi-map-mask", np, &id_out))
->                         break;
-> -       return rid_out;
-> +       return id_out;
->  }
->
->  /**
-> - * of_msi_map_rid - Map a MSI requester ID for a device.
-> + * of_msi_map_id - Map a MSI ID for a device.
->   * @dev: device for which the mapping is to be done.
->   * @msi_np: device node of the expected msi controller.
-> - * @rid_in: unmapped MSI requester ID for the device.
-> + * @id_in: unmapped MSI ID for the device.
->   *
->   * Walk up the device hierarchy looking for devices with a "msi-map"
-> - * property.  If found, apply the mapping to @rid_in.
-> + * property.  If found, apply the mapping to @id_in.
->   *
-> - * Returns the mapped MSI requester ID.
-> + * Returns the mapped MSI ID.
->   */
-> -u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
-> +u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in)
->  {
-> -       return __of_msi_map_rid(dev, &msi_np, rid_in);
-> +       return __of_msi_map_id(dev, &msi_np, id_in);
->  }
->
->  /**
->   * of_msi_map_get_device_domain - Use msi-map to find the relevant MSI domain
->   * @dev: device for which the mapping is to be done.
-> - * @rid: Requester ID for the device.
-> + * @id: Device ID.
->   * @bus_token: Bus token
->   *
->   * Walk up the device hierarchy looking for devices with a "msi-map"
-> @@ -625,7 +625,7 @@ struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 id,
->  {
->         struct device_node *np = NULL;
->
-> -       __of_msi_map_rid(dev, &np, id);
-> +       __of_msi_map_id(dev, &np, id);
->         return irq_find_matching_host(np, bus_token);
->  }
->
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 7142a3722758..cf9cb1e545ce 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -55,7 +55,12 @@ extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
->                                                         u32 id,
->                                                         u32 bus_token);
->  extern void of_msi_configure(struct device *dev, struct device_node *np);
-> -u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
-> +u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in);
-> +static inline u32 of_msi_map_rid(struct device *dev,
-> +                                struct device_node *msi_np, u32 rid_in)
+Mark, Andy,
+
+On Thu, May 21, 2020 at 04:21:51AM +0300, Serge Semin wrote:
+>  
+
+[nip]
+
+> +static void dw_spi_dma_calc_delay(struct dw_spi *dws, u32 nents,
+> +				  struct spi_delay *delay)
 > +{
-> +       return of_msi_map_id(dev, msi_np, rid_in);
+> +	unsigned long ns, us;
+> +
+> +	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
+> +	     BITS_PER_BYTE;
+> +
+> +	if (ns <= NSEC_PER_USEC) {
+> +		delay->unit = SPI_DELAY_UNIT_NSECS;
+> +		delay->value = ns;
+> +	} else {
+> +		us = DIV_ROUND_UP(ns, NSEC_PER_USEC);
+> +		delay->unit = SPI_DELAY_UNIT_USECS;
+> +		delay->value = clamp_val(us, 0, USHRT_MAX);
+> +	}
 > +}
->  #else
->  static inline int of_irq_count(struct device_node *dev)
->  {
-> @@ -93,10 +98,15 @@ static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev
->  static inline void of_msi_configure(struct device *dev, struct device_node *np)
->  {
->  }
-> +static inline u32 of_msi_map_id(struct device *dev,
-> +                                struct device_node *msi_np, u32 id_in)
+> +
+> +static inline bool dw_spi_dma_tx_busy(struct dw_spi *dws)
 > +{
-> +       return id_in;
+> +	return !(dw_readl(dws, DW_SPI_SR) & SR_TF_EMPT);
 > +}
->  static inline u32 of_msi_map_rid(struct device *dev,
->                                  struct device_node *msi_np, u32 rid_in)
+> +
+> +static void dw_spi_dma_wait_tx_done(struct dw_spi *dws)
+> +{
+> +	int retry = WAIT_RETRIES;
+> +	struct spi_delay delay;
+> +	u32 nents;
+> +
+> +	nents = dw_readl(dws, DW_SPI_TXFLR);
+> +	dw_spi_dma_calc_delay(dws, nents, &delay);
+> +
+> +	while (dw_spi_dma_tx_busy(dws) && retry--)
 
-Move this out of the ifdef and you only need it declared once.
+> +		spi_delay_exec(&delay, NULL);
 
-But again, I think I'd just kill of_msi_map_rid.
+I've just discovered using spi_delay_exec() wasn't a good idea here. Look at the
+call stack:
+dw_dma_tasklet() -> dwc_scan_descriptors() -> dwc_descriptor_complete() ->
+dw_spi_dma_tx_done() -> spi_delay_exec() -> usleep_range() -> ...
 
->  {
-> -       return rid_in;
-> +       return of_msi_map_id(dev, msi_np, rid_in);
->  }
->  #endif
->
-> --
-> 2.26.1
->
+So tasklet is calling a sleeping function.((( I've absolutely forgotten to check
+the context the DMA completion function is called with. We'll have to manually
+select either ndelay or udelay here and nothing else. Since basically both
+functions represent an atomic context and most of the platforms ndelay fallsback to
+udelay, I'll get the ndelay back to the wait functions. I'll resend a patchset
+shortly.
+
+-Sergey
