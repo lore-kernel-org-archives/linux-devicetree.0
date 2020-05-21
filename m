@@ -2,137 +2,210 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8481CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 06:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13633C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 06:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6522083E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 06:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="icPfX6Hz"
+	by mail.kernel.org (Postfix) with ESMTP id C68DB20748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 06:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590042059;
+	bh=lmK2PiZ17OdMrnL1rIUQEyERyyHltYL6X8n438Rq9WU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=d//RQdy9wQuqF/WmXeV6UVjWoaVgmXh+hlDAZvHTSEV3TuzStAT2RJGHb6u4Tjh4S
+	 fRQRMCicDiEJkrB8S35Wn+CRS9ZmuP8eCkE/s8U4IusblH+gJuxJJRBktPZJG0bJEz
+	 +Vrxe04H+wGaGF9HGdbuOG6lcjVDDBHp5uwxYdic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgEUGRq (ORCPT
+        id S1728196AbgEUGU7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 02:17:46 -0400
-Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:62466
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726938AbgEUGRn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 02:17:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AgL8Wm0Ms1BdffvtOMD+NdMSrCDWUesaKpLEWAIHUvN3c0y1LzrF7txSLQhnHiafuMS7BVJQR5f8f5eLI5iiI8v0zxWLD5UoMpAp3Qznfph9RLDx89vSALwQoIC7UC6Z9q1cO4DMV4vC0L+8cNqk9bkLDa32kDBTUTBNFUm9jkcN3NF/E21AcQEPDt8iQjASWk88tJ07qZqM7b4Dzc2BMhf8DMYa0LV5/wYjbqPXeHMZJNrGaSl5F/IpQfu3haS+Z33f92m9HjrPOUcEX+FtrxMfEpHJDLVUX70/sD6rBFX9vky1Aq3oEDYkVgPd2IEqPq5D4+Z49IXmZLgGptI7Qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jl91O/enUIS5CewE0lxQjFELsh1ZAJYlP7AtKwtSs/c=;
- b=Tve/qtgesv0UU6AGmNjUz70J3PdEJVoKABmazIGLOkmitn0XWuqtRY9GSB1RkdvPvee6+Q3tnbbRyJZqumcpuQ0LRwLQgTezUAVNJ8Z055fIm0JHGgnc/T6LMY3rMF04UQySdbgV+tx9knjOUI6Bz+48nkLtQPmmnRjDqFRUIcFjRJkcNUAgulqr114Kj9skZYHGGBNpf0/zliWr+eyJNWBlCFacWCKVlrMr1V1epS5/DCmTTPSQcndqpqJ3NX0yOs371QG3FF0GHyvv73XQJUvLH636F4hYDbtI+Ye7HRvOq3wJQl/x2Las7B0CUrBj7SqTjOBe3wtQQFfGG6fLZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jl91O/enUIS5CewE0lxQjFELsh1ZAJYlP7AtKwtSs/c=;
- b=icPfX6Hz+lV0WO4Ek+sxTlQgSehUQb7PQ62W+ubuFL3xJDAJKI0sQF+gJCtnJsxoGNdXSsP49Rul9PtSLQjtfBuLroyoCBahH/SRUzFUIMdDFbfDXlBtbl34pA2QXQCbsk0qGPfOK66bKgU10i3BbeW+ctSYwiXSLR30gWtYjxA=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6720.eurprd04.prod.outlook.com (2603:10a6:803:123::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Thu, 21 May
- 2020 06:17:38 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3021.020; Thu, 21 May 2020
- 06:17:38 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, anson.huang@nxp.com, peng.fan@nxp.com
-Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-Subject: [PATCH v2 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2 voltage range
-Date:   Thu, 21 May 2020 22:17:54 +0800
-Message-Id: <1590070674-23027-2-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com>
-References: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SGAP274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::22)
- To VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+        Thu, 21 May 2020 02:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgEUGU7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 02:20:59 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989D1C061A0E;
+        Wed, 20 May 2020 23:20:58 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z6so6811136ljm.13;
+        Wed, 20 May 2020 23:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=lmK2PiZ17OdMrnL1rIUQEyERyyHltYL6X8n438Rq9WU=;
+        b=F8H0wQiPawU6VT6EyZ+CmJrq0ZagIFaJLv47FUfBstXo6AIOfQDuQcA9P8WFdYajsK
+         o5Bsl+IfMJiWVASvqvrvWPSCdvD+Op7UmSd/JZsvyZgB3eAcvgrxmJ5rOMHhRku6NfWM
+         XbM8nVxBwFEVKtZk//yQ0PY34fdt3M4OenmeVz3L8V5D5TLAjzwxm7cqRqo4sMW78Ks3
+         ebnboRBMYXDuHvLHNDNgJxN2P+9cj2ZkS2QHaUE3+it9iKmf+LffEQDQq2tIfmHnjXcG
+         Xh058C7tMxib3hPMIVHizRZM32tyN4cNO33OzyVGJqKhcT/xEvTsOsK6y/+nOYMqQKee
+         02NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=lmK2PiZ17OdMrnL1rIUQEyERyyHltYL6X8n438Rq9WU=;
+        b=pCiwA7o0WXEn8Fxy95s0QWNzy1MjiYDNNvyigq5U+U2mPdIowcPP9bcUPhTgdEIYYh
+         YDpvjHj0EN/kTJVyiq4SLKRwp0iXtvD4Kj9TRdpNYKkdQsEZRMBSxhVY2ZM4zFh5fmWp
+         mAOmrHxkyqMeSVIbht0QPJWt1ZVNwvP89vjSlN80kAnER9XfthXetM4VqezVlAhyt7S4
+         XWFrTrHapBbzXi80v3C0g80N5LDoSknmOfjnJdmyjG0RYYkFg30xPd64DU3iJzGaSpud
+         opWThQUws5JuNAmXLBGDxhjumml5z9aybwZN2xMQEugstqTB05WANd+zeu8hVMAuNOgH
+         5SWQ==
+X-Gm-Message-State: AOAM531liE4sacNy/wL1jlfKDERleBkefXxxBrqivtWdh+mYJkU58G9X
+        OqVckCfB7/+qO/29ak87WKo=
+X-Google-Smtp-Source: ABdhPJynjVWZxieHDotU4xC1GI2NuI5cB79Qa6B9zPra9thuuRMxgD2ZBZ6t3SU8T/rJrlKBIRYpcA==
+X-Received: by 2002:a2e:8ed7:: with SMTP id e23mr4257000ljl.32.1590042056891;
+        Wed, 20 May 2020 23:20:56 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id k9sm1515408lja.52.2020.05.20.23.20.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 May 2020 23:20:55 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Jun Li <jun.li@nxp.com>,
+        Jun Li <lijun.kernel@gmail.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>
+Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by device controller
+In-Reply-To: <1c16bdb6-8d8d-1e1b-f08b-b3963f905eb0@synopsys.com>
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com>
+ <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com>
+ <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com>
+ <87h7wqmwrv.fsf@kernel.org>
+ <CAKgpwJXfWv5=MDqBCADhe2iXf6eiP0GQ13Bwo9fkuU5kGO7dsw@mail.gmail.com>
+ <87imgx35pg.fsf@kernel.org>
+ <VE1PR04MB65283F16826D2254128073C589BD0@VE1PR04MB6528.eurprd04.prod.outlook.com>
+ <3d757998-56f2-6fff-a724-f713867ae785@synopsys.com>
+ <87ftc0xsig.fsf@kernel.org>
+ <VE1PR04MB6528AB046FD441A5DDD83CD289BA0@VE1PR04MB6528.eurprd04.prod.outlook.com>
+ <87d074xfbq.fsf@kernel.org>
+ <VE1PR04MB6528A50EA40BF40E4B09793789B90@VE1PR04MB6528.eurprd04.prod.outlook.com>
+ <db7447c2-a39d-361f-8b35-a1d5c2705c89@synopsys.com>
+ <e3b0ff51-70ab-7d16-2c7e-cacac7d97043@synopsys.com>
+ <VE1PR04MB65286728B9546B5FAA818A0A89B90@VE1PR04MB6528.eurprd04.prod.outlook.com>
+ <bbfbd3f7-4908-5529-1a4e-29469e794b27@synopsys.com>
+ <1c16bdb6-8d8d-1e1b-f08b-b3963f905eb0@synopsys.com>
+Date:   Thu, 21 May 2020 09:20:50 +0300
+Message-ID: <87v9kpx0zh.fsf@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SGAP274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.23 via Frontend Transport; Thu, 21 May 2020 06:17:35 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9ca4a6dc-314f-48e8-79fe-08d7fd4ea941
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6720:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB67201B781AF6B9031F3F8F2A89B70@VE1PR04MB6720.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 041032FF37
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6+5C3mz28XLB11gmjp3eK4CnLZF8MzTfA72GyXfq27Z4ved9EogSCBOjldUbKNzN2Bmc/3ThSE9GUVAlkSblZ4MA7/oQNSOYw1H7NI8PFG5V0PIzK/ZRX5IH4UbXwhjuMhzX2AMcUFFAsHZWyEuK2CPtE76UB4eqYQNJhIAbSpOHExVrA4i3LS29vAt53JsScooP5fWp4M3Zvx52Eg/0yL8OtMlBpie2bC5zksTkAzMYGzGP1V5h1T2tyx6qxXnucZbUhpXYrGe7GKwIgsAaSLk5QwI98naulAYOzWFClajXvQ1j5YEkjKS9ysOf3CDyH9fVZt8hrrm4dxOe2MkR7Ga/egUqet4/tWFkoUeF68/dHdeUL3mK0Ni3fEkp2hsQ5+H9It7n7svQxlYnAXq9Yon6Lf5gdPokT6RewzOyCMAyKczR2+Sz1Jlj+dP4LOMUCXr2BsjhI7ziSP9eeR30CZDn6KTyql9ov6XVH8cshC4OzcMaMw86ebbQh9qbRwNP
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(6506007)(36756003)(6636002)(2616005)(86362001)(6486002)(956004)(52116002)(4326008)(5660300002)(26005)(8676002)(186003)(16526019)(66476007)(66556008)(8936002)(316002)(6666004)(66946007)(2906002)(478600001)(6512007)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 3UJrDjQex/c8fhm3Qcbv/jLWle7Y2wKtapGT2yW39+lIfYkl6Wip4kGQ8YzD3rCOpZhQ9F5siiRl25epc3VH5yYlzBftioICDP9JpuAtBtfClPpuiqGmmYC5CWbozEpJplXpZyvgZnCZu7Sheu7xIAlNXUOwrrk3yEXRl46j6ibIKsLvhSrecGHs1d6lMTwlBt00IUCecf6Gv9PtVoHk/JmECMI2wPrLoEJBr4KjlSn9mTmmt7jM9Qoguoufa9QRT/QXl2g68MH2f/Zd5i0mzf5pYqX+FnjuDl9VfbLwUB3HPF1Wup1YCc5aP6hR0XNYy43KutQjOTFHgG17J4Ck/VmoYVyoaU3jhg7Qmu6mH4TYIqVrllGnuz2ccJKY933wEnv/BaUyQuke73gn246rYUG4ZzGMGHV02e/pJBHbQsyvjPOVzBoqvEuIro42QGVSbjNfuR1a8ODPQNtw0OqAvR8FwBy37g32UuEfe9tEZZqWShHVVOVcdfrWizu7nB+w
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ca4a6dc-314f-48e8-79fe-08d7fd4ea941
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 06:17:38.8129
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j6O2/BdXOc7iEbhwuanQz+dDUbipzuNvvN0ZqqnbKuhRNxhBO6T+WWxzqZnLFkfL2GOg9Dgg6A3JfjP2qEwCxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6720
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Correct ldo1 voltage range from wrong high group(3.0v~3.3v) to low group
-(1.6v~1.9v) because the ldo1 should be 1.8v. Actually, two voltage groups
-have been supported at bd718x7-regulator driver, hence, just corrrect the
-voltage range to 1.6v~3.3v. For ldo2@0.8v, correct voltage range too.
-Otherwise, ldo1 would be kept @3.0v and ldo2@0.9v which violate i.mx8mn
-datasheet as the below warning log in kernel:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-[    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
-[    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-index d07e0e6..a1e5483 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-@@ -113,7 +113,7 @@
- 
- 			ldo1_reg: LDO1 {
- 				regulator-name = "LDO1";
--				regulator-min-microvolt = <3000000>;
-+				regulator-min-microvolt = <1600000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
-@@ -121,7 +121,7 @@
- 
- 			ldo2_reg: LDO2 {
- 				regulator-name = "LDO2";
--				regulator-min-microvolt = <900000>;
-+				regulator-min-microvolt = <800000>;
- 				regulator-max-microvolt = <900000>;
- 				regulator-boot-on;
- 				regulator-always-on;
--- 
-2.7.4
+Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
+>>>>>>>> "Power Down Scale (PwrDnScale)
+>>>>>>>> The USB3 suspend_clk input replaces pipe3_rx_pclk as a clock source
+>>>>>>>> to a small part of the USB3 controller that operates when the SS
+>>>>>>>> PHY is in its lowest power (P3) state, and therefore does not prov=
+ide a clock.
+>>>>>>>> The Power Down Scale field specifies how many suspend_clk periods
+>>>>>>>> fit into a 16 kHz clock period. When performing the division, round
+>>>>>>>> up the remainder.
+>>>>>>>> For example, when using an 8-bit/16-bit/32-bit PHY and 25-MHz
+>>>>>>>> Suspend clock, Power Down Scale =3D 25000 kHz/16 kHz =3D 13'd1563
+>>>>>>>> (rounder up)
+>>>>>>>> Note:
+>>>>>>>> - Minimum Suspend clock frequency is 32 kHz
+>>>>>>>> - Maximum Suspend clock frequency is 125 MHz"
+>>>>>>> Cool, now do we have an upper bound for how many clock cycles it
+>>>>>>> takes to wake up the PHY?
+>>>>>> My understanding is this ep command does not wake up the SS PHY, the
+>>>>>> SS PHY still stays at P3 when execute this ep command. The time
+>>>>>> required here is to wait controller complete something for this ep
+>>>>>> command with 32K clock.
+>>>>> Sorry I made a mistake. You're right. Just checked with one of the RTL
+>>>>> engineers, and it doesn't need to wake up the phy. However, if it is
+>>>>> eSS speed, it may take longer time as the command may be completing
+>>>>> with the suspend clock.
+>>>>>
+>>>> What's the value for GCTL[7:6]?
+>>> 2'b00
+>>>
+>>> Thanks
+>>> Li Jun
+>> (Sorry for the delay reply)
+>>
+>> If it's 0, then the ram clock should be the same as the bus_clk, which
+>> is odd since you mentioned that the suspend_clk is used instead while in=
+ P3.
+>
+> Just checked with the RTL engineer, even if GCTL[7:6] is set to 0,=20
+> internally it can still run with suspend clock during P3.
+>
+>> Anyway, I was looking for a way maybe to improve the speed during
+>> issuing a command. One way is to set GUSB3PIPECTL[17]=3D0, and it should
+>> wakeup the phy anytime. I think Felipe suggested it. It's odd that it
+>> doesn't work for you. I don't have other ideas beside increasing the
+>> command timeout.
+>>
+>
+> In any case, increasing the timeout should be fine with me. It maybe=20
+> difficult to determine the max timeout base on the slowest clock rate=20
+> and number of cycles. Different controller and controller versions=20
+> behave differently and may have different number of clock cycles to=20
+> complete a command.
+>
+> The RTL engineer recommended timeout to be at least 1ms (which maybe=20
+> more than the polling rate of this patch). I'm fine with either the rate=
+=20
+> provided by this tested patch or higher.
 
+A whole ms waiting for a command to complete? Wow, that's a lot of time
+blocking the CPU. It looks like, perhaps, we should move to command
+completion interrupts. The difficulty here is that we issue commands
+from within the interrupt handler and, as such, can't
+wait_for_completion().
+
+Meanwhile, we will take the timeout increase I guess, otherwise NXP
+won't have a working setup.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7GHcIACgkQzL64meEa
+mQZLig//Rs81H23b5/i0Jgjr01CjLiebl7wzrGjYvhhSGOa4tet7/6LUwxXzw/MA
+rcLOO9sDAfITi6syuCJLuRfb9YiXW6bqf3WH2h/pk1GEx6Gs8tIrw0qQ4pvM84Co
+uSX+5NTg8vCwgYLOpPhhukJjXhKT9oYHDSR4R+DGp38JJNmc3ue+6ptKumvcaXCt
+ZoWt3qdifNYuqtu/Pm+rm74DUbPzh9WKKmOIguNNnEeSIWwgCZGXQajYTdcV52l8
+QVC89WHOE3SP9TjjmuYSlzrGTIUooqS24fZCz9Q+IGo8TItxW07EMfzkHOiH6TAU
+IVySZHVI3PQmN2ByoZu2BDLKndvwFfvEqrpR/R/AwQ1MtxDm3iRczrmBaEffY/6c
+z89AR6LG8V6cw2I0VR9xvLIbTurQhdSjnrphMBrMeq5Q6FfAPmFO+TM0u85AU4ed
+K6R1/6/4F9k+a7ReXL3r7Sn0wlnqq5ep86O6djMgwf68AGrt+dn97C5Dd+GiYJFR
+wUQ1BJQ1Ak/81BPR5yqkjnY9uPtaCmnzISad4il2hYVN2otm1YlHtkZ6HYhAXDmg
+99rNmGLZpTz5eU9OzuR/AhSC5LIXepUHfhYc4fJnuJJLpWF4ak/snL5Ix8Im3Xkq
+zW4X3krc6OKVSlufY0muomjiTm1FrBZwXQoOjXEOjhd1Cp5Fvb8=
+=DFKC
+-----END PGP SIGNATURE-----
+--=-=-=--
