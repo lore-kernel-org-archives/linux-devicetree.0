@@ -2,110 +2,128 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD65C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 10:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C294CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 11:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3CE520814
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 10:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590058610;
-	bh=seW5V778px/AgzonYSOezyKQVmV3Co7HCNgbinTsjyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zm/FhOpHrldr7ePu94sFg5Q6dj8o5jGKzpAco7oGLntwFGK/rie2lPJI5Y/TCVfmL
-	 e0vBo4Ibq+miwU8Wu7+yFffhDeO0T20mYu4SszbW+Wd2g5xn2Ei31G5xIRbDMVgDZa
-	 GAhhJki55dA50+gDukXPD0xusisEvcVhkY+GLSJ4=
+	by mail.kernel.org (Postfix) with ESMTP id A4623207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 11:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgEUK4u (ORCPT
+        id S1729188AbgEULKa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 06:56:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728348AbgEUK4u (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 06:56:50 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1F30206F6;
-        Thu, 21 May 2020 10:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590058609;
-        bh=seW5V778px/AgzonYSOezyKQVmV3Co7HCNgbinTsjyg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jZbg4vvcLz0BWO3+7f3IRMU9tzhJygn8ioscFP/ZqnGFrF8ie91HV+nRvRe7qZKIL
-         S4NZZiLfJgP7Eo4tw1u7++Vd48k3aP42ktKeKc4oOt/epvOoOm3tlg+XEVahGyWWCX
-         SCivWjO4FdwbrEKnERNBtyqMub/z9gqjdOyvQsgw=
-Date:   Thu, 21 May 2020 11:56:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, vigneshr@ti.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-Message-ID: <20200521105646.GA4770@sirena.org.uk>
-References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200520124329.GF4823@sirena.org.uk>
- <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
+        Thu, 21 May 2020 07:10:30 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:49306 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729174AbgEULK2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 07:10:28 -0400
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04LB9Xbb018633;
+        Thu, 21 May 2020 14:09:34 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
+        id DCCE26032E; Thu, 21 May 2020 14:09:33 +0300 (IDT)
+From:   Tali Perry <tali.perry1@gmail.com>
+To:     ofery@google.com, brendanhiggins@google.com,
+        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        robh+dt@kernel.org, wsa@the-dreams.de,
+        andriy.shevchenko@linux.intel.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v12 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C controller
+Date:   Thu, 21 May 2020 14:09:08 +0300
+Message-Id: <20200521110910.45518-2-tali.perry1@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200521110910.45518-1-tali.perry1@gmail.com>
+References: <20200521110910.45518-1-tali.perry1@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
-Content-Disposition: inline
-In-Reply-To: <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
-X-Cookie: Keep your laws off my body!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Added device tree binding documentation for Nuvoton BMC
+NPCM I2C controller.
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+---
+ .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 62 +++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
 
-On Thu, May 21, 2020 at 10:18:26AM +0800, Ramuthevar, Vadivel MuruganX wrote:
-> On 20/5/2020 8:43 pm, Mark Brown wrote:
-> > On Wed, May 20, 2020 at 08:36:12PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+diff --git a/Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml b/Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+new file mode 100644
+index 000000000000..fb4293f11461
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/nuvoton,npcm7xx-i2c.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: nuvoton NPCM7XX I2C Controller Device Tree Bindings
++
++description: |
++  The NPCM750x includes sixteen I2C bus controllers. All Controllers support
++  both master and slave mode. Each controller can switch between master and slave
++  at run time (i.e. IPMB mode). Each controller has two 16 byte HW FIFO for TX and
++  RX.
++
++maintainers:
++  - Tali Perry <tali.perry1@gmail.com>
++
++properties:
++  compatible:
++    enum:
++      - nuvoton,npcm7xx-i2c
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description: Reference clock for the I2C bus
++
++  bus-frequency:
++    description: Desired I2C bus clock frequency in Hz. If not specified,
++                 the default 100 kHz frequency will be used.
++                 possible values are 100000, 400000 and 1000000.
++    default: 100000
++    enum: [100000, 400000, 1000000]
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c0: i2c@80000 {
++        compatible = "nuvoton,npcm750-i2c";
++        reg = <0x80000 0x1000>;
++        clocks = <&clk NPCM7XX_CLK_APB2>;
++        bus-frequency = <100000>;
++        interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&smb0_pins>;
++    };
++
++...
+-- 
+2.22.0
 
-> > >   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
-> > >   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 133 +++++++++++++++++++++
-
-> > The changelog says this is adding a new binding but the actual change is
-> > mostly a conversion to YAML.  Please split the additions out into a
-> > separate change, ideally doing that before the conversion since there is
-> > a backlog on review of YAML conversions.
-
-> Initially was sending the only YAML file alone, then reviewers suggest to me
-> do this way so I did, next by split the patches like below...
-
-> 1. remove the cadence-quadspi.txt (patch1)
-> 2. convert txt to YAML (patch2)
-
-That doesn't address either of the issues.  The removal of the old
-bindings and addition of the YAML ones needs to be in a single patch
-doing that conversion.  What I'm suggesting should be done separately is
-whatever changes to the semantics of the bindings you are (according to
-your changelog) doing.
-
---0OAP2g/MAC+5xKAE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7GXmsACgkQJNaLcl1U
-h9BdFwgAgFljcWTcMb6Us4MfVHcgy1YEqUmIwGaqY2UIBzMVQryRSOVEhQ4rpXHl
-axvDWQGwewuHB1d0UU8Ec+YKWRJl/MYTCtmTHuE4OYL5ZY1YCM5udJ05u/8FuWB6
-Z1Pqt3iJ/QHc76gNqZ+BXnUMGh222ixJSSci5lTKkznlratWhtyz1wJU8IJ2I+M1
-zRwl78qMsTvBE8abg7NBXHMlQae0yQVcr0ndYjJkx8z/5C6RvFQ+WGCPjf+xTH7E
-IEQxy2zRFVI5EJjofGLCDWitAZSLDULZqh0LObpKRJN6X9aOriK+dQzSVAH2EhvE
-ElA/2sH+NZpcz19Wlp6+U+5xNYTNqw==
-=Xvew
------END PGP SIGNATURE-----
-
---0OAP2g/MAC+5xKAE--
