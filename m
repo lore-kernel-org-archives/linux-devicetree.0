@@ -2,104 +2,164 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E061CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 12:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5051FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 12:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4DC2070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 12:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590063641;
-	bh=ibFoIIyMF1Cq5K82d+d9TeF08+OR/OuKj6IPDBv1eCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cQYIavcykT84N2uSbsb+QuTS1ds61Qr4NO9O435RDp90hM/W3Blcm+S8vScd117mp
-	 IGuQ64VRDMU/2k3mF4AdWs8zJIYsW0xbpFw82tsz098RCV1dA0ZdRbv1jrtxaiGhaq
-	 b7Nh/EkLXLfFnNbMBFQCs77yrWNdInuextMkzOK0=
+	by mail.kernel.org (Postfix) with ESMTP id 28AF32078B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 12:24:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LX8b5/50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgEUMUj (ORCPT
+        id S1729315AbgEUMYw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 08:20:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbgEUMUi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 08:20:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5702070A;
-        Thu, 21 May 2020 12:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590063638;
-        bh=ibFoIIyMF1Cq5K82d+d9TeF08+OR/OuKj6IPDBv1eCg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S6sdA04cTnvXYoly+hZLJSJzYe2wasbfZ02IuM3wTto6o/oXeugLu+X+5sUrImmdA
-         +XeyGwWZyprjvvHR395Cpu/yvFuSgjMoJiwts0sj7M+0lU9rLk07V8SXNnJG7k6UHK
-         9eXkLBREWeFM4y3W5VdZgw4K19OjDmMvaAfJULZ8=
-Date:   Thu, 21 May 2020 13:20:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, vigneshr@ti.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-Message-ID: <20200521122035.GB4770@sirena.org.uk>
-References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200520124329.GF4823@sirena.org.uk>
- <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
- <20200521105646.GA4770@sirena.org.uk>
- <24b0297c-5c33-f690-9514-68b76fc2c9ea@linux.intel.com>
+        Thu, 21 May 2020 08:24:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729304AbgEUMYw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 08:24:52 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B40FFC061A0E;
+        Thu, 21 May 2020 05:24:51 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id e125so4356971lfd.1;
+        Thu, 21 May 2020 05:24:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mDAJOLWg9mKjJNeVSHT8m8/Fhzt9bDgS8eqSCs7Dujc=;
+        b=LX8b5/50+9+WTk2veYSl1B0zyuk4I/Z1GdM/3rM5S25W0ryPYoGWL4n2K3MUYaVBNj
+         R1NmCkHJjJoWcICePlNevkQvtK/y3MNjvJvNFuW6i6Nrdrrqeo5bMUhT7+ltKY3UdaoM
+         uq33UGp0tPTONkG6LTUkpXOeU+ESLmdH8XViwmeucGNNiDpRG1rpdQtQBq4TEPkA7DuW
+         TLM4P1Tvi1wHeaugmMWtRxBQs/snHhp3P+sL18IYA6qH2GM15fky7jofEvv6F8XpBpiU
+         3sSn6wKmoU7Pl5OojnURTejuqqgcojGeGd7CjKhwzq08+tBwSqOGn+l/J24UlF0rNRBd
+         kB5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mDAJOLWg9mKjJNeVSHT8m8/Fhzt9bDgS8eqSCs7Dujc=;
+        b=TvlNrBQ2gTrPHEYoX8fJG2l5TjOuGRILJo+ctGSAE0jLwnC7hxfTvKyClqisEd03sl
+         YusWFfY0qxVpJBMM1zpHLOXazoPwMz2zPA9PM5ixmhJa8i7/v4jH/yFnKqeFbWP/Gquf
+         SJ2/wzJ+EVahRPa9+Pt80jpb7yuFJzeFwkKZ+XVKcYgp7VzLW5QDNIb0whWN6jvSk1mS
+         10JIc+DGx3L+PzAaSqfzYPRiChd8SOJwAOdDG3o7rCFIZ6uiuxMGVULMTVOEflxHBh1/
+         nv2hWkXKwo0bzWMImAs+f/GJXHbzK/hj8NUCbI0lASUP1u67cOxc5zYvSCQwMOBaMBxn
+         4q0g==
+X-Gm-Message-State: AOAM532LNAw+BNuoaCjTEyS3mB+ZSRThbrIGspIEVFqEkG6xYU70EAtn
+        bUnHvBoqZP7cU7+7smAFRM55q57u5N2jLXB1IzM=
+X-Google-Smtp-Source: ABdhPJwp/R8hnjRcGcej59N3MIfttVemdGNUrGc4anV8BfnRi1gqt5Fn4WKCNYgDEEeAvX3m9xFMKTuz/JumydwFjjQ=
+X-Received: by 2002:ac2:51a7:: with SMTP id f7mr4816668lfk.13.1590063890126;
+ Thu, 21 May 2020 05:24:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
-Content-Disposition: inline
-In-Reply-To: <24b0297c-5c33-f690-9514-68b76fc2c9ea@linux.intel.com>
-X-Cookie: Keep your laws off my body!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
+ <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
+ <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
+ <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
+ <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com>
+ <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com>
+ <CABb+yY1gXxpU=q9xKf14uZtJz51kLJ-k2EeWsjnFRyBzR5bmgA@mail.gmail.com> <CADBw62oFDrruSq+Rm=hXHZYn0qDrr47cNK4Wj0_A-jG1dOT+kw@mail.gmail.com>
+In-Reply-To: <CADBw62oFDrruSq+Rm=hXHZYn0qDrr47cNK4Wj0_A-jG1dOT+kw@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 21 May 2020 20:24:36 +0800
+Message-ID: <CADBw62rZuhaeSEppy+AhSkv1uNgaj9qrHFf7pz9nwKm8q3OrTA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Jassi,
 
---JP+T4n/bALQSJXh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, May 13, 2020 at 2:32 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> On Wed, May 13, 2020 at 2:05 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> >
+> > On Tue, May 12, 2020 at 11:14 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > >
+> > > Hi Jassi,
+> > >
+> > > On Thu, May 7, 2020 at 11:23 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > >
+> > > > Hi Jassi,
+> > > >
+> > > > On Thu, May 7, 2020 at 7:25 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> > > > >
+> > > > > On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > > >
+> > > > > > Hi Jassi,
+> > > > > >
+> > > > > > On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > > > >
+> > > > > > > From: Baolin Wang <baolin.wang@unisoc.com>
+> > > > > > >
+> > > > > > > The Spreadtrum mailbox controller supports 8 channels to communicate
+> > > > > > > with MCUs, and it contains 2 different parts: inbox and outbox, which
+> > > > > > > are used to send and receive messages by IRQ mode.
+> > > > > > >
+> > > > > > > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> > > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > > > > > ---
+> > > > > > > Changes from v3:
+> > > > > > >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
+> > > > > > >
+> > > > > > > Changes from v2:
+> > > > > > >  - None.
+> > > > > > >
+> > > > > > > Changes from v1:
+> > > > > > >  - None
+> > > > > >
+> > > > > > Gentle ping, do you have any other comments? Thanks.
+> > > > > >
+> > > > > Yea, I am still not sure about the error returned in send_data().  It
+> > > > > will either never hit or there will be no easy recovery from it. The
+> > > > > api expects the driver to tell it the last-tx was done only when it
+> > > > > can send the next message. (There may be case like sending depend on
+> > > > > remote, which can't be ensured before hand).
+> > > >
+> > > > Actually this is an unusual case, suppose the remote target did not
+> > > > fetch the message as soon as possile, which will cause the FIFO
+> > > > overflow, so in this case we  can not send messages to the remote
+> > > > target any more, otherwise messages will be lost. Thus we can return
+> > > > errors to users to indicate that something wrong with the remote
+> > > > target need to be checked.
+> > > >
+> > > > So this validation in send_data() is mostly for debugging for this
+> > > > abnormal case and we will not trigger this issue if the remote target
+> > > > works well. So I think it is useful to keep this validation in
+> > > > send_data(). Thanks.
+> > >
+> > > Any comments? Thanks.
+> > >
+> > Same as my last post.
+>
+> I think I've explained the reason why we need add this validation in
+> my previous email, I am not sure how do you think? You still want to
+> remove this validation?
 
-On Thu, May 21, 2020 at 08:14:04PM +0800, Ramuthevar, Vadivel MuruganX wrote:
-> On 21/5/2020 6:56 pm, Mark Brown wrote:
+Gentle ping.
 
-> > That doesn't address either of the issues.  The removal of the old
-> > bindings and addition of the YAML ones needs to be in a single patch
-> > doing that conversion.  What I'm suggesting should be done separately is
-> > whatever changes to the semantics of the bindings you are (according to
-> > your changelog) doing.
+As I explained in previous email, this validation is for an unusual
+case, suppose the remote target did not fetch the message as soon as
+possile, which will cause the FIFO overflow, so in this case we  can
+not send messages to the remote
+target any more, otherwise messages will be lost. Thus we can return
+errors to users to indicate that something wrong with the remote
+target need to be checked.
 
-> You mean semantics of the binding as a single patch you are suggesting me,
-> right? , Thanks!
+So this validation in send_data() is mostly for debugging for this
+abnormal case and we will not trigger this issue if the remote target
+works well. So I think it is useful to keep this validation in
+send_data(). What do you think? Thanks.
 
-I mean that any changes to the bindings ought to be split out into
-separate patches, if there's multiple changes it may make sense for
-there to be multiple patches.
-
---JP+T4n/bALQSJXh8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7GchIACgkQJNaLcl1U
-h9BBmwf/TAx18MCyJnkJz/cUdXiSZ/+3KxoqHwPbafjuXp6qJnMplcEAKFr4GKRQ
-PTqDr6x+1BLU9teHxr+zvvTjM291hIaF9Nvrf/UxkM3IpOAmBUSzPV1frd0hN2sZ
-eGhxkeI9d/+Vke4/koh+o4e89xis1Rk197LwrBSCBqS17mnXXu9CcJxxCOAmGlQn
-0PPfp8vz+tLT400Cf9QaP5U4cpKom24uz5GbjmOaq7mIHs+U+PZdjFJJ6gxKxV3K
-uUsaW2MnVnkPmgQlC0jMdaOYvxwduiCYCH4nT1zLLs+iSqJkoOiB4uMI0/QuFm4c
-kPWfhUXiqDm2eSA4sTcD4e/5YvDhfg==
-=I4eQ
------END PGP SIGNATURE-----
-
---JP+T4n/bALQSJXh8--
+-- 
+Baolin Wang
