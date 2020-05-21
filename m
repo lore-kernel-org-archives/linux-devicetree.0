@@ -2,127 +2,103 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21DBC433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 11:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C301CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 11:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE382070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 11:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gpL4D4jK"
+	by mail.kernel.org (Postfix) with ESMTP id A32DC2070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 11:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgEULfQ (ORCPT
+        id S1729115AbgEULrs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 07:35:16 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49788 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbgEULfP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 07:35:15 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LBYxLP047809;
-        Thu, 21 May 2020 06:34:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590060899;
-        bh=NKzh9+B9wxDJ0+3F2ItUkU3OQXKDmdpEmjKcIKq6+ls=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gpL4D4jKfPTyyrWSYH184r2DwD2XU7CKPdc0BhBOwkjTU+AEFGNxGIapVrs2n/2K8
-         +AwLdBav9KsPUzwlnhELyyH0qyGgCDSKS0xniYVlqBwQlVS7jJHzEI1aF8hIOVNaM5
-         4biOufV0nO/cJ2tTAI/rP9fXMlA56OuMq0wrZZ08=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LBYxt3074955
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 06:34:59 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 06:34:58 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 06:34:58 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LBYtCd024102;
-        Thu, 21 May 2020 06:34:55 -0500
-Subject: Re: [PATCH v4 07/14] PCI: cadence: Add new *ops* for CPU addr fixup
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thu, 21 May 2020 07:47:48 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37058 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729077AbgEULrr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 07:47:47 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3D2D4803087B;
+        Thu, 21 May 2020 11:47:39 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jNgJJc_VL4Gx; Thu, 21 May 2020 14:47:38 +0300 (MSK)
+Date:   Thu, 21 May 2020 14:47:36 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Feng Tang <feng.tang@intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Vinod Koul <vkoul@kernel.org>, Alan Cox <alan@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200506151429.12255-1-kishon@ti.com>
- <20200506151429.12255-8-kishon@ti.com> <20200520213434.GA583923@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <3f9cf6e5-94f8-4c54-aaee-c181b0e79f1f@ti.com>
-Date:   Thu, 21 May 2020 17:04:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200521114736.b2azyfvym372vkdl@mobilestation>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+ <20200521030924.GA12568@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520213434.GA583923@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200521030924.GA12568@shbuild999.sh.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello Feng,
 
-On 5/21/2020 3:04 AM, Rob Herring wrote:
-> On Wed, May 06, 2020 at 08:44:22PM +0530, Kishon Vijay Abraham I wrote:
->> Cadence driver uses "mem" memory resource to obtain the offset of
->> configuration space address region, memory space address region and
->> message space address region. The obtained offset is used to program
->> the Address Translation Unit (ATU). However certain platforms like TI's
->> J721E SoC require the absolute address to be programmed in the ATU and not
->> just the offset.
+On Thu, May 21, 2020 at 11:09:24AM +0800, Feng Tang wrote:
+> Hi Serge,
 > 
-> Once again, Cadence host binding is broken (or at least the example is). 
-> The 'mem' region shouldn't even exist. It is overlapping the config 
-> space and 'ranges':
-> 
->             reg = <0x0 0xfb000000  0x0 0x01000000>,
->                   <0x0 0x41000000  0x0 0x00001000>,
->                   <0x0 0x40000000  0x0 0x04000000>;
->             reg-names = "reg", "cfg", "mem";
-> 
->             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
->                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-> 
-> 
-> 16M of registers looks a bit odd. I guess it doesn't matter 
-> unless you have a 32-bit platform and care about your virtual 
-> space. Probably should have been 3 regions for LM, RP, and AT looking 
-> at the driver.
+> On Thu, May 21, 2020 at 04:21:51AM +0300, Serge Semin wrote:
 
-The "mem" region in never ioremapped. However $patch removes requiring to add
-"mem" memory resource.
+[nip]
+
+> >  /*
+> >   * dws->dma_chan_busy is set before the dma transfer starts, callback for rx
+> >   * channel will clear a corresponding bit.
+> > @@ -200,6 +267,8 @@ static void dw_spi_dma_rx_done(void *arg)
+> >  {
+> >  	struct dw_spi *dws = arg;
+> >  
+> > +	dw_spi_dma_wait_rx_done(dws);
 > 
-> Whatever outbound address translation you need should be based on 
-> 'ranges'.
+> I can understand the problem about TX, but I don't see how RX
+> will get hurt, can you elaborate more? thanks
+> 
+> - Feng
 
-You mean we don't need to add "new *ops* for CPU addr fixup"?. The issue is
-ranges provides CPU address and PCI address. The CPU will access whatever is
-populated in ranges to access the PCI bus. However while programming the ATU,
-we cannot use the CPU address provided in ranges directly (in some platforms)
-because the controller does not see the full address and only the lower 28bits.
+Your question is correct. You are right with your hypothesis. Ideally upon the
+dw_spi_dma_rx_done() execution Rx FIFO must be already empty. That's why the
+commit log signifies the error being mostly related with Tx FIFO. But
+practically there are many reasons why Rx FIFO might be left with data:
+DMA engine failures, incorrect DMA configuration (if DW SPI or DW DMA driver
+messed something up), controller hanging up, and so on. It's better to catch
+an error at this stage while propagating it up to the SPI device drivers.
+Especially seeing the wait-check implementation doesn't gives us much of the
+execution overhead in normal conditions. So by calling dw_spi_dma_wait_rx_done()
+we make sure that all the data has been fetched and we may freely get the
+buffers back to the client driver.
 
-This similar restriction was there with Designware (mostly an integration
-issue) and we used *ops* to fixup the address that has to be programmed in ATU.
-The Designware initially used a wrapper so that ranges property can be directly
-used [1]. However this approach was later removed in [2]
-
-[1] -> https://lore.kernel.org/patchwork/patch/468523/
-[2] -> https://lkml.org/lkml/2015/10/16/232
-
-Thanks
-Kishon
+-Sergey
