@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21F2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DCCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BEF2078C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7252078C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgEUAfo (ORCPT
+        id S1727897AbgEUAfu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 20:35:44 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33264 "EHLO
+        Wed, 20 May 2020 20:35:50 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33090 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgEUAff (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 20:35:35 -0400
+        with ESMTP id S1727070AbgEUAfb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 20:35:31 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E6A5E8029EB7;
-        Thu, 21 May 2020 00:35:32 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id F2DA98030776;
+        Thu, 21 May 2020 00:35:27 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 282dDLsDfqmV; Thu, 21 May 2020 03:35:32 +0300 (MSK)
+        with ESMTP id 6Xsx9O9g7TwY; Thu, 21 May 2020 03:35:27 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -34,18 +34,12 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 13/14] mips: csrc-r4k: Mark R4K timer as unstable if CPU freq changes
-Date:   Thu, 21 May 2020 03:34:42 +0300
-Message-ID: <20200521003443.11385-14-Sergey.Semin@baikalelectronics.ru>
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 10/14] mips: cdmm: Add mti,mips-cdmm dtb node support
+Date:   Thu, 21 May 2020 03:34:39 +0300
+Message-ID: <20200521003443.11385-11-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -57,104 +51,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit 07d69579e7fe ("MIPS: Don't register r4k sched clock when CPUFREQ
-enabled") disabled the r4k-clock usage for scheduler ticks counting due
-to the scheduler being non-tolerant for unstable clocks sources. For the
-same reason the clock should be used in the system clocksource framework
-with care. As soon as CPU frequency changes the clocksource framework
-should be notified about this by marking the R4K timer being unstable
-(which it really is, since the ticks rate has been changed synchronously
-with the CPU frequency).
+Since having and mapping the CDMM block is platform specific, then
+instead of just returning a zero-address, lets make the default CDMM
+base address search method (mips_cdmm_phys_base()) to do something
+useful. For instance to find the address in a dedicated dtb-node in
+order to support of-based platforms by default.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-
 ---
+ drivers/bus/mips_cdmm.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Changelog v3:
-- Mark clocksource as unstable instead of lowering its rating.
----
- arch/mips/Kconfig           |  1 +
- arch/mips/kernel/csrc-r4k.c | 40 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+)
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index b0eff203fbd8..c2911864fee1 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1154,6 +1154,7 @@ config CSRC_IOASIC
- 	bool
- 
- config CSRC_R4K
-+	select CLOCKSOURCE_WATCHDOG if CPU_FREQ
- 	bool
- 
- config CSRC_SB1250
-diff --git a/arch/mips/kernel/csrc-r4k.c b/arch/mips/kernel/csrc-r4k.c
-index 437dda64fd7a..edc4afc080fa 100644
---- a/arch/mips/kernel/csrc-r4k.c
-+++ b/arch/mips/kernel/csrc-r4k.c
-@@ -6,6 +6,7 @@
-  * Copyright (C) 2007 by Ralf Baechle
+diff --git a/drivers/bus/mips_cdmm.c b/drivers/bus/mips_cdmm.c
+index 1b14256376d2..7faa8c049f07 100644
+--- a/drivers/bus/mips_cdmm.c
++++ b/drivers/bus/mips_cdmm.c
+@@ -16,6 +16,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/smp.h>
++#include <linux/of_address.h>
++#include <linux/of.h>
+ #include <asm/cdmm.h>
+ #include <asm/hazards.h>
+ #include <asm/mipsregs.h>
+@@ -337,9 +339,22 @@ static phys_addr_t mips_cdmm_cur_base(void)
+  * Picking a suitable physical address at which to map the CDMM region is
+  * platform specific, so this weak function can be overridden by platform
+  * code to pick a suitable value if none is configured by the bootloader.
++ * By default this method tries to find a CDMM-specific node in the system
++ * dtb. Note that this won't work for early serial console.
   */
- #include <linux/clocksource.h>
-+#include <linux/cpufreq.h>
- #include <linux/init.h>
- #include <linux/sched_clock.h>
- 
-@@ -65,6 +66,45 @@ static bool rdhwr_count_usable(void)
- 	return false;
+ phys_addr_t __weak mips_cdmm_phys_base(void)
+ {
++	struct device_node *np;
++	struct resource res;
++	int err;
++
++	np = of_find_compatible_node(NULL, NULL, "mti,mips-cdmm");
++	if (np) {
++		err = of_address_to_resource(np, 0, &res);
++		if (!err)
++			return res.start;
++	}
++
+ 	return 0;
  }
  
-+#ifdef CONFIG_CPU_FREQ
-+
-+static bool __read_mostly r4k_clock_unstable;
-+
-+static void r4k_clocksource_unstable(char *reason)
-+{
-+	if (r4k_clock_unstable)
-+		return;
-+
-+	r4k_clock_unstable = true;
-+
-+	pr_info("R4K timer is unstable due to %s\n", reason);
-+
-+	clocksource_mark_unstable(&clocksource_mips);
-+}
-+
-+static int r4k_cpufreq_callback(struct notifier_block *nb,
-+				unsigned long val, void *data)
-+{
-+	if (val == CPUFREQ_POSTCHANGE)
-+		r4k_clocksource_unstable("CPU frequency change");
-+
-+	return 0;
-+}
-+
-+static struct notifier_block r4k_cpufreq_notifier = {
-+	.notifier_call  = r4k_cpufreq_callback,
-+};
-+
-+static int __init r4k_register_cpufreq_notifier(void)
-+{
-+	return cpufreq_register_notifier(&r4k_cpufreq_notifier,
-+					 CPUFREQ_TRANSITION_NOTIFIER);
-+
-+}
-+core_initcall(r4k_register_cpufreq_notifier);
-+
-+#endif /* !CONFIG_CPU_FREQ */
-+
- int __init init_r4k_clocksource(void)
- {
- 	if (!cpu_has_counter || !mips_hpt_frequency)
 -- 
 2.25.1
 
