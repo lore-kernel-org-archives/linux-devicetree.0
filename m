@@ -2,92 +2,227 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73395C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343B8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4807D20826
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590084683;
-	bh=NOalaYPbHEwoE5ZwTM1xPd8ZRFEsjARJSOjT4Et8B6E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OAAyt98OXqopTT2kVZ8MhGnLRdyFb38G0PSkegZd6bkDdlL2Ctgoja3dqk/ciI1ZU
-	 5Jrw9m2CC2i7jl8D1d56xVBqcGQbZ+WkSYizU8tICkh/blNtjKcOeXflLYUtExKt8l
-	 Ofo2EpfFlg7QiznSEV6+d/c4FSrGQuoN5F81TcF8=
+	by mail.kernel.org (Postfix) with ESMTP id 06D5E207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OlGZ0rM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgEUSLT (ORCPT
+        id S1729034AbgEUSMK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 14:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgEUSLT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 14:11:19 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB60207D3;
-        Thu, 21 May 2020 18:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590084679;
-        bh=NOalaYPbHEwoE5ZwTM1xPd8ZRFEsjARJSOjT4Et8B6E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U0NkA7rt95CF4hYXq7w3C0KfgPKrRQmZ9hvTM3IK+GjltmwQJY1+qpnF5hlVaovXz
-         8XPyTmj8Q/SaYkb/8qWLYqW710oKX72UijSwzzw3jJs+Kux/VGlB/whlV9CYUMF3pq
-         cdQiFLSeJO+yAQFh1kg6HtwWAOi9HNl/w5BrUmTE=
-Date:   Thu, 21 May 2020 19:11:14 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v14 1/2] dt-bindings: proximity: provide vcnl3020 device
- tree binding document
-Message-ID: <20200521191114.6b454ab9@archlinux>
-In-Reply-To: <20200518204144.GA11276@bogus>
-References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
-        <20200510184537.10335-2-i.mikhaylov@yadro.com>
-        <20200518204144.GA11276@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 21 May 2020 14:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729360AbgEUSMJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 14:12:09 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 713E8C08C5C0
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 11:12:09 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d10so3559833pgn.4
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 11:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2Rh0MulQkkuEGbxFUvnmU8zy8iOZUosVl0yNEP696vA=;
+        b=OlGZ0rM3Y2tsnOceWhRLzPhN/MrJfxnIjkKTCTA1i2RKz2zg10vn8nGStq8JJcsMP6
+         XIs0XypHikWHZtUee5WERCzjkj5jzWvYgophopUWdFdcX+lQ5ws3YLi9a5DhSPLf+iZz
+         m0kpH2X52NoQmgb/A1zP5FFlUjYfbaLd40460=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2Rh0MulQkkuEGbxFUvnmU8zy8iOZUosVl0yNEP696vA=;
+        b=ixbW/48EusECoVtik1GVVZFvklRUcXXDTGYejh1/IxqEtHMKzP46N+xoC/ZzPbOhzT
+         jqMysoQTnsUHvek7br8CtFUPFrao75+q2bbw3WrvPk832OeuOpW2q0D7msJCmWZwiA5U
+         I2Jym3jZHL9vtDv1Kmc62BipqXpUlK9YpBsFdk80cDUHxG/US12fTnexbnf8YMay+cg4
+         3PVukKrXHyjYMS8v4fzmg2KUsAIp3MTj2C7PY1fbCKfGIbnY2DiF2xzFto16pOuTEqUK
+         LOT+n8viVrJ3M2OX15TyS3/c9+um1Xnxjf9hwQDogYA5Rm4HdChnpxPnnndDaFudZe4T
+         tOSw==
+X-Gm-Message-State: AOAM531tgFKrcGcRlo7e0E5S74pJgWOppCINvFZGbb2U/anNfwiP8Fak
+        rOFFrmjWUPKJnKIaA0kTSNVPLg==
+X-Google-Smtp-Source: ABdhPJzWffE87ngZTa0scCppP/KReDxQI2X3ZPxnSPjf4C+oWsO/X0lg0xAf9YConEKttQ6iOKvqPw==
+X-Received: by 2002:a62:760e:: with SMTP id r14mr2630pfc.92.1590084728802;
+        Thu, 21 May 2020 11:12:08 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id l33sm5318087pje.22.2020.05.21.11.12.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 11:12:07 -0700 (PDT)
+Date:   Thu, 21 May 2020 11:12:05 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        msavaliy@codeaurora.org, evgreen@chromium.org
+Subject: Re: [PATCH V6 2/7] soc: qcom-geni-se: Add interconnect support to
+ fix earlycon crash
+Message-ID: <20200521181205.GC4525@google.com>
+References: <1590049764-20912-1-git-send-email-akashast@codeaurora.org>
+ <1590049764-20912-3-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1590049764-20912-3-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 18 May 2020 14:41:44 -0600
-Rob Herring <robh@kernel.org> wrote:
+Hi Akash,
 
-> On Sun, 10 May 2020 21:45:36 +0300, Ivan Mikhaylov wrote:
-> > Mostly standard i2c driver with some additional led-current option
-> > for vcnl3020.
-> > 
-> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> > ---
-> >  .../iio/proximity/vishay,vcnl3020.yaml        | 62 +++++++++++++++++++
-> >  1 file changed, 62 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-> >   
+On Thu, May 21, 2020 at 01:59:19PM +0530, Akash Asthana wrote:
+> QUP core clock is shared among all the SE drivers present on particular
+> QUP wrapper, the system will reset(unclocked access) if earlycon used after
+> QUP core clock is put to 0 from other SE drivers before real console comes
+> up.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> As earlycon can't vote for it's QUP core need, to fix this add ICC
+> support to common/QUP wrapper driver and put vote for QUP core from
+> probe on behalf of earlycon and remove vote during earlycon exit call.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Reported-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Change in V3:
+>  - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
+>    exit function to remove ICC vote for earlyconsole.
+>  - Remove suspend/resume hook for geni-se driver as we are no longer
+>    removing earlyconsole ICC vote from system suspend, we are removing
+>    from earlycon exit.
+> 
+> Change in V4:
+>  - As per Matthias comment make 'earlycon_wrapper' as static structure.
+> 
+> Changes in V5:
+>  - Vote for core path only after checking whether "qcom_geni" earlycon is
+>    actually present or not by traversing over structure "console_drivers".
+> 
+> Changes in V6:
+>  - As per Matthias's comment removed NULL check for console_drivers global
+>    struct, added NULL check for earlycon_wrapper in _remove_earlycon_icc_vote
+>    API
+>  - Addressed nitpicks from Andy.
+> 
+>  drivers/soc/qcom/qcom-geni-se.c       | 68 +++++++++++++++++++++++++++++++++++
+>  drivers/tty/serial/qcom_geni_serial.c |  7 ++++
+>  include/linux/qcom-geni-se.h          |  2 ++
+>  3 files changed, 77 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index 0b2526d..ac16bb1 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -3,6 +3,7 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/clk.h>
+> +#include <linux/console.h>
+>  #include <linux/slab.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/io.h>
+> @@ -90,11 +91,14 @@ struct geni_wrapper {
+>  	struct device *dev;
+>  	void __iomem *base;
+>  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+> +	struct geni_icc_path to_core;
+>  };
+>  
+>  static const char * const icc_path_names[] = {"qup-core", "qup-config",
+>  						"qup-memory"};
+>  
+> +static struct geni_wrapper *earlycon_wrapper;
+> +
+>  #define QUP_HW_VER_REG			0x4
+>  
+>  /* Common SE registers */
+> @@ -812,11 +816,38 @@ int geni_icc_disable(struct geni_se *se)
+>  }
+>  EXPORT_SYMBOL(geni_icc_disable);
+>  
+> +void geni_remove_earlycon_icc_vote(void)
+> +{
+> +	struct geni_wrapper *wrapper;
+> +	struct device_node *parent;
+> +	struct device_node *child;
+> +
+> +	if (!earlycon_wrapper)
+> +		return;
+> +
+> +	wrapper = earlycon_wrapper;
+> +	parent = of_get_next_parent(wrapper->dev->of_node);
+> +	for_each_child_of_node(parent, child) {
+> +		if (!of_device_is_compatible(child, "qcom,geni-se-qup"))
+> +			continue;
+> +		wrapper = platform_get_drvdata(of_find_device_by_node(child));
+> +		icc_put(wrapper->to_core.path);
+> +		wrapper->to_core.path = NULL;
+> +
+> +	}
+> +	of_node_put(parent);
+> +
+> +	earlycon_wrapper = NULL;
+> +}
+> +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
+> +
+>  static int geni_se_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct resource *res;
+>  	struct geni_wrapper *wrapper;
+> +	struct console __maybe_unused *bcon;
+> +	bool __maybe_unused has_earlycon = false;
+>  	int ret;
+>  
+>  	wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
+> @@ -839,6 +870,43 @@ static int geni_se_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +#ifdef CONFIG_SERIAL_EARLYCON
+> +	for_each_console(bcon) {
+> +		if (!strcmp(bcon->name, "qcom_geni")) {
+> +			has_earlycon = true;
+> +			break;
+> +		}
+> +	}
+> +	if (!has_earlycon)
+> +		goto exit;
+> +
+> +	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
+> +	if (IS_ERR(wrapper->to_core.path))
+> +		return PTR_ERR(wrapper->to_core.path);
+> +	/*
+> +	 * Put minmal BW request on core clocks on behalf of early console.
+> +	 * The vote will be removed earlycon exit function.
+> +	 *
+> +	 * Note: We are putting vote on each QUP wrapper instead only to which
+> +	 * earlycon is connected because QUP core clock of different wrapper
+> +	 * share same voltage domain. If core1 is put to 0, then core2 will
+> +	 * also run at 0, if not voted. Default ICC vote will be removed ASA
+> +	 * we touch any of the core clock.
+> +	 * core1 = core2 = max(core1, core2)
+> +	 */
+> +	ret = icc_set_bw(wrapper->to_core.path, GENI_DEFAULT_BW,
+> +				GENI_DEFAULT_BW);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "%s: ICC BW voting failed for core :%d\n",
 
+should be "... core: %d"
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+same for the other instances. I don't necessarily want to stall the series on
+this, it can also be addressed with a follow up patch. Up to you if you want
+to respin or not.
 
-Thanks,
-
-Jonathan
-
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
