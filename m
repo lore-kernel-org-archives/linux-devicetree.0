@@ -2,85 +2,122 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E610C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3483C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B9020829
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590070659;
-	bh=5MRn3H5sZAZmyAJ7ms4hcDmOF+0kJdAcWrKPmQYOlR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yitYSCYTUo2Wgf9JexfJljtbyIhwjZJexmQoqoAQJDkuNjGf8uDZa0TWqpS763aK7
-	 /8Y2cXqFckW/wF4btJL41gmKBRzKRCNcqgZWAUGujrjvfDMuegZ7oSAHzHdG15WFrX
-	 XS1rhTIIWKTzbyY6f91YObOApr1WfNjDkP2l4Q5I=
+	by mail.kernel.org (Postfix) with ESMTP id AC21E20748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbgEUORi (ORCPT
+        id S1729537AbgEUOW3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 10:17:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729678AbgEUORi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 10:17:38 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A49A20721;
-        Thu, 21 May 2020 14:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590070657;
-        bh=5MRn3H5sZAZmyAJ7ms4hcDmOF+0kJdAcWrKPmQYOlR0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hk9BuL52Yd+s1F9PZBKDi1fOj/hBpMdLhnVRrqDGLJHOMJUJ4cx1CtTqJjqji14lA
-         se04HPgcV50e35bBPs6oZN10HauSB5SCTxRi9BAEpAi6JOpzQotWs8pN2P23RLU3T9
-         jRk0X8KLGknqWO03sXQQpGyIbmzpKdaGmJhlarzo=
-Date:   Thu, 21 May 2020 15:17:31 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
-        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
-        maz@kernel.org
-Subject: Re: [PATCH v7 13/24] iommu/arm-smmu-v3: Enable broadcast TLB
- maintenance
-Message-ID: <20200521141730.GJ6608@willie-the-truck>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-14-jean-philippe@linaro.org>
+        Thu, 21 May 2020 10:22:29 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38780 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728207AbgEUOW1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 10:22:27 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 376CF8030776;
+        Thu, 21 May 2020 14:22:22 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8PSENPxDhIuf; Thu, 21 May 2020 17:22:21 +0300 (MSK)
+Date:   Thu, 21 May 2020 17:22:19 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 7/7] clocksource: mips-gic-timer: Mark GIC timer as
+ unstable if ref clock changes
+Message-ID: <20200521142219.ejsl4y5eaqqfsp5k@mobilestation>
+References: <20200521005321.12129-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521005321.12129-8-Sergey.Semin@baikalelectronics.ru>
+ <CAMuHMdW5TqfDTZZCscXCK-Fkd7Gq1Ciyu1_sDzzR0B+_W-2hfg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200519175502.2504091-14-jean-philippe@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdW5TqfDTZZCscXCK-Fkd7Gq1Ciyu1_sDzzR0B+_W-2hfg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[+Marc]
-
-On Tue, May 19, 2020 at 07:54:51PM +0200, Jean-Philippe Brucker wrote:
-> The SMMUv3 can handle invalidation targeted at TLB entries with shared
-> ASIDs. If the implementation supports broadcast TLB maintenance, enable it
-> and keep track of it in a feature bit. The SMMU will then be affected by
-> inner-shareable TLB invalidations from other agents.
+On Thu, May 21, 2020 at 11:09:50AM +0200, Geert Uytterhoeven wrote:
+> Hi Serge,
 > 
-> A major side-effect of this change is that stage-2 translation contexts
-> are now affected by all invalidations by VMID. VMIDs are all shared and
-> the only ways to prevent over-invalidation, since the stage-2 page tables
-> are not shared between CPU and SMMU, are to either disable BTM or allocate
-> different VMIDs. This patch does not address the problem.
+> On Thu, May 21, 2020 at 2:54 AM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > Currently clocksource framework doesn't support the clocks with variable
+> > frequency. Since MIPS GIC timer ticks rate might be unstable on some
+> > platforms, we must make sure that it justifies the clocksource
+> > requirements. MIPS GIC timer is incremented with the CPU cluster reference
+> > clocks rate. So in case if CPU frequency changes, the MIPS GIC tick rate
+> > changes synchronously. Due to this the clocksource subsystem can't rely on
+> > the timer to measure system clocks anymore. This commit marks the MIPS GIC
+> > based clocksource as unstable if reference clock (normally it's a CPU
+> > reference clocks) rate changes. The clocksource will execute a watchdog
+> > thread, which lowers the MIPS GIC timer rating to zero and fallbacks to a
+> > new stable one.
+> >
+> > Note we don't need to set the CLOCK_SOURCE_MUST_VERIFY flag to the MIPS
+> > GIC clocksource since normally the timer is stable. The only reason why
+> > it gets unstable is due to the ref clock rate change, which event we
+> > detect here in the driver by means of the clocks event notifier.
+> >
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> Thanks for your patch!
+> 
+> > --- a/drivers/clocksource/mips-gic-timer.c
+> > +++ b/drivers/clocksource/mips-gic-timer.c
+> > @@ -24,6 +24,9 @@
+> >  static DEFINE_PER_CPU(struct clock_event_device, gic_clockevent_device);
+> >  static int gic_timer_irq;
+> >  static unsigned int gic_frequency;
+> > +static bool __read_mostly gic_clock_unstable;
+> > +
+> > +static void git_clocksource_unstable(char *reason);
+> 
+> gic_clocksource_unstable? (everywhere)
 
-This sounds like a potential performance issue, particularly as we expose
-stage-2 contexts via VFIO directly. Maybe we could reserve some portion of
-VMID space for the SMMU? Marc, what do you reckon?
+This is the most used word lately. So my hands write git everywhere by itself.)
+Thanks for noticing this.
 
-Will
+-Sergey
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
