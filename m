@@ -2,397 +2,418 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E0CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12869C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 967FB20826
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590084876;
-	bh=1ycJTuwYHLQy1eQqsvLiRiLLLx/3HyjZl62v40TPbeI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sWaStSGRpbG59dMhEfF/Hp9/MXmVDGaLYOT4g6ytgLWVL4oO3UNFoXbMTcIVeLHHp
-	 ppSJYON4nBJvYJFtZyQlLoJlEqcBmVJQfNWHB6Q1sDXxvx+VpRHLUL7rCFl5WeUeAv
-	 WtOxoKHR9/gdWD8bw9rRG7qpN0T5cZhOxYgRDULc=
+	by mail.kernel.org (Postfix) with ESMTP id EC4A1207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mbODuniV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgEUSOg (ORCPT
+        id S1729183AbgEUSWt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 14:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbgEUSOg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 14:14:36 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63537207D3;
-        Thu, 21 May 2020 18:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590084874;
-        bh=1ycJTuwYHLQy1eQqsvLiRiLLLx/3HyjZl62v40TPbeI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=E+4yBw79CFHog9BQyczxnT0khe1VS+Io55gSEVUs6Asc2vUiUy29F9wvemZJAdrxE
-         T69voyC+3Eqh5Gf10zZ0tENNf67HobImlm7t3Co8TTyQAYZCqcI0as09BhOXvsjhFs
-         Gvx3KxwktH1m7PMxy0UKdhLZCwAPGwOMIiJWIjDU=
-Date:   Thu, 21 May 2020 19:14:29 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v14 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-Message-ID: <20200521191419.21be4a1a@archlinux>
-In-Reply-To: <20200510184537.10335-3-i.mikhaylov@yadro.com>
-References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
-        <20200510184537.10335-3-i.mikhaylov@yadro.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 21 May 2020 14:22:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728551AbgEUSWt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 14:22:49 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F92C05BD43
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 11:22:49 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f15so3178261plr.3
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 11:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5k4jr7oQbGC/waSmHCtV4glDgCwPs1EjTz2h56TFslo=;
+        b=mbODuniVM/EKfE1h310kd29H9xa4SPKxMHkXOoQeT77ocfLApBA8kz9XT63C4dLlu6
+         5gOpPgLTD4Ip7PFFp3A7mcBckVWD49p1bj4G0ZIbD+uskkVdl/4NUfHYYrXSrb2Z6C04
+         Jb/QMEDYIyJvl8KiqVosPiRMvwfC6iqVNRlJFiQY86Sbgn/3mrVkGHrfPamTId3VC6Uj
+         6ovTaBEFPEfhoRyklMMk+MgeAcRgLaRe8N56OJvCI4kCzE6zlheshrMLBGYijypSGp0v
+         MSGFyGKypkys7TWFRMcUivt8+Eowg+OXr+6/DxO0PB8/Z2j+cn002uwSdosXmDOsBBbt
+         muHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5k4jr7oQbGC/waSmHCtV4glDgCwPs1EjTz2h56TFslo=;
+        b=ZQwvRP7+uWlzj3l3kW+YnglJW7+JaVMi6vqQETAkTWZwdv2V/WOYxGIeBcRTvWx9Be
+         /PAmdq6jwZ+8S/CEUwqd9+KnclV4ZAPlyF9nxhQPDAq2r7Z9CshA2DFO1kgJv1IOMsT3
+         kBt4bgcHvzar06JFMHw12wwk3HXD8oUVRTu8rSKFkbGWJJVrq8aJbKB7IzJCpkrBTx/S
+         Knj24IhtT+1VCqdpLG2VWuGCBKI8+M22RAAMbj9FoKhhy+JuZuPhUoMnP3WQ99Vzmljx
+         OMi3HzbU6QIBOkT9XZkUb+NEhbIohRrwbl2z6WrSw9WMNK7xnlTOwuDVI0kMJkqNPmYM
+         4E5A==
+X-Gm-Message-State: AOAM531DufZ9QWOGY0NIrurrj+pcXtgU2djUxfc6Y2d2TC7yqnkjnLZc
+        aJNHKkQDjAburdNqE3sZhQjclg==
+X-Google-Smtp-Source: ABdhPJwB3fc3nwNk9pGyuNDG8OM1ndTxyj8Am/bJavff2gPpLkdE9FNQse3rbpm9jyocGmzsBJJ/hw==
+X-Received: by 2002:a17:902:a511:: with SMTP id s17mr10810265plq.33.1590085368092;
+        Thu, 21 May 2020 11:22:48 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x6sm5309166pfn.90.2020.05.21.11.22.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 11:22:47 -0700 (PDT)
+Date:   Thu, 21 May 2020 11:21:29 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH V1 2/3] mmc: sdhci-msm: Use internal voltage control
+Message-ID: <20200521182129.GB1331782@builder.lan>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1589541535-8523-3-git-send-email-vbadigan@codeaurora.org>
+ <20200518195711.GH2165@builder.lan>
+ <1f546a8b-7f10-95e7-efc2-8e3d5787aee6@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f546a8b-7f10-95e7-efc2-8e3d5787aee6@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 10 May 2020 21:45:37 +0300
-Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+On Wed 20 May 04:16 PDT 2020, Veerabhadrarao Badiganti wrote:
 
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
 > 
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
+> Thanks Bjorn for the review. For major comments I'm responding.
+> Other comments, i will take care of them in my next patch-set.
 > 
-> Datasheet: http://www.vishay.com/docs/84150/vcnl3020.pdf
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Applied to the togreg branch of iio.git and pushed out as testing
-or the autobuilders to play with it.
-
-I 'might' manage to sneak a last pull request to Greg tomorrow
-so this might make the coming merge window though we are cutting
-it close so may go either way.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/proximity/Kconfig    |  11 ++
->  drivers/iio/proximity/Makefile   |   1 +
->  drivers/iio/proximity/vcnl3020.c | 258 +++++++++++++++++++++++++++++++
->  3 files changed, 270 insertions(+)
->  create mode 100644 drivers/iio/proximity/vcnl3020.c
+> On 5/19/2020 1:27 AM, Bjorn Andersson wrote:
+> > On Fri 15 May 04:18 PDT 2020, Veerabhadrarao Badiganti wrote:
+[..]
+> > > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+[..]
+> > > +static int sdhci_msm_set_vmmc(struct sdhci_msm_host *msm_host,
+> > > +			      struct mmc_host *mmc, int level)
+> > > +{
+> > > +	int load, ret;
+> > > +
+> > > +	if (IS_ERR(mmc->supply.vmmc))
+> > > +		return 0;
+> > > +
+> > > +	if (msm_host->vmmc_load) {
+> > > +		load = level ? msm_host->vmmc_load : 0;
+> > > +		ret = regulator_set_load(mmc->supply.vmmc, load);
+> > I started on the comment about regulator_set_load() that you can find
+> > below...
+> > 
+> > > +		if (ret)
+> > > +			goto out;
+> > > +	}
+> > > +
+> > > +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
+> > ...but I don't see that mmc->ios.vdd necessarily is in sync with
+> > "level". Or do you here simply set the load based on what the hardware
+> > tell you and then orthogonally to that let the core enable/disable the
+> > regulator?
+> > 
+> > Perhaps I'm just missing something obvious, but if not I believe this
+> > warrants a comment describing that you're lowering the power level
+> > regardless of the actual power being disabled.
 > 
-> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-> index d53601447da4..b8d2b17e60ac 100644
-> --- a/drivers/iio/proximity/Kconfig
-> +++ b/drivers/iio/proximity/Kconfig
-> @@ -112,6 +112,17 @@ config SRF08
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called srf08.
->  
-> +config VCNL3020
-> +	tristate "VCNL3020 proximity sensor"
-> +	select REGMAP_I2C
-> +	depends on I2C
-> +	help
-> +	  Say Y here if you want to build a driver for the Vishay VCNL3020
-> +	  proximity sensor.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called vcnl3020.
-> +
->  config VL53L0X_I2C
->  	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
->  	depends on I2C
-> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-> index 0bb5f9de13d6..8245978ced30 100644
-> --- a/drivers/iio/proximity/Makefile
-> +++ b/drivers/iio/proximity/Makefile
-> @@ -12,5 +12,6 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
->  obj-$(CONFIG_SRF04)		+= srf04.o
->  obj-$(CONFIG_SRF08)		+= srf08.o
->  obj-$(CONFIG_SX9500)		+= sx9500.o
-> +obj-$(CONFIG_VCNL3020)		+= vcnl3020.o
->  obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
->  
-> diff --git a/drivers/iio/proximity/vcnl3020.c b/drivers/iio/proximity/vcnl3020.c
-> new file mode 100644
-> index 000000000000..9ff1a164c2e6
-> --- /dev/null
-> +++ b/drivers/iio/proximity/vcnl3020.c
-> @@ -0,0 +1,258 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Support for Vishay VCNL3020 proximity sensor on i2c bus.
-> + * Based on Vishay VCNL4000 driver code.
-> + *
-> + * TODO: interrupts.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/err.h>
-> +#include <linux/delay.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +
-> +#define VCNL3020_PROD_ID	0x21
-> +
-> +#define VCNL_COMMAND		0x80 /* Command register */
-> +#define VCNL_PROD_REV		0x81 /* Product ID and Revision ID */
-> +#define VCNL_PROXIMITY_RATE	0x82 /* Rate of Proximity Measurement */
-> +#define VCNL_LED_CURRENT	0x83 /* IR LED current for proximity mode */
-> +#define VCNL_PS_RESULT_HI	0x87 /* Proximity result register, MSB */
-> +#define VCNL_PS_RESULT_LO	0x88 /* Proximity result register, LSB */
-> +#define VCNL_PS_ICR		0x89 /* Interrupt Control Register */
-> +#define VCNL_PS_LO_THR_HI	0x8a /* High byte of low threshold value */
-> +#define VCNL_PS_LO_THR_LO	0x8b /* Low byte of low threshold value */
-> +#define VCNL_PS_HI_THR_HI	0x8c /* High byte of high threshold value */
-> +#define VCNL_PS_HI_THR_LO	0x8d /* Low byte of high threshold value */
-> +#define VCNL_ISR		0x8e /* Interrupt Status Register */
-> +#define VCNL_PS_MOD_ADJ		0x8f /* Proximity Modulator Timing Adjustment */
-> +
-> +/* Bit masks for COMMAND register */
-> +#define VCNL_PS_RDY		BIT(5) /* proximity data ready? */
-> +#define VCNL_PS_OD		BIT(3) /* start on-demand proximity
-> +					* measurement
-> +					*/
-> +
-> +#define VCNL_ON_DEMAND_TIMEOUT_US	100000
-> +#define VCNL_POLL_US			20000
-> +
-> +/**
-> + * struct vcnl3020_data - vcnl3020 specific data.
-> + * @regmap:	device register map.
-> + * @dev:	vcnl3020 device.
-> + * @rev:	revision id.
-> + * @lock:	lock for protecting access to device hardware registers.
-> + */
-> +struct vcnl3020_data {
-> +	struct regmap *regmap;
-> +	struct device *dev;
-> +	u8 rev;
-> +	struct mutex lock;
-> +};
-> +
-> +/**
-> + * struct vcnl3020_property - vcnl3020 property.
-> + * @name:	property name.
-> + * @reg:	i2c register offset.
-> + * @conversion_func:	conversion function.
-> + */
-> +struct vcnl3020_property {
-> +	const char *name;
-> +	u32 reg;
-> +	u32 (*conversion_func)(u32 *val);
-> +};
-> +
-> +static u32 microamp_to_reg(u32 *val)
-> +{
-> +	/*
-> +	 * An example of conversion from uA to reg val:
-> +	 * 200000 uA == 200 mA == 20
-> +	 */
-> +	return *val /= 10000;
-> +};
-> +
-> +static struct vcnl3020_property vcnl3020_led_current_property = {
-> +	.name = "vishay,led-current-microamp",
-> +	.reg = VCNL_LED_CURRENT,
-> +	.conversion_func = microamp_to_reg,
-> +};
-> +
-> +static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
-> +					   struct vcnl3020_property prop)
-> +{
-> +	int rc;
-> +	u32 val;
-> +
-> +	rc = device_property_read_u32(data->dev, prop.name, &val);
-> +	if (rc)
-> +		return 0;
-> +
-> +	if (prop.conversion_func)
-> +		prop.conversion_func(&val);
-> +
-> +	rc = regmap_write(data->regmap, prop.reg, val);
-> +	if (rc) {
-> +		dev_err(data->dev, "Error (%d) setting property (%s)\n",
-> +			rc, prop.name);
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static int vcnl3020_init(struct vcnl3020_data *data)
-> +{
-> +	int rc;
-> +	unsigned int reg;
-> +
-> +	rc = regmap_read(data->regmap, VCNL_PROD_REV, &reg);
-> +	if (rc) {
-> +		dev_err(data->dev,
-> +			"Error (%d) reading product revision\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	if (reg != VCNL3020_PROD_ID) {
-> +		dev_err(data->dev,
-> +			"Product id (%x) did not match vcnl3020 (%x)\n", reg,
-> +			VCNL3020_PROD_ID);
-> +		return -ENODEV;
-> +	}
-> +
-> +	data->rev = reg;
-> +	mutex_init(&data->lock);
-> +
-> +	return vcnl3020_get_and_apply_property(data,
-> +					       vcnl3020_led_current_property);
-> +};
-> +
-> +static int vcnl3020_measure_proximity(struct vcnl3020_data *data, int *val)
-> +{
-> +	int rc;
-> +	unsigned int reg;
-> +	__be16 res;
-> +
-> +	mutex_lock(&data->lock);
-> +
-> +	rc = regmap_write(data->regmap, VCNL_COMMAND, VCNL_PS_OD);
-> +	if (rc)
-> +		goto err_unlock;
-> +
-> +	/* wait for data to become ready */
-> +	rc = regmap_read_poll_timeout(data->regmap, VCNL_COMMAND, reg,
-> +				      reg & VCNL_PS_RDY, VCNL_POLL_US,
-> +				      VCNL_ON_DEMAND_TIMEOUT_US);
-> +	if (rc) {
-> +		dev_err(data->dev,
-> +			"Error (%d) reading vcnl3020 command register\n", rc);
-> +		goto err_unlock;
-> +	}
-> +
-> +	/* high & low result bytes read */
-> +	rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res,
-> +			      sizeof(res));
-> +	if (rc)
-> +		goto err_unlock;
-> +
-> +	*val = be16_to_cpu(res);
-> +
-> +err_unlock:
-> +	mutex_unlock(&data->lock);
-> +
-> +	return rc;
-> +}
-> +
-> +static const struct iio_chan_spec vcnl3020_channels[] = {
-> +	{
-> +		.type = IIO_PROXIMITY,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +	},
-> +};
-> +
-> +static int vcnl3020_read_raw(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan, int *val,
-> +			     int *val2, long mask)
-> +{
-> +	int rc;
-> +	struct vcnl3020_data *data = iio_priv(indio_dev);
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		rc = vcnl3020_measure_proximity(data, val);
-> +		if (rc)
-> +			return rc;
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info vcnl3020_info = {
-> +	.read_raw = vcnl3020_read_raw,
-> +};
-> +
-> +static const struct regmap_config vcnl3020_regmap_config = {
-> +	.reg_bits	= 8,
-> +	.val_bits	= 8,
-> +	.max_register	= VCNL_PS_MOD_ADJ,
-> +};
-> +
-> +static int vcnl3020_probe(struct i2c_client *client)
-> +{
-> +	struct vcnl3020_data *data;
-> +	struct iio_dev *indio_dev;
-> +	struct regmap *regmap;
-> +	int rc;
-> +
-> +	regmap = devm_regmap_init_i2c(client, &vcnl3020_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_err(&client->dev, "regmap_init failed\n");
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	data->regmap = regmap;
-> +	data->dev = &client->dev;
-> +
-> +	rc = vcnl3020_init(data);
-> +	if (rc)
-> +		return rc;
-> +
-> +	indio_dev->dev.parent = &client->dev;
-> +	indio_dev->info = &vcnl3020_info;
-> +	indio_dev->channels = vcnl3020_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(vcnl3020_channels);
-> +	indio_dev->name = "vcnl3020";
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	return devm_iio_device_register(&client->dev, indio_dev);
-> +}
-> +
-> +static const struct of_device_id vcnl3020_of_match[] = {
-> +	{
-> +		.compatible = "vishay,vcnl3020",
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, vcnl3020_of_match);
-> +
-> +static struct i2c_driver vcnl3020_driver = {
-> +	.driver = {
-> +		.name   = "vcnl3020",
-> +		.of_match_table = vcnl3020_of_match,
-> +	},
-> +	.probe_new  = vcnl3020_probe,
-> +};
-> +module_i2c_driver(vcnl3020_driver);
-> +
-> +MODULE_AUTHOR("Ivan Mikhaylov <i.mikhaylov@yadro.com>");
-> +MODULE_DESCRIPTION("Vishay VCNL3020 proximity sensor driver");
-> +MODULE_LICENSE("GPL");
+> ios.vdd will be in sync with level. Vdd will be either 0 or a valid voltage
+> (3v).
+> 
+> This indirectly gets triggered/invoked through power-irq when driver writes
+> 0
+> or valid voltage to SDHCI_POWER_CONTROL register from
+> sdhci_set_power_noreg().
 
+Ok, thanks for explaining.
+
+> > > +out:
+> > > +	if (ret)
+> > > +		pr_err("%s: vmmc set load/ocr failed: %d\n",
+> > > +				mmc_hostname(mmc), ret);
+> > Please use:
+> > 	dev_err(mmc_dev(mmc), ...);
+> > 
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
+> > > +			      struct mmc_host *mmc, int level)
+> > vqmmc_enabled is a bool and "level" sounds like an int with several
+> > possible values. So please make level bool here as well, to make it
+> > easer to read..
+> > 
+> > > +{
+> > > +	int load, ret;
+> > > +	struct mmc_ios ios;
+> > > +
+> > > +	if (IS_ERR(mmc->supply.vqmmc)			 ||
+> > > +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
+> > > +	    (msm_host->vqmmc_enabled == level))
+> > > +		return 0;
+> > > +
+> > > +	if (msm_host->vqmmc_load) {
+> > > +		load = level ? msm_host->vqmmc_load : 0;
+> > > +		ret = regulator_set_load(mmc->supply.vqmmc, load);
+> > Since v5.0 the "load" of a regulator consumer is only taken into
+> > consideration if the consumer is enabled. So given that you're toggling
+> > the regulator below there's no need to change this here.
+> > 
+> > Just specify the "active load" at probe time.
+> 
+> For eMMC case, we don't disable this Vccq2 regulator by having always-on
+> flag
+> in the regulator node. Only for SDcard Vccq2 will be disabled.
+> Sice driver is common for both eMMC and SDcard, I have to set 0 load to make
+> it generic and to ensure eMMC Vccq2 regulator will be in LPM mode.
+> 
+
+You should still call regulator_enable()/regulator_disable() on your
+consumer regulator in this driver. When you do this the regulator core
+will conclude that the regulator_dev (i.e. the part that represents the
+hardware) is marked always_on and will not enable/disable the regulator.
+
+But it will still invoke _regulator_handle_consumer_enable() and
+_regulator_handle_consumer_disable(), which will aggregate the "load" of
+all client regulators and update the regulator's load.
+
+So this will apply the load as you expect regardless of it being
+supplied by a regulator marked as always_on.
+
+> > 
+> > > +		if (ret)
+> > > +			goto out;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * The IO voltage regulator may not always support a voltage close to
+> > > +	 * vdd. Set IO voltage based on capability of the regulator.
+> > > +	 */
+> > Is this comment related to the if/else-if inside the conditional? If so
+> > please move it one line down.
+> > 
+> > > +	if (level) {
+> > > +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
+> > > +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
+> > > +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
+> > > +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
+> > Please add a space here, to indicate that the if statement on the next
+> > line is unrelated to the if/elseif above.
+> > 
+> > > +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
+> > > +			pr_debug("%s: %s: setting signal voltage: %d\n",
+> > > +					mmc_hostname(mmc), __func__,
+> > > +					ios.signal_voltage);
+> > I strongly believe you should replace these debug prints with
+> > tracepoints, throughout the driver.
+> > 
+> > > +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
+> > > +			if (ret < 0)
+> > > +				goto out;
+> > > +		}
+> > > +		ret = regulator_enable(mmc->supply.vqmmc);
+> > > +	} else {
+> > > +		ret = regulator_disable(mmc->supply.vqmmc);
+> > > +	}
+> > Given that you don't need to regulator_set_load() this function is now
+> > just one large if/else condition on a constant passed as an argument.
+> > Please split it into sdhci_msm_enable_vqmmc() and
+> > sdhci_msm_disable_vqmmc().
+> 
+> 
+> Same response as above
+> For eMMC case, we don't disable this Vccq2 regulator by having always-on
+> flag
+> in the regulator node. Only for SDcard Vccq2 will be disabled.
+> Sice driver is common for both eMMC and SDcard, I have to set 0 load to make
+> it generic and to ensure eMMC Vccq2 regulator will be in LPM mode.
+> 
+> > > +out:
+> > > +	if (ret)
+> > > +		pr_err("%s: vqmmc failed: %d\n", mmc_hostname(mmc), ret);
+> > I think it would be useful to know if this error came from
+> > mmc_regulator_set_vqmmc() or regulator_enable() - or
+> > regulator_disable().
+> > 
+> > So please move this up and add some context in the error message, and
+> > please use dev_err().
+> > 
+> > > +	else
+> > > +		msm_host->vqmmc_enabled = level;
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > >   static inline void sdhci_msm_init_pwr_irq_wait(struct sdhci_msm_host *msm_host)
+> > >   {
+> > >   	init_waitqueue_head(&msm_host->pwr_irq_wait);
+> > > @@ -1401,8 +1478,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+> > >   {
+> > >   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> > >   	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> > > +	struct mmc_host *mmc = host->mmc;
+> > >   	u32 irq_status, irq_ack = 0;
+> > > -	int retry = 10;
+> > > +	int retry = 10, ret = 0;
+> > There's no need to initialize ret, in all occasions it's assigned before
+> > being read.
+> > 
+> > >   	u32 pwr_state = 0, io_level = 0;
+> > >   	u32 config;
+> > >   	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
+> > > @@ -1438,14 +1516,35 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+> > >   	/* Handle BUS ON/OFF*/
+> > >   	if (irq_status & CORE_PWRCTL_BUS_ON) {
+> > > -		pwr_state = REQ_BUS_ON;
+> > > -		io_level = REQ_IO_HIGH;
+> > > -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> > > +		ret = sdhci_msm_set_vmmc(msm_host, mmc, 1);
+> > > +		if (!ret)
+> > > +			ret = sdhci_msm_set_vqmmc(msm_host, mmc, 1);
+> > I find this quite complex to follow. Wouldn't it be cleaner to retain
+> > the 4 checks on irq_status as they are and then before the writel of
+> > irq_ack check pwr_state and io_level and call sdhci_msm_set_{vmmc,vqmmc}
+> > accordingly?
+> 
+> I will see if i can update as you suggested.
+> 
+> > > +
+> > > +		if (!ret) {
+> > > +			pwr_state = REQ_BUS_ON;
+> > > +			io_level = REQ_IO_HIGH;
+> > > +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> > > +		} else {
+> > > +			pr_err("%s: BUS_ON req failed(%d). irq_status: 0x%08x\n",
+> > > +					mmc_hostname(mmc), ret, irq_status);
+> > You already printed that this failed in sdhci_msm_set_{vmmc,vqmmc}, no
+> > need to print again.
+> > 
+> > > +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
+> > > +			sdhci_msm_set_vmmc(msm_host, mmc, 0);
+> > > +		}
+> > >   	}
+> > >   	if (irq_status & CORE_PWRCTL_BUS_OFF) {
+> > > -		pwr_state = REQ_BUS_OFF;
+> > > -		io_level = REQ_IO_LOW;
+> > > -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> > > +		ret = sdhci_msm_set_vmmc(msm_host, mmc, 0);
+> > > +		if (!ret)
+> > > +			ret = sdhci_msm_set_vqmmc(msm_host, mmc, 0);
+> > > +
+> > > +		if (!ret) {
+> > > +			pwr_state = REQ_BUS_OFF;
+> > > +			io_level = REQ_IO_LOW;
+> > > +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> > > +		} else {
+> > > +			pr_err("%s: BUS_ON req failed(%d). irq_status: 0x%08x\n",
+> > > +					mmc_hostname(mmc), ret, irq_status);
+> > > +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
+> > > +		}
+> > >   	}
+> > >   	/* Handle IO LOW/HIGH */
+> > >   	if (irq_status & CORE_PWRCTL_IO_LOW) {
+> > > @@ -1457,6 +1556,15 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+> > >   		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
+> > >   	}
+> > > +	if (io_level && !IS_ERR(mmc->supply.vqmmc) && !pwr_state) {
+> > > +		ret = mmc_regulator_set_vqmmc(mmc, &mmc->ios);
+> > Didn't you already call this through sdhci_msm_set_vqmmc()?
+> 
+> No.sdhci_msm_set_vqmmc handles only vqmmc ON/OFF. While turning it ON it
+> sets
+> Vqmmc to possbile default IO level (1.8v or 3.0v).
+> Where this is only to make IO lines high (3.0v) or Low (1.8v).
+
+If you move both the regulator operations here (below the point where
+you figure out pwr_state and io_level), wouldn't it be possible to avoid
+the additional, nested, vqmmc voltage request?
+
+> > > +		if (ret < 0)
+> > > +			pr_err("%s: IO_level setting failed(%d). signal_voltage: %d, vdd: %d irq_status: 0x%08x\n",
+> > > +					mmc_hostname(mmc), ret,
+> > > +					mmc->ios.signal_voltage, mmc->ios.vdd,
+> > > +					irq_status);
+> > > +	}
+> > > +
+> > >   	/*
+> > >   	 * The driver has to acknowledge the interrupt, switch voltages and
+> > >   	 * report back if it succeded or not to this register. The voltage
+> > > @@ -1833,6 +1941,91 @@ static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+> > >   	sdhci_reset(host, mask);
+> > >   }
+> > > +static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
+> > > +{
+> > > +	int ret = 0;
+> > No need to initialize ret, first use is an assignment.
+> > 
+> > > +	struct mmc_host *mmc = msm_host->mmc;
+> > > +
+> > > +	ret = mmc_regulator_get_supply(msm_host->mmc);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +	device_property_read_u32(&msm_host->pdev->dev,
+> > > +			"vmmc-max-load-microamp",
+> > > +			&msm_host->vmmc_load);
+> > > +	device_property_read_u32(&msm_host->pdev->dev,
+> > > +			"vqmmc-max-load-microamp",
+> > > +			&msm_host->vqmmc_load);
+> > These properties are not documented. Do they vary enough to mandate
+> > being read from DT or could they simply be approximated by a define
+> > instead?
+> 
+> I can use defines. But since these values are different for eMMC and SDcard
+> I will have to maintain two sets and need to have logic during probe to
+> identify SDcard or eMMC and use the assign the set accordingly.
+> So we tought, getting from dt is simpler and clean.
+> In case Rob didn't agree with dt entries, I will go with this approach.
+> 
+
+Sounds reasonable, let's see what Rob says.
+
+> > > +
+> > > +	sdhci_msm_set_regulator_caps(msm_host);
+> > > +	mmc->ios.power_mode = MMC_POWER_UNDEFINED;
+> > > +
+> > > +	return 0;
+> > > +
+> > > +}
+> > > +
+> > > +static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
+> > > +				      struct mmc_ios *ios)
+> > > +{
+> > > +	struct sdhci_host *host = mmc_priv(mmc);
+> > > +	u16 ctrl;
+> > > +
+> > > +	/*
+> > > +	 * Signal Voltage Switching is only applicable for Host Controllers
+> > > +	 * v3.00 and above.
+> > > +	 */
+> > > +	if (host->version < SDHCI_SPEC_300)
+> > > +		return 0;
+> > > +
+> > > +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> > > +
+> > > +	switch (ios->signal_voltage) {
+> > > +	case MMC_SIGNAL_VOLTAGE_330:
+> > > +		if (!(host->flags & SDHCI_SIGNALING_330))
+> > > +			return -EINVAL;
+> > > +		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
+> > > +		ctrl &= ~SDHCI_CTRL_VDD_180;
+> > > +		sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
+> > > +
+> > > +		/* 3.3V regulator output should be stable within 5 ms */
+> > What mechanism ensures that the readw won't return withing 5ms from the
+> > writew above?
+> 
+> Thanks for pointing this. This delay got missed. I will add it in next
+> patchset.
+
+Nice, thanks.
+
+Regards,
+Bjorn
