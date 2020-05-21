@@ -2,121 +2,92 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA2CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 02:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B583C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 02:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 647FD2070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 02:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E503E206F6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 02:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgEUCDD (ORCPT
+        id S1726964AbgEUCSc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 22:03:03 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34392 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgEUCDC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 22:03:02 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 22B0C803087B;
-        Thu, 21 May 2020 02:02:59 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id V8qhQs_h6n-P; Thu, 21 May 2020 05:02:58 +0300 (MSK)
-Date:   Thu, 21 May 2020 05:02:56 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Max Staudt <max@enpas.org>, Stefan Roese <sr@denx.de>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 04/12] i2c: designware: Convert driver to using regmap
- API
-Message-ID: <20200521020256.mfdark6vzinuktf7@mobilestation>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-5-Sergey.Semin@baikalelectronics.ru>
- <a0d4c6d8-c2c0-b7ea-d77b-e1fe610fd966@linux.intel.com>
+        Wed, 20 May 2020 22:18:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:25849 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726833AbgEUCSc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 22:18:32 -0400
+IronPort-SDR: Gxpwy1yShcWG3uUExjEyq0yJFR1jNXJjHChXem5wDy91sFBB1tfTH4AnjobmrFWqOZIfC1gkUE
+ Sig3448RAUqg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 19:18:31 -0700
+IronPort-SDR: ej73RVr5VXW1YFsQO2RnXxS2Gz6PpL1WryA3R0i9OZOzz47haLbA6uGuM5NSc3gblLeTdBhlYP
+ ofEnlu51jN9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
+   d="scan'208";a="300642970"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 20 May 2020 19:18:31 -0700
+Received: from [10.214.148.54] (vramuthx-MOBL1.gar.corp.intel.com [10.214.148.54])
+        by linux.intel.com (Postfix) with ESMTP id 99B9E580613;
+        Wed, 20 May 2020 19:18:28 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, vigneshr@ti.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200520124329.GF4823@sirena.org.uk>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
+Date:   Thu, 21 May 2020 10:18:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <a0d4c6d8-c2c0-b7ea-d77b-e1fe610fd966@linux.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200520124329.GF4823@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:16:07PM +0300, Jarkko Nikula wrote:
-> On 5/10/20 12:50 PM, Serge Semin wrote:
-> > Seeing the DW I2C driver is using flags-based accessors with two
-> > conditional clauses it would be better to replace them with the regmap
-> > API IO methods and to initialize the regmap object with read/write
-> > callbacks specific to the controller registers map implementation. This
-> > will be also handy for the drivers with non-standard registers mapping
-> > (like an embedded into the Baikal-T1 System Controller DW I2C block, which
-> > glue-driver is a part of this series).
-> > 
-> > As before the driver tries to detect the mapping setup at probe stage and
-> > creates a regmap object accordingly, which will be used by the rest of the
-> > code to correctly access the controller registers. In two places it was
-> > appropriate to convert the hand-written read-modify-write and
-> > read-poll-loop design patterns to the corresponding regmap API
-> > ready-to-use methods.
-> > 
-> > Note the regmap IO methods return value is checked only at the probe
-> > stage. The rest of the code won't do this because basically we have
-> > MMIO-based regmap so non of the read/write methods can fail (this also
-> > won't be needed for the Baikal-T1-specific I2C controller).
-> > 
-> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-mips@vger.kernel.org
-> > ---
-> >   drivers/i2c/busses/Kconfig                 |   1 +
-> >   drivers/i2c/busses/i2c-designware-common.c | 171 +++++++++++++++------
-> >   drivers/i2c/busses/i2c-designware-core.h   |  18 +--
-> >   drivers/i2c/busses/i2c-designware-master.c | 125 ++++++++-------
-> >   drivers/i2c/busses/i2c-designware-slave.c  |  77 +++++-----
-> >   5 files changed, 239 insertions(+), 153 deletions(-)
-> > 
-> Looking at patches 4/12-12/12 I think it would be good to move fixes and
-> less invasive patches before this. Like
-> 
-> i2c: designware: slave: Set DW I2C core module dependency
-> i2c: designware: Use `-y` to build multi-object modules
-> i2c: designware: Move Baytrail sem config to the platform if-clause
-> 
-> That said, you may add:
-> 
-> Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Hi Mark,
 
-Ok. I'll move those three patches to be before this one in v3. Thanks.
+  Thank you for the review comments...
 
--Sergey
+On 20/5/2020 8:43 pm, Mark Brown wrote:
+> On Wed, May 20, 2020 at 08:36:12PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>> spi based flash memories.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
+>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 133 +++++++++++++++++++++
+> 
+> The changelog says this is adding a new binding but the actual change is
+> mostly a conversion to YAML.  Please split the additions out into a
+> separate change, ideally doing that before the conversion since there is
+> a backlog on review of YAML conversions.
+
+Initially was sending the only YAML file alone, then reviewers suggest 
+to me do this way so I did, next by split the patches like below...
+
+1. remove the cadence-quadspi.txt (patch1)
+2. convert txt to YAML (patch2)
+
+Regards
+Vadivel
+> 
