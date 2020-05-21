@@ -2,166 +2,180 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE10C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B93C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBD7207D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB7A207D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:22:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eJk3qKcM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jO1m0/v5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbgEUPQs (ORCPT
+        id S1729982AbgEUPW6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 11:16:48 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38236 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729896AbgEUPQr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 11:16:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LFGfpH106524;
-        Thu, 21 May 2020 10:16:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590074201;
-        bh=FLX5BGiA2jzuKm0fysF7agio1KGEJZtEH0AKo+Wdr1Y=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eJk3qKcMN3dfTb4mMrz5CVeXkKL8CcuoSQLKIBqCn3RKDiReQGk/ckt8d8AcJ8oOG
-         mbKrKy0FysIE/VRUWTxtYi8Xc5uE8v3I/m6kzHfK+3VLydKq+qhjlbxrIkitveZkyJ
-         8sDONOA6Xhha8GavDKSakG3o7YOQmL8GGPwBmM7Q=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LFGf6g035534;
-        Thu, 21 May 2020 10:16:41 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 10:16:41 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 10:16:41 -0500
-Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LFGfQH071720;
-        Thu, 21 May 2020 10:16:41 -0500
-Received: from localhost ([10.250.48.148])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 04LFGfwq076181;
-        Thu, 21 May 2020 10:16:41 -0500
-From:   Suman Anna <s-anna@ti.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thu, 21 May 2020 11:22:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727898AbgEUPW6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 11:22:58 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B51EC05BD43
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:22:56 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u188so6764870wmu.1
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BAKLcpITx/3kGgWTBYxDEZTohF/5xKJj7rJDCLE80Zo=;
+        b=jO1m0/v5PI18i/EX4FCyeJ0cr5KPOWycKpGnRQGN0bSwCpxt8XWGDKkwubaWb0doVL
+         QFggHPhQuapuwFk2GcAO/sFU/5KXmx6tmurSe+maOk6IxIvLE1mzL7tSB5gKF1y76rqk
+         6N5xVsZYZakqqegyFos4roVrtKTae2J8IVQO8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BAKLcpITx/3kGgWTBYxDEZTohF/5xKJj7rJDCLE80Zo=;
+        b=QbCv9eQFEcT3MJ56NmggrHtizh0emKAMouOajpBs96V3ucw+gj8NxZMOjweRcaTYfw
+         nk7QnWzsVdgqDp9YWRMguZc1RTZGMD8CR61ejXUurNsECJ/KAidIQgfUvad4FrNABwEk
+         0RS+RttTrA5L8W+i/7aBN6RD1h3eSidl2l4BaSeFlhuTG2msj/DWFUFlRpsnI+mJwWgR
+         +U0dtEU+6BLHN2oJG86hQM7aaDpm3dcKiAw+4tA8o65xlHfOlSNT+VIdF6271Y80zeW8
+         xCrvZ5RDjsO7Nd6YAH55iIxMwh0e/mFJbl/Z24ZRRWILLakNDvTnfmcDTJNURQuFVlv1
+         CoKA==
+X-Gm-Message-State: AOAM533rasZNRWTTDOfttO2r3vWVlOz3ajMfCPxIPG/lp7bFfUxFke+j
+        NMnDKrGQ2K5V5WNQ3SQ/b/W4Eg==
+X-Google-Smtp-Source: ABdhPJwMue+mt+thE6n7MP8xM0aOjfshOU4d1sP9ElGBs9Eu1VhZydaalBi9QV0v2+BvJeu8Riv4sg==
+X-Received: by 2002:a1c:a74a:: with SMTP id q71mr9177584wme.23.1590074575192;
+        Thu, 21 May 2020 08:22:55 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id j190sm7073152wmb.33.2020.05.21.08.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 08:22:54 -0700 (PDT)
+Date:   Thu, 21 May 2020 15:22:53 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2 2/2] remoteproc/k3-dsp: Add support for C71x DSPs
-Date:   Thu, 21 May 2020 10:16:36 -0500
-Message-ID: <20200521151636.28260-3-s-anna@ti.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200521151636.28260-1-s-anna@ti.com>
-References: <20200521151636.28260-1-s-anna@ti.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH v8 05/14] media: platform: Improve power on and power off
+ flow
+Message-ID: <20200521152253.GE209565@chromium.org>
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+ <20200403094033.8288-6-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403094033.8288-6-xia.jiang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Texas Instrument's K3 J721E SoCs have a newer next-generation
-C71x DSP Subsystem in the MAIN voltage domain in addition to the
-previous generation C66x DSP subsystems. The C71x DSP subsystem is
-based on the TMS320C71x DSP CorePac module. The C71x CPU is a true
-64-bit machine including 64-bit memory addressing and single-cycle
-64-bit base arithmetic operations and supports vector signal processing
-providing a significant lift in DSP processing power over C66x DSPs.
-J721E SoCs use a C711 (a one-core 512-bit vector width CPU core) DSP
-that is cache coherent with the A72 Arm cores.
+Hi Xia,
 
-Each subsystem has one or more Fixed/Floating-Point DSP CPUs, with 32 KB
-of L1P Cache, 48 KB of L1D SRAM that can be configured and partitioned as
-either RAM and/or Cache, and 512 KB of L2 SRAM configurable as either RAM
-and/or Cache. The CorePac also includes a Matrix Multiplication Accelerator
-(MMA), a Stream Engine (SE) and a C71x Memory Management Unit (CMMU), an
-Interrupt Controller (INTC) and a Powerdown Management Unit (PMU) modules.
+On Fri, Apr 03, 2020 at 05:40:24PM +0800, Xia Jiang wrote:
+> Call pm_runtime_get_sync() before starting a frame and then
+> pm_runtime_put() after completing it. This can save power for the time
+> between processing two frames.
+> 
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 27 +++++--------------
+>  1 file changed, 6 insertions(+), 21 deletions(-)
+> 
 
-Update the existing K3 DSP remoteproc driver to add support for this C71x
-DSP subsystem. The firmware loading support is provided by using the newly
-added 64-bit ELF loader support, and is limited to images using only
-external DDR memory at the moment. The L1D and L2 SRAMs are used as scratch
-memory when using as RAMs, and cannot be used for loadable segments. The
-CMMU is also not supported to begin with, and the driver is designed to
-treat the MMU as if it is in bypass mode.
+Thank you for the patch. Please see my comments inline.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
-v2: 
- - k3_dsp_rproc_prepare/unprepare plugged in dynamically based on local reset,
-   C71x doesn't use local resets
- - Dropped the sanity_check ops override, not needed on latest codebase
-v1: https://patchwork.kernel.org/patch/11458595/
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> index a536fa95b3d6..dd5cadd101ef 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> @@ -710,23 +710,6 @@ static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
+>  		return v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+>  }
+>  
+> -static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
+> -{
+> -	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
+> -	struct vb2_v4l2_buffer *vb;
+> -	int ret = 0;
+> -
+> -	ret = pm_runtime_get_sync(ctx->jpeg->dev);
+> -	if (ret < 0)
+> -		goto err;
+> -
+> -	return 0;
+> -err:
+> -	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
+> -		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_QUEUED);
+> -	return ret;
+> -}
+> -
+>  static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
+>  {
+>  	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
+> @@ -751,8 +734,6 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
+>  
+>  	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
+>  		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> -
+> -	pm_runtime_put_sync(ctx->jpeg->dev);
+>  }
+>  
+>  static const struct vb2_ops mtk_jpeg_qops = {
+> @@ -761,7 +742,6 @@ static const struct vb2_ops mtk_jpeg_qops = {
+>  	.buf_queue          = mtk_jpeg_buf_queue,
+>  	.wait_prepare       = vb2_ops_wait_prepare,
+>  	.wait_finish        = vb2_ops_wait_finish,
+> -	.start_streaming    = mtk_jpeg_start_streaming,
+>  	.stop_streaming     = mtk_jpeg_stop_streaming,
+>  };
+>  
+> @@ -812,7 +792,7 @@ static void mtk_jpeg_device_run(void *priv)
+>  	struct mtk_jpeg_src_buf *jpeg_src_buf;
+>  	struct mtk_jpeg_bs bs;
+>  	struct mtk_jpeg_fb fb;
+> -	int i;
+> +	int i, ret;
+>  
+>  	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+>  	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> @@ -832,6 +812,10 @@ static void mtk_jpeg_device_run(void *priv)
+>  		return;
+>  	}
+>  
+> +	ret = pm_runtime_get_sync(jpeg->dev);
+> +	if (ret < 0)
+> +		goto dec_end;
+> +
+>  	mtk_jpeg_set_dec_src(ctx, &src_buf->vb2_buf, &bs);
+>  	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, &dst_buf->vb2_buf, &fb))
+>  		goto dec_end;
+> @@ -957,6 +941,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+>  	v4l2_m2m_buf_done(src_buf, buf_state);
+>  	v4l2_m2m_buf_done(dst_buf, buf_state);
+>  	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> +	pm_runtime_put_sync(ctx->jpeg->dev);
 
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+The _sync variant explicitly waits until the asynchronous PM operation
+completes. This is usually undesired, because the CPU stays blocked for
+no good reason. In this context it is actually a bug, because this is an
+interrupt handler and it's not allowed to sleep. I wonder why this
+actually didn't crash in your testing. Please change to the regular
+pm_runtime_put().
 
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index 610fbbf85ee6..2dbed316b6ac 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -406,8 +406,6 @@ static void *k3_dsp_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
- }
- 
- static const struct rproc_ops k3_dsp_rproc_ops = {
--	.prepare	= k3_dsp_rproc_prepare,
--	.unprepare	= k3_dsp_rproc_unprepare,
- 	.start		= k3_dsp_rproc_start,
- 	.stop		= k3_dsp_rproc_stop,
- 	.kick		= k3_dsp_rproc_kick,
-@@ -617,6 +615,10 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
- 
- 	rproc->has_iommu = false;
- 	rproc->recovery_disabled = true;
-+	if (data->uses_lreset) {
-+		rproc->ops->prepare = k3_dsp_rproc_prepare;
-+		rproc->ops->unprepare = k3_dsp_rproc_unprepare;
-+	}
- 	kproc = rproc->priv;
- 	kproc->rproc = rproc;
- 	kproc->dev = dev;
-@@ -744,6 +746,12 @@ static const struct k3_dsp_mem_data c66_mems[] = {
- 	{ .name = "l1dram", .dev_addr = 0xf00000 },
- };
- 
-+/* C71x cores only have a L1P Cache, there are no L1P SRAMs */
-+static const struct k3_dsp_mem_data c71_mems[] = {
-+	{ .name = "l2sram", .dev_addr = 0x800000 },
-+	{ .name = "l1dram", .dev_addr = 0xe00000 },
-+};
-+
- static const struct k3_dsp_dev_data c66_data = {
- 	.mems = c66_mems,
- 	.num_mems = ARRAY_SIZE(c66_mems),
-@@ -751,8 +759,16 @@ static const struct k3_dsp_dev_data c66_data = {
- 	.uses_lreset = true,
- };
- 
-+static const struct k3_dsp_dev_data c71_data = {
-+	.mems = c71_mems,
-+	.num_mems = ARRAY_SIZE(c71_mems),
-+	.boot_align_addr = SZ_2M,
-+	.uses_lreset = false,
-+};
-+
- static const struct of_device_id k3_dsp_of_match[] = {
- 	{ .compatible = "ti,j721e-c66-dsp", .data = &c66_data, },
-+	{ .compatible = "ti,j721e-c71-dsp", .data = &c71_data, },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, k3_dsp_of_match);
--- 
-2.26.0
-
+Best regards,
+Tomasz
