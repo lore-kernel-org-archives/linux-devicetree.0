@@ -2,90 +2,113 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B654C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 16:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277EBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 16:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E2420748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 16:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UUK/8ULW"
+	by mail.kernel.org (Postfix) with ESMTP id 06D5E20829
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 16:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590079151;
+	bh=d1LNfflc2xncKAMYKDK3/akbZicrB/VqCYFFRCJWhn0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CP5l3jSggWUoxxQeEarq4/lQfCWPzCYxKgpNzEd2/WO9xymTg3NEmnEdOwb5KyuJy
+	 XBrzA/8uBYUzTWdlCAThKY/nYhwrJTOEcp7YPJQekt95jiHKttuiKlNkU2wbkP+j47
+	 A2dytUG6GgkLjf263pN49EPHiMGM6qXh/3UNw7lE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729561AbgEUQU0 (ORCPT
+        id S1729549AbgEUQjI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 12:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgEUQUY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 12:20:24 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FCA0C061A0E
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 09:20:24 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id k5so8965087lji.11
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 09:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KhSteGsD4RiqQuK5YmLBZC6UpLmDwoaKdLBagEsgYl4=;
-        b=UUK/8ULWjMB2mBygCKclhU6LqqpSWv9z30+t+BDLxfb3VTXARp03TokADV8sjD+Rm3
-         OFL0u+IlZG9t7sz8xdVVkBlMtP35b0P9vK22Ys0vOVkK66J0NVlx301AHSdzgwFINPFm
-         A8cTPxfFHhEdOwPW+3RdCzCQfr98gE40Qk7QI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KhSteGsD4RiqQuK5YmLBZC6UpLmDwoaKdLBagEsgYl4=;
-        b=Q6H1bYkCAjOf1alkRG7i+8rjaoENQkS2CtdCStO9LmA/UCLrkfW0GWNC1P5haT/mR2
-         h2D5snp38Pt1SUSobRLduo+1TTz70lx95X28BfSniRmGkkLECm8gacEfm30lk81CEwHd
-         UMd0+Nzs9C0HnJGm1Ve8zdgh1x/I3jARcand6+oXyIEB5ULcV3J5TLl7w8ZwVkwPryW/
-         LnWQO0FOjQ0lYPQyl2Dt0T9kHi5xcLpd+r5ruGBbMfsRJOy6Cl+pmdyLsH0netabreLD
-         4jlNp0LhegU8zzuWpY4nAoq3Vuk6ZjW7Qxh1yeBekSMZ3KXOMNpQaTJ6tD7puVJuIusl
-         a/qQ==
-X-Gm-Message-State: AOAM5322k84vm/i/byNTbipqGmDyNhqik6Gu806FYNvfuXbjvr7800zq
-        I50h9VrIzp1Ede/E1UmEAlXrz/1C4I0=
-X-Google-Smtp-Source: ABdhPJwxUb//b+2Bsakd5Kh+0uPuZae0u/qmBAfJjyu2Gf65BXhFc+oJt/OVbJlh+HuPEcjuLKnvwg==
-X-Received: by 2002:a2e:9248:: with SMTP id v8mr3248636ljg.413.1590078022244;
-        Thu, 21 May 2020 09:20:22 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id m13sm1880706lfk.12.2020.05.21.09.20.21
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 09:20:21 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id o14so9032034ljp.4
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 09:20:21 -0700 (PDT)
-X-Received: by 2002:a2e:8018:: with SMTP id j24mr5189945ljg.99.1590078020706;
- Thu, 21 May 2020 09:20:20 -0700 (PDT)
+        Thu, 21 May 2020 12:39:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726938AbgEUQjI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 12:39:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA3982072C;
+        Thu, 21 May 2020 16:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590079147;
+        bh=d1LNfflc2xncKAMYKDK3/akbZicrB/VqCYFFRCJWhn0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TE5HNonA6//A6to+71Mf+4I7jptBHdR05iodEwYKCIWVdc0qq3g/x+EOxeXQ8DrEP
+         /mGpITDcHqQPLlUl9rf1vWjb33vXv6GutJWPi92KiOqkbRqT0b67zmpYwWMB9LxTvL
+         /MidcaVFaealb/QkwqNgBOl0W3PpLK1WswNHr/dU=
+Date:   Thu, 21 May 2020 17:39:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Clement Leger <cleger@kalray.eu>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
+Message-ID: <20200521163904.GF4770@sirena.org.uk>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com>
+ <20200521121228.aqplh6eftylnys3p@mobilestation>
+ <20200521155143.GE4770@sirena.org.uk>
+ <20200521155804.qgaaqc23h2nll7r3@mobilestation>
+ <CAHp75VcY9HG3=wft9VFWKJD9PG6TiSbmOyjgYZyue+z3PW_eCQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
-In-Reply-To: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Thu, 21 May 2020 09:19:43 -0700
-X-Gmail-Original-Message-ID: <CAE=gft5pcHwK8yjObNSSH=U_B6Pz++bDaeUxZhPyJfG2E7LRAg@mail.gmail.com>
-Message-ID: <CAE=gft5pcHwK8yjObNSSH=U_B6Pz++bDaeUxZhPyJfG2E7LRAg@mail.gmail.com>
-Subject: Re: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TU+u6i6jrDPzmlWF"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcY9HG3=wft9VFWKJD9PG6TiSbmOyjgYZyue+z3PW_eCQ@mail.gmail.com>
+X-Cookie: Keep your laws off my body!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 8:57 PM Rakesh Pillai <pillair@codeaurora.org> wrote:
->
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on sc7180 soc.
->
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
+--TU+u6i6jrDPzmlWF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, May 21, 2020 at 07:02:32PM +0300, Andy Shevchenko wrote:
+> On Thu, May 21, 2020 at 6:58 PM Serge Semin
+
+> > Let's leave the patch as is.
+
+> Mark, should I send a partial revert afterwards in this case?
+> I'm not fully satisfied with it.
+
+That might be a suitable way to keep the peace here.  You are clearly
+both much more passionate about this choice than I am.
+
+--TU+u6i6jrDPzmlWF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7GrqcACgkQJNaLcl1U
+h9D6rwf/fACnRPPiV00dxVVND5ILBPJ1KzpV9NsThKr1PvqPTsJn7f0pKyas63Sf
+eoygJfneMKi3kZlj2wQJMKD8bCs4hXF4NeKPlUAMgN+rTHrC++vj509B7sNSLgDR
+r4Knt6+ur9iFTXvYggP7mbmAqFfbsVDTlCHViHgjXmRMoqT4lrPVhC6EcvwlUoaI
+ykrGzD+C6olEFbneErNLY2mIJhTcs8s90YT5VpccRx0oWLkVL0eQo8gBrSrQc+10
+nwQpIJVsIf/XFhvz/SPEank//XrgjOY6E2w+yN5d9AzpywJuqRQ8tILg5Y5KRqOL
+dQU19zRqFgoB6lKbX1KTFzX2GFNoXg==
+=jRLZ
+-----END PGP SIGNATURE-----
+
+--TU+u6i6jrDPzmlWF--
