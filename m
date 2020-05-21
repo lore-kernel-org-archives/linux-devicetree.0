@@ -2,227 +2,397 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343B8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E0CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06D5E207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:12:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OlGZ0rM3"
+	by mail.kernel.org (Postfix) with ESMTP id 967FB20826
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590084876;
+	bh=1ycJTuwYHLQy1eQqsvLiRiLLLx/3HyjZl62v40TPbeI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sWaStSGRpbG59dMhEfF/Hp9/MXmVDGaLYOT4g6ytgLWVL4oO3UNFoXbMTcIVeLHHp
+	 ppSJYON4nBJvYJFtZyQlLoJlEqcBmVJQfNWHB6Q1sDXxvx+VpRHLUL7rCFl5WeUeAv
+	 WtOxoKHR9/gdWD8bw9rRG7qpN0T5cZhOxYgRDULc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgEUSMK (ORCPT
+        id S1728885AbgEUSOg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 14:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729360AbgEUSMJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 14:12:09 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 713E8C08C5C0
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 11:12:09 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d10so3559833pgn.4
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 11:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2Rh0MulQkkuEGbxFUvnmU8zy8iOZUosVl0yNEP696vA=;
-        b=OlGZ0rM3Y2tsnOceWhRLzPhN/MrJfxnIjkKTCTA1i2RKz2zg10vn8nGStq8JJcsMP6
-         XIs0XypHikWHZtUee5WERCzjkj5jzWvYgophopUWdFdcX+lQ5ws3YLi9a5DhSPLf+iZz
-         m0kpH2X52NoQmgb/A1zP5FFlUjYfbaLd40460=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2Rh0MulQkkuEGbxFUvnmU8zy8iOZUosVl0yNEP696vA=;
-        b=ixbW/48EusECoVtik1GVVZFvklRUcXXDTGYejh1/IxqEtHMKzP46N+xoC/ZzPbOhzT
-         jqMysoQTnsUHvek7br8CtFUPFrao75+q2bbw3WrvPk832OeuOpW2q0D7msJCmWZwiA5U
-         I2Jym3jZHL9vtDv1Kmc62BipqXpUlK9YpBsFdk80cDUHxG/US12fTnexbnf8YMay+cg4
-         3PVukKrXHyjYMS8v4fzmg2KUsAIp3MTj2C7PY1fbCKfGIbnY2DiF2xzFto16pOuTEqUK
-         LOT+n8viVrJ3M2OX15TyS3/c9+um1Xnxjf9hwQDogYA5Rm4HdChnpxPnnndDaFudZe4T
-         tOSw==
-X-Gm-Message-State: AOAM531tgFKrcGcRlo7e0E5S74pJgWOppCINvFZGbb2U/anNfwiP8Fak
-        rOFFrmjWUPKJnKIaA0kTSNVPLg==
-X-Google-Smtp-Source: ABdhPJzWffE87ngZTa0scCppP/KReDxQI2X3ZPxnSPjf4C+oWsO/X0lg0xAf9YConEKttQ6iOKvqPw==
-X-Received: by 2002:a62:760e:: with SMTP id r14mr2630pfc.92.1590084728802;
-        Thu, 21 May 2020 11:12:08 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id l33sm5318087pje.22.2020.05.21.11.12.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 11:12:07 -0700 (PDT)
-Date:   Thu, 21 May 2020 11:12:05 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        msavaliy@codeaurora.org, evgreen@chromium.org
-Subject: Re: [PATCH V6 2/7] soc: qcom-geni-se: Add interconnect support to
- fix earlycon crash
-Message-ID: <20200521181205.GC4525@google.com>
-References: <1590049764-20912-1-git-send-email-akashast@codeaurora.org>
- <1590049764-20912-3-git-send-email-akashast@codeaurora.org>
+        Thu, 21 May 2020 14:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728022AbgEUSOg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 14:14:36 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63537207D3;
+        Thu, 21 May 2020 18:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590084874;
+        bh=1ycJTuwYHLQy1eQqsvLiRiLLLx/3HyjZl62v40TPbeI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=E+4yBw79CFHog9BQyczxnT0khe1VS+Io55gSEVUs6Asc2vUiUy29F9wvemZJAdrxE
+         T69voyC+3Eqh5Gf10zZ0tENNf67HobImlm7t3Co8TTyQAYZCqcI0as09BhOXvsjhFs
+         Gvx3KxwktH1m7PMxy0UKdhLZCwAPGwOMIiJWIjDU=
+Date:   Thu, 21 May 2020 19:14:29 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v14 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+Message-ID: <20200521191419.21be4a1a@archlinux>
+In-Reply-To: <20200510184537.10335-3-i.mikhaylov@yadro.com>
+References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
+        <20200510184537.10335-3-i.mikhaylov@yadro.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1590049764-20912-3-git-send-email-akashast@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Akash,
+On Sun, 10 May 2020 21:45:37 +0300
+Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 
-On Thu, May 21, 2020 at 01:59:19PM +0530, Akash Asthana wrote:
-> QUP core clock is shared among all the SE drivers present on particular
-> QUP wrapper, the system will reset(unclocked access) if earlycon used after
-> QUP core clock is put to 0 from other SE drivers before real console comes
-> up.
+> Proximity sensor driver based on light/vcnl4000.c code.
+> For now supports only the single on-demand measurement.
 > 
-> As earlycon can't vote for it's QUP core need, to fix this add ICC
-> support to common/QUP wrapper driver and put vote for QUP core from
-> probe on behalf of earlycon and remove vote during earlycon exit call.
+> The VCNL3020 is a fully integrated proximity sensor. Fully
+> integrated means that the infrared emitter is included in the
+> package. It has 16-bit resolution. It includes a signal
+> processing IC and features standard I2C communication
+> interface. It features an interrupt function.
 > 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> Reported-by: Matthias Kaehlcke <mka@chromium.org>
+> Datasheet: http://www.vishay.com/docs/84150/vcnl3020.pdf
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+Applied to the togreg branch of iio.git and pushed out as testing
+or the autobuilders to play with it.
+
+I 'might' manage to sneak a last pull request to Greg tomorrow
+so this might make the coming merge window though we are cutting
+it close so may go either way.
+
+Thanks,
+
+Jonathan
+
 > ---
-> Change in V3:
->  - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
->    exit function to remove ICC vote for earlyconsole.
->  - Remove suspend/resume hook for geni-se driver as we are no longer
->    removing earlyconsole ICC vote from system suspend, we are removing
->    from earlycon exit.
+>  drivers/iio/proximity/Kconfig    |  11 ++
+>  drivers/iio/proximity/Makefile   |   1 +
+>  drivers/iio/proximity/vcnl3020.c | 258 +++++++++++++++++++++++++++++++
+>  3 files changed, 270 insertions(+)
+>  create mode 100644 drivers/iio/proximity/vcnl3020.c
 > 
-> Change in V4:
->  - As per Matthias comment make 'earlycon_wrapper' as static structure.
-> 
-> Changes in V5:
->  - Vote for core path only after checking whether "qcom_geni" earlycon is
->    actually present or not by traversing over structure "console_drivers".
-> 
-> Changes in V6:
->  - As per Matthias's comment removed NULL check for console_drivers global
->    struct, added NULL check for earlycon_wrapper in _remove_earlycon_icc_vote
->    API
->  - Addressed nitpicks from Andy.
-> 
->  drivers/soc/qcom/qcom-geni-se.c       | 68 +++++++++++++++++++++++++++++++++++
->  drivers/tty/serial/qcom_geni_serial.c |  7 ++++
->  include/linux/qcom-geni-se.h          |  2 ++
->  3 files changed, 77 insertions(+)
-> 
-> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> index 0b2526d..ac16bb1 100644
-> --- a/drivers/soc/qcom/qcom-geni-se.c
-> +++ b/drivers/soc/qcom/qcom-geni-se.c
-> @@ -3,6 +3,7 @@
+> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
+> index d53601447da4..b8d2b17e60ac 100644
+> --- a/drivers/iio/proximity/Kconfig
+> +++ b/drivers/iio/proximity/Kconfig
+> @@ -112,6 +112,17 @@ config SRF08
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called srf08.
 >  
->  #include <linux/acpi.h>
->  #include <linux/clk.h>
-> +#include <linux/console.h>
->  #include <linux/slab.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/io.h>
-> @@ -90,11 +91,14 @@ struct geni_wrapper {
->  	struct device *dev;
->  	void __iomem *base;
->  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
-> +	struct geni_icc_path to_core;
->  };
->  
->  static const char * const icc_path_names[] = {"qup-core", "qup-config",
->  						"qup-memory"};
->  
-> +static struct geni_wrapper *earlycon_wrapper;
+> +config VCNL3020
+> +	tristate "VCNL3020 proximity sensor"
+> +	select REGMAP_I2C
+> +	depends on I2C
+> +	help
+> +	  Say Y here if you want to build a driver for the Vishay VCNL3020
+> +	  proximity sensor.
 > +
->  #define QUP_HW_VER_REG			0x4
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called vcnl3020.
+> +
+>  config VL53L0X_I2C
+>  	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
+>  	depends on I2C
+> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
+> index 0bb5f9de13d6..8245978ced30 100644
+> --- a/drivers/iio/proximity/Makefile
+> +++ b/drivers/iio/proximity/Makefile
+> @@ -12,5 +12,6 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
+>  obj-$(CONFIG_SRF04)		+= srf04.o
+>  obj-$(CONFIG_SRF08)		+= srf08.o
+>  obj-$(CONFIG_SX9500)		+= sx9500.o
+> +obj-$(CONFIG_VCNL3020)		+= vcnl3020.o
+>  obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
 >  
->  /* Common SE registers */
-> @@ -812,11 +816,38 @@ int geni_icc_disable(struct geni_se *se)
->  }
->  EXPORT_SYMBOL(geni_icc_disable);
->  
-> +void geni_remove_earlycon_icc_vote(void)
+> diff --git a/drivers/iio/proximity/vcnl3020.c b/drivers/iio/proximity/vcnl3020.c
+> new file mode 100644
+> index 000000000000..9ff1a164c2e6
+> --- /dev/null
+> +++ b/drivers/iio/proximity/vcnl3020.c
+> @@ -0,0 +1,258 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Support for Vishay VCNL3020 proximity sensor on i2c bus.
+> + * Based on Vishay VCNL4000 driver code.
+> + *
+> + * TODO: interrupts.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/err.h>
+> +#include <linux/delay.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +#define VCNL3020_PROD_ID	0x21
+> +
+> +#define VCNL_COMMAND		0x80 /* Command register */
+> +#define VCNL_PROD_REV		0x81 /* Product ID and Revision ID */
+> +#define VCNL_PROXIMITY_RATE	0x82 /* Rate of Proximity Measurement */
+> +#define VCNL_LED_CURRENT	0x83 /* IR LED current for proximity mode */
+> +#define VCNL_PS_RESULT_HI	0x87 /* Proximity result register, MSB */
+> +#define VCNL_PS_RESULT_LO	0x88 /* Proximity result register, LSB */
+> +#define VCNL_PS_ICR		0x89 /* Interrupt Control Register */
+> +#define VCNL_PS_LO_THR_HI	0x8a /* High byte of low threshold value */
+> +#define VCNL_PS_LO_THR_LO	0x8b /* Low byte of low threshold value */
+> +#define VCNL_PS_HI_THR_HI	0x8c /* High byte of high threshold value */
+> +#define VCNL_PS_HI_THR_LO	0x8d /* Low byte of high threshold value */
+> +#define VCNL_ISR		0x8e /* Interrupt Status Register */
+> +#define VCNL_PS_MOD_ADJ		0x8f /* Proximity Modulator Timing Adjustment */
+> +
+> +/* Bit masks for COMMAND register */
+> +#define VCNL_PS_RDY		BIT(5) /* proximity data ready? */
+> +#define VCNL_PS_OD		BIT(3) /* start on-demand proximity
+> +					* measurement
+> +					*/
+> +
+> +#define VCNL_ON_DEMAND_TIMEOUT_US	100000
+> +#define VCNL_POLL_US			20000
+> +
+> +/**
+> + * struct vcnl3020_data - vcnl3020 specific data.
+> + * @regmap:	device register map.
+> + * @dev:	vcnl3020 device.
+> + * @rev:	revision id.
+> + * @lock:	lock for protecting access to device hardware registers.
+> + */
+> +struct vcnl3020_data {
+> +	struct regmap *regmap;
+> +	struct device *dev;
+> +	u8 rev;
+> +	struct mutex lock;
+> +};
+> +
+> +/**
+> + * struct vcnl3020_property - vcnl3020 property.
+> + * @name:	property name.
+> + * @reg:	i2c register offset.
+> + * @conversion_func:	conversion function.
+> + */
+> +struct vcnl3020_property {
+> +	const char *name;
+> +	u32 reg;
+> +	u32 (*conversion_func)(u32 *val);
+> +};
+> +
+> +static u32 microamp_to_reg(u32 *val)
 > +{
-> +	struct geni_wrapper *wrapper;
-> +	struct device_node *parent;
-> +	struct device_node *child;
-> +
-> +	if (!earlycon_wrapper)
-> +		return;
-> +
-> +	wrapper = earlycon_wrapper;
-> +	parent = of_get_next_parent(wrapper->dev->of_node);
-> +	for_each_child_of_node(parent, child) {
-> +		if (!of_device_is_compatible(child, "qcom,geni-se-qup"))
-> +			continue;
-> +		wrapper = platform_get_drvdata(of_find_device_by_node(child));
-> +		icc_put(wrapper->to_core.path);
-> +		wrapper->to_core.path = NULL;
-> +
-> +	}
-> +	of_node_put(parent);
-> +
-> +	earlycon_wrapper = NULL;
-> +}
-> +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
-> +
->  static int geni_se_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct resource *res;
->  	struct geni_wrapper *wrapper;
-> +	struct console __maybe_unused *bcon;
-> +	bool __maybe_unused has_earlycon = false;
->  	int ret;
->  
->  	wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
-> @@ -839,6 +870,43 @@ static int geni_se_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +#ifdef CONFIG_SERIAL_EARLYCON
-> +	for_each_console(bcon) {
-> +		if (!strcmp(bcon->name, "qcom_geni")) {
-> +			has_earlycon = true;
-> +			break;
-> +		}
-> +	}
-> +	if (!has_earlycon)
-> +		goto exit;
-> +
-> +	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
-> +	if (IS_ERR(wrapper->to_core.path))
-> +		return PTR_ERR(wrapper->to_core.path);
 > +	/*
-> +	 * Put minmal BW request on core clocks on behalf of early console.
-> +	 * The vote will be removed earlycon exit function.
-> +	 *
-> +	 * Note: We are putting vote on each QUP wrapper instead only to which
-> +	 * earlycon is connected because QUP core clock of different wrapper
-> +	 * share same voltage domain. If core1 is put to 0, then core2 will
-> +	 * also run at 0, if not voted. Default ICC vote will be removed ASA
-> +	 * we touch any of the core clock.
-> +	 * core1 = core2 = max(core1, core2)
+> +	 * An example of conversion from uA to reg val:
+> +	 * 200000 uA == 200 mA == 20
 > +	 */
-> +	ret = icc_set_bw(wrapper->to_core.path, GENI_DEFAULT_BW,
-> +				GENI_DEFAULT_BW);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: ICC BW voting failed for core :%d\n",
+> +	return *val /= 10000;
+> +};
+> +
+> +static struct vcnl3020_property vcnl3020_led_current_property = {
+> +	.name = "vishay,led-current-microamp",
+> +	.reg = VCNL_LED_CURRENT,
+> +	.conversion_func = microamp_to_reg,
+> +};
+> +
+> +static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
+> +					   struct vcnl3020_property prop)
+> +{
+> +	int rc;
+> +	u32 val;
+> +
+> +	rc = device_property_read_u32(data->dev, prop.name, &val);
+> +	if (rc)
+> +		return 0;
+> +
+> +	if (prop.conversion_func)
+> +		prop.conversion_func(&val);
+> +
+> +	rc = regmap_write(data->regmap, prop.reg, val);
+> +	if (rc) {
+> +		dev_err(data->dev, "Error (%d) setting property (%s)\n",
+> +			rc, prop.name);
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +static int vcnl3020_init(struct vcnl3020_data *data)
+> +{
+> +	int rc;
+> +	unsigned int reg;
+> +
+> +	rc = regmap_read(data->regmap, VCNL_PROD_REV, &reg);
+> +	if (rc) {
+> +		dev_err(data->dev,
+> +			"Error (%d) reading product revision\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	if (reg != VCNL3020_PROD_ID) {
+> +		dev_err(data->dev,
+> +			"Product id (%x) did not match vcnl3020 (%x)\n", reg,
+> +			VCNL3020_PROD_ID);
+> +		return -ENODEV;
+> +	}
+> +
+> +	data->rev = reg;
+> +	mutex_init(&data->lock);
+> +
+> +	return vcnl3020_get_and_apply_property(data,
+> +					       vcnl3020_led_current_property);
+> +};
+> +
+> +static int vcnl3020_measure_proximity(struct vcnl3020_data *data, int *val)
+> +{
+> +	int rc;
+> +	unsigned int reg;
+> +	__be16 res;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	rc = regmap_write(data->regmap, VCNL_COMMAND, VCNL_PS_OD);
+> +	if (rc)
+> +		goto err_unlock;
+> +
+> +	/* wait for data to become ready */
+> +	rc = regmap_read_poll_timeout(data->regmap, VCNL_COMMAND, reg,
+> +				      reg & VCNL_PS_RDY, VCNL_POLL_US,
+> +				      VCNL_ON_DEMAND_TIMEOUT_US);
+> +	if (rc) {
+> +		dev_err(data->dev,
+> +			"Error (%d) reading vcnl3020 command register\n", rc);
+> +		goto err_unlock;
+> +	}
+> +
+> +	/* high & low result bytes read */
+> +	rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res,
+> +			      sizeof(res));
+> +	if (rc)
+> +		goto err_unlock;
+> +
+> +	*val = be16_to_cpu(res);
+> +
+> +err_unlock:
+> +	mutex_unlock(&data->lock);
+> +
+> +	return rc;
+> +}
+> +
+> +static const struct iio_chan_spec vcnl3020_channels[] = {
+> +	{
+> +		.type = IIO_PROXIMITY,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +	},
+> +};
+> +
+> +static int vcnl3020_read_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan, int *val,
+> +			     int *val2, long mask)
+> +{
+> +	int rc;
+> +	struct vcnl3020_data *data = iio_priv(indio_dev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		rc = vcnl3020_measure_proximity(data, val);
+> +		if (rc)
+> +			return rc;
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info vcnl3020_info = {
+> +	.read_raw = vcnl3020_read_raw,
+> +};
+> +
+> +static const struct regmap_config vcnl3020_regmap_config = {
+> +	.reg_bits	= 8,
+> +	.val_bits	= 8,
+> +	.max_register	= VCNL_PS_MOD_ADJ,
+> +};
+> +
+> +static int vcnl3020_probe(struct i2c_client *client)
+> +{
+> +	struct vcnl3020_data *data;
+> +	struct iio_dev *indio_dev;
+> +	struct regmap *regmap;
+> +	int rc;
+> +
+> +	regmap = devm_regmap_init_i2c(client, &vcnl3020_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&client->dev, "regmap_init failed\n");
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	data = iio_priv(indio_dev);
+> +	i2c_set_clientdata(client, indio_dev);
+> +	data->regmap = regmap;
+> +	data->dev = &client->dev;
+> +
+> +	rc = vcnl3020_init(data);
+> +	if (rc)
+> +		return rc;
+> +
+> +	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->info = &vcnl3020_info;
+> +	indio_dev->channels = vcnl3020_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(vcnl3020_channels);
+> +	indio_dev->name = "vcnl3020";
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	return devm_iio_device_register(&client->dev, indio_dev);
+> +}
+> +
+> +static const struct of_device_id vcnl3020_of_match[] = {
+> +	{
+> +		.compatible = "vishay,vcnl3020",
+> +	},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, vcnl3020_of_match);
+> +
+> +static struct i2c_driver vcnl3020_driver = {
+> +	.driver = {
+> +		.name   = "vcnl3020",
+> +		.of_match_table = vcnl3020_of_match,
+> +	},
+> +	.probe_new  = vcnl3020_probe,
+> +};
+> +module_i2c_driver(vcnl3020_driver);
+> +
+> +MODULE_AUTHOR("Ivan Mikhaylov <i.mikhaylov@yadro.com>");
+> +MODULE_DESCRIPTION("Vishay VCNL3020 proximity sensor driver");
+> +MODULE_LICENSE("GPL");
 
-should be "... core: %d"
-
-same for the other instances. I don't necessarily want to stall the series on
-this, it can also be addressed with a follow up patch. Up to you if you want
-to respin or not.
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
