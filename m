@@ -2,282 +2,289 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB092C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29877C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C775A206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A4B20823
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="pdzOstKG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WlJYgMh2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgEUTug (ORCPT
+        id S1730010AbgEUTvR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 15:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48862 "EHLO
+        Thu, 21 May 2020 15:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729971AbgEUTue (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 15:50:34 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA5B1C05BD43
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:50:32 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c3so3620056wru.12
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:50:32 -0700 (PDT)
+        with ESMTP id S1729864AbgEUTvR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 15:51:17 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6AB8C061A0F
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:51:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u12so2846125wmd.3
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=W0bmmrcfoMMLY53+q+PM9oHmwAiHFiyVtLVqP+FNgI0=;
-        b=pdzOstKGZ1qMN+Pt/TsxJHH8iZB55xatp5okzckH9uMnliXxBzJ9d0Dl9uBJ2qEw9R
-         7PTdcGlnFcOu+873UWzw/00aGEtsuyvlAJ7ZFQpy5TP4vD2NyfcKQKtrD9Ck7iQd2NkI
-         6Ng7TcezZa+S8AV4dIUNdC13V8LwS/Vfi4jGHA+K14GOcFaDrGoZDhHZYKyW2U5fLupK
-         ObdGJ7gdJpQwB7rewEDpX+h3vVGjeepFL58TpAGyAJOf5F8CjhUnRqtwFmi3aEy4lD/M
-         LoC1VKlwtJvVcmWpthwx0VwlfA/PwebI1aTE6ljjX7R7Mk+e6inPHbpSTFiu8/My8QCT
-         voxg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tXiGWKxcizAmUcdGxFZhb+iX29hlTYX+Cl65ro07vic=;
+        b=WlJYgMh2SdntlWU1WmKTcOAUOtNmQQX82qgtvK/ur05z3QNM7ar9ikuGofVXnWdDN2
+         Ip0SOpGKW/PABRn2oLdfqaToVDfZIf7yAVkTSZcKhzt2mRSXTiEBjBAAzM2PvSOggdjG
+         09Z1GBJekUw4uHrAtRQ24UxLs820MmR7LJ12I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=W0bmmrcfoMMLY53+q+PM9oHmwAiHFiyVtLVqP+FNgI0=;
-        b=VUCE5+5DUhl6kqLgzi/G67RUKwhx3MLtY1hGS+9ouUStpQ5+dhqZdLQ0XLIG9oTm7l
-         Z9TEHtLKXLpc/B6OIdY+U2J9WgAuesfTRONzjNOWJM326JKuPe7YlbSQqyp+z1z0erhj
-         2mj088nsHg8mK4DGQjs6+2Y/S94VJrIULz48pr6oKsdB5X7ZQ7FdGBolIWiG6YSP+6wh
-         guUSjKsT1orpQEygLVdL/PnqaE2ZF4mvnPEPmhezadBSgon2fujBNM8StRavzG9/Yu4z
-         AV7RPq2ayWr66niUFz2lS3RIOqVYeA/HPfOdDGdO9nx88owF2u4vNoLj0KzikNeBmLc9
-         sq0w==
-X-Gm-Message-State: AOAM533ZVxR5bdML6UFJfYdQx3tXjNaMCEaHqVMOzCxwsFElozfXE6aE
-        QSad0jcqlJo8cGXrU2VTJy4Wkw==
-X-Google-Smtp-Source: ABdhPJxI5+4zP6A4maoDpeagfmZeWogan+Aicw3eNBXaIjNm2V8HkzqxiSDUki2DMSG365TA15J5jQ==
-X-Received: by 2002:a5d:6806:: with SMTP id w6mr207199wru.324.1590090631449;
-        Thu, 21 May 2020 12:50:31 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id 18sm7329042wmj.19.2020.05.21.12.50.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tXiGWKxcizAmUcdGxFZhb+iX29hlTYX+Cl65ro07vic=;
+        b=sPmImwYAhZ6KPu0Fl2FuV0pBbKgQqNti+xKpfvJ3SF/vLu7I1XkutomOlJlXsadljQ
+         5qRE0OfEdbi+sFBPGBXbmzqn7CiustSjNqzQ7twcoS4e2K3ohuIkarTQiqPZycOTxFm+
+         GIH+pXBjm4OyuhEelpWelkeTAkknZ33gi44EEUHumovB9qW1OVBfGrFPRHkkyjz+yHfY
+         at3Yf72oyrV1Tnvp3bpFBEHM2LbhXv0zygWvI6LjsRV6Uyq4rtQb+JCR+2QUWuitz5CU
+         WH1dQM2/arDLA9fGA/KvY+QhPxpAFDssZQkQf0ppdNBbfjdesE3pfNIkTQ2VDiSgdXNf
+         hmJQ==
+X-Gm-Message-State: AOAM531HT/SFU7qpzTYk43imo4mEHKd3B/tkGY0123gTtOAlhEoDM9MQ
+        +HkYf1JvU7SwlzpHQZLKD1GbPw==
+X-Google-Smtp-Source: ABdhPJyjsZ7hK797EjzOKDGLVownHQy9DW40gXOy+PcukZTeX7rDoXWOyimJaOKk0Tu8BtHYy6tpuQ==
+X-Received: by 2002:a1c:5541:: with SMTP id j62mr9574864wmb.64.1590090675360;
+        Thu, 21 May 2020 12:51:15 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id 1sm7775934wmz.13.2020.05.21.12.51.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 12:50:30 -0700 (PDT)
-Date:   Thu, 21 May 2020 21:50:28 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: [PATCH] arm: dts: am335x-boneblack: add gpio-line-names
-Message-ID: <20200521195028.GB429020@x1>
+        Thu, 21 May 2020 12:51:14 -0700 (PDT)
+Date:   Thu, 21 May 2020 19:51:13 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
+        matthias.bgg@gmail.com, bingbu.cao@intel.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [V6, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
+Message-ID: <20200521195113.GC14214@chromium.org>
+References: <20200518132731.20855-1-dongchun.zhu@mediatek.com>
+ <20200518132731.20855-3-dongchun.zhu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200518132731.20855-3-dongchun.zhu@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add gpio-line-names properties to the GPIO controller nodes.
+Hi Dongchun, Sakari,
 
-The BeagleBone Black has P8 and P9 headers [0] which expose many of the
-AM3358 ZCZ SoC balls to stacking expansion boards called "capes", or to
-other external connections like jumper wires connected to a breadboard.
-BeagleBone users will often refer to the "Cape Exanpsion Headers" pin
-diagram [1] as it is in the "Bone101" getting started tutorial. [2]
+On Mon, May 18, 2020 at 09:27:31PM +0800, Dongchun Zhu wrote:
+> Add a V4L2 sub-device driver for DW9768 voice coil motor, providing
+> control to set the desired focus via IIC serial interface.
+> 
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> ---
+>  MAINTAINERS                |   1 +
+>  drivers/media/i2c/Kconfig  |  13 ++
+>  drivers/media/i2c/Makefile |   1 +
+>  drivers/media/i2c/dw9768.c | 515 +++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 530 insertions(+)
+>  create mode 100644 drivers/media/i2c/dw9768.c
+[snip]
+> +/*
+> + * DW9768_AAC_PRESC_REG & DW9768_AAC_TIME_REG determine VCM operation time.
+> + * If DW9768_AAC_PRESC_REG is 0x41, and DW9768_AAC_TIME_REG is 0x39, VCM mode
+> + * would be AAC3, Operation Time would be 0.70xTvib, that is 8.40ms.
+> + */
+> +#define DW9768_MOVE_DELAY_US			8400
+> +#define DW9768_STABLE_TIME_US			20000
 
-Most of the P8 and P9 header pins can muxed to a GPIO line.  The
-gpio-line-names describe which P8 or P9 pin that line goes to and the
-default mux for that P8 or P9 pin if it is not GPIO.
+These times are only valid with the specific settings mentioned in the
+comment. If one sets different settings in DT, the driver would apply
+incorrect delays. Rather than hardcoded, they should be computed based
+on the configured values.
 
-For example, gpiochip 1 line 0 is connected to P8 header pin 25 (P8_25)
-however the default device tree has the corresponding BGA ball (ZCZ U7)
-muxed to mmc1_dat0 as it is used for the on-board eMMC chip.  For that
-GPIO line to be used, one would need to modify the device tree to
-disable the eMMC and change the pin mux for that ball to GPIO mode.
+That said, I wonder if we're not digging too deep now. Sakari, do you
+think we could take a step back, remove the optional DT properties and
+just support the fixed values for now, so that we can get a basic driver
+upstream first without doubling the effort?
 
-Some of the AM3358 ZCZ balls corresponding to GPIO lines are not routed
-to a P8 or P9 header, but are instead wired to some peripheral device
-like on-board eMMC, HDMI framer IC, or status LEDs.  Those names are in
-brackets to denote those GPIO lines can not be used.
+> +
+> +static const char * const dw9768_supply_names[] = {
+> +	"vin",	/* I2C I/O interface power */
+> +	"vdd",	/* VCM power */
+> +};
+> +
+> +/* dw9768 device structure */
+> +struct dw9768 {
+> +	struct regulator_bulk_data supplies[ARRAY_SIZE(dw9768_supply_names)];
+> +	struct v4l2_ctrl_handler ctrls;
+> +	struct v4l2_ctrl	*focus;
+> +	struct v4l2_subdev	sd;
+> +
+> +	u32			aac_mode;
+> +	u32			aac_timing;
+> +	u32			clock_dividing_rate;
+> +	bool			aac_mode_control_enable;
+> +	bool			aact_cnt_select_enable;
+> +	bool			clock_dividing_rate_select_enable;
 
-Some GPIO lines are named "[NC]" as the corresponding balls are not
-routed to anything on the PCB.
+nit: Separate types from names with just 1 space.
 
-The goal for these names is to make it easier for a user viewing the
-output of gpioinfo to determine which P8 or P9 pin is connected to a
-GPIO line.  The output of gpioinfo on a BeagleBone Black would be:
+> +};
+> +
+> +static inline struct dw9768 *sd_to_dw9768(struct v4l2_subdev *subdev)
+> +{
+> +	return container_of(subdev, struct dw9768, sd);
+> +}
+> +
+> +struct regval_list {
+> +	u8 reg_num;
+> +	u8 value;
+> +};
+> +
+> +static int dw9768_read_smbus(struct dw9768 *dw9768, unsigned char reg,
+> +			     unsigned char *val)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
+> +	int ret;
+> +
+> +	ret = i2c_smbus_read_byte_data(client, reg);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = (unsigned char)ret;
+> +
+> +	return 0;
+> +}
 
-[0] https://git.io/JfgOd
-[1] https://beagleboard.org/capes
-[1] https://beagleboard.org/Support/bone101
-[2] https://beagleboard.org/static/images/cape-headers.png
+Why do we need this function? Couldn't we just call
+i2c_smbus_read_byte_data() directly?
 
-Reviewed-by: Jason Kridner <jason@beagleboard.org>
-Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
-V1 note:
-I had posted a patch with these line names for am335x-bone-common.dtsi
-but Grygorii Strashko pointed out that the names are not applicable to
-all BeagleBone models.  Thus is have created this patch to add these
-names just for the BeagleBone Black.
+[snip]
+> +static int dw9768_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct dw9768 *dw9768;
+> +	unsigned int aac_mode_select;
+> +	unsigned int aac_timing_select;
+> +	unsigned int clock_dividing_rate_select;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	dw9768 = devm_kzalloc(dev, sizeof(*dw9768), GFP_KERNEL);
+> +	if (!dw9768)
+> +		return -ENOMEM;
+> +
+> +	v4l2_i2c_subdev_init(&dw9768->sd, client, &dw9768_ops);
+> +	dw9768->aac_mode_control_enable = false;
+> +	dw9768->aact_cnt_select_enable = false;
+> +	dw9768->clock_dividing_rate_select_enable = false;
 
- arch/arm/boot/dts/am335x-boneblack.dts | 144 +++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
+devm_kzalloc() initializes the memory to zero, so no need to set anything
+to false explicitly.
 
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index d3928662aed4..5f31e832eb82 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -23,3 +23,147 @@ oppnitro-1000000000 {
- 		opp-supported-hw = <0x06 0x0100>;
- 	};
- };
-+
-+&gpio0 {
-+	gpio-line-names =
-+		"[ethernet]",
-+		"[ethernet]",
-+		"P9_22 [spi0_sclk]",
-+		"P9_21 [spi0_d0]",
-+		"P9_18 [spi0_d1]",
-+		"P9_17 [spi0_cs0]",
-+		"[sd card]",
-+		"P9_42A [ecappwm0]",
-+		"P8_35 [hdmi]",
-+		"P8_33 [hdmi]",
-+		"P8_31 [hdmi]",
-+		"P8_32 [hdmi]",
-+		"P9_20 [i2c2_sda]",
-+		"P9_19 [i2c2_scl]",
-+		"P9_26 [uart1_rxd]",
-+		"P9_24 [uart1_txd]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[usb]",
-+		"[hdmi]",
-+		"P9_41B",
-+		"[ethernet]",
-+		"P8_19 [ehrpwm2a]",
-+		"P8_13 [ehrpwm2b]",
-+		"[NC]",
-+		"[NC]",
-+		"P8_14",
-+		"P8_17",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"P9_11 [uart4_rxd]",
-+		"P9_13 [uart4_txd]";
-+};
-+
-+&gpio1 {
-+	gpio-line-names =
-+		"P8_25 [emmc]",
-+		"[emmc]",
-+		"P8_5 [emmc]",
-+		"P8_6 [emmc]",
-+		"P8_23 [emmc]",
-+		"P8_22 [emmc]",
-+		"P8_3 [emmc]",
-+		"P8_4 [emmc]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P8_12",
-+		"P8_11",
-+		"P8_16",
-+		"P8_15",
-+		"P9_15A",
-+		"P9_23",
-+		"P9_14 [ehrpwm1a]",
-+		"P9_16 [ehrpwm1b]",
-+		"[emmc]",
-+		"[usr0 led]",
-+		"[usr1 led]",
-+		"[usr2 led]",
-+		"[usr3 led]",
-+		"[hdmi]",
-+		"[usb]",
-+		"[hdmi audio]",
-+		"P9_12",
-+		"P8_26",
-+		"P8_21 [emmc]",
-+		"P8_20 [emmc]";
-+};
-+
-+&gpio2 {
-+	gpio-line-names =
-+		"P9_15B",
-+		"P8_18",
-+		"P8_7",
-+		"P8_8",
-+		"P8_10",
-+		"P8_9",
-+		"P8_45 [hdmi]",
-+		"P8_46 [hdmi]",
-+		"P8_43 [hdmi]",
-+		"P8_44 [hdmi]",
-+		"P8_41 [hdmi]",
-+		"P8_42 [hdmi]",
-+		"P8_39 [hdmi]",
-+		"P8_40 [hdmi]",
-+		"P8_37 [hdmi]",
-+		"P8_38 [hdmi]",
-+		"P8_36 [hdmi]",
-+		"P8_34 [hdmi]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"P8_27 [hdmi]",
-+		"P8_29 [hdmi]",
-+		"P8_28 [hdmi]",
-+		"P8_30 [hdmi]",
-+		"[emmc]",
-+		"[emmc]",
-+		"[emmc]",
-+		"[emmc]",
-+		"[emmc]",
-+		"[emmc]";
-+};
-+
-+&gpio3 {
-+	gpio-line-names =
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[i2c0]",
-+		"[i2c0]",
-+		"[emu]",
-+		"[emu]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[NC]",
-+		"[NC]",
-+		"[usb]",
-+		"P9_31 [spi1_sclk]",
-+		"P9_29 [spi1_d0]",
-+		"P9_30 [spi1_d1]",
-+		"P9_28 [spi1_cs0]",
-+		"P9_42B [ecappwm0]",
-+		"P9_27",
-+		"P9_41A",
-+		"P9_25",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]";
-+};
--- 
-2.25.1
+> +
+> +	/* Optional indication of AAC mode select */
+> +	ret = fwnode_property_read_u32(dev_fwnode(dev), "dongwoon,aac-mode",
+> +				       &aac_mode_select);
+> +
+> +	if (!ret) {
+> +		dw9768->aac_mode_control_enable = true;
+> +		dw9768->aac_mode = aac_mode_select;
 
+How about making aac_mode a signed int and assigning -1 by
+default? Then we don't need two separate fields in the struct.
+
+> +	}
+> +
+> +	/* Optional indication of VCM internal clock dividing rate select */
+> +	ret = fwnode_property_read_u32(dev_fwnode(dev),
+> +				       "dongwoon,clock-dividing-rate",
+> +				       &clock_dividing_rate_select);
+> +
+> +	if (!ret) {
+> +		dw9768->clock_dividing_rate_select_enable = true;
+> +		dw9768->clock_dividing_rate = clock_dividing_rate_select;
+
+Ditto.
+
+> +	}
+> +
+> +	/* Optional indication of AAC Timing */
+> +	ret = fwnode_property_read_u32(dev_fwnode(dev), "dongwoon,aac-timing",
+> +				       &aac_timing_select);
+> +
+> +	if (!ret) {
+> +		dw9768->aact_cnt_select_enable = true;
+> +		dw9768->aac_timing = aac_timing_select;
+
+Ditto.
+
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(dw9768_supply_names); i++)
+> +		dw9768->supplies[i].supply = dw9768_supply_names[i];
+> +
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dw9768_supply_names),
+> +				      dw9768->supplies);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get regulators\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = dw9768_init_controls(dw9768);
+> +	if (ret)
+> +		goto entity_cleanup;
+> +
+> +	dw9768->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	dw9768->sd.internal_ops = &dw9768_int_ops;
+> +
+> +	ret = media_entity_pads_init(&dw9768->sd.entity, 0, NULL);
+> +	if (ret < 0)
+> +		goto entity_cleanup;
+> +
+> +	dw9768->sd.entity.function = MEDIA_ENT_F_LENS;
+> +
+> +	pm_runtime_enable(dev);
+> +	if (!pm_runtime_enabled(dev)) {
+> +		ret = dw9768_runtime_resume(dev);
+> +		if (ret < 0) {
+> +			dev_err(dev, "failed to power on: %d\n", ret);
+> +			goto entity_cleanup;
+> +		}
+> +	}
+> +
+> +	ret = v4l2_async_register_subdev(&dw9768->sd);
+> +	if (ret < 0)
+> +		goto entity_cleanup;
+> +
+> +	return 0;
+> +
+> +entity_cleanup:
+
+Need to power off if the code above powered on.
+
+> +	v4l2_ctrl_handler_free(&dw9768->ctrls);
+> +	media_entity_cleanup(&dw9768->sd.entity);
+> +	return ret;
+> +}
+> +
+> +static int dw9768_remove(struct i2c_client *client)
+> +{
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct dw9768 *dw9768 = sd_to_dw9768(sd);
+> +
+> +	pm_runtime_disable(&client->dev);
+
+First the device must be unregistered from the userspace. Otherwise there
+is a race condition that risks the userspace accessing the device while the
+deinitialization is happening.
+
+Best regards,
+Tomasz
