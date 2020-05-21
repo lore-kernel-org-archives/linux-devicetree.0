@@ -2,180 +2,181 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B93C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D7CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB7A207D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995DF207D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jO1m0/v5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cKMteLRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgEUPW6 (ORCPT
+        id S1730311AbgEUPY1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 11:22:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbgEUPW6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 11:22:58 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B51EC05BD43
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:22:56 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u188so6764870wmu.1
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BAKLcpITx/3kGgWTBYxDEZTohF/5xKJj7rJDCLE80Zo=;
-        b=jO1m0/v5PI18i/EX4FCyeJ0cr5KPOWycKpGnRQGN0bSwCpxt8XWGDKkwubaWb0doVL
-         QFggHPhQuapuwFk2GcAO/sFU/5KXmx6tmurSe+maOk6IxIvLE1mzL7tSB5gKF1y76rqk
-         6N5xVsZYZakqqegyFos4roVrtKTae2J8IVQO8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BAKLcpITx/3kGgWTBYxDEZTohF/5xKJj7rJDCLE80Zo=;
-        b=QbCv9eQFEcT3MJ56NmggrHtizh0emKAMouOajpBs96V3ucw+gj8NxZMOjweRcaTYfw
-         nk7QnWzsVdgqDp9YWRMguZc1RTZGMD8CR61ejXUurNsECJ/KAidIQgfUvad4FrNABwEk
-         0RS+RttTrA5L8W+i/7aBN6RD1h3eSidl2l4BaSeFlhuTG2msj/DWFUFlRpsnI+mJwWgR
-         +U0dtEU+6BLHN2oJG86hQM7aaDpm3dcKiAw+4tA8o65xlHfOlSNT+VIdF6271Y80zeW8
-         xCrvZ5RDjsO7Nd6YAH55iIxMwh0e/mFJbl/Z24ZRRWILLakNDvTnfmcDTJNURQuFVlv1
-         CoKA==
-X-Gm-Message-State: AOAM533rasZNRWTTDOfttO2r3vWVlOz3ajMfCPxIPG/lp7bFfUxFke+j
-        NMnDKrGQ2K5V5WNQ3SQ/b/W4Eg==
-X-Google-Smtp-Source: ABdhPJwMue+mt+thE6n7MP8xM0aOjfshOU4d1sP9ElGBs9Eu1VhZydaalBi9QV0v2+BvJeu8Riv4sg==
-X-Received: by 2002:a1c:a74a:: with SMTP id q71mr9177584wme.23.1590074575192;
-        Thu, 21 May 2020 08:22:55 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id j190sm7073152wmb.33.2020.05.21.08.22.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 08:22:54 -0700 (PDT)
-Date:   Thu, 21 May 2020 15:22:53 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH v8 05/14] media: platform: Improve power on and power off
- flow
-Message-ID: <20200521152253.GE209565@chromium.org>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
- <20200403094033.8288-6-xia.jiang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403094033.8288-6-xia.jiang@mediatek.com>
+        Thu, 21 May 2020 11:24:27 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25758 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730347AbgEUPYY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 11:24:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590074664; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=JzqbmnEE661B7Lr5dD4p9+wQF60SRux+eXF7ny38bSs=; b=cKMteLRM44QvxYhPbjZZhz9yFlwa+0UCB+BIAlLinkmKjlEUlsFDnoU0PSc0QD1CrU9l6eii
+ ebt4h0TRmjxf2njxC5g57H7ZMexpYU6AIhik8hmhGayWgTstlJFkXs5ghEUgKcJU6KZgryup
+ t74KDDDTwvqr5mGXNKA7WEHwJbE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec69d268075f6e58c8e33f1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 15:24:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C3046C433AF; Thu, 21 May 2020 15:24:21 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51234C433CA;
+        Thu, 21 May 2020 15:24:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51234C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V2 3/3] mmc: sdhci: Allow platform controlled voltage switching
+Date:   Thu, 21 May 2020 20:53:35 +0530
+Message-Id: <1590074615-10787-4-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xia,
+From: Vijay Viswanath <vviswana@codeaurora.org>
 
-On Fri, Apr 03, 2020 at 05:40:24PM +0800, Xia Jiang wrote:
-> Call pm_runtime_get_sync() before starting a frame and then
-> pm_runtime_put() after completing it. This can save power for the time
-> between processing two frames.
-> 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 27 +++++--------------
->  1 file changed, 6 insertions(+), 21 deletions(-)
-> 
+If vendor platform drivers are controlling whole logic of voltage
+switching, then sdhci driver no need control vqmmc regulator.
+So skip enabling/disable vqmmc from SDHC driver.
 
-Thank you for the patch. Please see my comments inline.
+Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index a536fa95b3d6..dd5cadd101ef 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -710,23 +710,6 @@ static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
->  		return v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
->  }
->  
-> -static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
-> -{
-> -	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
-> -	struct vb2_v4l2_buffer *vb;
-> -	int ret = 0;
-> -
-> -	ret = pm_runtime_get_sync(ctx->jpeg->dev);
-> -	if (ret < 0)
-> -		goto err;
-> -
-> -	return 0;
-> -err:
-> -	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
-> -		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_QUEUED);
-> -	return ret;
-> -}
-> -
->  static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
->  {
->  	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
-> @@ -751,8 +734,6 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
->  
->  	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
->  		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
-> -
-> -	pm_runtime_put_sync(ctx->jpeg->dev);
->  }
->  
->  static const struct vb2_ops mtk_jpeg_qops = {
-> @@ -761,7 +742,6 @@ static const struct vb2_ops mtk_jpeg_qops = {
->  	.buf_queue          = mtk_jpeg_buf_queue,
->  	.wait_prepare       = vb2_ops_wait_prepare,
->  	.wait_finish        = vb2_ops_wait_finish,
-> -	.start_streaming    = mtk_jpeg_start_streaming,
->  	.stop_streaming     = mtk_jpeg_stop_streaming,
->  };
->  
-> @@ -812,7 +792,7 @@ static void mtk_jpeg_device_run(void *priv)
->  	struct mtk_jpeg_src_buf *jpeg_src_buf;
->  	struct mtk_jpeg_bs bs;
->  	struct mtk_jpeg_fb fb;
-> -	int i;
-> +	int i, ret;
->  
->  	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
->  	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> @@ -832,6 +812,10 @@ static void mtk_jpeg_device_run(void *priv)
->  		return;
->  	}
->  
-> +	ret = pm_runtime_get_sync(jpeg->dev);
-> +	if (ret < 0)
-> +		goto dec_end;
-> +
->  	mtk_jpeg_set_dec_src(ctx, &src_buf->vb2_buf, &bs);
->  	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, &dst_buf->vb2_buf, &fb))
->  		goto dec_end;
-> @@ -957,6 +941,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
->  	v4l2_m2m_buf_done(src_buf, buf_state);
->  	v4l2_m2m_buf_done(dst_buf, buf_state);
->  	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
-> +	pm_runtime_put_sync(ctx->jpeg->dev);
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 1bb6b67..88e5312 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -4098,6 +4098,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	unsigned int override_timeout_clk;
+ 	u32 max_clk;
+ 	int ret;
++	bool enable_vqmmc = false;
+ 
+ 	WARN_ON(host == NULL);
+ 	if (host == NULL)
+@@ -4111,9 +4112,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	 * the host can take the appropriate action if regulators are not
+ 	 * available.
+ 	 */
+-	ret = mmc_regulator_get_supply(mmc);
+-	if (ret)
+-		return ret;
++	if (!mmc->supply.vqmmc) {
++		ret = mmc_regulator_get_supply(mmc);
++		if (ret)
++			return ret;
++		enable_vqmmc  = true;
++	}
+ 
+ 	DBG("Version:   0x%08x | Present:  0x%08x\n",
+ 	    sdhci_readw(host, SDHCI_HOST_VERSION),
+@@ -4373,7 +4377,15 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		mmc->caps |= MMC_CAP_NEEDS_POLL;
+ 
+ 	if (!IS_ERR(mmc->supply.vqmmc)) {
+-		ret = regulator_enable(mmc->supply.vqmmc);
++		if (enable_vqmmc) {
++			ret = regulator_enable(mmc->supply.vqmmc);
++			if (ret) {
++				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
++					mmc_hostname(mmc), ret);
++				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
++			}
++			host->sdhci_core_to_disable_vqmmc = !ret;
++		}
+ 
+ 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
+@@ -4386,12 +4398,6 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
+ 						    3600000))
+ 			host->flags &= ~SDHCI_SIGNALING_330;
+-
+-		if (ret) {
+-			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
+-				mmc_hostname(mmc), ret);
+-			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
+-		}
+ 	}
+ 
+ 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
+@@ -4625,7 +4631,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	return 0;
+ 
+ unreg:
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ undma:
+ 	if (host->align_buffer)
+@@ -4643,7 +4649,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
+ {
+ 	struct mmc_host *mmc = host->mmc;
+ 
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ 
+ 	if (host->align_buffer)
+@@ -4780,7 +4786,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
+ 
+ 	destroy_workqueue(host->complete_wq);
+ 
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ 
+ 	if (host->align_buffer)
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 8d2a096..c7dbc68 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -570,6 +570,7 @@ struct sdhci_host {
+ 	u32 caps1;		/* CAPABILITY_1 */
+ 	bool read_caps;		/* Capability flags have been read */
+ 
++	bool sdhci_core_to_disable_vqmmc;  /* sdhci core can disable vqmmc */
+ 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
+ 	unsigned int            ocr_avail_sd;
+ 	unsigned int            ocr_avail_mmc;
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
-The _sync variant explicitly waits until the asynchronous PM operation
-completes. This is usually undesired, because the CPU stays blocked for
-no good reason. In this context it is actually a bug, because this is an
-interrupt handler and it's not allowed to sleep. I wonder why this
-actually didn't crash in your testing. Please change to the regular
-pm_runtime_put().
-
-Best regards,
-Tomasz
