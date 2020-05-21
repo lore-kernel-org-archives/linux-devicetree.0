@@ -2,122 +2,153 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3483C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A223C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC21E20748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50CA20748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgEUOW3 (ORCPT
+        id S1729421AbgEUOXm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 10:22:29 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38780 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgEUOW1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 10:22:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 376CF8030776;
-        Thu, 21 May 2020 14:22:22 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8PSENPxDhIuf; Thu, 21 May 2020 17:22:21 +0300 (MSK)
-Date:   Thu, 21 May 2020 17:22:19 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 7/7] clocksource: mips-gic-timer: Mark GIC timer as
- unstable if ref clock changes
-Message-ID: <20200521142219.ejsl4y5eaqqfsp5k@mobilestation>
-References: <20200521005321.12129-1-Sergey.Semin@baikalelectronics.ru>
- <20200521005321.12129-8-Sergey.Semin@baikalelectronics.ru>
- <CAMuHMdW5TqfDTZZCscXCK-Fkd7Gq1Ciyu1_sDzzR0B+_W-2hfg@mail.gmail.com>
+        Thu, 21 May 2020 10:23:42 -0400
+Received: from mga06.intel.com ([134.134.136.31]:4101 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727807AbgEUOXm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 10:23:42 -0400
+IronPort-SDR: cCzJlrA9V2rloUAvxuzr5wUdpvZNmCm722Z4mcUs7OtIKazlq3JEQ95AIp6qKTDovsrV3Gq+7M
+ S3c3PhPoFqwg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 07:23:41 -0700
+IronPort-SDR: HJwr70oF8r+qmhLkXdAqGrFwTDZR+Uh1JWVRI1suhxl+UzDLL/Fl2/k3MnYyHkfNDm743d3dr5
+ u5ECfTDgt3EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
+   d="scan'208";a="253985670"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 21 May 2020 07:23:38 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jbm6m-0082sf-QV; Thu, 21 May 2020 17:23:40 +0300
+Date:   Thu, 21 May 2020 17:23:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     ofery@google.com, brendanhiggins@google.com,
+        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        robh+dt@kernel.org, wsa@the-dreams.de,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
+ driver
+Message-ID: <20200521142340.GM1634618@smile.fi.intel.com>
+References: <20200521110910.45518-1-tali.perry1@gmail.com>
+ <20200521110910.45518-3-tali.perry1@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdW5TqfDTZZCscXCK-Fkd7Gq1Ciyu1_sDzzR0B+_W-2hfg@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200521110910.45518-3-tali.perry1@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:09:50AM +0200, Geert Uytterhoeven wrote:
-> Hi Serge,
-> 
-> On Thu, May 21, 2020 at 2:54 AM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> > Currently clocksource framework doesn't support the clocks with variable
-> > frequency. Since MIPS GIC timer ticks rate might be unstable on some
-> > platforms, we must make sure that it justifies the clocksource
-> > requirements. MIPS GIC timer is incremented with the CPU cluster reference
-> > clocks rate. So in case if CPU frequency changes, the MIPS GIC tick rate
-> > changes synchronously. Due to this the clocksource subsystem can't rely on
-> > the timer to measure system clocks anymore. This commit marks the MIPS GIC
-> > based clocksource as unstable if reference clock (normally it's a CPU
-> > reference clocks) rate changes. The clocksource will execute a watchdog
-> > thread, which lowers the MIPS GIC timer rating to zero and fallbacks to a
-> > new stable one.
-> >
-> > Note we don't need to set the CLOCK_SOURCE_MUST_VERIFY flag to the MIPS
-> > GIC clocksource since normally the timer is stable. The only reason why
-> > it gets unstable is due to the ref clock rate change, which event we
-> > detect here in the driver by means of the clocks event notifier.
-> >
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> Thanks for your patch!
-> 
-> > --- a/drivers/clocksource/mips-gic-timer.c
-> > +++ b/drivers/clocksource/mips-gic-timer.c
-> > @@ -24,6 +24,9 @@
-> >  static DEFINE_PER_CPU(struct clock_event_device, gic_clockevent_device);
-> >  static int gic_timer_irq;
-> >  static unsigned int gic_frequency;
-> > +static bool __read_mostly gic_clock_unstable;
-> > +
-> > +static void git_clocksource_unstable(char *reason);
-> 
-> gic_clocksource_unstable? (everywhere)
+On Thu, May 21, 2020 at 02:09:09PM +0300, Tali Perry wrote:
+> Add Nuvoton NPCM BMC I2C controller driver.
 
-This is the most used word lately. So my hands write git everywhere by itself.)
-Thanks for noticing this.
+Thanks. My comments below.
+After addressing them, FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
--Sergey
+...
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> +	/* Frequency larger than 1 MHZ is not supported */
+
+1 MHZ -> 1MHz
+
+...
+
+> +#ifdef CONFIG_DEBUG_FS
+
+Again, why is this here?
+
+Have you checked debugfs.h for !CONFIG_DEBUG_FS case?
+
+> +/* i2c debugfs directory: used to keep health monitor of i2c devices */
+> +static struct dentry *npcm_i2c_debugfs_dir;
+> +
+> +static void i2c_init_debugfs(struct platform_device *pdev, struct npcm_i2c *bus)
+> +{
+> +	struct dentry *d;
+> +
+> +	if (!npcm_i2c_debugfs_dir)
+> +		return;
+> +
+> +	d = debugfs_create_dir(dev_name(&pdev->dev), npcm_i2c_debugfs_dir);
+> +	if (IS_ERR_OR_NULL(d))
+> +		return;
+> +
+> +	debugfs_create_u64("ber_cnt", 0444, d, &bus->ber_cnt);
+> +	debugfs_create_u64("nack_cnt", 0444, d, &bus->nack_cnt);
+> +	debugfs_create_u64("rec_succ_cnt", 0444, d, &bus->rec_succ_cnt);
+> +	debugfs_create_u64("rec_fail_cnt", 0444, d, &bus->rec_fail_cnt);
+> +	debugfs_create_u64("timeout_cnt", 0444, d, &bus->timeout_cnt);
+> +
+> +	bus->debugfs = d;
+> +}
+
+> +#else
+> +static void i2c_init_debugfs(struct platform_device *pdev, struct npcm_i2c *bus)
+> +{
+> +}
+
+This is completely redundant.
+
+> +#endif
+
+...
+
+> +#ifdef CONFIG_DEBUG_FS
+
+Ditto.
+
+> +static int __init npcm_i2c_init(void)
+> +{
+> +	struct dentry *dir;
+> +
+> +	dir = debugfs_create_dir("i2c", NULL);
+> +	if (IS_ERR_OR_NULL(dir))
+> +		return 0;
+> +
+> +	npcm_i2c_debugfs_dir = dir;
+> +	return 0;
+> +}
+> +
+> +static void __exit npcm_i2c_exit(void)
+> +{
+> +	debugfs_remove_recursive(npcm_i2c_debugfs_dir);
+> +}
+> +
+> +module_init(npcm_i2c_init);
+> +module_exit(npcm_i2c_exit);
+> +#endif
+
+...
+
+> +MODULE_VERSION("0.1.3");
+
+Module version is defined by kernel commit hash. But it's up to you and
+subsystem maintainer to decide.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
