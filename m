@@ -2,107 +2,108 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F036CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E974DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C224920759
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590081223;
-	bh=nLt/i15MjrNqsvOy9V+a9DQMHa6geg3s34SazJ34AHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q5zDRLoXktLEsWRSTx8WmmgXsmsdbVUk3BTngGwEb3ECwIDXCZxy9ZSQnONjO1Mqb
-	 TwPdHgy96Gjiv0kdvymiWWodjhkuHOuiPMeY9N3ILqT1XszeqpsXeC4Or4fz8HWHhY
-	 /KcZkcHsCaIEsNt/sDGLmWN84ASewC9XLXiP+0hs=
+	by mail.kernel.org (Postfix) with ESMTP id B2F2320829
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:27:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q88Uz8n8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgEURNk (ORCPT
+        id S1729162AbgEUR1F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 13:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbgEURNk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 13:13:40 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82FE920759;
-        Thu, 21 May 2020 17:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590081220;
-        bh=nLt/i15MjrNqsvOy9V+a9DQMHa6geg3s34SazJ34AHU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q6tZlNf+RLWG225hD6Aw5iF3BpM/yh2Z7VInb6ke+UEVhW2PWK10GYrwFpmlLYW3r
-         fgo+1m6zLsuxqE5m9eDeWuPneOMyC38E/a07Y5Q9DGhN6Qs4kRPX6KBcexADrxD4bB
-         /pxKnzD9iqwZgfr27IAHNiaO85az9soxX/7mWooY=
-Date:   Thu, 21 May 2020 18:13:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: snps,dw-apb-ssi: add optional reset
- property
-Message-ID: <20200521171337.GI4770@sirena.org.uk>
-References: <20200521170359.20430-1-dinguyen@kernel.org>
- <20200521170359.20430-2-dinguyen@kernel.org>
+        Thu, 21 May 2020 13:27:05 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54824 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728864AbgEUR1E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 13:27:04 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LHQlch012436;
+        Thu, 21 May 2020 12:26:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590082007;
+        bh=5sbZFMXFyR6R0M8wgkVp71flez8Gasc4Z5KA2W8N+4U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Q88Uz8n8XFOimF1DN2mSKKhcwrafBNj5pONsJ20IssohVHQp/5QhGUuJifhF124qU
+         F2raO0vuZAtZjMQWr3GIVnobvapohPdCbcgObPy051uA7r2/XnsZELrD+bh4Rj9DUe
+         3o/AO66KI0VZ3ANwh60Xyh4Zc11aJAy+5N0IsLZg=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LHQlTj058716
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 12:26:47 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 12:26:46 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 12:26:46 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LHQheW043615;
+        Thu, 21 May 2020 12:26:44 -0500
+Subject: Re: [PATCH v2] arm: dts: am33xx-bone-common: add gpio-line-names
+To:     Robert Nelson <robertcnelson@gmail.com>
+CC:     Drew Fustini <drew@beagleboard.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux kernel <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>
+References: <20200520214757.GA362547@x1>
+ <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
+ <CAOCHtYiw2jJuzbnW02FUmPy-xmmtErMmow46QQJUMs0VtX=cKg@mail.gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <cdf82f9c-48fb-49a0-99e4-926dc292c109@ti.com>
+Date:   Thu, 21 May 2020 20:26:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Az4VpBrmI9+OyhK/"
-Content-Disposition: inline
-In-Reply-To: <20200521170359.20430-2-dinguyen@kernel.org>
-X-Cookie: Keep your laws off my body!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOCHtYiw2jJuzbnW02FUmPy-xmmtErMmow46QQJUMs0VtX=cKg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---Az4VpBrmI9+OyhK/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 21, 2020 at 12:03:59PM -0500, Dinh Nguyen wrote:
-> Add optional reset property.
->=20
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
->  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/=
-Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> index 3ed08ee9feba..e01c557a9876 100644
-> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> @@ -37,5 +37,7 @@ Example:
->  		num-cs =3D <2>;
->  		cs-gpios =3D <&gpio0 13 0>,
->  			   <&gpio0 14 0>;
-> +		resets =3D <&rst SPIM0_RST>;
-> +		reset-names =3D "spi";
+On 21/05/2020 17:41, Robert Nelson wrote:
+>> Not sure if it should be in am335x-bone-common.dtsi.
+>>
+>> For example:
+>> am335x-boneblack.dts
+>>    #include "am335x-bone-common.dtsi"
+>>    #include "am335x-boneblack-common.dtsi" <-- hdmi defined only here
+> 
+> Ah crap, yeah that's a good point.. So if we stick it in...
+> am335x-boneblack-common.dtsi
+> 
+> Then the Black-Wireless now has Ethernet...
+> 
+> am335x-boneblack-wireless.dts
+> #include "am335x-bone-common.dtsi"
+> #include "am335x-boneblack-common.dtsi"
+> 
+> It's going to be ugly, copy and paste mess, but i guess we might as
+> well stick it in the device " am335x-boneblack.dts"?
 
-This only adds the example, it doesn't add anything to the actual
-binding documentation.
+Seems like.
 
---Az4VpBrmI9+OyhK/
-Content-Type: application/pgp-signature; name="signature.asc"
+Unfortunately, there is no way to partially overwrite "gpio-line-names"
+property.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7GtsAACgkQJNaLcl1U
-h9AnSQf9HejrmAdErVY3ochU0FJ0BN0NFP/F4rzGy344mciEsopTU3UIpdvfyBQj
-AbbZ+UOt1IAaJAKRse7bPAMKDGigZQW+g+9zYAYSidLn85rHwao8UVHmFvTRIECk
-/uWiuDT2YQVHWJgbrlSlt5n1MTffhOL7UrvDgsPIOMo4j0H17LUiDxUNMY59CJ/z
-h1Z4GtBLInhcyopo7gNns/ZYUTmFNyDBuat5pyzbaQJ8bifG2vbxbkmstNw0FO5y
-Jb0jmO/RP45iCWb2mKdu99q7LtpFV7Fkis14c0/PeNTN8ZXH00RqK1xU4KCEJg1P
-8h1KkFl3OBA5PSaefEcvZLk13CRv+Q==
-=VJF0
------END PGP SIGNATURE-----
-
---Az4VpBrmI9+OyhK/--
+-- 
+Best regards,
+grygorii
