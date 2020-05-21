@@ -2,237 +2,103 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E745BC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B91C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C50D820826
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DAE2078B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dr6L788V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dGmoucgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgEUNdf (ORCPT
+        id S1727085AbgEUNpa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 09:33:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34326 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729437AbgEUNde (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 09:33:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LDXJmg077067;
-        Thu, 21 May 2020 08:33:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590067999;
-        bh=pIH2fVTWjlGjL7gngSKgJjMkSbsoCQ/O5bKvxJc4rP8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Dr6L788V8crSRNjoyvrsMqPBiTfvHG5japxUVEYhUcE138Qa0SKUbEkNzquQJTXmC
-         I9sDUDkNyaHXQQ4L3sRX0LtGeO79Odaf9iJzUq3RbPD+EoCBft7/MU0bd5mAaof3Th
-         3egN3U9NcA1bZPZeXvf8TEuKlz8e8sipZfJwlacw=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LDXJmt018834
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 08:33:19 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 08:33:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 08:33:19 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LDXFFj119241;
-        Thu, 21 May 2020 08:33:16 -0500
-Subject: Re: [PATCH v4 03/14] PCI: cadence: Add support to use custom read and
- write accessors
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200506151429.12255-1-kishon@ti.com>
- <20200506151429.12255-4-kishon@ti.com> <20200520220724.GA636352@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <37d2d6c3-232d-adb8-4e0b-e0c699ec435a@ti.com>
-Date:   Thu, 21 May 2020 19:03:15 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 09:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgEUNpa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 09:45:30 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA72CC061A0E
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 06:45:29 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t8so2290072wmi.0
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 06:45:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MIZbow6oCp6jhBPcKsqdy9EnMAR8LQb1Wb+CIClZf0I=;
+        b=dGmoucgrWl3fcaqDll9a/qRPLlA7s730yc2z/WBzNFxuL2a+M1qwz4OOCwGd++fhKy
+         p8H1ZqTfH5xn8dw70XzKJISp6Vd7YqNQ/dPn7g8DE4Th7Ys7glQVxU1ajIvWn44+3/e0
+         7gWzJKL3HsAPQXv9L62UgO6S71k5LFILN3dbQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MIZbow6oCp6jhBPcKsqdy9EnMAR8LQb1Wb+CIClZf0I=;
+        b=oJE5UVA79BwBJtEOCLzGepih625gQWqH3EG1MzcENqveOFdipYvGp2JzBh8MBUJVVn
+         wxWjuPj179wUqcTNhGo4v7ePx3qkNaAZHWJ708JamFArVqTrNdXhm9DykU7KZqIA90RA
+         R9fx0rrNTIfHVENpBrpgNzlkkc/J5Xwz/loJawclYFq8DHEWB/x+68hZyyyL+eHmVnM3
+         CpJIjF5lQxw5cBBDidm7gv/UxSz+ekyWK/OK7iy/Bm0M4QA3vHjXxhQQzG/+BzZaFPA8
+         1d+eJffhiLOxAtPbLSRe9suAULfaoqS9RVbKY1ytTy3PaPmq2NiF/Faw62f7x0FSZQxh
+         SyOA==
+X-Gm-Message-State: AOAM531JWD1KfLpSOZwdlNGaiNZ3zuGihpc0pI/KyaEnTn7+zuEYP+FP
+        tQMz3U6WAsapyuQRtYasrCq2cuy54D00eg==
+X-Google-Smtp-Source: ABdhPJzga0snvqqhabMrMb1GYaE9P70IQw0mFqh2Y8F+1nN0c5PVJEQNf6mkgxlQ/6SKai9ltVpOxA==
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr8844805wmk.168.1590068728336;
+        Thu, 21 May 2020 06:45:28 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id e29sm296309wra.7.2020.05.21.06.45.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 06:45:27 -0700 (PDT)
+Date:   Thu, 21 May 2020 13:45:26 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH v8 01/14] media: platform: Improve subscribe event flow
+ for bug fixing
+Message-ID: <20200521134526.GA209565@chromium.org>
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+ <20200403094033.8288-2-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520220724.GA636352@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403094033.8288-2-xia.jiang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Xia,
 
-On 5/21/2020 3:37 AM, Rob Herring wrote:
-> On Wed, May 06, 2020 at 08:44:18PM +0530, Kishon Vijay Abraham I wrote:
->> Add support to use custom read and write accessors. Platforms that
->> don't support half word or byte access or any other constraint
->> while accessing registers can use this feature to populate custom
->> read and write accessors. These custom accessors are used for both
->> standard register access and configuration space register access of
->> the PCIe host bridge.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence.h | 107 +++++++++++++++---
->>  1 file changed, 94 insertions(+), 13 deletions(-)
+On Fri, Apr 03, 2020 at 05:40:20PM +0800, Xia Jiang wrote:
+> Let v4l2_ctrl_subscribe_event() do the job for other types except
+> V4L2_EVENT_SOURCE_CHANGE.
 > 
-> Actually, take back my R-by...
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v8: no changes
+> ---
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->> index df14ad002fe9..70b6b25153e8 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->> @@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
->>  	MSG_ROUTING_GATHER,
->>  };
->>  
->> +struct cdns_pcie_ops {
->> +	u32	(*read)(void __iomem *addr, int size);
->> +	void	(*write)(void __iomem *addr, int size, u32 value);
->> +};
->> +
->>  /**
->>   * struct cdns_pcie - private data for Cadence PCIe controller drivers
->>   * @reg_base: IO mapped register base
->> @@ -239,7 +244,7 @@ struct cdns_pcie {
->>  	int			phy_count;
->>  	struct phy		**phy;
->>  	struct device_link	**link;
->> -	const struct cdns_pcie_common_ops *ops;
->> +	const struct cdns_pcie_ops *ops;
->>  };
->>  
->>  /**
->> @@ -299,69 +304,145 @@ struct cdns_pcie_ep {
->>  /* Register access */
->>  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
->>  {
->> -	writeb(value, pcie->reg_base + reg);
->> +	void __iomem *addr = pcie->reg_base + reg;
->> +
->> +	if (pcie->ops && pcie->ops->write) {
->> +		pcie->ops->write(addr, 0x1, value);
->> +		return;
->> +	}
->> +
->> +	writeb(value, addr);
->>  }
->>  
->>  static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
->>  {
->> -	writew(value, pcie->reg_base + reg);
->> +	void __iomem *addr = pcie->reg_base + reg;
->> +
->> +	if (pcie->ops && pcie->ops->write) {
->> +		pcie->ops->write(addr, 0x2, value);
->> +		return;
->> +	}
->> +
->> +	writew(value, addr);
->>  }
-> 
-> cdns_pcie_writeb and cdns_pcie_writew are used, so remove them.
-> 
->>  
->>  static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
->>  {
->> -	writel(value, pcie->reg_base + reg);
->> +	void __iomem *addr = pcie->reg_base + reg;
->> +
->> +	if (pcie->ops && pcie->ops->write) {
->> +		pcie->ops->write(addr, 0x4, value);
->> +		return;
->> +	}
->> +
->> +	writel(value, addr);
-> 
-> writel isn't broken for you, so you don't need this either.
-> 
->>  }
->>  
->>  static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
->>  {
->> -	return readl(pcie->reg_base + reg);
->> +	void __iomem *addr = pcie->reg_base + reg;
->> +
->> +	if (pcie->ops && pcie->ops->read)
->> +		return pcie->ops->read(addr, 0x4);
->> +
->> +	return readl(addr);
-> 
-> And neither is readl.
 
-Sure, I'll remove all the unused functions and avoid using ops for readl and
-writel.
-> 
->>  }
->>  
->>  /* Root Port register access */
->>  static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
->>  				       u32 reg, u8 value)
->>  {
->> -	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
->> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
->> +
->> +	if (pcie->ops && pcie->ops->write) {
->> +		pcie->ops->write(addr, 0x1, value);
->> +		return;
->> +	}
->> +
->> +	writeb(value, addr);
->>  }
->>  
->>  static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
->>  				       u32 reg, u16 value)
->>  {
->> -	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
->> +	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
->> +
->> +	if (pcie->ops && pcie->ops->write) {
->> +		pcie->ops->write(addr, 0x2, value);
->> +		return;
->> +	}
->> +
->> +	writew(value, addr);
-> 
-> You removed 2 out of 3 calls to this. I think I'd just make the root 
-> port writes always be 32-bit. It is all just one time init stuff 
-> anyways.
-> 
-> Either rework the calls to assemble the data into 32-bits or keep these 
-> functions and do the RMW here.
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
-The problem with assembling data into 32-bits is we have to read/write with
-different offsets. We'll give PCI_VENDOR_ID offset for modifying deviceID,
-PCI_INTERRUPT_LINE for modifying INTERRUPT_PIN which might get non-intuitive.
-Similarly in endpoint we read and write to MSI_FLAGS (which is at offset 2) we
-have to directly use MSI capability offset.
-
-And doing RMW in the accessors would mean the same RMW op is repeated. So if we
-just have cdns_pcie_rp_writeb() and cdns_pcie_rp_writew(), the same code will
-be repeated here twice.
-
-IMHO using ops is a lot cleaner for these cases. IMHO except for removing
-unused functions and not changing readl/writel, others should use ops.
-
-Kindly let me know what you think.
-
-Thanks
-Kishon
+Best regards,
+Tomasz
