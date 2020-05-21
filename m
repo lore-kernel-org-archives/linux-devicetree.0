@@ -6,32 +6,28 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04326C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 01:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DD2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 01:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF3D4207C4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 01:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB452075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 01:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgEUBWs (ORCPT
+        id S1727940AbgEUBW4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 21:22:48 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33776 "EHLO
+        Wed, 20 May 2020 21:22:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33836 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgEUBWr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 21:22:47 -0400
+        with ESMTP id S1726839AbgEUBWz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 21:22:55 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D24808030779;
-        Thu, 21 May 2020 01:22:44 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 63CDB803078D;
+        Thu, 21 May 2020 01:22:51 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WcfgVTapab-x; Thu, 21 May 2020 04:22:44 +0300 (MSK)
+        with ESMTP id GAe9a4jjPInB; Thu, 21 May 2020 04:22:50 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
-        Alan Cox <alan@linux.intel.com>,
-        Linus Walleij <linus.walleij@stericsson.com>
+To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
@@ -40,19 +36,17 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
         Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
         Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the MID DMA
-Date:   Thu, 21 May 2020 04:21:51 +0300
-Message-ID: <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
+Date:   Thu, 21 May 2020 04:21:53 +0300
+Message-ID: <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -64,175 +58,110 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since DMA transfers are performed asynchronously with actual SPI
-transaction, then even if DMA transfers are finished it doesn't mean
-all data is actually pushed to the SPI bus. Some data might still be
-in the controller FIFO. This is specifically true for Tx-only
-transfers. In this case if the next SPI transfer is recharged while
-a tail of the previous one is still in FIFO, we'll loose that tail
-data. In order to fix this lets add the wait procedure of the Tx/Rx
-SPI transfers completion after the corresponding DMA transactions
-are finished.
+Having them declared is redundant since each struct dw_dma_chan has
+the same structure embedded and the structure from the passed dma_chan
+private pointer will be copied there as a result of the next calls
+chain:
+dma_request_channel() -> find_candidate() -> dma_chan_get() ->
+device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
+dw_dma_filter().
+So just remove the static dw_dma_chan structures and use a locally
+declared data instance with dst_id/src_id set to the same values as
+the static copies used to have.
 
 Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
 Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 
 ---
 
-Changelog v2:
-- Use conditional statement instead of the ternary operator in the ref
-  clock getter.
-- Move the patch to the head of the series so one could be picked up to
-  the stable kernels as a fix.
-
 Changelog v3:
-- Use spi_delay_exec() method to wait for the current operation completion.
+- Explicitly initialize the dw_dma_slave members on stack.
 ---
- drivers/spi/spi-dw-mid.c | 69 ++++++++++++++++++++++++++++++++++++++++
- drivers/spi/spi-dw.h     | 10 ++++++
- 2 files changed, 79 insertions(+)
+ drivers/spi/spi-dw-mid.c | 19 ++++++++-----------
+ drivers/spi/spi-dw.h     |  2 --
+ 2 files changed, 8 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index f9757a370699..3526b196a7fc 100644
+index cf99832ba271..8446bad0528c 100644
 --- a/drivers/spi/spi-dw-mid.c
 +++ b/drivers/spi/spi-dw-mid.c
-@@ -17,6 +17,7 @@
- #include <linux/pci.h>
- #include <linux/platform_data/dma-dw.h>
- 
-+#define WAIT_RETRIES	5
+@@ -21,9 +21,6 @@
  #define RX_BUSY		0
  #define TX_BUSY		1
  
-@@ -143,6 +144,47 @@ static enum dma_slave_buswidth convert_dma_width(u32 dma_width) {
- 	return DMA_SLAVE_BUSWIDTH_UNDEFINED;
+-static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
+-static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
+-
+ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
+ {
+ 	struct dw_dma_slave *s = param;
+@@ -37,9 +34,11 @@ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
+ 
+ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ {
++	struct dw_dma_slave slave = {
++		.src_id = 0,
++		.dst_id = 0
++	};
+ 	struct pci_dev *dma_dev;
+-	struct dw_dma_slave *tx = dws->dma_tx;
+-	struct dw_dma_slave *rx = dws->dma_rx;
+ 	dma_cap_mask_t mask;
+ 
+ 	/*
+@@ -54,14 +53,14 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ 	dma_cap_set(DMA_SLAVE, mask);
+ 
+ 	/* 1. Init rx channel */
+-	rx->dma_dev = &dma_dev->dev;
+-	dws->rxchan = dma_request_channel(mask, mid_spi_dma_chan_filter, rx);
++	slave.dma_dev = &dma_dev->dev;
++	dws->rxchan = dma_request_channel(mask, mid_spi_dma_chan_filter, &slave);
+ 	if (!dws->rxchan)
+ 		goto err_exit;
+ 
+ 	/* 2. Init tx channel */
+-	tx->dma_dev = &dma_dev->dev;
+-	dws->txchan = dma_request_channel(mask, mid_spi_dma_chan_filter, tx);
++	slave.dst_id = 1;
++	dws->txchan = dma_request_channel(mask, mid_spi_dma_chan_filter, &slave);
+ 	if (!dws->txchan)
+ 		goto free_rxchan;
+ 
+@@ -386,8 +385,6 @@ static const struct dw_spi_dma_ops mfld_dma_ops = {
+ 
+ static void dw_spi_mid_setup_dma_mfld(struct dw_spi *dws)
+ {
+-	dws->dma_tx = &mid_dma_tx;
+-	dws->dma_rx = &mid_dma_rx;
+ 	dws->dma_ops = &mfld_dma_ops;
  }
  
-+static void dw_spi_dma_calc_delay(struct dw_spi *dws, u32 nents,
-+				  struct spi_delay *delay)
-+{
-+	unsigned long ns, us;
-+
-+	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
-+	     BITS_PER_BYTE;
-+
-+	if (ns <= NSEC_PER_USEC) {
-+		delay->unit = SPI_DELAY_UNIT_NSECS;
-+		delay->value = ns;
-+	} else {
-+		us = DIV_ROUND_UP(ns, NSEC_PER_USEC);
-+		delay->unit = SPI_DELAY_UNIT_USECS;
-+		delay->value = clamp_val(us, 0, USHRT_MAX);
-+	}
-+}
-+
-+static inline bool dw_spi_dma_tx_busy(struct dw_spi *dws)
-+{
-+	return !(dw_readl(dws, DW_SPI_SR) & SR_TF_EMPT);
-+}
-+
-+static void dw_spi_dma_wait_tx_done(struct dw_spi *dws)
-+{
-+	int retry = WAIT_RETRIES;
-+	struct spi_delay delay;
-+	u32 nents;
-+
-+	nents = dw_readl(dws, DW_SPI_TXFLR);
-+	dw_spi_dma_calc_delay(dws, nents, &delay);
-+
-+	while (dw_spi_dma_tx_busy(dws) && retry--)
-+		spi_delay_exec(&delay, NULL);
-+
-+	if (retry < 0) {
-+		dev_err(&dws->master->dev, "Tx hanged up\n");
-+		dws->master->cur_msg->status = -EIO;
-+	}
-+}
-+
- /*
-  * dws->dma_chan_busy is set before the dma transfer starts, callback for tx
-  * channel will clear a corresponding bit.
-@@ -151,6 +193,8 @@ static void dw_spi_dma_tx_done(void *arg)
- {
- 	struct dw_spi *dws = arg;
- 
-+	dw_spi_dma_wait_tx_done(dws);
-+
- 	clear_bit(TX_BUSY, &dws->dma_chan_busy);
- 	if (test_bit(RX_BUSY, &dws->dma_chan_busy))
- 		return;
-@@ -192,6 +236,29 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
- 	return txdesc;
- }
- 
-+static inline bool dw_spi_dma_rx_busy(struct dw_spi *dws)
-+{
-+	return !!(dw_readl(dws, DW_SPI_SR) & SR_RF_NOT_EMPT);
-+}
-+
-+static void dw_spi_dma_wait_rx_done(struct dw_spi *dws)
-+{
-+	int retry = WAIT_RETRIES;
-+	struct spi_delay delay;
-+	u32 nents;
-+
-+	nents = dw_readl(dws, DW_SPI_RXFLR);
-+	dw_spi_dma_calc_delay(dws, nents, &delay);
-+
-+	while (dw_spi_dma_rx_busy(dws) && retry--)
-+		spi_delay_exec(&delay, NULL);
-+
-+	if (retry < 0) {
-+		dev_err(&dws->master->dev, "Rx hanged up\n");
-+		dws->master->cur_msg->status = -EIO;
-+	}
-+}
-+
- /*
-  * dws->dma_chan_busy is set before the dma transfer starts, callback for rx
-  * channel will clear a corresponding bit.
-@@ -200,6 +267,8 @@ static void dw_spi_dma_rx_done(void *arg)
- {
- 	struct dw_spi *dws = arg;
- 
-+	dw_spi_dma_wait_rx_done(dws);
-+
- 	clear_bit(RX_BUSY, &dws->dma_chan_busy);
- 	if (test_bit(TX_BUSY, &dws->dma_chan_busy))
- 		return;
 diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index e92d43b9a9e6..81364f501b7e 100644
+index 81364f501b7e..60e9e430ce7b 100644
 --- a/drivers/spi/spi-dw.h
 +++ b/drivers/spi/spi-dw.h
-@@ -210,6 +210,16 @@ static inline void spi_set_clk(struct dw_spi *dws, u16 div)
- 	dw_writel(dws, DW_SPI_BAUDR, div);
- }
+@@ -146,8 +146,6 @@ struct dw_spi {
+ 	unsigned long		dma_chan_busy;
+ 	dma_addr_t		dma_addr; /* phy address of the Data register */
+ 	const struct dw_spi_dma_ops *dma_ops;
+-	void			*dma_tx;
+-	void			*dma_rx;
  
-+static inline u32 spi_get_clk(struct dw_spi *dws)
-+{
-+	u32 div = dw_readl(dws, DW_SPI_BAUDR);
-+
-+	if (!div)
-+		return 0;
-+
-+	return dws->max_freq / div;
-+}
-+
- /* Disable IRQ bits */
- static inline void spi_mask_intr(struct dw_spi *dws, u32 mask)
- {
+ 	/* Bus interface info */
+ 	void			*priv;
 -- 
 2.25.1
 
