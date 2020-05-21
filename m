@@ -2,165 +2,136 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177A3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 03:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F72C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 03:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB3EA206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 03:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5831B20709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 03:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a3Pt5HQY"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TM/QGDU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgEUDPd (ORCPT
+        id S1727975AbgEUDZ7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 23:15:33 -0400
-Received: from mail-vi1eur05on2084.outbound.protection.outlook.com ([40.107.21.84]:42049
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        Wed, 20 May 2020 23:25:59 -0400
+Received: from mail-eopbgr140073.outbound.protection.outlook.com ([40.107.14.73]:31268
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727825AbgEUDPc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 May 2020 23:15:32 -0400
+        id S1726875AbgEUDZ6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 23:25:58 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FiVOtAH4GwtOxE4Bu5wapqrZRYRUbZpmiW4Owe/sowBxg1/aEAaByBokZ9it4WnrF2tYRpmGElDRQEVqvRVHIWDpRpX1FZdK9mxOYTFdaye8tPMeldxhdcP35Q0WVyL8JfAFz3YNSecjl164KCsiZJqGCx+0Vr5J60GRiPfGfCfRtJTgfWHFen/zmB7ls28nHcIpFmr09KLMEo0BfqlNsui0DYFNlcWoGvR5PwiYN9eQOW7NZq4x9YaGO/38hrd8j6HHrPjWw9xfHB/6wsmhUbqPaKJz3kZwW3odxi49TJwpoYRAEEGQOChi3IMUXBe+rME7zz28sJDfezih6AVVsA==
+ b=VfM4vRSaqXWP7tJPCZ2OG6dbUzOW6oZnAlOFxG/148bRcRKVJdOMIRcYXHf9p2DstW7cEfmduHfW3j9GtR2xeQyXryYZj0ZghmY+XzDGL50dhRoQfTeG5rwjZ0ebWXM1T9z6e6c66tImAZkpEnGDzJTnWQd30K7xmbaUJw+0k4G+wyMv4K4A8BeDolNL8t98g3KbJuuLzR1fIe/C4f6zr6PrBCWDLunFevhfq58QhKkFeMhhSocpg7JzOSv+BmiFRIt5HxQPVbl9ST64EO7gvGO2krU8d/csmRBq2appCwT9wMM8S64uGNdWTQukBOVUzHAlPUguqpaQ6EDF0UjIEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NOtUJWlJX11pxQ5QRNBfkL8QsrXMq1HqwrpHHAjdgFw=;
- b=Y2L2rMts2ub5RUji9sxSKRXVoNKocSLWGKpoh5auMTp1UX/XzgmAed30BIyNBz9Bi8TuIJhzTpMaj7mwCDFDkJJt4+3eKRsjXouZR88HNQJYNNdYpDMdEVYVLYs8L/hoB/Id4JEpIOmyphX24/7I26vUqeblcFbKCr6JYKg1aFrfmCFBKok6EkH9sXNCEAnL5RdXPPNBgYglWgkii3EEekEJKdz8+eLGZydX14c5Ymmg0buuslQm2j1J8GDJQz8HGkxxQoAqaKe9MLfIiGiTNPKhc6dMmMXbRjKa57Q9sH9/zVvHG+HHIjvAXoMFQaNQ8LQVd7FskjW6ZZSuqPJrmg==
+ bh=kZyVXa6OVYjI56fPdSOlinHR0mhsfjQmzse91s3Pqt4=;
+ b=MG3IS3tntzbYEGxaPUmqp9KlhffYlfD6RuKb3wJumlSQTzg74NCWkgamE2gUA62AtdbrGbhhRShOFF8eXv0DdblRPUTy4qOr4IaIre2OBMWEUP8/yAlHjNN54HcZjOJS/uJM/+X+2awAQaYRLFJ13KfTdFxiurYS3EKGzDKO1Okj6v15qnS47GddbazxKTjmXtyHTsdQk/9IoE4CFJ4B1P5UNFi4stt/z61oeus7GIxycx/4T4gvrW86noetK6PF27ASFTIRiCmop92aDOH4JCMo9EwPZ8mnIggddHZd+5Mg8yjXsD8kO2olUM2s8iOhlulYrovwsBU6PUdeTyOOfw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NOtUJWlJX11pxQ5QRNBfkL8QsrXMq1HqwrpHHAjdgFw=;
- b=a3Pt5HQYThGJxdUmktibj5vFqi7RoTRd6SaL6C0exS3mxtx1/KULj/HdnTVnIgN8Kg56eJPexpxrlKwCF7HJCikOXDN6AzlSKf80X093sTKGedk7mXHjIgz5HsQM7sdlLb12C8BUIj9U1lf9SjiJK4bWGd+4eHueoh+d3iB0OJk=
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM6PR0402MB3431.eurprd04.prod.outlook.com
- (2603:10a6:209:e::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 21 May
- 2020 03:15:28 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3000.034; Thu, 21 May 2020
- 03:15:28 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH net 3/4] ARM: dts: imx6: update fec gpr property
- to match new format
-Thread-Topic: [EXT] Re: [PATCH net 3/4] ARM: dts: imx6: update fec gpr
- property to match new format
-Thread-Index: AQHWLoHSZsTKfn2KY0W5vmilgDZ/AqixNB4AgACoEqA=
-Date:   Thu, 21 May 2020 03:15:28 +0000
-Message-ID: <AM6PR0402MB3607541D33B1C61476022D0AFFB70@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-References: <1589963516-26703-1-git-send-email-fugang.duan@nxp.com>
- <1589963516-26703-4-git-send-email-fugang.duan@nxp.com>
- <20200520170322.GJ652285@lunn.ch>
-In-Reply-To: <20200520170322.GJ652285@lunn.ch>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a5c45306-47d5-43a5-d331-08d7fd353672
-x-ms-traffictypediagnostic: AM6PR0402MB3431:
-x-microsoft-antispam-prvs: <AM6PR0402MB3431996F8985CE56BE037CB3FFB70@AM6PR0402MB3431.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 041032FF37
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XtYRkWEWPGxUpp4WzP3taUqUwGJOxs5gT+gcCYn9RXH4Cdt9hXnX9PjYdwW4vsQC8HM5Byz0QXnRZduFibS3ILdg4J5/DcwghguesMsJOFDh6GHiq20NUBoU3Yyz0000Yjyj3zfTKXqzot8OV4SghWmDIxiDWOGaRBOMrr36rcnHb99sfVD1jLzFFNXfAogzPhyFWr7uVCHeb0CHz56ssIPYCl6c+Xz4RZKX/ohAXRt/CFkFXEsa3IMNNxrF+K9e0hesYQvzz8i75hQEmUMxY3XVosj0gX1ThY2ANN7c/Qe7s5OaRgAUix+DvRpzdCD8jh4Zd4duVxQ3z635wLetAA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(76116006)(66476007)(66946007)(66556008)(64756008)(71200400001)(55016002)(15650500001)(66446008)(8676002)(9686003)(86362001)(7696005)(54906003)(186003)(478600001)(316002)(2906002)(26005)(33656002)(6506007)(5660300002)(52536014)(4326008)(6916009)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 2dPA+oYbKn3hXghtEwy6sRIAD0o5exQqP+QoCLBmZ47HLGoz5YqXjiSZK3qmmzfxBvSVbeQeTE8ByB/Zoiwgyr+qSbWQ3df5jDYvnpQPj7Iwr0XP2k1zm7OHZ3InXVx6WLe/+guAefV/eN6aguI+aT3SL7CqSIMg2G+Ndm2zmszoszftAt7M8dGFg50B1z+4E0zg7nJo1dlvcIo34itO3yDlDZQKwizcRBXV36Rcs2y/JhwB+Y8CC1RaE0+YWWzDIGxJOXNk7obnQR6cEpNOR1OyN1rBKvTPfgbiDOV44njqHrxRqUTDpYA8z9yrtu6zVrCzkdFKwZDKwDdyD91kz+6AK3HbOfsezyx6AW9zDi1mrRX/qBj/H05bXu5ubz9azXrnAU2qnYe2xJrs2Mk3HaF30GUjUyeuJhCOnqpS1RqIkPRBjp36rUZwDb0IiHHtBXJioj8MO4S6WU6cIdOIDR2I8U7tLEm3xdJIM9w6AViviIeUrnX3BmnerenA2sRM
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=kZyVXa6OVYjI56fPdSOlinHR0mhsfjQmzse91s3Pqt4=;
+ b=TM/QGDU4DZxaNvyWhuygHr5zBYc9XZvRJz/ZMkFlIAbJ5U8YpOyS8pV+EXwqqmUc1gZ2YDpyTymMaP81tAKCKpcBQx8dsQbXpUbeGrA9A9u45mi8vOymmufIX4YoBGgsaOPiQH1QVVW2pdMoqwG8qy9SNl7ZzuNCyfj8B1fEopA=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6383.eurprd04.prod.outlook.com (2603:10a6:803:11b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Thu, 21 May
+ 2020 03:25:53 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3021.020; Thu, 21 May 2020
+ 03:25:53 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, Anson.Huang@nxp.com
+Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage range
+Date:   Thu, 21 May 2020 19:26:07 +0800
+Message-Id: <1590060368-2282-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR03CA0132.apcprd03.prod.outlook.com
+ (2603:1096:4:91::36) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR03CA0132.apcprd03.prod.outlook.com (2603:1096:4:91::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.11 via Frontend Transport; Thu, 21 May 2020 03:25:50 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c9bdf494-e768-48c1-4efd-08d7fd36aaca
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6383:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB6383159C2201FC876DBF55E289B70@VE1PR04MB6383.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 041032FF37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Dh2fJATLdTumekJ0qRqFl4Ep281vSggHG5gjjrDg5UciTMPT1HFdm55T4R75qlFMS32Hht1UycgomwZr3E9jrAYAn9Kfgyu4GQWBRRYEIhiq03WwBFqccTtb337QIs9nGEYBI8/dac65RtxP6yINVoikfeCkxjO6oET1xyJ5SXZB1o+Km2g+OC7pKA9xBD9X+VeloAaKWl+mQ4q7+1T/AMuI1DPzWZWXjElbNhBlSlvo0Ah1zWqNWbA8GLZ1VbGFrw/zfcci+3NX4saOZ2hcOg1lZJOgmBBXQskBJhfcoMxv8JUri6jHwHdesPEnJoME9X2Xs48WsX4Hdzzdk8C1hdAQ7px8heKv6kAn6uaju+KUlRevbXerdv/7DOKd9Ya9uEiCQNt1ZHcoDm7uVv1VM/gzZtPnoYfPXpErPJu+zxCAu5i6z7p0eKZHLU6AFc7nyQbL6z6ERU36qRUh9XNVCHCU/AJnafwJHOXiBMsRiaE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(366004)(136003)(396003)(39860400002)(8936002)(5660300002)(8676002)(186003)(16526019)(2906002)(86362001)(66476007)(956004)(6512007)(6486002)(6636002)(2616005)(66946007)(66556008)(6666004)(478600001)(316002)(52116002)(4326008)(36756003)(26005)(6506007)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: BA0dABnOqbusjlWb1MiHdXSek15OBU2qeAKa2eNPgkSm/5ByEKGDYEh0OS62hrDV+v/FitOADQSP51SkWmcgmx3Szwzv+1IDr9lAneSH5dyTdPkyiIdVDMVO1p63gwC4DjvbOSYkIWhqrOfan4uF42L7zpFn0ymSYbuubS489bNQaYP13jDd1w8SYn8e4JCKhfW9xaHVzwpMDss9+qQHSvo551VgjpGLvhqcLPVCqD2DhBvrkPgDQh4GryoaF/zWdizMd+G6IB26QHziM8PlKjBSY+qMPpP9d+BM+1BGRndu4U8GahLzMEhAuZHC+J0Mj4yUAugm8K+0MaZcvhuMuA63sa93DygCcPcyltf+qpaDmx6Rvtnv+vsvyJgCASy+KjJYIfAGNk0CpVFKyDW9STMjZ4Fer5rFdrcOsPe5jYl+CVJbTP3PAX21aUQwvkL0Km9WruWhEgGstJ10ARFKbYox+G7xJPG+PBPCkx4GZ06IyDdBTWyhIpX4d1Ol0O7Y
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5c45306-47d5-43a5-d331-08d7fd353672
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2020 03:15:28.3753
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9bdf494-e768-48c1-4efd-08d7fd36aaca
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 03:25:53.4539
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J8CPhIlxmQcgdw6rDljly3bWZfYJ0GpT4A52cVYiuguhI/JMiYTrdtH9oR18nc4HVXMELwUIc04UumsOvKycng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3431
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4fKDQw/OVTizwqHxRKinx8kcSJznOgNh7pWVHVBc8/Pq8HJ5YEbn7wJZartZctxVXEG0K0iIGKoRAN5LQCrSFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6383
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch> Sent: Thursday, May 21, 2020 1:03 AM
-> On Wed, May 20, 2020 at 04:31:55PM +0800, fugang.duan@nxp.com wrote:
-> > From: Fugang Duan <fugang.duan@nxp.com>
-> >
-> > Update the gpr property to define gpr register offset and bit in DT.
-> >
-> > Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-> > ---
-> >  arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/imx6qdl.dtsi
-> > b/arch/arm/boot/dts/imx6qdl.dtsi index 98da446..a4a68b7 100644
-> > --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> > @@ -1045,7 +1045,7 @@
-> >                                        <&clks
-> IMX6QDL_CLK_ENET>,
-> >                                        <&clks
-> IMX6QDL_CLK_ENET_REF>;
-> >                               clock-names =3D "ipg", "ahb", "ptp";
-> > -                             gpr =3D <&gpr>;
-> > +                             gpr =3D <&gpr 0x34 27>;
-> >                               status =3D "disabled";
-> >                       };
->=20
-> Hi Andy
->=20
-> This is the same values as hard coded, so no change here.
->=20
-> The next patch does not use grp at all. So it is unclear to me if you act=
-ually
-> make use of what you just added. I don't see anywhere
->=20
-> gpr =3D <&gpr 0x42 24>;
->=20
-> which is the whole point of this change, being able to specify different =
-values.
->=20
->       Andrew
+Correct ldo1 voltage range from wrong high group(3.0v~3.3v) to low group
+(1.6v~1.9v) because the ldo1 should be 1.8v. Actually, two voltage groups
+have been supported at bd718x7-regulator driver, hence, just corrrect the
+voltage range to 1.6v~3.3v. For ldo2@0.8v, correct voltage range too.
+Otherwise, ldo1 would be kept @3.0v and ldo2@0.9v which violate i.mx8mm
+datasheet as the below warning log in kernel:
 
-Andrew, patch#1 in the series will parse the property to get register offse=
-t and bit.
-Patch#2 describes the property format as below:
-       <&gpr req_gpr req_bit>.
-        gpr is the phandle to general purpose register node.
-        req_gpr is the gpr register offset for ENET stop request.
-        req_bit is the gpr bit offset for ENET stop request.
+[    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
+[    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
 
-All i.MX support wake-on-lan, imx6q/dl/qp is the first platforms in upstrea=
-m to support it.
-As you know, most of i.MX chips has two ethernet instances, they have diffe=
-rent gpr bit.
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-gpr is used to enter/exit stop mode for soc. So it can be defined in dtsi f=
-ile.
-"fsl,magic-packet;" property is define the board wakeup capability.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index e5ec832..0f1d7f8 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -208,7 +208,7 @@
+ 
+ 			ldo1_reg: LDO1 {
+ 				regulator-name = "LDO1";
+-				regulator-min-microvolt = <3000000>;
++				regulator-min-microvolt = <1600000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+@@ -216,7 +216,7 @@
+ 
+ 			ldo2_reg: LDO2 {
+ 				regulator-name = "LDO2";
+-				regulator-min-microvolt = <900000>;
++				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <900000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+-- 
+2.7.4
 
-I am not sure whether above information is clear for you why to add the pat=
-ch set.
-
-Andy
