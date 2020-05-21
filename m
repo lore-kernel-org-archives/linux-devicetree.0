@@ -2,74 +2,90 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1934C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 08:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B6CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 08:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C02B8207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 08:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590050596;
-	bh=FUzPuUkK7yJPPxDEeG7AeR2q5U1ot/3gTtCpIrQAv30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=unMl1A8uPOxJ7mNmsgehe5ibT7VQMtus82tvFSPWwO9s9fTZ+XF2rYeUv5D4At1N0
-	 yMh1ZC5bhcmiyh/m1Zgb21ts/gmrI6Gelb9ZI8icTYK4zftF7aFsuVFM6+6Jq90DJk
-	 kJz9A/KNMc2LsUOXZYFQSmSBwxX0TCbeNrR1lMCk=
+	by mail.kernel.org (Postfix) with ESMTP id 4849C20721
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 08:52:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="U+FaTvlt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbgEUInQ (ORCPT
+        id S1728623AbgEUIwj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 04:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728641AbgEUInQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 04:43:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CB6620721;
-        Thu, 21 May 2020 08:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590050595;
-        bh=FUzPuUkK7yJPPxDEeG7AeR2q5U1ot/3gTtCpIrQAv30=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ygwCOlZ50OWnr9Uo9EkfcrRvf1xQyXzxyFqvMfQF6XwHKxAM5dRPB5leWSkw45rAP
-         fBrflVvhCBy/vLhaQtR8iuZ6JLusYjJI7YDtXDOVBmmLzhFXqLIL0Blk0PJAMXf4cd
-         MZQ3yQDadDqnu4QtRsmKwdD37hsnh53h7Cp9yFj4=
-Date:   Thu, 21 May 2020 10:43:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Daniel Mack <daniel@zonque.org>
-Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        robh+dt@kernel.org, jslaby@suse.com, jringle@gridpoint.com,
-        m.brock@vanmierlo.com, pascal.huerst@gmail.com
-Subject: Re: [PATCH v2 2/6] sc16is7xx: Add flag to activate IrDA mode
-Message-ID: <20200521084313.GA2701989@kroah.com>
-References: <20200519182147.218713-1-daniel@zonque.org>
- <20200519182147.218713-3-daniel@zonque.org>
+        Thu, 21 May 2020 04:52:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:33210 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728389AbgEUIwj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 04:52:39 -0400
+X-UUID: eea90d1380b540bfb2d3f2d6437f50f9-20200521
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:From:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:Message-ID:Subject; bh=Ntq+xnZqQIn/7PE5MMeGwbIxDp+MLU6cQe0dH7iWCZU=;
+        b=U+FaTvltahZ7khZZtzciTGjMw2cZP8cOg2BL98HP1W7g5hyOid75Bmg0LrszMbJtAAxkfHtinTC2SXMb5srzC76X1Z7gdg9IzMdrRlqsl9tS5oBEWIwCw4A6ypqd2JE4FA2ICmwR3itSyFk8/m9lRlcMk+gnZ8c9+Y+p97FVTFs=;
+X-UUID: eea90d1380b540bfb2d3f2d6437f50f9-20200521
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <andrew-sh.cheng@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1294609958; Thu, 21 May 2020 16:52:36 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 21 May 2020 16:52:34 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 21 May 2020 16:52:34 +0800
+Subject: Re: [PATCH 09/12] devfreq: add mediatek cci devfreq
+Message-ID: <1590051155.14062.3.camel@mtksdaap41>
+SubjeTo: Mark Brown <broonie@kernel.org>
+CC:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, "Stephen Boyd" <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Date:   Thu, 21 May 2020 16:52:35 +0800
+In-Reply-To: <20200520123135.GD4823@sirena.org.uk>
+References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+         <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
+         <20200520123135.GD4823@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519182147.218713-3-daniel@zonque.org>
+From:   <andrew-sh.cheng@mediatek.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 08:21:43PM +0200, Daniel Mack wrote:
-> From: Pascal Huerst <pascal.huerst@gmail.com>
-> 
-> This series of uart controllers is able to work in IrDA mode.
-> Add per-port flag to the device-tree to enable that feature if needed.
-> 
-> Signed-off-by: Pascal Huerst <pascal.huerst@gmail.com>
-> ---
+DQpPbiBXZWQsIDIwMjAtMDUtMjAgYXQgMTM6MzEgKzAxMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+IE9uIFdlZCwgTWF5IDIwLCAyMDIwIGF0IDExOjQzOjA0QU0gKzA4MDAsIEFuZHJldy1zaC5DaGVu
+ZyB3cm90ZToNCj4gDQo+ID4gKwljY2lfZGYtPnByb2NfcmVnID0gZGV2bV9yZWd1bGF0b3JfZ2V0
+X29wdGlvbmFsKGNjaV9kZXYsICJwcm9jIik7DQo+ID4gKwlyZXQgPSBQVFJfRVJSX09SX1pFUk8o
+Y2NpX2RmLT5wcm9jX3JlZyk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJaWYgKHJldCAhPSAt
+RVBST0JFX0RFRkVSKQ0KPiA+ICsJCQlkZXZfZXJyKGNjaV9kZXYsICJmYWlsZWQgdG8gZ2V0IHJl
+Z3VsYXRvciBmb3IgQ0NJOiAlZFxuIiwNCj4gPiArCQkJCXJldCk7DQo+ID4gKwkJcmV0dXJuIHJl
+dDsNCj4gPiArCX0NCj4gPiArCXJldCA9IHJlZ3VsYXRvcl9lbmFibGUoY2NpX2RmLT5wcm9jX3Jl
+Zyk7DQo+IA0KPiBUaGUgY29kZSBhcHBlYXJzIHRvIHJlcXVpcmUgYSByZWd1bGF0b3IgKGFuZCBJ
+J20gZ3Vlc3NpbmcgdGhlIGRldmljZQ0KPiBuZWVkcyBwb3dlcikgc28gd2h5IGlzIHRoaXMgdXNp
+bmcgcmVndWxhdG9yX2dldF9vcHRpb25hbCgpPw0KDQpIaSBNYXJrLA0KDQpEbyB5b3UgbWVhbiwg
+d2h5IG5vdCB1c2UgcmVndWxhdG9yX2dldF9leGNsdXNpdmUoKSBvciByZWd1bGF0b3JfZ2V0KCk/
+DQpCZWNhdXNlIGNjaSBhbmQgY3B1IGxpdHRlciBjb3JlIHNoYXJlZCBidWNrLCBpdCBjYW5ub3Qg
+dXNlDQpyZWd1bGF0b3JfZ2V0X2V4Y2x1c2l2ZSgpLg0KQmVjYXVzZSBib3RoIGNjaSBhbmQgY3B1
+IHdhbnQgdG8gdHVuZSB2b2x0YWdlLCBpdCBjYW5ub3QgdXNlDQpyZWd1bGF0b3JfZ2V0KCksIG90
+aGVyd2lzZSBpdCB3aWxsIGdldCBkdW1teSByZWd1bGF0b3IgZXZlbiB0aGlzIGJ1Y2sNCmRvZXNu
+J3QgcmVnaXN0ZXIuYXMgcmVndWxhdG9yLg0KDQpCUiwNCkFuZHJldy1zaC5DaGVuZw0K
 
-If you send on a patch from someone else, you too need to sign-off on
-it, so that I could take it.  Please fix this up for all of the patches
-that need it in this series and resend.
-
-thanks,
-
-greg k-h
