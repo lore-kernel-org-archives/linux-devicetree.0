@@ -2,153 +2,126 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBB4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91ABC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52232207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45AF20759
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 18:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qLCAaBEx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JbuLznLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgEUShS (ORCPT
+        id S1729006AbgEUSi3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 14:37:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37398 "EHLO
+        Thu, 21 May 2020 14:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728240AbgEUShS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 14:37:18 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2F8EC061A0E;
-        Thu, 21 May 2020 11:37:17 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id n11so2771532qkn.8;
-        Thu, 21 May 2020 11:37:17 -0700 (PDT)
+        with ESMTP id S1728240AbgEUSi3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 14:38:29 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF201C061A0E
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 11:38:28 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k13so7688861wrx.3
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 11:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hZ2fUcvibZ/nGJTIbOnckpa0koPQZbzLKN92BTEKO0Q=;
-        b=qLCAaBEx5gVgjJ63m3yXYff152CX2zNP8wxOxKXx4AH1g/0zIKhvrEnSdscfXtu59v
-         UEizF050C+him4l4uvV0g8YPF7wZJ7m5sq6A9yvHwpdcaSiZ4mpMDK7yODyRn4Lbal6P
-         p4kqBFkQh+eMN6mNnFt9ak66am7NkprBgsladavG+IozJ6+xOCegSZQUnaIqTUMhH5UR
-         QnRt4zeGNtCjt8r+XANoktGOtfSrwKtYzxcpLrlVFzJzjcSu15z+G1ZE1FNdm6hGQNDd
-         tQPU2A+OYlSFsUTnIJpbg+YY3b9CPuR9JTmiwSxlfoXUHv89LZNt1p2hL0W7DwW1DGyo
-         v8YA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LNC3H7rEKUYKmtw+FfHQGSZX2sVQSBHXnVoTDU42qPY=;
+        b=JbuLznLZl83UGj+x/fv3TrhYsAe9fNCLffilc1K7DaqA3D+B14saAOvfrK+QCf2bVO
+         IdXHbRkvxXsIhfUlHcmLoIANGHGoULOdn3m21jPRcnbpboq620j9KzSmlU+tregxxFDZ
+         33xdGc7iUxca+LR96EHtwLNYzCgvk9Dgr2u5M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hZ2fUcvibZ/nGJTIbOnckpa0koPQZbzLKN92BTEKO0Q=;
-        b=aaAjwuX8whU/udEz4rnIufurWtOMJucROYMQJzawnilFfxobxOEoCaRSQWOXWPPdb5
-         o+LTpKH9gaiXGZMXU2SO5TRIusAjQWBzHVDS50TF39DArD7JZHkRe7fWpGiNTTh+/wuc
-         6IXsHGvzn/hdIuWI3FFlKYgke0LD6IG5fNKva63sHm+wqfT75F1BB+/pk7WGPezAxjXC
-         W/TBkMWXiR81lAXgTWnkgdt1xVH4cr9qt0gDXZEYu1HCy+hsAS99UxjsjcGrDjNDAiiX
-         OjBGHEpNdc30m0da/Lu2mlKOWpp1GUjfszmeSm7TUzd6o9SfMHqoi90vjyteyuISHvjw
-         0RRA==
-X-Gm-Message-State: AOAM533L/OlCNTu2sac4gKMhQyu9ggEyBkLYI4Ciz7aY8+dJpUtRmo0l
-        YE0uroN5Xy7itxJwzYmuWF3CxSZ6g3c=
-X-Google-Smtp-Source: ABdhPJyu9ouFk4Xg/E/8vfc52crxbFOA6f8T3LhXTwqTJ33ykwz/WapVEtJE5a5QpkHxM5fxrC0sfA==
-X-Received: by 2002:a37:7dc4:: with SMTP id y187mr11103129qkc.412.1590086236988;
-        Thu, 21 May 2020 11:37:16 -0700 (PDT)
-Received: from lord-gnome.lan (pool-100-8-210-135.nwrknj.fios.verizon.net. [100.8.210.135])
-        by smtp.gmail.com with ESMTPSA id z25sm5999723qtj.75.2020.05.21.11.37.16
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LNC3H7rEKUYKmtw+FfHQGSZX2sVQSBHXnVoTDU42qPY=;
+        b=l/OMeHikuVZGwYOVi8xDZfunmQXKwVkSKVH4bRf8En2aukpJjOGrSeG0FR2C6vT/Zj
+         3r6upmmeDCv+vDnLSY7PuvJhbVRA8JCrFiDHOte5+Q+1B2rS73FHVSvX7UVoZx5KW1uc
+         47IyI1KVo0aDfTCJqKWLJ73KGoxKqDqDJS0GckcxonNJsQgT23+tOa01OXGSFPh1yx/j
+         iMQHYzSJ6eRh/RUnLM1xiLOUBUqm170cJreA5FpTvxHPmGwKsGBhDYzocQWtI3VrRct+
+         5+C0uNXlCEJFnjV0gIg3mJ6KyPXNXeQJjGRwPU3DwDNC90F89xCNDXXGguRKoheUW0CH
+         9pKQ==
+X-Gm-Message-State: AOAM533guGa4nUYWRNBcGKQ8dNFz6r2R+JjIz5yFyBwO+zg30DN5bFOc
+        jJaXnco25nZUjY0AM4DkuFaDPQ==
+X-Google-Smtp-Source: ABdhPJx+mMeFfjdw27k0v6HQGzNGMS5EzIHJarokhlVRpcdV62wWUZ44xVDdvCqxSbWyifL0JHBSqA==
+X-Received: by 2002:adf:e749:: with SMTP id c9mr3070276wrn.25.1590086307624;
+        Thu, 21 May 2020 11:38:27 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id j2sm7127697wrp.47.2020.05.21.11.38.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 11:37:16 -0700 (PDT)
-From:   Christopher Hill <ch6574@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Christopher Hill <ch6574@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] spi: rb4xx: add corresponding device tree documentation
-Date:   Thu, 21 May 2020 14:36:31 -0400
-Message-Id: <20200521183631.37806-3-ch6574@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200521183631.37806-1-ch6574@gmail.com>
-References: <20200521183631.37806-1-ch6574@gmail.com>
+        Thu, 21 May 2020 11:38:26 -0700 (PDT)
+Date:   Thu, 21 May 2020 18:38:25 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
+Cc:     "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "pihsun@chromium.org" <pihsun@chromium.org>,
+        "yuzhao@chromium.org" <yuzhao@chromium.org>,
+        "zwisler@chromium.org" <zwisler@chromium.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sean Cheng =?utf-8?B?KOmEreaYh+W8mCk=?= 
+        <Sean.Cheng@mediatek.com>,
+        Sj Huang =?utf-8?B?KOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>,
+        Christie Yu =?utf-8?B?KOa4uOmbheaDoCk=?= 
+        <christie.yu@mediatek.com>,
+        Frederic Chen =?utf-8?B?KOmZs+S/iuWFgyk=?= 
+        <Frederic.Chen@mediatek.com>,
+        Jungo Lin =?utf-8?B?KOael+aYjuS/iik=?= <jungo.lin@mediatek.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH V4 0/4] media: platform: Add support for Face
+ Detection (FD) on mt8183 SoC
+Message-ID: <20200521183825.GB249683@chromium.org>
+References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
+ <1588903371.16825.14.camel@mtksdccf07>
+ <CAAFQd5CP+gH3zG9fejBv_hTzeAExMoY+L38W8e4e3OSc-gVRHg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5CP+gH3zG9fejBv_hTzeAExMoY+L38W8e4e3OSc-gVRHg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the correcsponding MikroTik vendor and device tree
-documentation
+Hi Jerry,
 
-Signed-off-by: Christopher Hill <ch6574@gmail.com>
----
- .../bindings/spi/mikrotik,rb4xx-spi.yaml      | 36 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 ++
- 2 files changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
+On Wed, May 13, 2020 at 11:45:37PM +0200, Tomasz Figa wrote:
+> Hi Jerry,
+> 
+> On Fri, May 8, 2020 at 4:03 AM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> >
+> > Hi Laurent, Tomasz, Matthias,
+> >
+> > gentle ping for this patch set,
+> > If no new comments, I would like to send a newer version.
+> >
+> 
+> Sorry, I still haven't had a chance to look at the series, so feel
+> free to send a new version and I will take a look at the new one.
+> 
 
-diff --git a/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml b/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
-new file mode 100644
-index 000000000000..4ddb42a4ae05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/mikrotik,rb4xx-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MikroTik RB4xx series SPI master
-+
-+maintainers:
-+  - Gabor Juhos <juhosg@openwrt.org>
-+  - Bert Vermeulen <bert@biot.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: mikrotik,rb4xx-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    spi: spi@1f000000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "mikrotik,rb4xx-spi";
-+        reg = <0x1f000000 0x10>;
-+    };
-+
-+...
-\ No newline at end of file
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index d3891386d671..d3277fe6640b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -633,6 +633,8 @@ patternProperties:
-     description: Microsoft Corporation
-   "^mikroe,.*":
-     description: MikroElektronika d.o.o.
-+  "^mikrotik,.*":
-+    description: MikroTik
-   "^miniand,.*":
-     description: Miniand Tech
-   "^minix,.*":
--- 
-2.25.1
+Finally found some time to review the series. Again sorry for the delay
+and thanks for your patience.
 
+Some general comments:
+1) The metadata format FourCC should be added in a separate patch,
+together with documentation for it.
+2) Control IDs, structs used by the userspace, etc. should be defined in
+a header under include/uapi/linux.
+
+Please also check my replies to particular patches for further comments.
+
+Best regards,
+Tomasz
