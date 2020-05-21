@@ -2,179 +2,180 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4C0C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B610FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1F00206F6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IngPvfQq"
+	by mail.kernel.org (Postfix) with ESMTP id 8076D20671
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgEUOfK (ORCPT
+        id S1729847AbgEUOgh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 10:35:10 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33032 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728243AbgEUOfK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 10:35:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LEZ3vo125705;
-        Thu, 21 May 2020 09:35:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590071703;
-        bh=cNjaQ9fXx/uUqYhSW8L/0cq+/RkAn17do/znBW1C7Bc=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=IngPvfQqk55+7bJe9Zom5oXOLr8G3ITt9bH8rZTsJ4dsDcSzZNP2MZxB9GISdoBHd
-         23UrC1LdaW/KYmch2e55aCp7fFW5rwj5HzeCj57jfc99EtNJIPKld28MitR+h8rJsD
-         1uR6K53NuPksB8BhzimqCK/SMa7x0luH0b//yhOU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LEZ3rO109304
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 09:35:03 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 09:35:02 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 09:35:02 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LEYx2o082791;
-        Thu, 21 May 2020 09:35:00 -0500
-Subject: Re: [PATCH v2] arm: dts: am33xx-bone-common: add gpio-line-names
-To:     Drew Fustini <drew@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-References: <20200520214757.GA362547@x1>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
-Date:   Thu, 21 May 2020 17:34:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 10:36:37 -0400
+Received: from mga05.intel.com ([192.55.52.43]:63186 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729844AbgEUOgh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 10:36:37 -0400
+IronPort-SDR: ae5p9ncrVuiXxW5wezmyun+odlx5FOb3wtTOjd9rhwM+LRRF2Cm3OrWj0XBMmnuFwu3uTM+IPY
+ ROiaoZN4x5CQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 07:36:36 -0700
+IronPort-SDR: 7b8ROu2A3A9XEgh3Fs2Y+Q285e1ifd91EOCucSW4KwbQ1BCx/+VNxN++j7SoDTWYquT7uYB9YF
+ J8sQKRBNJxAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
+   d="scan'208";a="343862381"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 21 May 2020 07:36:32 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jbmJH-0082yZ-GB; Thu, 21 May 2020 17:36:35 +0300
+Date:   Thu, 21 May 2020 17:36:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     ofery@google.com, brendanhiggins@google.com,
+        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        robh+dt@kernel.org, wsa@the-dreams.de,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 3/3] i2c: npcm7xx: Add support for slave mode for
+ Nuvoton
+Message-ID: <20200521143635.GN1634618@smile.fi.intel.com>
+References: <20200521110910.45518-1-tali.perry1@gmail.com>
+ <20200521110910.45518-4-tali.perry1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520214757.GA362547@x1>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521110910.45518-4-tali.perry1@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, May 21, 2020 at 02:09:10PM +0300, Tali Perry wrote:
+> Add support for slave mode for Nuvoton
+> NPCM BMC I2C controller driver.
 
+...
 
-On 21/05/2020 00:47, Drew Fustini wrote:
-> Add gpio-line-names properties to the GPIO controller nodes.
-> 
-> BeagleBone boards have P8 and P9 headers [0] which expose many of the
-> AM3358 ZCZ SoC balls to stacking expansion boards called "capes", or to
-> other external connections like jumper wires connected to a breadboard.
-> BeagleBone users will often refer to the "Cape Exanpsion Headers" pin
-> diagram [1] as it is in the "Bone101" getting started tutorial. [2]
-> 
-> Most of the P8 and P9 header pins can muxed to a GPIO line.  The
-> gpio-line-names describe which P8 or P9 pin that line goes to and the
-> default mux for that P8 or P9 pin if it is not GPIO.
-> 
-> For example, gpiochip 1 line 0 is connected to P8 header pin 25 (P8_25)
-> however the default device tree has the corresponding BGA ball (ZCZ U7)
-> muxed to mmc1_dat0 as it is used for the on-board eMMC chip.  For that
-> GPIO line to be used, one would need to modify the device tree to
-> disable the eMMC and change the pin mux for that ball to GPIO mode.
-> 
-> Some of the AM3358 ZCZ balls corresponding to GPIO lines are not routed
-> to a P8 or P9 header, but are instead wired to some peripheral device
-> like on-board eMMC, HDMI framer IC, or status LEDs.  Those names are in
-> brackets to denote those GPIO lines can not be used.
-> 
-> Some GPIO lines are named "[NC]" as the corresponding balls are not
-> routed to anything on the PCB.
-> 
-> The goal for these names is to make it easier for a user viewing the
-> output of gpioinfo to determine which P8 or P9 pin is connected to a
-> GPIO line.  The output of gpioinfo on a BeagleBone Black would be:
-> 
-> debian@beaglebone:~$ gpioinfo
-> gpiochip0 - 32 lines:
-> 	line   0: "[ethernet]"       unused   input  active-high
-> 	line   1: "[ethernet]"       unused   input  active-high
-> 	line   2: "P9_22 [spi0_sclk]" unused input active-high
-> 	line   3: "P9_21 [spi0_d0]" unused input active-high
-> 	line   4: "P9_18 [spi0_d1]" unused input active-high
-> 	line   5: "P9_17 [spi0_cs0]" unused input active-high
-> 	line   6:  "[sd card]"         "cd"   input   active-low [used]
-> 	line   7: "P9_42A [ecappwm0]" unused input active-high
-> 	line   8: "P8_35 [hdmi]" unused input active-high
-> 	line   9: "P8_33 [hdmi]" unused input active-high
-> 	line  10: "P8_31 [hdmi]" unused input active-high
-> 	line  11: "P8_32 [hdmi]" unused input active-high
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +/*
+> + * npcm_i2caddr array:
+> + * The module supports having multiple own slave addresses.
+> + * Since the addr regs are sprinkled all over the address space,
+> + * use this array to get the address or each register.
+> + */
+> +#define I2C_NUM_OWN_ADDR 10
+> +const int  npcm_i2caddr[I2C_NUM_OWN_ADDR] = {NPCM_I2CADDR1, NPCM_I2CADDR2,
 
-[...]
+Extra spaces.
+On top. please start assignment from the new line.
 
-> 
-> [0] https://git.io/JfgOd
-> [1] https://beagleboard.org/capes
-> [1] https://beagleboard.org/Support/bone101
-> [2] https://beagleboard.org/static/images/cape-headers.png
-> 
-> Reviewed-by: Jason Kridner <jason@beagleboard.org>
-> Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->   arch/arm/boot/dts/am335x-bone-common.dtsi | 144 ++++++++++++++++++++++
+> +					     NPCM_I2CADDR3, NPCM_I2CADDR4,
+> +					     NPCM_I2CADDR5, NPCM_I2CADDR6,
+> +					     NPCM_I2CADDR7, NPCM_I2CADDR8,
 
-Not sure if it should be in am335x-bone-common.dtsi.
+> +					     NPCM_I2CADDR9, NPCM_I2CADDR10};
 
-For example:
-am335x-boneblack.dts
-  #include "am335x-bone-common.dtsi"
-  #include "am335x-boneblack-common.dtsi" <-- hdmi defined only here
+Split }; to new line and leave comma with the last member.
 
-am335x-bonegreen.dts
-  #include "am335x-bone-common.dtsi"
-  #include "am335x-bonegreen-common.dtsi"
+> +#endif
 
->   1 file changed, 144 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index 6c9187bc0f17..d86e67b0e852 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -397,3 +397,147 @@ &rtc {
->   	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
->   	clock-names = "ext-clk", "int-clk";
->   };
+...
+
+> +static int  npcm_i2c_slave_enable(struct npcm_i2c *bus, enum i2c_addr addr_type,
+> +				  u8 addr, bool enable)
+
+Extra spaces. Check entire patch for that and fix accordingly.
+
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +	if (bus->slave)
+
+> +		npcm_i2c_slave_enable(bus, I2C_SLAVE_ADDR1, bus->slave->addr,
+> +				      true);
+
+I would leave this on one line.
+
+> +#endif
+
+...
+
+> +static void npcm_i2c_write_fifo_slave(struct npcm_i2c *bus, u16 max_bytes)
+> +{
+> +	u8 size_free_fifo;
+
++ blank line.
+
+> +	/*
+> +	 * Fill the FIFO, while the FIFO is not full and there are more bytes
+> +	 * to write
+> +	 */
+> +	npcm_i2c_clear_fifo_int(bus);
+> +	npcm_i2c_clear_tx_fifo(bus);
+> +	iowrite8(0, bus->reg + NPCM_I2CTXF_CTL);
+
+> +	size_free_fifo = I2C_HW_FIFO_SIZE - npcm_i2c_fifo_usage(bus);
+
+Dup, move into loop.
+
+> +	while (max_bytes-- && size_free_fifo) {
+> +		if (bus->slv_wr_size > 0) {
+> +			bus->slv_wr_ind = bus->slv_wr_ind % I2C_HW_FIFO_SIZE;
+> +			npcm_i2c_wr_byte(bus, bus->slv_wr_buf[bus->slv_wr_ind]);
+> +			bus->slv_wr_ind++;
+> +			bus->slv_wr_ind = bus->slv_wr_ind % I2C_HW_FIFO_SIZE;
+> +			bus->slv_wr_size--;
+> +			size_free_fifo = I2C_HW_FIFO_SIZE -
+> +					 npcm_i2c_fifo_usage(bus);
+> +		} else {
+> +			break;
+> +		}
+> +	}
+
+	while (...) {
+		if (...)
+			break;
+		...
+	}
+
+> +}
+
+...
+
+> +static int npcm_i2c_slave_get_wr_buf(struct npcm_i2c *bus)
+> +{
+> +	int i;
+
+> +	u8 value = 0;
+
+Redundant assignment.
+
+> +	int ind;
+> +	int ret = bus->slv_wr_ind;
 > +
-> +&gpio0 {
-> +	gpio-line-names =
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"P9_22 [spi0_sclk]",
-> +		"P9_21 [spi0_d0]",
-> +		"P9_18 [spi0_d1]",
-> +		"P9_17 [spi0_cs0]",
-> +		"[sd card]",
-> +		"P9_42A [ecappwm0]",
-> +		"P8_35 [hdmi]",
-> +		"P8_33 [hdmi]",
-> +		"P8_31 [hdmi]",
-> +		"P8_32 [hdmi]",
-
-[...]
+> +	/* fill a cyclic buffer */
+> +	for (i = 0; i < I2C_HW_FIFO_SIZE; i++) {
+> +		if (bus->slv_wr_size >= I2C_HW_FIFO_SIZE)
+> +			break;
+> +		i2c_slave_event(bus->slave, I2C_SLAVE_READ_REQUESTED, &value);
+> +		ind = (bus->slv_wr_ind + bus->slv_wr_size) % I2C_HW_FIFO_SIZE;
+> +		bus->slv_wr_buf[ind] = value;
+> +		bus->slv_wr_size++;
+> +		i2c_slave_event(bus->slave, I2C_SLAVE_READ_PROCESSED, &value);
+> +	}
+> +	return I2C_HW_FIFO_SIZE - ret;
+> +}
 
 -- 
-Best regards,
-grygorii
+With Best Regards,
+Andy Shevchenko
+
+
