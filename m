@@ -2,85 +2,215 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB632C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 21:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12280C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 21:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3CF120756
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 21:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFFA207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 21:29:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hcFygYI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgEUVVw (ORCPT
+        id S1730673AbgEUV3B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 17:21:52 -0400
-Received: from sauhun.de ([88.99.104.3]:54094 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgEUVVv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 17:21:51 -0400
-Received: from localhost (p5486ce13.dip0.t-ipconnect.de [84.134.206.19])
-        by pokefinder.org (Postfix) with ESMTPSA id DF02A2C1FCF;
-        Thu, 21 May 2020 23:21:49 +0200 (CEST)
-Date:   Thu, 21 May 2020 23:21:49 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tali Perry <tali.perry1@gmail.com>, ofery@google.com,
-        brendanhiggins@google.com, avifishman70@gmail.com,
-        tmaimon77@gmail.com, kfting@nuvoton.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
- driver
-Message-ID: <20200521212149.GB20150@ninjato>
-References: <20200521110910.45518-1-tali.perry1@gmail.com>
- <20200521110910.45518-3-tali.perry1@gmail.com>
- <20200521142340.GM1634618@smile.fi.intel.com>
- <20200521143100.GA16812@ninjato>
+        Thu, 21 May 2020 17:29:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgEUV3A (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 17:29:00 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AF0C061A0E
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 14:29:00 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id 36so3084738uaf.9
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 14:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=klWE6h3lUd9mKmrJLuN9Cee1MvLWP3xiEOXA4+1HHJ8=;
+        b=hcFygYI8RY1iIh5T/zvT2OHvQhYK0TNutxUaGtYcUpu1q0gBWYaZsVH5CFkqjtZQnf
+         cEuQx4Dj+gkL6Bo/sZ8zeUZJ5jEdi0ZwBYwPDnJNpQDVCWJQ866dilnLFUMTwoasuIQU
+         K4rtbgkL8YCEvaVkfnM145wnweQk2iTbUsTaE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=klWE6h3lUd9mKmrJLuN9Cee1MvLWP3xiEOXA4+1HHJ8=;
+        b=MwnK4VOw/CnQcMz/f8Y3H7AySwfW5mFRILKC5PdCEn2DFOjbT8uPatZnYDwZo1tbWF
+         og4IMNTD33j4Gvmgqapbr15rpqN96X5cxhV7AAS/AkX6eswblQFg1qZCxLIZDAByn/n0
+         sOAjkbapX9uyNdLoWJBA6IrI3EzzmTnpcPcZo6QXbKy0NdIabKl27bgCNycnHBYXzv6H
+         dyNyFCCUrpeHKkbIvkIBi/q7/v09eEq4hR+voRgROuEbKpbm0gnILPNmgbVF8iJSXUAp
+         lWaEy4fU27TSMH82aWvPuUtVQTY5bZ684F/+PUsFge+T53G+PVM06wElgNCJNtlqPLl0
+         k+yw==
+X-Gm-Message-State: AOAM532HvubTODqJ0sZMGqM3BO6Ch/pxALvdN3CkNNFbBm6NmMwlMY/I
+        Lb4zy4EAtycpHTC5Da7kB16UaW0vPXA=
+X-Google-Smtp-Source: ABdhPJy3k+8HVopBJQDiOeeW9WAjErzQCS7HNpLz4yer8vxh562zpws9Yv5jmxuFy7RgbcOiB2TtWA==
+X-Received: by 2002:ab0:154b:: with SMTP id p11mr8005227uae.11.1590096537855;
+        Thu, 21 May 2020 14:28:57 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id b198sm922431vkf.7.2020.05.21.14.28.55
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 14:28:56 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id v26so4978541vsa.1
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 14:28:55 -0700 (PDT)
+X-Received: by 2002:a67:e884:: with SMTP id x4mr8847497vsn.106.1590096535014;
+ Thu, 21 May 2020 14:28:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
-Content-Disposition: inline
-In-Reply-To: <20200521143100.GA16812@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
+ <1589307480-27508-3-git-send-email-rbokka@codeaurora.org> <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
+ <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org> <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
+ <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org> <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
+ <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
+ <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org> <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
+ <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org> <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
+ <9ecb5790-47fe-583b-6fc3-8f4f3ce7860e@linaro.org>
+In-Reply-To: <9ecb5790-47fe-583b-6fc3-8f4f3ce7860e@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 21 May 2020 14:28:43 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XbbUkeSwvcverBS8t6BCHuw3UT0_KYfx9LFGqmZyY2hA@mail.gmail.com>
+Message-ID: <CAD=FV=XbbUkeSwvcverBS8t6BCHuw3UT0_KYfx9LFGqmZyY2hA@mail.gmail.com>
+Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse support
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---7ZAtKRhVyVSsbBD2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, May 21, 2020 at 8:56 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> On 21/05/2020 16:10, Doug Anderson wrote:
+> >> On 20/05/2020 23:48, Doug Anderson wrote:
+> >>>> Is this only applicable for corrected address space?
+> >>> I guess I was proposing a two dts-node / two drive approach here.
+> >>>
+> >>> dts node #1:just covers the memory range for accessing the FEC-corrected data
+> >>> driver #1: read-only and reads the FEC-corrected data
+> >>>
+> >>> dts node #2: covers the memory range that's_not_  the FEC-corrected
+> >>> memory range.
+> >>> driver #2: read-write.  reading reads uncorrected data
+> >>>
+> >>> Does that seem sane?
+> >> I see your point but it does not make sense to have two node for same thing.
+> > OK, so that sounds as if we want to go with the proposal where we
+> > "deprecate the old driver and/or bindings and say that there really
+> > should just be one node and one driver".
+> >
+> > Would this be acceptable to you?
+> >
+> > 1. Officially mark the old bindings as deprecated.
+>
+> Possibly Yes for some reasons below!
+>
+> >
+> > 2. Leave the old driver there to support the old deprecated bindings,
+> > at least until everyone can be transferred over.  There seem to be
+> > quite a few existing users of "qcom,qfprom" and we're supposed to make
+> > an attempt at keeping the old device trees working, at least for a
+> > little while.  Once everyone is transferred over we could decide to
+> > delete the old driver.
+> we could consider "qcom,qfrom" to be only passing corrected address
+> space. Till we transition users to new bindings!
+>
+> >
+> Yes.
+>
+> > 3. We will have a totally new driver here.
+> No, we should still be using the same driver. But the exiting driver
+> seems to incorrect and is need of fixing.
+>
+> Having a look at the memory map for old SoCs like msm8996 and msm8916
+> shows that memory map that was passed to qfprom driver is corrected
+> address space. Writes will not obviously work!
+>
+> This should also be true with sdm845 or sc7180
+>
+> That needs to be fixed first!
+
+OK, so to summarize:
+
+1. We will have one driver: "drivers/nvmem/qfprom.c"
+
+2. If the driver detects that its reg is pointing to the corrected
+address space then it should operate in read-only mode.  Maybe it can
+do this based on the compatible string being just "qcom,qfprom" or
+maybe it can do this based on the size of the "reg".
+
+3. If that driver sees a newer compatible string (one that includes
+the SoC name in it) it will assume that its "reg" points to the start
+of qfprom space.
+
+4. We should post patches to transition all old dts files away from
+the deprecated bindings.
 
 
-> From a glimpse, this looks good to go. I will have a close look later
-> today.
+> > 4. A given device tree will_not_  be allowed to have both
+> > "qcom,qfprom" specified and "qcom,SOC-qfprom" specified.  ...and by
+> > "qcom,SOC-qfprom" I mean that SOC should be replaced by the SoC name,
+> > so "qcom,sc7180-qfprom" or "qcom,sdm845-qfprom".  So once you switch
+> > to the new node it replaces the old node.
+>
+> Secondly, this IP is clearly an integral part of Secure Control Block,
+> which clearly has versioning information.
+>
+> Versioning information should be part of compatible string in msm8996 it
+> should be "qcom,qfprom-5.1.0"
+> for msm8916 it should be "qcom,qfprom-4.0.0" this translates to
+> "qcom,qfprom-<MAJOR-NUMBER>-<MINOR-NUMBER>-<STEP>"
 
-Phew, this driver is huge. I won't finish my review today, but I am
-working on it and am maybe 2/3 through.
+I don't know much about this versioning info, but I'm curious: can we
+read it from the chip?  If so then it actually _doesn't_ need to be in
+the compatible string, I think.  Device tree shouldn't include things
+that can be probed.  So if this can be probed then maybe we could have
+the compatible as:
+
+compatible = "qcom,msm8996-qfprom", "qcom,qfprom"
+
+...where the SoC is there just in case we need it but we'd expect to
+just match on "qcom,qfprom" and then probe.
 
 
---7ZAtKRhVyVSsbBD2
-Content-Type: application/pgp-signature; name="signature.asc"
+If this can't be probed then having the version info is nice, so then
+I guess you'd have the compatible string:
 
------BEGIN PGP SIGNATURE-----
+compatible = "qcom,msm8996-qfprom", "qcom,qfprom-5.1.0"
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7G8OkACgkQFA3kzBSg
-KbYcCw/9H7oWUrWBWy5C49NVa1N+n9JHdtx5KFE40DwXAwm2mRCSuoMr1JP9Rq5M
-IFVgQp7Kk1mZ0jDR178dMQSYKuwDuFkOMDrewvQyOGPbGtn38FyInpJ6Te+uVyBS
-HNJMGTluuvvM6840KdZSkRYZ9ynptA/JwSfvKoBk9/UAL6W/4C1LR97a4AEb/JFT
-1To5HWdtArLvqSdfwvAaZyRghNLM2bjrp46NUFsfcXvxbZoiRZJBlmqBPJqkO4sw
-wyVdSW16rdxMrAa6sFlcCjnCCZWusEgf5hdUtm3dRqnELLYH87iLqZpdfpMyOA8E
-YJSLRpRBj2GUlmvG2S2Kd2H03UUyfspn9Qxe5T7MOpYDuoQQoOXrjH88kqTyEVty
-3pkQ0z/oo62JsfgfjJQW5cBxbRhIiwP/rvMai1eXo303chCA2ieP9cT1bPbw8BXY
-uJ3Xl2Botr7hgj7VywLHN6cp4S5m4iWJVbjUZfM2vAmSKTSKvBcIR1mVVzfZgWJD
-vE9PsxfHtt0EOAU8WE9iseFJPOvzK7tuuaibHaD6gVAaNLr0Nv4adcM1MwSCicum
-PqkDvXWuP+n6HdQ9+L/FA63xAtbT5SRQIFYhMBxots9hOYAUxK5gOnoHJYbAqB5R
-TY2mr5I/NekkgzmBbh0ZRWTRdCmgfQCXmzMku6xaM4D57Weuauk=
-=vjY8
------END PGP SIGNATURE-----
+...where (again) you'd have the SoC specific string there just in case
+but you'd expect that you could just use the generic string.
 
---7ZAtKRhVyVSsbBD2--
+
+Does that sound right?
+
+
+> Thirdly we should be able to have common read for all these as they tend
+> to just read from corrected address space.
+>
+> Offsets to corrected address space seems to always constant across SoCs too.
+>
+> platform specific device tree nodes should also be able to specify
+> "read-only" property to not allow writes on to this raw area.
+
+Yeah, I was thinking we probably wanted a read-only property.  That
+sounds sane to me.
+
+
+-Doug
