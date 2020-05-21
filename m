@@ -2,102 +2,135 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0918C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 06:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA279C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 06:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB32204EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 06:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590041345;
-	bh=rw8NuWYZLi77ecJ1DgyaQ2mq0QiBdMOyeKV1HeV4SAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pCV2LZpz0E0peuo7QtYx0ZtZvZ0dDJ6jhXf1gun40ozGvL17kRjmM2/CjjZvDSNPF
-	 GV8IdUgBX0Zs0SYCdqyxPkBSg8VbwztF1zoeCKCdBRz9a3e77sDIo0c0hBWfhLjbtX
-	 eC4JB/hEaDyr9tB7B4elNfLCz5TyZQRDocJzDEbg=
+	by mail.kernel.org (Postfix) with ESMTP id B4770207FB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 06:17:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DhryGNf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgEUGJF (ORCPT
+        id S1727055AbgEUGRk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 02:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbgEUGJE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 02:09:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21BD207D8;
-        Thu, 21 May 2020 06:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590041344;
-        bh=rw8NuWYZLi77ecJ1DgyaQ2mq0QiBdMOyeKV1HeV4SAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VTA3OCDGpcvS0FGCSfPz+MzoTxdfXeLYwM8IciNVS1doVk0Ygn7aKItiIOhUFGZ8Q
-         EcDPrulCP2iukWdV6/0bmf03Xtap3fX2cm3BoNNWPaf6/oHnCV2rcHtNKmvE7TFtX7
-         /aM9ZVgIZzPmd3fn+h6RdBqCDvzdFbc4diNXtjh8=
-Date:   Thu, 21 May 2020 08:09:02 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alan Cooper <alcooperx@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the
- Makefile
-Message-ID: <20200521060902.GA2352222@kroah.com>
-References: <20200512150019.25903-2-alcooperx@gmail.com>
- <20200513122613.GA1023594@kroah.com>
- <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
- <20200513162723.GF1362525@kroah.com>
- <38ff034d-a84c-2309-a8d5-f344930d9a31@gmail.com>
- <20200513170505.GB1369204@kroah.com>
- <20200513173920.GA2862@rowland.harvard.edu>
- <c0642cf4-1436-aec4-96fd-355a897f6418@gmail.com>
- <CAOGqxeU=LjAmAYR9wGeKZo_eLj+ehkrANTM+04E7xWNAp82EJA@mail.gmail.com>
- <CAOGqxeV_9LpFudC3VuFPAOmYVYBQGJ+s01HCK2nP6XxpprK2Qw@mail.gmail.com>
+        Thu, 21 May 2020 02:17:40 -0400
+Received: from mail-vi1eur05on2085.outbound.protection.outlook.com ([40.107.21.85]:33889
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726938AbgEUGRk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 02:17:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SH5KfF/oCd9QBrhCgPyhjegYyMZN0uhQgBntNIM36ujWerNgjVC0SaHt/bSfntQdq93fKOE/D0OtIwsVdws1UzB2Qn+GvV/qgnK4k944iSmW8MHg2P0q31biUJVn8Th5xf3KK19LwYeTiitME9Hbb7WcIvBvb/RUN/lQYuXuvvRoX1vKZ0Xx2FyO5rPlt2cZY0zrlIt7PxDVVSd/XophpsUFOFhcOWGEhffvHrlg0gSakTGFHF6v3H6sbv+yrpBFIftkxoikI090AVvkCc5YBD5BW3wgaqZf5NeAWy1uvNnHaNqAiDws6w3T9ps5/vDAg4O98w7J8vO3Urt1FpIQ9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kZyVXa6OVYjI56fPdSOlinHR0mhsfjQmzse91s3Pqt4=;
+ b=LSTEVEQrJKij2U4CFwRFEvGu9lulmKRBhULIAzs51TBRwlxWGR9TaB+QJcjEH3/2h+Fl7PzNB1zsQNq8TKsjmhnOXXlx8dx9bIGF95vY4uWsdjys7vHBTKBJjTz2eH6G72svmLQXolE5PjBpi6+ZCPf8SxYcLwwQz2xVLVObflfdit/4j+DYLr7J1orPtvBnvhD9KE69cZnzRypF0atfbRqcV0jfYt2WJ18NfbfalujbJUIBSKvgPsMHuI5apb3eNg/HReD8xAb6MDNdWn5m0FTdpg6QZzB48YkgvBZimJVWHTt+z1ITXsANcdGHdndYYj7gphP/PLu+FBvsbpwMmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kZyVXa6OVYjI56fPdSOlinHR0mhsfjQmzse91s3Pqt4=;
+ b=DhryGNf1wSITqCfKIQUylXPmuaaCKyE4EHew+CEbNvt3DhRd0FKT1xXECF+37U6RKsSds17XtipBvgM9SPHfWfmTNH6TdKn2QHVzdUgLKZZLNwO4zOk+cwV8ADNsRFStN6ImVkZ7iAYq43pUD0XIYrRP/5X8k1lOnUSKrfSCKlM=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6720.eurprd04.prod.outlook.com (2603:10a6:803:123::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Thu, 21 May
+ 2020 06:17:34 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3021.020; Thu, 21 May 2020
+ 06:17:34 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, anson.huang@nxp.com, peng.fan@nxp.com
+Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: [PATCH v2 1/2] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage range
+Date:   Thu, 21 May 2020 22:17:53 +0800
+Message-Id: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SGAP274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::22)
+ To VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOGqxeV_9LpFudC3VuFPAOmYVYBQGJ+s01HCK2nP6XxpprK2Qw@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SGAP274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.23 via Frontend Transport; Thu, 21 May 2020 06:17:30 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 89994a09-0434-4e68-af8d-08d7fd4ea64d
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6720:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB672076F0F7996CB95781972A89B70@VE1PR04MB6720.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 041032FF37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IvV5abqoQa38WTyJL1ZXf5z/Lv0RJge4YWoDOpDSWCXUv3zfNbxLFHq/i5Em+A+MA6ZokedtG4X6wZb+u/r/9uPWWeI9QHa0iNmj+/q8ZTDCtbF23cOyWWCjN39AOKuWvKNwHczrsU7MLrBfESmeV7KEzujQZ5/AOy0ai+IauITHlnz5C6VCmXEUcUIT0A2AHb4FE7SKukqtEldCnASHNrfaXLqzyPV/QsVfZsRVAXto4V0Mbq4vxfDEEy9DIda1rPkewyZIX7eCuTJJQuToAF44bJs2FlOgBJc9U61WnSGPHy0C3Lk+iECGeuOyHC2BEraUxRfQbBLM1GVshmxH8ox9wgmgAEhuiWfXMQiCwpT5ZEy8JtAPJDZb12q3kpx7jDi7igw2967YIbdms1wzzGjqNfsGTc3uy51GDaSFw17ZCMtvSDqaxWYot1TTMpZY3s9c9RnbRgL62adoX8srtITs28xuDOOYjzO1jc0CQRg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(6506007)(36756003)(6636002)(2616005)(86362001)(6486002)(956004)(52116002)(4326008)(5660300002)(26005)(8676002)(186003)(16526019)(66476007)(66556008)(8936002)(316002)(6666004)(66946007)(2906002)(478600001)(6512007)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 6z2ubjY4anI+e89LieQ6dSKqVAlLB+UwCjuW8MZzVrXleKvc/0vqdUiKt3mVhH1ztDhi73J9XTRO5YqlG5GkbXLGK2rc6yMfjyq0sQID/tB8OEHXKnl+Ktxf912zqqiKpg9nfrodmU/WsF6SDoprgAJiAv25z9aNyNvKa9EhdB55grCkrNqc7XkVpBgBpmYpVRcMATE1k1+pVvfCEEl79Lt/Wu54S7RAcMjpOxa8hFrUZK00qNePXfkoUyfMoXqa4PRjCh7bFffkI5bibW5M1u+5g6GaSw6AvIq6CRmWzKW6lVw5cFdd8L5yX7nX5Ryx5+kG7d9VP2EYwbyYomcebDby/4Yo0qGF0w3QVuPvRG4cWVDvuIz1qw5AXQWCVC6+/+SuW2wcCUtNXGYxap3CaIeNUonkEjBxvepGMsf2hwYnDBvr38RWgP08b926NzUgyhrZEnNh72j5DixCLfVUVQM/htR6Um7djSrNxECrD9uMN/U9z7BnYaEtbxvm5AZR
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89994a09-0434-4e68-af8d-08d7fd4ea64d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 06:17:33.9657
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m9uC8c3waRkn2btB9Hr/0ghRUpbHAO8EYSIxTge4gNlKXvTdLGy344Bg42rcloBptDj73M84JHKPFOdNJO2YuA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6720
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+Correct ldo1 voltage range from wrong high group(3.0v~3.3v) to low group
+(1.6v~1.9v) because the ldo1 should be 1.8v. Actually, two voltage groups
+have been supported at bd718x7-regulator driver, hence, just corrrect the
+voltage range to 1.6v~3.3v. For ldo2@0.8v, correct voltage range too.
+Otherwise, ldo1 would be kept @3.0v and ldo2@0.9v which violate i.mx8mm
+datasheet as the below warning log in kernel:
 
-A: No.
-Q: Should I include quotations after my reply?
+[    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
+[    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
 
-http://daringfireball.net/2007/07/on_top
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Wed, May 20, 2020 at 01:29:45PM -0400, Alan Cooper wrote:
-> Greg, Alan,
-> 
-> The other 4 related patches were accepted into usb-next and I just
-> realized that this one didn't make it. This patch will not fix the
-> "insmod out of order" issue, but will help our controllers work with
-> some poorly behaved USB devices when the drivers are builtin.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index e5ec832..0f1d7f8 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -208,7 +208,7 @@
+ 
+ 			ldo1_reg: LDO1 {
+ 				regulator-name = "LDO1";
+-				regulator-min-microvolt = <3000000>;
++				regulator-min-microvolt = <1600000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+@@ -216,7 +216,7 @@
+ 
+ 			ldo2_reg: LDO2 {
+ 				regulator-name = "LDO2";
+-				regulator-min-microvolt = <900000>;
++				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <900000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+-- 
+2.7.4
 
-As it doesn't solve the real issue, I did not accept this so that you
-all can continue to work on creating a real solution that works for both
-situations (built in and as modules.)
-
-I thought I said that already...
-
-thanks,
-
-greg k-h
