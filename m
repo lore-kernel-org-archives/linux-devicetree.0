@@ -2,97 +2,127 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4033BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 02:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3E9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 02:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1314920709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 02:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8423720756
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 02:40:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="U0O8L11/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgEUChk (ORCPT
+        id S1727915AbgEUCkS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 22:37:40 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34470 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgEUChk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 22:37:40 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5C29180307CB;
-        Thu, 21 May 2020 02:37:37 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iiCsY7-X5QfY; Thu, 21 May 2020 05:37:36 +0300 (MSK)
-Date:   Thu, 21 May 2020 05:37:35 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers
- glue layer interface
-Message-ID: <20200521023735.mja62ujmxebgwyef@mobilestation>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
- <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
-MIME-Version: 1.0
+        Wed, 20 May 2020 22:40:18 -0400
+Received: from mail-eopbgr60078.outbound.protection.outlook.com ([40.107.6.78]:26695
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727798AbgEUCkR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 22:40:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cor7TJGlh+RIAzNHaW0fgP/WU1LWOHTsARG9HYlfZ2ZmVp5SnSw3oihSXdAL3PFgCUZFBE09wo0UL5zNQhaL1ij7T0JThjzl6se4S+EKgNbMvU4xv11pkkZ8Y+gEyEX2FW+1NMtenW+2iW/z+w5pjo4lmE5Ls/JOHGTK+0uonve9zml7nZyK9+arD7DdCccOllFHl7UDtb/YwSymhi1ogOZUcTPRXYfvKzZ/PG9dQKvfCw6hppXxT5cyyLLduBtjD1U31e6KE54+UTBtlAlZnz2xr7L+uBHUlJOa48NmGP6P/RMNFxOeewgZagWTosxIoBPSoSRT6bdYst6/tqwz1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gj+Fwb2GWfu+UCbHJxvcu/+exX/DQABxS0KbrxLeRbg=;
+ b=Pa9hv2SVpiYslk/xagB2WIsZarasYtxz9wWrdBLRAME2s3tWmdrODXEJISVU22RZHRXL/I+DJCk8EE73xVS29Btp7hunxXEKJoUo7f+3b/Inq4RCKgqV2rUzKmMMAQXVfBp0GPv7nuZHzskL6M9WnFufQvaeQlHyH/CdqJapDcu2p84PzzH/l4O/TSJ0z31Nm1+65caPN2EruUgiS+DwH3gC5q2IE7S3p8h8XAYI8OxFgZy1y9rq868LTLnJREOAzwl8QX6nMGe7/Yx0IS3fkr9kpzhPYsnPR6DgorG//wDmneOv+8gmdtwmEj+ZGKSoi19Drgf5NIayuJChde1E7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gj+Fwb2GWfu+UCbHJxvcu/+exX/DQABxS0KbrxLeRbg=;
+ b=U0O8L11/ksEW308H6Yi6nTBA6pse/0IvHMzmhZN5OEaYbcS3RGaoEbgLf/YBtB9Ae86bUyZ6EH+iQcmn/fuwoqPrPPEBCboksbh931NVjX3UEJ4T9ZdCo2rxVPeHzDqJrYBgdJY19nO9y6tqzRVJmfDfYdNJ9sMWjgrhIqjnUJ0=
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM6PR0402MB3461.eurprd04.prod.outlook.com
+ (2603:10a6:209:3::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.33; Thu, 21 May
+ 2020 02:40:14 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3000.034; Thu, 21 May 2020
+ 02:40:14 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH net 1/4] net: ethernet: fec: move GPR register
+ offset and bit into DT
+Thread-Topic: [EXT] Re: [PATCH net 1/4] net: ethernet: fec: move GPR register
+ offset and bit into DT
+Thread-Index: AQHWLoHPjdUrXObnOkaNyQWAWrHig6ixMaOAgACjaQA=
+Date:   Thu, 21 May 2020 02:40:13 +0000
+Message-ID: <AM6PR0402MB3607AA1B7C7832A852CFF02FFFB70@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+References: <1589963516-26703-1-git-send-email-fugang.duan@nxp.com>
+        <1589963516-26703-2-git-send-email-fugang.duan@nxp.com>
+ <20200520095430.05cffcee@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200520095430.05cffcee@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 243f5cd7-2b1a-4431-c64d-08d7fd304a2a
+x-ms-traffictypediagnostic: AM6PR0402MB3461:
+x-microsoft-antispam-prvs: <AM6PR0402MB3461416843145B0A302ED63EFFB70@AM6PR0402MB3461.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:231;
+x-forefront-prvs: 041032FF37
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aomlL25xqms1dou8EcKj2JH4KtcES4+lQpqOQAqKvbwyJbOxDfgPMNNWqZN/ZuEnXgVDOJdH9fgK23jWnlp1l9pMJIV9/4y2nr+AioBgZJxU2iQMmzl9SAEuE4Qt89f6xJPcTz8kcFCfW2M3hdqEZwjBJSCp+SCM57k5zDIYYWfIBZYpxB/fMDhm1GpCvyiADNsra6eOswIqJz1HNX9OrW3uD8frs+ud7klr27UFpdHdAR55oYeroLa649VZkY17gt64HBiVn+cM3If01zELx+r08FMDsfpjyIGy7bCLV56O++gpNj16MYRrVrPeseHs4Bl6SXxmvXxtruC28CRPeZyegdC9ntFYVpJ9WKegJr/DMv/giT2pwGudDetazaUkrxgmDJfpPqg3Jk6SHb26z4LoyZ05+yJ4sgQaEZ4REihNhIqMJ+NlFEIlCN9fu+Vp
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(366004)(39860400002)(136003)(396003)(54906003)(76116006)(52536014)(66446008)(66946007)(33656002)(6506007)(66476007)(26005)(64756008)(66556008)(316002)(186003)(71200400001)(478600001)(2906002)(7696005)(4326008)(9686003)(6916009)(5660300002)(55016002)(8936002)(8676002)(4744005)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: N1J4U63ZYDrxoLEsZfUjDV41r4Uk93SGdoTtubZySUwNn4tf+/zx3/zd0MwLKfzNOzJFHf0cWp6HjJSIoOxo6Ko6qi3fB0lcT604jq+rczPud2N37ZFYBSkuCAIi39BHSFmcDWfmM8Pc1dE6IVcoNen/fgCKFkX83y9Pf0KNdQy6mpY4lDXZKGTxYnUrOS7nkb+pJVHd+MaWlnHr78qgCJgX99TCvQ4phyms7w7HtHPDZxxQ5cgYnkJeGn8REawaM/dRlYQMhVIyoBOBK3vseoV1eHOxFSJ4Ed+JzPVwot19H6bL2wLCJ6FjtkqNSVL2kIsle/pcZcR3PMsdZB2hZAMXCuzNo8Vl1IxJ+Y9w5ELn+w4aR7wKgqkkvJsTBjjMx8So+cYigj/axgW/fOdVeiBoVrAeaFtUt0xKQnzcbMQlrGVmRSFU09Wvl6mHKAj9JymveOe+wcz0LDiCJs9sPrEc+9bQ63mXz6aFY4EJXuf2QB4BYlwaqYv7GakldpH2
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 243f5cd7-2b1a-4431-c64d-08d7fd304a2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2020 02:40:14.0149
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yHgItj8I4KTYTYCxYC+4IHrdhFN0v478Vf97MPrbbZ5Qa+9NWTB8oEZYgQPBCsBaTdz1Z1E5Z2VMFJRpDELk0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3461
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:46:11PM +0300, Jarkko Nikula wrote:
-> Hi
-> 
-> On 5/10/20 12:50 PM, Serge Semin wrote:
-> > Seeing the DW I2C platform driver is getting overcomplicated with a lot of
-> > vendor-specific configs let's introduce a glue-layer interface so new
-> > platforms which equipped with Synopsys Designware APB I2C IP-core would
-> > be able to handle their peculiarities in the dedicated objects.
-> > 
-> Comment to this patch and patches 9/12 and 12/12:
-> 
-> Currently i2c-designware-platdrv.c is about 500 lines of code so I don't
-> think it's too overcomplicated. But I feel we have already too many Kconfig
-> options and source modules for i2c-designware and obviously would like to
-> push back a little from adding more.
-> 
-> I don't think i2c-designware-platdrv.c becomes yet too complicated if Baikal
-> related code is added there, perhaps under #ifdef CONFIG_OF like MSCC Ocelot
-> code is currently.
+From: Jakub Kicinski <kuba@kernel.org> Sent: Thursday, May 21, 2020 12:54 A=
+M
+> On Wed, 20 May 2020 16:31:53 +0800 fugang.duan@nxp.com wrote:
+> > From: Fugang Duan <fugang.duan@nxp.com>
+> >
+> > The commit da722186f654(net: fec: set GPR bit on suspend by DT
+> > configuration) set the GPR reigster offset and bit in driver for wake
+> > on lan feature.
+> >
+> > But it introduces two issues here:
+> > - one SOC has two instances, they have different bit
+> > - different SOCs may have different offset and bit
+> >
+> > So to support wake-on-lan feature on other i.MX platforms, it should
+> > configure the GPR reigster offset and bit from DT.
+> >
+> > Fixes: da722186f654(net: fec: set GPR bit on suspend by DT
+> > configuration)
+> > Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+>=20
+> Fixes tag: Fixes: da722186f654(net: fec: set GPR bit on suspend by DT
+> configuration) Has these problem(s):
+>         - missing space between the SHA1 and the subject
 
-Well, it's up to you to decide, what solution is more suitable for you to
-maintain. My idea of detaching the MSCC and Baikal-T1 code to the dedicated
-source files was to eventually move the whole i2c-designware-* set of files
-into a dedicated directory drivers/i2c/buses/dw as it's done for some others
-Synopsys DesignWare controllers: drivers/pci/controller/dwc/, drivers/usb/dwc2,
-drivers/usb/dwc3, drivers/net/ethernet/synopsys/ . If you think, that it's too
-early for Dw I2C code to live in a dedicated directory, fine with me. I can
-merge the MSCC and Baikal-T1 code back into the i2c-designware-platdrv.c .
-So what's your final word in this matter?
-
--Sergey
-
-> 
-> -- 
-> Jarkko
+Thanks, I will update it v2.
