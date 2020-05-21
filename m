@@ -2,229 +2,102 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C4EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC41C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D6E20748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C64020748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:42:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFYhck/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgEUOlC (ORCPT
+        id S1729767AbgEUOmR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 10:41:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:48218 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgEUOlC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 10:41:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4BC44D6E;
-        Thu, 21 May 2020 07:41:01 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12AA03F305;
-        Thu, 21 May 2020 07:41:01 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id CEAED682B71; Thu, 21 May 2020 15:40:59 +0100 (BST)
-Date:   Thu, 21 May 2020 15:40:59 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 04/16] arm64: dts: arm: Fix node address fields
-Message-ID: <20200521144059.GZ159988@e110455-lin.cambridge.arm.com>
-References: <20200505165212.76466-1-andre.przywara@arm.com>
- <20200505165212.76466-5-andre.przywara@arm.com>
- <347cdcba-a1cf-d308-1cc2-6c2194f40d19@arm.com>
+        Thu, 21 May 2020 10:42:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbgEUOmR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 10:42:17 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09C6C061A0E;
+        Thu, 21 May 2020 07:42:16 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id c16so7694836iol.3;
+        Thu, 21 May 2020 07:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uMf5PSS8v7h+lqCLsnwmzDp+h/BmZ4e0wPer6Vr2cGs=;
+        b=NFYhck/AVQ4UWSacJe7ENhzPcbR6sO8iACNZjErSdvwJ9wrqZ9RJFZ6QenBhe562aP
+         KfxW0cYjDNR4FLotUvUydBbfp3XT14Bk4PiwBWPOSV5h3DPQYpMd5VYt5+adDW8P78L/
+         J5y0pJpf1c0Wt+K5URdoBKLM+JlcXXdbM/ZLd935cpJUasiNfXGfxb1rYepad6dYah8p
+         LeTySwVr6Y4japUvkuFylk3x0yGdsHwJv/VVce+PDL/h9F/Xon80FOzJMA23VS1xgS34
+         h/l/ignBWZh7FA2s8tCDV2906hkU9GTarwXvq9AOjun/QP6IKSHPTzUOfpZPpHs5mrEH
+         Si2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uMf5PSS8v7h+lqCLsnwmzDp+h/BmZ4e0wPer6Vr2cGs=;
+        b=g2d/ep2F3OvwVODjoFgxD+I6AST6x7OvWCduUvlWkeAqK7l/mB/V4Ckx8DT7iQrmPT
+         CZCTnK99GljrtHHCVWSJCYfndFRbahyzXcfjxE3OhCel1+AM0QBD2FHU2KccEIUkgsGY
+         NDQky1Wo0SeQ2RI1F5Wfci9ZUggm1C/Y1zcfkiXFO7uX4EM6JeqSlRq2jDK94n47bSIa
+         Dqi2MISJVjQlyBk13KUPrjZwggNSRk2nf3REmpXRWhtkbWyei6wTLLTXPCmuEItE88oz
+         g2JpVG2WG8eUnNpHESg4lkZ5VlxHteP2ZwtHgjOwpaKfwWzTcLoQFr6MZXpABpv/Pzmy
+         Fmpw==
+X-Gm-Message-State: AOAM532ISirrC/IczdVL54BfA535R3blAc5Zb5ib+bvFwLvIl6LCcDuI
+        G2gex+RRu/h5dizPxC2IT/JRAfSes8TWDz9nhVw=
+X-Google-Smtp-Source: ABdhPJzmmoAtqvKiSRzzQdvPOdNku2+q8onAHYeKer64fb+YIN0nrWX+l4VWuyicyEo2/tLD9Pf2CRLDktLkJDnboNE=
+X-Received: by 2002:a05:6638:118c:: with SMTP id f12mr4230733jas.6.1590072135956;
+ Thu, 21 May 2020 07:42:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <347cdcba-a1cf-d308-1cc2-6c2194f40d19@arm.com>
+References: <20200520214757.GA362547@x1> <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
+In-Reply-To: <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
+From:   Robert Nelson <robertcnelson@gmail.com>
+Date:   Thu, 21 May 2020 09:41:50 -0500
+Message-ID: <CAOCHtYiw2jJuzbnW02FUmPy-xmmtErMmow46QQJUMs0VtX=cKg@mail.gmail.com>
+Subject: Re: [PATCH v2] arm: dts: am33xx-bone-common: add gpio-line-names
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux kernel <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 06:18:19PM +0100, Robin Murphy wrote:
-> On 2020-05-05 5:52 pm, Andre Przywara wrote:
-> > The Arm Ltd. boards were using an outdated address convention in the DT
-> > node names, by separating the high from the low 32-bits of an address by
-> > a comma.
-> 
-> I thought that historically that was deliberate, since the actual thing
-> being encoded is <chip select>,<address>, rather than just cosmetically
-> splitting a 64-bit address value?
-> 
-> Or maybe I'm thinking too far back and things have already changed in the
-> meantime :/
+> Not sure if it should be in am335x-bone-common.dtsi.
+>
+> For example:
+> am335x-boneblack.dts
+>   #include "am335x-bone-common.dtsi"
+>   #include "am335x-boneblack-common.dtsi" <-- hdmi defined only here
 
-Robin is right, if you look in the "ARM Motherboard Express µATX Technical
-Reference Manual", in the RS1 memory map (aka "Cortex-A Series memory map")
-the Ethernet for example is at CS2 offset 0x02000000. CS2 area is between
-0x18000000 and 0x1c000000. So actual physical address for LAN9118 is
-0x1a000000.
+Ah crap, yeah that's a good point.. So if we stick it in...
+am335x-boneblack-common.dtsi
 
-You might want to drop this patch or convert to physical addresses.
+Then the Black-Wireless now has Ethernet...
 
-Best regards,
-Liviu
+am335x-boneblack-wireless.dts
+#include "am335x-bone-common.dtsi"
+#include "am335x-boneblack-common.dtsi"
 
-> 
-> Robin.
-> 
-> > Remove the comma from the node name suffix to be DT spec compliant.
-> > 
-> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > ---
-> >   arch/arm/boot/dts/vexpress-v2m-rs1.dtsi              | 10 +++++-----
-> >   arch/arm64/boot/dts/arm/foundation-v8.dtsi           |  4 ++--
-> >   arch/arm64/boot/dts/arm/juno-motherboard.dtsi        |  6 +++---
-> >   arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |  2 +-
-> >   arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi     |  6 +++---
-> >   5 files changed, 14 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-> > index 5c183483ec3b..8010cdcdb37a 100644
-> > --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-> > +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-> > @@ -31,7 +31,7 @@
-> >   			#interrupt-cells = <1>;
-> >   			ranges;
-> > -			nor_flash: flash@0,00000000 {
-> > +			nor_flash: flash@0 {
-> >   				compatible = "arm,vexpress-flash", "cfi-flash";
-> >   				reg = <0 0x00000000 0x04000000>,
-> >   				      <4 0x00000000 0x04000000>;
-> > @@ -41,13 +41,13 @@
-> >   				};
-> >   			};
-> > -			psram@1,00000000 {
-> > +			psram@100000000 {
-> >   				compatible = "arm,vexpress-psram", "mtd-ram";
-> >   				reg = <1 0x00000000 0x02000000>;
-> >   				bank-width = <4>;
-> >   			};
-> > -			ethernet@2,02000000 {
-> > +			ethernet@202000000 {
-> >   				compatible = "smsc,lan9118", "smsc,lan9115";
-> >   				reg = <2 0x02000000 0x10000>;
-> >   				interrupts = <15>;
-> > @@ -59,14 +59,14 @@
-> >   				vddvario-supply = <&v2m_fixed_3v3>;
-> >   			};
-> > -			usb@2,03000000 {
-> > +			usb@203000000 {
-> >   				compatible = "nxp,usb-isp1761";
-> >   				reg = <2 0x03000000 0x20000>;
-> >   				interrupts = <16>;
-> >   				port1-otg;
-> >   			};
-> > -			iofpga@3,00000000 {
-> > +			iofpga@300000000 {
-> >   				compatible = "simple-bus";
-> >   				#address-cells = <1>;
-> >   				#size-cells = <1>;
-> > diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> > index 12f039fa3dad..e26b492795c5 100644
-> > --- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> > +++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> > @@ -151,7 +151,7 @@
-> >   				<0 0 41 &gic 0 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-> >   				<0 0 42 &gic 0 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> > -		ethernet@2,02000000 {
-> > +		ethernet@202000000 {
-> >   			compatible = "smsc,lan91c111";
-> >   			reg = <2 0x02000000 0x10000>;
-> >   			interrupts = <15>;
-> > @@ -178,7 +178,7 @@
-> >   			clock-output-names = "v2m:refclk32khz";
-> >   		};
-> > -		iofpga@3,00000000 {
-> > +		iofpga@300000000 {
-> >   			compatible = "simple-bus";
-> >   			#address-cells = <1>;
-> >   			#size-cells = <1>;
-> > diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> > index e3983ded3c3c..d5cefddde08c 100644
-> > --- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> > +++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> > @@ -103,7 +103,7 @@
-> >   				};
-> >   			};
-> > -			flash@0,00000000 {
-> > +			flash@0 {
-> >   				/* 2 * 32MiB NOR Flash memory mounted on CS0 */
-> >   				compatible = "arm,vexpress-flash", "cfi-flash";
-> >   				reg = <0 0x00000000 0x04000000>;
-> > @@ -120,7 +120,7 @@
-> >   				};
-> >   			};
-> > -			ethernet@2,00000000 {
-> > +			ethernet@200000000 {
-> >   				compatible = "smsc,lan9118", "smsc,lan9115";
-> >   				reg = <2 0x00000000 0x10000>;
-> >   				interrupts = <3>;
-> > @@ -133,7 +133,7 @@
-> >   				vddvario-supply = <&mb_fixed_3v3>;
-> >   			};
-> > -			iofpga@3,00000000 {
-> > +			iofpga@300000000 {
-> >   				compatible = "simple-bus";
-> >   				#address-cells = <1>;
-> >   				#size-cells = <1>;
-> > diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-> > index 60703b5763c6..350cbf17e8b4 100644
-> > --- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-> > +++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-> > @@ -9,7 +9,7 @@
-> >   		motherboard {
-> >   			arm,v2m-memory-map = "rs2";
-> > -			iofpga@3,00000000 {
-> > +			iofpga@300000000 {
-> >   				virtio-p9@140000 {
-> >   					compatible = "virtio,mmio";
-> >   					reg = <0x140000 0x200>;
-> > diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-> > index e333c8d2d0e4..d1bfa62ca073 100644
-> > --- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-> > +++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-> > @@ -17,14 +17,14 @@
-> >   			#interrupt-cells = <1>;
-> >   			ranges;
-> > -			flash@0,00000000 {
-> > +			flash@0 {
-> >   				compatible = "arm,vexpress-flash", "cfi-flash";
-> >   				reg = <0 0x00000000 0x04000000>,
-> >   				      <4 0x00000000 0x04000000>;
-> >   				bank-width = <4>;
-> >   			};
-> > -			ethernet@2,02000000 {
-> > +			ethernet@202000000 {
-> >   				compatible = "smsc,lan91c111";
-> >   				reg = <2 0x02000000 0x10000>;
-> >   				interrupts = <15>;
-> > @@ -51,7 +51,7 @@
-> >   				clock-output-names = "v2m:refclk32khz";
-> >   			};
-> > -			iofpga@3,00000000 {
-> > +			iofpga@300000000 {
-> >   				compatible = "simple-bus";
-> >   				#address-cells = <1>;
-> >   				#size-cells = <1>;
-> > 
+It's going to be ugly, copy and paste mess, but i guess we might as
+well stick it in the device " am335x-boneblack.dts"?
+
+Regards,
 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Robert Nelson
+https://rcn-ee.com/
