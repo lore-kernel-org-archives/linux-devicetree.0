@@ -6,82 +6,82 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5F2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 20:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E78BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 20:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A562D20738
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 20:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B2A20823
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 20:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590091206;
-	bh=pJ2/MDf9IVvH2Q9fur78ulsykNBXv5Xmh576na3NVs8=;
+	s=default; t=1590091247;
+	bh=4m4Nkqu/7SPmf/GkHTKVqS50FGgj6ypmaEq/VrqD7xM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LV3DACGe9aob5JlRYw2IqWwK4yWP5pASYc+8/Kr7yrBCKbNYCS5vOJCYi0wfA59KQ
-	 zyyqmGwm5/zIxmyo3zhSsuL6Hx6SRpau0XWzFn6x4feDeAvXCWfYej8xQnP2ACq1fg
-	 1/t9iaBMT6yzwoFxE8ShHxnDdKsQS39tBhC+11rc=
+	b=rXpl3SXQKbeu03bFoIRSbtaX5K9dVVicNxf69AVivgi5gNB3EEgYtybL4K80/4V3e
+	 K4iQp5yme5dZfKr2u+J3oih/2nylarLbVHfhm7fnhCrgCFS2VSjmFmY/iFgxZiBqft
+	 7cqaNccVf/+7VwMssosk/iUjpc6ANlhla2LZRicU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgEUUAG (ORCPT
+        id S1729907AbgEUUAq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 16:00:06 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33957 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbgEUUAG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 16:00:06 -0400
-Received: by mail-io1-f68.google.com with SMTP id f3so8970040ioj.1;
-        Thu, 21 May 2020 13:00:05 -0700 (PDT)
+        Thu, 21 May 2020 16:00:46 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:33592 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbgEUUAq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 16:00:46 -0400
+Received: by mail-il1-f195.google.com with SMTP id y17so6272213ilg.0;
+        Thu, 21 May 2020 13:00:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/OBbI+6GWlC3oOe3NnwlkfXbsrp49bIWsk0Mjef2X1w=;
-        b=mZyB99yA0rfZzYjPKDAlHXwWXzdf71m9ShKRy2RoxBvKBSLTWahDvrxP5dsAxRiFGc
-         Vz8ZQBDHtLr4H8ELbKtzzu1mE7SiEGpJWMCFomZ0jUUDznB9S7bBqHmke160+A7OJ1ST
-         pJ5yWkCKu//H1bDJFpJTESrv364dxI8h8JrhtBPYjfJKcunzgaO6PtHaVeQG8EU2XLv2
-         FXSH/U58mTTOkxg3yUJBn/KA49aLYe7WGTKvu7Sn62lMuP0KrJ6lKQxWHeIu6JcDFtOO
-         aeKnp6rRH5v7HzTt7mivNE+yKEkzGuK97bgodToXpx+8xr/t5y4Ah0CQxUxAP+dsglcA
-         dWYw==
-X-Gm-Message-State: AOAM530vu6Lv3JhHPskPRdSGjyyceln7QtGuHAnpzQ6WLXH69R1jvt8A
-        lgiVYtF5Lq3uC4nSO8arEw==
-X-Google-Smtp-Source: ABdhPJwzyw5pKWXUrC5O7c3oRIN0AOpnS71xcVe2dTARhkJ5T/JDIfApn3beqjgjWsFowWuLOQ4ZLQ==
-X-Received: by 2002:a6b:1cc:: with SMTP id 195mr225126iob.177.1590091205067;
-        Thu, 21 May 2020 13:00:05 -0700 (PDT)
+        bh=ZlH5ZMWcJXqsxFCIRSX97tK4Flrr0jYmclOA4NT0Xj8=;
+        b=KLPoyX3YS8pVazb7v4+Yezexg1P9Bb+08Kr9wYr0qvgIG5951jRNQq4AOzzEvk8fBV
+         eyoitcCb0aKYBXQH48qwD57KsQndgxAw1yZBkKkZhS1XepcFhegMayH0lsm3my5T8NRk
+         EFRuwGplPPZ3gw/UCG29EE3GtMaqUUIR+xqYziWFFL5A0gaOg08f+PZgE9hkn5MEiQNw
+         8V6tf2qg8JA1dFQEEnbz0pMHWuQyJRyXPMo4dK05UhaHi49HLdn1FNVUSmhJhjq0x2L4
+         OmK+CCbiAimvG6t7VrpmZ0TmSqPVTJCG9XZSpHuoK1KzdkUY5Ygb3uo/eFoeyotUS7Fx
+         rqhA==
+X-Gm-Message-State: AOAM533xZ3P43A+oNBfD01uY1LSLGWvY8zzNhBvT/zgVQMzs3iAE/n7P
+        6yJLeq5RjujWnwr+4BLcFA==
+X-Google-Smtp-Source: ABdhPJzO+8vNli6MJWPcPhp4AusITCDDAPwhu7cO7WuDbpzKtQj5Ru8KuWfEvku9pagBIN5SJF0Kiw==
+X-Received: by 2002:a05:6e02:544:: with SMTP id i4mr10547846ils.266.1590091245276;
+        Thu, 21 May 2020 13:00:45 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j17sm3239598ilq.79.2020.05.21.13.00.03
+        by smtp.gmail.com with ESMTPSA id t17sm3353322ilo.60.2020.05.21.13.00.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 13:00:03 -0700 (PDT)
-Received: (nullmailer pid 2801685 invoked by uid 1000);
-        Thu, 21 May 2020 20:00:02 -0000
-Date:   Thu, 21 May 2020 14:00:02 -0600
+        Thu, 21 May 2020 13:00:44 -0700 (PDT)
+Received: (nullmailer pid 2802949 invoked by uid 1000);
+        Thu, 21 May 2020 20:00:43 -0000
+Date:   Thu, 21 May 2020 14:00:43 -0600
 From:   robh@kernel.org
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 5/5] dt-bindings: arm: fsl: add different Protonic
- boards
-Message-ID: <20200521200002.GA2800876@bogus>
-References: <20200520154116.12909-1-o.rempel@pengutronix.de>
- <20200520154116.12909-6-o.rempel@pengutronix.de>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded
+ Controller binding
+Message-ID: <20200521200043.GA2802919@bogus>
+References: <20200521115407.2249702-1-lkundrak@v3.sk>
+ <20200521115407.2249702-2-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520154116.12909-6-o.rempel@pengutronix.de>
+In-Reply-To: <20200521115407.2249702-2-lkundrak@v3.sk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 20 May 2020 17:41:16 +0200, Oleksij Rempel wrote:
-> Add Protonic PRTI6Q, WD2, RVT, VT7 boards.
+On Thu, 21 May 2020 13:54:06 +0200, Lubomir Rintel wrote:
+> Add binding document for the ENE KB3930 Embedded Controller.
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> Changes since v1:
+> - Addressed binding validation failure
+> ---
+>  .../devicetree/bindings/mfd/ene-kb3930.yaml   | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
 > 
 
 
