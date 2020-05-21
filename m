@@ -5,177 +5,181 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB02C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4127C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A7F20748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D251D20829
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 15:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ID1dvrYm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SxHSttAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgEUPuD (ORCPT
+        id S1728315AbgEUPuP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 11:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39322 "EHLO
+        Thu, 21 May 2020 11:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgEUPuC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 11:50:02 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26528C061A0F
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:50:02 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x14so1746211wrp.2
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:50:02 -0700 (PDT)
+        with ESMTP id S1727968AbgEUPuO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 11:50:14 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABCDDC08C5C1
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:50:14 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x15so3520681pfa.1
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 08:50:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=I5QXaX52IPaG+95gPfmlZ0rD63JTAUJslTJmrnwNjQc=;
-        b=ID1dvrYmYK5R1R7a0Cw6H9ckAbwIgzD1jEh8cLijWGS6z4cOVQD8npfgacuW3YzbTR
-         6p53ASb2F8xqyBMI8KhptHeaQt1pyG6j16NzI19RwIF22j7IKpB1vdhv2vKICxvPmIGS
-         L9IwRDjpD8PgKAcggZu7EgMhLsHQK5hYnPirU=
+        bh=sA0g0lvUpDIAD2lv16TTki6eZ5ObFWThT5hUTpKEaZM=;
+        b=SxHSttAbNR9u1pBK/vE9U0EvP6k3sUDZ9euViRsxBhKQwtZZDJ+9Slcp75EnC7zjV5
+         3QlU+9wjPe1kXPzohm590bPeD+ilHSPRnU3z+uxzqm9U8JGHzSUzIAXM/O6kuQ2PDsOe
+         dD74tuoLkEfq0G1fPZmGd+xbLTMEkayphxpyE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=I5QXaX52IPaG+95gPfmlZ0rD63JTAUJslTJmrnwNjQc=;
-        b=lg176cPekMSar7CKIW4F7iG3a3V3MYXSHY+B2uv7vfdi9LitYMZSUbSRATySAmam7x
-         nWyYG3njmSG/FWmSJW/ncYAHz2vIjst8ene3ZoE0lfx1PG9em6KUJ+zZAfxqfkSPJsY1
-         oHhpQd05xiBkNhWTs6I0h3ZZ7Hwb7BLBOsaiN1bZ9NMQEO03YeyWh7ZNvsy917Iwqp1K
-         ku3UdfWU+zdVwY5PfeqeqPs7Vq13ZkkCkaENF1+v+M1IWx/wJGyKK87B3Yjw5Cm4ne1r
-         MlBmRQoHKUc+gK3BtzHZ5jKVrS9Rbc8luHONUs7I+CxdEsq9OHoks/EWHQf1T/OrZi1h
-         BWuw==
-X-Gm-Message-State: AOAM5334MvCq99J3SQRK8o5aYhRCxjv8MVwv84SBAMoK2M7DANlJkojn
-        V8utMo/uZ/XxodTC6wctTeU4QQ==
-X-Google-Smtp-Source: ABdhPJw5KfY6ZCQuAckjsE5E7cfiDb7ScpWMpUV7bgUyKbpKFR20CCu1lyQfVtv8YMw85K8xToqg9w==
-X-Received: by 2002:adf:ec87:: with SMTP id z7mr9942589wrn.149.1590076200716;
-        Thu, 21 May 2020 08:50:00 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id r3sm6663037wmh.48.2020.05.21.08.50.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 08:50:00 -0700 (PDT)
-Date:   Thu, 21 May 2020 15:49:58 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH v8 10/14] media: platform: Delete redundant code for
- improving code quality
-Message-ID: <20200521154958.GI209565@chromium.org>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
- <20200403094033.8288-11-xia.jiang@mediatek.com>
+        bh=sA0g0lvUpDIAD2lv16TTki6eZ5ObFWThT5hUTpKEaZM=;
+        b=Cj4ZKwFKe7lxQoVub7uvjOB8lZVMhLsfHBXRSjHxddHL4OAwtZ38CDToiAc8A90zZx
+         7+6zHXNe+82TfebdOt6uy6mlPAH3yntiizjqjqaMU1gmhlWj30v3nmvWk2rRycAo0+GY
+         vRAiNpm4/UYFVgj+8LOyzKSkQEsO78BF5RYXoJinZiPi4Y2FshbUMsGxuhpCsUuDEERu
+         1yhsxSCXakRrAa6OcmDvXTNVczAza1LA4NWhIai/6il79KLSqkUm3P+mtRctoj7z7843
+         DHQAEbS0RBdEK2IfgwFVdlad6Kjnl0xtXNe078hYHirA7X0yaUoX7ZWCJ6i79krE7Arj
+         c1AQ==
+X-Gm-Message-State: AOAM531QKureLWfl4i2h6CbT1SEMd9O5C/X+q0dMJXnY/7SeOn/ccfFa
+        EAJZq1QbyFQF5avKwqF4SrKcpA==
+X-Google-Smtp-Source: ABdhPJxkbbtArxWaeGThhTrUz55mXsi5ObGXQZbuxg7+tuo7TBShdw6VKuYjcKrRM+3WbVWaoAbFxQ==
+X-Received: by 2002:a62:3642:: with SMTP id d63mr2097232pfa.8.1590076213954;
+        Thu, 21 May 2020 08:50:13 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id s94sm4983713pjb.20.2020.05.21.08.50.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 08:50:12 -0700 (PDT)
+Date:   Thu, 21 May 2020 08:50:09 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        msavaliy@codeaurora.org, evgreen@chromium.org
+Subject: Re: [PATCH V6 1/7] soc: qcom: geni: Support for ICC voting
+Message-ID: <20200521155009.GA4525@google.com>
+References: <1590049764-20912-1-git-send-email-akashast@codeaurora.org>
+ <1590049764-20912-2-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200403094033.8288-11-xia.jiang@mediatek.com>
+In-Reply-To: <1590049764-20912-2-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xia,
+Hi Akash,
 
-On Fri, Apr 03, 2020 at 05:40:29PM +0800, Xia Jiang wrote:
-> Delete unused member variables annotation.
-> Delete unused variable definition.
-> Delete redundant log print, because V4L2 debug logs already print it.
+On Thu, May 21, 2020 at 01:59:18PM +0530, Akash Asthana wrote:
+> Add necessary macros and structure variables to support ICC BW
+> voting from individual SE drivers.
 > 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
-> v8: no changes
-> ---
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 16 ++--------------
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h |  5 +++--
->  2 files changed, 5 insertions(+), 16 deletions(-)
+> Changes in V2:
+>  - As per Bjorn's comment dropped enums for ICC paths, given the three
+>    paths individual members
 > 
-
-Thank you for the patch. Please see my comments inline.
-
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index 4e64046a6854..9e59b9a51ef0 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -182,7 +182,6 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
->  				   struct mtk_jpeg_ctx *ctx, int q_type)
->  {
->  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
-> -	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
->  	int i;
+> Changes in V3:
+>  - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
+>  - Add geni_icc_path structure in common header
+> 
+> Changes in V4:
+>  - As per Bjorn's comment print error message in geni_icc_get if return
+>    value is not -EPROBE_DEFER.
+>  - As per Bjorn's comment remove NULL on path before calling icc_set_bw
+>    API.
+>  - As per Bjorn's comment drop __func__ print.
+>  - As per Matthias's comment, make ICC path a array instead of individual
+>    member entry in geni_se struct.
+> 
+> Changes in V5:
+>  - As per Matthias's comment defined enums for ICC paths.
+>  - Integrate icc_enable/disable with power on/off call for driver.
+>  - As per Matthias's comment added icc_path_names array to print icc path name
+>    in failure case.
+>  - As per Georgi's suggestion assume peak_bw = avg_bw if not mentioned.
+> 
+> Changes in V6:
+>  - Addressed nitpicks from Matthias.
+> 
+> Note: I have ignored below check patch suggestion because it was throwing
+>       compilation error as 'icc_ddr' is not compile time comstant.
+> 
+> WARNING: char * array declaration might be better as static const
+>  - FILE: drivers/soc/qcom/qcom-geni-se.c:726:
+>  - const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+> 
+>  drivers/soc/qcom/qcom-geni-se.c | 92 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/qcom-geni-se.h    | 42 +++++++++++++++++++
+>  2 files changed, 134 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index 7d622ea..0b2526d 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -92,6 +92,9 @@ struct geni_wrapper {
+>  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+>  };
 >  
->  	memset(pix_mp->reserved, 0, sizeof(pix_mp->reserved));
-> @@ -190,7 +189,7 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
+> +static const char * const icc_path_names[] = {"qup-core", "qup-config",
+> +						"qup-memory"};
+> +
+>  #define QUP_HW_VER_REG			0x4
 >  
->  	if (ctx->state != MTK_JPEG_INIT) {
->  		mtk_jpeg_adjust_fmt_mplane(ctx, f);
-> -		goto end;
-> +		return 0;
->  	}
->  
->  	pix_mp->num_planes = fmt->colplanes;
-> @@ -210,7 +209,7 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
->  		pfmt->sizeimage = round_up(pfmt->sizeimage, 128);
->  		if (pfmt->sizeimage == 0)
->  			pfmt->sizeimage = MTK_JPEG_DEFAULT_SIZEIMAGE;
-> -		goto end;
-> +		return 0;
->  	}
->  
->  	/* type is MTK_JPEG_FMT_TYPE_CAPTURE */
-> @@ -224,20 +223,9 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
->  		u32 stride = pix_mp->width * fmt->h_sample[i] / 4;
->  		u32 h = pix_mp->height * fmt->v_sample[i] / 4;
->  
-> -		memset(pfmt->reserved, 0, sizeof(pfmt->reserved));
-
-This change is not mentioned in the description. I'd suggest moving it
-to a separate patch, because it's a functional change.
-
->  		pfmt->bytesperline = stride;
->  		pfmt->sizeimage = stride * h;
->  	}
-> -end:
-> -	v4l2_dbg(2, debug, &jpeg->v4l2_dev, "wxh:%ux%u\n",
-> -		 pix_mp->width, pix_mp->height);
-> -	for (i = 0; i < pix_mp->num_planes; i++) {
-> -		v4l2_dbg(2, debug, &jpeg->v4l2_dev,
-> -			 "plane[%d] bpl=%u, size=%u\n",
-> -			 i,
-> -			 pix_mp->plane_fmt[i].bytesperline,
-> -			 pix_mp->plane_fmt[i].sizeimage);
-> -	}
->  	return 0;
+>  /* Common SE registers */
+> @@ -720,6 +723,95 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
 >  }
+>  EXPORT_SYMBOL(geni_se_rx_dma_unprep);
 >  
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> index 64a731261214..9bbd615b1067 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> @@ -30,6 +30,9 @@
->  
->  #define MTK_JPEG_DEFAULT_SIZEIMAGE	(1 * 1024 * 1024)
->  
-> +/**
-> + * enum mtk_jpeg_ctx_state - contex state of jpeg
+> +int geni_icc_get(struct geni_se *se, const char *icc_ddr)
+> +{
+> +	int i, err;
+> +	const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+> +
+> +	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
+> +		if (!icc_names[i])
+> +			continue;
+> +
+> +		se->icc_paths[i].path = devm_of_icc_get(se->dev, icc_names[i]);
+> +		if (IS_ERR(se->icc_paths[i].path))
+> +			goto err;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	err = PTR_ERR(se->icc_paths[i].path);
+> +	if (err != -EPROBE_DEFER)
+> +		dev_err_ratelimited(se->dev, "Failed to get ICC path:%s :%d\n",
 
-typo: s/contex/context/
+That's still an odd format, especially the colon before the error code. My
+suggestion was "... path 'qup-core': 42" i.e. "... path '%s': %d".
 
-But I'd rephrase it to "states of the context state machine".
+I don't want to stall the series on nits though, if there is no need for
+a respin for other reasons this can be also fixed with a patch after this
+has landed.
 
-> + */
+I'm still not overly convinced about having two bandwidth values for what
+might happen in the future (or not). Typically unused functions or struct
+members that are added just in case tend to be rejected, since they can be
+added when the need actually arises. Anyway, as long as maintainers are
+happy with it I won't object.
 
-Not mentioned in the description. Also, the documentation of an enum
-should have descriptions for the values.
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 
-Best regards,
-Tomasz
+
+
+
