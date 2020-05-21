@@ -2,213 +2,120 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBCAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 10:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9324CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 10:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5E2120829
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 10:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6090C2072C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 10:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="M3IvwfRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgEUKtH (ORCPT
+        id S1727939AbgEUKvl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 06:49:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48336 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbgEUKtG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 06:49:06 -0400
-IronPort-SDR: ubYYU07HwqI7YVj7lwR9jUnoduzOyvfO4T0rhvQVngXRkCu1WnIyTWs0+RyDq78JCdeRu5ZO6s
- 4QASHYGjI/ow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 03:49:06 -0700
-IronPort-SDR: j54tVNWAMKZQp/4fVJ75sZHIhe48xnM00KcoMaDyIP50TxlVD/PYD+y0lwjG06H3ynBd1zGGQv
- u2uXTKzu5nvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
-   d="scan'208";a="268592021"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 21 May 2020 03:49:01 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jbil6-00819S-9w; Thu, 21 May 2020 13:49:04 +0300
-Date:   Thu, 21 May 2020 13:49:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/16] spi: dw: Use DMA max burst to set the request
- thresholds
-Message-ID: <20200521104904.GK1634618@smile.fi.intel.com>
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
- <20200521012206.14472-8-Sergey.Semin@baikalelectronics.ru>
+        Thu, 21 May 2020 06:51:41 -0400
+Received: from mail-eopbgr140050.outbound.protection.outlook.com ([40.107.14.50]:35766
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727013AbgEUKvl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 06:51:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eikGNZQFMKguwJar4gBtl48Myfm/XBNi1ijR9U5GD9cKKuNDNPpc44SKdJDHosxWOwShZEgHSQ+PuOA2RSFMXHb+P2KWogFY4SA6/qav5vKkpysL1/aZfbAK4ebmO/1xSXkIU39WKEnOl//gZYztfqSVVdPFkIk9jxBNm7TEGDm4KXoELqOQXqGV87aOw65VZ+ZXZLg5mPlZfKIKXiHD+ztC7gR5cFZIkicK0/e6L5HancPKrmG1x9vRFQqFLjzesyFc5a/oW2ExQJ86++SQ5IPFQAyV/Pg8oHp6HPVbX2itHoGSaku0UiD+AFwoikjbD9R5MRyA4AImepJ1VgPEqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AeWkf6eAUBtEGcv0/d2oSPrgMHWr/jvGoHLxoyHUAVM=;
+ b=fCSzdDe2881+oKcG5FE/8RC+Zj46FsEQd8vLALPWZ6eHy/HHaJlCRPoHDfOcdpdGre7SeYEYNMqPLeaqEl4YA4dc4csQPKnHwAjpbU5Qxy9SSdexiO0GN5CUF7dJNSSSjleCLPRAZtv+gRSNfSew0jqjxm2wyMsQpeR1RyV17872y66eeCX15NAOCIewSf9gD1y/A+wI4grJnshHe7eMxCIAg71YHTia910ZL0G4nsuNOyqsZ/7UTnC/9nxVDhuRBIQqJbress5r6U497jyuz4tw0L+Tjzx9i7FIV+1wl0IAyfRK7EOuzAEDG6PlyoPJVy0LgeWeLU/wges0X7Ccsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AeWkf6eAUBtEGcv0/d2oSPrgMHWr/jvGoHLxoyHUAVM=;
+ b=M3IvwfRsmUijYHZZm7ULpccZ0neJ53em6XouTSuqArwPTsbFrVIs6tw0AYFzBUywBqScOsCHWf/l9eFSd8QbX1tP+jYvcZ6jm2BsKQWWat6kwjoYr7TwXuCqg1EourEZcJKe6flTV5dMtou/0vJx0RF5AxtYws3XUvXpEWUWRz8=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB4454.eurprd04.prod.outlook.com (2603:10a6:20b:16::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 21 May
+ 2020 10:51:37 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.034; Thu, 21 May 2020
+ 10:51:37 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v2 1/2] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage
+ range
+Thread-Topic: [PATCH v2 1/2] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage
+ range
+Thread-Index: AQHWLzeGuEJZhZiDNE+QlTjmZZ7cNKiyXPsA
+Date:   Thu, 21 May 2020 10:51:37 +0000
+Message-ID: <AM6PR04MB49666F2BA7A2AEAB6F04994080B70@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 137a89c0-206d-4ce7-c000-08d7fd74efb4
+x-ms-traffictypediagnostic: AM6PR04MB4454:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB4454CF2EC41CF4A3F811797F80B70@AM6PR04MB4454.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 041032FF37
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uUXpcARQjZ18pkvw1IOwCJVA/sNllcZLbLeKuz7OGiE5ATZix0VXlXtoSPuk2FZLWiOvRDxPfrrs2F7aFdnXP38E6jQHszO2zyVtpnZss1nEt5TJUSgrvGHo6EKBBBWJD0eINifWIl1/J8f8+/N31u22MvK9QiHNEynUEL20JHqSnhtZa9+M7SnLIS663czEm6dA1CokolPSwjqUQ6Qb4USDcTnTxCgtAioFQ0NmIuiNBPOL5NnLDIHXKrCMQhowUFbXpv4IJPvJscPW9wD5ztD/MrbVxdZQaSxycPZrcnWYsWjtpF4hLL/PlTaYAwxFuslG8hNdplplZkuCUnfSJgt+EQVzAJSIHoZPXzb4ZOu8wN+w1ysFVGwFpBDZZMuk
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(4326008)(9686003)(7696005)(52536014)(8676002)(186003)(8936002)(6506007)(55016002)(110136005)(44832011)(26005)(2906002)(86362001)(316002)(76116006)(66476007)(66946007)(64756008)(66446008)(66556008)(54906003)(71200400001)(5660300002)(478600001)(6636002)(33656002)(4744005)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: xyYVIDI/BO65G5RfW28efKoJfrObgQFCtDesNSigdBqSR4k+m3BhRnue0WLmNbSgBNz7tKHPZ1eR29x2VeJUFwcZpqhGEXxEtQc70rZnEl3rFNrxwR96JXuFDlTcIuEgANogTaceBm4RYZJhCybb1EWpcjxRGVp/n+8OBO9FtmW8GyF47/81KfTjtDzqstHGEvHkrP1rlYG2mkqct9T6dyo6QDq2ncNpCONnvMENxm1WcwZ2g9KN6s5z/TsgaQdyXNIeVXFyrkxf8i1Qb/IRiqknPQG3uzcp6MeyQZid7D3plOW8d9CZ0hc0v8H+WqDzbcdKGPLUFuGPfiWguwpHmOn8tm8S6u1Hfywe7hA6P3rGGyR3un6AKC1U+UFL4YV/xMsiUJR/P4qyX3wYQ/La9hbVQVmSC5skPXTz6vNiX5zHa1QRKGByJwywcuSwZ7zyRc3boYCJLLOBzL1XKOR+Zc/QlAQZM3ircjV2Uk+6Fp+OjJpnd29rihAFz5zQvC8V
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521012206.14472-8-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 137a89c0-206d-4ce7-c000-08d7fd74efb4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2020 10:51:37.4699
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vl+LKQkhUgwF5QM+ega00kiyswtCYcNiUl0pYMXa2R9nrD7UjMvd3AaEle7t9R8j1TaG/N5tOTS6eBKIZ1WO5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4454
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 04:21:57AM +0300, Serge Semin wrote:
-> Each channel of DMA controller may have a limited length of burst
-> transaction (number of IO operations performed at ones in a single
-> DMA client request). This parameter can be used to setup the most
-> optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
-> overrun we can set the DMA Tx level to be of FIFO depth minus the
-> maximum burst transactions length. To prevent the Rx buffer underflow
-> the DMA Rx level should be set to the maximum burst transactions length.
-> This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
-> in accordance with these rules.
-
-Besides one bikeshedding point, looks good to me.
-Feel free to add
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - Use min() method to calculate the optimal burst values.
-> ---
->  drivers/spi/spi-dw-mid.c | 37 +++++++++++++++++++++++++++++++++----
->  drivers/spi/spi-dw.h     |  2 ++
->  2 files changed, 35 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-> index be02fedd87cb..0e95d8bc85c5 100644
-> --- a/drivers/spi/spi-dw-mid.c
-> +++ b/drivers/spi/spi-dw-mid.c
-> @@ -34,6 +34,31 @@ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
->  	return true;
->  }
->  
-> +static void mid_spi_maxburst_init(struct dw_spi *dws)
-> +{
-> +	struct dma_slave_caps caps;
-> +	u32 max_burst, def_burst;
-> +	int ret;
-> +
-> +	def_burst = dws->fifo_len / 2;
-> +
-> +	ret = dma_get_slave_caps(dws->rxchan, &caps);
-> +	if (!ret && caps.max_burst)
-> +		max_burst = caps.max_burst;
-> +	else
-> +		max_burst = RX_BURST_LEVEL;
-> +
-> +	dws->rxburst = min(max_burst, def_burst);
-> +
-> +	ret = dma_get_slave_caps(dws->txchan, &caps);
-> +	if (!ret && caps.max_burst)
-> +		max_burst = caps.max_burst;
-> +	else
-> +		max_burst = TX_BURST_LEVEL;
-> +
-> +	dws->txburst = min(max_burst, def_burst);
-> +}
-> +
->  static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
->  {
->  	struct dw_dma_slave slave = {
-> @@ -69,6 +94,8 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
->  	dws->master->dma_rx = dws->rxchan;
->  	dws->master->dma_tx = dws->txchan;
->  
-> +	mid_spi_maxburst_init(dws);
-> +
->  	return 0;
->  
->  free_rxchan:
-> @@ -94,6 +121,8 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
->  	dws->master->dma_rx = dws->rxchan;
->  	dws->master->dma_tx = dws->txchan;
->  
-> +	mid_spi_maxburst_init(dws);
-> +
->  	return 0;
->  }
->  
-> @@ -216,7 +245,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
->  	memset(&txconf, 0, sizeof(txconf));
->  	txconf.direction = DMA_MEM_TO_DEV;
->  	txconf.dst_addr = dws->dma_addr;
-> -	txconf.dst_maxburst = TX_BURST_LEVEL;
-> +	txconf.dst_maxburst = dws->txburst;
->  	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
->  	txconf.device_fc = false;
-> @@ -290,7 +319,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
->  	memset(&rxconf, 0, sizeof(rxconf));
->  	rxconf.direction = DMA_DEV_TO_MEM;
->  	rxconf.src_addr = dws->dma_addr;
-> -	rxconf.src_maxburst = RX_BURST_LEVEL;
-> +	rxconf.src_maxburst = dws->rxburst;
->  	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
->  	rxconf.device_fc = false;
-> @@ -315,8 +344,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
->  {
->  	u16 imr = 0, dma_ctrl = 0;
->  
-> -	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
-> -	dw_writel(dws, DW_SPI_DMATDLR, TX_BURST_LEVEL);
-> +	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
-> +	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
->  
->  	if (xfer->tx_buf) {
->  		dma_ctrl |= SPI_DMA_TDMAE;
-> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-> index 4902f937c3d7..d0c8b7d3a5d2 100644
-> --- a/drivers/spi/spi-dw.h
-> +++ b/drivers/spi/spi-dw.h
-> @@ -141,7 +141,9 @@ struct dw_spi {
->  
->  	/* DMA info */
->  	struct dma_chan		*txchan;
-> +	u32			txburst;
->  	struct dma_chan		*rxchan;
-> +	u32			rxburst;
->  	unsigned long		dma_chan_busy;
->  	dma_addr_t		dma_addr; /* phy address of the Data register */
->  	const struct dw_spi_dma_ops *dma_ops;
-> -- 
-> 2.25.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+PiBGcm9tOiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+IFNlbnQ6IFRodXJzZGF5
+LCBNYXkgMjEsIDIwMjAgMTA6MTggUE0NCj4gDQo+IENvcnJlY3QgbGRvMSB2b2x0YWdlIHJhbmdl
+IGZyb20gd3JvbmcgaGlnaCBncm91cCgzLjB2fjMuM3YpIHRvIGxvdyBncm91cA0KPiAoMS42dn4x
+Ljl2KSBiZWNhdXNlIHRoZSBsZG8xIHNob3VsZCBiZSAxLjh2LiBBY3R1YWxseSwgdHdvIHZvbHRh
+Z2UgZ3JvdXBzIGhhdmUNCj4gYmVlbiBzdXBwb3J0ZWQgYXQgYmQ3MTh4Ny1yZWd1bGF0b3IgZHJp
+dmVyLCBoZW5jZSwganVzdCBjb3JycmVjdCB0aGUgdm9sdGFnZQ0KPiByYW5nZSB0byAxLjZ2fjMu
+M3YuIEZvciBsZG8yQDAuOHYsIGNvcnJlY3Qgdm9sdGFnZSByYW5nZSB0b28uDQo+IE90aGVyd2lz
+ZSwgbGRvMSB3b3VsZCBiZSBrZXB0IEAzLjB2IGFuZCBsZG8yQDAuOXYgd2hpY2ggdmlvbGF0ZSBp
+Lm14OG1tDQo+IGRhdGFzaGVldCBhcyB0aGUgYmVsb3cgd2FybmluZyBsb2cgaW4ga2VybmVsOg0K
+PiANCj4gWyAgICAwLjk5NTUyNF0gTERPMTogQnJpbmdpbmcgMTgwMDAwMHVWIGludG8gMzAwMDAw
+MC0zMDAwMDAwdVYNCj4gWyAgICAwLjk5OTE5Nl0gTERPMjogQnJpbmdpbmcgODAwMDAwdVYgaW50
+byA5MDAwMDAtOTAwMDAwdVYNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJvYmluIEdvbmcgPHlpYmlu
+LmdvbmdAbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25n
+QG54cC5jb20+DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg0K
