@@ -4,231 +4,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698EAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29FBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5DB2070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4D62072C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 09:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgEUJOl (ORCPT
+        id S1728752AbgEUJfL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 05:14:41 -0400
-Received: from v6.sk ([167.172.42.174]:34954 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbgEUJOl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 05:14:41 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 394F661303;
-        Thu, 21 May 2020 09:14:09 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 5/9] dt-bindings: media: Convert marvell,mmp2-ccic to json-schema
-Date:   Thu, 21 May 2020 11:13:52 +0200
-Message-Id: <20200521091356.2211020-6-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521091356.2211020-1-lkundrak@v3.sk>
-References: <20200521091356.2211020-1-lkundrak@v3.sk>
+        Thu, 21 May 2020 05:35:11 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44704 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728720AbgEUJfL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 05:35:11 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A3BED833822F9EFD48BB;
+        Thu, 21 May 2020 17:35:07 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 21 May 2020 17:35:01 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>, <dyoung@redhat.com>,
+        <bhe@redhat.com>, <robh+dt@kernel.org>
+CC:     <arnd@arndb.de>, <John.p.donnelly@oracle.com>,
+        <pkushwaha@marvell.com>, <horms@verge.net.au>,
+        <guohanjun@huawei.com>, <chenzhou10@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>
+Subject: [PATCH v8 2/5] arm64: kdump: reserve crashkenel above 4G for crash dump kernel
+Date:   Thu, 21 May 2020 17:38:02 +0800
+Message-ID: <20200521093805.64398-3-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200521093805.64398-1-chenzhou10@huawei.com>
+References: <20200521093805.64398-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the marvell,mmp2-ccic binding to DT schema format using
-json-schema. While at that this drops the "func" and "phy" clocks.
+Crashkernel=X tries to reserve memory for the crash dump kernel under
+4G. If crashkernel=X,low is specified simultaneously, reserve spcified
+size low memory for crash kdump kernel devices firstly and then reserve
+memory above 4G.
 
-The driver consumes clocks with those names, but it's not clear
-what are they for and they are not used in DT systems. "phy" is
-probably a clock for the sensor and it would belong in the sensor
-node.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
 ---
-Changes since v1:
-- Fix indentation
-- Drop clocks other than "axi"
-- s/GPL-2.0-or-later/GPL-2.0-only/
+ arch/arm64/kernel/setup.c |  8 +++++++-
+ arch/arm64/mm/init.c      | 31 +++++++++++++++++++++++++++++--
+ 2 files changed, 36 insertions(+), 3 deletions(-)
 
- .../bindings/media/marvell,mmp2-ccic.txt      | 50 ----------
- .../bindings/media/marvell,mmp2-ccic.yaml     | 97 +++++++++++++++++++
- 2 files changed, 97 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
- create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-deleted file mode 100644
-index 7ec2c8c8a3b9..000000000000
---- a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--Marvell MMP2 camera host interface
--
--Required properties:
-- - compatible: Should be "marvell,mmp2-ccic".
-- - reg: Register base and size.
-- - interrupts: The interrupt number.
-- - #clock-cells: Must be 0.
--
--Optional properties:
-- - clocks: Reference to the input clock as specified by
--           Documentation/devicetree/bindings/clock/clock-bindings.txt.
-- - clock-names: Names of the clocks used; "axi" for the AXI bus interface,
--                "func" for the peripheral clock and "phy" for the parallel
--                video bus interface.
-- - clock-output-names: Optional clock source for sensors. Shall be "mclk".
--
--Required subnodes:
-- - port: The parallel bus interface port with a single endpoint linked to
--         the sensor's endpoint as described in
--         Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Required endpoint properties:
-- - bus-type: data bus type, <5> or <6> for Parallel or Bt.656 respectively
-- - pclk-sample: pixel clock polarity
-- - hsync-active: horizontal synchronization polarity (only required for
--   parallel bus)
-- - vsync-active: vertical synchronization polarity (only required for
--   parallel bus)
--
--Example:
--
--	camera0: camera@d420a000 {
--		compatible = "marvell,mmp2-ccic";
--		reg = <0xd420a000 0x800>;
--		interrupts = <42>;
--		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
--		clock-names = "axi";
--		#clock-cells = <0>;
--		clock-output-names = "mclk";
--
--		port {
--			camera0_0: endpoint {
--				remote-endpoint = <&ov7670_0>;
--                                bus-type = <5>;      /* Parallel */
--                                hsync-active = <1>;  /* Active high */
--                                vsync-active = <1>;  /* Active high */
--                                pclk-sample = <0>;   /* Falling */
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-new file mode 100644
-index 000000000000..fb399de668bb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/marvell,mmp2-ccic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 3fd2c11c09fc..a8487e4d3e5a 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -238,7 +238,13 @@ static void __init request_standard_resources(void)
+ 		    kernel_data.end <= res->end)
+ 			request_resource(res, &kernel_data);
+ #ifdef CONFIG_KEXEC_CORE
+-		/* Userspace will find "Crash kernel" region in /proc/iomem. */
++		/*
++		 * Userspace will find "Crash kernel" region in /proc/iomem.
++		 * Note: the low region is renamed as Crash kernel (low).
++		 */
++		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
++				crashk_low_res.end <= res->end)
++			request_resource(res, &crashk_low_res);
+ 		if (crashk_res.end && crashk_res.start >= res->start &&
+ 		    crashk_res.end <= res->end)
+ 			request_resource(res, &crashk_res);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index e42727e3568e..71498acf0cd8 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -81,6 +81,7 @@ static void __init reserve_crashkernel(void)
+ {
+ 	unsigned long long crash_base, crash_size;
+ 	int ret;
++	phys_addr_t crash_max = arm64_dma32_phys_limit;
+ 
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base);
+@@ -88,12 +89,38 @@ static void __init reserve_crashkernel(void)
+ 	if (ret || !crash_size)
+ 		return;
+ 
++	ret = reserve_crashkernel_low();
++	if (!ret && crashk_low_res.end) {
++		/*
++		 * If crashkernel=X,low specified, there may be two regions,
++		 * we need to make some changes as follows:
++		 *
++		 * 1. rename the low region as "Crash kernel (low)"
++		 * In order to distinct from the high region and make no effect
++		 * to the use of existing kexec-tools, rename the low region as
++		 * "Crash kernel (low)".
++		 *
++		 * 2. change the upper bound for crash memory
++		 * Set MEMBLOCK_ALLOC_ACCESSIBLE upper bound for crash memory.
++		 *
++		 * 3. mark the low region as "nomap"
++		 * The low region is intended to be used for crash dump kernel
++		 * devices, just mark the low region as "nomap" simply.
++		 */
++		const char *rename = "Crash kernel (low)";
 +
-+title: Marvell MMP2 camera host interface bindings
++		crashk_low_res.name = rename;
++		crash_max = MEMBLOCK_ALLOC_ACCESSIBLE;
++		memblock_mark_nomap(crashk_low_res.start,
++				    resource_size(&crashk_low_res));
++	}
 +
-+maintainers:
-+  - Lubomir Rintel <lkundrak@v3.sk>
-+
-+properties:
-+  $nodename:
-+    pattern: '^camera@[a-f0-9]+$'
-+
-+  compatible:
-+    const: marvell,mmp2-ccic
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      endpoint:
-+        type: object
-+        additionalProperties: false
-+
-+        # Properties described in
-+        # Documentation/devicetree/bindings/media/video-interfaces.txt
-+        properties:
-+          remote-endpoint: true
-+          hsync-active: true
-+          vsync-active: true
-+          pclk-sample: true
-+          bus-type: true
-+
-+        required:
-+          - remote-endpoint
-+
-+    required:
-+      - endpoint
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - description: AXI bus interface clock
-+      - description: Peripheral clock
-+      - description: Parallel video bus interface clock
-+
-+  clock-names:
-+    const: axi
-+
-+  '#clock-cells':
-+    const: 0
-+
-+  clock-output-names:
-+    const: mclk
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - port
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/marvell,mmp2.h>
-+
-+    camera@d420a000 {
-+      compatible = "marvell,mmp2-ccic";
-+      reg = <0xd420a000 0x800>;
-+      interrupts = <42>;
-+      clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-+      clock-names = "axi";
-+      #clock-cells = <0>;
-+      clock-output-names = "mclk";
-+
-+      port {
-+        camera0_0: endpoint {
-+          remote-endpoint = <&ov7670_0>;
-+          bus-type = <5>;      /* Parallel */
-+          hsync-active = <1>;  /* Active high */
-+          vsync-active = <1>;  /* Active high */
-+          pclk-sample = <0>;   /* Falling */
-+        };
-+      };
-+    };
-+
-+...
+ 	crash_size = PAGE_ALIGN(crash_size);
+ 
+ 	if (crash_base == 0) {
+ 		/* Current arm64 boot protocol requires 2MB alignment */
+-		crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
+-				crash_size, SZ_2M);
++		crash_base = memblock_find_in_range(0, crash_max, crash_size,
++				SZ_2M);
+ 		if (crash_base == 0) {
+ 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+ 				crash_size);
 -- 
-2.26.2
+2.20.1
 
