@@ -2,160 +2,210 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC8BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB42C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDCB20826
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oeUOIdLB"
+	by mail.kernel.org (Postfix) with ESMTP id 85635207F7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgEURhS (ORCPT
+        id S1728019AbgEURqm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 13:37:18 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53478 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728881AbgEURhQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 13:37:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590082635; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=F30tIyEfBVh5g5gaTce6ZjrM4vzM0/dihF/CEEqfqwE=; b=oeUOIdLBpIQvnK9WqzYt2m9Y4HvESSykxrdn6G7+wUwO0pXiVZZl/hJ3VX9rTA/v/XOFChWD
- rE1zwvrZElDdW/Y29jHTf2Xnq2UncOdRnWUfQFkVJvDicRiP2vR2V9B122VOra+yjlqzErPQ
- Hbn0P27j+h/RZnxKNCTgU0ks2c0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5ec6bc497c3c9cd06989ea64 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 17:37:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3E976C433CB; Thu, 21 May 2020 17:37:13 +0000 (UTC)
-Received: from [10.110.95.251] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E707DC433C6;
-        Thu, 21 May 2020 17:37:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E707DC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v2 0/3] Re-introduce TX FIFO resize for larger EP bursting
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org
-References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <1e2e9c1b-fcd9-9e03-da86-a46e541a1480@codeaurora.org>
-Date:   Thu, 21 May 2020 10:37:10 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 13:46:42 -0400
+Received: from mga01.intel.com ([192.55.52.88]:15985 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727966AbgEURql (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 13:46:41 -0400
+IronPort-SDR: hdrl0efVNCtzijIvRvUA9sobGXAD+uu8srkyoBYHKzJv6IMzaOdwdI760n3PL9OoVGe6r+ygu+
+ CHtFdK/Tbtbg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 10:46:41 -0700
+IronPort-SDR: 8aX85jWXvmSD89qEJZFBauvvMIasp7hathyri35IeY5Cbx6az3vB81oL6JWPo+QsiQOqMGBufp
+ R9cDjq237gNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
+   d="scan'208";a="412483262"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 21 May 2020 10:46:35 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jbpHC-0085Co-PX; Thu, 21 May 2020 20:46:38 +0300
+Date:   Thu, 21 May 2020 20:46:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/16] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200521174638.GQ1634618@smile.fi.intel.com>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, May 21, 2020 at 04:21:50AM +0300, Serge Semin wrote:
+> Baikal-T1 SoC provides a DW DMA controller to perform low-speed peripherals
+> Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
+> APB SSI devices embedded into the SoC. Currently the DMA-based transfers
+> are supported by the DW APB SPI driver only as a middle layer code for
+> Intel MID/Elkhart PCI devices. Seeing the same code can be used for normal
+> platform DMAC device we introduced a set of patches to fix it within this
+> series.
+> 
+> First of all we need to add the Tx and Rx DMA channels support into the DW
+> APB SSI binding. Then there are several fixes and cleanups provided as a
+> initial preparation for the Generic DMA support integration: add Tx/Rx
+> finish wait methods, clear DMAC register when done or stopped, Fix native
+> CS being unset, enable interrupts in accordance with DMA xfer mode,
+> discard static DW DMA slave structures, discard unused void priv pointer
+> and dma_width member of the dw_spi structure, provide the DMA Tx/Rx burst
+> length parametrisation and make sure it's optionally set in accordance
+> with the DMA max-burst capability.
+> 
+> In order to have the DW APB SSI MMIO driver working with DMA we need to
+> initialize the paddr field with the physical base address of the DW APB SSI
+> registers space. Then we unpin the Intel MID specific code from the
+> generic DMA one and placed it into the spi-dw-pci.c driver, which is a
+> better place for it anyway. After that the naming cleanups are performed
+> since the code is going to be used for a generic DMAC device. Finally the
+> Generic DMA initialization can be added to the generic version of the
+> DW APB SSI IP.
+> 
+> Last but not least we traditionally convert the legacy plain text-based
+> dt-binding file with yaml-based one and as a cherry on a cake replace
+> the manually written DebugFS registers read method with a ready-to-use
+> for the same purpose regset32 DebugFS interface usage.
 
+I have given tags where I agree with content and I left disputed ones untouched
+(1st patch, nevertheless, is fine for me, but I'm waiting for Feng).
 
-On 5/21/2020 1:36 AM, Wesley Cheng wrote:
-> Changes in V2:
->  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
->    FIFO.
->  - Removed dev_dbg() prints and fixed typos from patches
->  - Added some more description on the dt-bindings commit message
->
+So, now it seems settled in a way that I will send couple of cleanups
+afterwards to avoid blocking this series to go.
 
+Thanks for your work!
 
-> Reviewed-by: Felipe Balbi <balbi@kernel.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> This patchset is rebased and tested on the spi/for-next (5.7-rc5):
+> base-commit: fe9fce6b2cf3 ("Merge remote-tracking branch 'spi/for-5.8' into spi-next")
 > 
-
-Sorry, please disregard the Reviewed-by tags in the patches.  I added
-those mistakenly.
-
-> Currently, there is no functionality to allow for resizing the TXFIFOs, and
-> relying on the HW default setting for the TXFIFO depth.  In most cases, the
-> HW default is probably sufficient, but for USB compositions that contain
-> multiple functions that require EP bursting, the default settings
-> might not be enough.  Also to note, the current SW will assign an EP to a
-> function driver w/o checking to see if the TXFIFO size for that particular
-> EP is large enough. (this is a problem if there are multiple HW defined
-> values for the TXFIFO size)
+> Link: https://lore.kernel.org/linux-spi/20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Rebase on top of the spi repository for-next branch.
+> - Move bindings conversion patch to the tail of the series.
+> - Move fixes to the head of the series.
+> - Apply as many changes as possible to be applied the Generic DMA
+>   functionality support is added and the spi-dw-mid is moved to the
+>   spi-dw-dma driver.
+> - Discard patch "spi: dw: Fix dma_slave_config used partly uninitialized"
+>   since the problem has already been fixed.
+> - Add new patch "spi: dw: Discard unused void priv pointer".
+> - Add new patch "spi: dw: Discard dma_width member of the dw_spi structure".
+>   n_bytes member of the DW SPI data can be used instead.
+> - Build the DMA functionality into the DW APB SSI core if required instead
+>   of creating a separate kernel module.
+> - Use conditional statement instead of the ternary operator in the ref
+>   clock getter.
 > 
-> It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
-> is required for an EP that supports bursting.  Otherwise, there may be
-> frequent occurences of bursts ending.  For high bandwidth functions,
-> such as data tethering (protocols that support data aggregation), mass
-> storage, and media transfer protocol (over FFS), the bMaxBurst value can be
-> large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
-> throughput. (which can be associated to system access latency, etc...)  It
-> allows for a more consistent burst of traffic, w/o any interruptions, as
-> data is readily available in the FIFO.
+> Link: https://lore.kernel.org/linux-spi/20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v3:
+> - Use spi_delay_exec() method to wait for the DMA operation completion.
+> - Explicitly initialize the dw_dma_slave members on stack.
+> - Discard the dws->fifo_len utilization in the Tx FIFO DMA threshold
+>   setting from the patch where we just add the default burst length
+>   constants.
+> - Use min() method to calculate the optimal burst values.
+> - Add new patch which moves the spi-dw.c source file to spi-dw-core.c in
+>   order to preserve the DW APB SSI core driver name.
+> - Add commas in the debugfs_reg32 structure initializer and after the last
+>   entry of the dw_spi_dbgfs_regs array.
 > 
-> With testing done using the mass storage function driver, the results show
-> that with a larger TXFIFO depth, the bandwidth increased significantly.
+> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+> Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 > 
-> Test Parameters:
->  - Platform: Qualcomm SM8150
->  - bMaxBurst = 6
->  - USB req size = 256kB
->  - Num of USB reqs = 16
->  - USB Speed = Super-Speed
->  - Function Driver: Mass Storage (w/ ramdisk)
->  - Test Application: CrystalDiskMark
+> Serge Semin (16):
+>   spi: dw: Add Tx/Rx finish wait methods to the MID DMA
+>   spi: dw: Enable interrupts in accordance with DMA xfer mode
+>   spi: dw: Discard static DW DMA slave structures
+>   spi: dw: Discard unused void priv pointer
+>   spi: dw: Discard dma_width member of the dw_spi structure
+>   spi: dw: Parameterize the DMA Rx/Tx burst length
+>   spi: dw: Use DMA max burst to set the request thresholds
+>   spi: dw: Fix Rx-only DMA transfers
+>   spi: dw: Add core suffix to the DW APB SSI core source file
+>   spi: dw: Move Non-DMA code to the DW PCIe-SPI driver
+>   spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
+>   spi: dw: Add DW SPI DMA/PCI/MMIO dependency on the DW SPI core
+>   spi: dw: Cleanup generic DW DMA code namings
+>   spi: dw: Add DMA support to the DW SPI MMIO driver
+>   spi: dw: Use regset32 DebugFS method to create regdump file
+>   dt-bindings: spi: Convert DW SPI binding to DT schema
 > 
-> Results:
+>  .../bindings/spi/snps,dw-apb-ssi.txt          |  44 ---
+>  .../bindings/spi/snps,dw-apb-ssi.yaml         | 127 ++++++++
+>  .../devicetree/bindings/spi/spi-dw.txt        |  24 --
+>  drivers/spi/Kconfig                           |  15 +-
+>  drivers/spi/Makefile                          |   5 +-
+>  drivers/spi/{spi-dw.c => spi-dw-core.c}       |  88 ++----
+>  drivers/spi/{spi-dw-mid.c => spi-dw-dma.c}    | 276 +++++++++++-------
+>  drivers/spi/spi-dw-mmio.c                     |   4 +
+>  drivers/spi/spi-dw-pci.c                      |  50 +++-
+>  drivers/spi/spi-dw.h                          |  33 ++-
+>  10 files changed, 407 insertions(+), 259 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-dw.txt
+>  rename drivers/spi/{spi-dw.c => spi-dw-core.c} (82%)
+>  rename drivers/spi/{spi-dw-mid.c => spi-dw-dma.c} (53%)
 > 
-> TXFIFO Depth = 3 max packets
-> 
-> Test Case | Data Size | AVG tput (in MB/s)
-> -------------------------------------------
-> Sequential|1 GB x     | 
-> Read      |9 loops    | 193.60
-> 	  |           | 195.86
->           |           | 184.77
->           |           | 193.60
-> -------------------------------------------
-> 
-> TXFIFO Depth = 6 max packets
-> 
-> Test Case | Data Size | AVG tput (in MB/s)
-> -------------------------------------------
-> Sequential|1 GB x     | 
-> Read      |9 loops    | 287.35
-> 	  |           | 304.94
->           |           | 289.64
->           |           | 293.61
-> -------------------------------------------
-> 
-> Wesley Cheng (3):
->   usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
->   arm64: boot: dts: qcom: sm8150: Enable dynamic TX FIFO resize logic
->   dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
-> 
->  Documentation/devicetree/bindings/usb/dwc3.txt |   2 +-
->  arch/arm64/boot/dts/qcom/sm8150.dtsi           |   1 +
->  drivers/usb/dwc3/core.c                        |   2 +
->  drivers/usb/dwc3/core.h                        |   8 ++
->  drivers/usb/dwc3/ep0.c                         |  37 ++++++++-
->  drivers/usb/dwc3/gadget.c                      | 111 +++++++++++++++++++++++++
->  6 files changed, 159 insertions(+), 2 deletions(-)
+> -- 
+> 2.25.1
 > 
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+With Best Regards,
+Andy Shevchenko
+
+
