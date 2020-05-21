@@ -2,128 +2,107 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B643C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77950C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 534F9206BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF572078C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590070102;
+	bh=fb5z/8KTImUs11oTnP3VReDVj9J6VaGdo2+ddgr1rpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DX+JrOlKmFuF2co1GEBPGOLMEOOiWK5MhKLh8FhCNvkY5G/1nNZ35pAgOSq0eB/XW
+	 dNQos2xC3DVm5ygPBrzTA5+y1/9hMTJjzxukG4VO/7u5ZMhmf5JrsVrU4IQ1nwKdxc
+	 mKg3Wyp6s1CApOOD/F7mhufduFvCicLUkURM57b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbgEUOHo (ORCPT
+        id S1729665AbgEUOIV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 10:07:44 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38286 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729728AbgEUOHk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 10:07:40 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BC46F8030791;
-        Thu, 21 May 2020 14:07:37 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sop25_UHIheO; Thu, 21 May 2020 17:07:36 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 01/13] dt-bindings: power: Convert mti,mips-cpc to DT schema
-Date:   Thu, 21 May 2020 17:07:12 +0300
-Message-ID: <20200521140725.29571-2-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 21 May 2020 10:08:21 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42128 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729524AbgEUOIV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 10:08:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id e18so7529789iog.9;
+        Thu, 21 May 2020 07:08:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hkdAaLYIc0WsgyOtF7HphxQvDajMRAVCt9ecUnq6cSs=;
+        b=Fbiiu2fJG9C7TBtudUc6SxEodeeZc1NkCWFT6jwPHtAfhtI5ygQsRlaXOXAf0H1g2o
+         wzFev57NiThIJ9vPKelCXm5/MlPK3HqiJ14TGc0VaXXyqVcUQqdhkpQOOjsCjOHMAsUl
+         B4AuoksHZjRUiiqONa31wAQnzZeofLXGu3/g9q1mcve+RfzVA8u/BqKBRsmAMYwd6NSw
+         o6En09gD8DzaqvOcjgvtOyPn2GQJEBWbRE8OknT5jaGu5n8H4HhkkfrNSAUsXwavX6Te
+         VmEMg3mkbpJ2kMQQ/l/wtb8wMR8269+Nx+ePy0pyFAw5LpMhzzCYc5RrbBbalkBgxulQ
+         Z13w==
+X-Gm-Message-State: AOAM530vSK1+XB70e+TlBcGtAPVCeX0lt4oVbLnvpqm4W+SuWOKomF3E
+        S/GKb9AnOB6mpoNcjlLzqA==
+X-Google-Smtp-Source: ABdhPJzuJXTY4mbZgkKCxsK6OiELIu9X1jZKqPMjnJt3n48gVbBt7CPOXr61k8mGVP/9ied0TyLdOw==
+X-Received: by 2002:a02:90cd:: with SMTP id c13mr3832204jag.83.1590070100265;
+        Thu, 21 May 2020 07:08:20 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c13sm3060220ilu.81.2020.05.21.07.08.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 07:08:18 -0700 (PDT)
+Received: (nullmailer pid 2308939 invoked by uid 1000);
+        Thu, 21 May 2020 14:08:17 -0000
+Date:   Thu, 21 May 2020 08:08:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     robh+dt@kernel.org, ofery@google.com, venture@google.com,
+        wsa@the-dreams.de, yuenn@google.com, devicetree@vger.kernel.org,
+        linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, avifishman70@gmail.com,
+        andriy.shevchenko@linux.intel.com, tmaimon77@gmail.com,
+        benjaminfair@google.com, kfting@nuvoton.com,
+        brendanhiggins@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C
+ controller
+Message-ID: <20200521140817.GA2308392@bogus>
+References: <20200520095113.185414-1-tali.perry1@gmail.com>
+ <20200520095113.185414-2-tali.perry1@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520095113.185414-2-tali.perry1@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It's a Cluster Power Controller embedded into the MIPS IP cores.
-Currently the corresponding dts node is supposed to have compatible
-and reg properties.
+On Wed, 20 May 2020 12:51:11 +0300, Tali Perry wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM I2C controller.
+> 
+> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> ---
+>  .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+> 
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
----
- .../bindings/power/mti,mips-cpc.txt           |  8 -----
- .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
- 2 files changed, 35 insertions(+), 8 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
- create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
 
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-deleted file mode 100644
-index c6b82511ae8a..000000000000
---- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-+++ /dev/null
-@@ -1,8 +0,0 @@
--Binding for MIPS Cluster Power Controller (CPC).
--
--This binding allows a system to specify where the CPC registers are
--located.
--
--Required properties:
--compatible : Should be "mti,mips-cpc".
--regs: Should describe the address & size of the CPC register region.
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-new file mode 100644
-index 000000000000..9cd92a57130c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/mti,mips-cpc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MIPS Cluster Power Controller
-+
-+description: |
-+  Defines a location of the MIPS Cluster Power Controller registers.
-+
-+maintainers:
-+  - Paul Burton <paulburton@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: mti,mips-cpc
-+
-+  reg:
-+    description: |
-+      Base address and size of an unoccupied memory region, which will be
-+      used to map the MIPS CPC registers block.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    cpc@1bde0000 {
-+      compatible = "mti,mips-cpc";
-+      reg = <0 0x1bde0000 0 0x8000>;
-+    };
-+...
--- 
-2.25.1
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Error: Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dts:22.28-29 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1294210
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
