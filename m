@@ -2,247 +2,163 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39907C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 03:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3773DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 03:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13FF020738
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 03:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JO3hOK9d"
+	by mail.kernel.org (Postfix) with ESMTP id 06CED20721
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 03:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgEUDau (ORCPT
+        id S1728015AbgEUDy6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 23:30:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44024 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgEUDat (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 23:30:49 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04L3UaIk091192;
-        Wed, 20 May 2020 22:30:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590031836;
-        bh=b6oEC2PB2pjw4Mn+qzNvfqJC+/OpQLwrj1RTuLQtQwQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JO3hOK9dmY6s1gbbvAjsW2uFby9AjDV1qyuNfY03uf01UhQ3Yz7ifb9zZorzxAOt4
-         BTYt45eqipApPucs7R1iMcN9WHmjRunRmlrgWtN3kkg2/bJI7GfuLe/VTRI293EhVy
-         +ZjsRrFUJzEtObV7XGG6KLJ0+2xvELfo3wTdlJQA=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04L3UaTi053753
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 22:30:36 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 22:30:36 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 22:30:36 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L3UXwZ121668;
-        Wed, 20 May 2020 22:30:33 -0500
-Subject: Re: [PATCH v3 4/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200508130646.23939-1-kishon@ti.com>
- <20200508130646.23939-5-kishon@ti.com>
- <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <162447e2-ac3b-9523-d404-130b93e0860e@ti.com>
-Date:   Thu, 21 May 2020 09:00:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 20 May 2020 23:54:58 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:43167 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727998AbgEUDy6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 May 2020 23:54:58 -0400
+Date:   21 May 2020 12:54:56 +0900
+X-IronPort-AV: E=Sophos;i="5.73,416,1583161200"; 
+   d="scan'208";a="47634878"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 21 May 2020 12:54:56 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id AA6604181866;
+        Thu, 21 May 2020 12:54:56 +0900 (JST)
+Message-ID: <87pnay3ptb.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: [PATCH] ASoC: dt-bindings: simple-card: care missing address #address-cells
+User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-On 5/19/2020 10:41 PM, Rob Herring wrote:
-> On Fri, May 8, 2020 at 7:07 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->> property to configure the number of bits passed through from PCIe
->> address to internal address in Inbound Address Translation register.
->> This only used the NO MATCH BAR.
->>
->> However standard PCI dt-binding already defines "dma-ranges" to
->> describe the address ranges accessible by PCIe controller. Add support
->> in Cadence PCIe host driver to parse dma-ranges and configure the
->> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
->> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB, so if
->> the dma-ranges specifies a size larger than the maximum allowed, the
->> driver will split and configure the BARs.
-> 
-> Would be useful to know what your dma-ranges contains now.
-> 
-> 
->> Legacy device tree binding compatibility is maintained by retaining
->> support for "cdns,no-bar-match-nbits".
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../controller/cadence/pcie-cadence-host.c    | 141 ++++++++++++++++--
->>  drivers/pci/controller/cadence/pcie-cadence.h |  17 ++-
->>  2 files changed, 141 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 6ecebb79057a..2485ecd8434d 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -11,6 +11,12 @@
->>
->>  #include "pcie-cadence.h"
->>
->> +static u64 cdns_rp_bar_max_size[] = {
->> +       [RP_BAR0] = _ULL(128 * SZ_2G),
->> +       [RP_BAR1] = SZ_2G,
->> +       [RP_NO_BAR] = SZ_64T,
->> +};
->> +
->>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->>                                int where)
->>  {
->> @@ -106,6 +112,117 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->>         return 0;
->>  }
->>
->> +static void cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
->> +                                        enum cdns_pcie_rp_bar bar,
->> +                                        u64 cpu_addr, u32 aperture)
->> +{
->> +       struct cdns_pcie *pcie = &rc->pcie;
->> +       u32 addr0, addr1;
->> +
->> +       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
->> +               (lower_32_bits(cpu_addr) & GENMASK(31, 8));
->> +       addr1 = upper_32_bits(cpu_addr);
->> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
->> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
->> +}
->> +
->> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
->> +                                    struct resource_entry *entry,
->> +                                    enum cdns_pcie_rp_bar *index)
->> +{
->> +       u64 cpu_addr, pci_addr, size, winsize;
->> +       struct cdns_pcie *pcie = &rc->pcie;
->> +       struct device *dev = pcie->dev;
->> +       enum cdns_pcie_rp_bar bar;
->> +       unsigned long flags;
->> +       u32 aperture;
->> +       u32 value;
->> +
->> +       cpu_addr = entry->res->start;
->> +       flags = entry->res->flags;
->> +       pci_addr = entry->res->start - entry->offset;
->> +       size = resource_size(entry->res);
->> +       bar = *index;
->> +
->> +       if (entry->offset) {
->> +               dev_err(dev, "Cannot map PCI addr: %llx to CPU addr: %llx\n",
->> +                       pci_addr, cpu_addr);
-> 
-> Would be a bit more clear to say PCI addr must equal CPU addr.
-> 
->> +               return -EINVAL;
->> +       }
->> +
->> +       value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
->> +       while (size > 0) {
->> +               if (bar > RP_NO_BAR) {
->> +                       dev_err(dev, "Failed to map inbound regions!\n");
->> +                       return -EINVAL;
->> +               }
->> +
->> +               winsize = size;
->> +               if (size > cdns_rp_bar_max_size[bar])
->> +                       winsize = cdns_rp_bar_max_size[bar];
->> +
->> +               aperture = ilog2(winsize);
->> +
->> +               cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, aperture);
->> +
->> +               if (bar == RP_NO_BAR)
->> +                       break;
->> +
->> +               if (winsize + cpu_addr >= SZ_4G) {
->> +                       if (!(flags & IORESOURCE_PREFETCH))
->> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
->> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
->> +               } else {
->> +                       if (!(flags & IORESOURCE_PREFETCH))
->> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
->> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
->> +               }
->> +
->> +               value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
->> +
->> +               size -= winsize;
->> +               cpu_addr += winsize;
->> +               bar++;
->> +       }
->> +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
->> +       *index = bar;
->> +
->> +       return 0;
->> +}
->> +
->> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
->> +{
->> +       enum cdns_pcie_rp_bar bar = RP_BAR0;
->> +       struct cdns_pcie *pcie = &rc->pcie;
->> +       struct device *dev = pcie->dev;
->> +       struct device_node *np = dev->of_node;
->> +       struct pci_host_bridge *bridge;
->> +       struct resource_entry *entry;
->> +       u32 no_bar_nbits = 32;
->> +       int err;
->> +
->> +       bridge = pci_host_bridge_from_priv(rc);
->> +       if (!bridge)
->> +               return -ENOMEM;
->> +
->> +       if (list_empty(&bridge->dma_ranges)) {
->> +               of_property_read_u32(np, "cdns,no-bar-match-nbits",
->> +                                    &no_bar_nbits);
->> +               cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0, no_bar_nbits);
->> +               return 0;
->> +       }
->> +
->> +       resource_list_for_each_entry(entry, &bridge->dma_ranges) {
->> +               err = cdns_pcie_host_bar_config(rc, entry, &bar);
-> 
-> Seems like this should have some better logic to pick which BAR to
-> use. Something like find the biggest region and then find the smallest
-> BAR that it fits in. Then get the next biggest...
+Current simple-card will get below error,
+because it doesn't care about #address-cells at some part.
 
-Okay, I'll change this something like for each region, find the smallest BAR
-that it fits in and if there is no BAR big enough to hold the region, split the
-region to see if can be fitted using multiple BARs. I don't see the purpose of
-finding the biggest region first since at all times we'll only use the smallest
-BAR to fit.
+	DTC     Documentation/devicetree/bindings/sound/simple-card.example.dt.yaml
+	Documentation/devicetree/bindings/sound/simple-card.example.dts:171.46-173.15: \
+		Warning (unit_address_vs_reg): /example-4/sound/simple-audio-card,cpu@0: \
+		node has a unit name, but no reg or ranges property
+	Documentation/devicetree/bindings/sound/simple-card.example.dts:175.37-177.15: \
+		Warning (unit_address_vs_reg): /example-4/sound/simple-audio-card,cpu@1: \
+		node has a unit name, but no reg or ranges property
+	...
 
-Thanks
-Kishon
+This patch fixup this issue.
+
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+---
+ .../bindings/sound/simple-card.yaml           | 25 ++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/simple-card.yaml b/Documentation/devicetree/bindings/sound/simple-card.yaml
+index cb2bb5fac0e1..6c4c2c6d6d3c 100644
+--- a/Documentation/devicetree/bindings/sound/simple-card.yaml
++++ b/Documentation/devicetree/bindings/sound/simple-card.yaml
+@@ -208,6 +208,11 @@ patternProperties:
+       reg:
+         maxItems: 1
+ 
++      "#address-cells":
++        const: 1
++      "#size-cells":
++        const: 0
++
+       # common properties
+       frame-master:
+         $ref: "#/definitions/frame-master"
+@@ -288,7 +293,6 @@ examples:
+ 
+         #address-cells = <1>;
+         #size-cells = <0>;
+-
+         simple-audio-card,dai-link@0 {		/* I2S - HDMI */
+             reg = <0>;
+             format = "i2s";
+@@ -392,11 +396,15 @@ examples:
+         simple-audio-card,routing = "ak4642 Playback", "DAI0 Playback",
+                                     "ak4642 Playback", "DAI1 Playback";
+ 
++        #address-cells = <1>;
++        #size-cells = <0>;
+         dpcmcpu: simple-audio-card,cpu@0 {
++            reg = <0>;
+             sound-dai = <&rcar_sound 0>;
+         };
+ 
+         simple-audio-card,cpu@1 {
++            reg = <1>;
+             sound-dai = <&rcar_sound 1>;
+         };
+ 
+@@ -427,7 +435,12 @@ examples:
+             "pcm3168a Playback", "DAI3 Playback",
+             "pcm3168a Playback", "DAI4 Playback";
+ 
++        #address-cells = <1>;
++        #size-cells = <0>;
++
+         simple-audio-card,dai-link@0 {
++            reg = <0>;
++
+             format = "left_j";
+             bitclock-master = <&sndcpu0>;
+             frame-master = <&sndcpu0>;
+@@ -441,22 +454,30 @@ examples:
+         };
+ 
+         simple-audio-card,dai-link@1 {
++            reg = <1>;
++
+             format = "i2s";
+             bitclock-master = <&sndcpu1>;
+             frame-master = <&sndcpu1>;
+ 
+             convert-channels = <8>; /* TDM Split */
+ 
++            #address-cells = <1>;
++            #size-cells = <0>;
+             sndcpu1: cpu@0 {
++                reg = <0>;
+                 sound-dai = <&rcar_sound 1>;
+             };
+             cpu@1 {
++                reg = <1>;
+                 sound-dai = <&rcar_sound 2>;
+             };
+             cpu@2 {
++                reg = <2>;
+                 sound-dai = <&rcar_sound 3>;
+             };
+             cpu@3 {
++                reg = <3>;
+                 sound-dai = <&rcar_sound 4>;
+             };
+             codec {
+@@ -468,6 +489,8 @@ examples:
+         };
+ 
+         simple-audio-card,dai-link@2 {
++            reg = <2>;
++
+             format = "i2s";
+             bitclock-master = <&sndcpu2>;
+             frame-master = <&sndcpu2>;
+-- 
+2.17.1
+
