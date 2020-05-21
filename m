@@ -2,98 +2,79 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924F6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7448DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6E7207F9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590066262;
-	bh=MRCEC+nXdSDz6i5TZrMw6mLNWWrHvA60N+e767YVxns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F6xL9g3fIq+MOh2C1y1Oek8XCLgOJGzvNQZSM31n7FtkcHRLByYo7yeruDN2h+Ztl
-	 BV/FNZGFHxU/z+rG2wyTKH1n6dCPEfKM5yX46pzEOgdSivDWXnsMLpEvqB27IF27eD
-	 sHHXSfTRpEy9treN23oJAC/D6F5Z51kSJJH3ezuY=
+	by mail.kernel.org (Postfix) with ESMTP id 37CED2078B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 13:07:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iv9F5Sta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgEUNEW (ORCPT
+        id S1726878AbgEUNHK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 09:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
+        Thu, 21 May 2020 09:07:10 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42906 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbgEUNEV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 09:04:21 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 931022072C;
-        Thu, 21 May 2020 13:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590066261;
-        bh=MRCEC+nXdSDz6i5TZrMw6mLNWWrHvA60N+e767YVxns=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lmu3epPATx/GzY3jREbvlRwGrVQu7NJk8uFE7w/S8G1BcG1hgzymFGCxBxB3viHil
-         R4Hecc/Gx26n2kk2sBrr248PsSUtFBnxZcpkpZTD3fq88XA76zFMe4Kr03Js3lMNcM
-         cHsdSest9biXfmMIG+b2eQph4k3krZ8JUH+dhwf0=
-Date:   Thu, 21 May 2020 14:04:16 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        John Garry <john.garry@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier
- for userspace
-Message-ID: <20200521130415.GB5949@willie-the-truck>
-References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
- <20200512073115.14177-2-qiangqing.zhang@nxp.com>
- <20200519185125.GB453195@bogus>
- <20200520073304.GA23534@willie-the-truck>
- <CAL_JsqJfQ0PFy5mmwSG4aM91ghq5xiAEPR2YZOymws+BfGa+uA@mail.gmail.com>
+        id S1728208AbgEUNHK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 09:07:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=yQ6UEpWldvHmnkmYV9FHSOOr9MgmZ9ZSwdsyA6N/K8I=; b=iv9F5StaTY2NkJ2uRwUbWlhCvo
+        gw8AGvzWa1bQzRhQrxuR3+P/05xKWcedw8+hWI/Lg2WjSjHEywJLm1IRuKQaEzc3qj8xYChnGH2A9
+        yRw/ikE8ZD5zVW6+3HFQxQMtIPajL8vrhS3mi5nGza87au3gAFEHOIX1gNyC16PCDg9k=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jbkua-002u1Y-Hm; Thu, 21 May 2020 15:07:00 +0200
+Date:   Thu, 21 May 2020 15:07:00 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net 3/4] ARM: dts: imx6: update fec gpr
+ property to match new format
+Message-ID: <20200521130700.GC657910@lunn.ch>
+References: <1589963516-26703-1-git-send-email-fugang.duan@nxp.com>
+ <1589963516-26703-4-git-send-email-fugang.duan@nxp.com>
+ <20200520170322.GJ652285@lunn.ch>
+ <AM6PR0402MB3607541D33B1C61476022D0AFFB70@AM6PR0402MB3607.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJfQ0PFy5mmwSG4aM91ghq5xiAEPR2YZOymws+BfGa+uA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <AM6PR0402MB3607541D33B1C61476022D0AFFB70@AM6PR0402MB3607.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 09:23:41AM -0600, Rob Herring wrote:
-> On Wed, May 20, 2020 at 1:33 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Tue, May 19, 2020 at 12:51:25PM -0600, Rob Herring wrote:
-> > > On Tue, May 12, 2020 at 03:31:13PM +0800, Joakim Zhang wrote:
-> > > > +static ssize_t ddr_perf_identifier_show(struct device *dev,
-> > > > +                                   struct device_attribute *attr,
-> > > > +                                   char *page)
-> > > > +{
-> > > > +   struct ddr_pmu *pmu = dev_get_drvdata(dev);
-> > > > +
-> > > > +   return sprintf(page, "%s\n", pmu->devtype_data->identifier);
-> > >
-> > > Why do we need yet another way to identify the SoC from userspace?
-> >
-> > I also really dislike this. What's the preferred way to identify the SoC
-> > from userspace?
+> Andrew, patch#1 in the series will parse the property to get register offset and bit.
+> Patch#2 describes the property format as below:
+>        <&gpr req_gpr req_bit>.
+>         gpr is the phandle to general purpose register node.
+>         req_gpr is the gpr register offset for ENET stop request.
+>         req_bit is the gpr bit offset for ENET stop request.
 > 
-> /proc/cpuinfo? ;)
+> All i.MX support wake-on-lan, imx6q/dl/qp is the first platforms in upstream to support it.
+> As you know, most of i.MX chips has two ethernet instances, they have different gpr bit.
+> 
+> gpr is used to enter/exit stop mode for soc. So it can be defined in dtsi file.
+> "fsl,magic-packet;" property is define the board wakeup capability.
+> 
+> I am not sure whether above information is clear for you why to add the patch set.
 
-The *SoC*!
+I understand the patch. What is missing is an actual user, where you
+have two interfaces, doing WOL, with different values for gpr. We
+don't add new kernel APIs without a user.
 
-> For an non-firmware specific case, I'd say soc_device should be. I'd
-> guess ACPI systems don't use it and for them it's dmidecode typically.
-> The other problem I have with soc_device is it is optional.
-
-John -- what do you think about using soc_device to expose this information,
-with ACPI systems using DMI data instead?
-
-Will
+    Andrew
