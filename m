@@ -5,220 +5,172 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75332C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 16:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F5AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 16:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 519C620748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 16:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9194920748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 16:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iyB4ngXR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GeTX2t72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgEUQAO (ORCPT
+        id S1728493AbgEUQAv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 12:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40942 "EHLO
+        Thu, 21 May 2020 12:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgEUQAO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 12:00:14 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D1CC08C5C0
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 09:00:14 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p30so3352876pgl.11
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 09:00:14 -0700 (PDT)
+        with ESMTP id S1728350AbgEUQAu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 12:00:50 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A3AC061A0E
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 09:00:50 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z4so6000294wmi.2
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 09:00:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=jHirFrfUhrscDiyY19yFy1eojdIlJFYNDT0L5VP6NdE=;
-        b=iyB4ngXROy5qTSwcL5Cvl5LAnn2U16sn3BZvQyGAClC2S6/xy2nQLtKiG2/8kwRklF
-         WNVdSOimsudJuNLU7K5eiIGS5eRF8urxcHf9Ijf9Y2FlUwywDIWA9biynBY3D08eqBC4
-         kFPQ845JNwI3HI41jDcvAJEOoi1G3+mRda/sQ=
+        bh=l1/7oVopGR8ZQd6NaIEuCXZDCOqHLrR/3N7LZWtpNqA=;
+        b=GeTX2t72tcZNw5Q1Vq3bxOOwmr927HcyIkpXvBpKk0ZxuhWAwrGZ2fRvHtBA+vCd0a
+         shiz7RMixnasTu8+CYC9VSFQPu/XFvPZUYSqT+77V10ReU/ZVMLAWMEwJi0ovuk6Cshd
+         DWBNncRW5nBLTOcjfC9jlB3vujEzgdkgNY/1Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jHirFrfUhrscDiyY19yFy1eojdIlJFYNDT0L5VP6NdE=;
-        b=XUlOfIS7ha1/Oj/vo7et5KCoJ89Gl0B7070I1p96gyZwdw3uutPlU05kOen5tPD1+N
-         9SLF1pUsb6GLvVeV8Sc0kIykKx2WvTu2jOfbFr65eXaSBCHSoyKtuyW223RDhBAOFiDw
-         ujVbDz4lBgPR7Y633mWPAaTNCFW1DUj/wKq6qqvDqgeSrj8UFWKza5Xyy3LbH/UBiiw4
-         7lQQGVXVCf95Q33snHGHMd2V4ih6sAf5SK7LExtLOWYutKpD8eBpDuZysVJUxyV5JYlS
-         gAYYB6r6OGBujluSTa+SV6iGyJQj4J6sUmEmszcn/3MQTKrBQeAOyQpa02wqNIailcuo
-         LoBQ==
-X-Gm-Message-State: AOAM532puh7QAFfXsVXdhxRXm8ByyYDrDRKrZS/gGS17tks2PrB+rI50
-        c0XgTQzU4/FmD4pVHvmLRcfNpw==
-X-Google-Smtp-Source: ABdhPJyeSnrDAQNZVdUzm0V1yaYpL16GQlLMa/0trXnLiqwcmnp6adE8lFYQRNmL1AUSQvEq0E9O+Q==
-X-Received: by 2002:a62:b402:: with SMTP id h2mr10334883pfn.221.1590076813529;
-        Thu, 21 May 2020 09:00:13 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w12sm3948439pjn.21.2020.05.21.09.00.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 09:00:12 -0700 (PDT)
-Date:   Thu, 21 May 2020 09:00:10 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        msavaliy@codeaurora.org, evgreen@chromium.org
-Subject: Re: [PATCH V6 2/7] soc: qcom-geni-se: Add interconnect support to
- fix earlycon crash
-Message-ID: <20200521160010.GB4525@google.com>
-References: <1590049764-20912-1-git-send-email-akashast@codeaurora.org>
- <1590049764-20912-3-git-send-email-akashast@codeaurora.org>
+        bh=l1/7oVopGR8ZQd6NaIEuCXZDCOqHLrR/3N7LZWtpNqA=;
+        b=V28HY+MUwigOPngVCDdnN8QdnrCI4w8m7vRFIs9ea25DtxE3K7Z5RzEUCxWedDj7wq
+         ltw3l6Ur7Sr37rAx/DJXAeH+nUsYPSro9xDYEcCBk4Gv9XKz76swceJiXQgvepGP1Zm3
+         JQ8xg8UkAey68hFjsyjDojHnFjFZhY3ZGUQBmw0DR1lYEkivIVmH+55yE06Kkf4zWheA
+         mBbMug/R3l4dk3CvBghUAL3yJOeH2v6VccZ+ABoxVaoTdcpjd4aibFq9r3/lrfImR2Ni
+         Sm8pBWcbSiCgtv00lGV/fNvMP1aY+wO61kVSn72b8bzDFXSEIWGZR50+1VafygANcrgK
+         ayuw==
+X-Gm-Message-State: AOAM531jBCzOYafOKbJFXXFkpI9n5OKEmsRW74szN9SIQ0NoIFDYXBfF
+        2GHHjrE05btkQSz+B26B1QrN+g==
+X-Google-Smtp-Source: ABdhPJwBbbkzQM0pkq+XJy1eUeL/VqXKXEJpvr6yzQ+SOqXN0RpdIlsOxlmRNdPbmgSFjRlsFB6ApA==
+X-Received: by 2002:a7b:c3da:: with SMTP id t26mr8868032wmj.146.1590076848935;
+        Thu, 21 May 2020 09:00:48 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id y207sm7661823wmd.7.2020.05.21.09.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 09:00:48 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:00:46 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com,
+        yong.wu@mediatek.com
+Subject: Re: [PATCH v8 11/14] media: dt-bindings: Add jpeg enc device tree
+ node document
+Message-ID: <20200521160046.GJ209565@chromium.org>
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+ <20200403094033.8288-12-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590049764-20912-3-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <20200403094033.8288-12-xia.jiang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Akash,
+Hi Xia,
 
-On Thu, May 21, 2020 at 01:59:19PM +0530, Akash Asthana wrote:
-> QUP core clock is shared among all the SE drivers present on particular
-> QUP wrapper, the system will reset(unclocked access) if earlycon used after
-> QUP core clock is put to 0 from other SE drivers before real console comes
-> up.
+On Fri, Apr 03, 2020 at 05:40:30PM +0800, Xia Jiang wrote:
+> Add jpeg enc device tree node document
 > 
-> As earlycon can't vote for it's QUP core need, to fix this add ICC
-> support to common/QUP wrapper driver and put vote for QUP core from
-> probe on behalf of earlycon and remove vote during earlycon exit call.
-> 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> Reported-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
 > ---
-> Change in V3:
->  - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
->    exit function to remove ICC vote for earlyconsole.
->  - Remove suspend/resume hook for geni-se driver as we are no longer
->    removing earlyconsole ICC vote from system suspend, we are removing
->    from earlycon exit.
+> v8: no changes
 > 
-> Change in V4:
->  - As per Matthias comment make 'earlycon_wrapper' as static structure.
+> v7: no changes
 > 
-> Changes in V5:
->  - Vote for core path only after checking whether "qcom_geni" earlycon is
->    actually present or not by traversing over structure "console_drivers".
+> v6: no changes
 > 
-> Changes in V6:
->  - As per Matthias's comment removed NULL check for console_drivers global
->    struct, added NULL check for earlycon_wrapper in _remove_earlycon_icc_vote
->    API
->  - Addressed nitpicks from Andy.
+> v5: no changes
 > 
->  drivers/soc/qcom/qcom-geni-se.c       | 68 +++++++++++++++++++++++++++++++++++
->  drivers/tty/serial/qcom_geni_serial.c |  7 ++++
->  include/linux/qcom-geni-se.h          |  2 ++
->  3 files changed, 77 insertions(+)
+> v4: no changes
 > 
-> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> index 0b2526d..ac16bb1 100644
-> --- a/drivers/soc/qcom/qcom-geni-se.c
-> +++ b/drivers/soc/qcom/qcom-geni-se.c
-> @@ -3,6 +3,7 @@
->  
->  #include <linux/acpi.h>
->  #include <linux/clk.h>
-> +#include <linux/console.h>
->  #include <linux/slab.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/io.h>
-> @@ -90,11 +91,14 @@ struct geni_wrapper {
->  	struct device *dev;
->  	void __iomem *base;
->  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
-> +	struct geni_icc_path to_core;
->  };
->  
->  static const char * const icc_path_names[] = {"qup-core", "qup-config",
->  						"qup-memory"};
->  
-> +static struct geni_wrapper *earlycon_wrapper;
-> +
->  #define QUP_HW_VER_REG			0x4
->  
->  /* Common SE registers */
-> @@ -812,11 +816,38 @@ int geni_icc_disable(struct geni_se *se)
->  }
->  EXPORT_SYMBOL(geni_icc_disable);
->  
-> +void geni_remove_earlycon_icc_vote(void)
-> +{
-> +	struct geni_wrapper *wrapper;
-> +	struct device_node *parent;
-> +	struct device_node *child;
-> +
-> +	if (!earlycon_wrapper)
-> +		return;
-> +
-> +	wrapper = earlycon_wrapper;
-> +	parent = of_get_next_parent(wrapper->dev->of_node);
-> +	for_each_child_of_node(parent, child) {
-> +		if (!of_device_is_compatible(child, "qcom,geni-se-qup"))
-> +			continue;
-> +		wrapper = platform_get_drvdata(of_find_device_by_node(child));
-> +		icc_put(wrapper->to_core.path);
-> +		wrapper->to_core.path = NULL;
-> +
-> +	}
-> +	of_node_put(parent);
-> +
-> +	earlycon_wrapper = NULL;
-> +}
-> +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
-> +
->  static int geni_se_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct resource *res;
->  	struct geni_wrapper *wrapper;
-> +	struct console __maybe_unused *bcon;
-> +	bool __maybe_unused has_earlycon = false;
->  	int ret;
->  
->  	wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
-> @@ -839,6 +870,43 @@ static int geni_se_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +#ifdef CONFIG_SERIAL_EARLYCON
-> +	for_each_console(bcon) {
-> +		if (!strcmp(bcon->name, "qcom_geni")) {
-> +			has_earlycon = true;
-> +			break;
-> +		}
-> +	}
-> +	if (!has_earlycon)
-> +		goto exit;
-> +
-> +	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
-> +	if (IS_ERR(wrapper->to_core.path))
-> +		return PTR_ERR(wrapper->to_core.path);
-> +	/*
-> +	 * Put minmal BW request on core clocks on behalf of early console.
-> +	 * The vote will be removed earlycon exit function.
-> +	 *
-> +	 * Note: We are putting vote on each QUP wrapper instead only to which
-> +	 * earlycon is connected because QUP core clock of different wrapper
-> +	 * share same voltage domain. If core1 is put to 0, then core2 will
-> +	 * also run at 0, if not voted. Default ICC vote will be removed ASA
-> +	 * we touch any of the core clock.
-> +	 * core1 = core2 = max(core1, core2)
-> +	 */
-> +	ret = icc_set_bw(wrapper->to_core.path, GENI_DEFAULT_BW,
-> +				GENI_DEFAULT_BW);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: ICC BW voting failed for core :%d\n",
+> v3: change compatible to SoC specific compatible
+> 
+> v2: no changes
+> ---
+>  .../bindings/media/mediatek-jpeg-encoder.txt  | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
+> 
 
-nit: " ... core: %d\n".
+Thank you for the patch. Please see my comments inline.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt b/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
+> new file mode 100644
+> index 000000000000..fa8da699493b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
+> @@ -0,0 +1,37 @@
+> +* MediaTek JPEG Encoder
+> +
+> +MediaTek JPEG Encoder is the JPEG encode hardware present in MediaTek SoCs
+> +
+> +Required properties:
+> +- compatible : should be one of:
+> +               "mediatek,mt2701-jpgenc"
+> +               ...
+
+What does this "..." mean?
+
+> +               followed by "mediatek,mtk-jpgenc"
+> +- reg : physical base address of the JPEG encoder registers and length of
+> +  memory mapped region.
+> +- interrupts : interrupt number to the interrupt controller.
+> +- clocks: device clocks, see
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> +- clock-names: must contain "jpgenc". It is the clock of JPEG encoder.
+
+nit: In principle the clocks should be named after the function the clock
+performs on the consumer side, i.e. the JPEG block in this case, I guess
+here it's just a generic clock that does everything, but I guess it comes
+from somewhere. Is it the AHB clock or something? In that case it would
+normally be called "ahb".
+
+> +- power-domains: a phandle to the power domain, see
+> +  Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- mediatek,larb: must contain the local arbiters in the current SoCs, see
+> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+> +  for details.
+
+I believe this isn't necessary anymore, because larbs are added
+automatically by the MTK IOMMU driver using device links. +CC Yong who
+worked on that.
+
+> +- iommus: should point to the respective IOMMU block with master port as
+> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> +  for details.
+> +
+> +Example:
+> +	jpegenc: jpegenc@1500a000 {
+> +		compatible = "mediatek,mt2701-jpgenc",
+> +			     "mediatek,mtk-jpgenc";
+> +		reg = <0 0x1500a000 0 0x1000>;
+> +		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks =  <&imgsys CLK_IMG_VENC>;
+> +		clock-names = "jpgenc";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+> +		mediatek,larb = <&larb2>;
+
+Ditto.
+
+Best regards,
+Tomasz
