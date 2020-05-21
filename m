@@ -1,96 +1,139 @@
-Return-Path: <SRS0=Re5X=7C=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31FFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 23:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24710C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A957B20884
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 May 2020 23:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590016022;
-	bh=maGktyVvVjAOinDebeNtJUlcldwhjTZs1RJtoDQ0sa4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vxQdzlK76oaVdFRiJVQ9mUWtq6Uct8X8UpUiahUK0PA0e2+Z7amQHvBVvWBKAed72
-	 /DotUNzj4l8utRS3JKy8bFJA7fdNdPawWGtVjZjUqvxvpCx2JPFR5vUFim0PWpQ/y8
-	 kYBc2kLFxFs4KFy+T7wYr8gL5RB7inPGqUbNl5iQ=
+	by mail.kernel.org (Postfix) with ESMTP id 03D6A207F9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 00:10:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n5JQIU7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgETXHA (ORCPT
+        id S1726810AbgEUAKW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 May 2020 19:07:00 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45995 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbgETXHA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 19:07:00 -0400
-Received: by mail-il1-f193.google.com with SMTP id b15so5040065ilq.12;
-        Wed, 20 May 2020 16:06:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hpxe6Kf1Y1YKMS1+011D2HXa532cg7CAEDYR3p5RkEw=;
-        b=LdoGNGArJeHLdn8MZq6irDRDbDKJmSU53w3sOyRkH7x6VeV71zRu/B/2DzUVtEUCAi
-         O8Bk/hX4Xgdd6gpMqLXjDfm7sojbJfyAvrhqibcAoQm2AYK+zDYMmjFFQRmHmnESD1IJ
-         9CW/8gkoYh96Moj3ePuRJB+BZl2jwEam+IlL/jvROz5PfUmFnk9ZNI5pOjDE4hthJRQ4
-         5xcwK2eIbyKiwE0YHG0esWp1F6ZhLles/2+dfpbk4iiHjdh0pceR3cz59ufYRUOZnepK
-         E2JXhLVEHHJR5jPEAt5X4C0DOSgSgDmwoSREDSUdU2f3DKo3X+PDAHvhcpWcZeE1chLh
-         ShWg==
-X-Gm-Message-State: AOAM530z2zSnqA2DUuR9iw9avBRTxdGgsoK2I8dncH8Sw70Ah1jz0DYg
-        FgB7Eudq4lNZ+K6nEhb+9A==
-X-Google-Smtp-Source: ABdhPJxjcHECSsdzZdmzcqRS1EuJexuCuPYCn1h85LxDvs0MwMakXDkCfb4HocQNRcy4sUr6NgDWnA==
-X-Received: by 2002:a05:6e02:106d:: with SMTP id q13mr6278919ilj.107.1590016018819;
-        Wed, 20 May 2020 16:06:58 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q13sm1667155ion.36.2020.05.20.16.06.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 16:06:58 -0700 (PDT)
-Received: (nullmailer pid 788100 invoked by uid 1000);
-        Wed, 20 May 2020 23:06:57 -0000
-Date:   Wed, 20 May 2020 17:06:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     devicetree@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wed, 20 May 2020 20:10:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48434 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgEUAKV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 May 2020 20:10:21 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04L0ADbv039943;
+        Wed, 20 May 2020 19:10:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590019813;
+        bh=ST8Yem8ialn5243k7YW5yffQxZOhgWPUoOpWLgWxyRw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=n5JQIU7UxlsY3NiSOI8nNHRycPR0E7RssEID8o8Vlhkzd2RH0zm+qlXm5YU6NxBZ7
+         2UrA9QiJU5E0sLHe9XF6/tSveVbY0pZW1kfgFhnaSveg9YBwExPch5wfCTMkKtyG/I
+         UGsUQILAlsEY4tjmEseKrk0cYOAm7VeY/wLqhM9o=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04L0ADaR053697
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 19:10:13 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 19:10:13 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 19:10:13 -0500
+Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L0ADTr065310;
+        Wed, 20 May 2020 19:10:13 -0500
+Received: from localhost ([10.250.48.148])
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 04L0ACKH084879;
+        Wed, 20 May 2020 19:10:12 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 2/2] PCI: uniphier: Add Socionext UniPhier Pro5 PCIe
- endpoint controller driver
-Message-ID: <20200520230657.GA788030@bogus>
-References: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1589457801-12796-3-git-send-email-hayashi.kunihiko@socionext.com>
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH v2 1/4] remoteproc: Introduce rproc_of_parse_firmware() helper
+Date:   Wed, 20 May 2020 19:10:03 -0500
+Message-ID: <20200521001006.2725-2-s-anna@ti.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200521001006.2725-1-s-anna@ti.com>
+References: <20200521001006.2725-1-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589457801-12796-3-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 14 May 2020 21:03:21 +0900, Kunihiko Hayashi wrote:
-> Add driver for the Socionext UniPhier Pro5 SoC endpoint controller.
-> This controller is based on the DesignWare PCIe core.
-> 
-> And add "host" to existing controller descriontions for the host controller
-> in Kconfig.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  MAINTAINERS                                   |   2 +-
->  drivers/pci/controller/dwc/Kconfig            |  13 +-
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  drivers/pci/controller/dwc/pcie-uniphier-ep.c | 383 ++++++++++++++++++++++++++
->  4 files changed, 396 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> 
+Add a new helper function rproc_of_parse_firmware() to the remoteproc
+core that can be used by various remoteproc drivers to look up the
+the "firmware-name" property from a rproc device node. This property
+is already being used by multiple drivers, so this helper can avoid
+repeating equivalent code in remoteproc drivers.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+v2: New patch
+
+ drivers/remoteproc/remoteproc_core.c     | 23 +++++++++++++++++++++++
+ drivers/remoteproc/remoteproc_internal.h |  2 ++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 9f04c30c4aaf..c458b218d524 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1034,6 +1034,29 @@ rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, size_t len,
+ }
+ EXPORT_SYMBOL(rproc_of_resm_mem_entry_init);
+ 
++/**
++ * rproc_of_parse_firmware() - parse and return the firmware-name
++ * @dev: pointer on device struct representing a rproc
++ * @index: index to use for the firmware-name retrieval
++ * @fw_name: pointer to a character string, in which the firmware
++ *           name is returned on success and unmodified otherwise.
++ *
++ * This is an OF helper function that parses a device's DT node for
++ * the "firmware-name" property and returns the firmware name pointer
++ * in @fw_name on success.
++ *
++ * Return: 0 on success, or an appropriate failure.
++ */
++int rproc_of_parse_firmware(struct device *dev, int index, const char **fw_name)
++{
++	int ret;
++
++	ret = of_property_read_string_index(dev->of_node, "firmware-name",
++					    index, fw_name);
++	return ret ? ret : 0;
++}
++EXPORT_SYMBOL(rproc_of_parse_firmware);
++
+ /*
+  * A lookup table for resource handlers. The indices are defined in
+  * enum fw_resource_type.
+diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+index 4ba7cb59d3e8..e5341e91d2fc 100644
+--- a/drivers/remoteproc/remoteproc_internal.h
++++ b/drivers/remoteproc/remoteproc_internal.h
+@@ -28,6 +28,8 @@ struct rproc_debug_trace {
+ void rproc_release(struct kref *kref);
+ irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int vq_id);
+ void rproc_vdev_release(struct kref *ref);
++int rproc_of_parse_firmware(struct device *dev, int index,
++			    const char **fw_name);
+ 
+ /* from remoteproc_virtio.c */
+ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id);
+-- 
+2.26.0
+
