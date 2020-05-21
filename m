@@ -2,105 +2,98 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04D1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64002C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86DAF20748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590070644;
-	bh=AZMQPgg7eEixgM0PZYWK7KA66vV+dRiZTPUXhxoYuh8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1rD5Y5ktKEb0XDcStnwnq/LEVCzzWlL6a5R/X5+tuzqYI/16VEINB0oyKfkfcgf9F
-	 riZwWq5A6QYAEJdQOVabdha+VPiNk/lWrIF5JiERifrgv4KHwdig9tTF/NBd76hxeF
-	 ei3foSZQtNAASo2+6xP8LOoNHD4kzlXowJlXfDco=
+	by mail.kernel.org (Postfix) with ESMTP id 2CC08207F7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 14:17:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbgEUORY (ORCPT
+        id S1729586AbgEUORb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 10:17:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbgEUORY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 10:17:24 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C9920721;
-        Thu, 21 May 2020 14:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590070643;
-        bh=AZMQPgg7eEixgM0PZYWK7KA66vV+dRiZTPUXhxoYuh8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PoJrVHIFNFCAoLW6Mav1ejRUdOpgEryrgFeL/IOpkKIHq+3xr27pkIc9DACE26Z0R
-         rrFfzpT+hatcls+sC7b9iFT0tWtMRai6HF3m35UfE4UsAGvhv6JOtXcspLwBkPqjEr
-         7TKbYifo2BfeemF071FQzuKO7KfwFiUFwTlR+p88=
-Date:   Thu, 21 May 2020 15:17:17 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     devicetree@vger.kernel.org, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, jgg@ziepe.ca,
-        linux-pci@vger.kernel.org, joro@8bytes.org,
-        Jonathan.Cameron@huawei.com, fenghua.yu@intel.com,
-        hch@infradead.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, zhangfei.gao@linaro.org,
-        catalin.marinas@arm.com, felix.kuehling@amd.com,
-        xuzaibo@huawei.com, robin.murphy@arm.com, christian.koenig@amd.com,
-        linux-arm-kernel@lists.infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v7 00/24] iommu: Shared Virtual Addressing for SMMUv3
-Message-ID: <20200521141716.GI6608@willie-the-truck>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200521103513.GE5360@willie-the-truck>
+        Thu, 21 May 2020 10:17:31 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2239 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727909AbgEUORb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 10:17:31 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id B7AC5851A8F64C7CAB12;
+        Thu, 21 May 2020 15:17:29 +0100 (IST)
+Received: from [127.0.0.1] (10.47.6.132) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 21 May
+ 2020 15:17:28 +0100
+Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier for
+ userspace
+To:     Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>
+CC:     Rob Herring <robh@kernel.org>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>, <shawnguo@kernel.org>,
+        <linux-imx@nxp.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
+ <20200512073115.14177-2-qiangqing.zhang@nxp.com>
+ <20200519185125.GB453195@bogus> <20200520073304.GA23534@willie-the-truck>
+ <20200521132641.GB47848@C02TD0UTHF1T.local>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <04e6ed82-d33e-9153-eeab-29986ccf8e1e@huawei.com>
+Date:   Thu, 21 May 2020 15:16:29 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521103513.GE5360@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200521132641.GB47848@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.6.132]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:35:14AM +0100, Will Deacon wrote:
-> On Tue, May 19, 2020 at 07:54:38PM +0200, Jean-Philippe Brucker wrote:
-> > Shared Virtual Addressing (SVA) allows to share process page tables with
-> > devices using the IOMMU, PASIDs and I/O page faults. Add SVA support to
-> > the Arm SMMUv3 driver.
-> > 
-> > Since v6 [1]:
-> > * Rename ioasid_free() to ioasid_put() in patch 02, requiring changes to
-> >   the Intel drivers.
-> > * Use mmu_notifier_register() in patch 16 to avoid copying the ops and
-> >   simplify the invalidate() notifier in patch 17.
-> > * As a result, replace context spinlock with a mutex. Simplified locking in
-> >   patch 11 (That patch still looks awful, but I think the series is more
-> >   readable overall). And I've finally been able to remove the GFP_ATOMIC
-> >   allocations.
-> > * Use a single patch (04) for io-pgfault.c, since the code was simplified
-> >   in v6. Fixed partial list in patch 04.
+On 21/05/2020 14:26, Mark Rutland wrote:
+> On Wed, May 20, 2020 at 08:33:04AM +0100, Will Deacon wrote:
+>> On Tue, May 19, 2020 at 12:51:25PM -0600, Rob Herring wrote:
+>>> On Tue, May 12, 2020 at 03:31:13PM +0800, Joakim Zhang wrote:
+>>>> +static ssize_t ddr_perf_identifier_show(struct device *dev,
+>>>> +					struct device_attribute *attr,
+>>>> +					char *page)
+>>>> +{
+>>>> +	struct ddr_pmu *pmu = dev_get_drvdata(dev);
+>>>> +
+>>>> +	return sprintf(page, "%s\n", pmu->devtype_data->identifier);
+>>>
+>>> Why do we need yet another way to identify the SoC from userspace?
+>>
+>> I also really dislike this. What's the preferred way to identify the SoC
+>> from userspace? It's needed so that the perf userspace tool can describe
+>> perf events that are supported for the PMU, as this isn't probe-able
+>> directly from the hardware. We have the same issue with the SMMUv3 PMCG [1],
+>> and so we need to solve the problem for both DT and ACPI.
 > 
-> There's an awful lot here and it stretches across quite a few subsystems,
-> with different git trees. What's the plan for merging it?
+> Worth noting that while in this case it happens to identify the SoC,
+> in general you can have distinct instances of system IP in a single
+> system, so I do think that we need *something* instance-specific, even
+> if that's combined with SoC info.
 > 
-> I'm happy to take some of the arm64 and smmu changes for 5.8, then perhaps
-> we can review what's left and target 5.9? It would also be helpful to split
-> that up into separate series where there aren't strong dependencies, I
-> think.
 
-Hmm, so the way the series is structured makes it quite difficult to apply
-much of this at all :(
+Hi Mark,
 
-I've taken patch 5 into the arm64 tree and patch 8 into the smmu tree. I'll
-leave a couple of Acks on some of the simpler patches, but I think this
-really needs splitting up a bit to make it more manageable.
+> Where IP gets reused across SoCs, it makes sense for that to not depend
+> on top-level SoC info.
 
-I also notice a bunch of TODOs that get introduced and then removed. Given
-that the series needs to be bisectable, these shouldn't be needed and can
-just be removed.
+This would be quite an uncommon case. Generally most instances of a 
+given PMU in a SoC would be identical implementations.
+
+And anyway, we should be able to solve that problem in perf tool, as 
+long as the PMU device name is fixed. Like what we have for the SMMUv3 
+PMU, where the device name contains the device bus address, i.e don't 
+use idr for perf drivers device naming....
 
 Thanks,
-
-Will
+John
