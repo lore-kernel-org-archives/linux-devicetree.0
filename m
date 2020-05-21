@@ -2,248 +2,139 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182FDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310EDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2AFE20738
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D89207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:23:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="flKVBAWu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WMQxmoMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgEUTI7 (ORCPT
+        id S1729857AbgEUTXI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 15:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
+        Thu, 21 May 2020 15:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730255AbgEUTI6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 15:08:58 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877CDC05BD43
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:08:58 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id q8so3804115pfu.5
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:08:58 -0700 (PDT)
+        with ESMTP id S1729475AbgEUTXH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 15:23:07 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ACA7C061A0E
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:23:06 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j21so3673635pgb.7
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:23:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Z9lfKcpsk04+MOjenH3XmZ96ZShPJypXmsAOWsF+hL8=;
-        b=flKVBAWuiWwOAA9S9JGU6N3N3DZ1k/BIhgDYq+IJS1Lh9cBYnnY/7UPOZRlCYVLpRg
-         rpH3swfpnnGOb/2ynI7ZJWJv1sAa0Rl7icksSX+XYvnyJIKfz1WpK2N15qchQgje3pON
-         gB/8dfYLAeu1puK6NUs3AuQOkUCCHaJUHkEW/ZwfSWm5XCR3B2eGleNyGLKrt7ujLMEv
-         Nq04dkI45QpGkqcXsUOaPGeo3vMiyqMl4BQV1GGZTDl7xEEGTThMvrVZOdz7PlKYuqv9
-         GVTGZBdxVohQXb6pnXI+zAcA1d1vjxRkgwLOkGtChAFBSdQIA5i0RdLYRPx1QDSit9Pq
-         rJgw==
+        bh=Y63aS+NaGtpwqRet4e2k+offwk7YhLSwL57svUyiQxU=;
+        b=WMQxmoMkXiaxv0IrSbei9pAXdBwNmZcH/MmXSAHk0JQ+WNZrIH7HEba2ekgrpCCNnV
+         8G3X4p37vonBB3EjlGHPRR1rRLrqgq67toMztCXcGaThOLwaKDYZF8+T4+R47eCxXfbb
+         eDB8FIjJSw+ufhgTj5wvOWtqxyYv1gwgjN7ro+v86hkhNsDQUN4nHQ/rX5qWwlwXgBfb
+         cR2Yy2xsInkhcgL5wSXNmSSvdKTqi6F8NLyrsED6Kb/owzBsMrzxnJmP5P12YaTL3RAL
+         VVNmVk90RZ2svNNtUqrks2k9+f2I4DU0q1KXL+zdLQlrJAfRem72f2ZaGT/M7KVwEc8N
+         DHog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Z9lfKcpsk04+MOjenH3XmZ96ZShPJypXmsAOWsF+hL8=;
-        b=RLo9QQy4kdwLMXZXbG1m6xuK79p9Y5yy3ODS7qVhObTrv1mmIhoV43Lw1foMsL89eY
-         MIDFfgT/I/A4OQCMUGX4/9sPtQBCI3u4/5my2m5AyYTUyT3W+sQdzhbvJv3AiF4j1i72
-         UbGfhX5OMnwGQrYssLpry6i/nYmadQTrsWhXZEPQpIcNqARaAxClakeTCa6U4JS4hfPV
-         SwZTyvwpdSRj5Zl0yn0VWSSL2ulflbExr0B1H7edt0Xl+0Wim5wbnsJ2RKbCPDGMmj0V
-         hgIgkycRRSHvetrrJGiLkl6dDTS5mJEnj0zuv0n8V4mDgm5lrcW2jUR5stlNLJbqhrBF
-         wN0g==
-X-Gm-Message-State: AOAM532vr2fcK4EhAQHcfTnnWKaU6UOu22Su/cO9AR2zjmpN2q5Pdgpt
-        rraVTUxIoI8elDagQ/VrTT1hjw==
-X-Google-Smtp-Source: ABdhPJzvWYyJDO4JoirTkov2oI3WzQyVmBYO53edLU3D5fEctgmNUNunuP5QihACIwCQCB1eHJ1gpQ==
-X-Received: by 2002:a62:6186:: with SMTP id v128mr162480pfb.185.1590088137862;
-        Thu, 21 May 2020 12:08:57 -0700 (PDT)
+        bh=Y63aS+NaGtpwqRet4e2k+offwk7YhLSwL57svUyiQxU=;
+        b=SVPc1YjbXTqWD6samYQhvEg5I2f+BBuCBEiVdAZBXr0q0Rg2ffbyJHJIYeGT4QohTl
+         33UZPpBkOXpH2YoPHUI/C5KM289wRbCsPk1DPsRamcSsJw44Z+XuDHKoAMrRlDPsE+gv
+         SsgAS2L1TCOqhvUYAVHowHLLSOsBiB0jnyIqGKEB68ABIhUcwV+p0d0iXd6gHWH/X/+a
+         ypxaR2WzZ6H349te7pE2yZRRNeJf6metbdlJJ7qNuRNXaaNCwnh2gHXZcD8WjEcgLxk+
+         ZUS19LTJwplwWYpLgTOBsg8ShZsuTjXWp0vxMHrUV8wGL6zauvD1/K/Q+KlD2qgOTzsR
+         OSTw==
+X-Gm-Message-State: AOAM530LOCAqC9oukLb2e+/t5oOrgV8q3LFtViQoO7cFH4wEO79PHDiM
+        R2tEtYo+9VSwnQqihgc3DT0GNQ==
+X-Google-Smtp-Source: ABdhPJzU9w9G5TLd0sTBUx6ZZiZCtV51V0ECeg4y2odgj10sq90602L1zxAVvLWHKXJp6BCaPA09ng==
+X-Received: by 2002:a05:6a00:1342:: with SMTP id k2mr272459pfu.32.1590088985204;
+        Thu, 21 May 2020 12:23:05 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x2sm4961819pfc.106.2020.05.21.12.08.56
+        by smtp.gmail.com with ESMTPSA id m14sm4648350pgt.6.2020.05.21.12.23.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 12:08:57 -0700 (PDT)
-Date:   Thu, 21 May 2020 12:07:39 -0700
+        Thu, 21 May 2020 12:23:04 -0700 (PDT)
+Date:   Thu, 21 May 2020 12:21:46 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
-Message-ID: <20200521190739.GC1331782@builder.lan>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Clement Leger <cleger@kalray.eu>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] remoteproc: introduce version element into resource
+ type field
+Message-ID: <20200521192146.GO408178@builder.lan>
+References: <20200325204701.16862-1-s-anna@ti.com>
+ <20200325204701.16862-3-s-anna@ti.com>
+ <20200521175421.GI408178@builder.lan>
+ <b338480e-c586-f988-f5b6-784551b7beb6@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <b338480e-c586-f988-f5b6-784551b7beb6@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 21 May 08:23 PDT 2020, Veerabhadrarao Badiganti wrote:
+On Thu 21 May 12:06 PDT 2020, Suman Anna wrote:
 
-> On qcom SD host controllers voltage switching be done after the HW
-> is ready for it. The HW informs its readiness through power irq.
-> The voltage switching should happen only then.
+> Hi Bjorn,
 > 
-> Use the internal voltage switching and then control the voltage
-> switching using power irq.
+> On 5/21/20 12:54 PM, Bjorn Andersson wrote:
+> > On Wed 25 Mar 13:46 PDT 2020, Suman Anna wrote:
+> > 
+> > > The current remoteproc core has supported only 32-bit remote
+> > > processors and as such some of the current resource structures
+> > > may not scale well for 64-bit remote processors, and would
+> > > require new versions of resource types. Each resource is currently
+> > > identified by a 32-bit type field. Introduce the concept of version
+> > > for these resource types by overloading this 32-bit type field
+> > > into two 16-bit version and type fields with the existing resources
+> > > behaving as version 0 thereby providing backward compatibility.
+> > > 
+> > > The version field is passed as an additional argument to each of
+> > > the handler functions, and all the existing handlers are updated
+> > > accordingly. Each specific handler will be updated on a need basis
+> > > when a new version of the resource type is added.
+> > > 
+> > 
+> > I really would prefer that we add additional types for the new
+> > structures, neither side will be compatible with new versions without
+> > enhancements to their respective implementations anyways.
 > 
-> Set the regulator load as well so that regulator can be configured
-> in LPM mode when in is not being used.
+> OK.
 > 
-> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
-> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
-> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-
-Looks better, thanks.
-
-> ---
->  drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 198 insertions(+), 9 deletions(-)
+> > 
+> > > An alternate way would be to introduce the new types as completely
+> > > new resource types which would require additional customization of
+> > > the resource handlers based on the 32-bit or 64-bit mode of a remote
+> > > processor, and introduction of an additional mode flag to the rproc
+> > > structure.
+> > > 
+> > 
+> > What would this "mode" indicate? If it's version 0 or 1?
 > 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-[..]
->  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
-> @@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->  		sdhci_msm_hs400(host, &mmc->ios);
->  }
->  
-> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
-> +{
-> +	int ret;
-> +
-> +	if (IS_ERR(mmc->supply.vmmc))
-> +		return 0;
-> +
-> +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
-> +	if (ret)
-> +		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
-> +			mmc_hostname(mmc), mmc->ios.vdd, ret);
+> No, for indicating if the remoteproc is 32-bit or 64-bit and adjust the
+> loading handlers if the resource types need to be segregated accordingly.
+> 
 
-Missed this one on v1, in the event that mmc_regulator_set_ocr() return
-a non-zero value it has already printed an error message. So please
-replace the tail with just:
+Sorry, I think I'm misunderstanding something. Wouldn't your 64-bit
+remote processor need different firmware from your 32-bit processor
+anyways, if you want to support the wider resource? And you would pack
+your firmware with the appropriate resource types?
 
-	return mmc_regulator_set_ocr(...);
 
-> +
-> +	return ret;
-> +}
-> +
-> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
-> +			      struct mmc_host *mmc, bool level)
-> +{
-> +	int load, ret;
-> +	struct mmc_ios ios;
-> +
-> +	if (IS_ERR(mmc->supply.vqmmc)			 ||
-> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
-> +	    (msm_host->vqmmc_enabled == level))
-> +		return 0;
-> +
-> +	if (msm_host->vqmmc_load) {
-> +		load = level ? msm_host->vqmmc_load : 0;
-> +		ret = regulator_set_load(mmc->supply.vqmmc, load);
-
-Sorry for the late reply on v1, but please see my explanation regarding
-load and always-on regulators there.
-
-> +		if (ret) {
-> +			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
-> +				mmc_hostname(mmc), ret);
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	if (level) {
-> +		/* Set the IO voltage regulator to default voltage level */
-> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
-> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
-> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
-> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
-> +
-> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
-> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
-> +			if (ret < 0) {
-> +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
-> +					mmc_hostname(mmc), ret);
-> +				goto out;
-> +			}
-> +		}
-> +		ret = regulator_enable(mmc->supply.vqmmc);
-> +	} else {
-> +		ret = regulator_disable(mmc->supply.vqmmc);
-> +	}
-> +
-> +	if (ret)
-> +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
-> +			mmc_hostname(mmc), level ? "en":"dis", ret);
-> +	else
-> +		msm_host->vqmmc_enabled = level;
-> +out:
-> +	return ret;
-> +}
-[..]
-> +static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
-> +				      struct mmc_ios *ios)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	u16 ctrl, status;
-> +
-> +	/*
-> +	 * Signal Voltage Switching is only applicable for Host Controllers
-> +	 * v3.00 and above.
-> +	 */
-> +	if (host->version < SDHCI_SPEC_300)
-> +		return 0;
-> +
-> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-> +
-> +	switch (ios->signal_voltage) {
-> +	case MMC_SIGNAL_VOLTAGE_330:
-> +		if (!(host->flags & SDHCI_SIGNALING_330))
-> +			return -EINVAL;
-> +
-> +		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
-> +		ctrl &= ~SDHCI_CTRL_VDD_180;
-> +		break;
-> +	case MMC_SIGNAL_VOLTAGE_180:
-> +		if (!(host->flags & SDHCI_SIGNALING_180))
-> +			return -EINVAL;
-> +
-> +		/*
-> +		 * Enable 1.8V Signal Enable in the Host Control2
-> +		 * register
-> +		 */
-> +		ctrl |= SDHCI_CTRL_VDD_180;
-> +		break;
-> +	case MMC_SIGNAL_VOLTAGE_120:
-> +		if (!(host->flags & SDHCI_SIGNALING_120))
-> +			return -EINVAL;
-> +		return 0;
-> +	default:
-> +		/* No signal voltage switch required */
-> +		return 0;
-> +	}
-> +
-> +	sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
-> +
-> +	/* Wait for 5ms */
-> +	usleep_range(5000, 5500);
-> +
-> +	/* regulator output should be stable within 5 ms */
-> +	status = !!(ctrl & SDHCI_CTRL_VDD_180);
-> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-> +	if (!!(ctrl &  SDHCI_CTRL_VDD_180) == status)
-
-You should be able to drop the !! both here and when assigning status.
-
-Overall this looks neater, thanks for reworking it.
+Afaict the bit width of your remote processor, busses or memory is
+unrelated to the choice of number of bits used to express things in the
+resource table.
 
 Regards,
 Bjorn
