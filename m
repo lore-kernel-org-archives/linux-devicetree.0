@@ -2,83 +2,160 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84897C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC8BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A112072C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDCB20826
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 17:37:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oeUOIdLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgEUR3g (ORCPT
+        id S1728798AbgEURhS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 13:29:36 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:39830 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgEUR3g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 13:29:36 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 01164803087B;
-        Thu, 21 May 2020 17:29:34 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iY8IGjWiqpLP; Thu, 21 May 2020 20:29:33 +0300 (MSK)
-Date:   Thu, 21 May 2020 20:29:32 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
-Message-ID: <20200521172932.e5tcmb2ggsxbrxfz@mobilestation>
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
- <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com>
- <20200521121228.aqplh6eftylnys3p@mobilestation>
- <20200521155143.GE4770@sirena.org.uk>
- <20200521155804.qgaaqc23h2nll7r3@mobilestation>
- <CAHp75VcY9HG3=wft9VFWKJD9PG6TiSbmOyjgYZyue+z3PW_eCQ@mail.gmail.com>
- <20200521163904.GF4770@sirena.org.uk>
+        Thu, 21 May 2020 13:37:18 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:53478 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728881AbgEURhQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 13:37:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590082635; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=F30tIyEfBVh5g5gaTce6ZjrM4vzM0/dihF/CEEqfqwE=; b=oeUOIdLBpIQvnK9WqzYt2m9Y4HvESSykxrdn6G7+wUwO0pXiVZZl/hJ3VX9rTA/v/XOFChWD
+ rE1zwvrZElDdW/Y29jHTf2Xnq2UncOdRnWUfQFkVJvDicRiP2vR2V9B122VOra+yjlqzErPQ
+ Hbn0P27j+h/RZnxKNCTgU0ks2c0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ec6bc497c3c9cd06989ea64 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 17:37:13
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3E976C433CB; Thu, 21 May 2020 17:37:13 +0000 (UTC)
+Received: from [10.110.95.251] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E707DC433C6;
+        Thu, 21 May 2020 17:37:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E707DC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v2 0/3] Re-introduce TX FIFO resize for larger EP bursting
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <1e2e9c1b-fcd9-9e03-da86-a46e541a1480@codeaurora.org>
+Date:   Thu, 21 May 2020 10:37:10 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200521163904.GF4770@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 05:39:04PM +0100, Mark Brown wrote:
-> On Thu, May 21, 2020 at 07:02:32PM +0300, Andy Shevchenko wrote:
-> > On Thu, May 21, 2020 at 6:58 PM Serge Semin
-> 
-> > > Let's leave the patch as is.
-> 
-> > Mark, should I send a partial revert afterwards in this case?
-> > I'm not fully satisfied with it.
-> 
-> That might be a suitable way to keep the peace here.  You are clearly
-> both much more passionate about this choice than I am.
 
-Fine with me.)
 
--Sergey
+On 5/21/2020 1:36 AM, Wesley Cheng wrote:
+> Changes in V2:
+>  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
+>    FIFO.
+>  - Removed dev_dbg() prints and fixed typos from patches
+>  - Added some more description on the dt-bindings commit message
+>
+
+
+> Reviewed-by: Felipe Balbi <balbi@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+
+Sorry, please disregard the Reviewed-by tags in the patches.  I added
+those mistakenly.
+
+> Currently, there is no functionality to allow for resizing the TXFIFOs, and
+> relying on the HW default setting for the TXFIFO depth.  In most cases, the
+> HW default is probably sufficient, but for USB compositions that contain
+> multiple functions that require EP bursting, the default settings
+> might not be enough.  Also to note, the current SW will assign an EP to a
+> function driver w/o checking to see if the TXFIFO size for that particular
+> EP is large enough. (this is a problem if there are multiple HW defined
+> values for the TXFIFO size)
+> 
+> It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
+> is required for an EP that supports bursting.  Otherwise, there may be
+> frequent occurences of bursts ending.  For high bandwidth functions,
+> such as data tethering (protocols that support data aggregation), mass
+> storage, and media transfer protocol (over FFS), the bMaxBurst value can be
+> large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
+> throughput. (which can be associated to system access latency, etc...)  It
+> allows for a more consistent burst of traffic, w/o any interruptions, as
+> data is readily available in the FIFO.
+> 
+> With testing done using the mass storage function driver, the results show
+> that with a larger TXFIFO depth, the bandwidth increased significantly.
+> 
+> Test Parameters:
+>  - Platform: Qualcomm SM8150
+>  - bMaxBurst = 6
+>  - USB req size = 256kB
+>  - Num of USB reqs = 16
+>  - USB Speed = Super-Speed
+>  - Function Driver: Mass Storage (w/ ramdisk)
+>  - Test Application: CrystalDiskMark
+> 
+> Results:
+> 
+> TXFIFO Depth = 3 max packets
+> 
+> Test Case | Data Size | AVG tput (in MB/s)
+> -------------------------------------------
+> Sequential|1 GB x     | 
+> Read      |9 loops    | 193.60
+> 	  |           | 195.86
+>           |           | 184.77
+>           |           | 193.60
+> -------------------------------------------
+> 
+> TXFIFO Depth = 6 max packets
+> 
+> Test Case | Data Size | AVG tput (in MB/s)
+> -------------------------------------------
+> Sequential|1 GB x     | 
+> Read      |9 loops    | 287.35
+> 	  |           | 304.94
+>           |           | 289.64
+>           |           | 293.61
+> -------------------------------------------
+> 
+> Wesley Cheng (3):
+>   usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
+>   arm64: boot: dts: qcom: sm8150: Enable dynamic TX FIFO resize logic
+>   dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
+> 
+>  Documentation/devicetree/bindings/usb/dwc3.txt |   2 +-
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi           |   1 +
+>  drivers/usb/dwc3/core.c                        |   2 +
+>  drivers/usb/dwc3/core.h                        |   8 ++
+>  drivers/usb/dwc3/ep0.c                         |  37 ++++++++-
+>  drivers/usb/dwc3/gadget.c                      | 111 +++++++++++++++++++++++++
+>  6 files changed, 159 insertions(+), 2 deletions(-)
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
