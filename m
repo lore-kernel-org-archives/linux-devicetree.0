@@ -2,163 +2,282 @@ Return-Path: <SRS0=MDPI=7D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51C3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB092C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8983C20823
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C775A206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 May 2020 19:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="se3vu6er"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="pdzOstKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgEUTmh (ORCPT
+        id S1728273AbgEUTug (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 15:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47626 "EHLO
+        Thu, 21 May 2020 15:50:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729845AbgEUTmg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 15:42:36 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC7BEC061A0F
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:42:35 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k7so3652874pjs.5
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:42:35 -0700 (PDT)
+        with ESMTP id S1729971AbgEUTue (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 15:50:34 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA5B1C05BD43
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:50:32 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id c3so3620056wru.12
+        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 12:50:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BXYPauGkNWtPwKYwGGvUTVu/KGcI14RapTxg+fHwXY4=;
-        b=se3vu6erp2PBFC3GeiZK3pujHsPbv1+Tub7hi+r+f1Cu3Y6qod1+7C7rJZAl2ylOrO
-         xe7x3AdAvBRwQZ+ViBf3KRKqKxm5/pfNZdBUCB+/cZixrse5Nrq3v5eAScYCzQNG0wzd
-         bXws+6xkLfsjR+OPSM1Tezns0jGTj/TOo5PXDTpWjhjk72I2AHEzDy4zLLAQRg0+QW+d
-         mWWYanxQ9LMvTj1CgdOsvNvsfhKpKSWJR4cuW1nWvYDuqsA5AQAaaRqI3ucSL53IB6V+
-         x3ZOhZYpuxq0n4GGBJrYgVWsiorHx0X17eXWKyYOZtnXT4u7BGIxnD5cbxsAHeNBchtF
-         OXqg==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=W0bmmrcfoMMLY53+q+PM9oHmwAiHFiyVtLVqP+FNgI0=;
+        b=pdzOstKGZ1qMN+Pt/TsxJHH8iZB55xatp5okzckH9uMnliXxBzJ9d0Dl9uBJ2qEw9R
+         7PTdcGlnFcOu+873UWzw/00aGEtsuyvlAJ7ZFQpy5TP4vD2NyfcKQKtrD9Ck7iQd2NkI
+         6Ng7TcezZa+S8AV4dIUNdC13V8LwS/Vfi4jGHA+K14GOcFaDrGoZDhHZYKyW2U5fLupK
+         ObdGJ7gdJpQwB7rewEDpX+h3vVGjeepFL58TpAGyAJOf5F8CjhUnRqtwFmi3aEy4lD/M
+         LoC1VKlwtJvVcmWpthwx0VwlfA/PwebI1aTE6ljjX7R7Mk+e6inPHbpSTFiu8/My8QCT
+         voxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BXYPauGkNWtPwKYwGGvUTVu/KGcI14RapTxg+fHwXY4=;
-        b=AzaIj0CkKf6ApyD9z8DVocdT/2HQlxXPo2JchPnYAqKpYfGJBw4hEl5klqEXpwi3aW
-         qvQRT3FpEVQ/mEBy3F30sdt1703qruN5qpvx0Hh5YsrH/rxMc2WPyLULxOD/rU7lGPAT
-         lK9Wo58JOLui66xzsh1rxEp6VaCtIhkhuooNlOJF4ZMyIJpz/cMC2Kpne/QjhIm9crP9
-         zy8va/BxyENaaKlYLQCmyKHojBd1OKSYD1w156GBVBor5aSjvQbZBAGjtj45rcnHWtaW
-         pickqnH5sUOVkCCBlL3XIRXnqfEr/7k3S1ZH3D4rZAZglX3hnSMmpRwD3/zVmwCkBQXJ
-         mw5w==
-X-Gm-Message-State: AOAM530UJjK26liK20bu5DhChYh2DhM3VEv6bPlJddUfmGeP6GGiKx/4
-        swNJCDBDpNc5IwKqHUjay+sXYg==
-X-Google-Smtp-Source: ABdhPJxk6/AaRmSF7oCKZdzRq5JtighkgWW5LdhwQ4PD4zRb+L/JtxeyuIelMKGLsyYWPBn0ErhdvA==
-X-Received: by 2002:a17:90a:248a:: with SMTP id i10mr157777pje.174.1590090155010;
-        Thu, 21 May 2020 12:42:35 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n21sm5065359pjo.25.2020.05.21.12.42.33
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=W0bmmrcfoMMLY53+q+PM9oHmwAiHFiyVtLVqP+FNgI0=;
+        b=VUCE5+5DUhl6kqLgzi/G67RUKwhx3MLtY1hGS+9ouUStpQ5+dhqZdLQ0XLIG9oTm7l
+         Z9TEHtLKXLpc/B6OIdY+U2J9WgAuesfTRONzjNOWJM326JKuPe7YlbSQqyp+z1z0erhj
+         2mj088nsHg8mK4DGQjs6+2Y/S94VJrIULz48pr6oKsdB5X7ZQ7FdGBolIWiG6YSP+6wh
+         guUSjKsT1orpQEygLVdL/PnqaE2ZF4mvnPEPmhezadBSgon2fujBNM8StRavzG9/Yu4z
+         AV7RPq2ayWr66niUFz2lS3RIOqVYeA/HPfOdDGdO9nx88owF2u4vNoLj0KzikNeBmLc9
+         sq0w==
+X-Gm-Message-State: AOAM533ZVxR5bdML6UFJfYdQx3tXjNaMCEaHqVMOzCxwsFElozfXE6aE
+        QSad0jcqlJo8cGXrU2VTJy4Wkw==
+X-Google-Smtp-Source: ABdhPJxI5+4zP6A4maoDpeagfmZeWogan+Aicw3eNBXaIjNm2V8HkzqxiSDUki2DMSG365TA15J5jQ==
+X-Received: by 2002:a5d:6806:: with SMTP id w6mr207199wru.324.1590090631449;
+        Thu, 21 May 2020 12:50:31 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id 18sm7329042wmj.19.2020.05.21.12.50.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 12:42:34 -0700 (PDT)
-Date:   Thu, 21 May 2020 12:41:16 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Clement Leger <cleger@kalray.eu>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] remoteproc: introduce version element into resource
- type field
-Message-ID: <20200521194116.GP408178@builder.lan>
-References: <20200325204701.16862-1-s-anna@ti.com>
- <20200325204701.16862-3-s-anna@ti.com>
- <20200521175421.GI408178@builder.lan>
- <b338480e-c586-f988-f5b6-784551b7beb6@ti.com>
- <20200521192146.GO408178@builder.lan>
- <57ae5678-fd0a-07a8-6165-a2cf7ccdef88@ti.com>
+        Thu, 21 May 2020 12:50:30 -0700 (PDT)
+Date:   Thu, 21 May 2020 21:50:28 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: [PATCH] arm: dts: am335x-boneblack: add gpio-line-names
+Message-ID: <20200521195028.GB429020@x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <57ae5678-fd0a-07a8-6165-a2cf7ccdef88@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 21 May 12:29 PDT 2020, Suman Anna wrote:
+Add gpio-line-names properties to the GPIO controller nodes.
 
-> On 5/21/20 2:21 PM, Bjorn Andersson wrote:
-> > On Thu 21 May 12:06 PDT 2020, Suman Anna wrote:
-> > 
-> > > Hi Bjorn,
-> > > 
-> > > On 5/21/20 12:54 PM, Bjorn Andersson wrote:
-> > > > On Wed 25 Mar 13:46 PDT 2020, Suman Anna wrote:
-> > > > 
-> > > > > The current remoteproc core has supported only 32-bit remote
-> > > > > processors and as such some of the current resource structures
-> > > > > may not scale well for 64-bit remote processors, and would
-> > > > > require new versions of resource types. Each resource is currently
-> > > > > identified by a 32-bit type field. Introduce the concept of version
-> > > > > for these resource types by overloading this 32-bit type field
-> > > > > into two 16-bit version and type fields with the existing resources
-> > > > > behaving as version 0 thereby providing backward compatibility.
-> > > > > 
-> > > > > The version field is passed as an additional argument to each of
-> > > > > the handler functions, and all the existing handlers are updated
-> > > > > accordingly. Each specific handler will be updated on a need basis
-> > > > > when a new version of the resource type is added.
-> > > > > 
-> > > > 
-> > > > I really would prefer that we add additional types for the new
-> > > > structures, neither side will be compatible with new versions without
-> > > > enhancements to their respective implementations anyways.
-> > > 
-> > > OK.
-> > > 
-> > > > 
-> > > > > An alternate way would be to introduce the new types as completely
-> > > > > new resource types which would require additional customization of
-> > > > > the resource handlers based on the 32-bit or 64-bit mode of a remote
-> > > > > processor, and introduction of an additional mode flag to the rproc
-> > > > > structure.
-> > > > > 
-> > > > 
-> > > > What would this "mode" indicate? If it's version 0 or 1?
-> > > 
-> > > No, for indicating if the remoteproc is 32-bit or 64-bit and adjust the
-> > > loading handlers if the resource types need to be segregated accordingly.
-> > > 
-> > 
-> > Sorry, I think I'm misunderstanding something. Wouldn't your 64-bit
-> > remote processor need different firmware from your 32-bit processor
-> > anyways, if you want to support the wider resource? And you would pack
-> > your firmware with the appropriate resource types?
-> 
-> Yes, that's correct.
-> 
-> > 
-> > Afaict the bit width of your remote processor, busses or memory is
-> > unrelated to the choice of number of bits used to express things in the
-> > resource table.
-> 
-> I would have to add the new resource type to the loading_handlers right, so
-> it is a question of whether we want to impose any restrictions in remoteproc
-> core or not from supporting a certain resource type (eg: I don't expect
-> RSC_TRACE entries on 64-bit processors).
-> 
+The BeagleBone Black has P8 and P9 headers [0] which expose many of the
+AM3358 ZCZ SoC balls to stacking expansion boards called "capes", or to
+other external connections like jumper wires connected to a breadboard.
+BeagleBone users will often refer to the "Cape Exanpsion Headers" pin
+diagram [1] as it is in the "Bone101" getting started tutorial. [2]
 
-Right, but either you add support for new resource types to the
-loading_handlers, or you add the version checks within each handler,
-either way you will have to do some work to be compatible with new
-versions.
+Most of the P8 and P9 header pins can muxed to a GPIO line.  The
+gpio-line-names describe which P8 or P9 pin that line goes to and the
+default mux for that P8 or P9 pin if it is not GPIO.
 
-Regarding what resources would be fit for a 64-bit processor probably
-relates to many things, in particular the question of what we actually
-mean when we say that a coprocessor is 64-bit. So I don't really see a
-need for the remoteproc core to prevent someone to design their
-system/firmware to have a 64-bit CPU being passed 32-bit addresses.
+For example, gpiochip 1 line 0 is connected to P8 header pin 25 (P8_25)
+however the default device tree has the corresponding BGA ball (ZCZ U7)
+muxed to mmc1_dat0 as it is used for the on-board eMMC chip.  For that
+GPIO line to be used, one would need to modify the device tree to
+disable the eMMC and change the pin mux for that ball to GPIO mode.
 
-Regards,
-Bjorn
+Some of the AM3358 ZCZ balls corresponding to GPIO lines are not routed
+to a P8 or P9 header, but are instead wired to some peripheral device
+like on-board eMMC, HDMI framer IC, or status LEDs.  Those names are in
+brackets to denote those GPIO lines can not be used.
+
+Some GPIO lines are named "[NC]" as the corresponding balls are not
+routed to anything on the PCB.
+
+The goal for these names is to make it easier for a user viewing the
+output of gpioinfo to determine which P8 or P9 pin is connected to a
+GPIO line.  The output of gpioinfo on a BeagleBone Black would be:
+
+[0] https://git.io/JfgOd
+[1] https://beagleboard.org/capes
+[1] https://beagleboard.org/Support/bone101
+[2] https://beagleboard.org/static/images/cape-headers.png
+
+Reviewed-by: Jason Kridner <jason@beagleboard.org>
+Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+V1 note:
+I had posted a patch with these line names for am335x-bone-common.dtsi
+but Grygorii Strashko pointed out that the names are not applicable to
+all BeagleBone models.  Thus is have created this patch to add these
+names just for the BeagleBone Black.
+
+ arch/arm/boot/dts/am335x-boneblack.dts | 144 +++++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index d3928662aed4..5f31e832eb82 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -23,3 +23,147 @@ oppnitro-1000000000 {
+ 		opp-supported-hw = <0x06 0x0100>;
+ 	};
+ };
++
++&gpio0 {
++	gpio-line-names =
++		"[ethernet]",
++		"[ethernet]",
++		"P9_22 [spi0_sclk]",
++		"P9_21 [spi0_d0]",
++		"P9_18 [spi0_d1]",
++		"P9_17 [spi0_cs0]",
++		"[sd card]",
++		"P9_42A [ecappwm0]",
++		"P8_35 [hdmi]",
++		"P8_33 [hdmi]",
++		"P8_31 [hdmi]",
++		"P8_32 [hdmi]",
++		"P9_20 [i2c2_sda]",
++		"P9_19 [i2c2_scl]",
++		"P9_26 [uart1_rxd]",
++		"P9_24 [uart1_txd]",
++		"[ethernet]",
++		"[ethernet]",
++		"[usb]",
++		"[hdmi]",
++		"P9_41B",
++		"[ethernet]",
++		"P8_19 [ehrpwm2a]",
++		"P8_13 [ehrpwm2b]",
++		"[NC]",
++		"[NC]",
++		"P8_14",
++		"P8_17",
++		"[ethernet]",
++		"[ethernet]",
++		"P9_11 [uart4_rxd]",
++		"P9_13 [uart4_txd]";
++};
++
++&gpio1 {
++	gpio-line-names =
++		"P8_25 [emmc]",
++		"[emmc]",
++		"P8_5 [emmc]",
++		"P8_6 [emmc]",
++		"P8_23 [emmc]",
++		"P8_22 [emmc]",
++		"P8_3 [emmc]",
++		"P8_4 [emmc]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P8_12",
++		"P8_11",
++		"P8_16",
++		"P8_15",
++		"P9_15A",
++		"P9_23",
++		"P9_14 [ehrpwm1a]",
++		"P9_16 [ehrpwm1b]",
++		"[emmc]",
++		"[usr0 led]",
++		"[usr1 led]",
++		"[usr2 led]",
++		"[usr3 led]",
++		"[hdmi]",
++		"[usb]",
++		"[hdmi audio]",
++		"P9_12",
++		"P8_26",
++		"P8_21 [emmc]",
++		"P8_20 [emmc]";
++};
++
++&gpio2 {
++	gpio-line-names =
++		"P9_15B",
++		"P8_18",
++		"P8_7",
++		"P8_8",
++		"P8_10",
++		"P8_9",
++		"P8_45 [hdmi]",
++		"P8_46 [hdmi]",
++		"P8_43 [hdmi]",
++		"P8_44 [hdmi]",
++		"P8_41 [hdmi]",
++		"P8_42 [hdmi]",
++		"P8_39 [hdmi]",
++		"P8_40 [hdmi]",
++		"P8_37 [hdmi]",
++		"P8_38 [hdmi]",
++		"P8_36 [hdmi]",
++		"P8_34 [hdmi]",
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"P8_27 [hdmi]",
++		"P8_29 [hdmi]",
++		"P8_28 [hdmi]",
++		"P8_30 [hdmi]",
++		"[emmc]",
++		"[emmc]",
++		"[emmc]",
++		"[emmc]",
++		"[emmc]",
++		"[emmc]";
++};
++
++&gpio3 {
++	gpio-line-names =
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"[i2c0]",
++		"[i2c0]",
++		"[emu]",
++		"[emu]",
++		"[ethernet]",
++		"[ethernet]",
++		"[NC]",
++		"[NC]",
++		"[usb]",
++		"P9_31 [spi1_sclk]",
++		"P9_29 [spi1_d0]",
++		"P9_30 [spi1_d1]",
++		"P9_28 [spi1_cs0]",
++		"P9_42B [ecappwm0]",
++		"P9_27",
++		"P9_41A",
++		"P9_25",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]";
++};
+-- 
+2.25.1
+
