@@ -2,42 +2,62 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C813C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 11:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB85FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 11:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792AB20723
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 11:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8312072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 11:45:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CpUO9GWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgEVLgp (ORCPT
+        id S1729204AbgEVLpd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 07:36:45 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:49399 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728465AbgEVLgp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 07:36:45 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04MBXMmv015022;
-        Fri, 22 May 2020 14:33:22 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
-        id 47111639C0; Fri, 22 May 2020 14:33:22 +0300 (IDT)
-From:   Tali Perry <tali.perry1@gmail.com>
-To:     ofery@google.com, brendanhiggins@google.com,
-        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        robh+dt@kernel.org, wsa@the-dreams.de,
-        andriy.shevchenko@linux.intel.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
-Subject: [PATCH v13 0/3] i2c: npcm7xx: add NPCM i2c controller driver
-Date:   Fri, 22 May 2020 14:33:09 +0300
-Message-Id: <20200522113312.181413-1-tali.perry1@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Fri, 22 May 2020 07:45:33 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38912 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729377AbgEVLpd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 07:45:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590147932; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=y/tDLDxTaj/n3oOwTrmbLB4Bs+dfP08FE74B3sme6oo=; b=CpUO9GWeXKJayk07m4vIKkob6WgxPPuK2Axf9KYHDzu4JcOuFbql9ug+liEY0ilT74EGQblN
+ dlpaypJjy0FhchlfBhmEQ+9GufdhngFwYllCrt8BqVaYCPCQJ79jNozaX7wxZjZJzBbxRxiw
+ Kz5F2mola66nqaomxMa4Y5xgqwg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec7bb4a.7fbc1b475b90-smtp-out-n03;
+ Fri, 22 May 2020 11:45:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 11212C433C6; Fri, 22 May 2020 11:45:14 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: manafm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 249C7C433C6;
+        Fri, 22 May 2020 11:45:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 249C7C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=manafm@codeaurora.org
+From:   Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Subject: [PATCH v3 0/2] Add cold interrupt support to tsens driver
+Date:   Fri, 22 May 2020 17:14:50 +0530
+Message-Id: <20200522114452.28647-1-manafm@codeaurora.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -45,97 +65,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch set adds i2c controller support 
-for the Nuvoton NPCM Baseboard Management Controller (BMC).
+The changes have dependency on merging tsens-common.c into tsens.c [1]
+to merge first.
 
-NPCM7xx includes 16 I2C controllers. This driver operates the controller.
-This module also includes a slave mode.
+Dependencies:
+[1] https://lkml.org/lkml/2020/4/29/1028
 
----
-v13 -> v12:
-	- Fix yaml example. Issue found by an updated dt_binding_check.
-	- remove double spacing. indentation issues.
-	- remove ifdef DEBUG_FS around __init and __exit.
-	- debugfs and counters are always present in bus struct.
-	- Fix npcm_i2c_write_fifo_slave flow.
-	- Remove version number.
-v12 -> v11:
-	- Fix according to maintainer comments.
-	- debugfs simplified (usedebugfs_create_u64).
-	- slave read fifo split from master read fifo.
-v11 -> v10:
-	- Fix according to maintainer comments.
-	- Init clk simplified.
-	- Comments in c99
-	- Split master irq function.
-	- debugfs not mandatory.
-	- yaml file fix.
-
-v10 -> v9:
-	- Fix according to maintainer comments.
-	- binding file changed to yaml format.
-	- Shorten recovery flow.
-	- Add support for health monitoring counters.
-
-v9 -> v8:
-	- Fix according to maintainer comments.
-	- Split lines of iowrite..(ioread..) to separate lines.
-	- Use readx_poll_timeout_atomic
-	- resolve various style issues.
-	 
-v8 -> v7:
-	- Split to two commits, one for master, one for slave.
-	- Rename smb to i2c.
-	- Remove global vars.
-
-v7 -> v6:
-	- Rebased on Linux 5.4-rc8  (was Linux 5.4-rc7).
-	- Fix issue found by kbuild test robot (redundant include).
-	- Note: left a warning related to fall through. This fall through is
-	  intentional.
-	
-v6 -> v5:
-	- Update documentation
-
-v5 -> v4:
-	- support recovery
-	- master-slave switch support needed for IPMB
-
-v4 -> v3:
-	- typo on cover letter.
-
-v3 -> v2:
-	- fix dt binding: compatible name: omit "bus"
-
-v2 -> v1:
-	- run check patch in strict mode.
-	- use linux crc.
-	- define regs in constant offset without base.
-	- remove debug prints.
-	- no declarations for local functions.
-	
-v1: initial version
-
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
----
-Tali Perry (3):
-  dt-bindings: i2c: npcm7xx: add NPCM I2C controller documentation
-  i2c: npcm7xx: Add Nuvoton NPCM I2C controller driver
-  i2c: npcm7xx: Add support for slave mode for Nuvoton NPCM BMC I2C
-    controller driver.
-
- .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     |   60 +
- drivers/i2c/busses/Kconfig                    |    9 +
- drivers/i2c/busses/Makefile                   |    1 +
- drivers/i2c/busses/i2c-npcm7xx.c              | 2411 +++++++++++++++++
- 4 files changed, 2481 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
- create mode 100644 drivers/i2c/busses/i2c-npcm7xx.c
+Changes in v3:
+* Add cold interrupt support to tsens driver
+* Update cold interrupt support in yaml
 
 
-base-commit: b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce
+*** BLURB HERE ***
+
+Manaf Meethalavalappu Pallikunhi (2):
+  drivers: thermal: tsens: Add cold interrupt support
+  dt-bindings: thermal: tsens: Add cold interrupt support in yaml
+
+ .../bindings/thermal/qcom-tsens.yaml          |  42 +++++++
+ drivers/thermal/qcom/tsens-v2.c               |   5 +
+ drivers/thermal/qcom/tsens.c                  | 112 +++++++++++++++++-
+ drivers/thermal/qcom/tsens.h                  |  11 ++
+ 4 files changed, 169 insertions(+), 1 deletion(-)
+
 -- 
-2.22.0
-
+2.26.2
