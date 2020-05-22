@@ -2,96 +2,108 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AAAC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 22:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26C7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 22:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9850206B6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 22:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE25204EA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 22:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590187342;
+	bh=lJbj8vsN1yvS81mgR2/rEAdDi+wz/nxWqKAs+XksfGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O780FSwrIQ5g5LX10K3U7iLEn/JDz7vxn+IN43BNZGoK8Hp6Q48W942ebH3+8DvE1
+	 FF5DLnN1vngZlmeJZeeKJUhnBL9NKhev85D77hlpPJ5IyOgAzhIY/eJ/Fnp3L26BHH
+	 HrsTObPjf7KmfV9q9gKuclLBgYFOi+2s0RsCbobo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgEVWh1 (ORCPT
+        id S1731398AbgEVWmV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 18:37:27 -0400
-Received: from elvis.franken.de ([193.175.24.41]:34928 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731029AbgEVWh1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 18:37:27 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jcGI0-00019h-00; Sat, 23 May 2020 00:37:16 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 9BF9CC0183; Sat, 23 May 2020 00:36:56 +0200 (CEST)
-Date:   Sat, 23 May 2020 00:36:56 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
-Message-ID: <20200522223656.GA22313@alpha.franken.de>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
- <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
- <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
- <20200522142550.GB15261@alpha.franken.de>
- <20200522152210.GA15567@e121166-lin.cambridge.arm.com>
+        Fri, 22 May 2020 18:42:21 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37358 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731391AbgEVWmV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 18:42:21 -0400
+Received: by mail-il1-f196.google.com with SMTP id r2so1159167ila.4;
+        Fri, 22 May 2020 15:42:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JuCuXLGKu/Cpaze8rVHktM6qeXHp4VtIRO2ypPo4gW0=;
+        b=MwBXZT4VluQgaBM4YTyhs1WPQLrUoC0Y5JISmCV1P/8Yc7s/kN2vZIjJWYQCmqItZa
+         2ievMRPCbuB8UqZb5Si2tFgAMVYoTMriR4D5LAHccy9oafDf9edjYvAVn1kwzqImP3z2
+         d7W0OPTF8csEa6Fbe8IidaTJnAz5PXohNKAXlXQPfUY2wOCBg7g55WUR+5OvxPg9cfOG
+         JaAMmrDYPyS+yLZOZh0Iam9f5KhaLwP07tyCcxEim+IO8N1rvL5QTufGQGdzu2FkUoq/
+         bkjSBuHLKagc1B4zlMeMFo+ABOLS8Eibx8D46q36bGVH2uVWE8ohr3nGxAbDm6sWEAK3
+         RKug==
+X-Gm-Message-State: AOAM5320Yz6j7q1EJZqf7F+BKCYC3flVmv8QRkzZdxnlbYYZGrqAGKAo
+        LftA9f59EWdyjCFz+EOvnodInfc=
+X-Google-Smtp-Source: ABdhPJzavXPf6QraDSSP+C8Cf0zAAigF73AyOksGDL0HvQxYO0MhIQUfBalrWcaf30LuSiDr4uw5bQ==
+X-Received: by 2002:a05:6e02:130e:: with SMTP id g14mr15735257ilr.38.1590187339802;
+        Fri, 22 May 2020 15:42:19 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id e26sm4195065ioe.39.2020.05.22.15.42.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 15:42:19 -0700 (PDT)
+Received: (nullmailer pid 848403 invoked by uid 1000);
+        Fri, 22 May 2020 22:42:17 -0000
+Date:   Fri, 22 May 2020 16:42:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kfting@nuvoton.com, benjaminfair@google.com,
+        avifishman70@gmail.com, yuenn@google.com,
+        andriy.shevchenko@linux.intel.com, openbmc@lists.ozlabs.org,
+        tmaimon77@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, wsa@the-dreams.de,
+        brendanhiggins@google.com, robh+dt@kernel.org, venture@google.com,
+        ofery@google.com
+Subject: Re: [PATCH v13 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C
+ controller
+Message-ID: <20200522224217.GA847856@bogus>
+References: <20200522113312.181413-1-tali.perry1@gmail.com>
+ <20200522113312.181413-2-tali.perry1@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522152210.GA15567@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200522113312.181413-2-tali.perry1@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 04:22:11PM +0100, Lorenzo Pieralisi wrote:
-> On Fri, May 22, 2020 at 04:25:50PM +0200, Thomas Bogendoerfer wrote:
-> > On Thu, May 14, 2020 at 09:16:41PM +0800, Jiaxun Yang wrote:
-> > > We can now enable generic PCI driver in Kconfig, and remove legacy
-> > > PCI driver code.
-> > > 
-> > > Radeon vbios quirk is moved to the platform folder to fit the
-> > > new structure.
-> > > 
-> > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > > --
-> > > v9: Fix licenses tag
-> > > ---
-> > >  arch/mips/Kconfig                  |   1 +
-> > >  arch/mips/loongson64/Makefile      |   2 +-
-> > >  arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
-> > >  arch/mips/pci/Makefile             |   1 -
-> > >  arch/mips/pci/fixup-loongson3.c    |  71 ------------------
-> > >  arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
-> > >  6 files changed, 31 insertions(+), 189 deletions(-)
-> > >  create mode 100644 arch/mips/loongson64/vbios_quirk.c
-> > >  delete mode 100644 arch/mips/pci/fixup-loongson3.c
-> > >  delete mode 100644 arch/mips/pci/ops-loongson3.c
-> > 
-> > Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+On Fri, 22 May 2020 14:33:10 +0300, Tali Perry wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM I2C controller.
 > 
-> This patch (so the series) does not apply to v5.7-rc1 which is our
-> baseline. I reiterate the point, isn't it better to take the whole
-> series through the MIPS tree ?
+> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> ---
+>  .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+> 
 
-sounds better then
 
-> Failing that, the series has to
-> be rebased (or split differently so that it can be taken through
-> different trees), just let me know.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-so let's take via mips-next. So can I add your Acked-by to the
-first three patches ?
+Error: Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dts:22.28-29 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Thomas.
+See https://patchwork.ozlabs.org/patch/1296162
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
