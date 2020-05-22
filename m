@@ -2,461 +2,167 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B520C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C984FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBAE207FB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F9E207FB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:44:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ge+b+0kL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgEVHmP (ORCPT
+        id S1728797AbgEVHor (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 03:42:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21951 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbgEVHmP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 03:42:15 -0400
-IronPort-SDR: myiTBxbxLj69KHmgbcQvyYjpjob7NAE1YfXTJoHlXhXbTSbW6PftbT6yZJRp6zbcYbrmFtBLKz
- rVGxbr82fPXw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 00:42:14 -0700
-IronPort-SDR: Luruh70CIJQxJl9IUxA3Gochei59vsdonlywZClV7eLsoC7FNwDNzl/1olbGyk8dQ6Hnmf8Ja0
- +IAZUfEj5haA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,420,1583222400"; 
-   d="scan'208";a="412680073"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 22 May 2020 00:42:11 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
-        robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v1 2/2] Add PWM driver for LGM
-Date:   Fri, 22 May 2020 15:41:59 +0800
-Message-Id: <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
-References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
-References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
+        Fri, 22 May 2020 03:44:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727839AbgEVHop (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 03:44:45 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB49C05BD43
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 00:44:45 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id m6so9801554ilq.7
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 00:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LCkLyZXcgLXsj7dmJQa9iDLscNMkrkvWsu5Kx85OjLg=;
+        b=ge+b+0kLRvCWW+i7FZpDx3vEx/9YzZzTihd0/kwhJML/57n7AN8tpGRlBKOd+v/Vkq
+         MlxvKA+QiiJgfLN2IMjGjgls4JTBYwCh5dcsZV0voXh1SJfMbIUYGEVZDExaAXMjR3pa
+         CKh1er6geLM8qsCE1e0SxIxJeURG2LJHvzNxit1NXDK1sPbtEhbTGDwYa9nhr9S8RWX2
+         JkvxTxEfzcF8tSYMk40YQL/8EzhgTte5EbE1gvYUFSKrSOWSIszGfPqf7X37cvEcPmiv
+         HtMLTvK3kwmmT4cJ1y/3uuYXGkJ0n7Yt19IT8mO/KAmbN5lRd5Gbl+V1Hb+NVkOed3T5
+         CrEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LCkLyZXcgLXsj7dmJQa9iDLscNMkrkvWsu5Kx85OjLg=;
+        b=jRWSa+qMUAz3wKQ6BvSR7mnwQP8zwPvFMQlfVtH0GmFk9bMKizbEEoAtVjOuV8F7Jb
+         o82dv309INHswZglOs/c83ApJPCR0LlFra6PTMo8FPAIngyBdfsW/S0BYbTxHFlAt8y3
+         S1lZqUX7a8lY3/vZfeCWkJWA2e6t++nYep3q+dNfX4Hf9Yzyh3xP2YBcC3AxZR71icLi
+         2WZ2m6vsVqE131lQVhhiUgTI+4hiDnpj1XxDo4jNr3OBYt+yrctzoPJBzP5mWsuo7OTv
+         Fg6HSVUd9kHvWofsSe45sddqRyjVs9OSPJtixWEGM08gcEWI11CmFTepHfrBe4Xm4QKY
+         nuzg==
+X-Gm-Message-State: AOAM531TAQrjU+NMeqJDMdUCZzTXXvYYbdVl3jt4jE7ZS/bbFjXJEz8I
+        8+5b+tknMOXzsXLp54MNMU3yK+1Rs96fi407FovBRw==
+X-Google-Smtp-Source: ABdhPJyMFYW+VQGw9RND8F1TlWx6v0Sfg+2mzq6aucXwYl+4J0CTaHFg5jMebQ8YJqZw5nl76kjU2nOYVhi3sG6Wx5A=
+X-Received: by 2002:a92:d946:: with SMTP id l6mr12913271ilq.6.1590133484494;
+ Fri, 22 May 2020 00:44:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200520112523.30995-1-brgl@bgdev.pl> <20200520112523.30995-7-brgl@bgdev.pl>
+ <CAK8P3a3jhrQ3p1JsqMNMOOnfo9t=rAPWaOAwAdDuFMh7wUtZQw@mail.gmail.com>
+ <CAMRc=MeuQk9rFDFGWK0ijsiM-r296cVz9Rth8hWhW5Aeeti_cA@mail.gmail.com> <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 22 May 2020 09:44:33 +0200
+Message-ID: <CAMRc=MfVkbDSfEV71SD57dpYthdx5epD0FOvjRx8qQGT+SgsTQ@mail.gmail.com>
+Subject: Re: [PATCH v4 06/11] net: ethernet: mtk-eth-mac: new driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add PWM controller driver for Intel's Lightning Mountain(LGM) SoC.
+=C5=9Br., 20 maj 2020 o 23:23 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a)=
+:
+>
+> On Wed, May 20, 2020 at 7:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> > =C5=9Br., 20 maj 2020 o 16:37 Arnd Bergmann <arnd@arndb.de> napisa=C5=
+=82(a):
+>
+> > > I just noticed how the naming of NET_MEDIATEK_MAC and NET_MEDIATEK_SO=
+C
+> > > for two different drivers doing the same thing is really confusing.
+> > >
+> > > Maybe someone can come up with a better name, such as one
+> > > based on the soc it first showed up in.
+> > >
+> >
+> > This has been discussed under one of the previous submissions.
+> > MediaTek wants to use this IP on future designs as well and it's
+> > already used on multiple SoCs so they want the name to be generic. I
+> > also argued that this is a driver strongly tied to a specific
+> > platform(s) so if someone wants to compile it - they probably know
+> > what they're doing.
+> >
+> > That being said: I verified with MediaTek and the name of the IP I can
+> > use is "star" so they proposed "mtk-star-eth". I would personally
+> > maybe go with "mtk-star-mac". How about those two?
+>
+> Both seem fine to me. If this was previously discussed, I don't want
+> do further bike-shedding and I'd trust you to pick a sensible name
+> based on the earlier discussions.
+>
+> > >  +               /* One of the counters reached 0x8000000 - update st=
+ats and
+> > > > +                * reset all counters.
+> > > > +                */
+> > > > +               if (unlikely(status & MTK_MAC_REG_INT_STS_MIB_CNT_T=
+H)) {
+> > > > +                       mtk_mac_intr_disable_stats(priv);
+> > > > +                       schedule_work(&priv->stats_work);
+> > > > +               }
+> > > > + befor
+> > > > +               mtk_mac_intr_ack_all(priv);
+> > >
+> > > The ack here needs to be dropped, otherwise you can get further
+> > > interrupts before the bottom half has had a chance to run.
+> > >
+> >
+> > My thinking was this: if I mask the relevant interrupt (TX/RX
+> > complete) and ack it right away, the status bit will be asserted on
+> > the next packet received/sent but the process won't get interrupted
+> > and when I unmask it, it will fire right away and I won't have to
+> > recheck the status register. I noticed that if I ack it at the end of
+> > napi poll callback, I end up missing certain TX complete interrupts
+> > and end up seeing a lot of retransmissions even if I reread the status
+> > register. I'm not yet sure where this race happens.
+>
+> Right, I see. If you just ack at the end of the poll function, you need
+> to check the rings again to ensure you did not miss an interrupt
+> between checking observing both rings to be empty and the irq-ack.
+>
+> I suspect it's still cheaper to check the two rings with an uncached
+> read from memory than to to do the read-modify-write on the mmio,
+> but you'd have to measure that to be sure.
+>
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/pwm/Kconfig         |   9 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 356 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 366 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
+Unfortunately the PHY on the board I have is 100Mbps which is the
+limiting factor in benchmarking this driver. :(
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index eebbc917ac97..a582214f50b2 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,15 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
- 
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on X86 || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_JZ4740
- 	tristate "Ingenic JZ47xx PWM support"
- 	depends on MACH_INGENIC
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9a475073dafc..c16a972a101d 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
- obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..e307fd2457df
---- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,356 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define PWM_FAN_CON0		0x0
-+#define PWM_FAN_EN_EN		BIT(0)
-+#define PWM_FAN_EN_DIS		0x0
-+#define PWM_FAN_EN_MSK		BIT(0)
-+#define PWM_FAN_MODE_2WIRE	0x0
-+#define PWM_FAN_MODE_4WIRE	0x1
-+#define PWM_FAN_MODE_MSK	BIT(1)
-+#define PWM_FAN_PWM_DIS_DIS	0x0
-+#define PWM_FAN_PWM_DIS_MSK	BIT(2)
-+#define PWM_TACH_EN_EN		0x1
-+#define PWM_TACH_EN_MSK		BIT(4)
-+#define PWM_TACH_PLUS_2		0x0
-+#define PWM_TACH_PLUS_4		0x1
-+#define PWM_TACH_PLUS_MSK	BIT(5)
-+#define PWM_FAN_DC_MSK		GENMASK(23, 16)
-+
-+#define PWM_FAN_CON1		0x4
-+#define PWM_FAN_MAX_RPM_MSK	GENMASK(15, 0)
-+
-+#define PWM_FAN_STAT		0x10
-+#define PWM_FAN_TACH_MASK	GENMASK(15, 0)
-+
-+#define MAX_RPM			(BIT(16) - 1)
-+#define DFAULT_RPM		4000
-+#define MAX_DUTY_CYCLE		(BIT(8) - 1)
-+
-+#define FRAC_BITS		10
-+#define TWO_TENTH		204
-+
-+#define TWO_SECONDS		2000
-+#define IGNORE_FIRST_ERR	1
-+#define THIRTY_SECS_WINDOW	15
-+#define ERR_CNT_THRESHOLD	6
-+
-+struct intel_pwm_chip {
-+	struct pwm_chip		chip;
-+	struct regmap		*regmap;
-+	struct clk		*clk;
-+	struct reset_control	*rst;
-+	u32			tach_en;
-+	u32			max_rpm;
-+	u32			set_rpm;
-+	u32			set_dc;
-+	struct delayed_work	work;
-+};
-+
-+static inline struct intel_pwm_chip *to_intel_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct intel_pwm_chip, chip);
-+}
-+
-+static int pwm_update_dc(struct intel_pwm_chip *pc, u32 val)
-+{
-+	return regmap_update_bits(pc->regmap, PWM_FAN_CON0, PWM_FAN_DC_MSK,
-+				  FIELD_PREP(PWM_FAN_DC_MSK, val));
-+}
-+
-+static int intel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    int duty_ns, int period_ns)
-+{
-+	struct intel_pwm_chip *pc = to_intel_pwm_chip(chip);
-+	u32 val;
-+
-+	val = DIV_ROUND_CLOSEST(duty_ns * MAX_DUTY_CYCLE, period_ns);
-+	val = min_t(u32, val, MAX_DUTY_CYCLE);
-+
-+	if (pc->tach_en) {
-+		pc->set_dc = val;
-+		pc->set_rpm = val * pc->max_rpm / MAX_DUTY_CYCLE;
-+	}
-+
-+	return pwm_update_dc(pc, val);
-+}
-+
-+static int intel_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct intel_pwm_chip *pc = to_intel_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	regmap_update_bits(regmap, PWM_FAN_CON0,
-+			   PWM_FAN_EN_MSK, PWM_FAN_EN_EN);
-+
-+	if (pc->tach_en)
-+		schedule_delayed_work(&pc->work, msecs_to_jiffies(10000));
-+
-+	return 0;
-+}
-+
-+static void intel_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct intel_pwm_chip *pc = to_intel_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	if (pc->tach_en)
-+		cancel_delayed_work_sync(&pc->work);
-+
-+	regmap_update_bits(regmap, PWM_FAN_CON0,
-+			   PWM_FAN_EN_MSK, PWM_FAN_EN_DIS);
-+}
-+
-+static const struct pwm_ops intel_pwm_ops = {
-+	.config		= intel_pwm_config,
-+	.enable		= intel_pwm_enable,
-+	.disable	= intel_pwm_disable,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static void tach_work(struct work_struct *work)
-+{
-+	struct intel_pwm_chip *pc = container_of(work, struct intel_pwm_chip,
-+						 work.work);
-+	struct regmap *regmap = pc->regmap;
-+	u32 fan_tach, fan_dc, val;
-+	s32 diff;
-+	static u32 fanspeed_err_cnt, time_window, delta_dc;
-+
-+	/*
-+	 * Fan speed is tracked by reading the active duty cycle of PWM output
-+	 * from the active duty cycle register. Some variance in the duty cycle
-+	 * register value is expected. So we set a time window of 30 seconds and
-+	 * if we detect inaccurate fan speed 6 times within 30 seconds then we
-+	 * mark it as fan speed problem and fix it by readjusting the duty cycle.
-+	 */
-+
-+	if (fanspeed_err_cnt > IGNORE_FIRST_ERR)
-+		/*
-+		 * Ignore first time we detect inaccurate fan speed
-+		 * because it is expected during bootup.
-+		 */
-+		time_window++;
-+
-+	if (time_window == THIRTY_SECS_WINDOW) {
-+		/*
-+		 * This work is scheduled every 2 seconds i.e. each time_window
-+		 * counter step roughly mean 2 seconds. When the time window
-+		 * reaches 30 seconds, reset all the counters/logic.
-+		 */
-+		fanspeed_err_cnt = 0;
-+		delta_dc = 0;
-+		time_window = 0;
-+	}
-+
-+	regmap_read(regmap, PWM_FAN_STAT, &fan_tach);
-+	fan_tach &= PWM_FAN_TACH_MASK;
-+	if (!fan_tach)
-+		goto restart_work;
-+
-+	val = DIV_ROUND_CLOSEST(pc->set_rpm << FRAC_BITS, fan_tach);
-+	diff = val - BIT(FRAC_BITS);
-+
-+	if (abs(diff) > TWO_TENTH) {
-+		/* if duty cycle diff is more than two tenth, detect it as error */
-+		if (fanspeed_err_cnt > IGNORE_FIRST_ERR)
-+			delta_dc += val;
-+		fanspeed_err_cnt++;
-+	}
-+
-+	if (fanspeed_err_cnt == ERR_CNT_THRESHOLD) {
-+		/*
-+		 * We detected fan speed errors 6 times with 30 seconds.
-+		 * Fix the error by readjusting duty cycle and reset
-+		 * our counters/logic.
-+		 */
-+		fan_dc = pc->set_dc * delta_dc >> (FRAC_BITS + 2);
-+		fan_dc = min_t(u32, fan_dc, MAX_DUTY_CYCLE);
-+		pwm_update_dc(pc, fan_dc);
-+		fanspeed_err_cnt = 0;
-+		delta_dc = 0;
-+		time_window = 0;
-+	}
-+
-+restart_work:
-+	/*
-+	 * Fan speed doesn't need continous tracking. Schedule this work
-+	 * every two seconds so it doesn't steal too much cpu cycles.
-+	 */
-+	schedule_delayed_work(&pc->work, msecs_to_jiffies(TWO_SECONDS));
-+}
-+
-+static void pwm_init(struct intel_pwm_chip *pc)
-+{
-+	struct device *dev = pc->chip.dev;
-+	struct regmap *regmap = pc->regmap;
-+	u32 max_rpm, fan_wire, tach_plus, con0_val, con0_mask;
-+
-+	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
-+		fan_wire = 2; /* default is 2 wire mode */
-+
-+	con0_val = FIELD_PREP(PWM_FAN_PWM_DIS_MSK, PWM_FAN_PWM_DIS_DIS);
-+	con0_mask = PWM_FAN_PWM_DIS_MSK | PWM_FAN_MODE_MSK;
-+
-+	switch (fan_wire) {
-+	case 2 ... 3:
-+		con0_val |= FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
-+		break;
-+	case 4:
-+		con0_val |= FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_4WIRE) |
-+			    FIELD_PREP(PWM_TACH_EN_MSK, PWM_TACH_EN_EN);
-+		con0_mask |= PWM_TACH_EN_MSK | PWM_TACH_PLUS_MSK;
-+		pc->tach_en = 1;
-+		break;
-+	default:
-+		/* default is 2wire mode */
-+		con0_val |= FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
-+		break;
-+	}
-+
-+	if (pc->tach_en) {
-+		if (device_property_read_u32(dev, "intel,tach-plus",
-+					     &tach_plus))
-+			tach_plus = 2;
-+
-+		switch (tach_plus) {
-+		case 2:
-+			con0_val |= FIELD_PREP(PWM_TACH_PLUS_MSK,
-+					       PWM_TACH_PLUS_2);
-+			break;
-+		case 4:
-+			con0_val |= FIELD_PREP(PWM_TACH_PLUS_MSK,
-+					       PWM_TACH_PLUS_4);
-+			break;
-+		default:
-+			con0_val |= FIELD_PREP(PWM_TACH_PLUS_MSK,
-+					       PWM_TACH_PLUS_2);
-+			break;
-+		}
-+
-+		if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
-+			max_rpm = DFAULT_RPM;
-+
-+		max_rpm = min_t(u32, max_rpm, MAX_RPM);
-+		if (max_rpm == 0)
-+			max_rpm = DFAULT_RPM;
-+
-+		pc->max_rpm = max_rpm;
-+		INIT_DEFERRABLE_WORK(&pc->work, tach_work);
-+		regmap_update_bits(regmap, PWM_FAN_CON1,
-+				   PWM_FAN_MAX_RPM_MSK, max_rpm);
-+	}
-+
-+	regmap_update_bits(regmap, PWM_FAN_CON0, con0_mask, con0_val);
-+}
-+
-+static const struct regmap_config pwm_regmap_config = {
-+	.reg_bits       = 32,
-+	.reg_stride     = 4,
-+	.val_bits       = 32,
-+};
-+
-+static int intel_pwm_probe(struct platform_device *pdev)
-+{
-+	struct intel_pwm_chip *pc;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *io_base;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
-+	if (IS_ERR(pc->regmap)) {
-+		ret = PTR_ERR(pc->regmap);
-+		dev_err(dev, "failed to init register map: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pc->clk)) {
-+		ret = PTR_ERR(pc->clk);
-+		dev_err(dev, "failed to get clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pc->rst = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(pc->rst)) {
-+		ret = PTR_ERR(pc->rst);
-+		dev_err(dev, "failed to get reset control: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(pc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	reset_control_deassert(pc->rst);
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &intel_pwm_ops;
-+	pc->chip.npwm = 1;
-+
-+	pwm_init(pc);
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %d\n", ret);
-+		clk_disable_unprepare(pc->clk);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pc);
-+	return 0;
-+}
-+
-+static int intel_pwm_remove(struct platform_device *pdev)
-+{
-+	struct intel_pwm_chip *pc = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	if (pc->tach_en)
-+		cancel_delayed_work_sync(&pc->work);
-+
-+	ret = pwmchip_remove(&pc->chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	reset_control_assert(pc->rst);
-+
-+	clk_disable_unprepare(pc->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id intel_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, intel_pwm_of_match);
-+
-+static struct platform_driver intel_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = intel_pwm_of_match,
-+	},
-+	.probe = intel_pwm_probe,
-+	.remove = intel_pwm_remove,
-+};
-+module_platform_driver(intel_pwm_driver);
--- 
-2.11.0
+If you're fine with this - I'd like to fix the minor issues you
+pointed out and stick with the current approach for now. We can always
+fix the implementation in the future once a board with a Gigabit PHY
+is out. Most ethernet drivers don't use such fine-grained interrupt
+control anyway. I expect the performance differences to be miniscule
+really.
 
+Bart
