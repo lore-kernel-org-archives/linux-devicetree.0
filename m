@@ -2,239 +2,172 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE416C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435BDC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD0F207BC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241F9206D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fyFyhTTB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="uH1Nu4HK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbgEVREW (ORCPT
+        id S1730700AbgEVRL1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 13:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730613AbgEVREU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 13:04:20 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0187C05BD43
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 10:04:19 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ci21so5191532pjb.3
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 10:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7A6iyO2k2fi02P/NzWp7Gyx0jmN7Am3f02P31ob4Wmc=;
-        b=fyFyhTTB5I3oZm7mqgoPivDGwIHsZVBXT7hlfCm1r17aWGihsF/7DzUE5n5ymXQadM
-         Xx7DrNWzGZ8CyhoaXlFFGJv4Oa5KZ7s/Q8m408B5BoJdeHhdrZBTAwyVTP7kr5IyJpuV
-         w5tRGrTNGRg8OAoytmEfTBcbZw1jsQEQJuRQFji1Duza9xdS03AnksIM3/IJmpPXjaWw
-         eQVpxkrKEW4TLCEU/bnHxLoQhSp/fgQlpSUFe4ZBPeZY6GHb+sAE9F77v17eOefUQpBn
-         UEPGPMh9UQbyS1c0m0F9/SOY5TuPERV6crAQsDYa0+XtQJ8LoglkV1BKAPWzGgPeDRkT
-         Qhjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7A6iyO2k2fi02P/NzWp7Gyx0jmN7Am3f02P31ob4Wmc=;
-        b=XT9GFZoMvTiXyYbzfrbP30Aoxb89YM53fsWir35ulJiMed0aBc27+3trzZ6/Ou5u0a
-         V9/agaXCFBHcV74Bw4GXJsy1+yQYxA/hhIlrOLMuaAD8pJ2U8q4WNZ+u+INYZRu51Ny9
-         6rygNGNPxyyhOSq4r4g08t6vG9/3CUVXZur22qDRjtGveH3RmoMNfVCElfBqoqB+pT2i
-         /G4vcs3Bao9iXC+bVeja2W7M/KpuSWVO54YvuCtJeVMXx8WP5f9xAaOCyBwRikQ6UAkm
-         PPdhQhPZUw3AsyOaLLTXqo5PhPD0/LwTF7PxSZdsj2cWaICG9NfpH/mUf6RJW3Z36clo
-         jW/Q==
-X-Gm-Message-State: AOAM530Tbl+HLA+n19rFzMwuJ/dX5qU1sw35mmOfuEiaPw5X1qWnVME1
-        rTB1dRIAxAznf0xIfj0Kt6MTvA==
-X-Google-Smtp-Source: ABdhPJw1bAIOwqeWNM4uyzvNWma2h1I8Plu3ZI448K7S2XdchrZ8hmvPUwbAWaJPRNGNAtIMnEEsqQ==
-X-Received: by 2002:a17:90a:2242:: with SMTP id c60mr5861928pje.224.1590167058911;
-        Fri, 22 May 2020 10:04:18 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l9sm7757804pfd.5.2020.05.22.10.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 10:04:18 -0700 (PDT)
-Date:   Fri, 22 May 2020 10:04:15 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
-Message-ID: <20200522170415.GI11847@yoga>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
- <20200521190739.GC1331782@builder.lan>
- <08d11687-7aee-2c62-9435-670be1afb21e@codeaurora.org>
+        Fri, 22 May 2020 13:11:27 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:35740 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbgEVRL1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 13:11:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1590167484; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gq9F8lTkEQt8HCBJpWq1zgbA3UBCjpb+tJXX07K3abw=;
+        b=uH1Nu4HKVUV+dQbqHI0J7ym58RSoZ7n9YQVSBw/B7bhKwwY0kLpT6qtzuvmi3oYIr16caq
+        8/hwvnUA8TuV921HAfmb82AWCBP2+/AfAughZNLK4EG80nkbndH/3SBgL6r5Md5xFt+KrP
+        28UPaHN1haC7FwP4u29+AfqnavXO17s=
+Date:   Fri, 22 May 2020 19:11:13 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v7 3/5] remoteproc: Add support for runtime PM
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
+Message-Id: <P2TQAQ.3VDG3B8W2EPF3@crapouillou.net>
+In-Reply-To: <035bf8ad-3ef0-8314-ae5c-a94a24c230c8@ti.com>
+References: <20200515104340.10473-1-paul@crapouillou.net>
+        <20200515104340.10473-3-paul@crapouillou.net>
+        <035bf8ad-3ef0-8314-ae5c-a94a24c230c8@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08d11687-7aee-2c62-9435-670be1afb21e@codeaurora.org>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 22 May 06:27 PDT 2020, Veerabhadrarao Badiganti wrote:
+Hi Suman,
 
-> Hi Bjorn,
-> 
-> On 5/22/2020 12:37 AM, Bjorn Andersson wrote:
-> > On Thu 21 May 08:23 PDT 2020, Veerabhadrarao Badiganti wrote:
-> > 
-> > > On qcom SD host controllers voltage switching be done after the HW
-> > > is ready for it. The HW informs its readiness through power irq.
-> > > The voltage switching should happen only then.
-> > > 
-> > > Use the internal voltage switching and then control the voltage
-> > > switching using power irq.
-> > > 
-> > > Set the regulator load as well so that regulator can be configured
-> > > in LPM mode when in is not being used.
-> > > 
-> > > Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
-> > > Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> > > Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
-> > > Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-> > > Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> > > Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> > Looks better, thanks.
-> > 
-> > > ---
-> > >   drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
-> > >   1 file changed, 198 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> > [..]
-> > >   static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
-> > > @@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
-> > >   		sdhci_msm_hs400(host, &mmc->ios);
-> > >   }
-> > > +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	if (IS_ERR(mmc->supply.vmmc))
-> > > +		return 0;
-> > > +
-> > > +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
-> > > +	if (ret)
-> > > +		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
-> > > +			mmc_hostname(mmc), mmc->ios.vdd, ret);
-> > Missed this one on v1, in the event that mmc_regulator_set_ocr() return
-> > a non-zero value it has already printed an error message. So please
-> > replace the tail with just:
-> > 
-> > 	return mmc_regulator_set_ocr(...);
-> > 
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
-> > > +			      struct mmc_host *mmc, bool level)
-> > > +{
-> > > +	int load, ret;
-> > > +	struct mmc_ios ios;
-> > > +
-> > > +	if (IS_ERR(mmc->supply.vqmmc)			 ||
-> > > +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
-> > > +	    (msm_host->vqmmc_enabled == level))
-> > > +		return 0;
-> > > +
-> > > +	if (msm_host->vqmmc_load) {
-> > > +		load = level ? msm_host->vqmmc_load : 0;
-> > > +		ret = regulator_set_load(mmc->supply.vqmmc, load);
-> > Sorry for the late reply on v1, but please see my explanation regarding
-> > load and always-on regulators there.
-> 
-> <Merging your comment from V1 here>
-> 
-> >> You should still call regulator_enable()/regulator_disable() on your
-> >> consumer regulator in this driver. When you do this the regulator core
-> >> will conclude that the regulator_dev (i.e. the part that represents the
-> >> hardware) is marked always_on and will not enable/disable the regulator.
-> 
-> >> But it will still invoke _regulator_handle_consumer_enable() and
-> >> _regulator_handle_consumer_disable(), which will aggregate the "load" of
-> >> all client regulators and update the regulator's load.
-> 
-> >> So this will apply the load as you expect regardless of it being
-> >> supplied by a regulator marked as always_on.
-> 
-> Since I'm not turning off this regulator for eMMC, I wanted to keep it in
-> LPM mode
-> to save some power.
-> When the regulator configured in auto mode (RPMH_REGULATOR_MODE_AUTO) it
-> switches to LPM/HPM mode based on the active load.
-> So i have to minimize my driver load requirement so that I can let this
-> regulator
-> in LPM mode.
-> So i need to set load every-time I disable/enable the regulator.
-> 
+Le ven. 22 mai 2020 =E0 11:47, Suman Anna <s-anna@ti.com> a =E9crit :
+> Hi Paul,
+>=20
+> On 5/15/20 5:43 AM, Paul Cercueil wrote:
+>> Call pm_runtime_get_sync() before the firmware is loaded, and
+>> pm_runtime_put() after the remote processor has been stopped.
+>>=20
+>> Even though the remoteproc device has no PM callbacks, this allows=20
+>> the
+>> parent device's PM callbacks to be properly called.
+>=20
+> I see this patch staged now for 5.8, and the latest -next branch has=20
+> broken the pm-runtime autosuspend feature we have in the OMAP=20
+> remoteproc driver. See commit 5f31b232c674 ("remoteproc/omap: Add=20
+> support for runtime auto-suspend/resume").
+>=20
+> What was the original purpose of this patch, because there can be=20
+> differing backends across different SoCs.
 
-You call regulator_enable(vqmmc) and regulator_disable() below, so you
-are telling the regulator framework that your struct regulator should be
-"on" or "off".
+Did you try pm_suspend_ignore_children()? It looks like it was made for=20
+your use-case.
 
-This will cause the sum of all struct regulator's for the underlying
-struct regulator_dev to be recalculated. So after calling
-regulator_disable() below your effective addition to the load
-calculation is 0, regardless of which load you have specified.
+Cheers,
+-Paul
 
-Independent of this the property regulator-always-on (always_on in
-struct regulator_dev) will determine if the enable/disable request will
-actually be sent to the RPMh.
+>=20
+> regards
+> Suman
+>=20
+>>=20
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>=20
+>> Notes:
+>>      v2-v4: No change
+>>      v5: Move calls to prepare/unprepare to=20
+>> rproc_fw_boot/rproc_shutdown
+>>      v6: Instead of prepare/unprepare callbacks, use PM runtime=20
+>> callbacks
+>>      v7: Check return value of pm_runtime_get_sync()
+>>=20
+>>   drivers/remoteproc/remoteproc_core.c | 17 ++++++++++++++++-
+>>   1 file changed, 16 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/remoteproc/remoteproc_core.c=20
+>> b/drivers/remoteproc/remoteproc_core.c
+>> index a7f96bc98406..e33d1ef27981 100644
+>> --- a/drivers/remoteproc/remoteproc_core.c
+>> +++ b/drivers/remoteproc/remoteproc_core.c
+>> @@ -29,6 +29,7 @@
+>>   #include <linux/devcoredump.h>
+>>   #include <linux/rculist.h>
+>>   #include <linux/remoteproc.h>
+>> +#include <linux/pm_runtime.h>
+>>   #include <linux/iommu.h>
+>>   #include <linux/idr.h>
+>>   #include <linux/elf.h>
+>> @@ -1382,6 +1383,12 @@ static int rproc_fw_boot(struct rproc *rproc,=20
+>> const struct firmware *fw)
+>>   	if (ret)
+>>   		return ret;
+>>   =7F+	ret =3D pm_runtime_get_sync(dev);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "pm_runtime_get_sync failed: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>>   	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+>>   =7F  	/*
+>> @@ -1391,7 +1398,7 @@ static int rproc_fw_boot(struct rproc *rproc,=20
+>> const struct firmware *fw)
+>>   	ret =3D rproc_enable_iommu(rproc);
+>>   	if (ret) {
+>>   		dev_err(dev, "can't enable iommu: %d\n", ret);
+>> -		return ret;
+>> +		goto put_pm_runtime;
+>>   	}
+>>   =7F  	rproc->bootaddr =3D rproc_get_boot_addr(rproc, fw);
+>> @@ -1435,6 +1442,8 @@ static int rproc_fw_boot(struct rproc *rproc,=20
+>> const struct firmware *fw)
+>>   	rproc->table_ptr =3D NULL;
+>>   disable_iommu:
+>>   	rproc_disable_iommu(rproc);
+>> +put_pm_runtime:
+>> +	pm_runtime_put(dev);
+>>   	return ret;
+>>   }
+>>   =7F@@ -1840,6 +1849,8 @@ void rproc_shutdown(struct rproc *rproc)
+>>   =7F  	rproc_disable_iommu(rproc);
+>>   =7F+	pm_runtime_put(dev);
+>> +
+>>   	/* Free the copy of the resource table */
+>>   	kfree(rproc->cached_table);
+>>   	rproc->cached_table =3D NULL;
+>> @@ -2118,6 +2129,9 @@ struct rproc *rproc_alloc(struct device *dev,=20
+>> const char *name,
+>>   =7F  	rproc->state =3D RPROC_OFFLINE;
+>>   =7F+	pm_runtime_no_callbacks(&rproc->dev);
+>> +	pm_runtime_enable(&rproc->dev);
+>> +
+>>   	return rproc;
+>>   }
+>>   EXPORT_SYMBOL(rproc_alloc);
+>> @@ -2133,6 +2147,7 @@ EXPORT_SYMBOL(rproc_alloc);
+>>    */
+>>   void rproc_free(struct rproc *rproc)
+>>   {
+>> +	pm_runtime_disable(&rproc->dev);
+>>   	put_device(&rproc->dev);
+>>   }
+>>   EXPORT_SYMBOL(rproc_free);
+>>=20
+>=20
 
 
-So, if you where to not call regulator_disable() for eMMC your argument
-is correct, but as far as I can see you are and you're relying on the
-regulator core to keep it always-on - and then the load logic is in
-effect still.
-
-Regards,
-Bjorn
-
-> > > +		if (ret) {
-> > > +			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
-> > > +				mmc_hostname(mmc), ret);
-> > > +			goto out;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	if (level) {
-> > > +		/* Set the IO voltage regulator to default voltage level */
-> > > +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
-> > > +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
-> > > +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
-> > > +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
-> > > +
-> > > +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
-> > > +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
-> > > +			if (ret < 0) {
-> > > +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
-> > > +					mmc_hostname(mmc), ret);
-> > > +				goto out;
-> > > +			}
-> > > +		}
-> > > +		ret = regulator_enable(mmc->supply.vqmmc);
-> > > +	} else {
-> > > +		ret = regulator_disable(mmc->supply.vqmmc);
-> > > +	}
-> > > +
-> > > +	if (ret)
-> > > +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
-> > > +			mmc_hostname(mmc), level ? "en":"dis", ret);
-> > > +	else
-> > > +		msm_host->vqmmc_enabled = level;
-> > > +out:
-> > > +	return ret;
-> > > +}
