@@ -2,148 +2,110 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE84C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5768BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 920D32078B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF392072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IAtZ7gbD"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ROVHPn8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgEVBB5 (ORCPT
+        id S1726790AbgEVBIq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 21:01:57 -0400
-Received: from mail-eopbgr60048.outbound.protection.outlook.com ([40.107.6.48]:39502
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726335AbgEVBB4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 21:01:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RqHAezBLauQ4tTVgnErZk79fdYia2pAOXYNc7+2ROP6E0SihlF9OqSS0Nw6ymijCfuCzQNAIvHHlXc8Wft7lhZSlddj8HU5o/0o1Nb0KnOBZiYRn62Nbnn9rzoyIakC9V4OToAoaSf+3Yhui/G+oStTHfV5YxuntvXigRBpD/bi3hYwtQdiO9oc6PVm7NWJlxfBVgoq3acM7/ctISMHqhermn60VEfv+qOTCItzCYCqf0nKZkYqbVB3TyqA30anuDq/rghmPaJ7/ZI0/ASNDoVmqg57XtBcs/qkWwEahypMqTJtIYVQWb2alyTRoTt4DHFwBvRkMjo+RXvYd5riGQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=keWdxfH4NgNJxnCA2AsbVr6tvjSe2LfefyZs1SvB7Hc=;
- b=SYvE6Y/QU/vF6UlGhRNmXR93tMIlBnUS/jF/AUC7fDWVYG0cB8209aVFtqeEBYHjTFfu3BlGUhrcoRXoF6XaDyLucO9bE1fHEPhWq6VzrhRMTAbGa6xA0C4aGGd1XvRHRzthJXN90XwFvtvCAg4vwnRgzQW2q0GYY5tDlR6kLFEcmfIMLc8WX6Gt6G1PHwd+lxSaP7G+o4nQhCbw26zbrUQZmXjBNuM9Kx4hbXArHPM8TEb05+cW1s8G42NMIx3DbVPHwUEp7DmDhC4vihS8BSHyLEhaCRGXldYufSqbU3ftpVCqAE7H85QYy+pawdmD5IbjJmEtj8xoo/YPGUT9mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=keWdxfH4NgNJxnCA2AsbVr6tvjSe2LfefyZs1SvB7Hc=;
- b=IAtZ7gbDQhGzNP0qub2U4kh2RiQBaknW8MmFkz78reJoEoivb8IVOQXjk1YxitRQbWSfAKwMKZC1heoWjiIc4x3MTVJgXbpACJ/K3S6/Kui99S3KVnvHgA+6R3mdZpXA7tSWMz3i05UwmEiXF0Y0FerW9/j0caz2DLxlJw0zFdg=
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM6PR0402MB3591.eurprd04.prod.outlook.com
- (2603:10a6:209:8::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Fri, 22 May
- 2020 01:01:53 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3000.034; Fri, 22 May 2020
- 01:01:53 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH net 3/4] ARM: dts: imx6: update fec gpr property
- to match new format
-Thread-Topic: [EXT] Re: [PATCH net 3/4] ARM: dts: imx6: update fec gpr
- property to match new format
-Thread-Index: AQHWLoHSZsTKfn2KY0W5vmilgDZ/AqixNB4AgACoEqCAAKg5AIAAxaRg
-Date:   Fri, 22 May 2020 01:01:53 +0000
-Message-ID: <AM6PR0402MB360728F404F966B9EF404697FFB40@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-References: <1589963516-26703-1-git-send-email-fugang.duan@nxp.com>
- <1589963516-26703-4-git-send-email-fugang.duan@nxp.com>
- <20200520170322.GJ652285@lunn.ch>
- <AM6PR0402MB3607541D33B1C61476022D0AFFB70@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <20200521130700.GC657910@lunn.ch>
-In-Reply-To: <20200521130700.GC657910@lunn.ch>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f1f629a4-d044-4e4c-993e-08d7fdebb774
-x-ms-traffictypediagnostic: AM6PR0402MB3591:
-x-microsoft-antispam-prvs: <AM6PR0402MB3591379FFBA1DA1A55D7EF06FFB40@AM6PR0402MB3591.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 04111BAC64
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: r0zef+O1s8L2lgpoABcFhVrJNNOLkT+7mpTA7bgHzQjWLPEt/xjc6u5qzgVyXo7lA0jvmg9lk8HMacaQXePfER5Si59FZOocAYFzyDm3fqEjZ5U9EeVVwuN5t4UhLVbZ8NIU4mY1LxxfFHHRBiG6xo76AIp2dESgp4cXWVbPSrxwrw1h4gXQLBN0j+wHMQtRs3ptF7SCM9HXTEpR339e0NCIa6TKz/zS+SwsGPMYbdzIeFXahQLCKtNm0RtHvZRWweAc6cgyBQ8dHfSy8QWK/mcngFgYa7oGj5/VILu3Lxdv2Mt5+q6DGTlOiLCzVMKehOxGgOLZLIJSy3V0TPySwUR00GjlEz8KJ+ZZaS1G46qY++hi2ouLPR0gSYw2HnjRVdzd8oSUjLiGclezZKcpKmgKy5SO3/mpv00jmPpM055+RO1JruaV6bRYXT1Niqdx
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(376002)(346002)(39860400002)(396003)(54906003)(5660300002)(8676002)(86362001)(66946007)(71200400001)(55016002)(7696005)(2906002)(316002)(76116006)(4326008)(186003)(6506007)(9686003)(478600001)(64756008)(52536014)(66446008)(26005)(6916009)(33656002)(8936002)(66476007)(66556008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 0PxHIw6swkvXPbPnxAFxnp9uPcv8csp8QJbNTLJWI0tH/v6oUHqphlTl5VYrHfGEiVfiOcPoJzVSHgPmi/IgTYnAksFvnfYSm1BjJx/ccJnpYIpviMCio1Q3p8+Xyayi+9Cqik9UGCaMHAtCQZ3vJN5e3hXN/gUvett/qo7y9NQABf2SpQniViZ3KGttVHaW6OdgxOxRIHHj8uSkyJ9tG2dmLvmuBCvFTmieUmOYhftL0xcRmV8/GPSHSDZxrQ33rMiifBMFrzjSpEogcA3eHhe+nvz3dpmXn8tGfBVSWLR9kzkG9RLMcnNaC9pzYT7jegXxMcdkdTCEwoFBfhgweqviKlTx/tl1IKkWfX4bOiEbn5BCYKSKmu1z7SmtkmYkyIQymO7aMlAFfh7KkwSx4QtvViGy0dDYev9Esretb/vuw7IdRA9fwKK1vpiS1at2oorAeAnlYixOfL1RwaKoJepOP/5+PJMg+Pey6vUSExs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 May 2020 21:08:46 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:16520 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726762AbgEVBIq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 21:08:46 -0400
+X-UUID: dfc4e360bb65418eabff719be51640cd-20200522
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=oO4SaPPTxCTE7bONxyRSPlLMv4RJZyUeyjDZC6W1AEY=;
+        b=ROVHPn8iwca7HZzyKWs2KF9hhqwvvnFRObwGofNd4GBJJfcYd1Q2tSlaUYJIVI1P31DREcOb+bwmVKI2M1jh8bhiXMPnPg9nzhmHSur3L4SFkD7aI8DjWoofPPqIwdPXga+KWwx3LWDqxKP9O3c/1j8epjyPIImdGQc7NtbHYi8=;
+X-UUID: dfc4e360bb65418eabff719be51640cd-20200522
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1844598716; Fri, 22 May 2020 09:08:38 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 22 May
+ 2020 09:08:31 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 22 May 2020 09:08:34 +0800
+Message-ID: <1590109620.5899.18.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 0/7] add support USB for MT8183
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 May 2020 09:07:00 +0800
+In-Reply-To: <2e98982b-ab8a-9fa9-0903-881ebce916a5@gmail.com>
+References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1567562067.7317.52.camel@mhfsdcap03>
+         <2e98982b-ab8a-9fa9-0903-881ebce916a5@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1f629a4-d044-4e4c-993e-08d7fdebb774
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2020 01:01:53.1999
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jJ9Od9gPeU/ElImGlE2REp8g8+RF8mWE5oa/gSdyI+qhfvCPvy5BsRVjhKQxu5TcBaQIScVNYVZuVdo3wBVf6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3591
+X-TM-SNTS-SMTP: D722D1425AC6E7F67072680642C70D142CB6E1803E9F058E532825CF51FE18462000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch> Sent: Thursday, May 21, 2020 9:07 PM
-> > Andrew, patch#1 in the series will parse the property to get register o=
-ffset
-> and bit.
-> > Patch#2 describes the property format as below:
-> >        <&gpr req_gpr req_bit>.
-> >         gpr is the phandle to general purpose register node.
-> >         req_gpr is the gpr register offset for ENET stop request.
-> >         req_bit is the gpr bit offset for ENET stop request.
-> >
-> > All i.MX support wake-on-lan, imx6q/dl/qp is the first platforms in ups=
-tream
-> to support it.
-> > As you know, most of i.MX chips has two ethernet instances, they have
-> different gpr bit.
-> >
-> > gpr is used to enter/exit stop mode for soc. So it can be defined in dt=
-si file.
-> > "fsl,magic-packet;" property is define the board wakeup capability.
-> >
-> > I am not sure whether above information is clear for you why to add the
-> patch set.
->=20
-> I understand the patch. What is missing is an actual user, where you have=
- two
-> interfaces, doing WOL, with different values for gpr. We don't add new ke=
-rnel
-> APIs without a user.
->=20
->     Andrew
+SGkgTWF0dGhpYXMsDQoNCk9uIFRodSwgMjAyMC0wNS0yMSBhdCAxNDo0MSArMDIwMCwgTWF0dGhp
+YXMgQnJ1Z2dlciB3cm90ZToNCj4gSGkgQ2h1bmdmZW5nLA0KPiANCj4gT24gMDQvMDkvMjAxOSAw
+Mzo1NCwgQ2h1bmZlbmcgWXVuIHdyb3RlOg0KPiA+IEhpIEdyZWcsDQo+ID4gDQo+ID4gDQo+ID4g
+ICBQbGVhc2UgZG9uJ3QgdHJ5IHRvIHBpY2sgdXAgdGhpcyBzZXJpZXMsIHRoZSBkZXBlbmRlbnQg
+b25lcyBhcmUgc3RpbGwNCj4gPiB1bmRlciBwdWJsaWMgcmV2aWV3LCBJJ2xsIGZpeCBidWlsZCB3
+YXJuaW5nIGFuZCBzZW5kIG91dCBuZXcgdmVyc2lvbg0KPiA+IGFmdGVyIHRoZSBkZXBlbmRlbnQg
+b25lcyBhcmUgYXBwbGllZA0KPiA+ICAgU29ycnkgZm9yIGluY29udmVuaWVuY2UNCj4gPiANCj4g
+DQo+IEkgdGhpbmsgdGhlIHBtaWMgZHJpdmVyIGlzIHVwc3RyZWFtIG5vdyBhbmQgc2hvdyB1cCBp
+biBsaW51eC1uZXh0IHNvb24uDQo+IA0KPiBJIHByb3Bvc2UgdG8gcmViYXNlIHRoZSBzZXJpZXMg
+YW5kIHNlbmQgaXQgYWdhaW4uDQpPaywgSSdsbCByZXNlbmQgdGhpcyBzZXJpZXMsIHRoYW5rcyBh
+IGxvdA0KDQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCj4gPiBUaGFua3MNCj4gPiAN
+Cj4gPiBPbiBGcmksIDIwMTktMDgtMzAgYXQgMTU6NDAgKzA4MDAsIENodW5mZW5nIFl1biB3cm90
+ZToNCj4gPj4gVGhpcyBzZXJpZXMgc3VwcG9ydCBVU0IgRFJEIGNvbnRyb2xsZXIgYW5kIGVuYWJs
+ZSBpdCdzIHJlbW90ZQ0KPiA+PiB3YWtldXAgZnVuY3RvaW4gZm9yIE1UODE4MywgdGhleSBkZXBl
+bmQgb24gdGhlIGZvbGxvd2luZw0KPiA+PiBzZXJpZXMgcGF0Y2hlczoNCj4gPj4NCj4gPj4gMS4g
+dGhpcyBzZXJpZXMgYWRkIHN1cHBvcnQgTVQ2MzU4IFBNSUMNCj4gPj4gICBbdjUsMDEvMTBdIG1m
+ZDogbXQ2Mzk3OiBjbGVhbiB1cCBjb2RlDQo+ID4+ICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC8xMTExMDQ4Ny8NCj4gPj4NCj4gPj4gMi4gdGhpcyBzZXJpZXMgYWRkIHN1cHBv
+cnQgcGVyaWNmZyBzeXNjb24NCj4gPj4gICBbdjIsMS8yXSBkdC1iaW5kaW5nczogY2xvY2s6IG1l
+ZGlhdGVrOiBhZGQgcGVyaWNmZyBmb3IgTVQ4MTgzDQo+ID4+ICAgaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9wYXRjaC8xMTExODE4My8NCj4gPj4NCj4gPj4gMy4gYWRkIHByb3BlcnR5IG1l
+ZGlhdGVrLGRpc2N0aCBmb3IgdHBoeQ0KPiA+PiAgIFswNi8xMV0gcGh5OiBwaHktbXRrLXRwaHk6
+IGFkZCBhIHByb3BlcnR5IGZvciBkaXNjb25uZWN0IHRocmVzaG9sZA0KPiA+PiAgIGh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExMTA2OTUvDQo+ID4+DQo+ID4+IHYzIGNoYW5n
+ZXM6DQo+ID4+ICAgMS4gY2hhbmdlcyBtaWNyb3MgZGVmaW5lDQo+ID4+ICAgMi4gcmVtb3ZlICNy
+ZXNldC1jZWxsDQo+ID4+ICAgMy4gdXBkYXRlIGRlcGVuZGVudCBzZXJpZXMNCj4gPj4NCj4gPj4g
+djIgY2hhbmdlczoNCj4gPj4gICBhZGQgcGF0Y2ggWzcvN10NCj4gPj4NCj4gPj4gQ2h1bmZlbmcg
+WXVuICg3KToNCj4gPj4gICBkdC1iaW5kaW5nczogdXNiOiBtdHUzOiBzdXBwb3J0IFVTQiB3YWtl
+dXAgZm9yIE1UODE4Mw0KPiA+PiAgIGR0LWJpbmRpbmdzOiB1c2I6IG10ay14aGNpOiBzdXBwb3J0
+IFVTQiB3YWtldXAgZm9yIE1UODE4Mw0KPiA+PiAgIHVzYjogbXR1Mzogc3VwcG9ydCBpcC1zbGVl
+cCB3YWtldXAgZm9yIE1UODE4Mw0KPiA+PiAgIHVzYjogbXRrLXhoY2k6IHN1cHBvcnQgaXAtc2xl
+ZXAgd2FrZXVwIGZvciBNVDgxODMNCj4gPj4gICBhcm02NDogZHRzOiBtdDgxODM6IGFkZCB1c2Ig
+YW5kIHBoeSBub2Rlcw0KPiA+PiAgIGFybTY0OiBkdHM6IG10ODE4MzogZW5hYmxlIFVTQiByZW1v
+dGUgd2FrZXVwDQo+ID4+ICAgYXJtNjQ6IGR0czogbXQ4MTgzOiB0dW5lIGRpc2Nvbm5lY3QgdGhy
+ZXNob2xkIG9mIHUycGh5DQo+ID4+DQo+ID4+ICAuLi4vYmluZGluZ3MvdXNiL21lZGlhdGVrLG10
+ay14aGNpLnR4dCAgICAgICAgfCAgMSArDQo+ID4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy91
+c2IvbWVkaWF0ZWssbXR1My50eHQgfCAgMSArDQo+ID4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210ODE4My1ldmIuZHRzICAgfCAyMyArKysrKysrDQo+ID4+ICBhcmNoL2FybTY0L2Jv
+b3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpICAgICAgfCA2MyArKysrKysrKysrKysrKysrKysr
+DQo+ID4+ICBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMgICAgICAgICAgICAgICAgICAgfCAx
+NCArKysrLQ0KPiA+PiAgZHJpdmVycy91c2IvbXR1My9tdHUzX2hvc3QuYyAgICAgICAgICAgICAg
+ICAgIHwgMTQgKysrKy0NCj4gPj4gIDYgZmlsZXMgY2hhbmdlZCwgMTE0IGluc2VydGlvbnMoKyks
+IDIgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4gDQo+ID4gDQoNCg==
 
-Andrew, many customers require the wol feature, NXP NPI release always supp=
-ort
-the wol feature to match customers requirement.
-
-And some customers' board only design one ethernet instance based on imx6sx=
-/imx7d/
-Imx8 serial, but which instance we never know, maybe enet1, maybe enet2. So=
- we should
-supply different values for gpr.
-
-So, it is very necessary to support wol feature for multiple instances.
-
-Andy
