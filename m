@@ -2,128 +2,97 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C62C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA53C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0277C206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F382072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mrLZoriV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MavFXY1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgEVReU (ORCPT
+        id S1730819AbgEVRti (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 13:34:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730698AbgEVReU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 13:34:20 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4E2C08C5C0
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 10:34:20 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id j21so5282952pgb.7
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 10:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vpvOtYEoQPYr60AvQ4lbOXVaOz+PqOzSuTIlFxZC7hs=;
-        b=mrLZoriVWpSjIlqWcoKRs7Vf38HcNAIbk1aA1aj5M9bm3Kplf4mG3Nlg9o2f8mXie9
-         Fzh3k6kQqtcs2C2Z92Xjo5uCe7mXGGZJ7OhLbKqmeBdBJLXUSvy785BjEvi9KRPXlUyV
-         Jt9fS28KExNgHI2bGC8ZrNS0cBGoCgm/quS1o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vpvOtYEoQPYr60AvQ4lbOXVaOz+PqOzSuTIlFxZC7hs=;
-        b=ifShqAToFSVgSevRcC7XsO7HV+pS9uqt5BRW/uJeS+SbOU/T4wNYCu1n1KffrmPG9Y
-         KPuSWclnmHmbzgPVg3KZD3oCfgLjAWiljkutMYlCrLZYSl0e7tqdnJOmsYb9K3Y+2xOE
-         CKiPEdADRgKJj5jJg0enzBC31KwMCjK/LUEwXDajYTOttHyTBm9AcKlENPKQ7xjSF9a6
-         pZbdTwL45E7wzBbVWJBlF72h8B/+Or+B7ivTLxZHLRoGVq1qf+tZJRZjeIqKKjXK/E0f
-         /AZPFPenKD+f88P4l1CQL9SRv/U/XCzT2hsvyh3wZF00Ljq+Ed4+B5MByTZMlLqVg1SG
-         3d1Q==
-X-Gm-Message-State: AOAM532B47Svkx6Q8PKJ9d1T+fMBGtZhNKV5h+3aBANTDozqafkCW/2W
-        0490f1P2tM6ARrABhU3itOv9tw==
-X-Google-Smtp-Source: ABdhPJw3mEZJxGUEwT+YtZuRAtkaUC2r/G5yxPoHLWK7Hcz3C0nz+4i4d6ISwNAJSlDeH54wMalB+Q==
-X-Received: by 2002:a63:b64e:: with SMTP id v14mr15087127pgt.164.1590168859526;
-        Fri, 22 May 2020 10:34:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q4sm7769112pfu.42.2020.05.22.10.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 10:34:18 -0700 (PDT)
-Date:   Fri, 22 May 2020 10:34:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Benson Leung <bleung@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 2/6] printk: honor the max_reason field in kmsg_dumper
-Message-ID: <202005221032.859452DFA0@keescook>
-References: <20200515184434.8470-1-keescook@chromium.org>
- <20200515184434.8470-3-keescook@chromium.org>
- <20200522165120.GL3464@linux-b0ei>
+        Fri, 22 May 2020 13:49:38 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:30495 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726373AbgEVRti (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 13:49:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590169777; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=kBMBarMq60G2rfz2ZQoGG77PVjZaTssIIV2wPk/2GhU=; b=MavFXY1ntiBjsWb2WKwBRlqdc9ghduy6OCL+9by/01c+ciRANpGBqg8e6ZFoL4aVLZ+gvZ5p
+ aeEx0Kkd1Vi+NgOTlhvvJgxzP3QOjZkYZPee6gF8VzRQRb048HqYip74+1zFjUpXTLj1OBZ/
+ hXO2iYUT5iReiFz1XPlfH+TRSVw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ec810a7807c16b83944ecc8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 17:49:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C3DC2C433CB; Fri, 22 May 2020 17:49:26 +0000 (UTC)
+Received: from [10.110.64.235] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4851CC433C6;
+        Fri, 22 May 2020 17:49:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4851CC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v2 0/3] Re-introduce TX FIFO resize for larger EP bursting
+To:     Felipe Balbi <balbi@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
+ <87o8qgwazy.fsf@kernel.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <e814d3fc-1e6f-c7f7-7483-1cf06184cfdb@codeaurora.org>
+Date:   Fri, 22 May 2020 10:49:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522165120.GL3464@linux-b0ei>
+In-Reply-To: <87o8qgwazy.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 06:51:20PM +0200, Petr Mladek wrote:
-> On Fri 2020-05-15 11:44:30, Kees Cook wrote:
-> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > 
-> > kmsg_dump() allows to dump kmesg buffer for various system events: oops,
-> > panic, reboot, etc. It provides an interface to register a callback call
-> > for clients, and in that callback interface there is a field "max_reason"
-> > which gets ignored unless always_kmsg_dump is passed as kernel parameter.
+
+
+On 5/22/2020 2:54 AM, Felipe Balbi wrote:
+> Wesley Cheng <wcheng@codeaurora.org> writes:
 > 
-> Strictly speaking, this is not fully true. "max_reason" field is not
-> ignored when set to KMSG_DUMP_PANIC even when always_kmsg_dump was not set.
+>> Changes in V2:
+>>  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
+>>    FIFO.
+>>  - Removed dev_dbg() prints and fixed typos from patches
+>>  - Added some more description on the dt-bindings commit message
+>>
+>> Reviewed-by: Felipe Balbi <balbi@kernel.org>
 > 
-> It should be something like:
+> I don't remember giving you a Reviewed-by, did I?
 > 
-> "which gets ignored for reason higher than KMSG_DUMP_OOPS unless
-> always_kmsg_dump is passed as kernel parameter".
-> 
-> Heh, I wonder if anyone will be able to parse this ;-)
 
-Ah yeah, good point. I've reworded things like this:
+Hi Felipe,
 
-
-    kmsg_dump() allows to dump kmesg buffer for various system events: oops,
-    panic, reboot, etc. It provides an interface to register a callback
-    call for clients, and in that callback interface there is a field
-    "max_reason", but it was getting ignored when set to any "reason"
-    higher than KMSG_DUMP_OOPS unless "always_kmsg_dump" was passed as
-    kernel parameter.
-
-    Allow clients to actually control their "max_reason", and keep the
-    current behavior when "max_reason" is not set.
-
-> Otherwise, it looks good to me. With the updated commit message:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Thanks!
+Sorry, I put the Reviewed-by tag by mistake, I sent a follow up email to
+disregard the tags.  If you need me to resubmit the patch series
+version, please let me know.  Thanks!
 
 -- 
-Kees Cook
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
