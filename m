@@ -2,70 +2,74 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA53C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A99C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 18:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F382072C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11FC206D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 18:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MavFXY1n"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aXfCxukm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgEVRti (ORCPT
+        id S1730753AbgEVSAG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 13:49:38 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:30495 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726373AbgEVRti (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 13:49:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590169777; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=kBMBarMq60G2rfz2ZQoGG77PVjZaTssIIV2wPk/2GhU=; b=MavFXY1ntiBjsWb2WKwBRlqdc9ghduy6OCL+9by/01c+ciRANpGBqg8e6ZFoL4aVLZ+gvZ5p
- aeEx0Kkd1Vi+NgOTlhvvJgxzP3QOjZkYZPee6gF8VzRQRb048HqYip74+1zFjUpXTLj1OBZ/
- hXO2iYUT5iReiFz1XPlfH+TRSVw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ec810a7807c16b83944ecc8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 17:49:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C3DC2C433CB; Fri, 22 May 2020 17:49:26 +0000 (UTC)
-Received: from [10.110.64.235] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4851CC433C6;
-        Fri, 22 May 2020 17:49:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4851CC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v2 0/3] Re-introduce TX FIFO resize for larger EP bursting
-To:     Felipe Balbi <balbi@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org
-References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
- <87o8qgwazy.fsf@kernel.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <e814d3fc-1e6f-c7f7-7483-1cf06184cfdb@codeaurora.org>
-Date:   Fri, 22 May 2020 10:49:24 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Fri, 22 May 2020 14:00:06 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53642 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730674AbgEVSAF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 14:00:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MHxo2l125244;
+        Fri, 22 May 2020 12:59:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590170390;
+        bh=gl9XRrI0+ST50TU70sz+SomDBS0aeHhLlg8nkROosvg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=aXfCxukm+mrQPg6jqx5qpKGdHEVcaB+ndkmAqY1LSojmOrIq2FrO+qpvOIXVdmn7r
+         14WxwAZxvgpcwu15IJjr6KOyMeoP57uIWYKt4j4XbleRKFuCQGgJpu3si1FopwGult
+         JT2VXJUpOwRrd7S+fKUx0bKt/aNh2IR/96NRUCM0=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MHxoKF046789
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 12:59:50 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 12:59:12 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 12:59:12 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MHx8Rx014196;
+        Fri, 22 May 2020 12:59:09 -0500
+Subject: Re: [PATCH v15 2/2] i2c: core: support bus regulator controlling in
+ adapter
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-i2c@vger.kernel.org>
+CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+References: <20200519072729.7268-1-bibby.hsieh@mediatek.com>
+ <20200519072729.7268-3-bibby.hsieh@mediatek.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <952995ec-0865-d8ff-e285-522705fa9709@ti.com>
+Date:   Fri, 22 May 2020 20:59:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <87o8qgwazy.fsf@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200519072729.7268-3-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -73,26 +77,97 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 5/22/2020 2:54 AM, Felipe Balbi wrote:
-> Wesley Cheng <wcheng@codeaurora.org> writes:
+On 19/05/2020 10:27, Bibby Hsieh wrote:
+> Although in the most platforms, the bus power of i2c
+> are alway on, some platforms disable the i2c bus power
+> in order to meet low power request.
 > 
->> Changes in V2:
->>  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
->>    FIFO.
->>  - Removed dev_dbg() prints and fixed typos from patches
->>  - Added some more description on the dt-bindings commit message
->>
->> Reviewed-by: Felipe Balbi <balbi@kernel.org>
+> We get and enable bulk regulator in i2c adapter device.
 > 
-> I don't remember giving you a Reviewed-by, did I?
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>   drivers/i2c/i2c-core-base.c | 84 +++++++++++++++++++++++++++++++++++++
+>   include/linux/i2c.h         |  2 +
+>   2 files changed, 86 insertions(+)
 > 
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 5cc0b0ec5570..e1cc8d46bc51 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -313,12 +313,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+>   static int i2c_device_probe(struct device *dev)
+>   {
+>   	struct i2c_client	*client = i2c_verify_client(dev);
+> +	struct i2c_adapter	*adap;
+>   	struct i2c_driver	*driver;
+>   	int status;
+>   
+>   	if (!client)
+>   		return 0;
+>   
+> +	adap = client->adapter;
+>   	driver = to_i2c_driver(dev->driver);
+>   
+>   	client->irq = client->init_irq;
+> @@ -378,6 +380,12 @@ static int i2c_device_probe(struct device *dev)
+>   
+>   	dev_dbg(dev, "probe\n");
+>   
+> +	status = regulator_enable(adap->bus_regulator);
+> +	if (status < 0) {
+> +		dev_err(&adap->dev, "Failed to enable power regulator\n");
+> +		goto err_clear_wakeup_irq;
+> +	}
+> +
+>   	status = of_clk_set_defaults(dev->of_node, false);
+>   	if (status < 0)
+>   		goto err_clear_wakeup_irq;
+> @@ -414,12 +422,14 @@ static int i2c_device_probe(struct device *dev)
+>   static int i2c_device_remove(struct device *dev)
+>   {
+>   	struct i2c_client	*client = i2c_verify_client(dev);
+> +	struct i2c_adapter      *adap;
+>   	struct i2c_driver	*driver;
+>   	int status = 0;
+>   
+>   	if (!client || !dev->driver)
+>   		return 0;
+>   
+> +	adap = client->adapter;
+>   	driver = to_i2c_driver(dev->driver);
+>   	if (driver->remove) {
+>   		dev_dbg(dev, "remove\n");
+> @@ -427,6 +437,8 @@ static int i2c_device_remove(struct device *dev)
+>   	}
+>   
+>   	dev_pm_domain_detach(&client->dev, true);
+> +	if (!pm_runtime_status_suspended(&client->dev))
+> +		regulator_disable(adap->bus_regulator);
 
-Hi Felipe,
+Not sure this check is correct.
 
-Sorry, I put the Reviewed-by tag by mistake, I sent a follow up email to
-disregard the tags.  If you need me to resubmit the patch series
-version, please let me know.  Thanks!
+i2c_device_probe()
+  - regulator_enable - 1
+
+pm_runtime_get()
+  - regulator_enable - 2
+
+i2c_device_remove()
+  - pm_runtime_status_suspended() flase
+    - regulator_disable() - 1 --> still active?
+
+Sorry, I probably missing smth.
+
+>   
+>   	dev_pm_clear_wake_irq(&client->dev);
+>   	device_init_wakeup(&client->dev, false);
+> @@ -438,6 +450,72 @@ static int i2c_device_remove(struct device *dev)
+>   	return status;
+>   }
+>   
+
+[...]
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Best regards,
+grygorii
