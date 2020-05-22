@@ -2,124 +2,166 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADB2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 06:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECACCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 06:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3553F20776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 06:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBAE92072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 06:29:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PT4yOoiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgEVGD0 (ORCPT
+        id S1727942AbgEVG3k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 02:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59786 "EHLO
+        Fri, 22 May 2020 02:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgEVGD0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 02:03:26 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7441C05BD43
-        for <devicetree@vger.kernel.org>; Thu, 21 May 2020 23:03:25 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jc0mA-0001ss-IU; Fri, 22 May 2020 08:03:22 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jc0m9-0001bD-HH; Fri, 22 May 2020 08:03:21 +0200
-Date:   Fri, 22 May 2020 08:03:21 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     robh@kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 5/5] dt-bindings: arm: fsl: add different Protonic
- boards
-Message-ID: <20200522060321.j73heuzhughmrvrw@pengutronix.de>
-References: <20200520154116.12909-1-o.rempel@pengutronix.de>
- <20200520154116.12909-6-o.rempel@pengutronix.de>
- <20200521200002.GA2800876@bogus>
+        with ESMTP id S1727839AbgEVG3j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 02:29:39 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682C2C061A0E;
+        Thu, 21 May 2020 23:29:39 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id er16so4283340qvb.0;
+        Thu, 21 May 2020 23:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HjmL6pfe0f3OhioV2JNbpEM60lA22erI2gsb1y8QDSY=;
+        b=PT4yOoiuKuBt/zdxmrF57ViJ9qT4kYjccVUk7DVs1GipOIi/hfbL9Tn+woIX5fd3wM
+         wIrnNvSTAYlQb7jgE5DUtDGU28+L7wK9Hc21fd43W8HRmTpJlLck6DsR1xgmoMxSdZLv
+         0UjE2FWy02blFLBedkvCwOdgLSud9h4kfXlPTWpWBXSE6nU+HyQlkVTdOkMAqwjPjhhe
+         SWbw+VF30WeZNPacf1fW49o2HbnC1oRKurYqgjoNRLMIWvxL4IreseJZK4VKskzt2bFf
+         GsNys43B9ssz6DIml/iE/vIJmO7UKbtBWOqTcO+dBgTyYdzSRyphExX9opYO73n+L0f+
+         asug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=HjmL6pfe0f3OhioV2JNbpEM60lA22erI2gsb1y8QDSY=;
+        b=lsKm/joNmvg8iQM72H7WjMO1AHnlDouoxTFrgnMMBe2/b+O/x1LshxNFoZo6m2FIvU
+         2yfWN5uhFdqOJZmgwZgNA5GOVz7WEtkefhxXEMHC8VDNVmq4FD/O/fjHGg9fDMw64Cq3
+         YCrLq532TEjk1WoRIhkAt9XgWzPhgwrwd9fnU/3O6tPv8mXQtaik/w7hhE7LDQspeHlv
+         BroVn+LyROuGdTZAG/1nzV7udBgeZUewRjV0sWWMLWYxs5vjeaNSktIDNVGmZ/bow2C3
+         u4xvZxhyoDvzmhJtY8HO1bCXP3pEIQSmofx0H6+sjPvCUxU2KFE+tR9gBaP1IpPON6+F
+         UrOg==
+X-Gm-Message-State: AOAM532xeG6ZoOAEKTN/40T4m3lQv8jAnIYftqxRpAw3Yng/Zl4fQTVH
+        XdVMTsc3cMrOXDH01Zyc90g=
+X-Google-Smtp-Source: ABdhPJyBja49phXuJS/COK+hhpwZH7O+f/HMQzLZuJcaLN+ios1xoFmUBHgcTYOnRbcjwNR4GhzggQ==
+X-Received: by 2002:a0c:b60c:: with SMTP id f12mr2308661qve.244.1590128978414;
+        Thu, 21 May 2020 23:29:38 -0700 (PDT)
+Received: from [192.168.1.209] (pool-108-51-35-162.washdc.fios.verizon.net. [108.51.35.162])
+        by smtp.googlemail.com with ESMTPSA id v4sm6198876qkv.43.2020.05.21.23.29.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 23:29:37 -0700 (PDT)
+Subject: Re: [PATCH 5/5] dt-bindings: timer: Add CLINT bindings
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+References: <20200521134544.816918-1-anup.patel@wdc.com>
+ <20200521134544.816918-6-anup.patel@wdc.com>
+ <2aec08b7-7197-4b60-89d9-c3b0d5a8a258@gmail.com>
+ <CAAhSdy0OuxCwMVPBrvPpYMfVrhUuY3pONysk75yognOM5-0U+g@mail.gmail.com>
+From:   Sean Anderson <seanga2@gmail.com>
+Autocrypt: addr=seanga2@gmail.com; prefer-encrypt=mutual; keydata=
+ mQENBFe74PkBCACoLC5Zq2gwrDcCkr+EPGsT14bsxrW07GiYzQhLCgwnPdEpgU95pXltbFhw
+ 46GfyffABWxHKO2x+3L1S6ZxC5AiKbYXo7lpnTBYjamPWYouz+VJEVjUx9aaSEByBah5kX6a
+ lKFZWNbXLAJh+dE1HFaMi3TQXXaInaREc+aO1F7fCa2zNE75ja+6ah8L4TPRFZ2HKQzve0/Y
+ GXtoRw97qmnm3U36vKWT/m2AiLF619F4T1mHvlfjyd9hrVwjH5h/2rFyroXVXBZHGA9Aj8eN
+ F2si35dWSZlIwXkNu9bXp0/pIu6FD0bI+BEkD5S7aH1G1iAcMFi5Qq2RNa041DfQSDDHABEB
+ AAG0K1NlYW4gR2FsbGFnaGVyIEFuZGVyc29uIDxzZWFuZ2EyQGdtYWlsLmNvbT6JAVcEEwEK
+ AEECGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQYR1bzo1I0gPoYCg+6I/stKEQ
+ bgUCXT+S2AUJB2TlXwAKCRA+6I/stKEQbhNOB/9ooea0hU9Sgh7PBloU6CgaC5mlqPLB7NTp
+ +JkB+nh3Fqhk+qLZwzEynnuDLl6ESpVHIc0Ym1lyF4gT3DsrlGT1h0Gzw7vUwd1+ZfN0CuIx
+ Rn861U/dAUjvbtN5kMBqOI4/5ea+0r7MACcIVnKF/wMXBD8eypHsorT2sJTzwZ6DRCNP70C5
+ N1ahpqqNmXe0uLdP0pu55JCqhrGw2SinkRMdWyhSxT56uNwIVHGhLTqH7Q4t1N6G1EH626qa
+ SvIJsWlNpll6Y3AYLDw2/Spw/hqieS2PQ/Ky3rPZnvJt7/aSNYsKoFGX0yjkH67Uq8Lx0k1L
+ w8jpXnbEPQN3A2ZJCbeMuQENBF0/k2UBCADhvSlHblNc/aRAWtCFDblCJJMN/8Sd7S9u4ZRS
+ w1wIB4tTF7caxc8yfCHa+FjMFeVu34QPtMOvd/gfHz0mr+t0PiTAdDSbd6o7tj+g5ylm+FhT
+ OTUtJQ6mx6L9GzMmIDEbLxJMB9RfJaL2mT5JkujKxEst6nlHGV/lEQ54xBl5ImrPvuR5Dbnr
+ zWQYlafb1IC5ZFwSMpBeSfhS7/kGPtFY3NkpLrii/CF+ME0DYYWxlkDIycqF3fsUGGfb3HIq
+ z2l95OB45+mCs9DrIDZXRT6mFjLcl35UzuEErNIskCl9NKlbvAMAl+gbDH275SnE44ocC4qu
+ 0tMe7Z5jpOy6J8nNABEBAAGJATwEGAEKACYWIQSQYR1bzo1I0gPoYCg+6I/stKEQbgUCXT+T
+ ZQIbDAUJAeEzgAAKCRA+6I/stKEQbjAGB/4mYRqZTTEFmcS+f+8zsmjt2CfWvm38kR+sJFWB
+ vz82pFiUWbUM5xvcuOQhz698WQnIazbDGSYaOipyVNS52YiuYJDqMszzgw++DrcSuu0oRYWN
+ EWCkJjxMqjGg8uY0OZ6FJG+gYRN5wMFErGfV1OqQ7l00FYA9OzpOEuW9PzPZEutFnAbbh77i
+ zvxbQtT7IJCL24A4KutNYKmWg98im4mCzQcJCxE86Bv69ErLVPUyYbp4doLadScilXlvkkjL
+ iq1wOt3rRzOuw+qnWVgWGBPxdDftz0Wck941tYF9XE0aMgkf4o1sGoDZFUFPCQdfEYPzzV7O
+ S5hN3/mP5UeooFHb
+Message-ID: <c0e9e625-daf8-b72f-2237-06018ff5d8a0@gmail.com>
+Date:   Fri, 22 May 2020 02:29:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bqrs4b63lj2fy3tv"
-Content-Disposition: inline
-In-Reply-To: <20200521200002.GA2800876@bogus>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:01:27 up 188 days, 21:20, 178 users,  load average: 0.24, 0.14,
- 0.04
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <CAAhSdy0OuxCwMVPBrvPpYMfVrhUuY3pONysk75yognOM5-0U+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---bqrs4b63lj2fy3tv
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, May 21, 2020 at 02:00:02PM -0600, robh@kernel.org wrote:
-> On Wed, 20 May 2020 17:41:16 +0200, Oleksij Rempel wrote:
-> > Add Protonic PRTI6Q, WD2, RVT, VT7 boards.
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.yaml | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >=20
+On 5/22/20 1:54 AM, Anup Patel wrote:
+> On Fri, May 22, 2020 at 1:35 AM Sean Anderson <seanga2@gmail.com> wrote=
+:
+>>
+>> On 5/21/20 9:45 AM, Anup Patel wrote:
+>>> +Required properties:
+>>> +- compatible : "sifive,clint-1.0.0" and a string identifying the act=
+ual
+>>> +  detailed implementation in case that specific bugs need to be work=
+ed around.
+>>
+>> Should the "riscv,clint0" compatible string be documented here? This
 >=20
+> Yes, I forgot to add this compatible string. I will add in v2.
 >=20
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+>> peripheral is not really specific to sifive, as it is present in most
+>> rocket-chip cores.
 >=20
-> If a tag was not added on purpose, please state why and what changed.
+> I agree that CLINT is present in a lot of non-SiFive RISC-V SOCs and
+> FPGAs but this IP is only documented as part of SiFive FU540 SOC.
+> (Refer, https://static.dev.sifive.com/FU540-C000-v1.0.pdf)
+>=20
+> The RISC-V foundation should host the CLINT spec independently
+> under https://github.com/riscv and make CLINT spec totally open.
+>=20
+> For now, I have documented it just like PLIC DT bindings found at:
+> Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.=
+0.txt
 
-Sorry, there is no special reason. I just missed it.
+The PLIC seems to have its own RISC-V-sponsored documentation [1] which
+was split off from the older privileged specs. By your logic above,
+should it be renamed to riscv,plic0.txt (with a corresponding change in
+the documented compatible strings)?
 
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+[1] https://github.com/riscv/riscv-plic-spec
 
---bqrs4b63lj2fy3tv
-Content-Type: application/pgp-signature; name="signature.asc"
+>=20
+> If RISC-V maintainers agree then I will document it as "RISC-V CLINT".
+>=20
+> @Palmer ?? @Paul ??
+>=20
+> Regards,
+> Anup
+>=20
 
------BEGIN PGP SIGNATURE-----
+--Sean
 
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl7HayEACgkQ4omh9DUa
-UbMcmg//c0+BK3cTveZkOGqDqq4z9leCABwaeqO9pETzG5eMyjwl8c/AktiGc43O
-BVAx2ejlrRPSOfH9Y6NtMd3qkF563mqYfK+L9OWmhvnk6pfN9rgnxNxNE8ZBqT3+
-AwjaOBVD6+YhzOxFk/pywM4E96ER5h4A3PB6lYoQo88nzTSfv3aSxzwh5IzyISOL
-oAZYO+cs+XDi5Snj1r2gfjuFIRoHbc8dTX1v3m3nefkKdHI3pDPgB7AckE9OtPEW
-io/87X3WevPbd7JqEBWqR5LoB+SLse8DTAqNwwZSV+W5GeNAWFY/tnHz5wJPy68c
-nYtJN6hMjZ5o9pVLFtYpVhM1MVJOJ/nCC3DtKO6vDU4RN+yulgtXEWPC4sXYaB7P
-6qmaCnQ0s+cFkEPCexG/6NpBAgexFd4OtHwZpvDUW9IMRK8ln5YIn4PC2YsNBJuh
-gC9Is07Q6JvdggqSa+QqZBNMow/gpZpNaTRVI6w/Xg7oQv9nVAEQuipCH291nt0F
-NNKGSzMYwCh7nMAdvOAlV0xpx/ruPrJG9C2PpJwQtyPFBUj2BOjdgsm56pW1qN7M
-be4HakGTav/oiuwqz0v+D3q/UvnHyi8NKWw5akhBk8dYWcFdkjo90Yv4YIHLNE/w
-pWluoSaAUk4orYOZpEZ48sB5e18uuKCIX388QTf3WLgm0Zo8bIE=
-=EHZY
------END PGP SIGNATURE-----
-
---bqrs4b63lj2fy3tv--
