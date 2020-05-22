@@ -2,98 +2,115 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21F5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004C2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1D42078D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:38:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rU/rB2J7"
+	by mail.kernel.org (Postfix) with ESMTP id D171F20723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbgEVTiU (ORCPT
+        id S1730963AbgEVTjM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 15:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730894AbgEVTiS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 15:38:18 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84527C061A0E
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 12:38:18 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l11so11298062wru.0
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 12:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hpXaudKgcoJBGQ0g6uxVzYm/+QRXhqSUmA+R6+93KsY=;
-        b=rU/rB2J7Mdt9KXpIYF0r/2PTHbz2uOVQ2NK26cJGrv+R3kPgTVw2zzlxWY/w5lYDYk
-         cHOos1Rj8THnNbuv/g5cnIhM6vg75q5jArRdYdRLx8jcf5bYik7iNFewTqNNmL56rIZL
-         sqxbaY4+dev8uEM2QOpvBOQbzXEEdD8u1GDZ2CXLuWzX9ATDQlaME+NMvKHMF1giG0yB
-         b5SxBMRCFVdNgp+kPP+38NcoPrGMSj2zhd6fdXSCUDX4d0gObUbGpj7GITR4nWIj4DTF
-         qPQ6H2nbPfwg9RFsZCw8cdHJR3mnXXdov2ex2dVNx8ayqNusqJK54CPW0fR6OcTial3j
-         NMKA==
+        Fri, 22 May 2020 15:39:12 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39742 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730894AbgEVTjM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 15:39:12 -0400
+Received: by mail-io1-f68.google.com with SMTP id q129so3436199iod.6;
+        Fri, 22 May 2020 12:39:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hpXaudKgcoJBGQ0g6uxVzYm/+QRXhqSUmA+R6+93KsY=;
-        b=iMi2zYSVI7ggU28zyCnqoOJliRjEcApLbGUKCzCaOIFvv/XavtwtQJJZVPduoS2Tjf
-         Ywa6JLwxE60Ex/4O/65a1nsXrxYLKS5gjwCaHZbPWDmHQmLLclQ4OgLoZXsy7dS6ah3k
-         8GglOgq/sKsCOrMpsan1XTT96MMlvwmmlkuSX1A59zm7B5YPovUoB/ltwY/vZzLMDQfQ
-         CMUOUBeG1RXGhHoner8vD/jBFJurQWbUCe4VonRREePSrTFcJLhMmhtxVeMS3cPujUWy
-         9ikftcPobCwDvPm6sWOxA1xu7EdFlpHvQrM3XjhWy9PD794U/vK/1cTgfjLVoalr8qih
-         gnuQ==
-X-Gm-Message-State: AOAM533D2EXo155tjd7bjIMHpsOkZQ95dtJp6cKI9iAzfjEMKaKmiux5
-        8obcYdkMjAVfZ2g0J1lAak69nA==
-X-Google-Smtp-Source: ABdhPJxEhOmC/akkcwQuLjNWKRMW/+unLHtosQ6iW22D5aOnV69Tm7M6WvnFN63OyUiN/55666tTJw==
-X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr4894259wrx.124.1590176296966;
-        Fri, 22 May 2020 12:38:16 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id v24sm10846635wmh.45.2020.05.22.12.38.15
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X8n27llGBeVRgfd979EvYTTRTeep7XY/1kt8A/YmuXc=;
+        b=hCAebyAUbE8DZwFiN3wWkIW2exfkDrv89JhSn/eHGnSFikemNEU6nXsHTLg7jeLIhL
+         r/xLXT3mh7sZWl3MoBSeaDkCdBG7FOkCnCYDHhMO2e/gJpBBH4HihCOnUkAB4pN43d3g
+         Tt5gx0mPwaSg6RNlC1SK+4i0560xBSQykmO76RQihvvlRtscWH49sF0Xm/gId5XVnYYZ
+         KwPZ53eOef0hXy4rKs9HH8k9V4UfYUS2yB4KezCx6AbznQth4r4lEJ5QsncKIRyv4RkH
+         3prxpH0s/WVzoNR8NLrS0bzp89YNOhKwVVApUevxbo3TuZKUpN3cmIUWCnlDoxaRbVu6
+         q5bQ==
+X-Gm-Message-State: AOAM532UWtLMZRGIR0g03M8mrpxK9q78Tj1QCb906uqdMjhkqd7gOFdX
+        y2sk+nKLCyivK2kLsOhYCUa9qTfT
+X-Google-Smtp-Source: ABdhPJwB9KGA8IFLJiCDzBO67AJ49jL9ehoxyoQUUr7/LFEDadS344KBn077HMRzIZKQtLYuY5jAHA==
+X-Received: by 2002:a05:6602:2c88:: with SMTP id i8mr4522773iow.74.1590176350736;
+        Fri, 22 May 2020 12:39:10 -0700 (PDT)
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com. [209.85.166.180])
+        by smtp.gmail.com with ESMTPSA id x13sm4907320ilq.48.2020.05.22.12.39.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 12:38:16 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: timer: Add renesas,em-sti bindings
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200519081101.28973-1-geert+renesas@glider.be>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <50e3cf79-adb6-ba96-1c05-c88f54ccea86@linaro.org>
-Date:   Fri, 22 May 2020 21:38:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 12:39:10 -0700 (PDT)
+Received: by mail-il1-f180.google.com with SMTP id j2so11817091ilr.5;
+        Fri, 22 May 2020 12:39:10 -0700 (PDT)
+X-Received: by 2002:a05:6e02:f:: with SMTP id h15mr14323365ilr.90.1590176350216;
+ Fri, 22 May 2020 12:39:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200519081101.28973-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200520040221.10536-1-qiang.zhao@nxp.com> <20200520040221.10536-2-qiang.zhao@nxp.com>
+In-Reply-To: <20200520040221.10536-2-qiang.zhao@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 22 May 2020 14:38:47 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQEA1R6Ef=2r1w+KhUsKi2=_aJtFqrKO+Nj+b0WAyEVeQ@mail.gmail.com>
+Message-ID: <CADRPPNQEA1R6Ef=2r1w+KhUsKi2=_aJtFqrKO+Nj+b0WAyEVeQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: Add ds26522 node to dts to ls1043ardb
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19/05/2020 10:11, Geert Uytterhoeven wrote:
-> Document Device Tree bindings for the Renesas EMMA Mobile System Timer.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, May 19, 2020 at 11:08 PM Qiang Zhao <qiang.zhao@nxp.com> wrote:
+>
+> From: Zhao Qiang <qiang.zhao@nxp.com>
+
+Maybe remove the duplicated dts in the title?
+
+>
+> Add ds26522 node to fsl-ls1043a-rdb.dts
+>
+> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
 > ---
+> v3:
+>  - use "arm64: dts:" format for subject
+>
+> arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> index 44d9343..1cb265f 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> @@ -94,6 +94,22 @@
+>                 reg = <0>;
+>                 spi-max-frequency = <1000000>; /* input clock */
+>         };
+> +
+> +       slic@2 {
 
-Applied, thanks
+If this is a plugin card for the board, will this cause any problem
+when the card is not plugged in?
 
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> +               compatible = "maxim,ds26522";
+> +               reg = <2>;
+> +               spi-max-frequency = <2000000>;
+> +               fsl,spi-cs-sck-delay = <100>;
+> +               fsl,spi-sck-cs-delay = <50>;
+> +       };
+> +
+> +       slic@3 {
+> +               compatible = "maxim,ds26522";
+> +               reg = <3>;
+> +               spi-max-frequency = <2000000>;
+> +               fsl,spi-cs-sck-delay = <100>;
+> +               fsl,spi-sck-cs-delay = <50>;
+> +       };
+>  };
+>
+>  &duart0 {
+> --
+> 2.7.4
+>
