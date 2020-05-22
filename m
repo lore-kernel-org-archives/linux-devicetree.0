@@ -2,1900 +2,1967 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8014C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9C6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 583A1205CB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5472205CB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzQUSc6B"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="iXI7/TWz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kj4yBiOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbgEVPGk (ORCPT
+        id S1730181AbgEVPOM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 11:06:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730096AbgEVPGk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 11:06:40 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617D0C061A0E;
-        Fri, 22 May 2020 08:06:38 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w64so10104169wmg.4;
-        Fri, 22 May 2020 08:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5/3S3YctHzzKlt9Eudes14oucA/ApPf00bDsbbKr4EI=;
-        b=ZzQUSc6BMj5QPtPsAIb6ATLW7X8tdqv7jOdH+FIq5FRXKiXsf4iVlOsdnGoIUAXzs2
-         mm960fX/bG/Z3kMrIJxl8gjY++GjIHRpE/scxDxQtL5J/jR1bJttY9zDdrCyvj9A//F8
-         WepwThKtM8m9ORBQILtL+4/sv7ATwxvieOphXIUqkTNC7QA3I21n+AUABd61TAnkQtUT
-         Xu8vFJLF6VNO7VXZLsUvfrr7Pv9s8IHJKnGQ+JB99wA4h6U34Ym3WTnsI9WgLMY+n5qY
-         gJnIc0EC1ugb7OPhWBgVgfvtopmI7c6hcoqmCSviYUqCdA8WADFSSFBknt+QQ3voJi7f
-         IWvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=5/3S3YctHzzKlt9Eudes14oucA/ApPf00bDsbbKr4EI=;
-        b=Lg9n7MbYbIoaV5F3cOnVqWUdtGgMIZ23u7pxS0MJhlyt/ejnr1K77PWdYCh7CzwCJ6
-         s3wbXcNByVSq+Z6q1ESveTq7lwnEzmNP5zuvrL5PX5TKjWM6t3dyLNP1+b9tkZ9tZ0Hx
-         p3QEwFu3HxBffdQpYfVvJRATQDvOSbcE9yKNdFJdE19drBxRN64nWlqZBu7jY2TW8mmf
-         A0wVPlCrfweWwDVcuzhKa4e1mFTP+0VATsJ0RMJfTg1Qm32op9o+Sd/PfqCiH7fXDUPC
-         srGfewjuqGTPQoavN+eCM6moXToaffvGt8ZclzX2lr2/v3uWRtcwQdbmmTHYZ6YzISLn
-         elcw==
-X-Gm-Message-State: AOAM5304KgKd/Fj5wDRD1bWTekp38lgRk7/NnlaZFLF0/x86G2TXBd7O
-        Jo5U3We0ovPlLnFPywm6Y/4=
-X-Google-Smtp-Source: ABdhPJzZxDd8ih8e/dQL+0u1vZv3hT56b5VS+qXQYGT7Y05vy2S/kw8iCuPCNYTKojCxQhs1ZJeWNw==
-X-Received: by 2002:a7b:c0c9:: with SMTP id s9mr13442297wmh.59.1590159996202;
-        Fri, 22 May 2020 08:06:36 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id c25sm9421152wmb.44.2020.05.22.08.06.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 08:06:35 -0700 (PDT)
-Subject: Re: [PATCH v5 06/11] net: ethernet: mtk-star-emac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200522120700.838-1-brgl@bgdev.pl>
- <20200522120700.838-7-brgl@bgdev.pl>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5627e304-3463-9229-fa86-d7d31cad7a61@gmail.com>
-Date:   Fri, 22 May 2020 17:06:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 11:14:12 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:55491 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729929AbgEVPOL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 11:14:11 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 8390FC6E;
+        Fri, 22 May 2020 11:14:08 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 22 May 2020 11:14:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=+zAmwRGj4Hx3zU7KnF4LtFM1k3X
+        wqQ3FWC8F7d1g2TU=; b=iXI7/TWzWXtSN6Rv5Y9knaov3gdiieQZghy9j75ny9o
+        OrFDuDaDi3HpGbDMpq7QG/ENSBPQdMdDqng21VKPQdl2mNZeWkkxpKc4ImP+woSF
+        9KfwW/+re5ArYBJN+i+Pa8cbElPQQVTMOZqBEGQaQ/knEEWAvW8nE6q9SuTWbKL1
+        KinUMGKTVRIfSK9qo566UBMyPpkoeEqYDjsdVA/3jC7hfXz8iqRDmdi5RLT3D/5l
+        z/89sogj0PpP8sSC1aksfGR1qELtvtAeg0hQOEmUnMYkMTKV67HtrIv6ra6WlEXf
+        QSAsKatFg7UCMvYT5evFvZw6gb/O7xNETy0srlryE4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+zAmwR
+        Gj4Hx3zU7KnF4LtFM1k3XwqQ3FWC8F7d1g2TU=; b=kj4yBiOXio8ZSCt+hW8YKl
+        K+2Z1WJO5wgHWdn2wFUFr6NqELmka0AOLxR1crclzQmNpAeoYm5cWpooWXE5iD76
+        5qklPh46BjaPdLUDum6twHBuJFIhl1KoM7ZCAi+c2V8S113t4aL7b5uprpZDH+5R
+        UcHrWpAlGFrAlgk3WspfrZdt/st+ftBCo2d6tAi/tbZHwfMP8S4/eXF/s3xC0w42
+        B0Bk7EuNIU+HtiwsbHB2kKwOXZZtVzOvA4v7GtWtkDdvw2S4qyw2L6M8aHeYuWyf
+        z9bcwEZ1ktUiePWC23bJU77NncIg6u/tV4tt2m6hFrsdNzoTp4jjzM4LU0/KRsfQ
+        ==
+X-ME-Sender: <xms:PezHXnyJHXAPFcn4mwz7_EiQ4Gub5JKCLq97-4YAM-t8tjxqKUXLLw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddufedgkeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepfeehfeejudejtefhiefgudeugfektddvgeeuveehfeeifeeuudelhedtheev
+    geeunecuffhomhgrihhnpegtohhmmhhonhdrtghmnecukfhppeeltddrkeelrdeikedrje
+    einecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgr
+    gihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:PezHXvQNX9QS0fwCjUNirzj7RVlkUOPiPoMVW5BMPqFnwtDUfYFRBw>
+    <xmx:PezHXhWBUj9SLMc6LajklghFmqH_46kO7i6Vr3VtKxv2iZrJHuCSNw>
+    <xmx:PezHXhhAWZANZ_bU9ToqH5EZ_k_08hZhqHVlI6CTCi498oIxqt8l9g>
+    <xmx:QOzHXt70RCMRpqYtrag0F5Fv5tIiQXMYa_ATd9pgfBjxHPhBdCM_ldIN20Q>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 246373280063;
+        Fri, 22 May 2020 11:14:05 -0400 (EDT)
+Date:   Fri, 22 May 2020 17:14:03 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     wens@csie.org, robh+dt@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+        huangshuosheng@allwinnertech.com, tiny.windzz@gmail.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/4] clk: sunxi-ng: add support for the Allwinner A100 CCU
+Message-ID: <20200522151403.7ovbdza2o3cjrb7a@gilmour.lan>
+References: <20200522030743.10204-1-frank@allwinnertech.com>
+ <20200522030743.10204-2-frank@allwinnertech.com>
 MIME-Version: 1.0
-In-Reply-To: <20200522120700.838-7-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3gi2rcwjojrhvt23"
+Content-Disposition: inline
+In-Reply-To: <20200522030743.10204-2-frank@allwinnertech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+--3gi2rcwjojrhvt23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 22/05/2020 14:06, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> This adds the driver for the MediaTek STAR Ethernet MAC currently used
-> on the MT8* SoC family. For now we only support full-duplex.
+Hi,
 
-MT85** SoC family, AFAIU it's not used on MT81** devices. Correct?
-
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, May 22, 2020 at 11:07:40AM +0800, Frank Lee wrote:
+> Add support for a100 in the sunxi-ng CCU framework.
+>=20
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
 > ---
->  drivers/net/ethernet/mediatek/Kconfig         |    7 +
->  drivers/net/ethernet/mediatek/Makefile        |    1 +
->  drivers/net/ethernet/mediatek/mtk_star_emac.c | 1678 +++++++++++++++++
->  3 files changed, 1686 insertions(+)
->  create mode 100644 drivers/net/ethernet/mediatek/mtk_star_emac.c
-> 
-> diff --git a/drivers/net/ethernet/mediatek/Kconfig b/drivers/net/ethernet/mediatek/Kconfig
-> index 5079b8090f16..500c15e7ea4a 100644
-> --- a/drivers/net/ethernet/mediatek/Kconfig
-> +++ b/drivers/net/ethernet/mediatek/Kconfig
-> @@ -14,4 +14,11 @@ config NET_MEDIATEK_SOC
->  	  This driver supports the gigabit ethernet MACs in the
->  	  MediaTek SoC family.
->  
-> +config NET_MEDIATEK_STAR_EMAC
-> +	tristate "MediaTek STAR Ethernet MAC support"
-> +	select PHYLIB
-> +	help
-> +	  This driver supports the ethernet MAC IP first used on
-> +	  MediaTek MT85** SoCs.
+>  drivers/clk/sunxi-ng/Kconfig                  |   10 +
+>  drivers/clk/sunxi-ng/Makefile                 |    2 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  206 +++
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   14 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1255 +++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   14 +
+>  include/dt-bindings/clock/sun50i-a100-ccu.h   |  141 ++
+>  include/dt-bindings/clock/sun50i-a100-r-ccu.h |   25 +
+>  include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
+>  include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
+>  10 files changed, 1753 insertions(+)
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
+>  create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
+>  create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
+>=20
+> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
+> index cdf333003c30..ce5f5847d5d3 100644
+> --- a/drivers/clk/sunxi-ng/Kconfig
+> +++ b/drivers/clk/sunxi-ng/Kconfig
+> @@ -17,6 +17,16 @@ config SUN50I_A64_CCU
+>  	default ARM64 && ARCH_SUNXI
+>  	depends on (ARM64 && ARCH_SUNXI) || COMPILE_TEST
+> =20
+> +config SUN50I_A100_CCU
+> +	bool "Support for the Allwinner A100 CCU"
+> +	default ARM64 && ARCH_SUNXI
+> +	depends on (ARM64 && ARCH_SUNXI) || COMPILE_TEST
 > +
->  endif #NET_VENDOR_MEDIATEK
-> diff --git a/drivers/net/ethernet/mediatek/Makefile b/drivers/net/ethernet/mediatek/Makefile
-> index 3362fb7ef859..3a777b4a6cd3 100644
-> --- a/drivers/net/ethernet/mediatek/Makefile
-> +++ b/drivers/net/ethernet/mediatek/Makefile
-> @@ -5,3 +5,4 @@
->  
->  obj-$(CONFIG_NET_MEDIATEK_SOC) += mtk_eth.o
->  mtk_eth-y := mtk_eth_soc.o mtk_sgmii.o mtk_eth_path.o
-> +obj-$(CONFIG_NET_MEDIATEK_STAR_EMAC) += mtk_star_emac.o
-> diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+> +config SUN50I_A100_R_CCU
+> +	bool "Support for the Allwinner A100 PRCM CCU"
+> +	default ARM64 && ARCH_SUNXI
+> +	depends on (ARM64 && ARCH_SUNXI) || COMPILE_TEST
+> +
+>  config SUN50I_H6_CCU
+>  	bool "Support for the Allwinner H6 CCU"
+>  	default ARM64 && ARCH_SUNXI
+> diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
+> index 4c7bee883f2f..3eb5cff40eac 100644
+> --- a/drivers/clk/sunxi-ng/Makefile
+> +++ b/drivers/clk/sunxi-ng/Makefile
+> @@ -23,6 +23,8 @@ obj-y				+=3D ccu_mp.o
+>  # SoC support
+>  obj-$(CONFIG_SUNIV_F1C100S_CCU)	+=3D ccu-suniv-f1c100s.o
+>  obj-$(CONFIG_SUN50I_A64_CCU)	+=3D ccu-sun50i-a64.o
+> +obj-$(CONFIG_SUN50I_A100_CCU)	+=3D ccu-sun50i-a100.o
+> +obj-$(CONFIG_SUN50I_A100_R_CCU)	+=3D ccu-sun50i-a100-r.o
+>  obj-$(CONFIG_SUN50I_H6_CCU)	+=3D ccu-sun50i-h6.o
+>  obj-$(CONFIG_SUN50I_H6_R_CCU)	+=3D ccu-sun50i-h6-r.o
+>  obj-$(CONFIG_SUN4I_A10_CCU)	+=3D ccu-sun4i-a10.o
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c b/drivers/clk/sunxi=
+-ng/ccu-sun50i-a100-r.c
 > new file mode 100644
-> index 000000000000..789c77af501f
+> index 000000000000..31875269ef90
 > --- /dev/null
-> +++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> @@ -0,0 +1,1678 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+> @@ -0,0 +1,206 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Copyright (c) 2020 MediaTek Corporation
-> + * Copyright (c) 2020 BayLibre SAS
-> + *
-> + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> + * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
+
+The domain doesn't match the one used to send that patch, is that intention=
+al?
+
 > + */
 > +
-> +#include <linux/bits.h>
-> +#include <linux/clk.h>
-> +#include <linux/compiler.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/etherdevice.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/mii.h>
+> +#include <linux/clk-provider.h>
 > +#include <linux/module.h>
-> +#include <linux/netdevice.h>
-> +#include <linux/of.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/of_net.h>
+> +#include <linux/of_address.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/pm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/skbuff.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/workqueue.h>
 > +
-> +#define MTK_STAR_DRVNAME			"mtk_star_emac"
+> +#include "ccu_common.h"
+> +#include "ccu_reset.h"
 > +
-> +#define MTK_STAR_WAIT_TIMEOUT			300
-> +#define MTK_STAR_MAX_FRAME_SIZE			1514
-> +#define MTK_STAR_SKB_ALIGNMENT			16
-> +#define MTK_STAR_NAPI_WEIGHT			64
-> +#define MTK_STAR_HASHTABLE_MC_LIMIT		256
-> +#define MTK_STAR_HASHTABLE_SIZE_MAX		512
+> +#include "ccu_div.h"
+> +#include "ccu_gate.h"
+> +#include "ccu_mp.h"
+> +#include "ccu_nm.h"
 > +
-> +/* Normally we'd use NET_IP_ALIGN but on arm64 its value is 0 and it doesn't
-> + * work for this controller.
-> + */
-> +#define MTK_STAR_IP_ALIGN			2
+> +#include "ccu-sun50i-a100-r.h"
 > +
-> +static const char *const mtk_star_clk_names[] = { "core", "reg", "trans" };
-> +#define MTK_STAR_NCLKS ARRAY_SIZE(mtk_star_clk_names)
-> +
-> +/* PHY Control Register 0 */
-> +#define MTK_STAR_REG_PHY_CTRL0			0x0000
-> +#define MTK_STAR_BIT_PHY_CTRL0_WTCMD		BIT(13)
-> +#define MTK_STAR_BIT_PHY_CTRL0_RDCMD		BIT(14)
-> +#define MTK_STAR_BIT_PHY_CTRL0_RWOK		BIT(15)
-> +#define MTK_STAR_MSK_PHY_CTRL0_PREG		GENMASK(12, 8)
-> +#define MTK_STAR_OFF_PHY_CTRL0_PREG		8
-> +#define MTK_STAR_MSK_PHY_CTRL0_RWDATA		GENMASK(31, 16)
-> +#define MTK_STAR_OFF_PHY_CTRL0_RWDATA		16
-> +
-> +/* PHY Control Register 1 */
-> +#define MTK_STAR_REG_PHY_CTRL1			0x0004
-> +#define MTK_STAR_BIT_PHY_CTRL1_LINK_ST		BIT(0)
-> +#define MTK_STAR_BIT_PHY_CTRL1_AN_EN		BIT(8)
-> +#define MTK_STAR_OFF_PHY_CTRL1_FORCE_SPD	9
-> +#define MTK_STAR_VAL_PHY_CTRL1_FORCE_SPD_10M	0x00
-> +#define MTK_STAR_VAL_PHY_CTRL1_FORCE_SPD_100M	0x01
-> +#define MTK_STAR_VAL_PHY_CTRL1_FORCE_SPD_1000M	0x02
-> +#define MTK_STAR_BIT_PHY_CTRL1_FORCE_DPX	BIT(11)
-> +#define MTK_STAR_BIT_PHY_CTRL1_FORCE_FC_RX	BIT(12)
-> +#define MTK_STAR_BIT_PHY_CTRL1_FORCE_FC_TX	BIT(13)
-> +
-> +/* MAC Configuration Register */
-> +#define MTK_STAR_REG_MAC_CFG			0x0008
-> +#define MTK_STAR_OFF_MAC_CFG_IPG		10
-> +#define MTK_STAR_VAL_MAC_CFG_IPG_96BIT		GENMASK(4, 0)
-> +#define MTK_STAR_BIT_MAC_CFG_MAXLEN_1522	BIT(16)
-> +#define MTK_STAR_BIT_MAC_CFG_AUTO_PAD		BIT(19)
-> +#define MTK_STAR_BIT_MAC_CFG_CRC_STRIP		BIT(20)
-> +#define MTK_STAR_BIT_MAC_CFG_VLAN_STRIP		BIT(22)
-> +#define MTK_STAR_BIT_MAC_CFG_NIC_PD		BIT(31)
-> +
-> +/* Flow-Control Configuration Register */
-> +#define MTK_STAR_REG_FC_CFG			0x000c
-> +#define MTK_STAR_BIT_FC_CFG_BP_EN		BIT(7)
-> +#define MTK_STAR_BIT_FC_CFG_UC_PAUSE_DIR	BIT(8)
-> +#define MTK_STAR_OFF_FC_CFG_SEND_PAUSE_TH	16
-> +#define MTK_STAR_MSK_FC_CFG_SEND_PAUSE_TH	GENMASK(27, 16)
-> +#define MTK_STAR_VAL_FC_CFG_SEND_PAUSE_TH_2K	0x800
-> +
-> +/* ARL Configuration Register */
-> +#define MTK_STAR_REG_ARL_CFG			0x0010
-> +#define MTK_STAR_BIT_ARL_CFG_HASH_ALG		BIT(0)
-> +#define MTK_STAR_BIT_ARL_CFG_MISC_MODE		BIT(4)
-> +
-> +/* MAC High and Low Bytes Registers */
-> +#define MTK_STAR_REG_MY_MAC_H			0x0014
-> +#define MTK_STAR_REG_MY_MAC_L			0x0018
-> +
-> +/* Hash Table Control Register */
-> +#define MTK_STAR_REG_HASH_CTRL			0x001c
-> +#define MTK_STAR_MSK_HASH_CTRL_HASH_BIT_ADDR	GENMASK(8, 0)
-> +#define MTK_STAR_BIT_HASH_CTRL_HASH_BIT_DATA	BIT(12)
-> +#define MTK_STAR_BIT_HASH_CTRL_ACC_CMD		BIT(13)
-> +#define MTK_STAR_BIT_HASH_CTRL_CMD_START	BIT(14)
-> +#define MTK_STAR_BIT_HASH_CTRL_BIST_OK		BIT(16)
-> +#define MTK_STAR_BIT_HASH_CTRL_BIST_DONE	BIT(17)
-> +#define MTK_STAR_BIT_HASH_CTRL_BIST_EN		BIT(31)
-> +
-> +/* TX DMA Control Register */
-> +#define MTK_STAR_REG_TX_DMA_CTRL		0x0034
-> +#define MTK_STAR_BIT_TX_DMA_CTRL_START		BIT(0)
-> +#define MTK_STAR_BIT_TX_DMA_CTRL_STOP		BIT(1)
-> +#define MTK_STAR_BIT_TX_DMA_CTRL_RESUME		BIT(2)
-> +
-> +/* RX DMA Control Register */
-> +#define MTK_STAR_REG_RX_DMA_CTRL		0x0038
-> +#define MTK_STAR_BIT_RX_DMA_CTRL_START		BIT(0)
-> +#define MTK_STAR_BIT_RX_DMA_CTRL_STOP		BIT(1)
-> +#define MTK_STAR_BIT_RX_DMA_CTRL_RESUME		BIT(2)
-> +
-> +/* DMA Address Registers */
-> +#define MTK_STAR_REG_TX_DPTR			0x003c
-> +#define MTK_STAR_REG_RX_DPTR			0x0040
-> +#define MTK_STAR_REG_TX_BASE_ADDR		0x0044
-> +#define MTK_STAR_REG_RX_BASE_ADDR		0x0048
-> +
-> +/* Interrupt Status Register */
-> +#define MTK_STAR_REG_INT_STS			0x0050
-> +#define MTK_STAR_REG_INT_STS_PORT_STS_CHG	BIT(2)
-> +#define MTK_STAR_REG_INT_STS_MIB_CNT_TH		BIT(3)
-> +#define MTK_STAR_BIT_INT_STS_FNRC		BIT(6)
-> +#define MTK_STAR_BIT_INT_STS_TNTC		BIT(8)
-> +
-> +/* Interrupt Mask Register */
-> +#define MTK_STAR_REG_INT_MASK			0x0054
-> +#define MTK_STAR_BIT_INT_MASK_FNRC		BIT(6)
-> +
-> +/* Misc. Config Register */
-> +#define MTK_STAR_REG_TEST1			0x005c
-> +#define MTK_STAR_BIT_TEST1_RST_HASH_MBIST	BIT(31)
-> +
-> +/* Extended Configuration Register */
-> +#define MTK_STAR_REG_EXT_CFG			0x0060
-> +#define MTK_STAR_OFF_EXT_CFG_SND_PAUSE_RLS	16
-> +#define MTK_STAR_MSK_EXT_CFG_SND_PAUSE_RLS	GENMASK(26, 16)
-> +#define MTK_STAR_VAL_EXT_CFG_SND_PAUSE_RLS_1K	0x400
-> +
-> +/* EthSys Configuration Register */
-> +#define MTK_STAR_REG_SYS_CONF			0x0094
-> +#define MTK_STAR_BIT_MII_PAD_OUT_ENABLE		BIT(0)
-> +#define MTK_STAR_BIT_EXT_MDC_MODE		BIT(1)
-> +#define MTK_STAR_BIT_SWC_MII_MODE		BIT(2)
-> +
-> +/* MAC Clock Configuration Register */
-> +#define MTK_STAR_REG_MAC_CLK_CONF		0x00ac
-> +#define MTK_STAR_MSK_MAC_CLK_CONF		GENMASK(7, 0)
-> +#define MTK_STAR_BIT_CLK_DIV_10			0x0a
-> +
-> +/* Counter registers. */
-> +#define MTK_STAR_REG_C_RXOKPKT			0x0100
-> +#define MTK_STAR_REG_C_RXOKBYTE			0x0104
-> +#define MTK_STAR_REG_C_RXRUNT			0x0108
-> +#define MTK_STAR_REG_C_RXLONG			0x010c
-> +#define MTK_STAR_REG_C_RXDROP			0x0110
-> +#define MTK_STAR_REG_C_RXCRC			0x0114
-> +#define MTK_STAR_REG_C_RXARLDROP		0x0118
-> +#define MTK_STAR_REG_C_RXVLANDROP		0x011c
-> +#define MTK_STAR_REG_C_RXCSERR			0x0120
-> +#define MTK_STAR_REG_C_RXPAUSE			0x0124
-> +#define MTK_STAR_REG_C_TXOKPKT			0x0128
-> +#define MTK_STAR_REG_C_TXOKBYTE			0x012c
-> +#define MTK_STAR_REG_C_TXPAUSECOL		0x0130
-> +#define MTK_STAR_REG_C_TXRTY			0x0134
-> +#define MTK_STAR_REG_C_TXSKIP			0x0138
-> +#define MTK_STAR_REG_C_TX_ARP			0x013c
-> +#define MTK_STAR_REG_C_RX_RERR			0x01d8
-> +#define MTK_STAR_REG_C_RX_UNI			0x01dc
-> +#define MTK_STAR_REG_C_RX_MULTI			0x01e0
-> +#define MTK_STAR_REG_C_RX_BROAD			0x01e4
-> +#define MTK_STAR_REG_C_RX_ALIGNERR		0x01e8
-> +#define MTK_STAR_REG_C_TX_UNI			0x01ec
-> +#define MTK_STAR_REG_C_TX_MULTI			0x01f0
-> +#define MTK_STAR_REG_C_TX_BROAD			0x01f4
-> +#define MTK_STAR_REG_C_TX_TIMEOUT		0x01f8
-> +#define MTK_STAR_REG_C_TX_LATECOL		0x01fc
-> +#define MTK_STAR_REG_C_RX_LENGTHERR		0x0214
-> +#define MTK_STAR_REG_C_RX_TWIST			0x0218
-> +
-> +/* Ethernet CFG Control */
-> +#define MTK_PERICFG_REG_NIC_CFG_CON		0x03c4
-> +#define MTK_PERICFG_MSK_NIC_CFG_CON_CFG_MII	GENMASK(3, 0)
-> +#define MTK_PERICFG_BIT_NIC_CFG_CON_RMII	BIT(0)
-> +
-> +/* Represents the actual structure of descriptors used by the MAC. We can
-> + * reuse the same structure for both TX and RX - the layout is the same, only
-> + * the flags differ slightly.
-> + */
-> +struct mtk_star_ring_desc {
-> +	/* Contains both the status flags as well as packet length. */
-> +	u32 status;
-> +	u32 data_ptr;
-> +	u32 vtag;
-> +	u32 reserved;
+> +static const char * const cpus_r_apb2_parents[] =3D { "dcxo24M", "osc32k=
+",
+> +						     "iosc", "pll-periph0" };
+> +static const struct ccu_mux_var_prediv cpus_r_apb2_predivs[] =3D {
+> +	{ .index =3D 3, .shift =3D 0, .width =3D 5 },
 > +};
 > +
-> +#define MTK_STAR_DESC_MSK_LEN			GENMASK(15, 0)
-> +#define MTK_STAR_DESC_BIT_RX_CRCE		BIT(24)
-> +#define MTK_STAR_DESC_BIT_RX_OSIZE		BIT(25)
-> +#define MTK_STAR_DESC_BIT_INT			BIT(27)
-> +#define MTK_STAR_DESC_BIT_LS			BIT(28)
-> +#define MTK_STAR_DESC_BIT_FS			BIT(29)
-> +#define MTK_STAR_DESC_BIT_EOR			BIT(30)
-> +#define MTK_STAR_DESC_BIT_COWN			BIT(31)
+> +static struct ccu_div cpus_clk =3D {
+> +	.div		=3D _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
 > +
-> +/* Helper structure for storing data read from/written to descriptors in order
-> + * to limit reads from/writes to DMA memory.
-> + */
-> +struct mtk_star_ring_desc_data {
-> +	unsigned int len;
-> +	unsigned int flags;
-> +	dma_addr_t dma_addr;
-> +	struct sk_buff *skb;
+> +	.mux		=3D {
+> +		.shift	=3D 24,
+> +		.width	=3D 2,
+> +
+> +		.var_predivs	=3D cpus_r_apb2_predivs,
+> +		.n_var_predivs	=3D ARRAY_SIZE(cpus_r_apb2_predivs),
+> +	},
+> +
+> +	.common		=3D {
+> +		.reg		=3D 0x000,
+> +		.features	=3D CCU_FEATURE_VARIABLE_PREDIV,
+> +		.hw.init	=3D CLK_HW_INIT_PARENTS("cpus",
+> +						      cpus_r_apb2_parents,
+> +						      &ccu_div_ops,
+> +						      0),
+> +	},
 > +};
 > +
-> +#define MTK_STAR_RING_NUM_DESCS			128
-> +#define MTK_STAR_NUM_TX_DESCS			MTK_STAR_RING_NUM_DESCS
-> +#define MTK_STAR_NUM_RX_DESCS			MTK_STAR_RING_NUM_DESCS
-> +#define MTK_STAR_NUM_DESCS_TOTAL		(MTK_STAR_RING_NUM_DESCS * 2)
-> +#define MTK_STAR_DMA_SIZE \
-> +		(MTK_STAR_NUM_DESCS_TOTAL * sizeof(struct mtk_star_ring_desc))
+> +static CLK_FIXED_FACTOR_HW(r_ahb_clk, "r-ahb", &cpus_clk.common.hw, 1, 1=
+, 0);
 > +
-> +struct mtk_star_ring {
-> +	struct mtk_star_ring_desc *descs;
-> +	struct sk_buff *skbs[MTK_STAR_RING_NUM_DESCS];
-> +	dma_addr_t dma_addrs[MTK_STAR_RING_NUM_DESCS];
-> +	unsigned int head;
-> +	unsigned int tail;
+> +static struct ccu_div r_apb1_clk =3D {
+> +	.div		=3D _SUNXI_CCU_DIV(0, 2),
+> +
+> +	.common		=3D {
+> +		.reg		=3D 0x00c,
+> +		.hw.init	=3D CLK_HW_INIT("r-apb1",
+> +					      "r-ahb",
+> +					      &ccu_div_ops,
+> +					      0),
+> +	},
 > +};
 > +
-> +struct mtk_star_priv {
-> +	struct net_device *ndev;
+> +static struct ccu_div r_apb2_clk =3D {
+> +	.div		=3D _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
 > +
-> +	struct regmap *regs;
-> +	struct regmap *pericfg;
+> +	.mux		=3D {
+> +		.shift	=3D 24,
+> +		.width	=3D 2,
 > +
-> +	struct clk_bulk_data clks[MTK_STAR_NCLKS];
+> +		.var_predivs	=3D cpus_r_apb2_predivs,
+> +		.n_var_predivs	=3D ARRAY_SIZE(cpus_r_apb2_predivs),
+> +	},
 > +
-> +	void *ring_base;
-> +	struct mtk_star_ring_desc *descs_base;
-> +	dma_addr_t dma_addr;
-> +	struct mtk_star_ring tx_ring;
-> +	struct mtk_star_ring rx_ring;
-> +
-> +	struct mii_bus *mii;
-> +	struct napi_struct napi;
-> +
-> +	struct device_node *phy_node;
-> +	phy_interface_t phy_intf;
-> +	struct phy_device *phydev;
-> +	unsigned int link;
-> +	int speed;
-> +	int duplex;
-> +	int pause;
-> +
-> +	/* Protects against concurrent descriptor access. */
-> +	spinlock_t lock;
-> +
-> +	struct rtnl_link_stats64 stats;
-> +	struct work_struct stats_work;
+> +	.common		=3D {
+> +		.reg		=3D 0x010,
+> +		.features	=3D CCU_FEATURE_VARIABLE_PREDIV,
+> +		.hw.init	=3D CLK_HW_INIT_PARENTS("r-apb2",
+> +						      cpus_r_apb2_parents,
+> +						      &ccu_div_ops,
+> +						      0),
+> +	},
 > +};
 > +
-> +static struct device *mtk_star_get_dev(struct mtk_star_priv *priv)
-> +{
-> +	return priv->ndev->dev.parent;
-> +}
+> +static SUNXI_CCU_GATE(r_apb1_timer_clk, "r-apb1-timer", "r-apb1",
+> +		      0x11c, BIT(0), 0);
 > +
-> +static const struct regmap_config mtk_star_regmap_config = {
-> +	.reg_bits		= 32,
-> +	.val_bits		= 32,
-> +	.reg_stride		= 4,
-> +	.disable_locking	= true,
+> +static SUNXI_CCU_GATE(r_apb1_twd_clk, "r-apb1-twd", "r-apb1",
+> +		      0x12c, BIT(0), 0);
+> +
+> +static const char * const r_apb1_pwm_clk_parents[] =3D { "dcxo24M", "osc=
+32k",
+> +						       "iosc" };
+> +static SUNXI_CCU_MUX(r_apb1_pwm_clk, "r-apb1-pwm", r_apb1_pwm_clk_parent=
+s,
+> +		     0x130, 24, 2, 0);
+> +
+> +static SUNXI_CCU_GATE(r_apb1_bus_pwm_clk, "r-apb1-bus-pwm", "r-apb1",
+> +		      0x13c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(r_apb1_ppu_clk, "r-apb1-ppu", "r-apb1",
+> +		      0x17c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(r_apb2_uart_clk, "r-apb2-uart", "r-apb2",
+> +		      0x18c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(r_apb2_i2c0_clk, "r-apb2-i2c0", "r-apb2",
+> +		      0x19c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(r_apb2_i2c1_clk, "r-apb2-i2c1", "r-apb2",
+> +		      0x19c, BIT(1), 0);
+
+You should be using SUNXI_CCU_GATE_DATA here
+
+> +static const char * const r_apb1_ir_rx_parents[] =3D { "osc32k", "dcxo24=
+M" };
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(r_apb1_ir_rx_clk, "r-apb1-ir-rx",
+> +				  r_apb1_ir_rx_parents, 0x1c0,
+> +				  0, 5,		/* M */
+> +				  8, 2,		/* P */
+> +				  24, 1,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_GATE(r_apb1_bus_ir_rx_clk, "r-apb1-bus-ir-rx", "r-apb1",
+> +		      0x1cc, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(r_ahb_bus_rtc_clk, "r-ahb-rtc", "r-ahb",
+> +		      0x20c, BIT(0), 0);
+> +
+> +static struct ccu_common *sun50i_a100_r_ccu_clks[] =3D {
+> +	&cpus_clk.common,
+> +	&r_apb1_clk.common,
+> +	&r_apb2_clk.common,
+> +	&r_apb1_timer_clk.common,
+> +	&r_apb1_twd_clk.common,
+> +	&r_apb1_pwm_clk.common,
+> +	&r_apb1_bus_pwm_clk.common,
+> +	&r_apb1_ppu_clk.common,
+> +	&r_apb2_uart_clk.common,
+> +	&r_apb2_i2c0_clk.common,
+> +	&r_apb2_i2c1_clk.common,
+> +	&r_apb1_ir_rx_clk.common,
+> +	&r_apb1_bus_ir_rx_clk.common,
+> +	&r_ahb_bus_rtc_clk.common,
 > +};
 > +
-> +static void mtk_star_ring_init(struct mtk_star_ring *ring,
-> +			       struct mtk_star_ring_desc *descs)
-> +{
-> +	memset(ring, 0, sizeof(*ring));
-> +	ring->descs = descs;
-> +	ring->head = 0;
-> +	ring->tail = 0;
-> +}
-> +
-> +static int mtk_star_ring_pop_tail(struct mtk_star_ring *ring,
-> +				  struct mtk_star_ring_desc_data *desc_data)
-> +{
-> +	struct mtk_star_ring_desc *desc = &ring->descs[ring->tail];
-> +	unsigned int status;
-> +
-> +	status = READ_ONCE(desc->status);
-> +	dma_rmb(); /* Make sure we read the status bits before checking it. */
-> +
-> +	if (!(status & MTK_STAR_DESC_BIT_COWN))
-> +		return -1;
-> +
-> +	desc_data->len = status & MTK_STAR_DESC_MSK_LEN;
-> +	desc_data->flags = status & ~MTK_STAR_DESC_MSK_LEN;
-> +	desc_data->dma_addr = ring->dma_addrs[ring->tail];
-> +	desc_data->skb = ring->skbs[ring->tail];
-> +
-> +	ring->dma_addrs[ring->tail] = 0;
-> +	ring->skbs[ring->tail] = NULL;
-> +
-> +	status &= MTK_STAR_DESC_BIT_COWN | MTK_STAR_DESC_BIT_EOR;
-> +
-> +	WRITE_ONCE(desc->data_ptr, 0);
-> +	WRITE_ONCE(desc->status, status);
-> +
-> +	ring->tail = (ring->tail + 1) % MTK_STAR_RING_NUM_DESCS;
-> +
-> +	return 0;
-> +}
-> +
-> +static void mtk_star_ring_push_head(struct mtk_star_ring *ring,
-> +				    struct mtk_star_ring_desc_data *desc_data,
-> +				    unsigned int flags)
-> +{
-> +	struct mtk_star_ring_desc *desc = &ring->descs[ring->head];
-> +	unsigned int status;
-> +
-> +	status = READ_ONCE(desc->status);
-> +
-> +	ring->skbs[ring->head] = desc_data->skb;
-> +	ring->dma_addrs[ring->head] = desc_data->dma_addr;
-> +
-> +	status |= desc_data->len;
-> +	if (flags)
-> +		status |= flags;
-> +
-> +	WRITE_ONCE(desc->data_ptr, desc_data->dma_addr);
-> +	WRITE_ONCE(desc->status, status);
-> +	status &= ~MTK_STAR_DESC_BIT_COWN;
-> +	/* Flush previous modifications before ownership change. */
-> +	dma_wmb();
-> +	WRITE_ONCE(desc->status, status);
-> +
-> +	ring->head = (ring->head + 1) % MTK_STAR_RING_NUM_DESCS;
-> +}
-> +
-> +static void
-> +mtk_star_ring_push_head_rx(struct mtk_star_ring *ring,
-> +			   struct mtk_star_ring_desc_data *desc_data)
-> +{
-> +	mtk_star_ring_push_head(ring, desc_data, 0);
-> +}
-> +
-> +static void
-> +mtk_star_ring_push_head_tx(struct mtk_star_ring *ring,
-> +			   struct mtk_star_ring_desc_data *desc_data)
-> +{
-> +	static const unsigned int flags = MTK_STAR_DESC_BIT_FS |
-> +					  MTK_STAR_DESC_BIT_LS |
-> +					  MTK_STAR_DESC_BIT_INT;
-> +
-> +	mtk_star_ring_push_head(ring, desc_data, flags);
-> +}
-> +
-> +static unsigned int mtk_star_ring_num_used_descs(struct mtk_star_ring *ring)
-> +{
-> +	return abs(ring->head - ring->tail);
-> +}
-> +
-> +static bool mtk_star_ring_full(struct mtk_star_ring *ring)
-> +{
-> +	return mtk_star_ring_num_used_descs(ring) == MTK_STAR_RING_NUM_DESCS;
-> +}
-> +
-> +static bool mtk_star_ring_descs_available(struct mtk_star_ring *ring)
-> +{
-> +	return mtk_star_ring_num_used_descs(ring) > 0;
-> +}
-> +
-> +static dma_addr_t mtk_star_dma_map_rx(struct mtk_star_priv *priv,
-> +				      struct sk_buff *skb)
-> +{
-> +	struct device *dev = mtk_star_get_dev(priv);
-> +
-> +	/* Data pointer for the RX DMA descriptor must be aligned to 4N + 2. */
-> +	return dma_map_single(dev, skb_tail_pointer(skb) - 2,
-> +			      skb_tailroom(skb), DMA_FROM_DEVICE);
-> +}
-> +
-> +static void mtk_star_dma_unmap_rx(struct mtk_star_priv *priv,
-> +				  struct mtk_star_ring_desc_data *desc_data)
-> +{
-> +	struct device *dev = mtk_star_get_dev(priv);
-> +
-> +	dma_unmap_single(dev, desc_data->dma_addr,
-> +			 skb_tailroom(desc_data->skb), DMA_FROM_DEVICE);
-> +}
-> +
-> +static dma_addr_t mtk_star_dma_map_tx(struct mtk_star_priv *priv,
-> +				      struct sk_buff *skb)
-> +{
-> +	struct device *dev = mtk_star_get_dev(priv);
-> +
-> +	return dma_map_single(dev, skb->data, skb_headlen(skb), DMA_TO_DEVICE);
-> +}
-> +
-> +static void mtk_star_dma_unmap_tx(struct mtk_star_priv *priv,
-> +				  struct mtk_star_ring_desc_data *desc_data)
-> +{
-> +	struct device *dev = mtk_star_get_dev(priv);
-> +
-> +	return dma_unmap_single(dev, desc_data->dma_addr,
-> +				skb_headlen(desc_data->skb), DMA_TO_DEVICE);
-> +}
-> +
-> +static void mtk_star_nic_disable_pd(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_MAC_CFG,
-> +			   MTK_STAR_BIT_MAC_CFG_NIC_PD, 0);
-> +}
-> +
-> +/* Unmask the three interrupts we care about, mask all others. */
-> +static void mtk_star_intr_enable(struct mtk_star_priv *priv)
-> +{
-> +	unsigned int val = MTK_STAR_BIT_INT_STS_TNTC |
-> +			   MTK_STAR_BIT_INT_STS_FNRC |
-> +			   MTK_STAR_REG_INT_STS_MIB_CNT_TH;
-> +
-> +	regmap_write(priv->regs, MTK_STAR_REG_INT_MASK, ~val);
-> +}
-> +
-> +static void mtk_star_intr_disable(struct mtk_star_priv *priv)
-> +{
-> +	regmap_write(priv->regs, MTK_STAR_REG_INT_MASK, ~0);
-> +}
-> +
-> +static void mtk_star_intr_enable_tx(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-> +			   MTK_STAR_BIT_INT_STS_TNTC, 0);
-> +}
-> +
-> +static void mtk_star_intr_enable_rx(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-> +			   MTK_STAR_BIT_INT_STS_FNRC, 0);
-> +}
-> +
-> +static void mtk_star_intr_enable_stats(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-> +			   MTK_STAR_REG_INT_STS_MIB_CNT_TH, 0);
-> +}
-> +
-> +static void mtk_star_intr_disable_tx(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-> +			   MTK_STAR_BIT_INT_STS_TNTC,
-> +			   MTK_STAR_BIT_INT_STS_TNTC);
-> +}
-> +
-> +static void mtk_star_intr_disable_rx(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-> +			   MTK_STAR_BIT_INT_STS_FNRC,
-> +			   MTK_STAR_BIT_INT_STS_FNRC);
-> +}
-> +
-> +static void mtk_star_intr_disable_stats(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-> +			   MTK_STAR_REG_INT_STS_MIB_CNT_TH,
-> +			   MTK_STAR_REG_INT_STS_MIB_CNT_TH);
-> +}
-> +
-> +static unsigned int mtk_star_intr_read(struct mtk_star_priv *priv)
-> +{
-> +	unsigned int val;
-> +
-> +	regmap_read(priv->regs, MTK_STAR_REG_INT_STS, &val);
-> +
-> +	return val;
-> +}
-> +
-> +static unsigned int mtk_star_intr_ack_all(struct mtk_star_priv *priv)
-> +{
-> +	unsigned int val;
-> +
-> +	val = mtk_star_intr_read(priv);
-> +	regmap_write(priv->regs, MTK_STAR_REG_INT_STS, val);
-> +
-> +	return val;
-> +}
-> +
-> +static void mtk_star_dma_init(struct mtk_star_priv *priv)
-> +{
-> +	struct mtk_star_ring_desc *desc;
-> +	unsigned int val;
-> +	int i;
-> +
-> +	priv->descs_base = (struct mtk_star_ring_desc *)priv->ring_base;
-> +
-> +	for (i = 0; i < MTK_STAR_NUM_DESCS_TOTAL; i++) {
-> +		desc = &priv->descs_base[i];
-> +
-> +		memset(desc, 0, sizeof(*desc));
-> +		desc->status = MTK_STAR_DESC_BIT_COWN;
-> +		if ((i == MTK_STAR_NUM_TX_DESCS - 1) ||
-> +		    (i == MTK_STAR_NUM_DESCS_TOTAL - 1))
-> +			desc->status |= MTK_STAR_DESC_BIT_EOR;
-> +	}
-> +
-> +	mtk_star_ring_init(&priv->tx_ring, priv->descs_base);
-> +	mtk_star_ring_init(&priv->rx_ring,
-> +			   priv->descs_base + MTK_STAR_NUM_TX_DESCS);
-> +
-> +	/* Set DMA pointers. */
-> +	val = (unsigned int)priv->dma_addr;
-> +	regmap_write(priv->regs, MTK_STAR_REG_TX_BASE_ADDR, val);
-> +	regmap_write(priv->regs, MTK_STAR_REG_TX_DPTR, val);
-> +
-> +	val += sizeof(struct mtk_star_ring_desc) * MTK_STAR_NUM_TX_DESCS;
-> +	regmap_write(priv->regs, MTK_STAR_REG_RX_BASE_ADDR, val);
-> +	regmap_write(priv->regs, MTK_STAR_REG_RX_DPTR, val);
-> +}
-> +
-> +static void mtk_star_dma_start(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_TX_DMA_CTRL,
-> +			   MTK_STAR_BIT_TX_DMA_CTRL_START,
-> +			   MTK_STAR_BIT_TX_DMA_CTRL_START);
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_RX_DMA_CTRL,
-> +			   MTK_STAR_BIT_RX_DMA_CTRL_START,
-> +			   MTK_STAR_BIT_RX_DMA_CTRL_START);
-> +}
-> +
-> +static void mtk_star_dma_stop(struct mtk_star_priv *priv)
-> +{
-> +	regmap_write(priv->regs, MTK_STAR_REG_TX_DMA_CTRL,
-> +		     MTK_STAR_BIT_TX_DMA_CTRL_STOP);
-> +	regmap_write(priv->regs, MTK_STAR_REG_RX_DMA_CTRL,
-> +		     MTK_STAR_BIT_RX_DMA_CTRL_STOP);
-> +}
-> +
-> +static void mtk_star_dma_disable(struct mtk_star_priv *priv)
-> +{
-> +	int i;
-> +
-> +	mtk_star_dma_stop(priv);
-> +
-> +	/* Take back all descriptors. */
-> +	for (i = 0; i < MTK_STAR_NUM_DESCS_TOTAL; i++)
-> +		priv->descs_base[i].status |= MTK_STAR_DESC_BIT_COWN;
-> +}
-> +
-> +static void mtk_star_dma_resume_rx(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_RX_DMA_CTRL,
-> +			   MTK_STAR_BIT_RX_DMA_CTRL_RESUME,
-> +			   MTK_STAR_BIT_RX_DMA_CTRL_RESUME);
-> +}
-> +
-> +static void mtk_star_dma_resume_tx(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_TX_DMA_CTRL,
-> +			   MTK_STAR_BIT_TX_DMA_CTRL_RESUME,
-> +			   MTK_STAR_BIT_TX_DMA_CTRL_RESUME);
-> +}
-> +
-> +static void mtk_star_set_mac_addr(struct net_device *ndev)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +	u8 *mac_addr = ndev->dev_addr;
-> +	unsigned int high, low;
-> +
-> +	high = mac_addr[0] << 8 | mac_addr[1] << 0;
-> +	low = mac_addr[2] << 24 | mac_addr[3] << 16 |
-> +	      mac_addr[4] << 8 | mac_addr[5];
-> +
-> +	regmap_write(priv->regs, MTK_STAR_REG_MY_MAC_H, high);
-> +	regmap_write(priv->regs, MTK_STAR_REG_MY_MAC_L, low);
-> +}
-> +
-> +static void mtk_star_reset_counters(struct mtk_star_priv *priv)
-> +{
-> +	static const unsigned int counter_regs[] = {
-> +		MTK_STAR_REG_C_RXOKPKT,
-> +		MTK_STAR_REG_C_RXOKBYTE,
-> +		MTK_STAR_REG_C_RXRUNT,
-> +		MTK_STAR_REG_C_RXLONG,
-> +		MTK_STAR_REG_C_RXDROP,
-> +		MTK_STAR_REG_C_RXCRC,
-> +		MTK_STAR_REG_C_RXARLDROP,
-> +		MTK_STAR_REG_C_RXVLANDROP,
-> +		MTK_STAR_REG_C_RXCSERR,
-> +		MTK_STAR_REG_C_RXPAUSE,
-> +		MTK_STAR_REG_C_TXOKPKT,
-> +		MTK_STAR_REG_C_TXOKBYTE,
-> +		MTK_STAR_REG_C_TXPAUSECOL,
-> +		MTK_STAR_REG_C_TXRTY,
-> +		MTK_STAR_REG_C_TXSKIP,
-> +		MTK_STAR_REG_C_TX_ARP,
-> +		MTK_STAR_REG_C_RX_RERR,
-> +		MTK_STAR_REG_C_RX_UNI,
-> +		MTK_STAR_REG_C_RX_MULTI,
-> +		MTK_STAR_REG_C_RX_BROAD,
-> +		MTK_STAR_REG_C_RX_ALIGNERR,
-> +		MTK_STAR_REG_C_TX_UNI,
-> +		MTK_STAR_REG_C_TX_MULTI,
-> +		MTK_STAR_REG_C_TX_BROAD,
-> +		MTK_STAR_REG_C_TX_TIMEOUT,
-> +		MTK_STAR_REG_C_TX_LATECOL,
-> +		MTK_STAR_REG_C_RX_LENGTHERR,
-> +		MTK_STAR_REG_C_RX_TWIST,
-> +	};
-> +
-> +	unsigned int i, val;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(counter_regs); i++)
-> +		regmap_read(priv->regs, counter_regs[i], &val);
-> +}
-> +
-> +static void mtk_star_update_stat(struct mtk_star_priv *priv,
-> +				 unsigned int reg, u64 *stat)
-> +{
-> +	unsigned int val;
-> +
-> +	regmap_read(priv->regs, reg, &val);
-> +	*stat += val;
-> +}
-> +
-> +/* Try to get as many stats as possible from the internal registers instead
-> + * of tracking them ourselves.
-> + */
-> +static void mtk_star_update_stats(struct mtk_star_priv *priv)
-> +{
-> +	struct rtnl_link_stats64 *stats = &priv->stats;
-> +
-> +	/* OK packets and bytes. */
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RXOKPKT, &stats->rx_packets);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_TXOKPKT, &stats->tx_packets);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RXOKBYTE, &stats->rx_bytes);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_TXOKBYTE, &stats->tx_bytes);
-> +
-> +	/* RX & TX multicast. */
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RX_MULTI, &stats->multicast);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_TX_MULTI, &stats->multicast);
-> +
-> +	/* Collisions. */
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_TXPAUSECOL,
-> +			     &stats->collisions);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_TX_LATECOL,
-> +			     &stats->collisions);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RXRUNT, &stats->collisions);
-> +
-> +	/* RX Errors. */
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RX_LENGTHERR,
-> +			     &stats->rx_length_errors);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RXLONG,
-> +			     &stats->rx_over_errors);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RXCRC, &stats->rx_crc_errors);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RX_ALIGNERR,
-> +			     &stats->rx_frame_errors);
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RXDROP,
-> +			     &stats->rx_fifo_errors);
-> +	/* Sum of the general RX error counter + all of the above. */
-> +	mtk_star_update_stat(priv, MTK_STAR_REG_C_RX_RERR, &stats->rx_errors);
-> +	stats->rx_errors += stats->rx_length_errors;
-> +	stats->rx_errors += stats->rx_over_errors;
-> +	stats->rx_errors += stats->rx_crc_errors;
-> +	stats->rx_errors += stats->rx_frame_errors;
-> +	stats->rx_errors += stats->rx_fifo_errors;
-> +}
-> +
-> +/* This runs in process context and parallel TX and RX paths executing in
-> + * napi context may result in losing some stats data but this should happen
-> + * seldom enough to be acceptable.
-> + */
-> +static void mtk_star_update_stats_work(struct work_struct *work)
-> +{
-> +	struct mtk_star_priv *priv = container_of(work, struct mtk_star_priv,
-> +						 stats_work);
-> +
-> +	mtk_star_update_stats(priv);
-> +	mtk_star_reset_counters(priv);
-> +	mtk_star_intr_enable_stats(priv);
-> +}
-> +
-> +static struct sk_buff *mtk_star_alloc_skb(struct net_device *ndev)
-> +{
-> +	uintptr_t tail, offset;
-> +	struct sk_buff *skb;
-> +
-> +	skb = dev_alloc_skb(MTK_STAR_MAX_FRAME_SIZE);
-> +	if (!skb)
-> +		return NULL;
-> +
-> +	/* Align to 16 bytes. */
-> +	tail = (uintptr_t)skb_tail_pointer(skb);
-> +	if (tail & (MTK_STAR_SKB_ALIGNMENT - 1)) {
-> +		offset = tail & (MTK_STAR_SKB_ALIGNMENT - 1);
-> +		skb_reserve(skb, MTK_STAR_SKB_ALIGNMENT - offset);
-> +	}
-> +
-> +	/* Ensure 16-byte alignment of the skb pointer: eth_type_trans() will
-> +	 * extract the Ethernet header (14 bytes) so we need two more bytes.
-> +	 */
-> +	skb_reserve(skb, MTK_STAR_IP_ALIGN);
-> +
-> +	return skb;
-> +}
-> +
-> +static int mtk_star_prepare_rx_skbs(struct net_device *ndev)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +	struct mtk_star_ring *ring = &priv->rx_ring;
-> +	struct device *dev = mtk_star_get_dev(priv);
-> +	struct mtk_star_ring_desc *desc;
-> +	struct sk_buff *skb;
-> +	dma_addr_t dma_addr;
-> +	int i;
-> +
-> +	for (i = 0; i < MTK_STAR_NUM_RX_DESCS; i++) {
-> +		skb = mtk_star_alloc_skb(ndev);
-> +		if (!skb)
-> +			return -ENOMEM;
-> +
-> +		dma_addr = mtk_star_dma_map_rx(priv, skb);
-> +		if (dma_mapping_error(dev, dma_addr)) {
-> +			dev_kfree_skb(skb);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		desc = &ring->descs[i];
-> +		desc->data_ptr = dma_addr;
-> +		desc->status |= skb_tailroom(skb) & MTK_STAR_DESC_MSK_LEN;
-> +		desc->status &= ~MTK_STAR_DESC_BIT_COWN;
-> +		ring->skbs[i] = skb;
-> +		ring->dma_addrs[i] = dma_addr;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void
-> +mtk_star_ring_free_skbs(struct mtk_star_priv *priv, struct mtk_star_ring *ring,
-> +			void (*unmap_func)(struct mtk_star_priv *,
-> +					   struct mtk_star_ring_desc_data *))
-> +{
-> +	struct mtk_star_ring_desc_data desc_data;
-> +	struct mtk_star_ring_desc *desc;
-> +	int i;
-> +
-> +	for (i = 0; i < MTK_STAR_RING_NUM_DESCS; i++) {
-> +		if (!ring->dma_addrs[i])
-> +			continue;
-> +
-> +		desc = &ring->descs[i];
-> +
-> +		desc_data.dma_addr = ring->dma_addrs[i];
-> +		desc_data.skb = ring->skbs[i];
-> +
-> +		unmap_func(priv, &desc_data);
-> +		dev_kfree_skb(desc_data.skb);
-> +	}
-> +}
-> +
-> +static void mtk_star_free_rx_skbs(struct mtk_star_priv *priv)
-> +{
-> +	struct mtk_star_ring *ring = &priv->rx_ring;
-> +
-> +	mtk_star_ring_free_skbs(priv, ring, mtk_star_dma_unmap_rx);
-> +}
-> +
-> +static void mtk_star_free_tx_skbs(struct mtk_star_priv *priv)
-> +{
-> +	struct mtk_star_ring *ring = &priv->tx_ring;
-> +
-> +	mtk_star_ring_free_skbs(priv, ring, mtk_star_dma_unmap_tx);
-> +}
-> +
-> +/* All processing for TX and RX happens in the napi poll callback. */
-> +static irqreturn_t mtk_star_handle_irq(int irq, void *data)
-> +{
-> +	struct mtk_star_priv *priv;
-> +	struct net_device *ndev;
-> +	bool need_napi = false;
-> +	unsigned int status;
-> +
-> +	ndev = data;
-> +	priv = netdev_priv(ndev);
-> +
-> +	if (netif_running(ndev)) {
-> +		status = mtk_star_intr_read(priv);
-> +
-> +		if (status & MTK_STAR_BIT_INT_STS_TNTC) {
-> +			mtk_star_intr_disable_tx(priv);
-> +			need_napi = true;
-> +		}
-> +
-> +		if (status & MTK_STAR_BIT_INT_STS_FNRC) {
-> +			mtk_star_intr_disable_rx(priv);
-> +			need_napi = true;
-> +		}
-> +
-> +		if (need_napi)
-> +			napi_schedule(&priv->napi);
-> +
-> +		/* One of the counters reached 0x8000000 - update stats and
-> +		 * reset all counters.
-> +		 */
-> +		if (unlikely(status & MTK_STAR_REG_INT_STS_MIB_CNT_TH)) {
-> +			mtk_star_intr_disable_stats(priv);
-> +			schedule_work(&priv->stats_work);
-> +		}
-> +
-> +		mtk_star_intr_ack_all(priv);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/* Wait for the completion of any previous command - CMD_START bit must be
-> + * cleared by hardware.
-> + */
-> +static int mtk_star_hash_wait_cmd_start(struct mtk_star_priv *priv)
-> +{
-> +	unsigned int val;
-> +
-> +	return regmap_read_poll_timeout_atomic(priv->regs,
-> +				MTK_STAR_REG_HASH_CTRL, val,
-> +				!(val & MTK_STAR_BIT_HASH_CTRL_CMD_START),
-> +				10, MTK_STAR_WAIT_TIMEOUT);
-> +}
-> +
-> +static int mtk_star_hash_wait_ok(struct mtk_star_priv *priv)
-> +{
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	/* Wait for BIST_DONE bit. */
-> +	ret = regmap_read_poll_timeout_atomic(priv->regs,
-> +					MTK_STAR_REG_HASH_CTRL, val,
-> +					val & MTK_STAR_BIT_HASH_CTRL_BIST_DONE,
-> +					10, MTK_STAR_WAIT_TIMEOUT);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Check the BIST_OK bit. */
-> +	regmap_read(priv->regs, MTK_STAR_REG_HASH_CTRL, &val);
-> +	if (!(val & MTK_STAR_BIT_HASH_CTRL_BIST_OK))
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_star_set_hashbit(struct mtk_star_priv *priv,
-> +				unsigned int hash_addr)
-> +{
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	ret = mtk_star_hash_wait_cmd_start(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val = hash_addr & MTK_STAR_MSK_HASH_CTRL_HASH_BIT_ADDR;
-> +	val |= MTK_STAR_BIT_HASH_CTRL_ACC_CMD;
-> +	val |= MTK_STAR_BIT_HASH_CTRL_CMD_START;
-> +	val |= MTK_STAR_BIT_HASH_CTRL_BIST_EN;
-> +	val |= MTK_STAR_BIT_HASH_CTRL_HASH_BIT_DATA;
-> +	regmap_write(priv->regs, MTK_STAR_REG_HASH_CTRL, val);
-> +
-> +	return mtk_star_hash_wait_ok(priv);
-> +}
-> +
-> +static int mtk_star_reset_hash_table(struct mtk_star_priv *priv)
-> +{
-> +	int ret;
-> +
-> +	ret = mtk_star_hash_wait_cmd_start(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_HASH_CTRL,
-> +			   MTK_STAR_BIT_HASH_CTRL_BIST_EN,
-> +			   MTK_STAR_BIT_HASH_CTRL_BIST_EN);
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_TEST1,
-> +			   MTK_STAR_BIT_TEST1_RST_HASH_MBIST,
-> +			   MTK_STAR_BIT_TEST1_RST_HASH_MBIST);
-> +
-> +	return mtk_star_hash_wait_ok(priv);
-> +}
-> +
-> +static void mtk_star_phy_config(struct mtk_star_priv *priv)
-> +{
-> +	unsigned int val;
-> +
-> +	if (priv->speed == SPEED_1000)
-> +		val = MTK_STAR_VAL_PHY_CTRL1_FORCE_SPD_1000M;
-> +	else if (priv->speed == SPEED_100)
-> +		val = MTK_STAR_VAL_PHY_CTRL1_FORCE_SPD_100M;
-> +	else
-> +		val = MTK_STAR_VAL_PHY_CTRL1_FORCE_SPD_10M;
-> +	val <<= MTK_STAR_OFF_PHY_CTRL1_FORCE_SPD;
-> +
-> +	val |= MTK_STAR_BIT_PHY_CTRL1_AN_EN;
-> +	val |= MTK_STAR_BIT_PHY_CTRL1_FORCE_FC_RX;
-> +	val |= MTK_STAR_BIT_PHY_CTRL1_FORCE_FC_TX;
-> +	/* Only full-duplex supported for now. */
-> +	val |= MTK_STAR_BIT_PHY_CTRL1_FORCE_DPX;
-> +
-> +	regmap_write(priv->regs, MTK_STAR_REG_PHY_CTRL1, val);
-> +
-> +	if (priv->pause) {
-> +		val = MTK_STAR_VAL_FC_CFG_SEND_PAUSE_TH_2K;
-> +		val <<= MTK_STAR_OFF_FC_CFG_SEND_PAUSE_TH;
-> +		val |= MTK_STAR_BIT_FC_CFG_UC_PAUSE_DIR;
-> +	} else {
-> +		val = 0;
-> +	}
-> +
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_FC_CFG,
-> +			   MTK_STAR_MSK_FC_CFG_SEND_PAUSE_TH |
-> +			   MTK_STAR_BIT_FC_CFG_UC_PAUSE_DIR, val);
-> +
-> +	if (priv->pause) {
-> +		val = MTK_STAR_VAL_EXT_CFG_SND_PAUSE_RLS_1K;
-> +		val <<= MTK_STAR_OFF_EXT_CFG_SND_PAUSE_RLS;
-> +	} else {
-> +		val = 0;
-> +	}
-> +
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_EXT_CFG,
-> +			   MTK_STAR_MSK_EXT_CFG_SND_PAUSE_RLS, val);
-> +}
-> +
-> +static void mtk_star_adjust_link(struct net_device *ndev)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +	struct phy_device *phydev = priv->phydev;
-> +	bool new_state = false;
-> +
-> +	if (phydev->link) {
-> +		if (!priv->link) {
-> +			priv->link = phydev->link;
-> +			new_state = true;
-> +		}
-> +
-> +		if (priv->speed != phydev->speed) {
-> +			priv->speed = phydev->speed;
-> +			new_state = true;
-> +		}
-> +
-> +		if (priv->pause != phydev->pause) {
-> +			priv->pause = phydev->pause;
-> +			new_state = true;
-> +		}
-> +	} else {
-> +		if (priv->link) {
-> +			priv->link = phydev->link;
-> +			new_state = true;
-> +		}
-> +	}
-> +
-> +	if (new_state) {
-> +		if (phydev->link)
-> +			mtk_star_phy_config(priv);
-> +
-> +		phy_print_status(ndev->phydev);
-> +	}
-> +}
-> +
-> +static void mtk_star_init_config(struct mtk_star_priv *priv)
-> +{
-> +	unsigned int val;
-> +
-> +	val = (MTK_STAR_BIT_MII_PAD_OUT_ENABLE |
-> +	       MTK_STAR_BIT_EXT_MDC_MODE |
-> +	       MTK_STAR_BIT_SWC_MII_MODE);
-> +
-> +	regmap_write(priv->regs, MTK_STAR_REG_SYS_CONF, val);
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_MAC_CLK_CONF,
-> +			   MTK_STAR_MSK_MAC_CLK_CONF,
-> +			   MTK_STAR_BIT_CLK_DIV_10);
-> +}
-> +
-> +static void mtk_star_set_mode_rmii(struct mtk_star_priv *priv)
-> +{
-> +	regmap_update_bits(priv->pericfg, MTK_PERICFG_REG_NIC_CFG_CON,
-> +			   MTK_PERICFG_MSK_NIC_CFG_CON_CFG_MII,
-> +			   MTK_PERICFG_BIT_NIC_CFG_CON_RMII);
-> +}
-> +
-> +static int mtk_star_enable(struct net_device *ndev)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	mtk_star_nic_disable_pd(priv);
-> +	mtk_star_intr_disable(priv);
-> +	mtk_star_dma_stop(priv);
-> +
-> +	mtk_star_set_mac_addr(ndev);
-> +
-> +	/* Configure the MAC */
-> +	val = MTK_STAR_VAL_MAC_CFG_IPG_96BIT;
-> +	val <<= MTK_STAR_OFF_MAC_CFG_IPG;
-> +	val |= MTK_STAR_BIT_MAC_CFG_MAXLEN_1522;
-> +	val |= MTK_STAR_BIT_MAC_CFG_AUTO_PAD;
-> +	val |= MTK_STAR_BIT_MAC_CFG_CRC_STRIP;
-> +	regmap_write(priv->regs, MTK_STAR_REG_MAC_CFG, val);
-> +
-> +	/* Enable Hash Table BIST and reset it */
-> +	ret = mtk_star_reset_hash_table(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Setup the hashing algorithm */
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_ARL_CFG,
-> +			   MTK_STAR_BIT_ARL_CFG_HASH_ALG |
-> +			   MTK_STAR_BIT_ARL_CFG_MISC_MODE, 0);
-> +
-> +	/* Don't strip VLAN tags */
-> +	regmap_update_bits(priv->regs, MTK_STAR_REG_MAC_CFG,
-> +			   MTK_STAR_BIT_MAC_CFG_VLAN_STRIP, 0);
-> +
-> +	/* Setup DMA */
-> +	mtk_star_dma_init(priv);
-> +
-> +	ret = mtk_star_prepare_rx_skbs(ndev);
-> +	if (ret)
-> +		goto err_out;
-> +
-> +	/* Request the interrupt */
-> +	ret = request_irq(ndev->irq, mtk_star_handle_irq,
-> +			  IRQF_TRIGGER_FALLING, ndev->name, ndev);
-> +	if (ret)
-> +		goto err_free_skbs;
-> +
-> +	napi_enable(&priv->napi);
-> +
-> +	mtk_star_intr_ack_all(priv);
-> +	mtk_star_intr_enable(priv);
-> +
-> +	/* Connect to and start PHY */
-> +	priv->phydev = of_phy_connect(ndev, priv->phy_node,
-> +				      mtk_star_adjust_link, 0, priv->phy_intf);
-> +	if (!priv->phydev) {
-> +		netdev_err(ndev, "failed to connect to PHY\n");
-> +		goto err_free_irq;
-> +	}
-> +
-> +	mtk_star_dma_start(priv);
-> +	phy_start(priv->phydev);
-> +	netif_start_queue(ndev);
-> +
-> +	return 0;
-> +
-> +err_free_irq:
-> +	free_irq(ndev->irq, ndev);
-> +err_free_skbs:
-> +	mtk_star_free_rx_skbs(priv);
-> +err_out:
-> +	return ret;
-> +}
-> +
-> +static void mtk_star_disable(struct net_device *ndev)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +
-> +	netif_stop_queue(ndev);
-> +	napi_disable(&priv->napi);
-> +	mtk_star_intr_disable(priv);
-> +	mtk_star_dma_disable(priv);
-> +	mtk_star_intr_ack_all(priv);
-> +	phy_stop(priv->phydev);
-> +	phy_disconnect(priv->phydev);
-> +	free_irq(ndev->irq, ndev);
-> +	mtk_star_free_rx_skbs(priv);
-> +	mtk_star_free_tx_skbs(priv);
-> +}
-> +
-> +static int mtk_star_netdev_open(struct net_device *ndev)
-> +{
-> +	return mtk_star_enable(ndev);
-> +}
-> +
-> +static int mtk_star_netdev_stop(struct net_device *ndev)
-> +{
-> +	mtk_star_disable(ndev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_star_netdev_ioctl(struct net_device *ndev,
-> +				 struct ifreq *req, int cmd)
-> +{
-> +	if (!netif_running(ndev))
-> +		return -EINVAL;
-> +
-> +	return phy_mii_ioctl(ndev->phydev, req, cmd);
-> +}
-> +
-> +static int mtk_star_netdev_start_xmit(struct sk_buff *skb,
-> +				      struct net_device *ndev)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +	struct mtk_star_ring *ring = &priv->tx_ring;
-> +	struct device *dev = mtk_star_get_dev(priv);
-> +	struct mtk_star_ring_desc_data desc_data;
-> +
-> +	desc_data.dma_addr = mtk_star_dma_map_tx(priv, skb);
-> +	if (dma_mapping_error(dev, desc_data.dma_addr))
-> +		goto err_drop_packet;
-> +
-> +	desc_data.skb = skb;
-> +	desc_data.len = skb->len;
-> +
-> +	spin_lock_bh(&priv->lock);
-> +
-> +	mtk_star_ring_push_head_tx(ring, &desc_data);
-> +
-> +	netdev_sent_queue(ndev, skb->len);
-> +
-> +	if (mtk_star_ring_full(ring))
-> +		netif_stop_queue(ndev);
-> +
-> +	spin_unlock_bh(&priv->lock);
-> +
-> +	mtk_star_dma_resume_tx(priv);
-> +
-> +	return NETDEV_TX_OK;
-> +
-> +err_drop_packet:
-> +	dev_kfree_skb(skb);
-> +	ndev->stats.tx_dropped++;
-> +	return NETDEV_TX_BUSY;
-> +}
-> +
-> +/* Returns the number of bytes sent or a negative number on the first
-> + * descriptor owned by DMA.
-> + */
-> +static int mtk_star_tx_complete_one(struct mtk_star_priv *priv)
-> +{
-> +	struct mtk_star_ring *ring = &priv->tx_ring;
-> +	struct mtk_star_ring_desc_data desc_data;
-> +	int ret;
-> +
-> +	ret = mtk_star_ring_pop_tail(ring, &desc_data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mtk_star_dma_unmap_tx(priv, &desc_data);
-> +	ret = desc_data.skb->len;
-> +	dev_kfree_skb_irq(desc_data.skb);
-> +
-> +	return ret;
-> +}
-> +
-> +static void mtk_star_tx_complete_all(struct mtk_star_priv *priv)
-> +{
-> +	struct mtk_star_ring *ring = &priv->tx_ring;
-> +	struct net_device *ndev = priv->ndev;
-> +	int ret, pkts_compl, bytes_compl;
-> +	bool wake = false;
-> +
-> +	spin_lock(&priv->lock);
-> +
-> +	for (pkts_compl = 0, bytes_compl = 0;;
-> +	     pkts_compl++, bytes_compl += ret, wake = true) {
-> +		if (!mtk_star_ring_descs_available(ring))
-> +			break;
-> +
-> +		ret = mtk_star_tx_complete_one(priv);
-> +		if (ret < 0)
-> +			break;
-> +	}
-> +
-> +	netdev_completed_queue(ndev, pkts_compl, bytes_compl);
-> +
-> +	if (wake && netif_queue_stopped(ndev))
-> +		netif_wake_queue(ndev);
-> +
-> +	mtk_star_intr_enable_tx(priv);
-> +
-> +	spin_unlock(&priv->lock);
-> +}
-> +
-> +static void mtk_star_netdev_get_stats64(struct net_device *ndev,
-> +					struct rtnl_link_stats64 *stats)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +
-> +	mtk_star_update_stats(priv);
-> +
-> +	memcpy(stats, &priv->stats, sizeof(*stats));
-> +}
-> +
-> +static void mtk_star_set_rx_mode(struct net_device *ndev)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +	struct netdev_hw_addr *hw_addr;
-> +	unsigned int hash_addr, i;
-> +	int ret;
-> +
-> +	if (ndev->flags & IFF_PROMISC) {
-> +		regmap_update_bits(priv->regs, MTK_STAR_REG_ARL_CFG,
-> +				   MTK_STAR_BIT_ARL_CFG_MISC_MODE,
-> +				   MTK_STAR_BIT_ARL_CFG_MISC_MODE);
-> +	} else if (netdev_mc_count(ndev) > MTK_STAR_HASHTABLE_MC_LIMIT ||
-> +		   ndev->flags & IFF_ALLMULTI) {
-> +		for (i = 0; i < MTK_STAR_HASHTABLE_SIZE_MAX; i++) {
-> +			ret = mtk_star_set_hashbit(priv, i);
-> +			if (ret)
-> +				goto hash_fail;
-> +		}
-> +	} else {
-> +		/* Clear previous settings. */
-> +		ret = mtk_star_reset_hash_table(priv);
-> +		if (ret)
-> +			goto hash_fail;
-> +
-> +		netdev_for_each_mc_addr(hw_addr, ndev) {
-> +			hash_addr = (hw_addr->addr[0] & 0x01) << 8;
-> +			hash_addr += hw_addr->addr[5];
-> +			ret = mtk_star_set_hashbit(priv, hash_addr);
-> +			if (ret)
-> +				goto hash_fail;
-> +		}
-> +	}
-> +
-> +	return;
-> +
-> +hash_fail:
-> +	if (ret == -ETIMEDOUT)
-> +		netdev_err(ndev, "setting hash bit timed out\n");
-> +	else
-> +		/* Should be -EIO */
-> +		netdev_err(ndev, "unable to set hash bit");
-> +}
-> +
-> +static const struct net_device_ops mtk_star_netdev_ops = {
-> +	.ndo_open		= mtk_star_netdev_open,
-> +	.ndo_stop		= mtk_star_netdev_stop,
-> +	.ndo_start_xmit		= mtk_star_netdev_start_xmit,
-> +	.ndo_get_stats64	= mtk_star_netdev_get_stats64,
-> +	.ndo_set_rx_mode	= mtk_star_set_rx_mode,
-> +	.ndo_do_ioctl		= mtk_star_netdev_ioctl,
-> +	.ndo_set_mac_address	= eth_mac_addr,
-> +	.ndo_validate_addr	= eth_validate_addr,
+> +static struct clk_hw_onecell_data sun50i_a100_r_hw_clks =3D {
+> +	.hws	=3D {
+> +		[CLK_CPUS]		=3D &cpus_clk.common.hw,
+> +		[CLK_R_AHB]		=3D &r_ahb_clk.hw,
+
+Having some consistency here would be great, CLK_R_CPUS would be best I gue=
+ss.
+
+> +		[CLK_R_APB1]		=3D &r_apb1_clk.common.hw,
+> +		[CLK_R_APB2]		=3D &r_apb2_clk.common.hw,
+> +		[CLK_R_APB1_TIMER]	=3D &r_apb1_timer_clk.common.hw,
+> +		[CLK_R_APB1_TWD]	=3D &r_apb1_twd_clk.common.hw,
+> +		[CLK_R_APB1_PWM]	=3D &r_apb1_pwm_clk.common.hw,
+> +		[CLK_R_APB1_BUS_PWM]	=3D &r_apb1_bus_pwm_clk.common.hw,
+> +		[CLK_R_APB1_PPU]	=3D &r_apb1_ppu_clk.common.hw,
+> +		[CLK_R_APB2_UART]	=3D &r_apb2_uart_clk.common.hw,
+> +		[CLK_R_APB2_I2C0]	=3D &r_apb2_i2c0_clk.common.hw,
+> +		[CLK_R_APB2_I2C1]	=3D &r_apb2_i2c1_clk.common.hw,
+> +		[CLK_R_APB1_IR]		=3D &r_apb1_ir_rx_clk.common.hw,
+> +		[CLK_R_APB1_BUS_IR]	=3D &r_apb1_bus_ir_rx_clk.common.hw,
+> +		[CLK_R_AHB_BUS_RTC]	=3D &r_ahb_bus_rtc_clk.common.hw,
+> +	},
+> +	.num	=3D CLK_NUMBER,
 > +};
 > +
-> +static void mtk_star_get_drvinfo(struct net_device *dev,
-> +				 struct ethtool_drvinfo *info)
-> +{
-> +	strlcpy(info->driver, MTK_STAR_DRVNAME, sizeof(info->driver));
-> +}
-> +
-> +/* TODO Add ethtool stats. */
-> +static const struct ethtool_ops mtk_star_ethtool_ops = {
-> +	.get_drvinfo		= mtk_star_get_drvinfo,
-> +	.get_link		= ethtool_op_get_link,
-> +	.get_link_ksettings	= phy_ethtool_get_link_ksettings,
-> +	.set_link_ksettings	= phy_ethtool_set_link_ksettings,
+> +static struct ccu_reset_map sun50i_a100_r_ccu_resets[] =3D {
+> +	[RST_R_APB1_TIMER]	=3D  { 0x11c, BIT(16) },
+> +	[RST_R_APB1_BUS_PWM]	=3D  { 0x13c, BIT(16) },
+> +	[RST_R_APB1_PPU]	=3D  { 0x17c, BIT(16) },
+> +	[RST_R_APB2_UART]	=3D  { 0x18c, BIT(16) },
+> +	[RST_R_APB2_I2C0]	=3D  { 0x19c, BIT(16) },
+> +	[RST_R_APB2_I2C1]	=3D  { 0x19c, BIT(17) },
+> +	[RST_R_APB1_BUS_IR]	=3D  { 0x1cc, BIT(16) },
+> +	[RST_R_AHB_BUS_RTC]	=3D  { 0x20c, BIT(16) },
 > +};
 > +
-> +static int mtk_star_receive_packet(struct mtk_star_priv *priv)
+> +static const struct sunxi_ccu_desc sun50i_a100_r_ccu_desc =3D {
+> +	.ccu_clks	=3D sun50i_a100_r_ccu_clks,
+> +	.num_ccu_clks	=3D ARRAY_SIZE(sun50i_a100_r_ccu_clks),
+> +
+> +	.hw_clks	=3D &sun50i_a100_r_hw_clks,
+> +
+> +	.resets		=3D sun50i_a100_r_ccu_resets,
+> +	.num_resets	=3D ARRAY_SIZE(sun50i_a100_r_ccu_resets),
+> +};
+> +
+> +static int sun50i_a100_r_ccu_probe(struct platform_device *pdev)
 > +{
-> +	struct mtk_star_ring *ring = &priv->rx_ring;
-> +	struct device *dev = mtk_star_get_dev(priv);
-> +	struct mtk_star_ring_desc_data desc_data;
-> +	struct net_device *ndev = priv->ndev;
-> +	struct sk_buff *curr_skb, *new_skb;
-> +	dma_addr_t new_dma_addr;
-> +	int ret;
+> +	void __iomem *reg;
 > +
-> +	spin_lock(&priv->lock);
-> +	ret = mtk_star_ring_pop_tail(ring, &desc_data);
-> +	spin_unlock(&priv->lock);
-> +	if (ret)
-> +		return -1;
+> +	reg =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(reg))
+> +		return PTR_ERR(reg);
 > +
-> +	curr_skb = desc_data.skb;
-> +
-> +	if ((desc_data.flags & MTK_STAR_DESC_BIT_RX_CRCE) ||
-> +	    (desc_data.flags & MTK_STAR_DESC_BIT_RX_OSIZE)) {
-> +		/* Error packet -> drop and reuse skb. */
-> +		new_skb = curr_skb;
-> +		goto push_new_skb;
-> +	}
-> +
-> +	/* Prepare new skb before receiving the current one. Reuse the current
-> +	 * skb if we fail at any point.
-> +	 */
-> +	new_skb = mtk_star_alloc_skb(ndev);
-> +	if (!new_skb) {
-> +		ndev->stats.rx_dropped++;
-> +		new_skb = curr_skb;
-> +		goto push_new_skb;
-> +	}
-> +
-> +	new_dma_addr = mtk_star_dma_map_rx(priv, new_skb);
-> +	if (dma_mapping_error(dev, new_dma_addr)) {
-> +		ndev->stats.rx_dropped++;
-> +		dev_kfree_skb(new_skb);
-> +		new_skb = curr_skb;
-> +		netdev_err(ndev, "DMA mapping error of RX descriptor\n");
-> +		goto push_new_skb;
-> +	}
-> +
-> +	/* We can't fail anymore at this point: it's safe to unmap the skb. */
-> +	mtk_star_dma_unmap_rx(priv, &desc_data);
-> +
-> +	skb_put(desc_data.skb, desc_data.len);
-> +	desc_data.skb->ip_summed = CHECKSUM_NONE;
-> +	desc_data.skb->protocol = eth_type_trans(desc_data.skb, ndev);
-> +	desc_data.skb->dev = ndev;
-> +	netif_receive_skb(desc_data.skb);
-> +
-> +push_new_skb:
-> +	desc_data.dma_addr = new_dma_addr;
-> +	desc_data.len = skb_tailroom(new_skb);
-> +	desc_data.skb = new_skb;
-> +
-> +	spin_lock(&priv->lock);
-> +	mtk_star_ring_push_head_rx(ring, &desc_data);
-> +	spin_unlock(&priv->lock);
-> +
-> +	return 0;
+> +	return sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a100_r_ccu_desc);
 > +}
 > +
-> +static int mtk_star_process_rx(struct mtk_star_priv *priv, int budget)
-> +{
-> +	int received, ret;
-> +
-> +	for (received = 0, ret = 0; received < budget && ret == 0; received++)
-> +		ret = mtk_star_receive_packet(priv);
-> +
-> +	mtk_star_dma_resume_rx(priv);
-> +
-> +	return received;
-> +}
-> +
-> +static int mtk_star_poll(struct napi_struct *napi, int budget)
-> +{
-> +	struct mtk_star_priv *priv;
-> +	int received = 0;
-> +
-> +	priv = container_of(napi, struct mtk_star_priv, napi);
-> +
-> +	/* Clean-up all TX descriptors. */
-> +	mtk_star_tx_complete_all(priv);
-> +	/* Receive up to $budget packets. */
-> +	received = mtk_star_process_rx(priv, budget);
-> +
-> +	if (received < budget) {
-> +		napi_complete_done(napi, received);
-> +		mtk_star_intr_enable_rx(priv);
-> +	}
-> +
-> +	return received;
-> +}
-> +
-> +static void mtk_star_mdio_rwok_clear(struct mtk_star_priv *priv)
-> +{
-> +	regmap_write(priv->regs, MTK_STAR_REG_PHY_CTRL0,
-> +		     MTK_STAR_BIT_PHY_CTRL0_RWOK);
-> +}
-> +
-> +static int mtk_star_mdio_rwok_wait(struct mtk_star_priv *priv)
-> +{
-> +	unsigned int val;
-> +
-> +	return regmap_read_poll_timeout(priv->regs, MTK_STAR_REG_PHY_CTRL0,
-> +					val, val & MTK_STAR_BIT_PHY_CTRL0_RWOK,
-> +					10, MTK_STAR_WAIT_TIMEOUT);
-> +}
-> +
-> +static int mtk_star_mdio_read(struct mii_bus *mii, int phy_id, int regnum)
-> +{
-> +	struct mtk_star_priv *priv = mii->priv;
-> +	unsigned int val, data;
-> +	int ret;
-> +
-> +	if (regnum & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	mtk_star_mdio_rwok_clear(priv);
-> +
-> +	val = (regnum << MTK_STAR_OFF_PHY_CTRL0_PREG);
-> +	val &= MTK_STAR_MSK_PHY_CTRL0_PREG;
-> +	val |= MTK_STAR_BIT_PHY_CTRL0_RDCMD;
-> +
-> +	regmap_write(priv->regs, MTK_STAR_REG_PHY_CTRL0, val);
-> +
-> +	ret = mtk_star_mdio_rwok_wait(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	regmap_read(priv->regs, MTK_STAR_REG_PHY_CTRL0, &data);
-> +
-> +	data &= MTK_STAR_MSK_PHY_CTRL0_RWDATA;
-> +	data >>= MTK_STAR_OFF_PHY_CTRL0_RWDATA;
-> +
-> +	return data;
-> +}
-> +
-> +static int mtk_star_mdio_write(struct mii_bus *mii, int phy_id,
-> +			       int regnum, u16 data)
-> +{
-> +	struct mtk_star_priv *priv = mii->priv;
-> +	unsigned int val;
-> +
-> +	if (regnum & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	mtk_star_mdio_rwok_clear(priv);
-> +
-> +	val = data;
-> +	val <<= MTK_STAR_OFF_PHY_CTRL0_RWDATA;
-> +	val &= MTK_STAR_MSK_PHY_CTRL0_RWDATA;
-> +	regnum <<= MTK_STAR_OFF_PHY_CTRL0_PREG;
-> +	regnum &= MTK_STAR_MSK_PHY_CTRL0_PREG;
-> +	val |= regnum;
-> +	val |= MTK_STAR_BIT_PHY_CTRL0_WTCMD;
-> +
-> +	regmap_write(priv->regs, MTK_STAR_REG_PHY_CTRL0, val);
-> +
-> +	return mtk_star_mdio_rwok_wait(priv);
-> +}
-> +
-> +static int mtk_star_mdio_init(struct net_device *ndev)
-> +{
-> +	struct mtk_star_priv *priv = netdev_priv(ndev);
-> +	struct device *dev = mtk_star_get_dev(priv);
-> +	struct device_node *of_node, *mdio_node;
-> +	int ret;
-> +
-> +	of_node = dev->of_node;
-> +
-> +	mdio_node = of_get_child_by_name(of_node, "mdio");
-> +	if (!mdio_node)
-> +		return -ENODEV;
-> +
-> +	if (!of_device_is_available(mdio_node)) {
-> +		ret = -ENODEV;
-> +		goto out_put_node;
-> +	}
-> +
-> +	priv->mii = devm_mdiobus_alloc(dev);
-> +	if (!priv->mii) {
-> +		ret = -ENOMEM;
-> +		goto out_put_node;
-> +	}
-> +
-> +	snprintf(priv->mii->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
-> +	priv->mii->name = "mtk-mac-mdio";
-> +	priv->mii->parent = dev;
-> +	priv->mii->read = mtk_star_mdio_read;
-> +	priv->mii->write = mtk_star_mdio_write;
-> +	priv->mii->priv = priv;
-> +
-> +	ret = of_mdiobus_register(priv->mii, mdio_node);
-> +
-> +out_put_node:
-> +	of_node_put(mdio_node);
-> +	return ret;
-> +}
-> +
-> +static int mtk_star_suspend(struct device *dev)
-> +{
-> +	struct mtk_star_priv *priv;
-> +	struct net_device *ndev;
-> +
-> +	ndev = dev_get_drvdata(dev);
-> +	priv = netdev_priv(ndev);
-> +
-> +	if (netif_running(ndev))
-> +		mtk_star_disable(ndev);
-> +
-> +	clk_bulk_disable_unprepare(MTK_STAR_NCLKS, priv->clks);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_star_resume(struct device *dev)
-> +{
-> +	struct mtk_star_priv *priv;
-> +	struct net_device *ndev;
-> +	int ret;
-> +
-> +	ndev = dev_get_drvdata(dev);
-> +	priv = netdev_priv(ndev);
-> +
-> +	ret = clk_bulk_prepare_enable(MTK_STAR_NCLKS, priv->clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (netif_running(ndev)) {
-> +		ret = mtk_star_enable(ndev);
-> +		if (ret)
-> +			clk_bulk_disable_unprepare(MTK_STAR_NCLKS, priv->clks);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void mtk_star_clk_disable_unprepare(void *data)
-> +{
-> +	struct mtk_star_priv *priv = data;
-> +
-> +	clk_bulk_disable_unprepare(MTK_STAR_NCLKS, priv->clks);
-> +}
-> +
-> +static void mtk_star_mdiobus_unregister(void *data)
-> +{
-> +	struct mtk_star_priv *priv = data;
-> +
-> +	mdiobus_unregister(priv->mii);
-> +}
-> +
-> +static void mtk_star_unregister_netdev(void *data)
-> +{
-> +	struct net_device *ndev = data;
-> +
-> +	unregister_netdev(ndev);
-> +}
-> +
-> +static int mtk_star_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *of_node;
-> +	struct mtk_star_priv *priv;
-> +	struct net_device *ndev;
-> +	struct device *dev;
-> +	void __iomem *base;
-> +	int ret, i;
-> +
-> +	dev = &pdev->dev;
-> +	of_node = dev->of_node;
-> +
-> +	ndev = devm_alloc_etherdev(dev, sizeof(*priv));
-> +	if (!ndev)
-> +		return -ENOMEM;
-> +
-> +	priv = netdev_priv(ndev);
-> +	priv->ndev = ndev;
-> +	SET_NETDEV_DEV(ndev, dev);
-> +	platform_set_drvdata(pdev, ndev);
-> +
-> +	ndev->min_mtu = ETH_ZLEN;
-> +	ndev->max_mtu = MTK_STAR_MAX_FRAME_SIZE;
-> +
-> +	spin_lock_init(&priv->lock);
-> +	INIT_WORK(&priv->stats_work, mtk_star_update_stats_work);
-> +
-> +	base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	/* We won't be checking the return values of regmap read & write
-> +	 * functions. They can only fail for mmio if there's a clock attached
-> +	 * to regmap which is not the case here.
-> +	 */
-> +	priv->regs = devm_regmap_init_mmio(dev, base,
-> +					   &mtk_star_regmap_config);
-> +	if (IS_ERR(priv->regs))
-> +		return PTR_ERR(priv->regs);
-> +
-> +	priv->pericfg = syscon_regmap_lookup_by_phandle(of_node,
-> +							"mediatek,pericfg");
-> +	if (IS_ERR(priv->pericfg)) {
-> +		dev_err(dev, "Failed to lookup the PERICFG syscon\n");
-> +		return PTR_ERR(priv->pericfg);
-> +	}
-> +
-> +	ndev->irq = platform_get_irq(pdev, 0);
-> +	if (ndev->irq < 0)
-> +		return ndev->irq;
-> +
-> +	for (i = 0; i < MTK_STAR_NCLKS; i++)
-> +		priv->clks[i].id = mtk_star_clk_names[i];
-> +	ret = devm_clk_bulk_get(dev, MTK_STAR_NCLKS, priv->clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_bulk_prepare_enable(MTK_STAR_NCLKS, priv->clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_add_action_or_reset(dev,
-> +				       mtk_star_clk_disable_unprepare, priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_get_phy_mode(of_node, &priv->phy_intf);
-> +	if (ret) {
-> +		return ret;
-> +	} else if (priv->phy_intf != PHY_INTERFACE_MODE_RMII) {
-> +		dev_err(dev, "unsupported phy mode: %s\n",
-> +			phy_modes(priv->phy_intf));
-> +		return -EINVAL;
-> +	}
-> +
-> +	priv->phy_node = of_parse_phandle(of_node, "phy-handle", 0);
-> +	if (!priv->phy_node) {
-> +		dev_err(dev, "failed to retrieve the phy handle from device tree\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	mtk_star_set_mode_rmii(priv);
-> +
-> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> +	if (ret) {
-> +		dev_err(dev, "unsupported DMA mask\n");
-> +		return ret;
-> +	}
-> +
-> +	priv->ring_base = dmam_alloc_coherent(dev, MTK_STAR_DMA_SIZE,
-> +					      &priv->dma_addr,
-> +					      GFP_KERNEL | GFP_DMA);
-> +	if (!priv->ring_base)
-> +		return -ENOMEM;
-> +
-> +	mtk_star_nic_disable_pd(priv);
-> +	mtk_star_init_config(priv);
-> +
-> +	ret = mtk_star_mdio_init(ndev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_add_action_or_reset(dev, mtk_star_mdiobus_unregister, priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = eth_platform_get_mac_address(dev, ndev->dev_addr);
-> +	if (ret || !is_valid_ether_addr(ndev->dev_addr))
-> +		eth_hw_addr_random(ndev);
-> +
-> +	ndev->netdev_ops = &mtk_star_netdev_ops;
-> +	ndev->ethtool_ops = &mtk_star_ethtool_ops;
-> +
-> +	netif_napi_add(ndev, &priv->napi, mtk_star_poll, MTK_STAR_NAPI_WEIGHT);
-> +
-> +	ret = register_netdev(ndev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_add_action_or_reset(dev, mtk_star_unregister_netdev, ndev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mtk_star_of_match[] = {
-> +	{ .compatible = "mediatek,mt8516-eth", },
-> +	{ .compatible = "mediatek,mt8518-eth", },
-> +	{ .compatible = "mediatek,mt8175-eth", },
+> +static const struct of_device_id sun50i_a100_r_ccu_ids[] =3D {
+> +	{ .compatible =3D "allwinner,sun50i-a100-r-ccu" },
 > +	{ }
 > +};
-> +MODULE_DEVICE_TABLE(of, mtk_star_of_match);
-> +
-> +static SIMPLE_DEV_PM_OPS(mtk_star_pm_ops,
-> +			 mtk_star_suspend, mtk_star_resume);
-> +
-> +static struct platform_driver mtk_star_driver = {
-> +	.driver = {
-> +		.name = MTK_STAR_DRVNAME,
-> +		.pm = &mtk_star_pm_ops,
-> +		.of_match_table = of_match_ptr(mtk_star_of_match),
+
+You're going to need a DT binding here too.
+
+> +static struct platform_driver sun50i_a100_r_ccu_driver =3D {
+> +	.probe	=3D sun50i_a100_r_ccu_probe,
+> +	.driver	=3D {
+> +		.name	=3D "sun50i-a100-r-ccu",
+> +		.of_match_table	=3D sun50i_a100_r_ccu_ids,
 > +	},
-> +	.probe = mtk_star_probe,
 > +};
-> +module_platform_driver(mtk_star_driver);
+> +module_platform_driver(sun50i_a100_r_ccu_driver);
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h b/drivers/clk/sunxi=
+-ng/ccu-sun50i-a100-r.h
+> new file mode 100644
+> index 000000000000..c26a08b924db
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
+> + */
 > +
-> +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
-> +MODULE_DESCRIPTION("Mediatek STAR Ethernet MAC Driver");
-> +MODULE_LICENSE("GPL");
-> 
+> +#ifndef _CCU_SUN50IW10_R_H
+> +#define _CCU_SUN50IW10_R_H
+> +
+> +#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
+> +#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
+> +
+> +#define CLK_NUMBER	(CLK_R_AHB_BUS_RTC + 1)
+> +
+> +#endif /* _CCU_SUN50IW10_R_H */
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a100.c b/drivers/clk/sunxi-n=
+g/ccu-sun50i-a100.c
+> new file mode 100644
+> index 000000000000..f9a0a7754eed
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+> @@ -0,0 +1,1255 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "ccu_common.h"
+> +#include "ccu_reset.h"
+> +
+> +#include "ccu_div.h"
+> +#include "ccu_gate.h"
+> +#include "ccu_mp.h"
+> +#include "ccu_mult.h"
+> +#include "ccu_nk.h"
+> +#include "ccu_nkm.h"
+> +#include "ccu_nkmp.h"
+> +#include "ccu_nm.h"
+> +
+> +#include "ccu-sun50i-a100.h"
+> +
+> +/*
+> + * The CPU PLL is actually NP clock, with P being /1, /2 or /4. However
+> + * P should only be used for output frequencies lower than 288 MHz.
+> + *
+> + * For now we can just model it as a multiplier clock, and force P to /1.
+> + *
+> + * The M factor is present in the register's description, but not in the
+> + * frequency formula, and it's documented as "M is only used for backdoor
+> + * testing", so it's not modelled and then force to 0.
+> + */
+> +#define SUN50I_A100_PLL_CPUX_REG		0x000
+> +static struct ccu_mult pll_cpux_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.mult		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.common		=3D {
+> +		.reg		=3D 0x000,
+> +		.hw.init	=3D CLK_HW_INIT("pll-cpux", "dcxo24M",
+> +					      &ccu_mult_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +/* Some PLLs are input * N / div1 / P. Model them as NKMP with no K */
+> +#define SUN50I_A100_PLL_DDR0_REG		0x010
+> +static struct ccu_nkmp pll_ddr0_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.p		=3D _SUNXI_CCU_DIV(0, 1), /* output divider */
+> +	.common		=3D {
+> +		.reg		=3D 0x010,
+> +		.hw.init	=3D CLK_HW_INIT("pll-ddr0", "dcxo24M",
+> +					      &ccu_nkmp_ops,
+> +					      CLK_SET_RATE_UNGATE |
+> +					      CLK_IS_CRITICAL),
+> +	},
+> +};
+> +
+> +#define SUN50I_A100_PLL_PERIPH0_REG	0x020
+> +static struct ccu_nkmp pll_periph0_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.p		=3D _SUNXI_CCU_DIV(0, 1), /* output divider */
+> +	.fixed_post_div	=3D 2,
+> +	.common		=3D {
+> +		.reg		=3D 0x020,
+> +		.features	=3D CCU_FEATURE_FIXED_POSTDIV,
+> +		.hw.init	=3D CLK_HW_INIT("pll-periph0", "dcxo24M",
+> +					      &ccu_nkmp_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +#define SUN50I_A100_PLL_PERIPH1_REG	0x028
+> +static struct ccu_nkmp pll_periph1_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.p		=3D _SUNXI_CCU_DIV(0, 1), /* output divider */
+> +	.fixed_post_div	=3D 2,
+> +	.common		=3D {
+> +		.reg		=3D 0x028,
+> +		.features	=3D CCU_FEATURE_FIXED_POSTDIV,
+> +		.hw.init	=3D CLK_HW_INIT("pll-periph1", "dcxo24M",
+> +					      &ccu_nkmp_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +#define SUN50I_A100_PLL_PERIPH1_PATTERN0_REG	0x128
+> +
+> +#define SUN50I_A100_PLL_GPU_REG		0x030
+> +static struct ccu_nkmp pll_gpu_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.p		=3D _SUNXI_CCU_DIV(0, 1), /* output divider */
+> +	.common		=3D {
+> +		.reg		=3D 0x030,
+> +		.hw.init	=3D CLK_HW_INIT("pll-gpu", "dcxo24M",
+> +					      &ccu_nkmp_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +/*
+> + * For Video PLLs, the output divider is described as "used for testing"
+> + * in the user manual. So it's not modelled and forced to 0.
+> + */
+> +#define SUN50I_A100_PLL_VIDEO0_REG	0x040
+> +static struct ccu_nm pll_video0_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.fixed_post_div	=3D 4,
+> +	.common		=3D {
+> +		.reg		=3D 0x040,
+> +		.features	=3D CCU_FEATURE_FIXED_POSTDIV,
+> +		.hw.init	=3D CLK_HW_INIT("pll-video0", "dcxo24M",
+> +					      &ccu_nm_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +#define SUN50I_A100_PLL_VIDEO1_REG	0x048
+> +static struct ccu_nm pll_video1_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.fixed_post_div	=3D 4,
+> +	.common		=3D {
+> +		.reg		=3D 0x048,
+> +		.features	=3D CCU_FEATURE_FIXED_POSTDIV,
+> +		.hw.init	=3D CLK_HW_INIT("pll-video1", "dcxo24M",
+> +					      &ccu_nm_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +#define SUN50I_A100_PLL_VIDEO2_REG	0x050
+> +static struct ccu_nm pll_video2_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.fixed_post_div	=3D 4,
+> +	.common		=3D {
+> +		.reg		=3D 0x050,
+> +		.features	=3D CCU_FEATURE_FIXED_POSTDIV,
+> +		.hw.init	=3D CLK_HW_INIT("pll-video2", "dcxo24M",
+> +					      &ccu_nm_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +#define SUN50I_A100_PLL_VE_REG		0x058
+> +static struct ccu_nkmp pll_ve_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.p		=3D _SUNXI_CCU_DIV(0, 1), /* output divider */
+> +	.common		=3D {
+> +		.reg		=3D 0x058,
+> +		.hw.init	=3D CLK_HW_INIT("pll-ve", "dcxo24M",
+> +					      &ccu_nkmp_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +/*
+> + * The COM PLL has m0 dividers in addition to the usual N, M
+> + * factors. Since we only need 1 frequencies from this PLL: 45.1584 MHz,
+> + * ignore it for now.
+> + */
+> +#define SUN50I_A100_PLL_COM_REG		0x060
+> +static struct ccu_sdm_setting pll_com_sdm_table[] =3D {
+> +	{ .rate =3D 451584000, .pattern =3D 0xc0014396, .m =3D 2, .n =3D 37 },
+> +};
+> +
+> +static struct ccu_nm pll_com_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(0, 1),
+> +	.sdm		=3D _SUNXI_CCU_SDM(pll_com_sdm_table, BIT(24),
+> +					 0x160, BIT(31)),
+> +	.common		=3D {
+> +		.reg		=3D 0x060,
+> +		.features	=3D CCU_FEATURE_SIGMA_DELTA_MOD,
+> +		.hw.init	=3D CLK_HW_INIT("pll-com", "dcxo24M",
+> +					      &ccu_nm_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +#define SUN50I_A100_PLL_VIDEO3_REG	0x068
+> +static struct ccu_nm pll_video3_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(1, 1), /* input divider */
+> +	.fixed_post_div	=3D 4,
+> +	.common		=3D {
+> +		.reg		=3D 0x068,
+> +		.features	=3D CCU_FEATURE_FIXED_POSTDIV,
+> +		.hw.init	=3D CLK_HW_INIT("pll-video3", "dcxo24M",
+> +					      &ccu_nm_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +/*
+> + * The Audio PLL has m0, m1 dividers in addition to the usual N, M
+> + * factors. Since we only need 4 frequencies from this PLL: 22.5792 MHz,
+> + * 24.576 MHz, 90.3168MHz and 98.304MHz ignore them for now.
+> + * Enforce the default for them, which is m0 =3D 1, m1 =3D 0.
+> + */
+> +#define SUN50I_A100_PLL_AUDIO_REG		0x078
+> +static struct ccu_sdm_setting pll_audio_sdm_table[] =3D {
+> +	{ .rate =3D 45158400, .pattern =3D 0xc001bcd3, .m =3D 18, .n =3D 33 },
+> +	{ .rate =3D 49152000, .pattern =3D 0xc001eb85, .m =3D 20, .n =3D 40 },
+> +	{ .rate =3D 180633600, .pattern =3D 0xc001288d, .m =3D 3, .n =3D 22 },
+> +	{ .rate =3D 196608000, .pattern =3D 0xc001eb85, .m =3D 5, .n =3D 40 },
+> +};
+> +
+> +static struct ccu_nm pll_audio_clk =3D {
+> +	.enable		=3D BIT(27),
+> +	.lock		=3D BIT(28),
+> +	.n		=3D _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> +	.m		=3D _SUNXI_CCU_DIV(16, 6),
+> +	.fixed_post_div	=3D 2,
+> +	.sdm		=3D _SUNXI_CCU_SDM(pll_audio_sdm_table, BIT(24),
+> +					 0x178, BIT(31)),
+> +	.common		=3D {
+> +		.reg		=3D 0x078,
+> +		.features	=3D CCU_FEATURE_FIXED_POSTDIV |
+> +				  CCU_FEATURE_SIGMA_DELTA_MOD,
+> +		.hw.init	=3D CLK_HW_INIT("pll-audio", "dcxo24M",
+> +					      &ccu_nm_ops,
+> +					      CLK_SET_RATE_UNGATE),
+> +	},
+> +};
+> +
+> +static const char * const cpux_parents[] =3D { "dcxo24M", "osc32k",
+> +					     "iosc", "pll-cpux",
+> +					      "pll-periph0" };
+> +static SUNXI_CCU_MUX(cpux_clk, "cpux", cpux_parents,
+> +		     0x500, 24, 3, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL);
+> +static SUNXI_CCU_M(axi_clk, "axi", "cpux", 0x500, 0, 2, 0);
+> +static SUNXI_CCU_M(cpux_apb_clk, "cpux-apb", "cpux", 0x500, 8, 2, 0);
+> +
+> +static const char * const psi_ahb1_ahb2_parents[] =3D { "dcxo24M", "osc3=
+2k",
+> +						      "iosc", "pll-periph0",
+> +						      "pll-periph0-2x" };
+> +static SUNXI_CCU_MP_WITH_MUX(psi_ahb1_ahb2_clk, "psi-ahb1-ahb2",
+> +			     psi_ahb1_ahb2_parents,
+> +			     0x510,
+> +			     0, 2,	/* M */
+> +			     8, 2,	/* P */
+> +			     24, 3,	/* mux */
+> +			     0);
+> +
+> +static const char * const ahb3_apb1_apb2_parents[] =3D { "dcxo24M", "osc=
+32k",
+> +						       "psi-ahb1-ahb2",
+> +						       "pll-periph0",
+> +						       "pll-periph0-2x" };
+> +static SUNXI_CCU_MP_WITH_MUX(ahb3_clk, "ahb3", ahb3_apb1_apb2_parents, 0=
+x51c,
+> +			     0, 2,	/* M */
+> +			     8, 2,	/* P */
+> +			     24, 3,	/* mux */
+> +			     0);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX(apb1_clk, "apb1", ahb3_apb1_apb2_parents, 0=
+x520,
+> +			     0, 2,	/* M */
+> +			     8, 2,	/* P */
+> +			     24, 3,	/* mux */
+> +			     0);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX(apb2_clk, "apb2", ahb3_apb1_apb2_parents, 0=
+x524,
+> +			     0, 2,	/* M */
+> +			     8, 2,	/* P */
+> +			     24, 3,	/* mux */
+> +			     0);
+> +
+> +static const char * const mbus_parents[] =3D { "dcxo24M", "pll-ddr0",
+> +					     "pll-periph0",
+> +					     "pll-periph0-2x" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(mbus_clk, "mbus", mbus_parents, 0x540,
+> +				 0, 3,		/* M */
+> +				 24, 2,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 CLK_IS_CRITICAL);
+> +
+> +static const char * const de_parents[] =3D { "pll-com", "pll-periph0-2x"=
+ };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(de_clk, "de0", de_parents, 0x600,
+> +				 0, 4,		/* M */
+> +				 24, 1,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 CLK_SET_RATE_PARENT);
+> +
+> +static SUNXI_CCU_GATE(bus_de_clk, "bus-de", "psi-ahb1-ahb2",
+> +		      0x60c, BIT(0), 0);
+> +
+> +static const char * const g2d_parents[] =3D { "pll-com", "pll-periph0-2x=
+",
+> +					     "pll-video0-2x", "pll-video1-2x",
+> +					     "pll-video2-2x"};
+> +static SUNXI_CCU_M_WITH_MUX_GATE(g2d_clk, "g2d",
+> +				 g2d_parents,
+> +				 0x630,
+> +				 0, 4,		/* M */
+> +				 24, 3,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +static SUNXI_CCU_GATE(bus_g2d_clk, "bus-g2d", "psi-ahb1-ahb2",
+> +		      0x63c, BIT(0), 0);
+> +
+> +static const char * const gpu_parents[] =3D { "pll-gpu" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(gpu_clk, "gpu", gpu_parents, 0x670,
+> +				       0, 2,	/* M */
+> +				       24, 1,	/* mux */
+> +				       BIT(31),	/* gate */
+> +				       0);
+> +
+> +static SUNXI_CCU_GATE(bus_gpu_clk, "bus-gpu", "psi-ahb1-ahb2",
+> +		      0x67c, BIT(0), 0);
+> +
+> +static const char * const ce_parents[] =3D { "dcxo24M", "pll-periph0-2x"=
+ };
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(ce_clk, "ce", ce_parents, 0x680,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 1,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_GATE(bus_ce_clk, "bus-ce", "psi-ahb1-ahb2",
+> +		      0x68c, BIT(0), 0);
+> +
+> +static const char * const ve_parents[] =3D { "pll-ve" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(ve_clk, "ve", ve_parents, 0x690,
+> +				 0, 3,		/* M */
+> +				 24, 1,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 CLK_SET_RATE_PARENT);
+> +
+> +static SUNXI_CCU_GATE(bus_ve_clk, "bus-ve", "psi-ahb1-ahb2",
+> +		      0x69c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_dma_clk, "bus-dma", "psi-ahb1-ahb2",
+> +		      0x70c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_msgbox_clk, "bus-msgbox", "psi-ahb1-ahb2",
+> +		      0x71c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_spinlock_clk, "bus-spinlock", "psi-ahb1-ahb2",
+> +		      0x72c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_hstimer_clk, "bus-hstimer", "psi-ahb1-ahb2",
+> +		      0x73c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(avs_clk, "avs", "dcxo24M", 0x740, BIT(31), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_dbg_clk, "bus-dbg", "psi-ahb1-ahb2",
+> +		      0x78c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_psi_clk, "bus-psi", "psi-ahb1-ahb2",
+> +		      0x79c, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_pwm_clk, "bus-pwm", "apb1", 0x7ac, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_iommu_clk, "bus-iommu", "apb1", 0x7bc, BIT(0),=
+ 0);
+> +
+> +static SUNXI_CCU_GATE(mbus_dma_clk, "mbus-dma", "mbus",
+> +		      0x804, BIT(0), 0);
+> +static SUNXI_CCU_GATE(mbus_ve_clk, "mbus-ve", "mbus",
+> +		      0x804, BIT(1), 0);
+> +static SUNXI_CCU_GATE(mbus_ce_clk, "mbus-ce", "mbus",
+> +		      0x804, BIT(2), 0);
+> +static SUNXI_CCU_GATE(mbus_nand_clk, "mbus-nand", "mbus",
+> +		      0x804, BIT(5), 0);
+> +static SUNXI_CCU_GATE(mbus_csi_clk, "mbus-csi", "mbus",
+> +		      0x804, BIT(8), 0);
+> +static SUNXI_CCU_GATE(mbus_isp_clk, "mbus-isp", "mbus",
+> +		      0x804, BIT(9), 0);
+> +static SUNXI_CCU_GATE(mbus_g2d_clk, "mbus-g2d", "mbus",
+> +		      0x804, BIT(10), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_dram_clk, "bus-dram", "psi-ahb1-ahb2",
+> +		      0x80c, BIT(0), CLK_IS_CRITICAL);
+> +
+> +static const char * const nand_spi_parents[] =3D { "dcxo24M",
+> +						 "pll-periph0",
+> +						 "pll-periph1",
+> +						 "pll-periph0-2x",
+> +						 "pll-periph1-2x" };
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(nand0_clk, "nand0", nand_spi_parents, =
+0x810,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(nand1_clk, "nand1", nand_spi_parents, =
+0x814,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_GATE(bus_nand_clk, "bus-nand", "ahb3", 0x82c, BIT(0), 0=
+);
+> +
+> +/* don't use postdiv for bsp kernel */
+> +static const char * const mmc_parents[] =3D { "dcxo24M", "pll-periph0-2x=
+",
+> +					    "pll-periph1-2x" };
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(mmc0_clk, "mmc0", mmc_parents, 0x830,
+> +					  0, 4,		/* M */
+> +					  8, 2,		/* N */
+> +					  24, 2,	/* mux */
+> +					  BIT(31),	/* gate */
+> +					  CLK_SET_RATE_NO_REPARENT);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(mmc1_clk, "mmc1", mmc_parents, 0x834,
+> +					  0, 4,		/* M */
+> +					  8, 2,		/* N */
+> +					  24, 2,	/* mux */
+> +					  BIT(31),	/* gate */
+> +					  CLK_SET_RATE_NO_REPARENT);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(mmc2_clk, "mmc2", mmc_parents, 0x838,
+> +					  0, 4,		/* M */
+> +					  8, 2,		/* N */
+> +					  24, 2,	/* mux */
+> +					  BIT(31),	/* gate */
+> +					  CLK_SET_RATE_NO_REPARENT);
+> +
+> +static SUNXI_CCU_GATE(bus_mmc0_clk, "bus-mmc0", "ahb3", 0x84c, BIT(0), 0=
+);
+> +static SUNXI_CCU_GATE(bus_mmc1_clk, "bus-mmc1", "ahb3", 0x84c, BIT(1), 0=
+);
+> +static SUNXI_CCU_GATE(bus_mmc2_clk, "bus-mmc2", "ahb3", 0x84c, BIT(2), 0=
+);
+> +
+> +static SUNXI_CCU_GATE(bus_uart0_clk, "bus-uart0", "apb2", 0x90c, BIT(0),=
+ 0);
+> +static SUNXI_CCU_GATE(bus_uart1_clk, "bus-uart1", "apb2", 0x90c, BIT(1),=
+ 0);
+> +static SUNXI_CCU_GATE(bus_uart2_clk, "bus-uart2", "apb2", 0x90c, BIT(2),=
+ 0);
+> +static SUNXI_CCU_GATE(bus_uart3_clk, "bus-uart3", "apb2", 0x90c, BIT(3),=
+ 0);
+> +static SUNXI_CCU_GATE(bus_uart4_clk, "bus-uart4", "apb2", 0x90c, BIT(4),=
+ 0);
+> +
+> +static SUNXI_CCU_GATE(bus_i2c0_clk, "bus-i2c0", "apb2", 0x91c, BIT(0), 0=
+);
+> +static SUNXI_CCU_GATE(bus_i2c1_clk, "bus-i2c1", "apb2", 0x91c, BIT(1), 0=
+);
+> +static SUNXI_CCU_GATE(bus_i2c2_clk, "bus-i2c2", "apb2", 0x91c, BIT(2), 0=
+);
+> +static SUNXI_CCU_GATE(bus_i2c3_clk, "bus-i2c3", "apb2", 0x91c, BIT(3), 0=
+);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(spi0_clk, "spi0", nand_spi_parents, 0x=
+940,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(spi1_clk, "spi1", nand_spi_parents, 0x=
+944,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(spi2_clk, "spi2", nand_spi_parents, 0x=
+948,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_GATE(bus_spi0_clk, "bus-spi0", "ahb3", 0x96c, BIT(0), 0=
+);
+> +static SUNXI_CCU_GATE(bus_spi1_clk, "bus-spi1", "ahb3", 0x96c, BIT(1), 0=
+);
+> +static SUNXI_CCU_GATE(bus_spi2_clk, "bus-spi2", "ahb3", 0x96c, BIT(2), 0=
+);
+> +
+> +static SUNXI_CCU_GATE(emac_25m_clk, "emac-25m", "ahb3", 0x970,
+> +		      BIT(31) | BIT(30), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_emac_clk, "bus-emac", "ahb3", 0x97c, BIT(0), 0=
+);
+> +
+> +static const char * const ir_parents[] =3D { "osc32k", "iosc",
+> +					   "pll-periph0", "pll-periph1" };
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(ir_rx_clk, "ir-rx", ir_parents, 0x990,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_GATE(bus_ir_rx_clk, "bus-ir-rx", "ahb3", 0x99c, BIT(0),=
+ 0);
+> +
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(ir_tx_clk, "ir-tx", ir_parents, 0x9c0,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_GATE(bus_ir_tx_clk, "bus-ir-tx", "apb1", 0x9cc, BIT(0),=
+ 0);
+> +
+> +static SUNXI_CCU_GATE(bus_gpadc_clk, "bus-gpadc", "apb1", 0x9ec, BIT(0),=
+ 0);
+> +
+> +static SUNXI_CCU_GATE(bus_ths_clk, "bus-ths", "apb1", 0x9fc, BIT(0), 0);
+> +
+> +static const char * const audio_parents[] =3D { "pll-audio", "pll-com-au=
+dio" };
+> +static struct ccu_div i2s0_clk =3D {
+> +	.enable		=3D BIT(31),
+> +	.div		=3D _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
+> +	.mux		=3D _SUNXI_CCU_MUX(24, 2),
+> +	.common		=3D {
+> +		.reg		=3D 0xa10,
+> +		.hw.init	=3D CLK_HW_INIT_PARENTS("i2s0",
+> +						      audio_parents,
+> +						      &ccu_div_ops,
+> +						      CLK_SET_RATE_PARENT),
+> +	},
+> +};
+> +
+> +static struct ccu_div i2s1_clk =3D {
+> +	.enable		=3D BIT(31),
+> +	.div		=3D _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
+> +	.mux		=3D _SUNXI_CCU_MUX(24, 2),
+> +	.common		=3D {
+> +		.reg		=3D 0xa14,
+> +		.hw.init	=3D CLK_HW_INIT_PARENTS("i2s1",
+> +						      audio_parents,
+> +						      &ccu_div_ops,
+> +						      CLK_SET_RATE_PARENT),
+> +	},
+> +};
+> +
+> +static struct ccu_div i2s2_clk =3D {
+> +	.enable		=3D BIT(31),
+> +	.div		=3D _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
+> +	.mux		=3D _SUNXI_CCU_MUX(24, 2),
+> +	.common		=3D {
+> +		.reg		=3D 0xa18,
+> +		.hw.init	=3D CLK_HW_INIT_PARENTS("i2s2",
+> +						      audio_parents,
+> +						      &ccu_div_ops,
+> +						      CLK_SET_RATE_PARENT),
+> +	},
+> +};
+> +
+> +static struct ccu_div i2s3_clk =3D {
+> +	.enable		=3D BIT(31),
+> +	.div		=3D _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
+> +	.mux		=3D _SUNXI_CCU_MUX(24, 2),
+> +	.common		=3D {
+> +		.reg		=3D 0xa1c,
+> +		.hw.init	=3D CLK_HW_INIT_PARENTS("i2s3",
+> +						      audio_parents,
+> +						      &ccu_div_ops,
+> +						      CLK_SET_RATE_PARENT),
+> +	},
+> +};
+> +
+> +static SUNXI_CCU_GATE(bus_i2s0_clk, "bus-i2s0", "apb1", 0xa20, BIT(0), 0=
+);
+> +static SUNXI_CCU_GATE(bus_i2s1_clk, "bus-i2s1", "apb1", 0xa20, BIT(1), 0=
+);
+> +static SUNXI_CCU_GATE(bus_i2s2_clk, "bus-i2s2", "apb1", 0xa20, BIT(2), 0=
+);
+> +static SUNXI_CCU_GATE(bus_i2s3_clk, "bus-i2s3", "apb1", 0xa20, BIT(3), 0=
+);
+> +
+> +static struct ccu_div spdif_clk =3D {
+> +	.enable		=3D BIT(31),
+> +	.div		=3D _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
+> +	.mux		=3D _SUNXI_CCU_MUX(24, 2),
+> +	.common		=3D {
+> +		.reg		=3D 0xa24,
+> +		.hw.init	=3D CLK_HW_INIT_PARENTS("spdif",
+> +						      audio_parents,
+> +						      &ccu_div_ops,
+> +						      0),
+> +	},
+> +};
+> +
+> +static SUNXI_CCU_GATE(bus_spdif_clk, "bus-spdif", "apb1", 0xa2c, BIT(0),=
+ 0);
+> +
+> +static struct ccu_div dmic_clk =3D {
+> +	.enable		=3D BIT(31),
+> +	.div		=3D _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
+> +	.mux		=3D _SUNXI_CCU_MUX(24, 2),
+> +	.common		=3D {
+> +		.reg		=3D 0xa40,
+> +		.hw.init	=3D CLK_HW_INIT_PARENTS("dmic",
+> +						      audio_parents,
+> +						      &ccu_div_ops,
+> +						      0),
+> +	},
+> +};
+> +
+> +static SUNXI_CCU_GATE(bus_dmic_clk, "bus-dmic", "apb1", 0xa4c, BIT(0), 0=
+);
+> +
+> +static SUNXI_CCU_M_WITH_MUX_GATE(audio_codec_dac_clk, "audio-codec-dac",
+> +				 audio_parents, 0xa50,
+> +				 0, 4,		/* M */
+> +				 24, 2,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +static SUNXI_CCU_M_WITH_MUX_GATE(audio_codec_adc_clk, "audio-codec-adc",
+> +				 audio_parents, 0xa54,
+> +				 0, 4,		/* M */
+> +				 24, 2,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +static SUNXI_CCU_M_WITH_MUX_GATE(audio_codec_4x_clk, "audio-codec-4x",
+> +				 audio_parents, 0xa58,
+> +				 0, 4,		/* M */
+> +				 24, 2,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +static SUNXI_CCU_GATE(bus_audio_codec_clk, "bus-audio-codec", "apb1", 0x=
+a5c,
+> +		      BIT(0), 0);
+> +
+> +/*
+> + * There are OHCI 12M clock source selection bits for 2 USB 2.0 ports.
+> + * We will force them to 0 (12M divided from 48M).
+> + */
+> +#define SUN50I_A100_USB0_CLK_REG		0xa70
+> +#define SUN50I_A100_USB1_CLK_REG		0xa74
+> +
+> +static SUNXI_CCU_GATE(usb_ohci0_clk, "usb-ohci0", "osc12M", 0xa70, BIT(3=
+1), 0);
+> +static SUNXI_CCU_GATE(usb_phy0_clk, "usb-phy0", "dcxo24M", 0xa70, BIT(29=
+), 0);
+> +
+> +static SUNXI_CCU_GATE(usb_ohci1_clk, "usb-ohci1", "osc12M", 0xa74, BIT(3=
+1), 0);
+> +static SUNXI_CCU_GATE(usb_phy1_clk, "usb-phy1", "dcxo24M", 0xa74, BIT(29=
+), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_ohci0_clk, "bus-ohci0", "ahb3", 0xa8c, BIT(0),=
+ 0);
+> +static SUNXI_CCU_GATE(bus_ohci1_clk, "bus-ohci1", "ahb3", 0xa8c, BIT(1),=
+ 0);
+> +static SUNXI_CCU_GATE(bus_ehci0_clk, "bus-ehci0", "ahb3", 0xa8c, BIT(4),=
+ 0);
+> +static SUNXI_CCU_GATE(bus_ehci1_clk, "bus-ehci1", "ahb3", 0xa8c, BIT(5),=
+ 0);
+> +static SUNXI_CCU_GATE(bus_otg_clk, "bus-otg", "ahb3", 0xa8c, BIT(8), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_lradc_clk, "bus-lradc", "ahb3", 0xa9c, BIT(0),=
+ 0);
+> +
+> +static SUNXI_CCU_GATE(bus_dpss_top0_clk, "bus-dpss-top0", "ahb3",
+> +		      0xabc, BIT(0), 0);
+> +
+> +static SUNXI_CCU_GATE(bus_dpss_top1_clk, "bus-dpss-top1", "ahb3",
+> +		      0xacc, BIT(0), 0);
+> +
+> +static const char * const mipi_dsi_parents[] =3D { "dcxo24M", "pll-perip=
+h0-2x",
+> +						 "pll-periph0" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(mipi_dsi_clk, "mipi-dsi",
+> +				 mipi_dsi_parents,
+> +				 0xb24,
+> +				 0, 4,		/* M */
+> +				 24, 2,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +static SUNXI_CCU_GATE(bus_mipi_dsi_clk, "bus-mipi-dsi", "ahb3",
+> +		      0xb4c, BIT(0), 0);
+> +
+> +static const char * const tcon_lcd_parents[] =3D { "pll-video0-4x",
+> +						  "pll-video1-4x",
+> +						  "pll-video2-4x",
+> +						  "pll-video3-4x",
+> +						  "pll-periph0-2x" };
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(tcon_lcd_clk, "tcon-lcd0",
+> +				  tcon_lcd_parents, 0xb60,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_GATE(bus_tcon_lcd_clk, "bus-tcon-lcd0", "ahb3",
+> +		      0xb7c, BIT(0), 0);
+> +
+> +static const char * const ledc_parents[] =3D { "dcxo24M",
+> +					     "pll-periph0" };
+> +static SUNXI_CCU_MP_WITH_MUX_GATE(ledc_clk, "ledc",
+> +				  ledc_parents, 0xbf0,
+> +				  0, 4,		/* M */
+> +				  8, 2,		/* N */
+> +				  24, 3,	/* mux */
+> +				  BIT(31),	/* gate */
+> +				  0);
+> +
+> +static SUNXI_CCU_GATE(bus_ledc_clk, "bus-ledc", "ahb3", 0xbfc, BIT(0), 0=
+);
+> +
+> +static const char * const csi_top_parents[] =3D { "pll-periph0-2x",
+> +						"pll-video0-2x",
+> +						"pll-video1-2x",
+> +						"pll-video2-2x",
+> +						"pll-video3-2x" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(csi_top_clk, "csi-top",
+> +				 csi_top_parents, 0xc04,
+> +				 0, 4,		/* M */
+> +				 24, 3,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +static const char * const csi0_mclk_parents[] =3D { "dcxo24M", "pll-vide=
+o2",
+> +						  "pll-video3", "pll-video0",
+> +						  "pll-video1" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(csi0_mclk_clk, "csi0-mclk",
+> +				 csi0_mclk_parents, 0xc08,
+> +				 0, 5,		/* M */
+> +				 24, 3,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +static const char * const csi1_mclk_parents[] =3D { "dcxo24M", "pll-vide=
+o3",
+> +						  "pll-video0", "pll-video1",
+> +						  "pll-video2" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(csi1_mclk_clk, "csi1-mclk",
+> +				 csi1_mclk_parents, 0xc0c,
+> +				 0, 5,		/* M */
+> +				 24, 3,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +static SUNXI_CCU_GATE(bus_csi_clk, "bus-csi", "ahb3", 0xc1c, BIT(0), 0);
+> +
+> +static const char * const csi_isp_parents[] =3D { "pll-periph0-2x",
+> +						"pll-video0-2x",
+> +						"pll-video1-2x",
+> +						"pll-video2-2x",
+> +						"pll-video3-2x" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(csi_isp_clk, "csi-isp",
+> +				 csi_isp_parents, 0xc20,
+> +				 0, 5,		/* M */
+> +				 24, 3,		/* mux */
+> +				 BIT(31),	/* gate */
+> +				 0);
+> +
+> +/* Fixed factor clocks */
+> +static CLK_FIXED_FACTOR_FW_NAME(osc12M_clk, "osc12M", "hosc", 2, 1, 0);
+> +
+> +static CLK_FIXED_FACTOR_HW(pll_com_audio_clk, "pll-com-audio",
+> +			   &pll_com_clk.common.hw,
+> +			   5, 1, CLK_SET_RATE_PARENT);
+> +
+> +static CLK_FIXED_FACTOR_HW(pll_periph0_2x_clk, "pll-periph0-2x",
+> +			   &pll_periph0_clk.common.hw,
+> +			   1, 2, 0);
+> +
+> +static CLK_FIXED_FACTOR_HW(pll_periph1_2x_clk, "pll-periph1-2x",
+> +			   &pll_periph1_clk.common.hw,
+> +			   1, 2, 0);
+> +
+> +static const struct clk_hw *pll_video0_parents[] =3D {
+> +	&pll_video0_clk.common.hw
+> +};
+> +static CLK_FIXED_FACTOR_HWS(pll_video0_4x_clk, "pll-video0-4x",
+> +			    pll_video0_parents,
+> +			    1, 4, CLK_SET_RATE_PARENT);
+> +static CLK_FIXED_FACTOR_HWS(pll_video0_2x_clk, "pll-video0-2x",
+> +			    pll_video0_parents,
+> +			    1, 2, CLK_SET_RATE_PARENT);
+> +
+> +static const struct clk_hw *pll_video1_parents[] =3D {
+> +	&pll_video1_clk.common.hw
+> +};
+> +static CLK_FIXED_FACTOR_HWS(pll_video1_4x_clk, "pll-video1-4x",
+> +			    pll_video1_parents,
+> +			    1, 4, CLK_SET_RATE_PARENT);
+> +static CLK_FIXED_FACTOR_HWS(pll_video1_2x_clk, "pll-video1-2x",
+> +			    pll_video1_parents,
+> +			    1, 2, CLK_SET_RATE_PARENT);
+> +
+> +static const struct clk_hw *pll_video2_parents[] =3D {
+> +	&pll_video2_clk.common.hw
+> +};
+> +static CLK_FIXED_FACTOR_HWS(pll_video2_4x_clk, "pll-video2-4x",
+> +			    pll_video2_parents,
+> +			    1, 4, CLK_SET_RATE_PARENT);
+> +static CLK_FIXED_FACTOR_HWS(pll_video2_2x_clk, "pll-video2-2x",
+> +			    pll_video2_parents,
+> +			    1, 2, CLK_SET_RATE_PARENT);
+> +
+> +static const struct clk_hw *pll_video3_parents[] =3D {
+> +	&pll_video3_clk.common.hw
+> +};
+> +static CLK_FIXED_FACTOR_HWS(pll_video3_4x_clk, "pll-video3-4x",
+> +			    pll_video3_parents,
+> +			    1, 4, CLK_SET_RATE_PARENT);
+> +static CLK_FIXED_FACTOR_HWS(pll_video3_2x_clk, "pll-video3-2x",
+> +			    pll_video3_parents,
+> +			    1, 2, CLK_SET_RATE_PARENT);
+> +
+> +static struct ccu_common *sun50i_a100_ccu_clks[] =3D {
+> +	&pll_cpux_clk.common,
+> +	&pll_ddr0_clk.common,
+> +	&pll_periph0_clk.common,
+> +	&pll_periph1_clk.common,
+> +	&pll_gpu_clk.common,
+> +	&pll_video0_clk.common,
+> +	&pll_video1_clk.common,
+> +	&pll_video2_clk.common,
+> +	&pll_video3_clk.common,
+> +	&pll_ve_clk.common,
+> +	&pll_com_clk.common,
+> +	&pll_audio_clk.common,
+> +	&cpux_clk.common,
+> +	&axi_clk.common,
+> +	&cpux_apb_clk.common,
+> +	&psi_ahb1_ahb2_clk.common,
+> +	&ahb3_clk.common,
+> +	&apb1_clk.common,
+> +	&apb2_clk.common,
+> +	&mbus_clk.common,
+> +	&de_clk.common,
+> +	&bus_de_clk.common,
+> +	&g2d_clk.common,
+> +	&bus_g2d_clk.common,
+> +	&gpu_clk.common,
+> +	&bus_gpu_clk.common,
+> +	&ce_clk.common,
+> +	&bus_ce_clk.common,
+> +	&ve_clk.common,
+> +	&bus_ve_clk.common,
+> +	&bus_dma_clk.common,
+> +	&bus_msgbox_clk.common,
+> +	&bus_spinlock_clk.common,
+> +	&bus_hstimer_clk.common,
+> +	&avs_clk.common,
+> +	&bus_dbg_clk.common,
+> +	&bus_psi_clk.common,
+> +	&bus_pwm_clk.common,
+> +	&bus_iommu_clk.common,
+> +	&mbus_dma_clk.common,
+> +	&mbus_ve_clk.common,
+> +	&mbus_ce_clk.common,
+> +	&mbus_nand_clk.common,
+> +	&mbus_csi_clk.common,
+> +	&mbus_isp_clk.common,
+> +	&mbus_g2d_clk.common,
+> +	&bus_dram_clk.common,
+> +	&nand0_clk.common,
+> +	&nand1_clk.common,
+> +	&bus_nand_clk.common,
+> +	&mmc0_clk.common,
+> +	&mmc1_clk.common,
+> +	&mmc2_clk.common,
+> +	&bus_mmc0_clk.common,
+> +	&bus_mmc1_clk.common,
+> +	&bus_mmc2_clk.common,
+> +	&bus_uart0_clk.common,
+> +	&bus_uart1_clk.common,
+> +	&bus_uart2_clk.common,
+> +	&bus_uart3_clk.common,
+> +	&bus_uart4_clk.common,
+> +	&bus_i2c0_clk.common,
+> +	&bus_i2c1_clk.common,
+> +	&bus_i2c2_clk.common,
+> +	&bus_i2c3_clk.common,
+> +	&spi0_clk.common,
+> +	&spi1_clk.common,
+> +	&spi2_clk.common,
+> +	&bus_spi0_clk.common,
+> +	&bus_spi1_clk.common,
+> +	&bus_spi2_clk.common,
+> +	&emac_25m_clk.common,
+> +	&bus_emac_clk.common,
+> +	&ir_rx_clk.common,
+> +	&bus_ir_rx_clk.common,
+> +	&ir_tx_clk.common,
+> +	&bus_ir_tx_clk.common,
+> +	&bus_gpadc_clk.common,
+> +	&bus_ths_clk.common,
+> +	&i2s0_clk.common,
+> +	&i2s1_clk.common,
+> +	&i2s2_clk.common,
+> +	&i2s3_clk.common,
+> +	&bus_i2s0_clk.common,
+> +	&bus_i2s1_clk.common,
+> +	&bus_i2s2_clk.common,
+> +	&bus_i2s3_clk.common,
+> +	&spdif_clk.common,
+> +	&bus_spdif_clk.common,
+> +	&dmic_clk.common,
+> +	&bus_dmic_clk.common,
+> +	&audio_codec_dac_clk.common,
+> +	&audio_codec_adc_clk.common,
+> +	&audio_codec_4x_clk.common,
+> +	&bus_audio_codec_clk.common,
+> +	&usb_ohci0_clk.common,
+> +	&usb_phy0_clk.common,
+> +	&usb_ohci1_clk.common,
+> +	&usb_phy1_clk.common,
+> +	&bus_ohci0_clk.common,
+> +	&bus_ohci1_clk.common,
+> +	&bus_ehci0_clk.common,
+> +	&bus_ehci1_clk.common,
+> +	&bus_otg_clk.common,
+> +	&bus_lradc_clk.common,
+> +	&bus_dpss_top0_clk.common,
+> +	&bus_dpss_top1_clk.common,
+> +	&mipi_dsi_clk.common,
+> +	&bus_mipi_dsi_clk.common,
+> +	&tcon_lcd_clk.common,
+> +	&bus_tcon_lcd_clk.common,
+> +	&ledc_clk.common,
+> +	&bus_ledc_clk.common,
+> +	&csi_top_clk.common,
+> +	&csi0_mclk_clk.common,
+> +	&csi1_mclk_clk.common,
+> +	&bus_csi_clk.common,
+> +	&csi_isp_clk.common,
+> +};
+> +
+> +static struct clk_hw_onecell_data sun50i_a100_hw_clks =3D {
+> +	.hws	=3D {
+> +		[CLK_OSC12M]		=3D &osc12M_clk.hw,
+> +		[CLK_PLL_CPUX]		=3D &pll_cpux_clk.common.hw,
+> +		[CLK_PLL_DDR0]		=3D &pll_ddr0_clk.common.hw,
+> +		[CLK_PLL_PERIPH0]	=3D &pll_periph0_clk.common.hw,
+> +		[CLK_PLL_PERIPH0_2X]	=3D &pll_periph0_2x_clk.hw,
+> +		[CLK_PLL_PERIPH1]	=3D &pll_periph1_clk.common.hw,
+> +		[CLK_PLL_PERIPH1_2X]	=3D &pll_periph1_2x_clk.hw,
+> +		[CLK_PLL_GPU]		=3D &pll_gpu_clk.common.hw,
+> +		[CLK_PLL_VIDEO0]	=3D &pll_video0_clk.common.hw,
+> +		[CLK_PLL_VIDEO0_2X]	=3D &pll_video0_2x_clk.hw,
+> +		[CLK_PLL_VIDEO0_4X]	=3D &pll_video0_4x_clk.hw,
+> +		[CLK_PLL_VIDEO1]	=3D &pll_video1_clk.common.hw,
+> +		[CLK_PLL_VIDEO1_2X]	=3D &pll_video1_2x_clk.hw,
+> +		[CLK_PLL_VIDEO1_4X]	=3D &pll_video1_4x_clk.hw,
+> +		[CLK_PLL_VIDEO2]	=3D &pll_video2_clk.common.hw,
+> +		[CLK_PLL_VIDEO2_2X]	=3D &pll_video2_2x_clk.hw,
+> +		[CLK_PLL_VIDEO2_4X]	=3D &pll_video2_4x_clk.hw,
+> +		[CLK_PLL_VIDEO3]	=3D &pll_video3_clk.common.hw,
+> +		[CLK_PLL_VIDEO3_2X]	=3D &pll_video3_2x_clk.hw,
+> +		[CLK_PLL_VIDEO3_4X]	=3D &pll_video3_4x_clk.hw,
+> +		[CLK_PLL_VE]		=3D &pll_ve_clk.common.hw,
+> +		[CLK_PLL_COM]		=3D &pll_com_clk.common.hw,
+> +		[CLK_PLL_COM_AUDIO]	=3D &pll_com_audio_clk.hw,
+> +		[CLK_PLL_AUDIO]		=3D &pll_audio_clk.common.hw,
+> +		[CLK_CPUX]		=3D &cpux_clk.common.hw,
+> +		[CLK_AXI]		=3D &axi_clk.common.hw,
+> +		[CLK_CPUX_APB]		=3D &cpux_apb_clk.common.hw,
+> +		[CLK_PSI_AHB1_AHB2]	=3D &psi_ahb1_ahb2_clk.common.hw,
+> +		[CLK_AHB3]		=3D &ahb3_clk.common.hw,
+> +		[CLK_APB1]		=3D &apb1_clk.common.hw,
+> +		[CLK_APB2]		=3D &apb2_clk.common.hw,
+> +		[CLK_MBUS]		=3D &mbus_clk.common.hw,
+> +		[CLK_DE]		=3D &de_clk.common.hw,
+> +		[CLK_BUS_DE]		=3D &bus_de_clk.common.hw,
+> +		[CLK_G2D]		=3D &g2d_clk.common.hw,
+> +		[CLK_BUS_G2D]		=3D &bus_g2d_clk.common.hw,
+> +		[CLK_GPU]		=3D &gpu_clk.common.hw,
+> +		[CLK_BUS_GPU]		=3D &bus_gpu_clk.common.hw,
+> +		[CLK_CE]		=3D &ce_clk.common.hw,
+> +		[CLK_BUS_CE]		=3D &bus_ce_clk.common.hw,
+> +		[CLK_VE]		=3D &ve_clk.common.hw,
+> +		[CLK_BUS_VE]		=3D &bus_ve_clk.common.hw,
+> +		[CLK_BUS_DMA]		=3D &bus_dma_clk.common.hw,
+> +		[CLK_BUS_MSGBOX]	=3D &bus_msgbox_clk.common.hw,
+> +		[CLK_BUS_SPINLOCK]	=3D &bus_spinlock_clk.common.hw,
+> +		[CLK_BUS_HSTIMER]	=3D &bus_hstimer_clk.common.hw,
+> +		[CLK_AVS]		=3D &avs_clk.common.hw,
+> +		[CLK_BUS_DBG]		=3D &bus_dbg_clk.common.hw,
+> +		[CLK_BUS_PSI]		=3D &bus_psi_clk.common.hw,
+> +		[CLK_BUS_PWM]		=3D &bus_pwm_clk.common.hw,
+> +		[CLK_BUS_IOMMU]		=3D &bus_iommu_clk.common.hw,
+> +		[CLK_MBUS_DMA]		=3D &mbus_dma_clk.common.hw,
+> +		[CLK_MBUS_VE]		=3D &mbus_ve_clk.common.hw,
+> +		[CLK_MBUS_CE]		=3D &mbus_ce_clk.common.hw,
+> +		[CLK_MBUS_NAND]		=3D &mbus_nand_clk.common.hw,
+> +		[CLK_MBUS_CSI]		=3D &mbus_csi_clk.common.hw,
+> +		[CLK_MBUS_ISP]		=3D &mbus_isp_clk.common.hw,
+> +		[CLK_MBUS_G2D]		=3D &mbus_g2d_clk.common.hw,
+> +		[CLK_BUS_DRAM]		=3D &bus_dram_clk.common.hw,
+> +		[CLK_NAND0]		=3D &nand0_clk.common.hw,
+> +		[CLK_NAND1]		=3D &nand1_clk.common.hw,
+> +		[CLK_BUS_NAND]		=3D &bus_nand_clk.common.hw,
+> +		[CLK_MMC0]		=3D &mmc0_clk.common.hw,
+> +		[CLK_MMC1]		=3D &mmc1_clk.common.hw,
+> +		[CLK_MMC2]		=3D &mmc2_clk.common.hw,
+> +		[CLK_BUS_MMC0]		=3D &bus_mmc0_clk.common.hw,
+> +		[CLK_BUS_MMC1]		=3D &bus_mmc1_clk.common.hw,
+> +		[CLK_BUS_MMC2]		=3D &bus_mmc2_clk.common.hw,
+> +		[CLK_BUS_UART0]		=3D &bus_uart0_clk.common.hw,
+> +		[CLK_BUS_UART1]		=3D &bus_uart1_clk.common.hw,
+> +		[CLK_BUS_UART2]		=3D &bus_uart2_clk.common.hw,
+> +		[CLK_BUS_UART3]		=3D &bus_uart3_clk.common.hw,
+> +		[CLK_BUS_UART4]		=3D &bus_uart4_clk.common.hw,
+> +		[CLK_BUS_I2C0]		=3D &bus_i2c0_clk.common.hw,
+> +		[CLK_BUS_I2C1]		=3D &bus_i2c1_clk.common.hw,
+> +		[CLK_BUS_I2C2]		=3D &bus_i2c2_clk.common.hw,
+> +		[CLK_BUS_I2C3]		=3D &bus_i2c3_clk.common.hw,
+> +		[CLK_SPI0]		=3D &spi0_clk.common.hw,
+> +		[CLK_SPI1]		=3D &spi1_clk.common.hw,
+> +		[CLK_SPI2]		=3D &spi2_clk.common.hw,
+> +		[CLK_BUS_SPI0]		=3D &bus_spi0_clk.common.hw,
+> +		[CLK_BUS_SPI1]		=3D &bus_spi1_clk.common.hw,
+> +		[CLK_BUS_SPI2]		=3D &bus_spi2_clk.common.hw,
+> +		[CLK_EMAC_25M]		=3D &emac_25m_clk.common.hw,
+> +		[CLK_BUS_EMAC]		=3D &bus_emac_clk.common.hw,
+> +		[CLK_IR_RX]		=3D &ir_rx_clk.common.hw,
+> +		[CLK_BUS_IR_RX]		=3D &bus_ir_rx_clk.common.hw,
+> +		[CLK_IR_TX]		=3D &ir_tx_clk.common.hw,
+> +		[CLK_BUS_IR_TX]		=3D &bus_ir_tx_clk.common.hw,
+> +		[CLK_BUS_GPADC]		=3D &bus_gpadc_clk.common.hw,
+> +		[CLK_BUS_THS]		=3D &bus_ths_clk.common.hw,
+> +		[CLK_I2S0]		=3D &i2s0_clk.common.hw,
+> +		[CLK_I2S1]		=3D &i2s1_clk.common.hw,
+> +		[CLK_I2S2]		=3D &i2s2_clk.common.hw,
+> +		[CLK_I2S3]		=3D &i2s3_clk.common.hw,
+> +		[CLK_BUS_I2S0]		=3D &bus_i2s0_clk.common.hw,
+> +		[CLK_BUS_I2S1]		=3D &bus_i2s1_clk.common.hw,
+> +		[CLK_BUS_I2S2]		=3D &bus_i2s2_clk.common.hw,
+> +		[CLK_BUS_I2S3]		=3D &bus_i2s3_clk.common.hw,
+> +		[CLK_SPDIF]		=3D &spdif_clk.common.hw,
+> +		[CLK_BUS_SPDIF]		=3D &bus_spdif_clk.common.hw,
+> +		[CLK_DMIC]		=3D &dmic_clk.common.hw,
+> +		[CLK_BUS_DMIC]		=3D &bus_dmic_clk.common.hw,
+> +		[CLK_AUDIO_DAC]		=3D &audio_codec_dac_clk.common.hw,
+> +		[CLK_AUDIO_ADC]		=3D &audio_codec_adc_clk.common.hw,
+> +		[CLK_AUDIO_4X]		=3D &audio_codec_4x_clk.common.hw,
+> +		[CLK_BUS_AUDIO_CODEC]	=3D &bus_audio_codec_clk.common.hw,
+> +		[CLK_USB_OHCI0]		=3D &usb_ohci0_clk.common.hw,
+> +		[CLK_USB_PHY0]		=3D &usb_phy0_clk.common.hw,
+> +		[CLK_USB_OHCI1]		=3D &usb_ohci1_clk.common.hw,
+> +		[CLK_USB_PHY1]		=3D &usb_phy1_clk.common.hw,
+> +		[CLK_BUS_OHCI0]		=3D &bus_ohci0_clk.common.hw,
+> +		[CLK_BUS_OHCI1]		=3D &bus_ohci1_clk.common.hw,
+> +		[CLK_BUS_EHCI0]		=3D &bus_ehci0_clk.common.hw,
+> +		[CLK_BUS_EHCI1]		=3D &bus_ehci1_clk.common.hw,
+> +		[CLK_BUS_OTG]		=3D &bus_otg_clk.common.hw,
+> +		[CLK_BUS_LRADC]		=3D &bus_lradc_clk.common.hw,
+> +		[CLK_BUS_DPSS_TOP0]	=3D &bus_dpss_top0_clk.common.hw,
+> +		[CLK_BUS_DPSS_TOP1]	=3D &bus_dpss_top1_clk.common.hw,
+> +		[CLK_MIPI_DSI]		=3D &mipi_dsi_clk.common.hw,
+> +		[CLK_BUS_MIPI_DSI]	=3D &bus_mipi_dsi_clk.common.hw,
+> +		[CLK_TCON_LCD]		=3D &tcon_lcd_clk.common.hw,
+> +		[CLK_BUS_TCON_LCD]	=3D &bus_tcon_lcd_clk.common.hw,
+> +		[CLK_LEDC]		=3D &ledc_clk.common.hw,
+> +		[CLK_BUS_LEDC]		=3D &bus_ledc_clk.common.hw,
+> +		[CLK_CSI_TOP]		=3D &csi_top_clk.common.hw,
+> +		[CLK_CSI0_MCLK]		=3D &csi0_mclk_clk.common.hw,
+> +		[CLK_CSI1_MCLK]		=3D &csi1_mclk_clk.common.hw,
+> +		[CLK_BUS_CSI]		=3D &bus_csi_clk.common.hw,
+> +		[CLK_CSI_ISP]		=3D &csi_isp_clk.common.hw,
+> +	},
+> +	.num =3D CLK_NUMBER,
+> +};
+> +
+> +static struct ccu_reset_map sun50i_a100_ccu_resets[] =3D {
+> +	[RST_MBUS]		=3D { 0x540, BIT(30) },
+> +
+> +	[RST_BUS_DE]		=3D { 0x60c, BIT(16) },
+> +	[RST_BUS_G2D]		=3D { 0x63c, BIT(16) },
+> +	[RST_BUS_GPU]		=3D { 0x67c, BIT(16) },
+> +	[RST_BUS_CE]		=3D { 0x68c, BIT(16) },
+> +	[RST_BUS_VE]		=3D { 0x69c, BIT(16) },
+> +	[RST_BUS_DMA]		=3D { 0x70c, BIT(16) },
+> +	[RST_BUS_MSGBOX]	=3D { 0x71c, BIT(16) },
+> +	[RST_BUS_SPINLOCK]	=3D { 0x72c, BIT(16) },
+> +	[RST_BUS_HSTIMER]	=3D { 0x73c, BIT(16) },
+> +	[RST_BUS_DBG]		=3D { 0x78c, BIT(16) },
+> +	[RST_BUS_PSI]		=3D { 0x79c, BIT(16) },
+> +	[RST_BUS_PWM]		=3D { 0x7ac, BIT(16) },
+> +	[RST_BUS_DRAM]		=3D { 0x80c, BIT(16) },
+> +	[RST_BUS_NAND]		=3D { 0x82c, BIT(16) },
+> +	[RST_BUS_MMC0]		=3D { 0x84c, BIT(16) },
+> +	[RST_BUS_MMC1]		=3D { 0x84c, BIT(17) },
+> +	[RST_BUS_MMC2]		=3D { 0x84c, BIT(18) },
+> +	[RST_BUS_UART0]		=3D { 0x90c, BIT(16) },
+> +	[RST_BUS_UART1]		=3D { 0x90c, BIT(17) },
+> +	[RST_BUS_UART2]		=3D { 0x90c, BIT(18) },
+> +	[RST_BUS_UART3]		=3D { 0x90c, BIT(19) },
+> +	[RST_BUS_UART4]		=3D { 0x90c, BIT(20) },
+> +	[RST_BUS_I2C0]		=3D { 0x91c, BIT(16) },
+> +	[RST_BUS_I2C1]		=3D { 0x91c, BIT(17) },
+> +	[RST_BUS_I2C2]		=3D { 0x91c, BIT(18) },
+> +	[RST_BUS_I2C3]		=3D { 0x91c, BIT(19) },
+> +	[RST_BUS_SPI0]		=3D { 0x96c, BIT(16) },
+> +	[RST_BUS_SPI1]		=3D { 0x96c, BIT(17) },
+> +	[RST_BUS_SPI2]		=3D { 0x96c, BIT(18) },
+> +	[RST_BUS_EMAC]		=3D { 0x97c, BIT(16) },
+> +	[RST_BUS_IR_RX]		=3D { 0x99c, BIT(16) },
+> +	[RST_BUS_IR_TX]		=3D { 0x9cc, BIT(16) },
+> +	[RST_BUS_GPADC]		=3D { 0x9ec, BIT(16) },
+> +	[RST_BUS_THS]		=3D { 0x9fc, BIT(16) },
+> +	[RST_BUS_I2S0]		=3D { 0xa20, BIT(16) },
+> +	[RST_BUS_I2S1]		=3D { 0xa20, BIT(17) },
+> +	[RST_BUS_I2S2]		=3D { 0xa20, BIT(18) },
+> +	[RST_BUS_I2S3]		=3D { 0xa20, BIT(19) },
+> +	[RST_BUS_SPDIF]		=3D { 0xa2c, BIT(16) },
+> +	[RST_BUS_DMIC]		=3D { 0xa4c, BIT(16) },
+> +	[RST_BUS_AUDIO_CODEC]	=3D { 0xa5c, BIT(16) },
+> +
+> +	[RST_USB_PHY0]		=3D { 0xa70, BIT(30) },
+> +	[RST_USB_PHY1]		=3D { 0xa74, BIT(30) },
+> +
+> +	[RST_BUS_OHCI0]		=3D { 0xa8c, BIT(16) },
+> +	[RST_BUS_OHCI1]		=3D { 0xa8c, BIT(17) },
+> +	[RST_BUS_EHCI0]		=3D { 0xa8c, BIT(20) },
+> +	[RST_BUS_EHCI1]		=3D { 0xa8c, BIT(21) },
+> +	[RST_BUS_OTG]		=3D { 0xa8c, BIT(24) },
+> +
+> +	[RST_BUS_LRADC]		=3D { 0xa9c, BIT(16) },
+> +	[RST_BUS_DPSS_TOP0]	=3D { 0xabc, BIT(16) },
+> +	[RST_BUS_DPSS_TOP1]	=3D { 0xacc, BIT(16) },
+> +	[RST_BUS_MIPI_DSI]	=3D { 0xb4c, BIT(16) },
+> +	[RST_BUS_TCON_LCD]	=3D { 0xb7c, BIT(16) },
+> +	[RST_BUS_LVDS]		=3D { 0xbac, BIT(16) },
+> +	[RST_BUS_LEDC]		=3D { 0xbfc, BIT(16) },
+> +	[RST_BUS_CSI]		=3D { 0xc1c, BIT(16) },
+> +	[RST_BUS_CSI_ISP]	=3D { 0xc2c, BIT(16) },
+> +};
+> +
+> +static const struct sunxi_ccu_desc sun50i_a100_ccu_desc =3D {
+> +	.ccu_clks	=3D sun50i_a100_ccu_clks,
+> +	.num_ccu_clks	=3D ARRAY_SIZE(sun50i_a100_ccu_clks),
+> +
+> +	.hw_clks	=3D &sun50i_a100_hw_clks,
+> +
+> +	.resets		=3D sun50i_a100_ccu_resets,
+> +	.num_resets	=3D ARRAY_SIZE(sun50i_a100_ccu_resets),
+> +};
+> +
+> +static const u32 pll_regs[] =3D {
+> +	SUN50I_A100_PLL_CPUX_REG,
+> +	SUN50I_A100_PLL_DDR0_REG,
+> +	SUN50I_A100_PLL_PERIPH0_REG,
+> +	SUN50I_A100_PLL_PERIPH1_REG,
+> +	SUN50I_A100_PLL_GPU_REG,
+> +	SUN50I_A100_PLL_VIDEO0_REG,
+> +	SUN50I_A100_PLL_VIDEO1_REG,
+> +	SUN50I_A100_PLL_VIDEO2_REG,
+> +	SUN50I_A100_PLL_VIDEO3_REG,
+> +	SUN50I_A100_PLL_VE_REG,
+> +	SUN50I_A100_PLL_COM_REG,
+> +	SUN50I_A100_PLL_AUDIO_REG,
+> +};
+> +
+> +static const u32 pll_video_regs[] =3D {
+> +	SUN50I_A100_PLL_VIDEO0_REG,
+> +	SUN50I_A100_PLL_VIDEO1_REG,
+> +	SUN50I_A100_PLL_VIDEO2_REG,
+> +	SUN50I_A100_PLL_VIDEO3_REG,
+> +};
+> +
+> +static const u32 usb2_clk_regs[] =3D {
+> +	SUN50I_A100_USB0_CLK_REG,
+> +	SUN50I_A100_USB1_CLK_REG,
+> +};
+
+Using the same prefix that we use everywhere else would be nice too.
+
+> +static struct ccu_pll_nb sun50i_a100_pll_cpu_nb =3D {
+> +	.common =3D &pll_cpux_clk.common,
+> +	/* copy from pll_cpux_clk */
+> +	.enable =3D BIT(27),
+> +	.lock   =3D BIT(28),
+> +};
+> +
+> +static struct ccu_mux_nb sun50i_a100_cpu_nb =3D {
+> +	.common         =3D &cpux_clk.common,
+> +	.cm             =3D &cpux_clk.mux,
+> +	.delay_us       =3D 1,
+> +	.bypass_index   =3D 4, /* index of pll periph0 */
+> +};
+> +
+> +static int sun50i_a100_ccu_probe(struct platform_device *pdev)
+> +{
+> +	void __iomem *reg;
+> +	u32 val;
+> +	int i, ret;
+> +
+> +	reg =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(reg))
+> +		return PTR_ERR(reg);
+> +
+> +	/* Enable the lock bits on all PLLs */
+> +	for (i =3D 0; i < ARRAY_SIZE(pll_regs); i++) {
+> +		val =3D readl(reg + pll_regs[i]);
+> +		val |=3D BIT(29);
+
+Having a define for that would be nice here
+
+> +		writel(val, reg + pll_regs[i]);
+> +	}
+> +
+> +	/*
+> +	 * In order to pass the EMI certification, the SDM function of
+> +	 * the peripheral 1 bus is enabled, and the frequency is still
+> +	 * calculated using the previous division factor.
+> +	 */
+> +	writel(0xd1303333, reg + SUN50I_A100_PLL_PERIPH1_PATTERN0_REG);
+
+Same here
+
+> +	val =3D readl(reg + SUN50I_A100_PLL_PERIPH1_REG);
+> +	val |=3D BIT(24);
+> +	writel(val, reg + SUN50I_A100_PLL_PERIPH1_REG);
+
+Same here
+
+> +	/*
+> +	 * Force the output divider of video PLLs to 0.
+> +	 *
+> +	 * See the comment before pll-video0 definition for the reason.
+> +	 */
+> +	for (i =3D 0; i < ARRAY_SIZE(pll_video_regs); i++) {
+> +		val =3D readl(reg + pll_video_regs[i]);
+> +		val &=3D ~BIT(0);
+> +		writel(val, reg + pll_video_regs[i]);
+> +	}
+> +
+> +	/* Enforce m1 =3D 0, m0 =3D 1 for Audio PLL */
+
+Why?
+
+> +	val =3D readl(reg + SUN50I_A100_PLL_AUDIO_REG);
+> +	val &=3D ~BIT(1);
+> +	val |=3D BIT(0);
+> +	writel(val, reg + SUN50I_A100_PLL_AUDIO_REG);
+> +
+> +	/*
+> +	 * Force OHCI 12M clock sources to 00 (12MHz divided from 48MHz)
+> +	 *
+> +	 * This clock mux is still mysterious, and the code just enforces
+> +	 * it to have a valid clock parent.
+> +	 */
+> +	for (i =3D 0; i < ARRAY_SIZE(usb2_clk_regs); i++) {
+> +		val =3D readl(reg + usb2_clk_regs[i]);
+> +		val &=3D ~GENMASK(25, 24);
+> +		writel(val, reg + usb2_clk_regs[i]);
+> +	}
+> +
+> +	ret =3D sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a100_ccu_desc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Gate then ungate PLL CPU after any rate changes */
+> +	ccu_pll_notifier_register(&sun50i_a100_pll_cpu_nb);
+> +
+> +	/* Reparent CPU during PLL CPU rate changes */
+> +	ccu_mux_notifier_register(pll_cpux_clk.common.hw.clk,
+> +				  &sun50i_a100_cpu_nb);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sun50i_a100_ccu_ids[] =3D {
+> +	{ .compatible =3D "allwinner,sun50i-a100-ccu" },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver sun50i_a100_ccu_driver =3D {
+> +	.probe	=3D sun50i_a100_ccu_probe,
+> +	.driver	=3D {
+> +		.name	=3D "sun50i-a100-ccu",
+> +		.of_match_table	=3D sun50i_a100_ccu_ids,
+> +	},
+> +};
+> +module_platform_driver(sun50i_a100_ccu_driver);
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a100.h b/drivers/clk/sunxi-n=
+g/ccu-sun50i-a100.h
+> new file mode 100644
+> index 000000000000..4fbf2e1a6697
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-a100.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
+> + */
+> +
+> +#ifndef _CCU_SUN50I_A100_H_
+> +#define _CCU_SUN50I_A100_H_
+> +
+> +#include <dt-bindings/clock/sun50i-a100-ccu.h>
+> +#include <dt-bindings/reset/sun50i-a100-ccu.h>
+> +
+> +#define CLK_NUMBER		(CLK_CSI_ISP + 1)
+> +
+> +#endif /* _CCU_SUN50I_A100_H_ */
+> diff --git a/include/dt-bindings/clock/sun50i-a100-ccu.h b/include/dt-bin=
+dings/clock/sun50i-a100-ccu.h
+> new file mode 100644
+> index 000000000000..8186b1a7bcfe
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/sun50i-a100-ccu.h
+> @@ -0,0 +1,141 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
+> +/*
+> + * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_SUN50I_A100_H_
+> +#define _DT_BINDINGS_CLK_SUN50I_A100_H_
+> +
+> +#define CLK_OSC12M		0
+> +#define CLK_PLL_CPUX		1
+> +#define CLK_PLL_DDR0		2
+> +#define CLK_PLL_PERIPH0		3
+> +#define CLK_PLL_PERIPH0_2X	4
+> +#define CLK_PLL_PERIPH1		5
+> +#define CLK_PLL_PERIPH1_2X	6
+> +#define CLK_PLL_GPU		7
+> +#define CLK_PLL_VIDEO0		8
+> +#define CLK_PLL_VIDEO0_2X	9
+> +#define CLK_PLL_VIDEO0_4X	10
+> +#define CLK_PLL_VIDEO1		11
+> +#define CLK_PLL_VIDEO1_2X	12
+> +#define CLK_PLL_VIDEO1_4X	13
+> +#define CLK_PLL_VIDEO2		14
+> +#define CLK_PLL_VIDEO2_2X	15
+> +#define CLK_PLL_VIDEO2_4X	16
+> +#define CLK_PLL_VIDEO3		17
+> +#define CLK_PLL_VIDEO3_2X	18
+> +#define CLK_PLL_VIDEO3_4X	19
+> +#define CLK_PLL_VE		20
+> +#define CLK_PLL_COM		21
+> +#define CLK_PLL_COM_AUDIO	22
+> +#define CLK_PLL_AUDIO		23
+> +#define CLK_CPUX		24
+> +#define CLK_AXI			25
+> +#define CLK_CPUX_APB		26
+> +#define CLK_PSI_AHB1_AHB2	27
+> +#define CLK_AHB3		28
+> +#define CLK_APB1		29
+> +#define CLK_APB2		30
+> +#define CLK_MBUS		31
+> +#define CLK_DE			32
+> +#define CLK_BUS_DE		33
+> +#define CLK_G2D			34
+> +#define CLK_BUS_G2D		35
+> +#define CLK_GPU			36
+> +#define CLK_BUS_GPU		37
+> +#define CLK_CE			38
+> +#define CLK_BUS_CE		39
+> +#define CLK_VE			40
+> +#define CLK_BUS_VE		41
+> +#define CLK_BUS_DMA		42
+> +#define CLK_BUS_MSGBOX		43
+> +#define CLK_BUS_SPINLOCK	44
+> +#define CLK_BUS_HSTIMER		45
+> +#define CLK_AVS			46
+> +#define CLK_BUS_DBG		47
+> +#define CLK_BUS_PSI		48
+> +#define CLK_BUS_PWM		49
+> +#define CLK_BUS_IOMMU		50
+> +#define CLK_MBUS_DMA		51
+> +#define CLK_MBUS_VE		52
+> +#define CLK_MBUS_CE		53
+> +#define CLK_MBUS_NAND		54
+> +#define CLK_MBUS_CSI		55
+> +#define CLK_MBUS_ISP		56
+> +#define CLK_MBUS_G2D		57
+> +#define CLK_BUS_DRAM		58
+> +#define CLK_NAND0		59
+> +#define CLK_NAND1		60
+> +#define CLK_BUS_NAND		61
+> +#define CLK_MMC0		62
+> +#define CLK_MMC1		63
+> +#define CLK_MMC2		64
+> +#define CLK_MMC3		65
+> +#define CLK_BUS_MMC0		66
+> +#define CLK_BUS_MMC1		67
+> +#define CLK_BUS_MMC2		68
+> +#define CLK_BUS_UART0		69
+> +#define CLK_BUS_UART1		70
+> +#define CLK_BUS_UART2		71
+> +#define CLK_BUS_UART3		72
+> +#define CLK_BUS_UART4		73
+> +#define CLK_BUS_I2C0		74
+> +#define CLK_BUS_I2C1		75
+> +#define CLK_BUS_I2C2		76
+> +#define CLK_BUS_I2C3		77
+> +#define CLK_SPI0		78
+> +#define CLK_SPI1		79
+> +#define CLK_SPI2		80
+> +#define CLK_BUS_SPI0		81
+> +#define CLK_BUS_SPI1		82
+> +#define CLK_BUS_SPI2		83
+> +#define CLK_EMAC_25M		84
+> +#define CLK_BUS_EMAC		85
+> +#define CLK_IR_RX		86
+> +#define CLK_BUS_IR_RX		87
+> +#define CLK_IR_TX		88
+> +#define CLK_BUS_IR_TX		89
+> +#define CLK_BUS_GPADC		90
+> +#define CLK_BUS_THS		91
+> +#define CLK_I2S0		92
+> +#define CLK_I2S1		93
+> +#define CLK_I2S2		94
+> +#define CLK_I2S3		95
+> +#define CLK_BUS_I2S0		96
+> +#define CLK_BUS_I2S1		97
+> +#define CLK_BUS_I2S2		98
+> +#define CLK_BUS_I2S3		99
+> +#define CLK_SPDIF		100
+> +#define CLK_BUS_SPDIF		101
+> +#define CLK_DMIC		102
+> +#define CLK_BUS_DMIC		103
+> +#define CLK_AUDIO_DAC		104
+> +#define CLK_AUDIO_ADC		105
+> +#define CLK_AUDIO_4X		106
+> +#define CLK_BUS_AUDIO_CODEC	107
+> +#define CLK_USB_OHCI0		108
+> +#define CLK_USB_PHY0		109
+> +#define CLK_USB_OHCI1		110
+> +#define CLK_USB_PHY1		111
+> +#define CLK_BUS_OHCI0		112
+> +#define CLK_BUS_OHCI1		113
+> +#define CLK_BUS_EHCI0		114
+> +#define CLK_BUS_EHCI1		115
+> +#define CLK_BUS_OTG		116
+> +#define CLK_BUS_LRADC		117
+> +#define CLK_BUS_DPSS_TOP0	118
+> +#define CLK_BUS_DPSS_TOP1	119
+> +#define CLK_MIPI_DSI		120
+> +#define CLK_BUS_MIPI_DSI	121
+> +#define CLK_TCON_LCD		122
+> +#define CLK_BUS_TCON_LCD	123
+> +#define CLK_LEDC		124
+> +#define CLK_BUS_LEDC		125
+> +#define CLK_CSI_TOP		126
+> +#define CLK_CSI0_MCLK		127
+> +#define CLK_CSI1_MCLK		128
+> +#define CLK_BUS_CSI		129
+> +#define CLK_CSI_ISP		130
+> +
+> +#endif /* _DT_BINDINGS_CLK_SUN50I_A100_H_ */
+
+So we don't really want to expose all the clocks in the binding here, but o=
+nly
+the one that are going to be used by the devices (and not the "internal" on=
+es),
+so that will be usually the bus gates and the module gates.
+
+If we need a PLL at some point, we can always export it, but that should be=
+ the
+exception, not the default.
+
+> diff --git a/include/dt-bindings/clock/sun50i-a100-r-ccu.h b/include/dt-b=
+indings/clock/sun50i-a100-r-ccu.h
+> new file mode 100644
+> index 000000000000..a4486c31924a
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/sun50i-a100-r-ccu.h
+> @@ -0,0 +1,25 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_SUN50I_A100_R_CCU_H_
+> +#define _DT_BINDINGS_CLK_SUN50I_A100_R_CCU_H_
+> +
+> +#define CLK_CPUS		0
+> +#define CLK_R_AHB		1
+> +#define CLK_R_APB1		2
+> +#define CLK_R_APB2		3
+> +#define CLK_R_APB1_TIMER	4
+> +#define CLK_R_APB1_TWD		5
+> +#define CLK_R_APB1_PWM		6
+> +#define CLK_R_APB1_BUS_PWM	7
+> +#define CLK_R_APB1_PPU		8
+> +#define CLK_R_APB2_UART		9
+> +#define CLK_R_APB2_I2C0		10
+> +#define CLK_R_APB2_I2C1		11
+> +#define CLK_R_APB1_IR		12
+> +#define CLK_R_APB1_BUS_IR	13
+> +#define CLK_R_AHB_BUS_RTC	14
+> +
+> +#endif /* _DT_BINDINGS_CLK_SUN50I_A100_R_CCU_H_ */
+
+Same story here
+
+Maxime
+
+--3gi2rcwjojrhvt23
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXsfsOwAKCRDj7w1vZxhR
+xV2QAQDpVzmo6iWcbyhnyZ+wBS0BjFgSIlEkzsJAQ7by9sZe4gEAxfGegMJadPBy
+P+1fNIn7+0w3/K5LAmDVDDoXV8IJvw0=
+=uvni
+-----END PGP SIGNATURE-----
+
+--3gi2rcwjojrhvt23--
