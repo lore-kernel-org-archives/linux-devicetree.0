@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6C0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD83BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94EFA2072C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC66420757
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLPAj5Cq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiKDItij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgEVKYs (ORCPT
+        id S1728588AbgEVKZQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 06:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43872 "EHLO
+        Fri, 22 May 2020 06:25:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgEVKYr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 06:24:47 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB7EC061A0E;
-        Fri, 22 May 2020 03:24:47 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c21so6230479lfb.3;
-        Fri, 22 May 2020 03:24:47 -0700 (PDT)
+        with ESMTP id S1728822AbgEVKZN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 06:25:13 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F497C061A0E;
+        Fri, 22 May 2020 03:25:13 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m18so11985800ljo.5;
+        Fri, 22 May 2020 03:25:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fKfCBTr3t9MLCQ0J7OL7a+qWvpib5l9QLHxm5yO1R5w=;
-        b=DLPAj5CqPOJrt06enKB1ajI2NDFv9SufvT/yTgLAfjpMrZr6oFlggLT8lcqC29rl9t
-         GZUftu34UAAOMb7Rg8sQqIRMQW86faW04AVGbmaN+KNh+aHKolxikQ3th4gwg6fAX5cp
-         4JSk2b201knvWxlgX9KV57jVas0yhJVfYR/1H1HrbrSScxOCbvx+WBZ2XWJAzrSiQxHC
-         qG6ALBdMJSMtjAP59+7gOVZSwtKNFqbI3aEXEOT9urqfWaAOcOuTs9NUVhgUp0awvr2n
-         LtS3rbyGNcMspVITcsFZLgoRx41zfo6QMAZSgygb3FZ8xDvdfCbbTEx0LrZJmn8DUYjU
-         t0yQ==
+        bh=QFKhlqVsnkCrxGWdbHIjo8dNnb/R1dHUqeBwV1cH3to=;
+        b=TiKDItijeKH7AVGFffJI0WsNtOyRdNrgnSponqh9Hcj2fCrZRYs3B3Bdd2HlOg05Tx
+         5qBXUFdajt8aoufhAXUacFaUH8FaSbAn26Hepd2hgOspoIzlvqskSQ5nCankhINkProQ
+         2IGTwUr2VJjMHOLKq5GNkCJtC6bP9Tn+lHwi/ASvaboNZux3vduuFMqPInP3WsjtGrSs
+         kHe+idR/q5hkP6P0eh5Fuk1GSDmF4RrrF57r9OoBGsKjO28YnX+WR8qcLCDzTjLEFfm8
+         rxcgnte9/6zmd6WFQqpEOJBfqtC7qreSOtEvPez59qKolI25kHr0oET1mD+x4vS8f2Ht
+         NxRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fKfCBTr3t9MLCQ0J7OL7a+qWvpib5l9QLHxm5yO1R5w=;
-        b=KzQERF02HdGBhNyUZ82jEGyZq6xP2k3sb3ikz5yo7W2Nnf3uVCeyXT6QfOzXCib1z5
-         2kmE7qoyZ+kdt7yS6fpQW+JTD83cIZg9DibIdmD83fpeY4pbXTHJgoZw2ht8/7yyvl9K
-         JyXzyiE7Imx/CHEFS7EKp2tvvpKuJcbyMeKLMu+B7rprDRoZlr0n3c+LZ1LA/cIyy6ol
-         0u8uA+qum/ImGNllLU1GV44VKdsEBulMZTNif3GwCpDdpVA1mJ1Xqz96PP2cuK0kd+qM
-         eXfpUUtOaDmkgV9KecVdu3SCmV8Qse1attoVzWC0ulqN1Hc5GTbNpmqtnKgmUv0K8euK
-         tbwg==
-X-Gm-Message-State: AOAM5301dkjS7yJSR7z183Y8XWMuGxHS+s9JNUTTu8g2hEBzzxD41i+X
-        NoXVutfJt3Tg/e+PZWAORQr7PFVCq/X2Jt8nfB36K6mn
-X-Google-Smtp-Source: ABdhPJzAE9qHyplI74KdB5AD6oGUghscmd0IOe8zTZzcr+h2CPvEAwzkjjnL5jblpWGxXa2/Me9+fgzuIQyHXzThdww=
-X-Received: by 2002:a19:6141:: with SMTP id m1mr7281542lfk.7.1590143085555;
- Fri, 22 May 2020 03:24:45 -0700 (PDT)
+        bh=QFKhlqVsnkCrxGWdbHIjo8dNnb/R1dHUqeBwV1cH3to=;
+        b=jmcsm0/mnUfRG1wXviBJ/DC2zMgFxBXKEODBLo2TRHbblwhoAqOW735pQLV4JMaiMJ
+         QCzR8aQOnkqxY+XQ8MycU/+aMT5tnl1GAj1i8aGfqGPBXPh1UEPjlWOYLDPc69NUIV6D
+         W5bzaaadU3mfT5T53/DFQeXhdt/AJyGrnolIwfkMzptfdlC+OcE7/47YJa3c+7MT0+aj
+         Ey8aRRsLXlAe1B1hM+pP0BjFzvcZOvYOEe23X5D8bx057lkwe077N5uL3JofCoFHzeSc
+         FWdccYQ4zEWWIKXo1xjkvGMsbv0Hy2fxzheL7cBViTZxun2cr3Uk9g9G9gDUvVICrxkL
+         A6IQ==
+X-Gm-Message-State: AOAM530mpTb2lg8m5sJfrS7fCcUyPhxgAWBQUaqdvtRBPbYUvy0Kkay1
+        Gu/RnKKD5g92HjZFB3b7Gx1LHNEFyHfnskHkFaJbA3Ftz1k=
+X-Google-Smtp-Source: ABdhPJzgtITNAmGF4FXDUvVXgptvmZlGGf0/KQTzAC02eg1W4hBckNpsHF3Pn/RNqPoMOseHlfs4TSbPN2lmM9PcjH4=
+X-Received: by 2002:a2e:b4f3:: with SMTP id s19mr795267ljm.218.1590143111779;
+ Fri, 22 May 2020 03:25:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <1590144291-18526-1-git-send-email-yibin.gong@nxp.com>
-In-Reply-To: <1590144291-18526-1-git-send-email-yibin.gong@nxp.com>
+References: <1590144291-18526-1-git-send-email-yibin.gong@nxp.com> <1590144291-18526-2-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1590144291-18526-2-git-send-email-yibin.gong@nxp.com>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 22 May 2020 07:24:33 -0300
-Message-ID: <CAOMZO5AgAYgxb9djwGXdpMme4aREYiGPXVa=x0Hb5vo-KJGrug@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage range
+Date:   Fri, 22 May 2020 07:24:59 -0300
+Message-ID: <CAOMZO5Aiw+3N_o5+1g4nWWgsDQ5Yhdenumn04OhG6BwBy99EZg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
+ voltage range
 To:     Robin Gong <yibin.gong@nxp.com>
 Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -87,13 +88,13 @@ On Thu, May 21, 2020 at 11:44 PM Robin Gong <yibin.gong@nxp.com> wrote:
 > (1.6V~1.9V) because the ldo1 should be 1.8V. Actually, two voltage groups
 > have been supported at bd718x7-regulator driver, hence, just corrrect the
 > voltage range to 1.6V~3.3V. For ldo2@0.8V, correct voltage range too.
-> Otherwise, ldo1 would be kept @3.0V and ldo2@0.9V which violate i.mx8mm
+> Otherwise, ldo1 would be kept @3.0V and ldo2@0.9V which violate i.mx8mn
 > datasheet as the below warning log in kernel:
 >
 > [    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
 > [    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
 >
-> Fixes: 78cc25fa265d ("arm64: dts: imx8mm-evk: Add BD71847 PMIC")
+> Fixes: 3e44dd09736d ("arm64: dts: imx8mn-ddr4-evk: Add rohm,bd71847 PMIC support")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 > Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
