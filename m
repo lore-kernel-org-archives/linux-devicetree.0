@@ -2,123 +2,111 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838F5C433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F05CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5295320878
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159425;
-	bh=IXhxczKtqIZE62kYPXGoHl9XrWCOFM6MO3cDOy4QMAg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lMTyLcFqbo/y6UhFkYHwYyHHaE8zY1JoIMHVCD6863+v5yO5UifASdSL+UKJF/hM0
-	 3rnFV8BUdG1RclAR+T5kBjadZ6SiDd2MyotWQQX6hlW3s6tA+N7GfV9MxDgMnqaSOh
-	 da2MuMyaMZLYEG6sEn0yuPjuc8VKB0xvhpI0sJTQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7B914206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:57:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJh8B/6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbgEVO44 (ORCPT
+        id S1731039AbgEVO5t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730834AbgEVOuw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:52 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB1FE22249;
-        Fri, 22 May 2020 14:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159051;
-        bh=IXhxczKtqIZE62kYPXGoHl9XrWCOFM6MO3cDOy4QMAg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ObDlactGKm++VFbIlJd6liPazIY60fxU186jO4ySX11cwqEhDvSGiIgjrFZrNqpMv
-         3a7wN/pV8pz4bT8HFd0JEBiuxprMLathEcA3WvO7YmtgJtxBjSvKAyBvwk+Lu/dWek
-         BgfjkPXMzGl4XuTllPvKIjCF+IBA9bYnmndtUgoo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/32] ARM: dts: rockchip: swap clock-names of gpu nodes
-Date:   Fri, 22 May 2020 10:50:17 -0400
-Message-Id: <20200522145044.434677-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
-References: <20200522145044.434677-1-sashal@kernel.org>
+        Fri, 22 May 2020 10:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731342AbgEVO5r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 10:57:47 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAE2C061A0E;
+        Fri, 22 May 2020 07:57:47 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id j8so11576754iog.13;
+        Fri, 22 May 2020 07:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4E93R1F4OMg9K2XLuc0UwI5BfmV/kB8DZ8DcAqlj91Q=;
+        b=RJh8B/6rHjjbkuji4u+fJ26zGQ2weYdBP8O87V6gBC0R3uO3Cxuxwia4xEC5fiQpVd
+         BVao3bcj3EENB6cqKTKGBQu174xQRasXIfU4q+TkCRor9QpUGn/bNvOhtPgxnpksjF4z
+         3fsMvYjJfJTHISaJ3cUFiRzeDfD7i3e9PZi6fj0SkJEmzk7TEWtsxWUY/iwJxQpOJ2R4
+         T9SYcuC5mIwu3BPDv9d/KbkENTdJY9raVR0/065zsK9r46jPvzUkAxudp8zmyxpkPzW8
+         Mh3IcqqBDWoU5MuQNyfGmuqSaUQzuiK4qAbocc1kDDt5QghsG+0LEtcX/A9knBg3T5Ef
+         pvLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4E93R1F4OMg9K2XLuc0UwI5BfmV/kB8DZ8DcAqlj91Q=;
+        b=A8HAwTy87BkFgPBjC5bZ9vWtb7A3CPFHn+mypgqLRaGzLTcx6LaszXDLvCh6yvCPH3
+         jM0X6Pmjspr3xcYqx5Qc9pSxKvOa+dGUcCBYjfrACWASbhtJpM8qV5dDph3tN3LxvBDc
+         AvvzBnnTteSNlm4wekzi3T/9hnfHfmu4HMiW+J4+GzJPC7gjcRi6GRJHNl2Y/cnghQ80
+         PfJJdgnbmq+2OKnpomNjtoe8YQ7q6NjzChJtqOt4NWlzqtZLjnmj7Mpz6VZL817Ck+7x
+         5Yquj91e6nEwtkPCXUgXSxPT71obhiQ8eKgFRYqN84MWFnZJPSAzqgogMxp4LpVOrORb
+         uflQ==
+X-Gm-Message-State: AOAM530iIcwXx0ow2TCegm1QtUIfThknF51Av7FqPMYg08j47eKUk3lM
+        O44wTQCrrxMR56+s3QkiFOmGVGrtM5veU/fwpu4=
+X-Google-Smtp-Source: ABdhPJzIBFSsXPwSSCGw73KtvrqDIXMGD/+GjvxVG0mSEkFCp7BWwg4nqAvzm+UoIsx0S8/uDt84GiJO2N2vFmJg7HM=
+X-Received: by 2002:a05:6602:2ac9:: with SMTP id m9mr3461002iov.68.1590159466755;
+ Fri, 22 May 2020 07:57:46 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
+ <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com> <20200522113634.GE5801@sirena.org.uk>
+In-Reply-To: <20200522113634.GE5801@sirena.org.uk>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Fri, 22 May 2020 22:57:10 +0800
+Message-ID: <CAL9mu0LAnT+AfjpGs0O-MD2HYrpnQRmrj6qXtJQrJi9kbQLPUw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
+ support for stm32f4
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+hi Mark,
 
-[ Upstream commit b14f3898d2c25a9b47a61fb879d0b1f3af92c59b ]
+Thanks for reviewing.
 
-Dts files with Rockchip 'gpu' nodes were manually verified.
-In order to automate this process arm,mali-utgard.txt
-has been converted to yaml. In the new setup dtbs_check with
-arm,mali-utgard.yaml expects clock-names values
-in the same order, so fix that.
+On Fri, May 22, 2020 at 7:36 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Mon, May 18, 2020 at 07:09:20PM +0800, dillon.minfei@gmail.com wrote:
+>
+> > 2, use stm32 spi's "In full-duplex (BIDIMODE=0 and RXONLY=0)", as tx_buf is
+> > null, we must add dummy data sent out before read data.
+> > so, add stm32f4_spi_tx_dummy() to handle this situation.
+>
+> There are flags SPI_CONTROLLER_MUST_TX and SPI_CONTROLLER_MUST_RX flags
+> that the driver can set if it needs to, no need to open code this in the
+> driver.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200425192500.1808-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/rk3036.dtsi | 2 +-
- arch/arm/boot/dts/rk322x.dtsi | 2 +-
- arch/arm/boot/dts/rk3xxx.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Yes, after check SPI_CONTROLLER_MUST_TX in drivers/spi/spi.c , it's
+indeed to meet
+this situation,  i will try it and sumbmit a new patch.
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index c776321b2cc4..d282a7b638d8 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -128,7 +128,7 @@
- 		assigned-clocks = <&cru SCLK_GPU>;
- 		assigned-clock-rates = <100000000>;
- 		clocks = <&cru SCLK_GPU>, <&cru SCLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		resets = <&cru SRST_GPU>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 340ed6ccb08f..c60784f3aa75 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -561,7 +561,7 @@
- 				  "pp1",
- 				  "ppmmu1";
- 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		resets = <&cru SRST_GPU_A>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 97307a405e60..bce0b05ef7bf 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -84,7 +84,7 @@
- 		compatible = "arm,mali-400";
- 		reg = <0x10090000 0x10000>;
- 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		assigned-clocks = <&cru ACLK_GPU>;
- 		assigned-clock-rates = <100000000>;
- 		resets = <&cru SRST_GPU>;
--- 
-2.25.1
+thanks.
 
+best regards
+
+Dillon
