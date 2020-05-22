@@ -2,283 +2,1011 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A59CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 08:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15010C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 08:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5085D2087D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 08:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDFD2070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 08:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1x4s/d/"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Cel8UNuc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lkvQHzdg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388888AbgEYIiQ (ORCPT
+        id S2389029AbgEYIi7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 04:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387973AbgEYIiP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 04:38:15 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD965C061A0E;
-        Mon, 25 May 2020 01:38:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y17so7915868wrn.11;
-        Mon, 25 May 2020 01:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UZc2CH7pYyilAZluOYrqPrd3fThr3CQF2GU6qOuf958=;
-        b=j1x4s/d/vYUHXNDISjfenVtcRXyslFeM/mHGEeqNdM6uFniX82gFWwzpGlLV+trQ+D
-         l9rtwW5h2Ocytd3xMPpKZikPdbU0qu+6rb4G8mxtx9r4uz3S4S6l2VNnw6e43ESSucxl
-         seBdHzwqUdihswjhFFdag3R07LkpjoiRcYe30XUrL4ez/BkPXINC/om7pTikw/Ar+tEs
-         VBU84Gn6ptax/TiJNbuT+kBIrjUHM3fOZg3q6QKIj1hW0taszwIv+j8L22tiTU9rpofv
-         a3GOQ8d1x8DOd2JIn2+moc5ePLWsHCyab7XTji4ZZSnnOesoZ58mgRVrfLmMWqJuKcBH
-         chLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UZc2CH7pYyilAZluOYrqPrd3fThr3CQF2GU6qOuf958=;
-        b=TnTb8Ec81fvIvrm4oM9O/qiqip91T4pI9KsOX7zGPTUrk6iA8UM5RHFexPRnRi9nXA
-         6Z4iol7Ze9P9JDakpjMm9ie26nAPVHKgccy8qts6Qykcpc7eYpnbha7BOPKbChdYA4Yg
-         2afUXv0FT/5aTpz0oVvPFFCrPAmktVR03PeaHQh7c4HpTr8MALqcG9ocYAEkeKjEQstU
-         RfIK+YaajfCaJGSN9di7ieZHvrE2yAGaPkikcBbAq+rRoCLHGyeP6CYUXt6JQtapjB3y
-         +DRfAqmteNRpIqw0GiVnPNlkiF7a25XOgIrUbVHuIvfV/BusIeOP/p/XVn1Cchm8+BXm
-         uCOA==
-X-Gm-Message-State: AOAM5316ueA40Z2urwwX1KUTL9AOPMEiVffeheu6S3K7CDYH7+IEb/q3
-        DVc/3erLHJUn/YZHnpeC/iOdyotP
-X-Google-Smtp-Source: ABdhPJyOwGjWDbZt0YJ3qKFaSDOEfMwhQWk2pD5R3+EVszk8SMSf8yYMdX6wwjpCZZNEgNLd9AGxaA==
-X-Received: by 2002:a5d:4b88:: with SMTP id b8mr14340946wrt.341.1590395893420;
-        Mon, 25 May 2020 01:38:13 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id f2sm8898785wrg.17.2020.05.25.01.38.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 01:38:12 -0700 (PDT)
-Subject: Re: [PATCH v5 10/13] soc: mediatek: cmdq: export finalize function
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        HS Liao <hs.liao@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <1583664775-19382-1-git-send-email-dennis-yc.hsieh@mediatek.com>
- <1583664775-19382-11-git-send-email-dennis-yc.hsieh@mediatek.com>
- <5d6b61b2-23c9-647f-fa22-73e779010bd8@gmail.com>
- <CAAOTY___HNcRPr8Jq-wNPO_G9pLVjf2D7ezbpPcGbXVNYy1_nA@mail.gmail.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
- fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
- OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
- gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
- 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
- EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
- fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
- ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
- HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
- 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABtClNYXR0aGlhcyBC
- cnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPokCUgQTAQIAPAIbAwYLCQgHAwIGFQgC
- CQoLBBYCAwECHgECF4AWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCWt3scQIZAQAKCRDZFAuy
- VhMC8WzRD/4onkC+gCxG+dvui5SXCJ7bGLCu0xVtiGC673Kz5Aq3heITsERHBV0BqqctOEBy
- ZozQQe2Hindu9lasOmwfH8+vfTK+2teCgWesoE3g3XKbrOCB4RSrQmXGC3JYx6rcvMlLV/Ch
- YMRR3qv04BOchnjkGtvm9aZWH52/6XfChyh7XYndTe5F2bqeTjt+kF/ql+xMc4E6pniqIfkv
- c0wsH4CkBHqoZl9w5e/b9MspTqsU9NszTEOFhy7p2CYw6JEa/vmzR6YDzGs8AihieIXDOfpT
- DUr0YUlDrwDSrlm/2MjNIPTmSGHH94ScOqu/XmGW/0q1iar/Yr0leomUOeeEzCqQtunqShtE
- 4Mn2uEixFL+9jiVtMjujr6mphznwpEqObPCZ3IcWqOFEz77rSL+oqFiEA03A2WBDlMm++Sve
- 9jpkJBLosJRhAYmQ6ey6MFO6Krylw1LXcq5z1XQQavtFRgZoruHZ3XlhT5wcfLJtAqrtfCe0
- aQ0kJW+4zj9/So0uxJDAtGuOpDYnmK26dgFN0tAhVuNInEVhtErtLJHeJzFKJzNyQ4GlCaLw
- jKcwWcqDJcrx9R7LsCu4l2XpKiyxY6fO4O8DnSleVll9NPfAZFZvf8AIy3EQ8BokUsiuUYHz
- wUo6pclk55PZRaAsHDX/fNr24uC6Eh5oNQ+v4Pax/gtyybkCDQRd1TkHARAAt1BBpmaH+0o+
- deSyJotkrpzZZkbSs5ygBniCUGQqXpWqgrc7Uo/qtxOFL91uOsdX1/vsnJO9FyUv3ZNI2Thw
- NVGCTvCP9E6u4gSSuxEfVyVThCSPvRJHCG2rC+EMAOUMpxokcX9M2b7bBEbcSjeP/E4KTa39
- q+JJSeWliaghUfMXXdimT/uxpP5Aa2/D/vcUUGHLelf9TyihHyBohdyNzeEF3v9rq7kdqamZ
- Ihb+WYrDio/SzqTd1g+wnPJbnu45zkoQrYtBu58n7u8oo+pUummOuTR2b6dcsiB9zJaiVRIg
- OqL8p3K2fnE8Ewwn6IKHnLTyx5T/r2Z0ikyOeijDumZ0VOPPLTnwmb780Nym3LW1OUMieKtn
- I3v5GzZyS83NontvsiRd4oPGQDRBT39jAyBr8vDRl/3RpLKuwWBFTs1bYMLu0sYarwowOz8+
- Mn+CRFUvRrXxociw5n0P1PgJ7vQey4muCZ4VynH1SeVb3KZ59zcQHksKtpzz2OKhtX8FCeVO
- mHW9u4x8s/oUVMZCXEq9QrmVhdIvJnBCqq+1bh5UC2Rfjm/vLHwt5hes0HDstbCzLyiA0LTI
- ADdP77RN2OJbzBkCuWE21YCTLtc8kTQlP+G8m23K5w8k2jleCSKumprCr/5qPyNlkie1HC4E
- GEAfdfN+uLsFw6qPzSAsmukAEQEAAYkEbAQYAQgAIBYhBOa5khjA8sMlHCw6F9kUC7JWEwLx
- BQJd1TkHAhsCAkAJENkUC7JWEwLxwXQgBBkBCAAdFiEEUdvKHhzqrUYPB/u8L21+TfbCqH4F
- Al3VOQcACgkQL21+TfbCqH79RRAAtlb6oAL9y8JM5R1T3v02THFip8OMh7YvEJCnezle9Apq
- C6Vx26RSQjBV1JwSBv6BpgDBNXarTGCPXcre6KGfX8u1r6hnXAHZNHP7bFGJQiBv5RqGFf45
- OhOhbjXCyHc0jrnNjY4M2jTkUC+KIuOzasvggU975nolC8MiaBqfgMB2ab5W+xEiTcNCOg3+
- 1SRs5/ZkQ0iyyba2FihSeSw3jTUjPsJBF15xndexoc9jpi0RKuvPiJ191Xa3pzNntIxpsxqc
- ZkS1HSqPI63/urNezeSejBzW0Xz2Bi/b/5R9Hpxp1AEC3OzabOBATY/1Bmh2eAVK3xpN2Fe1
- Zj7HrTgmzBmSefMcSXN0oKQWEI5tHtBbw5XUj0Nw4hMhUtiMfE2HAqcaozsL34sEzi3eethZ
- IvKnIOTmllsDFMbOBa8oUSoaNg7GzkWSKJ59a9qPJkoj/hJqqeyEXF+WTCUv6FcA8BtBJmVf
- FppFzLFM/QzF5fgDZmfjc9czjRJHAGHRMMnQlW88iWamjYVye57srNq9pUql6A4lITF7w00B
- 5PXINFk0lMcNUdkWipu24H6rJhOO6xSP4n6OrCCcGsXsAR5oH3d4TzA9iPYrmfXAXD+hTp82
- s+7cEbTsCJ9MMq09/GTCeroTQiqkp50UaR0AvhuPdfjJwVYZfmMS1+5IXA/KY6DbGBAAs5ti
- AK0ieoZlCv/YxOSMCz10EQWMymD2gghjxojf4iwB2MbGp8UN4+++oKLHz+2j+IL08rd2ioFN
- YCJBFDVoDRpF/UnrQ8LsH55UZBHuu5XyMkdJzMaHRVQc1rzfluqx+0a/CQ6Cb2q7J2d45nYx
- 8jMSCsGj1/iU/bKjMBtuh91hsbdWCxMRW0JnGXxcEUklbhA5uGj3W4VYCfTQxwK6JiVt7JYp
- bX7JdRKIyq3iMDcsTXi7dhhwqsttQRwbBci0UdFGAG4jT5p6u65MMDVTXEgYfZy0674P06qf
- uSyff73ivwvLR025akzJui8MLU23rWRywXOyTINz8nsPFT4ZSGT1hr5VnIBs/esk/2yFmVoc
- FAxs1aBO29iHmjJ8D84EJvOcKfh9RKeW8yeBNKXHrcOV4MbMOts9+vpJgBFDnJeLFQPtTHuI
- kQXT4+yLDvwOVAW9MPLfcHlczq/A/nhGVaG+RKWDfJWNSu/mbhqUQt4J+RFpfx1gmL3yV8NN
- 7JXABPi5M97PeKdx6qc/c1o3oEHH8iBkWZIYMS9fd6rtAqV3+KH5Ors7tQVtwUIDYEvttmeO
- ifvpW6U/4au4zBYfvvXagbyXJhG9mZvz+jN1cr0/G2ZC93IbjFFwUmHtXS4ttQ4pbrX6fjTe
- lq5vmROjiWirpZGm+WA3Vx9QRjqfMdS5Ag0EXdU5SAEQAJu/Jk58uOB8HSGDSuGUB+lOacXC
- bVOOSywZkq+Ayv+3q/XIabyeaYMwhriNuXHjUxIORQoWHIHzTCqsAgHpJFfSHoM4ulCuOPFt
- XjqfEHkA0urB6S0jnvJ6ev875lL4Yi6JJO7WQYRs/l7OakJiT13GoOwDIn7hHH/PGUqQoZlA
- d1n5SVdg6cRd7EqJ+RMNoud7ply6nUSCRMNWbNqbgyWjKsD98CMjHa33SB9WQQSQyFlf+dz+
- dpirWENCoY3vvwKJaSpfeqKYuqPVSxnqpKXqqyjNnG9W46OWZp+JV5ejbyUR/2U+vMwbTilL
- cIUpTgdmxPCA6J0GQjmKNsNKKYgIMn6W4o/LoiO7IgROm1sdn0KbJouCa2QZoQ0+p/7mJXhl
- tA0XGZhNlI3npD1lLpjdd42lWboU4VeuUp4VNOXIWU/L1NZwEwMIqzFXl4HmRi8MYbHHbpN5
- zW+VUrFfeRDPyjrYpax+vWS+l658PPH+sWmhj3VclIoAU1nP33FrsNfp5BiQzao30rwe4ntd
- eEdPENvGmLfCwiUV2DNVrmJaE3CIUUl1KIRoB5oe7rJeOvf0WuQhWjIU98glXIrh3WYd7vsf
- jtbEXDoWhVtwZMShMvp7ccPCe2c4YBToIthxpDhoDPUdNwOssHNLD8G4JIBexwi4q7IT9lP6
- sVstwvA5ABEBAAGJAjYEGAEIACAWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCXdU5SAIbDAAK
- CRDZFAuyVhMC8bXXD/4xyfbyPGnRYtR0KFlCgkG2XWeWSR2shSiM1PZGRPxR888zA2WBYHAk
- 7NpJlFchpaErV6WdFrXQjDAd9YwaEHucfS7SAhxIqdIqzV5vNFrMjwhB1N8MfdUJDpgyX7Zu
- k/Phd5aoZXNwsCRqaD2OwFZXr81zSXwE2UdPmIfTYTjeVsOAI7GZ7akCsRPK64ni0XfoXue2
- XUSrUUTRimTkuMHrTYaHY3544a+GduQQLLA+avseLmjvKHxsU4zna0p0Yb4czwoJj+wSkVGQ
- NMDbxcY26CMPK204jhRm9RG687qq6691hbiuAtWABeAsl1AS+mdS7aP/4uOM4kFCvXYgIHxP
- /BoVz9CZTMEVAZVzbRKyYCLUf1wLhcHzugTiONz9fWMBLLskKvq7m1tlr61mNgY9nVwwClMU
- uE7i1H9r/2/UXLd+pY82zcXhFrfmKuCDmOkB5xPsOMVQJH8I0/lbqfLAqfsxSb/X1VKaP243
- jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
- +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
- y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <e487573a-2252-cd52-3a3d-c271f67fcb9a@gmail.com>
-Date:   Mon, 25 May 2020 10:38:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 04:38:59 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:47733 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388948AbgEYIi5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 04:38:57 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0EE2D580666;
+        Mon, 25 May 2020 04:38:54 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Mon, 25 May 2020 04:38:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=6N7ayvhBs+P3JaF+fC6gmSHino7
+        7cQGI0fLsgqYSz9Q=; b=Cel8UNuctHxZOJ6nj/LBkUgdxijPr44JYVMEiZdzFys
+        Dynn6ofI+Cr3l3l3Ya5PcaCTeLBGz6iGD5d1gWu5fC9eyUV+HGOWqCmd/ve9KZdE
+        BKXD6YhpmEUG45nDSLEcRexh2jJ7WlkQ4gx2/5n/6/6JaWq3XBNU01B+vPqqk/yB
+        9tap0aFQAkGeIfrrsGbCuWHrYLcsVK3PwqETo/IXLiOEOMJkErSMDVLgYUqUXyxI
+        OaC+0zQEpj+y0x+bRERUnMfTcAqhVhEfYKeQSt0TYWBScjUkIRiwlLKZ1ytowZf/
+        g4jMQRieksrGzf0U8vddIkgylKDMsEICzhV017rqgwA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=6N7ayv
+        hBs+P3JaF+fC6gmSHino77cQGI0fLsgqYSz9Q=; b=lkvQHzdg2V6CqFetC9fTTm
+        qhWbnTb6bGYL4MlrMKxMNw9QU02b2GrSeITYrDZUg1ZQ114itLI7jXMiiqG7yeHO
+        J/2TwGLBmlREwBHEuGFKROnMpSy8jm2S3+1DmipYntj6RDaaGrpfKoCN0ISvXF4A
+        DiZfcpon5HAE5zmShXcU6ewLI6t83T/W0+8q0uW7FusX/laUGp6g0y7rWgXsQazI
+        duni9fGyzmt5EWgHvBsldJDQ0jXK9B/J1lfXYt7NXHz5IkkpY2X4rL7nRdYhW3l/
+        cHEWtcBink3Rx9EVXExOMkL+uVGIYGPhsdjlcJDEUnck5IM7HEHgFf+YTLnrFLlQ
+        ==
+X-ME-Sender: <xms:HITLXsrYm2J9E-znrosU6dQHTz6Walo_IdRj3Zr5Z-5zezraiLLCUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvtddgtdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:HITLXirmTk9jacinO04qkde2u0vEWQdZi58OfZB2OjTpay9DFz2SlQ>
+    <xmx:HITLXhMUejkrch9phTAyee0yetZsaCXp5zZjkPaE4rLUkEYHgfJUgA>
+    <xmx:HITLXj4Ka2d4j4s_i_Oau0VHs6ZgixoPDjmqUEcrpTJmwCnTlHigDw>
+    <xmx:HoTLXowSEI6pLRAxu9-w7RLhuhHWYnEWzwnfA24eB6SK9-Jb6rpoiQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 827833066546;
+        Mon, 25 May 2020 04:38:52 -0400 (EDT)
+Date:   Fri, 22 May 2020 17:28:03 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     wens@csie.org, robh+dt@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+        huangshuosheng@allwinnertech.com, tiny.windzz@gmail.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/4] pinctrl: sunxi: add support for the Allwinner A100
+ pin controller
+Message-ID: <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
+References: <20200522030743.10204-1-frank@allwinnertech.com>
+ <20200522030743.10204-3-frank@allwinnertech.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY___HNcRPr8Jq-wNPO_G9pLVjf2D7ezbpPcGbXVNYy1_nA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vzzz6lahhmyzs3lj"
+Content-Disposition: inline
+In-Reply-To: <20200522030743.10204-3-frank@allwinnertech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+--vzzz6lahhmyzs3lj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 25/05/2020 02:23, Chun-Kuang Hu wrote:
-> Hi, Matthias:
-> 
-> Matthias Brugger <matthias.bgg@gmail.com> 於 2020年5月17日 週日 上午2:22寫道：
->>
->>
->>
->> On 08/03/2020 11:52, Dennis YC Hsieh wrote:
->>> Export finalize function to client which helps append eoc and jump
->>> command to pkt. Let client decide call finalize or not.
->>>
->>> Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
->>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
->>> ---
->>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 1 +
->>>  drivers/soc/mediatek/mtk-cmdq-helper.c  | 7 ++-----
->>>  include/linux/soc/mediatek/mtk-cmdq.h   | 8 ++++++++
->>>  3 files changed, 11 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
->>> index 0dfcd1787e65..7daaabc26eb1 100644
->>> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
->>> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
->>> @@ -490,6 +490,7 @@ static void mtk_drm_crtc_hw_config(struct mtk_drm_crtc *mtk_crtc)
->>>               cmdq_pkt_clear_event(cmdq_handle, mtk_crtc->cmdq_event);
->>>               cmdq_pkt_wfe(cmdq_handle, mtk_crtc->cmdq_event);
->>>               mtk_crtc_ddp_config(crtc, cmdq_handle);
->>> +             cmdq_pkt_finalize(cmdq_handle);
->>>               cmdq_pkt_flush_async(cmdq_handle, ddp_cmdq_cb, cmdq_handle);
->>>       }
->>>  #endif
->>
->> This should be a independent patch.
->> Other then that patch looks good.
-> 
-> Apply only drm part or only cmdq helpr part, it would be abnormal.
+Hi,
 
-Right it would break DRM driver (if only applied to cmdq) or compilation if only
-applied to DRM.
+On Fri, May 22, 2020 at 11:07:41AM +0800, Frank Lee wrote:
+> This commit introduces support for the pin controller on A100.
+>=20
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> ---
+>  drivers/pinctrl/sunxi/Kconfig                 |  10 +
+>  drivers/pinctrl/sunxi/Makefile                |   2 +
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c | 105 +++
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   | 710 ++++++++++++++++++
 
-> Shall we seperate this patch?
+This will need a DT binding too, and please make sure to run checkpatch with
+--strict, you have a bunch of misaligned parenthesis.
 
-After thinking twice, I think we can leave it as it is. If you provide your
-Acked-by I can take it thorugh my tree, if that's OK for you.
+>  4 files changed, 827 insertions(+)
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+>=20
+> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+> index f7aae200ee15..593293584ecc 100644
+> --- a/drivers/pinctrl/sunxi/Kconfig
+> +++ b/drivers/pinctrl/sunxi/Kconfig
+> @@ -94,6 +94,16 @@ config PINCTRL_SUN50I_A64_R
+>  	default ARM64 && ARCH_SUNXI
+>  	select PINCTRL_SUNXI
+> =20
+> +config PINCTRL_SUN50I_A100
+> +	bool "Support for the Allwinner A100 PIO"
+> +	default ARM64 && ARCH_SUNXI
+> +	select PINCTRL_SUNXI
+> +
+> +config PINCTRL_SUN50I_A100_R
+> +	bool "Support for the Allwinner A100 R-PIO"
+> +	default ARM64 && ARCH_SUNXI
+> +	select PINCTRL_SUNXI
+> +
+>  config PINCTRL_SUN50I_H5
+>  	bool "Support for the Allwinner H5 PIO"
+>  	default ARM64 && ARCH_SUNXI
+> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makef=
+ile
+> index fafcdae8134f..8b7ff0dc3bdf 100644
+> --- a/drivers/pinctrl/sunxi/Makefile
+> +++ b/drivers/pinctrl/sunxi/Makefile
+> @@ -13,6 +13,8 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23_R)	+=3D pinctrl-sun8i-a2=
+3-r.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_A33)		+=3D pinctrl-sun8i-a33.o
+>  obj-$(CONFIG_PINCTRL_SUN50I_A64)	+=3D pinctrl-sun50i-a64.o
+>  obj-$(CONFIG_PINCTRL_SUN50I_A64_R)	+=3D pinctrl-sun50i-a64-r.o
+> +obj-$(CONFIG_PINCTRL_SUN50I_A100)	+=3D pinctrl-sun50i-a100.o
+> +obj-$(CONFIG_PINCTRL_SUN50I_A100_R)	+=3D pinctrl-sun50i-a100-r.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_A83T)	+=3D pinctrl-sun8i-a83t.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_A83T_R)	+=3D pinctrl-sun8i-a83t-r.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_H3)		+=3D pinctrl-sun8i-h3.o
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c b/drivers/pinc=
+trl/sunxi/pinctrl-sun50i-a100-r.c
+> new file mode 100644
+> index 000000000000..d38d8770c9da
+> --- /dev/null
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
+> + *
+> + * Based on:
+> + * huangshuosheng <huangshuosheng@allwinnertech.com>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include "pinctrl-sunxi.h"
+> +
+> +static const struct sunxi_desc_pin a100_r_pins[] =3D {
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_i2c0"),		/* SCK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_i2c0"),		/* SDA */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_uart0"),		/* TX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_uart0"),		/* RX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_jtag"),		/* MS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_jtag"),		/* CK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_jtag"),		/* DO */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_jtag"),		/* DI */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_i2c1"),		/* SCK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_i2c1"),		/* SDA */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 10),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_pwm"),
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 11),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "s_cpu"),		/* CUR_W */
+> +		SUNXI_FUNCTION(0x3, "s_cir"),		/* IN */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 11)),
+> +};
+> +
+> +static const struct sunxi_pinctrl_desc a100_r_pinctrl_data =3D {
+> +	.pins =3D a100_r_pins,
+> +	.npins =3D ARRAY_SIZE(a100_r_pins),
+> +	.pin_base =3D PL_BASE,
+> +	.irq_banks =3D 1,
+> +};
+> +
+> +static int a100_r_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +	return sunxi_pinctrl_init(pdev, &a100_r_pinctrl_data);
+> +}
+> +
+> +static const struct of_device_id a100_r_pinctrl_match[] =3D {
+> +	{ .compatible =3D "allwinner,sun50i-a100-r-pinctrl", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, a100_r_pinctrl_match);
+> +
+> +static struct platform_driver a100_r_pinctrl_driver =3D {
+> +	.probe	=3D a100_r_pinctrl_probe,
+> +	.driver	=3D {
+> +		.name		=3D "sun50iw10p1-r-pinctrl",
+> +		.of_match_table	=3D a100_r_pinctrl_match,
+> +	},
+> +};
+> +module_platform_driver(a100_r_pinctrl_driver);
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c b/drivers/pinctr=
+l/sunxi/pinctrl-sun50i-a100.c
+> new file mode 100644
+> index 000000000000..b9591009f0a4
+> --- /dev/null
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> @@ -0,0 +1,710 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
+> + *
+> + * Based on:
+> + * huangshuosheng <huangshuosheng@allwinnertech.com>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +
+> +#include "pinctrl-sunxi.h"
+> +
+> +static const struct sunxi_desc_pin a100_pins[] =3D {
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 0),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart2"),		/* TX */
+> +		SUNXI_FUNCTION(0x3, "spi2"),		/* CS */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* MS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 1),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart2"),		/* RX */
+> +		SUNXI_FUNCTION(0x3, "spi2"),		/* CLK */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* CK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 2),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart2"),		/* RTS */
+> +		SUNXI_FUNCTION(0x3, "spi2"),		/* MOSI */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* DO */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 3),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart2"),		/* CTS */
+> +		SUNXI_FUNCTION(0x3, "spi2"),		/* MISO */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* DI */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 4),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c1"),		/* SCK */
+> +		SUNXI_FUNCTION(0x3, "i2s0"),		/* MCLK */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* MS_GPU */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 5),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c1"),		/* SDA */
+> +		SUNXI_FUNCTION(0x3, "i2s0"),		/* BCLK */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* CK_GPU */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 6),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "i2s0"),		/* LRCK */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* DO_GPU */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 7),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "spdif"),		/* DIN */
+> +		SUNXI_FUNCTION(0x3, "i2s0"),		/* DOUT0 */
+> +		SUNXI_FUNCTION(0x4, "i2s0"),		/* DIN1 */
 
-Regards,
-Matthias
+I guess the second one would be i2s1?
 
-> Or seperate it but make sure these two patches be in the same tree?
-> 
-> Regards,
-> Chun-Kuang.
-> 
->>
->>> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> index a9ebbabb7439..59bc1164b411 100644
->>> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> @@ -372,7 +372,7 @@ int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value)
->>>  }
->>>  EXPORT_SYMBOL(cmdq_pkt_assign);
->>>
->>> -static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->>> +int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->>>  {
->>>       struct cmdq_instruction inst = { {0} };
->>>       int err;
->>> @@ -392,6 +392,7 @@ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->>>
->>>       return err;
->>>  }
->>> +EXPORT_SYMBOL(cmdq_pkt_finalize);
->>>
->>>  static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
->>>  {
->>> @@ -426,10 +427,6 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
->>>       unsigned long flags = 0;
->>>       struct cmdq_client *client = (struct cmdq_client *)pkt->cl;
->>>
->>> -     err = cmdq_pkt_finalize(pkt);
->>> -     if (err < 0)
->>> -             return err;
->>> -
->>>       pkt->cb.cb = cb;
->>>       pkt->cb.data = data;
->>>       pkt->async_cb.cb = cmdq_pkt_flush_async_cb;
->>> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
->>> index fec292aac83c..99e77155f967 100644
->>> --- a/include/linux/soc/mediatek/mtk-cmdq.h
->>> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
->>> @@ -213,6 +213,14 @@ int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
->>>   */
->>>  int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value);
->>>
->>> +/**
->>> + * cmdq_pkt_finalize() - Append EOC and jump command to pkt.
->>> + * @pkt:     the CMDQ packet
->>> + *
->>> + * Return: 0 for success; else the error code is returned
->>> + */
->>> +int cmdq_pkt_finalize(struct cmdq_pkt *pkt);
->>> +
->>>  /**
->>>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
->>>   *                          packet and call back at the end of done packet
->>>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 8),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "spdif"),		/* DOUT */
+> +		SUNXI_FUNCTION(0x3, "i2s0"),		/* DIN0 */
+> +		SUNXI_FUNCTION(0x4, "i2s0"),		/* DOUT1 */
+
+Ditto
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 9),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart0"),		/* TX */
+> +		SUNXI_FUNCTION(0x3, "i2c0"),		/* SCK */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* DI_GPU */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 10),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart0"),		/* RX */
+> +		SUNXI_FUNCTION(0x3, "i2c0"),		/* SDA */
+> +		SUNXI_FUNCTION(0x4, "pwm1"),
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)),
+> +	/* HOLE */
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 0),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* WE */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* DS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 0)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 1),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* ALE */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* RST */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 1)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 2),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* CLE */
+> +		SUNXI_FUNCTION(0x4, "spi0"),		/* MOSI */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 2)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 3),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* CE1 */
+> +		SUNXI_FUNCTION(0x4, "spi0"),		/* CS0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 3)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 4),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* CE0 */
+> +		SUNXI_FUNCTION(0x4, "spi0"),		/* MISO */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 4)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 5),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* RE */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* CLK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 5)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 6),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* RB0 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* CMD */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 6)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 7),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* RB1 */
+> +		SUNXI_FUNCTION(0x4, "spi0"),		/* CS1 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 7)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 8),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQ7 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* D3 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 8)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 9),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQ6 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* D4 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 9)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 10),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQ5 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* D0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 10)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 11),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQ4 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* D5 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 11)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 12),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQS */
+> +		SUNXI_FUNCTION(0x4, "spi0"),		/* CLK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 12)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 13),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQ3 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* D1 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 13)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 14),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQ2 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* D6 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 14)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 15),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQ1 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* D2 */
+> +		SUNXI_FUNCTION(0x4, "spi0"),		/* WP */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 15)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 16),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "nand0"),		/* DQ0 */
+> +		SUNXI_FUNCTION(0x3, "mmc2"),		/* D7 */
+> +		SUNXI_FUNCTION(0x4, "spi0"),		/* HOLD */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 16)),
+> +	/* HOLE */
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 0),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D2 */
+> +		SUNXI_FUNCTION(0x3, "lvds0"),		/* D0P */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* DP0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 0)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 1),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D3 */
+> +		SUNXI_FUNCTION(0x3, "lvds0"),		/* D0N */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* DM0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 1)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 2),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D4 */
+> +		SUNXI_FUNCTION(0x3, "lvds0"),		/* D1P */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* DP1 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 2)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 3),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D5 */
+> +		SUNXI_FUNCTION(0x3, "lvds0"),		/* D1N */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* DM1 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 3)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 4),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D6 */
+> +		SUNXI_FUNCTION(0x3, "lvds0"),		/* D2P */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* CKP */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 4)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 5),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D7 */
+> +		SUNXI_FUNCTION(0x3, "lvds0"),		/* D2N */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* CKM */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 5)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 6),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D10 */
+> +		SUNXI_FUNCTION(0x3, "lvds0"),		/* CKP */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* DP2 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 6)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 7),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D11 */
+> +		SUNXI_FUNCTION(0x3, "lvds0"),		/* CKN */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* DM2 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 7)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 8),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D12 */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* DP3 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 8)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 9),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D13 */
+> +		SUNXI_FUNCTION(0x4, "dsi0"),		/* DM3 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 9)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 10),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D14 */
+> +		SUNXI_FUNCTION(0x4, "spi1"),		/* CS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 10)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 11),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D15 */
+> +		SUNXI_FUNCTION(0x4, "spi1"),		/* CLK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 11)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 12),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D18 */
+> +		SUNXI_FUNCTION(0x4, "spi1"),		/* MOSI */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 12)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 13),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D19 */
+> +		SUNXI_FUNCTION(0x4, "spi1"),		/* MISO */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 13)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 14),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D20 */
+> +		SUNXI_FUNCTION(0x4, "uart3"),		/* TX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 14)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 15),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D21 */
+> +		SUNXI_FUNCTION(0x4, "uart3"),		/* RX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 15)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 16),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D22 */
+> +		SUNXI_FUNCTION(0x4, "uart3"),		/* RTS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 16)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 17),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* D23 */
+> +		SUNXI_FUNCTION(0x4, "uart3"),		/* CTS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 17)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 18),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* CLK */
+> +		SUNXI_FUNCTION(0x4, "uart4"),		/* TX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 18)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 19),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* DE */
+> +		SUNXI_FUNCTION(0x4, "uart4"),		/* RX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 19)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 20),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* HSYNC */
+> +		SUNXI_FUNCTION(0x3, "pwm2"),
+> +		SUNXI_FUNCTION(0x4, "uart4"),		/* RTS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 20)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 21),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "lcd0"),		/* VSYNC */
+> +		SUNXI_FUNCTION(0x3, "pwm3"),
+> +		SUNXI_FUNCTION(0x4, "uart4"),		/* CTS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 21)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 22),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "pwm1"),
+> +		SUNXI_FUNCTION(0x4, "i2c0"),		/* SCK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 22)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 23),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "pwm0"),
+> +		SUNXI_FUNCTION(0x4, "i2c0"),		/* SDA */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 23)),
+> +	/* HOLE */
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 0),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "csi"),		/* MCLK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 0)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 1),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c2"),		/* SCK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 1)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 2),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c2"),		/* SDA */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 2)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 3),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c3"),		/* SCK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 3)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 4),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c3"),		/* SDA */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 4)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 5),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "csi"),		/* MCLK */
+> +		SUNXI_FUNCTION(0x3, "pll"),		/* LOCK_DBG */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* MCLK */
+> +		SUNXI_FUNCTION(0x5, "ledc"),		/* LEDC */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 5)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 6),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "bist0"),		/* RESULT0 */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* BCLK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 6)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 7),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "csi"),		/* SM_VS */
+> +		SUNXI_FUNCTION(0x3, "bist0"),		/* RESULT1 */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* LRCK */
+> +		SUNXI_FUNCTION(0x5, "tcon0"),		/* TRIG */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3,	7)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 8),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "bist0"),		/* RESULT2 */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* DOUT0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 8)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 9),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "bist0"),		/* RESULT3 */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* DIN0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 9)),
+> +	/* HOLE */
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 0),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc0"),		/* D1 */
+> +		SUNXI_FUNCTION(0x3, "jtag"),		/* MS1 */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* MS_GPU */
+
+We should use another name here, since the code will just pick the first on=
+e and
+ignore the second. What about jtag-gpu?
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 0)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 1),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc0"),		/* D0 */
+> +		SUNXI_FUNCTION(0x3, "jtag"),		/* DI1 */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* DI_GPU */
+
+Ditto
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 1)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 2),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc0"),		/* CLK */
+> +		SUNXI_FUNCTION(0x3, "uart0"),		/* TX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 2)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 3),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc0"),		/* CMD */
+> +		SUNXI_FUNCTION(0x3, "jtag"),		/* DO */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* DO_GPU */
+
+Ditto
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 3)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 4),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc0"),		/* D3 */
+> +		SUNXI_FUNCTION(0x3, "uart0"),		/* RX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 4)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 5),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc0"),		/* D2 */
+> +		SUNXI_FUNCTION(0x3, "jtag"),		/* CK */
+> +		SUNXI_FUNCTION(0x4, "jtag"),		/* CK_GPU */
+
+Ditto
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 5)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 6),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 6)),
+> +	/* HOLE */
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 0),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc1"),		/* CLK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 0)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 1),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc1"),		/* CMD */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 1)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 2),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc1"),		/* D0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 2)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 3),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc1"),		/* D1 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 3)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 4),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc1"),		/* D2 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 4)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 5),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "mmc1"),		/* D3 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 5)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 6),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart1"),		/* TX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 6)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 7),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart1"),		/* RX */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 7)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 8),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart1"),		/* RTS */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 8)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 9),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart1"),		/* CTS */
+> +		SUNXI_FUNCTION(0x3, "i2s1"),		/* MCLK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 9)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 10),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "i2s1"),		/* BCLK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 10)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 11),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "i2s1"),		/* LRCK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 11)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 12),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "i2s1"),		/* DOUT0 */
+> +		SUNXI_FUNCTION(0x4, "i2s1"),		/* DIN1 */
+
+This is suspicious too
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 12)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 13),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "i2s1"),		/* DIN0 */
+> +		SUNXI_FUNCTION(0x4, "i2s1"),		/* DOUT1 */
+
+Here too
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 13)),
+> +	/* HOLE */
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 0),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c0"),		/* SCK */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* RXD1 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 0)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c0"),		/* SDA */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* RXD0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 1)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c1"),		/* SCK */
+> +		SUNXI_FUNCTION(0x3, "cpu"),		/* CUR_W */
+
+What is "cpu" supposed to be?
+
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* RXCTL */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 2)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "i2c1"),		/* SDA */
+> +		SUNXI_FUNCTION(0x3, "cir0"),		/* OUT */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* CLKIN */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 3)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart3"),		/* TX */
+> +		SUNXI_FUNCTION(0x3, "spi1"),		/* CS */
+> +		SUNXI_FUNCTION(0x4, "cpu"),		/* CUR_W */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* TXD1 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 4)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart3"),		/* RX */
+> +		SUNXI_FUNCTION(0x3, "spi1"),		/* CLK */
+> +		SUNXI_FUNCTION(0x4, "ledc"),
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* TXD0 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 5)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart3"),		/* RTS */
+> +		SUNXI_FUNCTION(0x3, "spi1"),		/* MOSI */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* TXCK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 6)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "uart3"),		/* CTS */
+> +		SUNXI_FUNCTION(0x3, "spi1"),		/* MISO */
+> +		SUNXI_FUNCTION(0x4, "spdif"),		/* OUT */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* TXCTL */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 7)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "dmic"),		/* CLK */
+> +		SUNXI_FUNCTION(0x3, "spi2"),		/* CS */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* MCLK */
+> +		SUNXI_FUNCTION(0x5, "i2s2"),		/* DIN2 */
+
+Same issue than previously
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 8)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 9),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "dmic"),		/* DATA0 */
+> +		SUNXI_FUNCTION(0x3, "spi2"),		/* CLK */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* BCLK */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* MDC */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 9)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "dmic"),		/* DATA1 */
+> +		SUNXI_FUNCTION(0x3, "spi2"),		/* MOSI */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* LRCK */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* MDIO */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 10)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "dmic"),		/* DATA2 */
+> +		SUNXI_FUNCTION(0x3, "spi2"),		/* MISO */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* DOUT0 */
+> +		SUNXI_FUNCTION(0x5, "i2s2"),		/* DIN1 */
+
+Here as well
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 11)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 12),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "dmic"),		/* DATA3 */
+> +		SUNXI_FUNCTION(0x3, "i2c3"),		/* SCK */
+> +		SUNXI_FUNCTION(0x4, "i2s2"),		/* DIN0 */
+> +		SUNXI_FUNCTION(0x5, "i2s2"),		/* DOUT1 */
+
+Ditto
+
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 12)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 13),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "i2c3"),		/* SCK */
+> +		SUNXI_FUNCTION(0x4, "i2s3"),		/* MCLK */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* EPHY */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 13)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 14),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x4, "i2s3"),		/* BCLK */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* RXD3 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 14)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 15),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x4, "i2s3"),		/* LRCK */
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* RXD2 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 15)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 16),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "i2s3"),		/* DOUT0 */
+> +		SUNXI_FUNCTION(0x4, "i2s3"),		/* DIN1 */
+
+Ditto
+
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* RXCK */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 16)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 17),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x3, "i2s3"),		/* DOUT1 */
+> +		SUNXI_FUNCTION(0x4, "i2s3"),		/* DIN0 */
+
+Ditto
+
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* TXD3 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 17)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 18),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "cir0"),		/* OUT */
+> +		SUNXI_FUNCTION(0x3, "i2s3"),		/* DOUT2 */
+> +		SUNXI_FUNCTION(0x4, "i2s3"),		/* DIN2 */
+
+Ditto
+
+> +		SUNXI_FUNCTION(0x5, "emac0"),		/* TXD2 */
+> +		SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 18)),
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
+> +		SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		SUNXI_FUNCTION(0x2, "cir0"),		/* IN */
+> +		SUNXI_FUNCTION(0x3, "i2s3"),		/* DOUT3 */
+> +		SUNXI_FUNCTION(0x4, "i2s3"),		/* DIN3 */
+
+Ditto
+
+Maxime
+
+--vzzz6lahhmyzs3lj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXsfvgwAKCRDj7w1vZxhR
+xUnqAQCnNSz9Ym8pv9uQSXfaFtx2r/UQ/bHtCmXi67NPhXo6kwD+IBeXwfEf8u2G
+Kag0lyLROjxoJ5LyDUURW0Fg/kmv1ww=
+=vb3x
+-----END PGP SIGNATURE-----
+
+--vzzz6lahhmyzs3lj--
