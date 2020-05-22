@@ -2,173 +2,109 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1560C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44A2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 04:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85939207D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFE320812
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 04:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RP7bUKOj"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lsyu9iSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgEVDsu (ORCPT
+        id S1725859AbgEVEHn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 23:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727836AbgEVDst (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 23:48:49 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B116CC061A0E;
-        Thu, 21 May 2020 20:48:49 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id q129so848780iod.6;
-        Thu, 21 May 2020 20:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aIP2diEvzhm2AdN/Mxqa8HFPuNr8GL8GdM4WtK2bHt8=;
-        b=RP7bUKOja78unJmtL//FaC43ciXZEhEsCeSwFvs4nAHMrjEEGBzp9Q37CHRKKjX5uJ
-         I3OYdQjlyHOeLF1/fFBpkCrH7S6p8joOnfozfqfm0fm5KjEAI+spE0kDRf9jXaOviuWA
-         UtCICHYp+7kjypw4IWX7dw3steiHeuggnS7j1wKi9OEDrI5d2DkJ7TUZtgNMO3C2l1MG
-         aynbN33Icim2XL/IAYnCtX+z4s9TcYksL3N16IZTuYQcKPSiBOgYNaN869be+qloyvEo
-         WhUZAAue/metKXimkaOKFUTevbHCojnVwatT5zLvPxxwyW/sfCeH5JVsa0e8WOUlvIjl
-         4vUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aIP2diEvzhm2AdN/Mxqa8HFPuNr8GL8GdM4WtK2bHt8=;
-        b=tNgYCpfcbZsx3/a3tbnr+IK0QbkA1QDyrZ3rC4GJGrna58bcwv60UNmpWf2cUJ2BuL
-         22/2gS3MGBlD8aQzFKgb226hy9THBiR+MGg7Ed9eTTcBjGF3URPZDYSykf0m9m9rH0TS
-         HQr1c8BGkVivMPZgI6dvpLxfvnxN3G+YV7kSaDaTqihB/GlWMdnfaTUwO/BRSb5RiunZ
-         GTqomdS47j4h4yeLEEccRQMJB7pSI33d7UmcKQ2mrXlfe75EARTpNDXjYZ/Pa6QR9SkW
-         bCp/QOxBtHkpfB/bNDL+StwwJJdaB5CJVNnCskv48vQsyLNOXEcVMzD9IirQjxT5wxga
-         UqJQ==
-X-Gm-Message-State: AOAM530on3/zVeySYxIAIxASmp2NYvvl0gkuwESzyzOAxDjj3WVWi/At
-        1Vec0QMv83goEYyjXCdQAU6vchckSZSh6mAPRND5PcEB
-X-Google-Smtp-Source: ABdhPJx+AFKC3R/jcN/8VoSvvRx56ajr8mq3M4L+d0/fy22KFOOtVQAroBPRqS+PchdcjU/H1D+0L75bduAVSXZdr1M=
-X-Received: by 2002:a5e:9807:: with SMTP id s7mr1534629ioj.27.1590119329011;
- Thu, 21 May 2020 20:48:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
- <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
- <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
- <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
- <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com>
- <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com>
- <CABb+yY1gXxpU=q9xKf14uZtJz51kLJ-k2EeWsjnFRyBzR5bmgA@mail.gmail.com>
- <CADBw62oFDrruSq+Rm=hXHZYn0qDrr47cNK4Wj0_A-jG1dOT+kw@mail.gmail.com> <CADBw62rZuhaeSEppy+AhSkv1uNgaj9qrHFf7pz9nwKm8q3OrTA@mail.gmail.com>
-In-Reply-To: <CADBw62rZuhaeSEppy+AhSkv1uNgaj9qrHFf7pz9nwKm8q3OrTA@mail.gmail.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Thu, 21 May 2020 22:48:37 -0500
-Message-ID: <CABb+yY244ZCOk5kDtOR0oEYajwUVbXoSZdNiid__UuYbU=yB-Q@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Fri, 22 May 2020 00:07:43 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:61119 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725772AbgEVEHn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 00:07:43 -0400
+X-UUID: 4f118d0bd8a44cd2b6c2640b1f813856-20200522
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=9XJQWMeNbLuOVbhCAds/pojuKuqDmIStgg9SQ2imLs0=;
+        b=lsyu9iSHqhCqTfTLZVYCFHQT4UtdqwGUITHf2PHVkTlEGpYZXANvoGJdt/zXfvpm68LZtaMWmdsUxWfeG0avijUwgOrOLQcJDGomoATbrS2ZIz5XjW6MvjMZaVOTAuPjegthzF5eJs96y3M3gdFJVieTRzHHaO1wNhSngaU6ZL4=;
+X-UUID: 4f118d0bd8a44cd2b6c2640b1f813856-20200522
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 535475848; Fri, 22 May 2020 12:07:40 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 22 May 2020 12:07:37 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 22 May 2020 12:07:37 +0800
+Message-ID: <1590120458.22249.24.camel@mtksdccf07>
+Subject: Re: [v4,0/7] Add Mediatek thermal dirver and dtsi
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, <hsinyi@chromium.org>,
+        <linux-pm@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 22 May 2020 12:07:38 +0800
+In-Reply-To: <7e205390-c7a7-b8c9-3ba2-344a04dc6696@gmail.com>
+References: <20200323121537.22697-1-michael.kao@mediatek.com>
+         <7e205390-c7a7-b8c9-3ba2-344a04dc6696@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 7:24 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> Hi Jassi,
->
-> On Wed, May 13, 2020 at 2:32 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > On Wed, May 13, 2020 at 2:05 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> > >
-> > > On Tue, May 12, 2020 at 11:14 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > >
-> > > > Hi Jassi,
-> > > >
-> > > > On Thu, May 7, 2020 at 11:23 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > >
-> > > > > Hi Jassi,
-> > > > >
-> > > > > On Thu, May 7, 2020 at 7:25 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> > > > > >
-> > > > > > On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > > >
-> > > > > > > Hi Jassi,
-> > > > > > >
-> > > > > > > On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > From: Baolin Wang <baolin.wang@unisoc.com>
-> > > > > > > >
-> > > > > > > > The Spreadtrum mailbox controller supports 8 channels to communicate
-> > > > > > > > with MCUs, and it contains 2 different parts: inbox and outbox, which
-> > > > > > > > are used to send and receive messages by IRQ mode.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> > > > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > > > > > > > ---
-> > > > > > > > Changes from v3:
-> > > > > > > >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
-> > > > > > > >
-> > > > > > > > Changes from v2:
-> > > > > > > >  - None.
-> > > > > > > >
-> > > > > > > > Changes from v1:
-> > > > > > > >  - None
-> > > > > > >
-> > > > > > > Gentle ping, do you have any other comments? Thanks.
-> > > > > > >
-> > > > > > Yea, I am still not sure about the error returned in send_data().  It
-> > > > > > will either never hit or there will be no easy recovery from it. The
-> > > > > > api expects the driver to tell it the last-tx was done only when it
-> > > > > > can send the next message. (There may be case like sending depend on
-> > > > > > remote, which can't be ensured before hand).
-> > > > >
-> > > > > Actually this is an unusual case, suppose the remote target did not
-> > > > > fetch the message as soon as possile, which will cause the FIFO
-> > > > > overflow, so in this case we  can not send messages to the remote
-> > > > > target any more, otherwise messages will be lost. Thus we can return
-> > > > > errors to users to indicate that something wrong with the remote
-> > > > > target need to be checked.
-> > > > >
-> > > > > So this validation in send_data() is mostly for debugging for this
-> > > > > abnormal case and we will not trigger this issue if the remote target
-> > > > > works well. So I think it is useful to keep this validation in
-> > > > > send_data(). Thanks.
-> > > >
-> > > > Any comments? Thanks.
-> > > >
-> > > Same as my last post.
-> >
-> > I think I've explained the reason why we need add this validation in
-> > my previous email, I am not sure how do you think? You still want to
-> > remove this validation?
->
-> Gentle ping.
->
-> As I explained in previous email, this validation is for an unusual
-> case, suppose the remote target did not fetch the message as soon as
-> possile, which will cause the FIFO overflow, so in this case we  can
-> not send messages to the remote
-> target any more, otherwise messages will be lost. Thus we can return
-> errors to users to indicate that something wrong with the remote
-> target need to be checked.
->
-> So this validation in send_data() is mostly for debugging for this
-> abnormal case and we will not trigger this issue if the remote target
-> works well. So I think it is useful to keep this validation in
-> send_data(). What do you think? Thanks.
->
-I still think the same as before.
-You should do this check before you call mbox_chan_txdone() and wait
-if busy ... which is exactly the purpose of txdone().
-It seems harmless to be paranoid and place a block of code in
-practically "if 0", but that sets bad precedence for other drivers. So
-please move the check before txdone().
+T24gVGh1LCAyMDIwLTA1LTIxIGF0IDE0OjUxICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiBIaSBNaWNoYWVsLA0KPiANCj4gT24gMjMvMDMvMjAyMCAxMzoxNSwgTWljaGFlbCBLYW8g
+d3JvdGU6DQo+ID4gVGhpcyBwYXRjaHNldCBzdXBwb3J0cyBmb3IgTVQ4MTgzIGNoaXAgdG8gbXRr
+X3RoZXJtYWwuYy4NCj4gPiBBZGQgdGhlcm1hbCB6b25lIG9mIGFsbCB0aGUgdGhlcm1hbCBzZW5z
+b3IgaW4gU29DIGZvcg0KPiA+IGFub3RoZXIgZ2V0IHRlbXBlcmF0cnVlLiBUaGV5IGRvbid0IG5l
+ZWQgdG8gdGhlcm1hbCB0aHJvdHRsZS4NCj4gPiBBbmQgd2UgYmluZCBjb29sZXJzIGZvciB0aGVy
+bWFsIHpvbmUgbm9kZXMgb2YgY3B1X3RoZXJtYWwuDQo+ID4gDQo+ID4gUmViYXNlIHRvIGtlcm5l
+bC01LjYtcmMxLg0KPiA+IA0KPiA+IFVwZGF0ZSBjb250ZW50Og0KPiA+IA0KPiA+IFsxLzddDQo+
+ID4gICAgIC0gU3F1YXNoIHRoZXJtYWwgem9uZSBzZXR0aW5ncyBpbiB0aGUgZHRzaSBmcm9tIFt2
+Myw1LzhdDQo+ID4gICAgICAgYXJtNjQ6IGR0czogbXQ4MTgzOiBJbmNyZWFzZSBwb2xsaW5nIGZy
+ZXF1ZW5jeSBmb3IgQ1BVIHRoZXJtYWwgem9uZQ0KPiA+IA0KPiA+ICAgICAtIFJlbW92ZSB0aGUg
+cHJvcGVydHkgb2YgaW50ZXJydXB0cyBhbmQgbWVkaWF0ZWssaHctcmVzZXQtdGVtcA0KPiA+IA0K
+PiA+IFsyLzddDQo+ID4gICAgIC0gQ29ycmVjdCBjb21taXQgbWVzc2FnZQ0KPiA+IA0KPiA+IFs0
+LzddDQo+ID4gICAgIC0gQ2hhbmdlIHRoZSB0YXJnZXQgdGVtcGVyYXR1cmUgdG8gdGhlIDgwQyBh
+bmQgY2hhbmdlIHRoZSBjb21taXQgbWVzc2FnZQ0KPiA+IA0KPiA+IFs2LzddDQo+ID4gICAgIC0g
+QWRqdXN0IG5ld2xpbmUgYWxpZ25tZW50DQo+ID4gDQo+ID4gICAgIC0gRml4IHRoZSBqdWRnZW1l
+bnQgb24gdGhlIHJldHVybiB2YWx1ZSBvZiByZWdpc3RlcmluZyB0aGVybWFsIHpvbmUNCj4gPiAN
+Cj4gPiBUaGlzIHBhdGNoIHNlcmllcyBiYXNlIG9uIHRoZXNlIHBhdGNoZXMgWzFdLg0KPiA+IA0K
+PiA+IFt2NywzLzNdIFBNIC8gQVZTOiBTVlM6IEludHJvZHVjZSBTVlMgZW5naW5lIChodHRwczov
+L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExNDM5ODI5LykNCj4gPiANCj4gPiBNYXR0aGlh
+cyBLYWVobGNrZSAoMSk6DQo+ID4gICBhcm02NDogZHRzOiBtdDgxODM6IENvbmZpZ3VyZSBDUFUg
+Y29vbGluZw0KPiA+IA0KPiA+IE1pY2hhZWwgS2FvICg2KToNCj4gPiAgIGFybTY0OiBkdHM6IG10
+ODE4MzogYWRkIHRoZXJtYWwgem9uZSBub2RlDQo+ID4gICBhcm02NDogZHRzOiBtdDgxODM6IGFk
+ZCBkeW5hbWljIHBvd2VyIGNvZWZmaWNpZW50cw0KPiA+ICAgYXJtNjQ6IGR0czogbXQ4MTgzOiBB
+ZGQgI2Nvb2xpbmctY2VsbHMgdG8gQ1BVIG5vZGVzDQo+ID4gICB0aGVybWFsOiBtZWRpYXRlazog
+bXQ4MTgzOiBmaXggYmFuayBudW1iZXIgc2V0dGluZ3MNCj4gDQo+IERvIEkgdW5kZXJzdGFuZCBj
+b3JyZWN0bHkgdGhhdCB3ZSBuZWVkIHRvIGZpeCB0aGUgYmFuayBudW1iZXIgYmVmb3JlIHdlIGNh
+biBhZGQNCj4gdGhlIGRldmljZSB0cmVlIGNoYW5nZXMuIEFuZCB0aGF0IHRoZSBsYXN0IHR3byBw
+YXRjaGVzIGFyZSBlbmhhbmNlbWVudHMgZm9yIHRoZQ0KPiBkcml2ZXIgYnV0IG5lZWRlZCB0byBn
+ZXQgYSB3b3JraW5nIHZlcnNpb24/DQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KDQpIaSBN
+YXR0aGlhcywNCg0KVGhlcmUgaXMgb25lIGJhbmsgc2V0dGluZyBvZiBtdDgxODMgY29uZmlnLg0K
+SWYgdGhlIGRldmljZSB0cmVlIG1lcmdlZCBmaXJzdC4gSSB3b3JyeSB0aGF0IGl0IHdpbGwgY3Jh
+c2ggd2hlbiB0aGUNCnRoZXJtYWwgem9uZSByZWFkIHRlbXBlcmF0dXJlLg0KSXQgd2lsbCBhY2Nl
+c3MgdGhlIGludmFsaWQgaW5kZXggb2YgYmFuay4NClNvIHBsZWFzZSBhZGQgdGhlIHBhdGNoICJm
+aXggYmFuayBudW1iZXIgc2V0dGluZ3MgIg0KZmlyc3QuMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyDQoNCj4gDQo+ID4gICB0aGVybWFs
+OiBtZWRpYXRlazogYWRkIGFub3RoZXIgZ2V0X3RlbXAgb3BzIGZvciB0aGVybWFsIHNlbnNvcnMN
+Cj4gPiAgIHRoZXJtYWw6IG1lZGlhdGVrOiB1c2Ugc3BpbmxvY2sgdG8gcHJvdGVjdCBQVFBDT1JF
+U0VMDQo+ID4gDQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kg
+fCAxNTYgKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy90aGVybWFsL210a190
+aGVybWFsLmMgICAgICAgICAgICB8ICA4OCArKysrKysrKysrKy0tDQo+ID4gIDIgZmlsZXMgY2hh
+bmdlZCwgMjMxIGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQ0KPiA+IA0KDQo=
 
-thanks.
