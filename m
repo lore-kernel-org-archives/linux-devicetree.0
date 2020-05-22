@@ -2,246 +2,509 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0959C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 08:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD041C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 08:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78CFE207FB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 08:25:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WT1eooU+"
+	by mail.kernel.org (Postfix) with ESMTP id 7DA90206DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 08:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgEVIZS (ORCPT
+        id S1729188AbgEVI40 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 04:25:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
+        Fri, 22 May 2020 04:56:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgEVIZR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 04:25:17 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE79BC061A0E;
-        Fri, 22 May 2020 01:25:15 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id v4so7699300qte.3;
-        Fri, 22 May 2020 01:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XJsKRH19vB/cGeqHjSkLUZnV1D50ZWfC9CxNYPIMtuY=;
-        b=WT1eooU+uX39YaJnVBfcBwibdNR0GBbXNZ7UxW9dkBnZ6uo3Z8NAuBoJ/KLlGMvLuk
-         /FpXarQmNwRs2mMpODVT5yjKfleiByaCbuVk3bHQHdNMg32aarFM4JJOWuxE7SGS90M5
-         mLeTWV7UI43lbPMp9dRYb6FAyfKbuiB3JF6/akACi71rn9RxBnBFOZlounf58CiAF5Ed
-         DUgBaoMbrbtXyLWJ8iT7DYBK8W/uIoRhmZVdjeWDzgk1+GFpvpjPUCK0PfD7gUbhTarM
-         S5BXV41a0kQpTGaFoLcwppp9NlZLmGVwwliK7RHGlITo9l/DBBhjj/ZquFOjf6wTOEQd
-         aqpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XJsKRH19vB/cGeqHjSkLUZnV1D50ZWfC9CxNYPIMtuY=;
-        b=LqhrpKqIPoMJggEMEeUxtCdXDtgeXDPsC01Mv3d3xYBwYpOyC0a8Ps1xP+YcnPOywj
-         zpgY6dNqtfnbioIymotSaav9+ZkYm6dtUJq5xGyz8jAkZR4Lfmlqjo1Zi1Wo+x1ybnX9
-         i/1Pk/7R8zEZ80jt8Sc2RHBKHNgexkH8WT/7VuKAqM6HxQitD+ZrgtIR3NCa+Q3JYB3J
-         mjDisOqZmYXiknQsU/7fCIo1LFce45BdvSmoNoh7svQgyUCXPu/6N014AUvFfY7Hfjo1
-         +4dNDDpr/Ot+BoP70RPKXI86lBCKbKL6k+thizgiIFNgdwuA6icb0EpzHel+EyIDhYjC
-         CK+Q==
-X-Gm-Message-State: AOAM530/KU+j2SkuFznsLYmcwYC6KpR/Z/oan9iWz72a5bgsWzlSw7FY
-        CaQtWdxo7pNncb6HO9RdH1I=
-X-Google-Smtp-Source: ABdhPJx84n0CAJh5FKdKOS8FIWCGtW9vmaMCZgQjSSdpcVpXYn/dDcrgwzR9SW2EGFoU5Mqmc7LBmA==
-X-Received: by 2002:ac8:6ece:: with SMTP id f14mr14505718qtv.135.1590135914681;
-        Fri, 22 May 2020 01:25:14 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id u16sm3397752qkm.107.2020.05.22.01.25.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 May 2020 01:25:14 -0700 (PDT)
-Date:   Fri, 22 May 2020 10:25:10 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 3/4] iio: imu: bmi160: added regulator support
-Message-ID: <20200522082510.GC19742@ict14-OptiPlex-980>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
- <20200519075111.6356-4-jonathan.albrieux@gmail.com>
- <20200519185535.00003cb7@Huawei.com>
- <20200520071751.GD3361@ict14-OptiPlex-980>
- <20200521193055.7ee7cf9c@archlinux>
+        with ESMTP id S1729162AbgEVI4Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 04:56:24 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D04C061A0E
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 01:56:23 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jc3TT-0001X6-S2; Fri, 22 May 2020 10:56:15 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jc3TR-0007Z4-PE; Fri, 22 May 2020 10:56:13 +0200
+Date:   Fri, 22 May 2020 10:56:13 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        linux-pwm@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v1 2/2] Add PWM driver for LGM
+Message-ID: <20200522085613.ktb2ruw2virj337v@pengutronix.de>
+References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
+ <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200521193055.7ee7cf9c@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 07:30:55PM +0100, Jonathan Cameron wrote:
-> On Wed, 20 May 2020 09:17:51 +0200
-> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
-> 
-> > On Tue, May 19, 2020 at 06:55:35PM +0100, Jonathan Cameron wrote:
-> > > On Tue, 19 May 2020 09:50:59 +0200
-> > > Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
-> > >   
-> > > > v2: fixed missing description  
-> > > 
-> > > Don't put change log here....  
-> > 
-> > Yep I will put it in the cover letter
-> > 
-> > > > 
-> > > > Add vdd-supply and vddio-supply support. Without this support vdd and vddio
-> > > > should be set to always-on in device tree  
-> > > 
-> > > Kind of the opposite.  If they are always on we don't have to provide them
-> > > in the device tree.
-> > >   
-> > 
-> > I wrote that because, testing on msm8916, without setting the regulators to
-> > always on they were controlled by other components and it happened that
-> > the line wasn't ready during probe causing failure to load the module.
-> > 
-> > I will try to reword based on your comment, thank you.
-> 
-> Ah. Understood.  I'd give that explicit example in the patch description.
-> I'd assumed this was the normal case of they weren't being described
-> at all in DT, whereas you case is more complex.
-> 
-> Jonathan
->
+Hello,
 
-Yep, I omitted to describe the case I was in. I'll add it to next patch, thank
-you,
- 
-> > 
-> > > A few trivial things inline.
-> > >   
-> > > > 
-> > > > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > > > ---  
-> > > 
-> > > Change log goes here so we don't end up keeping it in the git log.
-> > >   
-> > > >  drivers/iio/imu/bmi160/bmi160.h      |  2 ++
-> > > >  drivers/iio/imu/bmi160/bmi160_core.c | 27 ++++++++++++++++++++++++++-
-> > > >  2 files changed, 28 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-> > > > index 621f5309d735..923c3b274fde 100644
-> > > > --- a/drivers/iio/imu/bmi160/bmi160.h
-> > > > +++ b/drivers/iio/imu/bmi160/bmi160.h
-> > > > @@ -3,10 +3,12 @@
-> > > >  #define BMI160_H_
-> > > >  
-> > > >  #include <linux/iio/iio.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > >  
-> > > >  struct bmi160_data {
-> > > >  	struct regmap *regmap;
-> > > >  	struct iio_trigger *trig;
-> > > > +	struct regulator_bulk_data supplies[2];
-> > > >  };
-> > > >  
-> > > >  extern const struct regmap_config bmi160_regmap_config;
-> > > > diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-> > > > index 6af65d6f1d28..9bbe0d8e6720 100644
-> > > > --- a/drivers/iio/imu/bmi160/bmi160_core.c
-> > > > +++ b/drivers/iio/imu/bmi160/bmi160_core.c
-> > > > @@ -15,6 +15,7 @@
-> > > >  #include <linux/delay.h>
-> > > >  #include <linux/irq.h>
-> > > >  #include <linux/of_irq.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > >  
-> > > >  #include <linux/iio/iio.h>
-> > > >  #include <linux/iio/triggered_buffer.h>
-> > > > @@ -709,6 +710,12 @@ static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
-> > > >  	unsigned int val;
-> > > >  	struct device *dev = regmap_get_device(data->regmap);
-> > > >  
-> > > > +	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > >  	ret = regmap_write(data->regmap, BMI160_REG_CMD, BMI160_CMD_SOFTRESET);
-> > > >  	if (ret)
-> > > >  		return ret;
-> > > > @@ -793,9 +800,17 @@ int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type)
-> > > >  static void bmi160_chip_uninit(void *data)
-> > > >  {
-> > > >  	struct bmi160_data *bmi_data = data;
-> > > > +	struct device *dev = regmap_get_device(bmi_data->regmap);
-> > > > +	int ret;
-> > > >  
-> > > >  	bmi160_set_mode(bmi_data, BMI160_GYRO, false);
-> > > >  	bmi160_set_mode(bmi_data, BMI160_ACCEL, false);
-> > > > +
-> > > > +	ret = regulator_bulk_disable(ARRAY_SIZE(bmi_data->supplies),
-> > > > +				     bmi_data->supplies);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Failed to disable regulators: %d\n", ret);
-> > > > +	}  
-> > > No need for brackets around a 1 line if block
-> > >   
-> > 
-> > Thank you, I didn't noticed that :-)
-> > 
-> > > 	if (ret)
-> > > 		dev_err(dev, "failed to disable regulators: %d\n", ret);
-> > >   
-> > > >  }
-> > > >  
-> > > >  int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> > > > @@ -815,6 +830,16 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> > > >  	dev_set_drvdata(dev, indio_dev);
-> > > >  	data->regmap = regmap;
-> > > >  
-> > > > +	data->supplies[0].supply = "vdd";
-> > > > +	data->supplies[1].supply = "vddio";
-> > > > +	ret = devm_regulator_bulk_get(dev,
-> > > > +				      ARRAY_SIZE(data->supplies),
-> > > > +				      data->supplies);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Failed to get regulators: %d\n", ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > >  	ret = bmi160_chip_init(data, use_spi);
-> > > >  	if (ret)
-> > > >  		return ret;
-> > > > @@ -853,6 +878,6 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(bmi160_core_probe);
-> > > >  
-> > > > -MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com");
-> > > > +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com>");  
-> > > 
-> > > Good fix but shouldn't be in this patch.   Put it a separate patch on it's own.
-> > >   
-> > 
-> > Ok will separate this fix into another patch, thank you!
-> > 
-> > > >  MODULE_DESCRIPTION("Bosch BMI160 driver");
-> > > >  MODULE_LICENSE("GPL v2");  
-> > > 
-> > >   
-> > 
-> > Best regards,
-> > Jonathan Albrieux
+On Fri, May 22, 2020 at 03:41:59PM +0800, Rahul Tanwar wrote:
+> Add PWM controller driver for Intel's Lightning Mountain(LGM) SoC.
 > 
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  drivers/pwm/Kconfig         |   9 ++
+>  drivers/pwm/Makefile        |   1 +
+>  drivers/pwm/pwm-intel-lgm.c | 356 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 366 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index eebbc917ac97..a582214f50b2 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -232,6 +232,15 @@ config PWM_IMX_TPM
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-imx-tpm.
+>  
+> +config PWM_INTEL_LGM
+> +	tristate "Intel LGM PWM support"
+> +	depends on X86 || COMPILE_TEST
+> +	help
+> +	  Generic PWM framework driver for LGM SoC.
 
-Best regards,
-Jonathan Albrieux
+I wouldn't call this "framework".
+
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-intel-lgm.
+> +
+>  config PWM_JZ4740
+>  	tristate "Ingenic JZ47xx PWM support"
+>  	depends on MACH_INGENIC
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 9a475073dafc..c16a972a101d 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
+>  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+>  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+>  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+> +obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
+>  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+>  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+>  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
+> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+> new file mode 100644
+> index 000000000000..e307fd2457df
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-intel-lgm.c
+> @@ -0,0 +1,356 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Intel Corporation.
+> + */
+
+Please point out limitations of your driver here similar to e.g.
+drivers/pwm/pwm-sifive.c (and in the same format).
+
+You should mention the fixed period of the hardware here (assuming I
+interpreted this correctly below) and missing support for polarity.
+
+How does the PWM behave on disable? Does the output become inactive
+then? Does it complete the currently running period? What about
+reconfiguration? Does changing the duty cycle complete the currently
+running period?
+
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +
+> +#define PWM_FAN_CON0		0x0
+> +#define PWM_FAN_EN_EN		BIT(0)
+> +#define PWM_FAN_EN_DIS		0x0
+> +#define PWM_FAN_EN_MSK		BIT(0)
+> +#define PWM_FAN_MODE_2WIRE	0x0
+> +#define PWM_FAN_MODE_4WIRE	0x1
+> +#define PWM_FAN_MODE_MSK	BIT(1)
+> +#define PWM_FAN_PWM_DIS_DIS	0x0
+> +#define PWM_FAN_PWM_DIS_MSK	BIT(2)
+> +#define PWM_TACH_EN_EN		0x1
+> +#define PWM_TACH_EN_MSK		BIT(4)
+> +#define PWM_TACH_PLUS_2		0x0
+> +#define PWM_TACH_PLUS_4		0x1
+> +#define PWM_TACH_PLUS_MSK	BIT(5)
+> +#define PWM_FAN_DC_MSK		GENMASK(23, 16)
+> +
+> +#define PWM_FAN_CON1		0x4
+> +#define PWM_FAN_MAX_RPM_MSK	GENMASK(15, 0)
+> +
+> +#define PWM_FAN_STAT		0x10
+> +#define PWM_FAN_TACH_MASK	GENMASK(15, 0)
+> +
+> +#define MAX_RPM			(BIT(16) - 1)
+> +#define DFAULT_RPM		4000
+> +#define MAX_DUTY_CYCLE		(BIT(8) - 1)
+> +
+> +#define FRAC_BITS		10
+> +#define TWO_TENTH		204
+> +
+> +#define TWO_SECONDS		2000
+> +#define IGNORE_FIRST_ERR	1
+> +#define THIRTY_SECS_WINDOW	15
+> +#define ERR_CNT_THRESHOLD	6
+> +
+> +struct intel_pwm_chip {
+> +	struct pwm_chip		chip;
+> +	struct regmap		*regmap;
+> +	struct clk		*clk;
+> +	struct reset_control	*rst;
+> +	u32			tach_en;
+> +	u32			max_rpm;
+> +	u32			set_rpm;
+> +	u32			set_dc;
+> +	struct delayed_work	work;
+> +};
+
+I don't like aligning the member names and prefer a single space here.
+(But I'm aware this is subjective and others like it the why you did
+it.)
+
+> +
+> +static inline struct intel_pwm_chip *to_intel_pwm_chip(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct intel_pwm_chip, chip);
+> +}
+> +
+> +static int pwm_update_dc(struct intel_pwm_chip *pc, u32 val)
+
+Please use a common function prefix for all functions in your driver.
+
+> +{
+> +	return regmap_update_bits(pc->regmap, PWM_FAN_CON0, PWM_FAN_DC_MSK,
+> +				  FIELD_PREP(PWM_FAN_DC_MSK, val));
+> +}
+> +
+> +static int intel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			    int duty_ns, int period_ns)
+> +{
+> +	struct intel_pwm_chip *pc = to_intel_pwm_chip(chip);
+> +	u32 val;
+> +
+> +	val = DIV_ROUND_CLOSEST(duty_ns * MAX_DUTY_CYCLE, period_ns);
+> +	val = min_t(u32, val, MAX_DUTY_CYCLE);
+
+The period is fixed for this hardware type? If so you're supposed to
+refuse requests for a period smaller than the actual period length.
+
+Also duty_cycle is supposed to round down.
+
+(That's something that PWM_DEBUG will tell you, too)
+
+> +	if (pc->tach_en) {
+> +		pc->set_dc = val;
+> +		pc->set_rpm = val * pc->max_rpm / MAX_DUTY_CYCLE;
+> +	}
+> +
+> +	return pwm_update_dc(pc, val);
+> +}
+> +
+> +static int intel_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct intel_pwm_chip *pc = to_intel_pwm_chip(chip);
+> +	struct regmap *regmap = pc->regmap;
+> +
+> +	regmap_update_bits(regmap, PWM_FAN_CON0,
+> +			   PWM_FAN_EN_MSK, PWM_FAN_EN_EN);
+> +
+> +	if (pc->tach_en)
+> +		schedule_delayed_work(&pc->work, msecs_to_jiffies(10000));
+> +
+> +	return 0;
+> +}
+> +
+> +static void intel_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct intel_pwm_chip *pc = to_intel_pwm_chip(chip);
+> +	struct regmap *regmap = pc->regmap;
+> +
+> +	if (pc->tach_en)
+> +		cancel_delayed_work_sync(&pc->work);
+> +
+> +	regmap_update_bits(regmap, PWM_FAN_CON0,
+> +			   PWM_FAN_EN_MSK, PWM_FAN_EN_DIS);
+> +}
+> +
+> +static const struct pwm_ops intel_pwm_ops = {
+> +	.config		= intel_pwm_config,
+> +	.enable		= intel_pwm_enable,
+> +	.disable	= intel_pwm_disable,
+> +	.owner		= THIS_MODULE,
+
+Please implement .apply instead of .config/.enable/.disable. Please also
+enable PWM_DEBUG and fix the issues pointed out with it.
+
+> +};
+> +
+> +static void tach_work(struct work_struct *work)
+> +{
+> +	struct intel_pwm_chip *pc = container_of(work, struct intel_pwm_chip,
+> +						 work.work);
+> +	struct regmap *regmap = pc->regmap;
+> +	u32 fan_tach, fan_dc, val;
+> +	s32 diff;
+> +	static u32 fanspeed_err_cnt, time_window, delta_dc;
+> +
+> +	/*
+> +	 * Fan speed is tracked by reading the active duty cycle of PWM output
+> +	 * from the active duty cycle register. Some variance in the duty cycle
+> +	 * register value is expected. So we set a time window of 30 seconds and
+> +	 * if we detect inaccurate fan speed 6 times within 30 seconds then we
+> +	 * mark it as fan speed problem and fix it by readjusting the duty cycle.
+> +	 */
+
+I'm a unhappy to have this in the PWM driver. The PWM driver is supposed
+to be generic and I think this belongs into a dedicated driver.
+
+> +
+> +	if (fanspeed_err_cnt > IGNORE_FIRST_ERR)
+> +		/*
+> +		 * Ignore first time we detect inaccurate fan speed
+> +		 * because it is expected during bootup.
+> +		 */
+> +		time_window++;
+> +
+> +	if (time_window == THIRTY_SECS_WINDOW) {
+> +		/*
+> +		 * This work is scheduled every 2 seconds i.e. each time_window
+> +		 * counter step roughly mean 2 seconds. When the time window
+> +		 * reaches 30 seconds, reset all the counters/logic.
+> +		 */
+> +		fanspeed_err_cnt = 0;
+> +		delta_dc = 0;
+> +		time_window = 0;
+> +	}
+> +
+> +	regmap_read(regmap, PWM_FAN_STAT, &fan_tach);
+> +	fan_tach &= PWM_FAN_TACH_MASK;
+> +	if (!fan_tach)
+> +		goto restart_work;
+> +
+> +	val = DIV_ROUND_CLOSEST(pc->set_rpm << FRAC_BITS, fan_tach);
+> +	diff = val - BIT(FRAC_BITS);
+> +
+> +	if (abs(diff) > TWO_TENTH) {
+> +		/* if duty cycle diff is more than two tenth, detect it as error */
+> +		if (fanspeed_err_cnt > IGNORE_FIRST_ERR)
+> +			delta_dc += val;
+> +		fanspeed_err_cnt++;
+> +	}
+> +
+> +	if (fanspeed_err_cnt == ERR_CNT_THRESHOLD) {
+> +		/*
+> +		 * We detected fan speed errors 6 times with 30 seconds.
+> +		 * Fix the error by readjusting duty cycle and reset
+> +		 * our counters/logic.
+> +		 */
+> +		fan_dc = pc->set_dc * delta_dc >> (FRAC_BITS + 2);
+> +		fan_dc = min_t(u32, fan_dc, MAX_DUTY_CYCLE);
+> +		pwm_update_dc(pc, fan_dc);
+> +		fanspeed_err_cnt = 0;
+> +		delta_dc = 0;
+> +		time_window = 0;
+> +	}
+> +
+> +restart_work:
+> +	/*
+> +	 * Fan speed doesn't need continous tracking. Schedule this work
+> +	 * every two seconds so it doesn't steal too much cpu cycles.
+> +	 */
+> +	schedule_delayed_work(&pc->work, msecs_to_jiffies(TWO_SECONDS));
+> +}
+> +
+> +static void pwm_init(struct intel_pwm_chip *pc)
+> +{
+> +	struct device *dev = pc->chip.dev;
+> +	struct regmap *regmap = pc->regmap;
+> +	u32 max_rpm, fan_wire, tach_plus, con0_val, con0_mask;
+> +
+> +	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
+> +		fan_wire = 2; /* default is 2 wire mode */
+> +
+> +	con0_val = FIELD_PREP(PWM_FAN_PWM_DIS_MSK, PWM_FAN_PWM_DIS_DIS);
+> +	con0_mask = PWM_FAN_PWM_DIS_MSK | PWM_FAN_MODE_MSK;
+> +
+> +	switch (fan_wire) {
+> +	case 2 ... 3:
+> +		con0_val |= FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
+> +		break;
+
+This can be dropped as it matches the default case.
+
+> +	case 4:
+> +		con0_val |= FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_4WIRE) |
+> +			    FIELD_PREP(PWM_TACH_EN_MSK, PWM_TACH_EN_EN);
+> +		con0_mask |= PWM_TACH_EN_MSK | PWM_TACH_PLUS_MSK;
+> +		pc->tach_en = 1;
+> +		break;
+> +	default:
+> +		/* default is 2wire mode */
+> +		con0_val |= FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
+> +		break;
+> +	}
+> +
+> +	if (pc->tach_en) {
+> +		if (device_property_read_u32(dev, "intel,tach-plus",
+> +					     &tach_plus))
+> +			tach_plus = 2;
+> +
+> +		switch (tach_plus) {
+> +		case 2:
+> +			con0_val |= FIELD_PREP(PWM_TACH_PLUS_MSK,
+> +					       PWM_TACH_PLUS_2);
+> +			break;
+> +		case 4:
+> +			con0_val |= FIELD_PREP(PWM_TACH_PLUS_MSK,
+> +					       PWM_TACH_PLUS_4);
+> +			break;
+> +		default:
+> +			con0_val |= FIELD_PREP(PWM_TACH_PLUS_MSK,
+> +					       PWM_TACH_PLUS_2);
+> +			break;
+
+Similarily here, case 2: and default are identical.
+
+> +		}
+> +
+> +		if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
+> +			max_rpm = DFAULT_RPM;
+> +
+> +		max_rpm = min_t(u32, max_rpm, MAX_RPM);
+> +		if (max_rpm == 0)
+> +			max_rpm = DFAULT_RPM;
+> +
+> +		pc->max_rpm = max_rpm;
+> +		INIT_DEFERRABLE_WORK(&pc->work, tach_work);
+> +		regmap_update_bits(regmap, PWM_FAN_CON1,
+> +				   PWM_FAN_MAX_RPM_MSK, max_rpm);
+> +	}
+> +
+> +	regmap_update_bits(regmap, PWM_FAN_CON0, con0_mask, con0_val);
+> +}
+> +
+> +static const struct regmap_config pwm_regmap_config = {
+> +	.reg_bits       = 32,
+> +	.reg_stride     = 4,
+> +	.val_bits       = 32,
+> +};
+> +
+> +static int intel_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct intel_pwm_chip *pc;
+> +	struct device *dev = &pdev->dev;
+> +	void __iomem *io_base;
+> +	int ret;
+> +
+> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+> +	if (!pc)
+> +		return -ENOMEM;
+> +
+> +	io_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(io_base))
+
+error message here?
+
+> +		return PTR_ERR(io_base);
+> +
+> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
+> +	if (IS_ERR(pc->regmap)) {
+> +		ret = PTR_ERR(pc->regmap);
+> +		dev_err(dev, "failed to init register map: %d\n", ret);
+
+Better use %pe for the error code to get a more descriptive message.
+
+> +		return ret;
+> +	}
+> +
+> +	pc->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(pc->clk)) {
+> +		ret = PTR_ERR(pc->clk);
+> +		dev_err(dev, "failed to get clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	pc->rst = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(pc->rst)) {
+> +		ret = PTR_ERR(pc->rst);
+> +		dev_err(dev, "failed to get reset control: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(pc->clk);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	reset_control_deassert(pc->rst);
+
+return value check is missing.
+
+> +	pc->chip.dev = dev;
+> +	pc->chip.ops = &intel_pwm_ops;
+> +	pc->chip.npwm = 1;
+> +
+> +	pwm_init(pc);
+> +
+> +	ret = pwmchip_add(&pc->chip);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to add PWM chip: %d\n", ret);
+> +		clk_disable_unprepare(pc->clk);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, pc);
+> +	return 0;
+> +}
+> +
+> +static int intel_pwm_remove(struct platform_device *pdev)
+> +{
+> +	struct intel_pwm_chip *pc = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	if (pc->tach_en)
+> +		cancel_delayed_work_sync(&pc->work);
+> +
+> +	ret = pwmchip_remove(&pc->chip);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	reset_control_assert(pc->rst);
+> +
+> +	clk_disable_unprepare(pc->clk);
+
+In .probe() you first release reset and then enable the clock. It's good
+style to do it the other way round in .remove().
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
