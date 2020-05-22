@@ -2,122 +2,185 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAD8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 16:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22953C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 16:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1DA2070A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 16:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C532070A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 16:11:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezt7no7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730114AbgEVQCa (ORCPT
+        id S1730326AbgEVQLO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 12:02:30 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45638 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730031AbgEVQCa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 12:02:30 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 69A7C803087B;
-        Fri, 22 May 2020 16:02:26 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WmsIA_XZQNfR; Fri, 22 May 2020 19:02:25 +0300 (MSK)
-Date:   Fri, 22 May 2020 19:02:24 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/8] clocksource: Fix MIPS GIC and DW APB Timer for
- Baikal-T1 SoC support
-Message-ID: <20200522160224.4bex4bz36uavnzoo@mobilestation>
-References: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
- <211ab91d-6085-3073-1cbc-2300abade1b7@linaro.org>
- <20200522154105.6gkutlgi2hxqjjzc@mobilestation>
- <0bbed067-f588-ef3e-a98a-c4b291810e4f@linaro.org>
+        Fri, 22 May 2020 12:11:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730195AbgEVQLO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 12:11:14 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121E9C061A0E;
+        Fri, 22 May 2020 09:11:14 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id f21so2197324pgg.12;
+        Fri, 22 May 2020 09:11:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6yGwOkXLg7GHKHathTBWhqxYl0q0EDsPE6Xli2YNqgM=;
+        b=ezt7no7rFfuyVnbv7ys1ZSAS1QceFEK4CnfrJrloyrjdfo/ENc5Jb/vUSIt9qZRCVi
+         k82tOj5elvhMWbRZe7bZ49J7RC6Kduui61/Ww2qccIalrNT/PAHjeoqXWEVhxCnq5Lem
+         QSMI2UXek50KnEObR+SeCEFa39WavI7wwrFd5PU61DDBA+JbQDgxYG9pap/0S/pN1Axt
+         f3uM+GVBUCgRjKDa/WjeLM3x3F9fh0ZgF680OefkIu9FBrUL0xw8+I3M/TXi5gnqp8oC
+         b1KNBbf1vx6nmtbyfyJH3iuogURcdbw5f2DUPCk3DLw/2HaHUh7hAy2j9xsIKn7guhLS
+         0Htw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6yGwOkXLg7GHKHathTBWhqxYl0q0EDsPE6Xli2YNqgM=;
+        b=E6TJ57T9PaX3RlMJzFfwr/ONC/vRxMSv+66Efg0fbn/sBzgBvbBTzlBmbZEROTf6jD
+         oUNxeWGDrGdgcj/3LZzyrdQEvCM5QBtGp2pV5jGjnZDFndB8CEWUURmAJ0EXxaY/R7vZ
+         4id61IEXDTsglSgOfMb9YDmQCltqPKacBIX3ojvhzN98qgU9Gisf9XDkxxfL+es2IYUO
+         8j+TU3gPrFfNjMfThLG8hod4Lt2bmZZU5CBP2Wr2Cf6h2kBkVPAaNrA8tAN3XzXdSux6
+         03IgwORNBh0+UsjEUD14C4sH7elzYPtoC3pAbRM1WiaSwztSgw6NpDIv9RyA2TlMGoVC
+         dZeQ==
+X-Gm-Message-State: AOAM530oDrF0yjS+yKXE2zGhef5MhsziHEFQ05JGyqEtsX1u3/v3XZO3
+        HwIKIbcmo9i2QeAuvahatKtP6UIJ
+X-Google-Smtp-Source: ABdhPJxiQcMkTlT2EgGKGmZxNBYjphQYy22duEAY+YaW20zVknDvqyZME8MWl9SPtKdIrM1SgckLsg==
+X-Received: by 2002:a65:6799:: with SMTP id e25mr14924885pgr.9.1590163873042;
+        Fri, 22 May 2020 09:11:13 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u4sm11820575pjf.3.2020.05.22.09.11.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 09:11:12 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 2/4] net: phy: Add a helper to return the
+ index for of the internal delay
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
+        davem@davemloft.net, robh@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200522122534.3353-1-dmurphy@ti.com>
+ <20200522122534.3353-3-dmurphy@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <da85ecb0-1da1-2ccd-0830-a3ec18ee486c@gmail.com>
+Date:   Fri, 22 May 2020 09:11:09 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0bbed067-f588-ef3e-a98a-c4b291810e4f@linaro.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200522122534.3353-3-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 05:44:55PM +0200, Daniel Lezcano wrote:
-> On 22/05/2020 17:41, Serge Semin wrote:
-> > On Fri, May 22, 2020 at 05:28:42PM +0200, Daniel Lezcano wrote:
-> >> On 21/05/2020 22:48, Serge Semin wrote:
-> >>> As for all Baikal-T1 SoC related patchsets, which need this, we replaced
-> >>> the DW APB Timer legacy plain text-based dt-binding file with DT schema.
-> >>> Similarly the MIPS GIC bindings file is also converted to DT schema seeing
-> >>> it also defines the MIPS GIC Timer binding.
-> >>>
-> >>> Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a
-> >>> functionality of two another timers: embedded into the MIPS GIC timer and
-> >>> three external DW timers available over APB bus. But we can't use them
-> >>> before the corresponding drivers are properly fixed. First of all DW APB
-> >>> Timer shouldn't be bound to a single CPU, since as being accessible over
-> >>> APB they are external with respect to all possible CPUs. Secondly there
-> >>> might be more than just two DW APB Timers in the system (Baikal-T1 has
-> >>> three of them), so permit the driver to use one of them as a clocksource
-> >>> and the rest - for clockevents. Thirdly it's possible to use MIPS GIC
-> >>> timer as a clocksource so register it in the corresponding subsystem
-> >>> (the patch has been found in the Paul Burton MIPS repo so I left the
-> >>> original Signed-off-by attribute). Finally in the same way as r4k timer
-> >>> the MIPS GIC timer should be used with care when CPUFREQ config is enabled
-> >>> since in case of CM2 the timer counting depends on the CPU reference clock
-> >>> frequency while the clocksource subsystem currently doesn't support the
-> >>> timers with non-stable clock.
-> >>>
-> >>> This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-> >>> base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-> >>> tag: v5.7-rc4
-> >>
-> >> Applied patch 1,2,4,5,6,7,8
-> >>
-> >> Thanks!
-> > 
-> > Great! Thanks. Am I right to expect the series in: git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-> > at the branch timers/core?
-> 
-> The series first goes to:
-> 
-> https://git.linaro.org/people/daniel.lezcano/linux.git/log/?h=timers/drivers/next
-> 
-> , then I send the PR to Thomas, who send in turn a PR at the merge
-> windows to Linus for the entire tip tree.
 
-Ok. Thanks for clarification.
 
--Sergey
+On 5/22/2020 5:25 AM, Dan Murphy wrote:
+> Add a helper function that will return the index in the array for the
+> passed in internal delay value.  The helper requires the array, size and
+> delay value.
+> 
+> The helper will then return the index for the exact match or return the
+> index for the index to the closest smaller value.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  drivers/net/phy/phy_device.c | 45 ++++++++++++++++++++++++++++++++++++
+>  include/linux/phy.h          |  2 ++
+>  2 files changed, 47 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 7481135d27ab..40f53b379d2b 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -2661,6 +2661,51 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
+>  }
+>  EXPORT_SYMBOL(phy_get_pause);
+>  
+> +/**
+> + * phy_get_delay_index - returns the index of the internal delay
+> + * @phydev: phy_device struct
+> + * @delay_values: array of delays the PHY supports
+> + * @size: the size of the delay array
+> + * @delay: the delay to be looked up
+> + *
+> + * Returns the index within the array of internal delay passed in.
 
+Can we consider using s32 for storage that way the various
+of_read_property_read_u32() are a natural fit (int works too, but I
+would prefer being explicit).
+
+> + */
+> +int phy_get_delay_index(struct phy_device *phydev, int *delay_values, int size,
+> +			int delay)
+> +{
+> +	int i;
+> +
+> +	if (size <= 0)
+> +		return -EINVAL;
+> +
+> +	if (delay <= delay_values[0])
+> +		return 0;
+> +
+> +	if (delay > delay_values[size - 1])
+> +		return size - 1;
+
+Does not that assume that the delays are sorted by ascending order, if
+so, can you make it clear in the kernel doc?
+
+> +
+> +	for (i = 0; i < size; i++) {
+> +		if (delay == delay_values[i])
+> +			return i;
+> +
+> +		/* Find an approximate index by looking up the table */
+> +		if (delay > delay_values[i - 1] &&
+
+&& i > 0 so you do not accidentally under-run the array?
+
+> +		    delay < delay_values[i]) {
+> +			if (delay - delay_values[i - 1] < delay_values[i] - delay)
+> +				return i - 1;
+> +			else
+> +				return i;
+> +		}
+> +
+> +	}
+> +
+> +	phydev_err(phydev, "error finding internal delay index for %d\n",
+> +		   delay);
+> +
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL(phy_get_delay_index);
+> +
+>  static bool phy_drv_supports_irq(struct phy_driver *phydrv)
+>  {
+>  	return phydrv->config_intr && phydrv->ack_interrupt;
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 2bcdf19ed3b4..73552612c189 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -1408,6 +1408,8 @@ void phy_set_asym_pause(struct phy_device *phydev, bool rx, bool tx);
+>  bool phy_validate_pause(struct phy_device *phydev,
+>  			struct ethtool_pauseparam *pp);
+>  void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause);
+> +int phy_get_delay_index(struct phy_device *phydev, int *delay_values,
+> +			int size, int delay);
+>  void phy_resolve_pause(unsigned long *local_adv, unsigned long *partner_adv,
+>  		       bool *tx_pause, bool *rx_pause);
+>  
 > 
-> 
-> -- 
-> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-> 
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
+
+-- 
+Florian
