@@ -2,184 +2,271 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7B2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 13:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD66AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 13:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E04B205CB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 13:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F3B2065F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 13:27:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W0hZdDkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbgEVNPg (ORCPT
+        id S1729728AbgEVN1m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 09:15:36 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44684 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbgEVNPf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 09:15:35 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5A558803087B;
-        Fri, 22 May 2020 13:15:31 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2SinbSvoL-v6; Fri, 22 May 2020 16:15:30 +0300 (MSK)
-Date:   Fri, 22 May 2020 16:15:26 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Huacai Chen <chenhc@lemote.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Liangliang Huang <huanglllzu@gmail.com>,
-        =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
-        Zou Wei <zou_wei@huawei.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 03/13] mips: Add MIPS Release 5 support
-Message-ID: <20200522131526.pmqtpmreq6ly3kou@mobilestation>
-References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
- <20200521140725.29571-4-Sergey.Semin@baikalelectronics.ru>
- <20200522072743.GA7331@alpha.franken.de>
+        Fri, 22 May 2020 09:27:42 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:10824 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729406AbgEVN1l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 09:27:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590154060; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=aVvjVLZCUqbbjgAaWN6mYNWCWBwPMGWumaXLB5ZNMvs=; b=W0hZdDkfAgW6NzUsVnN5BfatN0PvezclVyX/HgStgEJuO0pN3MEmgdIXNvLzD3NxdcGoxspg
+ xrx7lOkW8PbJ1RY9yOMw8UBAcqmMFudbZSOU04tomgwf1nRy+mXoebRFa0r3mYc0fmqDySuC
+ 7Spg9AZJ0s2fKURtFxpso7pL4W0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ec7d34aeb073d569134556e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 13:27:38
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0DBE5C433CA; Fri, 22 May 2020 13:27:38 +0000 (UTC)
+Received: from [192.168.0.106] (unknown [183.83.65.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F6D2C433C8;
+        Fri, 22 May 2020 13:27:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F6D2C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
+ <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
+ <20200521190739.GC1331782@builder.lan>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <08d11687-7aee-2c62-9435-670be1afb21e@codeaurora.org>
+Date:   Fri, 22 May 2020 18:57:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200522072743.GA7331@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200521190739.GC1331782@builder.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 09:27:43AM +0200, Thomas Bogendoerfer wrote:
-> On Thu, May 21, 2020 at 05:07:14PM +0300, Serge Semin wrote:
-> > There are five MIPS32/64 architecture releases currently available:
-> > from 1 to 6 except fourth one, which was intentionally skipped.
-> > Three of them can be called as major: 1st, 2nd and 6th, that not only
-> > have some system level alterations, but also introduced significant
-> > core/ISA level updates. The rest of the MIPS architecture releases are
-> > minor.
-> > 
-> > Even though they don't have as much ISA/system/core level changes
-> > as the major ones with respect to the previous releases, they still
-> > provide a set of updates (I'd say they were intended to be the
-> > intermediate releases before a major one) that might be useful for the
-> > kernel and user-level code, when activated by the kernel or compiler.
-> > In particular the following features were introduced or ended up being
-> > available at/after MIPS32/64 Release 5 architecture:
-> > + the last release of the misaligned memory access instructions,
-> > + virtualisation - VZ ASE - is optional component of the arch,
-> > + SIMD - MSA ASE - is optional component of the arch,
-> > + DSP ASE is optional component of the arch,
-> > + CP0.Status.FR=1 for CP1.FIR.F64=1 (pure 64-bit FPU general registers)
-> >   must be available if FPU is implemented,
-> > + CP1.FIR.Has2008 support is required so CP1.FCSR.{ABS2008,NAN2008} bits
-> >   are available.
-> > + UFR/UNFR aliases to access CP0.Status.FR from user-space by means of
-> >   ctc1/cfc1 instructions (enabled by CP0.Config5.UFR),
-> > + CP0.COnfig5.LLB=1 and eretnc instruction are implemented to without
-> >   accidentally clearing LL-bit when returning from an interrupt,
-> >   exception, or error trap,
-> > + XPA feature together with extended versions of CPx registers is
-> >   introduced, which needs to have mfhc0/mthc0 instructions available.
-> > 
-> > So due to these changes GNU GCC provides an extended instructions set
-> > support for MIPS32/64 Release 5 by default like eretnc/mfhc0/mthc0. Even
-> > though the architecture alteration isn't that big, it still worth to be
-> > taken into account by the kernel software. Finally we can't deny that
-> > some optimization/limitations might be found in future and implemented
-> > on some level in kernel or compiler. In this case having even
-> > intermediate MIPS architecture releases support would be more than
-> > useful.
-> > 
-> > So the most of the changes provided by this commit can be split into
-> > either compile- or runtime configs related. The compile-time related
-> > changes are caused by adding the new CONFIG_CPU_MIPS32_R5/CONFIG_CPU_MIPSR5
-> > configs and concern the code activating MIPSR2 or MIPSR6 already
-> > implemented features (like eretnc/LLbit, mthc0/mfhc0). In addition
-> > CPU_HAS_MSA can be now freely enabled for MIPS32/64 release 5 based
-> > platforms as this is done for CPU_MIPS32_R6 CPUs. The runtime changes
-> > concerns the features which are handled with respect to the MIPS ISA
-> > revision detected at run-time by means of CP0.Config.{AT,AR} bits. Alas
-> > these fields can be used to detect either r1 or r2 or r6 releases.
-> > But since we know which CPUs in fact support the R5 arch, we can manually
-> > set MIPS_CPU_ISA_M32R5/MIPS_CPU_ISA_M64R5 bit of c->isa_level and then
-> > use cpu_has_mips32r5/cpu_has_mips64r5 where it's appropriate.
-> > 
-> > Since XPA/EVA provide too complex alterationss and to have them used with
-> > MIPS32 Release 2 charged kernels (for compatibility with current platform
-> > configs) they are left to be setup as a separate kernel configs.
-> > 
-> > Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> >  arch/mips/Kconfig                    | 56 +++++++++++++++++++++++++---
-> >  arch/mips/Makefile                   |  2 +
-> >  arch/mips/include/asm/asmmacro.h     | 18 +++++----
-> >  arch/mips/include/asm/compiler.h     |  5 +++
-> >  arch/mips/include/asm/cpu-features.h | 27 ++++++++++----
-> >  arch/mips/include/asm/cpu-info.h     |  2 +-
-> >  arch/mips/include/asm/cpu-type.h     |  7 +++-
-> >  arch/mips/include/asm/cpu.h          | 10 +++--
-> >  arch/mips/include/asm/fpu.h          |  4 +-
-> >  arch/mips/include/asm/hazards.h      |  8 ++--
-> >  arch/mips/include/asm/module.h       |  4 ++
-> >  arch/mips/include/asm/stackframe.h   |  2 +-
-> >  arch/mips/include/asm/switch_to.h    |  8 ++--
-> >  arch/mips/kernel/cpu-probe.c         | 17 +++++++++
-> >  arch/mips/kernel/entry.S             |  6 +--
-> >  arch/mips/kernel/proc.c              |  4 ++
-> >  arch/mips/kernel/r4k_fpu.S           | 14 +++----
-> >  arch/mips/kvm/vz.c                   |  6 +--
-> >  arch/mips/lib/csum_partial.S         |  6 ++-
-> >  arch/mips/mm/c-r4k.c                 |  7 ++--
-> >  arch/mips/mm/sc-mips.c               |  7 ++--
-> >  21 files changed, 163 insertions(+), 57 deletions(-)
-> 
-> applied to mips-next. I've changed the two /* fall through */ by fallthrough;
-> while appliny. Running checkpatch would have caught that ;-)
+Hi Bjorn,
 
-Good. Thanks. Actually I've seen that warning, but just didn't know what way to
-choose.) So I've decided to leave the comment-based Fall-through fixup seeing
-the rest of the file is using the older way. By doing so I've kept the locally
-implemented coding style. Though I've heard the explicit attribute "fallthrough;"
-utilization is a preferred way of marking combined case statements.
+On 5/22/2020 12:37 AM, Bjorn Andersson wrote:
+> On Thu 21 May 08:23 PDT 2020, Veerabhadrarao Badiganti wrote:
+>
+>> On qcom SD host controllers voltage switching be done after the HW
+>> is ready for it. The HW informs its readiness through power irq.
+>> The voltage switching should happen only then.
+>>
+>> Use the internal voltage switching and then control the voltage
+>> switching using power irq.
+>>
+>> Set the regulator load as well so that regulator can be configured
+>> in LPM mode when in is not being used.
+>>
+>> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
+>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+>> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
+>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+>> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Looks better, thanks.
+>
+>> ---
+>>   drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 198 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> [..]
+>>   static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+>> @@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
+>>   		sdhci_msm_hs400(host, &mmc->ios);
+>>   }
+>>   
+>> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (IS_ERR(mmc->supply.vmmc))
+>> +		return 0;
+>> +
+>> +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
+>> +	if (ret)
+>> +		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
+>> +			mmc_hostname(mmc), mmc->ios.vdd, ret);
+> Missed this one on v1, in the event that mmc_regulator_set_ocr() return
+> a non-zero value it has already printed an error message. So please
+> replace the tail with just:
+>
+> 	return mmc_regulator_set_ocr(...);
+>
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
+>> +			      struct mmc_host *mmc, bool level)
+>> +{
+>> +	int load, ret;
+>> +	struct mmc_ios ios;
+>> +
+>> +	if (IS_ERR(mmc->supply.vqmmc)			 ||
+>> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
+>> +	    (msm_host->vqmmc_enabled == level))
+>> +		return 0;
+>> +
+>> +	if (msm_host->vqmmc_load) {
+>> +		load = level ? msm_host->vqmmc_load : 0;
+>> +		ret = regulator_set_load(mmc->supply.vqmmc, load);
+> Sorry for the late reply on v1, but please see my explanation regarding
+> load and always-on regulators there.
 
--Sergey
+<Merging your comment from V1 here>
 
-> 
-> Thomas.
-> 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+ >> You should still call regulator_enable()/regulator_disable() on your
+ >> consumer regulator in this driver. When you do this the regulator core
+ >> will conclude that the regulator_dev (i.e. the part that represents the
+ >> hardware) is marked always_on and will not enable/disable the regulator.
+
+ >> But it will still invoke _regulator_handle_consumer_enable() and
+ >> _regulator_handle_consumer_disable(), which will aggregate the "load" of
+ >> all client regulators and update the regulator's load.
+
+ >> So this will apply the load as you expect regardless of it being
+ >> supplied by a regulator marked as always_on.
+
+Since I'm not turning off this regulator for eMMC, I wanted to keep it 
+in LPM mode
+to save some power.
+When the regulator configured in auto mode (RPMH_REGULATOR_MODE_AUTO) it
+switches to LPM/HPM mode based on the active load.
+So i have to minimize my driver load requirement so that I can let this 
+regulator
+in LPM mode.
+So i need to set load every-time I disable/enable the regulator.
+
+>> +		if (ret) {
+>> +			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
+>> +				mmc_hostname(mmc), ret);
+>> +			goto out;
+>> +		}
+>> +	}
+>> +
+>> +	if (level) {
+>> +		/* Set the IO voltage regulator to default voltage level */
+>> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
+>> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
+>> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
+>> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
+>> +
+>> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
+>> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
+>> +			if (ret < 0) {
+>> +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
+>> +					mmc_hostname(mmc), ret);
+>> +				goto out;
+>> +			}
+>> +		}
+>> +		ret = regulator_enable(mmc->supply.vqmmc);
+>> +	} else {
+>> +		ret = regulator_disable(mmc->supply.vqmmc);
+>> +	}
+>> +
+>> +	if (ret)
+>> +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
+>> +			mmc_hostname(mmc), level ? "en":"dis", ret);
+>> +	else
+>> +		msm_host->vqmmc_enabled = level;
+>> +out:
+>> +	return ret;
+>> +}
+> [..]
+>> +static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
+>> +				      struct mmc_ios *ios)
+>> +{
+>> +	struct sdhci_host *host = mmc_priv(mmc);
+>> +	u16 ctrl, status;
+>> +
+>> +	/*
+>> +	 * Signal Voltage Switching is only applicable for Host Controllers
+>> +	 * v3.00 and above.
+>> +	 */
+>> +	if (host->version < SDHCI_SPEC_300)
+>> +		return 0;
+>> +
+>> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+>> +
+>> +	switch (ios->signal_voltage) {
+>> +	case MMC_SIGNAL_VOLTAGE_330:
+>> +		if (!(host->flags & SDHCI_SIGNALING_330))
+>> +			return -EINVAL;
+>> +
+>> +		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
+>> +		ctrl &= ~SDHCI_CTRL_VDD_180;
+>> +		break;
+>> +	case MMC_SIGNAL_VOLTAGE_180:
+>> +		if (!(host->flags & SDHCI_SIGNALING_180))
+>> +			return -EINVAL;
+>> +
+>> +		/*
+>> +		 * Enable 1.8V Signal Enable in the Host Control2
+>> +		 * register
+>> +		 */
+>> +		ctrl |= SDHCI_CTRL_VDD_180;
+>> +		break;
+>> +	case MMC_SIGNAL_VOLTAGE_120:
+>> +		if (!(host->flags & SDHCI_SIGNALING_120))
+>> +			return -EINVAL;
+>> +		return 0;
+>> +	default:
+>> +		/* No signal voltage switch required */
+>> +		return 0;
+>> +	}
+>> +
+>> +	sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
+>> +
+>> +	/* Wait for 5ms */
+>> +	usleep_range(5000, 5500);
+>> +
+>> +	/* regulator output should be stable within 5 ms */
+>> +	status = !!(ctrl & SDHCI_CTRL_VDD_180);
+>> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+>> +	if (!!(ctrl &  SDHCI_CTRL_VDD_180) == status)
+> You should be able to drop the !! both here and when assigning status.
+>
+> Overall this looks neater, thanks for reworking it.
+>
+> Regards,
+> Bjorn
+
+
+Thanks
+
+Veera
+
