@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808B6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3D8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 606D622254
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DDF22472
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159055;
-	bh=rqrGl13jobhYXcTJKyrzebOW90O43LvkFl6zGUpmsIc=;
+	s=default; t=1590159086;
+	bh=VMPVLPjD0+WHhRDFJyg3MGAJZ62iSw/QNHYKSyeBzd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBdA7soqciHp/6NGD8qd8Skiu4qgz1vN+5Mxg3BMJ5LlQHOSDinGc5clctLmCELW6
-	 QilaUmDN6ihJ63f/ifANCGMDhXsvNQ8O630c/qMK20nXfBL7By0D2Gjn7LsH4IONhY
-	 jfCNlMGQl7io/Njnsp5TXB4QHakaU7Cqqc62QfMs=
+	b=j8E1TzGGXdYW7QuRGb62pwDtjr6WQubGBcIqfPZoZi95o0G+h5GsSpZzcREcs+DxS
+	 EHpDLcHTHkDuRP3XM4YWGKkCrrb5W+5/3K0slZKjMxirQqLR4HahbOypH98zeMr3N/
+	 CYI4Iijmg8pSeqHmg6Mg+n9U8RClzGNtn8erMT58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgEVOuy (ORCPT
+        id S1730951AbgEVOvY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52296 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:51:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730822AbgEVOut (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:49 -0400
+        id S1730985AbgEVOvX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FDB822254;
-        Fri, 22 May 2020 14:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82BA2223E0;
+        Fri, 22 May 2020 14:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159049;
-        bh=rqrGl13jobhYXcTJKyrzebOW90O43LvkFl6zGUpmsIc=;
+        s=default; t=1590159083;
+        bh=VMPVLPjD0+WHhRDFJyg3MGAJZ62iSw/QNHYKSyeBzd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIsWp/lw135yrmzpeS/YU+0FqDKZcLbYxUIeHOwfCLtvALFGs+Xblay17aE660nLm
-         u145BoZzTfpx+yu3gJNrZRVsFS59ShHYX4k5GenpTENn39vTiZk0YF1BRb75JkFTtk
-         PXM82OSvvea/IoquMBGIVExvSwRt4g/TpkMebng4=
+        b=tDchs/XFSFsUzeKcl3LIKfAGmQOS1qcHkJus8b3WwDEHdAy4mGu7tRHagD1XeQ2tK
+         I/KPZRFQj//APKDL6Yse/UompKPyNYuWfQzMPZHNMMlOSL92oD41seoLGiiBbNJSYd
+         Y2eDamAoBLSsvSWrbgSQSitOJni/zVEnQR1srrNM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 03/32] arm64: dts: rockchip: fix status for &gmac2phy in rk3328-evb.dts
-Date:   Fri, 22 May 2020 10:50:15 -0400
-Message-Id: <20200522145044.434677-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 02/19] arm64: dts: rockchip: fix status for &gmac2phy in rk3328-evb.dts
+Date:   Fri, 22 May 2020 10:51:03 -0400
+Message-Id: <20200522145120.434921-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
-References: <20200522145044.434677-1-sashal@kernel.org>
+In-Reply-To: <20200522145120.434921-1-sashal@kernel.org>
+References: <20200522145120.434921-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -77,7 +77,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-index 6abc6f4a86cf..05265b38cc02 100644
+index 212dd8159da9..d89f3451ace5 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
 @@ -86,7 +86,7 @@
