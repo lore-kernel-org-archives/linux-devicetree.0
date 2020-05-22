@@ -2,271 +2,166 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD66AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 13:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDFBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 13:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F3B2065F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 13:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B0B20738
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 13:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W0hZdDkf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXcf6ZXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgEVN1m (ORCPT
+        id S1729604AbgEVNby (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 09:27:42 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:10824 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729406AbgEVN1l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 09:27:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590154060; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=aVvjVLZCUqbbjgAaWN6mYNWCWBwPMGWumaXLB5ZNMvs=; b=W0hZdDkfAgW6NzUsVnN5BfatN0PvezclVyX/HgStgEJuO0pN3MEmgdIXNvLzD3NxdcGoxspg
- xrx7lOkW8PbJ1RY9yOMw8UBAcqmMFudbZSOU04tomgwf1nRy+mXoebRFa0r3mYc0fmqDySuC
- 7Spg9AZJ0s2fKURtFxpso7pL4W0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ec7d34aeb073d569134556e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 13:27:38
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0DBE5C433CA; Fri, 22 May 2020 13:27:38 +0000 (UTC)
-Received: from [192.168.0.106] (unknown [183.83.65.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F6D2C433C8;
-        Fri, 22 May 2020 13:27:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F6D2C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
- <20200521190739.GC1331782@builder.lan>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <08d11687-7aee-2c62-9435-670be1afb21e@codeaurora.org>
-Date:   Fri, 22 May 2020 18:57:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200521190739.GC1331782@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Fri, 22 May 2020 09:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729367AbgEVNby (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 09:31:54 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F3DC061A0E;
+        Fri, 22 May 2020 06:31:54 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u22so4378166plq.12;
+        Fri, 22 May 2020 06:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fIP5XgLNH8pQd/AT+lCYKyHiYHAS6BGBNzZ5yozZhZ0=;
+        b=HXcf6ZXOabHaWhWWiBKy1SEjM5KKFbiHktOCs6UpJOsdHEQw86gLtsnxG1mj1Hmqq7
+         ASQpWbDHKzp4r8oS6ZOIIZo/IycsomCm5iRIWEpxMoDU5wJJOXNcVcKo5mFnzzIEotx/
+         T6uZXfnP2/Z0ldHFKw7qWPI6+6HtlJkP2yRqChHzEuYpa1AajOsYIdkycWjkKaz6GUfZ
+         685rdsXYbb7PA9b0zS3aEdA3gzglOt45FeqLZmS/MEhjfhVHhCDWiPCzzFcAVqUXQlCG
+         2WcAzYVmD8z8qEcV94HIkoAtQUh2aYtCJ2Mr2UPmaGTOYkd078NXQBygTIky717HHv+9
+         FpOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fIP5XgLNH8pQd/AT+lCYKyHiYHAS6BGBNzZ5yozZhZ0=;
+        b=RathOnKM2pRWmxjlGjLiJQ/bqg7E6cSSJEWbW1a2b6YJdDuuKdxgjtDiFwMYyLphnS
+         v6O2VZ7ArvmzJJT6CpRePMyBZHgbgjwH4AGJWAPR2ygu1lowyH4L01kv648wUz1Ju3TO
+         N/JWaV6GnkAQ7/4AIw0k0J1ycLuDLT25B9DTE1COaSiaDpNGSgG+FzOYMF7XsG+HcYYr
+         STyeUZH3G3t2DNi5cZ+lRPEVniSp1IWTLQ0BkRipnLqoXdFTHkZNnCwS53WaZHYfrQWs
+         S/5EKJ8wIKA7q8aq0uHeWtkH/i8C7FUTihX9vBYxpydlC793wc0FHOwj1QBiwJFaBSin
+         PIsw==
+X-Gm-Message-State: AOAM533YKasvqeteuaO0c6IsTJWAcE0RnVbIFdCE5b2bRPh5SFAbmLNM
+        wZ2UuhYsXwZqWAICznDzYAKFCiZc
+X-Google-Smtp-Source: ABdhPJxxegpbhEmta8ZCz6dKfvWPO/4qUjiovSmBDzZfUPENTctCBSEEGmfUrxmMkUTsSubpd4hJeQ==
+X-Received: by 2002:a17:902:a414:: with SMTP id p20mr15222856plq.333.1590154298234;
+        Fri, 22 May 2020 06:31:38 -0700 (PDT)
+Received: from localhost.localdomain ([45.135.186.16])
+        by smtp.gmail.com with ESMTPSA id c14sm6753132pfp.122.2020.05.22.06.31.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 06:31:37 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     robh+dt@kernel.org, jassisinghbrar@gmail.com
+Cc:     orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 1/2] dt-bindings: mailbox: Add the Spreadtrum mailbox documentation
+Date:   Fri, 22 May 2020 21:31:08 +0800
+Message-Id: <8d29eba045ef18c5489e122b3668afc20431f15d.1590153779.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+From: Baolin Wang <baolin.wang@unisoc.com>
 
-On 5/22/2020 12:37 AM, Bjorn Andersson wrote:
-> On Thu 21 May 08:23 PDT 2020, Veerabhadrarao Badiganti wrote:
->
->> On qcom SD host controllers voltage switching be done after the HW
->> is ready for it. The HW informs its readiness through power irq.
->> The voltage switching should happen only then.
->>
->> Use the internal voltage switching and then control the voltage
->> switching using power irq.
->>
->> Set the regulator load as well so that regulator can be configured
->> in LPM mode when in is not being used.
->>
->> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
->> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
->> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
->> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Looks better, thanks.
->
->> ---
->>   drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
->>   1 file changed, 198 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> [..]
->>   static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
->> @@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->>   		sdhci_msm_hs400(host, &mmc->ios);
->>   }
->>   
->> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
->> +{
->> +	int ret;
->> +
->> +	if (IS_ERR(mmc->supply.vmmc))
->> +		return 0;
->> +
->> +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
->> +	if (ret)
->> +		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
->> +			mmc_hostname(mmc), mmc->ios.vdd, ret);
-> Missed this one on v1, in the event that mmc_regulator_set_ocr() return
-> a non-zero value it has already printed an error message. So please
-> replace the tail with just:
->
-> 	return mmc_regulator_set_ocr(...);
->
->> +
->> +	return ret;
->> +}
->> +
->> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
->> +			      struct mmc_host *mmc, bool level)
->> +{
->> +	int load, ret;
->> +	struct mmc_ios ios;
->> +
->> +	if (IS_ERR(mmc->supply.vqmmc)			 ||
->> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
->> +	    (msm_host->vqmmc_enabled == level))
->> +		return 0;
->> +
->> +	if (msm_host->vqmmc_load) {
->> +		load = level ? msm_host->vqmmc_load : 0;
->> +		ret = regulator_set_load(mmc->supply.vqmmc, load);
-> Sorry for the late reply on v1, but please see my explanation regarding
-> load and always-on regulators there.
+Add the Spreadtrum mailbox documentation.
 
-<Merging your comment from V1 here>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+Changes from v4:
+ -None.
 
- >> You should still call regulator_enable()/regulator_disable() on your
- >> consumer regulator in this driver. When you do this the regulator core
- >> will conclude that the regulator_dev (i.e. the part that represents the
- >> hardware) is marked always_on and will not enable/disable the regulator.
+Changes from v3:
+ - None.
 
- >> But it will still invoke _regulator_handle_consumer_enable() and
- >> _regulator_handle_consumer_disable(), which will aggregate the "load" of
- >> all client regulators and update the regulator's load.
+Changes from v2:
+ - Add reviewed tag from Rob.
+ - Remove redundant 'minItems'.
 
- >> So this will apply the load as you expect regardless of it being
- >> supplied by a regulator marked as always_on.
+Changes from v1:
+ - Add 'additionalProperties'.
+ - Split description for each entry.
+---
+ .../bindings/mailbox/sprd-mailbox.yaml        | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
 
-Since I'm not turning off this regulator for eMMC, I wanted to keep it 
-in LPM mode
-to save some power.
-When the regulator configured in auto mode (RPMH_REGULATOR_MODE_AUTO) it
-switches to LPM/HPM mode based on the active load.
-So i have to minimize my driver load requirement so that I can let this 
-regulator
-in LPM mode.
-So i need to set load every-time I disable/enable the regulator.
-
->> +		if (ret) {
->> +			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
->> +				mmc_hostname(mmc), ret);
->> +			goto out;
->> +		}
->> +	}
->> +
->> +	if (level) {
->> +		/* Set the IO voltage regulator to default voltage level */
->> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
->> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
->> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
->> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
->> +
->> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
->> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
->> +			if (ret < 0) {
->> +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
->> +					mmc_hostname(mmc), ret);
->> +				goto out;
->> +			}
->> +		}
->> +		ret = regulator_enable(mmc->supply.vqmmc);
->> +	} else {
->> +		ret = regulator_disable(mmc->supply.vqmmc);
->> +	}
->> +
->> +	if (ret)
->> +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
->> +			mmc_hostname(mmc), level ? "en":"dis", ret);
->> +	else
->> +		msm_host->vqmmc_enabled = level;
->> +out:
->> +	return ret;
->> +}
-> [..]
->> +static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
->> +				      struct mmc_ios *ios)
->> +{
->> +	struct sdhci_host *host = mmc_priv(mmc);
->> +	u16 ctrl, status;
->> +
->> +	/*
->> +	 * Signal Voltage Switching is only applicable for Host Controllers
->> +	 * v3.00 and above.
->> +	 */
->> +	if (host->version < SDHCI_SPEC_300)
->> +		return 0;
->> +
->> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +
->> +	switch (ios->signal_voltage) {
->> +	case MMC_SIGNAL_VOLTAGE_330:
->> +		if (!(host->flags & SDHCI_SIGNALING_330))
->> +			return -EINVAL;
->> +
->> +		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
->> +		ctrl &= ~SDHCI_CTRL_VDD_180;
->> +		break;
->> +	case MMC_SIGNAL_VOLTAGE_180:
->> +		if (!(host->flags & SDHCI_SIGNALING_180))
->> +			return -EINVAL;
->> +
->> +		/*
->> +		 * Enable 1.8V Signal Enable in the Host Control2
->> +		 * register
->> +		 */
->> +		ctrl |= SDHCI_CTRL_VDD_180;
->> +		break;
->> +	case MMC_SIGNAL_VOLTAGE_120:
->> +		if (!(host->flags & SDHCI_SIGNALING_120))
->> +			return -EINVAL;
->> +		return 0;
->> +	default:
->> +		/* No signal voltage switch required */
->> +		return 0;
->> +	}
->> +
->> +	sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
->> +
->> +	/* Wait for 5ms */
->> +	usleep_range(5000, 5500);
->> +
->> +	/* regulator output should be stable within 5 ms */
->> +	status = !!(ctrl & SDHCI_CTRL_VDD_180);
->> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +	if (!!(ctrl &  SDHCI_CTRL_VDD_180) == status)
-> You should be able to drop the !! both here and when assigning status.
->
-> Overall this looks neater, thanks for reworking it.
->
-> Regards,
-> Bjorn
-
-
-Thanks
-
-Veera
+diff --git a/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+new file mode 100644
+index 000000000000..0f7451b42d7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mailbox/sprd-mailbox.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Spreadtrum mailbox controller bindings
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    enum:
++      - sprd,sc9860-mailbox
++
++  reg:
++    items:
++      - description: inbox registers' base address
++      - description: outbox registers' base address
++
++  interrupts:
++    items:
++      - description: inbox interrupt
++      - description: outbox interrupt
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: enable
++
++  "#mbox-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    mailbox: mailbox@400a0000 {
++      compatible = "sprd,sc9860-mailbox";
++      reg = <0 0x400a0000 0 0x8000>, <0 0x400a8000 0 0x8000>;
++      #mbox-cells = <1>;
++      clock-names = "enable";
++      clocks = <&aon_gate 53>;
++      interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++    };
++...
+-- 
+2.17.1
 
