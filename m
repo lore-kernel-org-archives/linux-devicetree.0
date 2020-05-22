@@ -2,126 +2,128 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F71C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C62C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2564920723
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0277C206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 17:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xM7/kxVn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mrLZoriV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbgEVRdu (ORCPT
+        id S1730701AbgEVReU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 13:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
+        Fri, 22 May 2020 13:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730636AbgEVRdu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 13:33:50 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E1C9C061A0E
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 10:33:50 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id n15so5261492pjt.4
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 10:33:50 -0700 (PDT)
+        with ESMTP id S1730698AbgEVReU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 13:34:20 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4E2C08C5C0
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 10:34:20 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j21so5282952pgb.7
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 10:34:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2tZSSQp+Q6NkFkvGgoTM41d8a2brRtjrb60yXEtR4oc=;
-        b=xM7/kxVnNd5tkM3aD88kh404nBLGZ0PykMDKj1PajSxvbZKv5gN1DQN4908oXvpFkT
-         D5j4s7pQVcv3lluXjL5hsxnA5VxVZtG0VkOtyF+z/kqlbmj4mJwBQsl5vSglfKkcR8nn
-         hCubMPJ6ImS9MjzxWO29RgINWtO+wzHImrvVO8bqT+EgexwI4z0GvFjyJSQuvA0RU0kK
-         XlRnMSnPgLf+iGmebcMZntq3a8e1GSzPZl1G1vlmX5mofuMANElZbQzYDpVk5myzPSTI
-         AGp8GUBRrS5t+JdFrWN109JV1COJz5flF4tptKa4cikXYJEW3rP9B8NjoLN/dHAbj2yd
-         l8DQ==
+         :content-disposition:in-reply-to;
+        bh=vpvOtYEoQPYr60AvQ4lbOXVaOz+PqOzSuTIlFxZC7hs=;
+        b=mrLZoriVWpSjIlqWcoKRs7Vf38HcNAIbk1aA1aj5M9bm3Kplf4mG3Nlg9o2f8mXie9
+         Fzh3k6kQqtcs2C2Z92Xjo5uCe7mXGGZJ7OhLbKqmeBdBJLXUSvy785BjEvi9KRPXlUyV
+         Jt9fS28KExNgHI2bGC8ZrNS0cBGoCgm/quS1o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2tZSSQp+Q6NkFkvGgoTM41d8a2brRtjrb60yXEtR4oc=;
-        b=ZdyVWmkp4bFmlLwLUm9+/PsMEoJEp5bDKKi1sBx3r/mamqKZDU85TmB3rwK/sraNqE
-         4zthrsu/lJAsDdwxaLZKJyH6PwITAbY/XGpkxEnOAznMyG9qt//x1AWP1qLvZKltF3WO
-         jsMO8qArFTvaXu9EZMexTsBFSkZ+FVjzitbgKYKto4gf7W5IRA9RF1W3YRGu2xkLP6wH
-         jaTmyEPXL0RaswvPpwzqowGE+vhRmV8b8SAWrTTQV1Amo/mc+FIaYqJunyHaHa6ULYnM
-         ft6CQAW0hW4m6HTtsWP7OarEW0bd2rpjpz3ANxKfws7mhY3mrNHbMP6RwJD8kQCTBKiA
-         yR9w==
-X-Gm-Message-State: AOAM530/8DPGL1CH0rWlZ/aJ3bx65MmSstV81mYaqFWL/dLMUIidVcxD
-        j+aLTP9mwAb6N3gImquF7miV9g==
-X-Google-Smtp-Source: ABdhPJxs9ytct9W3l8jqHigChSN52KDjrcdPVZee/8dxkQn+Y6KW9FWnWmyEjZpnERt5Wp6T0UgISg==
-X-Received: by 2002:a17:902:8509:: with SMTP id bj9mr15699226plb.151.1590168829712;
-        Fri, 22 May 2020 10:33:49 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t23sm7426330pji.32.2020.05.22.10.33.48
+         :mime-version:content-disposition:in-reply-to;
+        bh=vpvOtYEoQPYr60AvQ4lbOXVaOz+PqOzSuTIlFxZC7hs=;
+        b=ifShqAToFSVgSevRcC7XsO7HV+pS9uqt5BRW/uJeS+SbOU/T4wNYCu1n1KffrmPG9Y
+         KPuSWclnmHmbzgPVg3KZD3oCfgLjAWiljkutMYlCrLZYSl0e7tqdnJOmsYb9K3Y+2xOE
+         CKiPEdADRgKJj5jJg0enzBC31KwMCjK/LUEwXDajYTOttHyTBm9AcKlENPKQ7xjSF9a6
+         pZbdTwL45E7wzBbVWJBlF72h8B/+Or+B7ivTLxZHLRoGVq1qf+tZJRZjeIqKKjXK/E0f
+         /AZPFPenKD+f88P4l1CQL9SRv/U/XCzT2hsvyh3wZF00Ljq+Ed4+B5MByTZMlLqVg1SG
+         3d1Q==
+X-Gm-Message-State: AOAM532B47Svkx6Q8PKJ9d1T+fMBGtZhNKV5h+3aBANTDozqafkCW/2W
+        0490f1P2tM6ARrABhU3itOv9tw==
+X-Google-Smtp-Source: ABdhPJw3mEZJxGUEwT+YtZuRAtkaUC2r/G5yxPoHLWK7Hcz3C0nz+4i4d6ISwNAJSlDeH54wMalB+Q==
+X-Received: by 2002:a63:b64e:: with SMTP id v14mr15087127pgt.164.1590168859526;
+        Fri, 22 May 2020 10:34:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q4sm7769112pfu.42.2020.05.22.10.34.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 10:33:49 -0700 (PDT)
-Date:   Fri, 22 May 2020 10:33:46 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Clement Leger <cleger@kalray.eu>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] remoteproc: add support for a new 64-bit trace
- version
-Message-ID: <20200522173346.GJ11847@yoga>
-References: <20200325204701.16862-1-s-anna@ti.com>
- <20200325204701.16862-4-s-anna@ti.com>
- <20200521180417.GJ408178@builder.lan>
- <997d6f9a-64ba-7a89-e909-9a5a474120b0@ti.com>
- <f15b0c6d-eee8-b839-0c79-a5316dbbfa7b@ti.com>
+        Fri, 22 May 2020 10:34:18 -0700 (PDT)
+Date:   Fri, 22 May 2020 10:34:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Benson Leung <bleung@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 2/6] printk: honor the max_reason field in kmsg_dumper
+Message-ID: <202005221032.859452DFA0@keescook>
+References: <20200515184434.8470-1-keescook@chromium.org>
+ <20200515184434.8470-3-keescook@chromium.org>
+ <20200522165120.GL3464@linux-b0ei>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f15b0c6d-eee8-b839-0c79-a5316dbbfa7b@ti.com>
+In-Reply-To: <20200522165120.GL3464@linux-b0ei>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 22 May 09:54 PDT 2020, Suman Anna wrote:
-
-> On 5/21/20 2:42 PM, Suman Anna wrote:
-> > Hi Bjorn,
+On Fri, May 22, 2020 at 06:51:20PM +0200, Petr Mladek wrote:
+> On Fri 2020-05-15 11:44:30, Kees Cook wrote:
+> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
 > > 
-> > On 5/21/20 1:04 PM, Bjorn Andersson wrote:
-> > > On Wed 25 Mar 13:47 PDT 2020, Suman Anna wrote:
-[..]
-> > > > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-[..]
-> > > > +struct fw_rsc_trace2 {
-> > > 
-> > > Sounds more like fw_rsc_trace64 to me - in particular since the version
-> > > of trace2 is 1...
-> > 
-> > Yeah, will rename this.
-> > 
-> > > 
-> > > > +    u32 padding;
-> > > > +    u64 da;
-> > > > +    u32 len;
-> > > > +    u32 reserved;
-> > > 
-> > > What's the purpose of this reserved field?
-> > 
-> > Partly to make sure the entire resource is aligned on an 8-byte, and
-> > partly copied over from fw_rsc_trace entry. I guess 32-bits is already
-> > large enough of a size for trace entries irrespective of 32-bit or
-> > 64-bit traces, so I doubt if we want to make the len field also a u64.
+> > kmsg_dump() allows to dump kmesg buffer for various system events: oops,
+> > panic, reboot, etc. It provides an interface to register a callback call
+> > for clients, and in that callback interface there is a field "max_reason"
+> > which gets ignored unless always_kmsg_dump is passed as kernel parameter.
 > 
-> Looking at this again, I can drop both padding and reserved fields, if I
-> move the len field before da. Any preferences/comments?
+> Strictly speaking, this is not fully true. "max_reason" field is not
+> ignored when set to KMSG_DUMP_PANIC even when always_kmsg_dump was not set.
 > 
+> It should be something like:
+> 
+> "which gets ignored for reason higher than KMSG_DUMP_OOPS unless
+> always_kmsg_dump is passed as kernel parameter".
+> 
+> Heh, I wonder if anyone will be able to parse this ;-)
 
-Sounds good to me.
+Ah yeah, good point. I've reworded things like this:
 
-Thanks,
-Bjorn
+
+    kmsg_dump() allows to dump kmesg buffer for various system events: oops,
+    panic, reboot, etc. It provides an interface to register a callback
+    call for clients, and in that callback interface there is a field
+    "max_reason", but it was getting ignored when set to any "reason"
+    higher than KMSG_DUMP_OOPS unless "always_kmsg_dump" was passed as
+    kernel parameter.
+
+    Allow clients to actually control their "max_reason", and keep the
+    current behavior when "max_reason" is not set.
+
+> Otherwise, it looks good to me. With the updated commit message:
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Thanks!
+
+-- 
+Kees Cook
