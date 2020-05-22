@@ -2,187 +2,191 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC4AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 18:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7894CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2DC20738
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 18:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49441206D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pni8T/B8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PzVhr2wP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbgEVS7P (ORCPT
+        id S1730959AbgEVTI0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 14:59:15 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48958 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730840AbgEVS7P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 14:59:15 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MIx5tD018590;
-        Fri, 22 May 2020 13:59:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590173945;
-        bh=cWQVyiUOGA6CdUt5XXyh7cFJsbmK3Mc23pxMgj5Hzmg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pni8T/B83UwO2WLa8S+nfay+6qWJQQptvGZT3X7n5c1MIJ+gmrNnuPD3C83kR6dh/
-         Xt6Bn01NtTd7CRym4xhSIj9g5lCr3TCZHr5w73XqHtXiuLIROFz2pTlK+qI/ZAYLnP
-         GnL/xnvtxdZ0Z5gtUC39tpxV77IHwSn/pXFHtiNk=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MIx55t032460
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 13:59:05 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 13:59:04 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 13:59:04 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MIx414059462;
-        Fri, 22 May 2020 13:59:04 -0500
-Subject: Re: [PATCH 3/4] remoteproc: add support for a new 64-bit trace
- version
-To:     =?UTF-8?Q?Cl=c3=a9ment_Leger?= <cleger@kalray.eu>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200325204701.16862-1-s-anna@ti.com>
- <20200325204701.16862-4-s-anna@ti.com> <20200521180417.GJ408178@builder.lan>
- <997d6f9a-64ba-7a89-e909-9a5a474120b0@ti.com>
- <f15b0c6d-eee8-b839-0c79-a5316dbbfa7b@ti.com> <20200522173346.GJ11847@yoga>
- <1739080680.4218297.1590170621467.JavaMail.zimbra@kalray.eu>
- <1334263091.4218509.1590171014972.JavaMail.zimbra@kalray.eu>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <4fab212b-a9d2-927e-d3d7-e591912fd6cf@ti.com>
-Date:   Fri, 22 May 2020 13:59:04 -0500
+        Fri, 22 May 2020 15:08:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730867AbgEVTI0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 15:08:26 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6343C061A0E
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 12:08:25 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k13so11211723wrx.3
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 12:08:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=x/MRQ96H6Az+pqXHXN01ej45PZoEed6u3UDYNQ8cdX4=;
+        b=PzVhr2wPkOGE+YF9Q0Ja37GGyUsYVsZsJL57zig1z8BCa8Qep5Xti7/yjRJQ9/qJHf
+         QDhZud1Tjjnao51/AdKATcPcGpgymDVv+DP9ZUqSC50m9yp8JxQN8GorUusIC61ibMSv
+         1k8FLY7CEVJdEodNUo1gSa/Ok2XPUCBAfNjDQgh3VtgYCy+7aRuvD1jA2sTMTxseHFNX
+         5b4RAQucgHzFF3CuwZClKX26YpFeJM4Lws5JWo+YousVNxXMo8Jn30LpR5IpK4yllbTW
+         NaRfvW8DhcXmzGQolc7AgeOmKDxCXUMZiHJwyTrrD5tbM1QKlneKviK+VPWJImn3UQCW
+         oIPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x/MRQ96H6Az+pqXHXN01ej45PZoEed6u3UDYNQ8cdX4=;
+        b=X6krk+9feFFTa3uSWznUGkFvZT/Ftg/oFuc0ftkzyZlDmAyI/okDVzdjcvPJAVna5J
+         acUZ/sVlgqssl9ePrUyesiVMh14THOecp/yBYOefBd1rYj+NwzWbfa/eSXD3lTnT3Jqp
+         z0iqxoONfgjKgOw+syMlqgglNlewDCeIKi7Asc37QoXFUFodqM1ICwaUwl9caMQOwHj0
+         Q9WM1yyPty5rsBbskA0Q082lYVn6yaNbHshjBY5U6byyaqhpfyeGyd0imHi2YHttG+jw
+         87VrwgmSUCaXC7I+NG3j3WXpDg+AYf/QXFNWAiJxDraCg7KJFHlAz7lxl0zHJBxDce+M
+         4XOg==
+X-Gm-Message-State: AOAM530fMHLvdQPdkqqSUo1sg0AO6LRHiQGBUeKpY4J94H0yevfDNp/s
+        SLBgARKZr5yppgrqR+mIz+T0aw==
+X-Google-Smtp-Source: ABdhPJyyCvXxzy7xLZ+QVT611FhNvs3cXyfNnYMd18QneEGfeQ/uinWi8SdNplS5akPuJufHz1nPQQ==
+X-Received: by 2002:adf:e588:: with SMTP id l8mr1815032wrm.255.1590174504530;
+        Fri, 22 May 2020 12:08:24 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
+        by smtp.googlemail.com with ESMTPSA id z10sm10252695wmi.2.2020.05.22.12.08.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 12:08:23 -0700 (PDT)
+Subject: Re: [RESEND PATCH] thermal: mediatek: add suspend/resume callback
+To:     Michael Kao <michael.kao@mediatek.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
+        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Louis Yu <louis.yu@mediatek.com>
+References: <20200408090558.12410-1-michael.kao@mediatek.com>
+ <20200408090558.12410-2-michael.kao@mediatek.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <c95b1b31-b6c6-9b45-33f4-b3673ae27680@linaro.org>
+Date:   Fri, 22 May 2020 21:08:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1334263091.4218509.1590171014972.JavaMail.zimbra@kalray.eu>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200408090558.12410-2-michael.kao@mediatek.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Clement,
-
->  > ----- On 22 May, 2020, at 20:03, Clément Leger cleger@kalray.eu wrote:>
->> Hi Suman,
->>
->> ----- On 22 May, 2020, at 19:33, Bjorn Andersson bjorn.andersson@linaro.org
->> wrote:
->>
->>> On Fri 22 May 09:54 PDT 2020, Suman Anna wrote:
->>>
->>>> On 5/21/20 2:42 PM, Suman Anna wrote:
->>>>> Hi Bjorn,
->>>>>
->>>>> On 5/21/20 1:04 PM, Bjorn Andersson wrote:
->>>>>> On Wed 25 Mar 13:47 PDT 2020, Suman Anna wrote:
->>> [..]
->>>>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->>> [..]
->>>>>>> +struct fw_rsc_trace2 {
->>>>>>
->>>>>> Sounds more like fw_rsc_trace64 to me - in particular since the version
->>>>>> of trace2 is 1...
->>>>>
->>>>> Yeah, will rename this.
->>>>>
->>>>>>
->>>>>>> +    u32 padding;
->>>>>>> +    u64 da;
->>>>>>> +    u32 len;
->>>>>>> +    u32 reserved;
->>>>>>
->>>>>> What's the purpose of this reserved field?
->>>>>
->>>>> Partly to make sure the entire resource is aligned on an 8-byte, and
->>>>> partly copied over from fw_rsc_trace entry. I guess 32-bits is already
->>>>> large enough of a size for trace entries irrespective of 32-bit or
->>>>> 64-bit traces, so I doubt if we want to make the len field also a u64.
->>>>
->>>> Looking at this again, I can drop both padding and reserved fields, if I
->>>> move the len field before da. Any preferences/comments?
->>
-> Sorry, my message went a bit too fast... So as I was saying:
+On 08/04/2020 11:05, Michael Kao wrote:
+> From: Louis Yu <louis.yu@mediatek.com>
 > 
-> Not only the in-structure alignment matters but also in the resource table.
-> Since the resource table is often packed (see [1] for instance), if a trace
-> resource is embedded in the resource table after another resource aligned
-> on 32 bits only, your 64 bits trace field will potentially end up
-> misaligned.
-
-Right. Since one can mix and match the resources of different sizes and 
-include them in any order, the onus is going to be on the resource table 
-constructors to ensure the inter-resource alignments, if any are 
-required. The resource table format allows you to add padding fields in 
-between if needed, and the remoteproc core relies on the offsets.
-
-I can only ensure the alignment within this resource structure with 
-ready-available access and conversion to/from a 64-bit type, as long as 
-the resource is starting on a 64-bit boundary.
-
+> Add suspend/resume callback to disable/enable Mediatek thermal sensor
+> respectively. Since thermal power domain is off in suspend, thermal driver
+> needs re-initialization during resume.
 > 
-> To overcome this, there is multiple solutions:
+> Signed-off-by: Louis Yu <louis.yu@mediatek.com>
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+
+[ ... ]
+
+> +static int __maybe_unused mtk_thermal_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
+> +	int i, ret;
+> +
+
+Why is there a multi-controller loop in the probe and resume functions
+and not here?
+
+> +	for (i = 0; i < mt->conf->num_banks; i++) {
+> +		ret = mtk_thermal_disable_sensing(mt, i);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	/* disable buffer */
+> +	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
+> +	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
+> +	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
+> +
+> +	clk_disable_unprepare(mt->clk_peri_therm);
+> +	clk_disable_unprepare(mt->clk_auxadc);
+> +
+> +	return 0;
+> +
+> +out:
+> +	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused mtk_thermal_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
+> +	int i, ret, ctrl_id;
+> +
+> +	ret = device_reset(&pdev->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(mt->clk_auxadc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
+> +		goto err_disable_clk_auxadc;
+> +	}
+> +
+> +	ret = clk_prepare_enable(mt->clk_peri_therm);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
+> +		goto err_disable_clk_peri_therm;
+> +	}
+> +
+> +	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
+> +		for (i = 0; i < mt->conf->num_banks; i++)
+> +			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
+> +					      mt->auxadc_phys_base, ctrl_id);
+> +
+> +	return 0;
+> +
+> +err_disable_clk_peri_therm:
+> +	clk_disable_unprepare(mt->clk_peri_therm);
+> +err_disable_clk_auxadc:
+> +	clk_disable_unprepare(mt->clk_auxadc);
+> +
+> +	return ret;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
+> +			 mtk_thermal_suspend, mtk_thermal_resume);
+> +
+>  static struct platform_driver mtk_thermal_driver = {
+>  	.probe = mtk_thermal_probe,
+>  	.remove = mtk_thermal_remove,
+>  	.driver = {
+>  		.name = "mtk-thermal",
+> +		.pm = &mtk_thermal_pm_ops,
+>  		.of_match_table = mtk_thermal_of_match,
+>  	},
+>  };
 > 
-> - Split the 64 bits fields into 32bits low and high parts:
-> Since all resources are aligned on 32bits, it will be ok
 
-Yes, this is one solution. At the same time, this means you need 
-additional conversion logic for converting to and from 64-bit field. In 
-this particular case, da is the address of the trace buffer pointer on a 
-64-bit processor, so we can directly use the address of the trace 
-buffer. Guess it is a question of easier translation vs packing the 
-resource table as tight as possible.
 
-> 
-> - Use memcpy_from/to_io when reading/writing such fields
-> As I said in a previous message this should probably be used since
-> the memories that are accessed by rproc are io mem (ioremap in almost
-> all drivers).
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Anything running out of DDR actually doesn't need the io mem semantics, 
-so we actually need to be fixing the drivers. Blindly changing the 
-current memcpy to memcpy_to_io in the core loader is also not right. Any 
-internal memories properties will actually depend on the processor and 
-SoC. Eg: The R5 TCM interfaces in general can be treated as normal memories.
-
-regards
-Suman
-
-> 
-> Regards,
-> 
-> Clément
-> 
-> [1]  https://github.com/OpenAMP/open-amp/blob/master/apps/machine/zynqmp_r5/rsc_table.h
->>
->>
->>
->>
->>>>
->>>
->>> Sounds good to me.
->>>
->>> Thanks,
->>> Bjorn
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
