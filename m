@@ -2,304 +2,167 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D394C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 00:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E804C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 00:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03EC4207D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 00:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E03B2078B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 00:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T+kZWPqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbgEVAJh (ORCPT
+        id S1727909AbgEVAQn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 20:09:37 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41640 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730225AbgEVAJh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 20:09:37 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1CA898030790;
-        Fri, 22 May 2020 00:09:31 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dqPEJ_MjpqpO; Fri, 22 May 2020 03:09:29 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
+        Thu, 21 May 2020 20:16:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34685 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbgEVAQn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 20:16:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Sn936fsnz9sSc;
+        Fri, 22 May 2020 10:16:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590106600;
+        bh=l28u3l9eD1XulIm/Ob3VyL9n6/znFRgaPoWiwdYuchM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=T+kZWPqIDh1yLruVXvjSA0aAcEUeQfBa9mbmwsY0cTnpt9QxbzPW+V+DOjjJj8W9w
+         QnGbExnmF6+8LPuS01E2FhHCTK1b4OEucxX9CSCGYg0mvRNytU8MYPlDOYFusIr1i6
+         b9G8tAwipE+fVmbYdzsgOpnRz1ZE99N/oHq1QJ9aGZgnYzWbADH+4YGVdboZKV2d6p
+         sc/OUgjH0EROstM6Xk4lKImI6oyqADzhQS2bzIA0mXSyp2xhzas/TH/EIX9aAsaVEi
+         kuOKleNXpeB/NrzyKWi/+O15u85EwuMb6il1PpdBawFdBZcEz6IzDY+xnpBHVKUdPc
+         hV3bv0maYoTMg==
+Date:   Fri, 22 May 2020 10:16:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-mips@vger.kernel.org>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 16/16] dt-bindings: spi: Convert DW SPI binding to DT schema
-Date:   Fri, 22 May 2020 03:08:05 +0300
-Message-ID: <20200522000806.7381-17-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200522000806.7381-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200522000806.7381-1-Sergey.Semin@baikalelectronics.ru>
+        devicetree <devicetree@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Vijay Khemka <vkhemka@fb.com>
+Subject: Re: linux-next: build warning after merge of the aspeed tree
+Message-ID: <20200522101638.052bd0a2@canb.auug.org.au>
+In-Reply-To: <CACPK8Xd4651vtBTbBoGk0G7daunmF2CCOsDZ-ceto7Yu6A5z5g@mail.gmail.com>
+References: <20200507091008.1bd38185@canb.auug.org.au>
+        <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
+        <CACPK8XcUydETZvJEkWPvLnLXatAg3D-MfA1yeDzE0epc-hisJQ@mail.gmail.com>
+        <CAL_JsqJWXH4JMZgRQa9r_aPLW6Muz6BRtf_NmeqJv21Aefji1A@mail.gmail.com>
+        <CACPK8Xd4651vtBTbBoGk0G7daunmF2CCOsDZ-ceto7Yu6A5z5g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: multipart/signed; boundary="Sig_/DcFF.Emc/VDOSRZyZQaAlh_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Modern device tree bindings are supposed to be created as YAML-files
-in accordance with dt-schema. This commit replaces two DW SPI legacy
-bare text bindings with YAML file. As before the bindings file states
-that the corresponding dts node is supposed to be compatible either
-with generic DW APB SSI controller or with Microsemi/Amazon/Renesas/Intel
-vendors-specific controllers, to have registers, interrupts and clocks
-properties. Though in case of Microsemi version of the controller
-there must be two registers resources specified. Properties like
-clock-names, reg-io-width, cs-gpio, num-cs, DMA and slave device
-sub-nodes are optional.
+--Sig_/DcFF.Emc/VDOSRZyZQaAlh_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-mips@vger.kernel.org
----
- .../bindings/spi/snps,dw-apb-ssi.txt          |  44 ------
- .../bindings/spi/snps,dw-apb-ssi.yaml         | 127 ++++++++++++++++++
- .../devicetree/bindings/spi/spi-dw.txt        |  24 ----
- 3 files changed, 127 insertions(+), 68 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-dw.txt
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-deleted file mode 100644
-index 020e3168ee41..000000000000
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ /dev/null
-@@ -1,44 +0,0 @@
--Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
--
--Required properties:
--- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
--  "jaguar2", or "amazon,alpine-dw-apb-ssi", or "snps,dwc-ssi-1.01a" or
--  "intel,keembay-ssi"
--- reg : The register base for the controller. For "mscc,<soc>-spi", a second
--  register set is required (named ICPU_CFG:SPI_MST)
--- interrupts : One interrupt, used by the controller.
--- #address-cells : <1>, as required by generic SPI binding.
--- #size-cells : <0>, also as required by generic SPI binding.
--- clocks : phandles for the clocks, see the description of clock-names below.
--   The phandle for the "ssi_clk" is required. The phandle for the "pclk" clock
--   is optional. If a single clock is specified but no clock-name, it is the
--   "ssi_clk" clock. If both clocks are listed, the "ssi_clk" must be first.
--
--Optional properties:
--- clock-names : Contains the names of the clocks:
--    "ssi_clk", for the core clock used to generate the external SPI clock.
--    "pclk", the interface clock, required for register access. If a clock domain
--     used to enable this clock then it should be named "pclk_clkdomain".
--- cs-gpios : Specifies the gpio pins to be used for chipselects.
--- num-cs : The number of chipselects. If omitted, this will default to 4.
--- reg-io-width : The I/O register width (in bytes) implemented by this
--  device.  Supported values are 2 or 4 (the default).
--- dmas : Phandle + identifiers of Tx and Rx DMA channels.
--- dma-names : Contains the names of the DMA channels. Must be "tx" and "rx".
--
--Child nodes as per the generic SPI binding.
--
--Example:
--
--	spi@fff00000 {
--		compatible = "snps,dw-apb-ssi";
--		reg = <0xfff00000 0x1000>;
--		interrupts = <0 154 4>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		clocks = <&spi_m_clk>;
--		num-cs = <2>;
--		cs-gpios = <&gpio0 13 0>,
--			   <&gpio0 14 0>;
--	};
--
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-new file mode 100644
-index 000000000000..1fcab6415136
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-@@ -0,0 +1,127 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/snps,dw-apb-ssi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface
-+
-+maintainers:
-+  - Mark Brown <broonie@kernel.org>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mscc,ocelot-spi
-+              - mscc,jaguar2-spi
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description: Generic DW SPI Controller
-+        enum:
-+          - snps,dw-apb-ssi
-+          - snps,dwc-ssi-1.01a
-+      - description: Microsemi Ocelot/Jaguar2 SoC SPI Controller
-+        items:
-+          - enum:
-+              - mscc,ocelot-spi
-+              - mscc,jaguar2-spi
-+          - const: snps,dw-apb-ssi
-+      - description: Amazon Alpine SPI Controller
-+        const: amazon,alpine-dw-apb-ssi
-+      - description: Renesas RZ/N1 SPI Controller
-+        items:
-+          - const: renesas,rzn1-spi
-+          - const: snps,dw-apb-ssi
-+      - description: Intel Keem Bay SPI Controller
-+        const: intel,keembay-ssi
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description: DW APB SSI controller memory mapped registers
-+      - description: SPI MST region map
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    items:
-+      - description: SPI Controller reference clock source
-+      - description: APB interface clock source
-+
-+  clock-names:
-+    minItems: 1
-+    items:
-+      - const: ssi_clk
-+      - const: pclk
-+
-+  reg-io-width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: I/O register width (in bytes) implemented by this device
-+    default: 4
-+    enum: [ 2, 4 ]
-+
-+  num-cs:
-+    default: 4
-+    minimum: 1
-+    maximum: 4
-+
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 3
-+
-+      spi-rx-bus-width:
-+        const: 1
-+
-+      spi-tx-bus-width:
-+        const: 1
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    spi@fff00000 {
-+      compatible = "snps,dw-apb-ssi";
-+      reg = <0xfff00000 0x1000>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      interrupts = <0 154 4>;
-+      clocks = <&spi_m_clk>;
-+      num-cs = <2>;
-+      cs-gpios = <&gpio0 13 0>,
-+                 <&gpio0 14 0>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/spi/spi-dw.txt b/Documentation/devicetree/bindings/spi/spi-dw.txt
-deleted file mode 100644
-index 7b63ed601990..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-dw.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Synopsys DesignWare SPI master
--
--Required properties:
--- compatible: should be "snps,designware-spi"
--- #address-cells: see spi-bus.txt
--- #size-cells: see spi-bus.txt
--- reg: address and length of the spi master registers
--- interrupts: should contain one interrupt
--- clocks: spi clock phandle
--- num-cs: see spi-bus.txt
--
--Optional properties:
--- cs-gpios: see spi-bus.txt
--
--Example:
--
--spi: spi@4020a000 {
--	compatible = "snps,designware-spi";
--	interrupts = <11 1>;
--	reg = <0x4020a000 0x1000>;
--	clocks = <&pclk>;
--	num-cs = <2>;
--	cs-gpios = <&banka 0 0>;
--};
--- 
-2.25.1
+On Wed, 20 May 2020 07:56:36 +0000 Joel Stanley <joel@jms.id.au> wrote:
+>
+> On Mon, 11 May 2020 at 15:19, Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Fri, May 8, 2020 at 1:40 AM Joel Stanley <joel@jms.id.au> wrote: =20
+> > >
+> > > On Wed, 6 May 2020 at 23:13, Joel Stanley <joel@jms.id.au> wrote: =20
+> > > >
+> > > > Hi Rob,
+> > > >
+> > > > On Wed, 6 May 2020 at 23:10, Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote: =20
+> > > > >
+> > > > > After merging the aspeed tree, today's linux-next build (arm
+> > > > > multi_v7_defconfig) produced this warning: =20
+> > > >
+> > > > Thanks Stephen.
+> > > > =20
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4=
+: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus=
+ unit address format error, expected "40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: Wa=
+rning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C add=
+ress must be less than 10-bits, got "0x40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4=
+: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bu=
+s unit address format error, expected "40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: Wa=
+rning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C ad=
+dress must be less than 10-bits, got "0x40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4=
+: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bu=
+s unit address format error, expected "40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: Wa=
+rning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C ad=
+dress must be less than 10-bits, got "0x40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4=
+: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bu=
+s unit address format error, expected "40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: Wa=
+rning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C ad=
+dress must be less than 10-bits, got "0x40000010" =20
+> > > >
+> > > > These are IPMB nodes with the SLAVE_ADDRESS bit set:
+> > > >
+> > > > +&i2c5 {
+> > > > +       //Host3 IPMB bus
+> > > > +       status =3D "okay";
+> > > > +       multi-master;
+> > > > +       ipmb5@10 {
+> > > > +               compatible =3D "ipmb-dev";
+> > > > +               reg =3D <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
+> > > > +               i2c-protocol;
+> > > > +       };
+> > > >
+> > > > This is a correct entry, so dtc should not warn about it. =20
+> > >
+> > > I sent a patch for dtc here:
+> > > https://lore.kernel.org/lkml/20200508063904.60162-1-joel@jms.id.au/ =
+=20
+> >
+> > Patches for dtc need to be against upstream dtc. There's already a
+> > similar patch posted for it which I commented on and never saw a
+> > respin. =20
+>=20
+> Can I suggest some instructions in scsripts/dtc explaining that you
+> don't take patches in the kernel tree for this code?
+>=20
+> I've sent the patch so it applies to the dtc tree. It would be good to
+> see that change propagate over to -next as others have reported this
+> warning.
 
+These warnings now appear in the arm-soc tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/DcFF.Emc/VDOSRZyZQaAlh_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HGeYACgkQAVBC80lX
+0Gwm/gf/UiP3XqMc4FaiRIxc5sp/aEjFR3Yms5szHXC52VDyyQAv8DBKcjV6wFbC
+6tANr+Lqsuu7loczGa7pvqcY7VdBlgk7dLKMDpQdVkgT0qcjiXYLp4w6hDJQO8vk
++9ajzo1pJTIzTRV+b2AOOguhqsZyD/KzRqvkIU7EJW7WwKRFzPpQ9es70thQmSbG
+dMNZovADYWZEFGo/hpfnKlEmcdo0X3B5yzB4atAqrlaI4Y9JPDSaUiPney+V8uTP
+8bjHyyk9Q9COdJOLqb5NPbK1WUWpXPWnqwTQI1fO7hRqaBx8Zopw8rc1DdW1NDbQ
+dmsqJlupAoog2jtPrusX7Ok7b7s8bA==
+=Gt6l
+-----END PGP SIGNATURE-----
+
+--Sig_/DcFF.Emc/VDOSRZyZQaAlh_--
