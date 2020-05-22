@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F86C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC954C433E3
 	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 12:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51CCB2072C
+	by mail.kernel.org (Postfix) with ESMTP id AD4FC2072C
 	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 12:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="BJ3OIkLm"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="i0LAaJO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbgEVMIY (ORCPT
+        id S1729353AbgEVMIY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Fri, 22 May 2020 08:08:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729353AbgEVMH1 (ORCPT
+        with ESMTP id S1729344AbgEVMH1 (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 08:07:27 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4206BC08C5C0
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 05:07:27 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f134so8444949wmf.1
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 05:07:27 -0700 (PDT)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6ECC08C5C6
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 05:07:25 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i15so9894198wrx.10
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 05:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hGk6SHkwZ0/IFFGnE1iOAP01F59WjRCQF/3H+v3exE4=;
-        b=BJ3OIkLmKDJd8mJGXMOAEO0RYtZ+BzOIsHcG2UTpazbPreZ6uDY2fuZCBNsWnHPZjT
-         xuescNUhGBE8SFaTTfNfcabLq8y2VIiMaEMMogTnG1fWAg7mF5jI42aIffPUTPA+iePW
-         H1+GJn6TtGrfuwlTv2N2j+z+8FJe8t5Tkty0XiPLO8fEfBDLOX5xVk8vM2bkcyuYUIiG
-         6s5XAFWCd8aPysT8MuuczJuWiSYnGUnSFXTw1UdujFdRbRa6bEVoWEbUCrd77lm4pXBG
-         BJzOUC0xV1s37znu6SdHGwFgX+Imn6MDlvjRUTS+1uVNKUo0q6QE4VM7f6spU26/iS3X
-         hWww==
+        bh=/pmWjPydDcH2ECRLQQUecpuUxdBwIQiF7KV5PtBBYA0=;
+        b=i0LAaJO4/OsiG8tHqQqh8QMJFnyB9fw0SVJmnxPGwVTC6c84IGU5mK5QyKhXXyAdJY
+         gwxhvTbndWQZIPz4rlVu6qopD/zba+IYsJRc0V8W25aObCVlipS1HOIqHGeuz4IRwc0C
+         3WkftM8s+RgwQxuqLazSX/TOdAZqK2SNnCMJCce1G8I5UroZMlsPaWtI1A3KC0M35wNv
+         5PTjSWIHb9XdOhVpsE/mAichJ+oodz+TsK9zHPZGJCX7A4uGLz0CCB5ySpw+QlijqLzE
+         utvl5/7gbRxf6t+9Os+RqahStxHmEBlGoJ9zX+YiptZIfhJagdJ0rLderVS/L4oc62u1
+         vMHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hGk6SHkwZ0/IFFGnE1iOAP01F59WjRCQF/3H+v3exE4=;
-        b=iubbo8qK4/Ygr26zruoslJbHSBPmTUATjIACCGDRiPlJPZ9dqliEP4jWBC2oeHQKv5
-         FbQvQw4o+bBi628Ei6WmrdNDRj5my8qBRXbNk8ZaKpCrVGinvz7fl52BQ27dYOxfFktw
-         5XElgWuC3Jm5Cgc7oSloeneG6/q5V0liy65bY22ldybnFXIoB1At/3Tzoe5gWd9dufP5
-         NX4RhgUZj4oFbu3LbUo0TN37GdpeQG35meg8vyP95lrUG8rPSQi7emNCxfezkNKFtSa7
-         Ojc/q3Gp06HzoGMbb4ZpXyDRnpbf3UVaS2GPzMyZuNnBQhuXjR1ZfuSv1qnD8TRMNAC9
-         08Tw==
-X-Gm-Message-State: AOAM532+rHI2l2raium077vE3b0MxkcjWKzLi+BdaBCzH4XrlnZnxBN0
-        NCit19aGB582pyZoyIV/gsjxlw==
-X-Google-Smtp-Source: ABdhPJzPM9n4wz+olrOocFVpzas4NvH7xuF1o9DtfGChG8Sh1pIB0aDKJyKMN7cmRko0riD9kvETNg==
-X-Received: by 2002:a05:600c:2146:: with SMTP id v6mr13654376wml.142.1590149246036;
-        Fri, 22 May 2020 05:07:26 -0700 (PDT)
+        bh=/pmWjPydDcH2ECRLQQUecpuUxdBwIQiF7KV5PtBBYA0=;
+        b=oz2uNI0pxH8LK2WYpcN+6+qF0YoHUrJd9oZzTl15vxhYEx3U3Dnn177p8XfX4X5luc
+         Y1+yULkH4CsOj6kiYFekin4D/JFL06Bkp8ecAybALeS99NcTza0A5elQQ/F+AWsA2+bZ
+         0JN6R9uRSvyyvkYS+cSqp33+dJme/bqS8LZU2xTXy6BAMxHsf9v6uMrpnL/wzJYpCmM/
+         IZCQVM/aFSTz3ETKxcFV3Oq85Vzu5DzzXU4PEl1Glulp+inPUelCOdUocCDx+WfnwobD
+         SToz60FqKFmwHD+1rouby75KHzA68WH7huNAhPCUSqSsmSHp1NhEPjLSg9a2rkh1BPR1
+         bPRw==
+X-Gm-Message-State: AOAM531qw3h2eoi79fTkGwDRd3BoMWNXII0M/A3a/7RxqfT9Arh6S/5I
+        xFc0IQfdI0DPtoxXAqG/Qj7rEw==
+X-Google-Smtp-Source: ABdhPJyhBs1vuweSsT6UnZzHIxmupzWKr/Mklf9iaHHEzRP3oB0F6VGJEWNBq1p2UGylX27IQJUkew==
+X-Received: by 2002:a5d:4dd0:: with SMTP id f16mr1475060wru.117.1590149244637;
+        Fri, 22 May 2020 05:07:24 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id f128sm9946233wme.1.2020.05.22.05.07.24
+        by smtp.gmail.com with ESMTPSA id f128sm9946233wme.1.2020.05.22.05.07.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 05:07:25 -0700 (PDT)
+        Fri, 22 May 2020 05:07:24 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -77,9 +77,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v5 04/11] net: ethernet: mediatek: rename Kconfig prompt
-Date:   Fri, 22 May 2020 14:06:53 +0200
-Message-Id: <20200522120700.838-5-brgl@bgdev.pl>
+Subject: [PATCH v5 03/11] dt-bindings: net: add a binding document for MediaTek STAR Ethernet MAC
+Date:   Fri, 22 May 2020 14:06:52 +0200
+Message-Id: <20200522120700.838-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200522120700.838-1-brgl@bgdev.pl>
 References: <20200522120700.838-1-brgl@bgdev.pl>
@@ -92,26 +92,110 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We'll soon by adding a second MediaTek Ethernet driver so modify the
-Kconfig prompt.
+This adds yaml DT bindings for the MediaTek STAR Ethernet MAC present
+on the mt8* family of SoCs.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/ethernet/mediatek/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/net/mediatek,eth-mac.yaml        | 89 +++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
 
-diff --git a/drivers/net/ethernet/mediatek/Kconfig b/drivers/net/ethernet/mediatek/Kconfig
-index 4968352ba188..5079b8090f16 100644
---- a/drivers/net/ethernet/mediatek/Kconfig
-+++ b/drivers/net/ethernet/mediatek/Kconfig
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config NET_VENDOR_MEDIATEK
--	bool "MediaTek ethernet driver"
-+	bool "MediaTek devices"
- 	depends on ARCH_MEDIATEK || SOC_MT7621 || SOC_MT7620
- 	---help---
- 	  If you have a Mediatek SoC with ethernet, say Y.
+diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
+new file mode 100644
+index 000000000000..f85d91a9d6e5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/mediatek,eth-mac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek STAR Ethernet MAC Controller
++
++maintainers:
++  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
++
++description:
++  This Ethernet MAC is used on the MT8* family of SoCs from MediaTek.
++  It's compliant with 802.3 standards and supports half- and full-duplex
++  modes with flow-control as well as CRC offloading and VLAN tags.
++
++allOf:
++  - $ref: "ethernet-controller.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - mediatek,mt8516-eth
++      - mediatek,mt8518-eth
++      - mediatek,mt8175-eth
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 3
++    maxItems: 3
++
++  clock-names:
++    additionalItems: false
++    items:
++      - const: core
++      - const: reg
++      - const: trans
++
++  mediatek,pericfg:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      Phandle to the device containing the PERICFG register range. This is used
++      to control the MII mode.
++
++  mdio:
++    type: object
++    description:
++      Creates and registers an MDIO bus.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - mediatek,pericfg
++  - phy-handle
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/mt8516-clk.h>
++
++    ethernet: ethernet@11180000 {
++        compatible = "mediatek,mt8516-eth";
++        reg = <0x11180000 0x1000>;
++        mediatek,pericfg = <&pericfg>;
++        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>;
++        clocks = <&topckgen CLK_TOP_RG_ETH>,
++                 <&topckgen CLK_TOP_66M_ETH>,
++                 <&topckgen CLK_TOP_133M_ETH>;
++        clock-names = "core", "reg", "trans";
++        phy-handle = <&eth_phy>;
++        phy-mode = "rmii";
++
++        mdio {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            eth_phy: ethernet-phy@0 {
++                reg = <0>;
++            };
++        };
++    };
 -- 
 2.25.0
 
