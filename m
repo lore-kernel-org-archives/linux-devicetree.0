@@ -2,137 +2,150 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDD0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6068EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E1C206F6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4184220776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MMWImdE/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDzT50X4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbgEVP2r (ORCPT
+        id S1730397AbgEVPbS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 11:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34796 "EHLO
+        Fri, 22 May 2020 11:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgEVP2q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 11:28:46 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFE3C08C5C0
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 08:28:46 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y17so2161292wrn.11
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 08:28:46 -0700 (PDT)
+        with ESMTP id S1729851AbgEVPbR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 11:31:17 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDCCC061A0E;
+        Fri, 22 May 2020 08:31:17 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z26so5338891pfk.12;
+        Fri, 22 May 2020 08:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RE02VevKPga5GawhGamW95ZE1kXVYxGQzWhCIbMIzNY=;
-        b=MMWImdE/2ZE9LDYQnaGCIARyM962IGLuiw6eGA/jljxOaR7yh5pCQt+3wfvYRSnfOp
-         k5JKNPBeS69Vv4hi1byp7pnaA42f2saUD3rcNGfywZnGGpjwbapkrf/6bKIN53qVqNEO
-         rhdXGWgY4e93wR/0RmGUPVlIalsuTe6sMQE1MZS0cu5t5Qc8ZNM/VRySlOhxfKB+2Gkb
-         wJ4Nf4RndEct8/FO2q4BKzMAbtrRS1/9TtSOs0WiR0qB5mcwBixid/P0ECqitXmzRmOP
-         tkkkcU98mmsZgoNL7ljU3e7uujxzyRprCWUfqgC1FsPs9fl0G122XUrDsBGIZdWSkmqd
-         nT/g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SSLvHrUrUmnP+J7EUaDe7T1ErKWhhTBSuFxFKbP5p2U=;
+        b=BDzT50X4coOikh70Rqyz4HIZVxhBJy6tMg7dg9A0Bg1ifgpbm0V3hjmHvn1rMK3PEd
+         /qMrIu8iNjKTKRWpT8Jbk7dtDxRjGFKboNsPH2O9H11NdshCEZZL4n5czFNxzuorYO2V
+         QGgZuCQpICm2KGwKaoKHbPprG9wGuf+R/XU1p0tLI7QRX9YNCGCfu2gByZRBzIAB1N41
+         avM2FWs/qBUEqeJ+NOhEMOcmPJU1XIy2/Bm5fOOZX2U3qrt+1Q6HyZV9z1Ze6gsaPPDi
+         7CMey5aUjddyc3RXjMykO0TzXs+CznhwuR+9h/sRwVNqGpFkPJzuiucwbiEfeUc9hyYD
+         pslQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RE02VevKPga5GawhGamW95ZE1kXVYxGQzWhCIbMIzNY=;
-        b=K7uD4CrozAMX32ZaBPqjnMoeXyRwuxl6tPYqxCMbUmMcFnxT8nD6A1hg02IJ7gReB4
-         r4/ca8RXVJpfVL3D4142VdpStD6g7jBw3S777jrsBIYeamMmnPHHEDeNS6M+WcKg48Eh
-         gBeuoYxN/9m+TRz+ARsz9Ms790NmnPprqIysfcKSqY+bdNrsfT2f1UqKo6+I+UjGY2bI
-         r2I97tJP4D9XCfYseztoYlsYmhbZH/GlkEJQqp7dwhfI//Pmw1tiOVKqbJr9FT8NYO5h
-         BriejMKIQhX2PiooA431bJ4/weGwXyIwsKqDdPyM1pMeWQuDsMMiXkSLEug+d+ALG+L7
-         SqxQ==
-X-Gm-Message-State: AOAM532+jTqC5zEZUgkjLDdOg4WEx8MkFGtjFC5iCl5IVsEy87xrRlFb
-        ITssjKKEvwDnCPpiab1whxBJpA==
-X-Google-Smtp-Source: ABdhPJxdCf7sw2JHdZ8XQZwe1iL/1ihyu6MfIaO/x8mio0kAv1N7GEStdaiFyyQDolFStnz3Rqs/ew==
-X-Received: by 2002:adf:a3c9:: with SMTP id m9mr1159741wrb.405.1590161325014;
-        Fri, 22 May 2020 08:28:45 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id s19sm6092584wmj.21.2020.05.22.08.28.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 08:28:44 -0700 (PDT)
-Subject: Re: [PATCH v5 0/8] clocksource: Fix MIPS GIC and DW APB Timer for
- Baikal-T1 SoC support
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <211ab91d-6085-3073-1cbc-2300abade1b7@linaro.org>
-Date:   Fri, 22 May 2020 17:28:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SSLvHrUrUmnP+J7EUaDe7T1ErKWhhTBSuFxFKbP5p2U=;
+        b=WEM+d2qKcQTKiVHLg2BwkV+am5RZaOY0sKaV5Os3v6GiSFQH1T1QEN7VURPuEaV1Jl
+         Nc/Y4g2+giZsag72adS/7YJqRpro3bEDuvrhiDXZWy01gbJ1KgcGnozwcXbLx8k7wAw8
+         kn0/l9R+ONNGfIq/0NssVF+LZiP2rzdGSjb/FEQUNOUpSOKp/r86w22JhydbfE18bJGC
+         aV25wdEbEasxTrSE/lZkbDNkHk+ezilreLNfCJUEHdw3YghVl7YOOUZLD8bhPKhX/qbK
+         tAlsIEMZlpTo/uiOYWif1X1WE5v9mdvUCLuucHihriG4JEQyV/jGxfMuXgHBksUrFrus
+         VxzA==
+X-Gm-Message-State: AOAM533qzoAySc+O+q1j6zqeUjMprx8zwctYjjAax7WMwuYXDrpIIR8E
+        l1qIjK+i2bPnvdHFImLW6xZhr7EfxDJAWg108rs=
+X-Google-Smtp-Source: ABdhPJzHqqj8fLHqrPYt8036814ISRqAPyzCPwkwOwKw/jPrnn09boo9l3HZ9RshYZIyO8CwzN4XLER+NW+Ss0UGdtY=
+X-Received: by 2002:a62:2f43:: with SMTP id v64mr4328523pfv.170.1590161476980;
+ Fri, 22 May 2020 08:31:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org>
+ <1589361736-816-4-git-send-email-jprakash@codeaurora.org> <CAHp75VedM+=+m8WF=zPpUcizgCGareYuBzUfjKwesozVSY_gKg@mail.gmail.com>
+ <50ad0f74-22cc-c74f-afa4-df654e29bebb@codeaurora.org>
+In-Reply-To: <50ad0f74-22cc-c74f-afa4-df654e29bebb@codeaurora.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 22 May 2020 18:31:05 +0300
+Message-ID: <CAHp75Vf0srsT6yonxiA1Lc8uP4=17u5E19iWfW7XGivfgJjFNg@mail.gmail.com>
+Subject: Re: [PATCH V4 3/5] iio: adc: Add support for PMIC7 ADC
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 21/05/2020 22:48, Serge Semin wrote:
-> As for all Baikal-T1 SoC related patchsets, which need this, we replaced
-> the DW APB Timer legacy plain text-based dt-binding file with DT schema.
-> Similarly the MIPS GIC bindings file is also converted to DT schema seeing
-> it also defines the MIPS GIC Timer binding.
-> 
-> Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a
-> functionality of two another timers: embedded into the MIPS GIC timer and
-> three external DW timers available over APB bus. But we can't use them
-> before the corresponding drivers are properly fixed. First of all DW APB
-> Timer shouldn't be bound to a single CPU, since as being accessible over
-> APB they are external with respect to all possible CPUs. Secondly there
-> might be more than just two DW APB Timers in the system (Baikal-T1 has
-> three of them), so permit the driver to use one of them as a clocksource
-> and the rest - for clockevents. Thirdly it's possible to use MIPS GIC
-> timer as a clocksource so register it in the corresponding subsystem
-> (the patch has been found in the Paul Burton MIPS repo so I left the
-> original Signed-off-by attribute). Finally in the same way as r4k timer
-> the MIPS GIC timer should be used with care when CPUFREQ config is enabled
-> since in case of CM2 the timer counting depends on the CPU reference clock
-> frequency while the clocksource subsystem currently doesn't support the
-> timers with non-stable clock.
-> 
-> This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-> base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-> tag: v5.7-rc4
+On Fri, May 22, 2020 at 2:58 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+> On 5/13/2020 3:18 PM, Andy Shevchenko wrote:
+> > On Wed, May 13, 2020 at 12:23 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
 
-Applied patch 1,2,4,5,6,7,8
+...
 
-Thanks!
+> >> +static int qcom_vadc7_scale_hw_calib_die_temp(
+> >> +                               const struct vadc_prescale_ratio *prescale,
+> >> +                               const struct adc5_data *data,
+> >> +                               u16 adc_code, int *result_mdec)
+> >> +{
+> >> +
+> >> +       int voltage, vtemp0, temp, i = ARRAY_SIZE(adcmap7_die_temp) - 1;
+> > How assignment to i is useful?
+>
+>
+> I'm using it in adcmap7_die_temp[i] below, to keep it within the
+> character limit per line. I think it's more readable that way.
+>
+> >
+> >> +       voltage = qcom_vadc_scale_code_voltage_factor(adc_code,
+> >> +                               prescale, data, 1);
+> >> +
+> >> +       if (adcmap7_die_temp[0].x > voltage) {
+> >> +               *result_mdec = DIE_TEMP_ADC7_SCALE_1;
+> >> +               return 0;
+> >> +       } else if (adcmap7_die_temp[i].x <= voltage) {
 
-  -- Daniel
+I see now i in use, please, replace with direct meaning.
 
+> > Redundant 'else'.
+> The expression is different, it's adcmap7_die_temp[i] here, not
+> adcmap7_die_temp[0].
+
+if (a) {
+ ...
+ return;
+} else if (b) {
+ ...
+}
+
+'else' is redundant due to 'return'. Same when it's 'goto'.
+
+> >> +               *result_mdec = DIE_TEMP_ADC7_MAX;
+> >> +               return 0;
+> >> +       }
+> >> +
+> >> +       for (i = 0; i < ARRAY_SIZE(adcmap7_die_temp); i++)
+> >> +               if (adcmap7_die_temp[i].x > voltage)
+> >> +                       break;
+> >> +
+> >> +       vtemp0 = adcmap7_die_temp[i - 1].x;
+> >> +       voltage = voltage - vtemp0;
+> >> +       temp = div64_s64(voltage * DIE_TEMP_ADC7_SCALE_FACTOR,
+> >> +               adcmap7_die_temp[i - 1].y);
+> >> +       temp += DIE_TEMP_ADC7_SCALE_1 + (DIE_TEMP_ADC7_SCALE_2 * (i - 1));
+> >> +       *result_mdec = temp;
+> >> +
+> >> +       return 0;
+> >> +}
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+With Best Regards,
+Andy Shevchenko
