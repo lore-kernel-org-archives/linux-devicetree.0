@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3598C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A62C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81F07206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC902072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159582;
-	bh=d07kKZJF85G6WmyNuDRY5D8ZQiahqedqqafcMO5l6EY=;
+	s=default; t=1590159591;
+	bh=PShjP4JqEu7VciJj/G3J2Xnl9GwcIQlCD+Du0aKEP3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdtUsaWy35UzZEN7xj7uZDrLkbCxnwn0L4VxD3YpSbhxk7lAsdF70iD5IMv8G62XQ
-	 dR+1qxcECX5JyHEPM7+8xDNjXc/yQllTeQ/CbSF2p5/vMo+RRC3eXohjmo1IqeZnY1
-	 B41eeWqQRbzcruCL9lE7loN2VHzKBaJlhs8p09XA=
+	b=dXlND3z9WzUEGoVtTbnVwQVThL4jo5vWHStC8Tvz+K0uFCHyS+kgdWPgJncsvdXSr
+	 xdMZLosfsbATS60mfcyZ7tZiYYadTjb1heu+EfrEzDgxluUolFJ08PB31PmGML3xa4
+	 SktKckYyCxFDOtPMFLnWKgXpWxxhnFmi0cyODxOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730870AbgEVO7b (ORCPT
+        id S1730767AbgEVO7p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:59:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:59:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbgEVOuM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:12 -0400
+        id S1730375AbgEVOuI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE97A223BF;
-        Fri, 22 May 2020 14:50:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74800223D6;
+        Fri, 22 May 2020 14:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159011;
-        bh=d07kKZJF85G6WmyNuDRY5D8ZQiahqedqqafcMO5l6EY=;
+        s=default; t=1590159008;
+        bh=PShjP4JqEu7VciJj/G3J2Xnl9GwcIQlCD+Du0aKEP3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1qbbp0an1ckFA+GRZyP1Xowpfg/lFgeW9Oiw4tXikierNmnO1tEPFYDWbVIxyCQOq
-         U9pSs1ElkTa67X/L5JfqUqJZ2lS5krhN5drkJfYQ4xeJI7TWT5owGogUcq4aMetxoW
-         SHkkgYpCmYM2cSvQ7G87tSjhfjZRRiL0NA7ZMfqo=
+        b=YbD+E4pvz1/H90kJD9H08Jn2UueIzAn/6yt5YU52vz+btyK0rPPi1eJKfFUHXR1tl
+         Zmucop7yIx/TRYI1HRpD25HyDJ5tsEQpAw/jjE6iKjmGdUXNjvFBnjwsOPSAm6/mtT
+         wGsz/rAI57TOukG+Gjf2g4r/8BTWK11wXTSb3xdA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 10/41] ARM: dts: omap4-droid4: Fix flakey wlan by disabling internal pull for gpio
-Date:   Fri, 22 May 2020 10:49:27 -0400
-Message-Id: <20200522144959.434379-10-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 07/41] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
+Date:   Fri, 22 May 2020 10:49:24 -0400
+Message-Id: <20200522144959.434379-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
@@ -58,77 +60,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 30fa60c678eaa27b8f2a531920d77f7184658f73 ]
+[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
 
-The wlan on droid4 is flakey on some devices, and experiments have shown this
-gets fixed if we disable the internal pull for wlan gpio interrupt line.
+A test with the command below gives these errors:
 
-The symptoms are that the wlan connection is very slow and almost useless
-with lots of wlcore firmware reboot warnings in the dmesg.
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
+'#address-cells' is a required property
 
-In addition to configuring the wlan gpio pulls, let's also configure the rest
-of the wlan sd pins. We have not configured those eariler as we're booting
-using kexec.
+The $nodename pattern for spi nodes is
+"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
+'spi-0' and 'spi-1' pinctrl sub nodenames to
+'spi0' and 'spi1' in 'rk322x.dtsi'.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/motorola-mapphone-common.dtsi    | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm/boot/dts/rk322x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-index 9067e0ef4240..01ea9a1e2c86 100644
---- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-+++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-@@ -367,6 +367,8 @@
- };
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 729119952c68..a83f65486ad4 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -1033,7 +1033,7 @@
+ 			};
+ 		};
  
- &mmc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
- 	vmmc-supply = <&wl12xx_vmmc>;
- 	/* uart2_tx.sdmmc3_dat1 pad as wakeirq */
- 	interrupts-extended = <&wakeupgen GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH
-@@ -472,6 +474,37 @@
- 		>;
- 	};
+-		spi-0 {
++		spi0 {
+ 			spi0_clk: spi0-clk {
+ 				rockchip,pins = <0 RK_PB1 2 &pcfg_pull_up>;
+ 			};
+@@ -1051,7 +1051,7 @@
+ 			};
+ 		};
  
-+	/*
-+	 * Android uses PIN_OFF_INPUT_PULLDOWN | PIN_INPUT_PULLUP | MUX_MODE3
-+	 * for gpio_100, but the internal pull makes wlan flakey on some
-+	 * devices. Off mode value should be tested if we have off mode working
-+	 * later on.
-+	 */
-+	mmc3_pins: pinmux_mmc3_pins {
-+		pinctrl-single,pins = <
-+		/* 0x4a10008e gpmc_wait2.gpio_100 d23 */
-+		OMAP4_IOPAD(0x08e, PIN_INPUT | MUX_MODE3)
-+
-+		/* 0x4a100102 abe_mcbsp1_dx.sdmmc3_dat2 ab25 */
-+		OMAP4_IOPAD(0x102, PIN_INPUT_PULLUP | MUX_MODE1)
-+
-+		/* 0x4a100104 abe_mcbsp1_fsx.sdmmc3_dat3 ac27 */
-+		OMAP4_IOPAD(0x104, PIN_INPUT_PULLUP | MUX_MODE1)
-+
-+		/* 0x4a100118 uart2_cts.sdmmc3_clk ab26 */
-+		OMAP4_IOPAD(0x118, PIN_INPUT | MUX_MODE1)
-+
-+		/* 0x4a10011a uart2_rts.sdmmc3_cmd ab27 */
-+		OMAP4_IOPAD(0x11a, PIN_INPUT_PULLUP | MUX_MODE1)
-+
-+		/* 0x4a10011c uart2_rx.sdmmc3_dat0 aa25 */
-+		OMAP4_IOPAD(0x11c, PIN_INPUT_PULLUP | MUX_MODE1)
-+
-+		/* 0x4a10011e uart2_tx.sdmmc3_dat1 aa26 */
-+		OMAP4_IOPAD(0x11e, PIN_INPUT_PULLUP | MUX_MODE1)
-+		>;
-+	};
-+
- 	/* gpmc_ncs0.gpio_50 */
- 	poweroff_gpio: pinmux_poweroff_pins {
- 		pinctrl-single,pins = <
+-		spi-1 {
++		spi1 {
+ 			spi1_clk: spi1-clk {
+ 				rockchip,pins = <0 RK_PC7 2 &pcfg_pull_up>;
+ 			};
 -- 
 2.25.1
 
