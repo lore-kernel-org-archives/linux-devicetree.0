@@ -2,88 +2,133 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E79BC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3598C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF2D206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F07206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590159582;
+	bh=d07kKZJF85G6WmyNuDRY5D8ZQiahqedqqafcMO5l6EY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hdtUsaWy35UzZEN7xj7uZDrLkbCxnwn0L4VxD3YpSbhxk7lAsdF70iD5IMv8G62XQ
+	 dR+1qxcECX5JyHEPM7+8xDNjXc/yQllTeQ/CbSF2p5/vMo+RRC3eXohjmo1IqeZnY1
+	 B41eeWqQRbzcruCL9lE7loN2VHzKBaJlhs8p09XA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbgEVO7c (ORCPT
+        id S1730870AbgEVO7b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:59:32 -0400
-Received: from sauhun.de ([88.99.104.3]:33244 "EHLO pokefinder.org"
+        Fri, 22 May 2020 10:59:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730068AbgEVO7c (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 10:59:32 -0400
-Received: from localhost (p5486cea4.dip0.t-ipconnect.de [84.134.206.164])
-        by pokefinder.org (Postfix) with ESMTPSA id 47E9E2C203F;
-        Fri, 22 May 2020 16:59:30 +0200 (CEST)
-Date:   Fri, 22 May 2020 16:59:29 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c@vger.kernel.org, tfiga@chromium.org,
-        drinkcat@chromium.org, srv_heupstream@mediatek.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v15 1/2] dt-binding: i2c: add bus-supply property
-Message-ID: <20200522145929.GE5670@ninjato>
-References: <20200519072729.7268-1-bibby.hsieh@mediatek.com>
- <20200519072729.7268-2-bibby.hsieh@mediatek.com>
- <20200519084800.GG1094@ninjato>
+        id S1730461AbgEVOuM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:12 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE97A223BF;
+        Fri, 22 May 2020 14:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590159011;
+        bh=d07kKZJF85G6WmyNuDRY5D8ZQiahqedqqafcMO5l6EY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1qbbp0an1ckFA+GRZyP1Xowpfg/lFgeW9Oiw4tXikierNmnO1tEPFYDWbVIxyCQOq
+         U9pSs1ElkTa67X/L5JfqUqJZ2lS5krhN5drkJfYQ4xeJI7TWT5owGogUcq4aMetxoW
+         SHkkgYpCmYM2cSvQ7G87tSjhfjZRRiL0NA7ZMfqo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 10/41] ARM: dts: omap4-droid4: Fix flakey wlan by disabling internal pull for gpio
+Date:   Fri, 22 May 2020 10:49:27 -0400
+Message-Id: <20200522144959.434379-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
+References: <20200522144959.434379-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kA1LkgxZ0NN7Mz3A"
-Content-Disposition: inline
-In-Reply-To: <20200519084800.GG1094@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Tony Lindgren <tony@atomide.com>
 
---kA1LkgxZ0NN7Mz3A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 30fa60c678eaa27b8f2a531920d77f7184658f73 ]
 
-On Tue, May 19, 2020 at 10:48:00AM +0200, Wolfram Sang wrote:
-> On Tue, May 19, 2020 at 03:27:28PM +0800, Bibby Hsieh wrote:
-> > In some platforms, they disable the power-supply of i2c due
-> > to power consumption reduction. This patch add bus-supply property.
-> >=20
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
->=20
-> Applied to for-next, thanks!
+The wlan on droid4 is flakey on some devices, and experiments have shown this
+gets fixed if we disable the internal pull for wlan gpio interrupt line.
 
-Reverted because of regression reports in linux-next.
+The symptoms are that the wlan connection is very slow and almost useless
+with lots of wlcore firmware reboot warnings in the dmesg.
 
+In addition to configuring the wlan gpio pulls, let's also configure the rest
+of the wlan sd pins. We have not configured those eariler as we're booting
+using kexec.
 
---kA1LkgxZ0NN7Mz3A
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../boot/dts/motorola-mapphone-common.dtsi    | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+index 9067e0ef4240..01ea9a1e2c86 100644
+--- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
++++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+@@ -367,6 +367,8 @@
+ };
+ 
+ &mmc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins>;
+ 	vmmc-supply = <&wl12xx_vmmc>;
+ 	/* uart2_tx.sdmmc3_dat1 pad as wakeirq */
+ 	interrupts-extended = <&wakeupgen GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH
+@@ -472,6 +474,37 @@
+ 		>;
+ 	};
+ 
++	/*
++	 * Android uses PIN_OFF_INPUT_PULLDOWN | PIN_INPUT_PULLUP | MUX_MODE3
++	 * for gpio_100, but the internal pull makes wlan flakey on some
++	 * devices. Off mode value should be tested if we have off mode working
++	 * later on.
++	 */
++	mmc3_pins: pinmux_mmc3_pins {
++		pinctrl-single,pins = <
++		/* 0x4a10008e gpmc_wait2.gpio_100 d23 */
++		OMAP4_IOPAD(0x08e, PIN_INPUT | MUX_MODE3)
++
++		/* 0x4a100102 abe_mcbsp1_dx.sdmmc3_dat2 ab25 */
++		OMAP4_IOPAD(0x102, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a100104 abe_mcbsp1_fsx.sdmmc3_dat3 ac27 */
++		OMAP4_IOPAD(0x104, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a100118 uart2_cts.sdmmc3_clk ab26 */
++		OMAP4_IOPAD(0x118, PIN_INPUT | MUX_MODE1)
++
++		/* 0x4a10011a uart2_rts.sdmmc3_cmd ab27 */
++		OMAP4_IOPAD(0x11a, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a10011c uart2_rx.sdmmc3_dat0 aa25 */
++		OMAP4_IOPAD(0x11c, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a10011e uart2_tx.sdmmc3_dat1 aa26 */
++		OMAP4_IOPAD(0x11e, PIN_INPUT_PULLUP | MUX_MODE1)
++		>;
++	};
++
+ 	/* gpmc_ncs0.gpio_50 */
+ 	poweroff_gpio: pinmux_poweroff_pins {
+ 		pinctrl-single,pins = <
+-- 
+2.25.1
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7H6NEACgkQFA3kzBSg
-KbaxpBAAsjx3hatTWpodrRmQQZ8es1Fw3q4wtrSNpbXk4TIVy81BT2oCUzRmGBbe
-NwF3tIJcdFWwJxoM1AeEwfrm+hoJSvDkc0IQW37AdJYTn5Y+L6hajUxDTB0AiCvf
-9iArY7TyFLqbL7fPvFDL6w/s7AJMn/l0YxFuW7sOW4n2MK7iyvZdO7xkHpQpxed9
-gH0qIH4wFbNiB8dXMyVs1uISNc10nbZUNiEZZC31CSD372181xKbD8s2+bZLVPz3
-Zo24KO2TskgjsgrOOgpxvOVdUyoikYP9qnZq63LF9FJzpylBdelqVhMwFMg5PWQy
-D7RslQ+SCLk4htvNy8p2h7JTZRestNoWLy+WK+FNSNGBbZZhQv/u1u/tbH+y1NHt
-fqYVnhWPgauRxYMRwOL9e9UXEevT0mrTjTMl95twvqNPzhV/4fUq5GlqaPZR1d9t
-rqr+IGhuSqjtg7V+4vReQxP7FybU/mrGPF9qLPhXDzaT+2gnuMKjWZicJlE0qh+N
-IOjOx/bz8fi25ZN8HvWF10Tpm0D+dSatErk0e+WLCXjkSMPPIxwVwztAnNaynG+4
-CoFke2gtwPsC370QaAdkDljOEkEZY/r9XLwBokHr6JeBBwJy7wWLxkEC/W1Tdgdp
-fJt0AWczrIMhZr0MrwltKmL02qJaIV66ZQA4v+ZngHJuOn41VmU=
-=YVXO
------END PGP SIGNATURE-----
-
---kA1LkgxZ0NN7Mz3A--
