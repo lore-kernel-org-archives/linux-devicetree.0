@@ -2,51 +2,52 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF09C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B4EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C47620812
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474E820825
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GhWiCSLV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="brmyW4Il"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgEVDg4 (ORCPT
+        id S1728225AbgEVDhG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 23:36:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50030 "EHLO
+        Thu, 21 May 2020 23:37:06 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50048 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgEVDgz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 23:36:55 -0400
+        with ESMTP id S1727975AbgEVDhF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 23:37:05 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M3agN1038195;
-        Thu, 21 May 2020 22:36:42 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aoUG038225;
+        Thu, 21 May 2020 22:36:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590118602;
-        bh=giF+c2Per9KI83uYqkBut2N1cB6gGlc3M4nbnb5MpEY=;
+        s=ti-com-17Q1; t=1590118610;
+        bh=mKUVBx4Ow9SOnmVTpj1Ps0KC2GgOff1eIWcMic3aVOs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=GhWiCSLVo96F4UbualQP8wz4tCQQYJNkkI4r/OdPcHd+t7Rb5+4Z3hZpTrG0C8Z8Z
-         ZQHe2WM3Oba0a6e0ZDoxdEHxSlIsFIPaZsgihTePyDxyXr4SD7lRbgRQv0HQ9CiiiS
-         kW/QUK3OYufAfihvLf/gPM9dwmw2xHGP2kTAKWU4=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M3agNq026365
+        b=brmyW4IlzpYTofng0vBdc1stx/uvjtaWe3iQbivnK0UB+qo7mPRBkqyUANQJUbAmy
+         OtX6wlU2KTN8E3bGH8iUCcIZr+mkE/Sn/5FUrpvJcRVPuNUWVMGQ7IPoNeucjhtPT9
+         b7/Vu1VzdCH1DEb+tPzWznKi8nDYWfu8YtWNss90=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M3aoXd026457
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 22:36:42 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 21 May 2020 22:36:50 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 22:36:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 22:36:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 22:36:41 -0500
+ Frontend Transport; Thu, 21 May 2020 22:36:49 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aYbv062596;
-        Thu, 21 May 2020 22:36:38 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aYbx062596;
+        Thu, 21 May 2020 22:36:46 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -58,9 +59,9 @@ CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v5 01/14] PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
-Date:   Fri, 22 May 2020 09:06:18 +0530
-Message-ID: <20200522033631.32574-2-kishon@ti.com>
+Subject: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to perform only 32-bit accesses
+Date:   Fri, 22 May 2020 09:06:20 +0530
+Message-ID: <20200522033631.32574-4-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200522033631.32574-1-kishon@ti.com>
 References: <20200522033631.32574-1-kishon@ti.com>
@@ -72,90 +73,139 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-commit bd22885aa188 ("PCI: cadence: Refactor driver to use as a core
-library") while refactoring the Cadence PCIe driver to be used as
-library, removed pm_runtime_get_sync() from cdns_pcie_ep_setup()
-and cdns_pcie_host_setup() but missed to remove the corresponding
-pm_runtime_put_sync() in the error path. Fix it here.
+Certain platforms like TI's J721E using Cadence PCIe IP can perform only
+32-bit accesses for reading or writing to Cadence registers. Convert all
+read and write accesses to 32-bit in Cadence PCIe driver in preparation
+for adding PCIe support in TI's J721E SoC.
 
-Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/cadence/pcie-cadence-ep.c   | 9 ++-------
- drivers/pci/controller/cadence/pcie-cadence-host.c | 6 +-----
- 2 files changed, 3 insertions(+), 12 deletions(-)
+ drivers/pci/controller/cadence/pcie-cadence.h | 71 ++++++++++++++-----
+ 1 file changed, 53 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 1c173dad67d1..1fdae37843ef 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -8,7 +8,6 @@
- #include <linux/of.h>
- #include <linux/pci-epc.h>
- #include <linux/platform_device.h>
--#include <linux/pm_runtime.h>
- #include <linux/sizes.h>
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index bc49c22e48a9..737e9561092b 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -319,50 +319,88 @@ struct cdns_pcie_ep {
  
- #include "pcie-cadence.h"
-@@ -440,8 +439,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
- 	epc = devm_pci_epc_create(dev, &cdns_pcie_epc_ops);
- 	if (IS_ERR(epc)) {
- 		dev_err(dev, "failed to create epc device\n");
--		ret = PTR_ERR(epc);
--		goto err_init;
-+		return PTR_ERR(epc);
- 	}
  
- 	epc_set_drvdata(epc, ep);
-@@ -453,7 +451,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
- 			       resource_size(pcie->mem_res));
- 	if (ret < 0) {
- 		dev_err(dev, "failed to initialize the memory space\n");
--		goto err_init;
-+		return ret;
- 	}
- 
- 	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
-@@ -472,8 +470,5 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
-  free_epc_mem:
- 	pci_epc_mem_exit(epc);
- 
-- err_init:
--	pm_runtime_put_sync(dev);
--
- 	return ret;
+ /* Register access */
+-static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
++static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
+ {
+-	writeb(value, pcie->reg_base + reg);
++	writel(value, pcie->reg_base + reg);
  }
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 70e0eaa15bf9..8e73a680b567 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -7,7 +7,6 @@
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/platform_device.h>
--#include <linux/pm_runtime.h>
  
- #include "pcie-cadence.h"
- 
-@@ -476,7 +475,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 
- 	ret = cdns_pcie_host_init(dev, &resources, rc);
- 	if (ret)
--		goto err_init;
-+		return ret;
- 
- 	list_splice_init(&resources, &bridge->windows);
- 	bridge->dev.parent = dev;
-@@ -494,8 +493,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-  err_host_probe:
- 	pci_free_resource_list(&resources);
- 
-- err_init:
--	pm_runtime_put_sync(dev);
--
- 	return ret;
+-static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
++static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
+ {
+-	writew(value, pcie->reg_base + reg);
++	return readl(pcie->reg_base + reg);
  }
+ 
+-static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
++static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
+ {
+-	writel(value, pcie->reg_base + reg);
++	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
++	unsigned int offset = (unsigned long)addr & 0x3;
++	u32 val = readl(aligned_addr);
++
++	if (!IS_ALIGNED((uintptr_t)addr, size)) {
++		WARN(1, "Address %p and size %d are not aligned\n", addr, size);
++		return 0;
++	}
++
++	if (size > 2)
++		return val;
++
++	return (val >> (8 * offset)) & ((1 << (size * 8)) - 1);
+ }
+ 
+-static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
++static inline void cdns_pcie_write_sz(void __iomem *addr, int size, u32 value)
+ {
+-	return readl(pcie->reg_base + reg);
++	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
++	unsigned int offset = (unsigned long)addr & 0x3;
++	u32 mask;
++	u32 val;
++
++	if (!IS_ALIGNED((uintptr_t)addr, size)) {
++		WARN(1, "Address %p and size %d are not aligned\n", addr, size);
++		return;
++	}
++
++	if (size > 2) {
++		writel(value, addr);
++		return;
++	}
++
++	mask = ~(((1 << (size * 8)) - 1) << (offset * 8));
++	val = readl(aligned_addr) & mask;
++	val |= value << (offset * 8);
++	writel(val, aligned_addr);
+ }
+ 
+ /* Root Port register access */
+ static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
+ 				       u32 reg, u8 value)
+ {
+-	writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
++	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
++
++	cdns_pcie_write_sz(addr, 0x1, value);
+ }
+ 
+ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+ 				       u32 reg, u16 value)
+ {
+-	writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
++	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
++
++	cdns_pcie_write_sz(addr, 0x2, value);
+ }
+ 
+ /* Endpoint Function register access */
+ static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
+ 					  u32 reg, u8 value)
+ {
+-	writeb(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
++	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
++
++	cdns_pcie_write_sz(addr, 0x1, value);
+ }
+ 
+ static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
+ 					  u32 reg, u16 value)
+ {
+-	writew(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
++	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
++
++	cdns_pcie_write_sz(addr, 0x2, value);
+ }
+ 
+ static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
+@@ -371,14 +409,11 @@ static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
+ 	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+ }
+ 
+-static inline u8 cdns_pcie_ep_fn_readb(struct cdns_pcie *pcie, u8 fn, u32 reg)
+-{
+-	return readb(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+-}
+-
+ static inline u16 cdns_pcie_ep_fn_readw(struct cdns_pcie *pcie, u8 fn, u32 reg)
+ {
+-	return readw(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
++	void __iomem *addr = pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg;
++
++	return cdns_pcie_read_sz(addr, 0x2);
+ }
+ 
+ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
 -- 
 2.17.1
 
