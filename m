@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001E6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4195C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAE8B221FF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C77206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159295;
-	bh=rgoYLS+WMEIn3HQPScbZElKfuAs0VrEeOrN4VJIZ2TQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=kI3ZiXRvV5Mx70r+n3CVzjKkyclP9x2WSTEePzDcw3oMAXNJYf+o8KMC0gtWKqhZN
-	 4hpIs7mkAn/S1veshtYdlGRJTgQ4STwXI1Tz+k35YCNoN8upwRRdVAG4pPWAtZ/H0f
-	 DtYIS/orhKC61XV3h+A3X/Ny5KI3dOzv1ReTthMU=
+	s=default; t=1590159412;
+	bh=w2pSz6sSKuZ1uwjqUAGFQHWs2ZIfFkdSdsug/JB3dAU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2gOUeGXIScEbAz5knTF4aA5y9FjMXq/7fI5Zc8mjhiGQq8NDJb8GavXALi+XgZjjy
+	 bj+4OktqxLBuPYXKZtr4p/J73WS59Hnm1wLUok6rp6Yt6OtfUfvCBibNie3vTc912v
+	 KXz8RbFZQGwNmrnWINkiAtMOS7ppcD13scYzQreU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbgEVOyy (ORCPT
+        id S1731095AbgEVO4v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:54:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730942AbgEVOvW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:22 -0400
+        id S1730124AbgEVOux (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BD8422256;
-        Fri, 22 May 2020 14:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C63222E7;
+        Fri, 22 May 2020 14:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159082;
-        bh=rgoYLS+WMEIn3HQPScbZElKfuAs0VrEeOrN4VJIZ2TQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ngckiuZVIwXXtf1HJK7uYSt3h1dbuQx+KUcLR4wsjec/CFex0JD1u69FUPmxLUnqQ
-         YhXki5UUZvRzdR+VrWF2Sx/OEZwWrmX9p6ChVRrGvGdaIradmJhQINYXFy/HnSXRFB
-         yUUFwu/YYZKj9/wZ6Tf6Sx+wDDUsQZzumPNsuekA=
+        s=default; t=1590159052;
+        bh=w2pSz6sSKuZ1uwjqUAGFQHWs2ZIfFkdSdsug/JB3dAU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aKKidpoPysim0EJe4Yrbk8TyVRcWAVlRsiXPNZFdyuLoPPJriw5b31sSTCcpwuYc3
+         GaHG5Fbb2rCnLNMeeHEVHXY2ELEFc8jE9CaTd3RQuarQKDwrcWgqODNgRcfCdtmKPY
+         1rfy+d54ge4PKyM9idv1pK7D3jDWxDIl1XnCwSiw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/19] ARM: dts: rockchip: fix phy nodename for rk3228-evb
-Date:   Fri, 22 May 2020 10:51:02 -0400
-Message-Id: <20200522145120.434921-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 06/32] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
+Date:   Fri, 22 May 2020 10:50:18 -0400
+Message-Id: <20200522145044.434677-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
+References: <20200522145044.434677-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,45 +62,57 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 287e0d538fcec2f6e8eb1e565bf0749f3b90186d ]
+[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
 
-A test with the command below gives for example this error:
+A test with the command below gives these errors:
 
-arch/arm/boot/dts/rk3228-evb.dt.yaml: phy@0:
-'#phy-cells' is a required property
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
+'#address-cells' is a required property
 
-The phy nodename is normally used by a phy-handle.
-This node is however compatible with
-"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
-which is just been added to 'ethernet-phy.yaml'.
-So change nodename to 'ethernet-phy' for which '#phy-cells'
-is not a required property
+The $nodename pattern for spi nodes is
+"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
+'spi-0' and 'spi-1' pinctrl sub nodenames to
+'spi0' and 'spi1' in 'rk322x.dtsi'.
 
 make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
-phy/phy-provider.yaml
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200416170321.4216-1-jbx6244@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3228-evb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/rk322x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3228-evb.dts b/arch/arm/boot/dts/rk3228-evb.dts
-index 5670b33fd1bd..aed879db6c15 100644
---- a/arch/arm/boot/dts/rk3228-evb.dts
-+++ b/arch/arm/boot/dts/rk3228-evb.dts
-@@ -46,7 +46,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index c60784f3aa75..6bb78b19c555 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -1033,7 +1033,7 @@
+ 			};
+ 		};
  
--		phy: phy@0 {
-+		phy: ethernet-phy@0 {
- 			compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
- 			reg = <0>;
- 			clocks = <&cru SCLK_MAC_PHY>;
+-		spi-0 {
++		spi0 {
+ 			spi0_clk: spi0-clk {
+ 				rockchip,pins = <0 RK_PB1 2 &pcfg_pull_up>;
+ 			};
+@@ -1051,7 +1051,7 @@
+ 			};
+ 		};
+ 
+-		spi-1 {
++		spi1 {
+ 			spi1_clk: spi1-clk {
+ 				rockchip,pins = <0 RK_PC7 2 &pcfg_pull_up>;
+ 			};
 -- 
 2.25.1
 
