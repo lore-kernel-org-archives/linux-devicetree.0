@@ -2,124 +2,159 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F3BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CAEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2245E2072C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A985720814
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgEVHuJ convert rfc822-to-8bit (ORCPT
+        id S1728772AbgEVH6w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 03:50:09 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:34053 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgEVHuJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 03:50:09 -0400
-Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mofst-1jHtAc11eD-00p4mN; Fri, 22 May 2020 09:50:07 +0200
-Received: by mail-qv1-f45.google.com with SMTP id ee19so4306718qvb.11;
-        Fri, 22 May 2020 00:50:06 -0700 (PDT)
-X-Gm-Message-State: AOAM533tVL5/Oy8+3fIyAqAzY9JniazxXoQZRYjLgo7kJ7flAZmAsZ+P
-        2iYMb1jId4hvKgGz5ov5DkWkPfTAC1s7vOHZD40=
-X-Google-Smtp-Source: ABdhPJzTX2r7xydKqbJAwhK2+QTpPNnz3LZTzzTI94w3ZoU1ZULE1GyhxQ/7OzXgkRXqp42O1WffI9SLJ6KlmPBCdgc=
-X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr2340434qvz.210.1590133805879;
- Fri, 22 May 2020 00:50:05 -0700 (PDT)
+        Fri, 22 May 2020 03:58:52 -0400
+Received: from mga14.intel.com ([192.55.52.115]:23088 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728371AbgEVH6w (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 03:58:52 -0400
+IronPort-SDR: SSDT+KjdkyIGtrErUb5qURx8xKoNW2Eyp0nYskeHTKGn8Ot7YtU/3IJ62fDfGz4KBWUfvYerrZ
+ sPKpR87SZMlA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 00:58:49 -0700
+IronPort-SDR: Ba1UgqVNnQbJe3HN+feIC07RravYuDuHBXYUUY3XENWN37smKU3h68nyJO90j0LbE41qZLmeIu
+ exY7CO5KlG5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,420,1583222400"; 
+   d="scan'208";a="467102644"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by fmsmga005.fm.intel.com with ESMTP; 22 May 2020 00:58:44 -0700
+Date:   Fri, 22 May 2020 15:58:44 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Vinod Koul <vkoul@kernel.org>, Alan Cox <alan@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200522075844.GC12568@shbuild999.sh.intel.com>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+ <20200521030924.GA12568@shbuild999.sh.intel.com>
+ <20200521114736.b2azyfvym372vkdl@mobilestation>
+ <20200521145520.GB12568@shbuild999.sh.intel.com>
+ <20200521153317.7wjp2r47q75fm6ge@mobilestation>
 MIME-Version: 1.0
-References: <20200520112523.30995-1-brgl@bgdev.pl> <20200520112523.30995-7-brgl@bgdev.pl>
- <CAK8P3a3jhrQ3p1JsqMNMOOnfo9t=rAPWaOAwAdDuFMh7wUtZQw@mail.gmail.com>
- <CAMRc=MeuQk9rFDFGWK0ijsiM-r296cVz9Rth8hWhW5Aeeti_cA@mail.gmail.com>
- <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com> <CAMRc=MfVkbDSfEV71SD57dpYthdx5epD0FOvjRx8qQGT+SgsTQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MfVkbDSfEV71SD57dpYthdx5epD0FOvjRx8qQGT+SgsTQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 May 2020 09:49:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3qXf2NSDEoMHOQnChZmqQdVF--f_PFFHCyOKPhA=iW_w@mail.gmail.com>
-Message-ID: <CAK8P3a3qXf2NSDEoMHOQnChZmqQdVF--f_PFFHCyOKPhA=iW_w@mail.gmail.com>
-Subject: Re: [PATCH v4 06/11] net: ethernet: mtk-eth-mac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:NcI0FmX/A+Z6gFWkHmUV9bJwebgW/Sy51Vi1J4RqmHkyFCkcGus
- S9coRpEFv4tqgpmjzXqMHjenqs1I44f3KhmXK3AmI+c/rqsg6spGWX2j2w6nkwE3lF1gWPL
- MOWGB6fkY17nBHu0aUkyuYb/iAUgczTEnV13KvbKg9GRTmRwE0ovOYrSNMnnjhnIZH88tZv
- 6H0YAYT/6oplycgU9yQuw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:j+gUOz8bguc=:8Qf7PGky0zEogM8TxWn8DW
- Ne1pNtwtITOkvJDG6CwPIzbpTViXp7SHgWmkL4eXG2hy8T1ialg2ye16tVEYXgfL2Gq8B9E1o
- 30VDY2/q7HCoVUJOnbCzwlBYqCZmyQU15uo3ufJUnmjvTxH4ww7NaZD/EOIh5+2DlTeiEQiD1
- wlFWBqporbp0llQz5OMZ+qsQocZlXGclq6a4nYyqy+mYgYqy4DDTes2FrA4VKbd6+wY7CtSV9
- X8BqgJCwyZWjp1O7BpJhqvsy+vV9ZlT3muNT9v3+ojCNRp5WFKnj6ifcisXlqeSczA0BC6vTQ
- 69kc5XtR/dInQC3/MKLh//CVVjgZwF7GKklL/No9viS/zABMB8qSoPLaJunprJjNC/blQA6nr
- /LGBGgO6r830hVS6TwMWHZYamrm6VApOwhh03+jA8G3HRX1t4TiRQlhGPMWZ9/93XulZ+1mgk
- xTaUGf9sqRC0y3emK8kcdiT/Or2/Jz7lg4YXwRqCr/+8wogo59b6chnYWxMihexAz/oik9ymT
- tHIyV+E+96FJvda3tM8h2yMVKAbnwob7mkSUpz6+1sQE8qz6kFjfIat96JYcx9ctYzWMlnNN3
- s3IVUuxhnnn+4DaDs1ksJfkXQCT8D9TrH+hhxmqUpMm6hgjQwW6VPHoTZv0TlqKR4qGyn+Iwl
- sl7YGyZf1hwVruyP3bp8E4EM/0Oi11jiOnppnK/1tXjiIgqkKZtbOutgg/OhM10cHOQfayfjH
- 6fBmk9YvPGG66TMaIyLrWgwirCE9ms7VQbw8ywx0SuUF8Wz3QewdB/1sckNU2iM2G19444g1W
- Kl4tr7kRTaRu7FPgkR/92PHjqX3bUdPaCTJYzfsxhOFLe3m1Ys=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521153317.7wjp2r47q75fm6ge@mobilestation>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 9:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> śr., 20 maj 2020 o 23:23 Arnd Bergmann <arnd@arndb.de> napisał(a):
-> > On Wed, May 20, 2020 at 7:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > śr., 20 maj 2020 o 16:37 Arnd Bergmann <arnd@arndb.de> napisał(a):
+Hi Serge,
 
-> > > My thinking was this: if I mask the relevant interrupt (TX/RX
-> > > complete) and ack it right away, the status bit will be asserted on
-> > > the next packet received/sent but the process won't get interrupted
-> > > and when I unmask it, it will fire right away and I won't have to
-> > > recheck the status register. I noticed that if I ack it at the end of
-> > > napi poll callback, I end up missing certain TX complete interrupts
-> > > and end up seeing a lot of retransmissions even if I reread the status
-> > > register. I'm not yet sure where this race happens.
-> >
-> > Right, I see. If you just ack at the end of the poll function, you need
-> > to check the rings again to ensure you did not miss an interrupt
-> > between checking observing both rings to be empty and the irq-ack.
-> >
-> > I suspect it's still cheaper to check the two rings with an uncached
-> > read from memory than to to do the read-modify-write on the mmio,
-> > but you'd have to measure that to be sure.
-> >
->
-> Unfortunately the PHY on the board I have is 100Mbps which is the
-> limiting factor in benchmarking this driver. :(
->
-> If you're fine with this - I'd like to fix the minor issues you
-> pointed out and stick with the current approach for now. We can always
-> fix the implementation in the future once a board with a Gigabit PHY
-> is out. Most ethernet drivers don't use such fine-grained interrupt
-> control anyway. I expect the performance differences to be miniscule
-> really.
+On Thu, May 21, 2020 at 06:33:17PM +0300, Serge Semin wrote:
+> > > > > +	dw_spi_dma_wait_rx_done(dws);
+> > > > 
+> > > > I can understand the problem about TX, but I don't see how RX
+> > > > will get hurt, can you elaborate more? thanks
+> > > > 
+> > > > - Feng
+> > > 
+> > > Your question is correct. You are right with your hypothesis. Ideally upon the
+> > > dw_spi_dma_rx_done() execution Rx FIFO must be already empty. That's why the
+> > > commit log signifies the error being mostly related with Tx FIFO. But
+> > > practically there are many reasons why Rx FIFO might be left with data:
+> > > DMA engine failures, incorrect DMA configuration (if DW SPI or DW DMA driver
+> > > messed something up), controller hanging up, and so on. It's better to catch
+> > > an error at this stage while propagating it up to the SPI device drivers.
+> > > Especially seeing the wait-check implementation doesn't gives us much of the
+> > > execution overhead in normal conditions. So by calling dw_spi_dma_wait_rx_done()
+> > > we make sure that all the data has been fetched and we may freely get the
+> > > buffers back to the client driver.
+> > 
+> > I see your point about checking RX. But I still don't think checking
+> > RX FIFO level is the right way to detect error. Some data left in
+> > RX FIFO doesn't always mean a error, say for some case if there is
+> > 20 words in RX FIFO, and the driver starts a DMA request for 16
+> > words, then after a sucessful DMA transaction, there are 4 words
+> > left without any error.
+> 
+> Neither Tx nor Rx FIFO should be left with any data after transaction is
+> finished. If they are then something has been wrong.
+> 
+> See, every SPI transfer starts with FIFO clearance since we disable/enable the
+> SPI controller by means of the SSIENR (spi_enable_chip(dws, 0) and
+> spi_enable_chip(dws, 1) called in the dw_spi_transfer_one() callback). Here is the
+> SSIENR register description: "It enables and disables all SPI Controller operations.
+> When disabled, all serial transfers are halted immediately. Transmit and receive
+> FIFO buffers are cleared when the device is disabled. It is impossible to program
+> some of the SPI Controller control registers when enabled"
+> 
+> No mater whether we start DMA request or perform the normal IRQ-based PIO, we
+> request as much data as we need and neither Tx nor Rx FIFO are supposed to
+> be left with any data after the request is finished. If data is left, then
+> either we didn't push all of the necessary data to the SPI bus, or we didn't
+> pull all the data from the FIFO, and this could have happened only due to some
+> component mulfunction (drivers, DMA engine, SPI device). In any case the SPI
+> device driver should be notified about the problem.
 
-Ok, fair enough. The BQL limiting is the part that matters the most
-for performance on slow lines (preventing long latencies from
-buffer bloat), and  you have that now.
+Data left in TX FIFO and Data left in RX FIFO are 2 different stories. The
+former in dma case means the dma hw/driver has done its job, and spi hw/driver
+hasn't done its job of pushing out the data to spi slave devices, while the
+latter means the spi hw/driver has done its job, while the dma hw/driver hasn't. 
 
-       Arnd
+And the code is called inside the dma rx channel callback, which means the
+dma driver is saying "hey, I've done my job", but apparently it hasn't if
+there is data left.
+
+As for the wait time
+
++	nents = dw_readl(dws, DW_SPI_RXFLR);
++	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
++	     BITS_PER_BYTE;
+
+Using this formula for checking TX makes sense, but it doesn't for RX.
+Because the time of pushing data in TX FIFO to spi device depends on
+the clk, but the time of transferring RX FIFO to memory is up to
+the DMA controller and peripheral bus. 
+
+Also for the
+
++	while (dw_spi_dma_rx_busy(dws) && retry--)
++		ndelay(ns);
++
+
+the rx busy bit is cleared after this rx/tx checking, and it should
+be always true at this point. Am I mis-reading the code?
+
+Thanks,
+Feng
+
+> 
+> -Sergey
+> 
