@@ -2,105 +2,154 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED7BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AE7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE97205CB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9288A2065C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rORpKnmy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WVJ//CKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgEVKMe (ORCPT
+        id S1728425AbgEVKSK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 06:12:34 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:25166 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728281AbgEVKMd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 06:12:33 -0400
-X-UUID: aa7538676fed4a19805128da08b1b442-20200522
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6VbmeS/yrB1shYHBD+b0ArTurRXYrmNDPa81/IwQ/tI=;
-        b=rORpKnmyumfflCfytKRhmTVJuOy37KS2lD8cDOBpUqY+wnPY2vyfA2ykKfT5mf2A+X1gqZnpTFpVToJy2FBBiKVq2Zo71jMj/70kcdFcwmol6zDWei2libtTVIoeHsKl3/oiu96t94bSBQVHcgHCQU2Xcm9n3I3Tzx7Ep5jP0lw=;
-X-UUID: aa7538676fed4a19805128da08b1b442-20200522
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1393466909; Fri, 22 May 2020 18:12:27 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 22 May
- 2020 18:12:25 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Fri, 22 May 2020 18:12:24 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH] drm/mediatek: dsi: fix scrolling of panel with small hfp or hbp
-Date:   Fri, 22 May 2020 18:12:25 +0800
-Message-ID: <20200522101225.62571-1-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 22 May 2020 06:18:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbgEVKSJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 06:18:09 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D62BC061A0E
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 03:18:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e1so9617200wrt.5
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 03:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rDNDKX0HkLYt94EgaC8KrXxbFTf0b5UZDhkhcEUmDsA=;
+        b=WVJ//CKH4dmTBE0aqIBZXt0aAGFbLb2/HSsz+TTszSD504939LXSss4CoipdpB/CaP
+         UYEC49gciPAa156HBkX3vD6agGFcawT7wJGuqinqgdldtVpJcnYlHy8kYO+4r5wUGW4N
+         dybibnHmXgJPE6Yx//FGirSeVMwet4YQ4pqdD8PfOkmlAM9lkmxvRxK8W5pq10wP/QdV
+         nPZKGtAyqCQjPtUOqPpWTpK7PWQ7g8PDTvbQ9eAr9/mGFFzSg02tY1TfCtIKZQykmP7N
+         B8ikx09FYbHX1EDesimTPNwCJGF8URn5yiI0zH0eo0dpPE+4HsehFV61iZGVMleox6n1
+         gTbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rDNDKX0HkLYt94EgaC8KrXxbFTf0b5UZDhkhcEUmDsA=;
+        b=ZkRlOPmaUKSkUZjXjEwLU77k18zCKb0IIa7JQQQhaaii/KIJ++6efJmGo4epEB5dqg
+         IfKNeo7uGL/pe7MqJRiBta//kDxgUc4XXlp+W6SFg4epj4yhNTJnmf7e1QXEi0Bahgq4
+         4ppCkexDDx60JyH9/US9V8n4n0oQ35UkddXTUmWH2HM/A0FQE1Y+XIyNkV8UDg0wMLyQ
+         sq0Xq7l+9C/pUAPK62KHh0L9sjvVpdPNnMzsvv3HeX2VkyCGZWfzP5fUgK59QlJ4VQM7
+         lwHV7XdAWb+ncaOJjOEieqqZBO3I1B5vQFC/vBPeybTaW7QcJsgfn5VvQYAmxkrJXf1n
+         0ogQ==
+X-Gm-Message-State: AOAM531IySirWZMwl06pE8Sy6JSXdfiiCi417tmG+uYvxsSgRgiL8IeN
+        5kPH3VP1lGic4KsX0CJ3tsn4jQ==
+X-Google-Smtp-Source: ABdhPJzB2HI5kI/EmFJDdYOUgVosMpdPIKY9IaspD/NoZu4lv6KFYPamr6Pcq0PBpjpQXhtZ+2g/kQ==
+X-Received: by 2002:a5d:66c5:: with SMTP id k5mr2740621wrw.17.1590142686217;
+        Fri, 22 May 2020 03:18:06 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id d126sm9765981wmd.32.2020.05.22.03.18.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 03:18:05 -0700 (PDT)
+Date:   Fri, 22 May 2020 12:17:55 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-mm@kvack.org, joro@8bytes.org,
+        catalin.marinas@arm.com, robin.murphy@arm.com,
+        kevin.tian@intel.com, baolu.lu@linux.intel.com,
+        Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org, eric.auger@redhat.com
+Subject: Re: [PATCH v7 13/24] iommu/arm-smmu-v3: Enable broadcast TLB
+ maintenance
+Message-ID: <20200522101755.GA3453945@myrica>
+References: <20200519175502.2504091-1-jean-philippe@linaro.org>
+ <20200519175502.2504091-14-jean-philippe@linaro.org>
+ <20200521141730.GJ6608@willie-the-truck>
+ <0c896ad27b43b2de554cf772f9453d0a@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 9EFD99E22082E0674480556A643F1BD34B12751A45F5F49297FAC1342418AC822000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c896ad27b43b2de554cf772f9453d0a@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SWYgcGFuZWwgaGFzIHRvbyBzbWFsbCBoZnAgb3IgaGJwLCBob3Jpem9udGFsX2Zyb250cG9yY2hf
-Ynl0ZSBvcg0KaG9yaXpvbnRhbF9iYWNrcG9yY2hfYnl0ZSBtYXkgYmVjb21lIHZlcnkgc21hbGwg
-dmFsdWUgb3IgbmVnYXRpdmUNCnZhbHVlLiBUaGlzIHBhdGNoIGFkanVzdHMgdGhlaXIgdmFsdWVz
-IHNvIHRoYXQgdGhleSBhcmUgZ3JlYXRlcg0KdGhhbiBtaW5pbXVtIHZhbHVlIGFuZCBrZWVwIHRv
-dGFsIG9mIHRoZW0gdW5jaGFuZ2VkLg0KDQpTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFv
-LnNoaUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rz
-aS5jIHwgMTggKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlv
-bnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jDQppbmRleCAwZWRlNjk4MzBhOWQu
-LmFlYmFhZmQ5MGNlYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHNpLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMNCkBAIC0xNDgs
-NiArMTQ4LDkgQEANCiAJKHR5cGUgPT0gTUlQSV9EU0lfR0VORVJJQ19SRUFEX1JFUVVFU1RfMl9Q
-QVJBTSkgfHwgXA0KIAkodHlwZSA9PSBNSVBJX0RTSV9EQ1NfUkVBRCkpDQogDQorI2RlZmluZSBN
-SU5fSEZQX0JZVEUJCTB4MDINCisjZGVmaW5lIE1JTl9IQlBfQllURQkJMHgwMg0KKw0KIHN0cnVj
-dCBtdGtfcGh5X3RpbWluZyB7DQogCXUzMiBscHg7DQogCXUzMiBkYV9oc19wcmVwYXJlOw0KQEAg
-LTQ1MCw2ICs0NTMsNyBAQCBzdGF0aWMgdm9pZCBtdGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKHN0
-cnVjdCBtdGtfZHNpICpkc2kpDQogCXUzMiBob3Jpem9udGFsX3N5bmNfYWN0aXZlX2J5dGU7DQog
-CXUzMiBob3Jpem9udGFsX2JhY2twb3JjaF9ieXRlOw0KIAl1MzIgaG9yaXpvbnRhbF9mcm9udHBv
-cmNoX2J5dGU7DQorCXMzMiBzaWduZWRfaGZwX2J5dGUsIHNpZ25lZF9oYnBfYnl0ZTsNCiAJdTMy
-IGRzaV90bXBfYnVmX2JwcCwgZGF0YV9waHlfY3ljbGVzOw0KIAlzdHJ1Y3QgbXRrX3BoeV90aW1p
-bmcgKnRpbWluZyA9ICZkc2ktPnBoeV90aW1pbmc7DQogDQpAQCAtNTE5LDYgKzUyMywyMCBAQCBz
-dGF0aWMgdm9pZCBtdGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKHN0cnVjdCBtdGtfZHNpICpkc2kp
-DQogCQl9DQogCX0NCiANCisJc2lnbmVkX2hmcF9ieXRlID0gKHMzMilob3Jpem9udGFsX2Zyb250
-cG9yY2hfYnl0ZTsNCisJc2lnbmVkX2hicF9ieXRlID0gKHMzMilob3Jpem9udGFsX2JhY2twb3Jj
-aF9ieXRlOw0KKw0KKwlpZiAoc2lnbmVkX2hmcF9ieXRlICsgc2lnbmVkX2hicF9ieXRlIDwgTUlO
-X0hGUF9CWVRFICsgTUlOX0hCUF9CWVRFKSB7DQorCQlEUk1fV0FSTigiQ2FsY3VsYXRlZCBoZnBf
-Ynl0ZSBhbmQgaGJwX2J5dGUgYXJlIHRvbyBzbWFsbCwgIg0KKwkJCSAicGFuZWwgbWF5IG5vdCB3
-b3JrIHByb3Blcmx5LlxuIik7DQorCX0gZWxzZSBpZiAoc2lnbmVkX2hmcF9ieXRlIDwgTUlOX0hG
-UF9CWVRFKSB7DQorCQlob3Jpem9udGFsX2Zyb250cG9yY2hfYnl0ZSA9IE1JTl9IRlBfQllURTsN
-CisJCWhvcml6b250YWxfYmFja3BvcmNoX2J5dGUgLT0gTUlOX0hGUF9CWVRFIC0gc2lnbmVkX2hm
-cF9ieXRlOw0KKwl9IGVsc2UgaWYgKHNpZ25lZF9oYnBfYnl0ZSA8IE1JTl9IQlBfQllURSkgew0K
-KwkJaG9yaXpvbnRhbF9mcm9udHBvcmNoX2J5dGUgLT0gTUlOX0hCUF9CWVRFIC0gc2lnbmVkX2hi
-cF9ieXRlOw0KKwkJaG9yaXpvbnRhbF9iYWNrcG9yY2hfYnl0ZSA9IE1JTl9IQlBfQllURTsNCisJ
-fQ0KKw0KIAl3cml0ZWwoaG9yaXpvbnRhbF9zeW5jX2FjdGl2ZV9ieXRlLCBkc2ktPnJlZ3MgKyBE
-U0lfSFNBX1dDKTsNCiAJd3JpdGVsKGhvcml6b250YWxfYmFja3BvcmNoX2J5dGUsIGRzaS0+cmVn
-cyArIERTSV9IQlBfV0MpOw0KIAl3cml0ZWwoaG9yaXpvbnRhbF9mcm9udHBvcmNoX2J5dGUsIGRz
-aS0+cmVncyArIERTSV9IRlBfV0MpOw0KLS0gDQoyLjI1LjENCg==
+[+Eric]
 
+On Thu, May 21, 2020 at 03:38:35PM +0100, Marc Zyngier wrote:
+> On 2020-05-21 15:17, Will Deacon wrote:
+> > [+Marc]
+> > 
+> > On Tue, May 19, 2020 at 07:54:51PM +0200, Jean-Philippe Brucker wrote:
+> > > The SMMUv3 can handle invalidation targeted at TLB entries with shared
+> > > ASIDs. If the implementation supports broadcast TLB maintenance,
+> > > enable it
+> > > and keep track of it in a feature bit. The SMMU will then be
+> > > affected by
+> > > inner-shareable TLB invalidations from other agents.
+> > > 
+> > > A major side-effect of this change is that stage-2 translation
+> > > contexts
+> > > are now affected by all invalidations by VMID. VMIDs are all shared
+> > > and
+> > > the only ways to prevent over-invalidation, since the stage-2 page
+> > > tables
+> > > are not shared between CPU and SMMU, are to either disable BTM or
+> > > allocate
+> > > different VMIDs. This patch does not address the problem.
+> > 
+> > This sounds like a potential performance issue, particularly as we
+> > expose
+> > stage-2 contexts via VFIO directly.
+
+Yes it's certainly going to affect SMMU performance, though I haven't
+measured it. QEMU and kvmtool currently use stage-1 translations instead
+of stage-2, so it won't be a problem until they start using nested
+translation (and unless the SMMU only supports stage-2).
+
+In the coming month I'd like to have a look at coordinating VMID
+allocation between KVM and SMMU, for guest SVA. If the guest wants to
+share page tables with the SMMU, the SMMU has to use the same VMIDs as the
+VM to receive broadcast TLBI.
+
+Similarly to patch 06 ("arm64: mm: Pin down ASIDs for sharing mm with
+devices") the SMMU would request a VMID allocated by KVM, when setting up
+a nesting VFIO container. One major downside is that the VMID is pinned
+and cannot be recycled on rollover while it's being used for DMA.
+
+I wonder if we could use this even when page tables aren't shared between
+CPU and SMMU, to avoid splitting the VMID space.
+
+> > Maybe we could reserve some portion
+> > of
+> > VMID space for the SMMU? Marc, what do you reckon?
+> 
+> Certainly doable when we have 16bits VMIDs. With smaller VMID spaces (like
+> on
+> v8.0), this is a bit more difficult (we do have pretty large v8.0 systems
+> around).
+
+It's only an issue if those systems have an SMMUv3 supporting DVM. With
+any luck that doesn't exist?
+
+> How many VMID bits are we talking about?
+
+That's anyone's guess... One passed-through device per VM would halve the
+VMID space. But the SMMU allocates one VMID for each device assigned to a
+guest, not one per VM (well one per domain, or VFIO container, but I think
+it boils down to one per device with QEMU). So with SR-IOV for example it
+should be pretty easy to reach 256 VMIDs in the SMMU.
+
+Thanks,
+Jean
