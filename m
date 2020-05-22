@@ -2,105 +2,93 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A063C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C867C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60061206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159597;
-	bh=rgoYLS+WMEIn3HQPScbZElKfuAs0VrEeOrN4VJIZ2TQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NcRHrlS5EIFMGHVJR2PzjaoilP8RREmDreNdA5sImMcKS343sfc0FXE7QBWv45s6T
-	 B3+0uSTUHqewIjItzADm+8r2jOftL00IBhFmi2FFiWgqyB59EfkmhkDoBiRE4+8F2L
-	 AQE9gLucFFxmOKob+CKwV1DGIcnVP+47SrXAabSo=
+	by mail.kernel.org (Postfix) with ESMTP id 3B9E9204EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgEVOuD (ORCPT
+        id S1730283AbgEVPAj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:50:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 11:00:39 -0400
+Received: from sauhun.de ([88.99.104.3]:33274 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730221AbgEVOuC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A33F223BF;
-        Fri, 22 May 2020 14:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159002;
-        bh=rgoYLS+WMEIn3HQPScbZElKfuAs0VrEeOrN4VJIZ2TQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2I/TURVKgjaSjaDotYEy+FK0CPE59uxC4zc9inBzApj2zvn+mUwXzzILgsz0sECA
-         GF9JZK4Cs2mOZ5j9MBNnyl1HgR32dlfXpAqxMRSCQ7RI+q6NFwQJeWwFrcWCKIPava
-         MoH7x1zU8LI6PeCLANJ2P/AYU2zkJyjjrJw5pj/Y=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 02/41] ARM: dts: rockchip: fix phy nodename for rk3228-evb
-Date:   Fri, 22 May 2020 10:49:19 -0400
-Message-Id: <20200522144959.434379-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
-References: <20200522144959.434379-1-sashal@kernel.org>
+        id S1730261AbgEVPAj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 11:00:39 -0400
+Received: from localhost (p5486cea4.dip0.t-ipconnect.de [84.134.206.164])
+        by pokefinder.org (Postfix) with ESMTPSA id DA0942C203F;
+        Fri, 22 May 2020 17:00:37 +0200 (CEST)
+Date:   Fri, 22 May 2020 17:00:37 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-i2c@vger.kernel.org, tfiga@chromium.org,
+        drinkcat@chromium.org, srv_heupstream@mediatek.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v15 2/2] i2c: core: support bus regulator controlling in
+ adapter
+Message-ID: <20200522150037.GF5670@ninjato>
+References: <20200519072729.7268-1-bibby.hsieh@mediatek.com>
+ <20200519072729.7268-3-bibby.hsieh@mediatek.com>
+ <20200519084833.GH1094@ninjato>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nYySOmuH/HDX6pKp"
+Content-Disposition: inline
+In-Reply-To: <20200519084833.GH1094@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 287e0d538fcec2f6e8eb1e565bf0749f3b90186d ]
+--nYySOmuH/HDX6pKp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A test with the command below gives for example this error:
+On Tue, May 19, 2020 at 10:48:33AM +0200, Wolfram Sang wrote:
+> On Tue, May 19, 2020 at 03:27:29PM +0800, Bibby Hsieh wrote:
+> > Although in the most platforms, the bus power of i2c
+> > are alway on, some platforms disable the i2c bus power
+> > in order to meet low power request.
+> >=20
+> > We get and enable bulk regulator in i2c adapter device.
+> >=20
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+>=20
+> Applied to for-next, thanks! I added Tomasz Rev-by: for you.
 
-arch/arm/boot/dts/rk3228-evb.dt.yaml: phy@0:
-'#phy-cells' is a required property
+Reverted because of regression reports in linux-next. I am all open for
+the change in general, but it looks to me that we should wait another
+cycle.
 
-The phy nodename is normally used by a phy-handle.
-This node is however compatible with
-"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
-which is just been added to 'ethernet-phy.yaml'.
-So change nodename to 'ethernet-phy' for which '#phy-cells'
-is not a required property
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
-phy/phy-provider.yaml
+--nYySOmuH/HDX6pKp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200416170321.4216-1-jbx6244@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/rk3228-evb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/arch/arm/boot/dts/rk3228-evb.dts b/arch/arm/boot/dts/rk3228-evb.dts
-index 5670b33fd1bd..aed879db6c15 100644
---- a/arch/arm/boot/dts/rk3228-evb.dts
-+++ b/arch/arm/boot/dts/rk3228-evb.dts
-@@ -46,7 +46,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		phy: phy@0 {
-+		phy: ethernet-phy@0 {
- 			compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
- 			reg = <0>;
- 			clocks = <&cru SCLK_MAC_PHY>;
--- 
-2.25.1
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7H6RUACgkQFA3kzBSg
+KbYgEBAAm2Ws0HR6Us1YXmvYKoHYeckt55mFxwzRd04YrAX6JvWtvEfbgBNwX5MQ
+j0ZsXyDkakJUj93B0oYzVqBPH4vX1KG+inRUsp78j5d1cFl9YgTgrtw1rsAvjAh4
+IrLjo0V2sEJCLNRyEDkSo73udbhItQFDC+xRA28WJ8ueF/aVmMtHM1poyWA/QwR6
+NKLB8h5pUhRdX0ZlSOB9fTYnmVnJ15SNNLsOmF09XbMjTYkCGl0+sVsV8oOA3G5T
+o4J7+bL//YtDxGBLSri9Ut4nANW+63SqbOsAnWFJCZNlaFGkM8o0KfDGkaqlY0BR
+if8/4pd/XPH7CbPEAkdSR2QdPo0+XFkqMmRGld6ELKsjq+vaVU80F/fpUGyOH+Xo
+qijlAS2z+CVZEgEKjVE8jKDJ8MVUlIFp8tnXdE9n++jwZwB7VJq57lMSqHGeootb
+/AprIhiDCCjl9ETWCQgGK7n/zq0XuTmKACAK09vLqxflRYAuttKcLLo7jMG8LJbV
+XqvZzvwz+qC5EWrka5G4MBj0blLzXa3dNKj5CV3tXeOpKu1OYOtg2FiJ0k7Pbcui
+kFWmB1BTCVIkzkFsA4XaiTSLDc3lq7WjEOb4FUXumaUsb2mpeTKpP2QW9EVPtoJm
+Kxo8R+0vD9Ix0xXcHTpIg9mE3QzKJ2Gk2ey6jlNjHbOU/oKhM2c=
+=qEVd
+-----END PGP SIGNATURE-----
 
+--nYySOmuH/HDX6pKp--
