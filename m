@@ -2,112 +2,103 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BC4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B94DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2888207D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696ED205CB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qxEbZjwD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rT1NJtP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgEVBdX (ORCPT
+        id S1726693AbgEVBg4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 21:33:23 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:23722 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgEVBdX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 21:33:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590111220; x=1621647220;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/dhekmzFTgIlB9T7AkbhzCg/aXbY4QZ8mH7f4WQrVIg=;
-  b=qxEbZjwDV6w9K18SlDaXOrg+oKVWXcePbZHxMDSIDOW7QC177K9sMmqt
-   YdDiBfNO88i3odj9YoujyWErpDf/kRkQRjw1ku8NdFFL3mTY5VQMsB5PM
-   HFRNTv2ye+MtngOAJ8so22kMxk12DZB5kD2OV72jvmeJLqIOdvBThjMd1
-   76s0OWynezJvPDK0FoLh6T4EpFZu87tjNrD1qQTeT3i06XrLyEj6DxxbU
-   2P91SkhiNdw61DHFW97LVNAYRdHY2dZkBGCPXp64bzmZkszMw0QsqEZB6
-   DZHj/dQAoY/NcE6JyP8ibl9pV1ywbqcTDojsl4cJYi03XcK1t+lrnw+oQ
-   Q==;
-IronPort-SDR: J6Xz4/qxf4I7aVBBAIcg9A8Lt+ZLaPJ3PxMsL2Hvm7G1ifuza39JWmmspJhRd7/s6Dml1J9BT8
- Eyi0N3B9/ZAJrIA1b5CbUbpfUEHoiHVdDW6Bu5RkhOWXvaTjgAQEHh6g3+k3AqIh7ZxTVWnXoJ
- judEFufj9c3noMzonBzQGr9TyRyQjxQyRD+9bSbhKeKrM+WD6fx+0JMJ1uxpm9ZOs7Exnydhr4
- 21jWZ0kuBcN7pEDja7/zd0HxGwK9+ZMMm3yPdTr/hpzc1Q11i7hZXNr/yfNCOhGFvKAIDDOH9V
- GHM=
-X-IronPort-AV: E=Sophos;i="5.73,419,1583164800"; 
-   d="scan'208";a="241031113"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 22 May 2020 09:33:39 +0800
-IronPort-SDR: WMhJcEL+sj7MtQb9zsB1cxp5O4rQVIzAU1vdo4jHkf/fKCASSq3bwwJ4xSuFouRuvZxWM96Yvl
- 4lb3xmkJ02T4SXreVT9fZ0bSUIpE2nZwk=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 18:22:49 -0700
-IronPort-SDR: tHTLxVk1/JY8zWtT8+eTjABPWjnVNE3nlfSZOV7gSmosL80R+z4ScVeJSLBf9hYi5hRU5PeOBk
- rMUVcST+XS0A==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 18:33:17 -0700
-Date:   Fri, 22 May 2020 02:33:12 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Huacai Chen <chenhc@lemote.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Liangliang Huang <huanglllzu@gmail.com>,
-        =?UTF-8?Q?=E5=91=A8=E7=90=B0=E6=9D=B0_=28Zhou_Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
-        Zou Wei <zou_wei@huawei.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH v4 03/13] mips: Add MIPS Release 5 support
-In-Reply-To: <20200521140725.29571-4-Sergey.Semin@baikalelectronics.ru>
-Message-ID: <alpine.LFD.2.21.2005220228310.21168@redsun52.ssa.fujisawa.hgst.com>
-References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru> <20200521140725.29571-4-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 21 May 2020 21:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgEVBg4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 21:36:56 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34390C061A0E;
+        Thu, 21 May 2020 18:36:56 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v16so10703654ljc.8;
+        Thu, 21 May 2020 18:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xe8ItSV7TWpuJ0Sj6ABqt9kZYzEJBCX+NyG4cgDQbwQ=;
+        b=rT1NJtP19zASFzi0kLE9ovS9c17j+Xs/6AJSG7rK4TyrUn1MKdmSCXF1heoXnCLp7v
+         1Jry0RUhwUvjEoDaNvowlunPUXySy20/0anhrmpg0jkII6/AcwE78sb6B6Wi0qDxSdi7
+         kSAfW6DRkpX5a4OlT4AFrBbie0Rtsg5AQ5hvHOdEJi4wri1BBLJzEKgmXRninYDNWneP
+         N5vEaIx+eXbYvWlpyifBDefbVzg8hljn2EaN08r2ggbEo+3htywlRdYCwuVp0LcPuNHW
+         UuZwnZZdCqrUUwrW3JmJF78l2m5E/VXss8pH+Lu6wQvEx+86+bv1fRQU4VOkBHIJl0Fg
+         k2Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xe8ItSV7TWpuJ0Sj6ABqt9kZYzEJBCX+NyG4cgDQbwQ=;
+        b=m03/bTyO2X0MIMn5btMgJE6GK9vENLqeVuK4Aj8yVHGPBS/b9+DBZzuLzRbdRckLsX
+         WlyFgj/fnknJO07xmJxM2kWIHt6xAFv/QhEcY9abajWnWNTgWE9AhMWUPs5WHt3TVtab
+         WfnOfz0Txwen+R2zVk8324aXMJQ3DGI+KhLzxHjwOPFagBjS8cnVrXbJAVPPyFBgWzF8
+         bfX3hI3zsEnjVliN7dYKHESKRIULCGQnGzjPotL6QnRwsv/q17uVq7Yan+QkWJPvzsKx
+         N6tNn4YJCvgPTn+nd/I4shY712VWnfgOwWFLEv5gRlSJfIdN4hIqvjyK/OG11GVL1/MW
+         j5sg==
+X-Gm-Message-State: AOAM531KKE8KASly3mqpkUfqpsYCDnA2ec0oi1T16xZyD026nsGRmTVa
+        v4wGQeYSuXoeE6u9+XwN8q4K0WO+Rn5ivLic030=
+X-Google-Smtp-Source: ABdhPJz4ng85HDuCoXa+K1Pjzh5pnjaHSdLkxpp6ptjdi9kX0Ew+8Xac83dsBEF9SPUCrIBAXJFkj7uXZNxX6Zf6bIA=
+X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr4936909ljl.178.1590111414634;
+ Thu, 21 May 2020 18:36:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com> <1590070674-23027-2-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1590070674-23027-2-git-send-email-yibin.gong@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 21 May 2020 22:36:41 -0300
+Message-ID: <CAOMZO5AsCREw1OT5zzFH+pC6uyw+MOSKJFZ3_-HvDva65A2cKQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
+ voltage range
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Yongcai Huang <anson.huang@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 May 2020, Serge Semin wrote:
+Hi Robin,
 
-> There are five MIPS32/64 architecture releases currently available:
-> from 1 to 6 except fourth one, which was intentionally skipped.
-> Three of them can be called as major: 1st, 2nd and 6th, that not only
-> have some system level alterations, but also introduced significant
-> core/ISA level updates. The rest of the MIPS architecture releases are
-> minor.
+On Thu, May 21, 2020 at 3:17 AM Robin Gong <yibin.gong@nxp.com> wrote:
+>
+> Correct ldo1 voltage range from wrong high group(3.0v~3.3v) to low group
 
- Well, strictly speaking R3 added microMIPS support, which was all but
-minor (of course there were minor updates too, such as 2008-NaN support).
+Please use capital letter V for Volt.
 
-  Maciej
+> (1.6v~1.9v) because the ldo1 should be 1.8v. Actually, two voltage groups
+> have been supported at bd718x7-regulator driver, hence, just corrrect the
+> voltage range to 1.6v~3.3v. For ldo2@0.8v, correct voltage range too.
+> Otherwise, ldo1 would be kept @3.0v and ldo2@0.9v which violate i.mx8mn
+> datasheet as the below warning log in kernel:
+>
+> [    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
+> [    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
+>
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+
+You should add a Fixes tag and Cc stable on this one.
+
+Thanks
