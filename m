@@ -2,126 +2,99 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B1DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 11:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD47C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 11:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4ADB206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 11:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38856206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 11:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590147403;
+	bh=z/6OXOepRElS/C2Gkk6RRZeDF9+60BoN0+lQKMHv4sc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zVMhAF3Upf4pddwgiSo91FPmilTvhu4q56ddhjhhCYYKb/qi70AxulL+FMbyKtGD6
+	 cH5LdF5TckBGBtZ/NGqf8L32gHKPTKCvadnvPLk7lSGkmR9BtYp6qNhqf4kwg604yM
+	 af/Qlc3KyAM3fv/oIvki/3UxfGsQwQw6fJsAEP1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbgEVLfP (ORCPT
+        id S1729729AbgEVLgi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 07:35:15 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:49393 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729090AbgEVLfP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 07:35:15 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04MBXMSl015024;
-        Fri, 22 May 2020 14:33:22 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
-        id 676E4639C1; Fri, 22 May 2020 14:33:22 +0300 (IDT)
-From:   Tali Perry <tali.perry1@gmail.com>
-To:     ofery@google.com, brendanhiggins@google.com,
-        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        robh+dt@kernel.org, wsa@the-dreams.de,
-        andriy.shevchenko@linux.intel.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
-Subject: [PATCH v13 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C controller
-Date:   Fri, 22 May 2020 14:33:10 +0300
-Message-Id: <20200522113312.181413-2-tali.perry1@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200522113312.181413-1-tali.perry1@gmail.com>
-References: <20200522113312.181413-1-tali.perry1@gmail.com>
+        Fri, 22 May 2020 07:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728465AbgEVLgh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 07:36:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6CF8206C3;
+        Fri, 22 May 2020 11:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590147397;
+        bh=z/6OXOepRElS/C2Gkk6RRZeDF9+60BoN0+lQKMHv4sc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SViwwqlJ87aevdHn4RYwBdrJnJkpk2rgiCE7e168UaD8MlGXvEupOGhOH7ejYfrbJ
+         N3kZOSYajFR+FWCWBWyZDHjCeSTW6pHxtLB0BJj1sTzEGGQE0HGaQz/KalAcMtdjVw
+         a7j7/Lewv8pBtYtgHXcvbty7bFHiOt4Q0y6gEdzA=
+Date:   Fri, 22 May 2020 12:36:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     dillon.minfei@gmail.com
+Cc:     robh+dt@kernel.org, p.zabel@pengutronix.de,
+        mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
+        alexandre.torgue@st.com, thierry.reding@gmail.com,
+        sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
+ support for stm32f4
+Message-ID: <20200522113634.GE5801@sirena.org.uk>
+References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
+ <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HeFlAV5LIbMFYYuh"
+Content-Disposition: inline
+In-Reply-To: <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
+X-Cookie: C for yourself.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added device tree binding documentation for Nuvoton BMC
-NPCM I2C controller.
 
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
----
- .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+--HeFlAV5LIbMFYYuh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml b/Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
-new file mode 100644
-index 000000000000..1c9d9a2d4bcd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i2c/nuvoton,npcm7xx-i2c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: nuvoton NPCM7XX I2C Controller Device Tree Bindings
-+
-+description: |
-+  The NPCM750x includes sixteen I2C bus controllers. All Controllers support
-+  both master and slave mode. Each controller can switch between master and slave
-+  at run time (i.e. IPMB mode). Each controller has two 16 byte HW FIFO for TX and
-+  RX.
-+
-+maintainers:
-+  - Tali Perry <tali.perry1@gmail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nuvoton,npcm7xx-i2c
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: Reference clock for the I2C bus
-+
-+  bus-frequency:
-+    description: Desired I2C bus clock frequency in Hz. If not specified,
-+                 the default 100 kHz frequency will be used.
-+                 possible values are 100000, 400000 and 1000000.
-+    default: 100000
-+    enum: [100000, 400000, 1000000]
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+allOf:
-+  - $ref: /schemas/i2c/i2c-controller.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    i2c0: i2c@80000 {
-+        compatible = "nuvoton,npcm750-i2c";
-+        reg = <0x80000 0x1000>;
-+        clocks = <&clk NPCM7XX_CLK_APB2>;
-+        bus-frequency = <100000>;
-+        interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+
-+...
--- 
-2.22.0
+On Mon, May 18, 2020 at 07:09:20PM +0800, dillon.minfei@gmail.com wrote:
 
+> 2, use stm32 spi's "In full-duplex (BIDIMODE=0 and RXONLY=0)", as tx_buf is
+> null, we must add dummy data sent out before read data.
+> so, add stm32f4_spi_tx_dummy() to handle this situation.
+
+There are flags SPI_CONTROLLER_MUST_TX and SPI_CONTROLLER_MUST_RX flags
+that the driver can set if it needs to, no need to open code this in the
+driver.
+
+--HeFlAV5LIbMFYYuh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7HuUEACgkQJNaLcl1U
+h9DV4Qf/SihsJbdjpA046b8/NxOUN0XzKoBRryG9nf4DC4x3Fpb0tscXdk2/FeTd
+JceAquzFzEEQ49acoXxDA2UQXUMtmlEiGfbWhNHS0Jwo9JVU3XPHLG5d+nX+sudU
+L+O+LPQB61KcC2OQniMIjgApMjvyj2ePQY0lfjl1jnAb3PLHvlpaUt5Mjp8P0iVB
+N2skbxjLqD/nDEDYXV+S0Jp689oOuNDJ/zeNk3ds99vhHEc55yvZxvZB8OcWNuop
+AJ94iVaqJX+b7qak3V7Ts6Hb6GgkNvr/78bWpjGK5eB+a00Ia0l8yP9svyYdczOK
+GS605iD0geP72ehzZUhOjifzaJ7rgg==
+=XMsa
+-----END PGP SIGNATURE-----
+
+--HeFlAV5LIbMFYYuh--
