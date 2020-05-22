@@ -2,208 +2,137 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3A2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2308C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6674C233FC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC94C2225E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgEVOec (ORCPT
+        id S1730089AbgEVOgn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:34:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:36650 "EHLO foss.arm.com"
+        Fri, 22 May 2020 10:36:43 -0400
+Received: from mga09.intel.com ([134.134.136.24]:53007 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbgEVOec (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 10:34:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AEA0D6E;
-        Fri, 22 May 2020 07:34:31 -0700 (PDT)
-Received: from [10.57.2.168] (unknown [10.57.2.168])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26E7D3F68F;
-        Fri, 22 May 2020 07:34:29 -0700 (PDT)
-Subject: Re: [PATCH 09/12] dt-bindings: arm: fsl: Add msi-map device-tree
- binding for fsl-mc bus
-To:     Rob Herring <robh+dt@kernel.org>,
-        Diana Craciun OSS <diana.craciun@oss.nxp.com>
-Cc:     devicetree@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        linux-acpi@vger.kernel.org,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200521130008.8266-10-lorenzo.pieralisi@arm.com>
- <CAL_Jsq+h18gH2D3B-OZku6ACCgonPUJcUnrN8a5=jApsXHdB5Q@mail.gmail.com>
- <abca6ecb-5d93-832f-ff7c-de53bb6203f3@arm.com>
- <ee7a5c04-814e-215f-ec74-52c2f3b881d0@oss.nxp.com>
- <CAL_JsqKf+cq9Nhs+M8ihC-Ls24YH-WEofW8H4kkFPWMhZw=unA@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <7f8d00ae-b225-a58d-8a11-e8c68edc877b@arm.com>
-Date:   Fri, 22 May 2020 15:34:27 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1729879AbgEVOgn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 10:36:43 -0400
+IronPort-SDR: PNRESnoLTTWrUFmjh2S7uVf/ViOltpUimj0ATAkaB7hqF/++B36fLXIDeAYymtKg+JMhbl7Ypa
+ PV+iqeF43h9Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 07:36:42 -0700
+IronPort-SDR: WNZo8BoCRV9wtlQZiq9woxf7m5ny2JVyE4bhx4igzwWJwFIpt7LGzYskJ0taZyG5btHO00rmXe
+ QQTY2nqFiPPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
+   d="scan'208";a="283413455"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 22 May 2020 07:36:37 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jc8mt-008FKt-Bm; Fri, 22 May 2020 17:36:39 +0300
+Date:   Fri, 22 May 2020 17:36:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Alan Cox <alan@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200522143639.GG1634618@smile.fi.intel.com>
+References: <20200522000806.7381-2-Sergey.Semin@baikalelectronics.ru>
+ <20200522111340.GX1634618@smile.fi.intel.com>
+ <20200522115235.rt3ay7lveimrgooa@mobilestation>
+ <20200522121221.GA1634618@smile.fi.intel.com>
+ <20200522121820.GG5801@sirena.org.uk>
+ <20200522123427.GD1634618@smile.fi.intel.com>
+ <20200522124406.co7gmteojfsooerc@mobilestation>
+ <20200522131013.GH5801@sirena.org.uk>
+ <20200522132742.taf2ixfjpyd5u3dt@mobilestation>
+ <20200522140025.bmd6bhpjjk5msvsm@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKf+cq9Nhs+M8ihC-Ls24YH-WEofW8H4kkFPWMhZw=unA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522140025.bmd6bhpjjk5msvsm@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-22 15:08, Rob Herring wrote:
-> On Fri, May 22, 2020 at 3:57 AM Diana Craciun OSS
-> <diana.craciun@oss.nxp.com> wrote:
->>
->> On 5/22/2020 12:42 PM, Robin Murphy wrote:
->>> On 2020-05-22 00:10, Rob Herring wrote:
->>>> On Thu, May 21, 2020 at 7:00 AM Lorenzo Pieralisi
->>>> <lorenzo.pieralisi@arm.com> wrote:
->>>>>
->>>>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
->>>>>
->>>>> The existing bindings cannot be used to specify the relationship
->>>>> between fsl-mc devices and GIC ITSes.
->>>>>
->>>>> Add a generic binding for mapping fsl-mc devices to GIC ITSes, using
->>>>> msi-map property.
->>>>>
->>>>> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
->>>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>>> ---
->>>>>    .../devicetree/bindings/misc/fsl,qoriq-mc.txt | 30
->>>>> +++++++++++++++++--
->>>>>    1 file changed, 27 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
->>>>> b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
->>>>> index 9134e9bcca56..b0813b2d0493 100644
->>>>> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
->>>>> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
->>>>> @@ -18,9 +18,9 @@ same hardware "isolation context" and a 10-bit
->>>>> value called an ICID
->>>>>    the requester.
->>>>>
->>>>>    The generic 'iommus' property is insufficient to describe the
->>>>> relationship
->>>>> -between ICIDs and IOMMUs, so an iommu-map property is used to define
->>>>> -the set of possible ICIDs under a root DPRC and how they map to
->>>>> -an IOMMU.
->>>>> +between ICIDs and IOMMUs, so the iommu-map and msi-map properties
->>>>> are used
->>>>> +to define the set of possible ICIDs under a root DPRC and how they
->>>>> map to
->>>>> +an IOMMU and a GIC ITS respectively.
->>>>>
->>>>>    For generic IOMMU bindings, see
->>>>>    Documentation/devicetree/bindings/iommu/iommu.txt.
->>>>> @@ -28,6 +28,9 @@ Documentation/devicetree/bindings/iommu/iommu.txt.
->>>>>    For arm-smmu binding, see:
->>>>>    Documentation/devicetree/bindings/iommu/arm,smmu.yaml.
->>>>>
->>>>> +For GICv3 and GIC ITS bindings, see:
->>>>> +Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml.
->>>>>
->>>>> +
->>>>>    Required properties:
->>>>>
->>>>>        - compatible
->>>>> @@ -119,6 +122,15 @@ Optional properties:
->>>>>      associated with the listed IOMMU, with the iommu-specifier
->>>>>      (i - icid-base + iommu-base).
->>>>>
->>>>> +- msi-map: Maps an ICID to a GIC ITS and associated iommu-specifier
->>>>> +  data.
->>>>> +
->>>>> +  The property is an arbitrary number of tuples of
->>>>> +  (icid-base,iommu,iommu-base,length).
->>>>
->>>> I'm confused because the example has GIC ITS phandle, not an IOMMU.
->>>>
->>>> What is an iommu-base?
->>>
->>> Right, I was already halfway through writing a reply to say that all
->>> the copy-pasted "iommu" references here should be using the
->>> terminology from the pci-msi.txt binding instead.
->>
->> Right, will change it.
->>
->>>
->>>>> +
->>>>> +  Any ICID in the interval [icid-base, icid-base + length) is
->>>>> +  associated with the listed GIC ITS, with the iommu-specifier
->>>>> +  (i - icid-base + iommu-base).
->>>>>    Example:
->>>>>
->>>>>            smmu: iommu@5000000 {
->>>>> @@ -128,6 +140,16 @@ Example:
->>>>>                   ...
->>>>>            };
->>>>>
->>>>> +       gic: interrupt-controller@6000000 {
->>>>> +               compatible = "arm,gic-v3";
->>>>> +               ...
->>>>> +               its: gic-its@6020000 {
->>>>> +                       compatible = "arm,gic-v3-its";
->>>>> +                       msi-controller;
->>>>> +                       ...
->>>>> +               };
->>>>> +       };
->>>>> +
->>>>>            fsl_mc: fsl-mc@80c000000 {
->>>>>                    compatible = "fsl,qoriq-mc";
->>>>>                    reg = <0x00000008 0x0c000000 0 0x40>,    /* MC
->>>>> portal base */
->>>>> @@ -135,6 +157,8 @@ Example:
->>>>>                    msi-parent = <&its>;
->>>
->>> Side note: is it right to keep msi-parent here? It rather implies that
->>> the MC itself has a 'native' Device ID rather than an ICID, which I
->>> believe is not strictly true. Plus it's extra-confusing that it
->>> doesn't specify an ID either way, since that makes it look like the
->>> legacy PCI case that gets treated implicitly as an identity msi-map,
->>> which makes no sense at all to combine with an actual msi-map.
->>
->> Before adding msi-map, the fsl-mc code assumed that ICID and streamID
->> are equal and used msi-parent just to get the reference to the ITS node.
->> Removing msi-parent will break the backward compatibility of the already
->> existing systems. Maybe we should mention that this is legacy and not to
->> be used for newer device trees.
+On Fri, May 22, 2020 at 05:00:25PM +0300, Serge Semin wrote:
+> On Fri, May 22, 2020 at 04:27:43PM +0300, Serge Semin wrote:
+> > On Fri, May 22, 2020 at 02:10:13PM +0100, Mark Brown wrote:
+> > > On Fri, May 22, 2020 at 03:44:06PM +0300, Serge Semin wrote:
+> > > > On Fri, May 22, 2020 at 03:34:27PM +0300, Andy Shevchenko wrote:
+
+...
+
+> > > > > > Realistically it seems unlikely that the clock will be even as slow as
+> > > > > > double digit kHz though, and if we do I'd not be surprised to see other
+> > > > > > problems kicking in.  It's definitely good to handle such things if we
+> > > > > > can but so long as everything is OK for realistic use cases I'm not sure
+> > > > > > it should be a blocker.
+> > > 
+> > > > As I see it the only way to fix the problem for any use-case is to move the
+> > > > busy-wait loop out from the tasklet's callback, add a completion variable to the
+> > > > DW SPI data and wait for all the DMA transfers completion in the
+> > > > dw_spi_dma_transfer() method. Then execute both busy-wait loops (there we can
+> > > > use spi_delay_exec() since it's a work-thread) and call
+> > > > spi_finalize_current_transfer() after it. What do you think?
+> > > 
+> > > I'm concerned that this will add latency for the common case to handle a
+> > > potential issue for unrealistically slow buses but yeah, if it's an
+> > > issue kicking up to task context is how you'd handle it.
+> > 
+> > I am not that worried about the latency (most likely it'll be the same as
+> > before), but I am mostly concerned regarding a most likely need to re-implement
+> > a local version spi_transfer_wait(). We can't afford wait for the completion
+> > indefinitely here, so the wait_for_completion_timeout() should be used, for which
+> > I would have to calculate a decent timeout based on the transfer capabilities,
+> > etc. So basically it would mean to partly copy the spi_transfer_wait() to this
+> > module.(
 > 
-> If ids are 1:1, then the DT should use msi-parent. If there is
-> remapping, then use msi-map. A given system should use one or the
-> other. I suppose if some ids are 1:1 and the msi-map was added to add
-> additional support for ids not 1:1, then you could end up with both.
-> That's fine in dts files, but examples should reflect the 'right' way.
+> I'd also wait for Andy's suggestion regarding this, since he's been worried
+> about the delay length in the first place. So he may come up with a better
+> solution in this regard.
 
-Is that defined anywhere? The generic MSI binding just has some weaselly 
-wording about buses:
+The completion approach sounds quite heavy to me.
 
-"When #msi-cells is non-zero, busses with an msi-parent will require 
-additional properties to describe the relationship between devices on 
-the bus and the set of MSIs they can potentially generate."
+Since we haven't got any report for such an issue, I prefer as simplest as
+possible approach.
 
-which appears at odds with its own definition of msi-parent as including 
-an msi-specifier (or at best very unclear about what value that 
-specifier should take in this case).
+If we add might_sleep() wouldn't it be basically reimplementation of the
+spi_delay_exec() again?
 
-The PCI MSI binding goes even further and specifically reserves 
-msi-parent for cases where there is no sideband data. As far as I'm 
-aware, the fact that the ITS driver implements a bodge for the "empty 
-msi-parent even though #msi-cells > 0" case is merely a compatibility 
-thing for old DTs from before this was really thought through, not an 
-officially-specified behaviour.
+And second question, do you experience this warning on your system?
 
-Robin.
+My point is: let's warn and see if anybody comes with a bug report. We will
+solve an issue when it appears.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
