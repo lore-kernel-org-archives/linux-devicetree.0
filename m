@@ -2,61 +2,78 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91A4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A19C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91D4420748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9438820812
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tfwDFl2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgEVDYZ (ORCPT
+        id S1727083AbgEVDgh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 23:24:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5272 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727024AbgEVDYY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 May 2020 23:24:24 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 51717A9057906BA0EFA3;
-        Fri, 22 May 2020 11:24:22 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.90) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
- 11:24:12 +0800
-Subject: Re: [PATCH v8 5/5] dt-bindings: chosen: Document
- linux,low-memory-range for arm64 kdump
-To:     Rob Herring <robh+dt@kernel.org>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <20200521093805.64398-6-chenzhou10@huawei.com>
- <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        <John.p.donnelly@oracle.com>, <pkushwaha@marvell.com>,
-        "Simon Horman" <horms@verge.net.au>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        "Linux Doc Mailing List" <linux-doc@vger.kernel.org>,
+        Thu, 21 May 2020 23:36:37 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40664 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgEVDgh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 23:36:37 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aLPc037280;
+        Thu, 21 May 2020 22:36:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590118581;
+        bh=HrQjWJ1fQIqu1ayf7fVo3VgYbxThYydlatrnKWcfJzQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tfwDFl2F4veF+44wEnyZlowAjXC0drn3TmboAkdNp0ZOyAkE78ogBwSbSWqLldhL3
+         Qhuhq/XcUxjP2k8I5fxsrbCSvPrp4cNNbO92twrmXmJohLjODsk1oo8VoEkfVkVTLl
+         +JrPaxJngNCUWSZzjOCCvzuHum4WA3kwsXqiceZU=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aLWW007398;
+        Thu, 21 May 2020 22:36:21 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 22:36:21 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 22:36:21 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aHDv049868;
+        Thu, 21 May 2020 22:36:18 -0500
+Subject: Re: [PATCH v4 03/14] PCI: cadence: Add support to use custom read and
+ write accessors
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <kexec@lists.infradead.org>
-From:   chenzhou <chenzhou10@huawei.com>
-Message-ID: <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
-Date:   Fri, 22 May 2020 11:24:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200506151429.12255-1-kishon@ti.com>
+ <20200506151429.12255-4-kishon@ti.com> <20200520220724.GA636352@bogus>
+ <37d2d6c3-232d-adb8-4e0b-e0c699ec435a@ti.com>
+ <CAL_JsqK8xRTxuJ39yPMzE1JMBrYccXB5QqsSvn7HosvrEQGdWQ@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <0bb5280c-99d1-6b33-ce69-5698f9902415@ti.com>
+Date:   Fri, 22 May 2020 09:06:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
+In-Reply-To: <CAL_JsqK8xRTxuJ39yPMzE1JMBrYccXB5QqsSvn7HosvrEQGdWQ@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.213.90]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -64,66 +81,204 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Rob,
 
-On 2020/5/21 21:29, Rob Herring wrote:
-> On Thu, May 21, 2020 at 3:35 AM Chen Zhou <chenzhou10@huawei.com> wrote:
->> Add documentation for DT property used by arm64 kdump:
->> linux,low-memory-range.
->> "linux,low-memory-range" is an another memory region used for crash
->> dump kernel devices.
+On 5/22/2020 3:47 AM, Rob Herring wrote:
+> On Thu, May 21, 2020 at 7:33 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  Documentation/devicetree/bindings/chosen.txt | 25 ++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
-> chosen is now a schema documented here[1].
-Ok, that is, i don't need to modify the doc in kernel, just create a pull request in github [1]?
-
->
->> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
->> index 45e79172a646..bfe6fb6976e6 100644
->> --- a/Documentation/devicetree/bindings/chosen.txt
->> +++ b/Documentation/devicetree/bindings/chosen.txt
->> @@ -103,6 +103,31 @@ While this property does not represent a real hardware, the address
->>  and the size are expressed in #address-cells and #size-cells,
->>  respectively, of the root node.
+>> Hi Rob,
 >>
->> +linux,low-memory-range
->> +----------------------
->> +This property (arm64 only) holds a base address and size, describing a
->> +limited region below 4G. Similar to "linux,usable-memory-range", it is
->> +an another memory range which may be considered available for use by the
->> +kernel.
-> Why can't you just add a range to "linux,usable-memory-range"? It
-> shouldn't be hard to figure out which part is below 4G.
-I did like this in my previous version, such as v5. After discussed with James, i modified it to the current way.
+>> On 5/21/2020 3:37 AM, Rob Herring wrote:
+>>> On Wed, May 06, 2020 at 08:44:18PM +0530, Kishon Vijay Abraham I wrote:
+>>>> Add support to use custom read and write accessors. Platforms that
+>>>> don't support half word or byte access or any other constraint
+>>>> while accessing registers can use this feature to populate custom
+>>>> read and write accessors. These custom accessors are used for both
+>>>> standard register access and configuration space register access of
+>>>> the PCIe host bridge.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  drivers/pci/controller/cadence/pcie-cadence.h | 107 +++++++++++++++---
+>>>>  1 file changed, 94 insertions(+), 13 deletions(-)
+>>>
+>>> Actually, take back my R-by...
+>>>
+>>>>
+>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+>>>> index df14ad002fe9..70b6b25153e8 100644
+>>>> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+>>>> @@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
+>>>>      MSG_ROUTING_GATHER,
+>>>>  };
+>>>>
+>>>> +struct cdns_pcie_ops {
+>>>> +    u32     (*read)(void __iomem *addr, int size);
+>>>> +    void    (*write)(void __iomem *addr, int size, u32 value);
+>>>> +};
+>>>> +
+>>>>  /**
+>>>>   * struct cdns_pcie - private data for Cadence PCIe controller drivers
+>>>>   * @reg_base: IO mapped register base
+>>>> @@ -239,7 +244,7 @@ struct cdns_pcie {
+>>>>      int                     phy_count;
+>>>>      struct phy              **phy;
+>>>>      struct device_link      **link;
+>>>> -    const struct cdns_pcie_common_ops *ops;
+>>>> +    const struct cdns_pcie_ops *ops;
+>>>>  };
+>>>>
+>>>>  /**
+>>>> @@ -299,69 +304,145 @@ struct cdns_pcie_ep {
+>>>>  /* Register access */
+>>>>  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
+>>>>  {
+>>>> -    writeb(value, pcie->reg_base + reg);
+>>>> +    void __iomem *addr = pcie->reg_base + reg;
+>>>> +
+>>>> +    if (pcie->ops && pcie->ops->write) {
+>>>> +            pcie->ops->write(addr, 0x1, value);
+>>>> +            return;
+>>>> +    }
+>>>> +
+>>>> +    writeb(value, addr);
+>>>>  }
+>>>>
+>>>>  static inline void cdns_pcie_writew(struct cdns_pcie *pcie, u32 reg, u16 value)
+>>>>  {
+>>>> -    writew(value, pcie->reg_base + reg);
+>>>> +    void __iomem *addr = pcie->reg_base + reg;
+>>>> +
+>>>> +    if (pcie->ops && pcie->ops->write) {
+>>>> +            pcie->ops->write(addr, 0x2, value);
+>>>> +            return;
+>>>> +    }
+>>>> +
+>>>> +    writew(value, addr);
+>>>>  }
+>>>
+>>> cdns_pcie_writeb and cdns_pcie_writew are used, so remove them.
+>>>
+>>>>
+>>>>  static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
+>>>>  {
+>>>> -    writel(value, pcie->reg_base + reg);
+>>>> +    void __iomem *addr = pcie->reg_base + reg;
+>>>> +
+>>>> +    if (pcie->ops && pcie->ops->write) {
+>>>> +            pcie->ops->write(addr, 0x4, value);
+>>>> +            return;
+>>>> +    }
+>>>> +
+>>>> +    writel(value, addr);
+>>>
+>>> writel isn't broken for you, so you don't need this either.
+>>>
+>>>>  }
+>>>>
+>>>>  static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
+>>>>  {
+>>>> -    return readl(pcie->reg_base + reg);
+>>>> +    void __iomem *addr = pcie->reg_base + reg;
+>>>> +
+>>>> +    if (pcie->ops && pcie->ops->read)
+>>>> +            return pcie->ops->read(addr, 0x4);
+>>>> +
+>>>> +    return readl(addr);
+>>>
+>>> And neither is readl.
+>>
+>> Sure, I'll remove all the unused functions and avoid using ops for readl and
+>> writel.
+>>>
+>>>>  }
+>>>>
+>>>>  /* Root Port register access */
+>>>>  static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
+>>>>                                     u32 reg, u8 value)
+>>>>  {
+>>>> -    writeb(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+>>>> +    void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+>>>> +
+>>>> +    if (pcie->ops && pcie->ops->write) {
+>>>> +            pcie->ops->write(addr, 0x1, value);
+>>>> +            return;
+>>>> +    }
+>>>> +
+>>>> +    writeb(value, addr);
+>>>>  }
+>>>>
+>>>>  static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+>>>>                                     u32 reg, u16 value)
+>>>>  {
+>>>> -    writew(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
+>>>> +    void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+>>>> +
+>>>> +    if (pcie->ops && pcie->ops->write) {
+>>>> +            pcie->ops->write(addr, 0x2, value);
+>>>> +            return;
+>>>> +    }
+>>>> +
+>>>> +    writew(value, addr);
+>>>
+>>> You removed 2 out of 3 calls to this. I think I'd just make the root
+>>> port writes always be 32-bit. It is all just one time init stuff
+>>> anyways.
+>>>
+>>> Either rework the calls to assemble the data into 32-bits or keep these
+>>> functions and do the RMW here.
+>>
+>> The problem with assembling data into 32-bits is we have to read/write with
+>> different offsets. We'll give PCI_VENDOR_ID offset for modifying deviceID,
+>> PCI_INTERRUPT_LINE for modifying INTERRUPT_PIN which might get non-intuitive.
+>> Similarly in endpoint we read and write to MSI_FLAGS (which is at offset 2) we
+>> have to directly use MSI capability offset.
+>>
+>> And doing RMW in the accessors would mean the same RMW op is repeated. So if we
+>> just have cdns_pcie_rp_writeb() and cdns_pcie_rp_writew(), the same code will
+>> be repeated here twice.
+> 
+> Why repeated? Just copy what the config accessors do:
+> 
+> static inline void cdns_pcie_write_sz(u32 val, void __iomem *addr, int size)
+> {
+>   u32 tmp, mask, where = (unsigned long)addr & 0x3;
+> 
+>   addr -= where;
+> 
+>   mask = ~(((1 << (size * 8)) - 1) << (where * 8));
+>   tmp = readl(addr) & mask;
+>   tmp |= val << (where * 8);
+>   writel(tmp, addr);
+> }
+> 
+> /* Root Port register access */
+> static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
+>        u32 reg, u8 value)
+> {
+>   cdns_pcie_write_sz(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg, 1);
+> }
+> 
+> static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+>        u32 reg, u16 value)
+> {
+>   cdns_pcie_write_sz(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg, 2);
+> }
+> 
+>>
+>> IMHO using ops is a lot cleaner for these cases. IMHO except for removing
+>> unused functions and not changing readl/writel, others should use ops.
+> 
+> Trying to read the DW PCI driver I don't agree...
+> 
+> Again, unless doing RMW is fundamentally broken (like it is for config
+> space at runtime), then you only want to do it on broken h/w and ops
+> would be appropriate. It is all mostly one time setup, so doing a few
+> extra reads isn't a big deal. If you really care about speed on that,
+> probably should use the _relaxed accessor variants.
+> 
+> I'm being hopeful the Cadence IP doesn't become the mess that DW is.
 
-We think the existing behavior should be unchanged, which helps with keeping compatibility with existing
-user-space and older kdump kernels.
+Okay, I'll remove ops for read/write accessors.
 
-The comments from James:
-> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
-Won't this break if your kdump kernel doesn't know what the extra parameters are?
-Or if it expects two ranges, but only gets one? These DT properties should be treated as
-ABI between kernel versions, we can't really change it like this.
-
-I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
-think the simplest thing to do is to add an 'linux,low-memory-range' that we
-memblock_add() after memblock_cap_memory_range() has been called.
-If its missing, or the new kernel doesn't know what its for, everything keeps working.
-
-previous discusses:
-https://lkml.org/lkml/2019/6/5/674
-https://lkml.org/lkml/2019/6/13/229
-
-Thanks,
-Chen Zhou
-
->
-> Rob
->
-> [1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/chosen.yaml
->
-> .
->
-
-
+Thanks
+Kishon
