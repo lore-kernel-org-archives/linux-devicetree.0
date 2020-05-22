@@ -2,81 +2,279 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C72C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 09:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037E1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 09:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12485207FB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 09:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE579206B6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 09:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgEVJSZ (ORCPT
+        id S1729667AbgEVJ0W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 05:18:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37261 "EHLO mga09.intel.com"
+        Fri, 22 May 2020 05:26:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:60030 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgEVJSZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 05:18:25 -0400
-IronPort-SDR: 4sfRajtSiPTK5pXRhPShMXltCYWnibqHfE/XIczG6OSsOjl3ZWLjI88hgBNJRVt7MXxb1RlKuW
- TvGQ/VIT7nYA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 02:18:23 -0700
-IronPort-SDR: fliFQp2k0Jegvpud9LRgFiCDLKayCWiBstcC5LyqtT4DFnnULjgmrihisTWEaD49Mtgm9ipdgB
- guqmZqAI7Low==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
-   d="scan'208";a="309326287"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 May 2020 02:18:21 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jc3ou-008Cho-Ao; Fri, 22 May 2020 12:18:24 +0300
-Date:   Fri, 22 May 2020 12:18:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        linux-pwm@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v1 2/2] Add PWM driver for LGM
-Message-ID: <20200522091824.GR1634618@smile.fi.intel.com>
-References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
- <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
- <20200522085613.ktb2ruw2virj337v@pengutronix.de>
+        id S1729561AbgEVJ0S (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 05:26:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85F8B31B;
+        Fri, 22 May 2020 02:26:17 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78A0B3F305;
+        Fri, 22 May 2020 02:26:16 -0700 (PDT)
+Subject: Re: [PATCH 04/16] arm64: dts: arm: Fix node address fields
+To:     Liviu Dudau <liviu.dudau@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200505165212.76466-1-andre.przywara@arm.com>
+ <20200505165212.76466-5-andre.przywara@arm.com>
+ <347cdcba-a1cf-d308-1cc2-6c2194f40d19@arm.com>
+ <20200521144059.GZ159988@e110455-lin.cambridge.arm.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <6d6262f3-fd76-4ebc-fc1a-2743a885d4a9@arm.com>
+Date:   Fri, 22 May 2020 10:25:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200521144059.GZ159988@e110455-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200522085613.ktb2ruw2virj337v@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:56:13AM +0200, Uwe Kleine-König wrote:
-> On Fri, May 22, 2020 at 03:41:59PM +0800, Rahul Tanwar wrote:
+On 21/05/2020 15:40, Liviu Dudau wrote:
 
-> > +	io_base = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(io_base))
+Hi,
+
+> On Tue, May 05, 2020 at 06:18:19PM +0100, Robin Murphy wrote:
+>> On 2020-05-05 5:52 pm, Andre Przywara wrote:
+>>> The Arm Ltd. boards were using an outdated address convention in the DT
+>>> node names, by separating the high from the low 32-bits of an address by
+>>> a comma.
+>>
+>> I thought that historically that was deliberate, since the actual thing
+>> being encoded is <chip select>,<address>, rather than just cosmetically
+>> splitting a 64-bit address value?
+>>
+>> Or maybe I'm thinking too far back and things have already changed in the
+>> meantime :/
 > 
-> error message here?
-
-platform core provides it. No need to duplicate (esp. taking into consideration
-that it can issue IIRC three different error messages depending on actual error).
-
+> Robin is right, if you look in the "ARM Motherboard Express ÂµATX Technical
+> Reference Manual", in the RS1 memory map (aka "Cortex-A Series memory map")
+> the Ethernet for example is at CS2 offset 0x02000000. CS2 area is between
+> 0x18000000 and 0x1c000000. So actual physical address for LAN9118 is
+> 0x1a000000.
 > 
-> > +		return PTR_ERR(io_base);
+> You might want to drop this patch or convert to physical addresses.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Well, this patch is purely cosmetically, because it just changes the
+node names, which have no particular meaning. But the regexp in
+dt-schema for simple-bus denies commas after the '@' sign, so we get a
+warning.
 
+The question whether we actually need to model the chip select lines in
+the DT is separate: we could of course just use an empty ranges;
+property here, but that would be an extra patch.
+
+If people see some value in this, I can surely post something.
+
+Cheers,
+Andre.
+
+>> Robin.
+>>
+>>> Remove the comma from the node name suffix to be DT spec compliant.
+>>>
+>>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+>>> ---
+>>>   arch/arm/boot/dts/vexpress-v2m-rs1.dtsi              | 10 +++++-----
+>>>   arch/arm64/boot/dts/arm/foundation-v8.dtsi           |  4 ++--
+>>>   arch/arm64/boot/dts/arm/juno-motherboard.dtsi        |  6 +++---
+>>>   arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |  2 +-
+>>>   arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi     |  6 +++---
+>>>   5 files changed, 14 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>>> index 5c183483ec3b..8010cdcdb37a 100644
+>>> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>>> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>>> @@ -31,7 +31,7 @@
+>>>   			#interrupt-cells = <1>;
+>>>   			ranges;
+>>> -			nor_flash: flash@0,00000000 {
+>>> +			nor_flash: flash@0 {
+>>>   				compatible = "arm,vexpress-flash", "cfi-flash";
+>>>   				reg = <0 0x00000000 0x04000000>,
+>>>   				      <4 0x00000000 0x04000000>;
+>>> @@ -41,13 +41,13 @@
+>>>   				};
+>>>   			};
+>>> -			psram@1,00000000 {
+>>> +			psram@100000000 {
+>>>   				compatible = "arm,vexpress-psram", "mtd-ram";
+>>>   				reg = <1 0x00000000 0x02000000>;
+>>>   				bank-width = <4>;
+>>>   			};
+>>> -			ethernet@2,02000000 {
+>>> +			ethernet@202000000 {
+>>>   				compatible = "smsc,lan9118", "smsc,lan9115";
+>>>   				reg = <2 0x02000000 0x10000>;
+>>>   				interrupts = <15>;
+>>> @@ -59,14 +59,14 @@
+>>>   				vddvario-supply = <&v2m_fixed_3v3>;
+>>>   			};
+>>> -			usb@2,03000000 {
+>>> +			usb@203000000 {
+>>>   				compatible = "nxp,usb-isp1761";
+>>>   				reg = <2 0x03000000 0x20000>;
+>>>   				interrupts = <16>;
+>>>   				port1-otg;
+>>>   			};
+>>> -			iofpga@3,00000000 {
+>>> +			iofpga@300000000 {
+>>>   				compatible = "simple-bus";
+>>>   				#address-cells = <1>;
+>>>   				#size-cells = <1>;
+>>> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+>>> index 12f039fa3dad..e26b492795c5 100644
+>>> --- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+>>> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+>>> @@ -151,7 +151,7 @@
+>>>   				<0 0 41 &gic 0 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+>>>   				<0 0 42 &gic 0 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+>>> -		ethernet@2,02000000 {
+>>> +		ethernet@202000000 {
+>>>   			compatible = "smsc,lan91c111";
+>>>   			reg = <2 0x02000000 0x10000>;
+>>>   			interrupts = <15>;
+>>> @@ -178,7 +178,7 @@
+>>>   			clock-output-names = "v2m:refclk32khz";
+>>>   		};
+>>> -		iofpga@3,00000000 {
+>>> +		iofpga@300000000 {
+>>>   			compatible = "simple-bus";
+>>>   			#address-cells = <1>;
+>>>   			#size-cells = <1>;
+>>> diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+>>> index e3983ded3c3c..d5cefddde08c 100644
+>>> --- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+>>> +++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+>>> @@ -103,7 +103,7 @@
+>>>   				};
+>>>   			};
+>>> -			flash@0,00000000 {
+>>> +			flash@0 {
+>>>   				/* 2 * 32MiB NOR Flash memory mounted on CS0 */
+>>>   				compatible = "arm,vexpress-flash", "cfi-flash";
+>>>   				reg = <0 0x00000000 0x04000000>;
+>>> @@ -120,7 +120,7 @@
+>>>   				};
+>>>   			};
+>>> -			ethernet@2,00000000 {
+>>> +			ethernet@200000000 {
+>>>   				compatible = "smsc,lan9118", "smsc,lan9115";
+>>>   				reg = <2 0x00000000 0x10000>;
+>>>   				interrupts = <3>;
+>>> @@ -133,7 +133,7 @@
+>>>   				vddvario-supply = <&mb_fixed_3v3>;
+>>>   			};
+>>> -			iofpga@3,00000000 {
+>>> +			iofpga@300000000 {
+>>>   				compatible = "simple-bus";
+>>>   				#address-cells = <1>;
+>>>   				#size-cells = <1>;
+>>> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
+>>> index 60703b5763c6..350cbf17e8b4 100644
+>>> --- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
+>>> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
+>>> @@ -9,7 +9,7 @@
+>>>   		motherboard {
+>>>   			arm,v2m-memory-map = "rs2";
+>>> -			iofpga@3,00000000 {
+>>> +			iofpga@300000000 {
+>>>   				virtio-p9@140000 {
+>>>   					compatible = "virtio,mmio";
+>>>   					reg = <0x140000 0x200>;
+>>> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+>>> index e333c8d2d0e4..d1bfa62ca073 100644
+>>> --- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+>>> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+>>> @@ -17,14 +17,14 @@
+>>>   			#interrupt-cells = <1>;
+>>>   			ranges;
+>>> -			flash@0,00000000 {
+>>> +			flash@0 {
+>>>   				compatible = "arm,vexpress-flash", "cfi-flash";
+>>>   				reg = <0 0x00000000 0x04000000>,
+>>>   				      <4 0x00000000 0x04000000>;
+>>>   				bank-width = <4>;
+>>>   			};
+>>> -			ethernet@2,02000000 {
+>>> +			ethernet@202000000 {
+>>>   				compatible = "smsc,lan91c111";
+>>>   				reg = <2 0x02000000 0x10000>;
+>>>   				interrupts = <15>;
+>>> @@ -51,7 +51,7 @@
+>>>   				clock-output-names = "v2m:refclk32khz";
+>>>   			};
+>>> -			iofpga@3,00000000 {
+>>> +			iofpga@300000000 {
+>>>   				compatible = "simple-bus";
+>>>   				#address-cells = <1>;
+>>>   				#size-cells = <1>;
+>>>
+> 
 
