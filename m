@@ -2,149 +2,116 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B5AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC405C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C184A20757
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:15:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DODxib5K"
+	by mail.kernel.org (Postfix) with ESMTP id B8BA5206D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbgEVTPO (ORCPT
+        id S1730689AbgEVTUy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 15:15:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730840AbgEVTPO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 15:15:14 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3549C061A0E;
-        Fri, 22 May 2020 12:15:13 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id s198so10225376oie.6;
-        Fri, 22 May 2020 12:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hVx1XifLiqzcR3aQze/vFy6FED+f9dHS5bmNRNU3BI4=;
-        b=DODxib5KAH/Nd+AyiGl825EhHvcG4yhTievh7rjSrX3My7cKppuNLNm8NxaL3YwXot
-         T/MOQsMI0rDLqClT+6RoK8ZpEIAqzowtQSPxfuBHtkixZbrXKvtz4bAB0LsmB9CPJdPe
-         PSiPJbv/0CXYjS9HuKP29lklEtuQSIP4enu9s40ncQUNJfhEmPoAldw0XuGYYUwtT0kJ
-         C/ZevB8jaweU1tyRwD52p556RsTJHJP3t/vtIFDyF0MmO7YyQpIWkgOMUhuD/giJJzQq
-         YQCn73IsOX8xTjpodE9srWBXvJxmALphyESoL6hMrk4kNeewgof8srdZWBrrmb909EBK
-         t3kw==
+        Fri, 22 May 2020 15:20:54 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41642 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730918AbgEVTUy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 15:20:54 -0400
+Received: by mail-io1-f66.google.com with SMTP id o5so12498144iow.8;
+        Fri, 22 May 2020 12:20:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hVx1XifLiqzcR3aQze/vFy6FED+f9dHS5bmNRNU3BI4=;
-        b=G9cBUvcr5d1+oDOJATPZKdvUuDvhC7O4KPhir6kDW8+u4SLl+DU1dK/NET1pu8CHKg
-         o+aHfSkgGnjx+qA5KHyjdwHMVsVlCBTyGDod20h920qK3tTkw+HxBX4+4XfO3raVbGtO
-         XJGa+r0rzlCsk/RmBsmQbgmVIowfKHYgR8x34ixM+tvnX8yTOyFyd96Cqpmz6of17bns
-         9m88lftVAmXxJbjCIM3PosRy0Qcjd74ZRfvIsl0EDyP1vWsjZjt7SLoSGLSri3AInvqq
-         Ort+DQ0zMUiR30te0DNsZXjrbTChF4jVgHMUn6LR0HoK8989qE5YOqvLlrurZ4/QgYiy
-         Ne5A==
-X-Gm-Message-State: AOAM533dsFlP3GJ2vprbxyGkLC+JRM0SAUmv1KyZRJDzfdVwIDgpVzIj
-        KhL3z1nOWUX+ZHHo3f1e7c/hMR0XOny7+YM3RUY=
-X-Google-Smtp-Source: ABdhPJw6Z5oNxrJWWe2Z/VJ2dyoZ1svG+k7EHt8Gg0jkoo++Q6jrBStOvw/KaCbC6YON1Bc8ZAZfRDt4pi6Pp4vKXfo=
-X-Received: by 2002:aca:f550:: with SMTP id t77mr3774172oih.8.1590174913262;
- Fri, 22 May 2020 12:15:13 -0700 (PDT)
+        bh=7QXy8aTnpYj4ZL7eavU1d7UIYAYQxy4JmDn6cV7LhWI=;
+        b=mEtXV42qyBjhNsnaU1UxvE7G1gGzrAmXJw2Ok8O5ILDom3s0+oTBnDBcF2M6Knx0Gq
+         znYoB4lj3ORQ5iQu5EaU6aXulLQJZz6vdKMDAR0nYUbLpo6bVSQKl+AY5tiMle4JD+rr
+         H7jTX9wSzEA4wjIoUdP0RTM0vgnWpy0urXEQn+elz3KaIiAMPXY88hv3sUBAhu3d6/I5
+         x29hlgWkSx2zLt2AkPq6nP/GHE68X14z1gSi6D4abccJ5pf1jsOciNp17ZWjBaa1URWI
+         Oj+3/g1UBlbCWU3cQUhNSvA9rLb8qEzNkW/pjimHyRWQVclB8SzkfiFT8d7685nYGKlq
+         swrg==
+X-Gm-Message-State: AOAM533eZvsMQ/p++By3Y/4U5g0s0cW47Zwj5sxyLXlVNgtO/3FM08GT
+        +cx1W9npsCoZ7IOnlKcE78PcyhgP
+X-Google-Smtp-Source: ABdhPJy9G8HDq1MG+PtjijzcbP0Rf4PMRzTlR1T9vKVItNb892mHM53dTnWl1h6J6PcQ3Rogm5y3nQ==
+X-Received: by 2002:a5d:91d2:: with SMTP id k18mr3353534ior.20.1590175252552;
+        Fri, 22 May 2020 12:20:52 -0700 (PDT)
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
+        by smtp.gmail.com with ESMTPSA id p7sm4000986iob.7.2020.05.22.12.20.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 12:20:52 -0700 (PDT)
+Received: by mail-il1-f182.google.com with SMTP id r2so553364ila.4;
+        Fri, 22 May 2020 12:20:51 -0700 (PDT)
+X-Received: by 2002:a92:de02:: with SMTP id x2mr15117816ilm.267.1590175251164;
+ Fri, 22 May 2020 12:20:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200515171031.GB19423@ninjato> <CA+V-a8t6rPs4s8uMCpBQEAUvwsVn7Cte-vX3z2atWRhy_RFLQw@mail.gmail.com>
- <20200518092601.GA3268@ninjato> <CAMuHMdVWe1EEAtP64VW+0zXNingM1LiENv_Rfz5qTQ+C0dtGSw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVWe1EEAtP64VW+0zXNingM1LiENv_Rfz5qTQ+C0dtGSw@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 22 May 2020 20:14:45 +0100
-Message-ID: <CA+V-a8tVx6D8Vh=rYD2=Z-14GAW0puo009FtjYM++sw8PAtJug@mail.gmail.com>
-Subject: Re: [PATCH 03/17] ARM: dts: r8a7742: Add I2C and IIC support
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
+References: <20200520091543.44692-1-biwen.li@oss.nxp.com>
+In-Reply-To: <20200520091543.44692-1-biwen.li@oss.nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 22 May 2020 14:20:28 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQ0Q1hSi+nOqwz5Ej0K6Nc0+8376aVN6yyJ4OhkyENPDg@mail.gmail.com>
+Message-ID: <CADRPPNQ0Q1hSi+nOqwz5Ej0K6Nc0+8376aVN6yyJ4OhkyENPDg@mail.gmail.com>
+Subject: Re: [v2 1/2] dts: ppc: t4240rdb: remove interrupts property
+To:     Biwen Li <biwen.li@oss.nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        a.zummo@towertech.it,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
+        <devicetree@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-rtc@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Wed, May 20, 2020 at 4:21 AM Biwen Li <biwen.li@oss.nxp.com> wrote:
+>
+> From: Biwen Li <biwen.li@nxp.com>
+>
+> This removes interrupts property to drop warning as follows:
+>     - $ hwclock.util-linux
+>       hwclock.util-linux: select() to /dev/rtc0
+>       to wait for clock tick timed out
+>
+> My case:
+>     - RTC ds1374's INT pin is connected to VCC on T4240RDB,
+>       then the RTC cannot inform cpu about the alarm interrupt
 
-On Mon, May 18, 2020 at 11:10 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Wolfram,
->
-> On Mon, May 18, 2020 at 11:26 AM Wolfram Sang
-> <wsa+renesas@sang-engineering.com> wrote:
-> > > > However, both versions (with and without automatic transmission) are
-> > > > described with the same "renesas,iic-r8a7742" compatible. Is it possible
-> > > > to detect the reduced variant at runtime somehow?
-> > > >
-> > > I couldn't find anything the manual that would be useful to detect at runtime.
->
-> Hence if we really need that (see below), we need a quirk based on compatible
-> value + base address.
->
-> > > > My concern is that the peculiarity of this SoC might be forgotten if we
-> > > > describe it like this and ever add "automatic transmissions" somewhen.
-> > > >
-> > > Agreed.
-> >
-> > Well, I guess reading from a register which is supposed to not be there
-> > on the modified IP core is too hackish.
->
-> According to the Hardware User's Manual Rev. 1.00, the registers do exist
-> on all RZ/G1, except for RZ/G1E (see below).
->
->    "(automatic transmission can be used as a hardware function, but this is
->     not meaningful for actual use cases)."
->
-> (whatever that comment may mean?)
->
-> > Leaves us with a seperate compatible entry for it?
->
-> On R-Car E3 and RZ/G2E, which have a single IIC instance, we
-> handled that by:
->
->         The r8a77990 (R-Car E3) and r8a774c0 (RZ/G2E)
->         controllers are not considered compatible with
->         "renesas,rcar-gen3-iic" or "renesas,rmobile-iic"
->         due to the absence of automatic transmission registers.
->
-> On R-Car E2 and RZ/G1E, we forgot, and used both SoC-specific and
-> family-specific compatible values.
->
-What are your thoughts on the above.
+The commit message need a little bit improvement.  Something like:
 
-Cheers,
---Prabhakar
+Since the interrupt pin for RTC DS1374 is not connected to the CPU on
+T4240RDB, remove
+the interrupt property from the device tree.
 
-> Gr{oetje,eeting}s,
+This also fix the following warning for hwclock.util-linux:
+  $ hwclock.util-linux
+   hwclock.util-linux: select() to /dev/rtc0
+   to wait for clock tick timed out
+
 >
->                         Geert
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+>  arch/powerpc/boot/dts/fsl/t4240rdb.dts | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/powerpc/boot/dts/fsl/t4240rdb.dts b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+> index a56a705d41f7..145896f2eef6 100644
+> --- a/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+> +++ b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+> @@ -144,7 +144,6 @@
+>                         rtc@68 {
+>                                 compatible = "dallas,ds1374";
+>                                 reg = <0x68>;
+> -                               interrupts = <0x1 0x1 0 0>;
+>                         };
+>                 };
 >
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 2.17.1
 >
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
