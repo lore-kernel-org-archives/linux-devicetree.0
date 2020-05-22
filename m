@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6577DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C9DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 464E422227
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC1F22249
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159015;
-	bh=BYyPzYkx4ERUweSk9BWxGWyjc7yozBVun6QzBUsgIKA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F7l5He9SUGpkEyTw9RnhOyGEkcLen05wOLgFs3nAW2VIC4yvXMYILszhOM4LRucZA
-	 kIyu15pVvGAVK55HSeQ8+bRLbaSM+yn20ZmaXs88qJ/U/iSKL/peQG93vk0SMYX0f9
-	 77OGIIhigAVqEHxP9sJ/iNHy1B6c4J0REr6Y8PXI=
+	s=default; t=1590159049;
+	bh=rgoYLS+WMEIn3HQPScbZElKfuAs0VrEeOrN4VJIZ2TQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OWk9UImSwTmOSN6SZjUy54y4+kW1eGQGCdLS8jZSxilXtXZEL7dBYUBOVG+Eqz42A
+	 FAKzwcDCtHAwZiZm7GlciRkZBsHyBrDgbdGwsjBQe+Sa9Hk/kv9I7NTsn0Se+D9rXh
+	 h1eUOHVxH4czdHdNEypU/eWmtY3/ShfV1ZgwLoZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbgEVOuO (ORCPT
+        id S1730814AbgEVOus (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:50:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51190 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730488AbgEVOuN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:13 -0400
+        id S1730493AbgEVOur (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE4B92245D;
-        Fri, 22 May 2020 14:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E05221D6C;
+        Fri, 22 May 2020 14:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159012;
-        bh=BYyPzYkx4ERUweSk9BWxGWyjc7yozBVun6QzBUsgIKA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBAoQ5ccC+pfpDBZhy71LJSQBFNfUlwi1/tQ1973v5AITP7blSjw3z7w7hQEsKXbH
-         9AlRGvMVoXP9Jo2WLtCvy1HTE5rDloQaKlpQCsYPNw9AMaOyZ9CsKKN3LzzYzrsPVe
-         pPu5kHG1PAUb6/y9cq2bKTNWIqVfDEAijh8IDG4g=
+        s=default; t=1590159046;
+        bh=rgoYLS+WMEIn3HQPScbZElKfuAs0VrEeOrN4VJIZ2TQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1GwWNDEa+PXZEA8rxoz6UFVC7r5nQEAr68p6bEY7+jjUNXtW35QwZhmh7G1VOCa2u
+         8aY3v6EMSUefPZLOxyT9H5tAYdU038/IjW0IxUYWOqOUty3OXNO+7h0c+5dyloekMJ
+         lEEi5qncWOvjMLdMWJ6yb0cdlYUtti3dnXbAgUCs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 11/41] ARM: dts: omap4-droid4: Fix occasional lost wakeirq for uart1
-Date:   Fri, 22 May 2020 10:49:28 -0400
-Message-Id: <20200522144959.434379-11-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 01/32] ARM: dts: rockchip: fix phy nodename for rk3228-evb
+Date:   Fri, 22 May 2020 10:50:13 -0400
+Message-Id: <20200522145044.434677-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
-References: <20200522144959.434379-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,63 +58,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 738b150ecefbffb6e55cfa8a3b66a844f777d8fb ]
+[ Upstream commit 287e0d538fcec2f6e8eb1e565bf0749f3b90186d ]
 
-Looks like using the UART CTS pin does not always trigger for a wake-up
-when the SoC is idle.
+A test with the command below gives for example this error:
 
-This is probably because the modem first uses gpio_149 to signal the SoC
-that data will be sent, and the CTS will only get used later when the
-data transfer is starting.
+arch/arm/boot/dts/rk3228-evb.dt.yaml: phy@0:
+'#phy-cells' is a required property
 
-Let's fix the issue by configuring the gpio_149 pad as the wakeirq for
-UART. We have gpio_149 managed by the USB PHY for powering up the right
-USB mode, and after that, the gpio gets recycled as the modem wake-up
-pin. If needeed, the USB PHY can also later on be configured to use
-gpio_149 pad as the wakeirq as a shared irq.
+The phy nodename is normally used by a phy-handle.
+This node is however compatible with
+"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
+which is just been added to 'ethernet-phy.yaml'.
+So change nodename to 'ethernet-phy' for which '#phy-cells'
+is not a required property
 
-Let's also configure the missing properties for uart-has-rtscts and
-current-speed for the modem port while at it. We already configure the
-hardware flow control pins with uart1_pins pinctrl setting.
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
+phy/phy-provider.yaml
 
-Cc: maemo-leste@lists.dyne.org
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20200416170321.4216-1-jbx6244@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-mapphone-common.dtsi | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/rk3228-evb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-index 01ea9a1e2c86..06fbffa81636 100644
---- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-+++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-@@ -723,14 +723,18 @@
- };
+diff --git a/arch/arm/boot/dts/rk3228-evb.dts b/arch/arm/boot/dts/rk3228-evb.dts
+index 5670b33fd1bd..aed879db6c15 100644
+--- a/arch/arm/boot/dts/rk3228-evb.dts
++++ b/arch/arm/boot/dts/rk3228-evb.dts
+@@ -46,7 +46,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
- /*
-- * As uart1 is wired to mdm6600 with rts and cts, we can use the cts pin for
-- * uart1 wakeirq.
-+ * The uart1 port is wired to mdm6600 with rts and cts. The modem uses gpio_149
-+ * for wake-up events for both the USB PHY and the UART. We can use gpio_149
-+ * pad as the shared wakeirq for the UART rather than the RX or CTS pad as we
-+ * have gpio_149 trigger before the UART transfer starts.
-  */
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart1_pins>;
- 	interrupts-extended = <&wakeupgen GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH
--			       &omap4_pmx_core 0xfc>;
-+			       &omap4_pmx_core 0x110>;
-+	uart-has-rtscts;
-+	current-speed = <115200>;
- };
- 
- &uart3 {
+-		phy: phy@0 {
++		phy: ethernet-phy@0 {
+ 			compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
+ 			reg = <0>;
+ 			clocks = <&cru SCLK_MAC_PHY>;
 -- 
 2.25.1
 
