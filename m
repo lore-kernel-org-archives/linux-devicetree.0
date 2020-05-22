@@ -2,154 +2,322 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AE7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A3EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9288A2065C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2EC20723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 10:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WVJ//CKH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oLlphRdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgEVKSK (ORCPT
+        id S1728641AbgEVKXg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 06:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgEVKSJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 06:18:09 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D62BC061A0E
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 03:18:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e1so9617200wrt.5
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 03:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rDNDKX0HkLYt94EgaC8KrXxbFTf0b5UZDhkhcEUmDsA=;
-        b=WVJ//CKH4dmTBE0aqIBZXt0aAGFbLb2/HSsz+TTszSD504939LXSss4CoipdpB/CaP
-         UYEC49gciPAa156HBkX3vD6agGFcawT7wJGuqinqgdldtVpJcnYlHy8kYO+4r5wUGW4N
-         dybibnHmXgJPE6Yx//FGirSeVMwet4YQ4pqdD8PfOkmlAM9lkmxvRxK8W5pq10wP/QdV
-         nPZKGtAyqCQjPtUOqPpWTpK7PWQ7g8PDTvbQ9eAr9/mGFFzSg02tY1TfCtIKZQykmP7N
-         B8ikx09FYbHX1EDesimTPNwCJGF8URn5yiI0zH0eo0dpPE+4HsehFV61iZGVMleox6n1
-         gTbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rDNDKX0HkLYt94EgaC8KrXxbFTf0b5UZDhkhcEUmDsA=;
-        b=ZkRlOPmaUKSkUZjXjEwLU77k18zCKb0IIa7JQQQhaaii/KIJ++6efJmGo4epEB5dqg
-         IfKNeo7uGL/pe7MqJRiBta//kDxgUc4XXlp+W6SFg4epj4yhNTJnmf7e1QXEi0Bahgq4
-         4ppCkexDDx60JyH9/US9V8n4n0oQ35UkddXTUmWH2HM/A0FQE1Y+XIyNkV8UDg0wMLyQ
-         sq0Xq7l+9C/pUAPK62KHh0L9sjvVpdPNnMzsvv3HeX2VkyCGZWfzP5fUgK59QlJ4VQM7
-         lwHV7XdAWb+ncaOJjOEieqqZBO3I1B5vQFC/vBPeybTaW7QcJsgfn5VvQYAmxkrJXf1n
-         0ogQ==
-X-Gm-Message-State: AOAM531IySirWZMwl06pE8Sy6JSXdfiiCi417tmG+uYvxsSgRgiL8IeN
-        5kPH3VP1lGic4KsX0CJ3tsn4jQ==
-X-Google-Smtp-Source: ABdhPJzB2HI5kI/EmFJDdYOUgVosMpdPIKY9IaspD/NoZu4lv6KFYPamr6Pcq0PBpjpQXhtZ+2g/kQ==
-X-Received: by 2002:a5d:66c5:: with SMTP id k5mr2740621wrw.17.1590142686217;
-        Fri, 22 May 2020 03:18:06 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id d126sm9765981wmd.32.2020.05.22.03.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 03:18:05 -0700 (PDT)
-Date:   Fri, 22 May 2020 12:17:55 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org, joro@8bytes.org,
-        catalin.marinas@arm.com, robin.murphy@arm.com,
-        kevin.tian@intel.com, baolu.lu@linux.intel.com,
-        Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org, eric.auger@redhat.com
-Subject: Re: [PATCH v7 13/24] iommu/arm-smmu-v3: Enable broadcast TLB
- maintenance
-Message-ID: <20200522101755.GA3453945@myrica>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-14-jean-philippe@linaro.org>
- <20200521141730.GJ6608@willie-the-truck>
- <0c896ad27b43b2de554cf772f9453d0a@kernel.org>
+        Fri, 22 May 2020 06:23:36 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3417 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbgEVKXf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 06:23:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec7a7950000>; Fri, 22 May 2020 03:21:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 May 2020 03:23:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 May 2020 03:23:34 -0700
+Received: from [10.26.74.233] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
+ 2020 10:23:32 +0000
+Subject: Re: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
+ driver
+To:     Sandipan Patra <spatra@nvidia.com>, <treding@nvidia.com>,
+        <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>
+CC:     <bbasu@nvidia.com>, <ldewangan@nvidia.com>,
+        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <34ae18f5-494c-7bc7-0f30-2d1455bbcb55@nvidia.com>
+Date:   Fri, 22 May 2020 11:23:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c896ad27b43b2de554cf772f9453d0a@kernel.org>
+In-Reply-To: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590142869; bh=Vv4u0vtSk/51tCMaLHXqbGLGGb54LfI2L0ztBY1/xZk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=oLlphRdiiBkng4LPKy6IAOzdQ1g6bVsEfi+R/EEn14gBj6Btj06u51joCrXZS+zl1
+         C49x2jEYI/HlboZtX81AccWX9W4zxsiGO1olOXlnP10i3Qf4vMrvTjw06xt9Krlhig
+         Rw47Asi4JkQKcbB2eoVvc8wzeX0/QC/3E8wW33vPGqH/b/qysQdSMXQnryBf5pzUWm
+         ZTvKxGSb0BCo/z2OQT9yINLXzdnXUfE3zliTVXCugY0OWxZUrMQzwj0m4Nse7LHmic
+         sgKyfOmsUqD69fS3oqgRpMmnK1YwcDmRrnpR0oyx00lCiieutnk4RAbKNXkVC/PPfd
+         oisB8ya69fRUQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[+Eric]
 
-On Thu, May 21, 2020 at 03:38:35PM +0100, Marc Zyngier wrote:
-> On 2020-05-21 15:17, Will Deacon wrote:
-> > [+Marc]
-> > 
-> > On Tue, May 19, 2020 at 07:54:51PM +0200, Jean-Philippe Brucker wrote:
-> > > The SMMUv3 can handle invalidation targeted at TLB entries with shared
-> > > ASIDs. If the implementation supports broadcast TLB maintenance,
-> > > enable it
-> > > and keep track of it in a feature bit. The SMMU will then be
-> > > affected by
-> > > inner-shareable TLB invalidations from other agents.
-> > > 
-> > > A major side-effect of this change is that stage-2 translation
-> > > contexts
-> > > are now affected by all invalidations by VMID. VMIDs are all shared
-> > > and
-> > > the only ways to prevent over-invalidation, since the stage-2 page
-> > > tables
-> > > are not shared between CPU and SMMU, are to either disable BTM or
-> > > allocate
-> > > different VMIDs. This patch does not address the problem.
-> > 
-> > This sounds like a potential performance issue, particularly as we
-> > expose
-> > stage-2 contexts via VFIO directly.
+On 20/04/2020 16:54, Sandipan Patra wrote:
+> Added support for dynamic clock freq configuration in pwm kernel driver.
+> Earlier the pwm driver used to cache boot time clock rate by pwm clock
+> parent during probe. Hence dynamically changing pwm frequency was not
+> possible for all the possible ranges. With this change, dynamic calculati=
+on
+> is enabled and it is able to set the requested period from sysfs knob
+> provided the value is supported by clock source.
+>=20
+> Changes mainly have 2 parts:
+>   - T186 and later chips [1]
+>   - T210 and prior chips [2]
+>=20
+> For [1] - Changes implemented to set pwm period dynamically and
+>           also checks added to allow only if requested period(ns) is
+>           below or equals to higher range.
+>=20
+> For [2] - Only checks if the requested period(ns) is below or equals
+>           to higher range defined by max clock limit. The limitation
+>           in T210 or prior chips are due to the reason of having only
+>           one pwm-controller supporting multiple channels. But later
+>           chips have multiple pwm controller instances each having
+> 	  single channel support.
+>=20
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> ---
+> V2:
+> 1. Min period_ns calculation is moved to probe.
+> 2. Added descriptioins for PWM register bits and regarding behaviour
+>    of the controller when new configuration is applied or pwm is disabled=
+.
+> 3. Setting period with possible value when supplied period is below limit=
+.
+> 4. Corrected the earlier code comment:
+>    plus 1 instead of minus 1 during pwm calculation
+>=20
+>  drivers/pwm/pwm-tegra.c | 110 +++++++++++++++++++++++++++++++++++++++++-=
+------
+>  1 file changed, 94 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index d26ed8f..7a36325 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -4,8 +4,39 @@
+>   *
+>   * Tegra pulse-width-modulation controller driver
+>   *
+> - * Copyright (c) 2010, NVIDIA Corporation.
+> - * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix=
+.de>
+> + * Copyright (c) 2010-2020, NVIDIA Corporation.
+> + *
+> + * Overview of Tegra Pulse Width Modulator Register:
+> + * 1. 13-bit: Frequency division (SCALE)
+> + * 2. 8-bit : Puls division (DUTY)
+> + * 3. 1-bit : Enable bit
+> + *
+> + * The PWM clock frequency is divided by 256 before subdividing it based
+> + * on the programmable frequency division value to generate the required
+> + * frequency for PWM output. The maximum output frequency that can be
+> + * achieved is (max rate of source clock) / 256.
+> + * i.e. if source clock rate is 408 MHz, maximum output frequency cab be=
+:
+> + * 408 MHz/256 =3D 1.6 MHz.
+> + * This 1.6 MHz frequency can further be divided using SCALE value in PW=
+M.
+> + *
+> + * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
+> + * To achieve 100% duty cycle, program Bit [24] of this register to
+> + * 1=E2=80=99b1. In which case the other bits [23:16] are set to don't c=
+are.
+> + *
+> + * Limitations and known facts:
+> + * -	When PWM is disabled, the output is driven to 0.
+> + * -	It does not allow the current PWM period to complete and
+> + *	stops abruptly.
+> + *
+> + * -	If the register is reconfigured while pwm is running,
+> + *	It does not let the currently running period to complete.
+> + *
+> + * -	Pulse width of the pwm can never be out of bound.
+> + *	It's taken care at HW and SW
+> + * -	If the user input duty is below limit, then driver sets it to
+> + *	minimum possible value.
+> + * -	If anything else goes wrong for setting duty or period,
+> + *	-EINVAL is returned.
+>   */
+> =20
+>  #include <linux/clk.h>
+> @@ -41,6 +72,7 @@ struct tegra_pwm_chip {
+>  	struct reset_control*rst;
+> =20
+>  	unsigned long clk_rate;
+> +	unsigned long min_period_ns;
+> =20
+>  	void __iomem *regs;
+> =20
+> @@ -67,8 +99,9 @@ static int tegra_pwm_config(struct pwm_chip *chip, stru=
+ct pwm_device *pwm,
+>  			    int duty_ns, int period_ns)
+>  {
+>  	struct tegra_pwm_chip *pc =3D to_tegra_pwm_chip(chip);
+> -	unsigned long long c =3D duty_ns, hz;
+> -	unsigned long rate;
+> +	unsigned long long p_width =3D duty_ns, period_hz;
+> +	unsigned long rate, required_clk_rate;
+> +	unsigned long pfm; /* Frequency divider */
 
-Yes it's certainly going to affect SMMU performance, though I haven't
-measured it. QEMU and kvmtool currently use stage-1 translations instead
-of stage-2, so it won't be a problem until they start using nested
-translation (and unless the SMMU only supports stage-2).
+If it is not necessary to change the variable names, then I would prefer
+we keep them as is as then changes would be less.
 
-In the coming month I'd like to have a look at coordinating VMID
-allocation between KVM and SMMU, for guest SVA. If the guest wants to
-share page tables with the SMMU, the SMMU has to use the same VMIDs as the
-VM to receive broadcast TLBI.
+>  	u32 val =3D 0;
+>  	int err;
+> =20
+> @@ -77,37 +110,77 @@ static int tegra_pwm_config(struct pwm_chip *chip, s=
+truct pwm_device *pwm,
+>  	 * per (1 << PWM_DUTY_WIDTH) cycles and make sure to round to the
+>  	 * nearest integer during division.
+>  	 */
+> -	c *=3D (1 << PWM_DUTY_WIDTH);
+> -	c =3D DIV_ROUND_CLOSEST_ULL(c, period_ns);
+> +	p_width *=3D (1 << PWM_DUTY_WIDTH);
+> +	p_width =3D DIV_ROUND_CLOSEST_ULL(p_width, period_ns);
+> =20
+> -	val =3D (u32)c << PWM_DUTY_SHIFT;
+> +	val =3D (u32)p_width << PWM_DUTY_SHIFT;
+> +
+> +	/*
+> +	 *  Period in nano second has to be <=3D highest allowed period
+> +	 *  based on max clock rate of the pwm controller.
+> +	 *
+> +	 *  higher limit =3D max clock limit >> PWM_DUTY_WIDTH
+> +	 *  lower limit =3D min clock limit >> PWM_DUTY_WIDTH >> PWM_SCALE_WIDT=
+H
+> +	 */
+> +	if (period_ns < pc->min_period_ns) {
+> +		period_ns =3D pc->min_period_ns;
+> +		pr_warn("Period is adjusted to allowed value (%d ns)\n",
+> +				period_ns);
 
-Similarly to patch 06 ("arm64: mm: Pin down ASIDs for sharing mm with
-devices") the SMMU would request a VMID allocated by KVM, when setting up
-a nesting VFIO container. One major downside is that the VMID is pinned
-and cannot be recycled on rollover while it's being used for DMA.
+I see that other drivers (pwm-img.c) consider this to be an error and
+return an error. I wonder if adjusting the period makes sense here?
 
-I wonder if we could use this even when page tables aren't shared between
-CPU and SMMU, to avoid splitting the VMID space.
+I wonder if the handling of the min_period, should be a separate change?
 
-> > Maybe we could reserve some portion
-> > of
-> > VMID space for the SMMU? Marc, what do you reckon?
-> 
-> Certainly doable when we have 16bits VMIDs. With smaller VMID spaces (like
-> on
-> v8.0), this is a bit more difficult (we do have pretty large v8.0 systems
-> around).
+> +	}
+> =20
+>  	/*
+>  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
+>  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
+>  	 */
+> -	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	if (pc->soc->num_channels =3D=3D 1) {
 
-It's only an issue if those systems have an SMMUv3 supporting DVM. With
-any luck that doesn't exist?
+Are you using num_channels to determine if Tegra uses the BPMP? If so
+then the above is not really correct, because num_channels is not really
+related to what is being done here. So maybe you need a new SoC
+attribute in the soc data.
 
-> How many VMID bits are we talking about?
+> +		/*
+> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
+> +		 * with the hieghest applicable rate that the controller can
 
-That's anyone's guess... One passed-through device per VM would halve the
-VMID space. But the SMMU allocates one VMID for each device assigned to a
-guest, not one per VM (well one per domain, or VFIO container, but I think
-it boils down to one per device with QEMU). So with SR-IOV for example it
-should be pretty easy to reach 256 VMIDs in the SMMU.
+s/hieghest/highest/
 
-Thanks,
-Jean
+> +		 * provide. Any further lower value can be derived by setting
+> +		 * PFM bits[0:12].
+> +		 * Higher mark is taken since BPMP has round-up mechanism
+> +		 * implemented.
+> +		 */
+> +		required_clk_rate =3D
+> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
+> +
+
+Should be we checking the rate against the max rate supported?
+
+> +		err =3D clk_set_rate(pc->clk, required_clk_rate);
+> +		if (err < 0)
+> +			return -EINVAL;
+> +
+> +		rate =3D clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
+
+Do we need to update the pwm->clk_rate here?
+
+> +	} else {
+> +		/*
+> +		 * This is the case for SoCs who support multiple channels:
+> +		 *
+> +		 * clk_set_rate() can not be called again in config because
+> +		 * T210 or any prior chip supports one pwm-controller and
+> +		 * multiple channels. Hence in this case cached clock rate
+> +		 * will be considered which was stored during probe.
+> +		 */
+> +		rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	}
+> =20
+>  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+> -	hz =3D DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> -	rate =3D DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
+> +	period_hz =3D DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> +	pfm =3D DIV_ROUND_CLOSEST_ULL(100ULL * rate, period_hz);
+> =20
+>  	/*
+>  	 * Since the actual PWM divider is the register's frequency divider
+> -	 * field minus 1, we need to decrement to get the correct value to
+> +	 * field plus 1, we need to decrement to get the correct value to
+>  	 * write to the register.
+>  	 */
+> -	if (rate > 0)
+> -		rate--;
+> +	if (pfm > 0)
+> +		pfm--;
+> =20
+>  	/*
+> -	 * Make sure that the rate will fit in the register's frequency
+> +	 * Make sure that pfm will fit in the register's frequency
+>  	 * divider field.
+>  	 */
+> -	if (rate >> PWM_SCALE_WIDTH)
+> +	if (pfm >> PWM_SCALE_WIDTH)
+>  		return -EINVAL;
+> =20
+> -	val |=3D rate << PWM_SCALE_SHIFT;
+> +	val |=3D pfm << PWM_SCALE_SHIFT;
+> =20
+>  	/*
+>  	 * If the PWM channel is disabled, make sure to turn on the clock
+> @@ -205,6 +278,10 @@ static int tegra_pwm_probe(struct platform_device *p=
+dev)
+>  	 */
+>  	pwm->clk_rate =3D clk_get_rate(pwm->clk);
+> =20
+> +	/* Set minimum limit of PWM period for the IP */
+> +	pwm->min_period_ns =3D
+> +	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
+> +
+>  	pwm->rst =3D devm_reset_control_get_exclusive(&pdev->dev, "pwm");
+>  	if (IS_ERR(pwm->rst)) {
+>  		ret =3D PTR_ERR(pwm->rst);
+> @@ -313,4 +390,5 @@ module_platform_driver(tegra_pwm_driver);
+> =20
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("NVIDIA Corporation");
+> +MODULE_AUTHOR("Sandipan Patra <spatra@nvidia.com>");
+>  MODULE_ALIAS("platform:tegra-pwm");
+>=20
+
+--=20
+nvpublic
