@@ -2,191 +2,149 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7894CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B5AC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49441206D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C184A20757
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 19:15:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PzVhr2wP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DODxib5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730959AbgEVTI0 (ORCPT
+        id S1730907AbgEVTPO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 15:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40910 "EHLO
+        Fri, 22 May 2020 15:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730867AbgEVTI0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 15:08:26 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6343C061A0E
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 12:08:25 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k13so11211723wrx.3
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 12:08:25 -0700 (PDT)
+        with ESMTP id S1730840AbgEVTPO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 15:15:14 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3549C061A0E;
+        Fri, 22 May 2020 12:15:13 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id s198so10225376oie.6;
+        Fri, 22 May 2020 12:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x/MRQ96H6Az+pqXHXN01ej45PZoEed6u3UDYNQ8cdX4=;
-        b=PzVhr2wPkOGE+YF9Q0Ja37GGyUsYVsZsJL57zig1z8BCa8Qep5Xti7/yjRJQ9/qJHf
-         QDhZud1Tjjnao51/AdKATcPcGpgymDVv+DP9ZUqSC50m9yp8JxQN8GorUusIC61ibMSv
-         1k8FLY7CEVJdEodNUo1gSa/Ok2XPUCBAfNjDQgh3VtgYCy+7aRuvD1jA2sTMTxseHFNX
-         5b4RAQucgHzFF3CuwZClKX26YpFeJM4Lws5JWo+YousVNxXMo8Jn30LpR5IpK4yllbTW
-         NaRfvW8DhcXmzGQolc7AgeOmKDxCXUMZiHJwyTrrD5tbM1QKlneKviK+VPWJImn3UQCW
-         oIPQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hVx1XifLiqzcR3aQze/vFy6FED+f9dHS5bmNRNU3BI4=;
+        b=DODxib5KAH/Nd+AyiGl825EhHvcG4yhTievh7rjSrX3My7cKppuNLNm8NxaL3YwXot
+         T/MOQsMI0rDLqClT+6RoK8ZpEIAqzowtQSPxfuBHtkixZbrXKvtz4bAB0LsmB9CPJdPe
+         PSiPJbv/0CXYjS9HuKP29lklEtuQSIP4enu9s40ncQUNJfhEmPoAldw0XuGYYUwtT0kJ
+         C/ZevB8jaweU1tyRwD52p556RsTJHJP3t/vtIFDyF0MmO7YyQpIWkgOMUhuD/giJJzQq
+         YQCn73IsOX8xTjpodE9srWBXvJxmALphyESoL6hMrk4kNeewgof8srdZWBrrmb909EBK
+         t3kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x/MRQ96H6Az+pqXHXN01ej45PZoEed6u3UDYNQ8cdX4=;
-        b=X6krk+9feFFTa3uSWznUGkFvZT/Ftg/oFuc0ftkzyZlDmAyI/okDVzdjcvPJAVna5J
-         acUZ/sVlgqssl9ePrUyesiVMh14THOecp/yBYOefBd1rYj+NwzWbfa/eSXD3lTnT3Jqp
-         z0iqxoONfgjKgOw+syMlqgglNlewDCeIKi7Asc37QoXFUFodqM1ICwaUwl9caMQOwHj0
-         Q9WM1yyPty5rsBbskA0Q082lYVn6yaNbHshjBY5U6byyaqhpfyeGyd0imHi2YHttG+jw
-         87VrwgmSUCaXC7I+NG3j3WXpDg+AYf/QXFNWAiJxDraCg7KJFHlAz7lxl0zHJBxDce+M
-         4XOg==
-X-Gm-Message-State: AOAM530fMHLvdQPdkqqSUo1sg0AO6LRHiQGBUeKpY4J94H0yevfDNp/s
-        SLBgARKZr5yppgrqR+mIz+T0aw==
-X-Google-Smtp-Source: ABdhPJyyCvXxzy7xLZ+QVT611FhNvs3cXyfNnYMd18QneEGfeQ/uinWi8SdNplS5akPuJufHz1nPQQ==
-X-Received: by 2002:adf:e588:: with SMTP id l8mr1815032wrm.255.1590174504530;
-        Fri, 22 May 2020 12:08:24 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id z10sm10252695wmi.2.2020.05.22.12.08.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 12:08:23 -0700 (PDT)
-Subject: Re: [RESEND PATCH] thermal: mediatek: add suspend/resume callback
-To:     Michael Kao <michael.kao@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Louis Yu <louis.yu@mediatek.com>
-References: <20200408090558.12410-1-michael.kao@mediatek.com>
- <20200408090558.12410-2-michael.kao@mediatek.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c95b1b31-b6c6-9b45-33f4-b3673ae27680@linaro.org>
-Date:   Fri, 22 May 2020 21:08:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hVx1XifLiqzcR3aQze/vFy6FED+f9dHS5bmNRNU3BI4=;
+        b=G9cBUvcr5d1+oDOJATPZKdvUuDvhC7O4KPhir6kDW8+u4SLl+DU1dK/NET1pu8CHKg
+         o+aHfSkgGnjx+qA5KHyjdwHMVsVlCBTyGDod20h920qK3tTkw+HxBX4+4XfO3raVbGtO
+         XJGa+r0rzlCsk/RmBsmQbgmVIowfKHYgR8x34ixM+tvnX8yTOyFyd96Cqpmz6of17bns
+         9m88lftVAmXxJbjCIM3PosRy0Qcjd74ZRfvIsl0EDyP1vWsjZjt7SLoSGLSri3AInvqq
+         Ort+DQ0zMUiR30te0DNsZXjrbTChF4jVgHMUn6LR0HoK8989qE5YOqvLlrurZ4/QgYiy
+         Ne5A==
+X-Gm-Message-State: AOAM533dsFlP3GJ2vprbxyGkLC+JRM0SAUmv1KyZRJDzfdVwIDgpVzIj
+        KhL3z1nOWUX+ZHHo3f1e7c/hMR0XOny7+YM3RUY=
+X-Google-Smtp-Source: ABdhPJw6Z5oNxrJWWe2Z/VJ2dyoZ1svG+k7EHt8Gg0jkoo++Q6jrBStOvw/KaCbC6YON1Bc8ZAZfRDt4pi6Pp4vKXfo=
+X-Received: by 2002:aca:f550:: with SMTP id t77mr3774172oih.8.1590174913262;
+ Fri, 22 May 2020 12:15:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200408090558.12410-2-michael.kao@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200515171031.GB19423@ninjato> <CA+V-a8t6rPs4s8uMCpBQEAUvwsVn7Cte-vX3z2atWRhy_RFLQw@mail.gmail.com>
+ <20200518092601.GA3268@ninjato> <CAMuHMdVWe1EEAtP64VW+0zXNingM1LiENv_Rfz5qTQ+C0dtGSw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVWe1EEAtP64VW+0zXNingM1LiENv_Rfz5qTQ+C0dtGSw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 22 May 2020 20:14:45 +0100
+Message-ID: <CA+V-a8tVx6D8Vh=rYD2=Z-14GAW0puo009FtjYM++sw8PAtJug@mail.gmail.com>
+Subject: Re: [PATCH 03/17] ARM: dts: r8a7742: Add I2C and IIC support
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 08/04/2020 11:05, Michael Kao wrote:
-> From: Louis Yu <louis.yu@mediatek.com>
-> 
-> Add suspend/resume callback to disable/enable Mediatek thermal sensor
-> respectively. Since thermal power domain is off in suspend, thermal driver
-> needs re-initialization during resume.
-> 
-> Signed-off-by: Louis Yu <louis.yu@mediatek.com>
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+Hi Wolfram,
 
-[ ... ]
+On Mon, May 18, 2020 at 11:10 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Wolfram,
+>
+> On Mon, May 18, 2020 at 11:26 AM Wolfram Sang
+> <wsa+renesas@sang-engineering.com> wrote:
+> > > > However, both versions (with and without automatic transmission) are
+> > > > described with the same "renesas,iic-r8a7742" compatible. Is it possible
+> > > > to detect the reduced variant at runtime somehow?
+> > > >
+> > > I couldn't find anything the manual that would be useful to detect at runtime.
+>
+> Hence if we really need that (see below), we need a quirk based on compatible
+> value + base address.
+>
+> > > > My concern is that the peculiarity of this SoC might be forgotten if we
+> > > > describe it like this and ever add "automatic transmissions" somewhen.
+> > > >
+> > > Agreed.
+> >
+> > Well, I guess reading from a register which is supposed to not be there
+> > on the modified IP core is too hackish.
+>
+> According to the Hardware User's Manual Rev. 1.00, the registers do exist
+> on all RZ/G1, except for RZ/G1E (see below).
+>
+>    "(automatic transmission can be used as a hardware function, but this is
+>     not meaningful for actual use cases)."
+>
+> (whatever that comment may mean?)
+>
+> > Leaves us with a seperate compatible entry for it?
+>
+> On R-Car E3 and RZ/G2E, which have a single IIC instance, we
+> handled that by:
+>
+>         The r8a77990 (R-Car E3) and r8a774c0 (RZ/G2E)
+>         controllers are not considered compatible with
+>         "renesas,rcar-gen3-iic" or "renesas,rmobile-iic"
+>         due to the absence of automatic transmission registers.
+>
+> On R-Car E2 and RZ/G1E, we forgot, and used both SoC-specific and
+> family-specific compatible values.
+>
+What are your thoughts on the above.
 
-> +static int __maybe_unused mtk_thermal_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-> +	int i, ret;
-> +
+Cheers,
+--Prabhakar
 
-Why is there a multi-controller loop in the probe and resume functions
-and not here?
-
-> +	for (i = 0; i < mt->conf->num_banks; i++) {
-> +		ret = mtk_thermal_disable_sensing(mt, i);
-> +		if (ret)
-> +			goto out;
-> +	}
-> +
-> +	/* disable buffer */
-> +	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
-> +	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
-> +	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
-> +
-> +	clk_disable_unprepare(mt->clk_peri_therm);
-> +	clk_disable_unprepare(mt->clk_auxadc);
-> +
-> +	return 0;
-> +
-> +out:
-> +	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused mtk_thermal_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-> +	int i, ret, ctrl_id;
-> +
-> +	ret = device_reset(&pdev->dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(mt->clk_auxadc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
-> +		goto err_disable_clk_auxadc;
-> +	}
-> +
-> +	ret = clk_prepare_enable(mt->clk_peri_therm);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
-> +		goto err_disable_clk_peri_therm;
-> +	}
-> +
-> +	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
-> +		for (i = 0; i < mt->conf->num_banks; i++)
-> +			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
-> +					      mt->auxadc_phys_base, ctrl_id);
-> +
-> +	return 0;
-> +
-> +err_disable_clk_peri_therm:
-> +	clk_disable_unprepare(mt->clk_peri_therm);
-> +err_disable_clk_auxadc:
-> +	clk_disable_unprepare(mt->clk_auxadc);
-> +
-> +	return ret;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
-> +			 mtk_thermal_suspend, mtk_thermal_resume);
-> +
->  static struct platform_driver mtk_thermal_driver = {
->  	.probe = mtk_thermal_probe,
->  	.remove = mtk_thermal_remove,
->  	.driver = {
->  		.name = "mtk-thermal",
-> +		.pm = &mtk_thermal_pm_ops,
->  		.of_match_table = mtk_thermal_of_match,
->  	},
->  };
-> 
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
