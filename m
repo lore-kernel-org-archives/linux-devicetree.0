@@ -2,122 +2,265 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07437C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 09:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBCAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 09:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE08207F7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 09:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590141292;
-	bh=DCQ3NMcTqqopex6iSiJfvzZ3g8OEAM5c3grbH9qm1NE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=NIDQ0d927wUQOJW5H6bePenSP3prkqStzV1cuts/zR7isJoNnWuvlSJlJdQGJTax+
-	 XwSS97wRVc/8AgZLH5emTAoJbsfVvbz2Ez6JtQ1junm0E34UUNlccpmoVktH0Nbyj7
-	 E7E7v8VU7XuD9Hz1M08zlsxT1kTJLAGLueyUqFlM=
+	by mail.kernel.org (Postfix) with ESMTP id A7A9320870
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 09:57:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Gttv99l1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgEVJyw (ORCPT
+        id S1728315AbgEVJ51 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 05:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgEVJyv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 05:54:51 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FFDC061A0E;
-        Fri, 22 May 2020 02:54:50 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v16so11913291ljc.8;
-        Fri, 22 May 2020 02:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=XzN7vQSAeKD/eMd3BXZFqaFdo1S/tdrEDVtMr2FGnLU=;
-        b=Og7+X8GsBOfeJA3VJxO9QrF+eNA1WImqglo1OAStxYRp8TU5PGXrQmNtGmN0qlyp34
-         RaxDZmB5YkfLP3SlmIT6TNWFSnle76nSJBo4/fwN8LgyJXBjkfPFCieho97KHlfsf1iM
-         mdbPjltolPJBj6iROxZsLe7NtGT37gpt6jsIgbGVYgonW2hN1Wy3V9EuZaU2iQ61t0lo
-         OAvVy7v3ekVESgM1gcZZ/fglsARr2nC4a5Qni0+5BI467TUO23O0cxWPCNgOWO0VBEH+
-         uOzLY+dAnO5mKK8l2wQ32FuDjQrLZXbLh9J311jODurfsqOzjMrSQ3yWJxZzRW38uoP2
-         5+gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=XzN7vQSAeKD/eMd3BXZFqaFdo1S/tdrEDVtMr2FGnLU=;
-        b=O0C/8HTIl5JXNT4S5KnIgKZafH3qzuFh4Yw8+2VJ5h9TUmnF/czN8zQfIWtKBfNpF2
-         H3Dk3AU8PXgGj7daazYcbyIFkmnCiRL2LySj15FyK9qYbvuvO9E463GKS6WTYy+Wrb8l
-         G2yiuoCYzDEgt/JWEJPorbVzOrnxotgMVtQ+m6CuoXqxApW1E4wQ+wTfEW8ChHkiNbyb
-         wdOcUOT5ujAg3mn+8Yj3Zm3vtfqkqerDrCAVWNhpIKPDg4wNxIgpgOb17W9yp8XdWWb5
-         +Oms7UTD2eYIEwucn22qlfDY0sO1unqPGf4IgBNSrnijQvUd1vqlWwt86iJsgVgg9SQ/
-         NhwQ==
-X-Gm-Message-State: AOAM530OO+KeFxgd0dXHumim5mLGsEBbIRe1GFRB9x4jvCjgOmsdTWbZ
-        6N0zbo8Mwyt4g7LPP6zvuOs=
-X-Google-Smtp-Source: ABdhPJxls6sqBFx9as0rTD7ea7wRBsOpMahmM8dx899ivTV953sT8LrHdqpRnsVfBCHXJSWevqBg9Q==
-X-Received: by 2002:a2e:980d:: with SMTP id a13mr7372013ljj.277.1590141288728;
-        Fri, 22 May 2020 02:54:48 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id o23sm2655294lfg.0.2020.05.22.02.54.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 May 2020 02:54:47 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: Re: [PATCH v2 0/3] Re-introduce TX FIFO resize for larger EP bursting
-In-Reply-To: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
-References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
-Date:   Fri, 22 May 2020 12:54:25 +0300
-Message-ID: <87o8qgwazy.fsf@kernel.org>
+        Fri, 22 May 2020 05:57:27 -0400
+Received: from mail-eopbgr80058.outbound.protection.outlook.com ([40.107.8.58]:30339
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728212AbgEVJ50 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 05:57:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GpyOOSlJAodHsklUaFRH0TymYWyt6DPUt+hS0CsJput523K+xt9FWrMsSw0rFnvN7GAHMTejjhFnYu2WUy+H/tuN4ENDT48pyNahSP2hX9Ac8Jcc/zgJ3PgQqDdrO6cDwodVL7ozrgU+loJBSK9FFRoJanI84tJpkBYbr4Iay/JulYbhnNgECms1/ZaKFmzaNFD5jtbnrxt92fQ6FTo4nBh9aJmhUEatRFbCqv8PNRWaVZYQsVtlPhoHwcExRAv4hL1i6NwECsPBAsr5i8HIGrBaXscOpWs9U0ciq9qexBsHioLbV+BV3UfRSB1H65xo7RoWSzN5dz9bRDYPp/eK5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DiRek/1gWLqwYviHH523BGPtwtE2kagpc48+ur8iZg4=;
+ b=arAFKKmlk/FDNZ4gIpMyBqYTfYw2lQV8WYVbjLVY4FTie2kisaIMtZqXxZQ6ZTvYCZBuuQIY/WMKODJVjWBFZ5WPiPnSWJKzuA/kkNd29N0ik0Mv86JwBIwRsogRJsKbW1S7WWP+1CZ5UUf+3mwWnIgrJJ5pN+RTFNDa6BDt8YGl+97J35+LCYljgmiSGVP9/TZoI+V9+UE5prCufAqV4YqbwfWzuM+Ti/WDsBxy5/f+C/1ktgGRGZwlqtM23NqKexgg9ZhK/yjNH0QMrtNRJTWkWfsPVolTSm3oUjcyWXWvMmW1ger6BwXVsCi75S3FuDCgHNrTFXwelwLGDYk7Sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DiRek/1gWLqwYviHH523BGPtwtE2kagpc48+ur8iZg4=;
+ b=Gttv99l1I8j39M/iAC6TKoAAqrGjUBkvMaUF2Oq8p8WqdURCn0fK10l3pBK/EnGMYZWfwzFqr4KjWRpBUX76TI9Nf6VXP+8sAj0DMvurDbOJZRZ8s75NKBG5iiC4ABShPTryLuXQiwo6mHoq8IRljEiso/Q6bZo/ZlKocn+yfxk=
+Authentication-Results: lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=none action=none
+ header.from=oss.nxp.com;
+Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
+ (2603:10a6:800:ae::16) by VI1PR0402MB3616.eurprd04.prod.outlook.com
+ (2603:10a6:803:8::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Fri, 22 May
+ 2020 09:57:21 +0000
+Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
+ ([fe80::81fd:56b7:594b:59c0]) by VI1PR0402MB2815.eurprd04.prod.outlook.com
+ ([fe80::81fd:56b7:594b:59c0%10]) with mapi id 15.20.3021.026; Fri, 22 May
+ 2020 09:57:21 +0000
+Subject: Re: [PATCH 09/12] dt-bindings: arm: fsl: Add msi-map device-tree
+ binding for fsl-mc bus
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     devicetree@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-acpi@vger.kernel.org,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200521130008.8266-10-lorenzo.pieralisi@arm.com>
+ <CAL_Jsq+h18gH2D3B-OZku6ACCgonPUJcUnrN8a5=jApsXHdB5Q@mail.gmail.com>
+ <abca6ecb-5d93-832f-ff7c-de53bb6203f3@arm.com>
+From:   Diana Craciun OSS <diana.craciun@oss.nxp.com>
+Message-ID: <ee7a5c04-814e-215f-ec74-52c2f3b881d0@oss.nxp.com>
+Date:   Fri, 22 May 2020 12:57:05 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <abca6ecb-5d93-832f-ff7c-de53bb6203f3@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR01CA0169.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:aa::38) To VI1PR0402MB2815.eurprd04.prod.outlook.com
+ (2603:10a6:800:ae::16)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.122] (81.196.112.2) by AM0PR01CA0169.eurprd01.prod.exchangelabs.com (2603:10a6:208:aa::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Fri, 22 May 2020 09:57:19 +0000
+X-Originating-IP: [81.196.112.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3c04f067-51a7-4fc4-cce7-08d7fe3684ca
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3616:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3616D5811326B2BE8C6383C0BEB40@VI1PR0402MB3616.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 04111BAC64
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lZK/RkyvmIvq4ObOJ01NQnu1OgK0NbX696tlJ/QZuwOlHHJLn0VsQ3S5c5CZHc6sfgsBV32k0djdccGHfNJccHacCuzOVH/WuYuh9OjizawKYBv8E0ri46Vpuej40I44Z0A2CAbcd9RxtymHfCyTvFPjcC6N1HIvLZ/4rkgIfbBCEeaW9J+1LyNhKy8Npolz/eW2u+rhT3iZAtlfuXVTBSDAmR5Y/J9fMXABXdTl9L+kZgGHlyU8l8ETSFglW+bEA9VfpsD71pOzoOu8cTT306+hSNTPIVUC9MQBMewh/rUH0ETeEtBZTwqfLRTJTacGPANi3k6XqoPGwkCh79X4if6X8YpvtpohDP5CHetwC71BwY5oe+L2A104orWdQxtbdBkwAzBvyH4UdqL0zYy92R/qnRQZVj1JOBr8SnPaYnaaIpH2m3QrIKC+ZBoWJWJYRfJAdof3DbwRChqWmQ1Fu5qYcFtWCdkXHPfCcDlsAV89QERkHaah9SXvSSHpnynEkeRD40Fgs4hZoYeW3NaijqmODeTfeej8k+crGR3Gd3z7h9T4/0Xhj8E1N2qGUMJBYd14973LP3wfN/Xktn0p2g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB2815.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(478600001)(5660300002)(966005)(7416002)(66946007)(2616005)(86362001)(54906003)(16576012)(52116002)(31686004)(4326008)(6666004)(316002)(956004)(2906002)(6486002)(53546011)(8936002)(31696002)(110136005)(8676002)(16526019)(66556008)(66476007)(26005)(186003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: LiNugFNsLsT2IU/m+fXuKsRG4k2Q3PXQG1aMgarynHUWdpAj1iAC8rt+LTzpDibfXqTrkzxNEkg2e3UaFZ5d1I9q8aLYZqTUeWx2Ehej7ZNzJ4/FnAAbJ8CKH3Z7/d8q0No5pfebAONHFXSjFLY+of67LquzZqSKCAfwL+0mD0hq/0kOZu/jdcoPp+piHi+YVIJMbvKZ+Xo6q+Icob2k80tLAfRt69xmOClgWKKXbBec0QoP8JnBqy75CvwtlUOSM6C7D0Wp7O5K16nrYWK/HJ2Ng6r2dfju0P9bXTYLrDHi5ikAU7xxwEIM8puwzG8oPdroISrdkDvBEAm0ZB2S0MYFDu/05JfFYkqNYcSP7zOou9BMyqAw1+QnR62PfmXAK2GsKxohFdQx0Ta+3qqanPK0mLM9CWNXTvXazUOB39PMuD6QbwPTjgNAGavVoFOfC79FaDercYcEQvsH+MfkmRYO5MAML9FY3BRCwxdqp/8=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c04f067-51a7-4fc4-cce7-08d7fe3684ca
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2020 09:57:21.2573
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Pd+ALR22Ie+M3ExeLZPReA8jU3lSist0knQclq0eaOPVI+5K+EvG/NeNNb06atARrVHZGVNOhUG5/TPBI4p38w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3616
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Wesley Cheng <wcheng@codeaurora.org> writes:
-
-> Changes in V2:
->  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
->    FIFO.
->  - Removed dev_dbg() prints and fixed typos from patches
->  - Added some more description on the dt-bindings commit message
+On 5/22/2020 12:42 PM, Robin Murphy wrote:
+> On 2020-05-22 00:10, Rob Herring wrote:
+>> On Thu, May 21, 2020 at 7:00 AM Lorenzo Pieralisi
+>> <lorenzo.pieralisi@arm.com> wrote:
+>>>
+>>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>>
+>>> The existing bindings cannot be used to specify the relationship
+>>> between fsl-mc devices and GIC ITSes.
+>>>
+>>> Add a generic binding for mapping fsl-mc devices to GIC ITSes, using
+>>> msi-map property.
+>>>
+>>> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> ---
+>>>   .../devicetree/bindings/misc/fsl,qoriq-mc.txt | 30 
+>>> +++++++++++++++++--
+>>>   1 file changed, 27 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt 
+>>> b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>>> index 9134e9bcca56..b0813b2d0493 100644
+>>> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>>> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>>> @@ -18,9 +18,9 @@ same hardware "isolation context" and a 10-bit 
+>>> value called an ICID
+>>>   the requester.
+>>>
+>>>   The generic 'iommus' property is insufficient to describe the 
+>>> relationship
+>>> -between ICIDs and IOMMUs, so an iommu-map property is used to define
+>>> -the set of possible ICIDs under a root DPRC and how they map to
+>>> -an IOMMU.
+>>> +between ICIDs and IOMMUs, so the iommu-map and msi-map properties 
+>>> are used
+>>> +to define the set of possible ICIDs under a root DPRC and how they 
+>>> map to
+>>> +an IOMMU and a GIC ITS respectively.
+>>>
+>>>   For generic IOMMU bindings, see
+>>>   Documentation/devicetree/bindings/iommu/iommu.txt.
+>>> @@ -28,6 +28,9 @@ Documentation/devicetree/bindings/iommu/iommu.txt.
+>>>   For arm-smmu binding, see:
+>>>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml.
+>>>
+>>> +For GICv3 and GIC ITS bindings, see:
+>>> +Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml. 
+>>>
+>>> +
+>>>   Required properties:
+>>>
+>>>       - compatible
+>>> @@ -119,6 +122,15 @@ Optional properties:
+>>>     associated with the listed IOMMU, with the iommu-specifier
+>>>     (i - icid-base + iommu-base).
+>>>
+>>> +- msi-map: Maps an ICID to a GIC ITS and associated iommu-specifier
+>>> +  data.
+>>> +
+>>> +  The property is an arbitrary number of tuples of
+>>> +  (icid-base,iommu,iommu-base,length).
+>>
+>> I'm confused because the example has GIC ITS phandle, not an IOMMU.
+>>
+>> What is an iommu-base?
 >
-> Reviewed-by: Felipe Balbi <balbi@kernel.org>
+> Right, I was already halfway through writing a reply to say that all 
+> the copy-pasted "iommu" references here should be using the 
+> terminology from the pci-msi.txt binding instead.
 
-I don't remember giving you a Reviewed-by, did I?
+Right, will change it.
 
-=2D-=20
-balbi
+>
+>>> +
+>>> +  Any ICID in the interval [icid-base, icid-base + length) is
+>>> +  associated with the listed GIC ITS, with the iommu-specifier
+>>> +  (i - icid-base + iommu-base).
+>>>   Example:
+>>>
+>>>           smmu: iommu@5000000 {
+>>> @@ -128,6 +140,16 @@ Example:
+>>>                  ...
+>>>           };
+>>>
+>>> +       gic: interrupt-controller@6000000 {
+>>> +               compatible = "arm,gic-v3";
+>>> +               ...
+>>> +               its: gic-its@6020000 {
+>>> +                       compatible = "arm,gic-v3-its";
+>>> +                       msi-controller;
+>>> +                       ...
+>>> +               };
+>>> +       };
+>>> +
+>>>           fsl_mc: fsl-mc@80c000000 {
+>>>                   compatible = "fsl,qoriq-mc";
+>>>                   reg = <0x00000008 0x0c000000 0 0x40>,    /* MC 
+>>> portal base */
+>>> @@ -135,6 +157,8 @@ Example:
+>>>                   msi-parent = <&its>;
+>
+> Side note: is it right to keep msi-parent here? It rather implies that 
+> the MC itself has a 'native' Device ID rather than an ICID, which I 
+> believe is not strictly true. Plus it's extra-confusing that it 
+> doesn't specify an ID either way, since that makes it look like the 
+> legacy PCI case that gets treated implicitly as an identity msi-map, 
+> which makes no sense at all to combine with an actual msi-map.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Before adding msi-map, the fsl-mc code assumed that ICID and streamID 
+are equal and used msi-parent just to get the reference to the ITS node. 
+Removing msi-parent will break the backward compatibility of the already 
+existing systems. Maybe we should mention that this is legacy and not to 
+be used for newer device trees.
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7HoVEACgkQzL64meEa
-mQZY/hAAobcsEW4IFsU2bxTrcCRnV6RQNz20bIfxZRKcyKquzoBrV66YyGxsyE+t
-egAiLviJmCxwGdOzOSdHETrrG6HequyOGzwoux/HrGre/OCJqmrh6WnJPunPIqg3
-hzYN9Jos3yFDZUUi8KPoYeS88Ke//VKXXKEwKdAyKFrB1BO2+elWtfMexyDluxlk
-oZggbGmDVlenHL2/IUrxs6EvkL1ry1ogAa5U97hwwAJApJhjqKDTswoJJvvnm+e5
-01pkLPgvD+GWOHKV+zMQ5CnjVc+cVtpTqcQJ3FY+7cbkHgzOcnb2ANgn0gygK68w
-ljUf0kopym3Y3uAuEnRzIUdrLZMjwiDepXQb2Q1hoC6sS0ptO3Qso1SFRwGsCiNR
-9ocFjCios7dA8obaELDLXMwS3B0dfMW7HR2SFgeVQ9btB00ZYNMyAqE0yMcnhdHv
-Er+5fCcHy9ObwYoXbhI30eA64rn1+KBpyJo1UMh1XLoo3Z3ON/nuI/ozaBs7xexb
-4OPsf5E4CnkPSSqBpHG1ukGU7uHyEla/lwKCIBteb0iuX2LO+kn5G3tkcd0vBrua
-ceZmOk7UDMcYFN8jGNpitKqtrCuhiMn1UpGqdEySJYh40hI92lkAv3/brvouU8Pz
-C5R4GNwFrHqYHozr+39cQAX7BKDKoJ7hvzAjIllw4t2Lzum6OEc=
-=pWoV
------END PGP SIGNATURE-----
---=-=-=--
+>
+>>>                   /* define map for ICIDs 23-64 */
+>>>                   iommu-map = <23 &smmu 23 41>;
+>>> +                /* define msi map for ICIDs 23-64 */
+>>> +                msi-map = <23 &its 23 41>;
+>>
+>> Seeing 23 twice is odd. The numbers to the right of 'its' should be an
+>> ITS number space.
+>
+> On about 99% of systems the values in the SMMU Stream ID and ITS 
+> Device ID spaces are going to be the same. Nobody's going to bother 
+> carrying *two* sets of sideband data across the interconnect if they 
+> don't have to ;)
+>
+> Robin.
+
+Diana
+
+
+>
+>>>                   #address-cells = <3>;
+>>>                   #size-cells = <1>;
+>>>
+>>> -- 
+>>> 2.26.1
+>>>
+>> _______________________________________________
+>> iommu mailing list
+>> iommu@lists.linux-foundation.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>
+
