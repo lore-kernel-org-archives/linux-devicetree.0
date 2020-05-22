@@ -2,106 +2,137 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8DBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDD0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 580752065F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E1C206F6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 15:28:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jfK/zDIF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MMWImdE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730316AbgEVP1N (ORCPT
+        id S1730469AbgEVP2r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 11:27:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34548 "EHLO
+        Fri, 22 May 2020 11:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730031AbgEVP1L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 11:27:11 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36CD7C08C5C0
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 08:27:11 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id p12so8529581qtn.13
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 08:27:11 -0700 (PDT)
+        with ESMTP id S1725956AbgEVP2q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 11:28:46 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFE3C08C5C0
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 08:28:46 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y17so2161292wrn.11
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 08:28:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SRsdOjWWL+ErLjyMojixNVl7s3eXgVVstDINvK3dtXg=;
-        b=jfK/zDIFzAwRiPF5rSe1xq8YO+ZE0VL+EQPe6K4YPFRj9xXRozQLQi0tJM2zyK91BM
-         w6Q6wyRRRq4Qq46NUYu/kcCX1f78ojBrzaVsc9LDiIYA/RuUiiX8vfA7GBkol9Finv11
-         mQ7Ox5f4M3JlcOOKELjHlwqAPzd7yc/GQhYmlEdYOXV+xnBdH0/HrN2sD/BWNxqHT91u
-         rAo5gUjweaCu8QoaGEUC5QVe8xt2NF2nAQIlJ5w++VFJJpSUf/6ig5/aEe3d+a7IVzuF
-         82wUAcK7HdnhoZthoiL4FwdoJXIAvTjfiqfV6kii/d5yWsSktVexR4BbOAqcqg9hjBrg
-         Vgdw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RE02VevKPga5GawhGamW95ZE1kXVYxGQzWhCIbMIzNY=;
+        b=MMWImdE/2ZE9LDYQnaGCIARyM962IGLuiw6eGA/jljxOaR7yh5pCQt+3wfvYRSnfOp
+         k5JKNPBeS69Vv4hi1byp7pnaA42f2saUD3rcNGfywZnGGpjwbapkrf/6bKIN53qVqNEO
+         rhdXGWgY4e93wR/0RmGUPVlIalsuTe6sMQE1MZS0cu5t5Qc8ZNM/VRySlOhxfKB+2Gkb
+         wJ4Nf4RndEct8/FO2q4BKzMAbtrRS1/9TtSOs0WiR0qB5mcwBixid/P0ECqitXmzRmOP
+         tkkkcU98mmsZgoNL7ljU3e7uujxzyRprCWUfqgC1FsPs9fl0G122XUrDsBGIZdWSkmqd
+         nT/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SRsdOjWWL+ErLjyMojixNVl7s3eXgVVstDINvK3dtXg=;
-        b=U2+DJsaEZjggnd06rAArSXSl8r2r1qdP4mx67rT03LyerWPl5WjebIpN38Fsu1RPgk
-         9uLtPqM7DHWOqwj/7Z/GwRWB+gHKijFybpKf+Pj/G3sTpUI4GOpiJfPdRbJE5J616HFj
-         9gB2XaJjQpLEjeuUKJESnkDSadkLFWwv1pmmjSGfoILWtag0lMtCrEJJM00S743Usw/E
-         8mj4gNyOlW75ILWznSDDpjBdEIEDfbRWiJD4khNE1oFc7KLj8GvGrcdb9AzDTAlhzeVr
-         3wKSRq/fdNNo+Kfy72yQNGzTkz3i/RVms7yIRFlrxyV7ejhgKJXtYCHMLpCO6XuyQu3v
-         BDFQ==
-X-Gm-Message-State: AOAM533dum/gL2uoHiZc+AqL6jehP6L8XA+Ph4YhVZeNWTkrzcq9stTc
-        90oYKoJfOuAjzFx8+5V6BOBj7EU7OIJJBTq7VcoR8Q==
-X-Google-Smtp-Source: ABdhPJy8zE09hP3ssAEXIS8PrMxrdtczpkONJnriZwX1UvQjiBseW1fjfukwynTIX1jUsud00Bk+uIw6wPtBlxqVO3Q=
-X-Received: by 2002:aed:37e7:: with SMTP id j94mr16165439qtb.57.1590161230357;
- Fri, 22 May 2020 08:27:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200522120700.838-1-brgl@bgdev.pl> <20200522120700.838-7-brgl@bgdev.pl>
- <5627e304-3463-9229-fa86-d7d31cad7a61@gmail.com>
-In-Reply-To: <5627e304-3463-9229-fa86-d7d31cad7a61@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 22 May 2020 17:26:59 +0200
-Message-ID: <CAMpxmJVCE0RBNqBQw03bT5uqnCk3vDi1ncbNeWj=VvcN1wEaZg@mail.gmail.com>
-Subject: Re: [PATCH v5 06/11] net: ethernet: mtk-star-emac: new driver
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RE02VevKPga5GawhGamW95ZE1kXVYxGQzWhCIbMIzNY=;
+        b=K7uD4CrozAMX32ZaBPqjnMoeXyRwuxl6tPYqxCMbUmMcFnxT8nD6A1hg02IJ7gReB4
+         r4/ca8RXVJpfVL3D4142VdpStD6g7jBw3S777jrsBIYeamMmnPHHEDeNS6M+WcKg48Eh
+         gBeuoYxN/9m+TRz+ARsz9Ms790NmnPprqIysfcKSqY+bdNrsfT2f1UqKo6+I+UjGY2bI
+         r2I97tJP4D9XCfYseztoYlsYmhbZH/GlkEJQqp7dwhfI//Pmw1tiOVKqbJr9FT8NYO5h
+         BriejMKIQhX2PiooA431bJ4/weGwXyIwsKqDdPyM1pMeWQuDsMMiXkSLEug+d+ALG+L7
+         SqxQ==
+X-Gm-Message-State: AOAM532+jTqC5zEZUgkjLDdOg4WEx8MkFGtjFC5iCl5IVsEy87xrRlFb
+        ITssjKKEvwDnCPpiab1whxBJpA==
+X-Google-Smtp-Source: ABdhPJxdCf7sw2JHdZ8XQZwe1iL/1ihyu6MfIaO/x8mio0kAv1N7GEStdaiFyyQDolFStnz3Rqs/ew==
+X-Received: by 2002:adf:a3c9:: with SMTP id m9mr1159741wrb.405.1590161325014;
+        Fri, 22 May 2020 08:28:45 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
+        by smtp.googlemail.com with ESMTPSA id s19sm6092584wmj.21.2020.05.22.08.28.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 08:28:44 -0700 (PDT)
+Subject: Re: [PATCH v5 0/8] clocksource: Fix MIPS GIC and DW APB Timer for
+ Baikal-T1 SoC support
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <211ab91d-6085-3073-1cbc-2300abade1b7@linaro.org>
+Date:   Fri, 22 May 2020 17:28:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pt., 22 maj 2020 o 17:06 Matthias Brugger <matthias.bgg@gmail.com> napisa=
-=C5=82(a):
->
-> On 22/05/2020 14:06, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This adds the driver for the MediaTek STAR Ethernet MAC currently used
-> > on the MT8* SoC family. For now we only support full-duplex.
->
-> MT85** SoC family, AFAIU it's not used on MT81** devices. Correct?
->
+On 21/05/2020 22:48, Serge Semin wrote:
+> As for all Baikal-T1 SoC related patchsets, which need this, we replaced
+> the DW APB Timer legacy plain text-based dt-binding file with DT schema.
+> Similarly the MIPS GIC bindings file is also converted to DT schema seeing
+> it also defines the MIPS GIC Timer binding.
+> 
+> Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a
+> functionality of two another timers: embedded into the MIPS GIC timer and
+> three external DW timers available over APB bus. But we can't use them
+> before the corresponding drivers are properly fixed. First of all DW APB
+> Timer shouldn't be bound to a single CPU, since as being accessible over
+> APB they are external with respect to all possible CPUs. Secondly there
+> might be more than just two DW APB Timers in the system (Baikal-T1 has
+> three of them), so permit the driver to use one of them as a clocksource
+> and the rest - for clockevents. Thirdly it's possible to use MIPS GIC
+> timer as a clocksource so register it in the corresponding subsystem
+> (the patch has been found in the Paul Burton MIPS repo so I left the
+> original Signed-off-by attribute). Finally in the same way as r4k timer
+> the MIPS GIC timer should be used with care when CPUFREQ config is enabled
+> since in case of CM2 the timer counting depends on the CPU reference clock
+> frequency while the clocksource subsystem currently doesn't support the
+> timers with non-stable clock.
+> 
+> This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+> base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+> tag: v5.7-rc4
 
-MT81** and MT85** are very closely related. This IP is currently used
-on MT85**, MT81** and MT83**. It may be used in new designs in the
-future too.
+Applied patch 1,2,4,5,6,7,8
 
-Bart
+Thanks!
+
+  -- Daniel
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
