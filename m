@@ -2,103 +2,123 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B94DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE22C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 02:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 696ED205CB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 01:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7349D2078B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 02:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rT1NJtP1"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KN5yg70M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgEVBg4 (ORCPT
+        id S1727811AbgEVC05 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 21:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgEVBg4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 21:36:56 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34390C061A0E;
-        Thu, 21 May 2020 18:36:56 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v16so10703654ljc.8;
-        Thu, 21 May 2020 18:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xe8ItSV7TWpuJ0Sj6ABqt9kZYzEJBCX+NyG4cgDQbwQ=;
-        b=rT1NJtP19zASFzi0kLE9ovS9c17j+Xs/6AJSG7rK4TyrUn1MKdmSCXF1heoXnCLp7v
-         1Jry0RUhwUvjEoDaNvowlunPUXySy20/0anhrmpg0jkII6/AcwE78sb6B6Wi0qDxSdi7
-         kSAfW6DRkpX5a4OlT4AFrBbie0Rtsg5AQ5hvHOdEJi4wri1BBLJzEKgmXRninYDNWneP
-         N5vEaIx+eXbYvWlpyifBDefbVzg8hljn2EaN08r2ggbEo+3htywlRdYCwuVp0LcPuNHW
-         UuZwnZZdCqrUUwrW3JmJF78l2m5E/VXss8pH+Lu6wQvEx+86+bv1fRQU4VOkBHIJl0Fg
-         k2Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xe8ItSV7TWpuJ0Sj6ABqt9kZYzEJBCX+NyG4cgDQbwQ=;
-        b=m03/bTyO2X0MIMn5btMgJE6GK9vENLqeVuK4Aj8yVHGPBS/b9+DBZzuLzRbdRckLsX
-         WlyFgj/fnknJO07xmJxM2kWIHt6xAFv/QhEcY9abajWnWNTgWE9AhMWUPs5WHt3TVtab
-         WfnOfz0Txwen+R2zVk8324aXMJQ3DGI+KhLzxHjwOPFagBjS8cnVrXbJAVPPyFBgWzF8
-         bfX3hI3zsEnjVliN7dYKHESKRIULCGQnGzjPotL6QnRwsv/q17uVq7Yan+QkWJPvzsKx
-         N6tNn4YJCvgPTn+nd/I4shY712VWnfgOwWFLEv5gRlSJfIdN4hIqvjyK/OG11GVL1/MW
-         j5sg==
-X-Gm-Message-State: AOAM531KKE8KASly3mqpkUfqpsYCDnA2ec0oi1T16xZyD026nsGRmTVa
-        v4wGQeYSuXoeE6u9+XwN8q4K0WO+Rn5ivLic030=
-X-Google-Smtp-Source: ABdhPJz4ng85HDuCoXa+K1Pjzh5pnjaHSdLkxpp6ptjdi9kX0Ew+8Xac83dsBEF9SPUCrIBAXJFkj7uXZNxX6Zf6bIA=
-X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr4936909ljl.178.1590111414634;
- Thu, 21 May 2020 18:36:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com> <1590070674-23027-2-git-send-email-yibin.gong@nxp.com>
-In-Reply-To: <1590070674-23027-2-git-send-email-yibin.gong@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 21 May 2020 22:36:41 -0300
-Message-ID: <CAOMZO5AsCREw1OT5zzFH+pC6uyw+MOSKJFZ3_-HvDva65A2cKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
- voltage range
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Thu, 21 May 2020 22:26:57 -0400
+Received: from mail-db8eur05on2076.outbound.protection.outlook.com ([40.107.20.76]:60993
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727080AbgEVC04 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 May 2020 22:26:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jusOtUTWZ3QJXbRBH/PnDD3BjZQgDuGHzPIu+v6JNgCFavRYSpQm2tbtw2QUDz7pEHU3f/2trf+f/yUTnluthvHhUwjdCctYZyip/0tXSLpvnyQ12azMYvlFMgs46SO5rXEigSQR/YiuRkiPElDgXOJue+BLCz/BvQ0irVm61s7c12bpEZxx8QvI1IEo1b+EZyWY26u8+hY0s9PNolHspibloglYjuv41kqKPbzzZfihitbc5aWE5gEc17tZXHxsGrUlglDrckm2CiMhOzyiRLsWAJRyqIBWeHu0z1IPitKBCYqb/eLoOf1NkA0yay8HHahvuOIoK4NvardwB36tmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uTBg3aDNI0TSldielWxWe9MzhxO6B0rW5MAUcitFCKo=;
+ b=cS7/ZDSmKNtanVVE9u7zPqz1T3A/93rEUmcc6XCwqNMxRrZBTBRDCelWiYinzCok9vZt0SspSfePOTvFdOqwu8JWEuRxl8iThuxtoAjHyQJ1efCABA5WsmW1FRHr76KLrB/bt/BCvgS2VRBPffQ6cPkUv0Uqw+VdrCpJLDHHp7gLUo7Pcj5FI97nwDaA4ngWIupjFT28o9sbLjOymUdSHDJY/ttiulBXmk+VzEuQGPh8bBZP/qYKKns24fwoxzw9WRlQqTgAeLYyrhkn/erxkLIsR5jgk1oSRwPIrChANT68AG6iGU4e0A9PrH5zD2DHAiVpj6QP3hAPA/Vb/XbD/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uTBg3aDNI0TSldielWxWe9MzhxO6B0rW5MAUcitFCKo=;
+ b=KN5yg70M9UnEflU8AfdQTBnZHmpQfvNaDCbJKwSeKknpZ8uImx+tUzXEb7ZztNozk/0hllMYgGNjJkL+q7K7mRwfTw+eLG5hhloq/uVRrJJuMa7I3e1YgpBg1V5dryu8VwY0ZoUfkGWacFcLiV8y6SeR+px7yuHjAtpT0SNj9OY=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6493.eurprd04.prod.outlook.com (2603:10a6:803:11f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Fri, 22 May
+ 2020 02:26:53 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3021.020; Fri, 22 May 2020
+ 02:26:52 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        Yongcai Huang <anson.huang@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
         Sascha Hauer <kernel@pengutronix.de>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v2 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
+ voltage range
+Thread-Topic: [PATCH v2 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
+ voltage range
+Thread-Index: AQHWLzeGwEoS7avMqUe1/PurAPoV06izVHOAgAANc/A=
+Date:   Fri, 22 May 2020 02:26:52 +0000
+Message-ID: <VE1PR04MB66388D5243509C8EBF4DE9EB89B40@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com>
+ <1590070674-23027-2-git-send-email-yibin.gong@nxp.com>
+ <CAOMZO5AsCREw1OT5zzFH+pC6uyw+MOSKJFZ3_-HvDva65A2cKQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5AsCREw1OT5zzFH+pC6uyw+MOSKJFZ3_-HvDva65A2cKQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fb35a2d2-ee19-4e85-65e3-08d7fdf79717
+x-ms-traffictypediagnostic: VE1PR04MB6493:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6493257F8CDB03F4A73C686389B40@VE1PR04MB6493.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 04111BAC64
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9/vZ6cvNJi4aZKN4LDFvXl9QvBhYVGj5R45InKqe8xFVQkx92lRbvYyRaSnkl1PAGYKOb8mvPuV0C3w1kPWf8fEfGf8kiJOm7+550hibwck1yGb63/3F7b6JXPOkSiUztgOy3txpr92MmJIAQhL8L7JR1CNgdW5/NPdfvZWCtTod8jjZfUxte3ot/aKKvPvvLRMhTVuckTBkmtxcESJ5OzzrWcvwIxPuGHCKLS4aFdqy5d6pff8lka+BaCYg9YSMOnUgf5ZRAqjJborTa8Dhvv4xlGx8r+AFEYa2Knoi/GRqJtyjnJxALfXjfNWVfTFEBWaHB2nFE2qxqZl7Yv0Fph2VRSGgtK/ASpoiinq7tWStZ1Fd6vBcEe4RR4b4FsI8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(136003)(366004)(396003)(346002)(53546011)(86362001)(4326008)(6916009)(8676002)(8936002)(478600001)(186003)(26005)(6506007)(54906003)(33656002)(55016002)(9686003)(2906002)(316002)(52536014)(5660300002)(7696005)(4744005)(66446008)(66556008)(71200400001)(66946007)(76116006)(66476007)(64756008)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: WYQtOONKgXBSLaWBXRNSKPEdEFaF9Xm/nFMpukHCLO3PB2mcPRNl01rvpbjxp0CnR+m2CNb3GHIlmTdW0xZ0tIdEu7XdBRJByQRq7R1JgLOgjONNzXX6Xsmecs3oEqF+y29Li/I72utfh0E1CcCH8WzIW7Rmi8YFCasjhxe9Q3T7QaAOli4Wcyx9o/97Phny3Xn1FXa48sc4LWnHeoJiJeqVY7JfSc1HWELdBmQXnRfxWx9mPlg3L/8+D86jyNvIcSRx1pbLTsXs+15hBSYFpLwnY8jrInvaLMG0/sHM1q+uUAeEXfPvr+YogahWFsM1wAuVPalaR7RMQAb8vVzCQa8lCZKSJPQyazs2jC0HnIlpJKOzsIuYleRH0QqIKKReRrN5w2mXKajBJTnx5KB9AudXOiRz7zSsezrF1hbDNU3Oll4v9++Cj6BnWJtvNPDnB8X3quglt4zK+vo14bJ5KufiKrvHGzb+AQCu0RI2zgo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb35a2d2-ee19-4e85-65e3-08d7fdf79717
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2020 02:26:52.8587
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: paRbwBOgiqHZ9ulUj4ryT6eZd1/+pj3ZhyyoGYBhFBvtaAIWyLIxcyTEsMCf/HQWdBXOKNBW+78AwCPzVgf7zA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6493
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
-
-On Thu, May 21, 2020 at 3:17 AM Robin Gong <yibin.gong@nxp.com> wrote:
->
-> Correct ldo1 voltage range from wrong high group(3.0v~3.3v) to low group
-
-Please use capital letter V for Volt.
-
-> (1.6v~1.9v) because the ldo1 should be 1.8v. Actually, two voltage groups
-> have been supported at bd718x7-regulator driver, hence, just corrrect the
-> voltage range to 1.6v~3.3v. For ldo2@0.8v, correct voltage range too.
-> Otherwise, ldo1 would be kept @3.0v and ldo2@0.9v which violate i.mx8mn
-> datasheet as the below warning log in kernel:
->
-> [    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
-> [    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
->
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-
-You should add a Fixes tag and Cc stable on this one.
-
-Thanks
+T24gMjAyMC8wNS8yMiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+IHdyb3RlOg0K
+PiBIaSBSb2JpbiwNCj4gDQo+IE9uIFRodSwgTWF5IDIxLCAyMDIwIGF0IDM6MTcgQU0gUm9iaW4g
+R29uZyA8eWliaW4uZ29uZ0BueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IENvcnJlY3QgbGRvMSB2
+b2x0YWdlIHJhbmdlIGZyb20gd3JvbmcgaGlnaCBncm91cCgzLjB2fjMuM3YpIHRvIGxvdw0KPiA+
+IGdyb3VwDQo+IA0KPiBQbGVhc2UgdXNlIGNhcGl0YWwgbGV0dGVyIFYgZm9yIFZvbHQuDQo+IA0K
+PiA+ICgxLjZ2fjEuOXYpIGJlY2F1c2UgdGhlIGxkbzEgc2hvdWxkIGJlIDEuOHYuIEFjdHVhbGx5
+LCB0d28gdm9sdGFnZQ0KPiA+IGdyb3VwcyBoYXZlIGJlZW4gc3VwcG9ydGVkIGF0IGJkNzE4eDct
+cmVndWxhdG9yIGRyaXZlciwgaGVuY2UsIGp1c3QNCj4gPiBjb3JycmVjdCB0aGUgdm9sdGFnZSBy
+YW5nZSB0byAxLjZ2fjMuM3YuIEZvciBsZG8yQDAuOHYsIGNvcnJlY3Qgdm9sdGFnZSByYW5nZQ0K
+PiB0b28uDQo+ID4gT3RoZXJ3aXNlLCBsZG8xIHdvdWxkIGJlIGtlcHQgQDMuMHYgYW5kIGxkbzJA
+MC45diB3aGljaCB2aW9sYXRlDQo+ID4gaS5teDhtbiBkYXRhc2hlZXQgYXMgdGhlIGJlbG93IHdh
+cm5pbmcgbG9nIGluIGtlcm5lbDoNCj4gPg0KPiA+IFsgICAgMC45OTU1MjRdIExETzE6IEJyaW5n
+aW5nIDE4MDAwMDB1ViBpbnRvIDMwMDAwMDAtMzAwMDAwMHVWDQo+ID4gWyAgICAwLjk5OTE5Nl0g
+TERPMjogQnJpbmdpbmcgODAwMDAwdVYgaW50byA5MDAwMDAtOTAwMDAwdVYNCj4gPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT4NCj4gDQo+IFlvdSBz
+aG91bGQgYWRkIGEgRml4ZXMgdGFnIGFuZCBDYyBzdGFibGUgb24gdGhpcyBvbmUuDQpPa2F5LCB3
+aWxsIGFkZHJlc3MgeW91ciBjb21tZW50cyBpbiB2MywgdGhhbmtzLg0K
