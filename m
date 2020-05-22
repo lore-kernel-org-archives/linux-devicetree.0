@@ -2,204 +2,208 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7E8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3A2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 431F9223D6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Bk/q9kC2"
+	by mail.kernel.org (Postfix) with ESMTP id 6674C233FC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 14:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbgEVObO (ORCPT
+        id S1730011AbgEVOec (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 10:31:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729399AbgEVObO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 10:31:14 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6FBAC061A0E
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 07:31:13 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id e1so10367315wrt.5
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 07:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wut4c+bPuiYy5OjbI94UBdHQ9qFX+/Iy0AUzvohHk0E=;
-        b=Bk/q9kC2opiRlf3mZ6GqbOpTzKaXhi8G0UmcOaPcarVVY51tYm1AZ3dwlD6g7RTh2t
-         yVfVonK1kMPgOsKHHYogV8ogadZTEohsnqozJlTV+hRL9MClCSdmuGyMZUBZMEY3Kylg
-         qQDUO9kDg1MrX4jXnrk/MiOGpLI6maBUqcKU4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wut4c+bPuiYy5OjbI94UBdHQ9qFX+/Iy0AUzvohHk0E=;
-        b=dQynzU6Q1+3dvvfNwbJmS62tgMc9obyF1XraZdRJw+7oKDMcaqNhIGsF4adjjL7Gey
-         z/BG7QxBNx071MzeYWxJncVyKbU3FkgZjjkL7yNAqBsm7LSWgVc96pFLl5Lwyi+CJXv+
-         0n+0l7oG1uR6QpjnMgg0JwHjKawz951T5NNf4JPfyz4uU0VdEgV69NWYdaf++4be8WOY
-         P1oKlR5n2DN3pcxIsyBNnyel5ybbUOttVHKsfgFeMAAg2i7vbhCe6vzheG9Gh+wqauVI
-         05B0PbO0wllS3rpAAkiFCUF3zgMCqi7q96a8LdMD1yewjGVa975Wa5RDod77dewQe2qj
-         Qt1g==
-X-Gm-Message-State: AOAM532Gv5rw1QRBFRttxZH4fNjQ+sDkHkUnauOsVcvXqOMo/10pUKTF
-        mBkk7s9Yy+Q01hKiKX5r3nTFlYb1djX1sUx3SDoIcg==
-X-Google-Smtp-Source: ABdhPJyDTNQNorc4YA9Ng6UYpWYZ3xL4wPN4AoNiZ22sI5HulYRwzdCv5cajnBlTutkDgHl/rclh9HiVaVJ277hG528=
-X-Received: by 2002:adf:ec03:: with SMTP id x3mr740401wrn.297.1590157872537;
- Fri, 22 May 2020 07:31:12 -0700 (PDT)
+        Fri, 22 May 2020 10:34:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:36650 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729952AbgEVOec (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 May 2020 10:34:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AEA0D6E;
+        Fri, 22 May 2020 07:34:31 -0700 (PDT)
+Received: from [10.57.2.168] (unknown [10.57.2.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26E7D3F68F;
+        Fri, 22 May 2020 07:34:29 -0700 (PDT)
+Subject: Re: [PATCH 09/12] dt-bindings: arm: fsl: Add msi-map device-tree
+ binding for fsl-mc bus
+To:     Rob Herring <robh+dt@kernel.org>,
+        Diana Craciun OSS <diana.craciun@oss.nxp.com>
+Cc:     devicetree@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linux-acpi@vger.kernel.org,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200521130008.8266-10-lorenzo.pieralisi@arm.com>
+ <CAL_Jsq+h18gH2D3B-OZku6ACCgonPUJcUnrN8a5=jApsXHdB5Q@mail.gmail.com>
+ <abca6ecb-5d93-832f-ff7c-de53bb6203f3@arm.com>
+ <ee7a5c04-814e-215f-ec74-52c2f3b881d0@oss.nxp.com>
+ <CAL_JsqKf+cq9Nhs+M8ihC-Ls24YH-WEofW8H4kkFPWMhZw=unA@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7f8d00ae-b225-a58d-8a11-e8c68edc877b@arm.com>
+Date:   Fri, 22 May 2020 15:34:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-10-james.quinlan@broadcom.com> <2aa6f276085319a5af7a96b3d7bdd0501641a7d7.camel@suse.de>
-In-Reply-To: <2aa6f276085319a5af7a96b3d7bdd0501641a7d7.camel@suse.de>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Fri, 22 May 2020 10:31:00 -0400
-Message-ID: <CA+-6iNzeVO=WpLKR7wv-7URLk2aiZbGjPdQe_o6F_gfyX03oMQ@mail.gmail.com>
-Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma offsets
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_JsqKf+cq9Nhs+M8ihC-Ls24YH-WEofW8H4kkFPWMhZw=unA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On 2020-05-22 15:08, Rob Herring wrote:
+> On Fri, May 22, 2020 at 3:57 AM Diana Craciun OSS
+> <diana.craciun@oss.nxp.com> wrote:
+>>
+>> On 5/22/2020 12:42 PM, Robin Murphy wrote:
+>>> On 2020-05-22 00:10, Rob Herring wrote:
+>>>> On Thu, May 21, 2020 at 7:00 AM Lorenzo Pieralisi
+>>>> <lorenzo.pieralisi@arm.com> wrote:
+>>>>>
+>>>>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>>>>
+>>>>> The existing bindings cannot be used to specify the relationship
+>>>>> between fsl-mc devices and GIC ITSes.
+>>>>>
+>>>>> Add a generic binding for mapping fsl-mc devices to GIC ITSes, using
+>>>>> msi-map property.
+>>>>>
+>>>>> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>> ---
+>>>>>    .../devicetree/bindings/misc/fsl,qoriq-mc.txt | 30
+>>>>> +++++++++++++++++--
+>>>>>    1 file changed, 27 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>>>>> b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>>>>> index 9134e9bcca56..b0813b2d0493 100644
+>>>>> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>>>>> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>>>>> @@ -18,9 +18,9 @@ same hardware "isolation context" and a 10-bit
+>>>>> value called an ICID
+>>>>>    the requester.
+>>>>>
+>>>>>    The generic 'iommus' property is insufficient to describe the
+>>>>> relationship
+>>>>> -between ICIDs and IOMMUs, so an iommu-map property is used to define
+>>>>> -the set of possible ICIDs under a root DPRC and how they map to
+>>>>> -an IOMMU.
+>>>>> +between ICIDs and IOMMUs, so the iommu-map and msi-map properties
+>>>>> are used
+>>>>> +to define the set of possible ICIDs under a root DPRC and how they
+>>>>> map to
+>>>>> +an IOMMU and a GIC ITS respectively.
+>>>>>
+>>>>>    For generic IOMMU bindings, see
+>>>>>    Documentation/devicetree/bindings/iommu/iommu.txt.
+>>>>> @@ -28,6 +28,9 @@ Documentation/devicetree/bindings/iommu/iommu.txt.
+>>>>>    For arm-smmu binding, see:
+>>>>>    Documentation/devicetree/bindings/iommu/arm,smmu.yaml.
+>>>>>
+>>>>> +For GICv3 and GIC ITS bindings, see:
+>>>>> +Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml.
+>>>>>
+>>>>> +
+>>>>>    Required properties:
+>>>>>
+>>>>>        - compatible
+>>>>> @@ -119,6 +122,15 @@ Optional properties:
+>>>>>      associated with the listed IOMMU, with the iommu-specifier
+>>>>>      (i - icid-base + iommu-base).
+>>>>>
+>>>>> +- msi-map: Maps an ICID to a GIC ITS and associated iommu-specifier
+>>>>> +  data.
+>>>>> +
+>>>>> +  The property is an arbitrary number of tuples of
+>>>>> +  (icid-base,iommu,iommu-base,length).
+>>>>
+>>>> I'm confused because the example has GIC ITS phandle, not an IOMMU.
+>>>>
+>>>> What is an iommu-base?
+>>>
+>>> Right, I was already halfway through writing a reply to say that all
+>>> the copy-pasted "iommu" references here should be using the
+>>> terminology from the pci-msi.txt binding instead.
+>>
+>> Right, will change it.
+>>
+>>>
+>>>>> +
+>>>>> +  Any ICID in the interval [icid-base, icid-base + length) is
+>>>>> +  associated with the listed GIC ITS, with the iommu-specifier
+>>>>> +  (i - icid-base + iommu-base).
+>>>>>    Example:
+>>>>>
+>>>>>            smmu: iommu@5000000 {
+>>>>> @@ -128,6 +140,16 @@ Example:
+>>>>>                   ...
+>>>>>            };
+>>>>>
+>>>>> +       gic: interrupt-controller@6000000 {
+>>>>> +               compatible = "arm,gic-v3";
+>>>>> +               ...
+>>>>> +               its: gic-its@6020000 {
+>>>>> +                       compatible = "arm,gic-v3-its";
+>>>>> +                       msi-controller;
+>>>>> +                       ...
+>>>>> +               };
+>>>>> +       };
+>>>>> +
+>>>>>            fsl_mc: fsl-mc@80c000000 {
+>>>>>                    compatible = "fsl,qoriq-mc";
+>>>>>                    reg = <0x00000008 0x0c000000 0 0x40>,    /* MC
+>>>>> portal base */
+>>>>> @@ -135,6 +157,8 @@ Example:
+>>>>>                    msi-parent = <&its>;
+>>>
+>>> Side note: is it right to keep msi-parent here? It rather implies that
+>>> the MC itself has a 'native' Device ID rather than an ICID, which I
+>>> believe is not strictly true. Plus it's extra-confusing that it
+>>> doesn't specify an ID either way, since that makes it look like the
+>>> legacy PCI case that gets treated implicitly as an identity msi-map,
+>>> which makes no sense at all to combine with an actual msi-map.
+>>
+>> Before adding msi-map, the fsl-mc code assumed that ICID and streamID
+>> are equal and used msi-parent just to get the reference to the ITS node.
+>> Removing msi-parent will break the backward compatibility of the already
+>> existing systems. Maybe we should mention that this is legacy and not to
+>> be used for newer device trees.
+> 
+> If ids are 1:1, then the DT should use msi-parent. If there is
+> remapping, then use msi-map. A given system should use one or the
+> other. I suppose if some ids are 1:1 and the msi-map was added to add
+> additional support for ids not 1:1, then you could end up with both.
+> That's fine in dts files, but examples should reflect the 'right' way.
 
-On Wed, May 20, 2020 at 7:28 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Hi Jim,
-> thanks for having a go at this! My two cents.
->
-> On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
-> > The device variable 'dma_pfn_offset' is used to do a single
-> > linear map between cpu addrs and dma addrs.  The variable
-> > 'dma_map' is added to struct device to point to an array
-> > of multiple offsets which is required for some devices.
-> >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > ---
->
-> [...]
->
-> > --- a/include/linux/device.h
-> > +++ b/include/linux/device.h
-> > @@ -493,6 +493,8 @@ struct dev_links_info {
-> >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-> >   *           DMA limit than the device itself supports.
-> >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-> > + * @dma_map: Like dma_pfn_offset but used when there are multiple
-> > + *           pfn offsets for multiple dma-ranges.
-> >   * @dma_parms:       A low level driver may set these to teach IOMMU code
-> > about
-> >   *           segment limitations.
-> >   * @dma_pools:       Dma pools (if dma'ble device).
-> > @@ -578,7 +580,12 @@ struct device {
-> >                                            allocations such descriptors. */
-> >       u64             bus_dma_limit;  /* upstream dma constraint */
-> >       unsigned long   dma_pfn_offset;
-> > -
-> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
-> > +     const void *dma_offset_map;     /* Like dma_pfn_offset, but for
-> > +                                      * the unlikely case of multiple
-> > +                                      * offsets. If non-null, dma_pfn_offset
-> > +                                      * will be 0. */
->
-> I get a bad feeling about separating the DMA offset handling into two distinct
-> variables. Albeit generally frowned upon, there is a fair amount of trickery
-> around dev->dma_pfn_offset all over the kernel. usb_alloc_dev() comes to mind
-> for example. And this obviously doesn't play well with it.
+Is that defined anywhere? The generic MSI binding just has some weaselly 
+wording about buses:
 
-The trickery should only be present when
-CONFIG_DMA_PFN_OFFSET_MAP=y**.  Otherwise it does no harm.  Also, I
-feel that if dev-dma_pfn_offset is valid then so is
-dev->dma_pfn_offset_map -- they both use the same mechanism in the
-same places.  I am merely
-extending something that has been in Linux for a long time..
+"When #msi-cells is non-zero, busses with an msi-parent will require 
+additional properties to describe the relationship between devices on 
+the bus and the set of MSIs they can potentially generate."
 
-Further,  I could have had dma_pfn_offset_map  subsume dma_pfn_offset
-but I wanted to leave it alone since folks would complain that it
-would go from an addition to an if-clause and an inline function.  But
-if I did go that way there would  only be one mechanism that would
-cover both cases.
+which appears at odds with its own definition of msi-parent as including 
+an msi-specifier (or at best very unclear about what value that 
+specifier should take in this case).
 
-> I feel a potential
-> solution to multiple DMA ranges should completely integrate with the current
-> device DMA handling code, without special cases, on top of that, be transparent
-> to the user.
+The PCI MSI binding goes even further and specifically reserves 
+msi-parent for cases where there is no sideband data. As far as I'm 
+aware, the fact that the ITS driver implements a bodge for the "empty 
+msi-parent even though #msi-cells > 0" case is merely a compatibility 
+thing for old DTs from before this was really thought through, not an 
+officially-specified behaviour.
 
-Having dma_pfn_offset_map subsume  dma_pfn_offset would integrate the
-current  code too.  And I am not sure what you mean by being
-"transparent to the user" -- the writer of the PCIe endpoint driver is
-going to do some DMA calls and they have no idea if this mechanism is
-in play or not.
-
->
-> In more concrete terms, I'd repackage dev->bus_dma_limit and
-> dev->dma_pfn_offset into a list/array of DMA range structures
-
-This is sort of what I am doing except I defined my own structure.
-Using the of_range structure would require one to do the same extra
-calculations over  and over for a DMA call; this is why I  defined my
-structure that has all of the needed precomputed variables.
-
-> and adapt/create
-> the relevant getter/setter functions so as for DMA users not to have to worry
-> about the specifics of a device's DMA constraints.
-
-I'm not sure I understand where these getter/setter functions would
-exist or what they would do.
-
-> editing dev->dma_pfn_offset, you'd be passing a DMA range structure to the
-> device core, and let it take the relevant decisions on how to handle it
-
-How and where would the device core operate for these getter/setters?
-In how many places in the code?  The way I see it, any solution has to
-adjust the value when doing dma2phys and phys2dma conversions, and the
-most efficient place to do that is in the two DMA header files (the
-second one is for ARM).
-
-> internally (overwrite, add a new entry, merge them, etc...).
-I'm concerned that  this would be overkill; I am just trying to get a
-driver upstream for some baroque PCIe RC HW I'm not sure if we should
-set up something elaborate when the demand is not there.
-
-I'll be posting a v2.  ChrisophH has sent me some personal feedback
-which I am incorporating; so feel free to discuss your ideas with him
-as well because I really want consensus on any large changes in
-direction.
-
-Thanks,
-Jim
-
-** CONFIG_DMA_OF_PFN_OFFSET_MAP=y only occurs when building for
-ARCH_BRCMSTB.  However, ARCH_BRCMSTB is set by the ARM64 defconfig and
-the ARM multi_v7_defconfig, so it would be activated for those
-defconfigs.  This may(a)  get us kicked out of those defconfigs  or
-(b) we may have to keep DMA_OF_PFN_OFFSET_MAP off in those defconfigs
-and only turn it on solely for Broadcom STB Linux.
-
->
-> Easier said than done. :)
->
-> Regards,
-> Nicolas
->
+Robin.
