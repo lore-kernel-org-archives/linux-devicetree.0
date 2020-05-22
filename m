@@ -2,245 +2,173 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1B1C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1560C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB37207D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85939207D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 03:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V5PttCKJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RP7bUKOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgEVDhI (ORCPT
+        id S1728019AbgEVDsu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 May 2020 23:37:08 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40760 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728244AbgEVDhH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 23:37:07 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M3asHA037541;
-        Thu, 21 May 2020 22:36:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590118614;
-        bh=trx6Kkctm11H0eDVByyXNF39VDCbxETi0m05i4cIVpQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=V5PttCKJdbGM0TN5WWQ+rNZnJNmtEDnQnFcAitrUxdZLCQMP7kEzHehf8LwabkWaS
-         3zHrvC+HhNHfOZIHJz/5MKBc3gV1OQMBoy5EWNAzc35bsSBO3JmIbeiX0d2ojYGUX/
-         aF1rlMAPv69y5LaB4UVuTBHuDEc7JpeqS/MkOr5c=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M3arTe026505
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 22:36:53 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 22:36:53 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 22:36:53 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aYc0062596;
-        Thu, 21 May 2020 22:36:50 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v5 04/14] PCI: cadence: Add support to start link and verify link status
-Date:   Fri, 22 May 2020 09:06:21 +0530
-Message-ID: <20200522033631.32574-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200522033631.32574-1-kishon@ti.com>
-References: <20200522033631.32574-1-kishon@ti.com>
+        Thu, 21 May 2020 23:48:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727836AbgEVDst (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 May 2020 23:48:49 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B116CC061A0E;
+        Thu, 21 May 2020 20:48:49 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id q129so848780iod.6;
+        Thu, 21 May 2020 20:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aIP2diEvzhm2AdN/Mxqa8HFPuNr8GL8GdM4WtK2bHt8=;
+        b=RP7bUKOja78unJmtL//FaC43ciXZEhEsCeSwFvs4nAHMrjEEGBzp9Q37CHRKKjX5uJ
+         I3OYdQjlyHOeLF1/fFBpkCrH7S6p8joOnfozfqfm0fm5KjEAI+spE0kDRf9jXaOviuWA
+         UtCICHYp+7kjypw4IWX7dw3steiHeuggnS7j1wKi9OEDrI5d2DkJ7TUZtgNMO3C2l1MG
+         aynbN33Icim2XL/IAYnCtX+z4s9TcYksL3N16IZTuYQcKPSiBOgYNaN869be+qloyvEo
+         WhUZAAue/metKXimkaOKFUTevbHCojnVwatT5zLvPxxwyW/sfCeH5JVsa0e8WOUlvIjl
+         4vUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aIP2diEvzhm2AdN/Mxqa8HFPuNr8GL8GdM4WtK2bHt8=;
+        b=tNgYCpfcbZsx3/a3tbnr+IK0QbkA1QDyrZ3rC4GJGrna58bcwv60UNmpWf2cUJ2BuL
+         22/2gS3MGBlD8aQzFKgb226hy9THBiR+MGg7Ed9eTTcBjGF3URPZDYSykf0m9m9rH0TS
+         HQr1c8BGkVivMPZgI6dvpLxfvnxN3G+YV7kSaDaTqihB/GlWMdnfaTUwO/BRSb5RiunZ
+         GTqomdS47j4h4yeLEEccRQMJB7pSI33d7UmcKQ2mrXlfe75EARTpNDXjYZ/Pa6QR9SkW
+         bCp/QOxBtHkpfB/bNDL+StwwJJdaB5CJVNnCskv48vQsyLNOXEcVMzD9IirQjxT5wxga
+         UqJQ==
+X-Gm-Message-State: AOAM530on3/zVeySYxIAIxASmp2NYvvl0gkuwESzyzOAxDjj3WVWi/At
+        1Vec0QMv83goEYyjXCdQAU6vchckSZSh6mAPRND5PcEB
+X-Google-Smtp-Source: ABdhPJx+AFKC3R/jcN/8VoSvvRx56ajr8mq3M4L+d0/fy22KFOOtVQAroBPRqS+PchdcjU/H1D+0L75bduAVSXZdr1M=
+X-Received: by 2002:a5e:9807:: with SMTP id s7mr1534629ioj.27.1590119329011;
+ Thu, 21 May 2020 20:48:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
+ <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
+ <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
+ <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
+ <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com>
+ <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com>
+ <CABb+yY1gXxpU=q9xKf14uZtJz51kLJ-k2EeWsjnFRyBzR5bmgA@mail.gmail.com>
+ <CADBw62oFDrruSq+Rm=hXHZYn0qDrr47cNK4Wj0_A-jG1dOT+kw@mail.gmail.com> <CADBw62rZuhaeSEppy+AhSkv1uNgaj9qrHFf7pz9nwKm8q3OrTA@mail.gmail.com>
+In-Reply-To: <CADBw62rZuhaeSEppy+AhSkv1uNgaj9qrHFf7pz9nwKm8q3OrTA@mail.gmail.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Thu, 21 May 2020 22:48:37 -0500
+Message-ID: <CABb+yY244ZCOk5kDtOR0oEYajwUVbXoSZdNiid__UuYbU=yB-Q@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add cdns_pcie_ops to start link and verify link status. The registers
-to start link and to check link status is in Platform specific PCIe
-wrapper. Add support for platform specific drivers to add callback
-functions for the PCIe Cadence core to start link and verify link status.
+On Thu, May 21, 2020 at 7:24 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> Hi Jassi,
+>
+> On Wed, May 13, 2020 at 2:32 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> >
+> > On Wed, May 13, 2020 at 2:05 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> > >
+> > > On Tue, May 12, 2020 at 11:14 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > >
+> > > > Hi Jassi,
+> > > >
+> > > > On Thu, May 7, 2020 at 11:23 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > >
+> > > > > Hi Jassi,
+> > > > >
+> > > > > On Thu, May 7, 2020 at 7:25 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> > > > > >
+> > > > > > On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > > > >
+> > > > > > > Hi Jassi,
+> > > > > > >
+> > > > > > > On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > From: Baolin Wang <baolin.wang@unisoc.com>
+> > > > > > > >
+> > > > > > > > The Spreadtrum mailbox controller supports 8 channels to communicate
+> > > > > > > > with MCUs, and it contains 2 different parts: inbox and outbox, which
+> > > > > > > > are used to send and receive messages by IRQ mode.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> > > > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > > > > > > ---
+> > > > > > > > Changes from v3:
+> > > > > > > >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
+> > > > > > > >
+> > > > > > > > Changes from v2:
+> > > > > > > >  - None.
+> > > > > > > >
+> > > > > > > > Changes from v1:
+> > > > > > > >  - None
+> > > > > > >
+> > > > > > > Gentle ping, do you have any other comments? Thanks.
+> > > > > > >
+> > > > > > Yea, I am still not sure about the error returned in send_data().  It
+> > > > > > will either never hit or there will be no easy recovery from it. The
+> > > > > > api expects the driver to tell it the last-tx was done only when it
+> > > > > > can send the next message. (There may be case like sending depend on
+> > > > > > remote, which can't be ensured before hand).
+> > > > >
+> > > > > Actually this is an unusual case, suppose the remote target did not
+> > > > > fetch the message as soon as possile, which will cause the FIFO
+> > > > > overflow, so in this case we  can not send messages to the remote
+> > > > > target any more, otherwise messages will be lost. Thus we can return
+> > > > > errors to users to indicate that something wrong with the remote
+> > > > > target need to be checked.
+> > > > >
+> > > > > So this validation in send_data() is mostly for debugging for this
+> > > > > abnormal case and we will not trigger this issue if the remote target
+> > > > > works well. So I think it is useful to keep this validation in
+> > > > > send_data(). Thanks.
+> > > >
+> > > > Any comments? Thanks.
+> > > >
+> > > Same as my last post.
+> >
+> > I think I've explained the reason why we need add this validation in
+> > my previous email, I am not sure how do you think? You still want to
+> > remove this validation?
+>
+> Gentle ping.
+>
+> As I explained in previous email, this validation is for an unusual
+> case, suppose the remote target did not fetch the message as soon as
+> possile, which will cause the FIFO overflow, so in this case we  can
+> not send messages to the remote
+> target any more, otherwise messages will be lost. Thus we can return
+> errors to users to indicate that something wrong with the remote
+> target need to be checked.
+>
+> So this validation in send_data() is mostly for debugging for this
+> abnormal case and we will not trigger this issue if the remote target
+> works well. So I think it is useful to keep this validation in
+> send_data(). What do you think? Thanks.
+>
+I still think the same as before.
+You should do this check before you call mbox_chan_txdone() and wait
+if busy ... which is exactly the purpose of txdone().
+It seems harmless to be paranoid and place a block of code in
+practically "if 0", but that sets bad precedence for other drivers. So
+please move the check before txdone().
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../pci/controller/cadence/pcie-cadence-ep.c  |  8 ++++
- .../controller/cadence/pcie-cadence-host.c    | 28 ++++++++++++++
- drivers/pci/controller/cadence/pcie-cadence.h | 37 ++++++++++++++++++-
- 3 files changed, 72 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 1fdae37843ef..14021d760482 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -354,8 +354,10 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
- {
- 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct cdns_pcie *pcie = &ep->pcie;
-+	struct device *dev = pcie->dev;
- 	struct pci_epf *epf;
- 	u32 cfg;
-+	int ret;
- 
- 	/*
- 	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
-@@ -366,6 +368,12 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
- 		cfg |= BIT(epf->func_no);
- 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
- 
-+	ret = cdns_pcie_start_link(pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to start link\n");
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 8e73a680b567..93a9414932a9 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -3,6 +3,7 @@
- // Cadence PCIe host controller driver.
- // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
- 
-+#include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
-@@ -422,6 +423,23 @@ static int cdns_pcie_host_init(struct device *dev,
- 	return err;
- }
- 
-+static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	int retries;
-+
-+	/* Check if the link is up or not */
-+	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-+		if (cdns_pcie_link_up(pcie)) {
-+			dev_info(dev, "Link up\n");
-+			return 0;
-+		}
-+		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-+	}
-+
-+	return -ETIMEDOUT;
-+}
-+
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- {
- 	struct device *dev = rc->pcie.dev;
-@@ -470,6 +488,16 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 
- 	pcie->mem_res = res;
- 
-+	ret = cdns_pcie_start_link(pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to start link\n");
-+		return ret;
-+	}
-+
-+	ret = cdns_pcie_host_wait_for_link(pcie);
-+	if (ret)
-+		dev_dbg(dev, "PCIe link never came up\n");
-+
- 	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
- 		rc->avail_ib_bar[bar] = true;
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 737e9561092b..c013e629e9fa 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -10,6 +10,11 @@
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
- 
-+/* Parameters for the waiting for link up routine */
-+#define LINK_WAIT_MAX_RETRIES	10
-+#define LINK_WAIT_USLEEP_MIN	90000
-+#define LINK_WAIT_USLEEP_MAX	100000
-+
- /*
-  * Local Management Registers
-  */
-@@ -245,12 +250,20 @@ enum cdns_pcie_msg_routing {
- 	MSG_ROUTING_GATHER,
- };
- 
-+struct cdns_pcie_ops {
-+	int	(*start_link)(struct cdns_pcie *pcie);
-+	void	(*stop_link)(struct cdns_pcie *pcie);
-+	bool	(*link_up)(struct cdns_pcie *pcie);
-+};
-+
- /**
-  * struct cdns_pcie - private data for Cadence PCIe controller drivers
-  * @reg_base: IO mapped register base
-  * @mem_res: start/end offsets in the physical system memory to map PCI accesses
-  * @is_rc: tell whether the PCIe controller mode is Root Complex or Endpoint.
-  * @bus: In Root Complex mode, the bus number
-+ * @ops: Platform specific ops to control various inputs from Cadence PCIe
-+ *       wrapper
-  */
- struct cdns_pcie {
- 	void __iomem		*reg_base;
-@@ -261,7 +274,7 @@ struct cdns_pcie {
- 	int			phy_count;
- 	struct phy		**phy;
- 	struct device_link	**link;
--	const struct cdns_pcie_common_ops *ops;
-+	const struct cdns_pcie_ops *ops;
- };
- 
- /**
-@@ -421,6 +434,28 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
- 	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
- }
- 
-+static inline int cdns_pcie_start_link(struct cdns_pcie *pcie)
-+{
-+	if (pcie->ops->start_link)
-+		return pcie->ops->start_link(pcie);
-+
-+	return 0;
-+}
-+
-+static inline void cdns_pcie_stop_link(struct cdns_pcie *pcie)
-+{
-+	if (pcie->ops->stop_link)
-+		pcie->ops->stop_link(pcie);
-+}
-+
-+static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
-+{
-+	if (pcie->ops->link_up)
-+		return pcie->ops->link_up(pcie);
-+
-+	return true;
-+}
-+
- #ifdef CONFIG_PCIE_CADENCE_HOST
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
- #else
--- 
-2.17.1
-
+thanks.
