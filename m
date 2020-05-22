@@ -2,86 +2,117 @@ Return-Path: <SRS0=I+Xt=7E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEFBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFC9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65B8920814
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C1B2073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 May 2020 07:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s2XwS2bD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgEVHbH (ORCPT
+        id S1728583AbgEVHh2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 03:31:07 -0400
-Received: from elvis.franken.de ([193.175.24.41]:34138 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbgEVHbF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 May 2020 03:31:05 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jc28y-0003HE-00; Fri, 22 May 2020 09:31:00 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 4401BC015D; Fri, 22 May 2020 09:30:14 +0200 (CEST)
-Date:   Fri, 22 May 2020 09:30:14 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 13/13] mips: cevt-r4k: Update the r4k-clockevent
- frequency in sync with CPU
-Message-ID: <20200522073014.GI7331@alpha.franken.de>
-References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
- <20200521140725.29571-14-Sergey.Semin@baikalelectronics.ru>
+        Fri, 22 May 2020 03:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbgEVHh2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 03:37:28 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5AFC05BD43
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 00:37:26 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u12so4077524wmd.3
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 00:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=FxhyYotOdsb3Prsxlw/PCmLh9cDfCT3MjS19m7K8Q5o=;
+        b=s2XwS2bDg3iy2QFTSYYUp2zSt1XfNkCltyHI70cuooryTjTrmQxbyoYtC7EKyK4J/A
+         CMELJ8ZUfGTSxOg6AYlN57glArOF+Ly3LjBs501uqsGcZR+l5Ibxqj5DBoVL8XlApo+b
+         atG2eMn0WIvN4x1PzdTxcIHXw7mmI8zyZgEqdH4lRMCpbTWYzhSglv9A05yWl0+Rvm4o
+         a1TeQChSuAktfp1bMBydXDruT0T7jEQlllRF0IEpKC1x+j4OCj2MCcDtMbvOQOrfVMww
+         V3l5bx0/GQmy7oWXfKlljrEXIicKaJzqGjj0q/1VOv2DQAj2EGtyTx5RDElE8IrTsPbQ
+         hSlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=FxhyYotOdsb3Prsxlw/PCmLh9cDfCT3MjS19m7K8Q5o=;
+        b=AcWLA+l42RH/FDY4eH79WoTTK0XXsGkmZcGHsjzYWhw0Mga0SGi8YQYpNh5YkzZcwl
+         Cg0gaIFkoo1K29YG+rJ0CTrxkXHciB61evhh+A6i6qGxeOfOoC/OWoDaCYm4lPFSMUxd
+         2mUbPqmkZJYlzBvs3wX7hAjKMiDP8E85qaFVEOPvnnitd/Ves0QxTuYd1pdYsSGCJVW/
+         u3Eca3OzIIZVwmRtsewiMAHyav9aHwzyRAZGF+e4yJMWmkdeJg+mbQlAqHvWiaH9SaLu
+         IX3J1ccUqEUQ2MhizlBBwC/KcgbCmr3FPrUK2/Prjz0I2uOowCirWChMOFzbF9nnmeA1
+         Y6eg==
+X-Gm-Message-State: AOAM532vCimELtk3Ydo2YpvpPipTYjRwrIcPONmW7jOMPXPokjEIfijr
+        vdCUMR192EfSN9gmSJnGntPFmD/VIAc=
+X-Google-Smtp-Source: ABdhPJxs2hJYnfDm6N4+o9/p+SF/UJ8IDcPxC+ZnYoNz7e9Bj+uhDyIZoQpHZd769I0Jckb0UavO0Q==
+X-Received: by 2002:a1c:6042:: with SMTP id u63mr12028802wmb.65.1590133045474;
+        Fri, 22 May 2020 00:37:25 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id l19sm9221775wmj.14.2020.05.22.00.37.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 00:37:24 -0700 (PDT)
+Date:   Fri, 22 May 2020 08:37:22 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     matthias.bgg@kernel.org, Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: mfd: mediatek: Add MT6397 Pin Controller
+Message-ID: <20200522073722.GP271301@dell>
+References: <20200110145952.9720-1-matthias.bgg@kernel.org>
+ <20200115151938.GA8182@bogus>
+ <ce3747e5-41db-a168-0602-37337d8530f2@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200521140725.29571-14-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ce3747e5-41db-a168-0602-37337d8530f2@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 05:07:24PM +0300, Serge Semin wrote:
-> Due to being embedded into the CPU cores MIPS count/compare timer
-> frequency is changed together with the CPU clocks alteration.
-> In case if frequency really changes the kernel clockevent framework
-> must be notified, otherwise the kernel timers won't work correctly.
-> Fix this by calling clockevents_update_freq() for each r4k clockevent
-> handlers registered per available CPUs.
-> 
-> Traditionally MIPS r4k-clock are clocked with CPU frequency divided by 2.
-> But this isn't true for some of the platforms. Due to this we have to save
-> the basic CPU frequency, so then use it to scale the initial timer
-> frequency (mips_hpt_frequency) and pass the updated value further to the
-> clockevent framework.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  arch/mips/kernel/cevt-r4k.c | 44 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+On Thu, 21 May 2020, Matthias Brugger wrote:
 
-applied to mips-next.
+> Hi Lee,
+> 
+> On 15/01/2020 16:19, Rob Herring wrote:
+> > On Fri, 10 Jan 2020 15:59:51 +0100, matthias.bgg@kernel.org wrote:
+> >> From: Matthias Brugger <matthias.bgg@gmail.com>
+> >>
+> >> The MT6397 mfd includes a pin controller. Add binding
+> >> a description for it.
+> >>
+> >> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> >>
+> >> ---
+> >>
+> >>  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> > 
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > 
+> 
+> It looks like this fall through the cracks.
+> Would you consider to queue it or do you have further comments?
 
-Thomas.
+There is a current issue where Rob and I are both taking patches.
+Sometimes we both assume the other will take the patch.
+
+Apologies.
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
