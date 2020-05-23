@@ -2,175 +2,105 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9106C433E5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 08:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E6BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 09:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F2A207FB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 08:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB8A2071C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 09:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JOhZbqyf"
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="lgkXbzQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387695AbgEWIm5 (ORCPT
+        id S1725844AbgEWJzp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 04:42:57 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27179 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387471AbgEWIm4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 04:42:56 -0400
-X-UUID: ce6228006e6a4768bb6a0c14211c1a7d-20200523
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PhvFl3sBrDh5Chha4oDdTr7pxio4/UPPIepJuQ+yry4=;
-        b=JOhZbqyfzzcOXpGCaU+ODJkR1ptCKdNHrqMQrmH9/yDhoB0LuK0gEwYZby02Nt4iBlLOVXu9T7+eAUYiD925aeq8NOeOIyfmFujOnlxY0Xh37tfjpaBZnwhI6nr9mLZsNCBPo/DEoQ8Mmq4cBh7ADfKC5ASJQVpxOVn1b1czCmQ=;
-X-UUID: ce6228006e6a4768bb6a0c14211c1a7d-20200523
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 374822989; Sat, 23 May 2020 16:42:46 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 23 May 2020 16:42:44 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 23 May 2020 16:42:42 +0800
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
-        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
-        <bingbu.cao@intel.com>
-CC:     <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>,
-        <dongchun.zhu@mediatek.com>
-Subject: [V9, 1/2] media: dt-bindings: media: i2c: Document OV02A10 bindings
-Date:   Sat, 23 May 2020 16:41:02 +0800
-Message-ID: <20200523084103.31276-2-dongchun.zhu@mediatek.com>
-X-Mailer: git-send-email 2.9.2
-In-Reply-To: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
-References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
+        Sat, 23 May 2020 05:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbgEWJzo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 05:55:44 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF64DC061A0E
+        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 02:55:42 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q2so15556561ljm.10
+        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 02:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flowbird.group; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CMclQJeEjaTGzozjvCY7w7Tg3uKCjCaOAOe9Qm2vLDY=;
+        b=lgkXbzQaxZ3ZdUqaKD/Vk8++aL4V1xQFTCGOMMlMS2FwW/36sWQqk2y3t+S+XOpMKp
+         7r1yk9sbFiX+ulpxmh9DHFT5Pneh83/ip4//P9XuXtjMGRrDQHSCl5yQkVKtyJETvZtc
+         ZQTl2rX9KncufYqrd9gMLzSRR986GZ2TN8LshEnx8DUVP5XP2DfT64ZqAxmzwqgH7SkK
+         XCNpFncBj8GW+ardlqcljq3zWqd4Os26P8ApyLAxXFOk2OjJBSXP57EkIhhGOKNm4moz
+         cfOo1QTQ9RslEQmBxNG9B4XsKYMxPgfITMSU0erivsNpMHquKv4CFLRJGyQHpcKt+cAu
+         CB6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CMclQJeEjaTGzozjvCY7w7Tg3uKCjCaOAOe9Qm2vLDY=;
+        b=bw5oHzUtw8qqsbWljCgSBu6Rnn6VzbmWiCsz46PSDIFFYLoPseZQtQdKMQ6dbv6//C
+         DEm0WK1sRxiz8ludnpW8r6DbYjK6qsYM8Vu/TcYuQ+sUbPuVVju0V1YEH3C4MJ6YuVAF
+         gBtc9wjT7RNLOTVcOI7l9HthZNrIShA0lnvDJ7Jo0dO7F0KkeLYJF57o7Lo6SzCWY4fT
+         m+8KnVNIzErj45dq3jxxBI+LSPgdx1OvY4UthyfxVt2di4fA6e008Gt4UNq7y91sGxRU
+         f1T+QiAVAK6P3dkcu4R9nZzVMt2fm+MEjdutgpVf2T28Yoz0RuEkf0wwqaogezt6zIw6
+         49lQ==
+X-Gm-Message-State: AOAM533JJr8eKrHPZnzdMaNWjwdtVODK0mTochSJTlAKDaxE9IZ3C4uc
+        i8qofmYE7iLbt8mdxgkFF9WTymvtektY4NKDAqe5vQ==
+X-Google-Smtp-Source: ABdhPJyWikAx3DmkIWIlzihQD50fVK6Jep9CtCjCkA+74uSibZApHsJ7HrlPDX3OHQ52a4Ly48BqBKXpN5ihKWU+NV0=
+X-Received: by 2002:a2e:6c08:: with SMTP id h8mr7901816ljc.375.1590227741126;
+ Sat, 23 May 2020 02:55:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1589963516-26703-1-git-send-email-fugang.duan@nxp.com> <1589963516-26703-2-git-send-email-fugang.duan@nxp.com>
+In-Reply-To: <1589963516-26703-2-git-send-email-fugang.duan@nxp.com>
+From:   "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
+Date:   Sat, 23 May 2020 11:55:30 +0200
+Message-ID: <CANh8QzxuHAu+L0swPC5V4Oca21Z5zpiULTm22VPShX_T-JVznQ@mail.gmail.com>
+Subject: Re: [PATCH net 1/4] net: ethernet: fec: move GPR register offset and
+ bit into DT
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24gZm9yIE9tbml2aXNpb24gT1YwMkExMCBpbWFn
-ZSBzZW5zb3IuDQoNClNpZ25lZC1vZmYtYnk6IERvbmdjaHVuIFpodSA8ZG9uZ2NodW4uemh1QG1l
-ZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9iaW5kaW5ncy9tZWRpYS9pMmMvb3Z0aSxvdjAyYTEwLnlh
-bWwgICAgICAgICAgIHwgMTcyICsrKysrKysrKysrKysrKysrKysrKw0KIE1BSU5UQUlORVJTICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsNCiAyIGZpbGVzIGNo
-YW5nZWQsIDE3OSBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Z0aSxvdjAyYTEwLnlhbWwNCg0KZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Z0
-aSxvdjAyYTEwLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEv
-aTJjL292dGksb3YwMmExMC55YW1sDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAw
-MC4uNTZmMzFiNQ0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21lZGlhL2kyYy9vdnRpLG92MDJhMTAueWFtbA0KQEAgLTAsMCArMSwxNzIgQEAN
-CisjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBCU0QtMi1DbGF1c2UpDQor
-IyBDb3B5cmlnaHQgKGMpIDIwMjAgTWVkaWFUZWsgSW5jLg0KKyVZQU1MIDEuMg0KKy0tLQ0KKyRp
-ZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbWVkaWEvaTJjL292dGksb3YwMmExMC55
-YW1sIw0KKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55
-YW1sIw0KKw0KK3RpdGxlOiBPbW5pdmlzaW9uIE9WMDJBMTAgQ01PUyBTZW5zb3IgRGV2aWNlIFRy
-ZWUgQmluZGluZ3MNCisNCittYWludGFpbmVyczoNCisgIC0gRG9uZ2NodW4gWmh1IDxkb25nY2h1
-bi56aHVAbWVkaWF0ZWsuY29tPg0KKw0KK2Rlc2NyaXB0aW9uOiB8LQ0KKyAgVGhlIE9tbml2aXNp
-b24gT1YwMkExMCBpcyBhIGxvdy1jb3N0LCBoaWdoIHBlcmZvcm1hbmNlLCAxLzUtaW5jaCwgMiBt
-ZWdhcGl4ZWwNCisgIGltYWdlIHNlbnNvciwgd2hpY2ggaXMgdGhlIGxhdGVzdCBwcm9kdWN0aW9u
-IGRlcml2ZWQgZnJvbSBPbW5pdmlzaW9uJ3MgQ01PUw0KKyAgaW1hZ2Ugc2Vuc29yIHRlY2hub2xv
-Z3kuIEloaXMgY2hpcCBzdXBwb3J0cyBoaWdoIGZyYW1lIHJhdGUgc3BlZWRzIHVwIHRvIDMwZnBz
-DQorICBAIDE2MDB4MTIwMCAoVVhHQSkgcmVzb2x1dGlvbiB0cmFuc2ZlcnJlZCBvdmVyIGEgMS1s
-YW5lIE1JUEkgaW50ZXJmYWNlLiBUaGUNCisgIHNlbnNvciBvdXRwdXQgaXMgYXZhaWxhYmxlIHZp
-YSBDU0ktMiBzZXJpYWwgZGF0YSBvdXRwdXQuDQorDQorcHJvcGVydGllczoNCisgIGNvbXBhdGli
-bGU6DQorICAgIGNvbnN0OiBvdnRpLG92MDJhMTANCisNCisgIHJlZzoNCisgICAgbWF4SXRlbXM6
-IDENCisNCisgIGNsb2NrczoNCisgICAgaXRlbXM6DQorICAgICAgLSBkZXNjcmlwdGlvbjogdG9w
-IG11eCBjYW10ZyBjbG9jaw0KKyAgICAgIC0gZGVzY3JpcHRpb246IGRpdmlkZXIgY2xvY2sNCisN
-CisgIGNsb2NrLW5hbWVzOg0KKyAgICBpdGVtczoNCisgICAgICAtIGNvbnN0OiBlY2xrDQorICAg
-ICAgLSBjb25zdDogZnJlcV9tdXgNCisNCisgIGNsb2NrLWZyZXF1ZW5jeToNCisgICAgZGVzY3Jp
-cHRpb246DQorICAgICAgRnJlcXVlbmN5IG9mIHRoZSBlY2xrIGNsb2NrIGluIEhlcnR6Lg0KKw0K
-KyAgZG92ZGQtc3VwcGx5Og0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICBEZWZpbml0aW9uIG9m
-IHRoZSByZWd1bGF0b3IgdXNlZCBhcyBEaWdpdGFsIEkvTyB2b2x0YWdlIHN1cHBseS4NCisNCisg
-IGF2ZGQtc3VwcGx5Og0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICBEZWZpbml0aW9uIG9mIHRo
-ZSByZWd1bGF0b3IgdXNlZCBhcyBBbmFsb2cgdm9sdGFnZSBzdXBwbHkuDQorDQorICBkdmRkLXN1
-cHBseToNCisgICAgZGVzY3JpcHRpb246DQorICAgICAgRGVmaW5pdGlvbiBvZiB0aGUgcmVndWxh
-dG9yIHVzZWQgYXMgRGlnaXRhbCBjb3JlIHZvbHRhZ2Ugc3VwcGx5Lg0KKw0KKyAgcG93ZXJkb3du
-LWdwaW9zOg0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICBNdXN0IGJlIHRoZSBkZXZpY2UgdHJl
-ZSBpZGVudGlmaWVyIG9mIHRoZSBHUElPIGNvbm5lY3RlZCB0byB0aGUNCisgICAgICBQRF9QQUQg
-cGluLiBUaGlzIHBpbiBpcyB1c2VkIHRvIHBsYWNlIHRoZSBPVjAyQTEwIGludG8gU3RhbmRieSBt
-b2RlDQorICAgICAgb3IgU2h1dGRvd24gbW9kZS4gQXMgdGhlIGxpbmUgaXMgYWN0aXZlIGxvdywg
-aXQgc2hvdWxkIGJlDQorICAgICAgbWFya2VkIEdQSU9fQUNUSVZFX0xPVy4NCisNCisgIHJlc2V0
-LWdwaW9zOg0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICBNdXN0IGJlIHRoZSBkZXZpY2UgdHJl
-ZSBpZGVudGlmaWVyIG9mIHRoZSBHUElPIGNvbm5lY3RlZCB0byB0aGUNCisgICAgICBSU1RfUEQg
-cGluLiBJZiBzcGVjaWZpZWQsIGl0IHdpbGwgYmUgYXNzZXJ0ZWQgZHVyaW5nIGRyaXZlciBwcm9i
-ZS4NCisgICAgICBBcyB0aGUgbGluZSBpcyBhY3RpdmUgaGlnaCwgaXQgc2hvdWxkIGJlIG1hcmtl
-ZCBHUElPX0FDVElWRV9ISUdILg0KKw0KKyAgcm90YXRpb246DQorICAgIGRlc2NyaXB0aW9uOg0K
-KyAgICAgIERlZmluaXRpb24gb2YgdGhlIHNlbnNvcidzIHBsYWNlbWVudC4NCisgICAgYWxsT2Y6
-DQorICAgICAgLSAkcmVmOiAiL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMy
-Ig0KKyAgICAgIC0gZW51bToNCisgICAgICAgICAgLSAwICAgICMgU2Vuc29yIE1vdW50ZWQgVXBy
-aWdodA0KKyAgICAgICAgICAtIDE4MCAgIyBTZW5zb3IgTW91bnRlZCBVcHNpZGUgRG93bg0KKyAg
-ICAgICAgZGVmYXVsdDogMA0KKw0KKyAgb3Z0aSxtaXBpLXR4LXNwZWVkOg0KKyAgICBkZXNjcmlw
-dGlvbjoNCisgICAgICBJbmRpY2F0aW9uIG9mIE1JUEkgdHJhbnNtaXNzaW9uIHNwZWVkIHNlbGVj
-dCwgd2hpY2ggaXMgdG8gY29udHJvbCBELVBIWQ0KKyAgICAgIHRpbWluZyBzZXR0aW5nIGJ5IGFk
-anVzdGluZyBNSVBJIGNsb2NrIHZvbHRhZ2UgdG8gaW1wcm92ZSB0aGUgY2xvY2sNCisgICAgICBk
-cml2ZXIgY2FwYWJpbGl0eS4NCisgICAgYWxsT2Y6DQorICAgICAgLSAkcmVmOiAiL3NjaGVtYXMv
-dHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyIg0KKyAgICAgIC0gZW51bToNCisgICAgICAg
-ICAgLSAwICAgICMgIDIwTUh6IC0gIDMwTUh6DQorICAgICAgICAgIC0gMSAgICAjICAzME1IeiAt
-ICA1ME1Ieg0KKyAgICAgICAgICAtIDIgICAgIyAgNTBNSHogLSAgNzVNSHoNCisgICAgICAgICAg
-LSAzICAgICMgIDc1TUh6IC0gMTAwTUh6DQorICAgICAgICAgIC0gNCAgICAjIDEwME1IeiAtIDEz
-ME1Ieg0KKyAgICAgICAgZGVmYXVsdDogMw0KKw0KKyAgIyBTZWUgLi4vdmlkZW8taW50ZXJmYWNl
-cy50eHQgZm9yIGRldGFpbHMNCisgIHBvcnQ6DQorICAgIHR5cGU6IG9iamVjdA0KKyAgICBhZGRp
-dGlvbmFsUHJvcGVydGllczogZmFsc2UNCisNCisgICAgcHJvcGVydGllczoNCisgICAgICBlbmRw
-b2ludDoNCisgICAgICAgIHR5cGU6IG9iamVjdA0KKyAgICAgICAgYWRkaXRpb25hbFByb3BlcnRp
-ZXM6IGZhbHNlDQorDQorICAgICAgICBwcm9wZXJ0aWVzOg0KKyAgICAgICAgICBkYXRhLWxhbmVz
-Og0KKyAgICAgICAgICAgIG1heEl0ZW1zOiAxDQorDQorICAgICAgICAgIGxpbmstZnJlcXVlbmNp
-ZXM6IHRydWUNCisgICAgICAgICAgcmVtb3RlLWVuZHBvaW50OiB0cnVlDQorDQorICAgICAgICBy
-ZXF1aXJlZDoNCisgICAgICAgICAgLSBkYXRhLWxhbmVzDQorICAgICAgICAgIC0gbGluay1mcmVx
-dWVuY2llcw0KKyAgICAgICAgICAtIHJlbW90ZS1lbmRwb2ludA0KKw0KKyAgICByZXF1aXJlZDoN
-CisgICAgICAtIGVuZHBvaW50DQorDQorcmVxdWlyZWQ6DQorICAtIGNvbXBhdGlibGUNCisgIC0g
-cmVnDQorICAtIGNsb2Nrcw0KKyAgLSBjbG9jay1uYW1lcw0KKyAgLSBjbG9jay1mcmVxdWVuY3kN
-CisgIC0gZG92ZGQtc3VwcGx5DQorICAtIGF2ZGQtc3VwcGx5DQorICAtIGR2ZGQtc3VwcGx5DQor
-ICAtIHBvd2VyZG93bi1ncGlvcw0KKyAgLSByZXNldC1ncGlvcw0KKyAgLSBwb3J0DQorDQorYWRk
-aXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQorDQorZXhhbXBsZXM6DQorICAtIHwNCisNCisgICAg
-I2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL210ODE4My1jbGsuaD4NCisgICAgI2luY2x1ZGUg
-PGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPg0KKw0KKyAgICBpMmMgew0KKyAgICAgICAgI2FkZHJl
-c3MtY2VsbHMgPSA8MT47DQorICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCisNCisgICAgICAg
-IG92MDJhMTA6IGNhbWVyYS1zZW5zb3JAM2Qgew0KKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
-b3Z0aSxvdjAyYTEwIjsNCisgICAgICAgICAgICByZWcgPSA8MHgzZD47DQorICAgICAgICAgICAg
-cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCisgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JmNs
-a18yNG1fY2FtPjsNCisNCisgICAgICAgICAgICBjbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1Bf
-TVVYX0NBTVRHPiwNCisgICAgICAgICAgICAgICAgICAgICA8JnRvcGNrZ2VuIENMS19UT1BfVU5J
-VlBfMTkyTV9EOD47DQorICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiZWNsayIsICJmcmVxX211
-eCI7DQorICAgICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDI0MDAwMDAwPjsNCisNCisgICAg
-ICAgICAgICByb3RhdGlvbiA9IDwxODA+Ow0KKyAgICAgICAgICAgIG92dGksbWlwaS10eC1zcGVl
-ZCA9IDw0PjsNCisNCisgICAgICAgICAgICBkb3ZkZC1zdXBwbHkgPSA8Jm10NjM1OF92Y2FtaW9f
-cmVnPjsNCisgICAgICAgICAgICBhdmRkLXN1cHBseSA9IDwmbXQ2MzU4X3ZjYW1hMV9yZWc+Ow0K
-KyAgICAgICAgICAgIGR2ZGQtc3VwcGx5ID0gPCZtdDYzNThfdmNuMThfcmVnPjsNCisNCisgICAg
-ICAgICAgICBwb3dlcmRvd24tZ3Bpb3MgPSA8JnBpbyAxMDcgR1BJT19BQ1RJVkVfTE9XPjsNCisg
-ICAgICAgICAgICByZXNldC1ncGlvcyA9IDwmcGlvIDEwOSBHUElPX0FDVElWRV9ISUdIPjsNCisN
-CisgICAgICAgICAgICBwb3J0IHsNCisgICAgICAgICAgICAgICAgd2NhbV9vdXQ6IGVuZHBvaW50
-IHsNCisgICAgICAgICAgICAgICAgICAgIGRhdGEtbGFuZXMgPSA8MT47DQorICAgICAgICAgICAg
-ICAgICAgICBsaW5rLWZyZXF1ZW5jaWVzID0gL2JpdHMvIDY0IDwzOTAwMDAwMDA+Ow0KKyAgICAg
-ICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZtaXBpX2luX3djYW0+Ow0KKyAgICAg
-ICAgICAgICAgICB9Ow0KKyAgICAgICAgICAgIH07DQorICAgICAgICB9Ow0KKyAgICB9Ow0KKw0K
-Ky4uLg0KZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMNCmluZGV4IGU2NGU1
-ZGIuLjYzYTIzMzUgMTAwNjQ0DQotLS0gYS9NQUlOVEFJTkVSUw0KKysrIGIvTUFJTlRBSU5FUlMN
-CkBAIC0xMjM4OSw2ICsxMjM4OSwxMyBAQCBNOglIYXJhbGQgV2VsdGUgPGxhZm9yZ2VAZ251bW9u
-a3Mub3JnPg0KIFM6CU1haW50YWluZWQNCiBGOglkcml2ZXJzL2NoYXIvcGNtY2lhL2NtNDA0MF9j
-cy4qDQogDQorT01OSVZJU0lPTiBPVjAyQTEwIFNFTlNPUiBEUklWRVINCitNOglEb25nY2h1biBa
-aHUgPGRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20+DQorTDoJbGludXgtbWVkaWFAdmdlci5rZXJu
-ZWwub3JnDQorUzoJTWFpbnRhaW5lZA0KK1Q6CWdpdCBnaXQ6Ly9saW51eHR2Lm9yZy9tZWRpYV90
-cmVlLmdpdA0KK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMv
-b3Z0aSxvdjAyYTEwLnlhbWwNCisNCiBPTU5JVklTSU9OIE9WMTM4NTggU0VOU09SIERSSVZFUg0K
-IE06CVNha2FyaSBBaWx1cyA8c2FrYXJpLmFpbHVzQGxpbnV4LmludGVsLmNvbT4NCiBMOglsaW51
-eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcNCi0tIA0KMi45LjINCg==
+Hi Andy,
 
+> Fixes: da722186f654(net: fec: set GPR bit on suspend by DT configuration)
+
+Just a nitpick maybe but I don't really think this need as Fixes: tag.
+That commit didn't actually *break* anything AFAIK.
+It added WoL support for *some* SoCs that didn't have any in mainline
+and didn't hurt the others.
+Of course it turned out to be insufficient for the multiple FEC case
+so this patch series is a welcome improvement.
+
+
+>  struct fec_devinfo {
+>         u32 quirks;
+> -       u8 stop_gpr_reg;
+> -       u8 stop_gpr_bit;
+>  };
+
+This structure has become redundant now that it only contains a single
+u32 quirks field.
+So we *could* go back to storing the quirks bitmask directly in
+.driver_data as was done before.
+
+It's a slight wastage to keep the, now unnecessary, indirection,
+though the size impact is small
+and it's only used at probe() time not on a hot path.
+
+But switching back could be seen as code churn too...
+
+I don't have a strong opinion on this, so just noting it to see what
+others think.
+
+Martin
