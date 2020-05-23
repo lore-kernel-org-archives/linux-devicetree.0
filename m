@@ -2,81 +2,110 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B261EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 12:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2AAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98218207FB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 12:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99170207F9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:12:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Vwf8oR+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731337AbgEWM1b (ORCPT
+        id S1731327AbgEWNMN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 08:27:31 -0400
-Received: from mail.bugwerft.de ([46.23.86.59]:51568 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731291AbgEWM1a (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 23 May 2020 08:27:30 -0400
-Received: from [192.168.178.106] (pd95eff8e.dip0.t-ipconnect.de [217.94.255.142])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id A3325420697;
-        Sat, 23 May 2020 12:24:28 +0000 (UTC)
-Subject: Re: [PATCH v3 0/6] sc16is7xx: IrDA mode and threaded IRQs
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        robh+dt@kernel.org, jslaby@suse.com, jringle@gridpoint.com,
-        m.brock@vanmierlo.com, pascal.huerst@gmail.com
-References: <20200521091152.404404-1-daniel@zonque.org>
- <20200522090755.GA1189521@kroah.com>
-From:   Daniel Mack <daniel@zonque.org>
-Message-ID: <8a69bae2-8080-d0b0-bba7-813d9b8b0af2@zonque.org>
-Date:   Sat, 23 May 2020 14:27:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 23 May 2020 09:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731322AbgEWNMM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 09:12:12 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A468C05BD43
+        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 06:12:12 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id f89so6036277qva.3
+        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 06:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r5+LkB1TL3R/xRtbnTpHtVc52mSgHT6mX07ymQdEhWE=;
+        b=Vwf8oR+80FRu8UPj1VE1dhrJHkJlhsGbZ+BmwY6L1UJIBjNk7uSfXod2I+QlmDJjtH
+         BNtFwcmQmq2hUUV/aBwSc5AzO148HI+MOP0EwoeJqpEOhoyYgJOIb6+aFL4+E7rXZMot
+         mNv/yELgHPAIAU1cIFw9QxixlWzj2U5f4DTSNDfcwgrLh2v7obMGx+pXtg6pZR9H6kwz
+         rF3cppHqtl2r9D9FumdxMQfyAnIqTnsv6fGEelckgd752cictGUZb6B8wOAJibBtbhAc
+         M3o3vfhasmtxazjvqGxQRcC5dbzoUpimf3JwgZBYkoMeOgZOxRDMzPVczfsi6jdDO2ms
+         AwxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r5+LkB1TL3R/xRtbnTpHtVc52mSgHT6mX07ymQdEhWE=;
+        b=bbNyQcz7DjkNas2qxMWT9NPWsf8l5dl+DGRAC26vkZyYB/N7Zd7HO28nQKB60KcQm0
+         6nPme2vzXSc50aPys0RF4jPjG8ndteuXdpW5srL9mK+ewEDBWNhumI6wQlKHdoYefIDT
+         PObFwbDhLm9gdx+gk9ZpnQ/Pl4HpyY22edlce8AAI5K6xgZG14J7Ys4/JSG/EwWO5jq7
+         jAj4uTMVbr279g3zx3p8au/Q0yrGJkFPGg3KMYbvqSbe1wKSRPtBdGNel++yxD2GdHWs
+         DhH7bpNmrSk7ymj7tJXXvqGs6wmJyn/rfuGPepZuRSVpPeLm8PKwZWa7rRkY0cxc0qMu
+         yI4Q==
+X-Gm-Message-State: AOAM532OApYR4fd3dQ0EMSfrB7eJKmJ5KC0d6KVwGYdnDW5hbnQJQdC0
+        5pv0c2qccysxrSYLf8T5cpYKgQ==
+X-Google-Smtp-Source: ABdhPJypNcrx5YdS8JdgKXKLMq/J/EbituhaWK1VReOyeS9PyW05locBmPix0rf/2iu/DzD4JiB92A==
+X-Received: by 2002:a05:6214:122e:: with SMTP id p14mr8037854qvv.168.1590239531569;
+        Sat, 23 May 2020 06:12:11 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id d140sm9305607qkc.22.2020.05.23.06.12.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 06:12:11 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: qcom: sm8250: use dt-bindings defines for clocks
+Date:   Sat, 23 May 2020 09:12:13 -0400
+Message-Id: <20200523131213.18653-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <20200522090755.GA1189521@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/22/20 11:07 AM, Greg KH wrote:
-> On Thu, May 21, 2020 at 11:11:46AM +0200, Daniel Mack wrote:
->> This is v3 of the series.
->>
->> v3:
->>
->>  * Add my s-o-b to the first two patches
->>
->> v2:
->>
->>  * Change single bool properties into an array
->>    (suggested by Rob Herring)
->>  * Add a patch first try TRIGGER_LOW and SHARED interrupts, and then
->>    fall back to FALLING edge if the IRQ controller fails to provide the
->>    former (suggested by Maarten Brock)
->>  * Add a patch to check for the device presence
->>
->> Daniel Mack (4):
->>   sc16is7xx: Always use falling edge IRQ
->>   sc16is7xx: Use threaded IRQ
->>   sc16is7xx: Allow sharing the IRQ line
->>   sc16is7xx: Read the LSR register for basic device presence check
->>
->> Pascal Huerst (2):
->>   dt-bindings: sc16is7xx: Add flag to activate IrDA mode
->>   sc16is7xx: Add flag to activate IrDA mode
-> 
-> As I have to wait for the DT addition to be reviewed before applying the
-> first 2 patches here, I've taken the other 4 instead at the moment.  If
-> you could rebase the first two and resend when they get acked, so that I
-> could apply them, that would be great.
+Use the dt-bindings defines for qupv3_id_1 node's clocks.
 
-Sure, will do. Thanks :)
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 9c210fbac65e..04c9c215ffcd 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -292,7 +292,8 @@ qupv3_id_1: geniqup@ac0000 {
+ 			compatible = "qcom,geni-se-qup";
+ 			reg = <0x0 0x00ac0000 0x0 0x6000>;
+ 			clock-names = "m-ahb", "s-ahb";
+-			clocks = <&gcc 133>, <&gcc 134>;
++			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
++				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+ 			ranges;
+@@ -302,7 +303,7 @@ uart2: serial@a90000 {
+ 				compatible = "qcom,geni-debug-uart";
+ 				reg = <0x0 0x00a90000 0x0 0x4000>;
+ 				clock-names = "se";
+-				clocks = <&gcc 113>;
++				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
+ 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
+-- 
+2.26.1
 
-Daniel
