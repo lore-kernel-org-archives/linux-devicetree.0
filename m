@@ -2,204 +2,111 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEFFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 08:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC38C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 08:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7152071C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 08:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA7D20757
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 08:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bf8zg14A"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HyDEfmci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387627AbgEWIeR (ORCPT
+        id S2387685AbgEWImy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 04:34:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387512AbgEWIeR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 04:34:17 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DB4C061A0E;
-        Sat, 23 May 2020 01:34:15 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id x22so7856438lfd.4;
-        Sat, 23 May 2020 01:34:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=F3d+o4EkQI8dzAtQgDOYEYeiYTnRl/ABUKNf5AeEWnw=;
-        b=Bf8zg14ACwMjQhFGHbjNTptOzeaTrDOkvC+aQI0N4lTba1CaNsSCaL/cGUGix3MKyC
-         c7JxjvNEEzJlB4wnhbFt+86gXDLCWnByhebvY8bMogcJ/n67aOTEFdNPkrHtDqKcQ4/E
-         Ffr+vjYNnubjdlq32fCYEGRYgsEv8b6wujyl25vBvsM/i7UiCvS4NM2dil/Da9MuP3ar
-         nMVlmdtSEbj80NTV/h2s1X8/3p7qwP+hzfTQHYCqqacBj8CnKoZSSSXIMGOS3EXg+5z4
-         IZd/pR+V/CHGhh+K/DWmNS1dL5M2Im4/EDOA/mlSZF9WfwnsXFs9qQCSPP+6uIs17Q4e
-         eImw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F3d+o4EkQI8dzAtQgDOYEYeiYTnRl/ABUKNf5AeEWnw=;
-        b=TLyZ5DahLkk6rVlaomlZzkvmBzW9e4vqkbv0laWEvfvIjYcvi+Glp46wcOa3BK2MiD
-         7FFS0wWSQ9WpWW71hwKSRim/jxBUSfFFyIZKhoOOzX+bziWUVnYFn+r+Eq2WU9Ji0p5r
-         UpgOyprXVdl8v0dQUDPoqpFdWdpFP+sWp3pguRIKHmMqoVwJTnOuBLSZRF+/uWEQsmZA
-         3aze5IK5WY3+Kqy8gIKKsWQyt+0jpCgMmFEQRK7XjiWako6Y3qHKhuHmqpMLOBdN7xvr
-         N38bpRVkZ4C24jjn7j6IoQN9NL72qcwIq2oXthmEALqqQm3zYZuBWfkUIB8zRblSZcRE
-         Kukw==
-X-Gm-Message-State: AOAM53130GOEWlqpk/GCUkZHBQQKHtIVKNgvbYc0w8/fcz08CIiQPkQV
-        sbitHWzlqpIRgPXTzFJevn8=
-X-Google-Smtp-Source: ABdhPJyqdbYgA5KPOYIYWJOxpJBiM1rfOZy/+R9CbEqH2Bo1LQ3ZgVvuRJPCNMG4kBqVL+Caa3ohSw==
-X-Received: by 2002:a19:c3c5:: with SMTP id t188mr9445431lff.149.1590222853772;
-        Sat, 23 May 2020 01:34:13 -0700 (PDT)
-Received: from mobilestation ([95.79.222.123])
-        by smtp.gmail.com with ESMTPSA id 23sm2941907lfb.1.2020.05.23.01.34.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 01:34:13 -0700 (PDT)
-Date:   Sat, 23 May 2020 11:34:10 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@stericsson.com>,
-        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Alan Cox <alan@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/16] spi: dw: Add Tx/Rx finish wait methods to the
- MID DMA
-Message-ID: <20200523083410.3qarkfkwsmodvxwk@mobilestation>
-References: <20200522121221.GA1634618@smile.fi.intel.com>
- <20200522121820.GG5801@sirena.org.uk>
- <20200522123427.GD1634618@smile.fi.intel.com>
- <20200522124406.co7gmteojfsooerc@mobilestation>
- <20200522131013.GH5801@sirena.org.uk>
- <20200522132742.taf2ixfjpyd5u3dt@mobilestation>
- <20200522140025.bmd6bhpjjk5msvsm@mobilestation>
- <20200522143639.GG1634618@smile.fi.intel.com>
- <20200522144542.brhibh453wid2d6v@mobilestation>
- <20200522152241.GK5801@sirena.org.uk>
+        Sat, 23 May 2020 04:42:54 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:63054 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387500AbgEWImv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 04:42:51 -0400
+X-UUID: cfa01a54503943edae9a7ad49a7819c6-20200523
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=geMgDXW7+y5x9NHSgNuLpSBU2HC0fIuZRZ1XDMQaq+U=;
+        b=HyDEfmcicYVo1vQgVyNL2OM4IxuppxhmHNY0KJn7PnVFp5HmXHk4Qyhym1G8u4Rot/1RDOwGxyu+q/O5JTsLTXCWsqSwaVmJOrwac5T8ppMv4S31A0jtrjCNilH5PbB0B7/51BbcAgbEdItLZQ/12a6EGzrESv122As5DJZb79E=;
+X-UUID: cfa01a54503943edae9a7ad49a7819c6-20200523
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1927283339; Sat, 23 May 2020 16:42:44 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 23 May 2020 16:42:42 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 23 May 2020 16:42:41 +0800
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
+        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
+        <bingbu.cao@intel.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>,
+        <dongchun.zhu@mediatek.com>
+Subject: [V9, 0/2] media: i2c: Add support for OV02A10 sensor
+Date:   Sat, 23 May 2020 16:41:01 +0800
+Message-ID: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
+X-Mailer: git-send-email 2.9.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522152241.GK5801@sirena.org.uk>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 04:22:41PM +0100, Mark Brown wrote:
-> On Fri, May 22, 2020 at 05:45:42PM +0300, Serge Semin wrote:
-> > On Fri, May 22, 2020 at 05:36:39PM +0300, Andy Shevchenko wrote:
-> 
-> > > My point is: let's warn and see if anybody comes with a bug report. We will
-> > > solve an issue when it appears.
-> 
-> > In my environment the stack trace happened (strictly speaking it has been a
-> > BUG() invoked due to the sleep_range() called within the tasklet) when SPI bus
-> > had been enabled to work with !8MHz! clock. It's quite normal bus speed.
-> > So we'll get the bug report pretty soon.)
-> 
-> Right, that definitely needs to be fixed then - 8MHz is indeed a totally
-> normal clock rate for SPI so people will hit it.  I guess if there's a
-> noticable performance hit to defer to thread then we could implement
-> both and look at how long the delay is going to be to decide which to
-> use, that's annoyingly complicated though so if the overhead is small
-> enough we could just not bother.
+DQpIZWxsbywNCg0KVGhpcyBzZXJpZXMgYWRkcyBEVCBiaW5kaW5ncyBpbiBZQU1MIGFuZCBWNEwy
+IHN1Yi1kZXZpY2UgZHJpdmVyIGZvciBPbW5pdmlzaW9uJ3MNCk9WMDJBMTAgMiBtZWdhcGl4ZWwg
+Q01PUyAxLzUiIHNlbnNvciwgd2hpY2ggaGFzIGEgc2luZ2xlIE1JUEkgbGFuZSBpbnRlcmZhY2Uo
+SS9GKQ0KYW5kIG91dHB1dCBmb3JtYXQgb2YgMTAtYml0IFJBVy4NCg0KVGhlIGRyaXZlciBpcyBp
+bXBsZW1lbnRlZCB3aXRoIFY0TDIgRnJhbWV3b3JrLg0KIC0gQXN5bmMgcmVnaXN0ZXJlZCBhcyBv
+bmUgVjRMMiBzdWItZGV2aWNlLg0KIC0gQXMgdGhlIGZpcnN0IGNvbXBvbmVudCBvZiBjYW1lcmEg
+c3lzdGVtIGluY2x1ZGluZyBTZW5pbmYvSVNQIHByb2Nlc3NpbmcgcGlwZWxpbmUuDQogLSBBIG1l
+ZGlhIGVudGl0eSB0aGF0IHByb3ZpZGVzIG9uZSBzb3VyY2UgcGFkIGluIGNvbW1vbiBhbmQgdHdv
+IGZvciBkdWFsIGNhbWVyYS4NCiANClByZXZpb3VzIHZlcnNpb25zIG9mIHRoaXMgcGF0Y2gtc2V0
+IGNhbiBiZSBmb3VuZCBoZXJlOg0KIHY4OiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1t
+ZWRpYS8yMDIwMDUwOTA4MDYyNy4yMzIyMi0xLWRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20vDQog
+djc6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LW1lZGlhLzIwMjAwNDMwMDgwOTI0LjEx
+NDAtMS1kb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tLw0KIHY2OiBodHRwczovL2xvcmUua2VybmVs
+Lm9yZy9saW51eC1tZWRpYS8yMDE5MTIxMTExMjg0OS4xNjcwNS0xLWRvbmdjaHVuLnpodUBtZWRp
+YXRlay5jb20vDQogdjU6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LW1lZGlhLzIwMTkx
+MTA0MTA1NzEzLjI0MzExLTEtZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbS8NCiB2NDogaHR0cHM6
+Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtbWVkaWEvMjAxOTA5MDcwOTI3MjguMjM4OTctMS1kb25n
+Y2h1bi56aHVAbWVkaWF0ZWsuY29tLw0KIHYzOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51
+eC1tZWRpYS8yMDE5MDgxOTAzNDMzMS4xMzA5OC0xLWRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20v
+DQogdjI6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LW1lZGlhLzIwMTkwNzA0MDg0NjUx
+LjMxMDUtMS1kb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tLw0KIHYxOiBodHRwczovL2xvcmUua2Vy
+bmVsLm9yZy9saW51eC1tZWRpYS8yMDE5MDUyMzEwMjIwNC4yNDExMi0xLWRvbmdjaHVuLnpodUBt
+ZWRpYXRlay5jb20vDQoNCkNoYW5nZXMgb2YgdjkgbWFpbmx5IGFkZHJlc3MgY29tbWVudHMgZnJv
+bSBSb2IsIFNha2FyaSwgVG9tYXN6LCBBbmR5Lg0KSW5jbHVkaW5nOg0KIC0gQWRkIG1vcmUgZGV0
+YWlsZWQgZGVzY3JpcHRpb25zIGZvciBwb3dlcmRvd24tZ3Bpb3MgYW5kIHJlc2V0LWdwaW9zIGlu
+IERUDQogLSBTZXQgZGVmYXVsdCB0byBwcm9wZXJ0aWVzOiAicm90YXRpb24iIGFuZCAib3Z0aSxt
+aXBpLXR4LXNwZWVkIg0KIC0gUmVtb3ZlIHJlc2VydmVkIHZhbHVlcyBvZiAib3Z0aSxtaXBpLXR4
+LXNwZWVkIg0KIC0gVXNlIEFSUkFZX1NJWkUoKSBkaXJlY3RseSB0byByZXBsYWNlIG9mIGRlZmlu
+aW5nIG1hY3JvIGZ1bmN0aW9uDQogLSBSZW1vdmUgX19tYXliZV91bnVzZWQgc3BlY2lmaWVyIGZv
+ciBvdjAyYTEwX3Bvd2VyX29uIGFuZCBvdjAyYTEwX3Bvd2VyX29mZg0KIC0gUmVmaW5lIGRyaXZl
+ciBieSByZW1vdmluZyB1bm5lY2Vzc2FyeSBsb2dzIGFuZCB1bnVzZWQgbWFjcm9zIG9yIGZpZWxk
+cy4NCiAtIFBvd2VyIG9mZiBzZW5zb3Igd2hlbiBhc3luYyByZWdpc3RlciBzdWJkZXYgZmFpbGVk
+IGFuZCAhcG1fcnVudGltZV9lbmFibGVkKCkNCiAtIEZpeCBvdGhlciByZXZpZXcgY29tbWVudHMg
+aW4gdjgNCg0KUGxlYXNlIHJldmlldy4NClRoYW5rcy4NCg0KRG9uZ2NodW4gWmh1ICgyKToNCiAg
+bWVkaWE6IGR0LWJpbmRpbmdzOiBtZWRpYTogaTJjOiBEb2N1bWVudCBPVjAyQTEwIGJpbmRpbmdz
+DQogIG1lZGlhOiBpMmM6IG92MDJhMTA6IEFkZCBPVjAyQTEwIGltYWdlIHNlbnNvciBkcml2ZXIN
+Cg0KIC4uLi9iaW5kaW5ncy9tZWRpYS9pMmMvb3Z0aSxvdjAyYTEwLnlhbWwgICAgICAgICAgIHwg
+IDE3MiArKysrDQogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgICA4ICsNCiBkcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgMTMgKw0KIGRyaXZlcnMvbWVkaWEvaTJjL01ha2VmaWxlICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9tZWRpYS9pMmMvb3YwMmExMC5jICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAxMDI1ICsrKysrKysrKysrKysrKysrKysrDQogNSBmaWxl
+cyBjaGFuZ2VkLCAxMjE5IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdnRpLG92MDJhMTAueWFtbA0K
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL2kyYy9vdjAyYTEwLmMNCg0KLS0gDQoy
+LjkuMg0K
 
-As I suggested before we can implement a solution without performance drop.
-Just wait for the DMA completion locally in the dw_spi_dma_transfer() method and
-return 0 instead of 1 from the transfer_one() callback. In that function we'll
-wait while DMA finishes its business, after that we can check the Tx/Rx FIFO
-emptiness and wait for the data to be completely transferred with delays or
-sleeps or whatever.
-
-There are several drawback of the solution:
-1) We need to alter the dw_spi_transfer_one() method in a way one would return
-0 instead of 1 (for DMA) so the generic spi_transfer_one_message() method would
-be aware that the transfer has been finished and it doesn't need to wait by
-calling the spi_transfer_wait() method.
-2) Locally in the dw_spi_dma_transfer() I have to implement a method similar
-to the spi_transfer_wait(). It won't be that similar though. We can predict a
-completion timeout better in here due to using a more exact SPI bus frequency.
-Anyway in the rest of aspects the functions will be nearly the same. 
-3) Not using spi_transfer_wait() means we also have to locally add the SPI
-timeout statistics incremental.
-
-So to speak the local wait method will be like this:
-
-+static int dw_spi_dma_wait(struct dw_spi *dws, struct spi_transfer *xfer)
-+{
-+ 	struct spi_statistics *statm = &dws->master->statistics;
-+	struct spi_statistics *stats = &dws->master->cur_msg->spi->statistics;
-+	unsigned long ms = 1;
-+
-+	ms = xfer->len * MSEC_PER_SEC * BITS_PER_BYTE;
-+	ms /= xfer->effective_speed_hz;
-+	ms += ms + 200;
-+
-+	ms = wait_for_completion_timeout(&dws->xfer_completion,
-+					msecs_to_jiffies(ms));
-+
-+	if (ms == 0) {
-+		SPI_STATISTICS_INCREMENT_FIELD(statm, timedout);
-+		SPI_STATISTICS_INCREMENT_FIELD(stats, timedout);
-+		dev_err(&dws->master->cur_msg->spi->dev,
-+			"SPI transfer timed out\n");
-+			return -ETIMEDOUT;
-+	}
-+}
-
-NOTE Currently the DW APB SSI driver doesn't set xfer->effective_speed_hz, though as
-far as I can see that field exists there to be initialized by the SPI controller
-driver, right? If so, strange it isn't done in any SPI drivers...
-
-Then we can use that method to wait for the DMA transfers completion:
-
-+static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
-+{
-+	...
-+	/* DMA channels/buffers preparation and the transfers execution */
-+	...
-+
-+	ret = dw_spi_dma_wait(dws, xfer);
-+	if (ret)
-+		return ret;
-+
-+	ret = dw_spi_dma_wait_tx_done(dws);
-+	if (ret)
-+		return ret;
-+
-+	ret = dw_spi_dma_wait_rx_done(dws);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-
-What do think about this?
-
-If you don't mind I'll send this fixup separately from the patchset we discuss
-here, since it's going to be a series of patches. What would be better for you:
-implement it based on the current DW APB SSI driver, or on top of this
-patchset "spi: dw: Add generic DW DMA controller support" (it's being under
-review in this email thread) ? Anyway, if the fixup is getting to be that
-complicated, will it have to be backported to another stable kernels?
-
--Sergey
