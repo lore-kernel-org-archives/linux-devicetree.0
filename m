@@ -2,110 +2,141 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2AAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D46C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99170207F9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C914207F9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Vwf8oR+8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLm0wTbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbgEWNMN (ORCPT
+        id S2387763AbgEWNO1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 09:12:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
+        Sat, 23 May 2020 09:14:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731322AbgEWNMM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 09:12:12 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A468C05BD43
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 06:12:12 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id f89so6036277qva.3
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 06:12:12 -0700 (PDT)
+        with ESMTP id S1731291AbgEWNO1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 09:14:27 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D9CC061A0E;
+        Sat, 23 May 2020 06:14:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u1so11254596wmn.3;
+        Sat, 23 May 2020 06:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r5+LkB1TL3R/xRtbnTpHtVc52mSgHT6mX07ymQdEhWE=;
-        b=Vwf8oR+80FRu8UPj1VE1dhrJHkJlhsGbZ+BmwY6L1UJIBjNk7uSfXod2I+QlmDJjtH
-         BNtFwcmQmq2hUUV/aBwSc5AzO148HI+MOP0EwoeJqpEOhoyYgJOIb6+aFL4+E7rXZMot
-         mNv/yELgHPAIAU1cIFw9QxixlWzj2U5f4DTSNDfcwgrLh2v7obMGx+pXtg6pZR9H6kwz
-         rF3cppHqtl2r9D9FumdxMQfyAnIqTnsv6fGEelckgd752cictGUZb6B8wOAJibBtbhAc
-         M3o3vfhasmtxazjvqGxQRcC5dbzoUpimf3JwgZBYkoMeOgZOxRDMzPVczfsi6jdDO2ms
-         AwxQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8LGo7kypX/UuiVS5X2JtFQ0JunA+QZt3vaFNvgvumNU=;
+        b=gLm0wTbvAO45hZ2XesfzpTYLf2INXCegMtldROnBej+YMsA5hq5Qva0/c5u9XRoNfD
+         2KP/Pu3p+OAXOdee9bB9unMBWRVIheR8b9dYAg5ncfqwXiJrkWGOEhPuapE4gmRIDeNn
+         RNMV6rh9yvyTu7CCrYZzFJ/iVXM2VBsHVAiqPoHJNUQzdq11GxG7hyvjbCxHQz85s7xd
+         NVX4QsVYkYcrX7MBIlJRZeDwX6MFL4FnJJxhmA2zaaQZHxdVCcvqwG7aTTh6fajXvJVB
+         uUt1ErAwinoImb+4eA2YEKk4Nj7PfNayxWo1G9TSFyLJmH/QJgdTNjP7QpuVXk8aly+p
+         rA8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=r5+LkB1TL3R/xRtbnTpHtVc52mSgHT6mX07ymQdEhWE=;
-        b=bbNyQcz7DjkNas2qxMWT9NPWsf8l5dl+DGRAC26vkZyYB/N7Zd7HO28nQKB60KcQm0
-         6nPme2vzXSc50aPys0RF4jPjG8ndteuXdpW5srL9mK+ewEDBWNhumI6wQlKHdoYefIDT
-         PObFwbDhLm9gdx+gk9ZpnQ/Pl4HpyY22edlce8AAI5K6xgZG14J7Ys4/JSG/EwWO5jq7
-         jAj4uTMVbr279g3zx3p8au/Q0yrGJkFPGg3KMYbvqSbe1wKSRPtBdGNel++yxD2GdHWs
-         DhH7bpNmrSk7ymj7tJXXvqGs6wmJyn/rfuGPepZuRSVpPeLm8PKwZWa7rRkY0cxc0qMu
-         yI4Q==
-X-Gm-Message-State: AOAM532OApYR4fd3dQ0EMSfrB7eJKmJ5KC0d6KVwGYdnDW5hbnQJQdC0
-        5pv0c2qccysxrSYLf8T5cpYKgQ==
-X-Google-Smtp-Source: ABdhPJypNcrx5YdS8JdgKXKLMq/J/EbituhaWK1VReOyeS9PyW05locBmPix0rf/2iu/DzD4JiB92A==
-X-Received: by 2002:a05:6214:122e:: with SMTP id p14mr8037854qvv.168.1590239531569;
-        Sat, 23 May 2020 06:12:11 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id d140sm9305607qkc.22.2020.05.23.06.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 06:12:11 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: qcom: sm8250: use dt-bindings defines for clocks
-Date:   Sat, 23 May 2020 09:12:13 -0400
-Message-Id: <20200523131213.18653-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        bh=8LGo7kypX/UuiVS5X2JtFQ0JunA+QZt3vaFNvgvumNU=;
+        b=J2dhQ8C800Fnfmlm+BClvMFbGvIRjJdYeZFA0oKcxJmIll53MD/qjxYblYBGZcZnOH
+         WN3Nq8jJ+KKG7gvYiVp0yDZi9iVTEkyPs4t/rhz6kdW2CQ9A3LeWzNDjwDhwwpSE/bSr
+         q7OAmm/gGumBK/ChG+ICi+643VmbQuaOvQ9bE2Qksz2YkeBL62NUt/KCSHbj+oFmeIro
+         rYc7/qFRBiLHv3jVUU++sALUmKXnL7H9wfzkBzzFvQI4Jk+i2V+/lhMslyJP3Pap1mry
+         SwKfWrwaQ5ONY3/2kqE95BYNTNm9j8oiU/gt8mEx1I6EhemJI0SCXEdh8qtWG+Z991Qe
+         6QMg==
+X-Gm-Message-State: AOAM531Bna4tC1yhpOKFoGWCVnHF99uX6NcPV2df8AwxdEnxkzIgahIK
+        DR2rNqZUby4wzBct3os22Q0=
+X-Google-Smtp-Source: ABdhPJxn+IxcTwwADZNrv5cvugkYcBEcPWXDlnjrtAyFx9W55umV1V9VFywTsf2mzefrH5OFGaF3Ug==
+X-Received: by 2002:a05:600c:2043:: with SMTP id p3mr16862280wmg.187.1590239665539;
+        Sat, 23 May 2020 06:14:25 -0700 (PDT)
+Received: from linux-gy6r.site ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id y207sm13594800wmd.7.2020.05.23.06.14.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 May 2020 06:14:24 -0700 (PDT)
+Subject: Re: [PATCH v5 00/11] mediatek: add support for MediaTek Ethernet MAC
+To:     David Miller <davem@davemloft.net>
+Cc:     brgl@bgdev.pl, robh+dt@kernel.org, john@phrozen.org,
+        sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com, kuba@kernel.org,
+        arnd@arndb.de, fparent@baylibre.com, hkallweit1@gmail.com,
+        edwin.peer@broadcom.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        stephane.leprovost@mediatek.com, pedro.tsai@mediatek.com,
+        andrew.perepech@mediatek.com, bgolaszewski@baylibre.com
+References: <20200522120700.838-1-brgl@bgdev.pl>
+ <20200522.142031.1631406151370247419.davem@davemloft.net>
+ <1f941213-7ca2-c138-3530-85c34ebf0d53@gmail.com>
+ <20200522.143656.1986528672037093503.davem@davemloft.net>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+X-Pep-Version: 2.0
+Message-ID: <4a95de78-05fe-eec6-e09b-1b907287a8af@gmail.com>
+Date:   Sat, 23 May 2020 15:14:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200522.143656.1986528672037093503.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use the dt-bindings defines for qupv3_id_1 node's clocks.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 9c210fbac65e..04c9c215ffcd 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -292,7 +292,8 @@ qupv3_id_1: geniqup@ac0000 {
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0x0 0x00ac0000 0x0 0x6000>;
- 			clock-names = "m-ahb", "s-ahb";
--			clocks = <&gcc 133>, <&gcc 134>;
-+			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
-+				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
-@@ -302,7 +303,7 @@ uart2: serial@a90000 {
- 				compatible = "qcom,geni-debug-uart";
- 				reg = <0x0 0x00a90000 0x0 0x4000>;
- 				clock-names = "se";
--				clocks = <&gcc 113>;
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
--- 
-2.26.1
+On 5/22/20 11:36 PM, David Miller wrote:
+> From: Matthias Brugger <matthias.bgg@gmail.com>
+> Date: Fri, 22 May 2020 23:31:50 +0200
+>=20
+>>
+>>
+>> On 22/05/2020 23:20, David Miller wrote:
+>>> From: Bartosz Golaszewski <brgl@bgdev.pl>
+>>> Date: Fri, 22 May 2020 14:06:49 +0200
+>>>
+>>>> This series adds support for the STAR Ethernet Controller present on=
+ MediaTeK
+>>>> SoCs from the MT8* family.
+>>>
+>>> Series applied to net-next, thank you.
+>>>
+>>
+>> If you say "series applied" do you mean you also applied the device tr=
+ee parts?
+>> These should go through my branch, because there could be conflicts if=
+ there are
+>> other device tree patches from other series, not related with network,=
+ touching
+>> the same files.
+>=20
+> It's starting to get rediculous and tedious to manage the DT changes
+> when they are tied to new networking drivers and such.
+>=20
+> And in any event, it is the patch series submitter's responsibility to
+> sort these issues out, separate the patches based upon target tree, and=
+
+> clearly indicate this in the introductory posting and Subject lines.
+>=20
+
+My experience in with other subsystems is that the DTS changes which
+enables de device are part of the series.
+They are normally prefixed with "arm64: dts:" or "ARM: dts:" for 32 bit
+SoCs. That also normally the way I detect patches which should through
+my tree.
+
+Anyway I'll try to remember submitters in the future to send DTS patches
+for network devices as separate series. That makes my life a bit more
+complicated as I afterwards have to find the related DTS series to the
+driver you accepted, but I'll try.
+
+Regards,
+Matthias
 
