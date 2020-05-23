@@ -2,162 +2,130 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA26FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 01:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E64C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 01:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7556320727
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 01:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514662072C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 01:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SbAjIaif"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A992b6KQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbgEWBYh (ORCPT
+        id S2387427AbgEWBfo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 May 2020 21:24:37 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43044 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387418AbgEWBYg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 21:24:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04N1ONZY122215;
-        Fri, 22 May 2020 20:24:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590197063;
-        bh=pc8GIbCeCGbGW+dH6N5QrFkDMQ4GvXVFsG0XIqTPplo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SbAjIaifncOFx0ks4RCylrSqylUM8uq5BtAEVysnNa8NfHN5GiBNQJorE0g1OGQ3p
-         pmaMHRW9HJCbTSl4SmMy9Ki20mrlSActRpo4rGLeAH3w9bQ+5nDX5+8Lc80msM6hP8
-         r3cU/dryBNsrwcNdMMMKBwWzFOn6xUlo1werTWXY=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04N1ON1l064608
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 20:24:23 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 20:24:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 20:24:22 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04N1OJgZ108060;
-        Fri, 22 May 2020 20:24:20 -0500
-Subject: Re: [PATCH v4 07/14] PCI: cadence: Add new *ops* for CPU addr fixup
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200506151429.12255-1-kishon@ti.com>
- <20200506151429.12255-8-kishon@ti.com> <20200520213434.GA583923@bogus>
- <3f9cf6e5-94f8-4c54-aaee-c181b0e79f1f@ti.com>
- <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <44690fec-0b65-0192-75f7-e4fa086c4c0b@ti.com>
-Date:   Sat, 23 May 2020 06:54:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 21:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387418AbgEWBfo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 May 2020 21:35:44 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0A1C061A0E;
+        Fri, 22 May 2020 18:35:43 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 18so12693579iln.9;
+        Fri, 22 May 2020 18:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S1QSAzJLA557HDI9geZdFtza2j2ttaAmC0/pNbF94RQ=;
+        b=A992b6KQ0XxvQBvr4hpSCBAiJVOy3bCMOJRZbTEgNVsjziHkOX1YLkNL2W7JgGf5kB
+         6dkdnQIBW/+Lh4TZr5VZ9W9jlKsQLHFUNaXvbtKPXiXkE2z25chDOo+YqkADBuJdDhZ/
+         tHUB4rgSKsyEN1xbge2cNw65A0heIWhKbJcDMDvUkNC/9rydOmAqGX3PUZ8I2z0U7Y/V
+         5Cr+kLr+aMh+DQj7mplWOIOBhISwulzYr6G01tL+aSEMoNt7Tw1DQ0rbXyQBcNzZ99L6
+         aTZi5JpRzKVrsOLiFDG26hTNg0/+eB2eYUciggM6rhuzsRwMg4KgAEsT2EqkXuw9fJM0
+         UHFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S1QSAzJLA557HDI9geZdFtza2j2ttaAmC0/pNbF94RQ=;
+        b=DgAFAc830boakhrF3DPI/j3d+CCWdkDX14ukx/QlioTLAHr0BpeV8dr+orcc1Xa6eg
+         /HcJWyFXIav2X0LeX/YETywX+obHaYm0BbTYLlVL+Nwh5CpnWEOcdcyeDwFUR6YRHZkO
+         OW/wwORiBOU4/iWhwNPXa/yLtm9T55KS7FVjEqA4h2hQbcmOK+hOTZxjD6wTAuE1T7cK
+         xZ9bjz+X8JEurVZW5B6PuQkfXwXPFnE+5AL8wv9UZYk/coJXss7CMBm4w08mVCyk5XN9
+         3l8dQuF0Hu6gjMq5FcHOWMy+YPcnBFf+dif3Idt9aAXqUpDrEoW4nZAC09gfjUj8w3FA
+         OZzw==
+X-Gm-Message-State: AOAM532arBrW/DX65bckdXrLUsNI9smIclT5cLczOJNbHc5WvdkaWdx9
+        rJZEphQE/BdineKCqmJYR2vtbH/izU5a1PpRWOZuzCte1dc=
+X-Google-Smtp-Source: ABdhPJyFMcan15/IQgBUd7V654mVVCiDvmI/KPlV1LTFmOXrmNhn289+5jn0LkISjmGIfWZTCLlEXoFxdgoJGQtXdZU=
+X-Received: by 2002:a92:dc85:: with SMTP id c5mr15557198iln.270.1590197742955;
+ Fri, 22 May 2020 18:35:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
+ <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
+ <20200522113634.GE5801@sirena.org.uk> <CAL9mu0LAnT+AfjpGs0O-MD2HYrpnQRmrj6qXtJQrJi9kbQLPUw@mail.gmail.com>
+ <CAL9mu0JZ4Qy+m2oF9TSTRqA_mM0J89huCt3t_Gs7qHa=3LxhBw@mail.gmail.com> <20200522162901.GP5801@sirena.org.uk>
+In-Reply-To: <20200522162901.GP5801@sirena.org.uk>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Sat, 23 May 2020 09:35:06 +0800
+Message-ID: <CAL9mu0+E5R0mDUW3f+aKpfE_457VimS-ow2z_xVOmCfCAMnKuA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
+ support for stm32f4
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Sat, May 23, 2020 at 12:29 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, May 22, 2020 at 11:59:25PM +0800, dillon min wrote:
+>
+> > but, after spi-core create a dummy tx_buf or rx_buf, then i can't get
+> > the correct spi_3wire direction.
+> > actually, this dummy tx_buf is useless for SPI_3WIRE. it's has meaning
+> > for SPI_SIMPLE_RX mode,
+> > simulate SPI_FULL_DUMPLEX
+>
+> Oh, that's annoying.  I think the fix here is in the core, it should
+> ignore MUST_TX and MUST_RX in 3WIRE mode since they clearly make no
+> sense there.
 
-On 5/22/2020 10:15 PM, Rob Herring wrote:
-> On Thu, May 21, 2020 at 5:35 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Rob,
->>
->> On 5/21/2020 3:04 AM, Rob Herring wrote:
->>> On Wed, May 06, 2020 at 08:44:22PM +0530, Kishon Vijay Abraham I wrote:
->>>> Cadence driver uses "mem" memory resource to obtain the offset of
->>>> configuration space address region, memory space address region and
->>>> message space address region. The obtained offset is used to program
->>>> the Address Translation Unit (ATU). However certain platforms like TI's
->>>> J721E SoC require the absolute address to be programmed in the ATU and not
->>>> just the offset.
->>>
->>> Once again, Cadence host binding is broken (or at least the example is).
->>> The 'mem' region shouldn't even exist. It is overlapping the config
->>> space and 'ranges':
->>>
->>>             reg = <0x0 0xfb000000  0x0 0x01000000>,
->>>                   <0x0 0x41000000  0x0 0x00001000>,
->>>                   <0x0 0x40000000  0x0 0x04000000>;
->>>             reg-names = "reg", "cfg", "mem";
->>>
->>>             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
->>>                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
->>>
->>>
->>> 16M of registers looks a bit odd. I guess it doesn't matter
->>> unless you have a 32-bit platform and care about your virtual
->>> space. Probably should have been 3 regions for LM, RP, and AT looking
->>> at the driver.
->>
->> The "mem" region in never ioremapped. However $patch removes requiring to add
->> "mem" memory resource.
-> 
-> I was referring to ioremapping 'reg' region.
-> 
->>>
->>> Whatever outbound address translation you need should be based on
->>> 'ranges'.
->>
->> You mean we don't need to add "new *ops* for CPU addr fixup"?. The issue is
->> ranges provides CPU address and PCI address. The CPU will access whatever is
->> populated in ranges to access the PCI bus. However while programming the ATU,
->> we cannot use the CPU address provided in ranges directly (in some platforms)
->> because the controller does not see the full address and only the lower 28bits.
-> 
-> Okay, that is clearer as to what the difference is. I think this
-> should be 2 patches. One dropping 'mem' usage and using a mask and the
-> 2nd making the mask per platform.
+How about add below changes to spi-core
 
-hmm okay.
-> 
-> Really, the parent node of the PCI controller should probably have
-> 'ranges' and you could extract a mask from that. Looks like that is
-> what you had for DRA7... I'm not sure if ABI stability is important
-> for the Cadence platform. I'd assume that's just some IP eval system
-> and probably not?
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 8994545..bfd465c 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1022,7 +1022,8 @@ static int spi_map_msg(struct spi_controller
+*ctlr, struct spi_message *msg)
+        void *tmp;
+        unsigned int max_tx, max_rx;
 
-Right TI's J721E should be the first HW platform to use Cadence in mainline.
-> 
-> Why do you need an ops here? All you need is a mask value.
+-       if (ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) {
++       if ((ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) &&
++               !(msg->spi->mode & SPI_3WIRE)) {
+                max_tx = 0;
+                max_rx = 0;
 
-So how do we get platform specific mask? Use a different binding to specify the
-mask value?
-> 
->> This similar restriction was there with Designware (mostly an integration
->> issue) and we used *ops* to fixup the address that has to be programmed in ATU.
->> The Designware initially used a wrapper so that ranges property can be directly
->> used [1]. However this approach was later removed in [2]
->>
->> [1] -> https://lore.kernel.org/patchwork/patch/468523/
->> [2] -> https://lkml.org/lkml/2015/10/16/232
-> 
-> So while you had the data for a mask in DT, the driver now hardcodes it?
+for my board, lcd panel ilitek ill9341 use 3wire mode, gyro l3gd20 use
+simplex rx mode.
+it's has benefits to l3gd20, no impact to ili9341.
 
-Yes, that's correct. Which approach should we use for Cadence?
+if it's fine to spi-core, i will include it to my next submits.
 
-Thanks
-Kishon
+thanks
+
+best regards.
+
+Dillon
