@@ -2,91 +2,105 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FE8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 15:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0157EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 17:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609212072C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 15:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D617920759
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 17:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HA4Ia2wV"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="1w5qJPmr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387936AbgEWPNr (ORCPT
+        id S2387944AbgEWRwe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 11:13:47 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46336 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387815AbgEWPNr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 23 May 2020 11:13:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=g2G0MbVsoaFhpPXareC/2snBekx4pkXDqtUPZnko2zE=; b=HA4Ia2wV+2OM7fKjpDb7BrL3XJ
-        6+nWivW51tC9gXY4EN9QkhZdMOesVeBTI2Jq6XBpVFhINBI5xlzwa+WqXrK6337I8cmeVa05rHjEr
-        GauELEVv63zv7V/5rXVz74TuEsJIbbuKa8j0Q6m9PBmqANsR3wYqWzpyE6cq87hNFStM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jcVqG-0034Tp-PQ; Sat, 23 May 2020 17:13:40 +0200
-Date:   Sat, 23 May 2020 17:13:40 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/4] dt-bindings: net: Add tx and rx internal
- delays
-Message-ID: <20200523151340.GL610998@lunn.ch>
-References: <20200522122534.3353-1-dmurphy@ti.com>
- <20200522122534.3353-2-dmurphy@ti.com>
+        Sat, 23 May 2020 13:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387518AbgEWRwe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 13:52:34 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B744AC061A0E
+        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 10:52:32 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id r3so6291706qve.1
+        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 10:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xbNXqEdiNXrvhkFc9AbifeBSEF3iF1+uuqL2sVkcP4U=;
+        b=1w5qJPmr6SeJcD+EI09b+e0KZxTY6kXeh0o6ir7Ezxu89PCZzfjKtL14HoktpHAFCo
+         UhtBSzENcfXb1t0Sreg6T2isFy2hXsjHS5R0/qtyqB8N/VbsYrnBf7Cqv8P90vLBqI7R
+         EcXjOICNe631HRNct5wKlocR0GM507aB5pFr6o8hxHDQx0LqPof0JAGa0GsIQBwRw0af
+         xdmK4Vvxq3zB+8HQQ2RjDy8YCFRlJpVOW+BvUXnnV2bFHxaoHQ0ogIVu/w2I3aDrXU4d
+         aIsCVlTtZx5F5azA7igNSp7ZThBcdtbPdZJjHhyX8CYsiUBg2oZQDyMEsToeQyXHME/t
+         ntLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xbNXqEdiNXrvhkFc9AbifeBSEF3iF1+uuqL2sVkcP4U=;
+        b=MZOyy5qAVYqTOseXNYMR6sxVMyTK1lZoN/rR7JzlYtjwvkEr21Xbqsr272eP2o6I8c
+         1VnX/fJa6XxGrLYIWzwbaLzKZL6eQ7sdMnn/N3VEJ/+CQg5RBwxSDzBix21eXkSqqITZ
+         RI/Tk7oPCQVIDOD9W5MO7PQXiWGkS6LQm8FgGKxK/Zokq45jyoOEAQD6qoe/nltGaIb+
+         KKG15LiFeUF+h0E/8OnQJnZmZfL7wHteNCewxcTLLEFFIje32IBaHvquGrlMm0B615UZ
+         ukZJLXdCaSk7fqFqC3kzl+OLn/FQUl7FrdN9/Kj9xY9tCtQH98UH9x74n6FX/sSBq7i2
+         sHsw==
+X-Gm-Message-State: AOAM530UBcnRjiJ9iOtnw/V6w9x+vC37XwzRsFAxwu1j7qfEp0fh4KAw
+        yX9mZBbO6XH/vRvpVUyk82WdYQ==
+X-Google-Smtp-Source: ABdhPJxJqNc3s0k1S710OBgGWFWnNh/JFkMpuvIAPC7eSNS1lKSR6qsxIP7BSRmmL3JZAD5Irz+gIw==
+X-Received: by 2002:ad4:5282:: with SMTP id v2mr8777819qvr.167.1590256351873;
+        Sat, 23 May 2020 10:52:31 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id 80sm5147784qkl.116.2020.05.23.10.52.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 10:52:31 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: qcom: sm8250: change ufs node name to ufshc
+Date:   Sat, 23 May 2020 13:52:32 -0400
+Message-Id: <20200523175232.13721-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522122534.3353-2-dmurphy@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 07:25:31AM -0500, Dan Murphy wrote:
-> tx-internal-delays and rx-internal-delays are a common setting for RGMII
-> capable devices.
-> 
-> These properties are used when the phy-mode or phy-controller is set to
-> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
-> controller that the PHY will add the internal delay for the connection.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v2 - updated to add -ps
-> 
->  .../bindings/net/ethernet-controller.yaml          | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> index ac471b60ed6a..70702a4ef5e8 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> @@ -143,6 +143,20 @@ properties:
->        Specifies the PHY management type. If auto is set and fixed-link
->        is not specified, it uses MDIO for management.
->  
-> +  rx-internal-delay-ps:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
-> +      PHY's that have configurable RX internal delays.  This property is only
-> +      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-rxid.
+The ufs-qcom driver checks that the name matches the androidboot.bootdevice
+parameter provided by the bootloader, which uses the name ufshc. Without
+this change UFS fails to probe.
 
-Hi Dan
+I think this is broken behavior from the ufs-qcom driver, but using the
+name ufshc is consistent with dts for sdm845/sm8150/etc.
 
-Please add a comment about rounding to the nearest supported value.
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-    Andrew
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index e0344d3ba159..3bdce658c08a 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -309,7 +309,7 @@ uart2: serial@a90000 {
+ 			};
+ 		};
+ 
+-		ufs_mem_hc: ufs@1d84000 {
++		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+ 			reg = <0 0x01d84000 0 0x3000>;
+-- 
+2.26.1
+
