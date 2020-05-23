@@ -2,165 +2,100 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5BEC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 04:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E800DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 04:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 539592071C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 04:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C987A206F6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 04:12:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="G8S2SApa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725768AbgEWEJg (ORCPT
+        id S2387594AbgEWEMT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 00:09:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12254 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725294AbgEWEJg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 23 May 2020 00:09:36 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04N42942159920;
-        Sat, 23 May 2020 00:08:31 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3160mk2mpc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 23 May 2020 00:08:30 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04N48U8L175628;
-        Sat, 23 May 2020 00:08:30 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3160mk2mnw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 23 May 2020 00:08:30 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04N45RWH012073;
-        Sat, 23 May 2020 04:08:28 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 316uf9084h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 23 May 2020 04:08:28 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04N48SdY14025224
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 May 2020 04:08:28 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 536E2AC05B;
-        Sat, 23 May 2020 04:08:28 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B1ABCAC059;
-        Sat, 23 May 2020 04:08:17 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.49.7])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Sat, 23 May 2020 04:08:17 +0000 (GMT)
-References: <20200504203829.6330-1-prsriva@linux.microsoft.com> <20200505095620.GA82424@C02TD0UTHF1T.local> <e8c7d74e-74bf-caa3-452d-23faa649e825@linux.microsoft.com> <20200512230509.GA2654@bogus> <7701df90-a68b-b710-4279-9d64e45ee792@linux.microsoft.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        masahiroy@kernel.org, james.morse@arm.com, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, gregkh@linuxfoundation.org,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        balajib@linux.microsoft.com
-Subject: Re: [RFC][PATCH 0/2] Add support for using reserved memory for ima buffer pass
-In-reply-to: <7701df90-a68b-b710-4279-9d64e45ee792@linux.microsoft.com>
-Date:   Sat, 23 May 2020 01:08:13 -0300
-Message-ID: <87v9knpa36.fsf@morokweng.localdomain>
+        Sat, 23 May 2020 00:12:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgEWEMS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 00:12:18 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186FCC061A0E
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 21:12:18 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f189so12810769qkd.5
+        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 21:12:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M5sFOrNXglw9u9oFYHMskJ7NcnM7eaQiBeIqzNjN18A=;
+        b=G8S2SApaGaeOZYDOZa/usofyB38IwdN5arOsw90EdNv9M91atUz8HoIeWxnaEavt4k
+         lkFN9p2LOH3h5m3Xs2l+BFRL6h+bttLmhu4g6layqGy0qQH/vvmt0xuRgA9+tUBubB5n
+         BgyY2K1bBuOVhVgpBcwNx+kAOt75PR3vFAjzILzquIyTRDdkpVzIQyVbEiaV7UaCinVx
+         aK/QxWxCdiLGKJZIEKY6FvwbNPrceLumTCs8MeCtVXVfukWKsmCffr1IpGxE8KoSBrVE
+         cPds8tntUfOy2kPKViDmFxLcMSFGB16JkJRJ8XVQflrJX2Sfm1vcyCAdUaN+77UQrKon
+         4auw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M5sFOrNXglw9u9oFYHMskJ7NcnM7eaQiBeIqzNjN18A=;
+        b=J3vxbsPTB+ZE0p92Deo7sMlQQitz1f35S+sqQ/+goPNl2WkFvTFom9HKpAGTAoAE/Y
+         1If1TXb5GV1MazDHU5U1B3qemrpgRAo1JLIAPS3P2SFPN4Thoqw4JxX72icOHX0TeVut
+         +dNFeEVaLhxL1h9kFDQxHAV8o3/JPEEfe1WAwgFqsInb5+/mXa2eYjMCv1WV7FaC9Q+d
+         g9F3nNKv/Igl/DgjTXEi8I9ivJ5sZGgDNWTeOf/5LQP9UPj+rJklXbMIHoATKVySS05s
+         bpahbkdsXCcTffHqBjooCjywBvEv7jtJjZMY9AQSgIgjLfvIAAqapKWur71j1qiyXGHg
+         H3BQ==
+X-Gm-Message-State: AOAM531RvRePi9+5JswHcUbOEoiqU9/suHxuu+hjfXfotUBFi7DHjs2X
+        Dnz5quperzaRcxRTFl+ZKwc2eQ==
+X-Google-Smtp-Source: ABdhPJxRnAIPgMXBVIgY29ESU3hRJT/Hualiru5J/jkGjg0GRLMcQ7/pPTunfbRWCCCveIzowiD7RA==
+X-Received: by 2002:ae9:e50d:: with SMTP id w13mr12486140qkf.315.1590207137323;
+        Fri, 22 May 2020 21:12:17 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id w21sm10077978qtj.78.2020.05.22.21.12.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 21:12:16 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: qcom: enable pm8150 rtc
+Date:   Sat, 23 May 2020 00:12:01 -0400
+Message-Id: <20200523041201.32065-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-22_12:2020-05-22,2020-05-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 bulkscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
- suspectscore=0 cotscore=-2147483648 impostorscore=0 phishscore=0
- mlxscore=0 malwarescore=0 clxscore=1011 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005230027
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+I don't see any reason for it to be disabled by default.
 
-Hello Prakhar,
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/pm8150.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+index c0b197458665..b738c263f9d1 100644
+--- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+@@ -64,8 +64,6 @@ rtc@6000 {
+ 			reg = <0x6000>;
+ 			reg-names = "rtc", "alarm";
+ 			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
+-
+-			status = "disabled";
+ 		};
+ 
+ 		pm8150_gpios: gpio@c000 {
+-- 
+2.26.1
 
-> On 5/12/20 4:05 PM, Rob Herring wrote:
->> On Wed, May 06, 2020 at 10:50:04PM -0700, Prakhar Srivastava wrote:
->>> Hi Mark,
->>
->> Please don't top post.
->>
->>> This patch set currently only address the Pure DT implementation.
->>> EFI and ACPI implementations will be posted in subsequent patchsets.
->>>
->>> The logs are intended to be carried over the kexec and once read the
->>> logs are no longer needed and in prior conversation with James(
->>> https://lore.kernel.org/linux-arm-kernel/0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com/)
->>> the apporach of using a chosen node doesn't
->>> support the case.
->>>
->>> The DT entries make the reservation permanent and thus doesnt need kernel
->>> segments to be used for this, however using a chosen-node with
->>> reserved memory only changes the node information but memory still is
->>> reserved via reserved-memory section.
->>
->> I think Mark's point was whether it needs to be permanent. We don't
->> hardcode the initrd address for example.
->>
-> Thankyou for clarifying my misunderstanding, i am modelling this keeping to the
-> TPM log implementation that uses a reserved memory. I will rev up the version
-> with chosen-node support.
-> That will make the memory reservation free after use.
-
-Nice. Do you intend to use the same property that powerpc uses
-(linux,ima-kexec-buffer)?
-
->>> On 5/5/20 2:59 AM, Mark Rutland wrote:
->>>> Hi Prakhar,
->>>>
->>>> On Mon, May 04, 2020 at 01:38:27PM -0700, Prakhar Srivastava wrote:
->>>>> IMA during kexec(kexec file load) verifies the kernel signature and measures
->>
->> What's IMAIMA is a LSM attempting to detect if files have been accidentally or
-> maliciously altered, both remotely and locally, it can also be used
-> to appraise a file's measurement against a "good" value stored as an extended
-> attribute, and enforce local file integrity.
->
-> IMA also validates and measures the signers of the kernel and initrd
-> during kexec. The measurements are extended to PCR 10(configurable) and the logs
-> stored in memory, however once kexec'd the logs are lost. Kexec is used as
-> secondary boot loader in may use cases and loosing the signer
-> creates a security hole.
->
-> This patch is an implementation to carry over the logs and making it
-> possible to remotely validate the signers of the kernel and initrd. Such a
-> support exits only in powerpc.
-> This patch makes the carry over of logs architecture independent and puts the
-> complexity in a driver.
-
-If I'm not mistaken, the code at arch/powerpc/kexec/ima.c isn't actually
-powerpc-specific. It could be moved to an arch-independent directory and
-used by any other architecture which supports device trees.
-
-I think that's the simplest way forward. And to be honest I'm still
-trying to understand why you didn't take that approach. Did you try it
-and hit some obstacle or noticed a disadvantage for your use case?
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
