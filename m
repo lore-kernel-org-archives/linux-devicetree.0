@@ -2,108 +2,100 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7EDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0847C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFB920823
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBE620727
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 13:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Up30C1YR"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Omo1S8aT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387820AbgEWNOn (ORCPT
+        id S2387772AbgEWNU4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 09:14:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39376 "EHLO
+        Sat, 23 May 2020 09:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731373AbgEWNOm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 09:14:42 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C493C08C5C0
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 06:14:41 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id o5so14435303iow.8
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 06:14:41 -0700 (PDT)
+        with ESMTP id S1731282AbgEWNUz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 09:20:55 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFF4C05BD43
+        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 06:20:55 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id z5so6056083qvw.4
+        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 06:20:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Qqk95wVsZmzmcuIGFt4zOLnbm5tsZjHScQ5kWL0ptlo=;
-        b=Up30C1YRhvWB57ye1T2UrlkPecgpMbEt23MMyafxVtj4AWCFG/FP7d50A6YnKzg9yp
-         G2totyxkDwGSHGb7MyOfkpg+yi5yX1RK12jEKRrBkpHP6ZfWVKTJC9sYB2brG+MairoD
-         nVu7qav8lKDiem0EWG8cq+eNzX0PIUp92pXJJ05sgDL2eFgGXNL7w4o15p6olun3W+Xq
-         AWP/WTLrrm5Q2J98rGCkDUk465WESwOxdkOm+R3HSYg8UezUHHjE5f7UmhvYqSJEI9jC
-         dDMgCm+myuFjb6RIyGffd1PFIclibonFoPKs1bF6NUkiv9nFwsu5JVO3a0xShNsc/Nwh
-         1GHw==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jTWXBoIp5xP2z98SKXvxr1jwUQDv9G49Gs5gB7jAmQ=;
+        b=Omo1S8aTK2Xnmb0ZKAitTpFmzlzazJ6IEpN8QlZupFp4jAG/z+ILAtQ22mh90r0Q6N
+         H8VCvisko0Otqabe3s1i4RXIgtSlzjtuQzMixowLsADA6YrvoYzySOSEMolVTlmgl3BZ
+         unmnh0KcrxdfbG0ZTMyZyjTqC/YzzYqiTUXBB91FWV1nXL18uthuwcjCxYHyEKs+QYd+
+         KcmdtQlUnUOi4mpp2kJOX+qzILl15d4vCLA/7aYSnIwj2QfxbEWuR2tQse2pGSZtA7kp
+         Ms81QtCOf07KkEkWmRrXf60EdjabUREqAmOGI1dUShhFZIDqIuUTGeZyxaN9O1xfVFGI
+         +s0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Qqk95wVsZmzmcuIGFt4zOLnbm5tsZjHScQ5kWL0ptlo=;
-        b=SM1y21XxoCjL0sp99msNsaprlRIg3JDkYVNoQjzjMNc9aWfpQqjLsPXoMNOO6a6LBm
-         TDVTdEZgVpT8fwYGbq3Lxt6+KyzKo0eM+Clse0Q7LVVJNBibCogJucYG6wwNkhC7S5aU
-         zJ7EQqN8WizYX7Em9Xwvc51jDcG7zG3GXF3zTFQjrQEGPCUtp8P2CEews+7+2JPuq8GY
-         UpUvjEUP1d5ITaWhZ6PkzsH8XLaJ03HvMt3kw9p9G08Jb0qythsKQdkk3dRaKHmhufWP
-         1dEFwRwyFfZ2NSiLTVnmJKzng/tNrKOpzK0YVgd16ah+XcTQinHArTnnM/c5b0ckBTei
-         Lr2g==
-X-Gm-Message-State: AOAM532gQcUFwlD9U5xVtSZq2uaIoWGC16/E+xRMr5gmktJT+UPC5Wjy
-        UQGpxydJlVEtMI6T3p+QH4rpSD+ExfiIE41cLM95lg==
-X-Google-Smtp-Source: ABdhPJy3r7ROG2Dd7iXkJwzhgssNgb6WC0TdCHVJoxGhMF/mvblnvGscUx3CvN8/kuZuYuZPjaHAQSC9J4+TMor5GdA=
-X-Received: by 2002:a05:6638:b:: with SMTP id z11mr1909060jao.114.1590239680686;
- Sat, 23 May 2020 06:14:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jTWXBoIp5xP2z98SKXvxr1jwUQDv9G49Gs5gB7jAmQ=;
+        b=L8KmoAhOUqLnu/tLUADUUpDBDJz5T/7A2PUowJwQWotTVMUIa0affXX1YdOEvdMey0
+         m2tvdHMa6Aw5/9b+otrQ/6L2tXbMftuUsPQd3SmlnkJ6emLt9AbSKC1dpPAMEeQ94/dx
+         Q2I7lGL0m/+/zAsJ9yD//9z8xR5qqCrfaMW4yZSnLEWe4gzy6CAcH4rDEamaThTMAtBE
+         dnWPeARGpQXNLcVWkbu/AKudRDqcl2+VfLSs9M9XG4A0wiX6ir93qYc9vc3D6g425FuO
+         83cZ7LtFmMTV14ampzuQS2+GFAd23dcxhyLS3taEcdgcwpY5dXQkHiw8px+OGo6hgL2p
+         a9KA==
+X-Gm-Message-State: AOAM533gD6B/hf9/82l9O3cgr0lAQHhvKrGuWOqesmkUV3WJ5OIMDoRe
+        NtFhK5jzlFYUAdDpzO61kSvU4B//b5s=
+X-Google-Smtp-Source: ABdhPJzSiWtfHLcpMPsu3/OplQOPrW3WaqO9a9RL0m/spX6r63BLU7ZEGJoOWSQ+p6psVR32yyK4wg==
+X-Received: by 2002:ad4:55ac:: with SMTP id f12mr227669qvx.51.1590240054557;
+        Sat, 23 May 2020 06:20:54 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id m33sm10349519qte.17.2020.05.23.06.20.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 06:20:54 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: qcom: sm8250: rename spmi node to spmi_bus
+Date:   Sat, 23 May 2020 09:21:04 -0400
+Message-Id: <20200523132104.31046-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-References: <20200520114415.13041-1-brgl@bgdev.pl> <20200522.153653.998395486877096103.davem@davemloft.net>
-In-Reply-To: <20200522.153653.998395486877096103.davem@davemloft.net>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 23 May 2020 15:14:29 +0200
-Message-ID: <CAMRc=MdQo1faFjUzS0z5VmihZ3dfiuHiXozxQUkOhAi1n5tkcQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] net: provide a devres variant of register_netdev()
-To:     David Miller <davem@davemloft.net>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-sob., 23 maj 2020 o 00:36 David Miller <davem@davemloft.net> napisa=C5=82(a=
-):
->
-> From: Bartosz Golaszewski <brgl@bgdev.pl>
-> Date: Wed, 20 May 2020 13:44:10 +0200
->
-> >   net: ethernet: mtk_eth_mac: use devm_register_netdev()
->
-> This patch doesn't apply to net-next.
->
-> Neither the source file drivers/net/ethernet/mediatek/mtk_eth_mac.c,
-> nor the function mtk_mac_probe() even exist in the net-next GIT
-> tree.
+The pm8150 dtsi files refer to it as spmi_bus, so change it.
 
-Indeed. The driver got renamed in v5. I didn't resend a new version of
-this series because I thought there would be a discussion about its
-usefulness. I'll send a rebased version then.
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bartosz
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 04c9c215ffcd..a273b99bf1e6 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -578,7 +578,7 @@ pdc: interrupt-controller@b220000 {
+ 			interrupt-controller;
+ 		};
+ 
+-		spmi: qcom,spmi@c440000 {
++		spmi_bus: qcom,spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0x0 0x0c440000 0x0 0x0001100>,
+ 			      <0x0 0x0c600000 0x0 0x2000000>,
+-- 
+2.26.1
+
