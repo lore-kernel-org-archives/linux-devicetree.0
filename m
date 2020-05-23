@@ -2,99 +2,131 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872ECC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 10:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86CCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 10:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 639D320757
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 10:16:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="LbBFgRwc"
+	by mail.kernel.org (Postfix) with ESMTP id A350F20727
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 10:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590230175;
+	bh=0HzKqeO/bdhEuUfUb/+2HOuRW4/bgdkt0jgum4LSP7I=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=rUdAjbuPDeGUe5tRtMKVwowr8TJnqZm0RZ5AB+2NE27jdJ41NL0w3n5Vj+h/adQMU
+	 w8jjbEeJipP2DUms9128rpFTTMgvYz8mLmm2YtH+BwWPG0jFPV/rOe/RUwGd72E86d
+	 CsJt1//dVA6yf63Crf8DnpFLOWbRmLOZSg1DUQmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387741AbgEWKQO (ORCPT
+        id S1727090AbgEWKgP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 06:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbgEWKQN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 06:16:13 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D0B0C061A0E
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 03:16:12 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id m18so15622773ljo.5
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 03:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mIlsCm+rT7kwukl7URSohYQng9/Du2FKvF/brHcNKyU=;
-        b=LbBFgRwcOR6Ca4VmxtLY6AETfa6Cgnvp4i0ehkN6dL7ZYgrj6J93hNdGr6BTTg/2gZ
-         26Iwme03fRE71vy24tzHeCcP3oe8Vj/n9mRNa8mZHFvBtUlffKPVagv95kiORZ1EiZF6
-         KrHW9woREVPGdHW6hqk/0Dl9ca4ztL4DhS5zeSxp2qsArsTeg3xsG1h3qc6RypXfOy9S
-         TrNUL48c6pn129JsIF86DTS8GMDwA51qz8JUeLJ+3LEllA1b+RGIERq1oQhZ3kMFqYCE
-         bzduouN192nrwQG7+h6hNQnkb8V8Ly3Dh7JCjHKgw8IF5sAGY/eXf+ImhIpJ02zScS/z
-         73Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mIlsCm+rT7kwukl7URSohYQng9/Du2FKvF/brHcNKyU=;
-        b=b40hc9YX1JkLv6G7MWmbvuQU0ia3oCvseZyoL50NTjdUFWoGoUhX1i/5OB0Ijda0Ji
-         W3OQfHVl2UepCt4AU3e0jTpLqaDzQ1GEBESVWSc+ROx23eZnu2kAafO1l1nulZpu9Nfd
-         rQo2mnMkXjdT8mkfNFHAwlKH7BCGJu36B/LT4vvzSuXE/P9b62Kz/swxWOR8GmDgnAwx
-         z6iuAUJ4EOvavCL8315fBaZC7vM5R7XvMAX2VI146wTTGgKLpGFUpjUAQ5uzKMkX+jjt
-         eT7TCZKS1W7AlOaimU1jPOpqqHSYRu+PpfWtKBSEVFr8V0eO7nChta0NVV3ap1jFpwCS
-         qG3A==
-X-Gm-Message-State: AOAM532L/fSj54/O1LVia9gu86J2qFkqI/5+k3kQ/GsaVM32xqNfiUg6
-        3O1vKbsq91IlQkv3kjv0ESE9Zjgz8ShZH0KT2GjP/A==
-X-Google-Smtp-Source: ABdhPJw8d/bvq8DbyNF5EpiICZHfXIYlz3Eh+N9RghL1ws1sCknCrX1LgohK7PlMoVRSX56UsyFqADF4Nqv+onyTp/s=
-X-Received: by 2002:a2e:6c08:: with SMTP id h8mr7938646ljc.375.1590228970396;
- Sat, 23 May 2020 03:16:10 -0700 (PDT)
+        Sat, 23 May 2020 06:36:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbgEWKgN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 23 May 2020 06:36:13 -0400
+Received: from localhost (p5486c962.dip0.t-ipconnect.de [84.134.201.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBBAC2071C;
+        Sat, 23 May 2020 10:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590230172;
+        bh=0HzKqeO/bdhEuUfUb/+2HOuRW4/bgdkt0jgum4LSP7I=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=tcvPOX7FmK7rYwEMs0HJbm5mXoYSvZ/SjgG1xtFkYnqcuzPx/GVq4O6LXnX6Eh5jk
+         c4jwP5wSX6gLthoBAv+t1O0DRMCFFPSoFh5CSHH6U2P0G10YU4sxA9pZOvnSnMBic0
+         PkhLQwfl1X1gtHJthD25SaApF13kbUkzfAA8Ia8Q=
+Date:   Sat, 23 May 2020 12:36:01 +0200
+From:   "wsa@kernel.org" <wsa@kernel.org>
+To:     Rob Herring <robh@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
+Message-ID: <20200523103601.GA3459@ninjato>
+References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
+ <1588657871-14747-4-git-send-email-alain.volmat@st.com>
+ <20200513021932.GA9172@bogus>
+ <20200513054231.GA16558@gnbcxd0016.gnb.st.com>
 MIME-Version: 1.0
-References: <1589963516-26703-1-git-send-email-fugang.duan@nxp.com> <1589963516-26703-3-git-send-email-fugang.duan@nxp.com>
-In-Reply-To: <1589963516-26703-3-git-send-email-fugang.duan@nxp.com>
-From:   "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
-Date:   Sat, 23 May 2020 12:15:59 +0200
-Message-ID: <CANh8QzxfVtk+3N=5UttjXK6CR9ZQ=qD-Twu7y-zKabLJZGQ2yQ@mail.gmail.com>
-Subject: Re: [PATCH net 2/4] dt-bindings: fec: update the gpr property
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Content-Disposition: inline
+In-Reply-To: <20200513054231.GA16558@gnbcxd0016.gnb.st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->  - gpr: phandle of SoC general purpose register mode. Required for wake on LAN
-> -  on some SoCs
-> +  on some SoCs. Register bits of stop mode control, the format is
-> +       <&gpr req_gpr req_bit>.
-> +        gpr is the phandle to general purpose register node.
-> +        req_gpr is the gpr register offset for ENET stop request.
-> +        req_bit is the gpr bit offset for ENET stop request.
->
 
-More of a DT binding changes policy question, do we care about
-supporting the old
-no argument binding too?
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't think it actually matters seeing as the no argument gpr node
-binding was only added recently anyway.
-But it was backported to the stable trees and
-Documentation/bindings/ABI.txt says
 
-   "Bindings can be augmented, but the driver shouldn't break when given
-     the old binding. ie. add additional properties, but don't change the
-     meaning of an existing property. For drivers, default to the original
-     behaviour when a newly added property is missing."
+> > > +        st,smbus-alert:
+> > > +          description: Enable the SMBus Alert feature
+> > > +          $ref: /schemas/types.yaml#/definitions/flag
+> > > +
+> >=20
+> > We already have smbus_alert interrupt. Can't you just check for this in=
+=20
+> > the slave nodes and enable if found?
+>=20
+> My understanding reading the code (smbalert_probe within i2c-smbus.c, of_=
+i2c_setup_smbus_alert called when
+> registering an adapter within i2c-core-smbus.c) is that smbus_alert refer=
+s to an interrupt on the
+> adapter side. That is an interrupt that would be triggered when the adapt=
+er is receiving an smbus_alert
+> message.
+> In our case (stm32f7), we do not have specific interrupt for that purpose=
+=2E The interrupt triggered when
+> an SMBUS Alert is received (by the adapter) is the same interrupt as for =
+other reasons and we check
+> within the irq handler within stm32f7 the reason before calling i2c_handl=
+e_smbus_alert if the status
+> register indicated an SMBUS Alert.
+> So my understanding is that we cannot rely on the mechanism of naming an =
+interrupt smbus_alert.
+> Did I misunderstood something ?
 
-Myself I think this is overkill in this case and am fine with just
-changing the binding without the driver handling the old case but
-that's Rob's call to make I think.
+I just wonder what is bad about specifying the same interrupt twice in
+the interrupt properties? You could then check in probe if "smbus_alert"
+is populated and if it matches the main irq.
 
-Martin
+
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7I/I0ACgkQFA3kzBSg
+Kbavuw/+NO4H+Xha0Xe144SeVcvWUywbqoyWBQ0bwabNCH3szXM85RHPfEQsUXMo
+bwOa6rKiRHSI34T/PwCmjvNVAadYuYIkjGpLFNbUQEhpnEehWiLcsQMYWJUzg+ZE
+5uOg0Gbd5/Db6a/jpdF9A0FaPomsmqNPuXiThftutc5p1pk0eQzixOBaK61Ywky3
+OZoyCrOS4y2nZ0jNvCcccJI/38s35Sf0E5vMo0VUkXpUlqucdRp8oDWhapDNW8UP
+bvmCU9Xw7vfM1iaYOQ4hX0bUus/bH5/vkgEjnsEUNxlsbNB+nZDNAxm4ZLRr3hYW
+aLKVw6H+P7ZSbSOKy9SYzo+aHixk1r47kpzwCxLMEh3ul0BYwcArDQbqq0WtbhYf
+4fVswX9t5t194CW61jE2k/f12qiDpVJ3cn7XZZ2ygKY5JfmW3N6qjB+FY/o0amxs
+pfxClFmbMXuq4Bcn4+4Qj23QSAO4xxYkY7ImziQa9mYQAtmaJUagVzRxUz9JkP3Q
+qigB58PeO8etgZ+U6yNKjG6fxNg1THTmWtuE83Z5z0ZdwXyEtZLBpsXM8zCtptHq
+8m4ZI4SU6XVAFvQjrPgJXVSuZ1Tkc7ZJuBpXWF2UFhVGcJSeptEnkPQel6VJXME+
+ka3e+K9lySX+ub5zdNvEI+Uz3q9mTVzJP4RbW7PP7w13jb3kjm0=
+=NDSc
+-----END PGP SIGNATURE-----
+
+--BXVAT5kNtrzKuDFl--
