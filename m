@@ -2,110 +2,185 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C25C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 05:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F3EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 05:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 965C12067B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 05:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872122067B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 05:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NpzpEoKH"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="IcZFUhI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387612AbgEWFk3 (ORCPT
+        id S2387466AbgEWFof (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 01:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387459AbgEWFk3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 01:40:29 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01F1C061A0E
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 22:40:28 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q24so5970517pjd.1
-        for <devicetree@vger.kernel.org>; Fri, 22 May 2020 22:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Jxqs63Z1KDKQGpOdOeQMTViZZkGnReSqlh+zqFpbleQ=;
-        b=NpzpEoKHZnmldpoPMkE+bzHJ8AFM3iTtY/iE5mkL1vDY50VUOrfKjd5gNaVtnOTlYl
-         sMm3Lsly+RCq/jcCZIgneJXFg3cxvGAMX9Fuw3b/sfc0jgJoEQw7ZUNcuBEGAWuTKV9y
-         W6t//DvWTOky7bm6ofj60Me4iszhpqG7zHs0PputqOWVYAZq4Eh910LHpYktU7aMDH5R
-         P4Pjsl7KGL7evuGTo+s3GFfOvp4R9aTBAuuncQd7yo1GTkayDyAmZU05qET54wygA2K2
-         jqjx+Hpx2nfdM85Ga85d6wO/WJRWE7KylRwZS56KjtsnffzSDaWPhtUEVXKG28naajR+
-         9iYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jxqs63Z1KDKQGpOdOeQMTViZZkGnReSqlh+zqFpbleQ=;
-        b=lw9lV+55nKHIYPvfu4ml7IBSjV9hENWfGXUhVeQ+S9P7g2sOSWiTD6/OOVXPi2y0EN
-         CUmqDJAJqCJoJT885aMiePetWclBs+o9o3y06+LJ/ZWaSxIlluNKMQ7OtYiPSEXX5lA/
-         vTaiYec3nKzLImZ+SESnwHHkWyUadlFbmNA8EN8VE11Y8I8r8nWSPNRRKgji5aQ+E1Xm
-         yzoDoIcD7KxQPT11hrINsREhVrJ3jYFFYFlRRIPi/MwM0XpupdzQwMtLaZJ+BPQW+6qg
-         PePTG/sHDw2tg2IIsLIgG8SJnhp5RAQxzmsroYS/KH3jTaoLeZnTFKSAWoGpS5cwLfWZ
-         KhNg==
-X-Gm-Message-State: AOAM5320G7urE6rMAuPJ5w25hTUjR80SxvgYtvBLTE74wPe2+cSC3Xg3
-        1HZlJg4pRz7rtulsyJ4f4hG5tQ==
-X-Google-Smtp-Source: ABdhPJzrIIxev5YLq7j06KRiNYHqrMaVzvotEBa13813oXSRwPO34UqHwh/8/IsfG3JFW0nxQhyE8Q==
-X-Received: by 2002:a17:90a:8c85:: with SMTP id b5mr8201260pjo.187.1590212428371;
-        Fri, 22 May 2020 22:40:28 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l3sm8426994pjb.39.2020.05.22.22.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 22:40:27 -0700 (PDT)
-Date:   Fri, 22 May 2020 22:40:25 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: enable pm8150 rtc
-Message-ID: <20200523054025.GL11847@yoga>
-References: <20200523041201.32065-1-jonathan@marek.ca>
+        Sat, 23 May 2020 01:44:35 -0400
+Received: from mail-dm6nam10on2052.outbound.protection.outlook.com ([40.107.93.52]:24458
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387446AbgEWFoe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 23 May 2020 01:44:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cHpmoWcmXeBZLx6N2Cg+TKbEoH/VS6zjOmp4xD2KYlqixl7J81DNM7O8INmkeSytKoWO9D380D2Mq+YGedCLz0bIiRwvfRSi0WMoVa3bmc5BtYuuwDth0pJDu3F04zpG/6cZDdA9W/L48kKyVhgXkiMkI5hCsFmtYDL2SnScjMn6rC85xLuy6AtYpmWScnzCP1kdfY/yndYx5k9ZOBkNjtJuNnWNBHP1Btlr8uaELZY5VJhoLkXEwSotlbgpfjTaXyxiGf2pvgeHTlJc4h8RSXrnHs79MqVMpGo87BI+1/350o2mb7/RAPenkpYMuwL0O+Pr/gkvE94Lm07RKPslJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7ipjdO2rJczSUQQgRbN8u5RyrXa3dJvT49sWIF6gQA0=;
+ b=V0Uz6f9FJCqhfpGNfj+iasN2hCXu6lzkfy2WRjCGGrYUWUSBiIbQQNKxJssgpIcDaa73XFOXUDVAoXEKttFp9B/WbQadPwmJ9QbJ3PHjPtbgwbzdYlurgEC0iXwmSXjcWeApR5uqPK7JK7/b2r9tWPwDalAFsllZQVYwEEmgwovKvQpCSUM7HmgntTJGl98AdlbbRQfeKtZ62SM9u7lldCaw0tynxE8RIQKfJ5Ro3othOIAEvcpkp/6HIe7HwbAVysejumDAlKx6Ovkgm4xPCJYrBz+O901u0V/PjEPhzmRjkEqzDT0XxoF5kWsHtoUeDSC6T82dQ+eKDEbyrODTLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7ipjdO2rJczSUQQgRbN8u5RyrXa3dJvT49sWIF6gQA0=;
+ b=IcZFUhI0e5n+cV/dyUaunDl++aebHAeZjD6eCU/kOx5ZjpTMpczdprUFU6YthHy/4YGSa5RSyP5RhXQlW0DecnJZzujeCIvmubWONIsovQuAwx/Yv2moqlr4mBEzRemrpOxgbrKayRTWCvP6QMzHDs6INsWvpXltwSrIggpKJJc=
+Received: from BN8PR13MB2611.namprd13.prod.outlook.com (2603:10b6:408:81::17)
+ by BN8PR13MB2900.namprd13.prod.outlook.com (2603:10b6:408:91::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.19; Sat, 23 May
+ 2020 05:44:29 +0000
+Received: from BN8PR13MB2611.namprd13.prod.outlook.com
+ ([fe80::c1d9:f4ee:80ab:de83]) by BN8PR13MB2611.namprd13.prod.outlook.com
+ ([fe80::c1d9:f4ee:80ab:de83%6]) with mapi id 15.20.3045.009; Sat, 23 May 2020
+ 05:44:29 +0000
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>
+Subject: RE: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not
+ handled
+Thread-Topic: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not
+ handled
+Thread-Index: AQHWKS5si1qF0hln+U+l+oHBCN2XWai1N8NA
+Date:   Sat, 23 May 2020 05:44:29 +0000
+Message-ID: <BN8PR13MB26111D51332B5A716328079599B50@BN8PR13MB2611.namprd13.prod.outlook.com>
+References: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
+In-Reply-To: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
+x-originating-ip: [116.74.152.254]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5a82aac-6bf9-4229-fdd2-08d7fedc5c95
+x-ms-traffictypediagnostic: BN8PR13MB2900:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR13MB2900FC81923FB0AC1BF0949899B50@BN8PR13MB2900.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0412A98A59
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Sf2L9PS8sOqtlv9R2moR4bsFgb9t/SMyD18GGeKisd5ti5oyZHt5tL6orJXEnYH8w9Cc6gjP2S4Gi2CKNzxZmTEguAvxVmkVRMNOvvYYpwb5JV8XUyYdyzHOVFCKR9q1aRpPYxWL5zYzX3xD4ikootccWMwDqjt+isa3ienk+4UOqalVoPFqbHW0SAulytK1+gfMgqUmJTRnk9GSBl2ZZeWF6Lj9FOl/ZgKfcShble7IOZaKCyyuhTLLadwTcCijgyfM5hpRde3lFAVj8uXIgW56EWRgKUFWK5hcr0S01t10wQS/54KtenMSI/NWaOem8/qPXkVcGVhzVWpKSXNwf1gl8fKw0FBBd0eSxIwBWxz/1NXVa8NNFk22ZG7vCGXl7/Co5eoJOENy+memqtAk/A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR13MB2611.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39840400004)(346002)(366004)(396003)(136003)(110136005)(33656002)(66446008)(54906003)(66556008)(55236004)(76116006)(26005)(5660300002)(64756008)(8676002)(66476007)(52536014)(8936002)(66946007)(71200400001)(7696005)(186003)(53546011)(6506007)(44832011)(55016002)(86362001)(316002)(9686003)(2906002)(966005)(478600001)(4326008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 4gRrY3VSpltmhiSxwFXgZ15tt0SYgsFB6hKSgMwIy/Q8OQww8Y8aLuqpuveHrxJYSHJbdfzr6qwy5Tv3crEvOInLW9xcGFD31aHJIcHlNz69Z3lPomAHEhch72L2u81IebNvdYK4Euhv+hCd3Keecemck/H7Pmws6+2MftDyBeuZZl4W0TdpSOC2d/NnqcABI4Mb67oDwQLi8YBFwz3gnX4UG1rxWn5LLYA95ioRofGTlslscjHwaaVzsi4IUc/BJOy71bRReTrxA8cSIRMZB/tJLnTMBWkTl41TJxGuE7QI+09/jv03srBML8XXVGngTyKqAroIHdy4OTXaQY35FiJQnKcs4NWlTtURRUKK7nE72GCToAA9HDKF82aeVrQvt+L2S8O85OpF+mA7dQNTAiZ/1lfLsVYzw1Z8wFc4gXSXYHYeCvE5exe3fi2g2VxT/b105DA7r9IV9qMd5HkPYgD15q0eblTHlaXbuqpfTQOzn5YjHVK7B74o7J2t+JmH
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200523041201.32065-1-jonathan@marek.ca>
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5a82aac-6bf9-4229-fdd2-08d7fedc5c95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2020 05:44:29.4799
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dZuO8D6e8REzwQlmYWprxvaMDfj8TuOcDPk7uBDVKsveXFPsBKLhkMA9UmADz8cmcJNepMi5oWjIU7kEHGWXYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR13MB2900
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 22 May 21:12 PDT 2020, Jonathan Marek wrote:
+Hello,
 
-> I don't see any reason for it to be disabled by default.
-> 
+A gentle reminder. Any suggestions here?
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+BR,
+Sagar
 
-Regards,
-Bjorn
+> -----Original Message-----
+> From: Sagar Kadam <sagar.kadam@sifive.com>
+> Sent: Wednesday, May 13, 2020 7:27 PM
+> To: linux-kernel@vger.kernel.org; linux-riscv@lists.infradead.org;
+> devicetree@vger.kernel.org; robh+dt@kernel.org
+> Cc: palmer@dabbelt.com; Paul Walmsley <paul.walmsley@sifive.com>;
+> atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>
+> Subject: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not
+> handled
+>=20
+> HiFive Unleashed is having VSC8541-01 ethernet phy device and requires a
+> specific reset sequence of 0-1-0-1 in order to use it in unmanaged mode.
+> This series addresses a corner case where phy reset is not handled by boo=
+t
+> stages prior to linux.
+> Somewhat similar unreliable phy probe failure was reported and discussed
+> here [1].
+> The macb driver fails to detect the ethernet phy device if the bootloader
+> doesn't provide a proper reset sequence to the phy device or the phy itse=
+lf
+> is in some invalid state. Currently, the FSBL is resetting the phy device=
+, and
+> so there is no issue observed in the linux network setup.
+>=20
+> The series is based on linux-5.7-rc5.
+> Patch 1: Add the OUI to the phy dt node to fix issue of missing mdio devi=
+ce
+> Patch 2 and 3:
+> 	Resetting phy needs GPIO support so add to dt and defconfig.
+>=20
+> [1] https://lkml.org/lkml/2018/11/29/154
+>=20
+> To reproduce the issue:
+> 1. Comment out VSC8541 reset sequence in fsbl/main.c
+>    from within the freedom-u540-c000-bootloader.
+> 2. Build and flash fsbl.bin to micro sdcard.
+>=20
+> Boot the board and bootlog will show network setup failure messages as:
+>=20
+> [  1.069474] libphy: MACB_mii_bus: probed [  1.073092] mdio_bus
+> 10090000.ethernet-ffffffff: MDIO device at address 0
+> 	       is missing
+> .....
+> [  1.979252] macb 10090000.ethernet eth0: Could not attach PHY (-19)
+>=20
+> 3. Now apply the series build, and boot kernel.
+> 4. MACB and VSC8541 driver get successfully probed and the network is set
+>    without any failure.
+>=20
+>=20
+> So irrespective of whether the prior stages handle the phy reset sequence=
+,
+> the probing is successful in both the cases of cold boot and warm boot.
+>=20
+> Change History:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> V1:
+> -Ignore 4th patch as suggested and so removed it from the series.
+> -Verified this series on 5.7-rc5.
+>=20
+> V0: Base RFC patch. Verified on 5.7-rc2
+>=20
+>=20
+> Sagar Shrikant Kadam (3):
+>   dts: phy: fix missing mdio device and probe failure of vsc8541-01
+>     device
+>   dts: phy: add GPIO number and active state used for phy reset
+>   riscv: defconfig: enable gpio support for HiFive Unleashed
+>=20
+>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 2 ++
+>  arch/riscv/configs/defconfig                        | 2 ++
+>  2 files changed, 4 insertions(+)
+>=20
+> --
+> 2.7.4
 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  arch/arm64/boot/dts/qcom/pm8150.dtsi | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> index c0b197458665..b738c263f9d1 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> @@ -64,8 +64,6 @@ rtc@6000 {
->  			reg = <0x6000>;
->  			reg-names = "rtc", "alarm";
->  			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
-> -
-> -			status = "disabled";
->  		};
->  
->  		pm8150_gpios: gpio@c000 {
-> -- 
-> 2.26.1
-> 
