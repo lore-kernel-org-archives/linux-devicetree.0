@@ -2,109 +2,80 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867F3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 22:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ED5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 23:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 489A2207FB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 22:07:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="U+ECCzfr"
+	by mail.kernel.org (Postfix) with ESMTP id 7259620727
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 23:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgEWWHt (ORCPT
+        id S2388123AbgEWX4f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 18:07:49 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46616 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgEWWHt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 23 May 2020 18:07:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=0TK5MmKYn5+XxQjFm2ZcAEYxJODgUuVlSgKNVIWlelg=; b=U+ECCzfrr5GlGnp3+qFA5qCwGh
-        F6/x+t55V2gne2ChJHDxbip9rS/G8717Oonoi6z5AZFBcgO5SycL1DNo5EEuI8vrApvMaFtO0dDFj
-        ItbLycYGZd/Pe2H3nMflntjo0wRgkidtQ85O74upuyvB8hajEFzZiFA/TguoBvbiersg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jccIv-0035cb-EF; Sun, 24 May 2020 00:07:41 +0200
-Date:   Sun, 24 May 2020 00:07:41 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, hkallweit1@gmail.com,
-        davem@davemloft.net, robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v2 4/4] net: dp83869: Add RGMII internal delay
- configuration
-Message-ID: <20200523220741.GO610998@lunn.ch>
-References: <20200522122534.3353-1-dmurphy@ti.com>
- <20200522122534.3353-5-dmurphy@ti.com>
- <a1ec8ef0-1536-267b-e8f7-9902ed06c883@gmail.com>
- <948bfa24-97ad-ba35-f06c-25846432e506@ti.com>
- <20200523150951.GK610998@lunn.ch>
- <a59412a5-7cc6-dc70-b851-c7d65c1635b7@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a59412a5-7cc6-dc70-b851-c7d65c1635b7@ti.com>
+        Sat, 23 May 2020 19:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388106AbgEWX4e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 19:56:34 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0D4C061A0E;
+        Sat, 23 May 2020 16:56:34 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2E5D81287375F;
+        Sat, 23 May 2020 16:56:33 -0700 (PDT)
+Date:   Sat, 23 May 2020 16:56:32 -0700 (PDT)
+Message-Id: <20200523.165632.2131763470920616688.davem@davemloft.net>
+To:     brgl@bgdev.pl
+Cc:     corbet@lwn.net, matthias.bgg@gmail.com, john@phrozen.org,
+        sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com, kuba@kernel.org,
+        arnd@arndb.de, fparent@baylibre.com, hkallweit1@gmail.com,
+        edwin.peer@broadcom.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        stephane.leprovost@mediatek.com, pedro.tsai@mediatek.com,
+        andrew.perepech@mediatek.com, bgolaszewski@baylibre.com
+Subject: Re: [PATCH v2 0/5] net: provide a devres variant of
+ register_netdev()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200523132711.30617-1-brgl@bgdev.pl>
+References: <20200523132711.30617-1-brgl@bgdev.pl>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 23 May 2020 16:56:33 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > Any why is your PHY special, in that is does care about out of range
-> > delays, when others using new the new core helper don't?
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Sat, 23 May 2020 15:27:06 +0200
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> We are not rounding to nearest here.  Basically the helper works to find the
-> best match
+> Using devres helpers allows to shrink the probing code, avoid memory leaks in
+> error paths make sure the order in which resources are freed is the exact
+> opposite of their allocation. This series proposes to add a devres variant
+> of register_netdev() that will only work with net_device structures whose
+> memory is also managed.
 > 
-> If the delay passed in is less than or equal to the smallest delay then
-> return the smallest delay index
+> First we add the missing documentation entry for the only other networking
+> devres helper: devm_alloc_etherdev().
 > 
-> If the delay passed in is greater then the largest delay then return the max
-> delay index
+> Next we move devm_alloc_etherdev() into a separate source file.
+> 
+> We then use a proxy structure in devm_alloc_etherdev() to improve readability.
+> 
+> Last: we implement devm_register_netdev() and use it in mtk-eth-mac driver.
+> 
+> v1 -> v2:
+> - rebase on top of net-next after driver rename, no functional changes
 
-+               /* Find an approximate index by looking up the table */
-+               if (delay > delay_values[i - 1] &&
-+                   delay < delay_values[i]) {
-+                       if (delay - delay_values[i - 1] < delay_values[i] - delay)
-+                               return i - 1;
-+                       else
-+                               return i;
-
-This appears to round to the nearest value when it is not an exact
-match.
-
-The documentation is a hint to the DT developer what value to put in
-DT. By saying it rounders, the developer does not need to go digging
-through the source code to find an exact value, otherwise -EINVAL will
-be returned. They can just use the value the HW engineer suggested,
-and the PHY will pick whatever is nearest.
-
-> Not sure what you mean about this PHY being special.  This helper is
-> not PHY specific.
-
-As you said, if out of range, the helper returns the top/bottom
-value. Your PHY is special, the top/bottom value is not good enough,
-you throw an error.
-
-The point of helpers is to give uniform behaviour. We have one line
-helpers, simply because they give uniform behaviour, rather than have
-each driver do it subtlety different. But it also means drivers should
-try to not add additional constraints over what the helper already
-has, unless it is actually required by the hardware.
-
-> After I think about this more I am thinking a helper may be over kill here
-> and the delay to setting should be done within the PHY driver itself
-
-The helper is useful, it will result in uniform handling of rounding
-between DT values and what the PHY can actually do. But please also
-move your range check and error message inside the helper.
-
-     Andrew
+Series applied, thank you.
