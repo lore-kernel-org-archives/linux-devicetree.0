@@ -2,87 +2,123 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48001C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 21:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA6FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 21:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDF720727
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 21:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45610207D4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 21:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BbdzPxea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387984AbgEWVFb (ORCPT
+        id S2388016AbgEWVkd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 17:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387965AbgEWVFb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 17:05:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 585CFC061A0E
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 14:05:31 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jcbKh-0003p6-EQ; Sat, 23 May 2020 23:05:27 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jcbKf-0004RG-G1; Sat, 23 May 2020 23:05:25 +0200
-Date:   Sat, 23 May 2020 23:05:25 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com, andriy.shevchenko@intel.com
-Subject: Re: [PATCH 1/3] pwm: Add count attribute in sysfs for Intel Keem Bay
-Message-ID: <20200523210525.5ciw3lyafbwr26qn@pengutronix.de>
-References: <1589723560-5734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1589723560-5734-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        Sat, 23 May 2020 17:40:33 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57624 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388001AbgEWVkc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 17:40:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04NLeNFr113922;
+        Sat, 23 May 2020 16:40:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590270023;
+        bh=SiMQ2mdVD6XIm9JHgI3bhekP7OEXIT1Wjqo0LdZtwhc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BbdzPxeaMRIKYjKSwBQCjFxMkoToook77XlC//QL2++YQic5CZi0sElHbSCEtPKon
+         pIMtPYIRGAPBKyp6ZRUHgi4cnDiNl0eI/VyETXXISveLIaU2UL1dOU+qABPqTo6oL5
+         b+bd54IqhU0pl+6hFamgSYxj4F1qkbFRyVJMRZkE=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04NLeN7M031345;
+        Sat, 23 May 2020 16:40:23 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sat, 23
+ May 2020 16:40:22 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sat, 23 May 2020 16:40:22 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04NLeMeU126916;
+        Sat, 23 May 2020 16:40:22 -0500
+Subject: Re: [PATCH net-next v2 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200522122534.3353-1-dmurphy@ti.com>
+ <20200522122534.3353-5-dmurphy@ti.com>
+ <a1ec8ef0-1536-267b-e8f7-9902ed06c883@gmail.com>
+ <948bfa24-97ad-ba35-f06c-25846432e506@ti.com>
+ <20200523150951.GK610998@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <a59412a5-7cc6-dc70-b851-c7d65c1635b7@ti.com>
+Date:   Sat, 23 May 2020 16:40:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200523150951.GK610998@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1589723560-5734-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, May 17, 2020 at 09:52:38PM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
-> From: "Lai, Poey Seng" <poey.seng.lai@intel.com>
-> 
-> In Keem Bay, the number of repetitions for the period/waveform
-> can be configured from userspace. This requires addition of a sysfs
-> attribute to get/set the repetition count. Setting this value to 0
-> will result in continuous repetition of the waveform until the
-> channel is disabled or reconfigured.
+Andrew
 
-There is nothing specific for Keem Bay in this patch, the only special
-thing here is that this driver is the first implementor.
+On 5/23/20 10:09 AM, Andrew Lunn wrote:
+>>>> +	dp83869->tx_id_delay = DP83869_RGMII_CLK_DELAY_INV;
+>>>> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>>>> +				   &dp83869->tx_id_delay);
+>>>> +	if (!ret && dp83869->tx_id_delay > dp83869_internal_delay[delay_size]) {
+>>>> +		phydev_err(phydev,
+>>>> +			   "tx-internal-delay value of %u out of range\n",
+>>>> +			   dp83869->tx_id_delay);
+>>>> +		return -EINVAL;
+>>>> +	}
+>>> This is the kind of validation that I would be expecting from the PHY
+>>> library to do, in fact, since you use Device Tree standard property, I
+>>> would expect you only need to pass the maximum delay value and some
+>>> storage for your array of delays.
+>> Actually the PHY library will return either the 0th index if the value is to
+>> small or the max index if the value is to large
+>>
+>> based on the array passed in so maybe this check is unnecessary.
+> Hi Dan
+>
+> I'm not sure the helper is implementing the best behaviour. Rounded to
+> the nearest when within the supported range is O.K. But if the request
+> is outside the range, i would report an error.
 
-IMHO all drivers that don't support count should be changed to fail if
-a count > 0 is passed and introducing support in the sysfs interface
-should be a separate change.
+Hope this email does not bounce.
 
-Having said that I'm not convinced this is a good idea given that only
-very few driver can support this interface. Also this needs
-documentation, e.g. what is expected from .get_state().
+> Any why is your PHY special, in that is does care about out of range
+> delays, when others using new the new core helper don't?
 
-You should also motivate what this functionality is used for in the
-commit log and I'd prefer to see an in-tree user (apart from sysfs which
-I don't count as such).
+We are not rounding to nearest here.  Basically the helper works to find 
+the best match
 
-Best regards
-Uwe
+If the delay passed in is less than or equal to the smallest delay then 
+return the smallest delay index
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+If the delay passed in is greater then the largest delay then return the 
+max delay index
+
+Not sure what you mean about this PHY being special.  This helper is not 
+PHY specific.
+
+After I think about this more I am thinking a helper may be over kill 
+here and the delay to setting should be done within the PHY driver itself
+
+Dan
+
+> 	Andrew
