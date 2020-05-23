@@ -2,185 +2,204 @@ Return-Path: <SRS0=wYQk=7F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F3EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 05:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEFFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 08:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872122067B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 05:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7152071C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 May 2020 08:34:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="IcZFUhI0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bf8zg14A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbgEWFof (ORCPT
+        id S2387627AbgEWIeR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 01:44:35 -0400
-Received: from mail-dm6nam10on2052.outbound.protection.outlook.com ([40.107.93.52]:24458
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387446AbgEWFoe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 23 May 2020 01:44:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cHpmoWcmXeBZLx6N2Cg+TKbEoH/VS6zjOmp4xD2KYlqixl7J81DNM7O8INmkeSytKoWO9D380D2Mq+YGedCLz0bIiRwvfRSi0WMoVa3bmc5BtYuuwDth0pJDu3F04zpG/6cZDdA9W/L48kKyVhgXkiMkI5hCsFmtYDL2SnScjMn6rC85xLuy6AtYpmWScnzCP1kdfY/yndYx5k9ZOBkNjtJuNnWNBHP1Btlr8uaELZY5VJhoLkXEwSotlbgpfjTaXyxiGf2pvgeHTlJc4h8RSXrnHs79MqVMpGo87BI+1/350o2mb7/RAPenkpYMuwL0O+Pr/gkvE94Lm07RKPslJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ipjdO2rJczSUQQgRbN8u5RyrXa3dJvT49sWIF6gQA0=;
- b=V0Uz6f9FJCqhfpGNfj+iasN2hCXu6lzkfy2WRjCGGrYUWUSBiIbQQNKxJssgpIcDaa73XFOXUDVAoXEKttFp9B/WbQadPwmJ9QbJ3PHjPtbgwbzdYlurgEC0iXwmSXjcWeApR5uqPK7JK7/b2r9tWPwDalAFsllZQVYwEEmgwovKvQpCSUM7HmgntTJGl98AdlbbRQfeKtZ62SM9u7lldCaw0tynxE8RIQKfJ5Ro3othOIAEvcpkp/6HIe7HwbAVysejumDAlKx6Ovkgm4xPCJYrBz+O901u0V/PjEPhzmRjkEqzDT0XxoF5kWsHtoUeDSC6T82dQ+eKDEbyrODTLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ipjdO2rJczSUQQgRbN8u5RyrXa3dJvT49sWIF6gQA0=;
- b=IcZFUhI0e5n+cV/dyUaunDl++aebHAeZjD6eCU/kOx5ZjpTMpczdprUFU6YthHy/4YGSa5RSyP5RhXQlW0DecnJZzujeCIvmubWONIsovQuAwx/Yv2moqlr4mBEzRemrpOxgbrKayRTWCvP6QMzHDs6INsWvpXltwSrIggpKJJc=
-Received: from BN8PR13MB2611.namprd13.prod.outlook.com (2603:10b6:408:81::17)
- by BN8PR13MB2900.namprd13.prod.outlook.com (2603:10b6:408:91::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.19; Sat, 23 May
- 2020 05:44:29 +0000
-Received: from BN8PR13MB2611.namprd13.prod.outlook.com
- ([fe80::c1d9:f4ee:80ab:de83]) by BN8PR13MB2611.namprd13.prod.outlook.com
- ([fe80::c1d9:f4ee:80ab:de83%6]) with mapi id 15.20.3045.009; Sat, 23 May 2020
- 05:44:29 +0000
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>
-Subject: RE: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not
- handled
-Thread-Topic: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not
- handled
-Thread-Index: AQHWKS5si1qF0hln+U+l+oHBCN2XWai1N8NA
-Date:   Sat, 23 May 2020 05:44:29 +0000
-Message-ID: <BN8PR13MB26111D51332B5A716328079599B50@BN8PR13MB2611.namprd13.prod.outlook.com>
-References: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
-In-Reply-To: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
-x-originating-ip: [116.74.152.254]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f5a82aac-6bf9-4229-fdd2-08d7fedc5c95
-x-ms-traffictypediagnostic: BN8PR13MB2900:
-x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR13MB2900FC81923FB0AC1BF0949899B50@BN8PR13MB2900.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0412A98A59
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Sf2L9PS8sOqtlv9R2moR4bsFgb9t/SMyD18GGeKisd5ti5oyZHt5tL6orJXEnYH8w9Cc6gjP2S4Gi2CKNzxZmTEguAvxVmkVRMNOvvYYpwb5JV8XUyYdyzHOVFCKR9q1aRpPYxWL5zYzX3xD4ikootccWMwDqjt+isa3ienk+4UOqalVoPFqbHW0SAulytK1+gfMgqUmJTRnk9GSBl2ZZeWF6Lj9FOl/ZgKfcShble7IOZaKCyyuhTLLadwTcCijgyfM5hpRde3lFAVj8uXIgW56EWRgKUFWK5hcr0S01t10wQS/54KtenMSI/NWaOem8/qPXkVcGVhzVWpKSXNwf1gl8fKw0FBBd0eSxIwBWxz/1NXVa8NNFk22ZG7vCGXl7/Co5eoJOENy+memqtAk/A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR13MB2611.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39840400004)(346002)(366004)(396003)(136003)(110136005)(33656002)(66446008)(54906003)(66556008)(55236004)(76116006)(26005)(5660300002)(64756008)(8676002)(66476007)(52536014)(8936002)(66946007)(71200400001)(7696005)(186003)(53546011)(6506007)(44832011)(55016002)(86362001)(316002)(9686003)(2906002)(966005)(478600001)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 4gRrY3VSpltmhiSxwFXgZ15tt0SYgsFB6hKSgMwIy/Q8OQww8Y8aLuqpuveHrxJYSHJbdfzr6qwy5Tv3crEvOInLW9xcGFD31aHJIcHlNz69Z3lPomAHEhch72L2u81IebNvdYK4Euhv+hCd3Keecemck/H7Pmws6+2MftDyBeuZZl4W0TdpSOC2d/NnqcABI4Mb67oDwQLi8YBFwz3gnX4UG1rxWn5LLYA95ioRofGTlslscjHwaaVzsi4IUc/BJOy71bRReTrxA8cSIRMZB/tJLnTMBWkTl41TJxGuE7QI+09/jv03srBML8XXVGngTyKqAroIHdy4OTXaQY35FiJQnKcs4NWlTtURRUKK7nE72GCToAA9HDKF82aeVrQvt+L2S8O85OpF+mA7dQNTAiZ/1lfLsVYzw1Z8wFc4gXSXYHYeCvE5exe3fi2g2VxT/b105DA7r9IV9qMd5HkPYgD15q0eblTHlaXbuqpfTQOzn5YjHVK7B74o7J2t+JmH
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 23 May 2020 04:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387512AbgEWIeR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 04:34:17 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DB4C061A0E;
+        Sat, 23 May 2020 01:34:15 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x22so7856438lfd.4;
+        Sat, 23 May 2020 01:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=F3d+o4EkQI8dzAtQgDOYEYeiYTnRl/ABUKNf5AeEWnw=;
+        b=Bf8zg14ACwMjQhFGHbjNTptOzeaTrDOkvC+aQI0N4lTba1CaNsSCaL/cGUGix3MKyC
+         c7JxjvNEEzJlB4wnhbFt+86gXDLCWnByhebvY8bMogcJ/n67aOTEFdNPkrHtDqKcQ4/E
+         Ffr+vjYNnubjdlq32fCYEGRYgsEv8b6wujyl25vBvsM/i7UiCvS4NM2dil/Da9MuP3ar
+         nMVlmdtSEbj80NTV/h2s1X8/3p7qwP+hzfTQHYCqqacBj8CnKoZSSSXIMGOS3EXg+5z4
+         IZd/pR+V/CHGhh+K/DWmNS1dL5M2Im4/EDOA/mlSZF9WfwnsXFs9qQCSPP+6uIs17Q4e
+         eImw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F3d+o4EkQI8dzAtQgDOYEYeiYTnRl/ABUKNf5AeEWnw=;
+        b=TLyZ5DahLkk6rVlaomlZzkvmBzW9e4vqkbv0laWEvfvIjYcvi+Glp46wcOa3BK2MiD
+         7FFS0wWSQ9WpWW71hwKSRim/jxBUSfFFyIZKhoOOzX+bziWUVnYFn+r+Eq2WU9Ji0p5r
+         UpgOyprXVdl8v0dQUDPoqpFdWdpFP+sWp3pguRIKHmMqoVwJTnOuBLSZRF+/uWEQsmZA
+         3aze5IK5WY3+Kqy8gIKKsWQyt+0jpCgMmFEQRK7XjiWako6Y3qHKhuHmqpMLOBdN7xvr
+         N38bpRVkZ4C24jjn7j6IoQN9NL72qcwIq2oXthmEALqqQm3zYZuBWfkUIB8zRblSZcRE
+         Kukw==
+X-Gm-Message-State: AOAM53130GOEWlqpk/GCUkZHBQQKHtIVKNgvbYc0w8/fcz08CIiQPkQV
+        sbitHWzlqpIRgPXTzFJevn8=
+X-Google-Smtp-Source: ABdhPJyqdbYgA5KPOYIYWJOxpJBiM1rfOZy/+R9CbEqH2Bo1LQ3ZgVvuRJPCNMG4kBqVL+Caa3ohSw==
+X-Received: by 2002:a19:c3c5:: with SMTP id t188mr9445431lff.149.1590222853772;
+        Sat, 23 May 2020 01:34:13 -0700 (PDT)
+Received: from mobilestation ([95.79.222.123])
+        by smtp.gmail.com with ESMTPSA id 23sm2941907lfb.1.2020.05.23.01.34.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 01:34:13 -0700 (PDT)
+Date:   Sat, 23 May 2020 11:34:10 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Alan Cox <alan@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200523083410.3qarkfkwsmodvxwk@mobilestation>
+References: <20200522121221.GA1634618@smile.fi.intel.com>
+ <20200522121820.GG5801@sirena.org.uk>
+ <20200522123427.GD1634618@smile.fi.intel.com>
+ <20200522124406.co7gmteojfsooerc@mobilestation>
+ <20200522131013.GH5801@sirena.org.uk>
+ <20200522132742.taf2ixfjpyd5u3dt@mobilestation>
+ <20200522140025.bmd6bhpjjk5msvsm@mobilestation>
+ <20200522143639.GG1634618@smile.fi.intel.com>
+ <20200522144542.brhibh453wid2d6v@mobilestation>
+ <20200522152241.GK5801@sirena.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5a82aac-6bf9-4229-fdd2-08d7fedc5c95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2020 05:44:29.4799
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dZuO8D6e8REzwQlmYWprxvaMDfj8TuOcDPk7uBDVKsveXFPsBKLhkMA9UmADz8cmcJNepMi5oWjIU7kEHGWXYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR13MB2900
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522152241.GK5801@sirena.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+On Fri, May 22, 2020 at 04:22:41PM +0100, Mark Brown wrote:
+> On Fri, May 22, 2020 at 05:45:42PM +0300, Serge Semin wrote:
+> > On Fri, May 22, 2020 at 05:36:39PM +0300, Andy Shevchenko wrote:
+> 
+> > > My point is: let's warn and see if anybody comes with a bug report. We will
+> > > solve an issue when it appears.
+> 
+> > In my environment the stack trace happened (strictly speaking it has been a
+> > BUG() invoked due to the sleep_range() called within the tasklet) when SPI bus
+> > had been enabled to work with !8MHz! clock. It's quite normal bus speed.
+> > So we'll get the bug report pretty soon.)
+> 
+> Right, that definitely needs to be fixed then - 8MHz is indeed a totally
+> normal clock rate for SPI so people will hit it.  I guess if there's a
+> noticable performance hit to defer to thread then we could implement
+> both and look at how long the delay is going to be to decide which to
+> use, that's annoyingly complicated though so if the overhead is small
+> enough we could just not bother.
 
-A gentle reminder. Any suggestions here?
+As I suggested before we can implement a solution without performance drop.
+Just wait for the DMA completion locally in the dw_spi_dma_transfer() method and
+return 0 instead of 1 from the transfer_one() callback. In that function we'll
+wait while DMA finishes its business, after that we can check the Tx/Rx FIFO
+emptiness and wait for the data to be completely transferred with delays or
+sleeps or whatever.
 
-BR,
-Sagar
+There are several drawback of the solution:
+1) We need to alter the dw_spi_transfer_one() method in a way one would return
+0 instead of 1 (for DMA) so the generic spi_transfer_one_message() method would
+be aware that the transfer has been finished and it doesn't need to wait by
+calling the spi_transfer_wait() method.
+2) Locally in the dw_spi_dma_transfer() I have to implement a method similar
+to the spi_transfer_wait(). It won't be that similar though. We can predict a
+completion timeout better in here due to using a more exact SPI bus frequency.
+Anyway in the rest of aspects the functions will be nearly the same. 
+3) Not using spi_transfer_wait() means we also have to locally add the SPI
+timeout statistics incremental.
 
-> -----Original Message-----
-> From: Sagar Kadam <sagar.kadam@sifive.com>
-> Sent: Wednesday, May 13, 2020 7:27 PM
-> To: linux-kernel@vger.kernel.org; linux-riscv@lists.infradead.org;
-> devicetree@vger.kernel.org; robh+dt@kernel.org
-> Cc: palmer@dabbelt.com; Paul Walmsley <paul.walmsley@sifive.com>;
-> atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>
-> Subject: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not
-> handled
->=20
-> HiFive Unleashed is having VSC8541-01 ethernet phy device and requires a
-> specific reset sequence of 0-1-0-1 in order to use it in unmanaged mode.
-> This series addresses a corner case where phy reset is not handled by boo=
-t
-> stages prior to linux.
-> Somewhat similar unreliable phy probe failure was reported and discussed
-> here [1].
-> The macb driver fails to detect the ethernet phy device if the bootloader
-> doesn't provide a proper reset sequence to the phy device or the phy itse=
-lf
-> is in some invalid state. Currently, the FSBL is resetting the phy device=
-, and
-> so there is no issue observed in the linux network setup.
->=20
-> The series is based on linux-5.7-rc5.
-> Patch 1: Add the OUI to the phy dt node to fix issue of missing mdio devi=
-ce
-> Patch 2 and 3:
-> 	Resetting phy needs GPIO support so add to dt and defconfig.
->=20
-> [1] https://lkml.org/lkml/2018/11/29/154
->=20
-> To reproduce the issue:
-> 1. Comment out VSC8541 reset sequence in fsbl/main.c
->    from within the freedom-u540-c000-bootloader.
-> 2. Build and flash fsbl.bin to micro sdcard.
->=20
-> Boot the board and bootlog will show network setup failure messages as:
->=20
-> [  1.069474] libphy: MACB_mii_bus: probed [  1.073092] mdio_bus
-> 10090000.ethernet-ffffffff: MDIO device at address 0
-> 	       is missing
-> .....
-> [  1.979252] macb 10090000.ethernet eth0: Could not attach PHY (-19)
->=20
-> 3. Now apply the series build, and boot kernel.
-> 4. MACB and VSC8541 driver get successfully probed and the network is set
->    without any failure.
->=20
->=20
-> So irrespective of whether the prior stages handle the phy reset sequence=
-,
-> the probing is successful in both the cases of cold boot and warm boot.
->=20
-> Change History:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> V1:
-> -Ignore 4th patch as suggested and so removed it from the series.
-> -Verified this series on 5.7-rc5.
->=20
-> V0: Base RFC patch. Verified on 5.7-rc2
->=20
->=20
-> Sagar Shrikant Kadam (3):
->   dts: phy: fix missing mdio device and probe failure of vsc8541-01
->     device
->   dts: phy: add GPIO number and active state used for phy reset
->   riscv: defconfig: enable gpio support for HiFive Unleashed
->=20
->  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 2 ++
->  arch/riscv/configs/defconfig                        | 2 ++
->  2 files changed, 4 insertions(+)
->=20
-> --
-> 2.7.4
+So to speak the local wait method will be like this:
 
++static int dw_spi_dma_wait(struct dw_spi *dws, struct spi_transfer *xfer)
++{
++ 	struct spi_statistics *statm = &dws->master->statistics;
++	struct spi_statistics *stats = &dws->master->cur_msg->spi->statistics;
++	unsigned long ms = 1;
++
++	ms = xfer->len * MSEC_PER_SEC * BITS_PER_BYTE;
++	ms /= xfer->effective_speed_hz;
++	ms += ms + 200;
++
++	ms = wait_for_completion_timeout(&dws->xfer_completion,
++					msecs_to_jiffies(ms));
++
++	if (ms == 0) {
++		SPI_STATISTICS_INCREMENT_FIELD(statm, timedout);
++		SPI_STATISTICS_INCREMENT_FIELD(stats, timedout);
++		dev_err(&dws->master->cur_msg->spi->dev,
++			"SPI transfer timed out\n");
++			return -ETIMEDOUT;
++	}
++}
+
+NOTE Currently the DW APB SSI driver doesn't set xfer->effective_speed_hz, though as
+far as I can see that field exists there to be initialized by the SPI controller
+driver, right? If so, strange it isn't done in any SPI drivers...
+
+Then we can use that method to wait for the DMA transfers completion:
+
++static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
++{
++	...
++	/* DMA channels/buffers preparation and the transfers execution */
++	...
++
++	ret = dw_spi_dma_wait(dws, xfer);
++	if (ret)
++		return ret;
++
++	ret = dw_spi_dma_wait_tx_done(dws);
++	if (ret)
++		return ret;
++
++	ret = dw_spi_dma_wait_rx_done(dws);
++	if (ret)
++		return ret;
++
++	return 0;
++}
+
+What do think about this?
+
+If you don't mind I'll send this fixup separately from the patchset we discuss
+here, since it's going to be a series of patches. What would be better for you:
+implement it based on the current DW APB SSI driver, or on top of this
+patchset "spi: dw: Add generic DW DMA controller support" (it's being under
+review in this email thread) ? Anyway, if the fixup is getting to be that
+complicated, will it have to be backported to another stable kernels?
+
+-Sergey
