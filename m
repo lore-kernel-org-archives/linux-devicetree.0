@@ -2,110 +2,246 @@ Return-Path: <SRS0=DJdz=7G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A9DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 20:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B511BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADDCD2076C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 20:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E8C207D8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:06:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="ppJWH4TW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388062AbgEXUdv (ORCPT
+        id S2388332AbgEXVGl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 16:33:51 -0400
-Received: from mga09.intel.com ([134.134.136.24]:8056 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388045AbgEXUdu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 24 May 2020 16:33:50 -0400
-IronPort-SDR: DCubHS15rd9IwKKdybv3X9Sleift3gq9agqNrnj4MdfLcY+J96Yk8NUZKjiktPO69TQgvh+Y/y
- oqY8IFhS6RLA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 13:33:50 -0700
-IronPort-SDR: hGO7Y3wYazKbBMeBckgS76jnZK8vgx3/d2+Tum7KpIZBE7Os41Bbvt3Qwb/u2VDS+n2UM4fhvq
- Z18P3EudgMLg==
-X-IronPort-AV: E=Sophos;i="5.73,430,1583222400"; 
-   d="scan'208";a="254745249"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 13:33:46 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 554C820736; Sun, 24 May 2020 23:33:44 +0300 (EEST)
-Date:   Sun, 24 May 2020 23:33:44 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
-        <shengnan.wang@mediatek.com>
-Subject: Re: [V8, 1/2] media: dt-bindings: media: i2c: Document OV02A10
- bindings
-Message-ID: <20200524203344.GB7618@paasikivi.fi.intel.com>
-References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
- <20200509080627.23222-2-dongchun.zhu@mediatek.com>
- <20200511160207.GA32476@bogus>
- <1589251221.8804.289.camel@mhfsdcap03>
- <CAAFQd5DgrDwPEpdN9ErJWsHbMDpo2s_u3pwsqtpNwVk4g3_CdQ@mail.gmail.com>
+        Sun, 24 May 2020 17:06:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388287AbgEXVGe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 17:06:34 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2271FC061A0E
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 14:06:34 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id c12so2674869qtq.11
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 14:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=K0FV4gDWANQPDDk3Qcqd7n0WZF5nF9QpVrxzsC0+ROQ=;
+        b=ppJWH4TWXQrqBS1oqnCG5bBN51rlxhSS7K+fr4P8jI5cdDcWagjBIyFe6mTTLJJXu3
+         EHvB3OtgFISr77VZGLcFr5z39GTQ4vdFNll7UGScjCN4b0mjN9WHscll0mkxiL67V0EG
+         Jh3lAY8ICqHfQeojBpFghjPkO3nXJPmhtZ+5RnZur1fO3GjjOXpe44eqQp/cmzcKTPJN
+         F05Q8YdvnDX/9j4BR3yFMRbvFMsPraYHS8hLN7S6M7SXqerW8HGTbDmZmnr30HH769ba
+         PCn1zLw67jE3UWVqn5iAcIdUtesCTxHZFPpT/+0G6YTfbexgskErcbFeRKozrT6gNoeo
+         AJ9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=K0FV4gDWANQPDDk3Qcqd7n0WZF5nF9QpVrxzsC0+ROQ=;
+        b=BcAuK5InM2zoNsV3XdxIgXCBqMMcj22m/DJ5CRMiniaon3bxWs6j+UZY0GtENciKl8
+         VclyhsoPvULDYJ86Igb3M4XC3kGAILH8kA05d1dZP4gSKYWriaN8WzN6/yhBcUgtKYqX
+         CC0kPJcMi00R2wab8rJPRECHRYHsUfQN4MJEEu0DUgRPya2lUaM35n7ebrChgGo9tRPC
+         +nWOn5tu24v9QQSP/wFSp4JpB/kvYq7gTkQxERWyZUwxBLYsD8fzCybK6YLCVdWQ/RMz
+         /J2lEyX6B07bD/UOmVjVjd4NeeIiVdU6KTF2SiX8+pqJBb/64vAUOEdoav8NJGtVMkq2
+         lgiw==
+X-Gm-Message-State: AOAM533EnqHmJB+JiT1k7p2sc3t/8cv90Xm7FD/927iG27CWTgXcdQLc
+        wzVcAeQ7ARwAgG3Eid0yiRqO9Q==
+X-Google-Smtp-Source: ABdhPJzHUDxBBjtUNeq8JlCgH/w/+qn1imv9TCQck3AoNbnMGzYBC+Dy/Twnm8Arw+Zbq1XNxZdLyg==
+X-Received: by 2002:ac8:340b:: with SMTP id u11mr25926922qtb.38.1590354393351;
+        Sun, 24 May 2020 14:06:33 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id g51sm4401769qtb.69.2020.05.24.14.06.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 14:06:32 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 10/10] arm64: dts: qcom: add sm8250 GPU nodes
+Date:   Sun, 24 May 2020 17:06:11 -0400
+Message-Id: <20200524210615.17035-11-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200524210615.17035-1-jonathan@marek.ca>
+References: <20200524210615.17035-1-jonathan@marek.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5DgrDwPEpdN9ErJWsHbMDpo2s_u3pwsqtpNwVk4g3_CdQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 08:59:56PM +0200, Tomasz Figa wrote:
-> Hi Dongchun, Rob,
-> 
-> On Tue, May 12, 2020 at 4:41 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > Thanks for the review.
-> >
-> > On Mon, 2020-05-11 at 11:02 -0500, Rob Herring wrote:
-> > > On Sat, May 09, 2020 at 04:06:26PM +0800, Dongchun Zhu wrote:
-> [snip]
-> > > > +            port {
-> > > > +                wcam_out: endpoint {
-> > > > +                    remote-endpoint = <&mipi_in_wcam>;
-> > > > +                    data-lanes = <1>;
-> > >
-> > > This doesn't match the schema which says this should be 4 entries.
-> > >
-> >
-> > Property "data-lanes" shows the number of lanes that sensor supports.
-> > If this property is omitted, four-lane operation is assumed.
-> > For OV02A10, it is one-lane operation, so the property is supposed to be
-> > set to <1>.
-> >
-> 
-> To clarify on this, the ov02a10 sensor supports only 1 lane. It's not
-> a driver limitation.
+This brings up the GPU. Tested on HDK865 by running vulkan CTS.
 
-If there's nothing to configure there, then the property should be omitted.
-I understood the sensor supported one to four lanes...
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 139 +++++++++++++++++++++++++++
+ 1 file changed, 139 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 3bdce658c08a..a55d0e5d7425 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -5,6 +5,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-sm8250.h>
++#include <dt-bindings/clock/qcom,gpucc-sm8250.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+@@ -387,6 +388,144 @@ tcsr_mutex: hwlock@1f40000 {
+ 			#hwlock-cells = <1>;
+ 		};
+ 
++		gpu: gpu@3d00000 {
++			/*
++			 * note: the amd,imageon compatible makes it possible
++			 * to use the drm/msm driver without the display node,
++			 * make sure to remove it when display node is added
++			 */
++			compatible = "qcom,adreno-650.2",
++				     "qcom,adreno",
++				     "amd,imageon";
++			#stream-id-cells = <16>;
++
++			reg = <0 0x3d00000 0 0x40000>;
++			reg-names = "kgsl_3d0_reg_memory";
++
++			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
++
++			iommus = <&adreno_smmu 0 0x401>;
++
++			operating-points-v2 = <&gpu_opp_table>;
++
++			qcom,gmu = <&gmu>;
++
++			zap-shader {
++				memory-region = <&gpu_mem>;
++			};
++
++			/* note: downstream checks gpu binning for 670 Mhz */
++			gpu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-670000000 {
++					opp-hz = /bits/ 64 <670000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
++				};
++
++				opp-587000000 {
++					opp-hz = /bits/ 64 <587000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
++				};
++
++				opp-525000000 {
++					opp-hz = /bits/ 64 <525000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
++				};
++
++				opp-490000000 {
++					opp-hz = /bits/ 64 <490000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
++				};
++
++				/* opp-441600000 {
++					opp-hz = /bits/ 64 <441600000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L0>;
++				}; */
++
++				opp-400000000 {
++					opp-hz = /bits/ 64 <400000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
++				};
++
++				opp-305000000 {
++					opp-hz = /bits/ 64 <305000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
++				};
++			};
++		};
++
++		gmu: gmu@3d6a000 {
++			compatible="qcom,adreno-gmu-650.2", "qcom,adreno-gmu";
++
++			reg = <0 0x3d6a000 0 0x30000>,
++			      <0 0x3de0000 0 0x10000>,
++			      <0 0xb290000 0 0x10000>,
++			      <0 0xb490000 0 0x10000>;
++			reg-names = "gmu", "rscc", "gmu_pdc", "gmu_pdc_seq";
++
++			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hfi", "gmu";
++
++			clocks = <&gpucc GPU_CC_AHB_CLK>,
++				 <&gpucc GPU_CC_CX_GMU_CLK>,
++			         <&gpucc GPU_CC_CXO_CLK>,
++				 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
++				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
++			clock-names = "ahb", "gmu", "cxo", "axi", "memnoc";
++
++			power-domains = <&gpucc GPU_CX_GDSC>,
++					<&gpucc GPU_GX_GDSC>;
++			power-domain-names = "cx", "gx";
++
++			iommus = <&adreno_smmu 5 0x400>;
++
++			operating-points-v2 = <&gmu_opp_table>;
++
++			gmu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-200000000 {
++					opp-hz = /bits/ 64 <200000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++				};
++			};
++		};
++
++		gpucc: clock-controller@3d90000 {
++			compatible = "qcom,sm8250-gpucc";
++			reg = <0 0x3d90000 0 0x9000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "xo";
++		};
++
++		adreno_smmu: iommu@3da0000 {
++			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
++			reg = <0 0x3da0000 0 0x10000>;
++			#iommu-cells = <2>;
++			#global-interrupts = <2>;
++			interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gpucc GPU_CC_AHB_CLK>,
++				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
++				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
++			clock-names = "ahb", "bus", "iface";
++
++			power-domains = <&gpucc GPU_CX_GDSC>;
++		};
++
+ 		usb_1_hsphy: phy@88e3000 {
+ 			compatible = "qcom,sm8250-usb-hs-phy",
+ 				     "qcom,usb-snps-hs-7nm-phy";
 -- 
-Sakari Ailus
+2.26.1
+
