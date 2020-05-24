@@ -2,247 +2,233 @@ Return-Path: <SRS0=DJdz=7G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FC1C433E4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 10:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BBAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 11:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3652070A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 10:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FCB20849
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 11:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590320481;
+	bh=8ZAPT2spP3nkobeWSQ+7g6/OU1ai1KDStJyS50keCKs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1MMHHZ73oA7YVIpFAxSJIHLBD8iLK9ESY9H4gOzysbftoVarMtEwOzHwqdMm71P9F
+	 dkRGANjvUfDWnZ9AT4pTLWO3yPPTA2USFSMcPggdYbm4l/5NeKxaxyr7BVFxZvUH9h
+	 B9VcaEnr9p+jpic7AcyaUDoAjHxtnxTfySLb1swc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgEXKEz (ORCPT
+        id S1727842AbgEXLlU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 06:04:55 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46282 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729437AbgEXKEz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 24 May 2020 06:04:55 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 24 May 2020 03:04:55 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 24 May 2020 03:04:51 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 498A72138A; Sun, 24 May 2020 15:34:49 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: [PATCH V5 1/8] dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
-Date:   Sun, 24 May 2020 15:34:39 +0530
-Message-Id: <1590314686-11749-2-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590314686-11749-1-git-send-email-sivaprak@codeaurora.org>
-References: <1590314686-11749-1-git-send-email-sivaprak@codeaurora.org>
+        Sun, 24 May 2020 07:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbgEXLlU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 24 May 2020 07:41:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D103B2075F;
+        Sun, 24 May 2020 11:41:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590320479;
+        bh=8ZAPT2spP3nkobeWSQ+7g6/OU1ai1KDStJyS50keCKs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DPC+Obpx7Oe8ECa/1kOLIOeOrM86DUyuz5pePhMZY9FTz0odbwNGvVztbXgR8oTa0
+         pxozpwFI5iPnOaXB/axSpJzq4uUon2qjEz1Kp7a/GoGNrWEPXycIvm1XTTXyZlNxic
+         Tzg7E2ROzj5fC2fLI1e/ISgHo5l+IR6ULWzRQnNs=
+Date:   Sun, 24 May 2020 12:41:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@nxp.com,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED 
+        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: iio: imu: bmi160: convert txt
+ format to yaml
+Message-ID: <20200524124114.7f4e785d@archlinux>
+In-Reply-To: <20200520194656.16218-2-jonathan.albrieux@gmail.com>
+References: <20200520194656.16218-1-jonathan.albrieux@gmail.com>
+        <20200520194656.16218-2-jonathan.albrieux@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Qualcomm APCS global block provides a bunch of generic properties which
-are required in a device tree. Add YAML schema for these properties.
+On Wed, 20 May 2020 21:46:40 +0200
+Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 88 ----------------------
- .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 86 +++++++++++++++++++++
- 2 files changed, 86 insertions(+), 88 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> Converts documentation from txt format to yaml.
+> 
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-deleted file mode 100644
-index beec612..0000000
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-+++ /dev/null
-@@ -1,88 +0,0 @@
--Binding for the Qualcomm APCS global block
--==========================================
--
--This binding describes the APCS "global" block found in various Qualcomm
--platforms.
--
--- compatible:
--	Usage: required
--	Value type: <string>
--	Definition: must be one of:
--		    "qcom,msm8916-apcs-kpss-global",
--		    "qcom,msm8996-apcs-hmss-global"
--		    "qcom,msm8998-apcs-hmss-global"
--		    "qcom,qcs404-apcs-apps-global"
--		    "qcom,sc7180-apss-shared"
--		    "qcom,sdm845-apss-shared"
--		    "qcom,sm8150-apss-shared"
--		    "qcom,ipq8074-apcs-apps-global"
--
--- reg:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: must specify the base address and size of the global block
--
--- clocks:
--	Usage: required if #clock-names property is present
--	Value type: <phandle array>
--	Definition: phandles to the two parent clocks of the clock driver.
--
--- #mbox-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: as described in mailbox.txt, must be 1
--
--- #clock-cells:
--	Usage: optional
--	Value type: <u32>
--	Definition: as described in clock.txt, must be 0
--
--- clock-names:
--	Usage: required if the platform data based clock driver needs to
--	retrieve the parent clock names from device tree.
--	This will requires two mandatory clocks to be defined.
--	Value type: <string-array>
--	Definition: must be "pll" and "aux"
--
--= EXAMPLE
--The following example describes the APCS HMSS found in MSM8996 and part of the
--GLINK RPM referencing the "rpm_hlos" doorbell therein.
--
--	apcs_glb: mailbox@9820000 {
--		compatible = "qcom,msm8996-apcs-hmss-global";
--		reg = <0x9820000 0x1000>;
--
--		#mbox-cells = <1>;
--	};
--
--	rpm-glink {
--		compatible = "qcom,glink-rpm";
--
--		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
--
--		qcom,rpm-msg-ram = <&rpm_msg_ram>;
--
--		mboxes = <&apcs_glb 0>;
--		mbox-names = "rpm_hlos";
--	};
--
--Below is another example of the APCS binding on MSM8916 platforms:
--
--	apcs: mailbox@b011000 {
--		compatible = "qcom,msm8916-apcs-kpss-global";
--		reg = <0xb011000 0x1000>;
--		#mbox-cells = <1>;
--		clocks = <&a53pll>;
--		#clock-cells = <0>;
--	};
--
--Below is another example of the APCS binding on QCS404 platforms:
--
--	apcs_glb: mailbox@b011000 {
--		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
--		reg = <0x0b011000 0x1000>;
--		#mbox-cells = <1>;
--		clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
--		clock-names = "pll", "aux";
--		#clock-cells = <0>;
--	};
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-new file mode 100644
-index 0000000..12eff94
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/mailbox/qcom,apcs-kpss-global.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm APCS global block bindings
-+
-+description:
-+  This binding describes the APCS "global" block found in various Qualcomm
-+  platforms.
-+
-+maintainers:
-+  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,ipq8074-apcs-apps-global
-+      - qcom,msm8916-apcs-kpss-global
-+      - qcom,msm8996-apcs-hmss-global
-+      - qcom,msm8998-apcs-hmss-global
-+      - qcom,qcs404-apcs-apps-global
-+      - qcom,sc7180-apss-shared
-+      - qcom,sdm845-apss-shared
-+      - qcom,sm8150-apss-shared
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description: phandles to the parent clocks of the clock driver
-+    items:
-+      - description: primary pll parent of the clock driver
-+      - description: auxiliary parent
-+
-+  '#mbox-cells':
-+    const: 1
-+
-+  '#clock-cells':
-+    const: 0
-+
-+  clock-names:
-+    items:
-+      - const: pll
-+      - const: aux
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#mbox-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+
-+  # Example apcs with msm8996
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    apcs_glb: mailbox@9820000 {
-+        compatible = "qcom,msm8996-apcs-hmss-global";
-+        reg = <0x9820000 0x1000>;
-+
-+        #mbox-cells = <1>;
-+    };
-+
-+    rpm-glink {
-+        compatible = "qcom,glink-rpm";
-+        interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-+        qcom,rpm-msg-ram = <&rpm_msg_ram>;
-+        mboxes = <&apcs_glb 0>;
-+        mbox-names = "rpm_hlos";
-+    };
-+
-+  # Example apcs with qcs404
-+  - |
-+    #define GCC_APSS_AHB_CLK_SRC  1
-+    #define GCC_GPLL0_AO_OUT_MAIN 123
-+    apcs: mailbox@b011000 {
-+        compatible = "qcom,qcs404-apcs-apps-global";
-+        reg = <0x0b011000 0x1000>;
-+        #mbox-cells = <1>;
-+        clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
-+        clock-names = "pll", "aux";
-+        #clock-cells = <0>;
-+    };
--- 
-2.7.4
+A reminder on the maintainer bit as that thread crossed with
+this one.  Also, drop the spi-max-frequency as we don't need
+to mention it explicitly for this device.
+
+Thanks,
+
+Jonathan
+
+
+> ---
+>  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 ---------
+>  .../bindings/iio/imu/bosch,bmi160.yaml        | 76 +++++++++++++++++++
+>  2 files changed, 76 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> deleted file mode 100644
+> index 900c169de00f..000000000000
+> --- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
+> -and externally connectable Magnetometer
+> -
+> -https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> -
+> -Required properties:
+> - - compatible : should be "bosch,bmi160"
+> - - reg : the I2C address or SPI chip select number of the sensor
+> - - spi-max-frequency : set maximum clock frequency (only for SPI)
+> -
+> -Optional properties:
+> - - interrupts : interrupt mapping for IRQ
+> - - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
+> -   input, set to "INT2" if INT2 pin should be used instead
+> - - drive-open-drain : set if the specified interrupt pin should be configured as
+> -   open drain. If not set, defaults to push-pull.
+> -
+> -Examples:
+> -
+> -bmi160@68 {
+> -	compatible = "bosch,bmi160";
+> -	reg = <0x68>;
+> -
+> -	interrupt-parent = <&gpio4>;
+> -	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+> -	interrupt-names = "INT1";
+> -};
+> -
+> -bmi160@0 {
+> -	compatible = "bosch,bmi160";
+> -	reg = <0>;
+> -	spi-max-frequency = <10000000>;
+> -
+> -	interrupt-parent = <&gpio2>;
+> -	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
+> -	interrupt-names = "INT2";
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> new file mode 100644
+> index 000000000000..46cb4fde1165
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/imu/bosch,bmi160.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bosch BMI160
+> +
+> +maintainers:
+> +  - Daniel Baluta <daniel.baluta@nxp.com> (?)
+
+Daniel's reply crossed with this.  Given he's moved on to other things
+he's not happy to be listed as maintainer here.
+
+Given other threads, either put yourself here if you are happy to maintain
+the binding, or fall back to me but use my kernel.org address.
+
+Jonathan Cameron <jic23@kernel.org>
+
+I don't mind either way.
+
+
+> +
+> +description: |
+> +  Inertial Measurement Unit with Accelerometer, Gyroscope and externally
+> +  connectable Magnetometer
+> +  https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> +
+> +properties:
+> +  compatible:
+> +    const: bosch,bmi160
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maxItems: 1
+
+spi-max-frequency doesn't need to be here at all.   We aren't trying to list
+all of the properties that might be present - but rather those that
+are either required or that are part of the description of the device.
+This one is a generic spi binding that may or may not be present.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    enum:
+> +      - INT1
+> +      - INT2
+> +    description: |
+> +      set to "INT1" if INT1 pin should be used as interrupt input, set
+> +      to "INT2" if INT2 pin should be used instead
+> +
+> +  drive-open-drain:
+> +    description: |
+> +      set if the specified interrupt pin should be configured as
+> +      open drain. If not set, defaults to push-pull.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    // Example for I2C
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        bmi160@68 {
+> +                compatible = "bosch,bmi160";
+> +                reg = <0x68>;
+> +                interrupt-parent = <&gpio4>;
+> +                interrupts = <12 1>;
+> +                interrupt-names = "INT1";
+> +        };
+> +    };
+> +  - |
+> +    // Example for SPI
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        bmi160@0 {
+> +                compatible = "bosch,bmi160";
+> +                reg = <0>;
+> +                spi-max-frequency = <10000000>;
+> +                interrupt-parent = <&gpio2>;
+> +                interrupts = <12 1>;
+> +                interrupt-names = "INT2";
+> +        };
+> +    };
 
