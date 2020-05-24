@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5010C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF101C433E4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54BA20899
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD9A208B6
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:25:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cuqs1pzV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O0iGA+nk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387807AbgEXTZn (ORCPT
+        id S2388249AbgEXTZt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 15:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37512 "EHLO
+        Sun, 24 May 2020 15:25:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388229AbgEXTZl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 15:25:41 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A0AC08C5C0
-        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 12:25:40 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id r125so9338051lff.13
-        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 12:25:40 -0700 (PDT)
+        with ESMTP id S2388303AbgEXTZs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 15:25:48 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A19C08C5C0
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 12:25:47 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z18so18499157lji.12
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 12:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ythenNMgCasy/26fjGx9+1WbKj8OM9GaH/NHc6AXhOM=;
-        b=cuqs1pzV9wFff2GzAa77a4DoEBOaiwUw4k6/Z5KiNk0rPbw2WWyS87P6oE987eiUQY
-         dvFFcbBp3yAMwXas2jEHznl6OFbqR/glhEu7tjtzqv+AihXa/K9aVZ9wKqE9C3qDu6Tf
-         iOy2cw+Im3uOdJdsrheiW7bJGH8bgwHa5jzwSC0bZE649ZGdSLvLvllqMKYn5/wPUqEd
-         aR6SLXLiJ6w5zAuwDbPp0nCu4VoWqHjhT9v67s22giW0KTfTuSNcTu7U0ExBx5TorhW/
-         Y9bZc50QE3GpJhp6lfvQ0y2K4HWFw3Q9QeeCWvvXR4EPplzkihdAw0xE5vLuBQleYb1m
-         I7pg==
+        bh=yVilPSB28wiJ3qo4ENpoTa0U9qIpxtxzCgolTCdGKWo=;
+        b=O0iGA+nkmPxFQkUtW87EE7yoXxMEW/Ado6yrzVZAqtOQY6BVLyUFkDEmDdcu3qVbI+
+         1I27ZyzQ6+cMuIQAPPeaHvj0P4jefWb64qeDvTmjo+G1oLcIsJNCMtxDUyOIe746mAWH
+         yvRs21NMkAv0LdYSHRH8Cv54DNnGYGPP1+hBSkFOOMem77gEXH86HXPVZIvxSgfgzHCF
+         a2dKMJPvLBuIMHipKUpQuS/0AI/qszvz6cSHzfYym9Lrq9yymUytNzwNBk05KY8oX9ky
+         a13DSnz9LagIBECnsqBxA3zFWqe8hdvqNqPLC7U9VmFfQaHZ5K1SR9U6fHHR2U6kcykX
+         ckJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ythenNMgCasy/26fjGx9+1WbKj8OM9GaH/NHc6AXhOM=;
-        b=FBGKXgE7Q1xaxraQcSrWDQ1NNLeu+6CfYtAiXTVqzk5mstsEftH2+kuYFckGTtlFKC
-         llZSYSlrNZpES/xLulV1PmL0q2BL1fkMg0VzgR26PSMsJWqtZs3I3gpNEqG1zpjcuetQ
-         XxUWawsYOmEIT3cJLsaA/nEsjaRVSmRv+06XZvEEekivDWyJpWCd09p7x54WsBOgYCqc
-         UHHHHaLcqxednBBHhM+Ed7Uws0xc1tuTJmp5DoCQqChmLQDSdA7dr0Q5pY2Z1oW0utOu
-         gLuGIZEJrMzGTzc4Fipdd3orlz2oUbM+rXbexBtiKykVewHDy1ukYuPQpHUXqM+ZcjwK
-         cAiw==
-X-Gm-Message-State: AOAM530XnV444rJT2PR0bL2KkOSinMIHfqPQQ/8ewlt5gMmSQudexgYo
-        msirHEtxwHToxSr9bFCcqG2CHfAs5XWu/A==
-X-Google-Smtp-Source: ABdhPJyLX3K9NnfpRP83wKssyR/D1UCw4Vs0QqPtZAFmHi4f7xcRBgxDMaLRhHDA/s5sdZNPyS0D5Q==
-X-Received: by 2002:ac2:5597:: with SMTP id v23mr12527697lfg.42.1590348339139;
-        Sun, 24 May 2020 12:25:39 -0700 (PDT)
+        bh=yVilPSB28wiJ3qo4ENpoTa0U9qIpxtxzCgolTCdGKWo=;
+        b=KLkX6n/l4HG6X1AMUOpj5bcqDIj5qX7lev0SLOPPcb+zjkmkL/gWZp2REzY9QfajMV
+         aFgHgZoV0Gc5fX8qOpJKDZEorY1YjzqjpD4a1uSZg7abHIvjvSNqWKRDE6p2ePtYzC7O
+         N3RZrpfa3uQypMBPLQDDG9tiQfEDG8uwJkjr//MkwdJELIjs49twImKHofA0atJKRIOh
+         2/MdobkFiNA+hpi/DTZRBbjj02CWYmcOeWFDG1VG9lkR8/CuoeiizGWNfKjpbLBB+QZ3
+         RLjjGmsSV6g059DDD8FcoFjRSBY+SNoGuLxeFHgBjdPbeL1zWPJQ2ycqA+BRVB2OCUZX
+         wIvg==
+X-Gm-Message-State: AOAM530nu0XV5SNKdnL1S4DEO6yO019tN7XwV0DyU9n+tdZ+bvG7k3Cc
+        YUsjSFljzSgIm3LakPGrsA+G6g==
+X-Google-Smtp-Source: ABdhPJzsqo88xYujL0fmw6p8SF1ImgCVI5RtTHJMx+ue1BfevqSx6d5Ba3FHVFP4fmrTef95L2145g==
+X-Received: by 2002:a2e:9787:: with SMTP id y7mr5167301lji.107.1590348346340;
+        Sun, 24 May 2020 12:25:46 -0700 (PDT)
 Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.googlemail.com with ESMTPSA id v10sm3878137lja.23.2020.05.24.12.25.38
+        by smtp.googlemail.com with ESMTPSA id v10sm3878137lja.23.2020.05.24.12.25.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 12:25:38 -0700 (PDT)
+        Sun, 24 May 2020 12:25:45 -0700 (PDT)
 From:   Andrey Konovalov <andrey.konovalov@linaro.org>
 To:     mchehab@kernel.org, sakari.ailus@iki.fi,
         manivannan.sadhasivam@linaro.org
@@ -64,9 +64,9 @@ Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
         Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: [PATCH v3 02/10] media: i2c: imx290: fix the order of the args in SET_RUNTIME_PM_OPS()
-Date:   Sun, 24 May 2020 22:24:57 +0300
-Message-Id: <20200524192505.20682-3-andrey.konovalov@linaro.org>
+Subject: [PATCH v3 05/10] media: i2c: imx290: Add configurable link frequency and pixel rate
+Date:   Sun, 24 May 2020 22:25:00 +0300
+Message-Id: <20200524192505.20682-6-andrey.konovalov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200524192505.20682-1-andrey.konovalov@linaro.org>
 References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
@@ -75,28 +75,220 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This macro is defined as SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn),
-so imx290_power_off must be the 1st arg, and imx290_power_on the 2nd.
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+IMX290 operates with multiple link frequency and pixel rate combinations.
+The initial driver used a single setting for both but since we now have
+the lane count support in place, let's add configurable link frequency
+and pixel rate.
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/media/i2c/imx290.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/imx290.c | 100 ++++++++++++++++++++++++-------------
+ 1 file changed, 66 insertions(+), 34 deletions(-)
 
 diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index 2d8c38ffe2f0..d0322f9a8856 100644
+index a361c9ac8bd5..e800557cf423 100644
 --- a/drivers/media/i2c/imx290.c
 +++ b/drivers/media/i2c/imx290.c
-@@ -648,7 +648,7 @@ static int imx290_power_off(struct device *dev)
- }
+@@ -38,8 +38,6 @@
+ #define IMX290_HMAX_2_720 0x19C8
+ #define IMX290_HMAX_4_720 0x0CE4
  
- static const struct dev_pm_ops imx290_pm_ops = {
--	SET_RUNTIME_PM_OPS(imx290_power_on, imx290_power_off, NULL)
-+	SET_RUNTIME_PM_OPS(imx290_power_off, imx290_power_on, NULL)
+-#define IMX290_DEFAULT_LINK_FREQ 445500000
+-
+ static const char * const imx290_supply_name[] = {
+ 	"vdda",
+ 	"vddd",
+@@ -56,8 +54,6 @@ struct imx290_regval {
+ struct imx290_mode {
+ 	u32 width;
+ 	u32 height;
+-	u32 pixel_rate;
+-	u32 link_freq_index;
+ 
+ 	const struct imx290_regval *data;
+ 	u32 data_size;
+@@ -248,8 +244,13 @@ static const struct imx290_regval imx290_10bit_settings[] = {
  };
  
- static const struct v4l2_subdev_video_ops imx290_video_ops = {
+ /* supported link frequencies */
+-static const s64 imx290_link_freq[] = {
+-	IMX290_DEFAULT_LINK_FREQ,
++static const s64 imx290_link_freq_2lanes[] = {
++	891000000, /* 1920x1080 -  2 lane */
++	594000000, /* 1280x720  -  2 lane */
++};
++static const s64 imx290_link_freq_4lanes[] = {
++	445500000, /* 1920x1080 -  4 lane */
++	297000000, /* 1280x720  -  4 lane */
+ };
+ 
+ /* Mode configs */
+@@ -259,16 +260,12 @@ static const struct imx290_mode imx290_modes[] = {
+ 		.height = 1080,
+ 		.data = imx290_1080p_settings,
+ 		.data_size = ARRAY_SIZE(imx290_1080p_settings),
+-		.pixel_rate = 178200000,
+-		.link_freq_index = 0,
+ 	},
+ 	{
+ 		.width = 1280,
+ 		.height = 720,
+ 		.data = imx290_720p_settings,
+ 		.data_size = ARRAY_SIZE(imx290_720p_settings),
+-		.pixel_rate = 178200000,
+-		.link_freq_index = 0,
+ 	},
+ };
+ 
+@@ -442,6 +439,32 @@ static int imx290_get_fmt(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+ 
++static u8 imx290_get_link_freq_index(struct imx290 *imx290)
++{
++	const struct imx290_mode *cur_mode = imx290->current_mode;
++
++	return (cur_mode->width == 1920) ? 0 : 1;
++}
++
++static s64 imx290_get_link_freq(struct imx290 *imx290)
++{
++	u8 index = imx290_get_link_freq_index(imx290);
++
++	if (imx290->nlanes == 4)
++		return imx290_link_freq_4lanes[index];
++	else
++		return imx290_link_freq_2lanes[index];
++}
++
++static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
++{
++	s64 link_freq = imx290_get_link_freq(imx290);
++	u8 nlanes = imx290->nlanes;
++
++	/* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
++	return (link_freq * 2 * nlanes / 10);
++}
++
+ static int imx290_set_fmt(struct v4l2_subdev *sd,
+ 			  struct v4l2_subdev_pad_config *cfg,
+ 		      struct v4l2_subdev_format *fmt)
+@@ -475,10 +498,14 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
+ 		format = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
+ 	} else {
+ 		format = &imx290->current_format;
+-		__v4l2_ctrl_s_ctrl(imx290->link_freq, mode->link_freq_index);
+-		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate, mode->pixel_rate);
+-
+ 		imx290->current_mode = mode;
++
++		if (imx290->link_freq)
++			__v4l2_ctrl_s_ctrl(imx290->link_freq,
++					   imx290_get_link_freq_index(imx290));
++		if (imx290->pixel_rate)
++			__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate,
++						 imx290_calc_pixel_rate(imx290));
+ 	}
+ 
+ 	*format = fmt->format;
+@@ -502,12 +529,11 @@ static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
+ 	return 0;
+ }
+ 
+-static int imx290_write_current_format(struct imx290 *imx290,
+-				       struct v4l2_mbus_framefmt *format)
++static int imx290_write_current_format(struct imx290 *imx290)
+ {
+ 	int ret;
+ 
+-	switch (format->code) {
++	switch (imx290->current_format.code) {
+ 	case MEDIA_BUS_FMT_SRGGB10_1X10:
+ 		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
+ 						ARRAY_SIZE(
+@@ -558,8 +584,8 @@ static int imx290_start_streaming(struct imx290 *imx290)
+ 		return ret;
+ 	}
+ 
+-	/* Set current frame format */
+-	ret = imx290_write_current_format(imx290, &imx290->current_format);
++	/* Apply the register values related to current frame format */
++	ret = imx290_write_current_format(imx290);
+ 	if (ret < 0) {
+ 		dev_err(imx290->dev, "Could not set frame format\n");
+ 		return ret;
+@@ -821,12 +847,6 @@ static int imx290_probe(struct i2c_client *client)
+ 		goto free_err;
+ 	}
+ 
+-	if (imx290->ep.link_frequencies[0] != IMX290_DEFAULT_LINK_FREQ) {
+-		dev_err(dev, "Unsupported link frequency\n");
+-		ret = -EINVAL;
+-		goto free_err;
+-	}
+-
+ 	/* Only CSI2 is supported for now */
+ 	if (imx290->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
+ 		dev_err(dev, "Unsupported bus type, should be CSI2\n");
+@@ -879,23 +899,38 @@ static int imx290_probe(struct i2c_client *client)
+ 
+ 	mutex_init(&imx290->lock);
+ 
++	/*
++	 * Initialize the frame format. In particular, imx290->current_mode
++	 * and imx290->bpp are set to defaults: imx290_calc_pixel_rate() call
++	 * below relies on these fields.
++	 */
++	imx290_entity_init_cfg(&imx290->sd, NULL);
++
+ 	v4l2_ctrl_handler_init(&imx290->ctrls, 3);
+ 
+ 	v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
+ 			  V4L2_CID_GAIN, 0, 72, 1, 0);
+-	imx290->link_freq =
+-		v4l2_ctrl_new_int_menu(&imx290->ctrls,
+-				       &imx290_ctrl_ops,
+-				       V4L2_CID_LINK_FREQ,
+-				       ARRAY_SIZE(imx290_link_freq) - 1,
+-				       0, imx290_link_freq);
++	if (imx290->nlanes == 4)
++		imx290->link_freq =
++			v4l2_ctrl_new_int_menu(&imx290->ctrls,
++					       &imx290_ctrl_ops,
++					       V4L2_CID_LINK_FREQ,
++					       ARRAY_SIZE(imx290_link_freq_4lanes) - 1,
++					       0, imx290_link_freq_4lanes);
++	else
++		imx290->link_freq =
++			v4l2_ctrl_new_int_menu(&imx290->ctrls,
++					       &imx290_ctrl_ops,
++					       V4L2_CID_LINK_FREQ,
++					       ARRAY_SIZE(imx290_link_freq_2lanes) - 1,
++					       0, imx290_link_freq_2lanes);
+ 	if (imx290->link_freq)
+ 		imx290->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+ 
+ 	imx290->pixel_rate = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
+ 					       V4L2_CID_PIXEL_RATE, 1,
+ 					       INT_MAX, 1,
+-					       imx290_modes[0].pixel_rate);
++					       imx290_calc_pixel_rate(imx290));
+ 
+ 	imx290->sd.ctrl_handler = &imx290->ctrls;
+ 
+@@ -919,9 +954,6 @@ static int imx290_probe(struct i2c_client *client)
+ 		goto free_ctrl;
+ 	}
+ 
+-	/* Initialize the frame format (this also sets imx290->current_mode) */
+-	imx290_entity_init_cfg(&imx290->sd, NULL);
+-
+ 	ret = v4l2_async_register_subdev(&imx290->sd);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Could not register v4l2 device\n");
 -- 
 2.17.1
 
