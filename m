@@ -2,85 +2,100 @@ Return-Path: <SRS0=DJdz=7G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA972C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 09:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E1AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 10:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B34BB20787
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 09:49:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uKa6e2Pm"
+	by mail.kernel.org (Postfix) with ESMTP id 3FB7920812
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 10:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbgEXJtt (ORCPT
+        id S1728942AbgEXKEy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 05:49:49 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50074 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729003AbgEXJtt (ORCPT
+        Sun, 24 May 2020 06:04:54 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:32231 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728774AbgEXKEy (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 24 May 2020 05:49:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590313789; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Hpny/BC7WaaZVZire+fOYb5SmUYL/GKQYSit2tQ3rKs=; b=uKa6e2PmaSS3jQDdPkIH0IKGdQWdrXDm4CK5m1HAix2bti4umAtCf7rVNayw5DrrUJt5sy3u
- 8pmwka02PdPGt7TyPvdCnFVHhjuL2hknBgrSn/CJVCOxMGojo4qusCffRDg1Y+1Waj47AdbZ
- BFGY1opBP+PsW+K5pbKmdjhhmqA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5eca43227522fe8b0891e865 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 24 May 2020 09:49:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 25FB4C433CA; Sun, 24 May 2020 09:49:22 +0000 (UTC)
-Received: from [192.168.0.104] (unknown [49.207.133.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A588C433C9;
-        Sun, 24 May 2020 09:49:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A588C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH V4 2/8] dt-bindings: clock: Add schema for QCOM IPQ apss
- pll
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
- <1588573224-3038-3-git-send-email-sivaprak@codeaurora.org>
- <20200512195608.GH2165@builder.lan>
+        Sun, 24 May 2020 06:04:54 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 24 May 2020 03:04:54 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 24 May 2020 03:04:50 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 2B9B821791; Sun, 24 May 2020 15:34:49 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <6c1120c6-5344-e404-53fd-0f2277aa1f36@codeaurora.org>
-Date:   Sun, 24 May 2020 15:19:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200512195608.GH2165@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH V5 0/8] Add APSS clock controller support for IPQ6018
+Date:   Sun, 24 May 2020 15:34:38 +0530
+Message-Id: <1590314686-11749-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The CPU on Qualcomm's IPQ6018 devices are primarily fed by APSS PLL and XO,
+these are connected to a clock mux and enable block.
 
-On 5/13/2020 1:26 AM, Bjorn Andersson wrote:
-> On Sun 03 May 23:20 PDT 2020, Sivaprakash Murugesan wrote:
->
->> Add dt-binding for apss pll found on QCOM IPQ platforms
->>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> This seems quite similar to the existing qcom,a53pll binding, can't you
-> just describe both in the same binding?
-ok.
+This patch series adds support for these clocks and inturn enables clocks
+required for CPU freq.
+
+[V5]
+ * Addressed Bjorn comments on apss clk and dt-bindings
+ * Patch 2 depends on a53 pll dt-bindings
+   https://www.spinics.net/lists/linux-clk/msg48358.html  
+[V4]
+ * Re-written PLL found on IPQ platforms as a separate driver
+ * Addressed stephen's comments on apss clock controller and pll
+ * Addressed Rob's review comments on bindings
+ * moved a53 pll binding from this series as it is not applicable, will send
+   it separately.
+[V3]
+ * Fixed dt binding check error in patch2
+   dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
+[V2]
+ * Restructred the patch series as there are two different HW blocks,
+   the mux and enable belongs to the apcs block and PLL has a separate HW
+   block.
+ * Converted qcom mailbox and qcom a53 pll documentation to yaml.
+ * Addressed review comments from Stephen, Rob and Sibi where it is applicable.
+ * Changed this cover letter to state the purpose of this patch series
+
+Sivaprakash Murugesan (8):
+  dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
+  dt-bindings: clock: add ipq6018 a53 pll compatible
+  clk: qcom: Add ipq apss pll driver
+  clk: qcom: Add DT bindings for ipq6018 apss clock controller
+  clk: qcom: Add ipq6018 apss clock controller
+  dt-bindings: mailbox: Add dt-bindings for ipq6018 apcs global block
+  mailbox: qcom: Add ipq6018 apcs compatible
+  arm64: dts: ipq6018: Add a53 pll and apcs clock
+
+ .../devicetree/bindings/clock/qcom,a53pll.yaml     |  18 ++++
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     |  88 -----------------
+ .../bindings/mailbox/qcom,apcs-kpss-global.yaml    |  99 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  16 +++-
+ drivers/clk/qcom/Kconfig                           |  19 ++++
+ drivers/clk/qcom/Makefile                          |   2 +
+ drivers/clk/qcom/apss-ipq-pll.c                    |  97 +++++++++++++++++++
+ drivers/clk/qcom/apss-ipq6018.c                    | 106 +++++++++++++++++++++
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |  23 +++--
+ include/dt-bindings/clock/qcom,apss-ipq.h          |  12 +++
+ 10 files changed, 380 insertions(+), 100 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+ create mode 100644 drivers/clk/qcom/apss-ipq-pll.c
+ create mode 100644 drivers/clk/qcom/apss-ipq6018.c
+ create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
+
+-- 
+2.7.4
 
