@@ -2,102 +2,146 @@ Return-Path: <SRS0=DJdz=7G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02C3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 02:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4775AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 08:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC5AB20738
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 02:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E4820823
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 08:34:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="utvNopKS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2OK68h4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388279AbgEXCiS (ORCPT
+        id S1728018AbgEXIeC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 May 2020 22:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51206 "EHLO
+        Sun, 24 May 2020 04:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388262AbgEXCiS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 May 2020 22:38:18 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE28DC05BD43
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 19:38:17 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id z80so14785214qka.0
-        for <devicetree@vger.kernel.org>; Sat, 23 May 2020 19:38:17 -0700 (PDT)
+        with ESMTP id S1726331AbgEXIeC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 04:34:02 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6FDC061A0E;
+        Sun, 24 May 2020 01:34:01 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w10so17621083ljo.0;
+        Sun, 24 May 2020 01:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tB9LzyJXJnxo4xmJ3I2jFmQdd+PVH/6joMXkYDY/Q1g=;
-        b=utvNopKS/dd38rKDa6bUbUGoDV3x4nFJyf00yg9p+wI4Wh6FjvexNzZ5LEuJYDEnxd
-         NJ2hbF2Hn/0JsGedXWNiZ5fBZEb67t3yCD7k9iQvQ1DSdLuTiPzHeaHMriBlX/wMXmAl
-         lJnRpjJoHPAGWcg38bGahWiBVwdcbzKepFQnVmEd+pIjErWQdWkzcD89WfaN6LMOSsAi
-         bgbHC2wRMQI9cTsvDUph59rnaJp3ysFmI/HetJn5vsXhN7ephdYDgfSwWnhYIccHJa7n
-         70bQGL/hku/DOYQyeBA0zacBR1jywRL+s8pm1fPHLRCcNuCLXR5/IHqdcoUHsXNXW7Og
-         PUFA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ym2/jmTuyZ+LCBHY8uUjF46ZmpdYuv1HzG4ugP1Ee4c=;
+        b=a2OK68h4qAK4dqg2rQRo8Rc37ilbBu7fedOc1eeY8wPG5npT+PP5fRrec8wXKowX96
+         AYouvBDwSKKubCp3bgbXwrqmZeMdpQgvlBCEjsMvsO33DNIzkdlFQLL3N7DSF1NBSc4G
+         XcLqHaiig+Cc00/JXzXObmM6xAPryWfXk9R1I/l3Wf1ic2V8QLdRAPjhVzB16InUNBgQ
+         Dmumf6k5hUiUhkqRlUEYCt8vOa1E6A7O+Yn6GBL/s1gTCj0GI1GAlh/kAnoKxWTnoxgO
+         eHCvEP52/Y8oahSavx4GfwLfLI/orzXNuYHUv22DwIH10YMzeTdOWssMWHJBtIChR+jc
+         iRsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tB9LzyJXJnxo4xmJ3I2jFmQdd+PVH/6joMXkYDY/Q1g=;
-        b=qPZY0D7Y7gvLOyDB23YZe3QtJZWNJzz0L76MzT1RM1SJJ+2vXalzMyhOlZcEocs3lf
-         Yu4/u3ABotDVDEGJW/7zBE1EBIKlI7qIhp2mwn6gqCyHlrINs2SN30VDaN6+e+Yl4r+l
-         p3ogtzW+lCQ9AHuEVLH0ckWSjwhNkqbjUHshI9FJ6Bi1XFwS9KLtlkKLawdbDm+pFfd4
-         jWT2EB71puUrMCs/AuXOyfzMYMjLhKLQP1YWdpnD6IDKJC8n2bJCYd3E9p3ttLiErv5i
-         TMRoSkYmrSrdOB9dw+p7dOnpJWqhPPv+O0677hKgm6Qd1ImvMw4l8NIJkIMeX0TG+7jN
-         HsCQ==
-X-Gm-Message-State: AOAM530GDUAUFBfA0g7f368ke5VxEr/QtGF91BZdES96cCW4TCTxHzkL
-        pV8E70G1rP3U+KyvVYx9lQ3bSw==
-X-Google-Smtp-Source: ABdhPJwgakWaxEbJdoPoU/YLmpdWql9O7ybgSbPFRaikjhVgK3kj7GSXtl1S3Il13cuqZb4mynMseg==
-X-Received: by 2002:a37:ac0c:: with SMTP id e12mr14157324qkm.281.1590287897033;
-        Sat, 23 May 2020 19:38:17 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id e3sm11187666qtj.25.2020.05.23.19.38.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 19:38:16 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865 dts
-Date:   Sat, 23 May 2020 22:38:06 -0400
-Message-Id: <20200524023815.21789-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ym2/jmTuyZ+LCBHY8uUjF46ZmpdYuv1HzG4ugP1Ee4c=;
+        b=Sm2Aw+dora/67pmKlF8opISLoASVysQlsGSOofXkkESb1Uiw8DMiHTDWoe3kplU1yY
+         WE3eKEfwhTQx4hvmnOW6SgcGSACE4U6gXyL+rNLFy4HoXpinnEJhg8DCB0s3vXHKNAwR
+         JOPXRYajl1eEnAfwjDZNhz48mVmEdKMKCDCQ4b9cjd62htWltvvHk5JdoKOKNWvjjdUE
+         83euzN9PfsLDD44eKsNpnftZ7U8q8KwuZkRh33K3oYQHv0smtvhvSZBAXP+q2Rk5YTvq
+         BlA5pPboU/ABv+jKUuwyaxAT2L21doMv4hyB/9yfRTXjRYrXKSpZskXtca9AwcIhiEEL
+         3NXw==
+X-Gm-Message-State: AOAM530RDyodp9VK8F8+2VQcGWasqBiq6wdAHAgqiAjPa0IywxHm4jO6
+        j9VYDDigHQ+63LJQWLvZlpoWPV/v9203KAZkWoI=
+X-Google-Smtp-Source: ABdhPJyBeDmLEIA6+69iUoeLVOe0EjmnE3EcoRmeGkobz8HZ7gPzhnIXQ9hDlQd64+9msfF5i7BtMZDVtdHZlpC2mTA=
+X-Received: by 2002:a2e:898d:: with SMTP id c13mr9696182lji.108.1590309239942;
+ Sun, 24 May 2020 01:33:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200522113312.181413-1-tali.perry1@gmail.com>
+ <20200522113312.181413-2-tali.perry1@gmail.com> <20200522224217.GA847856@bogus>
+ <CAL_JsqLKaWkSs8vMB4+kBL+AzAU6A4KCVJRNFtvmYfATKR1H=w@mail.gmail.com>
+In-Reply-To: <CAL_JsqLKaWkSs8vMB4+kBL+AzAU6A4KCVJRNFtvmYfATKR1H=w@mail.gmail.com>
+From:   Tali Perry <tali.perry1@gmail.com>
+Date:   Sun, 24 May 2020 11:35:20 +0300
+Message-ID: <CAHb3i=ummYNiqqS4QNi1n1XAzg6bbGXyNPgmFeU_a0T+JP7xqQ@mail.gmail.com>
+Subject: Re: [PATCH v13 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C controller
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, kfting@nuvoton.com,
+        Benjamin Fair <benjaminfair@google.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Patrick Venture <venture@google.com>,
+        Ofer Yehielli <ofery@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
+Hi Rob,
 
-Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
-few changes. Notably, the HDK865 dts has regulator config changed a bit based
-on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
+On Sat, May 23, 2020 at 1:47 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, May 22, 2020 at 4:42 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, 22 May 2020 14:33:10 +0300, Tali Perry wrote:
+> > > Added device tree binding documentation for Nuvoton BMC
+> > > NPCM I2C controller.
+> > >
+> > > Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> > > ---
+> > >  .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 60 +++++++++++++++++++
+> > >  1 file changed, 60 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+> > >
+> >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Error: Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dts:22.28-29 syntax error
+> > FATAL ERROR: Unable to parse input tree
+> > scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml' failed
+> > make[1]: *** [Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml] Error 1
+> > make[1]: *** Waiting for unfinished jobs....
+> > Makefile:1300: recipe for target 'dt_binding_check' failed
+> > make: *** [dt_binding_check] Error 2
+> >
+> > See https://patchwork.ozlabs.org/patch/1296162
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> >
+> > Please check and re-submit.
+>
+> Why do you keep sending new versions with the same problem? It won't
+> get reviewed until this is fixed. This isn't a free automated service
+> to throw things at to see if they work. I have to review the failures.
+>
+> Rob
 
-Jonathan Marek (6):
-  arm64: dts: qcom: sm8150: add apps_smmu node
-  arm64: dts: qcom: sm8250: add apps_smmu node
-  arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
-  arm64: dts: qcom: sm8250: Add USB and PHY device nodes
-  arm64: dts: qcom: add sm8150 hdk dts
-  arm64: dts: qcom: add sm8250 hdk dts
+Definitely not trying to use the Bot to check my yaml. On the first
+version the dt-check was not updated on my side.
+On the previous version I updated according to the bot explanations.
+Found an error and fixed it. Now I don't see any errors. with latest
+dt-check.
+I did:
 
- arch/arm64/boot/dts/qcom/Makefile       |   2 +
- arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
- arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
- 5 files changed, 1384 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master
+--upgrade
+make dt_binding_check
 
--- 
-2.26.1
+And got a clean log, no warnings or errors. Was I suppose to check
+anything else?
 
+Thanks,
+Tali
