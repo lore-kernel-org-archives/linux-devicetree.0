@@ -4,70 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D45DC433E4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7223C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE10207D8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C272207D8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:06:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="SaeTcgNn"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="NO3qKV8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388298AbgEXVGn (ORCPT
+        id S2388230AbgEXVGv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 17:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53214 "EHLO
+        Sun, 24 May 2020 17:06:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388265AbgEXVGd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 17:06:33 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11287C05BD43
-        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 14:06:33 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id z80so16046376qka.0
-        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 14:06:33 -0700 (PDT)
+        with ESMTP id S2388221AbgEXVG3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 17:06:29 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C47C08C5C2
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 14:06:28 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id s1so15951585qkf.9
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 14:06:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=c4VnJkkNORcnXVsefViOavxGbWlTLu5kwrmQ6DrqkvQ=;
-        b=SaeTcgNnIrdJ8m5uLR3jhp+c9gJSwdrSG3yfaHKqk7QafEBO3e3oUSaIMJnOiH1s+N
-         kCHAR1JIFUlnbKxbHoRtemu1mTOnDvxBdQ3/Cz1a/Xda42SroQ8exlp3X9HDOINBkK5K
-         AmFHDca+jvBvI5CxzLsE1/R5YFNPUYG+hwytGos1dDYyYZkpX/Lbg+9Qzsz405pzwfH8
-         D1E0av4TSh3BO9B1dK2l6xuAF0g/Kbwj9OUoi2tvpF7q+QnD4pl8fl5yPj4LaU+ZLS3Y
-         8wj0YFlDCnesl78WiuSSk07Kvu7x7sbXBwqE5a/vvqUwBLRJEaE+fvdjUO4/TqnWiQ4R
-         5amA==
+        bh=IO3OJdtgmbM1LhZ6cGI9jz8O0RG1bcFdj81mJPo7wxQ=;
+        b=NO3qKV8cCmpf+ygMNPIzrFoEvyt+zJykJ1/ie15SO2f1o5FedXX4n+/UzuBqcoC3Nf
+         yDGZe+BCT6huBeeGospBnny4RVZ+tRkKuq2Y9izZnKuT74hpSKu2UpFlLtTlH3kTIQAB
+         EOG6EsIfPRmDZ88znIJgz2UPIXuo30E5OlXobONaaGeTB5+ty/Oq99cd5QK4pa3xTCXD
+         fG1qAXWocHGUQMvjinVTXnaV6HU9orZ/4qvCVxEIiD/rSVP3D67sg9g8lbKHXqvVmiwL
+         Dc/MDnGEPrDe8CQK+GR9nZlyit0rPKmmia7SlTMxozAV0QvdQDK9CS0OusQqF74bD6+e
+         GKmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=c4VnJkkNORcnXVsefViOavxGbWlTLu5kwrmQ6DrqkvQ=;
-        b=XkKuEnKPDd6GWT7jsT3kL1Fc+7dhNQG3uNmzycfOEOQzC1Warmun7jpMlNmQJTKjuL
-         f5+2O3MfranV//xTAqsyX4ZuyBWuAq1Ed9KjhicJyg3/+uBhrlnV4jD7K3WjMpAmrOk4
-         lJ0IQkZw0ER5Ab57yScF8SkuxOlrlBj1w+rfIVzgXTkaHJU6fb4gAQZq3jQiwCkqZjWF
-         qhcOBxzAFA0Cb3o/nwPiF8XZ1554JJq+TRDULncwhG6kLrMUgcIeKbgPot2D7R7Sogpc
-         XKEo75eGRw+BQ0eMZQ3WbAGLle2KWbCcUpdmr3DZ0wPoNC5e7GW637B9ek3LQHntyY13
-         HCxA==
-X-Gm-Message-State: AOAM531yem8ORw96GGCLGU+S8qFSERKU+OcRC7YCVBcGB1nABglW9Jfj
-        nCb28yL+C+KXRKM0KqMYIh+fSQ==
-X-Google-Smtp-Source: ABdhPJzto33NRO761giF2rceigWsUm197eO6eWMTp5L9x4kbF/xyxA7Cg7V4rIriKBtHuluzQeByJA==
-X-Received: by 2002:a05:620a:a53:: with SMTP id j19mr24846414qka.183.1590354392272;
-        Sun, 24 May 2020 14:06:32 -0700 (PDT)
+        bh=IO3OJdtgmbM1LhZ6cGI9jz8O0RG1bcFdj81mJPo7wxQ=;
+        b=Jq7UqVyVfLhKYzFZtKnYMfqb+eWukWp9hN7WSP29iMXsG0P8OIStggz7XcVNOVCTaJ
+         nNUVnAl9PnLRsDHobS7t8b3MBgHQuF9ZU8pwOhZqu3pN+A9KkkM0PWxaNGzcX2mqEJzC
+         9WOpqPMXJIPwcGDrpSRJv1bM45zLPr6rrfuOcW94dzwKXYaqDEKbV+DZhBD/o1/afluM
+         4dEtEks/crAsu/1SSDd4PAwngQ649LBsElj5lPTbzGqQOXZ+Nh6NXfLg00cbJeud8uEf
+         yLD0qc4mOLiMsXPLUSa34GFiJX+K87aW8QDZMsC9xuSe4caly9yU9KIZaFqJYyf8EZlO
+         aZYA==
+X-Gm-Message-State: AOAM533gLD0xDllfkgUjagjMIVNyLy0BuLLJ230ntpo88ohpipHfqNXT
+        T4rmaA+hGleIaTmB5N1tBiCnVOWbw84=
+X-Google-Smtp-Source: ABdhPJxThCzNSKcre9wI4l6PVAIteQg0MMvMCOYd9/KL5Ys+NAfAIOXSet/6ldM8CHojzjiERs52RQ==
+X-Received: by 2002:a37:b14:: with SMTP id 20mr18899833qkl.401.1590354387643;
+        Sun, 24 May 2020 14:06:27 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id g51sm4401769qtb.69.2020.05.24.14.06.31
+        by smtp.gmail.com with ESMTPSA id g51sm4401769qtb.69.2020.05.24.14.06.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 14:06:31 -0700 (PDT)
+        Sun, 24 May 2020 14:06:27 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org (open list),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 09/10] arm64: dts: qcom: add sm8150 GPU nodes
-Date:   Sun, 24 May 2020 17:06:10 -0400
-Message-Id: <20200524210615.17035-10-jonathan@marek.ca>
+        DEVICE TREE BINDINGS)
+Subject: [PATCH 06/10] dt-bindings: clock: Introduce SM8250 QCOM Graphics clock bindings
+Date:   Sun, 24 May 2020 17:06:07 -0400
+Message-Id: <20200524210615.17035-7-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200524210615.17035-1-jonathan@marek.ca>
 References: <20200524210615.17035-1-jonathan@marek.ca>
@@ -78,163 +79,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This brings up the GPU. Tested on HDK855 by running vulkan CTS.
+Add device tree bindings for graphics clock controller for
+Qualcomm Technology Inc's SM8250 SoCs.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 132 +++++++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
+ include/dt-bindings/clock/qcom,gpucc-sm8250.h | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 903514fc299f..1996e42ccb28 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/clock/qcom,gcc-sm8150.h>
-+#include <dt-bindings/clock/qcom,gpucc-sm8150.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -540,6 +541,137 @@ glink-edge {
- 			};
- 		};
- 
-+		gpu: gpu@2c00000 {
-+			/*
-+			 * note: the amd,imageon compatible makes it possible
-+			 * to use the drm/msm driver without the display node,
-+			 * make sure to remove it when display node is added
-+			 */
-+			compatible = "qcom,adreno-640.1",
-+				     "qcom,adreno",
-+				     "amd,imageon";
-+			#stream-id-cells = <16>;
+diff --git a/include/dt-bindings/clock/qcom,gpucc-sm8250.h b/include/dt-bindings/clock/qcom,gpucc-sm8250.h
+new file mode 100644
+index 000000000000..c8fe64e399fd
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,gpucc-sm8250.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
++ */
 +
-+			reg = <0 0x2c00000 0 0x40000>;
-+			reg-names = "kgsl_3d0_reg_memory";
++#ifndef _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8250_H
++#define _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8250_H
 +
-+			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
++/* GPU_CC clock registers */
++#define GPU_CC_AHB_CLK				0
++#define GPU_CC_CRC_AHB_CLK			1
++#define GPU_CC_CX_APB_CLK			2
++#define GPU_CC_CX_GMU_CLK			3
++#define GPU_CC_CX_QDSS_AT_CLK			4
++#define GPU_CC_CX_QDSS_TRIG_CLK			5
++#define GPU_CC_CX_QDSS_TSCTR_CLK		6
++#define GPU_CC_CX_SNOC_DVM_CLK			7
++#define GPU_CC_CXO_AON_CLK			8
++#define GPU_CC_CXO_CLK				9
++#define GPU_CC_GMU_CLK_SRC			10
++#define GPU_CC_GX_GMU_CLK			11
++#define GPU_CC_GX_QDSS_TSCTR_CLK		12
++#define GPU_CC_GX_VSENSE_CLK			13
++#define GPU_CC_PLL1				14
++#define GPU_CC_SLEEP_CLK			15
++#define GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK		16
 +
-+			iommus = <&adreno_smmu 0 0x401>;
++/* GPU_CC Resets */
++#define GPUCC_GPU_CC_ACD_BCR			0
++#define GPUCC_GPU_CC_CX_BCR			1
++#define GPUCC_GPU_CC_GFX3D_AON_BCR		2
++#define GPUCC_GPU_CC_GMU_BCR			3
++#define GPUCC_GPU_CC_GX_BCR			4
++#define GPUCC_GPU_CC_XO_BCR			5
 +
-+			operating-points-v2 = <&gpu_opp_table>;
++/* GPU_CC GDSCRs */
++#define GPU_CX_GDSC				0
++#define GPU_GX_GDSC				1
 +
-+			qcom,gmu = <&gmu>;
-+
-+			zap-shader {
-+				memory-region = <&gpu_mem>;
-+			};
-+
-+			/* note: downstream checks gpu binning for 675 Mhz */
-+			gpu_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-675000000 {
-+					opp-hz = /bits/ 64 <675000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+				};
-+
-+				opp-585000000 {
-+					opp-hz = /bits/ 64 <585000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+				};
-+
-+				opp-499200000 {
-+					opp-hz = /bits/ 64 <499200000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-+				};
-+
-+				opp-427000000 {
-+					opp-hz = /bits/ 64 <427000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+				};
-+
-+				opp-345000000 {
-+					opp-hz = /bits/ 64 <345000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+				};
-+
-+				opp-257000000 {
-+					opp-hz = /bits/ 64 <257000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+				};
-+			};
-+		};
-+
-+		gmu: gmu@2c6a000 {
-+			compatible="qcom,adreno-gmu-640.1", "qcom,adreno-gmu";
-+
-+			reg = <0 0x2c6a000 0 0x30000>,
-+			      <0 0xb290000 0 0x10000>,
-+			      <0 0xb490000 0 0x10000>;
-+			reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-+
-+			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hfi", "gmu";
-+
-+			clocks = <&gpucc GPU_CC_AHB_CLK>,
-+				 <&gpucc GPU_CC_CX_GMU_CLK>,
-+			         <&gpucc GPU_CC_CXO_CLK>,
-+				 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-+				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-+			clock-names = "ahb", "gmu", "cxo", "axi", "memnoc";
-+
-+			power-domains = <&gpucc GPU_CX_GDSC>,
-+					<&gpucc GPU_GX_GDSC>;
-+			power-domain-names = "cx", "gx";
-+
-+			iommus = <&adreno_smmu 5 0x400>;
-+
-+			operating-points-v2 = <&gmu_opp_table>;
-+
-+			gmu_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-200000000 {
-+					opp-hz = /bits/ 64 <200000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+				};
-+			};
-+		};
-+
-+		gpucc: clock-controller@2c90000 {
-+			compatible = "qcom,sm8150-gpucc";
-+			reg = <0 0x2c90000 0 0x9000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+		};
-+
-+		adreno_smmu: iommu@2ca0000 {
-+			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
-+			reg = <0 0x2ca0000 0 0x10000>;
-+			#iommu-cells = <2>;
-+			#global-interrupts = <1>;
-+			interrupts = <GIC_SPI 674 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 688 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gpucc GPU_CC_AHB_CLK>,
-+				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-+			         <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
-+			clock-names = "ahb", "bus", "iface";
-+
-+			power-domains = <&gpucc GPU_CX_GDSC>;
-+		};
-+
- 		tlmm: pinctrl@3100000 {
- 			compatible = "qcom,sm8150-pinctrl";
- 			reg = <0x0 0x03100000 0x0 0x300000>,
++#endif
 -- 
 2.26.1
 
