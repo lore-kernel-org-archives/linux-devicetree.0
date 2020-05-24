@@ -2,129 +2,110 @@ Return-Path: <SRS0=DJdz=7G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A788C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A9DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 20:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F7C207C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDCD2076C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 20:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388103AbgEXT1H (ORCPT
+        id S2388062AbgEXUdv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 15:27:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:57044 "EHLO mga17.intel.com"
+        Sun, 24 May 2020 16:33:51 -0400
+Received: from mga09.intel.com ([134.134.136.24]:8056 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388084AbgEXT1G (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 24 May 2020 15:27:06 -0400
-IronPort-SDR: By0a9SYhJ4TZ0JTmp34WG8jdU48wtKFiM7XgPJAWNyaaXGepPb8f8+UZ65hsfFwu1lORA67o03
- fJZ0vrn521Jw==
+        id S2388045AbgEXUdu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 24 May 2020 16:33:50 -0400
+IronPort-SDR: DCubHS15rd9IwKKdybv3X9Sleift3gq9agqNrnj4MdfLcY+J96Yk8NUZKjiktPO69TQgvh+Y/y
+ oqY8IFhS6RLA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 12:27:06 -0700
-IronPort-SDR: Jt1wxSweHy/gcVmjApzJ6eqN4bNznRQXVLnIg1IoO4kg/6e/ivSQzfrpA+9iAoRqDLNMEBs8k6
- LYbv/QAMX3Jw==
-X-ExtLoop1: 1
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 13:33:50 -0700
+IronPort-SDR: hGO7Y3wYazKbBMeBckgS76jnZK8vgx3/d2+Tum7KpIZBE7Os41Bbvt3Qwb/u2VDS+n2UM4fhvq
+ Z18P3EudgMLg==
 X-IronPort-AV: E=Sophos;i="5.73,430,1583222400"; 
-   d="scan'208";a="413310334"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga004.jf.intel.com with ESMTP; 24 May 2020 12:27:03 -0700
-Subject: Re: [PATCH 2/3] sdhci: sparx5: Add Sparx5 SoC eMMC driver
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, SoC Team <soc@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-References: <20200513133122.25121-1-lars.povlsen@microchip.com>
- <20200513133122.25121-3-lars.povlsen@microchip.com>
- <6398c7a6-ce5e-1df6-d5a6-08664a7fc123@intel.com>
- <87v9ktoc0h.fsf@soft-dev15.microsemi.net>
- <87wo56q2o3.fsf@soft-dev15.microsemi.net>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <abbd2306-55ed-014c-4b06-a5cb3f34796f@intel.com>
-Date:   Sun, 24 May 2020 22:26:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+   d="scan'208";a="254745249"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 13:33:46 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 554C820736; Sun, 24 May 2020 23:33:44 +0300 (EEST)
+Date:   Sun, 24 May 2020 23:33:44 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Louis Kuo <louis.kuo@mediatek.com>,
+        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
+        <shengnan.wang@mediatek.com>
+Subject: Re: [V8, 1/2] media: dt-bindings: media: i2c: Document OV02A10
+ bindings
+Message-ID: <20200524203344.GB7618@paasikivi.fi.intel.com>
+References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
+ <20200509080627.23222-2-dongchun.zhu@mediatek.com>
+ <20200511160207.GA32476@bogus>
+ <1589251221.8804.289.camel@mhfsdcap03>
+ <CAAFQd5DgrDwPEpdN9ErJWsHbMDpo2s_u3pwsqtpNwVk4g3_CdQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87wo56q2o3.fsf@soft-dev15.microsemi.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5DgrDwPEpdN9ErJWsHbMDpo2s_u3pwsqtpNwVk4g3_CdQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20/05/20 2:14 pm, Lars Povlsen wrote:
+On Thu, May 21, 2020 at 08:59:56PM +0200, Tomasz Figa wrote:
+> Hi Dongchun, Rob,
 > 
-> Lars Povlsen writes:
+> On Tue, May 12, 2020 at 4:41 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > Thanks for the review.
+> >
+> > On Mon, 2020-05-11 at 11:02 -0500, Rob Herring wrote:
+> > > On Sat, May 09, 2020 at 04:06:26PM +0800, Dongchun Zhu wrote:
+> [snip]
+> > > > +            port {
+> > > > +                wcam_out: endpoint {
+> > > > +                    remote-endpoint = <&mipi_in_wcam>;
+> > > > +                    data-lanes = <1>;
+> > >
+> > > This doesn't match the schema which says this should be 4 entries.
+> > >
+> >
+> > Property "data-lanes" shows the number of lanes that sensor supports.
+> > If this property is omitted, four-lane operation is assumed.
+> > For OV02A10, it is one-lane operation, so the property is supposed to be
+> > set to <1>.
+> >
 > 
->> Adrian Hunter writes:
->>
->>> On 13/05/20 4:31 pm, Lars Povlsen wrote:
->>>> This adds the eMMC driver for the Sparx5 SoC. It is based upon the
->>>> designware IP, but requires some extra initialization and quirks.
->>>>
->>>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->>>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->>>> ---
-> {Snip]
->>>> +};
->>>> +
->>>> +static const struct sdhci_pltfm_data sdhci_sparx5_pdata = {
->>>> +     .quirks  = 0,
->>>> +     .quirks2 = SDHCI_QUIRK2_HOST_NO_CMD23 | /* Card quirk */
->>>
->>> If this is a card quirk then it should be in drivers/mmc/core/quirks.h not here.
->>
-> 
-> Adrian, I had a go at changing the controller quirk to a card quirk.
-> 
-> Unfortunately, SDHCI_QUIRK2_HOST_NO_CMD23 does not directly translate to
-> MMC_QUIRK_BLK_NO_CMD23, as for 'do_rel_wr' in mmc_blk_rw_rq_prep(), it
-> will *still* use MMC_SET_BLOCK_COUNT (cmd23), causing the issue.
-> 
-> We are using a ISSI "IS004G" device, and so I have gone through the
-> motions of adding it to quirks.h. The comment before the list of devices
-> using MMC_QUIRK_BLK_NO_CMD23 suggest working around a performance issue,
-> which is not exactly the issue I'm seeing. I'm seeing combinations of
-> CMD_TOUT_ERR, DATA_CRC_ERR and DATA_END_BIT_ERR whenever a cmd23 is
-> issued.
-> 
-> I have not been able to test the controller with another eMMC device
-> yet, but I expect its not the controller at fault.
-> 
-> So, I'm a little bit in doubt of how to proceed - either keep the quirk
-> as a controller quirk - or make a *new* card quirk (with
-> SDHCI_QUIRK2_HOST_NO_CMD23 semantics)?
-> 
-> Anybody else have had experience with ISSI eMMC devices?
-> 
-> I have also tried to use DT sdhci-caps-mask, but MMC_CAP_CMD23 is not
-> read from the controller just (unconditionally) set in sdhci.c - so that
-> doesn't fly either.
-> 
-> Any suggestions?
+> To clarify on this, the ov02a10 sensor supports only 1 lane. It's not
+> a driver limitation.
 
-It is up to you.  In the future, you may want to distinguish devices that
-have this problem from ones that do not.
+If there's nothing to configure there, then the property should be omitted.
+I understood the sensor supported one to four lanes...
 
-If you are not sure it is the ISSI eMMC, and maybe not the host controller,
-then might it be the board?  Perhaps make SDHCI_QUIRK2_HOST_NO_CMD23
-conditional on the particular compatibility string?
-
-At a minimum, change the "/* Card quirk */" comment to a fuller explanation.
-
-> 
->> Yes, its supposedly a card quirk. I'll see to use the card quirks
->> methods in place.
->>
-> 
-
+-- 
+Sakari Ailus
