@@ -2,70 +2,83 @@ Return-Path: <SRS0=DJdz=7G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764F5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FA9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9F820776
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8193B204EF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 21:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388370AbgEXV2r (ORCPT
+        id S2387941AbgEXViL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 17:28:47 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:57770 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388451AbgEXV2q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 17:28:46 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id B5BA51C02AB; Sun, 24 May 2020 23:28:44 +0200 (CEST)
-Date:   Sun, 24 May 2020 23:28:43 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/8] dt-bindings: net: meson-dwmac: Add the
- amlogic,rx-delay-ns property
-Message-ID: <20200524212843.GF1192@bug>
-References: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
- <20200512211103.530674-2-martin.blumenstingl@googlemail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512211103.530674-2-martin.blumenstingl@googlemail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sun, 24 May 2020 17:38:11 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:26877 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387879AbgEXViL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 24 May 2020 17:38:11 -0400
+X-IronPort-AV: E=Sophos;i="5.73,430,1583161200"; 
+   d="scan'208";a="47678059"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 25 May 2020 06:38:09 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 05AB740E3D4A;
+        Mon, 25 May 2020 06:38:05 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/8] R8A7742 add support for HSUSB and USB2.0/3.0
+Date:   Sun, 24 May 2020 22:37:49 +0100
+Message-Id: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 2020-05-12 23:10:56, Martin Blumenstingl wrote:
-> The PRG_ETHERNET registers on Meson8b and newer SoCs can add an RX
-> delay. Add a property with the known supported values so it can be
-> configured according to the board layout.
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  .../bindings/net/amlogic,meson-dwmac.yaml           | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
-> index ae91aa9d8616..66074314e57a 100644
-> --- a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
-> +++ b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
-> @@ -67,6 +67,19 @@ allOf:
->              PHY and MAC are adding a delay).
->              Any configuration is ignored when the phy-mode is set to "rmii".
->  
-> +        amlogic,rx-delay-ns:
-> +          enum:
+Hi All,
 
-Is it likely other MACs will need rx-delay property, too? Should we get rid of the amlogic,
-prefix?
-										Pavel
+This patch series adds support for HSUSB, USB2.0 and USB3.0 to
+R8A7742 SoC DT.
+
+This patch series applies on-top of [1].
+
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=288491
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (8):
+  dt-bindings: phy: rcar-gen2: Add r8a7742 support
+  dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r8a7742
+  dt-bindings: usb: renesas,usbhs: Add support for r8a7742
+  dt-bindings: dmaengine: renesas,usb-dmac: Add binding for r8a7742
+  dt-bindings: usb: usb-xhci: Document r8a7742 support
+  ARM: dts: r8a7742: Add USB 2.0 host support
+  ARM: dts: r8a7742: Add USB-DMAC and HSUSB device nodes
+  ARM: dts: r8a7742: Add xhci support
+
+ .../devicetree/bindings/dma/renesas,usb-dmac.yaml  |   1 +
+ .../devicetree/bindings/pci/pci-rcar-gen2.txt      |   3 +-
+ .../devicetree/bindings/phy/rcar-gen2-phy.txt      |   3 +-
+ .../devicetree/bindings/usb/renesas,usbhs.yaml     |   1 +
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |   1 +
+ arch/arm/boot/dts/r8a7742.dtsi                     | 173 +++++++++++++++++++++
+ 6 files changed, 180 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
+
