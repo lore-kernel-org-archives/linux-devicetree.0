@@ -2,98 +2,148 @@ Return-Path: <SRS0=DJdz=7G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F439C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 15:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583B8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 15:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7525C207CB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 15:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368BE20787
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 15:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uATvaf9E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YR6PZ0L1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgEXP0c (ORCPT
+        id S1727869AbgEXPf7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 11:26:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56766 "EHLO
+        Sun, 24 May 2020 11:35:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbgEXP0b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 11:26:31 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D509C061A0E;
-        Sun, 24 May 2020 08:26:31 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f21so4626007pgg.12;
-        Sun, 24 May 2020 08:26:31 -0700 (PDT)
+        with ESMTP id S1726506AbgEXPf7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 11:35:59 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B69C061A0E;
+        Sun, 24 May 2020 08:35:58 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id y16so562444qto.4;
+        Sun, 24 May 2020 08:35:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u9ROz91xuBH6QrjqqF0E1q2Di/i7mALUiHHp8nW2VMk=;
-        b=uATvaf9EwRAjCsc3Fm4imKQPHtWb+PG7n6SLpFGmWXaXVEF614vPPtWWTUDhaGZIW6
-         79lm6ASLhrCZKWOgonOmBNzfHH2wn3SurHT2I+17iMm46ybLOeRk5JPuw8MngSpw1NkG
-         9QyivYVeGhLBcb/WHKh8FBZW/F+BMySD1/7L2+/WS2n5mUCV053XoeOGAoD7kMvuS/2T
-         z/MItTct5sPGPYTNcmxJt65IKcrKd8I5YFZGWYq6iZ/EWP5O2gW6sxyWd3R173sZ85xv
-         h0EXufWb++ppBPLCMpjxl7yw0dLEUnn+ITUlEEy4DGTnImCoPjCN//cF5Izigvuafpuk
-         8nHQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XSCyThDWyT3fRTEHc54P7I+5QHzke3yyM7FEulzWvu8=;
+        b=YR6PZ0L19epbm54KSIM6jkDTWp4P7VfPRm5s9CPSLA5FHrEftyANl9d+s3YeuNnsy7
+         JWythQbTQyISwhHYEKUJbb81KkDsS0TkezrJzD0chKFVa2NgH7COgHoyyOhW8n/Zz7Le
+         qE8RsUHAE8v5P+LC0H47nX/7rpYWgyjTIxk3EBFD6Xdq1iY/KwMXil2yxMrBBhgLA66R
+         g7YFYBDW6CTm5UyiiT6z5wpwI5ctLdYPCOliVJRLpk5i/ZHX9DqUUDgdteeMxuboittP
+         cDQawHSbAZkLtpCdGkcu0fpgqZGfLzm4OAHqA6i85n7z+FRybiMA4NTroioqGuJqiqaq
+         wshg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u9ROz91xuBH6QrjqqF0E1q2Di/i7mALUiHHp8nW2VMk=;
-        b=aJ0WmlY7KWilTPb/8RTd/cwtrn3C9Rk4hGdpqiFcIR9qVV8R5h8t7ulU1lym2Nb+m4
-         XPED4KqJxvmtsL/HRC+/qLwj7DySnbkllWTiZT+ktFpGijpcWQUo1nyoC1mu+6HCZa7T
-         jkcgbsnUiRDMmvBQAA68adJGSGnA4fTNz+6hkJqbZUM/0S4CY0QMOZjvUuLarOKku8HB
-         X8Sa7wQIWxSdK/bShuLiql/X/40hjwB1oS4L/2OvRxzUQDbWleu9TxvKotOvYc2AZvCF
-         Gu3f/ScQeF6ovfR3gi/HZK9TlXa36DE5f3APSRMshGSoo4uQkz9UkUWN9agK5oXIdbxZ
-         JJcw==
-X-Gm-Message-State: AOAM531zkw/XXK00FXxif/QWNBQWX4E0pUPTAWDBs2b5gkFWnjdfDD5d
-        G1+IDYqJ2UUZJmdSrWtop2g=
-X-Google-Smtp-Source: ABdhPJzViyc4mCiAajv6jBGzrAIkiyQnh2X1FUDiO84mrCc/TvAprXeZxL7s6pWLZraK+M1n3BtAUQ==
-X-Received: by 2002:a63:b252:: with SMTP id t18mr22590781pgo.133.1590333991071;
-        Sun, 24 May 2020 08:26:31 -0700 (PDT)
-Received: from localhost.localdomain ([141.164.38.6])
-        by smtp.gmail.com with ESMTPSA id o27sm9981987pgd.18.2020.05.24.08.26.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XSCyThDWyT3fRTEHc54P7I+5QHzke3yyM7FEulzWvu8=;
+        b=mtN2mKgQo4B0S59QNEes5EFU8X0xP8CbvtYWU20Icu1lCqdQU/qxgVpWRvQUgYo3CH
+         Yei5+7gXUjUjlNZn5K0itsJiyyZn6m38cVE1pO3bEhbJbt3UWXJB6P9tP129ACZJ/43u
+         /IML16pQ0Z29GryN07Sh5Yj/NqqepWH3C4RcHTxVYBioNya7VlLZYbmV1JeIi/PQVuEK
+         VqiwwiPQRf6ZMDtCfrkn0avrlr09slmEwTKANwcJ/3HE7YSFOAlrqmtxJzxDKL9PEb6l
+         tqdBLJm8Jn9AtrqqqN3gOnNCoB+0OUQf/deaU6MkDZtx2Brppeg6agpxgq1wXpvbbjyh
+         0AnQ==
+X-Gm-Message-State: AOAM531GW/C9FT2D1f5co7YRrmX0Ts76zqM5z0Ra5TX9DeH5AZ+nGl47
+        T8I1M+58I0lWDsCnfKy8eGrglFH72uIRHQ==
+X-Google-Smtp-Source: ABdhPJzcdoAUJKNz0W5YPodIcHyX0Rwi2/R6t/LiimRGcL49J8cUWFiqg5PdX9DFLQiPedJJRgqhFg==
+X-Received: by 2002:ac8:7b2b:: with SMTP id l11mr24573932qtu.307.1590334558128;
+        Sun, 24 May 2020 08:35:58 -0700 (PDT)
+Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id g5sm13165613qti.87.2020.05.24.08.35.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 08:26:30 -0700 (PDT)
-From:   Qi Zheng <arch0.zheng@gmail.com>
-To:     robh+dt@kernel.org, robh@kernel.org, frowand.list@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qi Zheng <arch0.zheng@gmail.com>
-Subject: [PATCH] dt/platform: Fix comment in of_dev_lookup()
-Date:   Sun, 24 May 2020 23:26:14 +0800
-Message-Id: <20200524152614.69393-1-arch0.zheng@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 24 May 2020 08:35:57 -0700 (PDT)
+Date:   Sun, 24 May 2020 11:35:38 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v5 5/5] counter: Add microchip TCB capture counter
+Message-ID: <20200524153538.GA12461@shinobu>
+References: <20200519083716.938384-1-kamel.bouhara@bootlin.com>
+ <20200519083716.938384-6-kamel.bouhara@bootlin.com>
+ <20200524161624.2c932a30@archlinux>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Disposition: inline
+In-Reply-To: <20200524161624.2c932a30@archlinux>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The code is using of_dev_lookup() rather than of_devname_lookup().
 
-Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
----
- drivers/of/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 3371e4a06248..3627fee60215 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -291,7 +291,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- #endif /* CONFIG_ARM_AMBA */
- 
- /**
-- * of_devname_lookup() - Given a device node, lookup the preferred Linux name
-+ * of_dev_lookup() - Given a device node, lookup the preferred Linux name
-  */
- static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *lookup,
- 				 struct device_node *np)
--- 
-2.25.1
+On Sun, May 24, 2020 at 04:16:24PM +0100, Jonathan Cameron wrote:
+> On Tue, 19 May 2020 10:37:16 +0200
+> Kamel Bouhara <kamel.bouhara@bootlin.com> wrote:
+>=20
+> > This drivers allows to use the capture mode of the Timer Counter Block
+> > hardware block available in Microchip SoCs through the counter subsyste=
+m.
+> >=20
+> > Two functions of the counter are supported for the moment: period
+> > capture and quadrature decoder. The latter is only supported by the
+> > SAMA5 series of SoCs.
+> >=20
+> > For the period capture mode a basic setup has been chosen that will
+> > reset the counter each time the period is actually reached. Of course
+> > the device offers much more possibilities.
+> >=20
+> > For quadrature mode, both channel 0 and 1 must be configured even if we
+> > only capture the position (no revolution/rotation).
+> >=20
+> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>=20
+> Looks good to me.  After reviews from William, DT and maybe
+> something from SoC side if intent is I'm taking this.
+>=20
+> Jonathan
 
+I'll defer to the DT maintainers for the dt-binding changes. Regarding
+this counter driver, I believe there have been no changes since I
+signed-off for it in the v3 patchset thread. If that's true, I haven't
+changed my mind -- I'm still statisfied with this particular version and
+have no objections if it's merged. ;-)
+
+William Breathitt Gray
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl7KlDQACgkQhvpINdm7
+VJIzLxAAkUJg6LHVXHAStbGJFDBPydEKceoWzIEgLZ/vm3dG1y7LyBGkng33mKQS
+MtCM5M9/l+WF1cy6xhfAMaq2A74pPRnGmYaNuMov44MnHeTezlv6udD3nn9R/Dyz
+S/a0ZGI+ASgY4RxvomRWiQCe1lP9Fx4EQGxjL+1Q+f1+Z9RlpAVwO+2ayGWhmu3u
+NDT3jF4KKpgQuSBQb4HHC/3MUgEuAn5tg6YIND4eP8sZ31C+HvY0AReg9G2pILEF
+ISxHTZEJUFQ2W1KFBhoytEueebjUzXLFe9DUGJ9oRkL2FyCt6SNcKajFHkNQ3cKN
+dh514IIQ2MoUHXS7775y08Ad3AHhRVyBAuLCoyAqeUlvxZbmrC9uGpvYq5sudDbH
+MoPGTAOwJUTEW1Qk+K3S9b20ebNYxkchClt19QeGhV9Inl9NJAFnqWwu9rTujO1n
+YXjjZUCioWFt80v+lkuEgIVE3ZKxFNAL4RdTBH1LvDYTgJiCh+0OOsDmv4Vxzjee
+jVWxMcUyHZ+rXb5roWmqUkWoWgynTBEnZP1B+22NfLCTsffATOkFKIvGwx1Nmgo5
+6EQSrIDVSXYa3xoIBTcIfQFp7CDCOf1CwkxjRtKSBjoXpzW/zU7AnVAwZJIJMArN
+1SiaQaG7ZMWQO4o6qjfACamGAvH1H8AUvryTYVy/MwTZOVZQYoc=
+=ENit
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
