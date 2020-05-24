@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAA2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5010C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C41020825
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54BA20899
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 19:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bXZUmt4Q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cuqs1pzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387755AbgEXTZp (ORCPT
+        id S2387807AbgEXTZn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 15:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
+        Sun, 24 May 2020 15:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388250AbgEXTZo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 15:25:44 -0400
+        with ESMTP id S2388229AbgEXTZl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 15:25:41 -0400
 Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66EDAC08C5C0
-        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 12:25:43 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id x22so9383929lfd.4
-        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 12:25:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A0AC08C5C0
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 12:25:40 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id r125so9338051lff.13
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 12:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cA0rxP4uX8r0J5dTgAkrFDikDC5/+iYQEYBegCVDUX8=;
-        b=bXZUmt4Q97nbHMur0+wddhj6NHibdNegK7WYEBHb3FXq/cXll1GDGCXmku19BFj5Nv
-         AcWpGD1X351yyzB/DqYBq+8mBFu/9qUShZ/hNApIK/U6hgV0yj+5azJO1hbH2k+eGM17
-         C8D0jT6d+q8N1+XN67HUr0foWANMbTV/C3yJElLdOIEhjVmNbzaYplzsxINkXKKjSrZC
-         +FTaMiqnHoM1cU8EyhRdDSF+Gcfv/daIYVmennTR/D/Bhr5GLZPL5fL+mbRsoYEG4GiI
-         arQy37b7UuNXnMroZHstTyInswcMLqrzyvk4ECcYUGfayRJd+UoigQu2fAxTY6HqVbmu
-         caqA==
+        bh=ythenNMgCasy/26fjGx9+1WbKj8OM9GaH/NHc6AXhOM=;
+        b=cuqs1pzV9wFff2GzAa77a4DoEBOaiwUw4k6/Z5KiNk0rPbw2WWyS87P6oE987eiUQY
+         dvFFcbBp3yAMwXas2jEHznl6OFbqR/glhEu7tjtzqv+AihXa/K9aVZ9wKqE9C3qDu6Tf
+         iOy2cw+Im3uOdJdsrheiW7bJGH8bgwHa5jzwSC0bZE649ZGdSLvLvllqMKYn5/wPUqEd
+         aR6SLXLiJ6w5zAuwDbPp0nCu4VoWqHjhT9v67s22giW0KTfTuSNcTu7U0ExBx5TorhW/
+         Y9bZc50QE3GpJhp6lfvQ0y2K4HWFw3Q9QeeCWvvXR4EPplzkihdAw0xE5vLuBQleYb1m
+         I7pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=cA0rxP4uX8r0J5dTgAkrFDikDC5/+iYQEYBegCVDUX8=;
-        b=L6rSNnSpVtoEdiwq42M+X2WzuyhCh+4TPvCDqGOv/3AKAAUQaBFHoA2/JtKDAa5VFT
-         H7o/VWph4xvKlOilhChAEO0zEwp7j/aSoRJH/T5vT1maX3n2xpDxwsyuQI5frZzcbVVA
-         wu18SlJZ7K3dwb+d/0sXF7PNs+HEs2xxeikgduTI+Lo8XIWgVz8NL1lpBR5apTEhKx/b
-         WPMUHsnYrSn5FC7yMhBC2nQUNx8iPwpidlhZazM85Sfwyf85KESX6RDAx2CnPxan+8aV
-         uZnk8Bx22aDlOOciB6U/x7Gfka9TY4D8hgXAbD07zEa+h5AW34O9e16YcpReOZkXBioz
-         MqZg==
-X-Gm-Message-State: AOAM533KWIzuAO4C7dc+2ub2/rkb1FBrbOzBQ+kEy45W0isOFNRPdZ0H
-        r4Vsx5hrexg1xU/fmc3OFx3Kww==
-X-Google-Smtp-Source: ABdhPJx0C0ywxASkq6HnfsazUJ4P8BtoLgib8fabRATVLYdBjqfrmIXTOinQ/nOYpw6Gk5h9DHeF+w==
-X-Received: by 2002:ac2:4143:: with SMTP id c3mr12541402lfi.131.1590348341928;
-        Sun, 24 May 2020 12:25:41 -0700 (PDT)
+        bh=ythenNMgCasy/26fjGx9+1WbKj8OM9GaH/NHc6AXhOM=;
+        b=FBGKXgE7Q1xaxraQcSrWDQ1NNLeu+6CfYtAiXTVqzk5mstsEftH2+kuYFckGTtlFKC
+         llZSYSlrNZpES/xLulV1PmL0q2BL1fkMg0VzgR26PSMsJWqtZs3I3gpNEqG1zpjcuetQ
+         XxUWawsYOmEIT3cJLsaA/nEsjaRVSmRv+06XZvEEekivDWyJpWCd09p7x54WsBOgYCqc
+         UHHHHaLcqxednBBHhM+Ed7Uws0xc1tuTJmp5DoCQqChmLQDSdA7dr0Q5pY2Z1oW0utOu
+         gLuGIZEJrMzGTzc4Fipdd3orlz2oUbM+rXbexBtiKykVewHDy1ukYuPQpHUXqM+ZcjwK
+         cAiw==
+X-Gm-Message-State: AOAM530XnV444rJT2PR0bL2KkOSinMIHfqPQQ/8ewlt5gMmSQudexgYo
+        msirHEtxwHToxSr9bFCcqG2CHfAs5XWu/A==
+X-Google-Smtp-Source: ABdhPJyLX3K9NnfpRP83wKssyR/D1UCw4Vs0QqPtZAFmHi4f7xcRBgxDMaLRhHDA/s5sdZNPyS0D5Q==
+X-Received: by 2002:ac2:5597:: with SMTP id v23mr12527697lfg.42.1590348339139;
+        Sun, 24 May 2020 12:25:39 -0700 (PDT)
 Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.googlemail.com with ESMTPSA id v10sm3878137lja.23.2020.05.24.12.25.40
+        by smtp.googlemail.com with ESMTPSA id v10sm3878137lja.23.2020.05.24.12.25.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 12:25:41 -0700 (PDT)
+        Sun, 24 May 2020 12:25:38 -0700 (PDT)
 From:   Andrey Konovalov <andrey.konovalov@linaro.org>
 To:     mchehab@kernel.org, sakari.ailus@iki.fi,
         manivannan.sadhasivam@linaro.org
@@ -64,9 +64,9 @@ Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
         Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: [PATCH v3 03/10] media: i2c: imx290: fix reset GPIO pin handling
-Date:   Sun, 24 May 2020 22:24:58 +0300
-Message-Id: <20200524192505.20682-4-andrey.konovalov@linaro.org>
+Subject: [PATCH v3 02/10] media: i2c: imx290: fix the order of the args in SET_RUNTIME_PM_OPS()
+Date:   Sun, 24 May 2020 22:24:57 +0300
+Message-Id: <20200524192505.20682-3-andrey.konovalov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200524192505.20682-1-andrey.konovalov@linaro.org>
 References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
@@ -75,59 +75,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to https://www.kernel.org/doc/Documentation/gpio/consumer.txt,
-
-- all of the gpiod_set_value_xxx() functions operate with the *logical* value.
-So in imx290_power_on() the reset signal should be cleared/de-asserted with
-gpiod_set_value_cansleep(imx290->rst_gpio, 0), and in imx290_power_off() the
-value of 1 must be used to apply/assert the reset to the sensor. In the device
-tree the reset pin is described as GPIO_ACTIVE_LOW, and gpiod_set_value_xxx()
-functions take this into account,
-
-- when devm_gpiod_get_optional() is called with GPIOD_ASIS, the GPIO is not
-initialized, and the direction must be set later; using a GPIO
-without setting its direction first is illegal and will result in undefined
-behavior. Fix this by using GPIOD_OUT_HIGH instead of GPIOD_ASIS (this asserts
-the reset signal to the sensor initially).
+This macro is defined as SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn),
+so imx290_power_off must be the 1st arg, and imx290_power_on the 2nd.
 
 Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/media/i2c/imx290.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/media/i2c/imx290.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index d0322f9a8856..7b1de1f0c8b7 100644
+index 2d8c38ffe2f0..d0322f9a8856 100644
 --- a/drivers/media/i2c/imx290.c
 +++ b/drivers/media/i2c/imx290.c
-@@ -628,7 +628,7 @@ static int imx290_power_on(struct device *dev)
- 	}
+@@ -648,7 +648,7 @@ static int imx290_power_off(struct device *dev)
+ }
  
- 	usleep_range(1, 2);
--	gpiod_set_value_cansleep(imx290->rst_gpio, 1);
-+	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
- 	usleep_range(30000, 31000);
+ static const struct dev_pm_ops imx290_pm_ops = {
+-	SET_RUNTIME_PM_OPS(imx290_power_on, imx290_power_off, NULL)
++	SET_RUNTIME_PM_OPS(imx290_power_off, imx290_power_on, NULL)
+ };
  
- 	return 0;
-@@ -641,7 +641,7 @@ static int imx290_power_off(struct device *dev)
- 	struct imx290 *imx290 = to_imx290(sd);
- 
- 	clk_disable_unprepare(imx290->xclk);
--	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
-+	gpiod_set_value_cansleep(imx290->rst_gpio, 1);
- 	regulator_bulk_disable(IMX290_NUM_SUPPLIES, imx290->supplies);
- 
- 	return 0;
-@@ -757,7 +757,8 @@ static int imx290_probe(struct i2c_client *client)
- 		goto free_err;
- 	}
- 
--	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
-+	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset",
-+						   GPIOD_OUT_HIGH);
- 	if (IS_ERR(imx290->rst_gpio)) {
- 		dev_err(dev, "Cannot get reset gpio\n");
- 		ret = PTR_ERR(imx290->rst_gpio);
+ static const struct v4l2_subdev_video_ops imx290_video_ops = {
 -- 
 2.17.1
 
