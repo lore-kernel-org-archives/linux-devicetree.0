@@ -2,65 +2,67 @@ Return-Path: <SRS0=DJdz=7G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E047C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 09:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDD6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 09:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D96420812
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 09:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7252920787
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 May 2020 09:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tVJ7Bjws"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="L1ix71oc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgEXJp5 (ORCPT
+        id S1728959AbgEXJtg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 05:45:57 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:64248 "EHLO
+        Sun, 24 May 2020 05:49:36 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:48721 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728825AbgEXJp5 (ORCPT
+        by vger.kernel.org with ESMTP id S1728825AbgEXJtg (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 24 May 2020 05:45:57 -0400
+        Sun, 24 May 2020 05:49:36 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590313556; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1590313776; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=rtPQNEuxTE+qtpvH3PG/YKnXwSbJX2CZrUtuoTcZOXY=; b=tVJ7BjwsizJepcz/wgugPXt23go3hd3V2D4ShP1/ct36EyU3ES9RbfwzqVrYsMKtOJ7ItTO1
- SKAsKrhWlZk06G6MvNEuxxO4pkqLbtaArUJCflqMbI6lHHCj7HoElUiK83mcbsqj2wlkEseV
- MI2usGFenBLGHTGxgEqrk+we8xU=
+ Subject: Sender; bh=rWUNIe9B+jeAbe/7iaGK9kGruHhpswyMUl0f/hO15NI=; b=L1ix71oc3mMn2J/kTp4DzLkpS62GPgA7PTxnE62OuwKu4Y9v6nn7eluDik5FVLRH3SVmN4lI
+ tvNuBi6Vg4+6shRN1Yh9GhPfbW8nGJqLnlMJDc+/q0k/U1vEiQbT2WfUH0yYeGdsPM2EY8P5
+ 5L879yrS/brzBXVXb1+LEc1kLxg=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eca4253.7f032d442dc0-smtp-out-n03;
- Sun, 24 May 2020 09:45:55 -0000 (UTC)
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5eca42fb4c3faf51e2db7290 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 24 May 2020 09:48:43
+ GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 94981C433C9; Sun, 24 May 2020 09:45:55 +0000 (UTC)
+        id 120E1C433C9; Sun, 24 May 2020 09:48:43 +0000 (UTC)
 Received: from [192.168.0.104] (unknown [49.207.133.24])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4DE7DC433C6;
-        Sun, 24 May 2020 09:45:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4DE7DC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2D27C433C6;
+        Sun, 24 May 2020 09:48:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2D27C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH V4 7/8] mailbox: qcom: Add ipq6018 apcs compatible
+Subject: Re: [PATCH V4 5/8] clk: qcom: Add ipq apss clock controller
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
         robh+dt@kernel.org, jassisinghbrar@gmail.com,
         linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
- <1588573224-3038-8-git-send-email-sivaprak@codeaurora.org>
- <20200512201931.GJ2165@builder.lan>
+ <1588573224-3038-6-git-send-email-sivaprak@codeaurora.org>
+ <20200512201233.GI2165@builder.lan>
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <32f33ed2-7c00-3967-e34b-424c5906a91b@codeaurora.org>
-Date:   Sun, 24 May 2020 15:15:47 +0530
+Message-ID: <81779b92-c30a-5d4c-cce2-b444a718ee42@codeaurora.org>
+Date:   Sun, 24 May 2020 15:18:36 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200512201931.GJ2165@builder.lan>
+In-Reply-To: <20200512201233.GI2165@builder.lan>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -69,100 +71,21 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
 
-On 5/13/2020 1:49 AM, Bjorn Andersson wrote:
+On 5/13/2020 1:42 AM, Bjorn Andersson wrote:
 > On Sun 03 May 23:20 PDT 2020, Sivaprakash Murugesan wrote:
 >
->> The Qualcomm ipq6018 has apcs block, add compatible for the same.
->> Also, the apcs provides a clock controller functionality similar
->> to msm8916 but the clock driver is different.
+>> The CPU on Qualcomm ipq platform is clocked primarily by a aplha PLL
+>> and xo which are connected to a mux and enable block.
 >>
->> Create a child platform device based on the apcs compatible for the
->> clock controller functionality.
+>> Add support for the mux and enable block which feeds the CPU on ipq
+>> based devices.
 >>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> ---
->>   drivers/mailbox/qcom-apcs-ipc-mailbox.c | 26 +++++++++++++++++---------
->>   1 file changed, 17 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
->> index eeebafd..7c0c4b0 100644
->> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
->> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
->> @@ -45,6 +45,16 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
->>   	.send_data = qcom_apcs_ipc_send_data,
->>   };
->>   
->> +static const struct of_device_id apcs_clk_match_table[] = {
->> +	{ .compatible = "qcom,msm8916-apcs-kpss-global",
->> +	  .data = "qcom-apcs-msm8916-clk", },
-> These are easier to read if you ignore the 80-char limit.
-> Unless Jassi's object that is.
-since Jassi has not objected your comment, I am making the change as per 
-your suggestion.
->
->> +	{ .compatible = "qcom,qcs404-apcs-apps-global",
->> +	  .data = "qcom-apcs-msm8916-clk", },
->> +	{ .compatible = "qcom,ipq6018-apcs-apps-global",
-> Add your entry on top, to maintain sort order.
-ok.
->
->> +	  .data = "qcom,apss-ipq-clk", },
->> +	{}
->> +};
->> +
->>   static int qcom_apcs_ipc_probe(struct platform_device *pdev)
->>   {
->>   	struct qcom_apcs_ipc *apcs;
->> @@ -54,11 +64,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
->>   	void __iomem *base;
->>   	unsigned long i;
->>   	int ret;
->> -	const struct of_device_id apcs_clk_match_table[] = {
->> -		{ .compatible = "qcom,msm8916-apcs-kpss-global", },
->> -		{ .compatible = "qcom,qcs404-apcs-apps-global", },
->> -		{}
->> -	};
->> +	const struct of_device_id *clk_device;
->>   
->>   	apcs = devm_kzalloc(&pdev->dev, sizeof(*apcs), GFP_KERNEL);
->>   	if (!apcs)
->> @@ -93,11 +99,12 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
->>   		return ret;
->>   	}
->>   
->> -	if (of_match_device(apcs_clk_match_table, &pdev->dev)) {
->> +	clk_device = of_match_device(apcs_clk_match_table, &pdev->dev);
-> Better use of_device_match_data() and get the string directly (or NULL).
+> As with the A53 binding, I don't believe that this driver will support
+> all past, present and future IPQ APSSs. Please make it more specific.
 
-As I checked there is no API called of_device_match_data(), the API 
-of_device_get_match_data()
+ok. Let me make the changes to be specific for ipq6018 devices.
 
-returns the data associated with the device and it cannot be used here.
-
-please correct me if wrong.
-
+> Regards,
+> Bjorn
 >
->> +	if (clk_device) {
->>   		apcs->clk = platform_device_register_data(&pdev->dev,
->> -							  "qcom-apcs-msm8916-clk",
->> -							  PLATFORM_DEVID_NONE,
->> -							  NULL, 0);
->> +						(const char *)clk_device->data,
->> +						PLATFORM_DEVID_NONE,
->> +						NULL, 0);
-> I didn't apply the patch to look for myself, but please ensure to
-> maintain indentation to follow the parenthesis on the line before.
-ok.
->
->>   		if (IS_ERR(apcs->clk))
->>   			dev_err(&pdev->dev, "failed to register APCS clk\n");
->>   	}
->> @@ -127,6 +134,7 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
->>   	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
->>   	{ .compatible = "qcom,sm8150-apss-shared", .data = (void *)12 },
->>   	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = (void *)8 },
->> +	{ .compatible = "qcom,ipq6018-apcs-apps-global", .data = (void *)8 },
-> Add it one line up and you'll maintain partial sorting...
-ok.
