@@ -2,131 +2,134 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908D8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 06:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5973C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 07:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBF72071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 06:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5002075F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 07:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gn6DI5iy"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jyArtrme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbgEYG4d (ORCPT
+        id S1726450AbgEYHOU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 02:56:33 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:3720 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388385AbgEYG4d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 02:56:33 -0400
-X-UUID: fbd3d7b1f60848d9a269012ade4917c9-20200525
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=6DRd72G/04IUjrJWtULzvnV0W9JE0UNqefujrxFZ1Cs=;
-        b=gn6DI5iy1sAcJebaPEH3cWoU+p0wrbb/2AW989G3Y5roI3t7japerJPGtbNckLDbVnKVfOdiA+PXIg0Y7lC35PPNjJj3pLizUJ5gGZyHVaBacRfGJ73A50eywhDjZuCm6+SNvc5HbvyM8F0b57Eg7UoebLJVN/6ksMeBSqwaZ9Y=;
-X-UUID: fbd3d7b1f60848d9a269012ade4917c9-20200525
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1290107391; Mon, 25 May 2020 14:56:14 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 25 May
- 2020 14:56:13 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 25 May 2020 14:56:13 +0800
-Message-ID: <1590389672.13912.26.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 7/7] iommu/mediatek: Add mt6779 basic support
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Chao Hao <chao.hao@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        FY Yang <fy.yang@mediatek.com>, Jun Yan <jun.yan@mediatek.com>
-Date:   Mon, 25 May 2020 14:54:32 +0800
-In-Reply-To: <20200509083654.5178-8-chao.hao@mediatek.com>
-References: <20200509083654.5178-1-chao.hao@mediatek.com>
-         <20200509083654.5178-8-chao.hao@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 25 May 2020 03:14:20 -0400
+Received: from mail-eopbgr70053.outbound.protection.outlook.com ([40.107.7.53]:1606
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726393AbgEYHOT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 03:14:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QUoopE6M1CitbXhNu6Tx8cxtZRWLnC4eKvJCOnvwx105ICrEkTVnuTzsinV5w9WbvnmhnJ9odol1nCaHOCyCyGhgUsq6WQP0IOfriCK5qfHou41YzAoTNPSQpVt2UcGmFsepTV879PEmMTkFdep5E4Lu88APsKS3PPQl2WAbYhRS0plEU7iS+4t7yODM2s4u3YMN/TZGJbHZgs+yVMzCMaZ6/ajkzwJEhPkZi6eqd6jT6J/Z9DEebmfc6s9CHSHR+mEGuG/8OsMiKRt4paXM5bwUkOEwBOEymjMG3Jv4snmV8rNiI79ys+8d0ATXJ53REbjJ1dY3gwKVulKFwthz4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pE5Az9QNVxAJFtEazPnsur/dFXvAntJJJUTGNV+gkI4=;
+ b=NDM7tLzt3zMuI8w6BcYnk3cZu5Vko6oGEWxTfkW7wXm4jz9h5TcmBFm9PXTVoym9Dm4+gpNFnkhv4K0YnVgIICYsTOhYgSp8d1v2V+RkG0KXPtu5u+2Zw4npyCi8ohGlW1cpc3yjdi7+IrVL/tS9KAoZGBXQ1s9K+DzWpRlC+iypo3RVjswY5dIAu7SocXljnn34gMwYsmHRcgFrj/sX+Gq7QntwZy5Q0cVVGicKdk25BLoIVqVg1TDB2NYQhdklKzFXaYQCm0g1kuKEkxinyCufiO5mZbirvkBOlBOUBUxHGUquPSnB+SmyZxTOM4KbEAIeHyWZr10hAPBthkPqNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pE5Az9QNVxAJFtEazPnsur/dFXvAntJJJUTGNV+gkI4=;
+ b=jyArtrmeJaVbZ80xHNbFw2VrLHv8bTzh1wtx8ByQTD2FRXE+2tjDXGmpeFJdzs5non6m02RlqdzjmPRC4aMUp+MAWfRwc/d5/wXhfzdKFOGCzdazjxA5q2XNENrVXKD2vhzHvdd3exfozHJVqDsrYxHNFaSsEqG5QzwXiJV9LRQ=
+Authentication-Results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM6PR0402MB3735.eurprd04.prod.outlook.com
+ (2603:10a6:209:1a::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Mon, 25 May
+ 2020 07:14:15 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3021.029; Mon, 25 May 2020
+ 07:14:15 +0000
+From:   fugang.duan@nxp.com
+To:     andrew@lunn.ch, martin.fuzzey@flowbird.group, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        devicetree@vger.kernel.org, kuba@kernel.org, fugang.duan@nxp.com
+Subject: [PATCH net v2 0/4] net: ethernet: fec: move GPR reigster offset and bit into DT
+Date:   Mon, 25 May 2020 15:09:25 +0800
+Message-Id: <1590390569-4394-1-git-send-email-fugang.duan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0213.apcprd06.prod.outlook.com
+ (2603:1096:4:68::21) To AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D84AC03253283C703994F8FF4CE4C4A6A591C83D422D4AD6387936229962A63F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from b38611.ap.freescale.net (119.31.174.66) by SG2PR06CA0213.apcprd06.prod.outlook.com (2603:1096:4:68::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.23 via Frontend Transport; Mon, 25 May 2020 07:14:12 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 024cf56d-b16a-45b2-f59f-08d8007b3b64
+X-MS-TrafficTypeDiagnostic: AM6PR0402MB3735:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR0402MB3735B7D71E6EB1416EF4F0A0FFB30@AM6PR0402MB3735.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:556;
+X-Forefront-PRVS: 0414DF926F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Bd+kbeu5GRFDj3J6aHYzLzu66EfAPfSUaO38X+oIMvTvdqrx25Bc46tZkxNpxYMmNO5evL1iLJNzWe7vcPfreXlwXpx1RQodYqCrEEuz8Ndfbw4X+1KfHj+Rt/EqcxB0cZcOX6guim1h1CkgdVZZ0Q0DIRLY/HU2sylCVp9WTFJvjjU5p0QoGscVR8K6+gGq4bZrvO0q2j3jhY03fXsfRWaI56RqgxHt3jwMSSMiP2B5FAo9FKQBd7R7Kl120rzP2MwM4o7fB+cLLqmz5xq9TraBDYQaoZetbeggRKcwO6S+iaVRCSoKW0Mcvw5AQRDG
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(316002)(956004)(2616005)(66476007)(52116002)(6506007)(66556008)(66946007)(86362001)(36756003)(26005)(5660300002)(6486002)(16526019)(186003)(6512007)(2906002)(8676002)(9686003)(478600001)(8936002)(4326008)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ZrXJfy3w1J2ftJLI1Bv7r7b3hXECXpzzMelXR/8xt529sgGSnh3rRLh3XvFpDmJrnqYllsv/sMQ2uC1ncY7Z6o6AVsCNpW7OxXzXUJA9sGp+XD0e2QH9nWR9MtnStiEtlc8tp7Nmse/fDorhA9tM8SeA8JRX3EXpujuHWy+a/73Hy9t2gOjAYtqxdfEYRGXzxuHPWgymp/cyF9irZrlnB5Lx+KYpd58SVxh0RccLPDPNDsA4VMfacdeTP+9TN9BasLYfDG4lcHP85S7pp5gHqE3I+/Cp0hrNO23oN/W16dliHdXKOYl4j6EGAY2b2lU2ghTDZtbrsaDnUldU39Jje33OeEGDr8o7fvHwn6It90GymYIkpBnMRwljK1/XpF/6GlCtSm4mw9nRx5GjJLb77V8XQiMobTu8V4x5ruLezlLHFYeYxD8qyCkKXEbY+YFymq5TQDzRat94EE9uqoHWC/YcLjZZeKFaVlINBSYMUd8=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 024cf56d-b16a-45b2-f59f-08d8007b3b64
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2020 07:14:15.2843
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oXjt51Bw2AUrzVqnRtutMwP6nuOn6Oxm3PupTBy5rQb3usUKYbJXpW+C7/KZALmA3Vb4yWDYQV6qyIaHXYdnJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3735
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA1LTA5IGF0IDE2OjM2ICswODAwLCBDaGFvIEhhbyB3cm90ZToNCj4gMS4g
-U3RhcnQgZnJvbSBtdDY3NzksIElOVkxEVF9TRUwgbW92ZSB0byBvZmZzZXQ9MHgyYywgc28gd2Ug
-YWRkDQo+ICAgIFJFR19NTVVfSU5WX1NFTF9HRU4yIGRlZmluaXRpb24gYW5kIG10Njc3OSB1c2Vz
-IGl0Lg0KPiAyLiBDaGFuZ2UgUFJPVEVDVF9QQV9BTElHTiBmcm9tIDEyOCBieXRlIHRvIDI1NiBi
-eXRlLg0KPiAzLiBGb3IgUkVHX01NVV9DVFJMX1JFRyByZWdpc3Rlciwgd2Ugb25seSBuZWVkIHRv
-IGNoYW5nZSBiaXRbMjowXSwNCj4gICAgb3RoZXJzIGJpdHMga2VlcCBkZWZhdWx0IHZhbHVlLCBl
-eDogZW5hYmxlIHZpY3RpbSB0bGIuDQo+IDQuIEFkZCBtdDY3NzlfZGF0YSB0byBzdXBwb3J0IG1t
-X2lvbW11IEhXIGluaXQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDaGFvIEhhbyA8Y2hhby5oYW9A
-bWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgfCAxOCAr
-KysrKysrKysrKysrKystLS0NCj4gIGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmggfCAgMSArDQo+
-ICAyIGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0K
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYyBiL2RyaXZlcnMvaW9tbXUv
-bXRrX2lvbW11LmMNCj4gaW5kZXggZGM5YWU5NDRlNzEyLi4zNGM0ZmZiNzdjNzMgMTAwNjQ0DQo+
-IC0tLSBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gKysrIGIvZHJpdmVycy9pb21tdS9t
-dGtfaW9tbXUuYw0KPiBAQCAtMzcsNiArMzcsNyBAQA0KPiAgI2RlZmluZSBSRUdfTU1VX0lOVkxE
-X1NUQVJUX0EJCQkweDAyNA0KPiAgI2RlZmluZSBSRUdfTU1VX0lOVkxEX0VORF9BCQkJMHgwMjgN
-Cj4gIA0KPiArI2RlZmluZSBSRUdfTU1VX0lOVl9TRUxfR0VOMgkJCTB4MDJjDQo+ICAjZGVmaW5l
-IFJFR19NTVVfSU5WX1NFTF9HRU4xCQkJMHgwMzgNCg0KTm9ybWFsbHkgdGhlIHJlZ2lzdGVyIG5h
-bWUgY29tZXMgZnJvbSB0aGUgQ09EQS4gSW4gdGhlIGxhc3RlZCBDT0RBLA0KdGhpcyBpcyBjYWxs
-ZWQgIk1NVV9JTlZMRFRfU0VMIi4gQnV0IGl0J3Mgc2FtZSB3aXRoIHRoZSBwcmV2aW91cyAweDM4
-DQp0b3RhbGx5LiBVc2luZyBfR0VOMSwgX0dFTjIgaXMgb2sgZm9yIG1lLiBQbGVhc2UgYWRkIGl0
-cyBjb2RhIG5hbWUgaW4NCnRoZSBjb21tZW50LiBsaWtlOg0KDQojZGVmaW5lIFJFR19NTVVfSU5W
-X1NFTF9HRU4yCQkweDAyYyAvKiBNTVVfSU5WTERUX1NFTCAqLw0KDQo+ICAjZGVmaW5lIEZfSU5W
-TERfRU4wCQkJCUJJVCgwKQ0KPiAgI2RlZmluZSBGX0lOVkxEX0VOMQkJCQlCSVQoMSkNCj4gQEAg
-LTk3LDcgKzk4LDcgQEANCj4gICNkZWZpbmUgRl9NTVVfSU5UX0lEX0xBUkJfSUQoYSkJCQkoKChh
-KSA+PiA3KSAmIDB4NykNCj4gICNkZWZpbmUgRl9NTVVfSU5UX0lEX1BPUlRfSUQoYSkJCQkoKChh
-KSA+PiAyKSAmIDB4MWYpDQo+ICANCj4gLSNkZWZpbmUgTVRLX1BST1RFQ1RfUEFfQUxJR04JCQkx
-MjgNCj4gKyNkZWZpbmUgTVRLX1BST1RFQ1RfUEFfQUxJR04JCQkyNTYNCj4gIA0KPiAgLyoNCj4g
-ICAqIEdldCB0aGUgbG9jYWwgYXJiaXRlciBJRCBhbmQgdGhlIHBvcnRpZCB3aXRoaW4gdGhlIGxh
-cmIgYXJiaXRlcg0KPiBAQCAtNTU0LDExICs1NTUsMTIgQEAgc3RhdGljIGludCBtdGtfaW9tbXVf
-aHdfaW5pdChjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X2RhdGEgKmRhdGEpDQo+ICAJCXJldHVybiBy
-ZXQ7DQo+ICAJfQ0KPiAgDQo+ICsJcmVndmFsID0gcmVhZGxfcmVsYXhlZChkYXRhLT5iYXNlICsg
-UkVHX01NVV9DVFJMX1JFRyk7DQo+ICAJaWYgKGRhdGEtPnBsYXRfZGF0YS0+bTR1X3BsYXQgPT0g
-TTRVX01UODE3MykNCj4gLQkJcmVndmFsID0gRl9NTVVfUFJFRkVUQ0hfUlRfUkVQTEFDRV9NT0Qg
-fA0KPiArCQlyZWd2YWwgfD0gRl9NTVVfUFJFRkVUQ0hfUlRfUkVQTEFDRV9NT0QgfA0KDQpUaGUg
-ZGVmYXVsdCB2YWx1ZSBpcyBub3Qgb2sgZm9yIG10ODE3MyhJdHMgYml0OSBpcyBpbl9vcmRlcl93
-cml0ZV9lbiwgd2UNCmNvdWxkIG5vdCB1c2UgaXRzIGRlZmF1bHQgMSdiMSkuIHRodXMsIERvbid0
-IHRvdWNoIHRoaXMgbGluZS4NCg0KPiAgCQkJIEZfTU1VX1RGX1BST1RfVE9fUFJPR1JBTV9BRERS
-X01UODE3MzsNCj4gIAllbHNlDQo+IC0JCXJlZ3ZhbCA9IEZfTU1VX1RGX1BST1RfVE9fUFJPR1JB
-TV9BRERSOw0KPiArCQlyZWd2YWwgfD0gRl9NTVVfVEZfUFJPVF9UT19QUk9HUkFNX0FERFI7DQo+
-ICAJd3JpdGVsX3JlbGF4ZWQocmVndmFsLCBkYXRhLT5iYXNlICsgUkVHX01NVV9DVFJMX1JFRyk7
-DQo+ICANCj4gIAlyZWd2YWwgPSBGX0wyX01VTElUX0hJVF9FTiB8DQo+IEBAIC04MDQsNiArODA2
-LDE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDI3MTJfZGF0
-YSA9IHsNCj4gIAkubGFyYmlkX3JlbWFwID0ge3swfSwgezF9LCB7Mn0sIHszfSwgezR9LCB7NX0s
-IHs2fSwgezd9fSwNCj4gIH07DQo+ICANCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11
-X3BsYXRfZGF0YSBtdDY3NzlfZGF0YSA9IHsNCj4gKwkubTR1X3BsYXQgPSBNNFVfTVQ2Nzc5LA0K
-PiArCS5sYXJiaWRfcmVtYXAgPSB7ezB9LCB7MX0sIHsyfSwgezN9LCB7NX0sIHs3LCA4fSwgezEw
-fSwgezl9fSwNCj4gKwkuaGFzX3N1Yl9jb21tID0gdHJ1ZSwNCj4gKwkuaGFzX3dyX2xlbiA9IHRy
-dWUsDQo+ICsJLmhhc19taXNjX2N0cmwgPSB0cnVlLA0KPiArCS5pbnZfc2VsX3JlZyA9IFJFR19N
-TVVfSU5WX1NFTF9HRU4yLA0KDQphbGlnbiAnPScgYSBiaXQuDQoNCj4gK307DQo+ICsNCj4gIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDgxNzNfZGF0YSA9IHsNCj4g
-IAkubTR1X3BsYXQgICAgID0gTTRVX01UODE3MywNCj4gIAkuaGFzXzRnYl9tb2RlID0gdHJ1ZSwN
-Cj4gQEAgLTgyMiw2ICs4MzMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0
-X2RhdGEgbXQ4MTgzX2RhdGEgPSB7DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2
-aWNlX2lkIG10a19pb21tdV9vZl9pZHNbXSA9IHsNCj4gIAl7IC5jb21wYXRpYmxlID0gIm1lZGlh
-dGVrLG10MjcxMi1tNHUiLCAuZGF0YSA9ICZtdDI3MTJfZGF0YX0sDQo+ICsJeyAuY29tcGF0aWJs
-ZSA9ICJtZWRpYXRlayxtdDY3NzktbTR1IiwgLmRhdGEgPSAmbXQ2Nzc5X2RhdGF9LA0KPiAgCXsg
-LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLW00dSIsIC5kYXRhID0gJm10ODE3M19kYXRh
-fSwNCj4gIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1tNHUiLCAuZGF0YSA9ICZt
-dDgxODNfZGF0YX0sDQo+ICAJe30NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvbXRrX2lv
-bW11LmggYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5oDQo+IGluZGV4IDk5NzFjZWRkNzJlYS4u
-ZmI3OWU3MTBjOGQ5IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5oDQo+
-ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gQEAgLTMxLDYgKzMxLDcgQEAgc3Ry
-dWN0IG10a19pb21tdV9zdXNwZW5kX3JlZyB7DQo+ICBlbnVtIG10a19pb21tdV9wbGF0IHsNCj4g
-IAlNNFVfTVQyNzAxLA0KPiAgCU00VV9NVDI3MTIsDQo+ICsJTTRVX01UNjc3OSwNCj4gIAlNNFVf
-TVQ4MTczLA0KPiAgCU00VV9NVDgxODMsDQo+ICB9Ow0KDQo=
+From: Fugang Duan <fugang.duan@nxp.com>
+
+The commit da722186f654 (net: fec: set GPR bit on suspend by DT configuration) set the GPR reigster offset and bit in driver for wol feature.
+
+It bring trouble to enable wol feature on imx6sx/imx6ul/imx7d platforms that have multiple ethernet instances with different GPR bit for stop mode control. So the patch set is to move GPR reigster offset and bit define into DT, and enable imx6q/imx6dl/imx6sx/imx6ul/imx7d stop mode support.
+
+Currently, below NXP i.MX boards support wol:
+- imx6q/imx6dl sabresd
+- imx6sx sabreauto
+- imx7d sdb
+
+imx6q/imx6dl sarebsd board dts file miss the property "fsl,magic-packet;", so patch#4 is to add the property for stop mode support.
+
+
+v1 -> v2:
+ - driver: switch back to store the quirks bitmask in driver_data
+ - dt-bindings: rename 'gpr' property string to 'fsl,stop-mode'
+ - imx6/7 dtsi: add imx6sx/imx6ul/imx7d ethernet stop mode property
+
+Thanks Martin and Andrew for the review.
+
+
+Fugang Duan (4):
+  net: ethernet: fec: move GPR register offset and bit into DT
+  dt-bindings: fec: update the gpr property
+  ARM: dts: imx: add ethernet stop mode property
+  ARM: dts: imx6qdl-sabresd: enable fec wake-on-lan
+
+ Documentation/devicetree/bindings/net/fsl-fec.txt |   7 +-
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi            |   1 +
+ arch/arm/boot/dts/imx6qdl.dtsi                    |   2 +-
+ arch/arm/boot/dts/imx6sx.dtsi                     |   2 +
+ arch/arm/boot/dts/imx6ul.dtsi                     |   2 +
+ arch/arm/boot/dts/imx7d.dtsi                      |   1 +
+ arch/arm/boot/dts/imx7s.dtsi                      |   1 +
+ drivers/net/ethernet/freescale/fec_main.c         | 103 +++++++---------------
+ 8 files changed, 47 insertions(+), 72 deletions(-)
+
+-- 
+2.7.4
 
