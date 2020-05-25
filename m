@@ -6,91 +6,81 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FDDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9E2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA2F92078B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583D8207C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390783AbgEYNZ0 (ORCPT
+        id S2390786AbgEYNmW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 09:25:26 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30274 "EHLO mga04.intel.com"
+        Mon, 25 May 2020 09:42:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52678 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388685AbgEYNZ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 09:25:26 -0400
-IronPort-SDR: rObcf0Q+uMIrYGvWdq4suARQfM082pAeOrZ9MwQauxJR1VgRNk69YlABge4Fay0XfQHVWih/d4
- a755zuDuo7bw==
+        id S2390752AbgEYNmW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 09:42:22 -0400
+IronPort-SDR: 2mJyGc4DUto9zzv9PPlx+qHEoNf7SXkxytbVXHQI6WdSWdqRx70LB0pGUKNdEP/xWVJfxooaFt
+ DCJ72WqDfqKg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:25:25 -0700
-IronPort-SDR: 2+jbuk/O7v+ofuIpI3sxz4UMMXRzsN+jsUGJhAsU1ZG1GsQPSA1cVKS5b9oU+XZSwuMIBZqQtN
- c4lQR60f+phA==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:42:20 -0700
+IronPort-SDR: 3ahJSY+WGJJJL30AHT0RjfuA8GbpndCYboJhLj5auNonIf3UK1WzfXVbmt5TsM2f+/YaVPBve3
+ c8UhP5cU6vZw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="441730138"
+   d="scan'208";a="468055300"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 25 May 2020 06:25:19 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 25 May 2020 06:42:17 -0700
 Received: from andy by smile with local (Exim 4.93)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdD6X-008nCW-92; Mon, 25 May 2020 16:25:21 +0300
-Date:   Mon, 25 May 2020 16:25:21 +0300
+        id 1jdDMx-008nMy-GZ; Mon, 25 May 2020 16:42:19 +0300
+Date:   Mon, 25 May 2020 16:42:19 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Pierre-louis Bossart <pierre-louis.bossart@intel.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-Message-ID: <20200525132521.GZ1634618@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-11-michael@walle.cc>
- <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com>
- <75bff2917be1badd36af9f980cf59d2c@walle.cc>
- <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
- <951244aab2ff553a463f7431ba09bf27@walle.cc>
- <CACRpkdZYEZk7o+Y2-AqnHGsY8N7KGGmPGSuSS=H7YY8VLZ3jZw@mail.gmail.com>
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers
+ glue layer interface
+Message-ID: <20200525134219.GB1634618@smile.fi.intel.com>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
+ <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
+ <20200521023735.mja62ujmxebgwyef@mobilestation>
+ <80cf1d67-5de1-f3f1-27a0-b88cc105b228@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZYEZk7o+Y2-AqnHGsY8N7KGGmPGSuSS=H7YY8VLZ3jZw@mail.gmail.com>
+In-Reply-To: <80cf1d67-5de1-f3f1-27a0-b88cc105b228@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 25, 2020 at 02:59:36PM +0200, Linus Walleij wrote:
-> On Mon, May 25, 2020 at 12:20 PM Michael Walle <michael@walle.cc> wrote:
-> 
-> > If you like I could submit this patch on its own. But then there
-> > wouldn't be a user for it.
-> 
-> I'm pretty much fine with that, we do merge code that has no
-> users if we anticipate they will be around the corner.
+On Mon, May 25, 2020 at 04:16:05PM +0300, Jarkko Nikula wrote:
+> On 5/21/20 5:37 AM, Serge Semin wrote:
 
-I remember we discussed with Pierre to use it for his ASoC work.
-Pierre, does it sound useful for you?
+> For this patchset I'd like more if changes are done to
+> i2c-designware-platdrv.c since it's not too complicated yet :-)
+
+And after moving ACPI stuff to common code, the one has even been shrunk significantly.
+
+> If it starts to look too messy in the future then it's time split I think.
 
 -- 
 With Best Regards,
