@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A70C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 03:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368FCC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 03:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73E832075F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 03:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1769A20825
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 03:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9x/beh8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjlDtBWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388819AbgEYDlg (ORCPT
+        id S2388840AbgEYDlp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 23:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57666 "EHLO
+        Sun, 24 May 2020 23:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388397AbgEYDle (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 23:41:34 -0400
+        with ESMTP id S2388397AbgEYDlo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 23:41:44 -0400
 Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB39DC061A0E;
-        Sun, 24 May 2020 20:41:34 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a5so8001011pjh.2;
-        Sun, 24 May 2020 20:41:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 963C8C061A0E;
+        Sun, 24 May 2020 20:41:44 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id cx22so8001900pjb.1;
+        Sun, 24 May 2020 20:41:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JHR9IFaRgCyJGWikuHqyC0B14pMQIGmyd5Kpq3MNpmQ=;
-        b=b9x/beh8V8+Wi3TKqrBgqD2YLsbTxg11tUo1GMv4hQuU9CXkFipOzeKKw1ZhH558DJ
-         r3oDIli3++aJuKFgOZhAMmIPgFHizDXljnjeuUsvEF9PQy3XdYGIYSNIkKY+vG+nZnUC
-         S17nYhtoQLypMlGwlOfC4yczd2ZcZeMhwYt5FPiTVMn0/n7muwoxYy7K5NrlRNkjOZoA
-         uYMMg1PRq7PQOTUKTlhGadlAru4Ngw2QUZcJmDsrxr/wcYKPqhI3yGp1of9jxHDiSs73
-         YsOHksI+ec5abVm67ec+Wz5N7W8PH9R8LQQhLaETnupDLM+bilLEXZ1lUOV5xhLPeWvu
-         MVZQ==
+        bh=iDnn3wwO4wgWkpXGhO1cGw9dx9qYzbrC+ZSQIhZHNL0=;
+        b=jjlDtBWN/16JQmSFYC7TV23yXD3qJz4n3xV2sK420hC1YiK8ETGR0y4wpyWU8RukLV
+         SqpSatLDtBr7+WKFLAtoAkTbwa+WhbfL5AYZ7w+KUr6QIKQmLmku6iJ38zSp8M0Z/Cmb
+         hKSkvngi8kBBa0Uh4QpCznTFNcEKIpDxWa8XTYNfX6aZpDJbqeyQi/XT2VgZ6YCNtA71
+         Kk+9tQIvVgA+nGLKNCEIlkz72uIXo0pi6PgjKOpf3LUWBR5m7B1SHBllrMxYIHcrn2t+
+         14ZUIRRDAACib2/IOewbL8Gax9yeRir0geDiwg624a9kv4FvwO67JcFRQwvKBnOI8/kB
+         Iweg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=JHR9IFaRgCyJGWikuHqyC0B14pMQIGmyd5Kpq3MNpmQ=;
-        b=ik63Rp4BM14AEMUmUEdJnlgPR60BGGMcy4iH6/QL7XyyCDoaa4yFN0v5PFyqfrHgJ8
-         YtN/1FAUfP8IQq/SakoweFGPm6WG8R4n/DvRGokzViARXdDHlg4qQ8BGI8ATUy4HRpfx
-         n1iL74SdC8FIrJOo9fx1POK0b8HPnKAYlnr0+ZkSWWTOFBhDqHh5qhJMYh5ZaezSE0Lw
-         I2Wzx4udOrqT3v3/ibykAbKyO9pNSE+yUOC7qD9TB0ZdUsKR0WXB2oKqFsi/85T+b8j4
-         maDabiCQOyI5HPabhLgcQ0/mxWQBsOx85UbHRgqXwOwmUud8qnXjNEyWNru+6pWkb99h
-         ZteQ==
-X-Gm-Message-State: AOAM5335Bo6hNYqQFF7d3+lIKku3qsOW61AJcFC6EfGVDGaX+SD4Jnz+
-        /JN5exLuse/RBl/g4xrVQFI=
-X-Google-Smtp-Source: ABdhPJwFd19cwDs3kghDA6cyFKAQQDyzxswSNn1g5n0asibuokVH+325D0MWIcoam+IOMZD80TfYMg==
-X-Received: by 2002:a17:902:bc82:: with SMTP id bb2mr5540650plb.107.1590378094241;
-        Sun, 24 May 2020 20:41:34 -0700 (PDT)
+        bh=iDnn3wwO4wgWkpXGhO1cGw9dx9qYzbrC+ZSQIhZHNL0=;
+        b=qzygH3QDi+ScDaRfoFzDwroyZUDcwXtrT+Dr6aowjESzz+dSR1bS3ZRXu54G4gYHzg
+         YmW2fIW4h7aWldnyyzQKxx6Mx5DEHL1XSz1+XpyvDrP4A2PQRmnDQNGtxNtYIhCu+70C
+         6PqSrSf7RVQfsIirIcFPlV5yguzGx6Raee5w66jKuvkwZ7Xt8plOOD2dXyu1NBTriThS
+         Xz1QEGO/2p8TZ5xJCInKiHAIVnqpc1acQt+Fyl+cNa7ykn1Hf9FYhff5fsfJiYAIuVWz
+         8BoQCZK0nw+okxDtw4lTJDfHoDDfXhBu21PzISQM9SkewFDp/V6avqBDeLcEe/VOYepm
+         v9IQ==
+X-Gm-Message-State: AOAM530aTDvtS1XmX2Eq1szJpafTOjUeV3ZpU1Pqb1dYiZanyyV5C4Os
+        zqRcEbFCmvGdKkCxtrFqm6o=
+X-Google-Smtp-Source: ABdhPJxoKIdtw415DByT7hwTPxxjMmM+Hxr8JYe3K494S5OCo3VeF502e2OXLD2FZhSXNulrXDX2cg==
+X-Received: by 2002:a17:90a:4497:: with SMTP id t23mr18625927pjg.88.1590378104137;
+        Sun, 24 May 2020 20:41:44 -0700 (PDT)
 Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.44])
-        by smtp.gmail.com with ESMTPSA id 7sm11981695pfc.203.2020.05.24.20.41.29
+        by smtp.gmail.com with ESMTPSA id 7sm11981695pfc.203.2020.05.24.20.41.39
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 May 2020 20:41:33 -0700 (PDT)
+        Sun, 24 May 2020 20:41:43 -0700 (PDT)
 From:   dillon.minfei@gmail.com
 To:     robh+dt@kernel.org, p.zabel@pengutronix.de,
         mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
@@ -68,9 +68,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-stm32@st-md-mailman.stormreply.com,
         dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
         dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH v5 5/8] clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate, fix duplicated ltdc clock register to 'clk_core' case ltdc's clock turn off by clk_disable_unused()
-Date:   Mon, 25 May 2020 11:40:59 +0800
-Message-Id: <1590378062-7965-6-git-send-email-dillon.minfei@gmail.com>
+Subject: [PATCH v5 7/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+Date:   Mon, 25 May 2020 11:41:01 +0800
+Message-Id: <1590378062-7965-8-git-send-email-dillon.minfei@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
 References: <broonie@kernel.org>
@@ -82,59 +82,119 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: dillon min <dillon.minfei@gmail.com>
 
-ltdc set clock rate crashed
-   'post_div_data[]''s pll_num is PLL_I2S, PLL_SAI (number is 1,2). but,
-    as pll_num is offset of 'clks[]' input to clk_register_pll_div(), which
-    is FCLK, CLK_LSI, defined in 'include/dt-bindings/clock/stm32fx-clock.h'
-    so, this is a null object at the register time.
-    then, in ltdc's clock is_enabled(), enable(), will call to_clk_gate().
-    will return a null object, cause kernel crashed.
-    need change pll_num to PLL_VCO_I2S, PLL_VCO_SAI for 'post_div_data[]'
+in l3gd20 driver startup, there is a setup failed error return from
+stm32 spi driver
 
- duplicated ltdc clock
-   'stm32f429_gates[]' has a member 'ltdc' register to 'clk_core', but no
-    upper driver use it, ltdc driver use the lcd-tft defined in
-   'stm32f429_aux_clk[]'. after system startup, as stm32f429_gates[]'s ltdc
-    enable_count is zero, so turn off by clk_disable_unused()
+     "
+     [    2.687630] st-gyro-spi spi0.0: supply vdd not found, using dummy
+     regulator
+     [    2.696869] st-gyro-spi spi0.0: supply vddio not found, using dummy
+     regulator
+     [    2.706707] spi_stm32 40015000.spi: SPI transfer setup failed
+     [    2.713741] st-gyro-spi spi0.0: SPI transfer failed: -22
+     [    2.721096] spi_master spi0: failed to transfer one message from queue
+     [    2.729268] iio iio:device0: failed to read Who-Am-I register.
+     [    2.737504] st-gyro-spi: probe of spi0.0 failed with error -22
+     "
 
-Changes since V3:
-1 drop last wrong changes about 'CLK_IGNORE_UNUSED' patch
-2 fix PLL_SAI mismatch with PLL_VCO_SAI
+after debug into spi-stm32 driver, st-gyro-spi split two steps to read
+l3gd20 id
+
+first: send command to l3gd20 with read id command in tx_buf, rx_buf
+is null.
+second: read id with tx_buf is null, rx_buf not null.
+
+so, for second step, stm32 driver recongise this process as 'SPI_SIMPLE_RX'
+from stm32_spi_communication_type(), but there is no related process for this
+type in stm32f4_spi_set_mode(), then we get error from
+stm32_spi_transfer_one_setup().
+
+we can use two method to fix this bug.
+1, use stm32 spi's "In unidirectional receive-only mode (BIDIMODE=0 and
+RXONLY=1)". but as our code running in sdram, the read latency is too large
+to get so many receive overrun error in interrupts handler.
+
+2, use stm32 spi's "In full-duplex (BIDIMODE=0 and RXONLY=0)", as tx_buf is
+null, so add flag 'SPI_MASTER_MUST_TX' to spi master.
+
+Change since V4:
+1 remove dummy data sent out by stm32 spi driver
+2 add flag 'SPI_MASTER_MUST_TX' to spi master
 
 Signed-off-by: dillon min <dillon.minfei@gmail.com>
 ---
- drivers/clk/clk-stm32f4.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index 18117ce..fa62e99 100644
---- a/drivers/clk/clk-stm32f4.c
-+++ b/drivers/clk/clk-stm32f4.c
-@@ -129,7 +129,6 @@ static const struct stm32f4_gate_data stm32f429_gates[] __initconst = {
- 	{ STM32F4_RCC_APB2ENR, 20,	"spi5",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR, 21,	"spi6",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR, 22,	"sai1",		"apb2_div" },
--	{ STM32F4_RCC_APB2ENR, 26,	"ltdc",		"apb2_div" },
- };
+Hi Mark,
+
+This changes add 'SPI_MASTER_MUST_TX' for stm32 spi controller
+
+thanks.
+
+
+ drivers/spi/spi-stm32.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 44ac6eb3..4c643df 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -811,7 +811,9 @@ static irqreturn_t stm32f4_spi_irq_event(int irq, void *dev_id)
+ 		mask |= STM32F4_SPI_SR_TXE;
+ 	}
  
- static const struct stm32f4_gate_data stm32f469_gates[] __initconst = {
-@@ -557,13 +556,13 @@ static const struct clk_div_table post_divr_table[] = {
+-	if (!spi->cur_usedma && spi->cur_comm == SPI_FULL_DUPLEX) {
++	if (!spi->cur_usedma && (spi->cur_comm == SPI_FULL_DUPLEX ||
++				spi->cur_comm == SPI_SIMPLEX_RX ||
++				spi->cur_comm == SPI_3WIRE_RX)) {
+ 		/* TXE flag is set and is handled when RXNE flag occurs */
+ 		sr &= ~STM32F4_SPI_SR_TXE;
+ 		mask |= STM32F4_SPI_SR_RXNE | STM32F4_SPI_SR_OVR;
+@@ -850,7 +852,7 @@ static irqreturn_t stm32f4_spi_irq_event(int irq, void *dev_id)
+ 		stm32f4_spi_read_rx(spi);
+ 		if (spi->rx_len == 0)
+ 			end = true;
+-		else /* Load data for discontinuous mode */
++		else if (spi->tx_buf)/* Load data for discontinuous mode */
+ 			stm32f4_spi_write_tx(spi);
+ 	}
  
- #define MAX_POST_DIV 3
- static const struct stm32f4_pll_post_div_data  post_div_data[MAX_POST_DIV] = {
--	{ CLK_I2SQ_PDIV, PLL_I2S, "plli2s-q-div", "plli2s-q",
-+	{ CLK_I2SQ_PDIV, PLL_VCO_I2S, "plli2s-q-div", "plli2s-q",
- 		CLK_SET_RATE_PARENT, STM32F4_RCC_DCKCFGR, 0, 5, 0, NULL},
+@@ -1151,7 +1153,9 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
+ 	/* Enable the interrupts relative to the current communication mode */
+ 	if (spi->cur_comm == SPI_SIMPLEX_TX || spi->cur_comm == SPI_3WIRE_TX) {
+ 		cr2 |= STM32F4_SPI_CR2_TXEIE;
+-	} else if (spi->cur_comm == SPI_FULL_DUPLEX) {
++	} else if (spi->cur_comm == SPI_FULL_DUPLEX ||
++				spi->cur_comm == SPI_SIMPLEX_RX ||
++				spi->cur_comm == SPI_3WIRE_RX) {
+ 		/* In transmit-only mode, the OVR flag is set in the SR register
+ 		 * since the received data are never read. Therefore set OVR
+ 		 * interrupt only when rx buffer is available.
+@@ -1462,10 +1466,16 @@ static int stm32f4_spi_set_mode(struct stm32_spi *spi, unsigned int comm_type)
+ 		stm32_spi_set_bits(spi, STM32F4_SPI_CR1,
+ 					STM32F4_SPI_CR1_BIDIMODE |
+ 					STM32F4_SPI_CR1_BIDIOE);
+-	} else if (comm_type == SPI_FULL_DUPLEX) {
++	} else if (comm_type == SPI_FULL_DUPLEX ||
++				comm_type == SPI_SIMPLEX_RX) {
+ 		stm32_spi_clr_bits(spi, STM32F4_SPI_CR1,
+ 					STM32F4_SPI_CR1_BIDIMODE |
+ 					STM32F4_SPI_CR1_BIDIOE);
++	} else if (comm_type == SPI_3WIRE_RX) {
++		stm32_spi_set_bits(spi, STM32F4_SPI_CR1,
++					STM32F4_SPI_CR1_BIDIMODE);
++		stm32_spi_clr_bits(spi, STM32F4_SPI_CR1,
++					STM32F4_SPI_CR1_BIDIOE);
+ 	} else {
+ 		return -EINVAL;
+ 	}
+@@ -1906,6 +1916,7 @@ static int stm32_spi_probe(struct platform_device *pdev)
+ 	master->prepare_message = stm32_spi_prepare_msg;
+ 	master->transfer_one = stm32_spi_transfer_one;
+ 	master->unprepare_message = stm32_spi_unprepare_msg;
++	master->flags = SPI_MASTER_MUST_TX;
  
--	{ CLK_SAIQ_PDIV, PLL_SAI, "pllsai-q-div", "pllsai-q",
-+	{ CLK_SAIQ_PDIV, PLL_VCO_SAI, "pllsai-q-div", "pllsai-q",
- 		CLK_SET_RATE_PARENT, STM32F4_RCC_DCKCFGR, 8, 5, 0, NULL },
- 
--	{ NO_IDX, PLL_SAI, "pllsai-r-div", "pllsai-r", CLK_SET_RATE_PARENT,
-+	{ NO_IDX, PLL_VCO_SAI, "pllsai-r-div", "pllsai-r", CLK_SET_RATE_PARENT,
- 		STM32F4_RCC_DCKCFGR, 16, 2, 0, post_divr_table },
- };
- 
+ 	spi->dma_tx = dma_request_chan(spi->dev, "tx");
+ 	if (IS_ERR(spi->dma_tx)) {
 -- 
 2.7.4
 
