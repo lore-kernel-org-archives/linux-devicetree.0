@@ -2,116 +2,143 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF1EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C21FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEF112073B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590407020;
-	bh=ohGuMmEbw6jcckmjGuy7SWze+kKppKGgRxKK0h8JEr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FMSuw73ifSXTt+2yiODtj7M0I8ScrOYhoF1HQ8FUyHp2/5P5hWORjV499H0oNPxSX
-	 528ftj97jbs1OD79nA6gSk+ER/2PfdDpREaaqTwSJtLmupjxqsZ8Uf+ffYS0uIp3jU
-	 F6Dedv2Vlavd7EJmkFA2p7bja4CNm4OpU0ir8m2w=
+	by mail.kernel.org (Postfix) with ESMTP id 61F9420888
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J7zkISA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390198AbgEYLnj (ORCPT
+        id S2390242AbgEYLpX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 07:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390189AbgEYLnj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 07:43:39 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36CE020723;
-        Mon, 25 May 2020 11:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590407018;
-        bh=ohGuMmEbw6jcckmjGuy7SWze+kKppKGgRxKK0h8JEr0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KM80Gu8HAcmZ1l6c68I4DnrdiD57M88zpiXWycjvRd03XGvrbG2HqVCawIo5VHm3F
-         HJEWyIi+trARwAOz28eZPsmxmVUJW4EKfcNfq4Cq0gz0TOCHmckoj6KzZVgbzVQc1z
-         SfCVNxC1mpxzGiTSEs5yrLbejv0JMu2jkSzODsaQ=
-Date:   Mon, 25 May 2020 12:43:36 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     dillon min <dillon.minfei@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
- support for stm32f4
-Message-ID: <20200525114336.GD4544@sirena.org.uk>
-References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
- <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
- <20200522113634.GE5801@sirena.org.uk>
- <CAL9mu0LAnT+AfjpGs0O-MD2HYrpnQRmrj6qXtJQrJi9kbQLPUw@mail.gmail.com>
- <CAL9mu0JZ4Qy+m2oF9TSTRqA_mM0J89huCt3t_Gs7qHa=3LxhBw@mail.gmail.com>
- <20200522162901.GP5801@sirena.org.uk>
- <CAL9mu0+E5R0mDUW3f+aKpfE_457VimS-ow2z_xVOmCfCAMnKuA@mail.gmail.com>
+        Mon, 25 May 2020 07:45:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390236AbgEYLpX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 07:45:23 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C91C061A0E
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 04:45:23 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id bs4so14779373edb.6
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 04:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P/cWAJl3Z7M7phJWdZ1viutRbSoAqLOTBAKufEZLlQs=;
+        b=J7zkISA9IACBaVZfIy7JcdxpE2ftuH3PzvgPxwCPTVvWLm94b33+EPTzq46DDaYm2H
+         tCRXLAp5upCjONBGcvqexKg7AU8Ka8ylT2X4YZPrLOUyQsXkiPls4zRxhVigqskhJ8Qc
+         R2JRs8LOj+hBFPv1FWpfNKziFvgfyUK87dOXA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P/cWAJl3Z7M7phJWdZ1viutRbSoAqLOTBAKufEZLlQs=;
+        b=Gkq4KZtSO5tBtrYWuJcOo1CuCQH5lh+/RkD1WlTEfDaq9ozdDSZC7fnb54aOoU3+Vo
+         ojzkzweCBDBsuEeZp7KrBHmo/y4FZloxLXfFMEyjk0fAmh+/kq5TBaaOqdcL7OaRyvz0
+         G/VcI5XCLTpnRd0jx8JcbfdxWZs80zNgfCXPN7ZfsozNxSTnYPbOCwxzkZK5zp8TE0+H
+         7sAh94gdcIqJHU5YXIEgY+6vSEiju2m0BiE0KqV8XCTvsa22GZ7a2MV9+b8cXQI9zp7L
+         H5Jc0z8JZ0qdazhicHiiSaE7XcV9HBX0RYZRuAsBgcWZR5qrvO9ug61UArTGIrEBpWAg
+         MORw==
+X-Gm-Message-State: AOAM533EooOH7HwP4sdvJmOcxoKvCEg8LyrLQA189vYeZVVTlmF2RV2s
+        HiI++KWuwDNPB0IUI7xWDB66JZzIMULV1g==
+X-Google-Smtp-Source: ABdhPJzTydBfPuxx0wDSaUZF2NR9vkj0A6rg9FJPgqr1umDWOwQ1bhwaCxnIj0PoeleRctwsbBbpOA==
+X-Received: by 2002:a50:a782:: with SMTP id i2mr14771785edc.33.1590407121790;
+        Mon, 25 May 2020 04:45:21 -0700 (PDT)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id b3sm15324542ejq.52.2020.05.25.04.45.20
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 04:45:21 -0700 (PDT)
+Received: by mail-wr1-f42.google.com with SMTP id q11so4659994wrp.3
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 04:45:20 -0700 (PDT)
+X-Received: by 2002:adf:e543:: with SMTP id z3mr14316481wrm.385.1590407120295;
+ Mon, 25 May 2020 04:45:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fXStkuK2IQBfcDe+"
-Content-Disposition: inline
-In-Reply-To: <CAL9mu0+E5R0mDUW3f+aKpfE_457VimS-ow2z_xVOmCfCAMnKuA@mail.gmail.com>
-X-Cookie: Help a swallow land at Capistrano.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200518132731.20855-1-dongchun.zhu@mediatek.com>
+ <20200518132731.20855-3-dongchun.zhu@mediatek.com> <20200521195113.GC14214@chromium.org>
+ <1590139561.8804.390.camel@mhfsdcap03>
+In-Reply-To: <1590139561.8804.390.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 25 May 2020 13:45:07 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5CCsT_oM9aij_imV+NABzByi94RmCj97Dx0Tk3S0WDsTg@mail.gmail.com>
+Message-ID: <CAAFQd5CCsT_oM9aij_imV+NABzByi94RmCj97Dx0Tk3S0WDsTg@mail.gmail.com>
+Subject: Re: [V6, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Louis Kuo <louis.kuo@mediatek.com>,
+        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
+        <shengnan.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, May 22, 2020 at 11:27 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+>
+> Hi Tomasz,
+>
+> Thanks for the review. My replies are as below.
+>
+> On Thu, 2020-05-21 at 19:51 +0000, Tomasz Figa wrote:
+> > Hi Dongchun, Sakari,
+> >
+> > On Mon, May 18, 2020 at 09:27:31PM +0800, Dongchun Zhu wrote:
+[snip]
+> > > +   pm_runtime_enable(dev);
+> > > +   if (!pm_runtime_enabled(dev)) {
+> > > +           ret = dw9768_runtime_resume(dev);
+> > > +           if (ret < 0) {
+> > > +                   dev_err(dev, "failed to power on: %d\n", ret);
+> > > +                   goto entity_cleanup;
+> > > +           }
+> > > +   }
+> > > +
+> > > +   ret = v4l2_async_register_subdev(&dw9768->sd);
+> > > +   if (ret < 0)
+> > > +           goto entity_cleanup;
+> > > +
+> > > +   return 0;
+> > > +
+> > > +entity_cleanup:
+> >
+> > Need to power off if the code above powered on.
+> >
+>
+> Thanks for the reminder.
+> If there is something wrong with runtime PM, actuator is to be powered
+> on via dw9768_runtime_resume() API.
+> When actuator sub-device is powered on completely and async registered
+> successfully, we shall power off it afterwards.
+>
 
---fXStkuK2IQBfcDe+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The code above calls dw9768_runtime_resume() if
+!pm_runtime_enabled(dev), but the clean-up code below the
+entity_cleanup label doesn't have the corresponding
+dw9768_runtime_suspend() call.
 
-On Sat, May 23, 2020 at 09:35:06AM +0800, dillon min wrote:
-
-> -       if (ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) {
-> +       if ((ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) &&
-> +               !(msg->spi->mode & SPI_3WIRE)) {
->                 max_tx = 0;
->                 max_rx = 0;
-
-> for my board, lcd panel ilitek ill9341 use 3wire mode, gyro l3gd20 use
-> simplex rx mode.
-> it's has benefits to l3gd20, no impact to ili9341.
-
-> if it's fine to spi-core, i will include it to my next submits.
-
-Yes, looks reasonable.
-
---fXStkuK2IQBfcDe+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Lr2cACgkQJNaLcl1U
-h9Czfgf5AZokYX+RDns/ATZTiNwwtWO8zgdUKtvU2B95mvVnSoH/+u22jEMjyBEV
-VTql9iv86CkoWuw8ClYb6Ii3VcZhJlMJjs6f6TPlihKzhOKSAvVrUwf0GXQlWaS5
-+uyF6imcop10LBRU7tKfWP+LpK90XFTt8wGtpnHqquhnlvs4zDEFu/Yvp91raDXu
-FfWKf+2Aqu7xuWMGdHJjF/SiRINbFZVw70Rv9GM06ywcTkThXhrKpn5z4fCdWlEQ
-iDy1RvrcqNwjm9MtAgYmwoOF/NVEcZaygAE11tHi6JOjrXYW+29jJRQDn4N06CZZ
-tIaKNPu+scagmjfGwKU2PSW4mVUAuA==
-=Yagp
------END PGP SIGNATURE-----
-
---fXStkuK2IQBfcDe+--
+Best regards,
+Tomasz
