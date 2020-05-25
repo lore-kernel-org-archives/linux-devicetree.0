@@ -2,140 +2,114 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B72C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 15:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E073EC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238862078B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 15:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16542078B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ts8RXt7I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Okfa0myw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404224AbgEYPlo (ORCPT
+        id S2388211AbgEYQB7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 11:41:44 -0400
-Received: from mail-vi1eur05on2063.outbound.protection.outlook.com ([40.107.21.63]:37056
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404002AbgEYPlo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 11:41:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ADgy64uPpnftadeO4Gex39UasUhx9MRMBTkYZIPXB8CmJNwM9ughoZneAdowrHfcbaAKVU4QBYWeCs4SXLku8j7K06ZbVtouUNUcMuybWvI66eD2ux+qRNnCdY2vHAT3Y2+ItDDD16u1Km9H9Z4ZTA2JCcXnkajNtoTUDLVTA+6SIFhTImoOKFd4uTGU4N6iwr/UsrJ99ZnzyNNz0AUDFmh8lky4Yc/FSTrNiwns6V+6nVJYMfZ+xtpgfB/N+zdRgZU+iiciWM/U6RF2xsS4A2yic1Q0A9N9D1gM0ylGNkXdjxVLwMYRNpldRSFxeno7Wbocrc8khuBA90dvlLfmWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qm8owt2LbOfRXb3wMAHGy0A4eBQUxtbzO9NcrK/bRMQ=;
- b=dlKa+bx4DwF3sfLOhryBGBcl5AJgpUtGNoCDY5Z4ohrLnmUohxgVYTgwA/IqDk3aVARKg7+JbM16NKnDIewmt2LOImd5Dcg5kQeLVzbdzmqAw4D1yKfOq6R19xserwgczED4tdvrpcIQmERYGAPyxc9laGq2dAVTtxxtoQSW+Po/4vrP3Cc7kQOXv5A1+xEVUPtM53btJtMF7+tDxbXEbqN0l+mAt67GNsTvT3cOLMqFaZ4vqbBv/OXX5nJjxS/SLkgpCq+/0fgGerpWaVFwm8bxx0eIZtnsvocuAQYE2TJvYD1mlaMVwnz5dCF3JJXnwG5ivN0IjA1HZ8t8Sv81ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qm8owt2LbOfRXb3wMAHGy0A4eBQUxtbzO9NcrK/bRMQ=;
- b=Ts8RXt7IONrtXR8h1l8rNF3zrRiDUi8W1Z5Z274LE84emchSGvrQBoVg2DF9PudKQwgy4H/D0Gp0SI7PQjRbZKYNY3m5GCO6mdWkGMzlYkvtUcdIN9p+ARabhKNMDd3tHJai8XsAZ9MmLDlY52/HoT5N43KWudmyeev85QzfQJ4=
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM6PR0402MB3400.eurprd04.prod.outlook.com
- (2603:10a6:209:3::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Mon, 25 May
- 2020 15:41:40 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3021.029; Mon, 25 May 2020
- 15:41:40 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>
-Subject: RE: [EXT] Re: [PATCH net v2 0/4] net: ethernet: fec: move GPR
- reigster offset and bit into DT
-Thread-Topic: [EXT] Re: [PATCH net v2 0/4] net: ethernet: fec: move GPR
- reigster offset and bit into DT
-Thread-Index: AQHWMmQZlaL31WXVCEyjTrjOYIQ80Ki400GAgAAdkWA=
-Date:   Mon, 25 May 2020 15:41:40 +0000
-Message-ID: <AM6PR0402MB3607362AAEB1B5B5182F190BFFB30@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-References: <1590390569-4394-1-git-send-email-fugang.duan@nxp.com>
- <20200525135433.GD752669@lunn.ch>
-In-Reply-To: <20200525135433.GD752669@lunn.ch>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d5ad6cbf-11de-4cc0-4886-08d800c21e51
-x-ms-traffictypediagnostic: AM6PR0402MB3400:
-x-microsoft-antispam-prvs: <AM6PR0402MB34009E4EE42FEA394319E645FFB30@AM6PR0402MB3400.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0414DF926F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 87JG6AleLfGeZghYS7y6Ae2PxzdinhpqSHVPDS2feBvWChoeR8q0zvp4xL5+C3y+SYVUDDccxrefBQnWyCPkJpmy+dDaMKiZwmy5xJ0Zm9XG8AWD83v23U/9oi35WqBb2/dMsoHuodlscU42JuL55kaqGFaZMB+WNfRp7JgVS2Sype6u+cJ2lQTn7eIKE3rco662QkKijAJPKLmAN1FpiaIkcM/ZjXSy/TCJEmOESow9vL0MrGklBupgaHo70JSM0VHaQ71uCXvMTSpl2cYUZWSxPX9GfA/FlaRV8CgMIRUJ0jhau+lCd1NFdcGu0+JK
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(5660300002)(86362001)(2906002)(33656002)(4326008)(66946007)(6916009)(66476007)(9686003)(55016002)(76116006)(66556008)(66446008)(478600001)(64756008)(8676002)(71200400001)(52536014)(8936002)(316002)(7696005)(54906003)(6506007)(186003)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: DEj/DGUTWY2eTFJTV1XBlw58d/6YCmh9FMowcfXqZqEBTSp3SGyrKJOhpl7q816hecl/oHntkCnoL2ECOMbXQAy+HTLRHOAxNy+gZpIoWxKMjImQvfv5dViQ7Buuoo5f9aikgtpDhqaEVBKwCYDyfDJ0/SaKno4NiNjiQJUwzD2BtFuCLvgh1qG/WKd8x+dImi0bPt5a4jAWU3q3KDnGH45EngreSZ7y/0M8hpIpncyanfZEGg07ewBwxg6znFkyJKrBRT5ql6iY40lX4tCf3CFUw+n63jVwZaf+4pPU6VEMMOOc6Tu8SdoP4iJE5LDtlzciM8hV/L+atQpGUf1S2u3mgi0rfLupT+yVssWGovM7VpeUobVliEFMjXQwA6SqEUYxU3UrtLL3+V6b73xXs2n2L41sP/aosxUFEeXA+83eZbN6sQjdN4IZxKcV4zIRA2TC1DaPd1erTMRBJwvespu22utw1h1V17TbKKQH0q5bp/u6EryEuF7McAZwJMgi
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 May 2020 12:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391155AbgEYQB7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 12:01:59 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A80C05BD43
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 09:01:58 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id j3so17634064ilk.11
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 09:01:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ndTklb7/SAZk4bUIoOKID+ziy4QQzei1SxmS+QITaNQ=;
+        b=Okfa0myw3gWvHcsvCG+LrNu8vo8bECwM1NcFblymMQAiGT7+y9eHEr8NC5z6+N8JzK
+         mzlw3h7rltmPg5jkXMl04Me9kIbZlJYjsG8Urh65mRdyktu03LLIpv77czeeIpVw8Sru
+         x6DqR6REiEic6JH/kXXTOsijnyICa34jR95UnPtu86+3N8w52mTLttUjUQRtPFCY/AZA
+         vG6P/pea15LJdJxDU3EvCTPMiuu5DCbxndnPe4cnBnNZF2ZxKEZ4qbok33u/ix0NGgf/
+         NluPSBy63jZnk1Nbp5nADhjP36FybTKqPGJNjjHqjN3ow+fOetbQDP+cAHrBoMqBGVCR
+         wFmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ndTklb7/SAZk4bUIoOKID+ziy4QQzei1SxmS+QITaNQ=;
+        b=FC0tyQANUlFdPbuSZAUwYyNTqRUiGAyIG8PvL133FXdTDRXac5Wno87B8WEW0P1f4d
+         rBtkj1NrxnpmgEht0/pHv2uBWsZ3Szo0m8TFI9EObjmC3AxjQ1Nox+rfBCjPlyQyjtNq
+         VSKOlNN5IXcxKywWQhGbNYi12wZtPLvzQXKy6PyZLIK4u6K25oI8FMuTaWqFO/e0vOas
+         CworK8t3FNsaonr/Q2XMtOydr66WZd+V+MwOt0fX7mtv7AsI3sk/OQPPZG2ZtVnBwfyI
+         soqC/ZLAkze0eeEouRsg+q3zXGzh28aGMYEYpVI/6blOD4EHQVIp0lFfxJNszrty8rPf
+         o1pA==
+X-Gm-Message-State: AOAM53092v2z+pOfmCpQRf7AIL5Ib4IqzfQW2Bk4BlGzt34EFoN0Z199
+        bE5RpljXHYJrwH6Wdc4botsBzbhwrE8xp8EcUKH4cQ==
+X-Google-Smtp-Source: ABdhPJzdCyCnVR8DkEpN7qEDDAtmWOw4EM3xPxchVD4sgi/TBYuoYYkIjzb27DvgzVuornpYLqRjO0idnxc4E75ZQnI=
+X-Received: by 2002:a92:89cf:: with SMTP id w76mr24457702ilk.57.1590422517999;
+ Mon, 25 May 2020 09:01:57 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5ad6cbf-11de-4cc0-4886-08d800c21e51
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2020 15:41:40.4614
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DgirErORgdOYrqJ4YOM8EGl01QO+ZE1E1FwUqUb6wRl4sCSGJBNnvQDpMcqZMIAcX/Nl8jVJ/Bs8XsT5Z5jqAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3400
+References: <cover.1590171891.git.saiprakash.ranjan@codeaurora.org> <ccfe8a5ede0523436508e31085322ccdab8f972a.1590171891.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <ccfe8a5ede0523436508e31085322ccdab8f972a.1590171891.git.saiprakash.ranjan@codeaurora.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 25 May 2020 10:01:47 -0600
+Message-ID: <CANLsYkwhjbyspLjbnp4XYCcRNFUkBs46QjWYBTza1scGDtNSmQ@mail.gmail.com>
+Subject: Re: [PATCHv3 2/2] dt-bindings: arm: coresight: Add optional property
+ to replicators
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch> Sent: Monday, May 25, 2020 9:55 PM
-> On Mon, May 25, 2020 at 03:09:25PM +0800, fugang.duan@nxp.com wrote:
-> > From: Fugang Duan <fugang.duan@nxp.com>
-> >
-> > The commit da722186f654 (net: fec: set GPR bit on suspend by DT
-> configuration) set the GPR reigster offset and bit in driver for wol feat=
-ure.
->=20
-> The cover letter gets committed as the merge commit message. So please
-> wrap long longs.
->=20
-> > It bring trouble to enable wol feature on imx6sx/imx6ul/imx7d
-> > platforms that have multiple ethernet instances with different GPR bit
-> > for stop mode control. So the patch set is to move GPR reigster
->=20
-> register
->=20
-Got it, will correct the typo in v3.
+On Fri, 22 May 2020 at 12:37, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Add an optional boolean property "qcom,replicator-loses-context" to
+> identify replicators which loses context when AMBA clocks are removed
+> in certain configurable replicator designs.
+>
+> Reviewed-by: Mike Leach <mike.leach@linaro.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/coresight.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index 846f6daae71b..b598a5f0037d 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -121,6 +121,12 @@ its hardware characteristcs.
+>         * interrupts : Exactly one SPI may be listed for reporting the address
+>           error
+>
+> +* Optional property for configurable replicators:
+> +
+> +       * qcom,replicator-loses-context: boolean. Indicates that the replicator
+> +         will lose register context when AMBA clock is removed which is observed
+> +         in some replicator designs.
 
-> > offset and bit define into DT, and enable
-> > imx6q/imx6dl/imx6sx/imx6ul/imx7d stop mode support.
->=20
->=20
-> >
-> > Currently, below NXP i.MX boards support wol:
-> > - imx6q/imx6dl sabresd
-> > - imx6sx sabreauto
-> > - imx7d sdb
-> >
-> > imx6q/imx6dl sarebsd board dts file miss the property "fsl,magic-packet=
-;",
-> so patch#4 is to add the property for stop mode support.
->=20
-> sabresd?
->=20
->         Andrew
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Thanks, I will correct the typo in v3.
+> +
+>  Graph bindings for Coresight
+>  -------------------------------
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
