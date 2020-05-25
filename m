@@ -2,151 +2,102 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051FDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B472C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E072C2071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6757C2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:59:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JqXkjdW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390585AbgEYMnn (ORCPT
+        id S2390626AbgEYM7t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 08:43:43 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:52669 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390556AbgEYMnn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 08:43:43 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E226720000B;
-        Mon, 25 May 2020 12:43:37 +0000 (UTC)
-Date:   Mon, 25 May 2020 14:46:57 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>, tfiga@google.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v11 02/13] dt-bindings: video-interface: Replace
- 'rotation' description
-Message-ID: <20200525124657.umnvfzpyo7moutp4@uno.localdomain>
-References: <20200509090456.3496481-1-jacopo@jmondi.org>
- <20200509090456.3496481-3-jacopo@jmondi.org>
- <20200525111621.GE27989@amd>
+        Mon, 25 May 2020 08:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388738AbgEYM7s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 08:59:48 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433BAC05BD43
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:59:48 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id e125so10485369lfd.1
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EXtqB8Wun/tgjNkBpbPrNbEYBqWbgFsLrLS2OmL1m/M=;
+        b=JqXkjdW/TwAhV/+ZstLcQDiGkcnh2vaThxK4UuXw1ZT4EbewRbqEMxF8cLo9srENSG
+         y2bzMe8eVT4GRDrV5lIfGsLezcWERXdbNA0we0XcZSk7s/wgI/0Bg36o+Q5s+WrQwFnR
+         9Ezeei8Zk5ZuBxczU7luJMzFJL4NWTdRSEvpgnxSVbeH3cK/DSXlN9Tdbn/KKHl0ElRF
+         1c79At+nt2Qv3ftKSagmriY4yHRJuT3SfL5MLqCGu+N67fiYVIz6F+xk123QNykV4Ed1
+         Wi4Uy6bedneHNi7QQrkTEzS6GmgrbN7iai2K6CwtEDX6745b9xMfceJdYvhJEE/s2F96
+         nJvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EXtqB8Wun/tgjNkBpbPrNbEYBqWbgFsLrLS2OmL1m/M=;
+        b=G9cVVQHQvUbEcljx9quoTjDz4bJLqpvE6gfRvvnkWflyVFdBB68mE+WMyeDctRSfDe
+         ypKWapgJEmx2IilWpHVU3U/oCHWJ6M2bXOS8Y2El/WLujEEVYreP9WFlPWgd5IYkj9Gb
+         63cgjk3Qy2gISHS7iswUDKlnOBqpan0Ck7ZLeZtu0THbQxEKN4N67Xpf9EpJlKA1QF8m
+         43eEACerSxJsvH144iTYc8NR1ov7nPMhbneNdGtusM+94jSNu1sQxS+F8lxxY1G10v5o
+         Dq6DJofGnnLST9JqACoHgE9BTI2YJ2i1RLqjNm4NOlpe2FrbUyq9fS+r7kCtrNvRlGxJ
+         qvaw==
+X-Gm-Message-State: AOAM533SYccNA4hsQ2O1oMbS4PbQttn5IxzNEfAk95d0OC1neiuDQKd9
+        72vg4ROAq6XWEXpcGaG1pG4a9Jn+hx+R/Lua69ol8g==
+X-Google-Smtp-Source: ABdhPJxD2+KgVOK9WTwoquq8HqW2c21+zgJ2wXOdh5XtNRaWnyUiVdw++6s8JUaftb7+v3ytf4RuSWtwx/6fIhWUhyk=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr14490822lfn.77.1590411586745;
+ Mon, 25 May 2020 05:59:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cozzvhkmmtid52ks"
-Content-Disposition: inline
-In-Reply-To: <20200525111621.GE27989@amd>
+References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-11-michael@walle.cc>
+ <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com>
+ <75bff2917be1badd36af9f980cf59d2c@walle.cc> <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
+ <951244aab2ff553a463f7431ba09bf27@walle.cc>
+In-Reply-To: <951244aab2ff553a463f7431ba09bf27@walle.cc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 14:59:36 +0200
+Message-ID: <CACRpkdZYEZk7o+Y2-AqnHGsY8N7KGGmPGSuSS=H7YY8VLZ3jZw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, May 25, 2020 at 12:20 PM Michael Walle <michael@walle.cc> wrote:
 
---cozzvhkmmtid52ks
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+> If you like I could submit this patch on its own. But then there
+> wouldn't be a user for it.
 
-Pavel,
+I'm pretty much fine with that, we do merge code that has no
+users if we anticipate they will be around the corner.
 
-On Mon, May 25, 2020 at 01:16:21PM +0200, Pavel Machek wrote:
-> On Sat 2020-05-09 11:04:45, Jacopo Mondi wrote:
-> > Replace the 'rotation' property description by providing a definition
-> > relative to the camera sensor pixel array coordinate system and the
-> > captured scene.
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> >  .../bindings/media/video-interfaces.txt       | 359 +++++++++++++++++-
-> >  1 file changed, 356 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > index b1ff492c7da7a..3920f25a91235 100644
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -85,9 +85,362 @@ Optional properties
-> >
-> >  - lens-focus: A phandle to the node of the focus lens controller.
-> >
-> > -- rotation: The device, typically an image sensor, is not mounted upright,
-> > -  but a number of degrees counter clockwise. Typical values are 0 and 180
-> > -  (upside down).
-> > +- rotation: The camera rotation is expressed as the angular difference in
-> > +  degrees between two reference systems, one relative to the camera module, and
-> > +  one defined on the external world scene to be captured when projected on the
-> > +  image sensor pixel array.
->
-> So.. how is this supposed to work. There's a phone, with its main
-> camera. It is designed to be used in both portrait and landscape
-> modes, internal accelerometr can tell between the two.
->
-> Plus you have phone with a keyboard. Common usage is portrait with
-> keyboard closed, and landscape with keyboard open...
->
-
-While I agree for 'orientation' we're far from perfection (and that's
-why I've been asked s/location/orientation/ to reserve 'location' for
-the future), 'rotation' is only defined by the camera sensor mounting
-rotation and the external scene. The way you move your phone should
-not impact the pixel read-out sequence.
-
-All phones can be used in portarait or landscape mode, I don't see why
-having a mechanical keyboard is different. You can type in landscape
-mode on a touchscreen keyboard, if you like to.
-
-The property gives you the rotation correction (actually, the control
-gives the correction) for display in the 'intended usage orientation'.
-If your concern is displaying the image,  as you sense the
-accellerometers to rotate the UI, the application that display the
-image will be rotated too, adding to the corrected image (capture image +
-rotation here specified) the required UI rotation.
-
-On the 'intended usage orientation', as there is one for the UI, there
-is one for all other components in the phone, so if your system
-establishes that 'portrait' is the (rotation = 0) point for the UI,
-this applies to the rest of the system.
-
-> And yes, there's linux with v4l2 working on Nokia N900.
->
-
-How is this and orientation handled there ?
-
-
-> Best regards,
-> 								Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
-
---cozzvhkmmtid52ks
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl7LvkAACgkQcjQGjxah
-Vjxq8hAAljqol8NiaXSAxpR71YqCmW2eWVsGdPZPKCf2WKu/V/d9VlWiTwwS3Vm6
-L3K0ezJnJvxFGJTj7hroP5baKUfxA4SbEWTyNyOmg+3YMVuKPO/SHS4Ht3cILU7R
-+3idH4ROYuTzidjQkSHcvzM870PKBwjgzV39o8Z2/zyz1JvJ5AiByRhcMlI+fg/m
-TupKZ/BO/4gl36DUNawXYkhTVOU4EltgDGP2vUqcjlpAmqw3kDng5Mw2sEijhxwI
-hD0r2OCM5UvJok+frt3FXlDo7QG0TNrue6n+tdoCASXdLmXbHsKtHd7KS7ht071l
-qcFhLxlS/koWlnpJp0ydPuWhdQP6aPiAl/fpMlar/rSrnV3KQja7m92cG/ViqB7v
-iWgzt9RZSwDnXQPB3LF87HoFhI6ka+l921HeESNJ6+eWge5zvf29co1A4uLny2Oj
-ATVpVpKtCLuzHlqWqg8fkFbJcYR9wYun76lzQ49R/pIjhvXu/8HoLhAB38ABrEtT
-5+b7mtTGUKANQ7lvMFcXRg0W3VYEBrhduHZl9ADS9bmpJZx62tOlM5h/FDJEd35t
-mqfh/HQY5ATS3TXJ1H5nIK26iDayJfwrXb289bZOYK6VktxiCNShdK6Y+nXzK2M4
-VW63OZ0747WJ8Lpfvl8jBQBiRqk3XGtpbqDdZxVerD3lWh+pY3c=
-=paVC
------END PGP SIGNATURE-----
-
---cozzvhkmmtid52ks--
+Yours,
+Linus Walleij
