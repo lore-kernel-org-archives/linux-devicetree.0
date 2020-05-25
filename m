@@ -2,88 +2,116 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9E2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CC6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 583D8207C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF1A2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="XWAzSl7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390786AbgEYNmW (ORCPT
+        id S2403814AbgEYNqq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 09:42:22 -0400
-Received: from mga17.intel.com ([192.55.52.151]:52678 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390752AbgEYNmW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 09:42:22 -0400
-IronPort-SDR: 2mJyGc4DUto9zzv9PPlx+qHEoNf7SXkxytbVXHQI6WdSWdqRx70LB0pGUKNdEP/xWVJfxooaFt
- DCJ72WqDfqKg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:42:20 -0700
-IronPort-SDR: 3ahJSY+WGJJJL30AHT0RjfuA8GbpndCYboJhLj5auNonIf3UK1WzfXVbmt5TsM2f+/YaVPBve3
- c8UhP5cU6vZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="468055300"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 25 May 2020 06:42:17 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdDMx-008nMy-GZ; Mon, 25 May 2020 16:42:19 +0300
-Date:   Mon, 25 May 2020 16:42:19 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers
- glue layer interface
-Message-ID: <20200525134219.GB1634618@smile.fi.intel.com>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
- <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
- <20200521023735.mja62ujmxebgwyef@mobilestation>
- <80cf1d67-5de1-f3f1-27a0-b88cc105b228@linux.intel.com>
+        Mon, 25 May 2020 09:46:46 -0400
+Received: from gateway23.websitewelcome.com ([192.185.49.219]:48889 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403812AbgEYNqp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 09:46:45 -0400
+X-Greylist: delayed 1398 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 May 2020 09:46:45 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 47E874A036
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 08:23:26 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id dD4gjBGojSl8qdD4gjReJl; Mon, 25 May 2020 08:23:26 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=At2weQp8Urq2ifR1Xqe+tnTzqybzUOz3VsMP3J4yfuc=; b=XWAzSl7mC/0FF2nciZlstQlk1z
+        EoSFcTOQmbi2lRt+H5PUtOrC5bvGTvl7wNHU9dZ7AzzIZ0RUvtvVO3NVTmyCK6X+X4gPxYqaMGHMs
+        nDW0P3pbzbi57zUxRTOKCiN7XnTkYNcHj5lGMASDKSTq32gpw9tKxjJtOuYJZI0+tHZF+d7qraTe3
+        zXoK0kU5ftanlHvqyDL2SS4qIxWzlW3A0aRir7lsLS21bruDbFL4WVOW87reoPVHfvS6f+F14dM0J
+        k3dMB67YiBcGm3YD0Qmtrh6QA/uNX88eO1babSNGgqrqpSAq9/Zxu0eLQyKCX1+/oMQGND5Xlwa/+
+        lHsKNOKg==;
+Received: from [191.31.196.240] (port=46922 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jdD4f-002bEq-Ns; Mon, 25 May 2020 10:23:26 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
+        Matheus Castello <matheus@castello.eng.br>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 2/3] dt-bindings: arm: actions: Document Caninos Loucos Labrador
+Date:   Mon, 25 May 2020 10:22:17 -0300
+Message-Id: <20200525132218.190841-3-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200525132218.190841-1-matheus@castello.eng.br>
+References: <20200525132218.190841-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80cf1d67-5de1-f3f1-27a0-b88cc105b228@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.240
+X-Source-L: No
+X-Exim-ID: 1jdD4f-002bEq-Ns
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.196.240]:46922
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 27
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:16:05PM +0300, Jarkko Nikula wrote:
-> On 5/21/20 5:37 AM, Serge Semin wrote:
+Update the documentation to add the Caninos Loucos Labrador. Labrador
+project consists of a computer on module based on the Actions Semi S500
+processor and the Labrador base board.
 
-> For this patchset I'd like more if changes are done to
-> i2c-designware-platdrv.c since it's not too complicated yet :-)
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/actions.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-And after moving ACPI stuff to common code, the one has even been shrunk significantly.
-
-> If it starts to look too messy in the future then it's time split I think.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
+index ace3fdaa8396..0eac72335a05 100644
+--- a/Documentation/devicetree/bindings/arm/actions.yaml
++++ b/Documentation/devicetree/bindings/arm/actions.yaml
+@@ -19,6 +19,11 @@ properties:
+               - allo,sparky # Allo.com Sparky
+               - cubietech,cubieboard6 # Cubietech CubieBoard6
+           - const: actions,s500
++      - items:
++          - enum:
++              - caninos,labrador-base-m # Labrador Base Board M v1
++          - const: caninos,labrador-v2
++          - const: actions,s500
+       - items:
+           - enum:
+               - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
+--
+2.26.2
 
