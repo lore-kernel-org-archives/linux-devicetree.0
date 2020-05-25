@@ -2,144 +2,142 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E681DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8367C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBA52078B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8256C2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="jaAKaoE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388763AbgEYNBh (ORCPT
+        id S2390698AbgEYNCY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 09:01:37 -0400
-Received: from mga06.intel.com ([134.134.136.31]:61383 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388738AbgEYNBg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 09:01:36 -0400
-IronPort-SDR: +WEbcvz6KbTVDxe417hrDmGNEuVVJsTIe/Zgm9KGnCfvKKSCaGse0b7cKyxaNltAOQwLcKKDeu
- dAxYlOUIJUqg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:01:34 -0700
-IronPort-SDR: Rli/mR6WDMx9Hx5ViPLLh25L60zuFtnubw00/s5RY3kRaHybaQtEQWu371E/UlTfgFLB1vz92w
- vQPs1Bp8bFyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="266141381"
-Received: from mylly.fi.intel.com (HELO [10.237.72.67]) ([10.237.72.67])
-  by orsmga003.jf.intel.com with ESMTP; 25 May 2020 06:01:27 -0700
-Subject: Re: [PATCH v2 07/12] i2c: designware: Move Baytrail sem config to the
- platform if-clause
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Max Staudt <max@enpas.org>, Stefan Roese <sr@denx.de>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-8-Sergey.Semin@baikalelectronics.ru>
- <da6d8b18-b808-fd86-bbd2-13e7a90b2a5e@linux.intel.com>
- <20200521022215.ubvhuop47aflqkkb@mobilestation>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <f01b3082-082c-8ce9-d0f7-f9ff952a37bf@linux.intel.com>
-Date:   Mon, 25 May 2020 16:01:26 +0300
+        Mon, 25 May 2020 09:02:24 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.36]:32889 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388757AbgEYNCX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 09:02:23 -0400
+X-Greylist: delayed 1421 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 May 2020 09:02:22 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id C70FC1E4D8
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 07:38:40 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id dCNMjQ290VQh0dCNMjQjTi; Mon, 25 May 2020 07:38:40 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=2TljW7JsW+WCZFc/vJnuFILXikxQwHFnuGlW+UY2ObY=; b=jaAKaoE9zh9aAvTL7GhKDpQNfZ
+        eCkF23JYStQG4EZq2qZzqP49go5dOw9ojs1PsnVGvyLai1KxDT0AnuEHSZvt78SEUFG+kIeKJSNGm
+        AywzfK60JlfYclTVBVEX/O13c507O3NL15Y4kkECBAyR+/rsBt1CgI57jNHVHol3waSbwKkicclDh
+        byKVOqwGT+T5D2Qi2dW56i2rq6Kd1g6EeQeS1wQYX/6LduDjKI08Rzu3w48VIyPCsL2C2on24UlnZ
+        s55pwtE+N4dhLk3lwOZ7O+IOUvl34wTmWtY9SGSZjZpgXHK0NySh8NAyoOr5hA3zZNwtRX/8W6zbv
+        BnZy0WJg==;
+Received: from [191.31.196.240] (port=53056 helo=[192.168.15.5])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jdCNM-002LnX-Dr; Mon, 25 May 2020 09:38:40 -0300
+Subject: Re: [PATCH v5 2/3] dt-bindings: arm: actions: Document Caninos Loucos
+ Labrador
+To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, edgar.righi@lsitec.org.br,
+        igor.lima@lsitec.org.br, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org, Rob Herring <robh@kernel.org>
+References: <20200525013008.108750-1-matheus@castello.eng.br>
+ <20200525013008.108750-3-matheus@castello.eng.br>
+ <8fc7b0d0-6516-ecd4-ce9c-a63a3cba7e9a@suse.de>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <752b0710-ba99-ef19-d3c2-78cca5c6bdf2@castello.eng.br>
+Date:   Mon, 25 May 2020 09:38:36 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200521022215.ubvhuop47aflqkkb@mobilestation>
+In-Reply-To: <8fc7b0d0-6516-ecd4-ce9c-a63a3cba7e9a@suse.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: pt-BR
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.240
+X-Source-L: No
+X-Exim-ID: 1jdCNM-002LnX-Dr
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [191.31.196.240]:53056
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 9
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/21/20 5:22 AM, Serge Semin wrote:
-> On Wed, May 20, 2020 at 03:16:14PM +0300, Jarkko Nikula wrote:
->> On 5/10/20 12:50 PM, Serge Semin wrote:
->>> Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
->>> platform driver. It's a bit confusing to see it's config in the menu at
->>> some separated place with no reference to the platform code. Lets move the
->>> config definition under the if-I2C_DESIGNWARE_PLATFORM clause. By doing so
->>> the config menu will display the feature right below the DW I2C platform
->>> driver item and will indent it to the right so signifying its belonging.
->>>
->>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->>> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
->>> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->>> Cc: Paul Burton <paulburton@kernel.org>
->>> Cc: Ralf Baechle <ralf@linux-mips.org>
->>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
->>> Cc: Wolfram Sang <wsa@the-dreams.de>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Frank Rowand <frowand.list@gmail.com>
->>> Cc: linux-mips@vger.kernel.org
->>> Cc: devicetree@vger.kernel.org
->>> ---
->>>    drivers/i2c/busses/Kconfig | 30 +++++++++++++++++-------------
->>>    1 file changed, 17 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
->>> index 368aa64e9266..ed6927c4c540 100644
->>> --- a/drivers/i2c/busses/Kconfig
->>> +++ b/drivers/i2c/busses/Kconfig
->>> @@ -530,8 +530,8 @@ config I2C_DESIGNWARE_CORE
->>>    config I2C_DESIGNWARE_PLATFORM
->>>    	tristate "Synopsys DesignWare Platform"
->>> -	select I2C_DESIGNWARE_CORE
->>>    	depends on (ACPI && COMMON_CLK) || !ACPI
->>> +	select I2C_DESIGNWARE_CORE
->>>    	help
->>>    	  If you say yes to this option, support will be included for the
->>>    	  Synopsys DesignWare I2C adapter.
->>> @@ -539,6 +539,22 @@ config I2C_DESIGNWARE_PLATFORM
->>>    	  This driver can also be built as a module.  If so, the module
->>>    	  will be called i2c-designware-platform.
->>> +if I2C_DESIGNWARE_PLATFORM
->>> +
->>> +config I2C_DESIGNWARE_BAYTRAIL
->>> +	bool "Intel Baytrail I2C semaphore support"
->>> +	depends on ACPI
->>> +	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
->>> +		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
->>> +	help
->>> +	  This driver enables managed host access to the PMIC I2C bus on select
->>> +	  Intel BayTrail platforms using the X-Powers AXP288 PMIC. It allows
->>> +	  the host to request uninterrupted access to the PMIC's I2C bus from
->>> +	  the platform firmware controlling it. You should say Y if running on
->>> +	  a BayTrail system using the AXP288.
->>> +
->>> +endif # I2C_DESIGNWARE_PLATFORM
->>> +
->>
->> Is the added "if I2C_DESIGNWARE_PLATFORM" needed here? Should the "depends
->> on" be enough?
-> 
-> The idea was to add if-endif clause here for features possibly added sometime
-> in future. But using normal "depends on I2C_DESIGNWARE_PLATFORM" shall make
-> the config depicted as an indented sub-config as well. Would you like me to
-> remove the if-clause and use the depends on operator instead?
-> 
-Yes, please remove it from this patch. Keeps this patch simpler and if 
-some future feature needs it then that patch(set) is the right place to 
-add it.
+Hi Andreas,
 
-Jarkko
+Em 5/25/20 7:41 AM, Andreas Färber escreveu:
+> Hi,
+> 
+> Am 25.05.20 um 03:30 schrieb Matheus Castello:
+>> Update the documentation to add the Caninos Loucos Labrador. Labrador
+>> project consists of a computer on module based on the Actions Semi S500
+>> processor and the Labrador base board.
+>>
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   Documentation/devicetree/bindings/arm/actions.yaml | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/actions.yaml 
+>> b/Documentation/devicetree/bindings/arm/actions.yaml
+>> index ace3fdaa8396..2187e1c5bc73 100644
+>> --- a/Documentation/devicetree/bindings/arm/actions.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/actions.yaml
+>> @@ -19,6 +19,11 @@ properties:
+>>                 - allo,sparky # Allo.com Sparky
+>>                 - cubietech,cubieboard6 # Cubietech CubieBoard6
+>>             - const: actions,s500
+>> +      - items:
+>> +          - enum:
+>> +              - caninos,labrador-v2 # Labrador Core v2
+>> +              - caninos,labrador-base-m # Labrador Base Board M v1
+> 
+> This enum still strikes me as wrong, it means either-or. (Was planning 
+> to look into it myself, but no time yet...) caninos,labrador-v2 should 
+> be a const one level down: board, SoM, SoC from most specific to most 
+> generic. Compare Guitar below.
+
+I got it, I agree make sense, I will send the v6.
+
+> 
+>> +          - const: actions,s500
+>>         - items:
+>>             - enum:
+>>                 - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board 
+>> rev. B
+> 
+> Regards,
+> Andreas
+> 
+
+Best Regards,
+Matheus Castello
