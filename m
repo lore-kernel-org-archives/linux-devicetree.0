@@ -2,152 +2,148 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1E9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 08:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2478C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 08:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECEF5207FB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 08:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D145A206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 08:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PVmyC9t1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389251AbgEYIsN (ORCPT
+        id S2388800AbgEYIuh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 04:48:13 -0400
-Received: from comms.puri.sm ([159.203.221.185]:59370 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388375AbgEYIsM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 04:48:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id AB776DF781;
-        Mon, 25 May 2020 01:47:41 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bjCaKVfCJaSc; Mon, 25 May 2020 01:47:40 -0700 (PDT)
-Subject: Re: [PATCH 1/2] arm64: dts: Add a device tree for the Librem5 phone
-To:     robh@kernel.org, kernel@puri.sm, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, mchehab@kernel.org, Anson.Huang@nxp.com,
-        agx@sigxcpu.org, angus@akkea.ca
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200514155737.12160-1-martin.kepplinger@puri.sm>
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
- 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
- ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
-Message-ID: <c56d67e9-84e3-16e3-1315-aa976adb2739@puri.sm>
-Date:   Mon, 25 May 2020 10:47:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200514155737.12160-1-martin.kepplinger@puri.sm>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 25 May 2020 04:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389232AbgEYIug (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 04:50:36 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196EFC061A0E
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 01:50:35 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 202so10096927lfe.5
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 01:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7MClqz66Xz6cvx9U2z34WXfhFIf6bKDdfxKE4l1S5Dc=;
+        b=PVmyC9t1Z3kTTSKm2hlXSwuZ4zCyT1V5zi3DvufV6enEk9caxMbM9EwjGHOAa15zXL
+         4VcBCEA7Cbbj7wdMXzI6KXnxQKLzpc6Ny+MiSJEMqsu83vdADazzfJILQKj+eVhEpzZq
+         /1Xv2TjwzEbzj2SUq8eh0YoJc1/APIpcOqdLz1qKEFuljfkLTbV6D8I0LNqGh6EPKMgH
+         6bOnf/+i+2I0SEBxgysQe3swEwHX6SkG3W05RAU2AzBLhrk8E1pCMNZv5l9CsAUkrpNC
+         WiYJ2O2Z6AQpigrRkQ3DPbudFvtSlmzyN0BIolAKiiPYIhSLyz2r2kyxohrYMzRIO1Bh
+         4vOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7MClqz66Xz6cvx9U2z34WXfhFIf6bKDdfxKE4l1S5Dc=;
+        b=QYvvE5fIRJJfChYtGxuNmrYsi3PD4ehp2RoC2eqM9A40ZjLEyvBes8LPOrD3Maq2oC
+         8wTufgLS89Lpa9wAy0EXyCDzjJlL2M/DjhUP/0CNEa37jCb9rYmk2VdL0awzajfMVC1w
+         BceYqrOG6XVSgvGBF+i076nRxkZXBj3pL3URZSPvWBvXem1tqTGBZN3wxyKSacAWbb2p
+         ovYxUHV5agTSUGDUKO3dPzsHU1gei455f6bnIsDBCof4dTzROvtfBgOuVFRc9nzUB+8G
+         74Od26PS8TVIQdx1mRiRP+HLPmWoCsMhy+wTthrAMl7WNukcaNhENLGa9iZ41FxOOMSj
+         dv2g==
+X-Gm-Message-State: AOAM5329MaOueV/ZFevb3Q2nQZvDmcJmSBTJeFV38TY7QG7ktdCKmSG4
+        usdbOTO7PMPloUtS3o+nqhSTPCEu0yf4GCbONZ01bQ==
+X-Google-Smtp-Source: ABdhPJwEqiQr6pJCsZYfcsO57SsykPVbI/VsBBSRlb4YLFujW7KBNC+YrNwAzMlIvsgiyenalkPQqpdKxVH4ZoO4loY=
+X-Received: by 2002:ac2:414c:: with SMTP id c12mr13992943lfi.47.1590396633587;
+ Mon, 25 May 2020 01:50:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200513141134.25819-1-lars.povlsen@microchip.com>
+ <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com>
+ <87pnb1nf2j.fsf@soft-dev15.microsemi.net>
+In-Reply-To: <87pnb1nf2j.fsf@soft-dev15.microsemi.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 10:50:22 +0200
+Message-ID: <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14.05.20 17:57, Martin Kepplinger wrote:
-> From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-> 
-> Add a devicetree description for the Librem 5 phone. The early batches
-> that have been sold are supported as well as the mass-produced device
-> available later this year, see https://puri.sm/products/librem-5/
-> 
-> This boots to a working console with working WWAN modem, wifi usdhc,
-> IMU sensor device, proximity sensor, haptic motor, gpio keys, GNSS and LEDs.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |    1 +
->  .../boot/dts/freescale/imx8mq-librem5.dts     | 1174 +++++++++++++++++
->  2 files changed, 1175 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5.dts
-> 
+On Mon, May 18, 2020 at 10:50 PM Lars Povlsen
+<lars.povlsen@microchip.com> wrote:
+> Linus Walleij writes:
+>
+> > On Wed, May 13, 2020 at 4:11 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+> >
+> >> This adds DT bindings for the Microsemi SGPIO controller, bindings
+> >> mscc,ocelot-sgpio and mscc,luton-sgpio.
+> >>
+> >> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> >> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> >
+> >> +  microchip,sgpio-ports:
+> >> +    description: This is a 32-bit bitmask, configuring whether a
+> >> +      particular port in the controller is enabled or not. This allows
+> >> +      unused ports to be removed from the bitstream and reduce latency.
+> >> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+> >
+> > I don't know about this.
+> >
+> > You are saying this pin controller can have up to 32 GPIO "ports"
+> > (also known as banks).
+> >
+> > Why can't you just represent each such port as a separate GPIO
+> > node:
+> >
+> > pinctrl@nnn {
+> >     gpio@0 {
+> >         ....
+> >     };
+> >     gpio@1 {
+> >         ....
+> >     };
+> >     ....
+> >     gpio@31 {
+> >         ....
+> >     };
+> > };
+> >
+> > Then if some of them are unused just set it to status = "disabled";
+> >
+> > This also makes your Linux driver simpler because each GPIO port
+> > just becomes a set of 32bit registers and you can use
+> > select GPIO_GENERIC and bgpio_init() and save a whole
+> > slew of standard stock code.
+> >
+>
+> Linus, thank you for your input.
+>
+> The controller handles an array of 32*n signals, where n >= 1 && n <=
+> 4.
+>
+> The problem with the above approach is that the ports are disabled
+> *port*-wise - so they remove all (upto) 4 bits. That would be across the
+> banks.
+>
+> You could of course have the "implied" semantics that a disabled port at
+> any bit position disabled all (bit positions for the same port).
 
-hi,
+I don't understand this, you would have to elaborate...
 
-I highly appreciate it in case you can take time to review. It's not the
-smallest board, but this "base" support isn't huge either. For
-devicetree people this is certainly easy to read and I'll be happy for
-any opinions, objections or Acks you might have.
+In any case microchip,sgpio-ports is probably not the right thing,
+use ngpios which is documented and just divide by 32 to get the
+number of ports I think? But that is just in case they get
+enabled strictly in sequence, otherwise you'd need a custom
+property.
 
-thanks,
-
-                               martin
+Yours,
+Linus Walleij
