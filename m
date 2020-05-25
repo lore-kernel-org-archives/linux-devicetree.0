@@ -2,183 +2,129 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A01C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 09:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7638FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 09:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1372A2068D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 09:06:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nO2zcmFB"
+	by mail.kernel.org (Postfix) with ESMTP id 60AE1207FB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 09:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388660AbgEYJGG (ORCPT
+        id S2389199AbgEYJHW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 05:06:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389217AbgEYJGF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 05:06:05 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE89C08C5C3
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 02:06:03 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id v79so6834405qkb.10
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 02:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dPuZPyJHL9y310jCMBab1+wUqEyxBpL9sxzRpIMUcDw=;
-        b=nO2zcmFBdCWzlGqLw1pR2ThUuz31GiwsX9FmLMPWXkIRbISIRdArAGzOKpkV7Qzv10
-         5VetiQSFGmqqkEyKB7+SGACaU0qLz2m+9iyUgPiDy2IDRCPxhwFx8/5DMtWUHYRsjtlL
-         0atWQF/ahgFhsYQYAzdXXs0aRQhob0wySOVyDYs2DXpouokBCqB6slqb/TvDM+I33ev8
-         yk0brFmDMsprGHiwBPRLvyh/NVcy/OCFMiVYdFYc4bQaZFP6VvDRpzKRyp0zTf5FOVWN
-         aSAJO9abuoljXUYQUaIMlrcVwRxlonf00RVbuDaEI1E+vkonNYosmqgXcWB0HgzUmBS7
-         NMpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dPuZPyJHL9y310jCMBab1+wUqEyxBpL9sxzRpIMUcDw=;
-        b=D3kpzRfxrcIUjYJvUrGj8JTRCiZrOI3yoiOxa4qulw5Cz/vQ67I/oOBbV87LkYJ38P
-         gHW3UVjFMh4NNCqEGi3H+uBoh0yVJrt2B3cCW+mb4acADZL4DIe8o23TVrW9/SueFLiA
-         JhuXOH50z6gvo0rP8X+6O5/rgKAxj4A6nDYEtPPhgjYhpDHn2tYrBJmHiR1vJJ9mJw/Z
-         I/xkfVBuBJmqM1fW4ficSSbscVKQSwOhCF7AtIQvrvNW+Gb5CVs0SYWjUmAYl/fEMKzm
-         Z495zab+wvksF+BeOQ2mhiYnTpsSiiKuzCBPdIpn0NYrcbJW7/HOb0V34FJt7S+SkDUI
-         4xYw==
-X-Gm-Message-State: AOAM533xZ8a+h3NM+FUDO6rNKiBZdpEo1z/qglVwx0tXLiQ7omwWkfiD
-        dnyRNLCzfnggCzCcztc0C+BZ+KUf47evoIHw3uE1SQ==
-X-Google-Smtp-Source: ABdhPJwwogx5lD1d892oBsZ0UV12gKR+k0N+3QkhwPrACB1IANnU5OS7w1qWs680sMYLIO0JDYTSL1iYK1byj+QAdpM=
-X-Received: by 2002:a37:5b47:: with SMTP id p68mr26336785qkb.120.1590397562647;
- Mon, 25 May 2020 02:06:02 -0700 (PDT)
+        Mon, 25 May 2020 05:07:22 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57094 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388611AbgEYJHV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 05:07:21 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 925E81C02B1; Mon, 25 May 2020 11:07:19 +0200 (CEST)
+Date:   Mon, 25 May 2020 11:07:18 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        robh+dt@kernel.org, andrew@lunn.ch,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/8] dt-bindings: net: meson-dwmac: Add the
+ amlogic,rx-delay-ns property
+Message-ID: <20200525090718.GB16796@amd>
+References: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
+ <20200512211103.530674-2-martin.blumenstingl@googlemail.com>
+ <20200524212843.GF1192@bug>
+ <d3f596d7-fb7f-5da7-4406-b5c0e9e9dc3f@gmail.com>
 MIME-Version: 1.0
-References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-11-michael@walle.cc>
- <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com> <75bff2917be1badd36af9f980cf59d2c@walle.cc>
-In-Reply-To: <75bff2917be1badd36af9f980cf59d2c@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 25 May 2020 11:05:51 +0200
-Message-ID: <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
-Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OwLcNYc0lM97+oe1"
+Content-Disposition: inline
+In-Reply-To: <d3f596d7-fb7f-5da7-4406-b5c0e9e9dc3f@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 12 maj 2020 o 16:41 Michael Walle <michael@walle.cc> napisa=C5=82(a):
->
-> >> +
-> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
-> >> +MODULE_LICENSE("GPL");
-> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
-> >> new file mode 100644
-> >> index 000000000000..a868cbcde6e9
-> >> --- /dev/null
-> >> +++ b/include/linux/gpio-regmap.h
-> >> @@ -0,0 +1,69 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only */
-> >> +
-> >> +#ifndef _LINUX_GPIO_REGMAP_H
-> >> +#define _LINUX_GPIO_REGMAP_H
-> >> +
-> >> +struct gpio_regmap;
-> >> +
-> >> +#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
-> >> +#define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
-> >> +
-> >
-> > What if the addr is actually 0?
->
-> Then the driver has to set GPIO_REGMAP_ADDR_ZERO or use the convenience
-> macro GPIO_REGMAP_ADDR.
->
-> So you can have
->
->    struct gpio_regmap_config config =3D { 0 };
->    config.reg_dat_base =3D 0x10;
->    config.reg_dir_out_base =3D 0x20;
->
-> or
->
->    config.reg_dat_base =3D GPIO_REGMAP_ADDR_ZERO;
->
-> or if you can't be sure if the RHS value might be zero:
->
->    config.reg_dat_base =3D GPIO_REGMAP_ADDR(reg);
->
->
-> > Maybe drop GPIO_REGMAP_ADDR and require users to set unused registers
-> > to GPIO_REGMAP_ADDR_ZERO?
->
-> Thats bad because:
->   * you'd have to set plenty of unused base registers for a simple driver
->   * if there will be additional properties in the future, you have to
-> touch
->     all other drivers, because they are initialized as 0 (ie. valid reg
-> 0).
->
-> >> +/**
-> >> + * struct gpio_regmap_config - Description of a generic regmap
-> >> gpio_chip.
-> >> + *
-> >> + * @parent:            The parent device
-> >> + * @regmap:            The regmap used to access the registers
-> >> + *                     given, the name of the device is used
-> >> + * @label:             (Optional) Descriptive name for GPIO
-> >> controller.
-> >> + *                     If not given, the name of the device is used.
-> >> + * @ngpio:             Number of GPIOs
-> >> + * @reg_dat_base:      (Optional) (in) register base address
-> >> + * @reg_set_base:      (Optional) set register base address
-> >> + * @reg_clr_base:      (Optional) clear register base address
-> >> + * @reg_dir_in_base:   (Optional) out setting register base address
-> >> + * @reg_dir_out_base:  (Optional) in setting register base address
-> >
-> > The two above are inverted I think?
-> good catch.
->
-> > Also: why the limitation of only supporting one at a time?
->
-> they should be exclusive, either you have a register where you set the
-> output bits to one, or the input bits. Maybe this need a bit more
-> context
-> above. in gpio-mmio.c you can set both and both are used in
-> set_direction(), but only one is read in get_direction().
->
-> That being said, I have no strong opinion wether they should be
-> exclusive
-> or not, besides the symmetry of set_/get_direction().
->
-> -michael
->
 
-Sorry for the late response, your comments make sense to me. Are you
-going to submit a v4 before the v5.8 merge window?
+--OwLcNYc0lM97+oe1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bart
+Hi!
+
+> > On Tue 2020-05-12 23:10:56, Martin Blumenstingl wrote:
+> >> The PRG_ETHERNET registers on Meson8b and newer SoCs can add an RX
+> >> delay. Add a property with the known supported values so it can be
+> >> configured according to the board layout.
+> >>
+> >> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> >> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> >> ---
+> >>  .../bindings/net/amlogic,meson-dwmac.yaml           | 13 +++++++++++++
+> >>  1 file changed, 13 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac=
+=2Eyaml b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> >> index ae91aa9d8616..66074314e57a 100644
+> >> --- a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> >> +++ b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> >> @@ -67,6 +67,19 @@ allOf:
+> >>              PHY and MAC are adding a delay).
+> >>              Any configuration is ignored when the phy-mode is set to =
+"rmii".
+> >> =20
+> >> +        amlogic,rx-delay-ns:
+> >> +          enum:
+> >=20
+> > Is it likely other MACs will need rx-delay property, too? Should we get=
+ rid of the amlogic,
+> > prefix?
+>=20
+> Yes, there are several MAC bindings that already define a delay property:
+>=20
+> Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml:
+>      allwinner,rx-delay-ps:
+> Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml:
+>      allwinner,rx-delay-ps:
+> Documentation/devicetree/bindings/net/apm-xgene-enet.txt:- rx-delay:
+> Delay value for RGMII bridge RX clock.
+> Documentation/devicetree/bindings/net/apm-xgene-enet.txt:       rx-delay
+> =3D <2>;
+> Documentation/devicetree/bindings/net/cavium-pip.txt:- rx-delay: Delay
+> value for RGMII receive clock. Optional. Disabled if 0.
+> Documentation/devicetree/bindings/net/mediatek-dwmac.txt:-
+> mediatek,rx-delay-ps: RX clock delay macro value. Default is 0.
+> Documentation/devicetree/bindings/net/mediatek-dwmac.txt:
+> mediatek,rx-delay-ps =3D <1530>;
+>=20
+> standardizing on rx-delay-ps and tx-delay-ps would make sense since that
+> is the lowest resolution and the property would be correctly named with
+> an unit in the name.
+
+Seems like similar patch is already being reviewed from Dan Murphy (?)
+=66rom TI.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OwLcNYc0lM97+oe1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7LisYACgkQMOfwapXb+vJCzACfcW9RZlns94NhbAXsafn1CBvX
+orcAoL3pNyoH5KhUL0FoV+EGTKQVEBDM
+=yjue
+-----END PGP SIGNATURE-----
+
+--OwLcNYc0lM97+oe1--
