@@ -2,149 +2,254 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A905C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992C8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 17:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A20620776
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7012B2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 17:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+Qm+xrk"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="f6dMxTFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391264AbgEYQsL (ORCPT
+        id S2391318AbgEYRge (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 12:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388356AbgEYQsJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 12:48:09 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12AFAC061A0E;
-        Mon, 25 May 2020 09:48:08 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id w3so12434249qkb.6;
-        Mon, 25 May 2020 09:48:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=j9GtLPWP384+mcmNAjX0iJ86SP6E9SyJL2vo8P6h15U=;
-        b=Z+Qm+xrkwzZuSGSlrTKQXiT0twvVcxnq/up4UsvHYhzQ+H9funTn43WfK2/cX1m9ox
-         podQ175SNu3HfQUY513TudhxDaj4xTUMEvNocmT4pc6mfLF9y6sFhCEf0gVF/xqc+J9U
-         0unBbVn5uJ1uj8i9lqOBbWaCc5HnpYy2wDNYOzhK7laCK6StaSnOZy9W/VXeTGN+csep
-         qt4w/ce/rKnyVJL8TqDL8GCMMylQFjzDZa+PzJgXJf0iuJEGUlECQi4ZvzT4Hn72F9Ib
-         kaR0AjHL+Im9tOhwg3qPuN468biErRC196hR3C9Er6NO9r/xIPoDT4/WdwjO5R+jjPAb
-         jl6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=j9GtLPWP384+mcmNAjX0iJ86SP6E9SyJL2vo8P6h15U=;
-        b=aCjtVYeSub4JBKXTb8LbS9o4+FEWZodsKIrUk4sfPxqwdWAAmJlCAz9BfnfbrMagbU
-         mTUaqaX6SDXJkPBhRjY2HxsE94/8o6pBr0QChPKR2yLFIZ0rpNWlrlvk8HA2asxgntL4
-         tGKpFSZnFf18Znj+aS1XhSdZi7oMZz95qGSGFBry6vs9OnBqmc0yC2P/s2KWFs3sDkwi
-         wJ7AtYjaoaSTLXHybKznOvazrJb1JxlfXmvK89f+Q2wvKoh4764vVWMCjZWcjB6diPjA
-         DgnVLw/l0ReHwAQy/zNoi+LWRMGs09rEpuBT2yfoZZl0/Ne5Nfc5KOpnB5i1JQmknLQ9
-         d2fg==
-X-Gm-Message-State: AOAM530klxw9AX/weG9m2XFPvSXfMKI0NRBkMuM7N3xWAmoDwaO/BiKj
-        wpz6y0si8N6iv+IEjhV1lbSs4snGlBY=
-X-Google-Smtp-Source: ABdhPJwDgDfKD/77hasok63rccG8G1K9bWVWL3Ikd3yJjTs9h3j1Ri3lL6ZOnLjaHqEH9IjpLocJRA==
-X-Received: by 2002:a37:5ce:: with SMTP id 197mr9104547qkf.334.1590425286863;
-        Mon, 25 May 2020 09:48:06 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id g5sm15559618qti.87.2020.05.25.09.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 09:48:06 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@gmail.com,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v4 5/5] iio: imu: bmi160: added mount-matrix support
-Date:   Mon, 25 May 2020 18:46:04 +0200
-Message-Id: <20200525164615.14962-6-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
-References: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
+        Mon, 25 May 2020 13:36:34 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:60753 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388230AbgEYRge (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 13:36:34 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DDEC922F2E;
+        Mon, 25 May 2020 19:36:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590428188;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tccD7vzIYEWi1bFmktWHDapg7/kSp29lv3VkLLvN1aI=;
+        b=f6dMxTFgq0dv3WcoUWQY3lGpKEI1zRaAo5vQ4eXD9W5/1IcgsbkQs2IprvSdGhntzf7+3s
+        VjDUBiP0Ohl+I7F/gjvbCkc+SOXy34S18pA/Vg+5sV+GUZVZ6tYqTNQJ4NOoGbVDgMncOV
+        VXE73fAV7Jnjk0n8FxO++uqxK4wM9EM=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 19:36:27 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+In-Reply-To: <20200515102848.GH271301@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+ <67e90dafd67c285158c2c6f67f92edb7@walle.cc> <20200515102848.GH271301@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add mount-matrix binding support. As chip could have different orientations
-a mount matrix support is needed to correctly translate these differences.
+Am 2020-05-15 12:28, schrieb Lee Jones:
+> On Thu, 30 Apr 2020, Michael Walle wrote:
+> 
+>> Hi Lee,
+>> 
+>> Am 2020-04-23 19:45, schrieb Michael Walle:
+>> > There might be multiple children with the device tree compatible, for
+>> > example if a MFD has multiple instances of the same function. In this
+>> > case only the first is matched and the other children get a wrong
+>> > of_node reference.
+>> > Add a new option to match also against the unit address of the child
+>> > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+>> 
+>> 
+>> Do you think this is feasible? I guess this is the biggest uncertainty
+>> for me at the moment in this patch series.
+> 
+> I think it sounds fine in principle.  So long as it doesn't change the
+> existing behaviour when of_reg isn't set.
+> 
+>> > Signed-off-by: Michael Walle <michael@walle.cc>
+>> > ---
+>> >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
+>> >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
+>> >  2 files changed, 40 insertions(+), 15 deletions(-)
+>> >
+>> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+>> > index e735565969b3..4ecb376338f7 100644
+>> > --- a/drivers/mfd/mfd-core.c
+>> > +++ b/drivers/mfd/mfd-core.c
+>> > @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, int
+>> > id,
+>> >  	struct device_node *np = NULL;
+>> >  	int ret = -ENOMEM;
+>> >  	int platform_id;
+>> > +	u32 of_reg;
+>> >  	int r;
+>> >
+>> >  	if (id == PLATFORM_DEVID_AUTO)
+>> > @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent,
+>> > int id,
+>> >
+>> >  	if (parent->of_node && cell->of_compatible) {
+>> >  		for_each_child_of_node(parent->of_node, np) {
+>> > -			if (of_device_is_compatible(np, cell->of_compatible)) {
+>> > -				if (!of_device_is_available(np)) {
+>> > -					/* Ignore disabled devices error free */
+>> > -					ret = 0;
+>> > -					goto fail_alias;
+>> > -				}
+>> > -				pdev->dev.of_node = np;
+>> > -				pdev->dev.fwnode = &np->fwnode;
+>> > -				break;
+>> > +			if (!of_device_is_compatible(np, cell->of_compatible))
+>> > +				continue;
+>> > +
+>> > +			/* also match the unit address if set */
+> 
+> Please use correct grammar in comments (leaving off the full-stop).
+> 
+>> > +			if (cell->of_reg & MFD_OF_REG_VALID) {
+>> > +				if (of_property_read_u32(np, "reg", &of_reg))
+>> > +					continue;
+>> > +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
+>> > +					continue;
+>> >  			}
+>> > +
+>> > +			if (!of_device_is_available(np)) {
+>> > +				/* Ignore disabled devices error free */
+>> > +				ret = 0;
+>> > +				goto fail_alias;
+>> > +			}
+>> > +
+>> > +			pdev->dev.of_node = np;
+>> > +			pdev->dev.fwnode = &np->fwnode;
+>> > +			break;
+>> >  		}
+>> >  	}
+>> >
+>> > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+>> > index d01d1299e49d..c2c0ad6b14f3 100644
+>> > --- a/include/linux/mfd/core.h
+>> > +++ b/include/linux/mfd/core.h
+>> > @@ -13,8 +13,11 @@
+>> >  #include <linux/platform_device.h>
+>> >
+>> >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+>> > +#define MFD_OF_REG_VALID	BIT(31)
+> 
+> What about 64bit platforms?
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
----
- drivers/iio/imu/bmi160/bmi160.h      |  1 +
- drivers/iio/imu/bmi160/bmi160_core.c | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
+The idea was to have this as a logical number. I.e. for now you may only
+have one subdevice per unique compatible string. In fact, if you have a
+look at the ab8500.c, there are multiple "stericsson,ab8500-pwm"
+subdevices. But there is only one DT node for all three of it. I guess
+this works as long as you don't use phandles to reference the pwm node
+in the device tree. Or you don't want to use device tree properties
+per subdevice (for example the "timeout-sec" of a watchdog device).
 
-diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-index 923c3b274fde..a82e040bd109 100644
---- a/drivers/iio/imu/bmi160/bmi160.h
-+++ b/drivers/iio/imu/bmi160/bmi160.h
-@@ -9,6 +9,7 @@ struct bmi160_data {
- 	struct regmap *regmap;
- 	struct iio_trigger *trig;
- 	struct regulator_bulk_data supplies[2];
-+	struct iio_mount_matrix orientation;
- };
- 
- extern const struct regmap_config bmi160_regmap_config;
-diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-index d3316ca02fbd..26d586daee26 100644
---- a/drivers/iio/imu/bmi160/bmi160_core.c
-+++ b/drivers/iio/imu/bmi160/bmi160_core.c
-@@ -110,6 +110,7 @@
- 		.storagebits = 16,				\
- 		.endianness = IIO_LE,				\
- 	},							\
-+	.ext_info = bmi160_ext_info,				\
- }
- 
- /* scan indexes follow DATA register order */
-@@ -265,6 +266,20 @@ static const struct  bmi160_odr_item bmi160_odr_table[] = {
- 	},
- };
- 
-+static const struct iio_mount_matrix *
-+bmi160_get_mount_matrix(const struct iio_dev *indio_dev,
-+			const struct iio_chan_spec *chan)
-+{
-+	struct bmi160_data *data = iio_priv(indio_dev);
-+
-+	return &data->orientation;
-+}
-+
-+static const struct iio_chan_spec_ext_info bmi160_ext_info[] = {
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmi160_get_mount_matrix),
-+	{ }
-+};
-+
- static const struct iio_chan_spec bmi160_channels[] = {
- 	BMI160_CHANNEL(IIO_ACCEL, X, BMI160_SCAN_ACCEL_X),
- 	BMI160_CHANNEL(IIO_ACCEL, Y, BMI160_SCAN_ACCEL_Y),
-@@ -839,6 +854,11 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
- 		return ret;
- 	}
- 
-+	ret = iio_read_mount_matrix(dev, "mount-matrix",
-+				    &data->orientation);
-+	if (ret)
-+		return ret;
-+
- 	ret = bmi160_chip_init(data, use_spi);
- 	if (ret)
- 		return ret;
--- 
-2.17.1
+So to circumvent this, I thought of having the unit-address (and thus
+the "reg" property) to differentiate between multiple subdevices. Now
+there is one special case for me: this board management controller
+might be upgradable and it might change internally. Thus I came up
+with that logical numbering of subdevices. Rob doesn't seem to be a
+fan of that, though. Therefore, having bit 31 as a valid indicator
+leaves you with 2^31 logical devices, which should be enough ;)
 
+Rob proposed to have the internal offset as the unit-address. But
+in that case I can also use devm_of_platform_populate() and don't
+need the OF_MFD_CELL_REG; I'd just parse the reg offset in each
+individual subdevice driver. But like I said, I wanted to keep the
+internal offsets out of the device tree.
+
+-michael
+
+> 
+>> > +#define MFD_OF_REG_MASK		GENMASK(30, 0)
+>> >
+>> > -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,
+>> > _match)\
+>> > +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+>> > +		     _of_reg, _match)					\
+>> >  	{								\
+>> >  		.name = (_name),					\
+>> >  		.resources = (_res),					\
+>> > @@ -22,24 +25,32 @@
+>> >  		.platform_data = (_pdata),				\
+>> >  		.pdata_size = (_pdsize),				\
+>> >  		.of_compatible = (_compat),				\
+>> > +		.of_reg = (_of_reg),					\
+>> >  		.acpi_match = (_match),					\
+>> >  		.id = (_id),						\
+>> >  	}
+>> >
+>> > +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
+>> > +			_of_reg)					\
+>> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+>> > +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
+>> > +
+>> >  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
+>> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
+>> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+>> > +		     0, NULL)						\
+>> >
+>> >  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
+>> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
+>> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
+>> > +		     _match)						\
+>> >
+>> >  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
+>> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
+>> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
+>> >
+>> >  #define MFD_CELL_RES(_name, _res)					\
+>> > -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
+>> > +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
+>> >
+>> >  #define MFD_CELL_NAME(_name)						\
+>> > -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
+>> > +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
+>> >
+>> >  struct irq_domain;
+>> >  struct property_entry;
+>> > @@ -78,6 +89,9 @@ struct mfd_cell {
+>> >  	 */
+>> >  	const char		*of_compatible;
+>> >
+>> > +	/* matching the reg property if set */
+> 
+> Proper grammar please.
+> 
+> "OF unit address for device matching"
+> 
+>> > +	unsigned int		of_reg;
+>> > +
+>> >  	/* Matches ACPI */
+>> >  	const struct mfd_cell_acpi_match	*acpi_match;
