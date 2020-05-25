@@ -2,158 +2,134 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15399C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 06:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA52C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 06:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8012207FB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 06:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98AB52075F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 06:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IeTfafWw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eEk861V9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388892AbgEYGdl (ORCPT
+        id S1730446AbgEYGj0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 02:33:41 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:11662 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388884AbgEYGdl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 02:33:41 -0400
-X-UUID: 48b26c1c68a14608a973e5b51d23e488-20200525
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yX9DbdtxP2DzviHUTXSqqtm5djMy9Kag6CeDl4UJwgY=;
-        b=IeTfafWwPLEbAPhbQZE0+j/nMakuBQIqVw1S0a1OgGTuMqV7iDBdNv2cwTu6awEKzPxWltdd3GhBHebgfSYDFxtLWvOjD6z9RZE7A63VsBr88GENRFVOxr+6rj8IFTHG0U7NNl4Ipm8HGbkRLxaze07zEeQin9lWJ6XMzIaLk1o=;
-X-UUID: 48b26c1c68a14608a973e5b51d23e488-20200525
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 815997012; Mon, 25 May 2020 14:33:27 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N2.mediatek.inc
- (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 25 May
- 2020 14:33:27 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 25 May 2020 14:33:26 +0800
-Message-ID: <1590388305.13912.16.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 5/7] iommu/mediatek: Add sub_comm id in translation
- fault
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Chao Hao <chao.hao@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        FY Yang <fy.yang@mediatek.com>, Jun Yan <jun.yan@mediatek.com>
-Date:   Mon, 25 May 2020 14:31:45 +0800
-In-Reply-To: <20200509083654.5178-6-chao.hao@mediatek.com>
-References: <20200509083654.5178-1-chao.hao@mediatek.com>
-         <20200509083654.5178-6-chao.hao@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 25 May 2020 02:39:26 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56306 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730230AbgEYGjZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 02:39:25 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P6dLxn025253;
+        Mon, 25 May 2020 01:39:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590388761;
+        bh=QTcmQMGgorj0hYnomxK5QtZ3R0Y2ratjZI/hzTNR0H8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eEk861V9qPFgKtTKYfpiAUgJuMVDEcfkoeT4IcJfSIQJHt2LJ07S3Z4cizsxJFUG4
+         scGqT1VXG15lmZxL1AbuPxKNXNaMHh4TuwEvcgrDMPO8YzK1vu+I8AjR98O3J6Qh19
+         VCSfFK88DU9bQogiCVm170Gm0XQGIQzjzsII4iu0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04P6dK9Y043128
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 25 May 2020 01:39:21 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 25
+ May 2020 01:39:20 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 25 May 2020 01:39:20 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P6dIsY085969;
+        Mon, 25 May 2020 01:39:19 -0500
+Subject: Re: [PATCH 3/3] usb: dwc3: keystone: Turn on USB3 PHY before
+ controller
+To:     Felipe Balbi <balbi@kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>
+CC:     <robh+dt@kernel.org>, <vigneshr@ti.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200513130709.10239-1-rogerq@ti.com>
+ <20200513130709.10239-4-rogerq@ti.com> <1589420265.5899.0.camel@mhfsdcap03>
+ <baaaf89c-4baf-4218-e22e-53cd1a64ec02@ti.com> <87tv0i4y0v.fsf@kernel.org>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <debe1c1d-8e84-8047-d387-42d4f6e03f91@ti.com>
+Date:   Mon, 25 May 2020 09:39:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D04CEC16514D9461F79069ADF288E5C328AE4284FF7CB22830DF0E34DCEFE93A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <87tv0i4y0v.fsf@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA1LTA5IGF0IDE2OjM2ICswODAwLCBDaGFvIEhhbyB3cm90ZToNCj4gVGhl
-IG1heCBsYXJiIG51bWJlciB0aGF0IGEgaW9tbXUgSFcgc3VwcG9ydCBpcyA4KGxhcmIwfmxhcmI3
-IGluIHRoZSBiZWxvdw0KPiBkaWFncmFtKS4NCj4gSWYgdGhlIGxhcmIncyBudW1iZXIgaXMgb3Zl
-ciA4LCB3ZSB1c2UgYSBzdWJfY29tbW9uIGZvciBtZXJnaW5nDQo+IHNldmVyYWwgbGFyYnMgaW50
-byBvbmUgbGFyYi4gQXQgdGhpcyBjYXNlLCB3ZSB3aWxsIGV4dGVuZCBsYXJiX2lkOg0KPiBiaXRb
-MTE6OV0gbWVhbnMgY29tbW9uLWlkOw0KPiBiaXRbODo3XSBtZWFucyBzdWJjb21tb24taWQ7DQo+
-IEZyb20gdGhlc2UgdHdvIHZhcmlhYmxlLCB3ZSBjb3VsZCBnZXQgdGhlIHJlYWwgbGFyYiBudW1i
-ZXIgd2hlbg0KPiB0cmFuc2xhdGlvbiBmYXVsdCBoYXBwZW4uDQo+IFRoZSBkaWFncmFtIGlzIGFz
-IGJlbG93Og0KPiAJCSBFTUkNCj4gCQkgIHwNCj4gCQlJT01NVQ0KPiAJCSAgfA0KPiAgICAgICAg
-ICAgIC0tLS0tLS0tLS0tLS0tLS0tDQo+IAkgICB8ICAgICAgICAgICAgICAgfA0KPiAJY29tbW9u
-MSAgIAljb21tb24wDQo+IAkgICB8CQkgICB8DQo+IAkgICAtLS0tLS0tLS0tLS0tLS0tLQ0KPiAJ
-CSAgfA0KPiAgICAgICAgICAgICAgc21pIGNvbW1vbg0KPiAJCSAgfA0KPiAgIC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgIHwgICAgICAgfCAgICAgICB8ICAgICAgIHwg
-ICAgIHwgICAgfA0KPiAgMydkMCAgICAzJ2QxICAgIDMnZDIgICAgMydkMyAgLi4uICAzJ2Q3ICAg
-PC1jb21tb25faWQobWF4IGlzIDgpDQo+ICAgfCAgICAgICB8ICAgICAgIHwgICAgICAgfCAgICAg
-fCAgICB8DQo+IExhcmIwICAgTGFyYjEgICAgIHwgICAgIExhcmIzICAuLi4gTGFyYjcNCj4gCQkg
-IHwNCj4gCSAgICBzbWkgc3ViIGNvbW1vbg0KPiAJCSAgfA0KPiAgICAgIC0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tDQo+ICAgICAgfCAgICAgICAgfCAgICAgICB8ICAgICAgIHwNCj4gICAgIDIn
-ZDAgICAgIDInZDEgICAgMidkMiAgICAyJ2QzICAgPC1zdWJfY29tbW9uX2lkKG1heCBpcyA0KQ0K
-PiAgICAgIHwgICAgICAgIHwgICAgICAgfCAgICAgICB8DQo+ICAgIExhcmI4ICAgIExhcmI5ICAg
-TGFyYjEwICBMYXJiMTENCj4gDQo+IEluIHRoaXMgcGF0Y2ggd2UgZXh0ZXJuIGxhcmJfcmVtYXBb
-XSB0byBsYXJiX3JlbWFwWzhdWzRdIGZvciB0aGlzLg0KPiBsYXJiX3JlbWFwW3hdW3ldOiB4IG1l
-YW4gY29tbW9uLWlkIGFib3ZlLCB5IG1lYW5zIHN1YmNvbW1vbl9pZCBhYm92ZS4NCj4gDQo+IFdl
-IGNhbiBhbHNvIGRpc3Rpbmd1aXNoIGlmIHRoZSBNNFUgSFcgaGFzIHN1Yl9jb21tb24gYnkgaGFz
-X3N1Yl9jb21tDQo+IHByb3BlcnR5Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2hhbyBIYW8gPGNo
-YW8uaGFvQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2lvbW11L210a19pb21tdS5j
-IHwgMjAgKysrKysrKysrKysrKy0tLS0tLS0NCj4gIGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11Lmgg
-fCAgMyArKy0NCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlv
-bnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5jIGIvZHJp
-dmVycy9pb21tdS9tdGtfaW9tbXUuYw0KPiBpbmRleCBkNzNkZTk4N2Y4YmUuLjM5MTRjNDE4ZDFi
-MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KPiArKysgYi9kcml2
-ZXJzL2lvbW11L210a19pb21tdS5jDQo+IEBAIC05MCw2ICs5MCw4IEBADQo+ICAjZGVmaW5lIFJF
-R19NTVUxX0lOVkxEX1BBCQkJMHgxNDgNCj4gICNkZWZpbmUgUkVHX01NVTBfSU5UX0lECQkJCTB4
-MTUwDQo+ICAjZGVmaW5lIFJFR19NTVUxX0lOVF9JRAkJCQkweDE1NA0KPiArI2RlZmluZSBGX01N
-VV9JTlRfSURfQ09NTV9JRChhKQkJCSgoKGEpID4+IDkpICYgMHg3KQ0KPiArI2RlZmluZSBGX01N
-VV9JTlRfSURfU1VCX0NPTU1fSUQoYSkJCSgoKGEpID4+IDcpICYgMHgzKQ0KPiAgI2RlZmluZSBG
-X01NVV9JTlRfSURfTEFSQl9JRChhKQkJCSgoKGEpID4+IDcpICYgMHg3KQ0KPiAgI2RlZmluZSBG
-X01NVV9JTlRfSURfUE9SVF9JRChhKQkJCSgoKGEpID4+IDIpICYgMHgxZikNCj4gIA0KPiBAQCAt
-MjI4LDcgKzIzMCw3IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBtdGtfaW9tbXVfaXNyKGludCBpcnEs
-IHZvaWQgKmRldl9pZCkNCj4gIAlzdHJ1Y3QgbXRrX2lvbW11X2RhdGEgKmRhdGEgPSBkZXZfaWQ7
-DQo+ICAJc3RydWN0IG10a19pb21tdV9kb21haW4gKmRvbSA9IGRhdGEtPm00dV9kb207DQo+ICAJ
-dTMyIGludF9zdGF0ZSwgcmVndmFsLCBmYXVsdF9pb3ZhLCBmYXVsdF9wYTsNCj4gLQl1bnNpZ25l
-ZCBpbnQgZmF1bHRfbGFyYiwgZmF1bHRfcG9ydDsNCj4gKwl1bnNpZ25lZCBpbnQgZmF1bHRfbGFy
-YiwgZmF1bHRfcG9ydCwgc3ViX2NvbW0gPSAwOw0KPiAgCWJvb2wgbGF5ZXIsIHdyaXRlOw0KPiAg
-DQo+ICAJLyogUmVhZCBlcnJvciBpbmZvIGZyb20gcmVnaXN0ZXJzICovDQo+IEBAIC0yNDQsMTAg
-KzI0NiwxNCBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgbXRrX2lvbW11X2lzcihpbnQgaXJxLCB2b2lk
-ICpkZXZfaWQpDQo+ICAJfQ0KPiAgCWxheWVyID0gZmF1bHRfaW92YSAmIEZfTU1VX0ZBVUxUX1ZB
-X0xBWUVSX0JJVDsNCj4gIAl3cml0ZSA9IGZhdWx0X2lvdmEgJiBGX01NVV9GQVVMVF9WQV9XUklU
-RV9CSVQ7DQo+IC0JZmF1bHRfbGFyYiA9IEZfTU1VX0lOVF9JRF9MQVJCX0lEKHJlZ3ZhbCk7DQo+
-ICAJZmF1bHRfcG9ydCA9IEZfTU1VX0lOVF9JRF9QT1JUX0lEKHJlZ3ZhbCk7DQo+IC0NCj4gLQlm
-YXVsdF9sYXJiID0gZGF0YS0+cGxhdF9kYXRhLT5sYXJiaWRfcmVtYXBbZmF1bHRfbGFyYl07DQo+
-ICsJaWYgKGRhdGEtPnBsYXRfZGF0YS0+aGFzX3N1Yl9jb21tKSB7DQo+ICsJCWZhdWx0X2xhcmIg
-PSBGX01NVV9JTlRfSURfQ09NTV9JRChyZWd2YWwpOw0KPiArCQlzdWJfY29tbSA9IEZfTU1VX0lO
-VF9JRF9TVUJfQ09NTV9JRChyZWd2YWwpOw0KPiArCX0gZWxzZSB7DQo+ICsJCWZhdWx0X2xhcmIg
-PSBGX01NVV9JTlRfSURfTEFSQl9JRChyZWd2YWwpOw0KPiArCX0NCj4gKwlmYXVsdF9sYXJiID0g
-ZGF0YS0+cGxhdF9kYXRhLT5sYXJiaWRfcmVtYXBbZmF1bHRfbGFyYl1bc3ViX2NvbW1dOw0KPiAg
-DQo+ICAJaWYgKHJlcG9ydF9pb21tdV9mYXVsdCgmZG9tLT5kb21haW4sIGRhdGEtPmRldiwgZmF1
-bHRfaW92YSwNCj4gIAkJCSAgICAgICB3cml0ZSA/IElPTU1VX0ZBVUxUX1dSSVRFIDogSU9NTVVf
-RkFVTFRfUkVBRCkpIHsNCj4gQEAgLTc4NSw3ICs3OTEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
-IG10a19pb21tdV9wbGF0X2RhdGEgbXQyNzEyX2RhdGEgPSB7DQo+ICAJLmhhc19iY2xrICAgICA9
-IHRydWUsDQo+ICAJLmhhc192bGRfcGFfcm5nICAgPSB0cnVlLA0KPiAgCS5pbnZfc2VsX3JlZyA9
-IFJFR19NTVVfSU5WX1NFTF9HRU4xLA0KPiAtCS5sYXJiaWRfcmVtYXAgPSB7MCwgMSwgMiwgMywg
-NCwgNSwgNiwgNywgOCwgOX0sDQo+ICsJLmxhcmJpZF9yZW1hcCA9IHt7MH0sIHsxfSwgezJ9LCB7
-M30sIHs0fSwgezV9LCB7Nn0sIHs3fX0sDQoNClRoZSBvcmlnaW5hbCBtdDI3MTIgaGFzIDEwIGxh
-cmJzLCBidXQgaXQgYWN0dWFsbHkgaGFzIDIgSU9NTVUgSFdzLg0KRm9yIGVhY2ggYSBzbWktY29t
-bW9uLCBUaGUgbWF4IGxhcmIgbnVtYmVyIGNvdWxkIG9ubHkgYmUgOC4gU28gaXQgaXMNCnJpZ2h0
-IGhlcmUuDQoNClRodXMsDQpSZXZpZXdlZC1ieTogWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRlay5j
-b20+DQoNCj4gIH07DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRf
-ZGF0YSBtdDgxNzNfZGF0YSA9IHsNCj4gQEAgLTc5NCwxNCArODAwLDE0IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDgxNzNfZGF0YSA9IHsNCj4gIAkuaGFzX2Jj
-bGsgICAgID0gdHJ1ZSwNCj4gIAkucmVzZXRfYXhpICAgID0gdHJ1ZSwNCj4gIAkuaW52X3NlbF9y
-ZWcgPSBSRUdfTU1VX0lOVl9TRUxfR0VOMSwNCj4gLQkubGFyYmlkX3JlbWFwID0gezAsIDEsIDIs
-IDMsIDQsIDV9LCAvKiBMaW5lYXIgbWFwcGluZy4gKi8NCj4gKwkubGFyYmlkX3JlbWFwID0ge3sw
-fSwgezF9LCB7Mn0sIHszfSwgezR9LCB7NX19LCAvKiBMaW5lYXIgbWFwcGluZy4gKi8NCj4gIH07
-DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDgxODNf
-ZGF0YSA9IHsNCj4gIAkubTR1X3BsYXQgICAgID0gTTRVX01UODE4MywNCj4gIAkucmVzZXRfYXhp
-ICAgID0gdHJ1ZSwNCj4gIAkuaW52X3NlbF9yZWcgPSBSRUdfTU1VX0lOVl9TRUxfR0VOMSwNCj4g
-LQkubGFyYmlkX3JlbWFwID0gezAsIDQsIDUsIDYsIDcsIDIsIDMsIDF9LA0KPiArCS5sYXJiaWRf
-cmVtYXAgPSB7ezB9LCB7NH0sIHs1fSwgezZ9LCB7N30sIHsyfSwgezN9LCB7MX19LA0KPiAgfTsN
-Cj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2lvbW11X29mX2lk
-c1tdID0gew0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaCBiL2RyaXZl
-cnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gaW5kZXggYWZkN2EyZGU1YzFlLi5kNTFmZjk5YzJjNzEg
-MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gKysrIGIvZHJpdmVy
-cy9pb21tdS9tdGtfaW9tbXUuaA0KPiBAQCAtNDEsMTAgKzQxLDExIEBAIHN0cnVjdCBtdGtfaW9t
-bXVfcGxhdF9kYXRhIHsNCj4gIAkvKiBIVyB3aWxsIHVzZSB0aGUgRU1JIGNsb2NrIGlmIHRoZXJl
-IGlzbid0IHRoZSAiYmNsayIuICovDQo+ICAJYm9vbCAgICAgICAgICAgICAgICBoYXNfYmNsazsN
-Cj4gIAlib29sCQkgICAgaGFzX21pc2NfY3RybDsNCj4gKwlib29sCQkgICAgaGFzX3N1Yl9jb21t
-Ow0KPiAgCWJvb2wgICAgICAgICAgICAgICAgaGFzX3ZsZF9wYV9ybmc7DQo+ICAJYm9vbCAgICAg
-ICAgICAgICAgICByZXNldF9heGk7DQo+ICAJdTMyICAgICAgICAgICAgICAgICBpbnZfc2VsX3Jl
-ZzsNCj4gLQl1bnNpZ25lZCBjaGFyICAgICAgIGxhcmJpZF9yZW1hcFtNVEtfTEFSQl9OUl9NQVhd
-Ow0KPiArCXVuc2lnbmVkIGNoYXIgICAgICAgbGFyYmlkX3JlbWFwWzhdWzRdOw0KPiAgfTsNCj4g
-IA0KPiAgc3RydWN0IG10a19pb21tdV9kb21haW47DQoNCg==
+Felipe,
 
+On 14/05/2020 13:21, Felipe Balbi wrote:
+> Roger Quadros <rogerq@ti.com> writes:
+> 
+>> On 14/05/2020 04:37, Chunfeng Yun wrote:
+>>> On Wed, 2020-05-13 at 16:07 +0300, Roger Quadros wrote:
+>>>> The Local Power Sleep Controller (LPSC) dependency on AM65
+>>>> requires SERDES0 to be powered on before USB.
+>>>>
+>>>> We need to power up SERDES0 power domain and hold it on
+>>>> throughout the reset, init, power on sequence.
+>>>>
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>> ---
+>>>>    drivers/usb/dwc3/dwc3-keystone.c | 47 +++++++++++++++++++++++++++++++-
+>>>>    1 file changed, 46 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/usb/dwc3/dwc3-keystone.c b/drivers/usb/dwc3/dwc3-keystone.c
+>>>> index 1e14a6f4884b..46d46f3507fc 100644
+>>>> --- a/drivers/usb/dwc3/dwc3-keystone.c
+>>>> +++ b/drivers/usb/dwc3/dwc3-keystone.c
+>>>> @@ -14,6 +14,7 @@
+>>>>    #include <linux/dma-mapping.h>
+>>>>    #include <linux/io.h>
+>>>>    #include <linux/of_platform.h>
+>>>> +#include <linux/phy/phy.h>
+>>>>    #include <linux/pm_runtime.h>
+>>>>    
+>>>>    /* USBSS register offsets */
+>>>> @@ -34,6 +35,7 @@
+>>>>    struct dwc3_keystone {
+>>>>    	struct device			*dev;
+>>>>    	void __iomem			*usbss;
+>>>> +	struct phy			*usb3_phy;
+>>>>    };
+>>>>    
+>>>>    static inline u32 kdwc3_readl(void __iomem *base, u32 offset)
+>>>> @@ -95,8 +97,44 @@ static int kdwc3_probe(struct platform_device *pdev)
+>>>>    	if (IS_ERR(kdwc->usbss))
+>>>>    		return PTR_ERR(kdwc->usbss);
+>>>>    
+>>>> -	pm_runtime_enable(kdwc->dev);
+>>>> +	/* PSC dependency on AM65 needs SERDES0 to be powered before USB0 */
+>>>> +	kdwc->usb3_phy = devm_phy_get(dev, "usb3-phy");
+>>> Use devm_phy_optional_get() instead?
+>>
+>> Indeed, it seems better suited.
+> 
+> patches 1 and 2 are in testing/next
+> 
+
+Could you please drop them as I need to make changes to make the PHY optional.
+I will send v2 of entire series.
+
+cheers,
+-roger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
