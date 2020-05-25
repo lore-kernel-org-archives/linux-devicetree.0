@@ -2,122 +2,122 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA05C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2438BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E63720723
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031132070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="me7yO4zT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gF2ae7jd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731511AbgEYQcS (ORCPT
+        id S2389108AbgEYQrg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 12:32:18 -0400
-Received: from mail-eopbgr150084.outbound.protection.outlook.com ([40.107.15.84]:14054
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731503AbgEYQcR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 12:32:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dMX8ILav+I+BKjxHQ2J+P1zuN/brh+pLHu/DqkBYJiQVrjI/XZYD8k8CGafa+Z6APmEqLBXKLLTWWo9vM9ugDmPISSmZLIL1jgnpbwQL27xh6+uxpzQj+uyNnXfDJKHHj/CFheKfU6UNWTrO1MXurDrvzZ316nKurcWx82weaThJxMdW22SX9omTmSX385kbZ1u4dSOfe3QIm2h/vO7LAMncctvLcuXZbUfuWcJhfJNS+vanLnIPpBFZdbeXop1y7Q66Q84dObyaFWMnw4foKdaYMkjiwa015offqRWXHB55NmEdv/JazAhj52C1uwsqve+kp9VwR2sw9aMPKWs7lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DLYS+8KaviG3AcYG3U4N7O76AjJCJpmDtkhBytcagt8=;
- b=kARln5Z+4poxPd5jhTCCIIgBj52j2Wj1pF/gbljGXymafpCzb9x2mtKQgKpW4tYbdOv/4yHBVM4qVUzg0R8rlWMQH0kVkX2Za1uR/TWkwlyr9iaXmIWcvAVzCCwn5ZT2UASk6zqyFtA8QAa9Tq1AD9YEaGZPg1Ukw9OS5brwajJP7A1mSCajvsWh866omTPYD/4B2IjaConPqx6V7eCmDc5K++Oi9w1xZUOuTUYUBH0YcIlTWzYSbkKk3PNpd2Hdlu8dHxAPZat0U31BZ0CEDTrq+fqgoAPcpBXIjhR6ifvLAx0RK4xBLYNNrx06GfOFqLTi0rYW2wvtjRcNXXg/Mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DLYS+8KaviG3AcYG3U4N7O76AjJCJpmDtkhBytcagt8=;
- b=me7yO4zTwjcwDfogTpjkaBIg57mnFpu5tkpSHkIYvf1j3ITHuz9l48v+Db6OBWC+SirdU5FGkN/PJKLS/p49Cn9G0UeBbk1uPDmGCMzvybHmXRrROOv7hwdOTVUKElLxOcWOSHXKJB8CuLbrsfuwDy4fLj9j8O/GioCcZsD2SAA=
-Authentication-Results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM6PR0402MB3846.eurprd04.prod.outlook.com
- (2603:10a6:209:18::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Mon, 25 May
- 2020 16:32:15 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3021.029; Mon, 25 May 2020
- 16:32:15 +0000
-From:   fugang.duan@nxp.com
-To:     andrew@lunn.ch, martin.fuzzey@flowbird.group, davem@davemloft.net,
-        s.hauer@pengutronix.de
-Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
-        devicetree@vger.kernel.org, kuba@kernel.org, fugang.duan@nxp.com
-Subject: [PATCH net v3 4/4] ARM: dts: imx6qdl-sabresd: enable fec wake-on-lan
-Date:   Tue, 26 May 2020 00:27:13 +0800
-Message-Id: <1590424033-16906-5-git-send-email-fugang.duan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590424033-16906-1-git-send-email-fugang.duan@nxp.com>
-References: <1590424033-16906-1-git-send-email-fugang.duan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0102.apcprd01.prod.exchangelabs.com
- (2603:1096:3:15::28) To AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from b38611.ap.freescale.net (119.31.174.66) by SG2PR01CA0102.apcprd01.prod.exchangelabs.com (2603:1096:3:15::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.23 via Frontend Transport; Mon, 25 May 2020 16:32:12 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: df3235d7-0043-4d87-57dd-08d800c92f2b
-X-MS-TrafficTypeDiagnostic: AM6PR0402MB3846:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR0402MB38462AE75556FDBFCC6A5270FFB30@AM6PR0402MB3846.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
-X-Forefront-PRVS: 0414DF926F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: U0lq5S7atnszEC9bf+nlWqnyalqq2zAPjIZNMGWAj+hKqFFJx7esWWmyPUIJwQ3zInbLvpn8oRDphErX/Co6DWHIkXSHLtc6mPLAvuFzOt0ym6g1KU3WFvNMGFQPEp1eFWL/vneoNGdUlfsWqml9LedYaIRrTIZL23DYuQV5WCxZKksbba98y51AjWsgFfSSlXwcmML3ku8e/Tpf/SiauWKoHa8lZRdjCCHvpm0bJBpdZl4kpb2fQpaIH+MDgLXd925bGyGltin7qqYjIBdAPgwtuxlAWO8byP13HGDm2bqsaIoMwStBBTs7Ta0nFEX+SlNNmoJpKXAPqQRC2KJZngz5z8EcTjUKUd8136YJFrvaLW48MJqB0KyygX3qGkV+
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(39860400002)(366004)(136003)(376002)(6512007)(9686003)(4326008)(36756003)(16526019)(86362001)(4744005)(316002)(6506007)(2906002)(52116002)(5660300002)(26005)(186003)(66556008)(8936002)(66946007)(66476007)(956004)(2616005)(478600001)(6486002)(8676002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 3lFRULRUdbfJVhwx++afRcSFam1BccAplixOFbU/uLLPpQIm+OxmnKI0CZXL8glVH99IU1d0UO70zoOrJV+bgWwSYyIHvLshe2mpU7MQRBoQ0/XDnN9j119ykLn3gUAP7wpXSY1/si1TIjbCFOwhfETyAfdhst+7/RIaCTeza7z5guQZ4VzJYqVkNOB54geZI8RdJKAVRPFgnNAxosmppidEzfsoM1S102K5LEQaRhzsLPepy96TREFEj9XYJ6YNTPq+G0JzL5QN3gFve4gDtSRUMAlsj7x3+n0kj1EOVuCBJ9jqp8UI1s8sAci7j2/YS9S06YWlta2giUjJhL9LeTlCKzPgUYULdoApumaBWH/EIC5pUnDTg6E5rNwkOz7NCs9UNLs2fJQprsB3dzY5OTC4NQazitroxtTOherMuffPw4sFXJelG3Ds2z7y1YPyYkD79tEoPg3gmQEkwT+fmhBtpjGWYvUfWHR0Hy/G574=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df3235d7-0043-4d87-57dd-08d800c92f2b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2020 16:32:15.5839
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JuUebXgj8OQjSBYAfpCAlzvEIjp7hBuCO4caF2sugc607eSiZ4jW6PPDoc1+m4oRptluIXlvP+kO3EnbGBo5wA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3846
+        Mon, 25 May 2020 12:47:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387766AbgEYQrf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 12:47:35 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727B2C061A0E;
+        Mon, 25 May 2020 09:47:35 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id h9so3935496qtj.7;
+        Mon, 25 May 2020 09:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=t8zEWUrm5GoCOEcVhpshh2tA+4Vj6BGZIYSk7nPV9Uo=;
+        b=gF2ae7jdmu3EfJ1DHBNkoCxIzaIPv8/KmuYxU6F0rIohBImh+YnijgzshZvoNS7NOR
+         yPj1KJn2/JDiVoU/YbAP7QHmTiT0AgMftNZs+u8DZ2U8nizkKjtxQKft/GYu7Qa61uel
+         fF36ryMgDX5f7Ra7Wxx/mypgpNArpN7TW7cGI3T+thspbqG9f6W/d1EflHu7hf7b587B
+         2IF6IaY/r4WMStLrKTZCjHr17T3G66tZFyojFD1LV+DVQ4lSSdWq3d6qRw9mPTcPPTVB
+         O50rq1X53p3GW5GlLfnRXlsF6qiWbywW3BG+Z7cMXbPyGk0ZptDEgdP/2FfwZQeM0QzG
+         GM9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=t8zEWUrm5GoCOEcVhpshh2tA+4Vj6BGZIYSk7nPV9Uo=;
+        b=TZgQEAHMETZdGE6LFbjO4xu60aZX/qjIvdnrZGubqCI2R638eFtXScPQvYCNaQ0QB0
+         uqYvFF/upKLCymFnA+YzCSmTpPCWA0uh9ZtBMPl834FNShM4eOALWL+UqKZEQBfQ0WLf
+         sk0M2Qrj0ArLBHwHqnlSdsl4UwmoqaDH1x+EZIqDAHLRoAPvoaN2S6s1zKPkIXEv28S/
+         PUeUnJ3EsMv2pANAFdwAzdDOzVbYO3/K+kpI2Z+cZfdwpqadGMMk7bYz7KOlS2gmlcs/
+         qggplm8QyHHtvWNsjDXZ8BymaOprvCJKGTCyckH+A7/1r3/BKyN0y3L62HHWZ2wqd25v
+         4V0g==
+X-Gm-Message-State: AOAM530KWy2zCT/wYS09O119+C9bDQQdyXQc7nvGVD++dTQ3qxDyMYeb
+        3Be1W0BmO4dTKHUEnK19B5jG4VLSi4w=
+X-Google-Smtp-Source: ABdhPJwlC1dvHr4PGrcdBP2nZFqf3pGAhOM27ptunP0xRjgGCZiMfRez+vSCSuVEN99GX+HcgzPVjw==
+X-Received: by 2002:aed:3b62:: with SMTP id q31mr3717224qte.293.1590425254143;
+        Mon, 25 May 2020 09:47:34 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id g5sm15559618qti.87.2020.05.25.09.47.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 09:47:33 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@gmail.com,
+        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: [PATCH v4 0/5] iio: imu: bmi160: added regulator and mount-matrix support
+Date:   Mon, 25 May 2020 18:45:59 +0200
+Message-Id: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+v4:
+ - add maintainer
+ - clean up of documentation
+ - added case concerning the need to add regulators, see [PATCH v4 4/5] 
 
-Enable ethernet wake-on-lan feature for imx6q/dl/qp sabresd
-boards since the PHY clock is supplied by external osc.
+v3: 
+ - separate typo fix into another patch
+ - clean up of documentation
+ - clean up of patch messages
+https://lore.kernel.org/linux-iio/20200520194656.16218-1-jonathan.albrieux@gmail.com/
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
----
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+v2: 
+ - fixed missing description for iio: imu: bmi160: added regulator
+   support
+https://lore.kernel.org/linux-iio/20200519075111.6356-1-jonathan.albrieux@gmail.com/
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index fe59dde..28b35cc 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -204,6 +204,7 @@
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii-id";
- 	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
-+	fsl,magic-packet;
- 	status = "okay";
- };
- 
+v1:
+ - initial patch submission
+https://lore.kernel.org/linux-iio/20200518133358.18978-1-jonathan.albrieux@gmail.com/
+
+Convert txt format documentation to yaml.
+Add documentation about vdd-supply, vddio-supply and mount-matrix.
+
+Add vdd-supply and vddio-supply support.
+
+Add mount-matrix binding support. As chip could have different
+orientations a mount matrix support is needed to correctly translate
+these differences.
+
+Jonathan Albrieux (5):
+  dt-bindings: iio: imu: bmi160: convert format to yaml, add maintainer
+  dt-bindings: iio: imu: bmi160: add regulators and mount-matrix
+  iio: imu: bmi160: fix typo
+  iio: imu: bmi160: added regulator support
+  iio: imu: bmi160: added mount-matrix support
+
+ .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
+ .../bindings/iio/imu/bosch,bmi160.yaml        | 91 +++++++++++++++++++
+ drivers/iio/imu/bmi160/bmi160.h               |  3 +
+ drivers/iio/imu/bmi160/bmi160_core.c          | 46 +++++++++-
+ 4 files changed, 139 insertions(+), 38 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+
 -- 
-2.7.4
+2.17.1
 
