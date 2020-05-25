@@ -2,465 +2,151 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0751FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051FDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB7B20878
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:24:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wjp4nQdn"
+	by mail.kernel.org (Postfix) with ESMTP id E072C2071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390539AbgEYMYw (ORCPT
+        id S2390585AbgEYMnn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 08:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390504AbgEYMYw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 08:24:52 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CEBC061A0E
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:24:51 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g9so14843791edr.8
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fXAW47hdPi2kDjAiwn3YZvIgp15z2/sg8BcZ41d9VMI=;
-        b=Wjp4nQdnlkRhlAZtEvR3Mw06JrUVfwN+j4NGEhxSsSEU1RgNec6mgiIZX55/4td8Q5
-         Bd3RZfaSZn5WFNWPHdiW9pO4FtJRkj3l3u92JS+URUKDzpMZL1bcsYcgunuKdBMA3oqN
-         owJ0CXSmh9HGAJsYf2cVxJKRbSMfiw4ZsSLR0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fXAW47hdPi2kDjAiwn3YZvIgp15z2/sg8BcZ41d9VMI=;
-        b=MyFAdgymBxhaQntouo8OL1w29m/eEITaNH8woape9a1Uz4/7WUrMG+C2lCRL+lKZSi
-         eyWDkEtT4k1gtlIEexeIj4KLVLqpCWLdO9/T6nl2ZQK4acb5jnAGeJqa+I9KJJKqDNN8
-         8U6rRyCYQiKaszAdj1bzj/+gWUfavn111jAUnLckteueSxYVcbwhnFdO7SVuNN+KpfkQ
-         0PJiNLLocOjybCAxn+g96vi8fEPzciveW+xyMEI1Ysr/A2Twe7yyXIfcDKWAFF29JA+U
-         Xt4Eb8k2TZWVJiGO850jP5vqeZjAd8LddNnWEH4jCCqRXd/SmilcEpe9d5p1KYA7c6hs
-         XMTQ==
-X-Gm-Message-State: AOAM530xdVWOOBWIf+Z0x2ZtKVzZKysbO7m6b5qW610/iZxVWqEC4SmR
-        p/wJ0RMA6Nyjye2FVras4FOjYL6TnWTBOw==
-X-Google-Smtp-Source: ABdhPJw4p907ZgA3jadBQ1FZpwnN71KaqcMc0poNFLAhTXS3rwM8eZQPyoXJhhTxPkaIejJh6sir/g==
-X-Received: by 2002:a50:d7c7:: with SMTP id m7mr15402059edj.101.1590409489769;
-        Mon, 25 May 2020 05:24:49 -0700 (PDT)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
-        by smtp.gmail.com with ESMTPSA id by21sm15108954ejb.93.2020.05.25.05.24.48
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 05:24:48 -0700 (PDT)
-Received: by mail-wm1-f42.google.com with SMTP id u188so16497694wmu.1
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:24:48 -0700 (PDT)
-X-Received: by 2002:a1c:bc42:: with SMTP id m63mr13603076wmf.11.1590409487499;
- Mon, 25 May 2020 05:24:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
- <20191204124732.10932-5-Jerry-Ch.chen@mediatek.com> <20200521182825.GA249683@chromium.org>
- <1590156658.27807.84.camel@mtksdccf07>
-In-Reply-To: <1590156658.27807.84.camel@mtksdccf07>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 25 May 2020 14:24:34 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5DodDfWsHkhQZP-M70k9_2sUwwb4zHtWfTx5EDyEKkwow@mail.gmail.com>
-Message-ID: <CAAFQd5DodDfWsHkhQZP-M70k9_2sUwwb4zHtWfTx5EDyEKkwow@mail.gmail.com>
-Subject: Re: [RFC PATCH V4 4/4] platform: mtk-isp: Add Mediatek FD driver
-To:     Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mon, 25 May 2020 08:43:43 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:52669 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390556AbgEYMnn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 08:43:43 -0400
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E226720000B;
+        Mon, 25 May 2020 12:43:37 +0000 (UTC)
+Date:   Mon, 25 May 2020 14:46:57 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>, yuzhao@chromium.org,
-        zwisler@chromium.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= 
-        <Sean.Cheng@mediatek.com>, Sj Huang <sj.huang@mediatek.com>,
-        =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= 
-        <christie.yu@mediatek.com>,
-        =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= 
-        <frederic.chen@mediatek.com>,
-        =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>,
-        =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh@kernel.org>, tfiga@google.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v11 02/13] dt-bindings: video-interface: Replace
+ 'rotation' description
+Message-ID: <20200525124657.umnvfzpyo7moutp4@uno.localdomain>
+References: <20200509090456.3496481-1-jacopo@jmondi.org>
+ <20200509090456.3496481-3-jacopo@jmondi.org>
+ <20200525111621.GE27989@amd>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cozzvhkmmtid52ks"
+Content-Disposition: inline
+In-Reply-To: <20200525111621.GE27989@amd>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-r
 
-On Fri, May 22, 2020 at 4:11 PM Jerry-ch Chen
-<Jerry-ch.Chen@mediatek.com> wrote:
->
-> Hi Tomasz,
->
-> On Thu, 2020-05-21 at 18:28 +0000, Tomasz Figa wrote:
-> > Hi Jerry,
+--cozzvhkmmtid52ks
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Pavel,
+
+On Mon, May 25, 2020 at 01:16:21PM +0200, Pavel Machek wrote:
+> On Sat 2020-05-09 11:04:45, Jacopo Mondi wrote:
+> > Replace the 'rotation' property description by providing a definition
+> > relative to the camera sensor pixel array coordinate system and the
+> > captured scene.
 > >
-> > On Wed, Dec 04, 2019 at 08:47:32PM +0800, Jerry-ch Chen wrote:
-[snip]
-> > > +
-> > > +enum face_angle {
-> > > +   MTK_FD_FACE_FRONT,
-> > > +   MTK_FD_FACE_RIGHT_50,
-> > > +   MTK_FD_FACE_LEFT_50,
-> > > +   MTK_FD_FACE_RIGHT_90,
-> > > +   MTK_FD_FACE_LEFT_90,
-> > > +   MTK_FD_FACE_ANGLE_NUM,
-> > > +};
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> > ---
+> >  .../bindings/media/video-interfaces.txt       | 359 +++++++++++++++++-
+> >  1 file changed, 356 insertions(+), 3 deletions(-)
 > >
-> > This enum seems to define values for the V4L2_CID_MTK_FD_DETECT_POSE
-> > control. Considering that this is an enumeration and the values are
-> > actually integers (-90, -50, 0, 50, 90), perhaps this should be an
-> > INTEGER_MENU control instead?
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > index b1ff492c7da7a..3920f25a91235 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -85,9 +85,362 @@ Optional properties
 > >
->
-> this ioctl let user select multiple face positions(combination of angles
-> and directions) to be detected. so I thought I am not able to use the
-> INTEGER_MENU for this purpose.
-
-Ah, okay, I thought there is only one selection possible.
-
->
-> A bit-field as following should be used by user.
-> I consider adding it to uapi.
->
-> struct face_direction_def {
-> __u16 MTK_FD_FACE_DIR_0 : 1,
->         MTK_FD_FACE_DIR_30 : 1,
->         MTK_FD_FACE_DIR_60 : 1,
->         MTK_FD_FACE_DIR_90 : 1,
->         MTK_FD_FACE_DIR_120 : 1,
->         MTK_FD_FACE_DIR_150 : 1,
->         MTK_FD_FACE_DIR_180 : 1,
->         MTK_FD_FACE_DIR_210 : 1,
->         MTK_FD_FACE_DIR_240 : 1,
->         MTK_FD_FACE_DIR_270 : 1,
->         MTK_FD_FACE_DIR_300 : 1,
->         MTK_FD_FACE_DIR_330 : 1,
->         : 4;
-> };
-
-Note that bit fields are not recommended in UAPI because of not being
-well specified by the language. Instead bits should be defined using
-macros with explicit masks or sometimes enums.
-
->
-> User can also select some face directions of each face angle in one
-> ioctl, for example:
->
-> /*
->  * u16 face_directions[MTK_FD_FACE_ANGLE_NUM] = {0};
->  *
->  *      face_directions[MTK_FD_FACE_FRONT] = 0x7; //angle:0, dir:0,30,60
->  *      face_directions[MTK_FACE_RIGHT_50] = 0x2; //angle:50, dir:30
->  *
->  */
-
-Makes sense, thanks.
-
->
-> > > +
-> > > +struct fd_buffer {
-> > > +   __u32 scp_addr; /* used by SCP */
-> > > +   __u32 dma_addr; /* used by DMA HW */
-> > > +} __packed;
-> fd buffer is used for scp ipi
->
-> > > +
-> > > +struct fd_face_result {
-> > > +   char data[16];
-> > > +};
-> fd_face_result is used for user, so it should be moved to
-> include/uapi/linux.
-> In fact, it has bit-field definition for user, so I would like to define
-> it in include/uapi/linux as following:
->
-> struct fd_face_result {
->   __u64 face_idx : 12,
->         type : 1,
->         x0 : 10,
->         y0 : 10,
->         x1 : 10,
->         y1 : 10,
->         fcv1 : 11;
->   __u64 fcv2 : 7,
->         rip_dir : 4,
->         rop_dir : 3,
->         det_size : 5;
-> };
->
-
-Indeed this should be defined, but as per my comment above, please
-avoid using the bitfield construct and define shifts and masks
-instead.
-
->
-> > > +
-> > > +struct fd_user_output {
-> > > +   struct fd_face_result results[MTK_FD_MAX_RESULT_NUM];
-> > > +   __u16 number;
+> >  - lens-focus: A phandle to the node of the focus lens controller.
 > >
-> > Is this perhaps the number of results? If so, would num_results be a better
-> > name?
-> >
-> yes, fixed.
-> > > +};
-> >
-> > Since this struct is the meta buffer format, it is a part of the userspace
-> > interface and should be defined in a header under include/uapi/linux/.
-> >
-> Ok, I will create include/uapi/linux/mtk_fd_40.h
-> which suppose to include structures that userspace will use.
-> should the private IOCTLs be placed in it together?
+> > -- rotation: The device, typically an image sensor, is not mounted upright,
+> > -  but a number of degrees counter clockwise. Typical values are 0 and 180
+> > -  (upside down).
+> > +- rotation: The camera rotation is expressed as the angular difference in
+> > +  degrees between two reference systems, one relative to the camera module, and
+> > +  one defined on the external world scene to be captured when projected on the
+> > +  image sensor pixel array.
+>
+> So.. how is this supposed to work. There's a phone, with its main
+> camera. It is designed to be used in both portrait and landscape
+> modes, internal accelerometr can tell between the two.
+>
+> Plus you have phone with a keyboard. Common usage is portrait with
+> keyboard closed, and landscape with keyboard open...
 >
 
-Sorry, what private IOCTLs are you referring to? If you mean private
-control IDs, then yes, they should go to that header.
+While I agree for 'orientation' we're far from perfection (and that's
+why I've been asked s/location/orientation/ to reserve 'location' for
+the future), 'rotation' is only defined by the camera sensor mounting
+rotation and the external scene. The way you move your phone should
+not impact the pixel read-out sequence.
 
-[snip]
-> > > +static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-> > > +                             unsigned int *num_buffers,
-> > > +                             unsigned int *num_planes,
-> > > +                             unsigned int sizes[],
-> > > +                             struct device *alloc_devs[])
-> > > +{
-> > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > +   unsigned int size[2];
-> > > +   unsigned int plane;
-> > > +
-> > > +   switch (vq->type) {
-> > > +   case V4L2_BUF_TYPE_META_CAPTURE:
-> > > +           size[0] = ctx->dst_fmt.buffersize;
-> > > +           break;
-> > > +   case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> > > +           size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
-> > > +           if (*num_planes == 2)
-> > > +                   size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
-> > > +           break;
-> > > +   }
-> >
-> > Is this code above needed? The code below sets sizes[] and it uses a for loop,
-> > without opencoded assignment for the second plane.
-> >
->
-> Looks like not really useful here,
-> it should check sizes and num_planes if num_plane not zero,
-> and for V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, it will at most have 2
-> planes, maybe no need for loop as well.
+All phones can be used in portarait or landscape mode, I don't see why
+having a mechanical keyboard is different. You can type in landscape
+mode on a touchscreen keyboard, if you like to.
 
-Loops generally make the code cleaner and there might be some desire
-to add support for more formats in the future, e.g. in case a next
-generation of the hardware shows up.
+The property gives you the rotation correction (actually, the control
+gives the correction) for display in the 'intended usage orientation'.
+If your concern is displaying the image,  as you sense the
+accellerometers to rotate the UI, the application that display the
+image will be rotated too, adding to the corrected image (capture image +
+rotation here specified) the required UI rotation.
 
-> I will refine this function as following:
-> mtk_fd_vb2_queue_setup(...)
-> {
->         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
->
->         if (*num_planes == 0) {
->                 if (vq->type == V4L2_BUF_TYPE_META_CAPTURE) {
->                         sizes[0] = ctx->dst_fmt.buffersize;
->                         *num_planes = 1;
->                         return 0;
->                 } else if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
->                         *num_planes = ctx->src_fmt.num_planes;
->                         sizes[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
->                         if (*num_planes == 2)
->                                 sizes[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
->                         return 0;
->                 }
->                 return -EINVAL;
->         }
->
->         /* If num_plane not zero, check the num_plane and sizes*/
->         if (vq->type == V4L2_BUF_TYPE_META_CAPTURE) {
->                 if ((*num_planes == 1) &&
->                     (sizes[0] <= ctx->dst_fmt.buffersize))
->                         return 0;
+On the 'intended usage orientation', as there is one for the UI, there
+is one for all other components in the phone, so if your system
+establishes that 'portrait' is the (rotation = 0) point for the UI,
+this applies to the rest of the system.
 
-nit: The typical convention is to check for problems and return the
-error code earlier, with the success handled at the end of the block.
-
->                 else
->                         return -EINVAL;
->         }
->         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
->                 if ((*num_planes == 1) &&
->                     (sizes[0] <= ctx->src_fmt.plane_fmt[0].sizeimage))
->                         return 0;
->                 else if ((*num_planes == 2) &&
->                          (sizes[0] <= ctx->src_fmt.plane_fmt[0].sizeimage) &&
->                          (sizes[1] <= ctx->src_fmt.plane_fmt[1].sizeimage))
->                         return 0;
-
-Wouldn't a loop eliminate the need to if/else if through the various
-supported cases and duplicate the size checks?
-
->                 else
->                         return -EINVAL;
->
->         }
->         return 0;
-> }
-
-How about the following?
-
-mtk_fd_vb2_queue_setup(...)
-{
-        struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-
-        if (vq->type == V4L2_BUF_TYPE_META_CAPTURE) {
-                if (*num_planes == 0) {
-                        *num_planes = 1;
-                        sizes[0] = ctx->dst_fmt.buffersize;
-                        return 0;
-                }
-
-                if (*num_planes != 1 || sizes[0] < ctx->dst_fmt.buffersize)
-                                return -EINVAL;
-
-                return 0;
-        }
-
-        /* V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE */
-        if (*num_planes == 0) {
-                        *num_planes = ctx->src_fmt.num_planes;
-                        for (i = 0; i < ctx->src_fmt.num_planes; ++i)
-                                sizes[i] = ctx->src_fmt.plane_fmt[i].sizeimage;
-                        return 0;
-        }
-
-        if (*num_planes < ctx->src_fmt.num_planes)
-                return -EINVAL;
-
-        for (i = 0; i < ctx->src_fmt.num_planes; ++i)
-                if (sizes[i] < ctx->src_fmt.plane_fmt[i].sizeimage)
-                        return -EINVAL;
-
-        return 0;
-}
-
-Note that it fully separates the code dealing with each queue and thus
-improves the readability.
-
-In this case, it could actually be beneficial to split the vb2_ops
-implementation into one that deals only with video_output_mplane and
-one only with meta_capture. This would allow eliminating the special
-casing based on vq->type and thus further simplify the code. Not sure
-if it applies to the other vb2 callbacks, though.
-
-[snip]
-> > > +static void mtk_fd_fill_pixfmt_mp(struct v4l2_pix_format_mplane *dfmt,
-> > > +                             const struct v4l2_pix_format_mplane *sfmt)
-> > > +{
-> > > +   dfmt->field = V4L2_FIELD_NONE;
-> > > +   dfmt->colorspace = V4L2_COLORSPACE_BT2020;
-> > > +   dfmt->num_planes = sfmt->num_planes;
-> > > +   dfmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-> > > +   dfmt->quantization = V4L2_QUANTIZATION_DEFAULT;
-> > > +   dfmt->xfer_func =
-> > > +           V4L2_MAP_XFER_FUNC_DEFAULT(dfmt->colorspace);
-> > > +
-> > > +   /* Keep user setting as possible */
-> > > +   dfmt->width = clamp(dfmt->width,
-> > > +                       MTK_FD_OUTPUT_MIN_WIDTH,
-> > > +                       MTK_FD_OUTPUT_MAX_WIDTH);
-> > > +   dfmt->height = clamp(dfmt->height,
-> > > +                        MTK_FD_OUTPUT_MIN_HEIGHT,
-> > > +                        MTK_FD_OUTPUT_MAX_HEIGHT);
-> > > +
-> > > +   if (sfmt->num_planes == 2) {
-> > > +           /* NV16M and NV61M has 1 byte per pixel */
-> > > +           dfmt->plane_fmt[0].bytesperline = dfmt->width;
-> > > +           dfmt->plane_fmt[1].bytesperline = dfmt->width;
-> > > +   } else {
-> > > +           /* 2 bytes per pixel */
-> > > +           dfmt->plane_fmt[0].bytesperline = dfmt->width * 2;
-> > > +   }
-> > > +
-> > > +   dfmt->plane_fmt[0].sizeimage =
-> > > +           dfmt->height * dfmt->plane_fmt[0].bytesperline;
-> >
-> > Could some of the code above be replaced with v4l2_fill_pixfmt_mp()?
-> >
-> I would like to refine as following
->
-> mtk_fd_fill_pixfmt_mp(...){
->         v4l2_fill_pixfmt_mp(dfmt, sfmt->pixelformat, dfmt->width,
-> dfmt->height);
->
->         dfmt->field = V4L2_FIELD_NONE;
->         dfmt->colorspace = V4L2_COLORSPACE_BT2020;
->         dfmt->num_planes = sfmt->num_planes;
-
-num_planes should be already filled in by the helper. That actually
-raises a question on whether there is any need to have sfmt passed to
-this function at all. Perhaps all we need is the value of pixelformat?
-
->         dfmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
->         dfmt->quantization = V4L2_QUANTIZATION_DEFAULT;
->         dfmt->xfer_func =
->                 V4L2_MAP_XFER_FUNC_DEFAULT(dfmt->colorspace);
-> }
+> And yes, there's linux with v4l2 working on Nokia N900.
 >
 
-Isn't still a need to clamp() width and height to min/max, though?
+How is this and orientation handled there ?
 
-[snip]
-> > > +   fd_param.user_param.src_img_fmt =
-> > > +           get_fd_img_fmt(ctx->src_fmt.pixelformat);
-> > > +   if (ctx->src_fmt.num_planes == 2)
-> > > +           fd_param.src_img[1].dma_addr =
-> > > +                   vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 1);
-> >
-> > nit: Could this be moved above, to be just below src_img[0] initialization,
-> > for readability reasons?
-> >
-> Ok, this function will be refined as
->
-> static void mtk_fd_device_run(void *priv)
-> {
->         struct mtk_fd_ctx *ctx = priv;
->         struct mtk_fd_dev *fd = ctx->fd_dev;
->         struct vb2_v4l2_buffer *src_buf, *dst_buf;
->         struct fd_enq_param fd_param;
->
->         src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
->         dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
->
->         fd_param.src_img[0].dma_addr =
->                 vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
->         if (ctx->src_fmt.num_planes == 2)
->                 fd_param.src_img[1].dma_addr =
->                         vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 1);
 
-How about making this a loop in terms of ctx->src_fmt.num_planes?
+> Best regards,
+> 								Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
->         fd_param.user_result.dma_addr =
->                 vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
->         fd_param.user_param.src_img_fmt =
->                 get_fd_img_fmt(fd->dev, ctx->src_fmt.pixelformat);
->
->         mtk_fd_fill_user_param(&fd_param.user_param, &ctx->hdl);
->
->         /* Complete request controls if any */
->         v4l2_ctrl_request_complete(src_buf->vb2_buf.req_obj.req, &ctx->hdl);
->
->         fd->output = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
->         mtk_fd_hw_job_exec(fd, &fd_param);
-> }
 
-Best regards,
-Tomasz
+
+--cozzvhkmmtid52ks
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl7LvkAACgkQcjQGjxah
+Vjxq8hAAljqol8NiaXSAxpR71YqCmW2eWVsGdPZPKCf2WKu/V/d9VlWiTwwS3Vm6
+L3K0ezJnJvxFGJTj7hroP5baKUfxA4SbEWTyNyOmg+3YMVuKPO/SHS4Ht3cILU7R
++3idH4ROYuTzidjQkSHcvzM870PKBwjgzV39o8Z2/zyz1JvJ5AiByRhcMlI+fg/m
+TupKZ/BO/4gl36DUNawXYkhTVOU4EltgDGP2vUqcjlpAmqw3kDng5Mw2sEijhxwI
+hD0r2OCM5UvJok+frt3FXlDo7QG0TNrue6n+tdoCASXdLmXbHsKtHd7KS7ht071l
+qcFhLxlS/koWlnpJp0ydPuWhdQP6aPiAl/fpMlar/rSrnV3KQja7m92cG/ViqB7v
+iWgzt9RZSwDnXQPB3LF87HoFhI6ka+l921HeESNJ6+eWge5zvf29co1A4uLny2Oj
+ATVpVpKtCLuzHlqWqg8fkFbJcYR9wYun76lzQ49R/pIjhvXu/8HoLhAB38ABrEtT
+5+b7mtTGUKANQ7lvMFcXRg0W3VYEBrhduHZl9ADS9bmpJZx62tOlM5h/FDJEd35t
+mqfh/HQY5ATS3TXJ1H5nIK26iDayJfwrXb289bZOYK6VktxiCNShdK6Y+nXzK2M4
+VW63OZ0747WJ8Lpfvl8jBQBiRqk3XGtpbqDdZxVerD3lWh+pY3c=
+=paVC
+-----END PGP SIGNATURE-----
+
+--cozzvhkmmtid52ks--
