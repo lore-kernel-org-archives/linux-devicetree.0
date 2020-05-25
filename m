@@ -2,120 +2,266 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F999C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 07:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A279EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 07:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEFE2071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 07:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F39920812
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 07:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZpRvI9q0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2fVxMqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389045AbgEYHOm (ORCPT
+        id S2389061AbgEYH1N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 03:14:42 -0400
-Received: from mail-eopbgr70053.outbound.protection.outlook.com ([40.107.7.53]:1606
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388982AbgEYHOl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 03:14:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=joBhlShxOTAxFbjfDkbgtmwUbnZ5kMR9Wq9jrXnBrscqb1nxJfjlugUiep37hrQuxa2vxuEOb8GwgT0fhNe4sqytqeydqUaD2xo7FJlp2eNvZi2uO5kAiYgrIsQaWxk3VDvR+IGI0zjJOT4JvK7Z6YrSdCX87HHx6B0hI42ZbQy76aXZYrEjrxvty6TCvUhLFkv/ipZUapDU4V6BbW9Ofx/1GhYPD9jWXD+V9p8nKAW0NBbcjY6CmOzm7CqrH+YgSG1HOww9SokuOj0K10kmOX799JUnr9A1oRwe0C94TcQuPhG46wG+WG9xNrmvFGFLLRASn+XcezlSor0baJkEyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MtRG06/tr9Gm/ftlPuSkcBfygPlrCYB5w/SQXiqqrF4=;
- b=lwmGEyLMu7X3u4/yNfkKrq62zdkTje5BCHbdE5antvyXCxTjDgrcCkxvd4rqG4doDQUeLUFjtYSLhCrmcB34gobcO8UXC679h5tCt9gNPiWZ4Ye3t98dHpxEvlgkF/9amqmrgX/Gio+hh7nnlECFS3WtgldOs5W1GfZYXDx0uXM6+IokGnDpgsaY20btaMfoX/b02mXL9BO6kZIQ7BfHEHpwUhDGJ5HqpmTRY2jekvpWarMIGVx8R4BhV0bDwwxO4VHsrk+drLcN6WHRdHewFbzq3rb3iJgSvqwGXUvkeHfnYRCPya9TwzmOc0RKECxBXvS1IIxQHerxyxaeb3kWXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MtRG06/tr9Gm/ftlPuSkcBfygPlrCYB5w/SQXiqqrF4=;
- b=ZpRvI9q0DlRoiNTBvL+wDjiqDC+gfvY0E5sipulWiXh+trQz3/TqZvkV1xKh9tUFtJ4WH4qDd3SwnPM1aS1YmGfe++3n7bez/lpwy/5B4FL6Whlq0pvaQLaljunwY7miAiVw7ZZr+d8Axzjrbqv9cfeKHd4VfmszQIcA81F06qM=
-Authentication-Results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM6PR0402MB3735.eurprd04.prod.outlook.com
- (2603:10a6:209:1a::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Mon, 25 May
- 2020 07:14:28 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3021.029; Mon, 25 May 2020
- 07:14:28 +0000
-From:   fugang.duan@nxp.com
-To:     andrew@lunn.ch, martin.fuzzey@flowbird.group, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
-        devicetree@vger.kernel.org, kuba@kernel.org, fugang.duan@nxp.com
-Subject: [PATCH net v2 4/4] ARM: dts: imx6qdl-sabresd: enable fec wake-on-lan
-Date:   Mon, 25 May 2020 15:09:29 +0800
-Message-Id: <1590390569-4394-5-git-send-email-fugang.duan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590390569-4394-1-git-send-email-fugang.duan@nxp.com>
-References: <1590390569-4394-1-git-send-email-fugang.duan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0213.apcprd06.prod.outlook.com
- (2603:1096:4:68::21) To AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18)
+        Mon, 25 May 2020 03:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388948AbgEYH1N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 03:27:13 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC2BC061A0E;
+        Mon, 25 May 2020 00:27:13 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i68so13231852qtb.5;
+        Mon, 25 May 2020 00:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ajNAsOcF30eG4hqzyeyUa+xAGM7I/tH3z9ZvaPCi0Hs=;
+        b=M2fVxMqzJWTj9nG09QoCCO0x3CGpPIPDCEJXBd7mYtK10DN8F363Hl2sGFl16s/7VF
+         MUu4GknWz738PbJAO5JsvTicpFlCxb235wNKmSs/jbX7tfp3+FAMULjDyOt6HUWGEq2X
+         1uSgoC+hCH4YyfaJFgXAsoPyXIO0oENeuRamZf8NSVATr1otMLFXrIqYgFcfDdiD4pAF
+         DUUZrXQ35OmkhuL8L89qoUN9noLF6w+1M3ljyfX27Jx2SyyyN59RbxUZrimarjnEyRBe
+         82iXYebWod0GLcC/owOXWYniylb11Md2m4h9qdZ7V+gl0M5Xe+oHjKiXIcgYFpezp44J
+         S0Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ajNAsOcF30eG4hqzyeyUa+xAGM7I/tH3z9ZvaPCi0Hs=;
+        b=NFJrQHuBZMqxIsVRAywzwuPp+yEhW1I7Z8uN5UNn3cRmrrrZtk8ghd5THhqqIfjzRA
+         aw2+OOmba/yG1PUvPMI4ix4lxNT9xYWA6Z05elX6rvl7VscMOHIuru8c/8B9CPNE+mZ2
+         LaYclBxWPH/+MA8QEvsNGBTWQ0mn6Zm2SCG1uiQ8d3NlHOyMo4ThxZTwj8AF+xR2sTnu
+         T8kanSrAiNU6OyxK2YMs4TPWOH5kzOl0xAiXrNNEso9DlWHjQDM4gC8/MYbVEz2V0/MF
+         wW2OUNkuPI3w9pqjUkyTscJcPVjW8c5F4u5orTqk2hJV5kVYCsAxP7POaICz0oBCInrk
+         7tVw==
+X-Gm-Message-State: AOAM533yH5EwfzSd/E/FfNKeRmWAhixYYLgFTlDcaicqofMCSjbYJhdU
+        RDRRtoIR1DxW4zP0G/s2YT0=
+X-Google-Smtp-Source: ABdhPJw2kYo4SMNynj5nfsDzzktvz1erwmL4xIZjc6aVXyE3UYv/RojUlPMncQ3dnRqR54OVXr/vmQ==
+X-Received: by 2002:ac8:670b:: with SMTP id e11mr27643877qtp.365.1590391632372;
+        Mon, 25 May 2020 00:27:12 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id n31sm15641781qtc.36.2020.05.25.00.27.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 00:27:11 -0700 (PDT)
+Date:   Mon, 25 May 2020 09:27:07 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@nxp.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: iio: imu: bmi160: convert txt format
+ to yaml
+Message-ID: <20200525072707.GB18690@ict14-OptiPlex-980>
+References: <20200520194656.16218-1-jonathan.albrieux@gmail.com>
+ <20200520194656.16218-2-jonathan.albrieux@gmail.com>
+ <20200524124114.7f4e785d@archlinux>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from b38611.ap.freescale.net (119.31.174.66) by SG2PR06CA0213.apcprd06.prod.outlook.com (2603:1096:4:68::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.23 via Frontend Transport; Mon, 25 May 2020 07:14:25 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ec199774-6c95-4420-9283-08d8007b4317
-X-MS-TrafficTypeDiagnostic: AM6PR0402MB3735:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR0402MB3735CC68A1A9DACA91AC06E5FFB30@AM6PR0402MB3735.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
-X-Forefront-PRVS: 0414DF926F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PBDQyctRxZun2HhOnurB9+QT2tHvai9L4zVFzPCnpqNoiGBRvwCeTLRn8DQymzrvF19iQ591FP5Vp2l20vSvicugV77B/S/8gwxqqdcmIMevcs2cKNu/UsMkzaz596OYSdVphqAwoHFMZPDjrt9nGESTGoiPXK0GoM4XMuQXDvHX07PG00BfJxnb2Sjsg+CHqzaE3wdgZ0SkFXGTFFSmhzwI2ceLrdneZ52NCyJt7Qtu2ZaqAAGlGuBHiZ/Yw0hAZo9KAyv9Rc18P+Ad3SqYyaNM15bgLbgGt5b38Vt7f4zE3ONAqGlEhwM9JHnvae/9LvZ57dwmQ4qIbEF96LhZd+1kWmXhoxB9GW3Y9O8DFbXK4F8c5MQVZmN353KOlCfd
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(316002)(956004)(2616005)(66476007)(52116002)(6506007)(66556008)(66946007)(86362001)(36756003)(26005)(5660300002)(6486002)(16526019)(186003)(6512007)(2906002)(8676002)(4744005)(9686003)(478600001)(8936002)(4326008)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: JhRNutu10hPkNuGe+heM3dPkucUVHfpAT0pKFAsFFUahSZXAQ4sMXusSwlBLfwvz6bXtRH2d1XMnQykYvuN9XY0Rm+cwtByGvx7XNhFx2ia2llEfuroqdVBSyA8HZ5nILfcB/X2N26q9PxtwYZHoWd1+NPY5WZSMOLg3GL/Y9mHP0zGO/+yf5y1rVuRuhiQ7LFDjPF9QFC/Zc5PLNNX3czVAkMF9SzBApU2UxAHcHi14Vne7i0o/dnoDjF7II6BhO72pnL7AWYtm/W8wmHHt5HqkYedNesc8wADwzSvMUwVxS3rxjFWH8v6mCpS6cy2CR3VNRNbSkxod0yM/qMzVPLDIHlzngRHjlS9ba1drrpMOYt9cFTGsOysWEPVlEnE/pWj6yIXWQyW+DIxDIRcoSQF36y7L8WTGmCxEy2iAc5WDr8uLVWsU033fhfK4+j6jCO7sYCNCc8yyegtKbeYtcTzde7c5DRHOBzdPGlA/PSdb/L4baI0zKvEmCscLnI+R
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec199774-6c95-4420-9283-08d8007b4317
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2020 07:14:28.2729
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0PD/4oIO9qpyqh54r9ogwcCQdLVP8MrzhLy9kAc9RH1UD9I+pMxBZguRG1qZytarYFWG3oTStNi65WIgcaoIFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3735
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524124114.7f4e785d@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+On Sun, May 24, 2020 at 12:41:14PM +0100, Jonathan Cameron wrote:
+> On Wed, 20 May 2020 21:46:40 +0200
+> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+> 
+> > Converts documentation from txt format to yaml.
+> > 
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> 
+> A reminder on the maintainer bit as that thread crossed with
+> this one.  Also, drop the spi-max-frequency as we don't need
+> to mention it explicitly for this device.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
 
-Enable ethernet wake-on-lan feature for imx6q/dl/qp sabresd
-boards since the PHY clock is supplied by exteranl osc.
+Thank you, I'll remove it today.
 
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
----
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+> 
+> > ---
+> >  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 ---------
+> >  .../bindings/iio/imu/bosch,bmi160.yaml        | 76 +++++++++++++++++++
+> >  2 files changed, 76 insertions(+), 37 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> > deleted file mode 100644
+> > index 900c169de00f..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> > +++ /dev/null
+> > @@ -1,37 +0,0 @@
+> > -Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
+> > -and externally connectable Magnetometer
+> > -
+> > -https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> > -
+> > -Required properties:
+> > - - compatible : should be "bosch,bmi160"
+> > - - reg : the I2C address or SPI chip select number of the sensor
+> > - - spi-max-frequency : set maximum clock frequency (only for SPI)
+> > -
+> > -Optional properties:
+> > - - interrupts : interrupt mapping for IRQ
+> > - - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
+> > -   input, set to "INT2" if INT2 pin should be used instead
+> > - - drive-open-drain : set if the specified interrupt pin should be configured as
+> > -   open drain. If not set, defaults to push-pull.
+> > -
+> > -Examples:
+> > -
+> > -bmi160@68 {
+> > -	compatible = "bosch,bmi160";
+> > -	reg = <0x68>;
+> > -
+> > -	interrupt-parent = <&gpio4>;
+> > -	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+> > -	interrupt-names = "INT1";
+> > -};
+> > -
+> > -bmi160@0 {
+> > -	compatible = "bosch,bmi160";
+> > -	reg = <0>;
+> > -	spi-max-frequency = <10000000>;
+> > -
+> > -	interrupt-parent = <&gpio2>;
+> > -	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
+> > -	interrupt-names = "INT2";
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> > new file mode 100644
+> > index 000000000000..46cb4fde1165
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> > @@ -0,0 +1,76 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/imu/bosch,bmi160.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Bosch BMI160
+> > +
+> > +maintainers:
+> > +  - Daniel Baluta <daniel.baluta@nxp.com> (?)
+> 
+> Daniel's reply crossed with this.  Given he's moved on to other things
+> he's not happy to be listed as maintainer here.
+> 
+> Given other threads, either put yourself here if you are happy to maintain
+> the binding, or fall back to me but use my kernel.org address.
+> 
+> Jonathan Cameron <jic23@kernel.org>
+> 
+> I don't mind either way.
+> 
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index fe59dde..28b35cc 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -204,6 +204,7 @@
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii-id";
- 	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
-+	fsl,magic-packet;
- 	status = "okay";
- };
- 
--- 
-2.7.4
+Thank you, I'll add you then for this binding.
 
+Thank for your help,
+
+Best regards,
+Jonathan Albrieux
+
+> 
+> > +
+> > +description: |
+> > +  Inertial Measurement Unit with Accelerometer, Gyroscope and externally
+> > +  connectable Magnetometer
+> > +  https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: bosch,bmi160
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  spi-max-frequency:
+> > +    maxItems: 1
+> 
+> spi-max-frequency doesn't need to be here at all.   We aren't trying to list
+> all of the properties that might be present - but rather those that
+> are either required or that are part of the description of the device.
+> This one is a generic spi binding that may or may not be present.
+> 
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  interrupt-names:
+> > +    enum:
+> > +      - INT1
+> > +      - INT2
+> > +    description: |
+> > +      set to "INT1" if INT1 pin should be used as interrupt input, set
+> > +      to "INT2" if INT2 pin should be used instead
+> > +
+> > +  drive-open-drain:
+> > +    description: |
+> > +      set if the specified interrupt pin should be configured as
+> > +      open drain. If not set, defaults to push-pull.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    // Example for I2C
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        bmi160@68 {
+> > +                compatible = "bosch,bmi160";
+> > +                reg = <0x68>;
+> > +                interrupt-parent = <&gpio4>;
+> > +                interrupts = <12 1>;
+> > +                interrupt-names = "INT1";
+> > +        };
+> > +    };
+> > +  - |
+> > +    // Example for SPI
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        bmi160@0 {
+> > +                compatible = "bosch,bmi160";
+> > +                reg = <0>;
+> > +                spi-max-frequency = <10000000>;
+> > +                interrupt-parent = <&gpio2>;
+> > +                interrupts = <12 1>;
+> > +                interrupt-names = "INT2";
+> > +        };
+> > +    };
+> 
