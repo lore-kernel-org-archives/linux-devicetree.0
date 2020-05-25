@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8C4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 01:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13073C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 01:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B282073B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 01:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E146C2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 01:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="a6KU2szu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="ims/7aia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388054AbgEYByI (ORCPT
+        id S2388479AbgEYBzJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 21:54:08 -0400
-Received: from gateway36.websitewelcome.com ([50.116.125.2]:44937 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388512AbgEYByI (ORCPT
+        Sun, 24 May 2020 21:55:09 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.31]:27037 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388445AbgEYBzJ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 24 May 2020 21:54:08 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 5132A400C6F2F
-        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 19:50:32 -0500 (CDT)
+        Sun, 24 May 2020 21:55:09 -0400
+X-Greylist: delayed 1466 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 May 2020 21:55:08 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 80DC3400C8640
+        for <devicetree@vger.kernel.org>; Sun, 24 May 2020 20:30:40 -0500 (CDT)
 Received: from br164.hostgator.com.br ([192.185.176.180])
         by cmsmtp with SMTP
-        id d1x1jZnvRAGTXd1x1jmmM1; Sun, 24 May 2020 20:30:47 -0500
+        id d1wujqK1s1s2xd1wujKrS0; Sun, 24 May 2020 20:30:40 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=E45E1Vj+A/NTDChq03v5v3U7lpRMI2oRWZNhEsEFnGQ=; b=a6KU2szuPIjfoOQt8Wu2X8q5VP
-        LuAZEH+8p+NDoRRABl0NlePlU3NLsWKsM1Uh8wj2alIjrzDoRNibqMB3T4ko21Rvd7j+FxFLdCmb/
-        DTtSMucvKYUvieP94F5iBe8bfOUHTcFgXksWgdAcBWcupioVeezVIzIm9sAAeWHCESv6gyqmjew1G
-        jrVsG1XXEFecb3EAp43A20UWoul2WcUGT4xP3w7QgJ00HJGLnN7H9FCTbBi7E6qIpjAjFZjHNoG/u
-        CxTKG5XQ4/0LBoPPssSBu3ZVvcCftDmlmZSYNUOdzYfEa+4MVLK34IvsNyHYo0YC8p1Uw1CjpDemk
-        LGDYjOQA==;
+        bh=GXXdtueQYy1caDAxoJ6IfrNPBdlHFqXjUasF2a2SRgQ=; b=ims/7aiaxYYird2sC8T0bd0Q1g
+        FTuv7sO8YvIs+viADzL/Ydt3Yk7910hakPI5XQms8u2qYpYSFpLq9ADZkr2M0FxnysWMEmq0rL11I
+        2eEQWwZb7JO4LYrccF149GPzZKqSdYfUmgWh0svuiRc29nw2bdDbXYXb2c0vxa4y9mV808EeW6SuZ
+        ASEjkIM3O0EkSeb5wZqn2yarSG8mdVDTqiMXC+2RYYcGVm5f1lP801AH+/easqMlimerMCcg4UeDN
+        IpAZdC56tgIrruNak9Wmy0yoBOxcLEj0oq2T1VEIuaAnU8zIYwsIipJHSRWg3sQOTTcAJ5RJrMlw+
+        SH90N5kA==;
 Received: from [191.31.196.240] (port=34284 helo=castello.castello)
         by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <matheus@castello.eng.br>)
-        id 1jd1x0-004Dik-F5; Sun, 24 May 2020 22:30:46 -0300
+        id 1jd1wt-004Dik-TR; Sun, 24 May 2020 22:30:40 -0300
 From:   Matheus Castello <matheus@castello.eng.br>
 To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
         mark.rutland@arm.com, robh+dt@kernel.org
@@ -55,13 +56,14 @@ Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
         linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
         Matheus Castello <matheus@castello.eng.br>,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 2/3] dt-bindings: arm: actions: Document Caninos Loucos Labrador
-Date:   Sun, 24 May 2020 22:30:07 -0300
-Message-Id: <20200525013008.108750-3-matheus@castello.eng.br>
+Subject: [PATCH v5 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+Date:   Sun, 24 May 2020 22:30:06 -0300
+Message-Id: <20200525013008.108750-2-matheus@castello.eng.br>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200525013008.108750-1-matheus@castello.eng.br>
 References: <20200525013008.108750-1-matheus@castello.eng.br>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
@@ -71,13 +73,13 @@ X-AntiAbuse: Sender Address Domain - castello.eng.br
 X-BWhitelist: no
 X-Source-IP: 191.31.196.240
 X-Source-L: No
-X-Exim-ID: 1jd1x0-004Dik-F5
+X-Exim-ID: 1jd1wt-004Dik-TR
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
 X-Source-Sender: (castello.castello) [191.31.196.240]:34284
 X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 27
+X-Email-Count: 15
 X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
 X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
@@ -85,32 +87,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the documentation to add the Caninos Loucos Labrador. Labrador
-project consists of a computer on module based on the Actions Semi S500
-processor and the Labrador base board.
+The Caninos Loucos Program develops Single Board Computers with an open
+structure. The Program wants to form a community of developers to use
+IoT technologies and disseminate the learning of embedded systems in
+Brazil.
+
+It is an initiative of the Technological Integrated Systems Laboratory
+(LSI-TEC) with the support of Polytechnic School of the University of
+São Paulo (Poli-USP) and Jon "Maddog" Hall.
 
 Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andreas Färber <afaerber@suse.de>
 ---
- Documentation/devicetree/bindings/arm/actions.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-index ace3fdaa8396..2187e1c5bc73 100644
---- a/Documentation/devicetree/bindings/arm/actions.yaml
-+++ b/Documentation/devicetree/bindings/arm/actions.yaml
-@@ -19,6 +19,11 @@ properties:
-               - allo,sparky # Allo.com Sparky
-               - cubietech,cubieboard6 # Cubietech CubieBoard6
-           - const: actions,s500
-+      - items:
-+          - enum:
-+              - caninos,labrador-v2 # Labrador Core v2
-+              - caninos,labrador-base-m # Labrador Base Board M v1
-+          - const: actions,s500
-       - items:
-           - enum:
-               - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..a20a05e3deaa 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -167,6 +167,8 @@ patternProperties:
+     description: CALAO Systems SAS
+   "^calxeda,.*":
+     description: Calxeda
++  "^caninos,.*":
++    description: Caninos Loucos Program
+   "^capella,.*":
+     description: Capella Microsystems, Inc
+   "^cascoda,.*":
 --
 2.26.2
 
