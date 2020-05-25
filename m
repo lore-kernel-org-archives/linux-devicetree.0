@@ -2,187 +2,194 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1447C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6D1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFB86207FB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1FC20787
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="v6YOqjsk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ga7PR3x1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390252AbgEYL05 (ORCPT
+        id S2388691AbgEYLeU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 07:26:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45924 "EHLO
+        Mon, 25 May 2020 07:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390142AbgEYL04 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 07:26:56 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD34C061A0E
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 04:26:56 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id w3so11643155qkb.6
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 04:26:56 -0700 (PDT)
+        with ESMTP id S2388733AbgEYLeU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 07:34:20 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B61AC05BD43
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 04:34:19 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id h21so20158127ejq.5
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 04:34:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=T1fKqU8yBUFbJU2PRqwWpgtp0OICg+fgV2aVzC2pyQc=;
-        b=v6YOqjskJeLREg51fQN8z62C4OyqkRKFXSpGnf29v23Buz6SoiP4y/AeQpXdUnUfID
-         AxtyaocQK41lFi0hRSydg+Okk6LTUsfSz9br5yTmS84soPguR9U+qY+EiisHstp5Mvhd
-         C4XJCCM95KStdyjD+q5CPgDeFz0X8EocdmVBL+ZQbz2dMUlHjDbqPjI3z5thA7qgA0bR
-         098+qOQ9iVKYa2uls5C4GZ3jNbSoVYfw1ZqJQ4J9DP96CrBytK5XAA36BI8ma6treTYM
-         d2TIu6fTgtURVscYqL5WbRPxc7NiUhZpTXavHCajAOQDRv9PYsnC5C1QZ3KCKmNfeHhY
-         LLaw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jcstEHUTZ/N80WBqA3Bn95izpDLoPr9B+Ndu3/xL8P0=;
+        b=Ga7PR3x1cyP9C7dZNKUuPfUY1KrJGuvA8WHisZeod8m2dL5dANd2QFNnF2qILBAMUp
+         FB+Zy0GgV1A+toxiq9lvJDUYPEQESHNeW8AxsWv+fQmZk+u4M1F5udBRgqHDYEeqTElX
+         pPYFoUGIRFqdwOIQimoJCay8uzdD6zsR1A1uI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=T1fKqU8yBUFbJU2PRqwWpgtp0OICg+fgV2aVzC2pyQc=;
-        b=LXfsWsrSrhLpVUPrTfO0Ig6Vy/mKWSQl409UGTOWc18j0BvLtACj4P8kS1deuLFEx2
-         gJH94x5Wmf2FzH+kPXZdcfmzCTbZfvk/B+ZMlBnEDlMeVdvgyZKe8jfSF013eVGugTpZ
-         FdwoX73EHxwuukkZaTY9k0LSv0KWTw7q95BwlHZAmwLT7D2OadMWwIvKLwdYBqWO7oxN
-         6tQdPXokzurvVCVUhzOb5+t/YBBIYofj4K+bIvyPbCF7Pps3edMCl4CZLVQizYSmfsOI
-         wb358KXxhF/qqZXmAOb8Q1t0kIon6FBqkpXg5EAAyEI/1OtAaNGr9UBgYQkid3B7JKC+
-         4JSw==
-X-Gm-Message-State: AOAM531AUzYlNox05kZppjMAfkHdWixyZphz5QFIhIlTCwjluhlFCVnE
-        IL0inp5LtvzjIszHpCWSksFkRA==
-X-Google-Smtp-Source: ABdhPJxpBlQiX8GNl/gIPb3yZevRM4hOesOdox3MTNk3wD1YG3ZiAmCYBxjvFhr9+2MV9uxAvSusDA==
-X-Received: by 2002:a37:de16:: with SMTP id h22mr21922901qkj.195.1590406015505;
-        Mon, 25 May 2020 04:26:55 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id w9sm14204059qtn.29.2020.05.25.04.26.54
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jcstEHUTZ/N80WBqA3Bn95izpDLoPr9B+Ndu3/xL8P0=;
+        b=FXtkw58/t7L4EZMv2yYEGSh0CskAEPa/PGlMMTnGTXaT6XO/BTPd2mL6hetN+X4LYv
+         epYhdGNHxl+GW/Qg3SSETTyjqMnf8e3YQw2QMwVB6QPy+1ytaZUYestga26wibfsHt9S
+         CngI1IHMi7Z//Sv+OXOs3LkSS0rpVoFWCPq0b+Fsl/4xoZk/TkOcsCw1r6rdIx8klIiL
+         gASX9u2GrjmCUzQfy4tzMV13wV2MBBTvKiv9CdeJ8hDssipQVtq7WAgrwz4bXAxnsTbr
+         DXZA0TlJzLE0goMJNKpAlCILwfWy5cOhs6T8Vcxi+VWcQlyBMj4FecMNt9F0VS3Ou3sF
+         yPkg==
+X-Gm-Message-State: AOAM532tQvFz91zPSq4AAtyRDFKOoOLyg0ua+Lhh0HBSVQNN/ven6lMH
+        MsZMz/x2Q49rcI+ioCwCVqFMElt+MXU=
+X-Google-Smtp-Source: ABdhPJwyFIVqTw5+BYeF/rANVcRzesa0jC9hwbvRxyGHHRLQj4+2MH0LxHdlLRcZE4fqSYoCGEWOBw==
+X-Received: by 2002:a17:907:72d0:: with SMTP id du16mr18109582ejc.40.1590406457967;
+        Mon, 25 May 2020 04:34:17 -0700 (PDT)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
+        by smtp.gmail.com with ESMTPSA id dk11sm15098412edb.67.2020.05.25.04.34.17
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 04:26:54 -0700 (PDT)
-Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-3-jonathan@marek.ca>
- <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
- <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
- <2a35f3b85d8311fb4298aaea82236967@codeaurora.org>
- <c9c21e4c-fc89-5a74-fa78-203e5fb64e27@marek.ca>
- <72d771390af9a68759d3f81cb79e46a6@codeaurora.org>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <33b34a58-46d2-80ec-1d79-8e02aa5ae026@marek.ca>
-Date:   Mon, 25 May 2020 07:27:22 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 25 May 2020 04:34:17 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id y17so8386804wrn.11
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 04:34:17 -0700 (PDT)
+X-Received: by 2002:adf:92a5:: with SMTP id 34mr15142405wrn.415.1590406456567;
+ Mon, 25 May 2020 04:34:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <72d771390af9a68759d3f81cb79e46a6@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200519072729.7268-1-bibby.hsieh@mediatek.com>
+ <20200519072729.7268-3-bibby.hsieh@mediatek.com> <952995ec-0865-d8ff-e285-522705fa9709@ti.com>
+In-Reply-To: <952995ec-0865-d8ff-e285-522705fa9709@ti.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 25 May 2020 13:34:04 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5Bx=zgsUAg7fA2jfsV_yFyPmnotTWEBEr2V3Nn5HO8qQQ@mail.gmail.com>
+Message-ID: <CAAFQd5Bx=zgsUAg7fA2jfsV_yFyPmnotTWEBEr2V3Nn5HO8qQQ@mail.gmail.com>
+Subject: Re: [PATCH v15 2/2] i2c: core: support bus regulator controlling in adapter
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/25/20 7:17 AM, Sai Prakash Ranjan wrote:
-> Hi,
-> 
-> On 2020-05-25 16:38, Jonathan Marek wrote:
->> On 5/25/20 6:54 AM, Sai Prakash Ranjan wrote:
->>> On 2020-05-25 15:39, Jonathan Marek wrote:
->>>> Hi,
->>>>
->>>> On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
->>>>> Hi Jonathan,
->>>>>
->>>>> On 2020-05-24 08:08, Jonathan Marek wrote:
->>>>>> Add the apps_smmu node for sm8250. Note that adding the iommus 
->>>>>> field for
->>>>>> UFS is required because initializing the iommu removes the bypass 
->>>>>> mapping
->>>>>> that created by the bootloader.
->>>>>>
->>>>>
->>>>> This statement doesn't seem right, you can just say since the 
->>>>> bypass is disabled
->>>>> by default now, we need to add this property to enable translation 
->>>>> and avoid global faults.
->>>>>
->>>>
->>>> If I use this patch [1] then the UFS iommu property isn't needed. In
->>>> downstream, the identity (bypass?) stream mapping is inherited from
->>>> the bootloader, and UFS is used without any iommu property. Setting
->>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own
->>>> (without the UFS iommu property), so there's more to it than just
->>>> "bypass is disabled by default now".
->>>>
->>>> https://patchwork.kernel.org/patch/11310757/
->>>>
->>>
->>> "iommus" property is not about inheriting stream mapping from 
->>> bootloader,
->>> it is used to enable SMMU address translation for the corresponding
->>> master when specified. So when you have disabled bypass, i.e.,
->>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y or via cmdline 
->>> "arm-smmu.disable_bypass=1"
->>> and iommus property with SID and mask is not specified, then it will 
->>> result
->>> in SMMU global faults.
->>>
->>> Downstream has bypass 
->>> enabled(ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n),so you
->>> won't see any global faults if you do not have iommus property.
->>>
->>> Patch in your link is for display because of the usecase for splash 
->>> screen
->>> on android and some other devices where the bootloader will configure 
->>> SMMU,
->>> it has not yet merged and not likely to get merged in the current state.
->>>
->>> So yes "there is *not* much more to it than bypass is disabled by 
->>> default now"
->>> and you have to specify "iommus" for the master devices or you should 
->>> enable bypass,
->>> i.e., ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or arm-smmu.disable_bypass=n
->>>
->>> Try without the patch in the link and without iommus for UFS and
->>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y and you will see.
->>>
->>> -Sai
->>
->> I know that the "iommus" property is not about inheriting stream
->> mapping. Probing the iommu removes the stream mapping created by the
->> bootloader, the iommus property is added so that new mappings are
->> created to replace what was removed.
->>
->> You seem to be under the impression that the SM8150/SM8250 bootloader
->> does not configure SMMU. It does, for both UFS and SDHC, just like it
->> does for display/splash screen on some devices.
->>
-> 
-> It could be that bootloader does configure SMMU for UFS and SDHC, but the
-> upstream SMMU driver doesnt allow to inherit stream mapping from the 
-> bootloader
-> yet, so adding iommus property based on the assumption that it is 
-> inherited seems
-> wrong.
-> 
+Hi Grygorii,
 
-I never said adding the iommus property is for inheriting stream 
-mapping. I mentioned inheriting to say UFS works without the iommus 
-property on downstream (it inherits a identity/bypass mapping).
+On Fri, May 22, 2020 at 7:59 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+>
+>
+>
+> On 19/05/2020 10:27, Bibby Hsieh wrote:
+> > Although in the most platforms, the bus power of i2c
+> > are alway on, some platforms disable the i2c bus power
+> > in order to meet low power request.
+> >
+> > We get and enable bulk regulator in i2c adapter device.
+> >
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > ---
+> >   drivers/i2c/i2c-core-base.c | 84 +++++++++++++++++++++++++++++++++++++
+> >   include/linux/i2c.h         |  2 +
+> >   2 files changed, 86 insertions(+)
+> >
+> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> > index 5cc0b0ec5570..e1cc8d46bc51 100644
+> > --- a/drivers/i2c/i2c-core-base.c
+> > +++ b/drivers/i2c/i2c-core-base.c
+> > @@ -313,12 +313,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+> >   static int i2c_device_probe(struct device *dev)
+> >   {
+> >       struct i2c_client       *client = i2c_verify_client(dev);
+> > +     struct i2c_adapter      *adap;
+> >       struct i2c_driver       *driver;
+> >       int status;
+> >
+> >       if (!client)
+> >               return 0;
+> >
+> > +     adap = client->adapter;
+> >       driver = to_i2c_driver(dev->driver);
+> >
+> >       client->irq = client->init_irq;
+> > @@ -378,6 +380,12 @@ static int i2c_device_probe(struct device *dev)
+> >
+> >       dev_dbg(dev, "probe\n");
+> >
+> > +     status = regulator_enable(adap->bus_regulator);
+> > +     if (status < 0) {
+> > +             dev_err(&adap->dev, "Failed to enable power regulator\n");
+> > +             goto err_clear_wakeup_irq;
+> > +     }
+> > +
+> >       status = of_clk_set_defaults(dev->of_node, false);
+> >       if (status < 0)
+> >               goto err_clear_wakeup_irq;
+> > @@ -414,12 +422,14 @@ static int i2c_device_probe(struct device *dev)
+> >   static int i2c_device_remove(struct device *dev)
+> >   {
+> >       struct i2c_client       *client = i2c_verify_client(dev);
+> > +     struct i2c_adapter      *adap;
+> >       struct i2c_driver       *driver;
+> >       int status = 0;
+> >
+> >       if (!client || !dev->driver)
+> >               return 0;
+> >
+> > +     adap = client->adapter;
+> >       driver = to_i2c_driver(dev->driver);
+> >       if (driver->remove) {
+> >               dev_dbg(dev, "remove\n");
+> > @@ -427,6 +437,8 @@ static int i2c_device_remove(struct device *dev)
+> >       }
+> >
+> >       dev_pm_domain_detach(&client->dev, true);
+> > +     if (!pm_runtime_status_suspended(&client->dev))
+> > +             regulator_disable(adap->bus_regulator);
+>
+> Not sure this check is correct.
+>
+> i2c_device_probe()
+>   - regulator_enable - 1
+>
+> pm_runtime_get()
+>   - regulator_enable - 2
+>
 
->> With either value of ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT, it will not
->> work without the iommus property.
-> 
-> I'm pretty sure that if you have ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n and
-> without iommus, it should work.
-> 
+I believe regulator_enable() wouldn't be called again, because the
+device was already active in probe. However, I've been having
+difficulties keeping track of runtime PM semantics under various
+circumstances (e.g. ACPI vs DT), so can't tell for sure anymore.
 
-It doesn't work, with either ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or 
-ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y.
-
-> -Sai
-> 
+> i2c_device_remove()
+>   - pm_runtime_status_suspended() flase
+>     - regulator_disable() - 1 --> still active?
+>
+> Sorry, I probably missing smth.
+>
+> >
+> >       dev_pm_clear_wake_irq(&client->dev);
+> >       device_init_wakeup(&client->dev, false);
+> > @@ -438,6 +450,72 @@ static int i2c_device_remove(struct device *dev)
+> >       return status;
+> >   }
+> >
+>
+> [...]
+>
+> --
+> Best regards,
+> grygorii
