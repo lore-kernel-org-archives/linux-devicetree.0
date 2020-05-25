@@ -2,95 +2,122 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A14C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 09:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4565C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 09:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D203A20787
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 09:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31AF2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 09:38:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UschULA+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dQ83ZYLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389300AbgEYJXa (ORCPT
+        id S2389251AbgEYJiB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 05:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389227AbgEYJXa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 05:23:30 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801D8C08C5C0
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 02:23:29 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id z206so6501350lfc.6
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 02:23:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qvFw6sgcsYKjmBSmepPkzby27EDEU18HnByQRkc2Nbc=;
-        b=UschULA+beUzLP+ObGINELeOVfCxrcZtlLvux9GyT6xMDrm1O3C81pZZJgPg2emSTB
-         zjvLbVB1iVWTRi9Njuy4zO0zjMC20JN4xDDiAwGR5o8d5+ZnY3qLxipWtKTGMPLCF2RU
-         g0YX1QOfRSLq+tDmO07RRzfBlScQ3x+FjS1rKPKHW/k3//WISxiDt4OJ07FU+62J7JIt
-         23qiBeVvA5uiv84cgIvwZM/uzQcosDR3l8q7/pHyqGg4AuFLgKUOeJHwtjVvRzObAsLG
-         TPXU7dzrtFJao5fxXK23z/lyrbgz3LClpciL2WGjF6OsICuRZ4x+qGDW8/JQTCA79YE7
-         hUjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qvFw6sgcsYKjmBSmepPkzby27EDEU18HnByQRkc2Nbc=;
-        b=UiNDV+Gb88mLTgaGaAXndawkLhYOt/jEUTjcca9+fRTlLN3wH8fHNWlXx3OTBd99TM
-         JUCR6et4y81n/oVUJNiQtc9oh2P2742DFeQ5ObLU5A080ZmDTQL4gi++pBJP2TamGmhh
-         LBZLOo6h/18C9yIGW2ok5UYG/6IxzrMNAAdfEDjierCh67oBvCrFHAhrN2XiOxg5KTU/
-         hMn8lFFNd6vhwFWx7hnaVx9z+xsEBUl/7mPM66+UJO6fo36dfN4FHHBISme/pZZ68NUN
-         9Zh8xncLvvwnTk4VhB9zNMxSyOgLGoBTg6njP0xy+lK9Dmc6AgsgrTWvKXEQ5qeyBnzI
-         lBsw==
-X-Gm-Message-State: AOAM53130oOkP6HfGCkbxtBGZBjaWAhTST21oduN4PToeSU+lp9JwQHM
-        lzTjFL2cCbUO5cLErxPtc5T5NhvNSZ4b9zeysHSoOQ==
-X-Google-Smtp-Source: ABdhPJzrSexekYMH/bV2liF0mWAt+tXhwKiki6esVDYqswNmkZ22r9Owk1xzLI+8jGIab6gqbPzZ8sDKq82iCW94i6I=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr13918757lfn.21.1590398607984;
- Mon, 25 May 2020 02:23:27 -0700 (PDT)
+        Mon, 25 May 2020 05:38:01 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58715 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389287AbgEYJiB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 05:38:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590399480; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=8yygGiBP0D9AqMlE/nAxVZXV3Mc/D/TZO0KkO47wiAo=;
+ b=dQ83ZYLWCrwymeeGzdZxC78uI4NDeft9HNf71owkhTrIQDmmoN6iwjenCjGWZ2BHz7HVzezs
+ rXgdPMBRyTAGi9UWN9LFziEdYaZkJE5/e52+/NQla4Ity/FQkeLkxsiUui74Q/gBWu+Yvrtj
+ csZdiIuHTh8P5mYHf7mTTYAxbNA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ecb91e48cd231c403df1322 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 09:37:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 33CD5C433CA; Mon, 25 May 2020 09:37:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCF53C433C9;
+        Mon, 25 May 2020 09:37:38 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200508165821.GA14555@x1> <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
- <20200518141843.GA916914@x1> <20200520220203.GA363398@x1>
-In-Reply-To: <20200520220203.GA363398@x1>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 11:23:17 +0200
-Message-ID: <CACRpkdYV4Pd2rL=Kha6HxL8J5+vFy_M0hV7+qMghS4AVxd9D2w@mail.gmail.com>
-Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 15:07:38 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree-owner@vger.kernel.org
+Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
+In-Reply-To: <20200524023815.21789-2-jonathan@marek.ca>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-2-jonathan@marek.ca>
+Message-ID: <d35d2d1b64622ae83ffd9a963aadcad4@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 12:02 AM Drew Fustini <drew@beagleboard.org> wrote:
+Hi Jonathan,
 
-> I've posted a v2 which I hope improves the intent of the line names. [0]
->
-> I'm happy to integrate any feedback and create a v3 - especially if it
-> is prefered for me to list the specific peripherial signals instead of
-> an abstract term like "[ethernet]" or "[emmc]".  This is for lines that
-> can not be used because they are not routed to the expansion headers.
->
-> [0] https://lore.kernel.org/linux-omap/20200520214757.GA362547@x1/T/#u
+On 2020-05-24 08:08, Jonathan Marek wrote:
+> Add the apps_smmu node for sm8150. Note that adding the iommus field 
+> for
+> UFS is required because initializing the iommu removes the bypass 
+> mapping
+> that created by the bootloader.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 91 ++++++++++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index a36512d1f6a1..acb839427b12 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -442,6 +442,8 @@ ufs_mem_hc: ufshc@1d84000 {
+>  			resets = <&gcc GCC_UFS_PHY_BCR>;
+>  			reset-names = "rst";
+> 
+> +			iommus = <&apps_smmu 0x300 0>;
+> +
+>  			clock-names =
+>  				"core_clk",
+>  				"bus_aggr_clk",
+> @@ -706,6 +708,7 @@ usb_1_dwc3: dwc3@a600000 {
+>  				compatible = "snps,dwc3";
+>  				reg = <0 0x0a600000 0 0xcd00>;
+>  				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> +				iommus = <&apps_smmu 0x140 0>;
+>  				snps,dis_u2_susphy_quirk;
+>  				snps,dis_enblslpm_quirk;
+>  				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+> @@ -742,6 +745,94 @@ spmi_bus: spmi@c440000 {
+>  			cell-index = <0>;
+>  		};
+> 
+> +		apps_smmu: iommu@15000000 {
+> +			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
 
-This looks good to me. FWIW
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+This should be qcom,sm8150-smmu-500 and also you need to update the 
+arm-smmu
+binding with this compatible in a separate patch.
 
-Yours,
-Linus Walleij
+-Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
