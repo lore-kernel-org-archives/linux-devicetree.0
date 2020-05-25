@@ -2,116 +2,67 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CC6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D750AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF1A2073B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09602071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="XWAzSl7m"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xT18/pBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403814AbgEYNqq (ORCPT
+        id S2403920AbgEYNvI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 09:46:46 -0400
-Received: from gateway23.websitewelcome.com ([192.185.49.219]:48889 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403812AbgEYNqp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 09:46:45 -0400
-X-Greylist: delayed 1398 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 May 2020 09:46:45 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 47E874A036
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 08:23:26 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id dD4gjBGojSl8qdD4gjReJl; Mon, 25 May 2020 08:23:26 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=At2weQp8Urq2ifR1Xqe+tnTzqybzUOz3VsMP3J4yfuc=; b=XWAzSl7mC/0FF2nciZlstQlk1z
-        EoSFcTOQmbi2lRt+H5PUtOrC5bvGTvl7wNHU9dZ7AzzIZ0RUvtvVO3NVTmyCK6X+X4gPxYqaMGHMs
-        nDW0P3pbzbi57zUxRTOKCiN7XnTkYNcHj5lGMASDKSTq32gpw9tKxjJtOuYJZI0+tHZF+d7qraTe3
-        zXoK0kU5ftanlHvqyDL2SS4qIxWzlW3A0aRir7lsLS21bruDbFL4WVOW87reoPVHfvS6f+F14dM0J
-        k3dMB67YiBcGm3YD0Qmtrh6QA/uNX88eO1babSNGgqrqpSAq9/Zxu0eLQyKCX1+/oMQGND5Xlwa/+
-        lHsKNOKg==;
-Received: from [191.31.196.240] (port=46922 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1jdD4f-002bEq-Ns; Mon, 25 May 2020 10:23:26 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
-        Matheus Castello <matheus@castello.eng.br>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 2/3] dt-bindings: arm: actions: Document Caninos Loucos Labrador
-Date:   Mon, 25 May 2020 10:22:17 -0300
-Message-Id: <20200525132218.190841-3-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200525132218.190841-1-matheus@castello.eng.br>
-References: <20200525132218.190841-1-matheus@castello.eng.br>
+        Mon, 25 May 2020 09:51:08 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48118 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403912AbgEYNvH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 09:51:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=n4Hcu/XRHflYCp2TxqUSLVLdPJzrZab4RenrXRass2A=; b=xT18/pBD89exWXmFn6J7S9I0I/
+        BsPv3JqfeRRpbWOHcIxLVniHX4fOVjAmg4XtOm96KhbZvH/o96ivbmvLSFFpPFKuapdKVfkM3563k
+        J1/S9s7gl/1P5z/kE7rx1mcJFkywyw3Oy5SHOgp8ClFhWlfOGG0hGndxG9/bMljU7gHI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jdDVQ-003C3d-Ax; Mon, 25 May 2020 15:51:04 +0200
+Date:   Mon, 25 May 2020 15:51:04 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     fugang.duan@nxp.com
+Cc:     martin.fuzzey@flowbird.group, davem@davemloft.net,
+        netdev@vger.kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        devicetree@vger.kernel.org, kuba@kernel.org
+Subject: Re: [PATCH net v2 3/4] ARM: dts: imx: add ethernet stop mode property
+Message-ID: <20200525135104.GB752669@lunn.ch>
+References: <1590390569-4394-1-git-send-email-fugang.duan@nxp.com>
+ <1590390569-4394-4-git-send-email-fugang.duan@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.196.240
-X-Source-L: No
-X-Exim-ID: 1jdD4f-002bEq-Ns
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.196.240]:46922
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 27
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590390569-4394-4-git-send-email-fugang.duan@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the documentation to add the Caninos Loucos Labrador. Labrador
-project consists of a computer on module based on the Actions Semi S500
-processor and the Labrador base board.
+On Mon, May 25, 2020 at 03:09:28PM +0800, fugang.duan@nxp.com wrote:
+> From: Fugang Duan <fugang.duan@nxp.com>
+> 
+> - Update the imx6qdl gpr property to define gpr register
+>   offset and bit in DT.
+> - Add imx6sx/imx6ul/imx7d ethernet stop mode property.
+> 
+> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/actions.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+Thanks for adding a user.
 
-diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-index ace3fdaa8396..0eac72335a05 100644
---- a/Documentation/devicetree/bindings/arm/actions.yaml
-+++ b/Documentation/devicetree/bindings/arm/actions.yaml
-@@ -19,6 +19,11 @@ properties:
-               - allo,sparky # Allo.com Sparky
-               - cubietech,cubieboard6 # Cubietech CubieBoard6
-           - const: actions,s500
-+      - items:
-+          - enum:
-+              - caninos,labrador-base-m # Labrador Base Board M v1
-+          - const: caninos,labrador-v2
-+          - const: actions,s500
-       - items:
-           - enum:
-               - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
---
-2.26.2
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
+    Andrew
