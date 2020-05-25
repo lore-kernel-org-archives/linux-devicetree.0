@@ -6,67 +6,68 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4C4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 14:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376E7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 14:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEDD22078B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 14:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136542071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 14:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="dE1V/r8P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pT4+h8fC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390897AbgEYO1E (ORCPT
+        id S1727797AbgEYOi6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 10:27:04 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:7220 "EHLO
+        Mon, 25 May 2020 10:38:58 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:8276 "EHLO
         esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390879AbgEYO1E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 10:27:04 -0400
+        with ESMTP id S1725809AbgEYOi6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 10:38:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590416824; x=1621952824;
+  t=1590417537; x=1621953537;
   h=references:from:to:cc:subject:in-reply-to:date:
    message-id:mime-version;
-  bh=GFYGDQDidiAIsf6A9qkRWMwevlywavapMyZL4vq1R3o=;
-  b=dE1V/r8PYysMBFIYfsnaQed5+M+qPNcngXFq9gTcl1tcWji3CEu1sCQr
-   p8SbfqbFcXZ9Z1qz4zpE/CTdr0hwAscVZq9Nkd6ie/i11pt5qBwpyGKy6
-   maUE7KtVGqte92kc4u3kbHJMjYLlxpUCCjpCsBRLkxwv6+HTPhZr8QKFR
-   l/og+IggISkpNNpNP8WQQFV3piW1bDKP3mA3TekMoxOIGFyb3cuGVu2F8
-   M6vqZ2NClBTLgnmzAT3+eb4OK6bIb9BtQqr0rs9HqQMGNx5lZp092OAoZ
-   fipKqvRhsGfKKYU+c1jpX+ZrM4+TQrdQRhtFK3RJEFgRGzWf5C6xhtk6R
-   w==;
-IronPort-SDR: b2/4aXB09gGz4fU4ObByebBRtITl0q6dSxd9wzWdo7W8teK24GN3lCnoNM/H11S0qrmP3OYiyy
- b4+L8Z5qmZn8+jxryZ21rB3zJdnAHRZcsjA/tbRDvxAVwDtAKj/U5BlVt5Gxe5Bee1EdrygqN9
- JvnbXgC2QAM2vJwDviz4VRAl7bfYsUzXKqcmy9WvWo98gaHAjpFlMTVWLfs7oERoQcRaau9cFi
- /DxZBpY3JL7k02ALG+WCyBO7hh8rS4qULchSdVOmSZ4pkNXZzaEwTURAIDq1vljsMZnhjcBIBx
- aEY=
+  bh=S99rpstexzLZC2qjsjZJhCbIgtSPGJorenKaanjakaE=;
+  b=pT4+h8fCaIn96oklBnQTxFWI/OHuOUFUc+pPvkE3Ke3mn6clzggjOsf8
+   7vPKANeLlkhnPSdmO5aSdGIKmBBEJQv78jGCZKZLVAZwaC1cpyo0sRlVW
+   XUNoAqJRHUl0gfH4YoIYEL2J0OWYxim+S2q5DXXuNraDkwv+pFWGiuAZm
+   1F6l/Wl4Qyg/oaK6Ouq0/myKH0Ng0criMb+bthTz5qswhXTGWbRghLEzd
+   Qc5c2NywQXj5ViYRrFpzJ/RMz91kJwqLFm7rAGCatDLn2gXvJrCEjQydK
+   xnyxTzPr8Oj3EBjNt5b0VY52ADIpmuv58+y8W7ZzNHMZHSRR7+e7KlOid
+   g==;
+IronPort-SDR: LwW1A8ByBD+yBQ/Mc7nwGC0gUUpS4Zyp18/VCWuBjvzcMjQ/rEekYWeunGRQeW5G0mAYzSZEqO
+ /cjuIUTRDbGV75TNsQADzOHlMoauPmPg373Goh/msbCft2ZFui8BtaWTiair59yBATkZ9D3CI8
+ LfWxNnNy0wiUWuCaLU/H/or2Jyq2G0YBCoGNhILyKx3hl7ugIYuiRPwKmM1ilZjskJ5JQ8hBYU
+ fgYi0kGYXyr6/pN0fcvJzfUQwCj8Nlu4Ei4Dw5gp2HLmBFNhjfq+xGKbHlnlBWjHt0mol8W3IJ
+ L78=
 X-IronPort-AV: E=Sophos;i="5.73,433,1583218800"; 
-   d="scan'208";a="74410943"
+   d="scan'208";a="74411981"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 May 2020 07:27:03 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 May 2020 07:38:56 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 25 May 2020 07:27:02 -0700
+ 15.1.1713.5; Mon, 25 May 2020 07:38:58 -0700
 Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 25 May 2020 07:27:00 -0700
-References: <20200513133122.25121-1-lars.povlsen@microchip.com> <20200513133122.25121-3-lars.povlsen@microchip.com> <6398c7a6-ce5e-1df6-d5a6-08664a7fc123@intel.com> <87v9ktoc0h.fsf@soft-dev15.microsemi.net> <87wo56q2o3.fsf@soft-dev15.microsemi.net> <abbd2306-55ed-014c-4b06-a5cb3f34796f@intel.com>
+ via Frontend Transport; Mon, 25 May 2020 07:38:49 -0700
+References: <20200513141134.25819-1-lars.povlsen@microchip.com> <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com> <87pnb1nf2j.fsf@soft-dev15.microsemi.net> <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com>
 From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
 List-Id: <soc.lore.kernel.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        SoC Team <soc@kernel.org>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
+        SoC Team <soc@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/3] sdhci: sparx5: Add Sparx5 SoC eMMC driver
-In-Reply-To: <abbd2306-55ed-014c-4b06-a5cb3f34796f@intel.com>
-Date:   Mon, 25 May 2020 16:26:59 +0200
-Message-ID: <87sgfoozt8.fsf@soft-dev15.microsemi.net>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
+In-Reply-To: <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com>
+Date:   Mon, 25 May 2020 16:38:52 +0200
+Message-ID: <87r1v8oz9f.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -75,87 +76,101 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-Adrian Hunter writes:
+Linus Walleij writes:
 
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> On Mon, May 18, 2020 at 10:50 PM Lars Povlsen
+> <lars.povlsen@microchip.com> wrote:
+>> Linus Walleij writes:
+>>
+>> > On Wed, May 13, 2020 at 4:11 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>> >
+>> >> This adds DT bindings for the Microsemi SGPIO controller, bindings
+>> >> mscc,ocelot-sgpio and mscc,luton-sgpio.
+>> >>
+>> >> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> >> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> >
+>> >> +  microchip,sgpio-ports:
+>> >> +    description: This is a 32-bit bitmask, configuring whether a
+>> >> +      particular port in the controller is enabled or not. This allows
+>> >> +      unused ports to be removed from the bitstream and reduce latency.
+>> >> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+>> >
+>> > I don't know about this.
+>> >
+>> > You are saying this pin controller can have up to 32 GPIO "ports"
+>> > (also known as banks).
+>> >
+>> > Why can't you just represent each such port as a separate GPIO
+>> > node:
+>> >
+>> > pinctrl@nnn {
+>> >     gpio@0 {
+>> >         ....
+>> >     };
+>> >     gpio@1 {
+>> >         ....
+>> >     };
+>> >     ....
+>> >     gpio@31 {
+>> >         ....
+>> >     };
+>> > };
+>> >
+>> > Then if some of them are unused just set it to status = "disabled";
+>> >
+>> > This also makes your Linux driver simpler because each GPIO port
+>> > just becomes a set of 32bit registers and you can use
+>> > select GPIO_GENERIC and bgpio_init() and save a whole
+>> > slew of standard stock code.
+>> >
+>>
+>> Linus, thank you for your input.
+>>
+>> The controller handles an array of 32*n signals, where n >= 1 && n <=
+>> 4.
+>>
+>> The problem with the above approach is that the ports are disabled
+>> *port*-wise - so they remove all (upto) 4 bits. That would be across the
+>> banks.
+>>
+>> You could of course have the "implied" semantics that a disabled port at
+>> any bit position disabled all (bit positions for the same port).
 >
-> On 20/05/20 2:14 pm, Lars Povlsen wrote:
->>
->> Lars Povlsen writes:
->>
->>> Adrian Hunter writes:
->>>
->>>> On 13/05/20 4:31 pm, Lars Povlsen wrote:
->>>>> This adds the eMMC driver for the Sparx5 SoC. It is based upon the
->>>>> designware IP, but requires some extra initialization and quirks.
->>>>>
->>>>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->>>>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->>>>> ---
->> {Snip]
->>>>> +};
->>>>> +
->>>>> +static const struct sdhci_pltfm_data sdhci_sparx5_pdata = {
->>>>> +     .quirks  = 0,
->>>>> +     .quirks2 = SDHCI_QUIRK2_HOST_NO_CMD23 | /* Card quirk */
->>>>
->>>> If this is a card quirk then it should be in drivers/mmc/core/quirks.h not here.
->>>
->>
->> Adrian, I had a go at changing the controller quirk to a card quirk.
->>
->> Unfortunately, SDHCI_QUIRK2_HOST_NO_CMD23 does not directly translate to
->> MMC_QUIRK_BLK_NO_CMD23, as for 'do_rel_wr' in mmc_blk_rw_rq_prep(), it
->> will *still* use MMC_SET_BLOCK_COUNT (cmd23), causing the issue.
->>
->> We are using a ISSI "IS004G" device, and so I have gone through the
->> motions of adding it to quirks.h. The comment before the list of devices
->> using MMC_QUIRK_BLK_NO_CMD23 suggest working around a performance issue,
->> which is not exactly the issue I'm seeing. I'm seeing combinations of
->> CMD_TOUT_ERR, DATA_CRC_ERR and DATA_END_BIT_ERR whenever a cmd23 is
->> issued.
->>
->> I have not been able to test the controller with another eMMC device
->> yet, but I expect its not the controller at fault.
->>
->> So, I'm a little bit in doubt of how to proceed - either keep the quirk
->> as a controller quirk - or make a *new* card quirk (with
->> SDHCI_QUIRK2_HOST_NO_CMD23 semantics)?
->>
->> Anybody else have had experience with ISSI eMMC devices?
->>
->> I have also tried to use DT sdhci-caps-mask, but MMC_CAP_CMD23 is not
->> read from the controller just (unconditionally) set in sdhci.c - so that
->> doesn't fly either.
->>
->> Any suggestions?
+> I don't understand this, you would have to elaborate...
 >
-> It is up to you.  In the future, you may want to distinguish devices that
-> have this problem from ones that do not.
->
-> If you are not sure it is the ISSI eMMC, and maybe not the host controller,
-> then might it be the board?  Perhaps make SDHCI_QUIRK2_HOST_NO_CMD23
-> conditional on the particular compatibility string?
->
-> At a minimum, change the "/* Card quirk */" comment to a fuller explanation.
+> In any case microchip,sgpio-ports is probably not the right thing,
+> use ngpios which is documented and just divide by 32 to get the
+> number of ports I think? But that is just in case they get
+> enabled strictly in sequence, otherwise you'd need a custom
+> property.
 >
 
-Adrian, I'm getting a board ready with another eMMC device, and we're
-also trying to contact ISSI for info.
+Hi Linus,
 
-My hope is to at least verify whether this is a controller or a card
-issue one way or the other. Then, I'll choose an appropriate solution
-for it.
+Yes, the problem is they're not in sequence. F.ex. you could have ports
+0,1 enabled, skip 2,3,4 and have 5,6,7 enabled.
 
-Thank you for your advice so far.
+In the data stream you would then have:
+
+p0.0 p0.1 p0.2 p0.3
+p1.0 p1.1 p1.2 p1.3
+p5.0 p5.1 p5.2 p5.3
+p6.0 p6.1 p6.2 p6.3
+p7.0 p7.1 p7.2 p7.3
+
+I will mull about this and try to come up with something better and more
+understandable.
+
+Luckily, this is not gating for integrating sparx5, so its possible
+we'll just skip the SGPIO driver for now.
+
+I'll provide an update as soon as possible.
 
 ---Lars
 
->>
->>> Yes, its supposedly a card quirk. I'll see to use the card quirks
->>> methods in place.
->>>
->>
+> Yours,
+> Linus Walleij
 
 -- 
 Lars Povlsen,
