@@ -2,61 +2,65 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9859AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA852070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66713207C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="vq9aRPSh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="X4B/eycX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388826AbgEYNXF (ORCPT
+        id S2390675AbgEYNXX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 09:23:05 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.36]:43721 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388685AbgEYNXE (ORCPT
+        Mon, 25 May 2020 09:23:23 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.31]:32245 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388685AbgEYNXX (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 09:23:04 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id E26FB18E3
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 08:23:03 -0500 (CDT)
+        Mon, 25 May 2020 09:23:23 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 6F5A7400C8E95
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 08:23:22 -0500 (CDT)
 Received: from br164.hostgator.com.br ([192.185.176.180])
         by cmsmtp with SMTP
-        id dD4Jjy4sU1s2xdD4JjSWmM; Mon, 25 May 2020 08:23:03 -0500
+        id dD4cjBGjxSl8qdD4cjReEz; Mon, 25 May 2020 08:23:22 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZlJcRTFhtej8T0UtBWcokFIRDI/JzVylWnvucohUJ7A=; b=vq9aRPShyuaIeDESHTZHBzkl6j
-        AMEjiAKwtKeXVMqK61TH7ofchoit4SpmFWiSxFH5R9SVl7tPcvjbJLXZf+JtRYsafI6OuB6IgXMsS
-        egrlfjFI0w92Abhq2YKc9vrLkJbye31UNLxHWzFyYF8+899in3kYEGy9Rx7nMXZlD69915Oz9T/F4
-        OhWJmUD7Lv+YfHJBHs6gdiMYTCijtmFoweNen3f1PAuQT0VpVDqCov4OV1tQtcuRazAL2YrKZR/NJ
-        8MGLhpU/ViE1nDlPMJfBJ/LIczL6H7gCQ9eBmnjRxtYWUEel/PnN7xlSPVrrIWEpfSXw3eQLa7VAb
-        Er3uZEVA==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=GXXdtueQYy1caDAxoJ6IfrNPBdlHFqXjUasF2a2SRgQ=; b=X4B/eycXMEVnUhBh5K1lbpBryM
+        beEmXwyjno7R/gpNBaUaUc9d5wlnzAHMSfeyDwwDEl91nmfxbUTT+vVqYfPsq5F/BttQoM1QP/jcE
+        ihzFMNyjup46OF1KZlmBZYEPHhpZBDDs9YjbzeviJcOgHz/hU+e9McQTNOSPBkoBY6b0ssp7ml3Sz
+        oadwWMO4Isf6SQItLAq5+vbZm+PyNEUmgxK2O7KTRyYMh9o/9a6RdgSo1Ze/ThbJzJq1Ehj7/3ha/
+        xVEl00TLnFeFkjzvSPRPQqrI291vfRZKHzqMYcAi1ZmjKXQAlNfngmY8mMM3I7wo3qyI+Jhbvnw0g
+        pkDx1HNQ==;
 Received: from [191.31.196.240] (port=46922 helo=castello.castello)
         by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <matheus@castello.eng.br>)
-        id 1jdD4I-002bEq-71; Mon, 25 May 2020 10:23:02 -0300
+        id 1jdD4b-002bEq-To; Mon, 25 May 2020 10:23:22 -0300
 From:   Matheus Castello <matheus@castello.eng.br>
 To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
         mark.rutland@arm.com, robh+dt@kernel.org
 Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v6 0/3] Add Caninos Loucos Labrador CoM and Base Board Device Tree
-Date:   Mon, 25 May 2020 10:22:15 -0300
-Message-Id: <20200525132218.190841-1-matheus@castello.eng.br>
+        Matheus Castello <matheus@castello.eng.br>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+Date:   Mon, 25 May 2020 10:22:16 -0300
+Message-Id: <20200525132218.190841-2-matheus@castello.eng.br>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200525132218.190841-1-matheus@castello.eng.br>
+References: <20200525132218.190841-1-matheus@castello.eng.br>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -68,13 +72,13 @@ X-AntiAbuse: Sender Address Domain - castello.eng.br
 X-BWhitelist: no
 X-Source-IP: 191.31.196.240
 X-Source-L: No
-X-Exim-ID: 1jdD4I-002bEq-71
+X-Exim-ID: 1jdD4b-002bEq-To
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
 X-Source-Sender: (castello.castello) [191.31.196.240]:46922
 X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 3
+X-Email-Count: 15
 X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
 X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
@@ -82,30 +86,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Andreas, Mani and Rob for your time reviewing it.
+The Caninos Loucos Program develops Single Board Computers with an open
+structure. The Program wants to form a community of developers to use
+IoT technologies and disseminate the learning of embedded systems in
+Brazil.
 
-Changes since v5:
-(Suggested by Andreas Färber)
-- Put caninos,labrador-v2 as const one level down
+It is an initiative of the Technological Integrated Systems Laboratory
+(LSI-TEC) with the support of Polytechnic School of the University of
+São Paulo (Poli-USP) and Jon "Maddog" Hall.
 
-Changes since v4:
-(Suggested by Rob Herring)
-- Fix issues with yaml indentation
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andreas Färber <afaerber@suse.de>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Matheus Castello (3):
-  dt-bindings: Add vendor prefix for Caninos Loucos
-  dt-bindings: arm: actions: Document Caninos Loucos Labrador
-  ARM: dts: Add Caninos Loucos Labrador
-
- .../devicetree/bindings/arm/actions.yaml      |  5 +++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 ++
- arch/arm/boot/dts/Makefile                    |  1 +
- .../arm/boot/dts/owl-s500-labrador-base-m.dts | 34 +++++++++++++++++++
- arch/arm/boot/dts/owl-s500-labrador-v2.dtsi   | 22 ++++++++++++
- 5 files changed, 64 insertions(+)
- create mode 100644 arch/arm/boot/dts/owl-s500-labrador-base-m.dts
- create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..a20a05e3deaa 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -167,6 +167,8 @@ patternProperties:
+     description: CALAO Systems SAS
+   "^calxeda,.*":
+     description: Calxeda
++  "^caninos,.*":
++    description: Caninos Loucos Program
+   "^capella,.*":
+     description: Capella Microsystems, Inc
+   "^cascoda,.*":
 --
 2.26.2
 
