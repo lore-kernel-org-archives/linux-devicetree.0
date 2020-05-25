@@ -2,114 +2,115 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E073EC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446D2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16542078B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FA32071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 16:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Okfa0myw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ojfn8Jqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388211AbgEYQB7 (ORCPT
+        id S1729404AbgEYQP6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 12:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60970 "EHLO
+        Mon, 25 May 2020 12:15:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391155AbgEYQB7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 12:01:59 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A80C05BD43
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 09:01:58 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id j3so17634064ilk.11
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 09:01:58 -0700 (PDT)
+        with ESMTP id S1726476AbgEYQP5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 12:15:57 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2052C061A0E
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 09:15:56 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so8820354pgv.8
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 09:15:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ndTklb7/SAZk4bUIoOKID+ziy4QQzei1SxmS+QITaNQ=;
-        b=Okfa0myw3gWvHcsvCG+LrNu8vo8bECwM1NcFblymMQAiGT7+y9eHEr8NC5z6+N8JzK
-         mzlw3h7rltmPg5jkXMl04Me9kIbZlJYjsG8Urh65mRdyktu03LLIpv77czeeIpVw8Sru
-         x6DqR6REiEic6JH/kXXTOsijnyICa34jR95UnPtu86+3N8w52mTLttUjUQRtPFCY/AZA
-         vG6P/pea15LJdJxDU3EvCTPMiuu5DCbxndnPe4cnBnNZF2ZxKEZ4qbok33u/ix0NGgf/
-         NluPSBy63jZnk1Nbp5nADhjP36FybTKqPGJNjjHqjN3ow+fOetbQDP+cAHrBoMqBGVCR
-         wFmg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gq7KDxytrwBv3Ee6LFih9/KTjS7vsScQxcda5nNQ+Ms=;
+        b=Ojfn8JqqBQKNdvSd4HpjRqRwRnE62A/rHtJxs74MU9uf7cmH1r7hohAX2tdclJ7BXj
+         xdPhMSF97utN4AWhwYJAIpwX9YaKuJdWNsEv0OirKVrVWS3gPlLxyPMZVHAOm9v+AoJv
+         FBEmR2ClctF/sTe6tSDkzC2LLnoEfpxFHgPPWbNkwE83qPdcPmgPVms84DR+Co1Yw+Wt
+         gvvS1hjOfSjAfWC+s7njQ625zkmNisqy0UZ23ceVy0bH0WJioV8r1Dngn17Kgk7dFX0n
+         fS9b3YYpaHIUB4RxhdPqtfkW6C8kE/aZGNbXl+3A129MLcAtqpUu0H7HMWC2Q0cqFJNN
+         bokQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ndTklb7/SAZk4bUIoOKID+ziy4QQzei1SxmS+QITaNQ=;
-        b=FC0tyQANUlFdPbuSZAUwYyNTqRUiGAyIG8PvL133FXdTDRXac5Wno87B8WEW0P1f4d
-         rBtkj1NrxnpmgEht0/pHv2uBWsZ3Szo0m8TFI9EObjmC3AxjQ1Nox+rfBCjPlyQyjtNq
-         VSKOlNN5IXcxKywWQhGbNYi12wZtPLvzQXKy6PyZLIK4u6K25oI8FMuTaWqFO/e0vOas
-         CworK8t3FNsaonr/Q2XMtOydr66WZd+V+MwOt0fX7mtv7AsI3sk/OQPPZG2ZtVnBwfyI
-         soqC/ZLAkze0eeEouRsg+q3zXGzh28aGMYEYpVI/6blOD4EHQVIp0lFfxJNszrty8rPf
-         o1pA==
-X-Gm-Message-State: AOAM53092v2z+pOfmCpQRf7AIL5Ib4IqzfQW2Bk4BlGzt34EFoN0Z199
-        bE5RpljXHYJrwH6Wdc4botsBzbhwrE8xp8EcUKH4cQ==
-X-Google-Smtp-Source: ABdhPJzdCyCnVR8DkEpN7qEDDAtmWOw4EM3xPxchVD4sgi/TBYuoYYkIjzb27DvgzVuornpYLqRjO0idnxc4E75ZQnI=
-X-Received: by 2002:a92:89cf:: with SMTP id w76mr24457702ilk.57.1590422517999;
- Mon, 25 May 2020 09:01:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1590171891.git.saiprakash.ranjan@codeaurora.org> <ccfe8a5ede0523436508e31085322ccdab8f972a.1590171891.git.saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <ccfe8a5ede0523436508e31085322ccdab8f972a.1590171891.git.saiprakash.ranjan@codeaurora.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gq7KDxytrwBv3Ee6LFih9/KTjS7vsScQxcda5nNQ+Ms=;
+        b=Eu8J8Jta444x2SXyVOVr7LFEWZQSVXjCp9MJOrwFklsSlRBOdc+NpLEQp1pjiy26Rp
+         TPsF3GHlPAUsQ3MeB8dSxr2Vmy5/CY5H7s8xOykO53VQqW9dEjbMZyQsCZvSdDEF5NcJ
+         5ndoiYMwV0HG24iepTOEUcgYDgkrg0AD1xlVsqSzAny+2Arz3WhxTsv+KvEkVokBhKVn
+         fxEFmpWPAZX+U/3LtoUf/bSzsghGjnYDpOu6OX0WDD9k9aXiq1sqn5LsUzqMFPN44Yws
+         sNhZZ8ANQDdOuRXCkjb8bkb2bIjP4lj51R1m/PzcsHW+uhQQTQUcPz3oEtqfFXOH3CsV
+         or5w==
+X-Gm-Message-State: AOAM531Vx5dRkOjpm70zQ8ZdHnDZ2n6JU4EcgeAj0TyqTyI3Vqh9oJwc
+        gKzPRloQP3nGfpXnuXSeI6pogg==
+X-Google-Smtp-Source: ABdhPJx5O26DBjPbD+W02Sji+TfR+vDgK84YFsKmX7EKqaRnHafICtceif3e2vp0vgA6JP89sQ1Zrg==
+X-Received: by 2002:a63:e549:: with SMTP id z9mr13461127pgj.213.1590423356161;
+        Mon, 25 May 2020 09:15:56 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id i10sm3040188pgq.36.2020.05.25.09.15.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 09:15:55 -0700 (PDT)
+Date:   Mon, 25 May 2020 10:15:53 -0600
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 25 May 2020 10:01:47 -0600
-Message-ID: <CANLsYkwhjbyspLjbnp4XYCcRNFUkBs46QjWYBTza1scGDtNSmQ@mail.gmail.com>
-Subject: Re: [PATCHv3 2/2] dt-bindings: arm: coresight: Add optional property
- to replicators
 To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCHv3 0/2] Add support for replicators which loses context on
+ clock removal
+Message-ID: <20200525161553.GA31527@xps15>
+References: <cover.1590171891.git.saiprakash.ranjan@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1590171891.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 22 May 2020 at 12:37, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Add an optional boolean property "qcom,replicator-loses-context" to
-> identify replicators which loses context when AMBA clocks are removed
-> in certain configurable replicator designs.
->
-> Reviewed-by: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index 846f6daae71b..b598a5f0037d 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -121,6 +121,12 @@ its hardware characteristcs.
->         * interrupts : Exactly one SPI may be listed for reporting the address
->           error
->
-> +* Optional property for configurable replicators:
-> +
-> +       * qcom,replicator-loses-context: boolean. Indicates that the replicator
-> +         will lose register context when AMBA clock is removed which is observed
-> +         in some replicator designs.
+Hi Sai,
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Sat, May 23, 2020 at 12:06:50AM +0530, Sai Prakash Ranjan wrote:
+> This series is mainly to add support for replicators
+> which lose context on removing AMBA clock like on SC7180
+> SoC where replicator in AOSS domain loses context.
+> 
 
-> +
->  Graph bindings for Coresight
->  -------------------------------
->
-> --
+I am good with this set but need a reviewed-by on the DT binding before I can
+add it to my tree.  The same goes for your other set[1].
+
+Thanks,
+Mathieu
+
+[1]. "coresight: etm4x: Add support to skip trace unit power up"
+
+> v2 - https://lore.kernel.org/patchwork/cover/1244340/
+> More discussion is found here - https://lore.kernel.org/patchwork/patch/1231182/
+> 
+> Changes since v2:
+>  * Added DT maintainers which I missed in v2
+>  * Added proper kernel-doc and header as per Mathieu
+> 
+> Sai Prakash Ranjan (2):
+>   coresight: replicator: Reset replicator if context is lost
+>   dt-bindings: arm: coresight: Add optional property to replicators
+> 
+>  .../devicetree/bindings/arm/coresight.txt     |  6 ++
+>  .../coresight/coresight-replicator.c          | 55 +++++++++++++------
+>  2 files changed, 44 insertions(+), 17 deletions(-)
+> 
+> -- 
 > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 > of Code Aurora Forum, hosted by The Linux Foundation
->
+> 
