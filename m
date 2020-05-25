@@ -2,280 +2,113 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC596C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9944C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91424207C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4C92071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 13:16:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403771AbgEYNOT (ORCPT
+        id S2390626AbgEYNQM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 09:14:19 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57137 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390674AbgEYNOS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 09:14:18 -0400
-Received: from [78.134.112.142] (port=42672 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jdCvk-0072GJ-Oc; Mon, 25 May 2020 15:14:12 +0200
-Subject: Re: [PATCH v13 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-To:     Vishal Sagar <vishal.sagar@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Hyun Kwon <hyun.kwon@xilinx.com>
-References: <20200512151947.120348-1-vishal.sagar@xilinx.com>
- <20200512151947.120348-3-vishal.sagar@xilinx.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <e3ccf942-0a0d-1c4c-30bf-db9f127126f4@lucaceresoli.net>
-Date:   Mon, 25 May 2020 15:14:07 +0200
+        Mon, 25 May 2020 09:16:12 -0400
+Received: from mga18.intel.com ([134.134.136.126]:64597 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388757AbgEYNQL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 09:16:11 -0400
+IronPort-SDR: gFHRJKf/fzgIkRWbiRwQ2XSMYXB/UwWQlvks7Qjuvw81DiGAx6fXNJa7e+QLXifs6GBibN5hzl
+ Fzb8HExQv0hw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:16:11 -0700
+IronPort-SDR: 29F1ZN30wZD0n3NYF9s7La+3jVNm76brsOCh1moocqg5VGKKI5v9XVZenm7WyJTxli7pWH8e+R
+ a2bJsIDr/DYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
+   d="scan'208";a="266147156"
+Received: from mylly.fi.intel.com (HELO [10.237.72.67]) ([10.237.72.67])
+  by orsmga003.jf.intel.com with ESMTP; 25 May 2020 06:16:06 -0700
+Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers glue
+ layer interface
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
+ <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
+ <20200521023735.mja62ujmxebgwyef@mobilestation>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <80cf1d67-5de1-f3f1-27a0-b88cc105b228@linux.intel.com>
+Date:   Mon, 25 May 2020 16:16:05 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200512151947.120348-3-vishal.sagar@xilinx.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200521023735.mja62ujmxebgwyef@mobilestation>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vishal,
+Hi
 
-thanks. I have only a few minor nitpicking comments.
-
-On 12/05/20 17:19, Vishal Sagar wrote:
-> The Xilinx MIPI CSI-2 Rx Subsystem soft IP is used to capture images
-> from MIPI CSI-2 camera sensors and output AXI4-Stream video data ready
-> for image processing. Please refer to PG232 for details.
+On 5/21/20 5:37 AM, Serge Semin wrote:
+> On Wed, May 20, 2020 at 03:46:11PM +0300, Jarkko Nikula wrote:
+>> Hi
+>>
+>> On 5/10/20 12:50 PM, Serge Semin wrote:
+>>> Seeing the DW I2C platform driver is getting overcomplicated with a lot of
+>>> vendor-specific configs let's introduce a glue-layer interface so new
+>>> platforms which equipped with Synopsys Designware APB I2C IP-core would
+>>> be able to handle their peculiarities in the dedicated objects.
+>>>
+>> Comment to this patch and patches 9/12 and 12/12:
+>>
+>> Currently i2c-designware-platdrv.c is about 500 lines of code so I don't
+>> think it's too overcomplicated. But I feel we have already too many Kconfig
+>> options and source modules for i2c-designware and obviously would like to
+>> push back a little from adding more.
+>>
+>> I don't think i2c-designware-platdrv.c becomes yet too complicated if Baikal
+>> related code is added there, perhaps under #ifdef CONFIG_OF like MSCC Ocelot
+>> code is currently.
 > 
-> The CSI2 Rx controller filters out all packets except for the packets
-> with data type fixed in hardware. RAW8 packets are always allowed to
-> pass through.
+> Well, it's up to you to decide, what solution is more suitable for you to
+> maintain. My idea of detaching the MSCC and Baikal-T1 code to the dedicated
+> source files was to eventually move the whole i2c-designware-* set of files
+> into a dedicated directory drivers/i2c/buses/dw as it's done for some others
+> Synopsys DesignWare controllers: drivers/pci/controller/dwc/, drivers/usb/dwc2,
+> drivers/usb/dwc3, drivers/net/ethernet/synopsys/ . If you think, that it's too
+> early for Dw I2C code to live in a dedicated directory, fine with me. I can
+> merge the MSCC and Baikal-T1 code back into the i2c-designware-platdrv.c .
+> So what's your final word in this matter?
 > 
-> It is also used to setup and handle interrupts and enable the core. It
-> logs all the events in respective counters between streaming on and off.
-> 
-> The driver supports only the video format bridge enabled configuration.
-> Some data types like YUV 422 10bpc, RAW16, RAW20 are supported when the
-> CSI v2.0 feature is enabled in design. When the VCX feature is enabled,
-> the maximum number of virtual channels becomes 16 from 4.
-> 
-> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+I think sub directory decision under each subsystem is more subsystem 
+rather than vendor/driver specific. Good point anyway.
 
-[...]
+For this patchset I'd like more if changes are done to 
+i2c-designware-platdrv.c since it's not too complicated yet :-)
 
-> +static int xcsi2rxss_start_stream(struct xcsi2rxss_state *state)
-> +{
-> +	int ret = 0;
-> +
-> +	/* enable core */
-> +	xcsi2rxss_set(state, XCSI_CCR_OFFSET, XCSI_CCR_ENABLE);
-> +
-> +	ret = xcsi2rxss_soft_reset(state);
-> +	if (ret < 0) {
+If it starts to look too messy in the future then it's time split I think.
 
-'if (ret)' is enough, it's a classic nonzero-on-error return value.
-
-> +/**
-> + * xcsi2rxss_irq_handler - Interrupt handler for CSI-2
-> + * @irq: IRQ number
-> + * @data: Pointer to device state
-> + *
-> + * In the interrupt handler, a list of event counters are updated for
-> + * corresponding interrupts. This is useful to get status / debug.
-> + *
-> + * Return: IRQ_HANDLED after handling interrupts
-> + */
-> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *data)
-> +{
-> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)data;
-> +	struct device *dev = state->dev;
-> +	u32 status;
-> +
-> +	status = xcsi2rxss_read(state, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
-> +	xcsi2rxss_write(state, XCSI_ISR_OFFSET, status);
-> +
-> +	/* Received a short packet */
-> +	if (status & XCSI_ISR_SPFIFONE) {
-> +		u32 count = 0;
-> +
-> +		/*
-> +		 * Drain generic short packet FIFO by reading max 31
-> +		 * (fifo depth) short packets from fifo or till fifo is empty.
-> +		 */
-> +		for (count = 0; count < XCSI_SPKT_FIFO_DEPTH; ++count) {
-> +			u32 spfifostat, spkt;
-> +
-> +			spkt = xcsi2rxss_read(state, XCSI_SPKTR_OFFSET);
-> +			dev_dbg(dev, "Short packet = 0x%08x\n", spkt);
-> +			spfifostat = xcsi2rxss_read(state, XCSI_ISR_OFFSET);
-> +			spfifostat &= XCSI_ISR_SPFIFONE;
-> +			if (!spfifostat)
-> +				break;
-> +			xcsi2rxss_write(state, XCSI_ISR_OFFSET, spfifostat);
-> +		}
-> +	}
-> +
-> +	/* Short packet FIFO overflow */
-> +	if (status & XCSI_ISR_SPFIFOF)
-> +		dev_dbg_ratelimited(dev, "Short packet FIFO overflowed\n");
-> +
-> +	/*
-> +	 * Stream line buffer full
-> +	 * This means there is a backpressure from downstream IP
-> +	 */
-> +	if (status & XCSI_ISR_SLBF) {
-> +		dev_alert_ratelimited(dev, "Stream Line Buffer Full!\n");
-> +
-> +		/* disable interrupts */
-> +		xcsi2rxss_clr(state, XCSI_IER_OFFSET, XCSI_IER_INTR_MASK);
-> +		xcsi2rxss_clr(state, XCSI_GIER_OFFSET, XCSI_GIER_GIE);
-> +
-> +		/* disable core */
-> +		xcsi2rxss_clr(state, XCSI_CCR_OFFSET, XCSI_CCR_ENABLE);
-> +		state->streaming = false;
-> +
-> +		/*
-> +		 * The IP needs to be hard reset before it can be used now.
-> +		 * This will be done in streamoff.
-> +		 */
-> +
-> +		/*
-> +		 * TODO: Notify the whole pipeline with v4l2_subdev_notify() to
-> +		 * inform userspace.
-> +		 */
-> +	}
-> +
-> +	/* Increment event counters */
-> +	if (status & XCSI_ISR_ALLINTR_MASK) {
-> +		unsigned int i;
-> +
-> +		for (i = 0; i < XCSI_NUM_EVENTS; i++) {
-> +			if (!(status & xcsi2rxss_events[i].mask))
-> +				continue;
-> +			state->events[i]++;
-> +			dev_dbg_ratelimited(dev, "%s: %u\n",
-> +					    xcsi2rxss_events[i].name,
-> +					    state->events[i]);
-> +		}
-> +
-> +		if (status & XCSI_ISR_VCXFE && state->en_vcx) {
-> +			u32 vcxstatus;
-> +
-> +			vcxstatus = xcsi2rxss_read(state, XCSI_VCXR_OFFSET);
-> +			vcxstatus &= XCSI_VCXR_VCERR;
-> +			for (i = 0; i < XCSI_VCX_NUM_EVENTS; i++) {
-> +				if (!(vcxstatus & (1 << i)))
-
-You can use BIT(i) instead of (1 << i).
-
-> +/**
-> + * xcsi2rxss_set_format - This is used to set the pad format
-> + * @sd: Pointer to V4L2 Sub device structure
-> + * @cfg: Pointer to sub device pad information structure
-> + * @fmt: Pointer to pad level media bus format
-> + *
-> + * This function is used to set the pad format. Since the pad format is fixed
-> + * in hardware, it can't be modified on run time. So when a format set is
-> + * requested by application, all parameters except the format type is saved
-> + * for the pad and the original pad format is sent back to the application.
-> + *
-> + * Return: 0 on success
-> + */
-> +static int xcsi2rxss_set_format(struct v4l2_subdev *sd,
-> +				struct v4l2_subdev_pad_config *cfg,
-> +				struct v4l2_subdev_format *fmt)
-> +{
-> +	struct xcsi2rxss_state *xcsi2rxss = to_xcsi2rxssstate(sd);
-> +	struct v4l2_mbus_framefmt *__format;
-> +	u32 dt;
-> +
-> +	/* only sink pad format can be updated */
-
-This comment should be placed...
-
-> +	mutex_lock(&xcsi2rxss->lock);
-> +
-> +	/*
-> +	 * Only the format->code parameter matters for CSI as the
-> +	 * CSI format cannot be changed at runtime.
-> +	 * Ensure that format to set is copied to over to CSI pad format
-> +	 */
-> +	__format = __xcsi2rxss_get_pad_format(xcsi2rxss, cfg,
-> +					      fmt->pad, fmt->which);
-> +
-
-...here.
-
-> +	if (fmt->pad == XVIP_PAD_SOURCE) {
-> +		fmt->format = *__format;
-> +		mutex_unlock(&xcsi2rxss->lock);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * RAW8 is supported in all datatypes. So if requested media bus format
-> +	 * is of RAW8 type, then allow to be set. In case core is configured to
-> +	 * other RAW, YUV422 8/10 or RGB888, set appropriate media bus format.
-> +	 */
-> +	dt = xcsi2rxss_get_dt(fmt->format.code);
-> +	if (dt != xcsi2rxss->datatype && dt != XCSI_DT_RAW8) {
-> +		dev_dbg(xcsi2rxss->dev, "Unsupported media bus format");
-> +		/* set the default format for the data type */
-> +		fmt->format.code = xcsi2rxss_get_nth_mbus(xcsi2rxss->datatype,
-> +							  0);
-> +	}
-> +
-> +	*__format = fmt->format;
-> +	mutex_unlock(&xcsi2rxss->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * xcsi2rxss_enum_mbus_code - Handle pixel format enumeration
-> + * @sd : pointer to v4l2 subdev structure
-> + * @cfg: V4L2 subdev pad configuration
-> + * @code : pointer to v4l2_subdev_mbus_code_enum structure
-
-Remove space before colon here.
-
-Looks good otherwise, and my comments are minor details so:
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
-
-I tried to runtime test this driver as well replacing the v10 driver
-that I'm using at the moment, but ran into many problems, apparently in
-the media entity navigation. The diff between v10 and v13 does not
-justify these problems, so I'm assuming v13 needs a more recent kernel
-than the 4.19 I'm currentl stuck on.
-
--- 
-Luca Ceresoli
+Jarkko
