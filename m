@@ -2,109 +2,135 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53104C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 10:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D09C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 10:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 295A6207FB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 10:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F2D2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 10:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEJn7fyt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bmwTAuhk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389919AbgEYKx2 (ORCPT
+        id S2389856AbgEYKzG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 06:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389484AbgEYKx2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 06:53:28 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B1CC061A0E;
-        Mon, 25 May 2020 03:53:27 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id r3so7889560qve.1;
-        Mon, 25 May 2020 03:53:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tm3Go7vlJDeWhXTFLsUD2Etyj1ppGrFIkUDns+ap1rs=;
-        b=TEJn7fytMxwiwk/IDTfV+jOUDjw28Ean0pawpZJ7O11nveJmrbmJPoHR6PrdgWVWdn
-         y/8MiD2Zc/FCdXFH95FbAERR8tVjZIfBfw+UC2N3aMX1NInAFjbHzsc9yQxBez+aEawg
-         +SOpdpSAVMZ+LP5lN2WbSmmx7aO0eSQYz1Vh6LoJc0XRNpf/CC3rMvs7X8m2h5qbIiRC
-         ObC7GDrdji3HgynDDOOpv3d+1+2d38ghHcrVn9AhSVFRscLBioleRKE9oG+DoGaC5Gq+
-         tcVzQ+07FErdbEv1WwBZqE20bTBfqpDfiTN66kDVqLRx+xvNCNp8lQFEkqM3Rvl7AXNq
-         O/5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tm3Go7vlJDeWhXTFLsUD2Etyj1ppGrFIkUDns+ap1rs=;
-        b=VCOcuc5FoR461bw7sTR3eZr90bqMNpITHYBHcCPZi0uPL9Ql5kukkF4vB+NMMpxwRm
-         bihmVBA5R3Kpoyk9wLsatYY+FZs5Qq6rWFtiov1QIfsqemMYI7niUXJkxfpNXXtPT27i
-         DsSpnHleEgb7+oxnpMxELjVQtIJkWu4AxFIhGWC9uqMjbpkWcE+T+lnUk4OADGT5aWq+
-         rVUBvRsVOEm5HbogPcg7UlsOIdikfS9isblZlk05wA+zMbeFJUgYtdjXSTjpoJ4ajAYV
-         5HgnlOikGoz6S/PcbJ0MAVbG5mgb2P1Rt0zOg4ZqP4RS6Mhl9WAf/Gg1n4uSeoFqCcfu
-         aDuw==
-X-Gm-Message-State: AOAM530gODLxXvSFpDOyp9AvZCVK17cPfjeCzTsP7uMGk7t6m3xFi8/J
-        JeeiYsMD6W07z8FLcTIk//E=
-X-Google-Smtp-Source: ABdhPJxmxS4+SVnH/5iUVhzSIPk2ZBFcYygdBgO6pQ/xxa9Fhqm4xZQ+a0yFcdQ9biP1tFVfO2HMxA==
-X-Received: by 2002:a0c:e9c9:: with SMTP id q9mr14886070qvo.215.1590404006285;
-        Mon, 25 May 2020 03:53:26 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id z10sm15054624qtu.22.2020.05.25.03.53.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 03:53:25 -0700 (PDT)
-Date:   Mon, 25 May 2020 12:53:20 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: magnetometer: ak8975: add gpio
- reset support
-Message-ID: <20200525105320.GD18690@ict14-OptiPlex-980>
-References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
- <20200518133645.19127-3-jonathan.albrieux@gmail.com>
- <CACRpkdZrcie3Op2aLoTQgwT-2so+s2FqKn0R4B8VQ7qcxz2oCg@mail.gmail.com>
+        Mon, 25 May 2020 06:55:06 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59135 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390004AbgEYKzF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 06:55:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590404105; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=URAxEGJXgPJ5x2QnGveL6/kEbz97aXCsDNyyWBJbK4E=;
+ b=bmwTAuhkstHqkv/tI/Uo141CbYQ0aavqdDban0Vmqs7l7gGlICM7o8bx4bX5NR7C7nhzwPcZ
+ 8gCsOQYuIX2xtcshCeKpVBM83T83iqLVTPEie0WhagXqfsDEelw7bR8kpUPZ6fFFL5E4qoCo
+ 015vu5EPUbSgGwpEyJdc4Ll9Hlc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ecba3ff4c3faf51e2e18f7b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 10:54:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 06EB3C43387; Mon, 25 May 2020 10:54:54 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A53CEC433C6;
+        Mon, 25 May 2020 10:54:54 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZrcie3Op2aLoTQgwT-2so+s2FqKn0R4B8VQ7qcxz2oCg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 16:24:54 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
+In-Reply-To: <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-3-jonathan@marek.ca>
+ <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
+ <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
+Message-ID: <2a35f3b85d8311fb4298aaea82236967@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 25, 2020 at 10:43:35AM +0200, Linus Walleij wrote:
-> On Mon, May 18, 2020 at 3:37 PM Jonathan Albrieux
-> <jonathan.albrieux@gmail.com> wrote:
+On 2020-05-25 15:39, Jonathan Marek wrote:
+> Hi,
 > 
-> > +  reset-gpio:
-> > +    description: an optional pin needed for AK09911 to set the reset state
+> On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
+>> Hi Jonathan,
+>> 
+>> On 2020-05-24 08:08, Jonathan Marek wrote:
+>>> Add the apps_smmu node for sm8250. Note that adding the iommus field 
+>>> for
+>>> UFS is required because initializing the iommu removes the bypass 
+>>> mapping
+>>> that created by the bootloader.
+>>> 
+>> 
+>> This statement doesn't seem right, you can just say since the bypass 
+>> is disabled
+>> by default now, we need to add this property to enable translation and 
+>> avoid global faults.
+>> 
 > 
-> This kind of properties should always be plural, so
-> reset-gpios please.
+> If I use this patch [1] then the UFS iommu property isn't needed. In
+> downstream, the identity (bypass?) stream mapping is inherited from
+> the bootloader, and UFS is used without any iommu property. Setting
+> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own
+> (without the UFS iommu property), so there's more to it than just
+> "bypass is disabled by default now".
 > 
-> Yours,
-> Linus Walleij
+> https://patchwork.kernel.org/patch/11310757/
+> 
 
-Thank you, will include this change in current patch version I'm working on.
+"iommus" property is not about inheriting stream mapping from 
+bootloader,
+it is used to enable SMMU address translation for the corresponding
+master when specified. So when you have disabled bypass, i.e.,
+ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y or via cmdline 
+"arm-smmu.disable_bypass=1"
+and iommus property with SID and mask is not specified, then it will 
+result
+in SMMU global faults.
 
-Best regards,
-Jonathan Albrieux
+Downstream has bypass enabled(ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n),so 
+you
+won't see any global faults if you do not have iommus property.
+
+Patch in your link is for display because of the usecase for splash 
+screen
+on android and some other devices where the bootloader will configure 
+SMMU,
+it has not yet merged and not likely to get merged in the current state.
+
+So yes "there is *not* much more to it than bypass is disabled by 
+default now"
+and you have to specify "iommus" for the master devices or you should 
+enable bypass,
+i.e., ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or arm-smmu.disable_bypass=n
+
+Try without the patch in the link and without iommus for UFS and
+ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y and you will see.
+
+-Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
