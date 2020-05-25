@@ -2,86 +2,142 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097E7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 10:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D0AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 10:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B32206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 10:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1635206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 10:09:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="jeszRHgx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389615AbgEYKFQ (ORCPT
+        id S2389540AbgEYKJZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 06:05:16 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:40380 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389455AbgEYKFQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 06:05:16 -0400
-Received: by mail-oo1-f66.google.com with SMTP id f39so164458ooi.7;
-        Mon, 25 May 2020 03:05:14 -0700 (PDT)
+        Mon, 25 May 2020 06:09:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389337AbgEYKJZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 06:09:25 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0AEC061A0E
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 03:09:24 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id w3so11503750qkb.6
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 03:09:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mmSKZLegHlAcDBUlIzHam8wKkEWO4T7rBCLsE3QaNq4=;
+        b=jeszRHgxD7Oxhg6M7LbMxHAWGne9QEOsMhqXeIa+AATrHr61QLFVPIEHqxDgsoiDrh
+         J31TBEqNAJp3c9WRAsqbtOuY/hIE+hapOkmbvyNO32ZSfptpXlI0We9gyNk0qy/mBTSK
+         T6Gc8w8TMPptcUbJb/Lm9DSm0YT+M9jDzAk2URz/cr1AAKqeEbreOZWIAkZUCE3PhHId
+         b534L+xbxh2vIxaogC1ghZcXCzxx7bApbqHnaeQsFAs/4v9ln/ukM4SHPKx4xxDEkjog
+         4ydyOt/5Rx2RcDPLLCbaB/hBpONY8FHI/VU3q5mrdCT1QP+lkn6JsS1JD9gcbPY+mPIk
+         OJnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xw1pkyh0Ir8nfmsoLVnnjIS8IfgdWiFdji6t98JfZAE=;
-        b=ft0/5SNQtI4e2cYekn8i3vaIFPn7VoyLA3CIMfo1gQNgrtxjeNl5+XD7NRfyPp6SVD
-         k/wXD71XQujMcPlSitNymyb/zG62IWq4xoG3hqi7cR3RM+asZQguK3dgMVHzNGGGeilT
-         Orl6gkiDSx0JKNT2EDolBE9T4geX8RPxzJJth49E4znH14RUsnLfhiXQQFL5zGIhaGv6
-         DDaJd8SKXHq7GSfPKAsnFbSTOHDJi9AgRo/CDW1w+42e/QQimjw/dD74ZFn188lNq7TB
-         kVWghouV9TxFVoNEYSDxPGSQaeJoMHd/ZotguvavFldFuewiJk0T6Ge0cCfv5B77lgDQ
-         OYxg==
-X-Gm-Message-State: AOAM532QCCLCF0kVbmX2jwFQ/V8fJv4c8V+kjWdaYkDXou7VWpnCuSFZ
-        ikuugA+QS61nqO1NlElOeJZV+f+6FnpFelqGMCw=
-X-Google-Smtp-Source: ABdhPJwpsoXxS4SZOMLNeUtOFIvKeQ/xfHoBmbLhEQs5FjxW+RcSdEOgaeAHqrTHm23gDT4hxLApJzNpKxs3TYatHYQ=
-X-Received: by 2002:a4a:95d0:: with SMTP id p16mr12638128ooi.40.1590401113953;
- Mon, 25 May 2020 03:05:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mmSKZLegHlAcDBUlIzHam8wKkEWO4T7rBCLsE3QaNq4=;
+        b=iyhKq41ocBl/s1xGTGfQz3EE1l/jgRoAdtPam+87XMs7LhCQ/an7kD3icAB4PeZM6N
+         aMmKWTDz31AxONa066sTHyBFUfx7yKFjAeXW8924VJcLTYI8K+PnlI6MSIZ5UCGyb5cz
+         xuTdExJGDB6ioFECn5W4YayFk1PUyhI2n4f9TkJ+7iUcGl8TfwFAiOCBgfvkoAaHmj3H
+         iMr+bJ+iKNIoC1fVXQd6tQLvHxi8YXv5D43TWyCH8dnOJYWvXRY+QPuUApT34LfDHKl+
+         QIe7nrIifFEjNkMxApMIyNbWLX3rUDPhJe9B0k9c0tCwibXO/xghUP2CDeq3c2Wiu+YE
+         9gNQ==
+X-Gm-Message-State: AOAM530PbvrFC3VmmApWLwwxCwydNNtICutpA5kOKmCJoioa555YEeyM
+        yVw5hZANa05AcWP6C+JruGyYAA==
+X-Google-Smtp-Source: ABdhPJxb3OvPieEdva8jtks4EbjSxctQTZww+YeaGRp3mJtL1NrniFckZt3WEvrli9/NlJmowthvIA==
+X-Received: by 2002:ae9:f442:: with SMTP id z2mr24828736qkl.116.1590401364127;
+        Mon, 25 May 2020 03:09:24 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id e16sm4429488qtc.71.2020.05.25.03.09.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 03:09:23 -0700 (PDT)
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-3-jonathan@marek.ca>
+ <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
+Date:   Mon, 25 May 2020 06:09:51 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590356277-19993-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590356277-19993-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 May 2020 12:05:02 +0200
-Message-ID: <CAMuHMdW=7oEj03eFmVkziZUhrSWk01AHEPAw1R1D0fmdijTAtQ@mail.gmail.com>
-Subject: Re: [PATCH 4/8] dt-bindings: dmaengine: renesas,usb-dmac: Add binding
- for r8a7742
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, May 24, 2020 at 11:40 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document RZ/G1H (R8A7742) SoC bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Hi,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
+> Hi Jonathan,
+> 
+> On 2020-05-24 08:08, Jonathan Marek wrote:
+>> Add the apps_smmu node for sm8250. Note that adding the iommus field for
+>> UFS is required because initializing the iommu removes the bypass mapping
+>> that created by the bootloader.
+>>
+> 
+> This statement doesn't seem right, you can just say since the bypass is 
+> disabled
+> by default now, we need to add this property to enable translation and 
+> avoid global faults.
+> 
 
-Gr{oetje,eeting}s,
+If I use this patch [1] then the UFS iommu property isn't needed. In 
+downstream, the identity (bypass?) stream mapping is inherited from the 
+bootloader, and UFS is used without any iommu property. Setting 
+ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own 
+(without the UFS iommu property), so there's more to it than just 
+"bypass is disabled by default now".
 
-                        Geert
+https://patchwork.kernel.org/patch/11310757/
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 107 +++++++++++++++++++++++++++
+>>  1 file changed, 107 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+>> b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+>> index 2f99c350c287..43c5e48c15e2 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+>> @@ -323,6 +323,8 @@ ufs_mem_hc: ufshc@1d84000 {
+>>
+>>              power-domains = <&gcc UFS_PHY_GDSC>;
+>>
+>> +            iommus = <&apps_smmu 0x0e0 0>, <&apps_smmu 0x4e0 0>;
+>> +
+>>              clock-names =
+>>                  "core_clk",
+>>                  "bus_aggr_clk",
+>> @@ -428,6 +430,111 @@ tlmm: pinctrl@f100000 {
+>>              wakeup-parent = <&pdc>;
+>>          };
+>>
+>> +        apps_smmu: iommu@15000000 {
+>> +            compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+> 
+> This should be qcom,sm8250-smmu-500 and also you need to update the 
+> arm-smmu
+> binding with this compatible in a separate patch.
+> 
+> -Sai
+> 
