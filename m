@@ -2,115 +2,168 @@ Return-Path: <SRS0=naVA=7H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC289C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C065EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 847DD2071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D48E2071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 11:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lM+n5ilu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390063AbgEYLQY (ORCPT
+        id S2390051AbgEYLRx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 07:16:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:44168 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389897AbgEYLQX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 07:16:23 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2F0BA1C02C4; Mon, 25 May 2020 13:16:22 +0200 (CEST)
-Date:   Mon, 25 May 2020 13:16:21 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>, tfiga@google.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v11 02/13] dt-bindings: video-interface: Replace
- 'rotation' description
-Message-ID: <20200525111621.GE27989@amd>
-References: <20200509090456.3496481-1-jacopo@jmondi.org>
- <20200509090456.3496481-3-jacopo@jmondi.org>
+        Mon, 25 May 2020 07:17:53 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49308 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390095AbgEYLRw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 May 2020 07:17:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590405471; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=NrdbeJbjmJrveR0HXfTx+Z+kD54p396ZB66qEdqxXe0=;
+ b=lM+n5iluYIg/YdnLSizJofw2DG2/0CQQHly7ijKsIXuI4zrCXHWFo1ppsTK+v/ctSneDEnB1
+ pv7ioXEoyuLNfmfmCPdqy75yEHBwiwzQoSv/USPMUtHv/unafSzeAPrB8SIGGmHetLybCmIG
+ s7+YDecWnS9HmmB1V711c1bTYws=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ecba955.7f67d8dc1228-smtp-out-n04;
+ Mon, 25 May 2020 11:17:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7FAA8C433C9; Mon, 25 May 2020 11:17:41 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3F83FC433C6;
+        Mon, 25 May 2020 11:17:40 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
-Content-Disposition: inline
-In-Reply-To: <20200509090456.3496481-3-jacopo@jmondi.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 16:47:40 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
+In-Reply-To: <c9c21e4c-fc89-5a74-fa78-203e5fb64e27@marek.ca>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-3-jonathan@marek.ca>
+ <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
+ <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
+ <2a35f3b85d8311fb4298aaea82236967@codeaurora.org>
+ <c9c21e4c-fc89-5a74-fa78-203e5fb64e27@marek.ca>
+Message-ID: <72d771390af9a68759d3f81cb79e46a6@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---2hMgfIw2X+zgXrFs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2020-05-25 16:38, Jonathan Marek wrote:
+> On 5/25/20 6:54 AM, Sai Prakash Ranjan wrote:
+>> On 2020-05-25 15:39, Jonathan Marek wrote:
+>>> Hi,
+>>> 
+>>> On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
+>>>> Hi Jonathan,
+>>>> 
+>>>> On 2020-05-24 08:08, Jonathan Marek wrote:
+>>>>> Add the apps_smmu node for sm8250. Note that adding the iommus 
+>>>>> field for
+>>>>> UFS is required because initializing the iommu removes the bypass 
+>>>>> mapping
+>>>>> that created by the bootloader.
+>>>>> 
+>>>> 
+>>>> This statement doesn't seem right, you can just say since the bypass 
+>>>> is disabled
+>>>> by default now, we need to add this property to enable translation 
+>>>> and avoid global faults.
+>>>> 
+>>> 
+>>> If I use this patch [1] then the UFS iommu property isn't needed. In
+>>> downstream, the identity (bypass?) stream mapping is inherited from
+>>> the bootloader, and UFS is used without any iommu property. Setting
+>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own
+>>> (without the UFS iommu property), so there's more to it than just
+>>> "bypass is disabled by default now".
+>>> 
+>>> https://patchwork.kernel.org/patch/11310757/
+>>> 
+>> 
+>> "iommus" property is not about inheriting stream mapping from 
+>> bootloader,
+>> it is used to enable SMMU address translation for the corresponding
+>> master when specified. So when you have disabled bypass, i.e.,
+>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y or via cmdline 
+>> "arm-smmu.disable_bypass=1"
+>> and iommus property with SID and mask is not specified, then it will 
+>> result
+>> in SMMU global faults.
+>> 
+>> Downstream has bypass enabled(ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n),so 
+>> you
+>> won't see any global faults if you do not have iommus property.
+>> 
+>> Patch in your link is for display because of the usecase for splash 
+>> screen
+>> on android and some other devices where the bootloader will configure 
+>> SMMU,
+>> it has not yet merged and not likely to get merged in the current 
+>> state.
+>> 
+>> So yes "there is *not* much more to it than bypass is disabled by 
+>> default now"
+>> and you have to specify "iommus" for the master devices or you should 
+>> enable bypass,
+>> i.e., ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or 
+>> arm-smmu.disable_bypass=n
+>> 
+>> Try without the patch in the link and without iommus for UFS and
+>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y and you will see.
+>> 
+>> -Sai
+> 
+> I know that the "iommus" property is not about inheriting stream
+> mapping. Probing the iommu removes the stream mapping created by the
+> bootloader, the iommus property is added so that new mappings are
+> created to replace what was removed.
+> 
+> You seem to be under the impression that the SM8150/SM8250 bootloader
+> does not configure SMMU. It does, for both UFS and SDHC, just like it
+> does for display/splash screen on some devices.
+> 
 
-On Sat 2020-05-09 11:04:45, Jacopo Mondi wrote:
-> Replace the 'rotation' property description by providing a definition
-> relative to the camera sensor pixel array coordinate system and the
-> captured scene.
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  .../bindings/media/video-interfaces.txt       | 359 +++++++++++++++++-
->  1 file changed, 356 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt=
- b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index b1ff492c7da7a..3920f25a91235 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -85,9 +85,362 @@ Optional properties
->=20
->  - lens-focus: A phandle to the node of the focus lens controller.
->=20
-> -- rotation: The device, typically an image sensor, is not mounted uprigh=
-t,
-> -  but a number of degrees counter clockwise. Typical values are 0 and 180
-> -  (upside down).
-> +- rotation: The camera rotation is expressed as the angular difference in
-> +  degrees between two reference systems, one relative to the camera modu=
-le, and
-> +  one defined on the external world scene to be captured when projected =
-on the
-> +  image sensor pixel array.
+It could be that bootloader does configure SMMU for UFS and SDHC, but 
+the
+upstream SMMU driver doesnt allow to inherit stream mapping from the 
+bootloader
+yet, so adding iommus property based on the assumption that it is 
+inherited seems
+wrong.
 
-So.. how is this supposed to work. There's a phone, with its main
-camera. It is designed to be used in both portrait and landscape
-modes, internal accelerometr can tell between the two.
+> With either value of ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT, it will not
+> work without the iommus property.
 
-Plus you have phone with a keyboard. Common usage is portrait with
-keyboard closed, and landscape with keyboard open...
+I'm pretty sure that if you have ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n 
+and
+without iommus, it should work.
 
-And yes, there's linux with v4l2 working on Nokia N900.
+-Sai
 
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2hMgfIw2X+zgXrFs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7LqQUACgkQMOfwapXb+vIaMwCfUfK0NB+oJcwe+8349bTgOT7+
-SE4AmgKPNdcqvahEQnuXH22WAUBVSNg5
-=RDoI
------END PGP SIGNATURE-----
-
---2hMgfIw2X+zgXrFs--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
