@@ -5,76 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8810BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 03:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70EFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 03:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6577D20825
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 03:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C750C2075F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 03:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pmqbvbjf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1v+SFIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388853AbgEYDlu (ORCPT
+        id S2388754AbgEYDp5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 May 2020 23:41:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
+        Sun, 24 May 2020 23:45:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388397AbgEYDlu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 23:41:50 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F6FC05BD43;
-        Sun, 24 May 2020 20:41:49 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d10so8128056pgn.4;
-        Sun, 24 May 2020 20:41:49 -0700 (PDT)
+        with ESMTP id S2388730AbgEYDp5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 May 2020 23:45:57 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B2BC061A0E;
+        Sun, 24 May 2020 20:45:57 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh7so82146plb.11;
+        Sun, 24 May 2020 20:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Eu+Ho/X9r7MZN52F/RomcQQtgjiQ+X/m9AkGhdRXtC0=;
-        b=PmqbvbjfQbPp8aCgYV4adtOizlxzzoYkkP3BmW00smgp2fP0Bgb6gdyaUQ4hSIboyv
-         v17woXHMmCbO+WITpNoew3ZTtwk+GINDY8hwKAcYqbhKR5mfY5n8Sx6wOC3DKlVsJ254
-         LC94GQMZAP7XMrauRY3joLeFA5EyYlu3MTIORwdh5K6lKQ4XbdESZQCBS+FTPbumlf4A
-         WElSv97Cre7PEAgs33dgrOqpa7Caw6r+g2WUAH+gf6a6dTsV05j64XII4l4nOrXjlXB5
-         lVAnOeQ9wLz5J4uOpLCjlTipqGfMETbFE4vqCnbX2n8GsVykhRXpzBRU8Xuzqeu9NO5H
-         w0GQ==
+        bh=STuSyGO/SfkcGFSauy0QHw5IqCNUH9D9huZMTiB2y2k=;
+        b=L1v+SFIcuOBtC5uNb1/F9JwnI/MV2Y6r7KptSWJmyzbRBYesYs+bXxJUS4ItcP+FPT
+         k2IVwpaEgQcZpIgX2E0nirnEIobOUQ4e/qQdA0x4hwmSnzKtTyzAZi8p0oTy3OOlJuRw
+         9I5G0UpR1rGvA3BHzYOtSr5wiFI1hzoOIVYgloKziD7+HX2iVNwO1P4IAzl+gUmomQOl
+         T7vo1xrCFWwOXCzPsh0LyH9KcnrN8yPtbib1XiSgVcErdtxLZl2AETvmALganitVM3N0
+         ePpnyIyaNXbuk7rdgWBPzbsC9fzXx6cZVtiDu0SPRxJL32R/xBFQ/NM8l97RIbYBBFgA
+         xiGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Eu+Ho/X9r7MZN52F/RomcQQtgjiQ+X/m9AkGhdRXtC0=;
-        b=kciVcyo6R/errJzOSD3k5B6E1NqdfC2Wv7xo1WrvNL2JTNHO0uZQk2xWBMIT3amg8v
-         itxZJxbhvSXZ1wO1LtsLoFqeQsE0LhUDx3RjURQkCDB7ePZ3NT89jSCHvG2M45koCnPC
-         v4iwlMekVYx10W5Ly8nt4oCh57VPcVwX0mW638fKH8eqgTsbJ/uiG28wJcs+uOePMIs3
-         n/pDZ9PESdlizYCYOj/OQR10dG0VXBHKDgEgqkBiQnj0ahhKqFVCYaiuLL/bVJ+Jmi0a
-         vrcxB5ZClh85CIGFdudoujLJ2f+4u/jCq0CV1mRoiCSjDS6fIkpNZia9o4D9k0DvCp+h
-         EM4Q==
-X-Gm-Message-State: AOAM533UwijgiZdDcHhBVgxbZmUYniLRkYp5sjdDdbn/AFFlrhstz/se
-        qXd2FAkCHj0mV2wnRUKfUsk=
-X-Google-Smtp-Source: ABdhPJxIuHMaJzv5SBEYVh6aGCYw3zkHcCsCQujjuOk1hJAg5OSAvXpvA0RjBvenltA1HqrMvGbYhQ==
-X-Received: by 2002:a65:41c8:: with SMTP id b8mr23889318pgq.265.1590378108951;
-        Sun, 24 May 2020 20:41:48 -0700 (PDT)
+        bh=STuSyGO/SfkcGFSauy0QHw5IqCNUH9D9huZMTiB2y2k=;
+        b=P5/M12RYoL5M3x+FolxYuBIL8cTJoS+24++MZ1Plhl7pAR5AZVEFumFCTbdb/6GqFZ
+         o5A0Yf7+Mc0ku79Vm+tc+PWab07MuaLq4tpaTQ9+0H4yehg83GECmJJaWd/Qwl5+ZvrB
+         ipkfbptOYteiNdv1PKiKih5EfYi0kxj1vIjYsjVFn1o9wCDv/L+Qi/NeRa1gjnzWD/vj
+         S4C9/ttDsgsrEcjg6hrgj/O5SdYf1AOqSSxOJM+iHqaRqQLGQNe3mafvweLDEFAXUMwU
+         qQvLMyP1NGKbCbUa8nWQrGzVNJcY0g/79UDTWcp7i/9Gs5Z459L8xONof1CbNyzXAkZi
+         KpNQ==
+X-Gm-Message-State: AOAM533T52d0hvM3uAuYys9IBc44EAU5hoKuyhNzrB8FoSU4UPXBm/Kz
+        R6IEvIA0tpb6F9+lSXSW4pM=
+X-Google-Smtp-Source: ABdhPJwkmS1ZHDjTueCXUPGhysWGmBYPKk9BaU4KH5QdoOaLDJ+q+4xaTLSo+sj1pCIJ1ykv9lAZig==
+X-Received: by 2002:a17:90a:a013:: with SMTP id q19mr18863765pjp.120.1590378356618;
+        Sun, 24 May 2020 20:45:56 -0700 (PDT)
 Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.44])
-        by smtp.gmail.com with ESMTPSA id 7sm11981695pfc.203.2020.05.24.20.41.44
+        by smtp.gmail.com with ESMTPSA id i98sm12152831pje.37.2020.05.24.20.45.53
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 May 2020 20:41:48 -0700 (PDT)
+        Sun, 24 May 2020 20:45:56 -0700 (PDT)
 From:   dillon.minfei@gmail.com
-To:     robh+dt@kernel.org, p.zabel@pengutronix.de,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
-        daniel@ffwll.ch, mturquette@baylibre.com, sboyd@kernel.org
+To:     linus.walleij@linaro.org, broonie@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
         dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH v5 8/8] spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't be coexit with 'SPI_3WIRE' mode
-Date:   Mon, 25 May 2020 11:41:02 +0800
-Message-Id: <1590378062-7965-9-git-send-email-dillon.minfei@gmail.com>
+Subject: [PATCH v5 1/8] ARM: dts: stm32: Add dma config for spi5
+Date:   Mon, 25 May 2020 11:45:41 +0800
+Message-Id: <1590378348-8115-2-git-send-email-dillon.minfei@gmail.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
-References: <broonie@kernel.org>
- <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
+In-Reply-To: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com>
+References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -82,30 +78,27 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: dillon min <dillon.minfei@gmail.com>
 
-since chip spi driver need get the transfer direction by 'tx_buf' and
-'rx_buf' of 'struct spi_transfer' in 'SPI_3WIRE' mode.
-
-so, we need bypass 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX'
-feature in 'SPI_3WIRE' mode
+Enable spi5's dma configuration. for graphics data output to
+ilitek ili9341 panel via mipi dbi interface
 
 Signed-off-by: dillon min <dillon.minfei@gmail.com>
 ---
- drivers/spi/spi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32f429.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index c92c894..f884411 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1023,7 +1023,8 @@ static int spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
- 	void *tmp;
- 	unsigned int max_tx, max_rx;
- 
--	if (ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) {
-+	if ((ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX))
-+		&& !(msg->spi->mode & SPI_3WIRE)) {
- 		max_tx = 0;
- 		max_rx = 0;
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index d777069..5820b11 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -660,6 +660,9 @@
+ 			reg = <0x40015000 0x400>;
+ 			interrupts = <85>;
+ 			clocks = <&rcc 0 STM32F4_APB2_CLOCK(SPI5)>;
++			dmas = <&dma2 3 2 0x400 0x0>,
++				<&dma2 4 2 0x400 0x0>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
  
 -- 
 2.7.4
