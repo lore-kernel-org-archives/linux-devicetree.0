@@ -6,61 +6,60 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56630C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4972C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3572B2054F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B528020812
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 May 2020 12:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s27kr2eq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHchiWv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390579AbgEYMUi (ORCPT
+        id S2390570AbgEYMX6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 08:20:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54394 "EHLO
+        Mon, 25 May 2020 08:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390568AbgEYMUh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 08:20:37 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D02C061A0E
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:20:36 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c21so10425255lfb.3
-        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:20:36 -0700 (PDT)
+        with ESMTP id S2390488AbgEYMX5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 08:23:57 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C9FC08C5C1
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:23:56 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m18so20539038ljo.5
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 05:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2uL/BTgbcmhuM5YoKw/xsIFunhmdvIl/vJd/r4JhQGI=;
-        b=s27kr2eqyPVVUBlXSvFGIQr/trFb1G9zTpaZkf+2EZG3Hx2n20tojKndnRmHxnFm5B
-         ASp5qUZUcNhgDtSz05MKDEc0AhNM7RX+XqKC4RcH+dueKzNuzdA9UUtfJm3QObywiyNn
-         gLyUfwWbN87noM3TipQ1xxzLT/qC8suP8C2ItO0uKVBLZF7gkDhYZYdyWaPhGsZlURx5
-         dC7jiymi5TrHLn3WrjWoWbTG/vN0K0XXq9T9jya4WAVmkhAW4KU3DPDDLxbaJk+51A8y
-         NPUY8Y3/kWXC5iqcAEtXLI21yhLyJybrVzQtHPxoRDO5FDHaT8xNMF10qM6k/sr2ih0m
-         THuA==
+        bh=1neDSVvo2exAwO7XG1Q7asHC8C/uLbtbXAanu+QhUvY=;
+        b=mHchiWv9d+bl7TypEyswUYJoJBznRNEzkaqNXJ6yZYcwVhCmDlHeQE5uaH/HclG1/A
+         Bx4Cg9tDzYVicfaKmVDBhYVOUgLefRTuPj7YFVjqzZ8YnTP/1LLLJTykYqXl+FHN2pZL
+         g8xP1m6SXMaHEiGtmqiEB2IP7G+kpZcs9VS8hZv85N+n3X6CdpddRhU6y1nCKsAQzFCY
+         4rfmeLIz/oOwhxkepv8pd1oS85BdwpikntEpMCfo0gVE3d09pfC4AhwFL/nAFV+L4+Zb
+         mwcQqn4CqSg3gj+nOH2kk2AibQMFcCPYOzlGhx/9SXJpErxweRkVif+GCa4LGQO8gvT9
+         9trw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2uL/BTgbcmhuM5YoKw/xsIFunhmdvIl/vJd/r4JhQGI=;
-        b=B/3+2ElczQlBmDR07fjwI6SsJr0aVGm/ersexW80PVyajrZPm5fJsYQDX6IGhpvNlf
-         ZHGGQKaAc9PnemLseWL5A5s1DpQSVv1FL/5lB1xRovNY+1R0OIettsrSjSXXRqxj5iDq
-         3RWL2lMLTrNZhm8Dp1EBLAPfyatWIGgNSZ6xIM5Atrt8YNGs3u54Z+rj35y7hWFOb0PT
-         +F0KKb13XlLpVfR2Wxo2r7yzIQfNPyFsgB4HLIigEDdzY0NnmnWW+wDj+bDFeoSjeySS
-         n9prd+Kzqwff1YUo6ZTsgeW+uN69RV1bIFjOZAHS6a44v1jL4fqFQXTKv7ZzUINm5CNv
-         8t0Q==
-X-Gm-Message-State: AOAM533B3vURSggDm+pGqGCjvxi71rtUq/krC6En33qnMZlUQAHuN5e4
-        r2y6kljpEyHSsnUCxYFxXM++2JdKdmNvwP05I5Qmv6iH
-X-Google-Smtp-Source: ABdhPJzzn4cmibq9OV9VwB1X2PlikxB9SvAFGTTF5EB8YLtQ3tUTqPOcsUIpd9PFnnM7N1+NhdQzLiY+0rFB4yQUkHM=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr14251823lfn.21.1590409234803;
- Mon, 25 May 2020 05:20:34 -0700 (PDT)
+        bh=1neDSVvo2exAwO7XG1Q7asHC8C/uLbtbXAanu+QhUvY=;
+        b=OHG06sLrZf2gkeAUFnTroSyGYBj5m1vzBm48rH/5fuqi6XNaR39rTm1l6idPRNIdk0
+         +R2UHFPlNVkYZNui7wPlTBdQQkWFTMKOFu2Fp9O8yQ5k5fvt5lNwd9g0wOKhzPqzvpci
+         3cIZM0qhx74NtNqlHq/7R+b6bjEYPwC7nlbDYWX6565r8ovnk02QL2v67QRzP/MJGPco
+         5kdeeJZ7i2S9z/bzMdYSvRsRp+QRnxZLl3w8dGslZMEWPhmRbVvCsyyLtJXTuwMScrMP
+         DXGSDOIaGOVzw54jv92XlNpj2fPIadFtbKeyIYNMqxfQKjNgM78Q+7yZhQ1YdS17n8yj
+         jUXw==
+X-Gm-Message-State: AOAM533mx47M2pqMLeAJ9b2NUUZzW+ava4kMhbCmNN3wFoO5a//VoZ9e
+        7ye1pJxZQtpSG818j0XWzgwpctuyc6Equ/2FSauDVw==
+X-Google-Smtp-Source: ABdhPJyf5wZA8Fh7xQjtaNnLLHBTpAkEbLAQIKhyb7JglaMhaJDSU7UOMtER0/cndL74Gsc/vcIt53XFGmKsX5AJ0t0=
+X-Received: by 2002:a2e:711c:: with SMTP id m28mr13451102ljc.104.1590409434478;
+ Mon, 25 May 2020 05:23:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com> <1590378348-8115-5-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1590378348-8115-5-git-send-email-dillon.minfei@gmail.com>
+References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com> <1590378348-8115-7-git-send-email-dillon.minfei@gmail.com>
+In-Reply-To: <1590378348-8115-7-git-send-email-dillon.minfei@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 14:20:23 +0200
-Message-ID: <CACRpkdb=+T0jSzBkrViHnuXGNhD4F3d_VX1t-hkqMG0CSdDhnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/8] dt-bindings: display: panel: Add ilitek ili9341
- panel bindings
+Date:   Mon, 25 May 2020 14:23:43 +0200
+Message-ID: <CACRpkda26eQZGMfbq-FL9X532mK=Z87GotjYMu2MWNGgNohp7A@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] drm/panel: Add ilitek ili9341 panel driver
 To:     dillon min <dillon.minfei@gmail.com>
 Cc:     Mark Brown <broonie@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
@@ -81,7 +80,17 @@ On Mon, May 25, 2020 at 5:46 AM <dillon.minfei@gmail.com> wrote:
 
 > From: dillon min <dillon.minfei@gmail.com>
 >
-> Add documentation for "ilitek,ili9341" panel.
+>     This driver combine tiny/ili9341.c mipi_dbi_interface driver
+>     with mipi_dpi_interface driver, can support ili9341 with serial
+>     mode or parallel rgb interface mode by register configuration.
+>
+> Changes since V3:
+>
+>     accoding to Linus Walleij's suggestion.
+>     1 add more comments to driver.
+>     2 reduce magic number usage in the driver.
+>     3 move panel configuration from common place to system configuration.
+>     4 reuse MIPI_DCS_* as more as possible.
 >
 > Signed-off-by: dillon min <dillon.minfei@gmail.com>
 
