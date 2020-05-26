@@ -6,26 +6,29 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F09C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4306AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A8A208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2373B208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:42:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391223AbgEZWmE (ORCPT
+        id S2390674AbgEZWmh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 18:42:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35092 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389755AbgEZWmE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:42:04 -0400
+        Tue, 26 May 2020 18:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389755AbgEZWmh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:42:37 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A453C061A0F
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 15:42:37 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5904C2A3607;
-        Tue, 26 May 2020 23:42:02 +0100 (BST)
-Date:   Wed, 27 May 2020 00:41:59 +0200
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F1A092A3607;
+        Tue, 26 May 2020 23:42:35 +0100 (BST)
+Date:   Wed, 27 May 2020 00:42:33 +0200
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Richard Weinberger <richard@nod.at>,
@@ -34,12 +37,11 @@ Cc:     Richard Weinberger <richard@nod.at>,
         <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         <devicetree@vger.kernel.org>
-Subject: Re: [RESEND v5 05/21] mtd: rawnand: Return an enum from
- of_get_nand_ecc_algo()
-Message-ID: <20200527004159.0a8e29a6@collabora.com>
-In-Reply-To: <20200526195633.11543-6-miquel.raynal@bootlin.com>
+Subject: Re: [RESEND v5 04/21] dt-bindings: mtd: Deprecate OOB_FIRST mode
+Message-ID: <20200527004233.61a78abc@collabora.com>
+In-Reply-To: <20200526195633.11543-5-miquel.raynal@bootlin.com>
 References: <20200526195633.11543-1-miquel.raynal@bootlin.com>
-        <20200526195633.11543-6-miquel.raynal@bootlin.com>
+        <20200526195633.11543-5-miquel.raynal@bootlin.com>
 Organization: Collabora
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
@@ -50,91 +52,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 26 May 2020 21:56:17 +0200
+On Tue, 26 May 2020 21:56:16 +0200
 Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> There is an enumeration to list ECC algorithm, let's use it instead of
-> returning an int.
+> This mode has never actually been used, it was introduced for a single
+> driver and even this driver did not use it in the DT but only in the
+> code. Now that this mode has been removed, let's trim the bindings
+> definition to avoid carrying useless properties.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
 > ---
->  drivers/mtd/nand/raw/nand_base.c | 35 +++++++++++++++++---------------
->  1 file changed, 19 insertions(+), 16 deletions(-)
+>  Documentation/devicetree/bindings/mtd/atmel-nand.txt       | 3 +--
+>  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 2 +-
+>  2 files changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> index 7176e513a0bb..a756f3193558 100644
-> --- a/drivers/mtd/nand/raw/nand_base.c
-> +++ b/drivers/mtd/nand/raw/nand_base.c
-> @@ -5048,17 +5048,20 @@ static const char * const nand_ecc_algos[] = {
->  	[NAND_ECC_RS]		= "rs",
->  };
->  
-> -static int of_get_nand_ecc_algo(struct device_node *np)
-> +static enum nand_ecc_algo of_get_nand_ecc_algo(struct device_node *np)
->  {
-> +	enum nand_ecc_algo ecc_algo;
->  	const char *pm;
-> -	int err, i;
-> +	int err;
->  
->  	err = of_property_read_string(np, "nand-ecc-algo", &pm);
->  	if (!err) {
-> -		for (i = NAND_ECC_HAMMING; i < ARRAY_SIZE(nand_ecc_algos); i++)
-> -			if (!strcasecmp(pm, nand_ecc_algos[i]))
-> -				return i;
-> -		return -ENODEV;
-> +		for (ecc_algo = NAND_ECC_HAMMING;
-> +		     ecc_algo < ARRAY_SIZE(nand_ecc_algos);
-> +		     ecc_algo++) {
-> +			if (!strcasecmp(pm, nand_ecc_algos[ecc_algo]))
-> +				return ecc_algo;
-> +		}
->  	}
->  
->  	/*
-> @@ -5066,15 +5069,14 @@ static int of_get_nand_ecc_algo(struct device_node *np)
->  	 * for some obsoleted values that were specifying ECC algorithm.
->  	 */
->  	err = of_property_read_string(np, "nand-ecc-mode", &pm);
-> -	if (err < 0)
-> -		return err;
-> +	if (!err) {
-> +		if (!strcasecmp(pm, "soft"))
-> +			return NAND_ECC_HAMMING;
-> +		else if (!strcasecmp(pm, "soft_bch"))
-> +			return NAND_ECC_BCH;
-> +	}
->  
-> -	if (!strcasecmp(pm, "soft"))
-> -		return NAND_ECC_HAMMING;
-> -	else if (!strcasecmp(pm, "soft_bch"))
-> -		return NAND_ECC_BCH;
-> -
-> -	return -ENODEV;
-> +	return NAND_ECC_UNKNOWN;
->  }
->  
->  static int of_get_nand_ecc_step_size(struct device_node *np)
-> @@ -5119,7 +5121,8 @@ static bool of_get_nand_on_flash_bbt(struct device_node *np)
->  static int nand_dt_init(struct nand_chip *chip)
->  {
->  	struct device_node *dn = nand_get_flash_node(chip);
-> -	int ecc_mode, ecc_algo, ecc_strength, ecc_step;
-> +	enum nand_ecc_algo ecc_algo;
-> +	int ecc_mode, ecc_strength, ecc_step;
->  
->  	if (!dn)
->  		return 0;
-> @@ -5141,7 +5144,7 @@ static int nand_dt_init(struct nand_chip *chip)
->  	if (ecc_mode >= 0)
->  		chip->ecc.mode = ecc_mode;
->  
-> -	if (ecc_algo >= 0)
-> +	if (ecc_algo != NAND_ECC_UNKNOWN)
->  		chip->ecc.algo = ecc_algo;
->  
->  	if (ecc_strength >= 0)
+> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> index 3aa297c97ab6..ead1826d0d51 100644
+> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> @@ -143,8 +143,7 @@ Required properties:
+>  Optional properties:
+>  - atmel,nand-has-dma : boolean to support dma transfer for nand read/write.
+>  - nand-ecc-mode : String, operation mode of the NAND ecc mode, soft by default.
+> -  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+> -  "soft_bch".
+> +  Supported values are: "none", "soft", "hw", "hw_syndrome", "soft_bch".
+>  - atmel,has-pmecc : boolean to enable Programmable Multibit ECC hardware,
+>    capable of BCH encoding and decoding, on devices where it is present.
+>  - atmel,pmecc-cap : error correct capability for Programmable Multibit ECC
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> index d261b7096c69..d529f8587ba6 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> @@ -49,7 +49,7 @@ patternProperties:
+>        nand-ecc-mode:
+>          allOf:
+>            - $ref: /schemas/types.yaml#/definitions/string
+> -          - enum: [ none, soft, hw, hw_syndrome, hw_oob_first, on-die ]
+> +          - enum: [ none, soft, hw, hw_syndrome, on-die ]
+>          description:
+>            Desired ECC engine, either hardware (most of the time
+>            embedded in the NAND controller) or software correction
 
