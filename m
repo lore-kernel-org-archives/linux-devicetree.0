@@ -2,197 +2,90 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E89AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 01:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4248C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 01:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6896B2071C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 01:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEBF2071C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 01:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZBcUjXew"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rA+7VCeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388572AbgEZBnH (ORCPT
+        id S2388233AbgEZBpA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 May 2020 21:43:07 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24106 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388568AbgEZBnG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 May 2020 21:43:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590457384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=90A2V+s9G7+5U5tOSG/V9yeg3CjImgO19y8K0xgH3vo=;
-        b=ZBcUjXewX8p6W31MrW+CRIKTiV9gJxESlCkPyI2yU5AZ+iGy5ZUdPeM2AbYhjZMphaWCXo
-        4R6KMHw8hhY9lvaHigTmzOFLYl4tg1f5JgXYdisQNkCgiwPVk1R3SgwPolpDnaSAN0S8wz
-        SQxWwvpZNbE7S7i4o8H3eAeVVkxyqIA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-UgCT4IApOH-CVovWkXx76g-1; Mon, 25 May 2020 21:42:50 -0400
-X-MC-Unique: UgCT4IApOH-CVovWkXx76g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C5E8107ACCD;
-        Tue, 26 May 2020 01:42:48 +0000 (UTC)
-Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0850879C3E;
-        Tue, 26 May 2020 01:42:44 +0000 (UTC)
-Date:   Tue, 26 May 2020 09:42:42 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, catalin.marinas@arm.com,
-        will@kernel.org, dyoung@redhat.com, robh+dt@kernel.org,
-        John.p.donnelly@oracle.com, arnd@arndb.de,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        horms@verge.net.au, guohanjun@huawei.com, pkushwaha@marvell.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
- kdump
-Message-ID: <20200526014242.GF20045@MiWiFi-R3L-srv>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
+        Mon, 25 May 2020 21:45:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387794AbgEZBo7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 May 2020 21:44:59 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E266C061A0E
+        for <devicetree@vger.kernel.org>; Mon, 25 May 2020 18:44:59 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C9451562;
+        Tue, 26 May 2020 03:44:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590457498;
+        bh=WO78qSn6qRwq865tLbnkjyz39KiwOC685Y01AfjqX8Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rA+7VCeTSx+FV23WUjOiz5m8cbmHlx4/aL4TkVantAECyeFmxUUHm95x+oMH4c+SV
+         OGbgf6UGcxxX4SjIxTDtGCPDi+GASoR9QZ33Pk1VtSiHyx+ahqYqu8jgmwYCUh8olo
+         J3viD2UCBZEgtvz3Ctc33evH4Agj2X+2aUQWLEII=
+Date:   Tue, 26 May 2020 04:44:44 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, geert+renesas@glider.be,
+        robh+dt@kernel.org, xuwei5@hisilicon.com
+Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt:
+ convert to yaml
+Message-ID: <20200526014444.GB6179@pendragon.ideasonboard.com>
+References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
+ <20200511110611.3142-7-ricardo.canuelo@collabora.com>
+ <20200514015412.GF7425@pendragon.ideasonboard.com>
+ <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360>
+ <20200514152239.GG5955@pendragon.ideasonboard.com>
+ <20200525074335.grnjvdjnipq5g3kf@rcn-XPS-13-9360>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200521093805.64398-1-chenzhou10@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200525074335.grnjvdjnipq5g3kf@rcn-XPS-13-9360>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05/21/20 at 05:38pm, Chen Zhou wrote:
-> This patch series enable reserving crashkernel above 4G in arm64.
-> 
-> There are following issues in arm64 kdump:
-> 1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
-> when there is no enough low memory.
-> 2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
-> in this case, if swiotlb or DMA buffers are required, crash dump kernel
-> will boot failure because there is no low memory available for allocation.
-> 
-> To solve these issues, introduce crashkernel=X,low to reserve specified
-> size low memory.
-> Crashkernel=X tries to reserve memory for the crash dump kernel under
-> 4G. If crashkernel=Y,low is specified simultaneously, reserve spcified
-> size low memory for crash kdump kernel devices firstly and then reserve
-> memory above 4G.
-> 
-> When crashkernel is reserved above 4G in memory, that is, crashkernel=X,low
-> is specified simultaneously, kernel should reserve specified size low memory
-> for crash dump kernel devices. So there may be two crash kernel regions, one
-> is below 4G, the other is above 4G.
-> In order to distinct from the high region and make no effect to the use of
-> kexec-tools, rename the low region as "Crash kernel (low)", and add DT property
-> "linux,low-memory-range" to crash dump kernel's dtb to pass the low region.
-> 
-> Besides, we need to modify kexec-tools:
-> arm64: kdump: add another DT property to crash dump kernel's dtb(see [1])
-> 
-> The previous changes and discussions can be retrieved from:
-> 
-> Changes since [v7]
-> - Move x86 CRASH_ALIGN to 2M
-> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
+Hi Ricardo,
 
-OK, moving x86 CRASH_ALIGN to 2M is suggested by Dave. Because
-CONFIG_PHYSICAL_ALIGN can be selected from 2M to 16M. So 2M seems good.
-But, anyway, we should tell the reason why it need be changed in commit
-log.
+On Mon, May 25, 2020 at 09:43:35AM +0200, Ricardo Cañuelo wrote:
+> On jue 14-05-2020 18:22:39, Laurent Pinchart wrote:
+> > > If we want to be more strict and require the definition of all the
+> > > supplies, there will be many more DTs changes in the series, and I'm not
+> > > sure I'll be able to do that in a reasonable amount of time. I'm looking
+> > > at them and it's not always clear which regulators to use or if they are
+> > > even defined.
+> > 
+> > We can decouple the two though (I think). The bindings should reflect
+> > what we consider right, and the dts files could be fixed on top.
+> 
+> Do you have a suggestion on how to do this? If we decouple the two
+> tasks most of the work would be searching for DTs to fix and finding a
+> way to fix each one of them, and unless I do this _before_ the binding
+> conversion I'll get a lot of dtbs_check errors.
 
+Rob should answer this question as it will be his decision, but I've
+personally never considered non-compliant DT sources to be an obstacle
+to bindings conversion to YAML. The DT sources should be fixed, but I
+don't see it as a prerequisite (although it's a good practice).
 
-arch/x86/Kconfig:
-config PHYSICAL_ALIGN
-        hex "Alignment value to which kernel should be aligned"
-        default "0x200000"
-        range 0x2000 0x1000000 if X86_32
-        range 0x200000 0x1000000 if X86_64
+> The binding conversion itself is done, if we go this route the only
+> additional change would be to make the supplies required.
 
-> - Update Documentation/devicetree/bindings/chosen.txt 
-> Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt suggested by Arnd.
-> - Add Tested-by from Jhon and pk
-> 
-> Changes since [v6]
-> - Fix build errors reported by kbuild test robot.
-> 
-> Changes since [v5]
-> - Move reserve_crashkernel_low() into kernel/crash_core.c.
-> - Delete crashkernel=X,high.
+-- 
+Regards,
 
-And the crashkernel=X,high being deleted need be told too. Otherwise
-people reading the commit have to check why themselves. I didn't follow
-the old version, can't see why ,high can't be specified explicitly.
-
-> - Modify crashkernel=X,low.
-> If crashkernel=X,low is specified simultaneously, reserve spcified size low
-> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
-> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
-> pass to crash dump kernel by DT property "linux,low-memory-range".
-> - Update Documentation/admin-guide/kdump/kdump.rst.
-> 
-> Changes since [v4]
-> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
-> 
-> Changes since [v3]
-> - Add memblock_cap_memory_ranges back for multiple ranges.
-> - Fix some compiling warnings.
-> 
-> Changes since [v2]
-> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
-> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
-> patch.
-> 
-> Changes since [v1]:
-> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
-> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
-> in fdt_enforce_memory_region().
-> There are at most two crash kernel regions, for two crash kernel regions
-> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
-> and then remove the memory range in the middle.
-> 
-> [1]: http://lists.infradead.org/pipermail/kexec/2020-May/025128.html
-> [v1]: https://lkml.org/lkml/2019/4/2/1174
-> [v2]: https://lkml.org/lkml/2019/4/9/86
-> [v3]: https://lkml.org/lkml/2019/4/9/306
-> [v4]: https://lkml.org/lkml/2019/4/15/273
-> [v5]: https://lkml.org/lkml/2019/5/6/1360
-> [v6]: https://lkml.org/lkml/2019/8/30/142
-> [v7]: https://lkml.org/lkml/2019/12/23/411
-> 
-> Chen Zhou (5):
->   x86: kdump: move reserve_crashkernel_low() into crash_core.c
->   arm64: kdump: reserve crashkenel above 4G for crash dump kernel
->   arm64: kdump: add memory for devices by DT property, low-memory-range
->   kdump: update Documentation about crashkernel on arm64
->   dt-bindings: chosen: Document linux,low-memory-range for arm64 kdump
-> 
->  Documentation/admin-guide/kdump/kdump.rst     | 13 ++-
->  .../admin-guide/kernel-parameters.txt         | 12 ++-
->  Documentation/devicetree/bindings/chosen.txt  | 25 ++++++
->  arch/arm64/kernel/setup.c                     |  8 +-
->  arch/arm64/mm/init.c                          | 61 ++++++++++++-
->  arch/x86/kernel/setup.c                       | 66 ++------------
->  include/linux/crash_core.h                    |  3 +
->  include/linux/kexec.h                         |  2 -
->  kernel/crash_core.c                           | 85 +++++++++++++++++++
->  kernel/kexec_core.c                           | 17 ----
->  10 files changed, 208 insertions(+), 84 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
+Laurent Pinchart
