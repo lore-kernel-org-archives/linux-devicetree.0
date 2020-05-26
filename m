@@ -2,105 +2,112 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C7FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CAEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E54F220787
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4F4205CB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oLg3EzO5"
+	dkim=pass (2048-bit key) header.d=nexus-software-ie.20150623.gappssmtp.com header.i=@nexus-software-ie.20150623.gappssmtp.com header.b="FNc4aIV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731770AbgEZJe7 (ORCPT
+        id S2388433AbgEZJhq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 05:34:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
+        Tue, 26 May 2020 05:37:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731691AbgEZJe4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 05:34:56 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1AA2C03E97E
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 02:34:55 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f5so2547389wmh.2
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 02:34:55 -0700 (PDT)
+        with ESMTP id S2388432AbgEZJhp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 05:37:45 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A79BC08C5C1
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 02:37:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x13so5069180wrv.4
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 02:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=uIfXKUCbDucsPOYpYgkjOAmRdJUZDObk3f5/C3vKFFQ=;
-        b=oLg3EzO5sInVvZZNdMUReY1VU37G5NrZ3kBSjpnme2iHn/mLV/BmxA0Mo0n0GfZf/n
-         lj+UYmqPYbPByclPic5/sFkZ/kokkxdJvkdDu87bglSe6+DoLTbQBunk1n5bfEbv0snV
-         xx9+mvNp1yASRai5BFwtpx5FG4W6kk8iaoY6AB/T46B9iZyEvpeh33OILv4HJ+xVhzv4
-         XRqO1XWRBCSxRsyl2lxztWFsVJlASL64oNxnEfnSM+Pa9yM/z/zx35H9sS2jj4+PaHfA
-         EZXMEIoqDNyIu9rCt3OkBrRR4qN4VCvhxiKAeb8xH1fijdU1ByRTg3XrxqkA8YLKH9xQ
-         MzeA==
+        d=nexus-software-ie.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zKgkx1RN+yOQz5t5MmLQDLEnUMA9zwlAKS6pKOreKZY=;
+        b=FNc4aIV0nhulL4pN4Z88kKa4a79yXjgO7FI8T76etE4vtRUUh9t/HH+YRM7VFHS2ay
+         n/0LqPWK9UNVH2Bo5dEVeRHWvrn9fdBi/z1hUfb4jujqGmcwAfK/QDngGUkWTLdrndf1
+         wDucR67QFkeCQd6TGpLQNakoGmVGAW5tGG/DWWSwlGcL+CG0VhJB2QhjW1NK0XlUUjE7
+         Ni/VX5WekMngIpi6qy6WlEHLTXQ1TweR2TG+w+B4Nq0qjvxFf7LB0FYa60tPDK+Z/hTq
+         dMmrq1HFfkc06E/JUaNF6K5/iPT/K3W3d51vq/yLUXYz/p3/t31o1IeGTczThkCuX9NC
+         7xoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=uIfXKUCbDucsPOYpYgkjOAmRdJUZDObk3f5/C3vKFFQ=;
-        b=IbetIOZrNUxqv77qABJD5agUZIbrjPuzi/dUDQ6HcwlyYpwhX9a+Zi3lBUT/q34Xoq
-         Cb1qdd0pwfEIYcezq5WtX9oaKsIqRt9Gs2o+HleiiHSJ4lhrkX33uP5Suu8o3RSwDLQt
-         ht+4HvDJ/+hH5SXCTNjZpjps2m8yEpz/d6XZM+jSCi64zPj1T5QINqPzxUhSq2LNdNIC
-         HO/GDvZnXZv63CRTayfwl63DAvggLuAL96LAzHCLJOAKL3IJQ1RzCn8K5Tc56JwTjne/
-         noUU1yMXW5AE6FFCXxwTMZuafIXVOVkHB8SuAHBcFs2Ocx7mrc0mTt04hK8alZv/qL+g
-         LVTA==
-X-Gm-Message-State: AOAM5322AIGcDmnLLb48OYfuBT9pMlWA70qHF0JPYqQwiqESsgCybY5h
-        fDscJZat8sGBV0ntbuHWSgTAnHnKlWg=
-X-Google-Smtp-Source: ABdhPJzrrxB7FkN/xp0+nIBota9X6mJMdDJrXBjQdIa6PiqyON/o1c2F/P0fkO+zgSyNBPJ1/c0myw==
-X-Received: by 2002:a1c:9cd4:: with SMTP id f203mr618021wme.26.1590485694696;
-        Tue, 26 May 2020 02:34:54 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id x18sm21533655wru.72.2020.05.26.02.34.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 02:34:54 -0700 (PDT)
-Date:   Tue, 26 May 2020 10:34:50 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v12 0/6] Add battery charger driver support for MP2629
-Message-ID: <20200526093450.GM3628@dell>
-References: <20200526090646.25827-1-sravanhome@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zKgkx1RN+yOQz5t5MmLQDLEnUMA9zwlAKS6pKOreKZY=;
+        b=icQjbgOXmi+orUP/pctAHD4CeQZ4bxa3lWzubBwqzwyt4OClmjmbt8DobWPlukF0rf
+         XZIWItRePf8ybllO9vpAUuB+TQUFjnFBkdYFpqAPb+UeYhYyKD/ol9tjUrFIiHKpA2NK
+         zx4n+aLf2ozm4+C6vqfIN/1EIDgjGJg9BuTSvqB9Dpvh4AJKgB2QZzi6xyH5RUAD4G/I
+         aDD81s5mfDLLtHpoA05L4HuILtiNinfvcyVEECG4Ry1fCqqBwymsXEOippb0ZhDTHSIJ
+         hXeQZjHAq1p1wSklpQy9uctDF0f/yNqlPt+WvQw09XxD/k4JN3Dzus964YXdpBKwkQE+
+         FfrQ==
+X-Gm-Message-State: AOAM532QcdZQASnm5D41HrQu9ymUQ7M6s2C5UQrYLoa/Bc29RVVf6W1P
+        7kNGfSEvE9p75FCGlr2avQW5Mg==
+X-Google-Smtp-Source: ABdhPJzfEXYdCF/DEyjlvvWvfNcMNSgFSqWgMZJUcODo9tJ+VjhsEhG1votkhojXE9haIoAN3q15Tw==
+X-Received: by 2002:a5d:4d01:: with SMTP id z1mr18065341wrt.29.1590485864008;
+        Tue, 26 May 2020 02:37:44 -0700 (PDT)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id b185sm388031wmd.3.2020.05.26.02.37.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 02:37:43 -0700 (PDT)
+Subject: Re: [PATCH v5 2/2] clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock
+ Controller
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de,
+        vincent.knecht@mailoo.org, konradybcio@gmail.com
+References: <20200517131348.688405-1-bryan.odonoghue@linaro.org>
+ <20200517131348.688405-3-bryan.odonoghue@linaro.org>
+From:   Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Message-ID: <af35d732-08bf-fe95-3c98-063b32fe992a@nexus-software.ie>
+Date:   Tue, 26 May 2020 10:38:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526090646.25827-1-sravanhome@gmail.com>
+In-Reply-To: <20200517131348.688405-3-bryan.odonoghue@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 26 May 2020, Saravanan Sekar wrote:
-
-> changes in v12:
->  - added SOB Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
-Looks like you added my Acked-by to every patch, when actually I only
-Acked the MFD one.  Fortunately, as I'm the one applying these, I can
-strip them off, but please be more careful about which *-bys you apply
-to which patches in the future.
-
-> changes in v11:
->  - module_remove part replaced by devm_add_action_or_reset in charger patch
->  - minor review comments solved in mfd and adc patch
+On 17/05/2020 14:13, Bryan O'Donoghue wrote:
+> This patch adds support for the MSM8939 GCC. The MSM8939 is based on the
+> MSM8916. MSM8939 is compatible in several ways with MSM8916 but, has
+> additional functional blocks added which require additional PLL sources. In
+> some cases functional blocks from the MSM8916 have different clock sources
+> or different supported frequencies.
 > 
-> I expect, that Lee will provide an immutable branch for me and
-> Jonathan once the MFD bits have been reviewed. Please tell me,
-> if I should prepare one instead.
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Co-developed-by: Shawn Guo <shawn.guo@linaro.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Tested-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-I'll do this now.
+ping
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+just sending a reminder on this one
+
