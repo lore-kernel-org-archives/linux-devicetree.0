@@ -2,94 +2,90 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B99C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD67FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E5B20849
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A252A20704
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEk6l109"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xERL7lEO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgEZRnh (ORCPT
+        id S2388858AbgEZRre (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 13:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgEZRng (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:43:36 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC99C03E96D;
-        Tue, 26 May 2020 10:43:36 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l11so21332324wru.0;
-        Tue, 26 May 2020 10:43:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DcoTWLaWuLh6LbQ2E4pMtjfD0DV5c7lnlwMOorG+hjo=;
-        b=MEk6l109ZsgDsgxPPHc7TMEvSssMisdoBSHkKQQrQCOthwHs0s8i/KdD8H/QGlhcPX
-         /yGYKMeGirxAUN8WXz3fZkl9/hKY3tt4l1tRn+fZyPKq99LJBolmTaFNGAMQ03ss/2Jm
-         9XKroGmMOL1ZNOX4hNQGMRG/gaAdgxTKfc0Y/djC+Np97sbgp5Z/8Un7pcc/1VhTnbdI
-         NpqRHA/Dd2mdwkLR7VhJBcsAeEuKsj7MVeOG6JCDwZYuJENI9AeOwUDNUtxTIgC9ErRe
-         d3ajk257n1qqjj1me2d+tbvAi353QZVF2X/zUfNGffg6dbomRH2vrF0e8jCi4C0TJZid
-         qCxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DcoTWLaWuLh6LbQ2E4pMtjfD0DV5c7lnlwMOorG+hjo=;
-        b=bXeUYpM9Yd8NuzwZUI3q4qy5CRXFsVMkWDWXDangnXho8RZCKrZZxbipXgTNFroWY/
-         2a/4b2o0eLwGYeY2/27JYD268i8qoP8MGXC5KG4VNATtbPRrxYh9QlGTxu3MIYoxKgPf
-         ng2g9TEKAs0VyYvGQkp0IfgtNQwl1doI+8GQ9a12tjLPacHCN837oGLqnusJ0CQYUK6d
-         QOAuxuUEa7BlVT8xycjKe/d7s5iMBCo84U+xpPSjTdnY+wZDrgshhyQs7piSpscMgK5A
-         ermdKafFPMFzVFjpLde/Dq1j7Sysi3vimNVS6G8KYCet7kT9CR0PYpLJvJIaopGt0oqo
-         Xkkg==
-X-Gm-Message-State: AOAM531ANjBgFoRGEro0ED7CxMGcQQixYHMPGk4VHBc+2rYYIkdqxfSq
-        Akbt08IiXPAnfjJnqUdLI9KbIDjdSAHA9q1Q98s=
-X-Google-Smtp-Source: ABdhPJyoDeW75oDbS4RgC+rrZAbEt3FUCMuJnat3rtA+g/1JeSCoyGgqVUMthL8CZAOusFW65TR9SHP2qXfztEoTg8k=
-X-Received: by 2002:adf:eec3:: with SMTP id a3mr22471564wrp.164.1590515015370;
- Tue, 26 May 2020 10:43:35 -0700 (PDT)
+        Tue, 26 May 2020 13:47:34 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38176 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388654AbgEZRrd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:47:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHlQ2o033068;
+        Tue, 26 May 2020 12:47:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590515246;
+        bh=iSQV5HysmgZxxM+A2iVQvD9rooBBNm9bWlMSdggWHNk=;
+        h=From:To:CC:Subject:Date;
+        b=xERL7lEORdCCEkqE+rRq4k5zFVoAv3VZLB8GsaNIOVQZrPlfL71BuvDQbX2MVlnWD
+         Y5C5JXGqVZrmXudWnapwaIfbO9Y46iocMrJcYk4JeVohHEi+esHW1oh0i63hDa2q2p
+         b4qdcDXabJjHIuBCHaWLR5M3Iyst2qRxDEnRI0d8=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QHlQk4020259
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 May 2020 12:47:26 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
+ May 2020 12:47:18 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 26 May 2020 12:47:17 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHlHOr107880;
+        Tue, 26 May 2020 12:47:17 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v3 0/4] RGMII Internal delay common property
+Date:   Tue, 26 May 2020 12:47:12 -0500
+Message-ID: <20200526174716.14116-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200526170939.104111-1-aford173@gmail.com>
-In-Reply-To: <20200526170939.104111-1-aford173@gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 26 May 2020 20:43:24 +0300
-Message-ID: <CAEnQRZCv0KbVkGUoVz-Sz3XwQyFY-5KZXfLoFw6u5amxGSCVgg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mm-beacon: Fix voltages on LDO1 and LDO2
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        aford@beaconembedded.com, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 26, 2020 at 8:11 PM Adam Ford <aford173@gmail.com> wrote:
->
-> LDO1 and LDO2 settings are wrong and case the voltage to go above the
-> maximum level of 2.15V permitted by the SoC to 3.0V.
->
-> This patch is based on work done on the i.MX8M Mini-EVK which utilizes
-> the same fix.
->
-> Fixes: 593816fa2f35 ("arm64: dts: imx: Add Beacon i.MX8m-Mini development kit")
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-No need for a new line between fixes and signed-off-by.
+Hello
 
-With that:
+The RGMII internal delay is a common setting found in most RGMII capable PHY
+devices.  It was found that many vendor specific device tree properties exist
+to do the same function. This creates a common property to be used for PHY's
+that have tunable internal delays for the Rx and Tx paths.
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+
+Dan Murphy (4):
+  dt-bindings: net: Add tx and rx internal delays
+  net: phy: Add a helper to return the index for of the internal delay
+  dt-bindings: net: Add RGMII internal delay for DP83869
+  net: dp83869: Add RGMII internal delay configuration
+
+ .../bindings/net/ethernet-controller.yaml     | 14 +++
+ .../devicetree/bindings/net/ti,dp83869.yaml   | 16 ++++
+ drivers/net/phy/dp83869.c                     | 91 +++++++++++++++++-
+ drivers/net/phy/phy_device.c                  | 94 +++++++++++++++++++
+ include/linux/phy.h                           |  2 +
+ 5 files changed, 214 insertions(+), 3 deletions(-)
+
+-- 
+2.26.2
+
