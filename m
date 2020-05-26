@@ -2,201 +2,295 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2616C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA50C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3EC72065F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44BC20674
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590516534;
-	bh=imWs4ah6WzLsF7HUgbEz+ghYEeQx18mGuyl9PlBOMCU=;
+	s=default; t=1590517731;
+	bh=A/jOfxAQhua+4aEIMtZp6fneOctH8IFKYFMqs22ur0I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e1Q44Ob4mgi1h3WYEJwIIbQ1BUlnNxm9dV1SHX0QlSjdlyl+8xD2alLFvWfu2FHPV
-	 GTKlBPSlav6rf/xNmjZh1ViUB5B3TRYNIugeUhyHcTHnVesVXqQcTP3DhHXu4fch/Z
-	 rwFveDMhyd6VfH+ZXzFjV+RNtu5m1niLgUM+uNGQ=
+	b=gcm4HhAxV0SGI9cq4ywl6jyBAxtd507BQ/YJbD9EzN7UGerP2SHX4+xkll3PAjLjm
+	 5xfb1Y8gzH8G9r+XrR3dLBsGN9nM7KtnZXhGQGIhRW+dy4WXIW7h4x+u33q7pCDG6I
+	 Tw2FPkJhDpO3wnw8PgrXYEQ9cLvenAVIhXpw6Gdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgEZSIr (ORCPT
+        id S1729141AbgEZS2v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 14:08:47 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39841 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbgEZSIr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:08:47 -0400
-Received: by mail-io1-f65.google.com with SMTP id c8so2715548iob.6;
-        Tue, 26 May 2020 11:08:45 -0700 (PDT)
+        Tue, 26 May 2020 14:28:51 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33067 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgEZS2v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:28:51 -0400
+Received: by mail-il1-f193.google.com with SMTP id y17so19299358ilg.0;
+        Tue, 26 May 2020 11:28:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ShRmryyfPituzUaTF9xqzITMDWyV5MMJxj9+4c5azDc=;
-        b=C9KvwuUFntPN9VrbKhVQfdEmBoI2rw0FpghH97V6yw5WLmTMue7Iob6YgwtUUfkRiw
-         3tXPuOehPOp57Of2WnEElaRiK/fHBWkuV5+lzJ2TNT6YwJaoY0OmSAnPASYsCP3ITQWf
-         iConQqnkMMzvXE0MNNWAGqHSaCl8bv/xJYPaoRZIxkD/lcYuNOTw4f9NfkgUdzCtiwi8
-         hhOPYxJIUhnU5HSPP5aKURMIWWCrGyrIgHRssH7e5+ZaDUvXF+QXz6kYzj0fi5LFVsGi
-         qdduB1650U4d0+P1kn3uEMeVnJI/EKq6RQuzbUuE2z6wswqaot9XQerAvhrLnbm/vt8E
-         k8NQ==
-X-Gm-Message-State: AOAM532IqvSsAgHSDp4oFfc8m2FOeiAWDkeVjlqiYtkilK7MHduLsYFU
-        MPGs4Z8vEbBx8YeppO5gNA==
-X-Google-Smtp-Source: ABdhPJw3FHEFautJYIk4tPlQQMhfWPm80jnVw4i0iIIULhGB0bIvWnQ4K1CyzKMAwU5hjhBOO6TKQA==
-X-Received: by 2002:a05:6602:134d:: with SMTP id i13mr18153812iov.50.1590516525215;
-        Tue, 26 May 2020 11:08:45 -0700 (PDT)
+        bh=8G/Js8g5idRPMRWdzi17/octVu1NTNo+9WkwNwKfGQg=;
+        b=csvQtWK47tarPSlrvVuz0dG02pX24dxY3qWfll9wq2UKuj18ib1JKQAzLuQLlijU6Z
+         1P0HJy7OuDYkR/ZnOcNePTMZSJMibxzNIXOiySUsXmBAPaqBr1Q66bs8eHg8ilnVyNCv
+         ciXVfmG/w5kWe1hh+xoFfQ6lFm7UbMNwpa916GEwzpYwFIOvNkI+YBlJsvpl/c1jzWwV
+         Fuy5/e9tTzxDPg5Z9SGzOLDGJZrQGmua2WLEGDIpefJYWVweuntsARIQ1fMTn90M7XFN
+         +qX5A6NpunVWbzKmCe+Pm03ziLQzsCOs6nPOsz+DvBrMbcXpUCw5lExOTJDOX2YDDBpC
+         RAHA==
+X-Gm-Message-State: AOAM531WFRBOhiGHyazFlmIhXLC+gm/EkXy3PyDObGi+jNHyCa74s9Cg
+        RPXqMKfKKbeTZnZMN3tNtA==
+X-Google-Smtp-Source: ABdhPJzdDSCsKm+b69so9ArYKwXlWLBU/YAO20Z2v1p7Om5xOYhZPKKMyvSOleIImXZeOuuZ5F/yTg==
+X-Received: by 2002:a92:9899:: with SMTP id a25mr2343958ill.151.1590517729468;
+        Tue, 26 May 2020 11:28:49 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z13sm324592ilh.82.2020.05.26.11.08.44
+        by smtp.gmail.com with ESMTPSA id o70sm351829ilb.86.2020.05.26.11.28.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:08:44 -0700 (PDT)
-Received: (nullmailer pid 91004 invoked by uid 1000);
-        Tue, 26 May 2020 18:08:43 -0000
-Date:   Tue, 26 May 2020 12:08:43 -0600
+        Tue, 26 May 2020 11:28:48 -0700 (PDT)
+Received: (nullmailer pid 129592 invoked by uid 1000);
+        Tue, 26 May 2020 18:28:47 -0000
+Date:   Tue, 26 May 2020 12:28:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
-        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
-        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
-        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 08/10] dt-bindings: ufs: Add DT binding documentation
- for ufs
-Message-ID: <20200526180843.GA81537@bogus>
-References: <20200514003914.26052-1-alim.akhtar@samsung.com>
- <CGME20200514005309epcas5p3ccd2b44c1bf20634eea3e232d1c2b62e@epcas5p3.samsung.com>
- <20200514003914.26052-9-alim.akhtar@samsung.com>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
+        mark.rutland@arm.com, sakari.ailus@linux.intel.com,
+        drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com,
+        bingbu.cao@intel.com, srv_heupstream@mediatek.com,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [V9, 1/2] media: dt-bindings: media: i2c: Document OV02A10
+ bindings
+Message-ID: <20200526182847.GA92449@bogus>
+References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
+ <20200523084103.31276-2-dongchun.zhu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514003914.26052-9-alim.akhtar@samsung.com>
+In-Reply-To: <20200523084103.31276-2-dongchun.zhu@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:09:12AM +0530, Alim Akhtar wrote:
-> This patch adds DT binding for samsung ufs hci
-
-Subject should indicate this is for Samsung in some way.
-
+On Sat, May 23, 2020 at 04:41:02PM +0800, Dongchun Zhu wrote:
+> Add DT bindings documentation for Omnivision OV02A10 image sensor.
 > 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > ---
->  .../bindings/ufs/samsung,exynos-ufs.yaml      | 91 +++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+>  .../bindings/media/i2c/ovti,ov02a10.yaml           | 172 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 +
+>  2 files changed, 179 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
 > new file mode 100644
-> index 000000000000..eaa64cc32d52
+> index 0000000..56f31b5
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+> @@ -0,0 +1,172 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (c) 2020 MediaTek Inc.
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/ufs/samsung,exynos-ufs.yaml#
+> +$id: http://devicetree.org/schemas/media/i2c/ovti,ov02a10.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Samsung SoC series UFS host controller Device Tree Bindings
+> +title: Omnivision OV02A10 CMOS Sensor Device Tree Bindings
 > +
 > +maintainers:
-> +  - Alim Akhtar <alim.akhtar@samsung.com>
+> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
 > +
-> +description: |
-> +  Each Samsung UFS host controller instance should have its own node.
-> +  This binding define Samsung specific binding other then what is used
-> +  in the common ufshcd bindings
-> +  [1] Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +description: |-
+> +  The Omnivision OV02A10 is a low-cost, high performance, 1/5-inch, 2 megapixel
+> +  image sensor, which is the latest production derived from Omnivision's CMOS
+> +  image sensor technology. Ihis chip supports high frame rate speeds up to 30fps
+> +  @ 1600x1200 (UXGA) resolution transferred over a 1-lane MIPI interface. The
+> +  sensor output is available via CSI-2 serial data output.
 > +
 > +properties:
-> +
 > +  compatible:
-> +    enum:
-> +      - samsung,exynos7-ufs
+> +    const: ovti,ov02a10
 > +
 > +  reg:
-> +    items:
-> +     - description: HCI register
-> +     - description: vendor specific register
-> +     - description: unipro register
-> +     - description: UFS protector register
-> +
-> +  reg-names:
-> +    items:
-> +      - const: hci
-> +      - const: vs_hci
-> +      - const: unipro
-> +      - const: ufsp
+> +    maxItems: 1
 > +
 > +  clocks:
-> +    maxItems: 2
-
-maxItems is redundant.
-
 > +    items:
-> +      - description: ufs link core clock
-> +      - description: unipro main clock
+> +      - description: top mux camtg clock
+> +      - description: divider clock
 > +
 > +  clock-names:
-> +    maxItems: 2
+> +    items:
+> +      - const: eclk
+> +      - const: freq_mux
+> +
+> +  clock-frequency:
+> +    description:
+> +      Frequency of the eclk clock in Hertz.
+> +
+> +  dovdd-supply:
+> +    description:
+> +      Definition of the regulator used as Digital I/O voltage supply.
+> +
+> +  avdd-supply:
+> +    description:
+> +      Definition of the regulator used as Analog voltage supply.
+> +
+> +  dvdd-supply:
+> +    description:
+> +      Definition of the regulator used as Digital core voltage supply.
+> +
+> +  powerdown-gpios:
+> +    description:
+> +      Must be the device tree identifier of the GPIO connected to the
+> +      PD_PAD pin. This pin is used to place the OV02A10 into Standby mode
+> +      or Shutdown mode. As the line is active low, it should be
+> +      marked GPIO_ACTIVE_LOW.
+
+Need to define how many GPIOs ('maxItems: 1')
+
+> +
+> +  reset-gpios:
+> +    description:
+> +      Must be the device tree identifier of the GPIO connected to the
+> +      RST_PD pin. If specified, it will be asserted during driver probe.
+> +      As the line is active high, it should be marked GPIO_ACTIVE_HIGH.
 
 Here too.
 
-> +    items:
-> +      - const: core_clk
-> +      - const: sclk_unipro_main
 > +
-> +  interrupts:
-> +    maxItems: 1
+> +  rotation:
+> +    description:
+> +      Definition of the sensor's placement.
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +      - enum:
+> +          - 0    # Sensor Mounted Upright
+> +          - 180  # Sensor Mounted Upside Down
+> +        default: 0
 > +
-> +  phys:
-> +    maxItems: 1
+> +  ovti,mipi-tx-speed:
+> +    description:
+> +      Indication of MIPI transmission speed select, which is to control D-PHY
+> +      timing setting by adjusting MIPI clock voltage to improve the clock
+> +      driver capability.
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +      - enum:
+> +          - 0    #  20MHz -  30MHz
+> +          - 1    #  30MHz -  50MHz
+> +          - 2    #  50MHz -  75MHz
+> +          - 3    #  75MHz - 100MHz
+> +          - 4    # 100MHz - 130MHz
+> +        default: 3
 > +
-> +  phy-names:
-> +    maxItems: 1
+> +  # See ../video-interfaces.txt for details
+> +  port:
+> +    type: object
+> +    additionalProperties: false
 
-What's the name? (Though a name is kind of pointless when there is only 
-1.)
+Should have a description of what data the port has.
 
-With those fixed,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        properties:
+> +          data-lanes:
+> +            maxItems: 1
+> +
+> +          link-frequencies: true
+> +          remote-endpoint: true
+> +
+> +        required:
+> +          - data-lanes
+> +          - link-frequencies
+> +          - remote-endpoint
+> +
+> +    required:
+> +      - endpoint
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - interrupts
-> +  - phys
-> +  - phy-names
 > +  - clocks
 > +  - clock-names
+> +  - clock-frequency
+> +  - dovdd-supply
+> +  - avdd-supply
+> +  - dvdd-supply
+> +  - powerdown-gpios
+> +  - reset-gpios
+> +  - port
 > +
 > +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/exynos7-clk.h>
 > +
-> +    ufs: ufs@15570000 {
-> +       compatible = "samsung,exynos7-ufs";
-> +       reg = <0x15570000 0x100>,
-> +             <0x15570100 0x100>,
-> +             <0x15571000 0x200>,
-> +             <0x15572000 0x300>;
-> +       reg-names = "hci", "vs_hci", "unipro", "ufsp";
-> +       interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
-> +       clocks = <&clock_fsys1 ACLK_UFS20_LINK>,
-> +                <&clock_fsys1 SCLK_UFSUNIPRO20_USER>;
-> +       clock-names = "core_clk", "sclk_unipro_main";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&ufs_rst_n &ufs_refclk_out>;
-> +       phys = <&ufs_phy>;
-> +       phy-names = "ufs-phy";
+> +    #include <dt-bindings/clock/mt8183-clk.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ov02a10: camera-sensor@3d {
+> +            compatible = "ovti,ov02a10";
+> +            reg = <0x3d>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&clk_24m_cam>;
+> +
+> +            clocks = <&topckgen CLK_TOP_MUX_CAMTG>,
+> +                     <&topckgen CLK_TOP_UNIVP_192M_D8>;
+> +            clock-names = "eclk", "freq_mux";
+> +            clock-frequency = <24000000>;
+> +
+> +            rotation = <180>;
+> +            ovti,mipi-tx-speed = <4>;
+> +
+> +            dovdd-supply = <&mt6358_vcamio_reg>;
+> +            avdd-supply = <&mt6358_vcama1_reg>;
+> +            dvdd-supply = <&mt6358_vcn18_reg>;
+> +
+> +            powerdown-gpios = <&pio 107 GPIO_ACTIVE_LOW>;
+> +            reset-gpios = <&pio 109 GPIO_ACTIVE_HIGH>;
+> +
+> +            port {
+> +                wcam_out: endpoint {
+> +                    data-lanes = <1>;
+> +                    link-frequencies = /bits/ 64 <390000000>;
+> +                    remote-endpoint = <&mipi_in_wcam>;
+> +                };
+> +            };
+> +        };
 > +    };
+> +
 > +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e64e5db..63a2335 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12389,6 +12389,13 @@ M:	Harald Welte <laforge@gnumonks.org>
+>  S:	Maintained
+>  F:	drivers/char/pcmcia/cm4040_cs.*
+>  
+> +OMNIVISION OV02A10 SENSOR DRIVER
+> +M:	Dongchun Zhu <dongchun.zhu@mediatek.com>
+> +L:	linux-media@vger.kernel.org
+> +S:	Maintained
+> +T:	git git://linuxtv.org/media_tree.git
+> +F:	Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+> +
+>  OMNIVISION OV13858 SENSOR DRIVER
+>  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+>  L:	linux-media@vger.kernel.org
 > -- 
-> 2.17.1
-> 
+> 2.9.2
