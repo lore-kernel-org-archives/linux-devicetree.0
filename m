@@ -2,81 +2,121 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E21C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 07:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A38C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 08:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 376A220776
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 07:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E05D2089D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 08:27:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xgwwlZ/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731286AbgEZH6j (ORCPT
+        id S1729611AbgEZI1t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 03:58:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40772 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgEZH6j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 03:58:39 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v128so17899918oia.7;
-        Tue, 26 May 2020 00:58:38 -0700 (PDT)
+        Tue, 26 May 2020 04:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgEZI1s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 04:27:48 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1D5C08C5C0
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 01:27:48 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u26so616324wmn.1
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 01:27:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=cfMx3QPegcW07ui0zEuFM9OMjXtnMXJjCz03Y4QBbMI=;
+        b=xgwwlZ/1mJxBPIFU8h/wk6la1tlt+HGj/xGHn7d9tdu6b3kNjT32rubdBqAyNjbJPT
+         3X3wPGbpgVBB7qgdheTHXP+kyfKdRaIgpcV9IIFK1BH+GHyilXXzlZDguSzzhvobiP+a
+         Vn8hjcqu3uW+1n3i2vh6BhuGj3PXl7xQjcUn6pqRS0qdeBbf17HoWN456lW769ZDJ/ql
+         TKMCLcEf4pwBi3FvKpn+n7e7iNsWUSAw5Wj40WYIbmoOyF5xvzwfcrzXY8C7PSKBSH+P
+         XdKVYYZ9HigzzyRDUuRVm9CZxKxDsoUcPpQvoxfBCWegSEFdUSwRasTloTWtRGFXxjaC
+         nRQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vsURDC42TSy6y23dlOiFzYIYBJQzEtPc2OlE7GC+Vns=;
-        b=Kt8AkJKjOVkEfo6wfsyppIPlYmnqCXHnYpeatwG+1PKFHZdOydKJRtL7Vt26EWHgVz
-         T633pFbpk5OGqSj//EgAtPt3KMXWP3IECp0QXQ5CJT8zexXWi3ixjio1BvBPXpHbhzNM
-         GhVUYX29wlJAlCOoX05ZdywxMfsbLTNkXRP89EmWSBUjdznIVlhYCwMuQCDd3qOaL30l
-         59r95/AXkeNYYcussFoKGx4EDqOfxzoUDbPQml/ShrX96PhnCUPg451BBiHfMwd1ZI0I
-         eEIPqhtMkpbfbYypxiMJljEhEXKDWAhpQLoN6aQnsroz//j5LGjUH0106Zx6XvsTvoJy
-         Gnuw==
-X-Gm-Message-State: AOAM533vU7JUwOFXxTFvhQXoLOz/2gh5E3DbRYs2wGRLQv3ZNbAZQKga
-        J3PYDhr9UBKjmuNBsW2Wt4mE2g92bPTrk0uLAas=
-X-Google-Smtp-Source: ABdhPJzz2vDoCU5nnj3rrgngnH6zyoxkynMR40cvCYpworU05mERbFwmbsYX2ELTq/5hLIDmaBMk8L0g8VNIzzFqgA4=
-X-Received: by 2002:aca:210a:: with SMTP id 10mr12878772oiz.153.1590479918473;
- Tue, 26 May 2020 00:58:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cfMx3QPegcW07ui0zEuFM9OMjXtnMXJjCz03Y4QBbMI=;
+        b=aaNuN2HSL2F+6CFBlql4TPh9fFQOvimwPjvSK5QtxAjm1G1KvW/Q+ivahXo8s3zAqg
+         y7kyLu2smuOfUVEATusrQ11vh0EYcMfVvpEi5Sr8hUNbYCFdmagd2SUaTmhTe1wW7Zqk
+         s7fcKZnKCUPoQOpaMU/QXk0QdWX45it2bt6KsUUt0xfFnNf29HLGc2tqo5Ox4/VR3pIZ
+         g/0ji5olyD0CbTh5qc4h+u/lVuzByYPrfdT4c9iOAbKwOVcFwwrnp84yoOMwpZlOir81
+         cqjRVu079kf3qjMxdNZ+Q+M7vIZmTcq7fVAEdyljL1qayPpTmqj9+6Env8wWm/wvDEMz
+         L7yg==
+X-Gm-Message-State: AOAM533+XM0GQbk7oKIgiw4m2+vrlFFibP4Wb43yJEgQyIS6EG8DXNQJ
+        4G9NfrvywlkAQ5VLIDsZxC1pyA==
+X-Google-Smtp-Source: ABdhPJwivVEa7Wbrfc8XZwwaPB5guQr4hvCUswwOuC6U80Y/wBCxFVwaG5kew77mdKPQT0wWtp3qiA==
+X-Received: by 2002:a1c:5a82:: with SMTP id o124mr288626wmb.188.1590481666849;
+        Tue, 26 May 2020 01:27:46 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id p65sm20347925wmp.36.2020.05.26.01.27.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 01:27:46 -0700 (PDT)
+Date:   Tue, 26 May 2020 09:27:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v11 2/6] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200526082744.GJ3628@dell>
+References: <20200430155810.21383-1-sravanhome@gmail.com>
+ <20200430155810.21383-3-sravanhome@gmail.com>
+ <20200519103741.GW271301@dell>
+ <75b6a2ee-2d90-17c2-4b2b-0ef6238e903e@gmail.com>
 MIME-Version: 1.0
-References: <1590420129-7531-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590420129-7531-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590420129-7531-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 26 May 2020 09:58:27 +0200
-Message-ID: <CAMuHMdW4OUrm4nbrozj6Rp8L7527sQWmZS-0xa7+sak2CXBu1Q@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: r8a7742-iwg21d-q7: Add RWDT support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <75b6a2ee-2d90-17c2-4b2b-0ef6238e903e@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 25, 2020 at 5:23 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable RWDT and use 60 seconds as default timeout.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On Sat, 23 May 2020, saravanan sekar wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+> Hi Lee,
+> 
+> On 19/05/20 12:37 pm, Lee Jones wrote:
+> > On Thu, 30 Apr 2020, Saravanan Sekar wrote:
+> > 
+> > > mp2629 is a highly-integrated switching-mode battery charge management
+> > > device for single-cell Li-ion or Li-polymer battery.
+> > > 
+> > > Add MFD core enables chip access for ADC driver for battery readings,
+> > > and a power supply battery-charger driver
+> > > 
+> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > ---
+> > >   drivers/mfd/Kconfig        |  9 +++++
+> > >   drivers/mfd/Makefile       |  2 +
+> > >   drivers/mfd/mp2629.c       | 79 ++++++++++++++++++++++++++++++++++++++
+> > >   include/linux/mfd/mp2629.h | 17 ++++++++
+> > >   4 files changed, 107 insertions(+)
+> > >   create mode 100644 drivers/mfd/mp2629.c
+> > >   create mode 100644 include/linux/mfd/mp2629.h
+> > For my own reference (apply this as-is to your sign-off block):
+> > 
+> >    Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> Do I have to resend with above sign-off in all the patch?
 
-Gr{oetje,eeting}s,
+That would make things simpler, yes.
 
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
