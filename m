@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DD6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72760C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E064020823
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524AB20704
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LN6LT48S"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rzJl38W3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389248AbgEZRs4 (ORCPT
+        id S2389154AbgEZRsv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 13:48:56 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38344 "EHLO
+        Tue, 26 May 2020 13:48:51 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38330 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389241AbgEZRsx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:48:53 -0400
+        with ESMTP id S2388901AbgEZRsu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:48:50 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmm8P033618;
-        Tue, 26 May 2020 12:48:48 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmjmO033609;
+        Tue, 26 May 2020 12:48:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590515328;
-        bh=G0XjWWJkhcxIyep/pNH32iAS9dR/fyKieQrxEzmRWJA=;
+        s=ti-com-17Q1; t=1590515325;
+        bh=h35Gn9fogWy8wFBKtHA2ZrBUEohvkANKQUX2eEmDuJo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LN6LT48SZe1QBVNo8XIOwt2jYO37wamSO9MQADl4/oyyyeVv4+O3OdNzBOIc43TwX
-         +C+YkDrobGS1mG2DIAQ3fhU4J3bOksounTbldV7u7AobKlhMXXpaZUxHP0bWg+MMHi
-         ZxvPgJ47X+97Yw+zFcfylkbhKZtcpy0r6tGaXKis=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHml6p087941;
-        Tue, 26 May 2020 12:48:48 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=rzJl38W39Tg0ZUFQI5zZHbW6V6ipG7yFJ3v5MnqzFPPk9+aPJ1j0f2ezStKIQEEg3
+         FoSCkcKKTfN7xLNrsxnTF7CP28CzCkFN3iuwaAsLjquw8BOd+Zw+S6egTBT7y6nkv4
+         WFtvrNO+um9Bkp6PuN2vvP1Cg6GVN18p3nFC2wvk=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmjkI087764;
+        Tue, 26 May 2020 12:48:45 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
  May 2020 12:47:18 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
  Frontend Transport; Tue, 26 May 2020 12:47:18 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHlIkS087194;
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHlI4Z087204;
         Tue, 26 May 2020 12:47:18 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>, <robh@kernel.org>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v3 1/4] dt-bindings: net: Add tx and rx internal delays
-Date:   Tue, 26 May 2020 12:47:13 -0500
-Message-ID: <20200526174716.14116-2-dmurphy@ti.com>
+Subject: [PATCH net-next v3 3/4] dt-bindings: net: Add RGMII internal delay for DP83869
+Date:   Tue, 26 May 2020 12:47:15 -0500
+Message-ID: <20200526174716.14116-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526174716.14116-1-dmurphy@ti.com>
 References: <20200526174716.14116-1-dmurphy@ti.com>
@@ -66,43 +66,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-tx-internal-delays and rx-internal-delays are a common setting for RGMII
-capable devices.
-
-These properties are used when the phy-mode or phy-controller is set to
-rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
-controller that the PHY will add the internal delay for the connection.
+Add the internal delay values into the header and update the binding
+with the internal delay properties.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../bindings/net/ethernet-controller.yaml          | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../devicetree/bindings/net/ti,dp83869.yaml      | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-index ac471b60ed6a..70702a4ef5e8 100644
---- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-@@ -143,6 +143,20 @@ properties:
-       Specifies the PHY management type. If auto is set and fixed-link
-       is not specified, it uses MDIO for management.
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+index 5b69ef03bbf7..2971dd3fc039 100644
+--- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
++++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+@@ -64,6 +64,20 @@ properties:
+        Operational mode for the PHY.  If this is not set then the operational
+        mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
  
 +  rx-internal-delay-ps:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
-+      PHY's that have configurable RX internal delays.  This property is only
-+      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-rxid.
++    $ref: "#/properties/rx-internal-delay-ps"
++    description: Delay is in pico seconds
++    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
++            3250, 3500, 3750, 4000 ]
++    default: 2000
 +
 +  tx-internal-delay-ps:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+      RGMII Transmit PHY Clock Delay defined in pico seconds.  This is used for
-+      PHY's that have configurable TX internal delays.  This property is only
-+      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-txid.
++    $ref: "#/properties/tx-internal-delay-ps"
++    description: Delay is in pico seconds
++    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
++            3250, 3500, 3750, 4000 ]
++    default: 2000
 +
-   fixed-link:
-     allOf:
-       - if:
+ required:
+   - reg
+ 
+@@ -80,5 +94,7 @@ examples:
+         ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
+         ti,max-output-impedance = "true";
+         ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
++        rx-internal-delay-ps = <2000>;
++        tx-internal-delay-ps = <2000>;
+       };
+     };
 -- 
 2.26.2
 
