@@ -2,206 +2,193 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E8CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 13:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A55C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 13:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E85852086A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 13:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2402086A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 13:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vAAQRH4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgEZNIr (ORCPT
+        id S1727034AbgEZNQS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 09:08:47 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57476 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgEZNIr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 09:08:47 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 16A79803086B;
-        Tue, 26 May 2020 13:08:43 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fJXa1zhMv0r9; Tue, 26 May 2020 16:08:42 +0300 (MSK)
-Date:   Tue, 26 May 2020 16:08:41 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh+dt@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Olof Johansson <olof@lixom.net>, <linux-mips@vger.kernel.org>,
-        <soc@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/6] bus/memory: Add Baikal-T1 SoC APB/AXI/L2 drivers
-Message-ID: <20200526130841.ap6qlxv7hqmabnh5@mobilestation>
-References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
+        Tue, 26 May 2020 09:16:18 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48124 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgEZNQS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 09:16:18 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QDGDwJ006901;
+        Tue, 26 May 2020 08:16:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590498973;
+        bh=eqGhzMDtI1ZxYG/zUvjhuAYLtAp8+AxdQqxcet91B1E=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=vAAQRH4G0xAWHCaDAE+NVGmezreS/rZUpFPZvcURf8eTHMldyguffUQSYspAkY5wi
+         6GICLR/PQRHyB2Xtcv/PbxQrqWK2YwRUkfVcn8qeJzrIYix1QDO7LeKp2s+yy9lJ3Q
+         jXvPPvmhUdg6fqfniNtlIyWxx6rGyVvlrKScvf+w=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QDGDlq085703;
+        Tue, 26 May 2020 08:16:13 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
+ May 2020 08:16:12 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 26 May 2020 08:16:12 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QDG9rf128095;
+        Tue, 26 May 2020 08:16:11 -0500
+Subject: Re: [PATCHv3 1/7] dt-bindings: crypto: Add TI SA2UL crypto
+ accelerator documentation
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>
+CC:     Keerthy <j-keerthy@ti.com>, Rob Herring <robh@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200511215343.GA10123@bogus>
+ <20200514125005.23641-1-t-kristo@ti.com>
+Message-ID: <ca7e30a4-111c-71f9-42cd-45ff0c9f951d@ti.com>
+Date:   Tue, 26 May 2020 16:16:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200514125005.23641-1-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob,
-Could you pay attention to this patchset? There is only one DT binding left
-without your tag:
-[PATCH v3 3/6] dt-bindings: memory: Add Baikal-T1 L2-cache Control Block binding
-After we get it, Arnd will merge the series into the soc repository.
-
-Thanks
--Sergey
-
-
-On Tue, May 26, 2020 at 03:59:22PM +0300, Serge Semin wrote:
-> Baikal-T1 SoC CPU is based on two MIPS Warrior P5600 cores. Their main
-> memory Non-Coherent IO interface is connected to the OCP2AXI bridge, which
-> in turn is then connected to the DW AMBA 3 AXI Interconnect (so called
-> Main Interconnect) with nine masters and four slaves ports. Main
-> Interconnect is responsible for the AXI-bus traffic arbitration (QoS) and
-> its routing from one component to another. In addition there is a Errors
-> Handler Block (EHB) accesible by means of the Baikal-T1 SoC System
-> Controller responsible to detect AXI protocol errors and device not
-> responding situations built on top the interconnect. Baikal-T1 AXI-bus
-> driver included in this patchset will be responsible for working with that
-> functionality, though currently it doesn't support QoS tuning. Instead
-> it's capable of detecting the error events, reporting an info about them
-> to the system log, injecting artificial errors to test the driver
-> functionality. Since AXI Interconnect doesn't provide a way to find out
-> which devices are connected to it, so its DT node is supposed to be
-> compatible with "simple-bus" driver, while sub-nodes shall represent the
-> masters attached to the bus.
+On 14/05/2020 15:50, Tero Kristo wrote:
+> From: Keerthy <j-keerthy@ti.com>
 > 
-> One of the AXI Interconnect slaves is an AXI-APB bridge used to access the
-> Baikal-T1 SoC subsystems CSRs. MMIO request from CPU and DMAC masters are
-> routed there if they are detected to be within [0x08000000 0x1FFFFFFF]
-> range of the physical memory. In case if an attempted APB transaction
-> stays with no response for a pre-defined time it will be detected by the
-> APB-bus Errors Handler Block (EHB), which will raise an interrupt, then
-> the bus gets freed for a next operation. The APB-bus driver provides the
-> interrupt handler to detect the erroneous address, update an errors
-> counter and prints an error message about the faulty address. The counter
-> and the APB-bus operations timeout can be accessed via corresponding sysfs
-> nodes. A dedicated sysfs-node can be also used to artificially cause the
-> bus errors described above. Since APB-bus is a platform bus, it doesn't
-> provide a way to detect slave devices connected to it, so similarly to the
-> AXI-bus it's also supposed to be compatible with "simple-bus" driver.
+> The Security Accelerator Ultra Lite (SA2UL) subsystem provides hardware
+> cryptographic acceleration for the following use cases:
 > 
-> Aside from PCIe/SATA/DDR/I2C/EHB/CPU/reboot specific settings the
-> Baikal-T1 System Controller provides a MIPS P5600 CM2 L2-cache tuning
-> block. It is responsible for the setting up the Tag/Data/WS L2-to-RAM
-> latencies. The last small patch in this patchset provides a driver and
-> DT-schema-based binding for the described device. So that the latencies
-> can be tuned up by means of dedicated DT properties and sysfs nodes.
+> * Encryption and authentication for secure boot
+> * Encryption and authentication of content in applications
+>    requiring DRM (digital rights management) and
+>    content/asset protection
 > 
-> This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-> 0e698dfa2822 ("Linux 5.7-rc4")
-> tag: v5.7-rc4
+> SA2UL provides support for number of different cryptographic algorithms
+> including SHA1, SHA256, SHA512, AES, 3DES, and various combinations of
+> the previous for AEAD use.
 > 
-> Changelog v2 (AXI/APB bus):
-> - Assign dual GPL/BSD licenses to the bindings.
-> - Use single lined copyright headers in the bindings.
-> - Replace "additionalProperties: false" property with
->   "unevaluatedProperties: false" in the bindings.
-> - Don't use a multi-arg clock phandle reference in DT binding examples.
->   Thus remove includes from there.
-> - Fix some commit message and Kconfig help text spelling.
-> - Move drivers from soc to the bus subsystem.
-> - Convert a simple EHB drivers to the Baikal-T1 AXI and APB bus ones.
-> - Convert APB bus driver to using regmap MMIO API.
-> - Use syscon regmap to access the AXI-bus erroneous address.
-> - Add reset line support.
-> - Add Main Interconnect clock support to the AXI-bus driver.
-> - Remove probe-status info string printout.
-> - Discard of_match_ptr() macro utilization.
-> - Don't print error-message if no platform IRQ found. Just return an error.
-> - Use generic FIELD_{GET,PREP} macros instead of handwritten ones in the
->   AXI-bus driver.
-> 
-> Changelog v2 (l2 driver):
-> - Fix some commit message and Kconfig help text spelling.
-> - Move the driver to the memory subsystem.
-> - Assign dual GPL/BSD license to the DT binding.
-> - Use single lined copyright header in the binding.
-> - Discard reg property and syscon compatible string.
-> - Move "allOf" restrictions to the root level of the properties.
-> - The DT node is supposed to be a child of the Baikal-T1 system controller
->   node. So regmap will be fetched from there.
-> - Use generic FIELD_{GET,PREP} macro.
-> - Remove probe-status info string printout.
-> - Since the driver depends on the OF config we can remove of_match_ptr()
->   macro utilization.
-> 
-> Changelog v3:
-> - Combine l2 and AXI/APB bus patches in a single patchset.
-> - Retrieve AXI-bus QoS registers by resource name "qos".
-> - Discard CONFIG_OF dependency since there is none at compile-time.
-> - Add syscon EHB registers range to the AXI-bus reg property as optional
->   entry.
-> - Fix invalid of_property_read_u32() return value test in the l2-ctl
->   driver.
-> - Get the reg property back into the l2-ctl DT bindings even though the
->   driver is using the parental syscon regmap.
-> - The l2-ctl DT schema will live separately from the system controller,
->   but the corresponding sub-node of the later DT schema will $ref this one.
-> - Set non-default latencies in the l2-ctl DT example.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: linux-mips@vger.kernel.org
-> Cc: soc@kernel.org
+> Cc: Rob Herring <robh@kernel.org>
 > Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> [t-kristo@ti.com: converted documentation to yaml]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+> v3:
+>    - fixed a typo in rng child node regex
+
+Rob, any comments on this one?
+
+I did post the patch for converting omap-rng (the child node) to schema 
+also.
+
+-Tero
+
 > 
-> Serge Semin (6):
->   dt-bindings: bus: Add Baikal-T1 AXI-bus binding
->   dt-bindings: bus: Add Baikal-T1 APB-bus binding
->   dt-bindings: memory: Add Baikal-T1 L2-cache Control Block binding
->   bus: Add Baikal-T1 AXI-bus driver
->   bus: Add Baikal-T1 APB-bus driver
->   memory: Add Baikal-T1 L2-cache Control Block driver
+>   .../devicetree/bindings/crypto/ti,sa2ul.yaml  | 76 +++++++++++++++++++
+>   1 file changed, 76 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
 > 
->  .../bindings/bus/baikal,bt1-apb.yaml          |  90 ++++
->  .../bindings/bus/baikal,bt1-axi.yaml          | 107 +++++
->  .../memory-controllers/baikal,bt1-l2-ctl.yaml |  63 +++
->  drivers/bus/Kconfig                           |  30 ++
->  drivers/bus/Makefile                          |   2 +
->  drivers/bus/bt1-apb.c                         | 421 ++++++++++++++++++
->  drivers/bus/bt1-axi.c                         | 318 +++++++++++++
->  drivers/memory/Kconfig                        |  11 +
->  drivers/memory/Makefile                       |   1 +
->  drivers/memory/bt1-l2-ctl.c                   | 322 ++++++++++++++
->  10 files changed, 1365 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
->  create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
->  create mode 100644 drivers/bus/bt1-apb.c
->  create mode 100644 drivers/bus/bt1-axi.c
->  create mode 100644 drivers/memory/bt1-l2-ctl.c
+> diff --git a/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
+> new file mode 100644
+> index 000000000000..27bb3a7e2b87
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/ti,sa2ul.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/crypto/ti,sa2ul.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: K3 SoC SA2UL crypto module
+> +
+> +maintainers:
+> +  - Tero Kristo <t-kristo@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,j721e-sa2ul
+> +      - ti,am654-sa2ul
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    items:
+> +      - description: TX DMA Channel
+> +      - description: RX DMA Channel #1
+> +      - description: RX DMA Channel #2
+> +
+> +  dma-names:
+> +    items:
+> +      - const: tx
+> +      - const: rx1
+> +      - const: rx2
+> +
+> +  dma-coherent: true
+> +
+> +  "#address-cells":
+> +    const: 2
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  ranges:
+> +    description:
+> +      Address translation for the possible RNG child node for SA2UL
+> +
+> +patternProperties:
+> +  "^rng@[a-f0-9]+$":
+> +    type: object
+> +    description:
+> +      Child RNG node for SA2UL
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - power-domains
+> +  - dmas
+> +  - dma-names
+> +  - dma-coherent
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    main_crypto: crypto@4e00000 {
+> +        compatible = "ti,j721-sa2ul";
+> +        reg = <0x0 0x4e00000 0x0 0x1200>;
+> +        power-domains = <&k3_pds 264 TI_SCI_PD_EXCLUSIVE>;
+> +        dmas = <&main_udmap 0xc000>, <&main_udmap 0x4000>,
+> +               <&main_udmap 0x4001>;
+> +        dma-names = "tx", "rx1", "rx2";
+> +        dma-coherent;
+> +    };
 > 
-> -- 
-> 2.26.2
-> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
