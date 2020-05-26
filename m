@@ -2,87 +2,128 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0157DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA50AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C35A22075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590533586;
-	bh=xsGmzS5AjN6haAWaWevKp0V7RkemTOAW9eXLR0Ipw6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gavG0s6uWS/uVFiETXe1rcZbciguD4YrcRbhGGUqyolbEiES0EtTQtLgrsX+QzIXP
-	 O7QveWjXy3+qSIu2a6+I75v5GCBscyf0a6ctD9Tl1G82UrCbbeDqqykzSyUxj9Uy6g
-	 ugHB+VjA2DGVDKD7IDiJzdDhZ8wWHcSAFk6T5NVk=
+	by mail.kernel.org (Postfix) with ESMTP id B53CA2075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391734AbgEZWxG (ORCPT
+        id S2392104AbgEZWzY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 18:53:06 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42446 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390428AbgEZWxG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:53:06 -0400
-Received: by mail-io1-f65.google.com with SMTP id d5so14404184ios.9;
-        Tue, 26 May 2020 15:53:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kF+vRBfnhOkmQvA5KLQ4cDaPOVZ28rGc0O0qwy5RLx8=;
-        b=P32b7cIs61bWGQKO+vQfRMx78GBXXufAz5+lymJb8v/BLQiAw3GLKhroiWOh7g6vKJ
-         ICdZbXcu62p6ev8/3dXEwFcfmwj9mRoCzBd0+a58xQBN8C7S8vYCPmGHdimDigWb3h9D
-         fM2K38PLu4zAqEJJrmWoDfhzhGwfF8Hv1ZC0tWnoLFRQfgmVyAGY4jIjHR/NluUL80YH
-         IyKjL8lOFZZTkrpdTjzGiBGlfRKhoG4Lb3gTDe1jhC7vk4pn5yYMIJlDws6H2yBUy/sP
-         bmGTrlE/WvCW5ojFM1YX21Yc3WFwPzfMV1j11qwU/L2CfWNyZOscVyks2AmwHkebHWix
-         qdcw==
-X-Gm-Message-State: AOAM530ySfiiCluWycmTP3K8+2WJUnOwNWRAZQB4zlwp0Rpe/qi7cTbJ
-        rOq8Y4/3GdT2/wp7p3rLCw==
-X-Google-Smtp-Source: ABdhPJyeoVtuZCUkjCMNR8Y6ccXH320ipxK5P3DJiUPsweubOQS/CFyKLVhwUqzve4pZavKBpEp3dg==
-X-Received: by 2002:a02:93a1:: with SMTP id z30mr3149527jah.25.1590533583588;
-        Tue, 26 May 2020 15:53:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p1sm632821ilq.67.2020.05.26.15.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:53:03 -0700 (PDT)
-Received: (nullmailer pid 538555 invoked by uid 1000);
-        Tue, 26 May 2020 22:53:02 -0000
-Date:   Tue, 26 May 2020 16:53:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH v5 06/14] dt-bindings: PCI: cadence: Remove "mem" from
- reg binding
-Message-ID: <20200526225302.GA538495@bogus>
-References: <20200522033631.32574-1-kishon@ti.com>
- <20200522033631.32574-7-kishon@ti.com>
+        Tue, 26 May 2020 18:55:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35232 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392102AbgEZWzY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:55:24 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BA6DB2A083B;
+        Tue, 26 May 2020 23:55:22 +0100 (BST)
+Date:   Wed, 27 May 2020 00:55:18 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v5 09/21] mtd: rawnand: Create a new enumeration to
+ describe properly ECC types
+Message-ID: <20200527005518.2d780ecc@collabora.com>
+In-Reply-To: <20200526195633.11543-10-miquel.raynal@bootlin.com>
+References: <20200526195633.11543-1-miquel.raynal@bootlin.com>
+        <20200526195633.11543-10-miquel.raynal@bootlin.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522033631.32574-7-kishon@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 22 May 2020 09:06:23 +0530, Kishon Vijay Abraham I wrote:
-> "mem" is not a memory resource and it overlaps with PCIe config space
-> and memory region. Removve "mem" from reg binding.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../devicetree/bindings/pci/cdns,cdns-pcie-host.yaml      | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
+On Tue, 26 May 2020 21:56:21 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> Now that the misleading mix between ECC engine type and OOB placement
+> has been addressed, add a new enumeration to properly define ECC types
+> (also called provider or mode).
+
+Let's pick a name and stick to it. I think "ECC provider type" or
+"ECC engine type" are good names.
+
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> ---
+>  drivers/mtd/nand/raw/nand_base.c |  7 +++++++
+>  include/linux/mtd/rawnand.h      | 16 ++++++++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> index 515cd4681660..5c6ab5b93270 100644
+> --- a/drivers/mtd/nand/raw/nand_base.c
+> +++ b/drivers/mtd/nand/raw/nand_base.c
+> @@ -5018,6 +5018,13 @@ static const char * const nand_ecc_modes[] = {
+>  	[NAND_ECC_ON_DIE]	= "on-die",
+>  };
+>  
+> +static const char * const nand_ecc_engine_providers[] = {
+
+I'd rename that one nand_ecc_engine_types or nand_ecc_provider_types.
+
+> +	[NAND_ECC_ENGINE_NONE] = "none",
+> +	[NAND_ECC_ENGINE_SOFT] = "soft",
+> +	[NAND_ECC_ENGINE_CONTROLLER] = "hw",
+> +	[NAND_ECC_ENGINE_ON_DIE] = "on-die",
+> +};
+> +
+>  static const char * const nand_ecc_placement[] = {
+>  	[NAND_ECC_PLACEMENT_INTERLEAVED] = "interleaved",
+>  };
+> diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+> index dc909fb977c7..a2078c5f3d21 100644
+> --- a/include/linux/mtd/rawnand.h
+> +++ b/include/linux/mtd/rawnand.h
+> @@ -92,6 +92,22 @@ enum nand_ecc_mode {
+>  	NAND_ECC_ON_DIE,
+>  };
+>  
+> +/**
+> + * enum nand_ecc_engine_type - NAND ECC engine type/provider
+> + * @NAND_ECC_ENGINE_INVALID: Invalid value
+> + * @NAND_ECC_ENGINE_NONE: No ECC correction
+> + * @NAND_ECC_ENGINE_SOFT: Software ECC correction
+> + * @NAND_ECC_ENGINE_CONTROLLER: Hardware controller ECC correction
+> + * @NAND_ECC_ENGINE_ON_DIE: On chip hardware ECC correction
+> + */
+> +enum nand_ecc_engine_type {
+
+Looks like you went for ecc_engine_type here, so let's stick to that.
+
+> +	NAND_ECC_ENGINE_INVALID,
+
+NAND_ECC_ENGINE_TYPE_xxx
+
+> +	NAND_ECC_ENGINE_NONE,
+
+Do we really need a value for NONE? I'd expect the engine type to be
+applicable to NAND that have some sort of ECC engine connected to them.
+
+> +	NAND_ECC_ENGINE_SOFT,
+> +	NAND_ECC_ENGINE_CONTROLLER,
+> +	NAND_ECC_ENGINE_ON_DIE,
+> +};
+> +
+>  /**
+>   * enum nand_ecc_placement - NAND ECC placement
+>   * @NAND_ECC_PLACEMENT_FREE: The driver can decide where to put ECC bytes.
+
