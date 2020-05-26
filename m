@@ -2,116 +2,97 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45172C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6685C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3122073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D84207CB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590484761;
+	bh=pQ9fSIsd2546ytSpDQuQx2cfrsXYFihGA5BoJ2QU+ds=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=L1KIvnQChXtkICe9uzg2XZch9hVmvdHmxEaz3+StOlzPAMQ+kejJSjVNwSHBBLy+/
+	 GhL58y+4ZYkp9htQtBTHU7VCt2RUXERVxH+i6OIZE165p2E6iipCTiZ7Xjq4nzuFZB
+	 8Co6pKw/gAOZ4qV5T/ORE5sHm5MZb2Mp8jAIM8CQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731643AbgEZJSE (ORCPT
+        id S1731766AbgEZJTV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 05:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgEZJSD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 05:18:03 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F13C03E97E;
-        Tue, 26 May 2020 02:18:03 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 26 May 2020 05:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731600AbgEZJTU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 May 2020 05:19:20 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id A14B4634C87;
-        Tue, 26 May 2020 12:17:16 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jdVi0-0002Rz-M8; Tue, 26 May 2020 12:17:16 +0300
-Date:   Tue, 26 May 2020 12:17:16 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v3 08/10] media: i2c: imx290: Add support to enumerate
- all frame sizes
-Message-ID: <20200526091716.GJ8214@valkosipuli.retiisi.org.uk>
-References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
- <20200524192505.20682-9-andrey.konovalov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200524192505.20682-9-andrey.konovalov@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A7C82073B;
+        Tue, 26 May 2020 09:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590484760;
+        bh=pQ9fSIsd2546ytSpDQuQx2cfrsXYFihGA5BoJ2QU+ds=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=n+3mDJ0XDwFUiVHYZkKbTC2uE5yIjCtnlRYbS8jwqSCDc7Cui5pUHoUegUZePsW4s
+         WYWFddgcOpEBwGbXLF71WExMKCgY+mOfSOpeozhUTOWCMV8y+uE4U2O1rnDSa+oHvG
+         LIzJVsrejlOYQFvW4u31p/rSDKJa9NMjmAPjb++4=
+Date:   Tue, 26 May 2020 10:19:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "dillon.minfei@gmail.com" <dillon.minfei@gmail.com>,
+        linus.walleij@linaro.org
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-spi@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com>
+References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com>
+Subject: Re: [PATCH v5 0/8] Enable ili9341 and l3gd20 on stm32f429-disco
+Message-Id: <159048475756.7363.2129939912077382888.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrey,
-
-On Sun, May 24, 2020 at 10:25:03PM +0300, Andrey Konovalov wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Mon, 25 May 2020 11:45:40 +0800, dillon.minfei@gmail.com wrote:
+> V5's update based on Mark Brown's suggestion, use 'SPI_MASTER_MUST_RX'
+> for SPI_SIMPLEX_RX mode on stm32 spi controller.
 > 
-> Add support to enumerate all frame sizes supported by IMX290. This is
-> required for using with userspace tools such as libcamera.
+> V5:
+> 1 instead of add send dummy data out under SIMPLEX_RX mode,
+>    add flags 'SPI_CONTROLLER_MUST_TX' for stm32 spi driver
+> 2 bypass 'SPI_CONTROLLER_MUST_TX' and 'SPI_CONTROLLER_MUST_RX' under
+> 'SPI_3WIRE' mode
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> ---
->  drivers/media/i2c/imx290.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index 6e70ff22bc5f..88850f3b1427 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -471,6 +471,25 @@ static int imx290_enum_mbus_code(struct v4l2_subdev *sd,
->  	return 0;
->  }
->  
-> +static int imx290_enum_frame_size(struct v4l2_subdev *subdev,
-> +				  struct v4l2_subdev_pad_config *cfg,
-> +				  struct v4l2_subdev_frame_size_enum *fse)
-> +{
-> +	if ((fse->code != imx290_formats[0].code) &&
-> +	    (fse->code != imx290_formats[1].code))
-> +		return -EINVAL;
+> [...]
 
-Please skip the modes that do not have the code specified by the user. They
-should not be enumerated here.
+Applied to
 
-> +
-> +	if (fse->index >= ARRAY_SIZE(imx290_modes))
-> +		return -EINVAL;
-> +
-> +	fse->min_width = imx290_modes[fse->index].width;
-> +	fse->max_width = imx290_modes[fse->index].width;
-> +	fse->min_height = imx290_modes[fse->index].height;
-> +	fse->max_height = imx290_modes[fse->index].height;
-> +
-> +	return 0;
-> +}
-> +
->  static int imx290_get_fmt(struct v4l2_subdev *sd,
->  			  struct v4l2_subdev_pad_config *cfg,
->  			  struct v4l2_subdev_format *fmt)
-> @@ -850,6 +869,7 @@ static const struct v4l2_subdev_video_ops imx290_video_ops = {
->  static const struct v4l2_subdev_pad_ops imx290_pad_ops = {
->  	.init_cfg = imx290_entity_init_cfg,
->  	.enum_mbus_code = imx290_enum_mbus_code,
-> +	.enum_frame_size = imx290_enum_frame_size,
->  	.get_fmt = imx290_get_fmt,
->  	.set_fmt = imx290_set_fmt,
->  };
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
--- 
-Regards,
+Thanks!
 
-Sakari Ailus
+[1/2] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+      commit: 61367d0b8f5edf5146059ba8b79ce4e4485340b2
+[2/2] spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't be coexit with 'SPI_3WIRE' mode
+      commit: aee67fe879e5030a2f5e1d9af3cb5b2a1027e78a
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
