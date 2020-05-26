@@ -2,92 +2,106 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BCEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5362EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB7920899
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590533450;
-	bh=ozs6kk4QMVleSXTPi07onyUD4b1gzUsm5XeeXg9GX6Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OwZcNvGKOGN186FJOAFgjqlSx3mgL5rwN79nrCztbmnEyNeKYPlPqsj0OTFS1j7aX
-	 omG9eMERd7PnznsP/wsHHvNgdKvbIre7fkOaqGTmwNlpaZGFVZmZZ6NHLMBcufgnYS
-	 X+8VB0SqS2HA8HZHFlYh6BL+G2IFoqF9Ni8oCKzs=
+	by mail.kernel.org (Postfix) with ESMTP id 2D51A2075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389755AbgEZWut (ORCPT
+        id S2404571AbgEZWvn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 18:50:49 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35062 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391442AbgEZWut (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:50:49 -0400
-Received: by mail-il1-f196.google.com with SMTP id a14so22192421ilk.2;
-        Tue, 26 May 2020 15:50:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OK9x5VtJCjk7ns+n8rJJ2eqoCOZIYQWVhZELo9bv0M0=;
-        b=mPZxenhO6+VsldV4M5xifDcn7RMO5dSf6D1+84FOSeWqtWooaMB8UVxzHpdGNGjRaW
-         N7pYBIf2pSSE4dyuopVVYMedRaVAA29OTFPZw6nNA4BV3llqgrimLHRN0a3ZZlAp9tzJ
-         wmOATmF+i2jbdeHc1g7RtDE28ejzjvQbE7SRhOYRX//JXf5b66dnRx76/WkYBjelnMlc
-         ZlfyLnlMvKuNFWfubJv2stXZ+b/7tqHsuzKtlhG93ikAuRkELWefnSiAwoBDtkPJ45At
-         6tbgvHwYMSmBWIoIfAFMWvcQOLMWSya9udAXcUV8CDz1jIIqHbMKiEzd3TeUG4ejeMa9
-         XliQ==
-X-Gm-Message-State: AOAM531PF+smw7TcrZMOdXNF4wY9EWMQMcEmUuPh6V/Ya/DK+m6pz7ve
-        kQFsKrOWv2rb8dmgleSzxQ==
-X-Google-Smtp-Source: ABdhPJztTmAtLvK+aSkJiWcjWBiMfCXKr7NUWfYDNNlMqP/XiIh8cqEiim/xZKuMj+BxyZrpFjDSLA==
-X-Received: by 2002:a92:5ec1:: with SMTP id f62mr3408821ilg.80.1590533448280;
-        Tue, 26 May 2020 15:50:48 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k18sm477196ioj.54.2020.05.26.15.50.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:50:47 -0700 (PDT)
-Received: (nullmailer pid 534722 invoked by uid 1000);
-        Tue, 26 May 2020 22:50:46 -0000
-Date:   Tue, 26 May 2020 16:50:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-input@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 3/5] dt-bindings: microchip: atmel, at91rm9200-tcb:
- add sama5d2 compatible
-Message-ID: <20200526225046.GA534667@bogus>
-References: <20200519083716.938384-1-kamel.bouhara@bootlin.com>
- <20200519083716.938384-4-kamel.bouhara@bootlin.com>
+        Tue, 26 May 2020 18:51:43 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60238 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404568AbgEZWvn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:51:43 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AFCA58030875;
+        Tue, 26 May 2020 22:51:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uU1xhBNbPSMa; Wed, 27 May 2020 01:51:39 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 02/10] dt-bindings: dma: dw: Add max burst transaction length property
+Date:   Wed, 27 May 2020 01:50:13 +0300
+Message-ID: <20200526225022.20405-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519083716.938384-4-kamel.bouhara@bootlin.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 19 May 2020 10:37:14 +0200, Kamel Bouhara wrote:
-> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> 
-> The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
-> Instead of being MCK / 2, it is the TCB GCLK.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 36 +++++++++++++++----
->  1 file changed, 30 insertions(+), 6 deletions(-)
-> 
+This array property is used to indicate the maximum burst transaction
+length supported by each DMA channel.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-mips@vger.kernel.org
+
+---
+
+Changelog v2:
+- Rearrange SoBs.
+- Move $ref to the root level of the properties. So do with the
+  constraints.
+- Set default max-burst-len to 256 TR-WIDTH words.
+
+Changelog v3:
+- Add more details into the property description about what limitations
+  snps,max-burst-len defines.
+---
+ .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+index e7611840a7cf..20870f5c14dd 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -120,6 +120,21 @@ properties:
+         enum: [0, 1]
+         default: 1
+ 
++  snps,max-burst-len:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Maximum length of the burst transactions supported by the controller.
++      This property defines the upper limit of the run-time burst setting
++      (CTLx.SRC_MSIZE/CTLx.DST_MSIZE fields) so the allowed burst length
++      will be from 1 to max-burst-len words. It's an array property with one
++      cell per channel in the units determined by the value set in the
++      CTLx.SRC_TR_WIDTH/CTLx.DST_TR_WIDTH fields (data width).
++    items:
++      maxItems: 8
++      items:
++        enum: [4, 8, 16, 32, 64, 128, 256]
++        default: 256
++
+   snps,dma-protection-control:
+     $ref: /schemas/types.yaml#definitions/uint32
+     description: |
+-- 
+2.26.2
+
