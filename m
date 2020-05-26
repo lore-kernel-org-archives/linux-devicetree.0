@@ -2,254 +2,85 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28563C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 05:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 05:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03A6E207ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 05:06:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QJTlDTnc"
+	by mail.kernel.org (Postfix) with ESMTP id C7F1C207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 05:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgEZFGN (ORCPT
+        id S1726768AbgEZFGW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 01:06:13 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10483 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgEZFGN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 01:06:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecca36c0000>; Mon, 25 May 2020 22:04:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 25 May 2020 22:06:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 25 May 2020 22:06:12 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
- 2020 05:06:12 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 26 May 2020 05:06:12 +0000
-Received: from sandipan-pc.nvidia.com (Not Verified[10.24.42.163]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ecca3c00000>; Mon, 25 May 2020 22:06:11 -0700
-From:   Sandipan Patra <spatra@nvidia.com>
-To:     <treding@nvidia.com>, <jonathanh@nvidia.com>,
-        <u.kleine-koenig@pengutronix.de>, <kamil@wypas.org>,
-        <jdelvare@suse.com>, <linux@roeck-us.net>, <robh+dt@kernel.org>
-CC:     <bbasu@nvidia.com>, <bbiswas@nvidia.com>,
-        <linux-pwm@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sandipan Patra <spatra@nvidia.com>
-Subject: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove module support
-Date:   Tue, 26 May 2020 10:36:04 +0530
-Message-ID: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590469484; bh=YNG08g8NnR/+zB8mCjRyNEMkFDmY+YHQZPfszu7vlRU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=QJTlDTnceYS2J34I7iRMFfYK2CYe10VK6NMuTxJQZBoooYRyUKE12HKCU2sswxDCQ
-         ifEpevlvL3eBaDVkiWbDEUE8LpyiINY4oX9JpJTnW/TIgdGR1TyA4cXnM0JU7p/1Tp
-         Y2nYyLiEQ7GeGuoQ/YWP9T27luL6BB1xqiW5Ag0fgLj5VYwW1xnylRdhX1AIbzJt64
-         7bQiubyFZ0+GW4TtA+fMoLSMqbjirsBlRYwh6FzExvVgenMo1IxalBu7e9uK6NQus6
-         BqBL5dbWm2JenHevUxYitomVWMRuNnybwweUJRt+bmQk3x7NPOs6wCZ0hlD35GQGyw
-         Beo3fsxLdc/ew==
+        Tue, 26 May 2020 01:06:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:42947 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbgEZFGU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 May 2020 01:06:20 -0400
+IronPort-SDR: +LHUp/ev/fC01KoCDc4N3lIjolK5UrgyQNqlPBkpUIGAwOzrMWrFgRiPUk4T6J+AALUcmAV7bN
+ 4Uo3mf4GNhRQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 22:06:19 -0700
+IronPort-SDR: ucfUPh8XPtGtKHP3jL+4IsikV7JBLKIicpnKhi4u1JAL6hom0EThRi5NH02ISxdTOKWDxjQLln
+ IFbuMMLGNGHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
+   d="scan'208";a="255059506"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by fmsmga007.fm.intel.com with ESMTP; 25 May 2020 22:06:17 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, adrian.hunter@intel.com,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH v2 0/2] phy: intel: Add Keem Bay eMMC PHY support
+Date:   Tue, 26 May 2020 13:04:50 +0800
+Message-Id: <20200526050452.8837-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This change has 2 parts:
-1. Add support for profiles mode settings.
-    This allows different fan settings for trip point temp/hyst/pwm.
-    T194 has multiple fan-profiles support.
+Hi.
 
-2. Add pwm-fan remove support. This is essential since the config is
-    tristate capable.
+The first part is to document DT bindings for Keem Bay eMMC PHY.
 
-Signed-off-by: Sandipan Patra <spatra@nvidia.com>
----
- drivers/hwmon/pwm-fan.c | 112 ++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 100 insertions(+), 12 deletions(-)
+The second is the driver file, loosely based on phy-rockchip-emmc.c
+and phy-intel-emmc.c. The latter is not being reused as there are
+quite a number of differences i.e. registers offset, supported clock
+rates, bitfield to set.
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 30b7b3e..26db589 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -3,8 +3,10 @@
-  * pwm-fan.c - Hwmon driver for fans connected to PWM lines.
-  *
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-+ * Copyright (c) 2020, NVIDIA Corporation.
-  *
-  * Author: Kamil Debski <k.debski@samsung.com>
-+ * Author: Sandipan Patra <spatra@nvidia.com>
-  */
- 
- #include <linux/hwmon.h>
-@@ -21,6 +23,8 @@
- #include <linux/timer.h>
- 
- #define MAX_PWM 255
-+/* Based on OF max device tree node name length */
-+#define MAX_PROFILE_NAME_LENGTH	31
- 
- struct pwm_fan_ctx {
- 	struct mutex lock;
-@@ -38,6 +42,12 @@ struct pwm_fan_ctx {
- 	unsigned int pwm_fan_state;
- 	unsigned int pwm_fan_max_state;
- 	unsigned int *pwm_fan_cooling_levels;
-+
-+	unsigned int pwm_fan_profiles;
-+	const char **fan_profile_names;
-+	unsigned int **fan_profile_cooling_levels;
-+	unsigned int fan_current_profile;
-+
- 	struct thermal_cooling_device *cdev;
- };
- 
-@@ -227,28 +237,86 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
- 				       struct pwm_fan_ctx *ctx)
- {
- 	struct device_node *np = dev->of_node;
-+	struct device_node *base_profile = NULL;
-+	struct device_node *profile_np = NULL;
-+	const char *default_profile = NULL;
- 	int num, i, ret;
- 
--	if (!of_find_property(np, "cooling-levels", NULL))
--		return 0;
-+	num = of_property_count_u32_elems(np, "cooling-levels");
-+	if (num <= 0) {
-+		base_profile = of_get_child_by_name(np, "profiles");
-+		if (!base_profile) {
-+			dev_err(dev, "Wrong Data\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (base_profile) {
-+		ctx->pwm_fan_profiles =
-+			of_get_available_child_count(base_profile);
-+
-+		if (ctx->pwm_fan_profiles <= 0) {
-+			dev_err(dev, "Profiles used but not defined\n");
-+			return -EINVAL;
-+		}
- 
--	ret = of_property_count_u32_elems(np, "cooling-levels");
--	if (ret <= 0) {
--		dev_err(dev, "Wrong data!\n");
--		return ret ? : -EINVAL;
-+		ctx->fan_profile_names = devm_kzalloc(dev,
-+			sizeof(const char *) * ctx->pwm_fan_profiles,
-+							GFP_KERNEL);
-+		ctx->fan_profile_cooling_levels = devm_kzalloc(dev,
-+			sizeof(int *) * ctx->pwm_fan_profiles,
-+							GFP_KERNEL);
-+
-+		if (!ctx->fan_profile_names
-+				|| !ctx->fan_profile_cooling_levels)
-+			return -ENOMEM;
-+
-+		ctx->fan_current_profile = 0;
-+		i = 0;
-+		for_each_available_child_of_node(base_profile, profile_np) {
-+			num = of_property_count_u32_elems(profile_np,
-+							"cooling-levels");
-+			if (num <= 0) {
-+				dev_err(dev, "No data in cooling-levels inside profile node!\n");
-+				return -EINVAL;
-+			}
-+
-+			of_property_read_string(profile_np, "name",
-+						&ctx->fan_profile_names[i]);
-+			if (default_profile &&
-+				!strncmp(default_profile,
-+				ctx->fan_profile_names[i],
-+				MAX_PROFILE_NAME_LENGTH))
-+				ctx->fan_current_profile = i;
-+
-+			ctx->fan_profile_cooling_levels[i] =
-+				devm_kzalloc(dev, sizeof(int) * num,
-+							GFP_KERNEL);
-+			if (!ctx->fan_profile_cooling_levels[i])
-+				return -ENOMEM;
-+
-+			of_property_read_u32_array(profile_np, "cooling-levels",
-+				ctx->fan_profile_cooling_levels[i], num);
-+			i++;
-+		}
- 	}
- 
--	num = ret;
- 	ctx->pwm_fan_cooling_levels = devm_kcalloc(dev, num, sizeof(u32),
- 						   GFP_KERNEL);
- 	if (!ctx->pwm_fan_cooling_levels)
- 		return -ENOMEM;
- 
--	ret = of_property_read_u32_array(np, "cooling-levels",
--					 ctx->pwm_fan_cooling_levels, num);
--	if (ret) {
--		dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
--		return ret;
-+	if (base_profile) {
-+		memcpy(ctx->pwm_fan_cooling_levels,
-+		  ctx->fan_profile_cooling_levels[ctx->fan_current_profile],
-+						num);
-+	} else {
-+		ret = of_property_read_u32_array(np, "cooling-levels",
-+				ctx->pwm_fan_cooling_levels, num);
-+		if (ret) {
-+			dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	for (i = 0; i < num; i++) {
-@@ -390,6 +458,25 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int pwm_fan_remove(struct platform_device *pdev)
-+{
-+	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
-+	struct pwm_args args;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	if (IS_ENABLED(CONFIG_THERMAL))
-+		thermal_cooling_device_unregister(ctx->cdev);
-+
-+	pwm_get_args(ctx->pwm, &args);
-+	pwm_config(ctx->pwm, 0, args.period);
-+	pwm_disable(ctx->pwm);
-+
-+	return 0;
-+}
-+
-+
- static int pwm_fan_disable(struct device *dev)
- {
- 	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-@@ -465,6 +552,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_fan_match);
- 
- static struct platform_driver pwm_fan_driver = {
- 	.probe		= pwm_fan_probe,
-+	.remove         = pwm_fan_remove,
- 	.shutdown	= pwm_fan_shutdown,
- 	.driver	= {
- 		.name		= "pwm-fan",
+The patch was tested with Keem Bay evaluation module board.
+
+Thank you.
+
+Best regards,
+Zainie
+
+Changes since v1:
+- Rework phy-keembay-emmc.c to make it similar to phy-intel-emmc.c.
+- Use regmap_mmio, and remove reference to intel,syscon.
+- Use node name phy@....
+- Update license i.e. use dual license.
+
+
+Wan Ahmad Zainie (2):
+  dt-bindings: phy: intel: Add Keem Bay eMMC PHY bindings
+  phy: intel: Add Keem Bay eMMC PHY support
+
+ .../bindings/phy/intel,keembay-emmc-phy.yaml  |  45 +++
+ drivers/phy/intel/Kconfig                     |   8 +
+ drivers/phy/intel/Makefile                    |   1 +
+ drivers/phy/intel/phy-keembay-emmc.c          | 321 ++++++++++++++++++
+ 4 files changed, 375 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+ create mode 100644 drivers/phy/intel/phy-keembay-emmc.c
+
 -- 
-2.7.4
+2.17.1
 
