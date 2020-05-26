@@ -7,61 +7,60 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51881C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 11:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F72C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 11:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACE32053B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 11:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3C92073B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 11:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M/bNMMik"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TxHGmW0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgEZLWa (ORCPT
+        id S1729203AbgEZLck (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 07:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
+        Tue, 26 May 2020 07:32:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgEZLWa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 07:22:30 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A357C03E97E
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 04:22:30 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v16so24028548ljc.8
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 04:22:29 -0700 (PDT)
+        with ESMTP id S1726974AbgEZLcj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 07:32:39 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2058C08C5C1
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 04:32:38 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m12so21626257ljc.6
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 04:32:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zJxI8q9GaxwusSxiN1TRl1t50DLCSayUphT+bXOuVqA=;
-        b=M/bNMMikN5rlMrwQqf4wuwwbofYB2P7B1TVibatvt8DV12qC0t3WfTLDIKYPPVaVAr
-         A/f3VdlkZ0uoLoIgysMyIpfF1UG/ANS6qt1mUuG29T5Cl6mAeNoOyvzUKOdJJ8uA7giL
-         qD7sfjXYbwg4iSJN5ZIRmUBWa2wlbl+Ugvxjeg5ss11qHAsmn25CwI7z6ncTNoh9NJiX
-         0sxAbxzSMgfnDrVk5m4SNa5jHt3jgGyiccSWLvURNhA4j4SyZORWhck4vjMgfFGv2a5b
-         rPWOMAmALGAVvuNt8rbuXWXGHACZGW4c1S+jz+mgm5NHSXQm2562P12Dnu85ptTxZS39
-         9eag==
+        bh=N3aU8bQ2jt19toIdkwK4iimsCUAHj37+zUJ/z8dG82c=;
+        b=TxHGmW0M/1J5kA67dTHib6mjP7IqlmXB9GlPXLnj3brNAtLjENIk88ciWY00CFrxgh
+         m+RVHnNpqmSoAmn0koZ4VVVv6Q8kij/9A1DQWcHw5NKCJPlqkcB/PoNqDhyiWHyl1iaj
+         zEPAGqTTOUnZBomUlkcEEjud7qxatQaGdOU7DXRnWr8MnBbpiXXPwEQFgujvP3Mhq0jt
+         KgGPg0GPrFObpIdq9Qmg9LZXRK6i2WYpw5FgQEWoJqeiLwnsW8YIpZroi2BnnirKRE1u
+         Te3lMIxX9v3MiDlAkkFy2ES3BpkILyrkkioDjGf+EdIFsoI0j5f3Z1YOQU0m5o9ZCAGa
+         zNVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zJxI8q9GaxwusSxiN1TRl1t50DLCSayUphT+bXOuVqA=;
-        b=AaW91ahP/+9Ffbu6BaNf3AwzAKZbT6uElVLmvmrp0WGj2rdQ8BCQvZglymLmO89ncA
-         LoQozNt8vjgTnR46BHSthD8B2JyHIk0csPik7Lay4o6ySOBKzAjtl3JpLJqbWzPycl0Y
-         3iMotFs7wu8bI872oDOrcJ0D2yyHlpqQpbzJFwDYnZzldQlqwCh/hKEhRH2xAm00uIkH
-         bCYZ+KReprfwG0aJAY7AVOeqYZFdkm4XH1gcFjFV7q9tiikQPIjte5FmvNoBa/ykrwDW
-         gM0MsNbC2r622Y7KnS4nbbMH5e1GK9fP+Bc+Y4qu7rIVBi5zyScNI9tMy26VXMBbPM+q
-         Kppg==
-X-Gm-Message-State: AOAM530ijsn1JTxEjaLAoLcuJcNFj8VU3bclf3JFZ+G4aTrnfHHBJ/Ry
-        Oqg7TDGPrP/TUF6X9PvQKjoIvf9nh8V58jBSKMXjIA==
-X-Google-Smtp-Source: ABdhPJzdhwywLZUu1iioOyV4RjM5M1Epk+nZBmMIV652Jit18mFH9boEqTDc5xdPxLb/F7xuG/+hRyaxUu9GK3c0+oc=
-X-Received: by 2002:a2e:711c:: with SMTP id m28mr384158ljc.104.1590492148520;
- Tue, 26 May 2020 04:22:28 -0700 (PDT)
+        bh=N3aU8bQ2jt19toIdkwK4iimsCUAHj37+zUJ/z8dG82c=;
+        b=meSsytiR0nCfk8og9wRPMIJjUhdN4xWxIsXxzRwP2a2YPCNRF/hPLu9e7ZNWyGRHlp
+         mtHO+nhHb0k3441jlpB4SGofv29VWF4ekM0HoP1N1Sqq2jpszrAKoNm+SI3+5/S1wWsk
+         U1qb5wRXlIc1T5/MJMfUMp2VDcJ1ZHqVBYyat0RDUjxtkXSWrryzXnJNdma5MnLX0BYT
+         AlnrfGxBnEJpaPqsXuvN8224pha756gnVAueJL7/KGm1EQtywKmUsvn0QcbQsNheqBoO
+         SEUwpANC5dSeVp7byxJ09/i2nW9KetYPxYsKbhE4LYhWp0+FlU++hWsqhAAJXwiQBHRe
+         pcdA==
+X-Gm-Message-State: AOAM531/cocRF/o4BJiSU24GING7zWzGT2q0TWsYvVVcayG1Bf0juaM7
+        L5RYa/dKujasKW9goTXzyX9/W082YEXOVUIPJPLHQA==
+X-Google-Smtp-Source: ABdhPJxM6A8ot4e/2DXXh6aue4hLFO5ial0ZBwWU8vJG+VNoWIczU4kxVWFCMR36ozh5h1OSlYeLxEUkI+61oop6giU=
+X-Received: by 2002:a05:651c:32d:: with SMTP id b13mr401630ljp.283.1590492757082;
+ Tue, 26 May 2020 04:32:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200513212451.1919013-1-megous@megous.com> <20200513212451.1919013-3-megous@megous.com>
-In-Reply-To: <20200513212451.1919013-3-megous@megous.com>
+References: <20200513212451.1919013-1-megous@megous.com> <20200513212451.1919013-4-megous@megous.com>
+In-Reply-To: <20200513212451.1919013-4-megous@megous.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 May 2020 13:22:17 +0200
-Message-ID: <CACRpkdbb0Y32EG=tEx208eUh_CJndvnQGQvAnF_mG29Hd9-2Jg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: panel: Add binding for Xingbangda
- XBD599 panel
+Date:   Tue, 26 May 2020 13:32:25 +0200
+Message-ID: <CACRpkdZpiQ7E_v-Gfk6vFcUEiMazvixYaL0ksKeP=Tq3O6Fh=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] drm: panel: Add Xingbangda XBD599 panel (ST7703 controller)
 To:     Ondrej Jirman <megous@megous.com>
 Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -85,19 +84,113 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Ondrej,
+
+I see you took over this driver submission from
+Icenowy.
+
 On Wed, May 13, 2020 at 11:24 PM Ondrej Jirman <megous@megous.com> wrote:
 
 > From: Icenowy Zheng <icenowy@aosc.io>
 >
-> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel. It is based on
-> Sitronix ST7703 LCD controller.
+> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI IPS LCD panel made by
+> Xingbangda, which is used on PinePhone final assembled phones.
 >
-> Add its device tree binding.
+> It is based on Sitronix ST7703 LCD controller.
+>
+> Add support for it.
 >
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 > Signed-off-by: Ondrej Jirman <megous@megous.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+(...)
+>  create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
+
+Nice!
+
+> +       /*
+> +        * Init sequence was supplied by the panel vendor.
+> +        */
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC,
+> +                         0xF1, 0x12, 0x83);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
+> +                         0x33, 0x81, 0x05, 0xF9, 0x0E, 0x0E, 0x20, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
+> +                         0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4F, 0x11,
+> +                         0x00, 0x00, 0x37);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
+> +                         0x25, 0x22, 0x20, 0x03);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
+> +                         0x10, 0x10, 0x05, 0x05, 0x03, 0xFF, 0x00, 0x00,
+> +                         0x00, 0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
+> +                         0x73, 0x73, 0x50, 0x50, 0x00, 0xC0, 0x08, 0x70,
+> +                         0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP, 0xF0, 0x12, 0xF0);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
+> +                         0x00, 0x00, 0x0B, 0x0B, 0x10, 0x10, 0x00, 0x00,
+> +                         0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
+> +       dsi_dcs_write_seq(dsi, 0xC6, 0x01, 0x00, 0xFF, 0xFF, 0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
+> +                         0x74, 0x00, 0x32, 0x32, 0x77, 0xF1, 0xFF, 0xFF,
+> +                         0xCC, 0xCC, 0x77, 0x77);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP, 0x07, 0x07);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM, 0x2C, 0x2C);
+> +       dsi_dcs_write_seq(dsi, 0xBF, 0x02, 0x11, 0x00);
+> +
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
+> +                         0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
+> +                         0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> +                         0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> +                         0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> +                         0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> +                         0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> +                         0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
+> +                         0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> +                         0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> +                         0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> +                         0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
+> +                         0xA5, 0x00, 0x00, 0x00, 0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
+> +                         0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
+> +                         0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
+> +                         0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
+> +                         0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
+> +                         0x12, 0x18);
+> +       msleep(20);
+
+This stuff is really hard or impossible to understand without the
+datasheet.
+
+In my previous review I wrote:
+
+It appears that the Himax HX8363 is using the same display controller
+if you look at the datasheet:
+http://www.datasheet-pdf.com/PDF/HX8369-A-Datasheet-Himax-729024
+There you find an explanation to some of the commands.
+
+That means, try to get rid of as much of the magic bytes as you can
+and use proper #defines. I know it takes some work but the result
+is so much more useful and readable.
+
+Further I wrote:
+
+You should definately insert code to read the MTP bytes:
+0xDA manufacturer
+0xDB driver version
+0xDC LCD module/driver
+And print these, se e.g. my newly added NT35510 driver or
+the Sony ACX424AKP driver.
+
+So please do that.
 
 Yours,
 Linus Walleij
