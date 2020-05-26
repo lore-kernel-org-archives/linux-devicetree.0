@@ -2,142 +2,153 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5027C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83676C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 19:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B120E2073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DC720888
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 19:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="kMVkvfh2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388499AbgEZSkS (ORCPT
+        id S2404239AbgEZTNU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 14:40:18 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59486 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387399AbgEZSkS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:40:18 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id F347F8030869;
-        Tue, 26 May 2020 18:40:14 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2o6nlMTIy_Dv; Tue, 26 May 2020 21:40:13 +0300 (MSK)
-Date:   Tue, 26 May 2020 21:40:11 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
+        Tue, 26 May 2020 15:13:20 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45826 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389966AbgEZTNT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:19 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 3A98130D62B;
+        Tue, 26 May 2020 12:13:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 3A98130D62B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590520396;
+        bh=+b41cKto7oBml6gbt0P3Uc1iMp9Snf8kHAJBk8ILXSc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kMVkvfh2RF6stG81DoEIP5rW2Bb1X314UrWcAaVH2vesNfHDGDr6KhshbNA46ZHix
+         7ZwntfMj7r7NDOxK4+O77jSehqnV1xcgzxPORE2AO6ggOOFgMQnDPaBIK+8fl7+mZP
+         rhW1OIwreN8UcomYfGhgxrbXcaiUc4E8Vm+33GjA=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 6F1C914008B;
+        Tue, 26 May 2020 12:13:13 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Max Staudt <max@enpas.org>, Stefan Roese <sr@denx.de>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 07/12] i2c: designware: Move Baytrail sem config to
- the platform if-clause
-Message-ID: <20200526184011.rjpkpuk6nxuksyct@mobilestation>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-8-Sergey.Semin@baikalelectronics.ru>
- <da6d8b18-b808-fd86-bbd2-13e7a90b2a5e@linux.intel.com>
- <20200521022215.ubvhuop47aflqkkb@mobilestation>
- <f01b3082-082c-8ce9-d0f7-f9ff952a37bf@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f01b3082-082c-8ce9-d0f7-f9ff952a37bf@linux.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Corey Minyard <minyard@acm.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE), Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        iommu@lists.linux-foundation.org (open list:DMA MAPPING HELPERS),
+        Julien Grall <julien.grall@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
+        Mark Brown <broonie@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>
+Subject: [PATCH v2 00/14] PCI: brcmstb: enable PCIe for STB chips
+Date:   Tue, 26 May 2020 15:12:39 -0400
+Message-Id: <20200526191303.1492-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:01:26PM +0300, Jarkko Nikula wrote:
-> On 5/21/20 5:22 AM, Serge Semin wrote:
-> > On Wed, May 20, 2020 at 03:16:14PM +0300, Jarkko Nikula wrote:
-> > > On 5/10/20 12:50 PM, Serge Semin wrote:
-> > > > Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
-> > > > platform driver. It's a bit confusing to see it's config in the menu at
-> > > > some separated place with no reference to the platform code. Lets move the
-> > > > config definition under the if-I2C_DESIGNWARE_PLATFORM clause. By doing so
-> > > > the config menu will display the feature right below the DW I2C platform
-> > > > driver item and will indent it to the right so signifying its belonging.
-> > > > 
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > > Cc: Paul Burton <paulburton@kernel.org>
-> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > > Cc: linux-mips@vger.kernel.org
-> > > > Cc: devicetree@vger.kernel.org
-> > > > ---
-> > > >    drivers/i2c/busses/Kconfig | 30 +++++++++++++++++-------------
-> > > >    1 file changed, 17 insertions(+), 13 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> > > > index 368aa64e9266..ed6927c4c540 100644
-> > > > --- a/drivers/i2c/busses/Kconfig
-> > > > +++ b/drivers/i2c/busses/Kconfig
-> > > > @@ -530,8 +530,8 @@ config I2C_DESIGNWARE_CORE
-> > > >    config I2C_DESIGNWARE_PLATFORM
-> > > >    	tristate "Synopsys DesignWare Platform"
-> > > > -	select I2C_DESIGNWARE_CORE
-> > > >    	depends on (ACPI && COMMON_CLK) || !ACPI
-> > > > +	select I2C_DESIGNWARE_CORE
-> > > >    	help
-> > > >    	  If you say yes to this option, support will be included for the
-> > > >    	  Synopsys DesignWare I2C adapter.
-> > > > @@ -539,6 +539,22 @@ config I2C_DESIGNWARE_PLATFORM
-> > > >    	  This driver can also be built as a module.  If so, the module
-> > > >    	  will be called i2c-designware-platform.
-> > > > +if I2C_DESIGNWARE_PLATFORM
-> > > > +
-> > > > +config I2C_DESIGNWARE_BAYTRAIL
-> > > > +	bool "Intel Baytrail I2C semaphore support"
-> > > > +	depends on ACPI
-> > > > +	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
-> > > > +		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
-> > > > +	help
-> > > > +	  This driver enables managed host access to the PMIC I2C bus on select
-> > > > +	  Intel BayTrail platforms using the X-Powers AXP288 PMIC. It allows
-> > > > +	  the host to request uninterrupted access to the PMIC's I2C bus from
-> > > > +	  the platform firmware controlling it. You should say Y if running on
-> > > > +	  a BayTrail system using the AXP288.
-> > > > +
-> > > > +endif # I2C_DESIGNWARE_PLATFORM
-> > > > +
-> > > 
-> > > Is the added "if I2C_DESIGNWARE_PLATFORM" needed here? Should the "depends
-> > > on" be enough?
-> > 
-> > The idea was to add if-endif clause here for features possibly added sometime
-> > in future. But using normal "depends on I2C_DESIGNWARE_PLATFORM" shall make
-> > the config depicted as an indented sub-config as well. Would you like me to
-> > remove the if-clause and use the depends on operator instead?
-> > 
-> Yes, please remove it from this patch. Keeps this patch simpler and if some
-> future feature needs it then that patch(set) is the right place to add it.
+v2:
+Commit: "device core: Add ability to handle multiple dma offsets"
+  o Added helper func attach_dma_pfn_offset_map() in address.c (Chistoph)
+  o Helpers funcs added to __phys_to_dma() & __dma_to_phys() (Christoph)
+  o Added warning when multiple offsets are needed and !DMA_PFN_OFFSET_MAP
+  o dev->dma_pfn_map => dev->dma_pfn_offset_map
+  o s/frm/from/ for dma_pfn_offset_frm_{phys,dma}_addr() (Christoph)
+  o In device.h: s/const void */const struct dma_pfn_offset_region */
+  o removed 'unlikely' from unlikely(dev->dma_pfn_offset_map) since
+    guarded by CONFIG_DMA_PFN_OFFSET_MAP (Christoph)
+  o Since dev->dma_pfn_offset is copied in usb/core/{usb,message}.c, now
+    dev->dma_pfn_offset_map is copied as well.
+  o Merged two of the DMA commits into one (Christoph).
 
-Agreed. I'll do this in v3.
+Commit "arm: dma-mapping: Invoke dma offset func if needed":
+  o Use helper functions instead of #if CONFIG_DMA_PFN_OFFSET
 
--Sergey
+Other commits' changes:
+  o Removed need for carrying of_id var in priv (Nicolas)
+  o Commit message rewordings (Bjorn)
+  o Commit log messages filled to 75 chars (Bjorn)
+  o devm_reset_control_get_shared())
+    => devm_reset_control_get_optional_shared (Philipp)
+  o Add call to reset_control_assert() in PCIe remove routines (Philipp)
 
-> 
-> Jarkko
+v1:
+This patchset expands the usefulness of the Broadcom Settop Box PCIe
+controller by building upon the PCIe driver used currently by the
+Raspbery Pi.  Other forms of this patchset were submitted by me years
+ago and not accepted; the major sticking point was the code required
+for the DMA remapping needed for the PCIe driver to work [1].
+
+There have been many changes to the DMA and OF subsystems since that
+time, making a cleaner and less intrusive patchset possible.  This
+patchset implements a generalization of "dev->dma_pfn_offset", except
+that instead of a single scalar offset it provides for multiple
+offsets via a function which depends upon the "dma-ranges" property of
+the PCIe host controller.  This is required for proper functionality
+of the BrcmSTB PCIe controller and possibly some other devices.
+
+[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
+
+Jim Quinlan (14):
+  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+  ata: ahci_brcm: Fix use of BCM7216 reset controller
+  dt-bindings: PCI: Add bindings for more Brcmstb chips
+  PCI: brcmstb: Add bcm7278 reigister info
+  PCI: brcmstb: Add suspend and resume pm_ops
+  PCI: brcmstb: Add bcm7278 PERST support
+  PCI: brcmstb: Add control of rescal reset
+  of: Include a dev param in of_dma_get_range()
+  device core: Add ability to handle multiple dma offsets
+  arm: dma-mapping: Invoke dma offset func if needed
+  PCI: brcmstb: Set internal memory viewport sizes
+  PCI: brcmstb: Accommodate MSI for older chips
+  PCI: brcmstb: Set bus max burst size by chip type
+  PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
+
+ .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
+ arch/arm/include/asm/dma-mapping.h            |  13 +-
+ drivers/ata/ahci_brcm.c                       |  14 +-
+ drivers/of/address.c                          |  69 ++-
+ drivers/of/device.c                           |   2 +-
+ drivers/of/of_private.h                       |   8 +-
+ drivers/pci/controller/Kconfig                |   3 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 408 +++++++++++++++---
+ drivers/usb/core/message.c                    |   3 +
+ drivers/usb/core/usb.c                        |   3 +
+ include/linux/device.h                        |  10 +-
+ include/linux/dma-direct.h                    |  10 +-
+ include/linux/dma-mapping.h                   |  46 ++
+ kernel/dma/Kconfig                            |  13 +
+ 14 files changed, 559 insertions(+), 83 deletions(-)
+
+-- 
+2.17.1
+
