@@ -2,115 +2,260 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E048BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0982C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FB8208DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590530896;
-	bh=btXwG+8894ZAUlHjClZLGsQrNaYj/a/EcwRM/kzN5mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uuWLh6XQKqVA1JlaFhg6rzGcFl7MgA77rei0OrbH6+cukNhmSm91p9nGtna+5fkPt
-	 FkMDsUxSHU9IytlJ20zLaPetWSqxRZZNHC5sP+NOF6qbSZm18SvPyBt1gaLYMHptCn
-	 td9vPsthB6wLOlPF/iWQbh7W3MrHl3sQ4Tgcbih4=
+	by mail.kernel.org (Postfix) with ESMTP id A8C89208C9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389799AbgEZWIN (ORCPT
+        id S2389613AbgEZWVY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 18:08:13 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35962 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389342AbgEZWIN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:08:13 -0400
-Received: by mail-io1-f68.google.com with SMTP id y18so3370683iow.3;
-        Tue, 26 May 2020 15:08:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mXe3eMhOfw8Yi0mzveU2UUdf9WbJiPX68762lf2f3m8=;
-        b=lnGpxnl4Ptsii9Oal3CfKvRrQ6E70G0Es5XwkC6aYwMTShppiSQ48V2buS2xEMJp6n
-         n4foNO7lb0Uc7qLZ0usrc3jicmeTmeeP4PTChZbNlACtK+7zrJiwMYFYL0JaVhRd0yLe
-         R3iA1MagoO3zpwnt2OJrlbNjN0e0Q+9HxnTAN0VCylBabiegqtd7QLTd+zxeAkKByrjE
-         wYmryKC5xRhvPvJBes4T5RW2v2bK9R0hsvC+YNiJR6N88MqISKcW/bWDggbIqV+KXb7Q
-         skAnadg8HoE/Z/iRTVZM+jw1Jqp4vo+7yY5czD10RjY+T9ZXeohDV9kbqS8Bwc0fjGlm
-         52Dg==
-X-Gm-Message-State: AOAM532IsBhhZ2JVWIK7JNQXwfKh0tOtgAKH9tZxtA/80Aacwiz3OXgt
-        zSqSIkDytsg8jsDa/D51nw==
-X-Google-Smtp-Source: ABdhPJxua5/2ASeh+JDi3H6ENvlO5duKzfxD0bd/FxftWvnUVDU7fZZVP6RJWTWfF7tnoEbMyFvyDA==
-X-Received: by 2002:a02:b782:: with SMTP id f2mr3009396jam.91.1590530891856;
-        Tue, 26 May 2020 15:08:11 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id o70sm677282ild.3.2020.05.26.15.08.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:08:10 -0700 (PDT)
-Received: (nullmailer pid 467130 invoked by uid 1000);
-        Tue, 26 May 2020 22:08:08 -0000
-Date:   Tue, 26 May 2020 16:08:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     daniel@ffwll.ch, linux-arm-msm@vger.kernel.org, jonas@kwiboo.se,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, robh+dt@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>, a.hajda@samsung.com,
-        narmstrong@baylibre.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        robdclark@chromium.org, jeffrey.l.hugo@gmail.com,
-        jernej.skrabec@siol.net, airlied@linux.ie, spanda@codeaurora.org,
-        Laurent.pinchart@ideasonboard.com, swboyd@chromium.org,
-        bgolaszewski@baylibre.com, bjorn.andersson@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to
- yaml
-Message-ID: <20200526220808.GA467074@bogus>
-References: <20200513215902.261547-1-dianders@chromium.org>
- <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
+        Tue, 26 May 2020 18:21:24 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60096 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391168AbgEZWVX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:21:23 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 96BB8803086F;
+        Tue, 26 May 2020 22:21:17 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id sR-oF7S0S2Zk; Wed, 27 May 2020 01:21:16 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
+Date:   Wed, 27 May 2020 01:20:53 +0300
+Message-ID: <20200526222056.18072-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200526222056.18072-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200526222056.18072-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 14:59:01 -0700, Douglas Anderson wrote:
-> This moves the bindings over, based a lot on toshiba,tc358768.yaml.
-> Unless there's someone known to be better, I've set the maintainer in
-> the yaml as the first person to submit bindings.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> I removed Stephen's review tag on v5 since I squashed in a bunch of
-> other stuff.
-> 
-> Changes in v6: None
-> Changes in v5:
-> - Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
-> 
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2:
-> - specification => specifier.
-> - power up => power.
-> - Added back missing suspend-gpios.
-> - data-lanes and lane-polarities are are the right place now.
-> - endpoints don't need to be patternProperties.
-> - Specified more details for data-lanes and lane-polarities.
-> - Added old example back in, fixing bugs in it.
-> - Example i2c bus is just called "i2c", not "i2c1" now.
-> 
->  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
->  .../bindings/display/bridge/ti,sn65dsi86.yaml | 285 ++++++++++++++++++
->  2 files changed, 285 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> 
+Baikal-T1 Clocks Control Unit is responsible for transformation of a
+signal coming from an external oscillator into clocks of various
+frequencies to propagate them then to the corresponding clocks
+consumers (either individual IP-blocks or clock domains). In order
+to create a set of high-frequency clocks the external signal is
+firstly handled by the embedded into CCU PLLs. So the corresponding
+dts-node is just a normal clock-provider node with standard set of
+properties. Note as being part of the Baikal-T1 System Controller its
+DT node is supposed to be a child the system controller node.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-mips@vger.kernel.org
+
+---
+
+Changelog v2:
+- Rearrange the SoBs.
+- Discard comments in the bindings file header.
+- Add dual GPL/BSD license.
+- Add spaces around the ASCII-graphics in the binding description.
+- Remove reference to Documentation/devicetree/bindings/clock/clock-bindings.txt
+  file.
+- Discard redundant object check against "/schemas/clock/clock.yaml#" schema.
+- Discard redundant descriptions of the "#clock-cells" property.
+- Remove "reg" property since from now the clock DT node is supposed to be
+  a child of the syscon-compatible system controller node.
+- Remove "clock-output-names" property support.
+- Replace "additionalProperties: false" with "unevaluatedProperties: false".
+- Lowercase the nodes name in the examples.
+- Use "clock-controller" node name suffix in the examples.
+- Remove unnecessary comments in the clocks dt-bindings header file.
+
+Changelog v3:
+- Get the reg property back even though the driver is using the parental
+  syscon regmap.
+- The DT schema will live separately from the system controller, but the
+  corresponding sub-node of the later DT schema will $ref this one.
+---
+ .../bindings/clock/baikal,bt1-ccu-pll.yaml    | 131 ++++++++++++++++++
+ include/dt-bindings/clock/bt1-ccu.h           |  16 +++
+ 2 files changed, 147 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+ create mode 100644 include/dt-bindings/clock/bt1-ccu.h
+
+diff --git a/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+new file mode 100644
+index 000000000000..97131bfa6f87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+@@ -0,0 +1,131 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/baikal,bt1-ccu-pll.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Baikal-T1 Clock Control Unit PLL
++
++maintainers:
++  - Serge Semin <fancer.lancer@gmail.com>
++
++description: |
++  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
++  responsible for the chip subsystems clocking and resetting. The CCU is
++  connected with an external fixed rate oscillator, which signal is transformed
++  into clocks of various frequencies and then propagated to either individual
++  IP-blocks or to groups of blocks (clock domains). The transformation is done
++  by means of PLLs and gateable/non-gateable dividers embedded into the CCU.
++  It's logically divided into the next components:
++  1) External oscillator (normally XTAL's 25 MHz crystal oscillator, but
++     in general can provide any frequency supported by the CCU PLLs).
++  2) PLLs clocks generators (PLLs) - described in this binding file.
++  3) AXI-bus clock dividers (AXI).
++  4) System devices reference clock dividers (SYS).
++  which are connected with each other as shown on the next figure:
++
++          +---------------+
++          | Baikal-T1 CCU |
++          |   +----+------|- MIPS P5600 cores
++          | +-|PLLs|------|- DDR controller
++          | | +----+      |
++  +----+  | |  |  |       |
++  |XTAL|--|-+  |  | +---+-|
++  +----+  | |  |  +-|AXI|-|- AXI-bus
++          | |  |    +---+-|
++          | |  |          |
++          | |  +----+---+-|- APB-bus
++          | +-------|SYS|-|- Low-speed Devices
++          |         +---+-|- High-speed Devices
++          +---------------+
++
++  Each CCU sub-block is represented as a separate dts-node and has an
++  individual driver to be bound with.
++
++  In order to create signals of wide range frequencies the external oscillator
++  output is primarily connected to a set of CCU PLLs. There are five PLLs
++  to create a clock for the MIPS P5600 cores, the embedded DDR controller,
++  SATA, Ethernet and PCIe domains. The last three domains though named by the
++  biggest system interfaces in fact include nearly all of the rest SoC
++  peripherals. Each of the PLLs is based on True Circuits TSMC CLN28HPM core
++  with an interface wrapper (so called safe PLL' clocks switcher) to simplify
++  the PLL configuration procedure. The PLLs work as depicted on the next
++  diagram:
++
++      +--------------------------+
++      |                          |
++      +-->+---+    +---+   +---+ |  +---+   0|\
++  CLKF--->|/NF|--->|PFD|...|VCO|-+->|/OD|--->| |
++          +---+ +->+---+   +---+ /->+---+    | |--->CLKOUT
++  CLKOD---------C----------------+          1| |
++       +--------C--------------------------->|/
++       |        |                             ^
++  Rclk-+->+---+ |                             |
++  CLKR--->|/NR|-+                             |
++          +---+                               |
++  BYPASS--------------------------------------+
++  BWADJ--->
++
++  where Rclk is the reference clock coming  from XTAL, NR - reference clock
++  divider, NF - PLL clock multiplier, OD - VCO output clock divider, CLKOUT -
++  output clock, BWADJ is the PLL bandwidth adjustment parameter. At this moment
++  the binding supports the PLL dividers configuration in accordance with a
++  requested rate, while bypassing and bandwidth adjustment settings can be
++  added in future if it gets to be necessary.
++
++  The PLLs CLKOUT is then either directly connected with the corresponding
++  clocks consumer (like P5600 cores or DDR controller) or passed over a CCU
++  divider to create a signal required for the clock domain.
++
++  The CCU PLL dts-node uses the common clock bindings with no custom
++  parameters. The list of exported clocks can be found in
++  'include/dt-bindings/clock/bt1-ccu.h'. Since CCU PLL is a part of the
++  Baikal-T1 SoC System Controller its DT node is supposed to be a child of
++  later one.
++
++properties:
++  compatible:
++    const: baikal,bt1-ccu-pll
++
++  reg:
++    maxItems: 1
++
++  "#clock-cells":
++    const: 1
++
++  clocks:
++    description: External reference clock
++    maxItems: 1
++
++  clock-names:
++    const: ref_clk
++
++unevaluatedProperties: false
++
++required:
++  - compatible
++  - "#clock-cells"
++  - clocks
++  - clock-names
++
++examples:
++  # Clock Control Unit PLL node:
++  - |
++    clock-controller@1f04d000 {
++      compatible = "baikal,bt1-ccu-pll";
++      reg = <0x1f04d000 0x028>;
++      #clock-cells = <1>;
++
++      clocks = <&clk25m>;
++      clock-names = "ref_clk";
++    };
++  # Required external oscillator:
++  - |
++    clk25m: clock-oscillator-25m {
++      compatible = "fixed-clock";
++      #clock-cells = <0>;
++      clock-frequency  = <25000000>;
++      clock-output-names = "clk25m";
++    };
++...
+diff --git a/include/dt-bindings/clock/bt1-ccu.h b/include/dt-bindings/clock/bt1-ccu.h
+new file mode 100644
+index 000000000000..931a4bea67c0
+--- /dev/null
++++ b/include/dt-bindings/clock/bt1-ccu.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
++ *
++ * Baikal-T1 CCU clock indices
++ */
++#ifndef __DT_BINDINGS_CLOCK_BT1_CCU_H
++#define __DT_BINDINGS_CLOCK_BT1_CCU_H
++
++#define CCU_CPU_PLL			0
++#define CCU_SATA_PLL			1
++#define CCU_DDR_PLL			2
++#define CCU_PCIE_PLL			3
++#define CCU_ETH_PLL			4
++
++#endif /* __DT_BINDINGS_CLOCK_BT1_CCU_H */
+-- 
+2.26.2
+
