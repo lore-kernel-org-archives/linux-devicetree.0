@@ -2,116 +2,114 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EC4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56C0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C990207FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFC420849
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3wcKRmb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwgYEdJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgEZRJs (ORCPT
+        id S2388499AbgEZRLt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 13:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
+        Tue, 26 May 2020 13:11:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728444AbgEZRJr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:09:47 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A00F1C03E96D;
-        Tue, 26 May 2020 10:09:46 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id 9so2740730ilg.12;
-        Tue, 26 May 2020 10:09:46 -0700 (PDT)
+        with ESMTP id S2388373AbgEZRLs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:11:48 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE798C03E96D;
+        Tue, 26 May 2020 10:11:48 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id r16so989557qvm.6;
+        Tue, 26 May 2020 10:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qDMtsfOhm3VjziHJE2E1cNppZGDhVrk8ubukeyWGRX4=;
-        b=g3wcKRmbalgUtm11bVdHv8qL3LYhdL0QrZ0Tw1Vt7ECNYVsx3ibiBCGgGZjBTZ10Ut
-         lseDTXK5zhZ0LR7F+V13fcBLCQjJX0R/054ayq1e0/Ao2kuTUi46uynzW69NKJJ8VbMj
-         G/OMrFZnIm1yvnBYotaJfZ6fa/nyXwn1oR+DoexzlWBsBLjNrCSL2Z02AVObFJWWmOcX
-         AFKwxV6TggtmLne1nHIzFnFzDVNGbWuvI2sla/LQidclclbb8k/v2wCfcpYwLcbpCG9I
-         JVB+4GPEhuHmtKOW3ZpCS7XK6Zag9f5TgIogyl/NKcn60z+oRWid+995AOdeFDtAK3wz
-         5OFQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KYV7/EJY8skNu4Mtq/Qn2Agcp3CmHlLCDVh2doozBEU=;
+        b=JwgYEdJDQ/uIIcFwlKyXpzLsjqIz68AIdnPC+fopKjr0+O03ByCELarQloCi43hpXw
+         T4skqKg491ay9e6Ss90HK8Nz8iwTozfzoENWKGmYFDzw8/JWdLzNv1vEsPiVjQ5qm48p
+         gfP0L+3lFoFd4iP0aXgBGAbGM/06liMiMW5owj4yBX4gfq7ftW7MFTX5b2NCj2FqUeIl
+         d8tuenFc9nl9DDYiZ/WxeT9r5lqJGzNMFuuWMhTIywN0/MriK7DvMMBQnNmj9IMpardx
+         t+pjezF0N0pP9IY1xNd7UadO7Gdj/a58GkbLUZHz1wEteG6Uml7f2TS/1ijuIVzpbux/
+         KmHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qDMtsfOhm3VjziHJE2E1cNppZGDhVrk8ubukeyWGRX4=;
-        b=rU6YTudbhkFdicsHq9X6HzlTplzcLGGOmeDXOC8t+K+ALU39vOWvsX24uwIQZ9cdzs
-         HX4GgartfRMK/m8v2HzKkFXFw+BN+5koolFrERieHV10KR52zVOd9WxX4Pj3+DZ6SLqk
-         2WACOeakxa7glr1cneOJ81SpdxMWjsioF/GkohSEOcg5e/DCSMjmlMH0t/MzBbCfq4C6
-         Fm0ONmcUGoFNmay1RfGqvM1HVo5JWFRrO3u6PKmLbD3RHpcdMpMKIdzAfpHjH/ZsNa5A
-         jM4cjBNAzthj/H/LQaAgUWaqy7Ti2QqCi6CfPukU5PNaZrMwgODcdEmnnTtjP8mcp9kn
-         39aA==
-X-Gm-Message-State: AOAM532AKOTGAaYOP9424fD6tNn1O0iUo4wuyLf+WflxduS6L39DfYNO
-        P31+VBkyH2UKVaNklxF1D2M=
-X-Google-Smtp-Source: ABdhPJyiCTc5LxB7MGg1Mg2Z3LpRLDDmxxNgMXldniIQX8H7iq3tA9+sDdWDd7TrmiAT4bYBQZlC3A==
-X-Received: by 2002:a92:c704:: with SMTP id a4mr2119077ilp.163.1590512985746;
-        Tue, 26 May 2020 10:09:45 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id j17sm244116ilq.79.2020.05.26.10.09.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 10:09:45 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: imx8mm-beacon: Fix voltages on LDO1 and LDO2
-Date:   Tue, 26 May 2020 12:09:39 -0500
-Message-Id: <20200526170939.104111-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KYV7/EJY8skNu4Mtq/Qn2Agcp3CmHlLCDVh2doozBEU=;
+        b=eEG1ePi+1kyPbcI7Ly1XS3jV28HYKKrZDgBpO63oDGjZMNyoPQKsnoRlSV7sCvQfcA
+         C7mEX+8AbM3eYlgURwpcNXSJqZ0aehrpFRo+O4O6RoO+DjaMwm7MxH3HoFHg4TThIEmo
+         okY/Sl7jPYdOKJeWAdNHQW7QYMJYj7tqpsEoWjklz1sHVnuUm0sfYk8ww6t8KA9GhdPF
+         cVpIhU5/WgrpdFP+Yj21qVxs+IsntGRIen18EME4vBPlImYkLsYkAtSj5jQeu070c9J0
+         JnJZj1JJfNq0VISm02goIL+vB3CQebUpTLmpYCt7G+hPgS4xn0r8v64OqOA45dFwJG8Z
+         EIgw==
+X-Gm-Message-State: AOAM532g691a38DCiMEdhGU3GREaxlI4OOHOcSFzKVkB7N6Vbn/Bw4J2
+        M1Wst5oAfkTT0k3Zm7h9QVU=
+X-Google-Smtp-Source: ABdhPJzEDF5z8a+BdBW6FzpI5b4GVQxMz0KacM8N1MLQOhuXRFKizNhj68n7e7J/KVVH4OHepYffww==
+X-Received: by 2002:ad4:57a2:: with SMTP id g2mr21036833qvx.137.1590513107751;
+        Tue, 26 May 2020 10:11:47 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id x1sm225275qts.63.2020.05.26.10.11.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 May 2020 10:11:46 -0700 (PDT)
+Date:   Tue, 26 May 2020 19:11:37 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 3/5] dt-bindings: iio: magnetometer: ak8975: add gpio
+ reset support
+Message-ID: <20200526171137.GA21760@ict14-OptiPlex-980>
+References: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
+ <20200525151117.32540-4-jonathan.albrieux@gmail.com>
+ <CACRpkdZo4PsC9Y8seMfS33escA6ZVKWwnbW2BCFOKiX2gY8RDw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZo4PsC9Y8seMfS33escA6ZVKWwnbW2BCFOKiX2gY8RDw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-LDO1 and LDO2 settings are wrong and case the voltage to go above the
-maximum level of 2.15V permitted by the SoC to 3.0V.
+On Tue, May 26, 2020 at 11:22:07AM +0200, Linus Walleij wrote:
+> On Mon, May 25, 2020 at 5:13 PM Jonathan Albrieux
+> <jonathan.albrieux@gmail.com> wrote:
+> 
+> > Add reset-gpio support.
+> >
+> > Without reset's deassertion during ak8975_power_on(), driver's probe fails
+> > on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+> >
+> > AK09911 has an active low reset gpio to handle register's reset.
+> > AK09911 datasheet says that, if not used, reset pin should be connected
+> > to VID. This patch emulates this situation.
+> >
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Yours,
+> Linus Walleij
 
-This patch is based on work done on the i.MX8M Mini-EVK which utilizes
-the same fix.
+Thank you!!
 
-Fixes: 593816fa2f35 ("arm64: dts: imx: Add Beacon i.MX8m-Mini development kit")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-index fb0137a8611c..94911b1707ef 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-@@ -136,7 +136,7 @@
- 
- 			ldo1_reg: LDO1 {
- 				regulator-name = "LDO1";
--				regulator-min-microvolt = <3000000>;
-+				regulator-min-microvolt = <1600000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
-@@ -144,7 +144,7 @@
- 
- 			ldo2_reg: LDO2 {
- 				regulator-name = "LDO2";
--				regulator-min-microvolt = <900000>;
-+				regulator-min-microvolt = <800000>;
- 				regulator-max-microvolt = <900000>;
- 				regulator-boot-on;
- 				regulator-always-on;
--- 
-2.17.1
-
+Best regards,
+Jonathan Albrieux
