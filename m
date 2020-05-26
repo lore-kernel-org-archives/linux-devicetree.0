@@ -2,60 +2,59 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5132EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4C1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 243272084C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A6920823
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:48:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="keLEo3Sz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bMJ9mdjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388810AbgEZRsu (ORCPT
+        id S2389115AbgEZRs4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 13:48:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58428 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388499AbgEZRsu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:48:50 -0400
+        Tue, 26 May 2020 13:48:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53646 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388901AbgEZRsx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:48:53 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmhNP103268;
-        Tue, 26 May 2020 12:48:43 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmkJn072451;
+        Tue, 26 May 2020 12:48:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590515323;
-        bh=qHVpA1Q6epqnqSqEAx0SKTTya9mqUNPldRJpAOKn1GQ=;
+        s=ti-com-17Q1; t=1590515326;
+        bh=5fyUlu/Zprub7RTCYkUniEyaqK7vEi3mHrO00+nEK+o=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=keLEo3SzQPdpQzCKQ058xrEz58iG72v5jTMmZ4gBcHJ7BT3pWilfssK4BAB9A4Gio
-         XEU5p24R3OQ7SRLeHWjJw9Znv2Y+RUkLNQni9OPTwfvvsdIW8KIF+93oIb2dfAaM93
-         FPaoAuUTKZWNqdzrzSIIaMGTIBPuGUUPd+7dccZk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QHmhte124674
+        b=bMJ9mdjWZTKNNiINC8R3N6m7eWr8M/gwwPkYTynaWCVvZ2gMdlb98Rc+ufTzIHPw/
+         OCmyfDthhlH8FTMy7vckz/2FfKQLDzjt7p0YShachFU7dAq3a9kQnbadiUQ4McOzAX
+         8beXXNpTuyqZza47I3oiAIXLTNXCFUbO86hY9fqw=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QHmkRK124800
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 12:48:43 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 26 May 2020 12:48:46 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
  May 2020 12:47:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
  Frontend Transport; Tue, 26 May 2020 12:47:18 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHlIgs107893;
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHlITL022891;
         Tue, 26 May 2020 12:47:18 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>, <robh@kernel.org>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v3 4/4] net: dp83869: Add RGMII internal delay configuration
-Date:   Tue, 26 May 2020 12:47:16 -0500
-Message-ID: <20200526174716.14116-5-dmurphy@ti.com>
+Subject: [PATCH net-next v3 2/4] net: phy: Add a helper to return the index for of the internal delay
+Date:   Tue, 26 May 2020 12:47:14 -0500
+Message-ID: <20200526174716.14116-3-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526174716.14116-1-dmurphy@ti.com>
 References: <20200526174716.14116-1-dmurphy@ti.com>
@@ -68,167 +67,136 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add RGMII internal delay configuration for Rx and Tx.
+Add a helper function that will return the index in the array for the
+passed in internal delay value.  The helper requires the array, size and
+delay value.
+
+The helper will then return the index for the exact match or return the
+index for the index to the closest smaller value.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/net/phy/dp83869.c | 91 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 88 insertions(+), 3 deletions(-)
+ drivers/net/phy/phy_device.c | 94 ++++++++++++++++++++++++++++++++++++
+ include/linux/phy.h          |  2 +
+ 2 files changed, 96 insertions(+)
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index cfb22a21a2e6..1c440e0c0d64 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -64,6 +64,9 @@
- #define DP83869_RGMII_TX_CLK_DELAY_EN		BIT(1)
- #define DP83869_RGMII_RX_CLK_DELAY_EN		BIT(0)
- 
-+/* RGMIIDCTL */
-+#define DP83869_RGMII_CLK_DELAY_SHIFT		4
-+
- /* STRAP_STS1 bits */
- #define DP83869_STRAP_OP_MODE_MASK		GENMASK(2, 0)
- #define DP83869_STRAP_STS1_RESERVED		BIT(11)
-@@ -78,9 +81,6 @@
- #define DP83869_PHYCR_FIFO_DEPTH_MASK	GENMASK(15, 12)
- #define DP83869_PHYCR_RESERVED_MASK	BIT(11)
- 
--/* RGMIIDCTL bits */
--#define DP83869_RGMII_TX_CLK_DELAY_SHIFT	4
--
- /* IO_MUX_CFG bits */
- #define DP83869_IO_MUX_CFG_IO_IMPEDANCE_CTRL	0x1f
- 
-@@ -99,6 +99,10 @@
- #define DP83869_OP_MODE_MII			BIT(5)
- #define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
- 
-+static int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500, 1750,
-+				       2000, 2250, 2500, 2750, 3000, 3250,
-+				       3500, 3750, 4000};
-+
- enum {
- 	DP83869_PORT_MIRRORING_KEEP,
- 	DP83869_PORT_MIRRORING_EN,
-@@ -108,6 +112,8 @@ enum {
- struct dp83869_private {
- 	int tx_fifo_depth;
- 	int rx_fifo_depth;
-+	s32 rx_id_delay;
-+	s32 tx_id_delay;
- 	int io_impedance;
- 	int port_mirroring;
- 	bool rxctrl_strap_quirk;
-@@ -218,6 +224,7 @@ static int dp83869_of_init(struct phy_device *phydev)
- 		ret = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_STRAP_STS1);
- 		if (ret < 0)
- 			return ret;
-+
- 		if (ret & DP83869_STRAP_MIRROR_ENABLED)
- 			dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
- 		else
-@@ -232,6 +239,20 @@ static int dp83869_of_init(struct phy_device *phydev)
- 				 &dp83869->tx_fifo_depth))
- 		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
- 
-+	ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
-+				   &dp83869->rx_id_delay);
-+	if (ret) {
-+		dp83869->rx_id_delay = ret;
-+		ret = 0;
-+	}
-+
-+	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
-+				   &dp83869->tx_id_delay);
-+	if (ret) {
-+		dp83869->tx_id_delay = ret;
-+		ret = 0;
-+	}
-+
- 	return ret;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 6b30d205642f..667b510c8810 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2661,6 +2661,100 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
  }
- #else
-@@ -367,10 +388,45 @@ static int dp83869_configure_mode(struct phy_device *phydev,
- 	return ret;
- }
+ EXPORT_SYMBOL(phy_get_pause);
  
-+static int dp83869_get_delay(struct phy_device *phydev)
++static int phy_find_descending_delay(struct phy_device *phydev,
++				     int *delay_values, int size, int int_delay)
 +{
-+	struct dp83869_private *dp83869 = phydev->priv;
-+	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
-+	int tx_delay = 0;
-+	int rx_delay = 0;
++	int i;
 +
-+	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID ||
-+	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
-+		tx_delay = phy_get_delay_index(phydev,
-+					       &dp83869_internal_delay[0],
-+					       delay_size, dp83869->tx_id_delay,
-+					       false);
-+		if (tx_delay < 0) {
-+			phydev_err(phydev, "Tx internal delay is invalid\n");
-+			return tx_delay;
++	if (int_delay > delay_values[0] || int_delay < delay_values[size - 1]) {
++		phydev_err(phydev, "Delay %d is out of range\n", int_delay);
++		return -EINVAL;
++	}
++
++	if (int_delay == delay_values[0])
++		return 0;
++
++	for (i = 1; i < size; i++) {
++		if (int_delay == delay_values[i])
++			return i;
++
++		/* Find an approximate index by looking up the table */
++		if (int_delay < delay_values[i - 1] &&
++		    int_delay > delay_values[i]) {
++			if (int_delay - delay_values[i - 1] >
++			    delay_values[i] - int_delay)
++				return i + 1;
++			else
++				return i;
 +		}
 +	}
 +
-+	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID ||
-+	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
-+		rx_delay = phy_get_delay_index(phydev,
-+					       &dp83869_internal_delay[0],
-+					       delay_size, dp83869->rx_id_delay,
-+					       false);
-+		if (rx_delay < 0) {
-+			phydev_err(phydev, "Rx internal delay is invalid\n");
-+			return rx_delay;
-+		}
-+	}
-+
-+	return rx_delay | tx_delay << DP83869_RGMII_CLK_DELAY_SHIFT;
++	phydev_err(phydev, "error finding internal delay index for %d\n",
++		   int_delay);
++	return -EINVAL;
 +}
 +
- static int dp83869_config_init(struct phy_device *phydev)
- {
- 	struct dp83869_private *dp83869 = phydev->priv;
- 	int ret, val;
-+	int delay;
- 
- 	ret = dp83869_configure_mode(phydev, dp83869);
- 	if (ret)
-@@ -394,6 +450,35 @@ static int dp83869_config_init(struct phy_device *phydev)
- 				     dp83869->clk_output_sel <<
- 				     DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT);
- 
-+	if (phy_interface_is_rgmii(phydev)) {
-+		ret = dp83869_get_delay(phydev);
-+		if (ret < 0)
-+			return ret;
++static int phy_find_ascending_delay(struct phy_device *phydev,
++				    int *delay_values, int size, int int_delay)
++{
++	int i;
 +
-+		delay = ret;
-+		ret = phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIIDCTL,
-+				    delay);
-+		if (ret)
-+			return ret;
-+
-+		val = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL);
-+		val &= ~(DP83869_RGMII_TX_CLK_DELAY_EN |
-+			 DP83869_RGMII_RX_CLK_DELAY_EN);
-+
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
-+			val |= (DP83869_RGMII_TX_CLK_DELAY_EN |
-+				DP83869_RGMII_RX_CLK_DELAY_EN);
-+
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+			val |= DP83869_RGMII_TX_CLK_DELAY_EN;
-+
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-+			val |= DP83869_RGMII_RX_CLK_DELAY_EN;
-+
-+		ret = phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL,
-+				    val);
++	if (int_delay < delay_values[0] || int_delay > delay_values[size - 1]) {
++		phydev_err(phydev, "Delay %d is out of range\n", int_delay);
++		return -EINVAL;
 +	}
 +
- 	return ret;
- }
++	if (int_delay == delay_values[0])
++		return 0;
++
++	for (i = 1; i < size; i++) {
++		if (int_delay == delay_values[i])
++			return i;
++
++		/* Find an approximate index by looking up the table */
++		if (int_delay > delay_values[i - 1] &&
++		    int_delay < delay_values[i]) {
++			if (int_delay - delay_values[i - 1] <
++			    delay_values[i] - int_delay)
++				return i - 1;
++			else
++				return i;
++		}
++	}
++
++	phydev_err(phydev, "error finding internal delay index for %d\n",
++		   int_delay);
++	return -EINVAL;
++}
++
++/**
++ * phy_get_delay_index - returns the index of the internal delay
++ * @phydev: phy_device struct
++ * @delay_values: array of delays the PHY supports
++ * @size: the size of the delay array
++ * @int_delay: the internal delay to be looked up
++ * @descending: if the delay array is in descending order
++ *
++ * Returns the index within the array of internal delay passed in.
++ * Return errno if the delay is invalid or cannot be found.
++ */
++s32 phy_get_delay_index(struct phy_device *phydev, int *delay_values, int size,
++			int int_delay, bool descending)
++{
++	if (int_delay < 0)
++		return -EINVAL;
++
++	if (size <= 0)
++		return -EINVAL;
++
++	if (descending)
++		return phy_find_descending_delay(phydev, delay_values, size,
++						 int_delay);
++
++	return phy_find_ascending_delay(phydev, delay_values, size, int_delay);
++}
++EXPORT_SYMBOL(phy_get_delay_index);
++
+ static bool phy_drv_supports_irq(struct phy_driver *phydrv)
+ {
+ 	return phydrv->config_intr && phydrv->ack_interrupt;
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 2bcdf19ed3b4..1ba2c132b635 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1408,6 +1408,8 @@ void phy_set_asym_pause(struct phy_device *phydev, bool rx, bool tx);
+ bool phy_validate_pause(struct phy_device *phydev,
+ 			struct ethtool_pauseparam *pp);
+ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause);
++int phy_get_delay_index(struct phy_device *phydev, int *delay_values,
++			int size, int delay, bool descending);
+ void phy_resolve_pause(unsigned long *local_adv, unsigned long *partner_adv,
+ 		       bool *tx_pause, bool *rx_pause);
  
 -- 
 2.26.2
