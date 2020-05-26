@@ -2,104 +2,253 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66427C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 07:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A137BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 07:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFA8207CB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 07:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B22F20870
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 07:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731540AbgEZHDX convert rfc822-to-8bit (ORCPT
+        id S1731310AbgEZHFV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 03:03:23 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36621 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731493AbgEZHDW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 03:03:22 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x23so17822303oic.3
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 00:03:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eylea4IzybGIW6tKiP757miyZUnIcYAn0TGjr5EpQeg=;
-        b=S0IJtpph/upvtMLQUGWXplryKGMhWCr/yD77lmcB4BgfglQiRKdV28bNULNSlERInz
-         tEnYgG/jwqeXgfIBAaEsw0UPA+F3++N6kfQB9Iq7JUeKGLeZsZmevj7O5ULPzFcquopO
-         1JqSjS9i0MCtKuXqH7ZBNsI/QO+Uh5gnrr9KBvy0RxKizl3KliOxDt7L/BS6Iieq9o+7
-         3CLAAfY9E2Ockc+loSDZBuz+rk7+jXApuUBNS4mcL/UXhO8xon1qHLpRxSphPooJDSdm
-         UZlBaLyVglS9PiHJnZIeXb2z2WxEMbsZOmw+33HYltNmJPtSehalR7aIxRE2965eYbLt
-         yfIQ==
-X-Gm-Message-State: AOAM532JyJWAdu/IORR3KJ9qx6AiNkK8bxfNzjz9S0eZEHJoWm/qrU4/
-        68uioP9KV7cnCFuiBr6PRi8yH2XhNYP1HNlCqWNdJg==
-X-Google-Smtp-Source: ABdhPJwoTDU5wULf7eq9/btuEuJSHCIUmidUX0Z2hIGssT3qq1UQVdPUrc1BWTuhuTqVAkLXFujdyBtKyRuneHegSIQ=
-X-Received: by 2002:aca:210a:: with SMTP id 10mr12785206oiz.153.1590476601417;
- Tue, 26 May 2020 00:03:21 -0700 (PDT)
+        Tue, 26 May 2020 03:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730341AbgEZHFU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 03:05:20 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A952C061A0E
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 00:05:20 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jdTds-00010S-GX; Tue, 26 May 2020 09:04:52 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jdTdq-0006Xy-U8; Tue, 26 May 2020 09:04:50 +0200
+Date:   Tue, 26 May 2020 09:04:50 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, jonathanh@nvidia.com, kamil@wypas.org,
+        jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        bbasu@nvidia.com, bbiswas@nvidia.com, linux-pwm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
+ module support
+Message-ID: <20200526070450.sackolk6m3qv7omy@pengutronix.de>
+References: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
-References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
- <20200511110611.3142-7-ricardo.canuelo@collabora.com> <20200514015412.GF7425@pendragon.ideasonboard.com>
- <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360> <20200514152239.GG5955@pendragon.ideasonboard.com>
- <20200525074335.grnjvdjnipq5g3kf@rcn-XPS-13-9360> <20200526014444.GB6179@pendragon.ideasonboard.com>
-In-Reply-To: <20200526014444.GB6179@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 26 May 2020 09:03:09 +0200
-Message-ID: <CAMuHMdXinhY13us9rt9h7EvrT_8zhnQg6tmOBtA0nEQ=1G1O7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt: convert
- to yaml
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>, Wei Xu <xuwei5@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Tue, May 26, 2020 at 10:36:04AM +0530, Sandipan Patra wrote:
+> This change has 2 parts:
+> 1. Add support for profiles mode settings.
+>     This allows different fan settings for trip point temp/hyst/pwm.
+>     T194 has multiple fan-profiles support.
+> 
+> 2. Add pwm-fan remove support. This is essential since the config is
+>     tristate capable.
 
-On Tue, May 26, 2020 at 3:44 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Mon, May 25, 2020 at 09:43:35AM +0200, Ricardo CaÃ±uelo wrote:
-> > On jue 14-05-2020 18:22:39, Laurent Pinchart wrote:
-> > > > If we want to be more strict and require the definition of all the
-> > > > supplies, there will be many more DTs changes in the series, and I'm not
-> > > > sure I'll be able to do that in a reasonable amount of time. I'm looking
-> > > > at them and it's not always clear which regulators to use or if they are
-> > > > even defined.
-> > >
-> > > We can decouple the two though (I think). The bindings should reflect
-> > > what we consider right, and the dts files could be fixed on top.
-> >
-> > Do you have a suggestion on how to do this? If we decouple the two
-> > tasks most of the work would be searching for DTs to fix and finding a
-> > way to fix each one of them, and unless I do this _before_ the binding
-> > conversion I'll get a lot of dtbs_check errors.
->
-> Rob should answer this question as it will be his decision, but I've
-> personally never considered non-compliant DT sources to be an obstacle
-> to bindings conversion to YAML. The DT sources should be fixed, but I
-> don't see it as a prerequisite (although it's a good practice).
+These two are orthogonal, aren't they? So they belong in two patches.
 
-I do my best to avoid introducing regressions when the binding conversions
-go upstream.
+You have to expand the binding documentation.
 
-FTR, hence patches 1-3 are already in v5.7-rc7.
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> ---
+>  drivers/hwmon/pwm-fan.c | 112 ++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 100 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 30b7b3e..26db589 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -3,8 +3,10 @@
+>   * pwm-fan.c - Hwmon driver for fans connected to PWM lines.
+>   *
+>   * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + * Copyright (c) 2020, NVIDIA Corporation.
+>   *
+>   * Author: Kamil Debski <k.debski@samsung.com>
+> + * Author: Sandipan Patra <spatra@nvidia.com>
+>   */
+>  
+>  #include <linux/hwmon.h>
+> @@ -21,6 +23,8 @@
+>  #include <linux/timer.h>
+>  
+>  #define MAX_PWM 255
+> +/* Based on OF max device tree node name length */
+> +#define MAX_PROFILE_NAME_LENGTH	31
+>  
+>  struct pwm_fan_ctx {
+>  	struct mutex lock;
+> @@ -38,6 +42,12 @@ struct pwm_fan_ctx {
+>  	unsigned int pwm_fan_state;
+>  	unsigned int pwm_fan_max_state;
+>  	unsigned int *pwm_fan_cooling_levels;
+> +
+> +	unsigned int pwm_fan_profiles;
+> +	const char **fan_profile_names;
+> +	unsigned int **fan_profile_cooling_levels;
+> +	unsigned int fan_current_profile;
+> +
+>  	struct thermal_cooling_device *cdev;
+>  };
+>  
+> @@ -227,28 +237,86 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
+>  				       struct pwm_fan_ctx *ctx)
+>  {
+>  	struct device_node *np = dev->of_node;
+> +	struct device_node *base_profile = NULL;
+> +	struct device_node *profile_np = NULL;
+> +	const char *default_profile = NULL;
+>  	int num, i, ret;
+>  
+> -	if (!of_find_property(np, "cooling-levels", NULL))
+> -		return 0;
+> +	num = of_property_count_u32_elems(np, "cooling-levels");
+> +	if (num <= 0) {
+> +		base_profile = of_get_child_by_name(np, "profiles");
+> +		if (!base_profile) {
+> +			dev_err(dev, "Wrong Data\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	if (base_profile) {
+> +		ctx->pwm_fan_profiles =
+> +			of_get_available_child_count(base_profile);
+> +
+> +		if (ctx->pwm_fan_profiles <= 0) {
+> +			dev_err(dev, "Profiles used but not defined\n");
+> +			return -EINVAL;
+> +		}
+>  
+> -	ret = of_property_count_u32_elems(np, "cooling-levels");
+> -	if (ret <= 0) {
+> -		dev_err(dev, "Wrong data!\n");
+> -		return ret ? : -EINVAL;
+> +		ctx->fan_profile_names = devm_kzalloc(dev,
+> +			sizeof(const char *) * ctx->pwm_fan_profiles,
+> +							GFP_KERNEL);
+> +		ctx->fan_profile_cooling_levels = devm_kzalloc(dev,
+> +			sizeof(int *) * ctx->pwm_fan_profiles,
+> +							GFP_KERNEL);
+> +
+> +		if (!ctx->fan_profile_names
+> +				|| !ctx->fan_profile_cooling_levels)
+> +			return -ENOMEM;
+> +
+> +		ctx->fan_current_profile = 0;
+> +		i = 0;
+> +		for_each_available_child_of_node(base_profile, profile_np) {
+> +			num = of_property_count_u32_elems(profile_np,
+> +							"cooling-levels");
+> +			if (num <= 0) {
+> +				dev_err(dev, "No data in cooling-levels inside profile node!\n");
+> +				return -EINVAL;
+> +			}
+> +
+> +			of_property_read_string(profile_np, "name",
+> +						&ctx->fan_profile_names[i]);
+> +			if (default_profile &&
+> +				!strncmp(default_profile,
+> +				ctx->fan_profile_names[i],
+> +				MAX_PROFILE_NAME_LENGTH))
+> +				ctx->fan_current_profile = i;
+> +
+> +			ctx->fan_profile_cooling_levels[i] =
+> +				devm_kzalloc(dev, sizeof(int) * num,
+> +							GFP_KERNEL);
+> +			if (!ctx->fan_profile_cooling_levels[i])
+> +				return -ENOMEM;
+> +
+> +			of_property_read_u32_array(profile_np, "cooling-levels",
+> +				ctx->fan_profile_cooling_levels[i], num);
+> +			i++;
+> +		}
+>  	}
+>  
+> -	num = ret;
+>  	ctx->pwm_fan_cooling_levels = devm_kcalloc(dev, num, sizeof(u32),
+>  						   GFP_KERNEL);
+>  	if (!ctx->pwm_fan_cooling_levels)
+>  		return -ENOMEM;
+>  
+> -	ret = of_property_read_u32_array(np, "cooling-levels",
+> -					 ctx->pwm_fan_cooling_levels, num);
+> -	if (ret) {
+> -		dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+> -		return ret;
+> +	if (base_profile) {
+> +		memcpy(ctx->pwm_fan_cooling_levels,
+> +		  ctx->fan_profile_cooling_levels[ctx->fan_current_profile],
+> +						num);
+> +	} else {
+> +		ret = of_property_read_u32_array(np, "cooling-levels",
+> +				ctx->pwm_fan_cooling_levels, num);
+> +		if (ret) {
+> +			dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	for (i = 0; i < num; i++) {
+> @@ -390,6 +458,25 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int pwm_fan_remove(struct platform_device *pdev)
+> +{
+> +	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+> +	struct pwm_args args;
+> +
+> +	if (!ctx)
+> +		return -EINVAL;
+> +
+> +	if (IS_ENABLED(CONFIG_THERMAL))
+> +		thermal_cooling_device_unregister(ctx->cdev);
+> +
+> +	pwm_get_args(ctx->pwm, &args);
+> +	pwm_config(ctx->pwm, 0, args.period);
+> +	pwm_disable(ctx->pwm);
 
-Gr{oetje,eeting}s,
+What is what you really here? Is it only that the PWM stops oscillating,
+or is it crucial that the output goes to its inactive level?
 
-                        Geert
+(The intended semantic of pwm_disable includes that the output goes low,
+but not all implementations enforce this.)
+
+Also please don't introduce new users of pwm_config() and pwm_disable()
+use pwm_apply() instead.
+
+I wonder if this unregistration is "safe". When the driver is in use I'd
+expect that the hwmon device doesn't go away and so the devm
+unregistration callback that belongs to
+devm_hwmon_device_register_with_groups() blocks. But at this time the
+PWM is already stopped and so the device stops functioning earlier.
+
+Best regards
+Uwe
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
