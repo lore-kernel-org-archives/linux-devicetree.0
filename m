@@ -2,196 +2,197 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C825C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 12:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C61C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 12:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD8D207CB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 12:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F07F2073B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 12:42:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lVQuxTuc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Se0hPz63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731675AbgEZMIW (ORCPT
+        id S2389228AbgEZMmE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 08:08:22 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:14839 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729062AbgEZMIW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 08:08:22 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecd06b10001>; Tue, 26 May 2020 20:08:17 +0800
-Received: from HKMAIL104.nvidia.com ([10.18.16.13])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 26 May 2020 05:08:17 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Tue, 26 May 2020 05:08:17 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL104.nvidia.com
- (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
- 2020 12:08:17 +0000
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.50) by
- HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 26 May 2020 12:08:16 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KQmQNp99m+ZdNfuuBrnB7OPfPdSbM6UpGMZjItLmOgnVP8c+snrcIeCE2x1qim20Sgcr1AxLufvEBRXjSXvWXdIbJym6c041Bi7CIHwxyFAgqVHF8sobVOw8ofl2BMRFydLt69MSNJKtB2vkkmwI94SH2JzXyaAISDyDUZlASzeSGXTWOeDV7eYGTskZliDMcXNIpYu/eT38dC1RWwqocDSdsFTW4Reddunn9HmVgG74RvwzqMJ/VQeN5uvilZJi7Zkq3oFrykXeeG3U5iigqeC/LshKyUKkxU/HuOiWsvEciFw82TjEjuaV3DjOj/i1OVtqnNGUOOBdERsvxC0J0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZDPTDFnpOfS4bsZMNe4onIbn3X4+jpNXTtVH1rIm7dg=;
- b=nde1DE3QUDbuSmTJyGzQpguSn/0wSg6qL8VZNRDFiSuPcAO+rE6WRB3DNgfuuSN73HoejlfPdYS7OX1s9nLVV65yq4L3zxucMSqWZBp9g979PII+ZpBsTGx/xgk5vdqlF+d8/4rN2Bt6FIYHL5B9VFXk+mGZO6y+60CcVyFoz/Mpu8q0nz5utAjlb58uesBJvUpMItRgSdNbwAosqzNRvNAZrVn0z4EkvKwesLVDDE3Us4r+iMj6Hvgp1h+iqPfEYe4Adwa+lt5VqqJUXtZWIsiYsn35UaHweqN6+YxTVCFuuT+Fb0Iv5JNgMFApEhvjWjI67ghAl4uj0tZkg2kC3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB3014.namprd12.prod.outlook.com (2603:10b6:a03:d8::11)
- by BYAPR12MB3463.namprd12.prod.outlook.com (2603:10b6:a03:ac::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Tue, 26 May
- 2020 12:08:15 +0000
-Received: from BYAPR12MB3014.namprd12.prod.outlook.com
- ([fe80::ad7c:1862:e032:66f6]) by BYAPR12MB3014.namprd12.prod.outlook.com
- ([fe80::ad7c:1862:e032:66f6%7]) with mapi id 15.20.3021.029; Tue, 26 May 2020
- 12:08:14 +0000
-From:   Sandipan Patra <spatra@nvidia.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "kamil@wypas.org" <kamil@wypas.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     Bibek Basu <bbasu@nvidia.com>, Bitan Biswas <bbiswas@nvidia.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
- module support
-Thread-Topic: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
- module support
-Thread-Index: AQHWMxtmVPDRpufQoUeveXztGYgnVKi6PzOAgAAEX/A=
-Date:   Tue, 26 May 2020 12:08:14 +0000
-Message-ID: <BYAPR12MB30145EC4578F64EAD1233357ADB00@BYAPR12MB3014.namprd12.prod.outlook.com>
-References: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
- <53619c02-8c0f-3eec-cccc-16e779b8c425@roeck-us.net>
-In-Reply-To: <53619c02-8c0f-3eec-cccc-16e779b8c425@roeck-us.net>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=spatra@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-05-26T12:08:11.8694480Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=132bc317-5ca9-4b07-a311-d93334cdd251;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: roeck-us.net; dkim=none (message not signed)
- header.d=none;roeck-us.net; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [124.123.74.49]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 43c69598-980e-4c5b-00b5-08d8016d77f5
-x-ms-traffictypediagnostic: BYAPR12MB3463:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3463ECB96FFB35C0747F3852ADB00@BYAPR12MB3463.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 041517DFAB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KYtluHhAasvcMDuhhVLc1fbC+P55j4Gv5rJ7gy8+qUsWWp70foqIx6p1i5hEkjBv+aXZsS0SlEcdjfG70Y26yF3N87+n0jiKDQHMEYeJhEu2hdAdL4Gddgy8NjLnOYaZ/dHFKV8vriA6PTCum27RNA881+9Old7gkCQYPQr1qczatZkR77ebAicpi5EcCG6XFgru492WoGllZu2FOh/hcljqHfaRJpqKX00d32zFbi8gUMSTxp3fN43QFMEbhHDYIiL4sxlnSpnGcr5ZkEGQYUuEFx6h1XxZPHyKCxAHwgbLCuNh56eQazdkeqC2ZazkQ8Drp6RA91wdOx0d3+yd9Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3014.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(346002)(376002)(366004)(396003)(55016002)(66946007)(9686003)(53546011)(6506007)(186003)(54906003)(86362001)(71200400001)(4326008)(316002)(52536014)(110136005)(7696005)(5660300002)(64756008)(2906002)(66446008)(478600001)(76116006)(8936002)(26005)(66476007)(66556008)(33656002)(8676002)(7416002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: L1nMdTWreQImNdQgcTx02dW0+HX4G/aSJARehlFuWhcrOpu9Dy6cDfR+Fg/oRR3M/ivFHBO/iV5ZXHXl63Pvg1RjQAQvbpF70Ar1Zp7xbNV+T3dfSZX3t+vzyAv4sD65EhURGoRZ50AstPgyKslm/yL7kdd6u/Fzs0BTqbUxYs0yMLjytrACZTrepa0qfPk5s9WjzpMNXD6qM0m2FEAU4j6PDtKhh7LB7CIXFetlAAntWslvVhvuhXsRBMsarfJqvpIEVmvRKALsQ57riwA/ZcWPMlpIIhyKhuBpe3b83rfeWSEwkG7mzBvO2l6oRG3s4nH1wDPzrlgWBDat6VFylMMhWelMp2d07QkeDUrWTRwbmxdHfukrdf/zKWgVqORGNB3LfusGcsDX4j0w0AkRwLMJih6DS/y14GNLUINnls3qAOjLDoFrSjh8TtlmCP5iehtZ4wH2hbgt1sDC9eKLEFB1wj20BV412O2s/jJfMWM=
+        Tue, 26 May 2020 08:42:04 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:28933 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388497AbgEZMmD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 May 2020 08:42:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590496922; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=3YELMVf9xcJ/2QcH8NbwFghCdLwvN8U//nrtWkkfUQ0=; b=Se0hPz63TGJihQzNa/m/AN2HmVLAytE9Wm+1Ou73JDYsBC+nrBYRdmZtNiJhg+zqJjRY8rcO
+ fMCKEliiJq80ESDUP/WwxKofKmMFmqpytHdGibEy/tq9OD/KF7z8IWcj58Y3EroPQN+eb+FD
+ 0a9pMu6frnzspbVIqK1PdJAQfPA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5ecd0e8f50867324811c06b8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 12:41:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8FA93C433A1; Tue, 26 May 2020 12:41:51 +0000 (UTC)
+Received: from [192.168.0.13] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16F7FC433C6;
+        Tue, 26 May 2020 12:41:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 16F7FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V6 1/7] soc: qcom: geni: Support for ICC voting
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        msavaliy@codeaurora.org, evgreen@chromium.org
+References: <1590049764-20912-1-git-send-email-akashast@codeaurora.org>
+ <1590049764-20912-2-git-send-email-akashast@codeaurora.org>
+ <20200521155009.GA4525@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <4d56790d-b8ac-6ae3-1e6e-df84fe2010ae@codeaurora.org>
+Date:   Tue, 26 May 2020 18:11:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43c69598-980e-4c5b-00b5-08d8016d77f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2020 12:08:14.6354
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6eSP+FOIFJQRYcgjgJcOk/J2KHX21Kq+5ImlxYoFz/of5TsJvC2vEnfhgackvMbM9zXJ93OMfZuouHYafr1OuA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3463
-X-OriginatorOrg: Nvidia.com
+In-Reply-To: <20200521155009.GA4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590494897; bh=ZDPTDFnpOfS4bsZMNe4onIbn3X4+jpNXTtVH1rIm7dg=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam:
-         x-microsoft-antispam-message-info:x-forefront-antispam-report:
-         x-ms-exchange-antispam-messagedata:MIME-Version:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=lVQuxTuczD0XN4ig3mg+HykBsbgzbj7RAW9i860H4KbEIpGh8RTNTse2GXW7XYEPe
-         Tf0oHqPPtSyz14rKMEY1kmnuYxLrSIZdRjMaGAhkyqbJ+SYqspt8Hv6cnfWjMfrYt3
-         vlTd8246EPjuDKhXKdSWOs+9iqS5RM/KvU8HnyL5uziz1LQk8H/Hfu+7xQ6khFMjgh
-         PHb2+bE4w/uyefGj2RY1e4UpoejV18doRUAx3uiaLwn92IBZelohZc3HUhWl6WSE5/
-         rnjI2LrGcyU/KoEf4Cjz/ScLU3tXseC9idTzX1gOtIczMaoOfgdcaps7pL+cBDZChx
-         nDU/NmKPtu+lg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVudGVyIFJv
-ZWNrIDxncm9lY2s3QGdtYWlsLmNvbT4gT24gQmVoYWxmIE9mIEd1ZW50ZXIgUm9lY2sNCj4gU2Vu
-dDogVHVlc2RheSwgTWF5IDI2LCAyMDIwIDU6MTIgUE0NCj4gVG86IFNhbmRpcGFuIFBhdHJhIDxz
-cGF0cmFAbnZpZGlhLmNvbT47IFRoaWVycnkgUmVkaW5nDQo+IDx0cmVkaW5nQG52aWRpYS5jb20+
-OyBKb25hdGhhbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPjsgdS5rbGVpbmUtDQo+IGtv
-ZW5pZ0BwZW5ndXRyb25peC5kZTsga2FtaWxAd3lwYXMub3JnOyBqZGVsdmFyZUBzdXNlLmNvbTsN
-Cj4gcm9iaCtkdEBrZXJuZWwub3JnDQo+IENjOiBCaWJlayBCYXN1IDxiYmFzdUBudmlkaWEuY29t
-PjsgQml0YW4gQmlzd2FzIDxiYmlzd2FzQG52aWRpYS5jb20+Ow0KPiBsaW51eC1wd21Admdlci5r
-ZXJuZWwub3JnOyBsaW51eC1od21vbkB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC10ZWdyYUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBod21vbjogcHdt
-LWZhbjogQWRkIHByb2ZpbGUgc3VwcG9ydCBhbmQgYWRkIHJlbW92ZQ0KPiBtb2R1bGUgc3VwcG9y
-dA0KPiANCj4gRXh0ZXJuYWwgZW1haWw6IFVzZSBjYXV0aW9uIG9wZW5pbmcgbGlua3Mgb3IgYXR0
-YWNobWVudHMNCj4gDQo+IA0KPiBPbiA1LzI1LzIwIDEwOjA2IFBNLCBTYW5kaXBhbiBQYXRyYSB3
-cm90ZToNCj4gPiBUaGlzIGNoYW5nZSBoYXMgMiBwYXJ0czoNCj4gPiAxLiBBZGQgc3VwcG9ydCBm
-b3IgcHJvZmlsZXMgbW9kZSBzZXR0aW5ncy4NCj4gPiAgICAgVGhpcyBhbGxvd3MgZGlmZmVyZW50
-IGZhbiBzZXR0aW5ncyBmb3IgdHJpcCBwb2ludCB0ZW1wL2h5c3QvcHdtLg0KPiA+ICAgICBUMTk0
-IGhhcyBtdWx0aXBsZSBmYW4tcHJvZmlsZXMgc3VwcG9ydC4NCj4gPg0KPiA+IDIuIEFkZCBwd20t
-ZmFuIHJlbW92ZSBzdXBwb3J0LiBUaGlzIGlzIGVzc2VudGlhbCBzaW5jZSB0aGUgY29uZmlnIGlz
-DQo+ID4gICAgIHRyaXN0YXRlIGNhcGFibGUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBTYW5k
-aXBhbiBQYXRyYSA8c3BhdHJhQG52aWRpYS5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvaHdt
-b24vcHdtLWZhbi5jIHwgMTEyDQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMDAgaW5zZXJ0aW9ucygrKSwg
-MTIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9od21vbi9wd20t
-ZmFuLmMgYi9kcml2ZXJzL2h3bW9uL3B3bS1mYW4uYyBpbmRleA0KPiA+IDMwYjdiM2UuLjI2ZGI1
-ODkgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9od21vbi9wd20tZmFuLmMNCj4gPiArKysgYi9k
-cml2ZXJzL2h3bW9uL3B3bS1mYW4uYw0KPiANCj4gWyAuLi4gXQ0KPiANCj4gPg0KPiA+ICtzdGF0
-aWMgaW50IHB3bV9mYW5fcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4g
-PiArICAgICBzdHJ1Y3QgcHdtX2Zhbl9jdHggKmN0eCA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBk
-ZXYpOw0KPiA+ICsgICAgIHN0cnVjdCBwd21fYXJncyBhcmdzOw0KPiA+ICsNCj4gPiArICAgICBp
-ZiAoIWN0eCkNCj4gPiArICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOw0KPiA+ICsNCj4gPiAr
-ICAgICBpZiAoSVNfRU5BQkxFRChDT05GSUdfVEhFUk1BTCkpDQo+ID4gKyAgICAgICAgICAgICB0
-aGVybWFsX2Nvb2xpbmdfZGV2aWNlX3VucmVnaXN0ZXIoY3R4LT5jZGV2KTsNCj4gPiArDQo+ID4g
-KyAgICAgcHdtX2dldF9hcmdzKGN0eC0+cHdtLCAmYXJncyk7DQo+ID4gKyAgICAgcHdtX2NvbmZp
-ZyhjdHgtPnB3bSwgMCwgYXJncy5wZXJpb2QpOw0KPiA+ICsgICAgIHB3bV9kaXNhYmxlKGN0eC0+
-cHdtKTsNCj4gPiArDQo+ID4gKyAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+IA0KPiBJ
-IGRvbid0IHRoaW5rIHlvdSBhY3R1YWxseSB0ZXN0ZWQgdGhpcy4gSSB3b3VsZCBzdWdnZXN0IHRv
-IG1ha2UgeW91cnNlbGYgZmFtaWxpYXINCj4gd2l0aCAnZGV2bScgZnVuY3Rpb25zIGFuZCB0aGVp
-ciB1c2UsIGFuZCB0aGVuIHJlc3VibWl0Lg0KPiANCg0KVGhhbmtzIEd1ZW50ZXIuDQpJIG1pc3Nl
-ZCB0byBtZW50aW9uIGFib3V0IGRldm0gd2hpbGUgdW5yZWdpc3RlcmluZyB0aGUgY29vbGluZyBk
-ZXZpY2UuDQpUaGF0IHdvdWxkIGRlZmluaXRlbHkgY2F1c2UgYSBtaXN0YWtlIGluIGNvZGUuIEkg
-YW0gbm90aW5nIGl0IGZvciBmdXJ0aGVyIHBhdGNoLg0KDQpGb3IgYSBiZXR0ZXIgY2xhcml0eSwg
-SSB3aWxsIHB1c2ggbmV4dCB2ZXJzaW9uIG9mIHRoaXMgcGF0Y2ggdG8gaGFuZGxlIG9ubHkgbXVs
-dGlwbGUgcHJvZmlsZXMgc3VwcG9ydC4NCiJyZW1vdmUgZmFuIG1vZHVsZSIgd2lsbCBiZSBzdXBw
-b3J0ZWQgYnkgYSBzZXBhcmF0ZSBwYXRjaCBhbHRvZ2V0aGVyLg0KDQoNClRoYW5rcyAmIFJlZ2Fy
-ZHMsDQpTYW5kaXBhbg0KDQo+IFRoYW5rcywNCj4gR3VlbnRlcg0K
+Hi Matthias,
+
+On 5/21/2020 9:20 PM, Matthias Kaehlcke wrote:
+> Hi Akash,
+>
+> On Thu, May 21, 2020 at 01:59:18PM +0530, Akash Asthana wrote:
+>> Add necessary macros and structure variables to support ICC BW
+>> voting from individual SE drivers.
+>>
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>> Changes in V2:
+>>   - As per Bjorn's comment dropped enums for ICC paths, given the three
+>>     paths individual members
+>>
+>> Changes in V3:
+>>   - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
+>>   - Add geni_icc_path structure in common header
+>>
+>> Changes in V4:
+>>   - As per Bjorn's comment print error message in geni_icc_get if return
+>>     value is not -EPROBE_DEFER.
+>>   - As per Bjorn's comment remove NULL on path before calling icc_set_bw
+>>     API.
+>>   - As per Bjorn's comment drop __func__ print.
+>>   - As per Matthias's comment, make ICC path a array instead of individual
+>>     member entry in geni_se struct.
+>>
+>> Changes in V5:
+>>   - As per Matthias's comment defined enums for ICC paths.
+>>   - Integrate icc_enable/disable with power on/off call for driver.
+>>   - As per Matthias's comment added icc_path_names array to print icc path name
+>>     in failure case.
+>>   - As per Georgi's suggestion assume peak_bw = avg_bw if not mentioned.
+>>
+>> Changes in V6:
+>>   - Addressed nitpicks from Matthias.
+>>
+>> Note: I have ignored below check patch suggestion because it was throwing
+>>        compilation error as 'icc_ddr' is not compile time comstant.
+>>
+>> WARNING: char * array declaration might be better as static const
+>>   - FILE: drivers/soc/qcom/qcom-geni-se.c:726:
+>>   - const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+>>
+>>   drivers/soc/qcom/qcom-geni-se.c | 92 +++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/qcom-geni-se.h    | 42 +++++++++++++++++++
+>>   2 files changed, 134 insertions(+)
+>>
+>> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+>> index 7d622ea..0b2526d 100644
+>> --- a/drivers/soc/qcom/qcom-geni-se.c
+>> +++ b/drivers/soc/qcom/qcom-geni-se.c
+>> @@ -92,6 +92,9 @@ struct geni_wrapper {
+>>   	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+>>   };
+>>   
+>> +static const char * const icc_path_names[] = {"qup-core", "qup-config",
+>> +						"qup-memory"};
+>> +
+>>   #define QUP_HW_VER_REG			0x4
+>>   
+>>   /* Common SE registers */
+>> @@ -720,6 +723,95 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
+>>   }
+>>   EXPORT_SYMBOL(geni_se_rx_dma_unprep);
+>>   
+>> +int geni_icc_get(struct geni_se *se, const char *icc_ddr)
+>> +{
+>> +	int i, err;
+>> +	const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
+>> +		if (!icc_names[i])
+>> +			continue;
+>> +
+>> +		se->icc_paths[i].path = devm_of_icc_get(se->dev, icc_names[i]);
+>> +		if (IS_ERR(se->icc_paths[i].path))
+>> +			goto err;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err:
+>> +	err = PTR_ERR(se->icc_paths[i].path);
+>> +	if (err != -EPROBE_DEFER)
+>> +		dev_err_ratelimited(se->dev, "Failed to get ICC path:%s :%d\n",
+> That's still an odd format, especially the colon before the error code. My
+> suggestion was "... path 'qup-core': 42" i.e. "... path '%s': %d".
+Sorry about it, I will correct this everywhere.
+> I don't want to stall the series on nits though, if there is no need for
+> a respin for other reasons this can be also fixed with a patch after this
+> has landed.
+>
+> I'm still not overly convinced about having two bandwidth values for what
+> might happen in the future (or not). Typically unused functions or struct
+> members that are added just in case tend to be rejected, since they can be
+> added when the need actually arises. Anyway, as long as maintainers are
+> happy with it I won't object.
+
+Okay, I am removing peak_bw variable and tracking BW request just with 
+avg_bw, if need I will add this back in future.
+
+Thanks for reviewing
+
+regards,
+
+Akash
+
+
+>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>
+>
+>
+>
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
