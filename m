@@ -2,149 +2,103 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C87C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA757C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E420A20888
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590527884;
-	bh=MFAehDAU7MZpexynosp2Nf/gW4GxzaTvFvckT1FHhHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k4tELzexMaoyKRbMzpcDVvvdvaaUThUwWzhdtL42st0ZI5dqf61EOcz6waG4stNcB
-	 hG4LUlQ3c1ejZoq+aX7O0ffSD9H4s135i7bJVfaroJOPGDaNTds6xYazcVp4hZ8Wsn
-	 VaYF4nzTvlkE95/stwmdsVvieGXp1KYHVFmBmS+Q=
+	by mail.kernel.org (Postfix) with ESMTP id B954920870
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:24:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PyQ1E+UC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390435AbgEZVSE (ORCPT
+        id S2391426AbgEZVY3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 17:18:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34773 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390009AbgEZVSD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 17:18:03 -0400
-Received: by mail-io1-f65.google.com with SMTP id f3so23717703ioj.1;
-        Tue, 26 May 2020 14:18:02 -0700 (PDT)
+        Tue, 26 May 2020 17:24:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389572AbgEZVY1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 17:24:27 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99FF8C061A0F
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 14:24:26 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c12so3406876qkk.13
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 14:24:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QBRz1+/7+0iGsXWNeTLr3q8/FFn5AWhnRzIa/vyWa3g=;
+        b=PyQ1E+UC6flPY4IF4ASkvmgiPe+bGnoyS++a9wtIGNDVbdA7CwVxC8NNFVLNVVPt9Q
+         ea+JqFHSMi3JjRYt0NQKFmcHNjXkwAOF/DnMKltFIE1DtyVMMJqyPO2Mnp5lwv5Xk08I
+         A/6Rd6CumqigVLzvQ6UmSRzBq3gvNL/otLrm04ys17lEA3Rn1Q3vv/86ASUXh8Gy5obA
+         zcbz8Ri/xz39piuOOCIS9j67ZL60C/+/JyQ7rniOKLJkkeyYYfq5qv0VKhmOMyUfciS3
+         ULoHxlbPbKYIO4NY7A6Rfyth4PfgS6thGgpIPbM5y45JZHHuylXM9FK3rgdnwvYiSQ4B
+         ngAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lVVBuWO3qFEQRVDuoZfe9DGQFjStmCr4atb2ZbHcO8E=;
-        b=AeIMKfN+5/n35HclKzNcOmYZEHwr4aO5D22NgPTX0dZZd3IZA0o3V4+sWavKqjj4n+
-         v3NSl4Q84NKqB08tflrt19o816L5AD26NDl+tjY3+N6dAZbA9LVDk0KAjHgWfiedF11e
-         ig0FZTMLuDQb3VRw7mU18Lyip2Jyq4Exct58ZW5aEW+HsKq2GfuiIXg+JzmaRV0kZAJh
-         MD5zlWqs+SEx4jEBMftjR61OD238wRcAkvrKAx2Uk1QgmkXjB5CgAoShKksVfdMLzkfl
-         k31uLOlKxklTS804TuUCRhPy0TuhnalUSyWkarIjG869Bn9IjOe9JM/ka1Rsv9qpqVfD
-         494g==
-X-Gm-Message-State: AOAM532CMPu0zXjNXOKQe3C3Wzy7TC0CdFk1Y+1Vim29E74DnRcs9UaC
-        DvghuHL8BfBi9WVfFNHPZA==
-X-Google-Smtp-Source: ABdhPJwQrpel77itHrejAW3V1OCVBywOqev2wghw6aLmvMslUJY88azNYlGgJ1qYFsSmB5E2n/qkqA==
-X-Received: by 2002:a6b:7017:: with SMTP id l23mr4256428ioc.140.1590527882382;
-        Tue, 26 May 2020 14:18:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x22sm567394ill.9.2020.05.26.14.18.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QBRz1+/7+0iGsXWNeTLr3q8/FFn5AWhnRzIa/vyWa3g=;
+        b=n3viEDwR17tdTLPIJwDtkQ1paF7ce8HSz6cRYEVBT7Ehs8GYjQFiDqj2yCCydWjOrH
+         5JKWRyYlbrjxZ+MULnhNcNb90KbrSLRp4vg49ryLbmac05zH2YMbBFpTMG6QoDhQB74Q
+         vt1qPVWsOfhoAZswCJvhw2KQJquPSaWNve5wYPumTIInrKw6viKMZrdAjJSBITFF5usm
+         YRhJnIjhLDJOwM6Rd3Ol3zeE1KaL5SOZJBPew/LcuN86PaJySdOWdaaKh8HSyq8UXBe/
+         TfUAEqCubZgXNXGHA4gg0rZaVYqpEsRObpzTVwWMkxSB/kCZbpsFzvo+0ezvpX28M9Be
+         ySQg==
+X-Gm-Message-State: AOAM531k3huqAD8HVN1IOXrirOLOxm+H7vUTjeG6oRKOla2hq5rGJ9bv
+        FKpEs4gNdflwg75UK4iJXhGJ/A==
+X-Google-Smtp-Source: ABdhPJzQhvUqUjxcMGfDJg9Cd3DUf3NBupqjurT0pomIH1kEQijK3lmaExCaJ84plMXhxS+sIx0YDA==
+X-Received: by 2002:a37:2710:: with SMTP id n16mr897806qkn.149.1590528264459;
+        Tue, 26 May 2020 14:24:24 -0700 (PDT)
+Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.googlemail.com with ESMTPSA id r14sm698678qke.62.2020.05.26.14.24.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 14:18:01 -0700 (PDT)
-Received: (nullmailer pid 389955 invoked by uid 1000);
-        Tue, 26 May 2020 21:18:00 -0000
-Date:   Tue, 26 May 2020 15:18:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     chenzhou <chenzhou10@huawei.com>, James Morse <james.morse@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, dyoung@redhat.com,
-        Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        John.p.donnelly@oracle.com, pkushwaha@marvell.com,
-        Simon Horman <horms@verge.net.au>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kexec@lists.infradead.org
-Subject: Re: [PATCH v8 5/5] dt-bindings: chosen: Document
- linux,low-memory-range for arm64 kdump
-Message-ID: <20200526211800.GA352001@bogus>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <20200521093805.64398-6-chenzhou10@huawei.com>
- <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
- <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
+        Tue, 26 May 2020 14:24:24 -0700 (PDT)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sm8250: Fix device name for ufs controller
+Date:   Tue, 26 May 2020 17:24:23 -0400
+Message-Id: <20200526212423.24452-1-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 22, 2020 at 11:24:11AM +0800, chenzhou wrote:
-> Hi Rob,
+Change ufs controller dev name from ufs@1d84000 to ufshc@1d84000. Without
+this change when ufs controller is built in as part of kernel, the driver
+code fails to initialize the device  due to a check against
+android.bootdevice.(The validity and reason for this check in the driver
+code needs to be revisited. But the change in device name allows ufs
+controller to be registered during boot). This change also makes the dev
+name compatible with how it is defined for other Qualcomm SoCs.
 
-+James M (It's nice to Cc folks if you mention/quote them)
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 7050adba7995..0ef72c839ed8 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -306,7 +306,7 @@
+ 			};
+ 		};
+ 
+-		ufs_mem_hc: ufs@1d84000 {
++		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+ 			reg = <0 0x01d84000 0 0x3000>;
+-- 
+2.20.1
 
-> On 2020/5/21 21:29, Rob Herring wrote:
-> > On Thu, May 21, 2020 at 3:35 AM Chen Zhou <chenzhou10@huawei.com> wrote:
-> >> Add documentation for DT property used by arm64 kdump:
-> >> linux,low-memory-range.
-> >> "linux,low-memory-range" is an another memory region used for crash
-> >> dump kernel devices.
-> >>
-> >> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/chosen.txt | 25 ++++++++++++++++++++
-> >>  1 file changed, 25 insertions(+)
-> > chosen is now a schema documented here[1].
-> Ok, that is, i don't need to modify the doc in kernel, just create a pull request in github [1]?
-> 
-> >
-> >> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> >> index 45e79172a646..bfe6fb6976e6 100644
-> >> --- a/Documentation/devicetree/bindings/chosen.txt
-> >> +++ b/Documentation/devicetree/bindings/chosen.txt
-> >> @@ -103,6 +103,31 @@ While this property does not represent a real hardware, the address
-> >>  and the size are expressed in #address-cells and #size-cells,
-> >>  respectively, of the root node.
-> >>
-> >> +linux,low-memory-range
-> >> +----------------------
-> >> +This property (arm64 only) holds a base address and size, describing a
-> >> +limited region below 4G. Similar to "linux,usable-memory-range", it is
-> >> +an another memory range which may be considered available for use by the
-> >> +kernel.
-> > Why can't you just add a range to "linux,usable-memory-range"? It
-> > shouldn't be hard to figure out which part is below 4G.
-> I did like this in my previous version, such as v5. After discussed with James, i modified it to the current way.
-> 
-> We think the existing behavior should be unchanged, which helps with keeping compatibility with existing
-> user-space and older kdump kernels.
-> 
-> The comments from James:
-> > linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
-> Won't this break if your kdump kernel doesn't know what the extra parameters are?
-> Or if it expects two ranges, but only gets one? These DT properties should be treated as
-> ABI between kernel versions, we can't really change it like this.
-> 
-> I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
-> think the simplest thing to do is to add an 'linux,low-memory-range' that we
-> memblock_add() after memblock_cap_memory_range() has been called.
-> If its missing, or the new kernel doesn't know what its for, everything keeps working.
-
-
-I don't think there's a compatibility issue here though. The current 
-kernel doesn't care if the property is longer than 1 base+size. It only 
-checks if the size is less than 1 base+size. And yes, we can rely on 
-that implementation detail. It's only an ABI if an existing user 
-notices.
-
-Now, if the low memory is listed first, then an older kdump kernel 
-would get a different memory range. If that's a problem, then define 
-that low memory goes last. 
-
-Rob
