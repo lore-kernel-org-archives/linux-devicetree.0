@@ -2,104 +2,129 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52D9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8ABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8992520870
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590528855;
-	bh=Da6me/OU6rQvvJsllH/U03C9LEKRWkwPCUd8auX3khw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2ZkGUachs/bVPyw2idP+BPFLo2jyJhz2CpgfnVRwfgzdHKFlNjeJsBWoEmip6Ekfd
-	 9mwbl2uneBc47nL/gmvH+I2LWuPEUI4nQmvROHIEwNyJ2QVgRdpnY4Y17ZnnWzlY+g
-	 5LIxukJ/dgXZw14B27Zv1QbyT4ajrWedjA+9DGUw=
+	by mail.kernel.org (Postfix) with ESMTP id C131520707
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389155AbgEZVeP (ORCPT
+        id S2389698AbgEZVzo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 17:34:15 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34279 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388740AbgEZVeO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 17:34:14 -0400
-Received: by mail-il1-f195.google.com with SMTP id v11so4646801ilh.1;
-        Tue, 26 May 2020 14:34:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4IGWiIO9QQ2uNyibpst11tBp9IaLJjLxoCP1PUreahE=;
-        b=bU9OOAGwtBkzAL6bMdPibQQ6XwHLD8f9CfM+kWto3+m1XS4PcQNdhbxctUlO4ovO/D
-         Sb8wXqCJU/Q4pvIgMM0REiUCDpMSpGsXoSvRPIHECFU42Fu/eT95GqvBfmrihUhhJ46Q
-         OgDELuKgACjo6NN9g97cn9yTEJwpcZhr4IdRfINFt5yvdlBx71y0T0T8o8fuzNSGQJHP
-         p8/ZuO9sMTXOOVbxZoxNflwiUsD0WPqciF3A0uuhcLK6n1nDO4bqZiZ3mItpaMPktB3C
-         aOGLzK2k+bhBY2GNuPCK7VVa+Zb9hTTKIGM6+G8xftv0YNuREJ7WwUQLSP+IoEIuN2s0
-         1QrQ==
-X-Gm-Message-State: AOAM532JOGkhVoWM3jNmmDGtGI+6U6jOMcJ7W1Hn4AGPBtc4TDBY/kXA
-        cJo4ShMp+P3E2YqrFIJZ+w==
-X-Google-Smtp-Source: ABdhPJzp0EwE7XGT6pdGkzbmHIL2nvEZ3e4SrIoV0m8LDZZ/TRFJq39YHaGw2aIXJtWbDhLLb2+Z1g==
-X-Received: by 2002:a05:6e02:1072:: with SMTP id q18mr3065200ilj.121.1590528853402;
-        Tue, 26 May 2020 14:34:13 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h10sm417843ioe.3.2020.05.26.14.34.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 14:34:12 -0700 (PDT)
-Received: (nullmailer pid 415156 invoked by uid 1000);
-        Tue, 26 May 2020 21:34:11 -0000
-Date:   Tue, 26 May 2020 15:34:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v7 1/7] dt-bindings: iio/adc: Convert ingenic-adc docs to
- YAML.
-Message-ID: <20200526213411.GA414898@bogus>
-References: <20200517194904.34758-1-contact@artur-rojek.eu>
+        Tue, 26 May 2020 17:55:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59830 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389384AbgEZVzo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 17:55:44 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A381C803086D;
+        Tue, 26 May 2020 21:55:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uTdaH333Hlk4; Wed, 27 May 2020 00:55:36 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 01/12] scripts/dtc: check: Add 10bit/slave i2c reg flags support
+Date:   Wed, 27 May 2020 00:55:17 +0300
+Message-ID: <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517194904.34758-1-contact@artur-rojek.eu>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 17 May 2020 21:48:58 +0200, Artur Rojek wrote:
-> Convert the textual documentation of Device Tree bindings for the
-> Ingenic JZ47xx SoCs ADC controller to YAML.
-> 
-> The `interrupts` property is now explicitly listed and marked as
-> required. While missing from the previous textual documentation, this
-> property has been used with all the boards which probe this driver.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
->  Changes:
-> 
->  v6: new patch
-> 
->  v7: - specify `maxItems: 1` for single entry properties
->      - get rid of redundant descriptions of said properties
-> 
->  .../bindings/iio/adc/ingenic,adc.txt          | 49 -------------
->  .../bindings/iio/adc/ingenic,adc.yaml         | 71 +++++++++++++++++++
->  2 files changed, 71 insertions(+), 49 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
-> 
+Recently the I2C-controllers slave interface support was added to the
+kernel I2C subsystem. In this case Linux can be used as, for example,
+a I2C EEPROM machine. See [1] for details. Other than instantiating
+the EEPROM-slave device from user-space there is a way to declare the
+device in dts. In this case firstly the I2C bus controller must support
+the slave interface. Secondly I2C-slave sub-node of that controller
+must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+declared in [2]). That flag is declared as (1 << 30), which when set
+makes dtc unhappy about too big address set for a I2C-slave:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+
+Similar problem would have happened if we had set the 10-bit address
+flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+
+In order to fix the problem we suggest to alter the I2C-bus reg-check
+algorithm, so one would be aware of the upper bits set. Normally if no
+flag specified, the 7-bit address is expected in the "reg"-property.
+If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+
+[1] Documentation/i2c/slave-interface.rst
+[2] include/dt-bindings/i2c/i2c.h
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org
+---
+ scripts/dtc/checks.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+index 4b3c486f1399..6321fc5b7404 100644
+--- a/scripts/dtc/checks.c
++++ b/scripts/dtc/checks.c
+@@ -1028,6 +1028,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	const char *unitname = get_unitname(node);
+ 	char unit_addr[17];
+ 	uint32_t reg = 0;
++	uint32_t addr;
+ 	int len;
+ 	cell_t *cells = NULL;
+ 
+@@ -1044,17 +1045,21 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	}
+ 
+ 	reg = fdt32_to_cpu(*cells);
+-	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
++	addr = reg & 0x3FFFFFFFU;
++	snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
+ 	if (!streq(unitname, unit_addr))
+ 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
+ 		     unit_addr);
+ 
+ 	for (len = prop->val.len; len > 0; len -= 4) {
+ 		reg = fdt32_to_cpu(*(cells++));
+-		if (reg > 0x3ff)
++		addr = reg & 0x3FFFFFFFU;
++		if ((reg & (1 << 31)) && addr > 0x3ff)
+ 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
+-				  reg);
+-
++				  addr);
++		else if (!(reg & (1 << 31)) && addr > 0x7f)
++			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
++				  addr);
+ 	}
+ }
+ WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
+-- 
+2.26.2
+
