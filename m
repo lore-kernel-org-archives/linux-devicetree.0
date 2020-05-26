@@ -2,142 +2,121 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC421C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 10:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7938C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 10:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A690120776
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 10:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5B62073B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 10:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wbdKlT5M"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="qhIXUq65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388551AbgEZKb6 (ORCPT
+        id S1731858AbgEZKiH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 06:31:58 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23584 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388355AbgEZKb5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 06:31:57 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QARxXv023075;
-        Tue, 26 May 2020 12:31:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=CtZEACoRwW0bUVjUWvettuhq5zKMG+xHV8Cj3kMCEBc=;
- b=wbdKlT5MYwBIpCAg7igTwRxAiC190KWXlxxBnfaYC6+FCA1yyRrERmoj6Qe32o13DMaI
- xnG4IrCajpQDG8Tn0nxOcHl+miNgIJZjsGw5cIxp3n6wBbltQea9wAEOzQWFr8PkWW+j
- 6WDIO3DqP6cwjRWem2pl6TV02WfVCy0MxVvXs+gpA3F4GiryS6Fa2X10rYsbYOjGlFq6
- I1eUB8LjvTU47aJQDfwyyZ8On8u0oPerbx1PN1qnu1/RMDj7As6SmnF0LOU8ws5U7R8R
- qQ1Y9pNdMRQXs1kU1XGVhdf7ssaQBZSdRRXCrLQTmIKyU0VnGhpYo3zoyDIX9uO7oK1I pQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 316rya76wm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 May 2020 12:31:44 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 90F8310003B;
-        Tue, 26 May 2020 12:31:43 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 78DEE21BDAE;
-        Tue, 26 May 2020 12:31:43 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 26 May
- 2020 12:31:43 +0200
-Date:   Tue, 26 May 2020 12:31:41 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     "wsa@kernel.org" <wsa@kernel.org>
-CC:     Rob Herring <robh@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
-Message-ID: <20200526103141.GB14423@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: "wsa@kernel.org" <wsa@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-4-git-send-email-alain.volmat@st.com>
- <20200513021932.GA9172@bogus>
- <20200513054231.GA16558@gnbcxd0016.gnb.st.com>
- <20200523103601.GA3459@ninjato>
+        Tue, 26 May 2020 06:38:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728515AbgEZKiG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 06:38:06 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468C4C03E97E;
+        Tue, 26 May 2020 03:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DcCPTegeL4/9yo2vCU/JGoVKdudEoFYRZ1hgMcX0JO0=; b=qhIXUq65KKmkwLWRnRnI9CLOIS
+        rD3r9RUkwcBrzCVqh8UlmI4LPMGuYe0mhot5T8qAOpfEpmpCQmJt5AMH+nKfagIPpkJRMleng1mxz
+        OyTK+NFKACihHd75NOPNlfEPWMGrMNPGsC1CL0dV/C0BrRk4VRNMqcAb0Anc8TK6hbWNnDiue89PQ
+        VT5+lRx38B/PrsaAuVranD0BLfTnG7SmrJxOOM7zDIHSsL7XlSdPJ4LJ5kMngek2ugR4+s3p7omsh
+        BmQoIVwFO4bL2f0m9dY/lEGh6ygghp/tRCaOp54B/zfoU6JcRyRvvI0pYLHODI1ez2TMXOONr8GyV
+        fwZhjEgQ==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:58843 helo=[192.168.10.61])
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1jdWyA-00012X-Db; Tue, 26 May 2020 12:38:02 +0200
+Subject: Re: [PATCH v5 6/8] drm/panel: Add ilitek ili9341 panel driver
+To:     dillon min <dillon.minfei@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com>
+ <1590378348-8115-7-git-send-email-dillon.minfei@gmail.com>
+ <CAHp75VebSZa6mwAETnM0t42RQCp4iM6_SNjmy3TB48ixsGKV8g@mail.gmail.com>
+ <CAL9mu0+jmcivC6zAXxK0-oXy3n44pAU1QGD7BDq=CT2D7twROQ@mail.gmail.com>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Message-ID: <c085e8f5-f626-28a9-1d3f-a1c277ec5052@tronnes.org>
+Date:   Tue, 26 May 2020 12:38:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200523103601.GA3459@ninjato>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-26_01:2020-05-26,2020-05-26 signatures=0
+In-Reply-To: <CAL9mu0+jmcivC6zAXxK0-oXy3n44pAU1QGD7BDq=CT2D7twROQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 23, 2020 at 10:36:01AM +0000, wsa@kernel.org wrote:
+
+
+Den 26.05.2020 11.08, skrev dillon min:
+> Hi Andy,
 > 
-> > > > +        st,smbus-alert:
-> > > > +          description: Enable the SMBus Alert feature
-> > > > +          $ref: /schemas/types.yaml#/definitions/flag
-> > > > +
-> > > 
-> > > We already have smbus_alert interrupt. Can't you just check for this in 
-> > > the slave nodes and enable if found?
-> > 
-> > My understanding reading the code (smbalert_probe within i2c-smbus.c, of_i2c_setup_smbus_alert called when
-> > registering an adapter within i2c-core-smbus.c) is that smbus_alert refers to an interrupt on the
-> > adapter side. That is an interrupt that would be triggered when the adapter is receiving an smbus_alert
-> > message.
-> > In our case (stm32f7), we do not have specific interrupt for that purpose. The interrupt triggered when
-> > an SMBUS Alert is received (by the adapter) is the same interrupt as for other reasons and we check
-> > within the irq handler within stm32f7 the reason before calling i2c_handle_smbus_alert if the status
-> > register indicated an SMBUS Alert.
-> > So my understanding is that we cannot rely on the mechanism of naming an interrupt smbus_alert.
-> > Did I misunderstood something ?
+> Thanks for input.
 > 
-> I just wonder what is bad about specifying the same interrupt twice in
-> the interrupt properties? You could then check in probe if "smbus_alert"
-> is populated and if it matches the main irq.
+> On Tue, May 26, 2020 at 3:46 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>>
+>> On Mon, May 25, 2020 at 6:46 AM <dillon.minfei@gmail.com> wrote:
+>>>
+>>> From: dillon min <dillon.minfei@gmail.com>
+>>>
+>>>     This driver combine tiny/ili9341.c mipi_dbi_interface driver
+>>>     with mipi_dpi_interface driver, can support ili9341 with serial
+>>>     mode or parallel rgb interface mode by register configuration.
+>>
+>> Noralf told once that this driver should be unified with mi0283qt.c.
+>>
+>> So, what should we do here?
+>>
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
+> 
+> from sam's suggestion, we can't setup two drivers to support one panel
+> in the tree. so, i copy the mipi dbi part from tiny/ili9341.c. to this driver
+> from register settings and dts binding is keep the same to tiny/ili9341.c.
+> 
+> so, in my opinion if tiny/ili9341.c is unified with mi0283qt.c, this
+> driver should be
+> too.
 > 
 
-Here's my understanding of the current implementation.
-During the adapter registration, the function of_i2c_setup_smbus_alert is called
-and if a interrupt is named "smbus_alert" in the adapter node, a new device
-"smbus_alert" will be created. This will leads to smbalert_probe to be called,
-and a request_irq will be done with the irq value read from the adapter node.
-This means that we will have both our handle (the handler of the main irq
-of the stm32 i2c driver) and the smbus_alert handler on the same irq. Leading
-to smbus_alert being called everytime there is a irq (most of the time not
-smbus_alert related) coming from the stm32_i2c. (since this is our main irq).
+There's a discussion about MIPI DBI panels here:
 
-So to me this approach can't work. I'd understand if the smbus_alert property
-was on the client node in the same way as it is done for host-notify however
-that's not the case.
-This is why I was proposing to have our own st,smbus-alert property to decide
-to enable or not the smbus_alert. In our case, we cannot rely on the mechanism
-done by of_i2c_setup_smbus_alert since for us, smbus_alert irq is just one
-case of all the other stm32 i2c irq. (this is the same irq, and we check after
-by reading the interrupt status register).
+MIPI DSI, DBI, and tinydrm drivers
+https://lists.freedesktop.org/archives/dri-devel/2020-May/267031.html
+
+Noralf.
+
+> thanks.
+> 
+> best regards,
+> 
+> Dillon,
+> 
