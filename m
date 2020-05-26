@@ -4,206 +4,224 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4D6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 20:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038DDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 20:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00976208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 20:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5A320674
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 20:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590525795;
-	bh=ozEcZjroQtpwRKSU5YISBgutjoFHZIR4o1LS52WNDEA=;
+	s=default; t=1590526395;
+	bh=Es55q4XzZ0cVihpUYXDpSKr3s+QtePR/w/wcQdig9LA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NqKWMN+ioBg5vTc2djQSM4VNLnMx8bFLEhGXzfZR5e8bNKyEmBXdywSHRtTFlfcrL
-	 iaJE1PCw64xBbTIyMfcBHUQAaq1g/QbHoWvootnxKt5AF/cRClaIPX4pYUchjZlS/8
-	 TpxKrhL0kOT6j4+oo0kH7IVqnGdo+L29MWXS+ob8=
+	b=P5y78L/2pnYWg4i0e2ZxH/uNVm2fvJWYCkedWGeaJd9DlZ4qF/srQo5GPDsYKmMGo
+	 3tQ7FmpaH5mvAnM9QHV0lLG4GM3gUOtC+6ADvN/NOGqnq5hqLfKs2ULvs+mix8bd4O
+	 tWnZBH20/G6cOehzAHtz2CQCdNWuvL8Gmbi/EEgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391344AbgEZUnK (ORCPT
+        id S2404056AbgEZUxP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 16:43:10 -0400
-Received: from mail-io1-f41.google.com ([209.85.166.41]:33808 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391281AbgEZUnK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 16:43:10 -0400
-Received: by mail-io1-f41.google.com with SMTP id f3so23617541ioj.1;
-        Tue, 26 May 2020 13:43:09 -0700 (PDT)
+        Tue, 26 May 2020 16:53:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38388 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404010AbgEZUxP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 16:53:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id d7so23643673ioq.5;
+        Tue, 26 May 2020 13:53:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=05fRtb3l7CU2Nk1q80iQghWcohiFEtAdOdLPDPtrgQM=;
-        b=qe5a6g64rKfhWzhUtZ/h+lzbK8r9y3y3cBCFres0n/N1k7FyMRcF+FKbxM9LB4T6Kf
-         7wgFzFvRv/gKdoHMGt5vfmNHiTB7kFJCjFJI7Vh/rstyXiFk1tu4wpr0FVIjv6N6nKRr
-         vg6lUkjQhBkP+RkOKZ+3sx6xjREhXnMkfEkIUetq+DROT4VeORggbbo2AChJimxgspmm
-         3yprItnoz62s4oroPQyd/aJpHnEeG+3vMSPVCy5GZJ8XU/J1tR0v9PljTUU1qzODkK+U
-         gDjk+rE3rVw7fHc0vtFWvfER3IBUMjbh1/PioDjOsjxzOQcBRCo12qdeP/v6E/4nQ/+/
-         0XRw==
-X-Gm-Message-State: AOAM533GjFSQ0IemsEEnvTPEJ8IeU29gymzte6sGKD9fAF96ovSAdb/e
-        0cgw0uFxqLt2u/gpx8Cc2g==
-X-Google-Smtp-Source: ABdhPJxxQMajEHw93bHjLSQCqQRRc4712FyKVp3vy1T0XvKvvTb5ijKU9eVHfPZ2tLAlUqaZQiKdzg==
-X-Received: by 2002:a02:c4c8:: with SMTP id h8mr2848837jaj.64.1590525789124;
-        Tue, 26 May 2020 13:43:09 -0700 (PDT)
+        bh=qjmwyia8m0idHo7LSD/jUZIkRzjqZXNiiim0DOiQRZg=;
+        b=uCLCeBuVoVtMJCluG3aKXYME8nFsxbV4h2SgwvaB1I30SckKZ+qpV/NT/3QNEBMPw9
+         OK9FOJ2yM+m9/FbxilerpSzWDGlnPD6kRiqv6USCbqJNBj7dzatxsbHjI/jfx1uOejqn
+         Oblr9+im0nVP/UUB8NhMicdmpKakhuPTN+A06G61IGPU+rjtUOIZShrE6oF+UV0cL9o6
+         eCqKM7megByJC1ny5b1w0Yp18Euxpb/i+be3cEB8EOh7MGzjAVNHRCjX0GGmJPmhnC6V
+         3XPRlmEhQbEvCSD7B0KLYVAQxI+azi4bF9l2cqUhCuC4AD7r3CGnM2DvSOXCwqt8s5oj
+         WVLA==
+X-Gm-Message-State: AOAM531p/och7esOkCa3TFbMt6SIAycy2/Axpj+Lr+zVp5KK63DyNXI9
+        MRBM1G4fQcSvuf1sTllnXQ==
+X-Google-Smtp-Source: ABdhPJwDNco5Muj0tbO/Tcz6zkkPMhylBcvTg1YWB0BRz9M/iDI5+3oQwITya3FlxOlrjEMqsrnFjQ==
+X-Received: by 2002:a5d:8e0d:: with SMTP id e13mr18640719iod.132.1590526393661;
+        Tue, 26 May 2020 13:53:13 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w70sm531218ili.78.2020.05.26.13.43.07
+        by smtp.gmail.com with ESMTPSA id t17sm545168ilm.7.2020.05.26.13.53.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 13:43:08 -0700 (PDT)
-Received: (nullmailer pid 335891 invoked by uid 1000);
-        Tue, 26 May 2020 20:43:06 -0000
-Date:   Tue, 26 May 2020 14:43:06 -0600
+        Tue, 26 May 2020 13:53:12 -0700 (PDT)
+Received: (nullmailer pid 351420 invoked by uid 1000);
+        Tue, 26 May 2020 20:53:12 -0000
+Date:   Tue, 26 May 2020 14:53:12 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-Subject: Re: [RESENDPATCH v8 1/2] dt-bindings: mtd: Add Nand Flash Controller
- support for Intel LGM SoC
-Message-ID: <20200526204306.GA224630@bogus>
-References: <20200520000621.49152-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200520000621.49152-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     sre@kernel.org, sspatil@android.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Subject: Re: [PATCH v8 2/3] Add the bindings for the bq25150 and bq25155
+ 500mA charging ICs from Texas Instruments.
+Message-ID: <20200526205312.GA337476@bogus>
+References: <20200520122027.31320-1-dmurphy@ti.com>
+ <20200520122027.31320-3-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520000621.49152-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20200520122027.31320-3-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:06:20AM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Wed, May 20, 2020 at 07:20:26AM -0500, Dan Murphy wrote:
+> From: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
 > 
-> Add YAML file for dt-bindings to support NAND Flash Controller
-> on Intel's Lightning Mountain SoC.
+> The BQ2515X family of devices are highly integrated battery management
+> ICs that integrate the most common functions for wearable devices
+> namely a charger, an output voltage rail, ADC for battery and system
+> monitoring, and a push-button controller.
 > 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Datasheets:
+> http://www.ti.com/lit/ds/symlink/bq25150.pdf
+> http://www.ti.com/lit/ds/symlink/bq25155.pdf
+> 
+> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
 > ---
->  .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 91 ++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>  .../bindings/power/supply/bq2515x.yaml        | 106 ++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq2515x.yaml b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
 > new file mode 100644
-> index 000000000000..cd4e983a449e
+> index 000000000000..83487957fc8c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Still not dual licensed.
-
+> +++ b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+> @@ -0,0 +1,106 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +$id: "http://devicetree.org/schemas/power/supply/bq2515x.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +title: Intel LGM SoC NAND Controller Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml"
+> +title: TI bq2515x 500-mA Linear charger family
 > +
 > +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +  - Dan Murphy <dmurphy@ti.com>
+> +  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> +
+> +description: |
+> +  The BQ2515x family is a highly integrated battery charge management IC that
+> +  integrates the most common functions for wearable devices, namely a charger,
+> +  an output voltage rail, ADC for battery and system monitoring, and
+> +  push-button controller.
+> +
+> +  Specifications about the charger can be found at:
+> +    http://www.ti.com/lit/ds/symlink/bq25150.pdf
+> +    http://www.ti.com/lit/ds/symlink/bq25155.pdf
 > +
 > +properties:
 > +  compatible:
-> +    const: intel,lgm-nand-controller
-
-Still doesn't match the example. And the example will fail when it does.
-
+> +    enum:
+> +      - ti,bq25150
+> +      - ti,bq25155
 > +
 > +  reg:
-> +    items:
-> +       - description: ebunand registers
-> +       - description: hsnand registers
-> +       - description: nand_cs0 external flash access
-> +       - description: nand_cs1 external flash access
-> +       - description: addr_sel0 memory region enable and access
-> +       - description: addr_sel1 memory region enable and access
-
-reg-names?
-
-> +
-> +  clocks:
 > +    maxItems: 1
+> +    description: I2C address of the charger.
 > +
-> +  dmas:
-> +    maxItems: 2
+> +  ac-detect-gpios:
+> +    description: |
+> +       GPIO used for connecting the bq2515x device PG (AC Detect)
+> +       pin.  This pin should be used if possible as this is the
+> +       recommended way to obtain the charger's input PG state.
+> +       If this pin is not specified a software-based approach for PG
+> +       detection is used.
+
+How many? (maxItems: 1)
+
+Same for the rest of the GPIOs.
+
 > +
-> +  dma-names:
-> +    items:
-> +      - const: tx
-> +      - const: rx
+> +  reset-gpios:
+> +    description: |
+> +       GPIO used for hardware reset.
 > +
-> +patternProperties:
-> +  "^nand@[a-f0-9]+$":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 7
+> +  low-power-gpios:
+> +    description: |
+> +       GPIO used for low power mode of IC.
+
+powerdown-gpios is the somewhat standard name for this.
+
 > +
-> +      nand-ecc-mode: true
+> +  charge-enable-gpios:
+> +    description: |
+> +       GPIO used to turn on and off charging.
 > +
-> +      nand-ecc-algo:
-> +        const: hw
+
+> +  constant-charge-current-max-microamp:
+> +    description: |
+> +       Maximum charging current in micro Amps.
+> +    minimum: 50000
+> +    maximum: 600000
 > +
-> +    additionalProperties: false
+> +  precharge-current-max-microamp:
+> +    description: |
+> +       Maximum precharging current in micro Amps.
+> +    minimum: 1250
+> +    maximum: 77500
+> +
+> +  input-current-limit-microamp:
+> +    description: |
+> +       Maximum input current in micro Amps.
+> +    minimum: 50000
+> +    maximum: 500000
+> +
+> +  constant-charge-voltage-max-microvolt:
+> +    description: |
+> +       Maximum charging voltage in micro volts.
+> +    minimum: 3600000
+> +    maximum: 4600000
+
+Other than input-current-limit-microamp, none of these should be part of 
+this schema as they apply to the battery node. There's not really a way 
+for us to express something like this.
+
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - clocks
-> +  - clock-names
 
-Not documented or should be dropped.
+Add:
 
-> +  - dmas
-> +  - dma-names
-> +
-> +additionalProperties: false
+additionalProperties: false
+
 > +
 > +examples:
 > +  - |
-> +    nand-controller@e0f00000 {
-> +      compatible = "intel,lgm-nand";
-> +      reg = <0xe0f00000 0x100>,
-> +            <0xe1000000 0x300>,
-> +            <0xe1400000 0x8000>,
-> +            <0xe1c00000 0x1000>,
-> +            <0x17400000 0x4>,
-> +            <0x17c00000 0x4>;
-> +      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1",
-> +        "addr_sel0","addr_sel1";
-
-Not documented. And needs a space after the ','.
-
-> +      clocks = <&cgu0 125>;
-> +      dmas = <&dma0 8>, <&dma0 9>;
-> +      dma-names = "tx", "rx";
+> +    bat: battery {
+> +      compatible = "simple-battery";
+> +      constant-charge-current-max-microamp = <50000>;
+> +      precharge-current-microamp = <2500>;
+> +      constant-charge-voltage-max-microvolt = <4000000>;
+> +    };
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    i2c0 {
 > +      #address-cells = <1>;
 > +      #size-cells = <0>;
-> +      #clock-cells = <1>;
-
-Should be removed?
-
 > +
-> +      nand@0 {
-> +        reg = <0>;
-> +        nand-on-flash-bbt;
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
+> +      bq25150: charger@6b {
+> +        compatible = "ti,bq25150";
+> +        reg = <0x6b>;
+> +        monitored-battery = <&bat>;
+
+Not documented.
+
+> +        input-current-limit-microamp = <100000>;
+> +
+> +        ac-detect-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +        reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> +        low-power-gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
+> +        charge-enable-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
 > +      };
 > +    };
-> +
-> +...
 > -- 
-> 2.11.0
+> 2.26.2
 > 
