@@ -6,42 +6,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB77BC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 13:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95520C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 14:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8892084C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 13:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB5E208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 14:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbgEZNvL (ORCPT
+        id S1731850AbgEZODC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 09:51:11 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57760 "EHLO
+        Tue, 26 May 2020 10:03:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57906 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729400AbgEZNvL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 09:51:11 -0400
+        with ESMTP id S1731846AbgEZODB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 10:03:01 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 468CD803086E;
-        Tue, 26 May 2020 13:51:08 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9E531803086D;
+        Tue, 26 May 2020 14:02:58 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 36kKExf0ojJW; Tue, 26 May 2020 16:51:07 +0300 (MSK)
+        with ESMTP id eLOR7vdUy706; Tue, 26 May 2020 17:02:57 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Sebastian Reichel <sre@kernel.org>,
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Burton <paulburton@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: power: reset: Unrequire regmap property in syscon-reboot node
-Date:   Tue, 26 May 2020 16:51:00 +0300
-Message-ID: <20200526135102.21236-2-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200526135102.21236-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200526135102.21236-1-Sergey.Semin@baikalelectronics.ru>
+        Paul Burton <paul.burton@imgtec.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/6] dt-bindings: power: Convert mti,mips-cpc to DT schema
+Date:   Tue, 26 May 2020 17:02:38 +0300
+Message-ID: <20200526140243.21946-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200526140243.21946-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200526140243.21946-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -51,66 +58,80 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since normally syscon-reboot block is supposed to be a part of a system
-controller, lets mark the regmap property as deprecated and recommend the
-syscon-reboot node to be a sub-node of SYSCON.
+It's a Cluster Power Controller embedded into the MIPS IP cores.
+Currently the corresponding dts node is supposed to have compatible
+and reg properties.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mips@vger.kernel.org
 
 ---
 
-Changelog v2:
-- This is a new patch created as a result of the discussion:
-  https://lore.kernel.org/linux-pm/20200306130402.1F4F0803079F@mail.baikalelectronics.ru/
+Changelog prev:
+- Reword the changelog summary - use shorter version.
+- Lowercase the example hex'es.
 ---
- .../bindings/power/reset/syscon-reboot.yaml       | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ .../bindings/power/mti,mips-cpc.txt           |  8 -----
+ .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
+ 2 files changed, 35 insertions(+), 8 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+ create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
 
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
-index b80772cb9f06..da2509724812 100644
---- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
-@@ -12,9 +12,12 @@ maintainers:
- description: |+
-   This is a generic reset driver using syscon to map the reset register.
-   The reset is generally performed with a write to the reset register
--  defined by the register map pointed by syscon reference plus the offset
--  with the value and mask defined in the reboot node.
--  Default will be little endian mode, 32 bit access only.
-+  defined by the SYSCON register map base plus the offset with the value and
-+  mask defined in the reboot node. Default will be little endian mode, 32 bit
-+  access only. The SYSCON registers map is normally retrieved from the
-+  parental dt-node. So the SYSCON reboot node should be represented as a
-+  sub-node of a "syscon", "simple-mfd" node. Though the regmap property
-+  pointing to the system controller node is also supported.
- 
- properties:
-   compatible:
-@@ -30,7 +33,10 @@ properties:
- 
-   regmap:
-     $ref: /schemas/types.yaml#/definitions/phandle
--    description: Phandle to the register map node.
-+    deprecated: true
+diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+deleted file mode 100644
+index c6b82511ae8a..000000000000
+--- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
++++ /dev/null
+@@ -1,8 +0,0 @@
+-Binding for MIPS Cluster Power Controller (CPC).
+-
+-This binding allows a system to specify where the CPC registers are
+-located.
+-
+-Required properties:
+-compatible : Should be "mti,mips-cpc".
+-regs: Should describe the address & size of the CPC register region.
+diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+new file mode 100644
+index 000000000000..9cd92a57130c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/mti,mips-cpc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MIPS Cluster Power Controller
++
++description: |
++  Defines a location of the MIPS Cluster Power Controller registers.
++
++maintainers:
++  - Paul Burton <paulburton@kernel.org>
++
++properties:
++  compatible:
++    const: mti,mips-cpc
++
++  reg:
 +    description: |
-+      Phandle to the register map node. This property is deprecated in favor of
-+      the syscon-reboot node been a child of a system controller node.
- 
-   value:
-     $ref: /schemas/types.yaml#/definitions/uint32
-@@ -38,7 +44,6 @@ properties:
- 
- required:
-   - compatible
--  - regmap
-   - offset
- 
- additionalProperties: false
++      Base address and size of an unoccupied memory region, which will be
++      used to map the MIPS CPC registers block.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    cpc@1bde0000 {
++      compatible = "mti,mips-cpc";
++      reg = <0 0x1bde0000 0 0x8000>;
++    };
++...
 -- 
 2.26.2
 
