@@ -2,95 +2,201 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377BEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2616C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0897220721
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3EC72065F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590516264;
-	bh=GzhhALiduGhcmdMoqZGdm9ZOr3vuxoXlxqc3/+/xa04=;
+	s=default; t=1590516534;
+	bh=imWs4ah6WzLsF7HUgbEz+ghYEeQx18mGuyl9PlBOMCU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B4ZGIvx1q+QeXyvUnnvfrjPqrAtpa+ObWgOrnBipJEED5+xrYg6Ngow+UsQ4RMZ/n
-	 y/Zr6PZvdTPJJVI/nsx8qYHl4WSlTyQdZEAt9TSjts1zzRIRrcOPWvg++e8jFgOCmC
-	 H5IMOpjOoPB0vDC3gay3Ab/fOQRxxMI6DVT+x5e4=
+	b=e1Q44Ob4mgi1h3WYEJwIIbQ1BUlnNxm9dV1SHX0QlSjdlyl+8xD2alLFvWfu2FHPV
+	 GTKlBPSlav6rf/xNmjZh1ViUB5B3TRYNIugeUhyHcTHnVesVXqQcTP3DhHXu4fch/Z
+	 rwFveDMhyd6VfH+ZXzFjV+RNtu5m1niLgUM+uNGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgEZSEX (ORCPT
+        id S1728339AbgEZSIr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 14:04:23 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46847 "EHLO
+        Tue, 26 May 2020 14:08:47 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39841 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbgEZSEW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:04:22 -0400
-Received: by mail-io1-f65.google.com with SMTP id j8so23010308iog.13;
-        Tue, 26 May 2020 11:04:21 -0700 (PDT)
+        with ESMTP id S1728285AbgEZSIr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:08:47 -0400
+Received: by mail-io1-f65.google.com with SMTP id c8so2715548iob.6;
+        Tue, 26 May 2020 11:08:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ClJL8gB+/7Ulq3yj2f4VaDBjcjvT7VkWGg/z9gQ4pgg=;
-        b=YB/7jRzIWHrCjwDKoJ5EU63VfJWnOpZOD8pQU4bu60XdB8cySAq/Z32rSJC/VSM/fr
-         oobRUOr3RS1FxlveCLZ7d4nbHj2V6IhXV94mU53Ir7Kofl3Shu0m6vESU7V8DqYErtuO
-         kNvp0YJQKZ9kHQSoMsFhArQtZuLmm/f1JgERoniCDWwB72eMwkvfunoS2kcniLZBDbb7
-         TtKDIWfyhIg7qX64k/n5WgDE0vz3FYpZN3D0WvUUWX+AfoGvWfyFL7q60LD08uEjZZvF
-         /8d7u0gEhTJLIhFigQZVd2/I4HpMqQt2wL27L8ac9QsdxXbdT0YRg0VlT6LTr10YDc4I
-         MHkw==
-X-Gm-Message-State: AOAM533lxFv5bKmQAglSDCT25ePDxoIdPLFAl4XokSQxdP+qtGVI6byT
-        XXmLFr6ZjUpY42Bwuv3ofg==
-X-Google-Smtp-Source: ABdhPJzcu2nCj6F92lx7P/df1l59GGQNg9IGF9YDymeeq6DRFL67TpPCdRsq+oEeB/mS2xXLEmpasQ==
-X-Received: by 2002:a05:6602:2c8f:: with SMTP id i15mr11103155iow.45.1590516260900;
-        Tue, 26 May 2020 11:04:20 -0700 (PDT)
+        bh=ShRmryyfPituzUaTF9xqzITMDWyV5MMJxj9+4c5azDc=;
+        b=C9KvwuUFntPN9VrbKhVQfdEmBoI2rw0FpghH97V6yw5WLmTMue7Iob6YgwtUUfkRiw
+         3tXPuOehPOp57Of2WnEElaRiK/fHBWkuV5+lzJ2TNT6YwJaoY0OmSAnPASYsCP3ITQWf
+         iConQqnkMMzvXE0MNNWAGqHSaCl8bv/xJYPaoRZIxkD/lcYuNOTw4f9NfkgUdzCtiwi8
+         hhOPYxJIUhnU5HSPP5aKURMIWWCrGyrIgHRssH7e5+ZaDUvXF+QXz6kYzj0fi5LFVsGi
+         qdduB1650U4d0+P1kn3uEMeVnJI/EKq6RQuzbUuE2z6wswqaot9XQerAvhrLnbm/vt8E
+         k8NQ==
+X-Gm-Message-State: AOAM532IqvSsAgHSDp4oFfc8m2FOeiAWDkeVjlqiYtkilK7MHduLsYFU
+        MPGs4Z8vEbBx8YeppO5gNA==
+X-Google-Smtp-Source: ABdhPJw3FHEFautJYIk4tPlQQMhfWPm80jnVw4i0iIIULhGB0bIvWnQ4K1CyzKMAwU5hjhBOO6TKQA==
+X-Received: by 2002:a05:6602:134d:: with SMTP id i13mr18153812iov.50.1590516525215;
+        Tue, 26 May 2020 11:08:45 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z13sm319397ilh.82.2020.05.26.11.04.19
+        by smtp.gmail.com with ESMTPSA id z13sm324592ilh.82.2020.05.26.11.08.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:04:19 -0700 (PDT)
-Received: (nullmailer pid 80209 invoked by uid 1000);
-        Tue, 26 May 2020 18:04:18 -0000
-Date:   Tue, 26 May 2020 12:04:18 -0600
+        Tue, 26 May 2020 11:08:44 -0700 (PDT)
+Received: (nullmailer pid 91004 invoked by uid 1000);
+        Tue, 26 May 2020 18:08:43 -0000
+Date:   Tue, 26 May 2020 12:08:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Xin Ji <xji@analogixsemi.com>
-Cc:     devel@driverdev.osuosl.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>, devicetree@vger.kernel.org,
-        Sheng Pan <span@analogixsemi.com>,
-        David Airlie <airlied@linux.ie>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        dri-devel@lists.freedesktop.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v11 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter DT schema
-Message-ID: <20200526180418.GA80145@bogus>
-References: <cover.1589511894.git.xji@analogixsemi.com>
- <393386c0a18753cb4b3f695348fe506a192ea82a.1589511894.git.xji@analogixsemi.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
+        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 08/10] dt-bindings: ufs: Add DT binding documentation
+ for ufs
+Message-ID: <20200526180843.GA81537@bogus>
+References: <20200514003914.26052-1-alim.akhtar@samsung.com>
+ <CGME20200514005309epcas5p3ccd2b44c1bf20634eea3e232d1c2b62e@epcas5p3.samsung.com>
+ <20200514003914.26052-9-alim.akhtar@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <393386c0a18753cb4b3f695348fe506a192ea82a.1589511894.git.xji@analogixsemi.com>
+In-Reply-To: <20200514003914.26052-9-alim.akhtar@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 15 May 2020 13:49:20 +0800, Xin Ji wrote:
-> anx7625: MIPI to DP transmitter DT schema
+On Thu, May 14, 2020 at 06:09:12AM +0530, Alim Akhtar wrote:
+> This patch adds DT binding for samsung ufs hci
+
+Subject should indicate this is for Samsung in some way.
+
 > 
-> Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 > ---
->  .../bindings/display/bridge/analogix,anx7625.yaml  | 95 ++++++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+>  .../bindings/ufs/samsung,exynos-ufs.yaml      | 91 +++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+> new file mode 100644
+> index 000000000000..eaa64cc32d52
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/ufs/samsung,exynos-ufs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC series UFS host controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Alim Akhtar <alim.akhtar@samsung.com>
+> +
+> +description: |
+> +  Each Samsung UFS host controller instance should have its own node.
+> +  This binding define Samsung specific binding other then what is used
+> +  in the common ufshcd bindings
+> +  [1] Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +
+> +properties:
+> +
+> +  compatible:
+> +    enum:
+> +      - samsung,exynos7-ufs
+> +
+> +  reg:
+> +    items:
+> +     - description: HCI register
+> +     - description: vendor specific register
+> +     - description: unipro register
+> +     - description: UFS protector register
+> +
+> +  reg-names:
+> +    items:
+> +      - const: hci
+> +      - const: vs_hci
+> +      - const: unipro
+> +      - const: ufsp
+> +
+> +  clocks:
+> +    maxItems: 2
+
+maxItems is redundant.
+
+> +    items:
+> +      - description: ufs link core clock
+> +      - description: unipro main clock
+> +
+> +  clock-names:
+> +    maxItems: 2
+
+Here too.
+
+> +    items:
+> +      - const: core_clk
+> +      - const: sclk_unipro_main
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    maxItems: 1
+
+What's the name? (Though a name is kind of pointless when there is only 
+1.)
+
+With those fixed,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - phys
+> +  - phy-names
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/exynos7-clk.h>
+> +
+> +    ufs: ufs@15570000 {
+> +       compatible = "samsung,exynos7-ufs";
+> +       reg = <0x15570000 0x100>,
+> +             <0x15570100 0x100>,
+> +             <0x15571000 0x200>,
+> +             <0x15572000 0x300>;
+> +       reg-names = "hci", "vs_hci", "unipro", "ufsp";
+> +       interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
+> +       clocks = <&clock_fsys1 ACLK_UFS20_LINK>,
+> +                <&clock_fsys1 SCLK_UFSUNIPRO20_USER>;
+> +       clock-names = "core_clk", "sclk_unipro_main";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&ufs_rst_n &ufs_refclk_out>;
+> +       phys = <&ufs_phy>;
+> +       phy-names = "ufs-phy";
+> +    };
+> +...
+> -- 
+> 2.17.1
+> 
