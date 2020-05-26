@@ -2,101 +2,200 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24131C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 16:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBC1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 16:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 042162086A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 16:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3907620787
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 16:05:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="hHB73bWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731363AbgEZQDo (ORCPT
+        id S1729337AbgEZQFx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 12:03:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:3709 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgEZQDn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 12:03:43 -0400
-IronPort-SDR: mwE+zKzxthCAzlElbMsdbrEix9w1GWoocQYgYeopfTuaSTmuzg0Syqcx2OXBwNvNxuz96zdkbm
- W3eRM3qismhw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 09:03:42 -0700
-IronPort-SDR: 2xWlNCFO2LxbbSXeaNDSvwyvAro0gZEgkG/jybusID3x9qZ0i5pNXqeWg4zF5nMHdyMUhCGsL6
- GmBbwzkspemg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="255452739"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 26 May 2020 09:03:34 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdc3E-0091nj-Af; Tue, 26 May 2020 19:03:36 +0300
-Date:   Tue, 26 May 2020 19:03:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200526160336.GV1634618@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
- <20200515102848.GH271301@dell>
- <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
- <20200526072427.GC3628@dell>
- <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
+        Tue, 26 May 2020 12:05:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgEZQFv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 12:05:51 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E30D2C03E96E
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 09:05:49 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q11so8797637wrp.3
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 09:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7cPMOzmzrq5LcaA6afOlcnUvTlySbm2Zz5cRjRBFUB8=;
+        b=hHB73bWGgQwTTVf8pYNmpNnooECAKXvA6l40jbW1uF1ZgSFspa4p5HEpzKOEmq5d20
+         MbKb6r6mfL/O1NX8CgiiI9OI5qA9kXXUDrCA5TEtqQxuTV72NYqO6Z+iZYc/LUaJ2guQ
+         v2/vgZVeEE5aloi0hzrlkeL0Mtu4rXHaBHDfm+P9FDl4IaBu1UlfIYP3ZH9KphTe2l0I
+         l9f+H/yPg5k4Vhe9e0O5WU60ouZHRKLTzP3DmRQX7+vEVJI9CODui4DnmyDQGWvgRv/z
+         BcWuO1KOXDQVFhhLDcTzU6ENEm3Bm3mo5s/exOQOZ/Qh68+Ka+fCJDgekxM4EdjrADko
+         IIHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7cPMOzmzrq5LcaA6afOlcnUvTlySbm2Zz5cRjRBFUB8=;
+        b=ig85rqA9iNljbe0otCr3GHRVHB5XITFsjk+3gKl9CgkBY8Mx+4NRAcWT/neGk02lVf
+         ZvjqENRAq3oiNuRokl93FGyj7P5mZT2ysNLPtkJ9oV7vJxGukQeR57GoCoZFJfdGSd+0
+         0wxUufKSUU7xQkMxbCjefFTLpDIodm+7JAiv6rN9jPS/lQswIuMXbWoql5xo3ML71MiA
+         RyZot5doLZvG5vjFzVdQKRd6gHFs2DtoQ9D3jbk55afsYA0hQpVZyS3oAfMz8NMqfRhv
+         I8lzrSTwd6RiacpQ7Z7JtWZnorGubYUDOmbw76jwNg3uxoxYC0uIMsrpqpCXy8nQeNtc
+         w6Ew==
+X-Gm-Message-State: AOAM5301xhQhkG4oGsumlRLDItEa9P/iyy4xFJ44Aah4fYyq+XgUJCXU
+        laRabRq8sRCnFjAAKb2B0D0VKIy57McJQswFLslBaw==
+X-Google-Smtp-Source: ABdhPJzbNZzcmv/E+mCoy9/ugd+2hWuRWbmHIetsobYOKHTzpGICK6/mhGNbuGycrtPlxefT05gv7k8iaVD6IUq7zHc=
+X-Received: by 2002:a5d:500d:: with SMTP id e13mr12590422wrt.150.1590509148646;
+ Tue, 26 May 2020 09:05:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200524192505.20682-1-andrey.konovalov@linaro.org> <20200524192505.20682-8-andrey.konovalov@linaro.org>
+In-Reply-To: <20200524192505.20682-8-andrey.konovalov@linaro.org>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 26 May 2020 17:05:31 +0100
+Message-ID: <CAPY8ntAW+yfxw0NTDi3yEwoZ+AqUuXD__pqB977bXgJr=jnNXg@mail.gmail.com>
+Subject: Re: [PATCH v3 07/10] media: i2c: imx290: Add RAW12 mode support
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        manivannan.sadhasivam@linaro.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
+        a.brela@framos.com, Peter Griffin <peter.griffin@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 26, 2020 at 05:54:38PM +0200, Michael Walle wrote:
-> Am 2020-05-26 09:24, schrieb Lee Jones:
+Hi Andrey
 
-...
+Thanks for the patch.
 
-> Like I said, in the long term I would like to have support for
-> different versions of the board management controller
+On Sun, 24 May 2020 at 20:26, Andrey Konovalov
+<andrey.konovalov@linaro.org> wrote:
+>
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>
+> IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
+> 12 bit formats. Since the driver already supports RAW10 mode, let's add
+> the missing RAW12 mode as well.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> ---
+>  drivers/media/i2c/imx290.c | 36 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 33 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> index 162c345fffac..6e70ff22bc5f 100644
+> --- a/drivers/media/i2c/imx290.c
+> +++ b/drivers/media/i2c/imx290.c
+> @@ -71,6 +71,7 @@ struct imx290 {
+>         struct clk *xclk;
+>         struct regmap *regmap;
+>         u8 nlanes;
+> +       u8 bpp;
+>
+>         struct v4l2_subdev sd;
+>         struct v4l2_fwnode_endpoint ep;
+> @@ -90,10 +91,12 @@ struct imx290 {
+>
+>  struct imx290_pixfmt {
+>         u32 code;
+> +       u8 bpp;
+>  };
+>
+>  static const struct imx290_pixfmt imx290_formats[] = {
+> -       { MEDIA_BUS_FMT_SRGGB10_1X10 },
+> +       { MEDIA_BUS_FMT_SRGGB10_1X10, 10 },
+> +       { MEDIA_BUS_FMT_SRGGB12_1X12, 12 },
+>  };
+>
+>  static const struct regmap_config imx290_regmap_config = {
+> @@ -261,6 +264,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
+>         { 0x300b, 0x00},
+>  };
+>
+> +static const struct imx290_regval imx290_12bit_settings[] = {
+> +       { 0x3005, 0x01 },
+> +       { 0x3046, 0x01 },
+> +       { 0x3129, 0x00 },
+> +       { 0x317c, 0x00 },
+> +       { 0x31ec, 0x0e },
+> +       { 0x3441, 0x0c },
+> +       { 0x3442, 0x0c },
+> +       { 0x300a, 0xf0 },
+> +       { 0x300b, 0x00 },
+> +};
+> +
+>  /* supported link frequencies */
+>  static const s64 imx290_link_freq_2lanes[] = {
+>         891000000, /* 1920x1080 -  2 lane */
+> @@ -421,7 +436,12 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
+>                 } else {
+>                         imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
+>                         msleep(10);
+> -                       imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
+> +                       if (imx290->bpp == 10)
+> +                               imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
+> +                                                0x3c);
+> +                       else /* 12 bits per pixel */
+> +                               imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
+> +                                                0xf0);
+>                         imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
+>                 }
+>                 break;
+> @@ -496,7 +516,7 @@ static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
+>         u8 nlanes = imx290->nlanes;
+>
+>         /* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
+> -       return (link_freq * 2 * nlanes / 10);
+> +       return (link_freq * 2 * nlanes / imx290->bpp);
 
-> without having to change the device tree and have device tree bindings for the
-> subdevices at the same time.
+This doesn't link on a 32bit system as it's a 64bit divide:
+ERROR: "__aeabi_ldivmod" [drivers/media/i2c/imx290.ko] undefined!
+It ought to be using do_div().
 
-But isn't device tree to describe *very specific platform* rather than *class
-of platforms*?
+Admittedly it didn't compile before as you still had a s64 divide by
+10, but I hadn't tried that :-)
 
-> But it seems, that this is not possible
-> and I guess I have to bite the bullet and may need to provide another
-> device tree if the controller might be updated.
+  Dave
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  }
+>
+>  static int imx290_set_fmt(struct v4l2_subdev *sd,
+> @@ -533,6 +553,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
+>         } else {
+>                 format = &imx290->current_format;
+>                 imx290->current_mode = mode;
+> +               imx290->bpp = imx290_formats[i].bpp;
+>
+>                 if (imx290->link_freq)
+>                         __v4l2_ctrl_s_ctrl(imx290->link_freq,
+> @@ -577,6 +598,15 @@ static int imx290_write_current_format(struct imx290 *imx290)
+>                         return ret;
+>                 }
+>                 break;
+> +       case MEDIA_BUS_FMT_SRGGB12_1X12:
+> +               ret = imx290_set_register_array(imx290, imx290_12bit_settings,
+> +                                               ARRAY_SIZE(
+> +                                                       imx290_12bit_settings));
+> +               if (ret < 0) {
+> +                       dev_err(imx290->dev, "Could not set format registers\n");
+> +                       return ret;
+> +               }
+> +               break;
+>         default:
+>                 dev_err(imx290->dev, "Unknown pixel format\n");
+>                 return -EINVAL;
+> --
+> 2.17.1
+>
