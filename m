@@ -2,578 +2,162 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5840BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 14:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7B6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 14:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3857F20723
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 14:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5FF2078C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 14:49:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tSppjyes";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="HJy3CUs0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgEZOo5 (ORCPT
+        id S1728803AbgEZOtY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 10:44:57 -0400
-Received: from out28-145.mail.aliyun.com ([115.124.28.145]:37388 "EHLO
-        out28-145.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729102AbgEZOo4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 10:44:56 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436308|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0386974-0.000314612-0.960988;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16370;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.Hdvl59T_1590504067;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Hdvl59T_1590504067)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Tue, 26 May 2020 22:42:40 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v10 4/6] clk: Ingenic: Add CGU driver for X1830.
-Date:   Tue, 26 May 2020 22:40:42 +0800
-Message-Id: <20200526144044.71413-6-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200526144044.71413-1-zhouyanjie@wanyeetech.com>
-References: <20200526144044.71413-1-zhouyanjie@wanyeetech.com>
+        Tue, 26 May 2020 10:49:24 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:7586 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbgEZOtY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 10:49:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590504563; x=1622040563;
+  h=from:to:cc:subject:date:message-id:content-id:
+   content-transfer-encoding:mime-version;
+  bh=utPZfONMB8psloQX6u69HKsZLbUl9vddzki9MRUTGn4=;
+  b=tSppjyesRwKoPmlqQ/8OuyyFzrXIJd7BMzT/W1ZJ/TTBGCSYCJJTq4I6
+   rdUOxuvkzwf6M6JwtDEbpf1n3MgUyLwwSqVkdvx0AbQ+496J0Fi9zEJxm
+   OmE4XbGaMGsfKJ9HG7+OAbkmips7sM1Oe2brRUJmS9fYy8GfNay+KXO27
+   xEzhrVb2ckSBJUwr1eIrDz9lWUAViqqGvu77PR6gPm0daUicWNwCnaRvb
+   8nfIMhK/AO+Y3wBPsN6fIc5YGo373WHgqJSnHyQDYuKiBErSPaUQSZbCB
+   qytgaQYx3geBBNBJX0+rRX+6+09Kb4YPWpv1J+m07Mlx52zz9fLue6mXJ
+   g==;
+IronPort-SDR: fkSZ3KXkSDmkXieJMfO6F4j5LiFVEuNaIq02Ynsmcgoj3HIPsAYYYk5v4xWrFWzMHJoTsAsXcu
+ mgxav+blb0zYe33oSEQRAJdcxPYnNwciN0OA/ZrIvXJljQFckmmffjiFkopUkwmxu4IdJdxI/P
+ PBbQ6NjO/8S5G5IDWf9iJpYFvxUB0EYsQid0DXYTiB1BNR00jzcHfbYUXmHSqgJenu2Cn/ChNB
+ Y5lldrjMDnsVOx1FpgbDfTx/LNmUPn2ljDSWWC1gC4l/PgDoWOz4sf3SbNUZgNWUiz2BydoHvn
+ MEQ=
+X-IronPort-AV: E=Sophos;i="5.73,437,1583218800"; 
+   d="scan'208";a="76370265"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 May 2020 07:49:22 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 26 May 2020 07:49:24 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Tue, 26 May 2020 07:49:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lq9dVvo2yQsMrjs0W6NnBkeghl+2q84rhCf7FPOW5mIfycNmCE2pBhtxH79naf/pdaVVbcKt7bjBPc8C5TLGyAbfyP/tUQB0VLSlzYsJkjNHoeJ7TUiJmM90bxXrDaMzutktqWGcicmEOdHV2j1CsAR6TeNKYQDjnUM70bsikseklqoPLWjz7o6Si2e26h0Jrmavb+yVffes1NnZDzefo0ZtsL1uo6fnhDHypfy/idWr+1uUjFjyH+Kz0SI7z+dekrGcxLWB4232mJTzVTahzwzymstH7gLbgzZH8KYKaT3w3zjBDCojhDBRw6cXssmMA6aO1d9QmZrudEJ3Usyd3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=utPZfONMB8psloQX6u69HKsZLbUl9vddzki9MRUTGn4=;
+ b=a49GRovPu9ofdHheSA6xlHp54IymXbvyubZJU0YAzZKwJuxrjroT+S8tgMRfrWDB64i4DEsPTSo3yXo4krV1dQWl4Ko/Eg2lGBoOib4O6XXO10VzPc8B0yU2UJat2KkxIEIDCrNc9bSYfesfvj6Kz5U82gURoxLCoE61brFeIVB0iHWt+C/PpqIbRpNaFgfKIXwNHtuxkX7/OsU3qV9MTgUDNXBvp8wBhSdcLWJfUT2U3c8XByp+2U0W0fooK0QYVlNhfOHX/JuMTAtbzrGkRT6Ntw9iKGKGZyh4wnWSif8LhPngTlqu95ZhtH4lVLhMKIhda371SJijtMd7labOsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=utPZfONMB8psloQX6u69HKsZLbUl9vddzki9MRUTGn4=;
+ b=HJy3CUs0/YhrHNYRBPeP5aUxBS06xpGK9vsCxqOvs+6frN08RmeeIW3MYbcK9ODzkLpsTtutoJxz0o4P70EowjnT+N/Acw2UmMB3/Ia1qfmGeXpke918wBRAw7hENnPZpaY4LE4p/1WODKGjkdll3UiQzznpPpg83eNvptP/+bA=
+Received: from MN2PR11MB4269.namprd11.prod.outlook.com (2603:10b6:208:190::32)
+ by MN2PR11MB3966.namprd11.prod.outlook.com (2603:10b6:208:13f::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Tue, 26 May
+ 2020 14:49:20 +0000
+Received: from MN2PR11MB4269.namprd11.prod.outlook.com
+ ([fe80::8d6f:606b:5ddc:d5cb]) by MN2PR11MB4269.namprd11.prod.outlook.com
+ ([fe80::8d6f:606b:5ddc:d5cb%2]) with mapi id 15.20.3021.029; Tue, 26 May 2020
+ 14:49:20 +0000
+From:   <Daire.McNamara@microchip.com>
+To:     <amurray@thegoodpenguin.co.uk>, <lorenzo.pieralisi@arm.com>,
+        <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+CC:     <david.abdurachmanov@gmail.com>
+Subject: [PATCH v10 0/2] PCI: microchip: Add host driver for Microchip PCIe
+ controller
+Thread-Topic: [PATCH v10 0/2] PCI: microchip: Add host driver for Microchip
+ PCIe controller
+Thread-Index: AQHWM2zWk2vQFmiyF0Cxp8HUIwYe8w==
+Date:   Tue, 26 May 2020 14:49:20 +0000
+Message-ID: <930a4f34fd11be89bc66cfa35b249c9b685aa8c2.camel@microchip.com>
+Accept-Language: en-IE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: thegoodpenguin.co.uk; dkim=none (message not signed)
+ header.d=none;thegoodpenguin.co.uk; dmarc=none action=none
+ header.from=microchip.com;
+x-originating-ip: [89.101.219.210]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 66a78ff3-45fd-4bb4-8fe1-08d80183f937
+x-ms-traffictypediagnostic: MN2PR11MB3966:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB39662D69F8B43D1F66B5C7BE96B00@MN2PR11MB3966.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:663;
+x-forefront-prvs: 041517DFAB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: T5uGbaOtpioaQl4bRsELRAZOhla05Tw4FouwtMbbd2NlL1/PqA8u6AClrPe1Fug0zWRFYO2W67FAbY24Yh0kdKNR7JUYaNumeFKRoSAVaz3Iwbjk6rTEDLvVbZfuHlE99x4MejRlO9gJadXO0bsfrjK8w/9GQ82w33+mOZ4FIEloydlO/OT4LgXDOjjXre9QDW7nnSrkBdXyco/QJL52L4sXgvLOcEilWksafERPr49mAYV4wIZhEaaUVvfIGkr+PQC4Kq8k+qYDE0Byj6Zr8MCAl16MIur1qkBR+Yvm9xio3vSqNzgkqTNUwVpUH0IN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4269.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(346002)(366004)(39850400004)(396003)(64756008)(66446008)(66556008)(91956017)(76116006)(6512007)(66946007)(4326008)(66476007)(8936002)(26005)(8676002)(6506007)(186003)(316002)(71200400001)(110136005)(478600001)(2906002)(86362001)(5660300002)(2616005)(6486002)(36756003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 7cUCYzzJCDX+X5UW38CjMv/fQ02L3EDLNmRhFT/gSMm3QCTjg2/zH6Nn68lQHcEZYygQ1Cu1cQYDpI4aMlDbckmfvT6iKkl4mr7gT64XhQKEMXAGFAiKOpMsDSPZv33soGpMer/R2pSxS959H0WClPeaYNF/eXs9XonAqcmNLR/iyeFwr2K3P+EHgvJfIZqQVnhiJX2gpdjHbnVk6d4c9MuqyhauzwXlpze+kjyAO7DlWTGTEZDH2rgnVRKwiO8GfbNJp5/1sUsaYaqmKags+HTiNXDhW7D1IQSGQivUUK6fUvUr5BedBfddyJ8MuivLyBQ0E9EWpfGT/xVHoO0PYwfQiSPH4dVrsDkcti3CQhWxVDF1S84BNDWCN92hXnStCHyQq88/0jyAJLcpfJ9EhsIFURm3g/usMgcYf3JLNB73RcVT31lxgg7tOuWkMDHznGR3IGtWIlljvyv4ZZq5tAZP8yh7M53MEkEfFPuDJn/PUVNSKbRSgM/7DbQbH4wZ
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9D60C669D4FD4442873AF248F63CE0A6@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66a78ff3-45fd-4bb4-8fe1-08d80183f937
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2020 14:49:20.4837
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5tHYCwK8cvMLsLj1Ibz6qxqD4GBX801z/1Qzo2f0UPKMVf8/31ZOZOOQ1XND5TqUT1mSnb9w3fDwq62ploo8NYEE2FQCeYYwrj/uH8q0OCg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3966
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the clocks provided by the CGU in the Ingenic X1830
-SoC, making use of the cgu code to do the heavy lifting.
-
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
----
-
-Notes:
-    v1->v2:
-    1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
-      array (reg[2]).
-    2.Remove the "pll_info->version" and add a "pll_info->rate_multiplier".
-    3.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
-      to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
-      the old mailbox is in an unstable state.
-    
-    v2->v3:
-    Adjust order from [4/5] in v2 to [5/5] in v3.
-    
-    v3->v4:
-    Adjust order from [5/5] in v3 to [4/4] in v4.
-    
-    v4->v5:
-    Rebase on top of kernel 5.6-rc1.
-    
-    v5->v6:
-    Add missing part of X1830's CGU.
-    
-    v6->v7:
-    1.Adjust includes, add blank line as Paul Cercueil's suggest.
-    2.Move "*cgu" into x1830_cgu_init() as a local variable.
-    
-    v7->v8:
-    No change.
-    
-    v8->v9:
-    Add Paul Cercueil's Reviewed-by, somehow his emails are not displayed
-    on the mailing list and patchwork of clock framework subsystem.
-    
-    v9->v10:
-    1.Add missing "X1830_CLK_TCU".
-    2.Fix bugs in "X1830_CLK_OTGPHY".
-
- drivers/clk/ingenic/Kconfig     |  10 +
- drivers/clk/ingenic/Makefile    |   1 +
- drivers/clk/ingenic/x1830-cgu.c | 443 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 454 insertions(+)
- create mode 100644 drivers/clk/ingenic/x1830-cgu.c
-
-diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
-index b4555b465ea6..580b0cf69ed5 100644
---- a/drivers/clk/ingenic/Kconfig
-+++ b/drivers/clk/ingenic/Kconfig
-@@ -55,6 +55,16 @@ config INGENIC_CGU_X1000
- 
- 	  If building for a X1000 SoC, you want to say Y here.
- 
-+config INGENIC_CGU_X1830
-+	bool "Ingenic X1830 CGU driver"
-+	default MACH_X1830
-+	select INGENIC_CGU_COMMON
-+	help
-+	  Support the clocks provided by the CGU hardware on Ingenic X1830
-+	  and compatible SoCs.
-+
-+	  If building for a X1830 SoC, you want to say Y here.
-+
- config INGENIC_TCU_CLK
- 	bool "Ingenic JZ47xx TCU clocks driver"
- 	default MACH_INGENIC
-diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
-index 8b1dad9b74a7..aaa4bffe03c6 100644
---- a/drivers/clk/ingenic/Makefile
-+++ b/drivers/clk/ingenic/Makefile
-@@ -5,4 +5,5 @@ obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+= jz4725b-cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4770)	+= jz4770-cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4780)	+= jz4780-cgu.o
- obj-$(CONFIG_INGENIC_CGU_X1000)		+= x1000-cgu.o
-+obj-$(CONFIG_INGENIC_CGU_X1830)		+= x1830-cgu.o
- obj-$(CONFIG_INGENIC_TCU_CLK)		+= tcu.o
-diff --git a/drivers/clk/ingenic/x1830-cgu.c b/drivers/clk/ingenic/x1830-cgu.c
-new file mode 100644
-index 000000000000..29a637f4a2cc
---- /dev/null
-+++ b/drivers/clk/ingenic/x1830-cgu.c
-@@ -0,0 +1,443 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * X1830 SoC CGU driver
-+ * Copyright (c) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/of.h>
-+
-+#include <dt-bindings/clock/x1830-cgu.h>
-+
-+#include "cgu.h"
-+#include "pm.h"
-+
-+/* CGU register offsets */
-+#define CGU_REG_CPCCR		0x00
-+#define CGU_REG_CPPCR		0x0c
-+#define CGU_REG_APLL		0x10
-+#define CGU_REG_MPLL		0x14
-+#define CGU_REG_CLKGR0		0x20
-+#define CGU_REG_OPCR		0x24
-+#define CGU_REG_CLKGR1		0x28
-+#define CGU_REG_DDRCDR		0x2c
-+#define CGU_REG_USBPCR		0x3c
-+#define CGU_REG_USBRDT		0x40
-+#define CGU_REG_USBVBFIL	0x44
-+#define CGU_REG_USBPCR1		0x48
-+#define CGU_REG_MACCDR		0x54
-+#define CGU_REG_EPLL		0x58
-+#define CGU_REG_I2SCDR		0x60
-+#define CGU_REG_LPCDR		0x64
-+#define CGU_REG_MSC0CDR		0x68
-+#define CGU_REG_I2SCDR1		0x70
-+#define CGU_REG_SSICDR		0x74
-+#define CGU_REG_CIMCDR		0x7c
-+#define CGU_REG_MSC1CDR		0xa4
-+#define CGU_REG_CMP_INTR	0xb0
-+#define CGU_REG_CMP_INTRE	0xb4
-+#define CGU_REG_DRCG		0xd0
-+#define CGU_REG_CPCSR		0xd4
-+#define CGU_REG_VPLL		0xe0
-+#define CGU_REG_MACPHYC		0xe8
-+
-+/* bits within the OPCR register */
-+#define OPCR_GATE_USBPHYCLK	BIT(23)
-+#define OPCR_SPENDN0		BIT(7)
-+#define OPCR_SPENDN1		BIT(6)
-+
-+/* bits within the USBPCR register */
-+#define USBPCR_SIDDQ		BIT(21)
-+#define USBPCR_OTG_DISABLE	BIT(20)
-+
-+static struct ingenic_cgu *cgu;
-+
-+static int x1830_usb_phy_enable(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
-+
-+	writel((readl(reg_opcr) | OPCR_SPENDN0) & ~OPCR_GATE_USBPHYCLK, reg_opcr);
-+	writel(readl(reg_usbpcr) & ~USBPCR_OTG_DISABLE & ~USBPCR_SIDDQ, reg_usbpcr);
-+	return 0;
-+}
-+
-+static void x1830_usb_phy_disable(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
-+
-+	writel((readl(reg_opcr) & ~OPCR_SPENDN0) | OPCR_GATE_USBPHYCLK, reg_opcr);
-+	writel(readl(reg_usbpcr) | USBPCR_OTG_DISABLE | USBPCR_SIDDQ, reg_usbpcr);
-+}
-+
-+static int x1830_usb_phy_is_enabled(struct clk_hw *hw)
-+{
-+	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-+	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
-+
-+	return (readl(reg_opcr) & OPCR_SPENDN0) &&
-+		!(readl(reg_usbpcr) & USBPCR_SIDDQ) &&
-+		!(readl(reg_usbpcr) & USBPCR_OTG_DISABLE);
-+}
-+
-+static const struct clk_ops x1830_otg_phy_ops = {
-+	.enable		= x1830_usb_phy_enable,
-+	.disable	= x1830_usb_phy_disable,
-+	.is_enabled	= x1830_usb_phy_is_enabled,
-+};
-+
-+static const s8 pll_od_encoding[64] = {
-+	0x0, 0x1,  -1, 0x2,  -1,  -1,  -1, 0x3,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x4,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x5,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x6,
-+};
-+
-+static const struct ingenic_cgu_clk_info x1830_cgu_clocks[] = {
-+
-+	/* External clocks */
-+
-+	[X1830_CLK_EXCLK] = { "ext", CGU_CLK_EXT },
-+	[X1830_CLK_RTCLK] = { "rtc", CGU_CLK_EXT },
-+
-+	/* PLLs */
-+
-+	[X1830_CLK_APLL] = {
-+		"apll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.reg = CGU_REG_APLL,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.bypass_bit = 30,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_MPLL] = {
-+		"mpll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.reg = CGU_REG_MPLL,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.bypass_bit = 28,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_EPLL] = {
-+		"epll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.reg = CGU_REG_EPLL,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.bypass_bit = 24,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_VPLL] = {
-+		"vpll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.reg = CGU_REG_VPLL,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.bypass_bit = 26,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	/* Custom (SoC-specific) OTG PHY */
-+
-+	[X1830_CLK_OTGPHY] = {
-+		"otg_phy", CGU_CLK_CUSTOM,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.custom = { &x1830_otg_phy_ops },
-+	},
-+
-+	/* Muxes & dividers */
-+
-+	[X1830_CLK_SCLKA] = {
-+		"sclk_a", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_EXCLK, X1830_CLK_APLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 30, 2 },
-+	},
-+
-+	[X1830_CLK_CPUMUX] = {
-+		"cpu_mux", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 28, 2 },
-+	},
-+
-+	[X1830_CLK_CPU] = {
-+		"cpu", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
-+		.gate = { CGU_REG_CLKGR1, 15 },
-+	},
-+
-+	[X1830_CLK_L2CACHE] = {
-+		"l2cache", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[X1830_CLK_AHB0] = {
-+		"ahb0", CGU_CLK_MUX | CGU_CLK_DIV,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 26, 2 },
-+		.div = { CGU_REG_CPCCR, 8, 1, 4, 21, -1, -1 },
-+	},
-+
-+	[X1830_CLK_AHB2PMUX] = {
-+		"ahb2_apb_mux", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 24, 2 },
-+	},
-+
-+	[X1830_CLK_AHB2] = {
-+		"ahb2", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 12, 1, 4, 20, -1, -1 },
-+	},
-+
-+	[X1830_CLK_PCLK] = {
-+		"pclk", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
-+		.gate = { CGU_REG_CLKGR1, 14 },
-+	},
-+
-+	[X1830_CLK_DDR] = {
-+		"ddr", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_DDRCDR, 30, 2 },
-+		.div = { CGU_REG_DDRCDR, 0, 1, 4, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 31 },
-+	},
-+
-+	[X1830_CLK_MAC] = {
-+		"mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_MACCDR, 30, 2 },
-+		.div = { CGU_REG_MACCDR, 0, 1, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR1, 4 },
-+	},
-+
-+	[X1830_CLK_LCD] = {
-+		"lcd", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_LPCDR, 30, 2 },
-+		.div = { CGU_REG_LPCDR, 0, 1, 8, 28, 27, 26 },
-+		.gate = { CGU_REG_CLKGR1, 9 },
-+	},
-+
-+	[X1830_CLK_MSCMUX] = {
-+		"msc_mux", CGU_CLK_MUX,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_MSC0CDR, 30, 2 },
-+	},
-+
-+	[X1830_CLK_MSC0] = {
-+		"msc0", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
-+		.div = { CGU_REG_MSC0CDR, 0, 2, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 4 },
-+	},
-+
-+	[X1830_CLK_MSC1] = {
-+		"msc1", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
-+		.div = { CGU_REG_MSC1CDR, 0, 2, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 5 },
-+	},
-+
-+	[X1830_CLK_SSIPLL] = {
-+		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_SSICDR, 30, 2 },
-+		.div = { CGU_REG_SSICDR, 0, 1, 8, 28, 27, 26 },
-+	},
-+
-+	[X1830_CLK_SSIPLL_DIV2] = {
-+		"ssi_pll_div2", CGU_CLK_FIXDIV,
-+		.parents = { X1830_CLK_SSIPLL },
-+		.fixdiv = { 2 },
-+	},
-+
-+	[X1830_CLK_SSIMUX] = {
-+		"ssi_mux", CGU_CLK_MUX,
-+		.parents = { X1830_CLK_EXCLK, X1830_CLK_SSIPLL_DIV2, -1, -1 },
-+		.mux = { CGU_REG_SSICDR, 29, 1 },
-+	},
-+
-+	/* Gate-only clocks */
-+
-+	[X1830_CLK_EMC] = {
-+		"emc", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_AHB2, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 0 },
-+	},
-+
-+	[X1830_CLK_EFUSE] = {
-+		"efuse", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_AHB2, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 1 },
-+	},
-+
-+	[X1830_CLK_OTG] = {
-+		"otg", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 3 },
-+	},
-+
-+	[X1830_CLK_SSI0] = {
-+		"ssi0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 6 },
-+	},
-+
-+	[X1830_CLK_SMB0] = {
-+		"smb0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 7 },
-+	},
-+
-+	[X1830_CLK_SMB1] = {
-+		"smb1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 8 },
-+	},
-+
-+	[X1830_CLK_SMB2] = {
-+		"smb2", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 9 },
-+	},
-+
-+	[X1830_CLK_UART0] = {
-+		"uart0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 14 },
-+	},
-+
-+	[X1830_CLK_UART1] = {
-+		"uart1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 15 },
-+	},
-+
-+	[X1830_CLK_SSI1] = {
-+		"ssi1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 19 },
-+	},
-+
-+	[X1830_CLK_SFC] = {
-+		"sfc", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIPLL, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 20 },
-+	},
-+
-+	[X1830_CLK_PDMA] = {
-+		"pdma", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 21 },
-+	},
-+
-+	[X1830_CLK_TCU] = {
-+		"tcu", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 30 },
-+	},
-+
-+	[X1830_CLK_DTRNG] = {
-+		"dtrng", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR1, 1 },
-+	},
-+
-+	[X1830_CLK_OST] = {
-+		"ost", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR1, 11 },
-+	},
-+};
-+
-+static void __init x1830_cgu_init(struct device_node *np)
-+{
-+	int retval;
-+
-+	cgu = ingenic_cgu_new(x1830_cgu_clocks,
-+			      ARRAY_SIZE(x1830_cgu_clocks), np);
-+	if (!cgu) {
-+		pr_err("%s: failed to initialise CGU\n", __func__);
-+		return;
-+	}
-+
-+	retval = ingenic_cgu_register_clocks(cgu);
-+	if (retval) {
-+		pr_err("%s: failed to register CGU Clocks\n", __func__);
-+		return;
-+	}
-+
-+	ingenic_cgu_register_syscore_ops(cgu);
-+}
-+CLK_OF_DECLARE_DRIVER(x1830_cgu, "ingenic,x1830-cgu", x1830_cgu_init);
--- 
-2.11.0
-
+VGhpcyB2MTAgcGF0Y2ggYWRkcyBzdXBwb3J0IGZvciB0aGUgTWljcm9jaGlwIFBDSWUgUG9sYXJG
+aXJlIFBDSWUNCmNvbnRyb2xsZXIgd2hlbiBjb25maWd1cmVkIGluIGhvc3QgKFJvb3QgQ29tcGxl
+eCkgbW9kZS4NCg0KVXBkYXRlcyBzaW5jZSB2OToNCiogQWRqdXN0ZWQgY29tbWl0IGxvZ3MNCiog
+bWFrZSBkdF9iaW5kaW5nc19jaGVjayBub3cgcGFzc2VzDQoNClVwZGF0ZXMgc2luY2Ugdjg6DQoq
+IFJlZmFjdG9yZWQgYXMgcGVyIFJvYiBIZXJyaW5nJ3MgY29tbWVudHM6DQogIC0gYmluZGluZ3Mg
+aW4gc2NoZW1hIGZvcm1hdA0KICAtIEFkanVzdGVkIGxpY2VuY2UgdG8gR1BMdjIuMA0KICAtIFJl
+ZmFjdG9yZWQgYWNjZXNzIHRvIGNvbmZpZyBzcGFjZSBiZXR3ZWVuIGRyaXZlciBhbmQgY29tbW9u
+IGVDQU0gY29kZQ0KICAtIEFkb3B0ZWQgcGNpX2hvc3RfcHJvYmUoKQ0KICAtIE1pc2NlbGxhbm91
+cyBvdGhlciBpbXByb3ZlbWVudHMNCg0KVXBkYXRlcyBzaW5jZSB2NzoNCiogQnVpbGQgZm9yIDY0
+Yml0IFJJU0NWIGFyY2hpdGVjdHVyZSBvbmx5DQoNClVwZGF0ZXMgc2luY2UgdjY6DQoqIFJlZmFj
+dG9yZWQgdG8gdXNlIGNvbW1vbiBlQ0FNIGRyaXZlcg0KKiBVcGRhdGVkIHRvIENPTkZJR19QQ0lF
+X01JQ1JPQ0hJUF9IT1NUIGV0Yw0KKiBGb3JtYXR0aW5nIGltcHJvdmVtZW50cw0KKiBSZW1vdmVk
+IGNvZGUgZm9yIHNlbGVjdGlvbiBiZXR3ZWVuIGJyaWRnZSAwIGFuZCAxDQoNClVwZGF0ZXMgc2lu
+Y2UgdjU6DQoqIEZpeGVkIEtjb25maWcgdHlwbyBub3RlZCBieSBSYW5keSBEdW5sYXANCiogVXBk
+YXRlZCB3aXRoIGNvbW1lbnRzIGZyb20gQmpvcm4gSGVsZ2Fhcw0KDQpVcGRhdGVzIHNpbmNlIHY0
+Og0KKiBGaXggY29tcGlsZSBpc3N1ZXMuDQoNClVwZGF0ZXMgc2luY2UgdjM6DQoqIFVwZGF0ZSBh
+bGwgcmVmZXJlbmNlcyB0byBNaWNyb3NlbWkgdG8gTWljcm9jaGlwDQoqIFNlcGFyYXRlIE1TSSBm
+dW5jdGlvbmFsaXR5IGZyb20gbGVnYWN5IFBDSWUgaW50ZXJydXB0IGhhbmRsaW5nIGZ1bmN0aW9u
+YWxpdHkNCg0KVXBkYXRlcyBzaW5jZSB2MjoNCiogU3BsaXQgb3V0IERUIGJpbmRpbmdzIGFuZCBW
+ZW5kb3IgSUQgdXBkYXRlcyBpbnRvIHRoZWlyIG93biBwYXRjaA0KICBmcm9tIFBDSWUgZHJpdmVy
+Lg0KKiBVcGRhdGVkIENoYW5nZSBMb2cNCg0KVXBkYXRlcyBzaW5jZSB2MToNCiogSW5jb3Jwb3Jh
+dGUgZmVlZGJhY2sgZnJvbSBCam9ybiBIZWxnYWFzDQoNCkRhaXJlIE1jTmFtYXJhICgyKToNCiAg
+UENJOiBtaWNyb2NoaXA6IEFkZCBob3N0IGRyaXZlciBmb3IgTWljcm9jaGlwIFBDSWUgY29udHJv
+bGxlcg0KICBQQ0k6IG1pY3JvY2hpcDogQWRkIGhvc3QgZHJpdmVyIGZvciBNaWNyb2NoaXAgUENJ
+ZSBjb250cm9sbGVyDQoNCiAuLi4vYmluZGluZ3MvcGNpL21pY3JvY2hpcCxwY2llLWhvc3QueWFt
+bCAgICAgfCAgOTMgKysrDQogZHJpdmVycy9wY2kvY29udHJvbGxlci9LY29uZmlnICAgICAgICAg
+ICAgICAgIHwgICA5ICsNCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL01ha2VmaWxlICAgICAgICAg
+ICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1taWNyb2NoaXAtaG9z
+dC5jICB8IDY2NCArKysrKysrKysrKysrKysrKysNCiA0IGZpbGVzIGNoYW5nZWQsIDc2NyBpbnNl
+cnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9wY2kvbWljcm9jaGlwLHBjaWUtaG9zdC55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1taWNyb2NoaXAtaG9zdC5jDQoNCg0KYmFzZS1j
+b21taXQ6IGMwY2MyNzExNzNiMmUxYzJkOGQwY2VhZWYxNGU0ZGZhNzllZWZjMGQNCi0tIA0KMi4x
+Ny4xDQoNCg==
