@@ -2,161 +2,102 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91DEC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 11:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51881C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 11:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88BF12084C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 11:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACE32053B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 11:22:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VmvcfV+w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M/bNMMik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388837AbgEZLEq (ORCPT
+        id S1726618AbgEZLWa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 07:04:46 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:48277 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388999AbgEZLEq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 07:04:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590491085; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=SKBdhs63Zp2CNDzdiohqN/c3xb5urkHJTxlo1SdluWA=; b=VmvcfV+w2UFlOhZKMY6i3W/t7qnb61gBsnKC3HBAfBZjP19eOkq/FrPV1lTEDSP/84dH/c4f
- cryxSprXaL6oegMeLb3r7/gzE+F5IlFFdTrCI5f4u+kwhyeVtX875McOtDHKhOI3SBMDzZTC
- jPVouq+4XVqY4dIYr/eF4pduhxE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5eccf7b03131442d95951718 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 11:04:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7D019C43395; Tue, 26 May 2020 11:04:15 +0000 (UTC)
-Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9663FC433C6;
-        Tue, 26 May 2020 11:04:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9663FC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
- <878shu4uwk.fsf@kernel.org> <875zcy4uuj.fsf@kernel.org>
- <20200514171352.GP4525@google.com>
- <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org> <87tv0h3fpv.fsf@kernel.org>
- <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org> <87r1vl3e42.fsf@kernel.org>
- <20200518183512.GE2165@builder.lan>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <b20775ba-7870-b0ca-7c65-d72a08fdacb2@codeaurora.org>
-Date:   Tue, 26 May 2020 16:34:06 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 26 May 2020 07:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgEZLWa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 07:22:30 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A357C03E97E
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 04:22:30 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v16so24028548ljc.8
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 04:22:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zJxI8q9GaxwusSxiN1TRl1t50DLCSayUphT+bXOuVqA=;
+        b=M/bNMMikN5rlMrwQqf4wuwwbofYB2P7B1TVibatvt8DV12qC0t3WfTLDIKYPPVaVAr
+         A/f3VdlkZ0uoLoIgysMyIpfF1UG/ANS6qt1mUuG29T5Cl6mAeNoOyvzUKOdJJ8uA7giL
+         qD7sfjXYbwg4iSJN5ZIRmUBWa2wlbl+Ugvxjeg5ss11qHAsmn25CwI7z6ncTNoh9NJiX
+         0sxAbxzSMgfnDrVk5m4SNa5jHt3jgGyiccSWLvURNhA4j4SyZORWhck4vjMgfFGv2a5b
+         rPWOMAmALGAVvuNt8rbuXWXGHACZGW4c1S+jz+mgm5NHSXQm2562P12Dnu85ptTxZS39
+         9eag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zJxI8q9GaxwusSxiN1TRl1t50DLCSayUphT+bXOuVqA=;
+        b=AaW91ahP/+9Ffbu6BaNf3AwzAKZbT6uElVLmvmrp0WGj2rdQ8BCQvZglymLmO89ncA
+         LoQozNt8vjgTnR46BHSthD8B2JyHIk0csPik7Lay4o6ySOBKzAjtl3JpLJqbWzPycl0Y
+         3iMotFs7wu8bI872oDOrcJ0D2yyHlpqQpbzJFwDYnZzldQlqwCh/hKEhRH2xAm00uIkH
+         bCYZ+KReprfwG0aJAY7AVOeqYZFdkm4XH1gcFjFV7q9tiikQPIjte5FmvNoBa/ykrwDW
+         gM0MsNbC2r622Y7KnS4nbbMH5e1GK9fP+Bc+Y4qu7rIVBi5zyScNI9tMy26VXMBbPM+q
+         Kppg==
+X-Gm-Message-State: AOAM530ijsn1JTxEjaLAoLcuJcNFj8VU3bclf3JFZ+G4aTrnfHHBJ/Ry
+        Oqg7TDGPrP/TUF6X9PvQKjoIvf9nh8V58jBSKMXjIA==
+X-Google-Smtp-Source: ABdhPJzdhwywLZUu1iioOyV4RjM5M1Epk+nZBmMIV652Jit18mFH9boEqTDc5xdPxLb/F7xuG/+hRyaxUu9GK3c0+oc=
+X-Received: by 2002:a2e:711c:: with SMTP id m28mr384158ljc.104.1590492148520;
+ Tue, 26 May 2020 04:22:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200518183512.GE2165@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200513212451.1919013-1-megous@megous.com> <20200513212451.1919013-3-megous@megous.com>
+In-Reply-To: <20200513212451.1919013-3-megous@megous.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 26 May 2020 13:22:17 +0200
+Message-ID: <CACRpkdbb0Y32EG=tEx208eUh_CJndvnQGQvAnF_mG29Hd9-2Jg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: panel: Add binding for Xingbangda
+ XBD599 panel
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Felipe,
+On Wed, May 13, 2020 at 11:24 PM Ondrej Jirman <megous@megous.com> wrote:
 
-Please let me know how to go forward with this patch
-
-Regards
-
-Sandeep
-
-On 5/19/2020 12:05 AM, Bjorn Andersson wrote:
-> On Thu 14 May 23:29 PDT 2020, Felipe Balbi wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
 >
->> Hi,
->>
->> Georgi Djakov <georgi.djakov@linaro.org> writes:
->>>>>>>> Sandeep Maheswaram <sanm@codeaurora.org> writes:
->>>>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
->>>>>>>>> +{
->>>>>>>>> +	struct device *dev = qcom->dev;
->>>>>>>>> +	int ret;
->>>>>>>>> +
->>>>>>>>> +	if (!device_is_bound(&qcom->dwc3->dev))
->>>>>>>>> +		return -EPROBE_DEFER;
->>>>>>>> this breaks allmodconfig. I'm dropping this series from my queue for
->>>>>>>> this merge window.
->>>>>>> Sorry, I meant this patch ;-)
->>>>>> I guess that's due to INTERCONNECT being a module. There is currently a
->>>>> I believe it's because of this:
->>>>> ERROR: modpost: "device_is_bound" [drivers/usb/dwc3/dwc3-qcom.ko] undefined!
->>>>>
->>>>>> discussion about this  with Viresh and Georgi in response to another
->>>>>> automated build failure. Viresh suggests changing CONFIG_INTERCONNECT
->>>>>> from tristate to bool, which seems sensible to me given that interconnect
->>>>>> is a core subsystem.
->>>>> The problem you are talking about would arise when INTERCONNECT=m and
->>>>> USB_DWC3_QCOM=y and it definitely exists here and could be triggered with
->>>>> randconfig build. So i suggest to squash also the diff below.
->>>>>
->>>>> Thanks,
->>>>> Georgi
->>>>>
->>>>> ---8<---
->>>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
->>>>> index 206caa0ea1c6..6661788b1a76 100644
->>>>> --- a/drivers/usb/dwc3/Kconfig
->>>>> +++ b/drivers/usb/dwc3/Kconfig
->>>>> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
->>>>>   	tristate "Qualcomm Platform"
->>>>>   	depends on ARCH_QCOM || COMPILE_TEST
->>>>>   	depends on EXTCON || !EXTCON
->>>>> +	depends on INTERCONNECT || !INTERCONNECT
->>>> I would prefer to see a patch adding EXPORT_SYMBOL_GPL() to device_is_bound()
->>> Agree, but just to clarify, that these are two separate issues that need to
->>> be fixed. The device_is_bound() is the first one and USB_DWC3_QCOM=y combined
->>> with INTERCONNECT=m is the second one.
->> If INTERCONNECT=m, QCOM3 shouldn't be y. I think the following is
->> enough:
->>
->> 	depends on INTERCONNECT=y || INTERCONNECT=USB_DWC3_QCOM
->>
-> This misses the case where INTERCONNECT=n and USB_DWC3_QCOM=[ym] which
-> I don't see a reason for breaking.
+> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel. It is based on
+> Sitronix ST7703 LCD controller.
 >
-> But if only INTERCONNECT where a bool, then we don't need to specify a
-> depends on, because it will either be there, or the stubs will.
-> We've come to this conclusion in a lot of different frameworks and I
-> don't see why we should do this differently with INTERCONNECT.
+> Add its device tree binding.
 >
-> Regards,
-> Bjorn
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
