@@ -2,200 +2,116 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBC1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 16:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C49C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 16:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3907620787
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 16:05:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="hHB73bWG"
+	by mail.kernel.org (Postfix) with ESMTP id 4569F20776
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 16:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590509359;
+	bh=o7X0LsAaef0eoYFS70zUdJBxKV3nil2kjKPUkH9WY1o=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=DzvqKrRqlq/bgKrC675kY3bie+mn7RacHW9FiCiR5IG9F6b5o0oVoFyNryPqlI3O2
+	 vvMhkUlPOMbSkwwc4pA7v5/sZHdtky07kt68sJkXj6kE37KlzoE5Kjw3NwVLoKfudl
+	 U11OlCWjnykuIzFRwwSNCkDwJzDY6+ko4LzubUo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgEZQFx (ORCPT
+        id S2388476AbgEZQJS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 12:05:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgEZQFv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 12:05:51 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E30D2C03E96E
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 09:05:49 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q11so8797637wrp.3
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 09:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7cPMOzmzrq5LcaA6afOlcnUvTlySbm2Zz5cRjRBFUB8=;
-        b=hHB73bWGgQwTTVf8pYNmpNnooECAKXvA6l40jbW1uF1ZgSFspa4p5HEpzKOEmq5d20
-         MbKb6r6mfL/O1NX8CgiiI9OI5qA9kXXUDrCA5TEtqQxuTV72NYqO6Z+iZYc/LUaJ2guQ
-         v2/vgZVeEE5aloi0hzrlkeL0Mtu4rXHaBHDfm+P9FDl4IaBu1UlfIYP3ZH9KphTe2l0I
-         l9f+H/yPg5k4Vhe9e0O5WU60ouZHRKLTzP3DmRQX7+vEVJI9CODui4DnmyDQGWvgRv/z
-         BcWuO1KOXDQVFhhLDcTzU6ENEm3Bm3mo5s/exOQOZ/Qh68+Ka+fCJDgekxM4EdjrADko
-         IIHQ==
+        Tue, 26 May 2020 12:09:18 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45641 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388373AbgEZQJS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 12:09:18 -0400
+Received: by mail-il1-f193.google.com with SMTP id 9so2502948ilg.12;
+        Tue, 26 May 2020 09:09:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7cPMOzmzrq5LcaA6afOlcnUvTlySbm2Zz5cRjRBFUB8=;
-        b=ig85rqA9iNljbe0otCr3GHRVHB5XITFsjk+3gKl9CgkBY8Mx+4NRAcWT/neGk02lVf
-         ZvjqENRAq3oiNuRokl93FGyj7P5mZT2ysNLPtkJ9oV7vJxGukQeR57GoCoZFJfdGSd+0
-         0wxUufKSUU7xQkMxbCjefFTLpDIodm+7JAiv6rN9jPS/lQswIuMXbWoql5xo3ML71MiA
-         RyZot5doLZvG5vjFzVdQKRd6gHFs2DtoQ9D3jbk55afsYA0hQpVZyS3oAfMz8NMqfRhv
-         I8lzrSTwd6RiacpQ7Z7JtWZnorGubYUDOmbw76jwNg3uxoxYC0uIMsrpqpCXy8nQeNtc
-         w6Ew==
-X-Gm-Message-State: AOAM5301xhQhkG4oGsumlRLDItEa9P/iyy4xFJ44Aah4fYyq+XgUJCXU
-        laRabRq8sRCnFjAAKb2B0D0VKIy57McJQswFLslBaw==
-X-Google-Smtp-Source: ABdhPJzbNZzcmv/E+mCoy9/ugd+2hWuRWbmHIetsobYOKHTzpGICK6/mhGNbuGycrtPlxefT05gv7k8iaVD6IUq7zHc=
-X-Received: by 2002:a5d:500d:: with SMTP id e13mr12590422wrt.150.1590509148646;
- Tue, 26 May 2020 09:05:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c24TAX9eZkc7nqjyxn5z29SNHBuSwFKeXoaN8/HMgWM=;
+        b=BOKcq9MVzpqsRNqbPPEpOGRiKL2QlTuH0xPCM7yIqK/63A0Gg6NE5fJqnC58CTg2Pq
+         nakFyPPNOoFlyfS9OEPTSO5ahPaJc+gtM7xu44+YRLZukyqz22MHB/taSOlF2u7o7r3/
+         EmsaJb28exzyWgstLl7AdvCqsS14V2Mx9OzCjJd2aEQ83KDjjbpD3tk0VhVzsm5zTPCx
+         8YUJ6PbZmVgBRvfg++3mY7zcaRwsXhP2/3D2iXnEZ14QcKDO+UMj5xeK83fc9mqmGy3u
+         2vaJyOFx9dd42TEL1dPM1w4mOv8MwbVdgGw/tHdzQzFi0j5I0TQFxKV9cCWFFHJQpKEM
+         bxxA==
+X-Gm-Message-State: AOAM530Xul+I/5NE35zMpY2amYIs73HDA/dFwTDzlO3+Vb9rbXMTXMuD
+        uX7Gdd+gsD4zH70rk/T3nw==
+X-Google-Smtp-Source: ABdhPJxwr3dqawH8+SWnEPm4Q2+Tuopm79dpOC3bN7jhQKABwVvB5cM1bK2uK6nYRp1kjDtiZ6fg5w==
+X-Received: by 2002:a92:d6cc:: with SMTP id z12mr1742481ilp.179.1590509357261;
+        Tue, 26 May 2020 09:09:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id w26sm221173ill.19.2020.05.26.09.09.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 09:09:16 -0700 (PDT)
+Received: (nullmailer pid 4042318 invoked by uid 1000);
+        Tue, 26 May 2020 16:09:15 -0000
+Date:   Tue, 26 May 2020 10:09:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+List-Id: <soc.lore.kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mips@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>, soc@kernel.org,
+        Paul Burton <paulburton@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/6] dt-bindings: memory: Add Baikal-T1 L2-cache
+ Control Block binding
+Message-ID: <20200526160915.GA4042264@bogus>
+References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526125928.17096-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200524192505.20682-1-andrey.konovalov@linaro.org> <20200524192505.20682-8-andrey.konovalov@linaro.org>
-In-Reply-To: <20200524192505.20682-8-andrey.konovalov@linaro.org>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 26 May 2020 17:05:31 +0100
-Message-ID: <CAPY8ntAW+yfxw0NTDi3yEwoZ+AqUuXD__pqB977bXgJr=jnNXg@mail.gmail.com>
-Subject: Re: [PATCH v3 07/10] media: i2c: imx290: Add RAW12 mode support
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        manivannan.sadhasivam@linaro.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, Peter Griffin <peter.griffin@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526125928.17096-4-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrey
-
-Thanks for the patch.
-
-On Sun, 24 May 2020 at 20:26, Andrey Konovalov
-<andrey.konovalov@linaro.org> wrote:
->
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
-> 12 bit formats. Since the driver already supports RAW10 mode, let's add
-> the missing RAW12 mode as well.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+On Tue, 26 May 2020 15:59:25 +0300, Serge Semin wrote:
+> There is a single register provided by the SoC system controller,
+> which can be used to tune the L2-cache RAM up. It only provides a way
+> to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
+> compatible string the device node can be optionally equipped with the
+> properties of Tag/Data/WS latencies.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Olof Johansson <olof@lixom.net>
+> Cc: linux-mips@vger.kernel.org
+> Cc: soc@kernel.org
+> 
 > ---
->  drivers/media/i2c/imx290.c | 36 +++++++++++++++++++++++++++++++++---
->  1 file changed, 33 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index 162c345fffac..6e70ff22bc5f 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -71,6 +71,7 @@ struct imx290 {
->         struct clk *xclk;
->         struct regmap *regmap;
->         u8 nlanes;
-> +       u8 bpp;
->
->         struct v4l2_subdev sd;
->         struct v4l2_fwnode_endpoint ep;
-> @@ -90,10 +91,12 @@ struct imx290 {
->
->  struct imx290_pixfmt {
->         u32 code;
-> +       u8 bpp;
->  };
->
->  static const struct imx290_pixfmt imx290_formats[] = {
-> -       { MEDIA_BUS_FMT_SRGGB10_1X10 },
-> +       { MEDIA_BUS_FMT_SRGGB10_1X10, 10 },
-> +       { MEDIA_BUS_FMT_SRGGB12_1X12, 12 },
->  };
->
->  static const struct regmap_config imx290_regmap_config = {
-> @@ -261,6 +264,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
->         { 0x300b, 0x00},
->  };
->
-> +static const struct imx290_regval imx290_12bit_settings[] = {
-> +       { 0x3005, 0x01 },
-> +       { 0x3046, 0x01 },
-> +       { 0x3129, 0x00 },
-> +       { 0x317c, 0x00 },
-> +       { 0x31ec, 0x0e },
-> +       { 0x3441, 0x0c },
-> +       { 0x3442, 0x0c },
-> +       { 0x300a, 0xf0 },
-> +       { 0x300b, 0x00 },
-> +};
-> +
->  /* supported link frequencies */
->  static const s64 imx290_link_freq_2lanes[] = {
->         891000000, /* 1920x1080 -  2 lane */
-> @@ -421,7 +436,12 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
->                 } else {
->                         imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
->                         msleep(10);
-> -                       imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
-> +                       if (imx290->bpp == 10)
-> +                               imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
-> +                                                0x3c);
-> +                       else /* 12 bits per pixel */
-> +                               imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
-> +                                                0xf0);
->                         imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
->                 }
->                 break;
-> @@ -496,7 +516,7 @@ static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
->         u8 nlanes = imx290->nlanes;
->
->         /* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
-> -       return (link_freq * 2 * nlanes / 10);
-> +       return (link_freq * 2 * nlanes / imx290->bpp);
+> 
+> Changelog v2:
+> - Move driver to the memory subsystem.
+> - Use dual GPL/BSD license.
+> - Use single lined copyright header.
+> - Move "allOf" restrictions to the root level of the properties.
+> - Discard syscon compatible string and reg property.
+> - The DT node is supposed to be a child of the Baikal-T1 system controller
+>   node.
+> 
+> Changelog v3:
+> - Get the reg property back even though the driver is using the parental
+>   syscon regmap.
+> - The DT schema will live separately from the system controller, but the
+>   corresponding sub-node of the later DT schema will $ref this one.
+> - Set non-default latencies in the example.
+> ---
+>  .../memory-controllers/baikal,bt1-l2-ctl.yaml | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+> 
 
-This doesn't link on a 32bit system as it's a 64bit divide:
-ERROR: "__aeabi_ldivmod" [drivers/media/i2c/imx290.ko] undefined!
-It ought to be using do_div().
-
-Admittedly it didn't compile before as you still had a s64 divide by
-10, but I hadn't tried that :-)
-
-  Dave
-
->  }
->
->  static int imx290_set_fmt(struct v4l2_subdev *sd,
-> @@ -533,6 +553,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
->         } else {
->                 format = &imx290->current_format;
->                 imx290->current_mode = mode;
-> +               imx290->bpp = imx290_formats[i].bpp;
->
->                 if (imx290->link_freq)
->                         __v4l2_ctrl_s_ctrl(imx290->link_freq,
-> @@ -577,6 +598,15 @@ static int imx290_write_current_format(struct imx290 *imx290)
->                         return ret;
->                 }
->                 break;
-> +       case MEDIA_BUS_FMT_SRGGB12_1X12:
-> +               ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-> +                                               ARRAY_SIZE(
-> +                                                       imx290_12bit_settings));
-> +               if (ret < 0) {
-> +                       dev_err(imx290->dev, "Could not set format registers\n");
-> +                       return ret;
-> +               }
-> +               break;
->         default:
->                 dev_err(imx290->dev, "Unknown pixel format\n");
->                 return -EINVAL;
-> --
-> 2.17.1
->
+Reviewed-by: Rob Herring <robh@kernel.org>
