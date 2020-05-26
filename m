@@ -2,132 +2,87 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877FEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC56BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB812084C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IPEzv0tC"
+	by mail.kernel.org (Postfix) with ESMTP id A536320721
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:02:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590516166;
+	bh=FpAErRht9TdqgOIKx0JJHVn83d0Hgq6QodrXwgpzNtQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FvhfiBMCTbKYtYeDYwYH4Ne/gMY80uA5+Rg0izmDq2stoCY3DZZPEFt3D3ez13dEp
+	 ek2LTXMtKMOJQrrxmzZKrxO2JuU0K3y8XIKpcONGnI1DGI5pm/de98PBwid83ttJ0z
+	 57Mdhw32Ls2kbbzHi5iRy8cBoDnTPSbK5/ZzWi+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388663AbgEZRyI (ORCPT
+        id S1727822AbgEZSCq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 13:54:08 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39202 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388586AbgEZRyH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:54:07 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHrFmK035070;
-        Tue, 26 May 2020 12:53:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590515595;
-        bh=mTjyA08DkTl9/UxPwDQR7QnPE9aXKDpzBvfiE5znuqQ=;
-        h=From:To:CC:Subject:Date;
-        b=IPEzv0tCFFDQw7n4vfV24DixgLOT2M28LGIPOQM1DWeJ5vM/AzygY1sRE3XlZsPYY
-         oUHugbWKcJlWoLzBXVYswhts2Ai4LtTYW/NaQzm7d4weVrQutaCcIR2iNGDlzC7AuX
-         y6wwY5SBpSnCdr8XUXM9p2BpFTCU0LZ6M5r4AhA0=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QHrFKv094636
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 12:53:15 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 12:52:48 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 12:52:48 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHqmCI095113;
-        Tue, 26 May 2020 12:52:48 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH] ASoC: tlv320adcx140: Fix warnings when using W=1
-Date:   Tue, 26 May 2020 12:52:47 -0500
-Message-ID: <20200526175247.15309-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 26 May 2020 14:02:46 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:33487 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbgEZSCp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:02:45 -0400
+Received: by mail-il1-f195.google.com with SMTP id y17so19209851ilg.0;
+        Tue, 26 May 2020 11:02:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YebaOmD7Ju0D8dp8+Jh6rQ27XVMpKBTe+xY/yyi+R5c=;
+        b=lk3Gh6R/n9kXq4mPiQtOWhE7K/WYgX5w/V64GvoEHFgErUyyDb4XZKqeaQz0Onf9wX
+         DD6Pir329ADffVIxbOCZc93ZB3w00GowVjD/uNu7PjGu9aSYsA0z3hV6qqpusUHPmWdD
+         yqmIjttXyZ6h1WBlwyLy2ZC7qZ45M3TfzBeXRm3M0/WuvBHX0LwsSK8GBegr7NFMA1ng
+         ftzoqnl1tipikjZFEci394/LXqXxS7IdTYRqNzNt7KvMKX8XdHunCEAr/ajPLGAUbsmO
+         uxCGERBv+nEpRnIiuZYysgsVAu43qcl74k0lN3v3Kae6x5/tYCEAM6uy3Fq+DMFOw0pX
+         SNow==
+X-Gm-Message-State: AOAM530fbpDOOiWXDgtmFb0ecTBo7LSToOEnlOWg2CFFIMuEKWNuHucU
+        aAQGEO1RVYLcwrxmWYeMiA==
+X-Google-Smtp-Source: ABdhPJzHpsHTbs1kNcS5W7S2W7j2Tz56qjTVrOe7LVapF32Ul2j79RUmxJxaOWK3AAyJg24lmEWqow==
+X-Received: by 2002:a92:ce8e:: with SMTP id r14mr2366787ilo.265.1590516164859;
+        Tue, 26 May 2020 11:02:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j90sm339624ilg.70.2020.05.26.11.02.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 11:02:44 -0700 (PDT)
+Received: (nullmailer pid 76101 invoked by uid 1000);
+        Tue, 26 May 2020 18:02:43 -0000
+Date:   Tue, 26 May 2020 12:02:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-mediatek@lists.infradead.org,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sascha Hauer <kernel@pengutronix.de>,
+        srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v15 01/11] dt-bindings: mediatek: Add property to mt8183
+ smi-common
+Message-ID: <20200526180243.GA75958@bogus>
+References: <1590051985-29149-1-git-send-email-weiyi.lu@mediatek.com>
+ <1590051985-29149-2-git-send-email-weiyi.lu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590051985-29149-2-git-send-email-weiyi.lu@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix the warnings when using the W=1 compiler flag.
+On Thu, 21 May 2020 17:06:14 +0800, Weiyi Lu wrote:
+> For scpsys driver using regmap based syscon driver API.
+> 
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
+>  .../devicetree/bindings/memory-controllers/mediatek,smi-common.txt      | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-sound/soc/codecs/tlv320adcx140.c: In function ‘adcx140_reset’:
-sound/soc/codecs/tlv320adcx140.c:570:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
-  570 |  int ret = 0;
-      |      ^~~
-
-This was set but only used in case where the reset GPIO is not defined.
-Have the function return the value of ret.
-
-sound/soc/codecs/tlv320adcx140.c: In function ‘adcx140_codec_probe’:
-sound/soc/codecs/tlv320adcx140.c:778:18: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-  778 |  if (bias_source < ADCX140_MIC_BIAS_VAL_VREF ||
-      |                  ^
-sound/soc/codecs/tlv320adcx140.c:789:18: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-  789 |  if (vref_source < ADCX140_MIC_BIAS_VREF_275V ||
-
-This condition will not occur since if the dt property is not set then
-the *_source variable is set to the default value.  So there is no way
-that *_source can be less then 0.  Which is what each #define is set to.
-The code just needs to make sure that the dt property is not out of the
-upper bounds.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- sound/soc/codecs/tlv320adcx140.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 472d759ba8a3..2fe0df3b7550 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -582,7 +582,7 @@ static int adcx140_reset(struct adcx140_priv *adcx140)
- 	/* 8.4.2: wait >= 10 ms after entering sleep mode. */
- 	usleep_range(10000, 100000);
- 
--	return 0;
-+	return ret;
- }
- 
- static int adcx140_hw_params(struct snd_pcm_substream *substream,
-@@ -772,8 +772,7 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
- 	if (ret)
- 		bias_source = ADCX140_MIC_BIAS_VAL_VREF;
- 
--	if (bias_source < ADCX140_MIC_BIAS_VAL_VREF ||
--	    bias_source > ADCX140_MIC_BIAS_VAL_AVDD) {
-+	if (bias_source > ADCX140_MIC_BIAS_VAL_AVDD) {
- 		dev_err(adcx140->dev, "Mic Bias source value is invalid\n");
- 		return -EINVAL;
- 	}
-@@ -783,8 +782,7 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
- 	if (ret)
- 		vref_source = ADCX140_MIC_BIAS_VREF_275V;
- 
--	if (vref_source < ADCX140_MIC_BIAS_VREF_275V ||
--	    vref_source > ADCX140_MIC_BIAS_VREF_1375V) {
-+	if (vref_source > ADCX140_MIC_BIAS_VREF_1375V) {
- 		dev_err(adcx140->dev, "Mic Bias source value is invalid\n");
- 		return -EINVAL;
- 	}
--- 
-2.26.2
-
+Acked-by: Rob Herring <robh@kernel.org>
