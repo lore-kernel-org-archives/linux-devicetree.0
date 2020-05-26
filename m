@@ -2,114 +2,144 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56C0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E01C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFFC420849
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D78720704
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 17:36:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwgYEdJD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BkNpRVV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388499AbgEZRLt (ORCPT
+        id S2389442AbgEZRgS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 13:11:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43720 "EHLO
+        Tue, 26 May 2020 13:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388373AbgEZRLs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:11:48 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE798C03E96D;
-        Tue, 26 May 2020 10:11:48 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id r16so989557qvm.6;
-        Tue, 26 May 2020 10:11:48 -0700 (PDT)
+        with ESMTP id S2389451AbgEZRgR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 13:36:17 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0803C03E96F
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 10:36:16 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id i17so451718pli.13
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 10:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KYV7/EJY8skNu4Mtq/Qn2Agcp3CmHlLCDVh2doozBEU=;
-        b=JwgYEdJDQ/uIIcFwlKyXpzLsjqIz68AIdnPC+fopKjr0+O03ByCELarQloCi43hpXw
-         T4skqKg491ay9e6Ss90HK8Nz8iwTozfzoENWKGmYFDzw8/JWdLzNv1vEsPiVjQ5qm48p
-         gfP0L+3lFoFd4iP0aXgBGAbGM/06liMiMW5owj4yBX4gfq7ftW7MFTX5b2NCj2FqUeIl
-         d8tuenFc9nl9DDYiZ/WxeT9r5lqJGzNMFuuWMhTIywN0/MriK7DvMMBQnNmj9IMpardx
-         t+pjezF0N0pP9IY1xNd7UadO7Gdj/a58GkbLUZHz1wEteG6Uml7f2TS/1ijuIVzpbux/
-         KmHg==
+         :content-disposition:in-reply-to;
+        bh=Bl//2pYHj3csa8N7S/mTuxuIBaa/b+phWcHwiPQzkOw=;
+        b=BkNpRVV/r0N3GqR1VZDQH7oKI+aSLYpW+DUKMWD8EO9crlNX+d6/gzNWbQUMRCUbrv
+         SvhMa7XoTvfvnOIdJqBGdbQSnBg0Vb2yOi4erDEQqgCj3ifVWq6VHG5GY/0MN1h8Fj7j
+         M3qZRyHRctXoZITEL6GOVvZs5fmtLKWtZikc4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KYV7/EJY8skNu4Mtq/Qn2Agcp3CmHlLCDVh2doozBEU=;
-        b=eEG1ePi+1kyPbcI7Ly1XS3jV28HYKKrZDgBpO63oDGjZMNyoPQKsnoRlSV7sCvQfcA
-         C7mEX+8AbM3eYlgURwpcNXSJqZ0aehrpFRo+O4O6RoO+DjaMwm7MxH3HoFHg4TThIEmo
-         okY/Sl7jPYdOKJeWAdNHQW7QYMJYj7tqpsEoWjklz1sHVnuUm0sfYk8ww6t8KA9GhdPF
-         cVpIhU5/WgrpdFP+Yj21qVxs+IsntGRIen18EME4vBPlImYkLsYkAtSj5jQeu070c9J0
-         JnJZj1JJfNq0VISm02goIL+vB3CQebUpTLmpYCt7G+hPgS4xn0r8v64OqOA45dFwJG8Z
-         EIgw==
-X-Gm-Message-State: AOAM532g691a38DCiMEdhGU3GREaxlI4OOHOcSFzKVkB7N6Vbn/Bw4J2
-        M1Wst5oAfkTT0k3Zm7h9QVU=
-X-Google-Smtp-Source: ABdhPJzEDF5z8a+BdBW6FzpI5b4GVQxMz0KacM8N1MLQOhuXRFKizNhj68n7e7J/KVVH4OHepYffww==
-X-Received: by 2002:ad4:57a2:: with SMTP id g2mr21036833qvx.137.1590513107751;
-        Tue, 26 May 2020 10:11:47 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id x1sm225275qts.63.2020.05.26.10.11.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 May 2020 10:11:46 -0700 (PDT)
-Date:   Tue, 26 May 2020 19:11:37 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 3/5] dt-bindings: iio: magnetometer: ak8975: add gpio
- reset support
-Message-ID: <20200526171137.GA21760@ict14-OptiPlex-980>
-References: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
- <20200525151117.32540-4-jonathan.albrieux@gmail.com>
- <CACRpkdZo4PsC9Y8seMfS33escA6ZVKWwnbW2BCFOKiX2gY8RDw@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bl//2pYHj3csa8N7S/mTuxuIBaa/b+phWcHwiPQzkOw=;
+        b=kBMYmTg3W6h21B0rpU6h/o6l8c80JhESj3ZgCq4Uq4zn8JvO3rXlfxLNn4Gqrh3TYk
+         3qZLVOfwfRf1QFUuSMf/GQ+PEn3Pzdf5XmgXNQ1ckDg1Uk6O22eO6+4O/1ylCJYD+Wyr
+         3sTv1wutLkHc7mxPHqIESRzZbKCXtu16KUlQ/c9uMuiLblT1lWT8B/P1uWrXfpH1vgBp
+         DFpdrNPscSDpGumNe9ZfNDWeU57dy0uUqjU108PwpvwDYEjMCToJI7vH7QxiyEdz4SaV
+         43x80M8NjRJBa2F3TQNiEfoX8MkC7NeHWfckEDRKACBrlli2BpB4PRNSVMpjm+4nXR2P
+         KMXA==
+X-Gm-Message-State: AOAM531u2uwRdd6jZPbzt0IcJrjHaIY7zinvkzsG3GKVqaePXeJLRQ6H
+        xT1kIRtY5FydTM0e5p0Zl1U5uw==
+X-Google-Smtp-Source: ABdhPJyzUgvTne5XzQDrFY8l1KASpKHwXP04J+NhScYWwbDrv+H8LoktzSM90MIjDWKJ7/+vEh9tmg==
+X-Received: by 2002:a17:90a:c78f:: with SMTP id gn15mr335118pjb.103.1590514576158;
+        Tue, 26 May 2020 10:36:16 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id u45sm112166pjb.7.2020.05.26.10.36.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 10:36:15 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:36:13 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        msavaliy@codeaurora.org, evgreen@chromium.org
+Subject: Re: [PATCH V7 6/7] spi: spi-qcom-qspi: Add interconnect support
+Message-ID: <20200526173613.GF4525@google.com>
+References: <1590497690-29035-1-git-send-email-akashast@codeaurora.org>
+ <1590497690-29035-7-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZo4PsC9Y8seMfS33escA6ZVKWwnbW2BCFOKiX2gY8RDw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1590497690-29035-7-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:22:07AM +0200, Linus Walleij wrote:
-> On Mon, May 25, 2020 at 5:13 PM Jonathan Albrieux
-> <jonathan.albrieux@gmail.com> wrote:
+On Tue, May 26, 2020 at 06:24:49PM +0530, Akash Asthana wrote:
+> Get the interconnect paths for QSPI device and vote according to the
+> current bus speed of the driver.
 > 
-> > Add reset-gpio support.
-> >
-> > Without reset's deassertion during ak8975_power_on(), driver's probe fails
-> > on ak8975_who_i_am() while checking for device identity for AK09911 chip.
-> >
-> > AK09911 has an active low reset gpio to handle register's reset.
-> > AK09911 datasheet says that, if not used, reset pin should be connected
-> > to VID. This patch emulates this situation.
-> >
-> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>    path handle
+>  - As per Matthias comment, added error handling for icc_set_bw call
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Changes in V3:
+>  - No Change.
 > 
-> Yours,
-> Linus Walleij
+> Changes in V4:
+>  - As per Mark's comment move peak_bw guess as twice of avg_bw if
+>    nothing mentioned explicitly to ICC core.
+> 
+> Changes in V5:
+>  - Add icc_enable/disable to power on/off call.
+>  - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
+>    from probe so that when resume/icc_enable is called NOC are running at
+>    some non-zero value.
+> 
+> Changes in V6:
+>  - As per Matthias's comment made print statement consistent across driver
+> 
+> Changes in V7:
+>  - As per Matthias's comment removed usage of peak_bw variable because we don't
+>    have explicit peak requirement, we were voting peak = avg and this can be
+>    tracked using single variable for avg bw.
+>  - As per Matthias's comment improved print log.
+> 
+>  drivers/spi/spi-qcom-qspi.c | 57 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 56 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+> index 3c4f83b..092ac27 100644
+> --- a/drivers/spi/spi-qcom-qspi.c
+> +++ b/drivers/spi/spi-qcom-qspi.c
+> @@ -2,6 +2,7 @@
+>  // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
+>  
+>  #include <linux/clk.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> @@ -139,7 +140,9 @@ struct qcom_qspi {
+>  	struct device *dev;
+>  	struct clk_bulk_data *clks;
+>  	struct qspi_xfer xfer;
+> -	/* Lock to protect xfer and IRQ accessed registers */
+> +	struct icc_path *icc_path_cpu_to_qspi;
+> +	unsigned int avg_bw_cpu;
 
-Thank you!!
+I should have noticed this earlier, but the field isn't needed now that
+we have icc_enable/disable(). The bandwidth is set in
+qcom_qspi_transfer_one() and that's it.
 
-Best regards,
-Jonathan Albrieux
+From my side it would be fine to remove the field in a follow up patch,
+to avoid respinning the series yet another time just for this.
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
