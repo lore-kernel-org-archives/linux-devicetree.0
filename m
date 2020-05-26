@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41039C433E5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 12:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A467CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 13:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26938204EF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 12:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E17204EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 13:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389268AbgEZM75 (ORCPT
+        id S2388945AbgEZM75 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 26 May 2020 08:59:57 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57316 "EHLO
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57282 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731776AbgEZM7k (ORCPT
+        with ESMTP id S1726325AbgEZM7k (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 08:59:40 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D6081803086F;
-        Tue, 26 May 2020 12:59:36 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 66961803086B;
+        Tue, 26 May 2020 12:59:35 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9Q_ERQDKo20T; Tue, 26 May 2020 15:59:35 +0300 (MSK)
+        with ESMTP id B2Q0vX5ntY65; Tue, 26 May 2020 15:59:34 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -33,14 +33,15 @@ To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 List-Id: <soc.lore.kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Olof Johansson <olof@lixom.net>, <linux-mips@vger.kernel.org>,
         <soc@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 3/6] dt-bindings: memory: Add Baikal-T1 L2-cache Control Block binding
-Date:   Tue, 26 May 2020 15:59:25 +0300
-Message-ID: <20200526125928.17096-4-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 1/6] dt-bindings: bus: Add Baikal-T1 AXI-bus binding
+Date:   Tue, 26 May 2020 15:59:23 +0300
+Message-ID: <20200526125928.17096-2-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -52,13 +53,19 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is a single register provided by the SoC system controller,
-which can be used to tune the L2-cache RAM up. It only provides a way
-to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
-compatible string the device node can be optionally equipped with the
-properties of Tag/Data/WS latencies.
+AXI3-bus is the main communication bus connecting all high-speed
+peripheral IP-cores with RAM controller and with MIPS P5600 cores on
+Baikal-T1 SoC. This binding describes the DW AMBA 3 AXI Inteconnect
+and Errors Handler Block synthesized on top of it, which are
+responsible for the AXI-bus traffic arbitration and errors reporting
+upstream to CPU. Baikal-T1 AXI-bus DT node is supposed to be compatible
+with "be,bt1-axi" and "simple-bus" drivers, should have reg property with
+AXI-bus QOS registers space, syscon phandle reference to the Baikal-T1
+System Controller, IRQ line declared, AXI Interconnect reference clock and
+reset line.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Olof Johansson <olof@lixom.net>
@@ -68,92 +75,135 @@ Cc: soc@kernel.org
 ---
 
 Changelog v2:
-- Move driver to the memory subsystem.
+- Move driver to the bus subsystem.
 - Use dual GPL/BSD license.
 - Use single lined copyright header.
-- Move "allOf" restrictions to the root level of the properties.
-- Discard syscon compatible string and reg property.
-- The DT node is supposed to be a child of the Baikal-T1 system controller
-  node.
+- Lowercase the unit-address.
+- Convert a simple EHB block binding to the Baikal-T1 AXI-bus one with
+  interconnect capabilities support.
+- Replace "additionalProperties: false" property with
+  "unevaluatedProperties: false".
+- Add AXI reference clock and reset support.
+- Add syscon phandle reference to the Baikal-T1 System Controller node.
 
 Changelog v3:
-- Get the reg property back even though the driver is using the parental
-  syscon regmap.
-- The DT schema will live separately from the system controller, but the
-  corresponding sub-node of the later DT schema will $ref this one.
-- Set non-default latencies in the example.
+- Add syscon EHB registers range to the reg property as optional entry.
 ---
- .../memory-controllers/baikal,bt1-l2-ctl.yaml | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+ .../bindings/bus/baikal,bt1-axi.yaml          | 107 ++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml b/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
 new file mode 100644
-index 000000000000..1fca282f64a2
+index 000000000000..203bc0e5346b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
-@@ -0,0 +1,63 @@
++++ b/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
+@@ -0,0 +1,107 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/memory-controllers/baikal,bt1-l2-ctl.yaml#
++$id: http://devicetree.org/schemas/bus/baikal,bt1-axi.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Baikal-T1 L2-cache Control Block
++title: Baikal-T1 AXI-bus
 +
 +maintainers:
 +  - Serge Semin <fancer.lancer@gmail.com>
 +
 +description: |
-+  By means of the System Controller Baikal-T1 SoC exposes a few settings to
-+  tune the MIPS P5600 CM2 L2 cache performance up. In particular it's possible
-+  to change the Tag, Data and Way-select RAM access latencies. Baikal-T1
-+  L2-cache controller block is responsible for the tuning. Its DT node is
-+  supposed to be a child of the system controller.
++  AXI3-bus is the main communication bus of Baikal-T1 SoC connecting all
++  high-speed peripheral IP-cores with RAM controller and with MIPS P5600
++  cores. Traffic arbitration is done by means of DW AXI Interconnect (so
++  called AXI Main Interconnect) routing IO requests from one block to
++  another: from CPU to SoC peripherals and between some SoC peripherals
++  (mostly between peripheral devices and RAM, but also between DMA and
++  some peripherals). In case of any protocol error, device not responding
++  an IRQ is raised and a faulty situation is reported to the AXI EHB
++  (Errors Handler Block) embedded on top of the DW AXI Interconnect and
++  accessible by means of the Baikal-T1 System Controller.
++
++allOf:
++ - $ref: /schemas/simple-bus.yaml#
 +
 +properties:
 +  compatible:
-+    const: baikal,bt1-l2-ctl
++    contains:
++      const: baikal,bt1-axi
 +
 +  reg:
++    minItems: 1
++    items:
++      - description: Synopsys DesignWare AXI Interconnect QoS registers
++      - description: AXI EHB MMIO system controller registers
++
++  reg-names:
++    minItems: 1
++    items:
++      - const: qos
++      - const: ehb
++
++  '#interconnect-cells':
++    const: 1
++
++  syscon:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description: Phandle to the Baikal-T1 System Controller DT node
++
++  interrupts:
 +    maxItems: 1
 +
-+  baikal,l2-ws-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Way-select RAM accesses
-+    default: 0
-+    minimum: 0
-+    maximum: 3
++  clocks:
++    items:
++      - description: Main Interconnect uplink reference clock
 +
-+  baikal,l2-tag-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Tag RAM accesses
-+    default: 0
-+    minimum: 0
-+    maximum: 3
++  clock-names:
++    items:
++      - const: aclk
 +
-+  baikal,l2-data-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Data RAM accesses
-+    default: 1
-+    minimum: 0
-+    maximum: 3
++  resets:
++    items:
++      - description: Main Interconnect reset line
 +
-+additionalProperties: false
++  reset-names:
++    items:
++      - const: arst
++
++unevaluatedProperties: false
 +
 +required:
 +  - compatible
++  - reg
++  - reg-names
++  - syscon
++  - interrupts
++  - clocks
++  - clock-names
 +
 +examples:
 +  - |
-+    l2@1f04d028 {
-+      compatible = "baikal,bt1-l2-ctl";
-+      reg = <0x1f04d028 0x004>;
++    #include <dt-bindings/interrupt-controller/mips-gic.h>
 +
-+      baikal,l2-ws-latency = <1>;
-+      baikal,l2-tag-latency = <1>;
-+      baikal,l2-data-latency = <2>;
++    bus@1f05a000 {
++      compatible = "baikal,bt1-axi", "simple-bus";
++      reg = <0 0x1f05a000 0 0x1000>,
++            <0 0x1f04d110 0 0x8>;
++      reg-names = "qos", "ehb";
++      #address-cells = <1>;
++      #size-cells = <1>;
++      #interconnect-cells = <1>;
++
++      syscon = <&syscon>;
++
++      ranges;
++
++      interrupts = <GIC_SHARED 127 IRQ_TYPE_LEVEL_HIGH>;
++
++      clocks = <&ccu_axi 0>;
++      clock-names = "aclk";
++
++      resets = <&ccu_axi 0>;
++      reset-names = "arst";
 +    };
 +...
 -- 
