@@ -6,74 +6,74 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B85C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210ADC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A87C208FE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8D1208C9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590532284;
-	bh=OwNgAEE3RelOWrT98pheb0NSDXIvjfOun/TDUH9Q9hk=;
+	s=default; t=1590532301;
+	bh=JaJ0fRQffGLWXvi9iW/3gwF3Q7T0IAPPD4d1dHNNzfg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xIu6yjI6FSyeZGd2YUPXoctkAEHNvKWiOhZsiMV+UxnfCc8pRR4CtfhCiU58R70NK
-	 3CC4khhaalkLRqreXOYGLgUeWcijFxVVnr71BpPwsHmqNl6rLnLO8CjmZ8KdEQphWz
-	 nuLxllispmEPO15qmUv3UUGiE0KEgodmSC6x4IaA=
+	b=LvnJRYJncHTaK/H/nBoM9XR7DDMbKtgMQfdpKBT56glNuWhc5elsw/GxFZNTldWyd
+	 WGRL1LHmp4ht0iAIUzFn59K9+NCEv/JCJZorCu96qhlhrIQQpA9LNB9Ncb27FQXpqg
+	 sXlBeXcstxWYW/MQAekjQHROkc4t5l7PikPcEr5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390675AbgEZWbX (ORCPT
+        id S2392131AbgEZWbk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 18:31:23 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33694 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389482AbgEZWbX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:31:23 -0400
-Received: by mail-io1-f68.google.com with SMTP id k18so23936380ion.0;
-        Tue, 26 May 2020 15:31:22 -0700 (PDT)
+        Tue, 26 May 2020 18:31:40 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38706 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389482AbgEZWbj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:31:39 -0400
+Received: by mail-il1-f194.google.com with SMTP id q18so1019399ilm.5;
+        Tue, 26 May 2020 15:31:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=7PO7nGDx6i6iJvomFwFAJKzAEqtQa3QMoljS+fScBDg=;
-        b=nbZDkSm5AqNOaKEix7x2K5Yy8YqwEiaiLZQYPhDhKNTUrQU+/V7cYR/4R1mpP3PyFW
-         4ELwurhwz6evC9p6vehiJLv0KvASi9GZkW1uL7s+lOJtwA2X540X7kTf11bhyigKo614
-         iDBCT0iwLr4s8nmDkLJ8y1dvjG1jHXQNC1PXQ8GoCbOI6uJV3DDfpzo99TTy5lRY8j3b
-         OI+GukfskFOclIQ05OaQ0cP8Oax664fkYTlmr3hhb0z0ydR5vBCblIP0HnhloQaypsR8
-         8N0Mq054FIGhA2bkKQ9dWEyK9KcRTe78+4nmhClBKOHfanlZfqUwllzZ0EhC/+UM+zSO
-         9BeQ==
-X-Gm-Message-State: AOAM531AbOT8TCFilwZFo4sFwC0IkN7D1nNI7GCbA8v51TJVRNCesWKD
-        Rrqtlmd8xgngSAOgY7N91A==
-X-Google-Smtp-Source: ABdhPJzg3/7lwTB77ZTQN1hMWzcgg9hexWm7c31lZM6rBv5yZyP5Irit38gNDKsTOeMlYqaaRRoNkw==
-X-Received: by 2002:a6b:f812:: with SMTP id o18mr18386246ioh.87.1590532282441;
-        Tue, 26 May 2020 15:31:22 -0700 (PDT)
+        bh=dG0yREiJ8rMigfSfPZSI5NcnyO0i13MGt4qNl+maJjs=;
+        b=sSOavBq+EiqYb0po4IJRVm3kNfb4S4G70gZcNhSpQpZSb9Bx9kFq+XIUZBFPT1BGAF
+         sP2GFLAYXB7UkMQvl9bZ/6kqTEWGHNC3oi/iUWxAC6SUjBa+6sGV49KOottVKgZ+0uAy
+         2WdLXxH/1p+OOnZAqPfZqr7RYZ8/BKisaIJVTiWuHbitWOGLzD7cxDDeZEQ9Rv/4fgNw
+         JmDyFoyhAizIhBApQ/1iNaHUpoJE2g7V03vP4dFysEUan5iqjUeVoJTW6SLNkgDY3Gur
+         iTYsJyR8dNVDxC4o7XemY+Bz5WsIMFUlf8l/2eWx5LdYUMbJk/MM/K8jj82DhaX1fmQW
+         11tg==
+X-Gm-Message-State: AOAM533AtlE8h6Y8FcOrUhu/R9Zl+QA1UIyvthVuPRPeTYMnCxL/rq49
+        S7vf0BsGOCU5l4HBEGbuKA==
+X-Google-Smtp-Source: ABdhPJwYDuX0YBr0ghAF5q2Z3W0G8nV9//YxCnJwp57gwK8cUcmcS4rq7IEJAlPQZESwfKHB2R+QCA==
+X-Received: by 2002:a92:b0d:: with SMTP id b13mr3323423ilf.225.1590532298662;
+        Tue, 26 May 2020 15:31:38 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f15sm661633ill.58.2020.05.26.15.31.21
+        by smtp.gmail.com with ESMTPSA id n21sm457321ioj.43.2020.05.26.15.31.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:31:21 -0700 (PDT)
-Received: (nullmailer pid 504022 invoked by uid 1000);
-        Tue, 26 May 2020 22:31:20 -0000
-Date:   Tue, 26 May 2020 16:31:20 -0600
+        Tue, 26 May 2020 15:31:38 -0700 (PDT)
+Received: (nullmailer pid 504590 invoked by uid 1000);
+        Tue, 26 May 2020 22:31:36 -0000
+Date:   Tue, 26 May 2020 16:31:36 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mturquette@baylibre.com, festevam@gmail.com,
-        shawnguo@kernel.org, sboyd@kernel.org, kernel@pengutronix.de,
+Cc:     linux-kernel@vger.kernel.org, Linux-imx@nxp.com,
+        shawnguo@kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Linux-imx@nxp.com, s.hauer@pengutronix.de
-Subject: Re: [PATCH V5 4/5] dt-bindings: clock: Convert i.MX6SLL clock to
+        linux-clk@vger.kernel.org, s.hauer@pengutronix.de,
+        mturquette@baylibre.com, festevam@gmail.com, kernel@pengutronix.de
+Subject: Re: [PATCH V5 5/5] dt-bindings: clock: Convert i.MX6UL clock to
  json-schema
-Message-ID: <20200526223120.GA503921@bogus>
+Message-ID: <20200526223136.GA504539@bogus>
 References: <1589328684-1397-1-git-send-email-Anson.Huang@nxp.com>
- <1589328684-1397-5-git-send-email-Anson.Huang@nxp.com>
+ <1589328684-1397-6-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589328684-1397-5-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1589328684-1397-6-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 08:11:23 +0800, Anson Huang wrote:
-> Convert the i.MX6SLL clock binding to DT schema format using json-schema.
+On Wed, 13 May 2020 08:11:24 +0800, Anson Huang wrote:
+> Convert the i.MX6UL clock binding to DT schema format using json-schema.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > Acked-by: Stephen Boyd <sboyd@kernel.org>
@@ -81,11 +81,11 @@ On Wed, 13 May 2020 08:11:23 +0800, Anson Huang wrote:
 > Changes since V4:
 > 	- add descriptions for interrupts and each item of it.
 > ---
->  .../devicetree/bindings/clock/imx6sll-clock.txt    | 36 ------------
->  .../devicetree/bindings/clock/imx6sll-clock.yaml   | 66 ++++++++++++++++++++++
->  2 files changed, 66 insertions(+), 36 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
+>  .../devicetree/bindings/clock/imx6ul-clock.txt     | 13 -----
+>  .../devicetree/bindings/clock/imx6ul-clock.yaml    | 66 ++++++++++++++++++++++
+>  2 files changed, 66 insertions(+), 13 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/imx6ul-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx6ul-clock.yaml
 > 
 
 Applied, thanks!
