@@ -2,141 +2,121 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B0EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88773C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7098208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590532605;
-	bh=SoyS9n5uzrCTeisHdfFQF2I8r8kuXmqmf/eQd1xljCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lVuOXKyvqMLIC35N3vA/PHxWYDIxsqZiobV1LKUg61TWKZATQwLxL0ZzpTT7r4Uiu
-	 MVqesO9QnnJHf87dQM3TCa/WsezkOdJe4Tk1KONZygcRftp0cTeoiufgAcH9Eku4B4
-	 Tm8IjErtpvBpR4ZEkbD2FStVhYJsSlLad7M1Ej3k=
+	by mail.kernel.org (Postfix) with ESMTP id 6E1B9208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 22:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390038AbgEZWgp (ORCPT
+        id S2391948AbgEZWjJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 18:36:45 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44149 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389755AbgEZWgp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:36:45 -0400
-Received: by mail-io1-f68.google.com with SMTP id p20so10448084iop.11;
-        Tue, 26 May 2020 15:36:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tj8N2mepZ2doGS8o5HvQFvU4E1JvXzOMzruiM4qqlkA=;
-        b=UoDCzV920leTmz0b5clKHCtdKhl1tG5bX0jTGsmRVpECNpLC7GgUgudy346Uy8ugs5
-         F26EF2VbvwuRs/BEjhWJ8XqCbVIqyJW5u8Au8dTEoAfIUYmBRtfaNhWq0yomnDq2Isrn
-         3K8MAtSb6a7jYi11HGKyEfcigNuANh3ndzg6/2XN0MAar1C6vhvMdxWwZ4Cs4i4trSBh
-         1I5iCrn3UzU3e19SpMQYo+K8MpbG76B1Qx6guHcWlGYxRBhGN7Zamzea9Uf0PGFOtlML
-         RoHHwQs9BpQRXwba13nr2IbOUuq8v5/tz7qLOwCIIe3CetOb85jeEnvDxrdur/5AGHlS
-         rjBQ==
-X-Gm-Message-State: AOAM530nYJPrOczTynA816lZ0ZfjrjuEahTMWZlSzf42B7KSDzF04Obz
-        orY/GNoJGv+YDv05Olj0qYFwi1Q=
-X-Google-Smtp-Source: ABdhPJwnkJMGWyVt/cg8hbEkr6MQZUJOiTQ9GhmS2gEM3rC+m3jVY0ILT9haJVEEAeAQUNbmuDB0zQ==
-X-Received: by 2002:a02:a899:: with SMTP id l25mr3122374jam.101.1590532604273;
-        Tue, 26 May 2020 15:36:44 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v76sm664733ill.73.2020.05.26.15.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:36:43 -0700 (PDT)
-Received: (nullmailer pid 512636 invoked by uid 1000);
-        Tue, 26 May 2020 22:36:42 -0000
-Date:   Tue, 26 May 2020 16:36:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Steve Lee <steves.lee@maximintegrated.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ryan.lee.maxim@gmail.com,
-        ryans.lee@maximintegrated.com, steves.lee.maxim@gmail.com
-Subject: Re: [RESEND][V5 PATCH 1/2] dt-bindings: Added device tree binding
- for max98390
-Message-ID: <20200526223642.GA506893@bogus>
-References: <20200518004930.20973-1-steves.lee@maximintegrated.com>
+        Tue, 26 May 2020 18:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389755AbgEZWjI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 18:39:08 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02AFC061A0F
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 15:39:08 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2D5ED2A35F8;
+        Tue, 26 May 2020 23:39:07 +0100 (BST)
+Date:   Wed, 27 May 2020 00:39:04 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v5 07/21] mtd: rawnand: Create a new enumeration to
+ describe OOB placement
+Message-ID: <20200527003904.362e59e4@collabora.com>
+In-Reply-To: <20200526195633.11543-8-miquel.raynal@bootlin.com>
+References: <20200526195633.11543-1-miquel.raynal@bootlin.com>
+        <20200526195633.11543-8-miquel.raynal@bootlin.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518004930.20973-1-steves.lee@maximintegrated.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 18, 2020 at 09:49:30AM +0900, Steve Lee wrote:
-> Add documentation for DT binding of max98390 amplifier driver.
+On Tue, 26 May 2020 21:56:19 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+
+> There is currently a confusion between the ECC type/mode/provider
+> (eg. hardware, software, on-die or none) and the ECC bytes placement.
 > 
-> Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+> Create a new enumeration to describe this placement.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 > ---
+>  drivers/mtd/nand/raw/nand_base.c |  4 ++++
+>  include/linux/mtd/rawnand.h      | 12 ++++++++++++
+>  2 files changed, 16 insertions(+)
 > 
-> 
-> Changed since V4:
-> 	* No changes.
-> Changed since V3:
-> 	* No changes.
-> Changed since V2:
-> 	* No changes.
-> Changed since V1:
-> 	* Modified sample text in example
-
-You are obviously sending patches too quickly. Give folks a chance to 
-review.
-
-> 
->  .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
-
-Bindings are now in DT schema format. Please convert this. See 
-Documentation/devicetree/writing-schema.rst
-
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-> new file mode 100644
-> index 000000000000..0ddd4c6ae55e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/max98390.txt
-> @@ -0,0 +1,26 @@
-> +Maxim Integrated MAX98390 Speaker Amplifier
-> +
-> +This device supports I2C.
-> +
-> +Required properties:
-> +
-> + - compatible : "maxim,max98390"
-> +
-> + - reg : the I2C address of the device.
-> +
-> +Optional properties:
-> +
-> +- maxim,temperature_calib
-> +  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-> +
-> +- maxim,r0_calib
-> +  u32. This is r0 calibration data which was measured in factory mode.
-
-Unless these are shared already with other Maxim chips, s/_/-/.
-
-> +
-> +Example:
-> +
-> +codec: max98390@38 {
-
-amplifier@38
-
-> +	compatible = "maxim,max98390";
-> +	reg = <0x38>;
-> +	maxim,temperature_calib = <1024>;
-> +	maxim,r0_calib = <100232>;
+> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> index ef70ca0828c3..a4470a19c805 100644
+> --- a/drivers/mtd/nand/raw/nand_base.c
+> +++ b/drivers/mtd/nand/raw/nand_base.c
+> @@ -5018,6 +5018,10 @@ static const char * const nand_ecc_modes[] = {
+>  	[NAND_ECC_ON_DIE]	= "on-die",
+>  };
+>  
+> +static const char * const nand_ecc_placement[] = {
+> +	[NAND_ECC_PLACEMENT_INTERLEAVED] = "interleaved",
 > +};
-> -- 
-> 2.17.1
-> 
+> +
+>  static int of_get_nand_ecc_mode(struct device_node *np)
+>  {
+>  	const char *pm;
+> diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+> index 8187056dd3a0..6eb4d91b07eb 100644
+> --- a/include/linux/mtd/rawnand.h
+> +++ b/include/linux/mtd/rawnand.h
+> @@ -92,6 +92,18 @@ enum nand_ecc_mode {
+>  	NAND_ECC_ON_DIE,
+>  };
+>  
+> +/**
+> + * enum nand_ecc_placement - NAND ECC placement
+> + * @NAND_ECC_PLACEMENT_FREE: The driver can decide where to put ECC bytes.
+
+Can we name that one UNDEFINED instead of FREE, and it's not really the
+driver that decides (unless you have a choice or use SW ECC), more the ECC
+engine itself.
+
+> + *                           Default behavior is to put them at the end of the
+> + *                           OOB area.
+
+I wouldn't even define a default behavior here, but instead add a value for
+OOB/TAIL placement.
+
+> + * @NAND_ECC_PLACEMENT_INTERLEAVED: Syndrome layout: interleave data and OOB.
+
+
+									     ^ECC bytes
+
+> + */
+> +enum nand_ecc_placement {
+> +	NAND_ECC_PLACEMENT_FREE,
+> +	NAND_ECC_PLACEMENT_INTERLEAVED,
+> +};
+> +
+>  enum nand_ecc_algo {
+>  	NAND_ECC_UNKNOWN,
+>  	NAND_ECC_HAMMING,
+
