@@ -6,83 +6,91 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC56BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C68C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A536320721
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F01220721
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590516166;
-	bh=FpAErRht9TdqgOIKx0JJHVn83d0Hgq6QodrXwgpzNtQ=;
+	s=default; t=1590516206;
+	bh=Strl1cxJAhSLc51NP6x/GYHOF1epC7a+J4OX9YeKEtQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FvhfiBMCTbKYtYeDYwYH4Ne/gMY80uA5+Rg0izmDq2stoCY3DZZPEFt3D3ez13dEp
-	 ek2LTXMtKMOJQrrxmzZKrxO2JuU0K3y8XIKpcONGnI1DGI5pm/de98PBwid83ttJ0z
-	 57Mdhw32Ls2kbbzHi5iRy8cBoDnTPSbK5/ZzWi+w=
+	b=VvTAkQoYkF9MF+n2AIeUrbtN+pmmeUqwtnJ+Prykmajji8aA4MLHw+B+qvLWN3wko
+	 slfY3G+oROVCi9R1O2loWps8VhDnlIVH7eznr+J8r7cl9DFh5eTXNJ/BFmOIXgm6ZX
+	 AED99Ti9LXuX1PMDqd2o4I6PC/TfTuLf7XAfr9Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgEZSCq (ORCPT
+        id S1727112AbgEZSDZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 14:02:46 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33487 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgEZSCp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:02:45 -0400
-Received: by mail-il1-f195.google.com with SMTP id y17so19209851ilg.0;
-        Tue, 26 May 2020 11:02:45 -0700 (PDT)
+        Tue, 26 May 2020 14:03:25 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36841 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728904AbgEZSDZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:03:25 -0400
+Received: by mail-il1-f194.google.com with SMTP id 17so21437360ilj.3;
+        Tue, 26 May 2020 11:03:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YebaOmD7Ju0D8dp8+Jh6rQ27XVMpKBTe+xY/yyi+R5c=;
-        b=lk3Gh6R/n9kXq4mPiQtOWhE7K/WYgX5w/V64GvoEHFgErUyyDb4XZKqeaQz0Onf9wX
-         DD6Pir329ADffVIxbOCZc93ZB3w00GowVjD/uNu7PjGu9aSYsA0z3hV6qqpusUHPmWdD
-         yqmIjttXyZ6h1WBlwyLy2ZC7qZ45M3TfzBeXRm3M0/WuvBHX0LwsSK8GBegr7NFMA1ng
-         ftzoqnl1tipikjZFEci394/LXqXxS7IdTYRqNzNt7KvMKX8XdHunCEAr/ajPLGAUbsmO
-         uxCGERBv+nEpRnIiuZYysgsVAu43qcl74k0lN3v3Kae6x5/tYCEAM6uy3Fq+DMFOw0pX
-         SNow==
-X-Gm-Message-State: AOAM530fbpDOOiWXDgtmFb0ecTBo7LSToOEnlOWg2CFFIMuEKWNuHucU
-        aAQGEO1RVYLcwrxmWYeMiA==
-X-Google-Smtp-Source: ABdhPJzHpsHTbs1kNcS5W7S2W7j2Tz56qjTVrOe7LVapF32Ul2j79RUmxJxaOWK3AAyJg24lmEWqow==
-X-Received: by 2002:a92:ce8e:: with SMTP id r14mr2366787ilo.265.1590516164859;
-        Tue, 26 May 2020 11:02:44 -0700 (PDT)
+        bh=udyKIAgzUuMLjrt7p/tKMSuE96YEp3YyGPeKVs0pC30=;
+        b=G4fh4tjyEkg90wkTxzfetT4niAZIojQPhqLJNN2r5FzshHQYPV4SH0hmS0xLFqVwPb
+         hC8jOISXDFVmYv9ciIOwQ3N5lL8m1NcerTV2BptO9MPtOwPAbUXWb+e7ALnSzlSw6qaf
+         MBmMSaV/PRWrU3ZIyUL7okvXsxKTPqSfTYclsDj5uI1033OZuhE1hUZFjAyg1Kgv2HZ7
+         LsZooRx3Fg4b0xOoJkWhHBMRa4H/VzdZMt62kbsRw/HzLBIkjG8ubtgUwALAJdl/Abjt
+         sw2BFdcaF/0sggBzCp2nAqk4ouLVaj4Oz+UiJcBiXtX+jIJF4FSGNZTv22BruN6JaXNM
+         yH8g==
+X-Gm-Message-State: AOAM532g01XFOXoUDpuQ4nxopHlzGsvMpX+19jY9mpakyLM0b4rYARbb
+        jK39+jGIOVCl1ro/zgdjrw==
+X-Google-Smtp-Source: ABdhPJz49fxHgfKUlXk9bT+7PEkcHyxo07cWGJ72t5O8q64FjmH/+SLrhIzcouiT9jARc7MEOifDQA==
+X-Received: by 2002:a92:3d8b:: with SMTP id k11mr785485ilf.122.1590516203049;
+        Tue, 26 May 2020 11:03:23 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j90sm339624ilg.70.2020.05.26.11.02.43
+        by smtp.gmail.com with ESMTPSA id 4sm337307ilc.34.2020.05.26.11.03.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:02:44 -0700 (PDT)
-Received: (nullmailer pid 76101 invoked by uid 1000);
-        Tue, 26 May 2020 18:02:43 -0000
-Date:   Tue, 26 May 2020 12:02:43 -0600
+        Tue, 26 May 2020 11:03:22 -0700 (PDT)
+Received: (nullmailer pid 77730 invoked by uid 1000);
+        Tue, 26 May 2020 18:03:21 -0000
+Date:   Tue, 26 May 2020 12:03:21 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Weiyi Lu <weiyi.lu@mediatek.com>
 Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, Fan Chen <fan.chen@mediatek.com>,
+        linux-kernel@vger.kernel.org,
         Enric Balletbo Serra <eballetbo@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
         linux-mediatek@lists.infradead.org,
-        Fan Chen <fan.chen@mediatek.com>,
         linux-arm-kernel@lists.infradead.org,
         Sascha Hauer <kernel@pengutronix.de>,
-        srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v15 01/11] dt-bindings: mediatek: Add property to mt8183
- smi-common
-Message-ID: <20200526180243.GA75958@bogus>
+        Nicolas Boichat <drinkcat@chromium.org>,
+        devicetree@vger.kernel.org, James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v15 02/11] dt-bindings: soc: Add MT8183 power dt-bindings
+Message-ID: <20200526180321.GA77691@bogus>
 References: <1590051985-29149-1-git-send-email-weiyi.lu@mediatek.com>
- <1590051985-29149-2-git-send-email-weiyi.lu@mediatek.com>
+ <1590051985-29149-3-git-send-email-weiyi.lu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590051985-29149-2-git-send-email-weiyi.lu@mediatek.com>
+In-Reply-To: <1590051985-29149-3-git-send-email-weiyi.lu@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 May 2020 17:06:14 +0800, Weiyi Lu wrote:
-> For scpsys driver using regmap based syscon driver API.
+On Thu, 21 May 2020 17:06:15 +0800, Weiyi Lu wrote:
+> Add power dt-bindings of MT8183 and introduces "BASIC" and
+> "SUBSYS" clock types in binding document.
+> The "BASIC" type is compatible to the original power control with
+> clock name [a-z]+[0-9]*, e.g. mm, vpu1.
+> The "SUBSYS" type is used for bus protection control with clock
+> name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
+> And add an optional "mediatek,smi" property for phandle to smi-common
+> node.
 > 
 > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
 > ---
->  .../devicetree/bindings/memory-controllers/mediatek,smi-common.txt      | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 21 ++++++++++++++---
+>  include/dt-bindings/power/mt8183-power.h           | 26 ++++++++++++++++++++++
+>  2 files changed, 44 insertions(+), 3 deletions(-)
+>  create mode 100644 include/dt-bindings/power/mt8183-power.h
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
