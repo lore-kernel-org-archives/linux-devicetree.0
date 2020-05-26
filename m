@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363FDC433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845F3C433DF
 	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 14:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17359208A7
+	by mail.kernel.org (Postfix) with ESMTP id 65425208A7
 	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 14:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgEZODE (ORCPT
+        id S1731846AbgEZODP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 10:03:04 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57966 "EHLO
+        Tue, 26 May 2020 10:03:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58024 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731856AbgEZODD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 10:03:03 -0400
+        with ESMTP id S1731887AbgEZODE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 10:03:04 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A91568030870;
-        Tue, 26 May 2020 14:03:00 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 262E8803086C;
+        Tue, 26 May 2020 14:03:02 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pDQHqZJiOjRx; Tue, 26 May 2020 17:02:59 +0300 (MSK)
+        with ESMTP id sv-Ah8IKs_Cd; Tue, 26 May 2020 17:03:01 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 3/6] dt-bindings: bus: Add MIPS CDMM controller
-Date:   Tue, 26 May 2020 17:02:40 +0300
-Message-ID: <20200526140243.21946-4-Sergey.Semin@baikalelectronics.ru>
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+Date:   Tue, 26 May 2020 17:02:43 +0300
+Message-ID: <20200526140243.21946-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200526140243.21946-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200526140243.21946-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -57,62 +56,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It's a Common Device Memory Map controller embedded into the MIPS IP
-cores, which dts node is supposed to have compatible and reg properties.
+Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+and MIPS CPS CPUidle drivers.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
-
 ---
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Changelog prev:
-- Lowercase the example hex'es.
----
- .../bindings/bus/mti,mips-cdmm.yaml           | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
-
-diff --git a/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml b/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
-new file mode 100644
-index 000000000000..b3ba98515cbe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/mti,mips-cdmm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..f21e51c4a0d5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11278,6 +11278,16 @@ F:	arch/mips/configs/generic/board-boston.config
+ F:	drivers/clk/imgtec/clk-boston.c
+ F:	include/dt-bindings/clock/boston-clock.h
+ 
++MIPS CORE DRIVERS
++M:	Serge Semin <fancer.lancer@gmail.com>
++L:	linux-mips@vger.kernel.org
++S:	Supported
++F:	drivers/bus/mips_cdmm.c
++F:	drivers/irqchip/irq-mips-cpu.c
++F:	drivers/irqchip/irq-mips-gic.c
++F:	drivers/clocksource/mips-gic-timer.c
++F:	drivers/cpuidle/cpuidle-cps.c
 +
-+title: MIPS Common Device Memory Map
-+
-+description: |
-+  Defines a location of the MIPS Common Device Memory Map registers.
-+
-+maintainers:
-+  - James Hogan <jhogan@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: mti,mips-cdmm
-+
-+  reg:
-+    description: |
-+      Base address and size of an unoccupied memory region, which will be
-+      used to map the MIPS CDMM registers block.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    cdmm@1bde8000 {
-+      compatible = "mti,mips-cdmm";
-+      reg = <0 0x1bde8000 0 0x8000>;
-+    };
-+...
+ MIPS GENERIC PLATFORM
+ M:	Paul Burton <paulburton@kernel.org>
+ L:	linux-mips@vger.kernel.org
 -- 
 2.26.2
 
