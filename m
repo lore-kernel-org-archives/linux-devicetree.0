@@ -2,135 +2,110 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A73CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 10:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3D6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 10:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06A18208A7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 10:40:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TJa7J+KA"
+	by mail.kernel.org (Postfix) with ESMTP id 8A06D2088E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 10:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbgEZKjz (ORCPT
+        id S1731907AbgEZKkG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 06:39:55 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58439 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731907AbgEZKjx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 06:39:53 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QAc29I022072;
-        Tue, 26 May 2020 12:39:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=C8k53DjjYyfSex56lDdOYubcmmBBqtjkh1SjIKFK07M=;
- b=TJa7J+KAtCbOnxiZK8u+N6QqtUgLtfQvtNkevPschMh1XJjFhH8jP552iBQXXguttwQh
- z3w80ac8qN4sp+TpakM9FxdyUhhRplARc6bqFemUdyeet+YozLGN+j6fLWSjU1zjLybG
- TI+GIi4nfOW98MmUuiLAwIZI9dwUTAQf5fRzNfMhqezE6D9U5tpJjdihzwQ8HkA3+e5y
- dqmtRyZKYc2eJ+7ehnq1PVI/44JJhoaIt4Iuqd5HSrWOISTNrDI5bAtEzrDpXAD+eyps
- FX3ZiJqBU16syzJTWse7QPXLIZGe/UDh6Xgq6GGy5SqQ802IJN07pc5bhY0nhR/lop5O Kw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 316skw75hc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 May 2020 12:39:40 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4FD7710002A;
-        Tue, 26 May 2020 12:39:40 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 399452A705A;
-        Tue, 26 May 2020 12:39:40 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 26 May
- 2020 12:39:39 +0200
-Date:   Tue, 26 May 2020 12:39:38 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Wolfram Sang <wsa@kernel.org>
-CC:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <pierre-yves.mordret@st.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 4/4] i2c: stm32f7: Add SMBus-specific protocols support
-Message-ID: <20200526103938.GC14423@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-5-git-send-email-alain.volmat@st.com>
- <20200523110140.GD3459@ninjato>
+        Tue, 26 May 2020 06:40:06 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38381 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728259AbgEZKkF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 06:40:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o13so15880637otl.5
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 03:40:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dTaB15/ZleBqDK53ohM/31ShTHP4GnhoecVhCtwiqFU=;
+        b=VQnc3qCX80dv8TUbw3bfPdntazziw/WJ+L9Wa/rHcs3C61pjk2eHF38pnhpgl0cd9p
+         XVsXO27O38mMrp5smnltddkK83+GY78me59EsdSrtY5fRlPBcJ8zZ39nXE788KMsZxos
+         M1GncAZ1mND2A+ol2jzZgy+NHQdL9ouDyZgBl0oXb+Y5YgqOFHfclOgIMHZ6TFbOh8/a
+         dx2hHzbNam6+BXxFEU4z/rg1J4gKxrrnJwNIhqgQ7dE66BxZ6CPjR3F/CRAswZaVau+t
+         NyvfSnJqzf6c8KoaXWXVs5opugdw59huDc0cEufMg2tngL4OePR3tMEq1JyJVgDRX8xP
+         rl7w==
+X-Gm-Message-State: AOAM5326E2ORUeTccX1H73cvTomjagTkdtTvnBamIVrnBBC9gghfEEw/
+        OaImUoQfJukHCogxFFQ8qIcmoNc6CaxVk6XBhVw=
+X-Google-Smtp-Source: ABdhPJxkfLttUGiOUgqdiWLlHCoBdZw0pBOxG2BykOGgx3dfJ7lQPvh1Hg7DEmLz6ytyeXpXRq06Z9Je6ABlFop6tfw=
+X-Received: by 2002:a05:6830:1151:: with SMTP id x17mr370069otq.250.1590489603970;
+ Tue, 26 May 2020 03:40:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200523110140.GD3459@ninjato>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-26_01:2020-05-26,2020-05-26 signatures=0
+References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
+ <20200511110611.3142-7-ricardo.canuelo@collabora.com> <20200514015412.GF7425@pendragon.ideasonboard.com>
+ <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360> <20200514152239.GG5955@pendragon.ideasonboard.com>
+ <20200525074335.grnjvdjnipq5g3kf@rcn-XPS-13-9360> <20200526014444.GB6179@pendragon.ideasonboard.com>
+ <CAMuHMdXinhY13us9rt9h7EvrT_8zhnQg6tmOBtA0nEQ=1G1O7Q@mail.gmail.com> <20200526101158.GA5903@pendragon.ideasonboard.com>
+In-Reply-To: <20200526101158.GA5903@pendragon.ideasonboard.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 26 May 2020 12:39:52 +0200
+Message-ID: <CAMuHMdUV+qHpfLfbYwQwPXAUsh7HXvonUNWNh-SeTC-RpHwrog@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt: convert
+ to yaml
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>, Wei Xu <xuwei5@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 23, 2020 at 01:01:40PM +0200, Wolfram Sang wrote:
-> 
-> > +static int stm32f7_i2c_reg_client(struct i2c_client *client)
-> > +{
-> > +	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(client->adapter);
-> > +	int ret;
-> > +
-> > +	if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
-> > +		/* Only enable on the first device registration */
-> > +		if (atomic_inc_return(&i2c_dev->host_notify_cnt) == 1) {
-> > +			ret = stm32f7_i2c_enable_smbus_host(i2c_dev);
-> > +			if (ret) {
-> > +				dev_err(i2c_dev->dev,
-> > +					"failed to enable SMBus host notify (%d)\n",
-> > +					ret);
-> > +				return ret;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> So, as mentioned in the other review, I'd like to evaluate other
-> possibilities for the above:
-> 
-> - One option is to enable it globally in probe(). Then you lose the
->   possibility to have a device at address 0x08.
+Hi Laurent,
 
-I'd prefer avoid this solution to not lose the address 0x08.
+On Tue, May 26, 2020 at 12:12 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Tue, May 26, 2020 at 09:03:09AM +0200, Geert Uytterhoeven wrote:
+> > On Tue, May 26, 2020 at 3:44 AM Laurent Pinchart wrote:
+> > > On Mon, May 25, 2020 at 09:43:35AM +0200, Ricardo Cañuelo wrote:
+> > > > On jue 14-05-2020 18:22:39, Laurent Pinchart wrote:
+> > > > > > If we want to be more strict and require the definition of all the
+> > > > > > supplies, there will be many more DTs changes in the series, and I'm not
+> > > > > > sure I'll be able to do that in a reasonable amount of time. I'm looking
+> > > > > > at them and it's not always clear which regulators to use or if they are
+> > > > > > even defined.
+> > > > >
+> > > > > We can decouple the two though (I think). The bindings should reflect
+> > > > > what we consider right, and the dts files could be fixed on top.
+> > > >
+> > > > Do you have a suggestion on how to do this? If we decouple the two
+> > > > tasks most of the work would be searching for DTs to fix and finding a
+> > > > way to fix each one of them, and unless I do this _before_ the binding
+> > > > conversion I'll get a lot of dtbs_check errors.
+> > >
+> > > Rob should answer this question as it will be his decision, but I've
+> > > personally never considered non-compliant DT sources to be an obstacle
+> > > to bindings conversion to YAML. The DT sources should be fixed, but I
+> > > don't see it as a prerequisite (although it's a good practice).
+> >
+> > I do my best to avoid introducing regressions when the binding conversions
+> > go upstream.
+>
+> Please note that we're not talking about runtime regressions, as drivers
+> are not updated. It's "only" dtbs_check that would produce new errors.
 
-> - Enable it in probe() only if there is a generic binding "host-notify".
+Exactly.  I was talking about "make dtbs_check" regressions, too.
 
-Do you mean having the adapter walk through childs node and see if at least
-one of them have the host-notify property ? This mean that such solution
-wouldn't work for device relying on platform data rather than DT nodes.
+Gr{oetje,eeting}s,
 
-> - Let the core scan for a device with HOST_NOTIFY when registering an
->   adapter and then call back into the driver somehow?
+                        Geert
 
-You mean at adapter registration time only ? Not device probing time ?
-At probing time, we could have the core (i2c_device_probe) check for the flag
-HOST_NOTIFY and if setted call a dedicated host-notify reg callback ?
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> 
-> Other ideas?
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
