@@ -4,95 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F98C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B50C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 579AB20776
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91932068D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590517874;
-	bh=j1WQHf8Er/cYLIzWuY05H9rB2c83y6dCqbJE+5KSiWY=;
+	s=default; t=1590517924;
+	bh=n281IfLAcbTb85CPm0jqUkyIWkLnfrct5htszXNofyI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fr2LxHaNyytLxaJ5YN/0sLxtHTDiYF0c8t41KbPt6k+7ug6J0CXvaLnsYHd47uxW0
-	 eOjXujXUcrddZNSp7WWFx47YaGJETA+4T80yW9SWdKrXa2aAK/ZNv8p3c6rIhLkRiF
-	 Fo2D/Aoo/4g3fpf14g6bvaj7CCMqU9Qxp033744U=
+	b=SIkqS+n49SqhnOTV265hp/mHYa4bJcHv6NTv6KE7VAfI1oZsbz9RzNx8BDIW9FrHM
+	 DmgTUJpDCqJEgqf0F0JxoUAyAB4EFgrTPbqlMaLN7ecSXFtEbg6lXbKUrVcfYlFZT1
+	 2JLBexa38M0P9+L/dLTNTnB6HJ/JckFGOFtsm9Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgEZSbN (ORCPT
+        id S1729484AbgEZScE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 14:31:13 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44501 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbgEZSbN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:31:13 -0400
-Received: by mail-io1-f65.google.com with SMTP id p20so9734386iop.11;
-        Tue, 26 May 2020 11:31:12 -0700 (PDT)
+        Tue, 26 May 2020 14:32:04 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41682 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729574AbgEZScE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:32:04 -0400
+Received: by mail-il1-f194.google.com with SMTP id b71so21490862ilg.8;
+        Tue, 26 May 2020 11:32:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6Lz4//1z2ZrWHaf5fTT44ISM/EApcBJeJCpGJbLcQ7I=;
-        b=TiIZmxPWL9LSIDPNdDxEzwgPnobu9+Y2/cdgf/T+q4IW742XE+2RNAWJxQRm1cfCBl
-         h0QkpXixjhuJDIeOrsyytcKA/DkdmWPqMUzFm4mK1IdU6m9YDgUYdTO/Kyyh6EXmh25W
-         rSLmGqqGLCH+LTSBIqbZt/+fg7PLEvA4yKqXwa/F3wYqgn3SNmxcI3tW9w2yvHBEAOGA
-         GRDg8Lpq7+ApygmqQHP9wNOcafAdor1jgkYQ8MVXEii6uPFQWW4z0/US0KSJIBJSaek2
-         hHY3wGqcwU0kEbscAUcPY760DEcpS9IoaYqMSaHzNM0iLdmz4yzEHG5P73yz52VhK9gM
-         Xvpw==
-X-Gm-Message-State: AOAM531oD6m5bd1Od8L1bcLzsW3OKWoGS1iZ+pfflzXu6as7q7HtdkZi
-        3OpZp4GwUPyy5OVuSVwFeQ==
-X-Google-Smtp-Source: ABdhPJwzrhgUCSrXyhw34o2MneTMGR3pkuaPU9wiVQaHPVclL0neGvls6Q/hiHwIpqM1xK+SeMu/CA==
-X-Received: by 2002:a05:6638:1405:: with SMTP id k5mr2199979jad.108.1590517872401;
-        Tue, 26 May 2020 11:31:12 -0700 (PDT)
+        bh=ys3yTN0+ac2nWV6kQ76kCGllrYqouXUa6sUx/6wOfQY=;
+        b=lnnf5hFzNB9mmXIPcS/jXV+Wb+0opq/TFSC5gnJr5xKIYn7qXOqXe9gMrbQEpGHklM
+         XMsL4BbXo0GxQW4BY5kQAyajBxVVuVPhs/MTDoiaxbVjoxfMrGdTqErPUS+fwXPtkpuv
+         epokcma+O4hJtb0L6maZ9imtbOIqIgzBimzP/vUN4a6166Mj0QJ8PeEgHn0fwCuhIkq6
+         qMYfAqO5tjwMk/Z2liqsTs4fkqF6aVpB/jb+49vSFH4pp/UKFwFo9fPRqnX3Vk4dydYY
+         NjGlr+kG3+NC4w0BIr5HSCnSLchZUSo8mJMpwNqlsLNIUMEcz1iW2PRTxcKN+yZ6gGaJ
+         JXHQ==
+X-Gm-Message-State: AOAM532l2sStlqhWhx2nnOxtKf8Bau4b1zWDL4nrAQ0ZmJLQ88Ghula6
+        BuYYXkqJ5RSnY0sggw2usT5UCU8=
+X-Google-Smtp-Source: ABdhPJz2NnH/oN4bzaqTdkmM0QjsDMmHpgRJNYGOFD8tjeWWgs/oLbkXDGmpwX/yhqi6vu2TeQsv/Q==
+X-Received: by 2002:a92:b0d:: with SMTP id b13mr2435731ilf.225.1590517922981;
+        Tue, 26 May 2020 11:32:02 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d10sm362125ils.69.2020.05.26.11.31.10
+        by smtp.gmail.com with ESMTPSA id p22sm55193ill.52.2020.05.26.11.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:31:11 -0700 (PDT)
-Received: (nullmailer pid 133591 invoked by uid 1000);
-        Tue, 26 May 2020 18:31:10 -0000
-Date:   Tue, 26 May 2020 12:31:10 -0600
+        Tue, 26 May 2020 11:32:02 -0700 (PDT)
+Received: (nullmailer pid 135011 invoked by uid 1000);
+        Tue, 26 May 2020 18:32:01 -0000
+Date:   Tue, 26 May 2020 12:32:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     amirmizi6@gmail.com
-Cc:     amir.mizinski@nuvoton.com, robh+dt@kernel.org,
-        shmulik.hager@nuvoton.com, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, tmaimon77@gmail.com,
-        christophe-h.richard@st.com, linux-integrity@vger.kernel.org,
-        Eyal.Cohen@nuvoton.com, gcwilson@us.ibm.com,
-        oshri.alkoby@nuvoton.com, oren.tanami@nuvoton.com,
-        oshrialkoby85@gmail.com, jgg@ziepe.ca, peterhuewe@gmx.de,
-        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        alexander.steffen@infineon.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v9 7/8] tpm: Add YAML schema for TPM TIS I2C options
-Message-ID: <20200526183110.GA133552@bogus>
-References: <20200526141658.157801-1-amirmizi6@gmail.com>
- <20200526141658.157801-8-amirmizi6@gmail.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+Message-ID: <20200526183201.GA134956@bogus>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+ <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526141658.157801-8-amirmizi6@gmail.com>
+In-Reply-To: <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 26 May 2020 17:16:57 +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
+On Wed, 13 May 2020 20:22:37 +0300, Laurent Pinchart wrote:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 > 
-> Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
-> PTP based physical layer.
+> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> Processing System Gigabit Transceiver which provides PHY capabilities to
+> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
 > 
-> This patch adds the documentation for corresponding device tree bindings of
-> I2C based Physical TPM.
-> Refer to the 'I2C Interface Definition' section in
-> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
-> for specification.
-> 
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > ---
->  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+> Changes since v7:
+> 
+> - Switch to GPL-2.0-only OR BSD-2-Clause
+> 
+> Changes since v6:
+> 
+> - Fixed specification of compatible-dependent xlnx,tx-termination-fix
+>   property
+> - Dropped status property from example
+> - Use 4 spaces to indent example
+> 
+> Changes since v5:
+> 
+> - Document clocks and clock-names properties
+> - Document resets and reset-names properties
+> - Replace subnodes with an additional entry in the PHY cells
+> - Drop lane frequency PHY cell, replaced by reference clock phandle
+> - Convert bindings to YAML
+> - Reword the subject line
+> - Drop Rob's R-b as the bindings have significantly changed
+> - Drop resets and reset-names properties
+> ---
+>  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                 |   1 +
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
