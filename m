@@ -2,109 +2,104 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBDBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52D9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B7920870
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8992520870
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 21:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590528367;
-	bh=SQJ2YyECm9SasLMYfYktxSA+Cl9qFVCg/zhPHAcRGxA=;
+	s=default; t=1590528855;
+	bh=Da6me/OU6rQvvJsllH/U03C9LEKRWkwPCUd8auX3khw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YU1a3R3Vbpx+Crx4mnOS4C4OyUM+2GwApeWrAiKTs7JEEWrufAUKVIMEydBCbyBZw
-	 ri5hra5lFjRGvaosX6HZmx/KctHgzAs/dtMqDkD6ZHrfrzFQMJEbOC85wI50H6wh6C
-	 4LGPelViTceyY91148EGttLO6uvzWgSK9uGfbO1c=
+	b=2ZkGUachs/bVPyw2idP+BPFLo2jyJhz2CpgfnVRwfgzdHKFlNjeJsBWoEmip6Ekfd
+	 9mwbl2uneBc47nL/gmvH+I2LWuPEUI4nQmvROHIEwNyJ2QVgRdpnY4Y17ZnnWzlY+g
+	 5LIxukJ/dgXZw14B27Zv1QbyT4ajrWedjA+9DGUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389664AbgEZV0D (ORCPT
+        id S2389155AbgEZVeP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 17:26:03 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34302 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389455AbgEZV0D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 17:26:03 -0400
-Received: by mail-il1-f196.google.com with SMTP id v11so4627352ilh.1;
-        Tue, 26 May 2020 14:26:01 -0700 (PDT)
+        Tue, 26 May 2020 17:34:15 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34279 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388740AbgEZVeO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 17:34:14 -0400
+Received: by mail-il1-f195.google.com with SMTP id v11so4646801ilh.1;
+        Tue, 26 May 2020 14:34:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tJmsklodNJkwEQXv5Bm7TC2I5rB9sQAy8SZOzq4g6bk=;
-        b=g7Lf/LjC8x4hmYBONrY2m9S6nTZsobIch2TRJUg1LhLX3TISRkmPmheJS3KCeQg3e6
-         RwIhUxUchv3azmvHokB9ozMiMPsrXVBBEMXkqQ1vcMbXx0xN3gpAkqSy5vWO3OeBI5Ov
-         Qk/TfBxUeKlc569TyuoN/ErvQSrgJJAi6XJYDVHYe/pFqE3It1pa8LWGcoebi4uB5/EA
-         g5QkI6/6C3XjmsFjMox+l+56FzUlenrSkmpxC1YFrefYrjTAWui5WiUZsb05KzfQP8aW
-         Cjad4YT3YnL2cp1Q8SkrAy00yqnKBRFL4pjCe7s5SSoTCOpHp4mbsiln2uo7hP9J6i0Y
-         VOVA==
-X-Gm-Message-State: AOAM530bNRWRWUDTYk8tGU1TmvkeC5BGb1XXSbUw0+irMyYwOgYi8ma7
-        8McHfhczHQeg9jppYZKoXw==
-X-Google-Smtp-Source: ABdhPJxUm+oAxNAr2SYG4Y81gyy+25kF4QyK6LRTv8PfLwB7yBi6SJuidXXHzUWkboe+3gLkonhHzw==
-X-Received: by 2002:a92:10a:: with SMTP id 10mr3084238ilb.203.1590528361383;
-        Tue, 26 May 2020 14:26:01 -0700 (PDT)
+        bh=4IGWiIO9QQ2uNyibpst11tBp9IaLJjLxoCP1PUreahE=;
+        b=bU9OOAGwtBkzAL6bMdPibQQ6XwHLD8f9CfM+kWto3+m1XS4PcQNdhbxctUlO4ovO/D
+         Sb8wXqCJU/Q4pvIgMM0REiUCDpMSpGsXoSvRPIHECFU42Fu/eT95GqvBfmrihUhhJ46Q
+         OgDELuKgACjo6NN9g97cn9yTEJwpcZhr4IdRfINFt5yvdlBx71y0T0T8o8fuzNSGQJHP
+         p8/ZuO9sMTXOOVbxZoxNflwiUsD0WPqciF3A0uuhcLK6n1nDO4bqZiZ3mItpaMPktB3C
+         aOGLzK2k+bhBY2GNuPCK7VVa+Zb9hTTKIGM6+G8xftv0YNuREJ7WwUQLSP+IoEIuN2s0
+         1QrQ==
+X-Gm-Message-State: AOAM532JOGkhVoWM3jNmmDGtGI+6U6jOMcJ7W1Hn4AGPBtc4TDBY/kXA
+        cJo4ShMp+P3E2YqrFIJZ+w==
+X-Google-Smtp-Source: ABdhPJzp0EwE7XGT6pdGkzbmHIL2nvEZ3e4SrIoV0m8LDZZ/TRFJq39YHaGw2aIXJtWbDhLLb2+Z1g==
+X-Received: by 2002:a05:6e02:1072:: with SMTP id q18mr3065200ilj.121.1590528853402;
+        Tue, 26 May 2020 14:34:13 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u2sm355966ion.50.2020.05.26.14.26.00
+        by smtp.gmail.com with ESMTPSA id h10sm417843ioe.3.2020.05.26.14.34.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 14:26:00 -0700 (PDT)
-Received: (nullmailer pid 402416 invoked by uid 1000);
-        Tue, 26 May 2020 21:25:59 -0000
-Date:   Tue, 26 May 2020 15:25:59 -0600
+        Tue, 26 May 2020 14:34:12 -0700 (PDT)
+Received: (nullmailer pid 415156 invoked by uid 1000);
+        Tue, 26 May 2020 21:34:11 -0000
+Date:   Tue, 26 May 2020 15:34:11 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v7 3/4] dt-bindings: phy: qcom,qmp-usb3-dp: Add support
- for SC7180
-Message-ID: <20200526212559.GA401226@bogus>
-References: <1589510358-3865-1-git-send-email-sanm@codeaurora.org>
- <1589510358-3865-4-git-send-email-sanm@codeaurora.org>
+        Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v7 1/7] dt-bindings: iio/adc: Convert ingenic-adc docs to
+ YAML.
+Message-ID: <20200526213411.GA414898@bogus>
+References: <20200517194904.34758-1-contact@artur-rojek.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589510358-3865-4-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <20200517194904.34758-1-contact@artur-rojek.eu>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 08:09:17AM +0530, Sandeep Maheswaram wrote:
-> Add compatible for SC7180 in QMP USB3 DP PHY bindings.
+On Sun, 17 May 2020 21:48:58 +0200, Artur Rojek wrote:
+> Convert the textual documentation of Device Tree bindings for the
+> Ingenic JZ47xx SoCs ADC controller to YAML.
 > 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> The `interrupts` property is now explicitly listed and marked as
+> required. While missing from the previous textual documentation, this
+> property has been used with all the boards which probe this driver.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
-> index 6055786..b770e63 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
-> @@ -12,8 +12,9 @@ maintainers:
->  
->  properties:
->    compatible:
-> -    const:
-> -      qcom,sdm845-qmp-usb3-phy
-> +    enum:
-> +      - qcom,sc7180-qmp-usb3-phy
-> +      - qcom,sdm845-qmp-usb3-phy
-
-Use enum in the prior patch so this is a oneliner.
-
->    reg:
->      items:
->        - description: Address and length of PHY's common serdes block.
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+>  Changes:
 > 
+>  v6: new patch
+> 
+>  v7: - specify `maxItems: 1` for single entry properties
+>      - get rid of redundant descriptions of said properties
+> 
+>  .../bindings/iio/adc/ingenic,adc.txt          | 49 -------------
+>  .../bindings/iio/adc/ingenic,adc.yaml         | 71 +++++++++++++++++++
+>  2 files changed, 71 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
