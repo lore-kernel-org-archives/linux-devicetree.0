@@ -2,121 +2,82 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A38C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 08:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E816C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 08:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E05D2089D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 08:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xgwwlZ/1"
+	by mail.kernel.org (Postfix) with ESMTP id 4107F2075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 08:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbgEZI1t (ORCPT
+        id S1728458AbgEZImw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 04:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZI1s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 04:27:48 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1D5C08C5C0
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 01:27:48 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u26so616324wmn.1
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 01:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cfMx3QPegcW07ui0zEuFM9OMjXtnMXJjCz03Y4QBbMI=;
-        b=xgwwlZ/1mJxBPIFU8h/wk6la1tlt+HGj/xGHn7d9tdu6b3kNjT32rubdBqAyNjbJPT
-         3X3wPGbpgVBB7qgdheTHXP+kyfKdRaIgpcV9IIFK1BH+GHyilXXzlZDguSzzhvobiP+a
-         Vn8hjcqu3uW+1n3i2vh6BhuGj3PXl7xQjcUn6pqRS0qdeBbf17HoWN456lW769ZDJ/ql
-         TKMCLcEf4pwBi3FvKpn+n7e7iNsWUSAw5Wj40WYIbmoOyF5xvzwfcrzXY8C7PSKBSH+P
-         XdKVYYZ9HigzzyRDUuRVm9CZxKxDsoUcPpQvoxfBCWegSEFdUSwRasTloTWtRGFXxjaC
-         nRQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cfMx3QPegcW07ui0zEuFM9OMjXtnMXJjCz03Y4QBbMI=;
-        b=aaNuN2HSL2F+6CFBlql4TPh9fFQOvimwPjvSK5QtxAjm1G1KvW/Q+ivahXo8s3zAqg
-         y7kyLu2smuOfUVEATusrQ11vh0EYcMfVvpEi5Sr8hUNbYCFdmagd2SUaTmhTe1wW7Zqk
-         s7fcKZnKCUPoQOpaMU/QXk0QdWX45it2bt6KsUUt0xfFnNf29HLGc2tqo5Ox4/VR3pIZ
-         g/0ji5olyD0CbTh5qc4h+u/lVuzByYPrfdT4c9iOAbKwOVcFwwrnp84yoOMwpZlOir81
-         cqjRVu079kf3qjMxdNZ+Q+M7vIZmTcq7fVAEdyljL1qayPpTmqj9+6Env8wWm/wvDEMz
-         L7yg==
-X-Gm-Message-State: AOAM533+XM0GQbk7oKIgiw4m2+vrlFFibP4Wb43yJEgQyIS6EG8DXNQJ
-        4G9NfrvywlkAQ5VLIDsZxC1pyA==
-X-Google-Smtp-Source: ABdhPJwivVEa7Wbrfc8XZwwaPB5guQr4hvCUswwOuC6U80Y/wBCxFVwaG5kew77mdKPQT0wWtp3qiA==
-X-Received: by 2002:a1c:5a82:: with SMTP id o124mr288626wmb.188.1590481666849;
-        Tue, 26 May 2020 01:27:46 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id p65sm20347925wmp.36.2020.05.26.01.27.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 01:27:46 -0700 (PDT)
-Date:   Tue, 26 May 2020 09:27:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v11 2/6] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200526082744.GJ3628@dell>
-References: <20200430155810.21383-1-sravanhome@gmail.com>
- <20200430155810.21383-3-sravanhome@gmail.com>
- <20200519103741.GW271301@dell>
- <75b6a2ee-2d90-17c2-4b2b-0ef6238e903e@gmail.com>
+        Tue, 26 May 2020 04:42:52 -0400
+Received: from smtp.asem.it ([151.1.184.197]:57600 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728380AbgEZImw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 May 2020 04:42:52 -0400
+X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 May 2020 04:42:51 EDT
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000280135.MSG 
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 10:37:47 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Tue, 26
+ May 2020 10:37:44 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
+ Transport; Tue, 26 May 2020 10:37:44 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH] dt-bindings: leds: fix macro names for pca955x
+Date:   Tue, 26 May 2020 10:37:43 +0200
+Message-ID: <20200526083743.21372-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <75b6a2ee-2d90-17c2-4b2b-0ef6238e903e@gmail.com>
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090207.5ECCD559.0079,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 23 May 2020, saravanan sekar wrote:
+The documentation reports the wrong macro names
+related to the pca9532 instead of the pca955x
 
-> Hi Lee,
-> 
-> On 19/05/20 12:37 pm, Lee Jones wrote:
-> > On Thu, 30 Apr 2020, Saravanan Sekar wrote:
-> > 
-> > > mp2629 is a highly-integrated switching-mode battery charge management
-> > > device for single-cell Li-ion or Li-polymer battery.
-> > > 
-> > > Add MFD core enables chip access for ADC driver for battery readings,
-> > > and a power supply battery-charger driver
-> > > 
-> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > ---
-> > >   drivers/mfd/Kconfig        |  9 +++++
-> > >   drivers/mfd/Makefile       |  2 +
-> > >   drivers/mfd/mp2629.c       | 79 ++++++++++++++++++++++++++++++++++++++
-> > >   include/linux/mfd/mp2629.h | 17 ++++++++
-> > >   4 files changed, 107 insertions(+)
-> > >   create mode 100644 drivers/mfd/mp2629.c
-> > >   create mode 100644 include/linux/mfd/mp2629.h
-> > For my own reference (apply this as-is to your sign-off block):
-> > 
-> >    Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > 
-> Do I have to resend with above sign-off in all the patch?
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ Documentation/devicetree/bindings/leds/leds-pca955x.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-That would make things simpler, yes.
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+index 7984efb767b4..7a5830f8d5ab 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+@@ -26,9 +26,9 @@ LED sub-node properties:
+ 		from 0 to 15 for the pca9552
+ 		from 0 to  3 for the pca9553
+ - type: (optional) either
+-	PCA9532_TYPE_NONE
+-	PCA9532_TYPE_LED
+-	PCA9532_TYPE_GPIO
++	PCA955X_TYPE_NONE
++	PCA955X_TYPE_LED
++	PCA955X_TYPE_GPIO
+ 	see dt-bindings/leds/leds-pca955x.h (default to LED)
+ - label : (optional)
+ 	see Documentation/devicetree/bindings/leds/common.txt
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
