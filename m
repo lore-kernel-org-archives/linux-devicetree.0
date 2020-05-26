@@ -2,79 +2,105 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50568C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C7FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7F920787
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54F220787
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 09:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oLg3EzO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbgEZJb1 (ORCPT
+        id S1731770AbgEZJe7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 05:31:27 -0400
-Received: from smtp.asem.it ([151.1.184.197]:54374 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728568AbgEZJb1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 05:31:27 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000280398.MSG 
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 11:31:25 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Tue, 26
- May 2020 11:31:23 +0200
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1261.035; Tue, 26 May 2020 11:31:23 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] dt-bindings: leds: fix macro names for pca955x
-Thread-Topic: [PATCH] dt-bindings: leds: fix macro names for pca955x
-Thread-Index: AQHWMz70EMXZwJlm5E6wAi2dJ6VX7ai59m4AgAAhzHD//9+vAIAAIbJg
-Date:   Tue, 26 May 2020 09:31:23 +0000
-Message-ID: <71e4f274356c4a4b98d0a29bf7a97df5@asem.it>
-References: <20200526092052.24172-1-f.suligoi@asem.it>
- <20200526092250.GB12838@amd> <b58a76bed46141a1a7952303ec466f66@asem.it>
- <20200526092808.GC12838@amd>
-In-Reply-To: <20200526092808.GC12838@amd>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.208]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 26 May 2020 05:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731691AbgEZJe4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 05:34:56 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1AA2C03E97E
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 02:34:55 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f5so2547389wmh.2
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 02:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=uIfXKUCbDucsPOYpYgkjOAmRdJUZDObk3f5/C3vKFFQ=;
+        b=oLg3EzO5sInVvZZNdMUReY1VU37G5NrZ3kBSjpnme2iHn/mLV/BmxA0Mo0n0GfZf/n
+         lj+UYmqPYbPByclPic5/sFkZ/kokkxdJvkdDu87bglSe6+DoLTbQBunk1n5bfEbv0snV
+         xx9+mvNp1yASRai5BFwtpx5FG4W6kk8iaoY6AB/T46B9iZyEvpeh33OILv4HJ+xVhzv4
+         XRqO1XWRBCSxRsyl2lxztWFsVJlASL64oNxnEfnSM+Pa9yM/z/zx35H9sS2jj4+PaHfA
+         EZXMEIoqDNyIu9rCt3OkBrRR4qN4VCvhxiKAeb8xH1fijdU1ByRTg3XrxqkA8YLKH9xQ
+         MzeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uIfXKUCbDucsPOYpYgkjOAmRdJUZDObk3f5/C3vKFFQ=;
+        b=IbetIOZrNUxqv77qABJD5agUZIbrjPuzi/dUDQ6HcwlyYpwhX9a+Zi3lBUT/q34Xoq
+         Cb1qdd0pwfEIYcezq5WtX9oaKsIqRt9Gs2o+HleiiHSJ4lhrkX33uP5Suu8o3RSwDLQt
+         ht+4HvDJ/+hH5SXCTNjZpjps2m8yEpz/d6XZM+jSCi64zPj1T5QINqPzxUhSq2LNdNIC
+         HO/GDvZnXZv63CRTayfwl63DAvggLuAL96LAzHCLJOAKL3IJQ1RzCn8K5Tc56JwTjne/
+         noUU1yMXW5AE6FFCXxwTMZuafIXVOVkHB8SuAHBcFs2Ocx7mrc0mTt04hK8alZv/qL+g
+         LVTA==
+X-Gm-Message-State: AOAM5322AIGcDmnLLb48OYfuBT9pMlWA70qHF0JPYqQwiqESsgCybY5h
+        fDscJZat8sGBV0ntbuHWSgTAnHnKlWg=
+X-Google-Smtp-Source: ABdhPJzrrxB7FkN/xp0+nIBota9X6mJMdDJrXBjQdIa6PiqyON/o1c2F/P0fkO+zgSyNBPJ1/c0myw==
+X-Received: by 2002:a1c:9cd4:: with SMTP id f203mr618021wme.26.1590485694696;
+        Tue, 26 May 2020 02:34:54 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id x18sm21533655wru.72.2020.05.26.02.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 02:34:54 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:34:50 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v12 0/6] Add battery charger driver support for MP2629
+Message-ID: <20200526093450.GM3628@dell>
+References: <20200526090646.25827-1-sravanhome@gmail.com>
 MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090206.5ECCE1EC.001C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200526090646.25827-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1iaW5kaW5nczogbGVkczogZml4IG1hY3JvIG5hbWVz
-IGZvciBwY2E5NTV4DQo+IA0KPiBPbiBUdWUgMjAyMC0wNS0yNiAwOToyNTo1OCwgRmxhdmlvIFN1
-bGlnb2kgd3JvdGU6DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1iaW5kaW5nczogbGVk
-czogZml4IG1hY3JvIG5hbWVzIGZvciBwY2E5NTV4DQo+ID4gPg0KPiA+ID4gT24gVHVlIDIwMjAt
-MDUtMjYgMTE6MjA6NTIsIEZsYXZpbyBTdWxpZ29pIHdyb3RlOg0KPiA+ID4gPiBUaGUgZG9jdW1l
-bnRhdGlvbiByZXBvcnRzIHRoZSB3cm9uZyBtYWNybyBuYW1lcw0KPiA+ID4gPiByZWxhdGVkIHRv
-IHRoZSBwY2E5NTMyIGluc3RlYWQgb2YgdGhlIHBjYTk1NXgNCj4gPiA+ID4NCj4gPiA+ID4gU2ln
-bmVkLW9mZi1ieTogRmxhdmlvIFN1bGlnb2kgPGYuc3VsaWdvaUBhc2VtLml0Pg0KPiA+ID4NCj4g
-PiA+IE5vdGhpbmcgb2J2aW91c2x5IHdyb25nLCBidXQgd2h5IGRpZCB5b3Ugc2VuZCBpdCB0d2lj
-ZSB3aXRoaW4gaGFsZiBhbg0KPiA+ID4gaG91cj8NCj4gPiA+IAkJCQkJCQkJUGF2ZWwNCj4gPg0K
-PiA+IFNvcnJ5IFBhdmVsLCB3aXRoIHRoZSBmaXJzdCBlbWFpbCBJIGZvcmdvdCB0byBzdWJzY3Jp
-YmUNCj4gPiB0byB0aGUgbGludXgtbGVkcyBtYWlsaW5nIGxpc3QhIPCfmIoNCj4gDQo+IFlvdSBy
-ZWFsbHkgZG9uJ3QgbmVlZCB0byBiZSBzdWJzY3JpYmVkIG9uIGEgbGlzdCBmb3IgdHJpdmlhbA0K
-PiBjbGVhbnVwcy4uLiBOb3JtYWxseSBwZW9wbGUgd291bGQgcmVwbHktYWxsLCBhbnl3YXkuDQo+
-IA0KPiBCUiwNCj4gCQkJCQkJCQkJUGF2ZWwNCg0KVGhhbmtzIGZvciB0aGUgZXhwbGFuYXRpb24h
-DQoNClJlZ2FyZHMsDQoNCkZsYXZpbw0K
+On Tue, 26 May 2020, Saravanan Sekar wrote:
+
+> changes in v12:
+>  - added SOB Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+Looks like you added my Acked-by to every patch, when actually I only
+Acked the MFD one.  Fortunately, as I'm the one applying these, I can
+strip them off, but please be more careful about which *-bys you apply
+to which patches in the future.
+
+> changes in v11:
+>  - module_remove part replaced by devm_add_action_or_reset in charger patch
+>  - minor review comments solved in mfd and adc patch
+> 
+> I expect, that Lee will provide an immutable branch for me and
+> Jonathan once the MFD bits have been reviewed. Please tell me,
+> if I should prepare one instead.
+
+I'll do this now.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
