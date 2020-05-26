@@ -2,157 +2,155 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AD3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 19:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC863C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 19:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCA620776
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 19:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F4620776
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 19:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="P6N4btUB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="PxJFdkDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404272AbgEZTTD (ORCPT
+        id S2390891AbgEZTWB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 15:19:03 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45882 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404253AbgEZTNX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:23 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 1D46730D751;
-        Tue, 26 May 2020 12:13:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 1D46730D751
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1590520402;
-        bh=8TtwqVFOeNWHeLC4ioTyyfNs+GuSFwf6XTiy9LM2XsM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P6N4btUBsdsEPE1z//oDdAcGWUTnI7hxnU+F4DJpJOgsUit90NIcr5MGo+fdQDm0K
-         m9CTYqvgc8s88B6CI5EkeMI762vnCFuWlHbZ25vzGmtej2P66zQ/Pre9qJwH5Aw8d5
-         rw2oHR2Z/XQ+pCK1Jb5vHmW8YLQLbap5jf5q/L9o=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 93BE6140069;
-        Tue, 26 May 2020 12:13:20 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 03/14] dt-bindings: PCI: Add bindings for more Brcmstb chips
-Date:   Tue, 26 May 2020 15:12:42 -0400
-Message-Id: <20200526191303.1492-4-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+        Tue, 26 May 2020 15:22:01 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38202 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391941AbgEZTKp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 15:10:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1590520241; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p9jm//+Z7Q5hm03MZeLwX34SXNnp8zZEFN+1T4rYbdM=;
+        b=PxJFdkDes4KukZbPwS5mMveTS9QphjYgDvbxZ7NKMoj6+38ulMiSySkxN1YXLQc7ZPi0Sn
+        +UpgL7qaS37Izf1cqqD7PdTi4j2eAdyiAkWC1ByRQ8BMkKUKru3O0BetJgCPNmO46Xq5et
+        cW+Zc/BXGPka2lWC4YReEAiLuQxRZSk=
+Date:   Tue, 26 May 2020 21:10:29 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, hns@goldelico.com, paul@boddie.org.uk,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Message-Id: <H9DYAQ.4YAB8VVZPLZO@crapouillou.net>
+In-Reply-To: <20200526170722.17206-2-zhouyanjie@wanyeetech.com>
+References: <20200526170722.17206-1-zhouyanjie@wanyeetech.com>
+        <20200526170722.17206-2-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+Hi Zhou,
 
-- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
-  7211 (STB version of RPi4).
-- add new property 'brcm,scb-sizes'
-- add new property 'resets'
-- add new property 'reset-names'
-- allow 'ranges' and 'dma-ranges' to have more than one item and update
-  the example to show this.
+Le mer. 27 mai 2020 =C3=A0 1:07, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Document the available properties for the SoC root node and the
+> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+>=20
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Tested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57=20
+> ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644=20
+> Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>=20
+> diff --git=20
+> a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml=20
+> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> new file mode 100644
+> index 000000000000..afb02071a756
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Ingenic XBurst family CPUs
+> +
+> +maintainers:
+> +  - =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetech.com=
+>
+> +
+> +description:
+> +  Ingenic XBurst family CPUs shall have the following properties.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +
+> +      - description: Ingenic XBurst=C2=AE1 CPU Cores
+> +        items:
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
----
- .../bindings/pci/brcm,stb-pcie.yaml           | 40 +++++++++++++++++--
- 1 file changed, 36 insertions(+), 4 deletions(-)
+Strip the 'items', put the enum directly.
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 8680a0f86c5a..66a7df45983d 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -14,7 +14,13 @@ allOf:
- 
- properties:
-   compatible:
--    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-+    items:
-+      - enum:
-+          - brcm,bcm2711-pcie # The Raspberry Pi 4
-+          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-+          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-+          - brcm,bcm7216-pcie # Broadcom 7216 Arm
-+          - brcm,bcm7445-pcie # Broadcom 7445 Arm
- 
-   reg:
-     maxItems: 1
-@@ -34,10 +40,12 @@ properties:
-       - const: msi
- 
-   ranges:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 4
- 
-   dma-ranges:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 6
- 
-   clocks:
-     maxItems: 1
-@@ -58,8 +66,30 @@ properties:
- 
-   aspm-no-l0s: true
- 
-+  resets:
-+    description: for "brcm,bcm7216-pcie", must be a valid reset
-+      phandle pointing to the RESCAL reset controller provider node.
-+    $ref: "/schemas/types.yaml#/definitions/phandle"
-+
-+  reset-names:
-+    items:
-+      - const: rescal
-+
-+  brcm,scb-sizes:
-+    description: (u32, u32) tuple giving the 64bit PCIe memory
-+      viewport size of a memory controller.  There may be up to
-+      three controllers, and each size must be a power of two
-+      with a size greater or equal to the amount of memory the
-+      controller supports.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - items:
-+          minItems: 2
-+          maxItems: 6
-+
- required:
-   - reg
-+  - ranges
-   - dma-ranges
-   - "#interrupt-cells"
-   - interrupts
-@@ -93,7 +123,9 @@ examples:
-                     msi-parent = <&pcie0>;
-                     msi-controller;
-                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
--                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
-+                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
-                     brcm,enable-ssc;
-+                    brcm,scb-sizes = <0x0 0x80000000 0x0 0x80000000>;
-             };
-     };
--- 
-2.17.1
+> +          enum:
+> +            - ingenic,xburst-mxu1.0
+> +            - ingenic,xburst-fpu1.0-mxu1.1
+> +            - ingenic,xburst-fpu2.0-mxu2.0
+> +
+> +      - description: Ingenic XBurst=C2=AE2 CPU Cores
+> +        items:
+
+Same here.
+
+> +          enum:
+> +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - device_type
+> +  - compatible
+> +  - reg
+
+device_type is not in the list of your properties.
+
+Also, I think you need a clock in there.
+
+-Paul
+
+> +
+> +examples:
+> +  - |
+> +    cpus {
+> +    	#address-cells =3D <1>;
+> +    	#size-cells =3D <0>;
+> +
+> +    	cpu0: cpu@0 {
+> +    		device_type =3D "cpu";
+> +    		compatible =3D "ingenic,xburst-fpu1.0-mxu1.1";
+> +    		reg =3D <0>;
+> +    	};
+> +
+> +    	cpu1: cpu@1 {
+> +    		device_type =3D "cpu";
+> +    		compatible =3D "ingenic,xburst-fpu1.0-mxu1.1";
+> +    		reg =3D <1>;
+> +    	};
+> +    };
+> +...
+> --
+> 2.11.0
+>=20
+
 
