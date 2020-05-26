@@ -2,206 +2,95 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B52C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377BEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB4720721
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:03:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SScriLeC"
+	by mail.kernel.org (Postfix) with ESMTP id 0897220721
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 18:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590516264;
+	bh=GzhhALiduGhcmdMoqZGdm9ZOr3vuxoXlxqc3/+/xa04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B4ZGIvx1q+QeXyvUnnvfrjPqrAtpa+ObWgOrnBipJEED5+xrYg6Ngow+UsQ4RMZ/n
+	 y/Zr6PZvdTPJJVI/nsx8qYHl4WSlTyQdZEAt9TSjts1zzRIRrcOPWvg++e8jFgOCmC
+	 H5IMOpjOoPB0vDC3gay3Ab/fOQRxxMI6DVT+x5e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgEZSDo (ORCPT
+        id S1728965AbgEZSEX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 14:03:44 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40288 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbgEZSDo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:03:44 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QI3R99037944;
-        Tue, 26 May 2020 13:03:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590516207;
-        bh=tWqL+sUPJTZ2h8BHQyEb5vjm1K8M7Eltv+SurxkGaOI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SScriLeCaWmFID1v89DUtFyhpICeE/polFmzw+1U6dkT4UqSQfpxI4h74jMkXQqQi
-         VfpPqsD77EG17+kZq3lAUWgfUpzXSjXF/5G4y/9zNp8qDEhX4Mv5eKh4/1HYNf1Edn
-         QChXE1YZr3FDPIEJK9FzKdZQAnHHyxF9G4977mh4=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QI3RoX042692
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 13:03:27 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 13:03:27 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 13:03:26 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QI3NY3016763;
-        Tue, 26 May 2020 13:03:24 -0500
-Subject: Re: [PATCH v15 2/2] i2c: core: support bus regulator controlling in
- adapter
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
+        Tue, 26 May 2020 14:04:23 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46847 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbgEZSEW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 14:04:22 -0400
+Received: by mail-io1-f65.google.com with SMTP id j8so23010308iog.13;
+        Tue, 26 May 2020 11:04:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ClJL8gB+/7Ulq3yj2f4VaDBjcjvT7VkWGg/z9gQ4pgg=;
+        b=YB/7jRzIWHrCjwDKoJ5EU63VfJWnOpZOD8pQU4bu60XdB8cySAq/Z32rSJC/VSM/fr
+         oobRUOr3RS1FxlveCLZ7d4nbHj2V6IhXV94mU53Ir7Kofl3Shu0m6vESU7V8DqYErtuO
+         kNvp0YJQKZ9kHQSoMsFhArQtZuLmm/f1JgERoniCDWwB72eMwkvfunoS2kcniLZBDbb7
+         TtKDIWfyhIg7qX64k/n5WgDE0vz3FYpZN3D0WvUUWX+AfoGvWfyFL7q60LD08uEjZZvF
+         /8d7u0gEhTJLIhFigQZVd2/I4HpMqQt2wL27L8ac9QsdxXbdT0YRg0VlT6LTr10YDc4I
+         MHkw==
+X-Gm-Message-State: AOAM533lxFv5bKmQAglSDCT25ePDxoIdPLFAl4XokSQxdP+qtGVI6byT
+        XXmLFr6ZjUpY42Bwuv3ofg==
+X-Google-Smtp-Source: ABdhPJzcu2nCj6F92lx7P/df1l59GGQNg9IGF9YDymeeq6DRFL67TpPCdRsq+oEeB/mS2xXLEmpasQ==
+X-Received: by 2002:a05:6602:2c8f:: with SMTP id i15mr11103155iow.45.1590516260900;
+        Tue, 26 May 2020 11:04:20 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id z13sm319397ilh.82.2020.05.26.11.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 11:04:19 -0700 (PDT)
+Received: (nullmailer pid 80209 invoked by uid 1000);
+        Tue, 26 May 2020 18:04:18 -0000
+Date:   Tue, 26 May 2020 12:04:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     devel@driverdev.osuosl.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20200519072729.7268-1-bibby.hsieh@mediatek.com>
- <20200519072729.7268-3-bibby.hsieh@mediatek.com>
- <952995ec-0865-d8ff-e285-522705fa9709@ti.com>
- <CAAFQd5Bx=zgsUAg7fA2jfsV_yFyPmnotTWEBEr2V3Nn5HO8qQQ@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <543950fa-83c0-9d3d-e64a-068be2368717@ti.com>
-Date:   Tue, 26 May 2020 21:03:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>, devicetree@vger.kernel.org,
+        Sheng Pan <span@analogixsemi.com>,
+        David Airlie <airlied@linux.ie>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel@lists.freedesktop.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v11 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter DT schema
+Message-ID: <20200526180418.GA80145@bogus>
+References: <cover.1589511894.git.xji@analogixsemi.com>
+ <393386c0a18753cb4b3f695348fe506a192ea82a.1589511894.git.xji@analogixsemi.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5Bx=zgsUAg7fA2jfsV_yFyPmnotTWEBEr2V3Nn5HO8qQQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <393386c0a18753cb4b3f695348fe506a192ea82a.1589511894.git.xji@analogixsemi.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 25/05/2020 14:34, Tomasz Figa wrote:
-> Hi Grygorii,
+On Fri, 15 May 2020 13:49:20 +0800, Xin Ji wrote:
+> anx7625: MIPI to DP transmitter DT schema
 > 
-> On Fri, May 22, 2020 at 7:59 PM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->>
->>
->>
->> On 19/05/2020 10:27, Bibby Hsieh wrote:
->>> Although in the most platforms, the bus power of i2c
->>> are alway on, some platforms disable the i2c bus power
->>> in order to meet low power request.
->>>
->>> We get and enable bulk regulator in i2c adapter device.
->>>
->>> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
->>> ---
->>>    drivers/i2c/i2c-core-base.c | 84 +++++++++++++++++++++++++++++++++++++
->>>    include/linux/i2c.h         |  2 +
->>>    2 files changed, 86 insertions(+)
->>>
->>> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
->>> index 5cc0b0ec5570..e1cc8d46bc51 100644
->>> --- a/drivers/i2c/i2c-core-base.c
->>> +++ b/drivers/i2c/i2c-core-base.c
->>> @@ -313,12 +313,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
->>>    static int i2c_device_probe(struct device *dev)
->>>    {
->>>        struct i2c_client       *client = i2c_verify_client(dev);
->>> +     struct i2c_adapter      *adap;
->>>        struct i2c_driver       *driver;
->>>        int status;
->>>
->>>        if (!client)
->>>                return 0;
->>>
->>> +     adap = client->adapter;
->>>        driver = to_i2c_driver(dev->driver);
->>>
->>>        client->irq = client->init_irq;
->>> @@ -378,6 +380,12 @@ static int i2c_device_probe(struct device *dev)
->>>
->>>        dev_dbg(dev, "probe\n");
->>>
->>> +     status = regulator_enable(adap->bus_regulator);
->>> +     if (status < 0) {
->>> +             dev_err(&adap->dev, "Failed to enable power regulator\n");
->>> +             goto err_clear_wakeup_irq;
->>> +     }
->>> +
->>>        status = of_clk_set_defaults(dev->of_node, false);
->>>        if (status < 0)
->>>                goto err_clear_wakeup_irq;
->>> @@ -414,12 +422,14 @@ static int i2c_device_probe(struct device *dev)
->>>    static int i2c_device_remove(struct device *dev)
->>>    {
->>>        struct i2c_client       *client = i2c_verify_client(dev);
->>> +     struct i2c_adapter      *adap;
->>>        struct i2c_driver       *driver;
->>>        int status = 0;
->>>
->>>        if (!client || !dev->driver)
->>>                return 0;
->>>
->>> +     adap = client->adapter;
->>>        driver = to_i2c_driver(dev->driver);
->>>        if (driver->remove) {
->>>                dev_dbg(dev, "remove\n");
->>> @@ -427,6 +437,8 @@ static int i2c_device_remove(struct device *dev)
->>>        }
->>>
->>>        dev_pm_domain_detach(&client->dev, true);
->>> +     if (!pm_runtime_status_suspended(&client->dev))
->>> +             regulator_disable(adap->bus_regulator);
->>
->> Not sure this check is correct.
->>
->> i2c_device_probe()
->>    - regulator_enable - 1
->>
->> pm_runtime_get()
->>    - regulator_enable - 2
->>
+> Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> ---
+>  .../bindings/display/bridge/analogix,anx7625.yaml  | 95 ++++++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
 > 
-> I believe regulator_enable() wouldn't be called again, because the
-> device was already active in probe. However, I've been having
-> difficulties keeping track of runtime PM semantics under various
-> circumstances (e.g. ACPI vs DT), so can't tell for sure anymore.
 
-True.
-
-I've found pretty useful:
-  - CONFIG_PM_ADVANCED_DEBUG
-  - bind/unbind
-for such testing.
-
-for regulators - num_users can be checked.
-
-
-> 
->> i2c_device_remove()
->>    - pm_runtime_status_suspended() flase
->>      - regulator_disable() - 1 --> still active?
->>
->> Sorry, I probably missing smth.
->>
->>>
->>>        dev_pm_clear_wake_irq(&client->dev);
->>>        device_init_wakeup(&client->dev, false);
->>> @@ -438,6 +450,72 @@ static int i2c_device_remove(struct device *dev)
->>>        return status;
->>>    }
->>>
->>
->> [...]
->>
->> --
->> Best regards,
->> grygorii
-
--- 
-Best regards,
-grygorii
+Reviewed-by: Rob Herring <robh@kernel.org>
