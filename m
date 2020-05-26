@@ -2,87 +2,86 @@ Return-Path: <SRS0=q8LW=7I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8ACC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 23:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6EFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 23:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD2D2075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 23:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CAD2078C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 May 2020 23:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590534346;
+	bh=e2QX2PER2r0ACcoealfB5rbpO8NhJ+Emjfw22FjXdyc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o0UlyXtgrDrCkMnMs/0kT1hPoKee03dySHWqESpztLly7iRlb0N0xX19uP3/q6Jw6
+	 LE1X+mh3IQGJxDshpMeCjvNlNW5wY2wZpTAAl/JpbjDHhLLygXBydxwyjKSYlKgrRy
+	 BrzPBfdwuxunwy9HjZAXUnsOWEUDhHcsAk1mPhyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390929AbgEZXDa (ORCPT
+        id S2391064AbgEZXFn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 19:03:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389565AbgEZXD3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 19:03:29 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B55F2C061A0F
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 16:03:29 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5A89B2A1C39;
-        Wed, 27 May 2020 00:03:28 +0100 (BST)
-Date:   Wed, 27 May 2020 01:03:25 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [RESEND v5 12/21] mtd: rawnand: Deprecate nand-ecc-mode in
- favor of nand-ecc-provider
-Message-ID: <20200527010325.0e7213b2@collabora.com>
-In-Reply-To: <20200526195633.11543-13-miquel.raynal@bootlin.com>
-References: <20200526195633.11543-1-miquel.raynal@bootlin.com>
-        <20200526195633.11543-13-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 26 May 2020 19:05:43 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43073 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389565AbgEZXFm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 19:05:42 -0400
+Received: by mail-il1-f194.google.com with SMTP id l20so22164998ilj.10;
+        Tue, 26 May 2020 16:05:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2oYPgM1BtR439Mfpid4h6QvwH7miODS6soRM9HPdtmM=;
+        b=VeqJDgrql00O53CQ8fGVzNG/iYrcwCF1W1FS6VkiyYTS+Ry2BSJsVhNsg0CMa/uloJ
+         whNPE2AvQ9u4Lr+CDh0rAk+kq+rWzBa2u9/jg0DGKC76A+IHS7VRjtEfMQzK5lzlwnbR
+         QNXKVWzXZvZ5zXXbL1qHShC8gtxZv/HBOjcVLjEMtTHkWR3Qt+kMDXgItsZ3UtVckpN5
+         TeGAj4+znjxi++5jvkOWcPxWzM3KPJ3J4csu+p9y5GnFCLWgtG/2Mu3OZ95Cg32lNXrh
+         tVwESVhDu0qxJPvMHJbNR49KAH5CeDfrtQkKJE98phFTaDIRwHBBeKjR2tg/OuKAXNLY
+         AQxQ==
+X-Gm-Message-State: AOAM531JCwHaK7XZQQE+MKIr7itlhsiJe+GSyEWnkWnWFcD0aUope0wv
+        +PZHZF8fi6eF7+N/T5DomQ==
+X-Google-Smtp-Source: ABdhPJyBcSvWgTEJyZu7WnBFc0wCdUtMbWcguCU5wrtNSwGUZAEBzYVIN4zA/3rvIXr6KxxEurglbw==
+X-Received: by 2002:a92:c742:: with SMTP id y2mr3207192ilp.126.1590534341592;
+        Tue, 26 May 2020 16:05:41 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id 4sm722115ilc.34.2020.05.26.16.05.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 16:05:41 -0700 (PDT)
+Received: (nullmailer pid 558228 invoked by uid 1000);
+        Tue, 26 May 2020 23:05:40 -0000
+Date:   Tue, 26 May 2020 17:05:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 09/13] dt-bindings: clock: Make marvell,mmp2-clock a
+ power controller
+Message-ID: <20200526230540.GA557537@bogus>
+References: <20200519224151.2074597-1-lkundrak@v3.sk>
+ <20200519224151.2074597-10-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519224151.2074597-10-lkundrak@v3.sk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 26 May 2020 21:56:24 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-
-> Use nand-ecc-provider as the provider DT property. Fallback to
-> nand-ecc-mode if the property does not exist.
+On Wed, May 20, 2020 at 12:41:47AM +0200, Lubomir Rintel wrote:
+> This is a binding for the MMP2 power management units. As such apart from
+> providing the clocks, they also manage the power islands.
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
 > ---
->  drivers/mtd/nand/raw/nand_base.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Changes since v2:
+> - Added this patch
 > 
-> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> index 69c1b7ab938e..7d17d52cdd34 100644
-> --- a/drivers/mtd/nand/raw/nand_base.c
-> +++ b/drivers/mtd/nand/raw/nand_base.c
-> @@ -5036,7 +5036,9 @@ of_get_nand_ecc_engine_type(struct device_node *np)
->  	const char *pm;
->  	int err;
->  
-> -	err = of_property_read_string(np, "nand-ecc-mode", &pm);
-> +	err = of_property_read_string(np, "nand-ecc-provider", &pm);
+>  .../devicetree/bindings/clock/marvell,mmp2-clock.yaml        | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-					   "nand-ecc-engine-type"
-
-And I'd prefer to have a different string table for that one, so we get
-rid of the confusing "hw" type (which is actually "on-controller").
-
-> +	if (err)
-> +		err = of_property_read_string(np, "nand-ecc-mode", &pm);
->  	if (err)
->  		return NAND_ECC_ENGINE_INVALID;
->  
-
+Acked-by: Rob Herring <robh@kernel.org>
