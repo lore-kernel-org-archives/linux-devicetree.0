@@ -2,271 +2,127 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46540C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5470AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8C8207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:27:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xgLe8dPo"
+	by mail.kernel.org (Postfix) with ESMTP id 2E14A2089D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590600605;
+	bh=AYuJ67xsI+CFY7fGg0P0jYxtF43oU5VTBcAFmEh+qxc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cY6xAsj0yp/CUBceqD2IQIGc7wBxjdzg3GTANeyNDWKerPmqxOJyudxL+EUuzDjxj
+	 EXwVxo4IhX3CWr5ckQdZXPZVyA00CUWJzrYTsOzbcrYYbtgbwKjYwo/I52XHhJ+omc
+	 DXASlVrUq77jD/hUZnnOgLfc8lzY4HeKGeZlQ0nU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbgE0R1P (ORCPT
+        id S1726798AbgE0RaE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 13:27:15 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54724 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387878AbgE0R1P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 13:27:15 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RHR76Z035112;
-        Wed, 27 May 2020 12:27:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590600427;
-        bh=GewqrLAXpbLigBVMM1jBh3cLD3IcS34HW/Gd02v61jU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xgLe8dPotxyTWHsEepXZrtwLJEem26ybIzXgjSXDCxhPKvKw98IZI67BpzWN1woMe
-         HROWNHj7EQ3BLJxvkh5fIS2vBvSU0WAL6SWKUGdn/cG4GFww4RkQsv+rGmN7PtIgpZ
-         SEPouV5b1wCrjOLI7DCwEh35gmwWdZzdaHIoaLZs=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RHR7Rv042640
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 12:27:07 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
- May 2020 12:27:07 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 27 May 2020 12:27:07 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RHR6p3114838;
-        Wed, 27 May 2020 12:27:07 -0500
-Subject: Re: [PATCH v25 03/16] dt: bindings: lp50xx: Introduce the lp50xx
- family of RGB drivers
-To:     Rob Herring <robh@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200526164652.2331-1-dmurphy@ti.com>
- <20200526164652.2331-4-dmurphy@ti.com> <20200527015905.GA874676@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <69bb1d4a-3210-21a7-c6d3-d08713e31c9f@ti.com>
-Date:   Wed, 27 May 2020 12:27:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 27 May 2020 13:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbgE0RaE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 13:30:04 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D5922089D
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 17:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590600603;
+        bh=AYuJ67xsI+CFY7fGg0P0jYxtF43oU5VTBcAFmEh+qxc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EJWWhLbk5Lz6+Rnb8QcUPDoQATBQVp2Iy6kvhQD7FufGToEqZw0WNmKoEZY+OeWoD
+         4rrHCNZGyQtw7/B8k5ncP5E/pc9LDYXrZg2pq9TIrd9nknM4w/xTPrhulgOkCsTMPa
+         pFSZ0noNeWbaxVUSiUxAum/0PU6fIzcy/VTy7wWw=
+Received: by mail-oi1-f180.google.com with SMTP id l6so22417688oic.9
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 10:30:03 -0700 (PDT)
+X-Gm-Message-State: AOAM531VwHapx6JMz2cbX8GsCLZpEmgMMlg6kJ+xNAPhVyTF3Y2w8iYf
+        SRr7MijRssBHjqMZX5i3O+/MYRITp70HS0KS2g==
+X-Google-Smtp-Source: ABdhPJw6llfBTCOQ2yPHWqoilVklcwSd7RUIwXqOE8eWot1HvhdFljn/0QocEk0zHloG/X0FBFCjJl7CKzBHAp2PxaU=
+X-Received: by 2002:aca:d4d5:: with SMTP id l204mr3572243oig.147.1590600602702;
+ Wed, 27 May 2020 10:30:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200527015905.GA874676@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
+ <20200511110611.3142-7-ricardo.canuelo@collabora.com> <20200514015412.GF7425@pendragon.ideasonboard.com>
+ <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360> <20200514152239.GG5955@pendragon.ideasonboard.com>
+ <20200525074335.grnjvdjnipq5g3kf@rcn-XPS-13-9360> <20200526014444.GB6179@pendragon.ideasonboard.com>
+ <CAMuHMdXinhY13us9rt9h7EvrT_8zhnQg6tmOBtA0nEQ=1G1O7Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdXinhY13us9rt9h7EvrT_8zhnQg6tmOBtA0nEQ=1G1O7Q@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 27 May 2020 11:29:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJgQajnKdQ1Bt6YFX04fX0VGz44Q3kBdLLR04OzhWrH5A@mail.gmail.com>
+Message-ID: <CAL_JsqJgQajnKdQ1Bt6YFX04fX0VGz44Q3kBdLLR04OzhWrH5A@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt: convert
+ to yaml
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wei Xu <xuwei5@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, May 26, 2020 at 1:03 AM Geert Uytterhoeven <geert@linux-m68k.org> w=
+rote:
+>
+> Hi Laurent,
+>
+> On Tue, May 26, 2020 at 3:44 AM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Mon, May 25, 2020 at 09:43:35AM +0200, Ricardo Ca=C3=B1uelo wrote:
+> > > On jue 14-05-2020 18:22:39, Laurent Pinchart wrote:
+> > > > > If we want to be more strict and require the definition of all th=
+e
+> > > > > supplies, there will be many more DTs changes in the series, and =
+I'm not
+> > > > > sure I'll be able to do that in a reasonable amount of time. I'm =
+looking
+> > > > > at them and it's not always clear which regulators to use or if t=
+hey are
+> > > > > even defined.
+> > > >
+> > > > We can decouple the two though (I think). The bindings should refle=
+ct
+> > > > what we consider right, and the dts files could be fixed on top.
+> > >
+> > > Do you have a suggestion on how to do this? If we decouple the two
+> > > tasks most of the work would be searching for DTs to fix and finding =
+a
+> > > way to fix each one of them, and unless I do this _before_ the bindin=
+g
+> > > conversion I'll get a lot of dtbs_check errors.
+> >
+> > Rob should answer this question as it will be his decision, but I've
+> > personally never considered non-compliant DT sources to be an obstacle
+> > to bindings conversion to YAML. The DT sources should be fixed, but I
+> > don't see it as a prerequisite (although it's a good practice).
+
+There's currently no requirement that binding schema don't introduce
+warnings in dts files. That should change when/if we get to a warning
+free state (probably per platform/family). I don't think we're close
+on any platform? (If we are, I'd like to start tracking that). It is
+good to pay attention to the warnings you get though as the schema may
+not be doing what you expect or the binding really doesn't match
+reality.
+
+> I do my best to avoid introducing regressions when the binding conversion=
+s
+> go upstream.
+
+Meaning you fix the dts files or massage the schema to match? If we
+just adjust schema to match, what's the point in this effort? We
+should find things wrong or ill defined.
+
 Rob
-
-On 5/26/20 8:59 PM, Rob Herring wrote:
-> On Tue, May 26, 2020 at 11:46:39AM -0500, Dan Murphy wrote:
->> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
->> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
->> can control RGB LEDs individually or as part of a control bank group.
->> These devices have the ability to adjust the mixing control for the RGB
->> LEDs to obtain different colors independent of the overall brightness of
->> the LED grouping.
->>
->> Datasheet:
->> http://www.ti.com/lit/ds/symlink/lp5012.pdf
->> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->> http://www.ti.com/lit/ds/symlink/lp5036.pdf
->>
->> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../devicetree/bindings/leds/leds-lp50xx.yaml | 180 ++++++++++++++++++
->>   1 file changed, 180 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
->> new file mode 100644
->> index 000000000000..a2ea03e07f6d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
->> @@ -0,0 +1,180 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/leds/leds-lp50xx.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: LED driver for LP50XX RGB LED from Texas Instruments.
->> +
->> +maintainers:
->> +  - Dan Murphy <dmurphy@ti.com>
->> +
->> +description: |
->> +  The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
->> +  a LED group or control them individually.
->> +
->> +  The difference in these RGB LED drivers is the number of supported RGB
->> +  modules.
->> +
->> +  For more product information please see the link below:
->> +  http://www.ti.com/lit/ds/symlink/lp5012.pdf
->> +  http://www.ti.com/lit/ds/symlink/lp5024.pdf
->> +  http://www.ti.com/lit/ds/symlink/lp5036.pdf
->> +
->> +properties:
->> +  compatible:
->> +     oneOf:
->> +      - const: ti,lp5009
->> +      - const: ti,lp5012
->> +      - const: ti,lp5018
->> +      - const: ti,lp5024
->> +      - const: ti,lp5030
->> +      - const: ti,lp5036
-> Use enum rather than oneOf+const.
-Ok
->
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description:
->> +      I2C slave address
->> +      lp5009/12 - 0x14, 0x15, 0x16, 0x17
->> +      lp5018/24 - 0x28, 0x29, 0x2a, 0x2b
->> +      lp5030/36 - 0x30, 0x31, 0x32, 0x33
->> +
->> +  enable-gpios:
->> +    description: GPIO pin to enable/disable the device.
-> How many? (maxItems: 1)
-1
->
->> +
->> +  vled-supply:
->> +    description: LED supply.
->> +
->> +  child-node:
-> This literally requires a node called 'child-node'. Not what you want.
->
-> You need a $ref to the multi-color schema in here and then only define
-> what's specific to this chip.
-Ok
->
->> +    type: object
->> +    properties:
->> +      reg:
->> +        description: This is the LED module number.
-> Constraints?
-
-What type of constraints are needed here?  They vary based on what LED 
-device you are using.
-
-
->
->> +
->> +      color:
->> +        description: Must be LED_COLOR_ID_MULTI
->> +
->> +      function:
->> +        description: see Documentation/devicetree/bindings/leds/common.txt
->> +
->> +      ti,led-bank:
->> +        description:
->> +          This property denotes the LED module numbers that will be controlled as
->> +          a single RGB cluster.  Each LED module number will be controlled by a
->> +          single LED class instance.
->> +          There can only be one instance of the ti,led-bank
->> +          property for each device node.  This is a required node is the LED
->> +          modules are to be backed.
->> +        $ref: /schemas/types.yaml#definitions/uint32-array
-> What is reg then? Some made up index? Can't you do:
->
-> reg = <1 2 3>;
-> led@1 {};
-> led@2 {};
-> led@2 {};
-
-reg becomes the first LED module number in the banked LED group.
-
-This chip has the ability to group or bank and control RGB LED clusters 
-via a single register.
-
-Or the device can control a single RGB LED cluster.  The device needs to 
-be programmed with what LED modules are banked
-
-together.  The bank numbers and LED module numbers and output numbers 
-are not the same.  So this property indicates what modules are banked as 
-in the
-
-multi-led@2 example.
-
-     #size-cells = <0>;
-+            reg = <2>;
-+            color = <LED_COLOR_ID_MULTI>;
-+            function = LED_FUNCTION_STANDBY;
-+            ti,led-bank = <2 3 5>;
-+
-+            led@6 {
-+              reg = <0x6>;
-+              color = <LED_COLOR_ID_RED>;
-+              led-sources = <6 9 15>;
-+            };
-+
-+            led@7 {
-+              reg = <0x7>;
-+              color = <LED_COLOR_ID_GREEN>;
-+              led-sources = <7 10 16>;
-+            };
-+
-+            led@8 {
-+              reg = <0x8>;
-+              color = <LED_COLOR_ID_BLUE>;
-+              led-sources = <8 11 17>;
-+            };
-+         };
-
->> +
->> +    required:
->> +      - reg
->> +      - color
->> +      - function
->> +
->> +  grandchild-node:
-> Again, no.
-ok
->
->> +    type: object
->> +    properties:
->> +      reg:
->> +        description:
->> +          A single entry denoting the LED output that controls the monochrome LED.
-> Constraints?
-
-Same as above
-
-
->> +
->> +      color:
->> +        description:
->> +          see Documentation/devicetree/bindings/leds/common.txt
-> Have you read this file recently? Don't add new references to it. (And
-> generally freeform references to other files are wrong with schemas).
-
-These patchsets and versions have been around for a very long time.
-
-So this and all references to the common.txt are artifacts prior to the 
-text file being obsoleted.
-
-I will reference the common.yaml file.
-
-Dan
-
-
