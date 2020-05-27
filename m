@@ -2,247 +2,100 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9411C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF01C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD944207CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00016208FE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590543440;
-	bh=4cUIPDm/foJKaIkPtkzb20WhYpxDbx/mzQ/Z/SNEa/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wouFKh+y8hAbgkXj0sTTPqtCEiZsr5UnyCyoxqgjN/xeYZNYinWSfSfZW5ZrKTCUw
-	 CX6p9CbKku7iThbd5yW7jscOpo6oTGK3Grii2WPeJNi430YubYESCiBYku0Q200ioK
-	 wDsa7cfNfO1WsXYExDyaAu73K5+d88FiXShM3Zq4=
+	s=default; t=1590543898;
+	bh=X8IeUYi5TEn1bZovze7WvWR7fZ/TpSB3r+3JOJw+vJQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=XG4LnnPOUIPieN8qr88s8Jb8DcXFSREE8oLbF7ETmJT710BG+FSdgq+BuvEG3kzcc
+	 a4LiSJ8WBYpCpYSfjx6gdeHotqz8x2/1i3YL6FL5kV2u2bxe3pri8AKWdqTLuGzY9X
+	 u1viw8bk3FUWKa7Z/bPcCYHpzDC9Pn4FvY9p0lUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgE0BhU (ORCPT
+        id S1726864AbgE0Bo5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 21:37:20 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38160 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgE0BhT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 21:37:19 -0400
-Received: by mail-io1-f65.google.com with SMTP id d7so24263322ioq.5;
-        Tue, 26 May 2020 18:37:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xckD9+dHAmUGj7g+utINyA+rLaiLP9KqU3YumDLq3PE=;
-        b=bdL4szCwQPS1O+4il3fB8+B60vX1HVZq0I6lFqMIeDu/69Gel3aZluxU8fQ8xqFftP
-         KHGmW99MywSiSlvqiAuEqFOL340aDNpR1qigOzq+pFioOmHP4RzIaI+rOoPgYELlcA6t
-         Dxj2jasEFstBk8H/+Tb1nHEWbksf4k5Mxwis44DNGD+G0mk93085QurFbqL/9a0CWIcI
-         Pl/Snw2WBrEmN50tQPHRXoGccu8AykfPXAo69ziFcFG/kELu8HbUT0N4oQwDSepzHQJz
-         5wGjtkXMaKnwBGwM8XDEU6UBtLY/Sur22iwlf7sK3XzEw1AdQNGQJi6SCUesk0pH1HII
-         RvBQ==
-X-Gm-Message-State: AOAM530Taip0fgDmRXPV39kfagEmRHfWDo+LHRzhjl2W96gPAma5KJnY
-        71feu23kjv6fS3JusUxCLzqiAXs=
-X-Google-Smtp-Source: ABdhPJyaK2mdTrxf61+oakEx9DGgvUIte6C7kK0Co/6Hn2/jE+Jnnd6DVBPrp3084vEYB9IfypTIrw==
-X-Received: by 2002:a5e:d506:: with SMTP id e6mr19684901iom.184.1590543437064;
-        Tue, 26 May 2020 18:37:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p7sm620988iob.7.2020.05.26.18.37.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 18:37:16 -0700 (PDT)
-Received: (nullmailer pid 852830 invoked by uid 1000);
-        Wed, 27 May 2020 01:37:15 -0000
-Date:   Tue, 26 May 2020 19:37:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     balbi@kernel.org, vigneshr@ti.com, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: usb: convert keystone-usb.txt to YAML
-Message-ID: <20200527013715.GA847644@bogus>
-References: <20200513130709.10239-1-rogerq@ti.com>
- <20200513130709.10239-2-rogerq@ti.com>
+        Tue, 26 May 2020 21:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725287AbgE0Bo5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 May 2020 21:44:57 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D60D207CB;
+        Wed, 27 May 2020 01:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590543896;
+        bh=X8IeUYi5TEn1bZovze7WvWR7fZ/TpSB3r+3JOJw+vJQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=QLptIsKhuHarasq/W6RYkU8NHJoMp0xnt0xZil+C30FyLSxx0ko4GnJqD1aLFrCrv
+         JahMQqsz6vQdQrXrr7Lr60y5v4JGPCylyVhsRe+7tPWmeip6Q9DrXJiEgtMwCK7xfM
+         XKAngA+z8LBWFwXGQrGa2SIOEiDtNeNG0h/0i6vA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513130709.10239-2-rogerq@ti.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590378348-8115-6-git-send-email-dillon.minfei@gmail.com>
+References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com> <1590378348-8115-6-git-send-email-dillon.minfei@gmail.com>
+Subject: Re: [PATCH v5 5/8] clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate, fix duplicated ltdc clock register to 'clk_core' case ltdc's clock turn off by clk_disable_unused()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillon min <dillon.minfei@gmail.com>
+To:     broonie@kernel.org, dillon.minfei@gmail.com,
+        linus.walleij@linaro.org
+Date:   Tue, 26 May 2020 18:44:55 -0700
+Message-ID: <159054389592.88029.12389551390229328953@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 04:07:07PM +0300, Roger Quadros wrote:
-> Convert keystone-usb documentation to YAML format.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  .../devicetree/bindings/usb/keystone-usb.txt  | 56 ----------------
->  .../bindings/usb/ti,keystone-dwc3.yaml        | 67 +++++++++++++++++++
->  2 files changed, 67 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/keystone-usb.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
-> deleted file mode 100644
-> index 77df82e36138..000000000000
-> --- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -TI Keystone Soc USB Controller
-> -
-> -DWC3 GLUE
-> -
-> -Required properties:
-> - - compatible: should be
-> -		"ti,keystone-dwc3" for Keystone 2 SoCs
-> -		"ti,am654-dwc3" for AM654 SoC
-> - - #address-cells, #size-cells : should be '1' if the device has sub-nodes
-> -   with 'reg' property.
-> - - reg : Address and length of the register set for the USB subsystem on
-> -   the SOC.
-> - - interrupts : The irq number of this device that is used to interrupt the
-> -   MPU.
-> - - ranges: allows valid 1:1 translation between child's address space and
-> -   parent's address space.
-> -
-> -SoC-specific Required Properties:
-> -The following are mandatory properties for Keystone 2 66AK2HK, 66AK2L and 66AK2E
-> -SoCs only:
-> -
-> -- clocks:		Clock ID for USB functional clock.
-> -- clock-names:		Must be "usb".
-> -
-> -
-> -The following are mandatory properties for 66AK2G and AM654:
-> -
-> -- power-domains:	Should contain a phandle to a PM domain provider node
-> -			and an args specifier containing the USB device id
-> -			value. This property is as per the binding,
-> -			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> -
-> -Sub-nodes:
-> -The dwc3 core should be added as subnode to Keystone DWC3 glue.
-> -- dwc3 :
-> -   The binding details of dwc3 can be found in:
-> -   Documentation/devicetree/bindings/usb/dwc3.txt
-> -
-> -Example:
-> -	usb: usb@2680000 {
-> -		compatible = "ti,keystone-dwc3";
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		reg = <0x2680000 0x10000>;
-> -		clocks = <&clkusb>;
-> -		clock-names = "usb";
-> -		interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
-> -		ranges;
-> -
-> -		dwc3@2690000 {
-> -			compatible = "synopsys,dwc3";
-> -			reg = <0x2690000 0x70000>;
-> -			interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
-> -			usb-phy = <&usb_phy>, <&usb_phy>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-> new file mode 100644
-> index 000000000000..14d2fe329b93
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/usb/ti,keystone-dwc3.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI Keystone Soc USB Controller
-> +
-> +maintainers:
-> +  - Roger Quadros <rogerq@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: "ti,keystone-dwc3"
-> +      - const: "ti,am654-dwc3"
+Quoting dillon.minfei@gmail.com (2020-05-24 20:45:45)
+> From: dillon min <dillon.minfei@gmail.com>
+>=20
+> ltdc set clock rate crashed
+>    'post_div_data[]''s pll_num is PLL_I2S, PLL_SAI (number is 1,2). but,
 
-Use enum rather than oneOf+const.
+Please write "post_div_data[]'s" if it is possessive. "But" doesn't
+start a sentence. This is one sentence, not two.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: Address and length of the register set for the USB subsystem on
-> +      the SOC.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: The irq number of this device that is used to interrupt the MPU.
+>     as pll_num is offset of 'clks[]' input to clk_register_pll_div(), whi=
+ch
+>     is FCLK, CLK_LSI, defined in 'include/dt-bindings/clock/stm32fx-clock=
+.h'
+>     so, this is a null object at the register time.
+>     then, in ltdc's clock is_enabled(), enable(), will call to_clk_gate().
+>     will return a null object, cause kernel crashed.
+>     need change pll_num to PLL_VCO_I2S, PLL_VCO_SAI for 'post_div_data[]'
+>=20
+>  duplicated ltdc clock
+>    'stm32f429_gates[]' has a member 'ltdc' register to 'clk_core', but no
+>     upper driver use it, ltdc driver use the lcd-tft defined in
+>    'stm32f429_aux_clk[]'. after system startup, as stm32f429_gates[]'s lt=
+dc
+>     enable_count is zero, so turn off by clk_disable_unused()
 
-No need for genericish descriptions when a single item.
+I sort of follow this. Is this another patch? Seems like two things are
+going on here.
 
-> +
-> +
-> +  clocks:
-> +    description: Clock ID for USB functional clock.
+>=20
+> Changes since V3:
+> 1 drop last wrong changes about 'CLK_IGNORE_UNUSED' patch
+> 2 fix PLL_SAI mismatch with PLL_VCO_SAI
 
-How many?
+This change log goes under the --- below.
 
-> +
-> +  power-domains:
-> +    description: Should contain a phandle to a PM domain provider node
-> +      and an args specifier containing the USB device id
-> +      value. This property is as per the binding,
-> +      Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>=20
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
 
-How many?
-
-> +
-> +  dwc3:
-
-This doesn't work because there's a unit address. You need a pattern.
-
-> +    description: This is the node representing the DWC3 controller instance
-> +      Documentation/devicetree/bindings/usb/dwc3.txt
-
-type: object
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    usb: usb@2680000 {
-> +      compatible = "ti,keystone-dwc3";
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-
-These have to be documented.
-
-> +      reg = <0x2680000 0x10000>;
-> +      clocks = <&clkusb>;
-> +      clock-names = "usb";
-> +      interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
-> +      ranges;
-
-This too.
-
-> +
-> +      dwc3@2690000 {
-> +        compatible = "synopsys,dwc3";
-> +        reg = <0x2690000 0x70000>;
-> +        interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
-> +        usb-phy = <&usb_phy>, <&usb_phy>;
-> +      };
-> +    };
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+Any Fixes tag?
