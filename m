@@ -2,50 +2,78 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7645BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3656BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5938B2075A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15089207CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590578320;
+	bh=Eb5W1Mu4UnXinW4nhuzmv6KKdI/oP0r3mQb3N4LC+sU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gLc69wSci6Su8KTvmkTbfklGxeE9xUj8cs3kUh+i87sv8zk7a9IT7RWacfm3XcrU7
+	 rvqxBSFmjeimFTSsnRiENN2Lxa+YPfvyJcs25N8aWHgyaz/KCKIstrNcYPrY0u2v+B
+	 oDAAbcWHTV+hvckJUoU9O0kJPUwyT9AA57PYW154=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387793AbgE0LHe (ORCPT
+        id S2387677AbgE0LSf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 07:07:34 -0400
-Received: from sauhun.de ([88.99.104.3]:55380 "EHLO pokefinder.org"
+        Wed, 27 May 2020 07:18:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387534AbgE0LHe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 07:07:34 -0400
-Received: from localhost (p54b33011.dip0.t-ipconnect.de [84.179.48.17])
-        by pokefinder.org (Postfix) with ESMTPSA id 84A462C2037;
-        Wed, 27 May 2020 13:07:32 +0200 (CEST)
-Date:   Wed, 27 May 2020 13:07:32 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH] i2c: xiic: Support disabling multi-master in DT
-Message-ID: <20200527110732.GA4875@ninjato>
-References: <20200218135627.24739-1-ext-jaakko.laine@vaisala.com>
- <CAKfKVtFf+VpinkOGsBFZ2-_PKvx-C1L7G7_uhY2RCvV5dy6L_w@mail.gmail.com>
- <AM0PR06MB5185E501349E06428093B62FD4F70@AM0PR06MB5185.eurprd06.prod.outlook.com>
- <20200401143254.GA2409@ninjato>
- <AM0PR06MB5185F8F51316FCD5213F0ABED4C60@AM0PR06MB5185.eurprd06.prod.outlook.com>
- <20200402092813.GA986@ninjato>
- <AM0PR06MB51857F4CDC7AE643CE160F9ED4A60@AM0PR06MB5185.eurprd06.prod.outlook.com>
+        id S2387619AbgE0LSe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 07:18:34 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9302A207CB;
+        Wed, 27 May 2020 11:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590578314;
+        bh=Eb5W1Mu4UnXinW4nhuzmv6KKdI/oP0r3mQb3N4LC+sU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XtBpaS+v/lpJ9RrOyaPoiNOws0yskW0gCFJwnq5/cqlLekMU3baEbiWM2aeapJ8di
+         CklyM05gEwvP4Kf2SWN9Va00wb2otRuEMe7bisF3ZeRBm8TTQ0bikOri9+9fyDnkXP
+         E7vBo27aAiaM9AkQWfLi96qnlVRBQMOK2vWz9Xfs=
+Date:   Wed, 27 May 2020 12:18:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     dillon min <dillon.minfei@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Hua Dillon <dillonhua@gmail.com>
+Subject: Re: [PATCH v6 8/9] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
+ support for stm32f4
+Message-ID: <20200527111831.GC5308@sirena.org.uk>
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+ <1590564453-24499-9-git-send-email-dillon.minfei@gmail.com>
+ <20200527095109.GA5308@sirena.org.uk>
+ <CAL9mu0JA=XRTj_HONQGtj74X05TAV0__dW2At0AAeymwNvJhEw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
 Content-Disposition: inline
-In-Reply-To: <AM0PR06MB51857F4CDC7AE643CE160F9ED4A60@AM0PR06MB5185.eurprd06.prod.outlook.com>
+In-Reply-To: <CAL9mu0JA=XRTj_HONQGtj74X05TAV0__dW2At0AAeymwNvJhEw@mail.gmail.com>
+X-Cookie: Drop in any mailbox.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -53,63 +81,31 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---45Z9DzgjV8m4Oswq
+--TYecfFk8j8mZq+dy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi Jaako,
+On Wed, May 27, 2020 at 06:45:53PM +0800, dillon min wrote:
 
-> The changes required to this patch at XIIC driver from suggested DT
-> changes are pretty minor. Basically only checking a different
-> property, reversing logic and some naming changes. I can make these
-> changes already for the driver if this solution is what will be
-> chosen, or would you prefer to still think about this?
+> sorry, forget to remove these two patch from this submits, will not
+> include it in later submits
+> which ack other's review result.
 
-I think we can go forward this way. Although I didn't find an example, I
-am quite sure YAML format can have exclusive properties. If not, it
-should be added ;) I'll try again to get some information from people
-more experienced with YAML. But we don't depend on it.
+Ah, OK - no problem.
 
-> Regarding the device tree changes: I am not very familiar with the
-> needed documentation changes, YAML bindings or what needs to be done
-> for new bindings in general. Would you prefer to still consider them
-> and/or get these subsystem level bindings done by someone more
-> familiar with them? Another option would be for me to try find time to
-> do the suggested bindings changes anyway, but it will likely require
-> some effort from me to familiarize with device tree bindings changes
-> and schedule the time for it.
-
-No need to. Luckily, the I2C main bindings file is still text, so it is
-easy to modify. I will send a patch out in a few minutes, so you can
-base your driver code on that. Converting to YAML is a completely
-different step, not related to your patch here. (Sidenote: I am looking
-for volunteers to do that)
-
-I think this covers it?
-
-Happy hacking,
-
-   Wolfram
-
-
---45Z9DzgjV8m4Oswq
+--TYecfFk8j8mZq+dy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7OSe8ACgkQFA3kzBSg
-KbYhDA/+Mz+QoufnY4EPCz5k/e/sII/jXO8cozIN4DhnrjHB/hm1ypYwvJxyQGnO
-ajA/7vWPE5ZdFTff+DiaVu4btR0fZpUztvZOZnko7CVtgnhZ+2q44nY7kuOEJzo5
-RqqrmWcNRDu5kDtfFKZqkQS2Lg8mkN7FKulq3VBXBhhov2G+OcIzjVW981QwFRFl
-An9skXoQKUu7Jog7EwZEhPYPuVEDPsxIgwJjQW0RagIT3N4hiRAlPBUvy2hy1FWV
-55b4Xf16A2lBnRrUPYvs4W75KAVdCgWxuJvNINKremjpZGkbile0nVKvyEUc8Qyi
-scu180J5u6PFvjJO9x49unn7qf9XtcwtlE9oabUcOHvDa3U753m8RHrh+K/j1iYu
-WntnYjpcKWqGmodj9JoiAXledcy/ntfd+9UJL4zihxAP6wgcVzpxl2W9Zn3aOgPE
-PBowiHNZl9lwLm9uKCpi29+7Ne1Vt1v7J2FZ07S+bY+ytvDM1abvp5GfBzKRz7XA
-q8aXZ2Amhh84dNha9r3VOiLRBAzHjZOVc6hR8mBnAjy8+1O0kyJn2GrPK9rGwDQ7
-kqhe5uTlBmJyvQrJx0CnILXOuRS7rJTj7y2u5FHUZNZghROzEXn6PlmnL4WNeqBz
-cgus7tOk4/Xz8ihlAGrKvNOvPkSNALVyW96kCkUT9EcOV5qmWKk=
-=g4Yu
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7OTIcACgkQJNaLcl1U
+h9CjnAf9EH3yOA2f087uyr/KGCDeTZDdKdksfcJ4a9wlCQWW1Cur92auEEnoA3Rt
+OaZkMT9iqrDJqCSZ80c9Be1Ql4zXnjxCHU+qExkLFmDJcR448ywgqaYh9gluj6D3
+xQnn0fxJcjgY+eixxAPqszazPIQm3iHZL0TsQo5DNBU7uDO/p+HytpUoYEntT7AT
+bjn2mYE+1drgcxELR/TkQdRnV0jUiAtcpkGnI2tPO70MBQ6jcAwIAX4cBSnjwdhO
+L9bXUB58NNMcuUWSj9+c8WyJn0zssre7UWLaYiX9g92/yJEPJNzGN2SFXiM1Jsks
+PQH9axxSmBjKf8StOS7727u+sJ8H8Q==
+=Ibfd
 -----END PGP SIGNATURE-----
 
---45Z9DzgjV8m4Oswq--
+--TYecfFk8j8mZq+dy--
