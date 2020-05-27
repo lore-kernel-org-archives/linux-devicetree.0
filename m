@@ -2,97 +2,108 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F27C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9D1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 578762065F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590599754;
-	bh=DmkWu4p3uiFJtjCdJCSH3WMauJ+B8g0HGW0R5W/y3nw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YvW683WZHlg0jcf79aLcNA4485j6jkMiCdzDZeaWVtzYejEq5uthTmggIsLDbYG/7
-	 6vgxIDTPOe79+LkzcosBxZos9bcVeTmCeK4GjzUFhTpAytPZg76pbR8Adl164l6jaU
-	 oh6dI3TQyrd2PkzUrj4wMl0HTw6tHXVdn5z2vpL8=
+	by mail.kernel.org (Postfix) with ESMTP id 96D8B20899
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731296AbgE0RPy (ORCPT
+        id S1730185AbgE0RSp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 13:15:54 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37202 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729913AbgE0RPx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 13:15:53 -0400
-Received: by mail-il1-f195.google.com with SMTP id r2so13639128ila.4;
-        Wed, 27 May 2020 10:15:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=99jkXJtnw0P2GQYZjU0aScSsUNY825EbLFpq6MuWBZM=;
-        b=gsK2/YiiuDQiYj2U23kEWnRx9vTN7MHgQYmT+E+G4Syje5gcrHrL9CRzLG6E6Hko1Y
-         5B5lKW5OJfV6n4nR9k3KlZq2oX++5i0f5Evuc9xzKr8MyyQ7WpeeGyuqa6qU7g5AXBgq
-         z5lULyBJGaqnfK0xiICXgXUWK5VZoFJTDlxXnGX62kwYtze3tSEdvh9UlEXP+Pu3wq85
-         17tzNsNlJgZyxfzNE9IoJogzTf9XXDcqtNAdoXyBAAd/GqtTaMHEJ7uv2sQovINAWg2O
-         r+TxFlyQhlQ0ibn98NKkceazfhmKNoEgpSJYcmmFJU6UggsPuTusjHLIVoSAtHb9MCVK
-         71/Q==
-X-Gm-Message-State: AOAM530pmrvwV3rpPeCYsMT2ziVgAXbfF05UF5+IfSmYiN5snmcIbnoU
-        HBk354kg7W5CPhfmax5/TkXTYOM=
-X-Google-Smtp-Source: ABdhPJwPTefjiDIOFvVJXCs7TY5ht51jwG0qsC72o6krduJg/Kg+szG4VgXRZmELzJcCA5WCHlNh1g==
-X-Received: by 2002:a92:d183:: with SMTP id z3mr7109934ilz.102.1590599752632;
-        Wed, 27 May 2020 10:15:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id g6sm1881136ile.38.2020.05.27.10.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:15:52 -0700 (PDT)
-Received: (nullmailer pid 2365435 invoked by uid 1000);
-        Wed, 27 May 2020 17:15:51 -0000
-Date:   Wed, 27 May 2020 11:15:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: watchdog: renesas,wdt: Document r8a7742
- support
-Message-ID: <20200527171551.GA2365256@bogus>
-References: <1590596967-22973-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 27 May 2020 13:18:45 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37466 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729534AbgE0RSp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 13:18:45 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5C8B58030833;
+        Wed, 27 May 2020 17:18:42 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id J1BUg-MTvr5n; Wed, 27 May 2020 20:18:41 +0300 (MSK)
+Date:   Wed, 27 May 2020 20:18:41 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+Message-ID: <20200527171841.am2iaynff243xoep@mobilestation>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
+ <20200527171204.GA2348490@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1590596967-22973-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200527171204.GA2348490@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 May 2020 17:29:27 +0100, Lad Prabhakar wrote:
-> RZ/G1H (R8A7742) watchdog implementation is compatible with R-Car Gen2,
-> therefore add relevant documentation.
+On Wed, May 27, 2020 at 11:12:04AM -0600, Rob Herring wrote:
+> On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
+> > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> > i2c "reg" property. If it is the compiler will print a warning:
+> > 
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > 
+> > In order to silence dtc up let's discard the flag from the DW I2C DT
+> > binding example for now. Just revert this commit when dtc is fixed.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: linux-mips@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch created as a result of the Rob request to remove
+> >   the EEPROM-slave bit setting in the DT binndings example until the dtc
+> >   is fixed.
+> > ---
+> >  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > index 4bd430b2b41d..101d78e8f19d 100644
+> > --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > @@ -137,7 +137,7 @@ examples:
+> >  
+> >        eeprom@64 {
+> >          compatible = "linux,slave-24c02";
+> > -        reg = <0x40000064>;
+> > +        reg = <0x64>;
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> Hi,
-> 
-> This patch is part of series [1], as requested by Rob [1] I have
-> reabsed my changes on-top json-schema conversion patch.
-> 
-> [1] https://www.spinics.net/lists/netdev/msg653258.html
-> [2] https://patchwork.kernel.org/patch/11552335/
-> 
-> Cheers,
-> Prabhakar
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> But the compatible is a slave, so you need an example with a different 
+> device.
 
-Applied, thanks!
+Ok. I'll replace the sub-node with just "atmel,24c02" compatible string then.
+
+-Sergey
+
+> 
+> >        };
+> >      };
+> >    - |
+> > -- 
+> > 2.26.2
+> > 
