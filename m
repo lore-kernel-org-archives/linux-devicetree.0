@@ -2,101 +2,114 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FF5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 10:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8970C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 10:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 938C6208B8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 10:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FF92075F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 10:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIzpvkEu"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OOvC/Pw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgE0KSj (ORCPT
+        id S1729907AbgE0Kmi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 06:18:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgE0KSi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 06:18:38 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8EE9C061A0F;
-        Wed, 27 May 2020 03:18:38 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id c75so11581804pga.3;
-        Wed, 27 May 2020 03:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EhwhFw1tES4LZGvoxz/NosIDfmflP0OU91r5bFTkb98=;
-        b=SIzpvkEuQFsOG8bNh7PbCXcg58+f7d7hDswJsuYf1mwFQoAVPLwpPBYwLB5Kld98aL
-         zk4hubJqwcCvwoo2mDJ8ugJ3EZwPABifi80PkNZbhxG29ap6Lv4Zc2PMfqnLqT5JuwBH
-         uceu/KM2j/2mOACBpCFROhRD5Za2JFPFLzgcem3EU/CsY0GOEKH/6yKIegmaVCsdlA8b
-         ELvAfKdkbO+Pyapj0EXPZdV1ByF7FFqzT+G1SBcGj0bXhV2rghRgnSO6m33MBvG1wPRj
-         e4SnFHR3jGzUqRJp9E4PsaYI7eLMNoy8KnNDCF0zFlITkp5AMZTA28g179rYNQFVHZvy
-         WG3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EhwhFw1tES4LZGvoxz/NosIDfmflP0OU91r5bFTkb98=;
-        b=pE0ASEHLHNIMy96p44mHXl7/zyvkvWSnu4xIusIrESLmZsD87HLDkFKwnxhTAYqK7N
-         SleSS4wEN2qz8jZ++RI5zQC3BU29iTazFbX7MT0avBtdnlmhJoWBctIbobqD1zKkio5u
-         f8mIn/I9AS9xXi5MPHYo9TeKP+jgsE3jaLjiIQvjVVkmwqXGQpYeiwK0CL7SpmqNQtdq
-         FFk/3CkeFsD2VL1xtalcB6RdRi9nnKqoCteSZaI60CCFs+FGSv1RJBNMyuPhGohwGSlq
-         tTRwIcZkhzpM4b8/+ELGdyFjXspOFGQpwkUA6jhlEAydd/PJChQ34RMSx992NwAKhHlG
-         r1CA==
-X-Gm-Message-State: AOAM530zmaFJuMjpkNluKLa4GawwUnNLUWyigFSornJrquPDp9jrbSVY
-        FGMgx3imrw1d4ePC+lW6slmsHiXg8MRX8dskiPk=
-X-Google-Smtp-Source: ABdhPJyCHpozKeoHK85XTSqAWyu+N2lpBygYqk3zDE/5YtgW+awwVfP/5OgHvoazlKjrN+diVc6lN3DBQ6FUKqoKPc0=
-X-Received: by 2002:a63:545a:: with SMTP id e26mr1830343pgm.4.1590574718152;
- Wed, 27 May 2020 03:18:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
- <20200526215528.16417-12-Sergey.Semin@baikalelectronics.ru>
- <CAHp75Veygd2y8Tp28p+ZX8Hm_u975QdqatKbsNOG9tNz6HOCAg@mail.gmail.com> <20200527095034.xd52qv45nzcnkbnz@mobilestation>
-In-Reply-To: <20200527095034.xd52qv45nzcnkbnz@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 27 May 2020 13:18:26 +0300
-Message-ID: <CAHp75Vdv10g5Fsxp+P49SR79yzePss-2=ACTdbAD-3BGHeHAmg@mail.gmail.com>
-Subject: Re: [PATCH v3 11/12] i2c: designware: Move reg-space remapping into a
- dedicated function
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 May 2020 06:42:38 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:34630 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729354AbgE0Kmh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 06:42:37 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D71E1C0519;
+        Wed, 27 May 2020 10:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1590576157; bh=lpACwEEgKDR7yHl5cTeAFMn8IWhWr6mS3IR2RzmeAgk=;
+        h=Date:From:Subject:To:Cc:From;
+        b=OOvC/Pw4xL0cc8ffTcmlrPBKtn7Om8cqlNAHuifZkka4vvjKQdQwOknaL9O2j2ulK
+         rQRp3L6/YQdY7BJHimu8un0yV4Jtv0jUxRj3l4PRml5FQ6i4gKvpl1wlLawE7TV9jR
+         Pdvy3kPe3xh4oVxqe6gx6H4bvTZ6lZHTzswRTKnjy1XSEqeztx7Y0dGfo3pkkNyCuW
+         f+h8xB+ZGHsmbhJZBQCkR1znJfOV7on4ZQTA1+jZDB5fPwLVjc6/QiSXiuNq03RPp+
+         UsaHze/xjtxXqpcx8PjUoGM3bikRJVlr2kt9O0WdVy2CaExOJbrnN76aLd9NFOJVKE
+         2r8ODMfkECMBw==
+Received: from tejas-VirtualBox (joglekar-e7480.internal.synopsys.com [10.146.20.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPSA id 7B168A005C;
+        Wed, 27 May 2020 10:42:32 +0000 (UTC)
+Received: by tejas-VirtualBox (sSMTP sendmail emulation); Wed, 27 May 2020 16:10:30 +0530
+Date:   Wed, 27 May 2020 16:10:30 +0530
+Message-Id: <cover.1590415123.git.joglekar@synopsys.com>
+X-SNPS-Relay: synopsys.com
+From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+Subject: [PATCH v3 0/4] Add logic to consolidate TRBs for Synopsys xHC
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     John Youn <John.Youn@synopsys.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:50 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> On Wed, May 27, 2020 at 12:26:09PM +0300, Andy Shevchenko wrote:
-> > On Wed, May 27, 2020 at 4:03 AM Serge Semin
-> > <Sergey.Semin@baikalelectronics.ru> wrote:
+The Synopsys xHC has an internal TRB cache of size TRB_CACHE_SIZE for
+each endpoint. The default value for TRB_CACHE_SIZE is 16 for SS and 8
+for HS. The controller loads and updates the TRB cache from the
+transfer ring in system memory whenever the driver issues a start
+transfer or update transfer command.
 
-...
+For chained TRBs, the Synopsys xHC requires that the total amount of
+bytes for all TRBs loaded in the TRB cache be greater than or equal to
+1 MPS. Or the chain ends within the TRB cache (with a last TRB).
 
-> > Wolfram, did my last series make your tree? I think there was a patch
-> > that touched this part...
->
-> Right. It is there. I'll rebase the series on top of the i2c/for-next branch.
+If this requirement is not met, the controller will not be able to
+send or receive a packet and it will hang causing a driver timeout and
+error.
 
-Ah, my memory did a trick. Thank you!
+This patch set adds logic to the XHCI driver to detect and prevent this
+from happening along with the quirk to enable this logic for Synopsys
+HAPS platform.
+
+Based on Mathias's feedback on previous implementation where consolidation
+was done in TRB cache, with this patch series the implementation is done
+during mapping of the URB by consolidating the SG list into a temporary
+buffer if the SG list buffer sizes within TRB_CACHE_SIZE is less than MPS.
+
+Changes since v2:
+ - Modified the xhci_unmap_temp_buffer function to unmap dma and clear
+   the dma flag
+ - Removed RFC tag
+
+Changes since v1:
+ - Comments from Greg are addressed on [PATCH 4/4] and [PATCH 1/4]
+ - Renamed the property and quirk as in other patches based on [PATCH 1/4]
+
+Tejas Joglekar (4):
+  dt-bindings: usb: Add documentation for SG trb cache size quirk
+  usb: xhci: Set quirk for XHCI_SG_TRB_CACHE_SIZE_QUIRK
+  usb: dwc3: Add device property sgl-trb-cache-size-quirk
+  usb: xhci: Use temporary buffer to consolidate SG
+
+ Documentation/devicetree/bindings/usb/dwc3.txt     |   4 +
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |   3 +
+ drivers/usb/dwc3/core.c                            |   2 +
+ drivers/usb/dwc3/core.h                            |   2 +
+ drivers/usb/dwc3/dwc3-haps.c                       |   1 +
+ drivers/usb/dwc3/host.c                            |   6 +-
+ drivers/usb/host/xhci-pci.c                        |   3 +
+ drivers/usb/host/xhci-plat.c                       |   4 +
+ drivers/usb/host/xhci-ring.c                       |   2 +-
+ drivers/usb/host/xhci.c                            | 135 +++++++++++++++++++++
+ drivers/usb/host/xhci.h                            |   5 +
+ 11 files changed, 165 insertions(+), 2 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.11.0
+
