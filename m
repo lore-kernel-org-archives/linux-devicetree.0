@@ -2,94 +2,112 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FE6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 03:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE4DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 03:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D631B2084C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 03:49:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="sExtPwMI"
+	by mail.kernel.org (Postfix) with ESMTP id E85C120776
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 03:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgE0Dtu (ORCPT
+        id S2387507AbgE0DxT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 23:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgE0Dtt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 23:49:49 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29898C03E97C
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 20:49:49 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id e16so12271824qtg.0
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 20:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dVMhtUwlG7AgZ0Ijz3j9HLaOpimNX6eb8QQEpufvZ6g=;
-        b=sExtPwMIpav1ROWvRyoQV2sve5tEvstu/cUoWiG8YF+qvuePbma/yLZ0k8svPQhpQg
-         b4zE5SnUv8LyJ/sXjy2t8wvivL6wwko8GOq6BSMx0Zu4S8is/+8gROSd9+J/EJkreJaE
-         0dIpEI8jMKZOz1gNuUUDxRlpZq68hkucY9YMRiTDP4grSJsIleVRRkDO6pksVFnEhXIZ
-         xhWfDqzwFOAcFFLGQNzsV3Hz/l1mHI9pk5+ZEix3zzH/uUALeraXLtiAvAGFniq2CS2t
-         3LLlbEGo2DFv51LzG3hD1/mwnfS8mr864C/U+LpL3U8s0jSDsyaB3q59lH4r68bDRqt3
-         WMHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dVMhtUwlG7AgZ0Ijz3j9HLaOpimNX6eb8QQEpufvZ6g=;
-        b=ihdrDnDeCQGezsBLW+uJ3ZIZ1HNcqqHWMFAmKVIDfUnRMJtN/lIlj4HzYo6Lk3BwDX
-         B8317u4C1F90Q/UrcgsUFDMc3tEsSeyq+8Qr87B8yhoFJYd/o1aVM3sa7ht+b2vBjScX
-         QiBa18pqKsibnbT3B64iCPVlKMj+O3C6Z0cOXIM9RUXEa1qNp+wVoXj0O6FV309fKZs3
-         irACf+2V1waaUKFvl2LcV4dn9K4nslFATqrNhXJq42FDZ4ZSjjOR9bxuNdYV99cRGMJ8
-         sSkQGJDJAmLlDVUDJULfVLXFNSQ8GEE5T+4vleQoPIphnwCv2MTKE4KtgWNfvD3/bDpQ
-         iIgw==
-X-Gm-Message-State: AOAM531Q/0m+1knbo+OJ9b24l5AcKgji8+gXHXnxaKaOrZMu+gie6ZXr
-        zB4rzMFMhAm2ov+BdDWkX4NvWdbqhymKpKJWgXICnw==
-X-Google-Smtp-Source: ABdhPJzw/Ea21QjAz+NNc+UEvVjKgzKsu7W2vzxBdItWR7V+TRRc1JIl7TX2+ezCAqEJ32OO1Ie36scyU+a6wB1ZZqk=
-X-Received: by 2002:ac8:7383:: with SMTP id t3mr2301591qtp.221.1590551388107;
- Tue, 26 May 2020 20:49:48 -0700 (PDT)
+        Tue, 26 May 2020 23:53:19 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8198 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387487AbgE0DxT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 May 2020 23:53:19 -0400
+IronPort-SDR: GRSqhu7Ij8H6PUGsOjoVTH4LQEhYjTFL2JnYFfVSjdWWVEU2aqrurznGQy27uNZH7BA/6dLOJ/
+ A/5tz9dRxjbQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 20:53:19 -0700
+IronPort-SDR: f0/a7uXNqJ5aDFrnDJ0yEoe7GmPGGF/fM4jFM9d1GXpNKVgxLRdXoBGZ/L70VPM+xs2wnh8j4G
+ vfSzCZXTOKAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
+   d="scan'208";a="442356630"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 26 May 2020 20:53:19 -0700
+Received: from [10.214.150.18] (rtanwar-mobl.gar.corp.intel.com [10.214.150.18])
+        by linux.intel.com (Postfix) with ESMTP id 1D8CC5803C1;
+        Tue, 26 May 2020 20:53:15 -0700 (PDT)
+Subject: Re: [PATCH v8 2/2] clk: intel: Add CGU clock driver for a new SoC
+To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com
+Cc:     robh@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        rtanwar <rahul.tanwar@intel.com>
+References: <cover.1587102634.git.rahul.tanwar@linux.intel.com>
+ <42a4f71847714df482bacffdcd84341a4052800b.1587102634.git.rahul.tanwar@linux.intel.com>
+ <159054541310.88029.5777794695153819198@swboyd.mtv.corp.google.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <c91ec0e0-5a16-2e28-dae0-4219f5f5340f@linux.intel.com>
+Date:   Wed, 27 May 2020 11:53:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
- <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com> <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
-In-Reply-To: <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Wed, 27 May 2020 11:49:36 +0800
-Message-ID: <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <159054541310.88029.5777794695153819198@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-On Tue, May 26, 2020 at 6:20 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> I gave it a try with U-Boot with my latest work and couldn't reproduce it, so it
-> seems that I fixed it along the way
+Hi Stephen,
 
-Is your latest work available in a git branch anywhere that we could
-test directly?
+On 27/5/2020 10:10 am, Stephen Boyd wrote:
+> Quoting Rahul Tanwar (2020-04-16 22:54:47)
+>> diff --git a/drivers/clk/x86/clk-cgu.c b/drivers/clk/x86/clk-cgu.c
+>> new file mode 100644
+>> index 000000000000..802a7fa88535
+>> --- /dev/null
+>> +++ b/drivers/clk/x86/clk-cgu.c
+>> @@ -0,0 +1,636 @@
+> [...]
+>> +       ctx->membase = devm_platform_ioremap_resource(pdev, 0);
+>> +       if (IS_ERR(ctx->membase))
+>> +               return PTR_ERR(ctx->membase);
+>> +
+>> +       ctx->np = np;
+>> +       ctx->dev = dev;
+>> +       spin_lock_init(&ctx->lock);
+>> +
+>> +       ret = lgm_clk_register_plls(ctx, lgm_pll_clks,
+>> +                                   ARRAY_SIZE(lgm_pll_clks));
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = lgm_clk_register_branches(ctx, lgm_branch_clks,
+>> +                                       ARRAY_SIZE(lgm_branch_clks));
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = lgm_clk_register_ddiv(ctx, lgm_ddiv_clks,
+>> +                                   ARRAY_SIZE(lgm_ddiv_clks));
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+>> +                                         &ctx->clk_data);
+>> +       if (ret)
+>> +               return ret;
+> Are any of the clks unregistered on failure? It looks like devm_ isn't
+> used for registration so nothing can be undone? Please fix this in a
+> future patch.
 
-Thanks
-Daniel
+Thanks a lot for accepting the patch series. I went through all of your
+comments and i agree with all of them. Will fix it & address other
+review concerns in a future patch once 5.8 is released.
+
+Regards,
+Rahul
+
