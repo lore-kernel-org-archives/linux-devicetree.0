@@ -2,114 +2,88 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E299EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7FBC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1CD20873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:57:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="GDPfI1e5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="smWN56+f"
+	by mail.kernel.org (Postfix) with ESMTP id 6074C20776
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbgE0P5A (ORCPT
+        id S2390726AbgE0P5b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 11:57:00 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60367 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390106AbgE0Pte (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 11:49:34 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D3E3D582005;
-        Wed, 27 May 2020 11:49:32 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=2I5zMakGdefyc
-        AHM9J30Y7T2xEqngHoH53dlRgc3XbQ=; b=GDPfI1e5KUvbj23n5X227mloVFY/3
-        t4ZnnUqAy/V3vYC+s/+6lMhmuG6BtTkgtEbtVzCK94xHj2Q4HA8PR2ZpDuq56By3
-        DxgK6hq6FzzbDnvoNjb4XRc5cufhUaM+mYmQ2bBT1FiFV7zIgfKSk3S8q1WcfZGa
-        /GjPj0dKNEsd1PXwsfFGN30JySBg37GWLtTjEMlJwyaOnXSm44KQKaVkXVSjdKk1
-        mYQCIh0Qza9H5KMKa4z7Lb/1N6lX94AWMlOG9mR+Xh81E7Xu2uxQlqZHeWUFHLjz
-        A7Zw9upBF1pbzNOxoXQALpubQutmyZnP2fb5UBvRNgTfhutbsA8XRlN7Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=2I5zMakGdefycAHM9J30Y7T2xEqngHoH53dlRgc3XbQ=; b=smWN56+f
-        1pwLp2iGMWQSidpEwae8QUOnqW840OQijmct90Dz6zXB6VOYcQmO9RjZfXY/rJSa
-        l/Ei/x2nOpNOwmEVtD0n3drmA0ayxudShPW9ezpeP+Uhdm4qPe1U/Ri0p5ygMGLz
-        fKkOgxQn+peJ3Xy6PVAB/hdJ3lFPuObAWwb9pFPzQwKITqgzB0eQrZaniug2ryk8
-        2CnqmlBdCdcXRqlcYfP62H+qgaVBkw13tlkHnNnBQQ/ETBGkHWDQW6lgb7kT10im
-        KmmPdnkGp9HRgD8gbUGNsiEETxL5w5pSc8Um3e8daSFqAJbcLxkJEo6NHHeeYdYC
-        g/h/65WiMaQrNw==
-X-ME-Sender: <xms:DIzOXnXWO_lISxlUCitH0rnMi4dKb6xYO7PsRyUpc23fbq_uej2VXA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdejne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:DIzOXvmJ-VLAYX7qZ8v_tQ4_-ZFCAXRL07JbpEF6cARKfTiu9UKe-Q>
-    <xmx:DIzOXjbNIZ1MgebVYfsSEM9A8JT1D2v51Vpk3OC615B3pUrb3zZLkA>
-    <xmx:DIzOXiVQbowtYBPCONx9JBbLeqp_fX-AKEne-jAcExujoqViiPQBOg>
-    <xmx:DIzOXijEe9LvUU_f5KZSujyNyDIGd8kLTiMlvpBXyrygEKgS4FDRQQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 78ABA3280060;
-        Wed, 27 May 2020 11:49:32 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v3 010/105] dt-bindings: display: vc4: Document BCM2711 VC5
-Date:   Wed, 27 May 2020 17:47:40 +0200
-Message-Id: <c92be0086d086cd763160bec08c81dd8b8fd32e6.1590594512.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+        Wed, 27 May 2020 11:57:31 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46751 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389098AbgE0P5a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 11:57:30 -0400
+IronPort-SDR: /RmBll3NcqzurLjWivv0Ghnq5xxgj2jb78FFbvo/j95HEIbawZi2Ty6mY8fSVXBSvyIAIbdPHw
+ uVF0hID3qgQQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 08:57:28 -0700
+IronPort-SDR: 48nmseDxO4buDj9BHJ72XfM7rkj0ZuzQrmlgWuQGxqfSjijDZadQB+8NIQrLGd5GtUaD3f9rrI
+ YhKw3Kbh5dwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="255505955"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 27 May 2020 08:57:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdyQn-009Ftm-Uq; Wed, 27 May 2020 18:57:25 +0300
+Date:   Wed, 27 May 2020 18:57:25 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 07/11] i2c: designware: Discard Cherry Trail model flag
+Message-ID: <20200527155725.GK1634618@smile.fi.intel.com>
+References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527153046.6172-8-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527153046.6172-8-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BCM2711 comes with a new VideoCore. Add a compatible for it.
+On Wed, May 27, 2020 at 06:30:42PM +0300, Serge Semin wrote:
+> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
+> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
+> bus pm_disabled workaround"), but the flag most likely by mistake has been
+> left in the Dw I2C drivers. Let's remove it.
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Same comment as per previous version.
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
-index 0dcf0c397375..49a5e041aa49 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
-@@ -17,6 +17,7 @@ description: >
- properties:
-   compatible:
-     enum:
-+      - brcm,bcm2711-vc5
-       - brcm,bcm2835-vc4
-       - brcm,cygnus-vc4
- 
+> Since MODEL_MSCC_OCELOT is
+> the only model-flag left, redefine it to be 0x100 so setting a very first
+> bit in the MODEL_MASK bits range.
+
+Cool, but why should we care?
+
+> -#define MODEL_MSCC_OCELOT	0x00000200
+> +#define MODEL_MSCC_OCELOT	0x00000100
+
+We have 4 bits for that, and you are going to reuse this anyway.
+
+I consider this unneeded churn.
+
 -- 
-git-series 0.9.1
+With Best Regards,
+Andy Shevchenko
+
+
