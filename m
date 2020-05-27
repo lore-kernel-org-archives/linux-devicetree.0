@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BCCC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F63C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92C7F208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F8120C09
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389769AbgE0PbT (ORCPT
+        id S2389698AbgE0Pa5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 11:31:19 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:36808 "EHLO
+        Wed, 27 May 2020 11:30:57 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36752 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389695AbgE0Pa6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 11:30:58 -0400
+        with ESMTP id S2389670AbgE0Pa4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 11:30:56 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 201AA8030837;
-        Wed, 27 May 2020 15:30:56 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C83D9803083C;
+        Wed, 27 May 2020 15:30:52 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fcJ1bLUFWa8e; Wed, 27 May 2020 18:30:55 +0300 (MSK)
+        with ESMTP id hgvMKJqD2rFf; Wed, 27 May 2020 18:30:52 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+        Wolfram Sang <wsa@the-dreams.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 10/11] i2c: designware: Move reg-space remapping into a dedicated function
-Date:   Wed, 27 May 2020 18:30:45 +0300
-Message-ID: <20200527153046.6172-11-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v5 06/11] i2c: designware: Add Baytrail sem config DW I2C platform dependency
+Date:   Wed, 27 May 2020 18:30:41 +0300
+Message-ID: <20200527153046.6172-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -52,13 +52,19 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is a preparation patch before adding a quirk with custom registers
-map creation required for the Baikal-T1 System I2C support.
+Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
+platform driver. It's a bit confusing to see it's config in the menu at
+some separated place with no reference to the platform code. Let's move the
+config definition to be below the I2C_DESIGNWARE_PLATFORM config and mark
+it with "depends on I2C_DESIGNWARE_PLATFORM" statement. By doing so the
+config menu will display the feature right below the DW I2C platform
+driver item and will indent it to the right so signifying its belonging.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
@@ -66,56 +72,56 @@ Cc: devicetree@vger.kernel.org
 ---
 
 Changelog v3:
-- This is a new patch, which has been created due to declining the
-  glue-layer approach.
-
-Changelog v4:
-- Use PTR_ERR_OR_ZERO() helper in the bt1_i2c_request_regs() method.
-- Discard devm_platform_get_and_ioremap_resource() utilization.
+- Replace if-endif clause around the I2C_DESIGNWARE_BAYTRAIL config
+  with "depends on" operator.
 ---
- drivers/i2c/busses/i2c-designware-platdrv.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/i2c/busses/Kconfig | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 38657d821c72..9d467fa0e163 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -108,6 +108,15 @@ static void dw_i2c_plat_pm_cleanup(struct dw_i2c_dev *dev)
- 		pm_runtime_put_noidle(dev->dev);
- }
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 7f92f6a96042..7cd279c36898 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -549,20 +549,10 @@ config I2C_DESIGNWARE_PLATFORM
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-designware-platform.
  
-+static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev->dev);
-+
-+	dev->base = devm_platform_ioremap_resource(pdev, 0);
-+
-+	return PTR_ERR_OR_ZERO(dev->base);
-+}
-+
- static int dw_i2c_plat_probe(struct platform_device *pdev)
- {
- 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
-@@ -125,15 +134,14 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	dev->flags = (uintptr_t)device_get_match_data(&pdev->dev);
+-config I2C_DESIGNWARE_PCI
+-	tristate "Synopsys DesignWare PCI"
+-	depends on PCI
+-	select I2C_DESIGNWARE_CORE
+-	help
+-	  If you say yes to this option, support will be included for the
+-	  Synopsys DesignWare I2C adapter. Only master mode is supported.
 -
--	dev->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(dev->base))
--		return PTR_ERR(dev->base);
+-	  This driver can also be built as a module.  If so, the module
+-	  will be called i2c-designware-pci.
 -
- 	dev->dev = &pdev->dev;
- 	dev->irq = irq;
- 	platform_set_drvdata(pdev, dev);
+ config I2C_DESIGNWARE_BAYTRAIL
+ 	bool "Intel Baytrail I2C semaphore support"
+ 	depends on ACPI
++	depends on I2C_DESIGNWARE_PLATFORM
+ 	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
+ 		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
+ 	help
+@@ -572,6 +562,17 @@ config I2C_DESIGNWARE_BAYTRAIL
+ 	  the platform firmware controlling it. You should say Y if running on
+ 	  a BayTrail system using the AXP288.
  
-+	ret = dw_i2c_plat_request_regs(dev);
-+	if (ret)
-+		return ret;
++config I2C_DESIGNWARE_PCI
++	tristate "Synopsys DesignWare PCI"
++	depends on PCI
++	select I2C_DESIGNWARE_CORE
++	help
++	  If you say yes to this option, support will be included for the
++	  Synopsys DesignWare I2C adapter. Only master mode is supported.
 +
- 	dev->rst = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
- 	if (IS_ERR(dev->rst))
- 		return PTR_ERR(dev->rst);
++	  This driver can also be built as a module.  If so, the module
++	  will be called i2c-designware-pci.
++
+ config I2C_DIGICOLOR
+ 	tristate "Conexant Digicolor I2C driver"
+ 	depends on ARCH_DIGICOLOR || COMPILE_TEST
 -- 
 2.26.2
 
