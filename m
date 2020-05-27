@@ -2,92 +2,124 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7860C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992F3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8626A20663
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590601677;
-	bh=rSaJJZXTFSQo5V8SYqelQDcIOgr53WZjyRZI3TXtzSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w64RldfCRcmFnkSXKx23kG/L501S0L4d+99wi41CHT3tbTW8s0rxS879r/0MaYbwh
-	 hsE5i1s2pbCGPxHfCdZVAF+bLjCg0CcpGTiqXOmug/+4D9h9zh3Z5cp/3xjb60iFj9
-	 rjLKk9rNAoAKkuSjEJ02suxGlsaMOxyoLbjAG+yg=
+	by mail.kernel.org (Postfix) with ESMTP id 85365208B8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391538AbgE0Rr5 (ORCPT
+        id S2387979AbgE0RyK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 13:47:57 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41322 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387924AbgE0Rr4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 13:47:56 -0400
-Received: by mail-il1-f196.google.com with SMTP id d1so2432761ila.8;
-        Wed, 27 May 2020 10:47:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IRFVL6+5bKwj2i/4vQTFTXAfMw+OfdS62EpNoSmSV3I=;
-        b=bmI0PA2/78uOXCpFTZE0LIwrvpDl3yYmVm6lNA5pfwmaJhul5j7aTcmzpAJZFHqbkA
-         dy8LLfR2OwyKJ8mRTiJrEUCqgiXI/GmWZkL38O26sfJxEhKR1MzM+h272x/JVX3Q5X+Z
-         20oSo+HkzqCpvY+MStVQnrv2XHTE2kQDhGHDHaZaHUQWttr3/MjuPpakVyccFj6GGWhd
-         yIDW1l1lK8NjSaZJ3nZK9kZd4j50au2g0tYzGURQVk9KVpWTviiMvR5mq8CqRos0FKL6
-         h9/IeUUTWU8VJS+k9bWSS0h6FECgepuNjGoo15yHT3KIz/KCOcBzJ5jP6dUGzjcGziYf
-         rlPw==
-X-Gm-Message-State: AOAM531JD0/iXTze/7lnBbE4B2S+lC760MzujYm71cDpr19WIAgyofb5
-        S6rgjbTw7s4fMeXZsTyE1w==
-X-Google-Smtp-Source: ABdhPJzUBxL+J+xPV5JwZZiLBG7Yc15b/Sdl4BNiDHIgs0PftuDN9IsXIOwC4XuIpdh/Lt3QSRMCTA==
-X-Received: by 2002:a92:d591:: with SMTP id a17mr4951741iln.13.1590601675793;
-        Wed, 27 May 2020 10:47:55 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r68sm1858093ilb.37.2020.05.27.10.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:47:55 -0700 (PDT)
-Received: (nullmailer pid 2443835 invoked by uid 1000);
-        Wed, 27 May 2020 17:47:54 -0000
-Date:   Wed, 27 May 2020 11:47:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     patches@opensource.cirrus.com, broonie@kernel.org,
-        linux@roeck-us.net, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, mturquette@baylibre.com,
-        linus.walleij@linaro.org, sboyd@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org, jdelvare@suse.com
-Subject: Re: [PATCH v3 5/5] mfd: lochnagar: Move binding over to dtschema
-Message-ID: <20200527174754.GA2443798@bogus>
-References: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
- <20200512152359.11839-5-ckeepax@opensource.cirrus.com>
+        Wed, 27 May 2020 13:54:10 -0400
+Received: from out28-173.mail.aliyun.com ([115.124.28.173]:49203 "EHLO
+        out28-173.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387653AbgE0RyK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 13:54:10 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07893082|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0599157-0.000270983-0.939813;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03310;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HeTFPHM_1590602042;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeTFPHM_1590602042)
+          by smtp.aliyun-inc.com(10.147.43.230);
+          Thu, 28 May 2020 01:54:03 +0800
+Subject: Re: [PATCH v10 3/6] dt-bindings: clock: Add X1830 bindings.
+To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+References: <20200526144044.71413-1-zhouyanjie@wanyeetech.com>
+ <20200526144044.71413-5-zhouyanjie@wanyeetech.com>
+ <159056716225.88029.7227987261941853085@swboyd.mtv.corp.google.com>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <08fe6e46-99d3-c66c-4f60-adf87f1b8edf@wanyeetech.com>
+Date:   Thu, 28 May 2020 01:54:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512152359.11839-5-ckeepax@opensource.cirrus.com>
+In-Reply-To: <159056716225.88029.7227987261941853085@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 May 2020 16:23:58 +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> 
-> No changes since v2.
-> 
-> Thanks,
-> Charles
-> 
->  .../devicetree/bindings/mfd/cirrus,lochnagar.txt   |  85 -----
->  .../devicetree/bindings/mfd/cirrus,lochnagar.yaml  | 352 +++++++++++++++++++++
->  .../bindings/regulator/cirrus,lochnagar.txt        |  82 -----
->  MAINTAINERS                                        |  11 +-
->  4 files changed, 357 insertions(+), 173 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-> 
+Hi Stephen,
 
-Applied, thanks!
+I'm very sorry, forgive my carelessness, communication with Paul 
+Cercueil made me realize that the modification of 
+"CLK_OF_DECLARE_DRIVER" mentioned in comments of [7/7] has never really 
+existed in the patch, v12 has fixed this problem, and split the patch 
+about bindings according to your requirements, it may be a good idea to 
+retake [4/7] and [7/7] of v12.
+
+Thanks and best regards!
+
+在 2020/5/27 下午4:12, Stephen Boyd 写道:
+> Quoting 周琰杰 (Zhou Yanjie) (2020-05-26 07:40:41)
+>> Add the clock bindings for the X1830 Soc from Ingenic.
+>>
+>> Signed-off-by: \u5468\u7430\u6770 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>
+>> Notes:
+>>      v2->v3:
+>>      Adjust order from [3/5] in v2 to [4/5] in v3.
+>>      
+>>      v3->v4:
+>>      Adjust order from [4/5] in v3 to [3/4] in v4.
+>>      
+>>      v4->v5:
+>>      Rebase on top of kernel 5.6-rc1.
+>>      
+>>      v5->v6:
+>>      Add missing part of X1830's CGU.
+>>      
+>>      v6->v7:
+>>      No change.
+>>      
+>>      v7->v8:
+>>      Rebase on top of linux-next.
+>>      
+>>      v8->v9:
+>>      No change.
+>>      
+>>      v9->v10:
+>>      Add missing "X1830_CLK_TCU".
+>>
+>>   .../devicetree/bindings/clock/ingenic,cgu.yaml     |  2 +
+>>   include/dt-bindings/clock/x1830-cgu.h              | 55 ++++++++++++++++++++++
+>>   2 files changed, 57 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/x1830-cgu.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml b/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
+> This file is in Rob's DT tree staged for the next release, not in the
+> clk tree. Can you split this patch into two, one for the compatible
+> update and another for the header file update and send again? Then Rob
+> can pick up the yaml file change and I can pick up the header file
+> change.
+>
+>> index 0281cd1d7e1b..a952d5811823 100644
+>> --- a/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
+>> +++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
+>> @@ -25,6 +25,7 @@ select:
+>>             - ingenic,jz4770-cgu
+>>             - ingenic,jz4780-cgu
+>>             - ingenic,x1000-cgu
+>> +          - ingenic,x1830-cgu
+>>     required:
+>>       - compatible
+>>   
+>> @@ -51,6 +52,7 @@ properties:
+>>           - ingenic,jz4770-cgu
+>>           - ingenic,jz4780-cgu
+>>           - ingenic,x1000-cgu
+>> +        - ingenic,x1830-cgu
+>>         - const: simple-mfd
+>>       minItems: 1
+>>
