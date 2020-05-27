@@ -2,117 +2,109 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92793C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3649DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73592207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB4C20888
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgE0JkY (ORCPT
+        id S1725766AbgE0JqJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 05:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgE0JkY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 05:40:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68396C061A0F
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 02:40:24 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jdsXn-0005nV-PP; Wed, 27 May 2020 11:40:15 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jdsXm-0000Kd-2L; Wed, 27 May 2020 11:40:14 +0200
-Date:   Wed, 27 May 2020 11:40:14 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     robh@kernel.org, kernel@puri.sm, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, mchehab@kernel.org, Anson.Huang@nxp.com,
-        agx@sigxcpu.org, angus@akkea.ca, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] MAINTAINERS: Add Purism Librem 5 section to the list
-Message-ID: <20200527094014.nn4cupjrvcceo5lv@pengutronix.de>
-References: <20200514155737.12160-1-martin.kepplinger@puri.sm>
- <20200514155737.12160-2-martin.kepplinger@puri.sm>
+        Wed, 27 May 2020 05:46:09 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33958 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgE0JqJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 05:46:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5C0618030879;
+        Wed, 27 May 2020 09:46:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id j8jW8Ahn9y-z; Wed, 27 May 2020 12:46:05 +0300 (MSK)
+Date:   Wed, 27 May 2020 12:46:04 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/12] scripts/dtc: check: Add 10bit/slave i2c reg
+ flags support
+Message-ID: <20200527094604.qpyqjqlnz7fpcq3m@mobilestation>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
+ <20200527011704.GA808104@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200514155737.12160-2-martin.kepplinger@puri.sm>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:38:12 up 194 days, 56 min, 195 users,  load average: 0.19, 0.17,
- 0.11
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200527011704.GA808104@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-05-14 17:57, Martin Kepplinger wrote:
-> Add development information for the devicetree files for hardware
-> by Purism SPC.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0abba1aff1ae..176efec31010 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13775,6 +13775,14 @@ T:	git git://linuxtv.org/media_tree.git
->  F:	Documentation/admin-guide/media/pulse8-cec.rst
->  F:	drivers/media/cec/usb/pulse8/
->  
-> +PURISM LIBREM 5
-> +M:	Purism Kernel Team <kernel@puri.sm>
-> +S:	Supported
-> +B:	https://source.puri.sm/Librem5/linux-next/issues
-> +T:	https://source.puri.sm/Librem5/linux-next
-> +F:	arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> +F:	arch/arm64/boot/dts/freescale/imx8mq-librem5.dts
-
-Is it okay to take care of all imx8mq-librem5* files? 
-
-F:	arch/arm64/boot/dts/freescale/imx8mq-librem5*
-
-Regards,
-  Marco
-
-> +
->  PVRUSB2 VIDEO4LINUX DRIVER
->  M:	Mike Isely <isely@pobox.com>
->  L:	pvrusb2@isely.net	(subscribers-only)
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+On Tue, May 26, 2020 at 07:17:04PM -0600, Rob Herring wrote:
+> On Wed, May 27, 2020 at 12:55:17AM +0300, Serge Semin wrote:
+> > Recently the I2C-controllers slave interface support was added to the
+> > kernel I2C subsystem. In this case Linux can be used as, for example,
+> > a I2C EEPROM machine. See [1] for details. Other than instantiating
+> > the EEPROM-slave device from user-space there is a way to declare the
+> > device in dts. In this case firstly the I2C bus controller must support
+> > the slave interface. Secondly I2C-slave sub-node of that controller
+> > must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+> > declared in [2]). That flag is declared as (1 << 30), which when set
+> > makes dtc unhappy about too big address set for a I2C-slave:
+> > 
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > 
+> > Similar problem would have happened if we had set the 10-bit address
+> > flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+> > 
+> > In order to fix the problem we suggest to alter the I2C-bus reg-check
+> > algorithm, so one would be aware of the upper bits set. Normally if no
+> > flag specified, the 7-bit address is expected in the "reg"-property.
+> > If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+> > performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+> > 
+> > [1] Documentation/i2c/slave-interface.rst
+> > [2] include/dt-bindings/i2c/i2c.h
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: linux-i2c@vger.kernel.org
+> > ---
+> >  scripts/dtc/checks.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> I've lost track of who all I've said this to already for this issue, but 
+> patches to dtc should be against upstream and a version of this has been 
+> sent there already. But it seems they've lost interest in addressing the 
+> review comments. So feel free to send another one. The same comment 
+> applies here.
+
+Agreed. Rob, could you also take a look at the patch
+[PATCH v3 03/12] dt-bindings: i2c: Discard i2c-slave flag from the DW I2C example
+from this series? You must have missed that. I've created that patch in
+accordance with your suggestion from v2:
+https://lore.kernel.org/linux-i2c/20200511160924.GA9628@bogus/
+
+-Sergey
+
+> 
+> Rob
