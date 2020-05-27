@@ -2,154 +2,126 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0645BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 16:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30754C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 16:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E21A820787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 16:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B01420787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 16:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgE0QPN (ORCPT
+        id S1728275AbgE0QT2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 12:15:13 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37160 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgE0QPN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 12:15:13 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3DC0C8030835;
-        Wed, 27 May 2020 16:15:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id b5UZcRe2YfCH; Wed, 27 May 2020 19:15:08 +0300 (MSK)
-Date:   Wed, 27 May 2020 19:15:07 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/11] i2c: designeware: Add Baikal-T1 System I2C
- support
-Message-ID: <20200527161507.s7vytvkq6w7o4cjp@mobilestation>
-References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
- <20200527160847.GN1634618@smile.fi.intel.com>
+        Wed, 27 May 2020 12:19:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728938AbgE0QT2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 12:19:28 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB51C03E97D
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 09:19:28 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jdym2-0006Kt-98; Wed, 27 May 2020 18:19:22 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jdym1-00053e-Bn; Wed, 27 May 2020 18:19:21 +0200
+Message-ID: <58431830e527c8acb873487f5173e437bee712a6.camel@pengutronix.de>
+Subject: Re: [PATCH v6 3/4] arm64: dts: imx8mq: enable Hantro G1/G2 VPU
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de,
+        devicetree@vger.kernel.org
+Date:   Wed, 27 May 2020 18:19:21 +0200
+In-Reply-To: <20200320131256.23294-4-p.zabel@pengutronix.de>
+References: <20200320131256.23294-1-p.zabel@pengutronix.de>
+         <20200320131256.23294-4-p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200527160847.GN1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 07:08:47PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 06:30:35PM +0300, Serge Semin wrote:
-> > Jarkko, Wolfram, the merge window is upon us, please review/merge in/whatever
-> > the patchset.
-> > 
-> > Initially this has been a small patchset which embedded the Baikal-T1
-> > System I2C support into the DW APB I2C driver as is by using a simplest
-> > way. After a short discussion with Andy we decided to implement what he
-> > suggested (introduce regmap-based accessors and create a glue driver) and
-> > even more than that to provide some cleanups of the code. So here is what
-> > this patchset consists of.
-> > 
-> > First of all we've found out that current implementation of scripts/dtc
-> > didn't support i2c dt nodes with 10bit and slave flags set in the
-> > reg property. You'll see an error if you try to dt_binding_check it.
-> > So the very first patch fixes the problem by adding these flags support
-> > into the check_i2c_bus_reg() method.
-> > 
-> > Traditionally we converted the plain text-based DT binding to the DT schema
-> > and added Baikal-T1 System I2C device support there. This required to mark
-> > the reg property redundant for Baikal-T1 I2C since its reg-space is
-> > indirectly accessed by means of the System Controller cmd/read/write
-> > registers.
-> > 
-> > Then as Andy suggested we replaced the Synopsys DW APB I2C common driver
-> > registers IO accessors into the regmap API methods. This doesn't change
-> > the code logic much, though in two places we managed to replace some bulky
-> > peaces of code with a ready-to-use regmap methods.
-> > 
-> > Additionally before adding the glue layer API we initiated a set of cleanups:
-> > - Define components of the multi-object drivers (like i2c-designware-core.o
-> >   and i2c-designware-paltform.o) with using `-y` suffixed makefile
-> >   variables instead of `-objs` suffixed one. This is encouraged by
-> >   Documentation/kbuild/makefiles.rst text since `-objs` is supposed to be used
-> >   to build host programs.
-> > - Make DW I2C slave driver depended on the DW I2C core code instead of the
-> >   platform one, which it really is.
-> > - Move Intel Baytrail semaphore feature to the platform if-clause of the
-> >   kernel config.
-> > 
-> > After this we finally can introduce the glue layer API for the DW APB I2C
-> > platform driver. So there are three methods exported from the driver:
-> > i2c_dw_plat_setup(), i2c_dw_plat_clear(), &i2c_dw_plat_dev_pm_ops to
-> > setup, cleanup and add PM operations to the glue driven I2C device. Before
-> > setting the platform DW I2C device up the glue probe code is supposed to
-> > create an instance of DW I2C device generic object and pre-initialize
-> > its `struct device` pointer together with optional platform-specific
-> > flags. In addition to that we converted the MSCC Ocelot SoC I2C specific
-> > code into the glue layer seeing it's really too specific and, which is more
-> > important, isn't that complicated so we could unpin it without much of
-> > worrying to break something.
-> > 
-> > Meanwhile we discovered that MODEL_CHERRYTRAIL and MODEL_MASK actually
-> > were no longer used in the code. MODEL_MSCC flag has been discarded since
-> > the MSCC Ocelot I2C code conversion to the glue driver. So now we can get
-> > rid of all the MODEL-specific flags.
-> > 
-> > Finally we introduced a glue driver with Baikal-T1 System I2C device
-> > support. The driver probe tries to find a syscon regmap, creates the DW
-> > APB I2C regmap based on it and passes it further to the DW I2C device
-> > descriptor. Then it does normal DW APB I2C platform setup by calling a
-> > generic setup method. Cleanup is straightforward. It's just calling a
-> > generic DW APB I2C clean method.
-> 
-> Thank you for an update.
-> 
-> > This patchset is rebased and tested on the i2c/for-next (5.7-rc7):
-> 
-> Hmm...
-> 
-> > base-commit: 228f95c14949 ("Merge remote-tracking branch 'spi/for-5.8' into spi-next")
-> 
-> ...this is strange.
+Hi Shawn,
 
-Yeah, my mistake. It should have been:
-base-commit: 2a41d0f91443 ("Merge branch 'i2c/for-5.8' into i2c/for-next")
+On Fri, 2020-03-20 at 14:12 +0100, Philipp Zabel wrote:
+> Add the i.MX8MQ VPU module which comprises Hantro G1 and G2 video
+> decoder cores and a reset/control block.
+> 
+> Hook up the bus clock to the VPU power domain to enable handshakes, and
+> configure the core clocks to 600 MHz and the bus clock to 800 MHz by
+> default.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 
--Sergey
+could you pick up this patch? The driver and binding parts have been
+merged in media/master.
 
+regards
+Philipp
+
+> ---
+> New in v6.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 27 +++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> > Changelog v5:
-> > - Replace or-assignment with just assignment operator when getting
-> >   the quirk flags.
-> > - Keep alphabetical order of the include statements.
-> > - Discard explicit u16-type cast in the dw_reg_write_word() method.
-> 
-> Patches 8 and 11 have been commented solely due to previous comments for
-> patches 6 and 7, which I think should be addressed.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 6a1e83922c71..98e464ecb68a 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -666,6 +666,7 @@
+>  					pgc_vpu: power-domain@6 {
+>  						#power-domain-cells = <0>;
+>  						reg = <IMX8M_POWER_DOMAIN_VPU>;
+> +						clocks = <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
+>  					};
+>  
+>  					pgc_disp: power-domain@7 {
+> @@ -1130,6 +1131,32 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		vpu: video-codec@38300000 {
+> +			compatible = "nxp,imx8mq-vpu";
+> +			reg = <0x38300000 0x10000>,
+> +			      <0x38310000 0x10000>,
+> +			      <0x38320000 0x10000>;
+> +			reg-names = "g1", "g2", "ctrl";
+> +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "g1", "g2";
+> +			clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
+> +				 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
+> +				 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
+> +			clock-names = "g1", "g2", "bus";
+> +			assigned-clocks = <&clk IMX8MQ_CLK_VPU_G1>,
+> +					  <&clk IMX8MQ_CLK_VPU_G2>,
+> +					  <&clk IMX8MQ_CLK_VPU_BUS>,
+> +					  <&clk IMX8MQ_VPU_PLL_BYPASS>;
+> +			assigned-clock-parents = <&clk IMX8MQ_VPU_PLL_OUT>,
+> +						 <&clk IMX8MQ_VPU_PLL_OUT>,
+> +						 <&clk IMX8MQ_SYS1_PLL_800M>,
+> +						 <&clk IMX8MQ_VPU_PLL>;
+> +			assigned-clock-rates = <600000000>, <600000000>,
+> +					       <800000000>, <0>;
+> +			power-domains = <&pgc_vpu>;
+> +		};
+> +
+>  		pcie0: pcie@33800000 {
+>  			compatible = "fsl,imx8mq-pcie";
+>  			reg = <0x33800000 0x400000>,
