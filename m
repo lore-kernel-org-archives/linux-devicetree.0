@@ -2,100 +2,131 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECAAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 13:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA54FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 13:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2A6208DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 13:45:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cEtxG1QB"
+	by mail.kernel.org (Postfix) with ESMTP id A5ED620787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 13:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388653AbgE0Npm (ORCPT
+        id S2388825AbgE0NuY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 09:45:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388652AbgE0Npk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 09:45:40 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116CAC08C5C3
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 06:45:40 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id z206so10849141lfc.6
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 06:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pqMjF481/emegOTyAnp90i2QSPi+4HPq/HRpDph3sd4=;
-        b=cEtxG1QBb6k0/9pivnXsIM4fxxgTmO6eKy3cb4jjp5+kQNfHVlksx1KW++A7tdPXNv
-         oY2Ob0P9vNNprE6p4NGP04bu/InKQ/EF4F2+wJwW+oY9E8YyJqJNZGtPMuzc5qLL0HWI
-         fbhtYM7PcCz7DfVylsOzqby5Qs3IHhHLLbl9blKfUGBSf4zaaAgjnl5o0dbVSJ4DvPoW
-         Lx+VZEycnhRAGhdVQAj29L9RY0uZ6YY2m8X2b2LqnnTUPWNtVuoZ+MHCVqwRrOEjYOq/
-         EKnUL6kl2azL30dBaSZuMa/KxZcpN6UCJO8YV+KqgmxgC4f8GArCvy88KgPw8b2F4xLC
-         ixNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pqMjF481/emegOTyAnp90i2QSPi+4HPq/HRpDph3sd4=;
-        b=D6YxkG8f0E4rHkBZMQyHTC0eouS5mN/5mslXNv60kU+x9c7AhvG6Z1OLDDVlxs6E1E
-         4VJ/vxRwpf9SZXKDW/wEVwhvZ6ytAs0e943gfLVu1Bzq/VLuWoPFTOQBPyhz6ranoGjA
-         Dpy+X4MAa5SsV8P6RH6mTqoIq8AwwdCkCkxO9B1F67uy1TUsnHEeevEou4Tv4JnlQJcf
-         tFECpJ5gjAL9wnV0KOp24YBPcCK1x4rKaJmgIVganSBYBfaaoeohDaBUCumMWU7v+WZC
-         kQMHx8/fwLJf4UeABnlpX3cVso1Yho380gybx3/Dke8iRshdWjU/53PHOvu49CkjnBRE
-         8cYQ==
-X-Gm-Message-State: AOAM533P+N4QY+YJlSFJGEHIcLL/E81s8lbmh42Ii2B/RarOdoHVeH+8
-        htNYpUPwDmU2jPzbZjbgntR6ENzoiK/XUXcLIufcAg==
-X-Google-Smtp-Source: ABdhPJywnRjyy63BmYPCVd6xtABhxO8rvnbtGtftY9/L9Axjxr/II+eDgYpm5vNmJPSCVWS3wWgZuzCOQirdIHM52xc=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr3147605lfn.21.1590587138395;
- Wed, 27 May 2020 06:45:38 -0700 (PDT)
+        Wed, 27 May 2020 09:50:24 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11641 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388516AbgE0NuY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 09:50:24 -0400
+IronPort-SDR: tGAcWAIk7zdzhoykw2ighaaIoKnYlfM0ZV24KfHqrxV0IoRUh7Crg3sb9xAjlQCiVDXzoa2L36
+ uKTQNENQWsuA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:50:23 -0700
+IronPort-SDR: H0p5dRR8T13DBoId/dME1iuTy+t/Rp36eNRRIoaMXkmQhD3k8cz0gijFEGF1ho0R3hqSgIxSK9
+ Vv4gQQiL8hgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="284807538"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 27 May 2020 06:50:20 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdwRr-009EnT-C5; Wed, 27 May 2020 16:50:23 +0300
+Date:   Wed, 27 May 2020 16:50:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/11] i2c: designware: Convert driver to using regmap
+ API
+Message-ID: <20200527135023.GZ1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-9-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200513141134.25819-1-lars.povlsen@microchip.com>
- <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com>
- <87pnb1nf2j.fsf@soft-dev15.microsemi.net> <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com>
- <87r1v8oz9f.fsf@soft-dev15.microsemi.net> <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
- <87pnappzun.fsf@soft-dev15.microsemi.net>
-In-Reply-To: <87pnappzun.fsf@soft-dev15.microsemi.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 May 2020 15:45:27 +0200
-Message-ID: <CACRpkdbfNPWKDU5zDaKT0kvJhCpL3X=jvTpLpicm1yMD5brA8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527120111.5781-9-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:05 AM Lars Povlsen
-<lars.povlsen@microchip.com> wrote:
+On Wed, May 27, 2020 at 03:01:08PM +0300, Serge Semin wrote:
+> Seeing the DW I2C driver is using flags-based accessors with two
+> conditional clauses it would be better to replace them with the regmap
+> API IO methods and to initialize the regmap object with read/write
+> callbacks specific to the controller registers map implementation. This
+> will be also handy for the drivers with non-standard registers mapping
+> (like an embedded into the Baikal-T1 System Controller DW I2C block, which
+> glue-driver is a part of this series).
+> 
+> As before the driver tries to detect the mapping setup at probe stage and
+> creates a regmap object accordingly, which will be used by the rest of the
+> code to correctly access the controller registers. In two places it was
+> appropriate to convert the hand-written read-modify-write and
+> read-poll-loop design patterns to the corresponding regmap API
+> ready-to-use methods.
+> 
+> Note the regmap IO methods return value is checked only at the probe
+> stage. The rest of the code won't do this because basically we have
+> MMIO-based regmap so non of the read/write methods can fail (this also
+> won't be needed for the Baikal-T1-specific I2C controller).
 
-> The only issue is that the gpios on the same "port" have restrictions on
-> their status - they can only be enabled "all" or "none" for gpios that
-> map to the same port. F.ex. gpio0, gpio32, gpio64 and gpio96 must all be
-> enabled or disabled because at the hardware level you control the
-> _port_.
+Thanks! My comments below.
 
-This is fairly common. For example that an entire port/block share
-a clock.
+...
 
-> But as I noted earlier, that could just be the driver enforcing
-> this.
+>  #include <linux/export.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/regmap.h>
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
 
-Yeps.
+Please, keep ordered.
 
-Yours,
-Linus Walleij
+...
+
+> +static int dw_reg_write_word(void *context, unsigned int reg, unsigned int val)
+> +{
+> +	struct dw_i2c_dev *dev = context;
+> +
+
+> +	writew_relaxed((u16)val, dev->base + reg);
+> +	writew_relaxed((u16)(val >> 16), dev->base + reg + 2);
+
+What does explicit casting here help to?
+I think you may drop it.
+
+> +	return 0;
+>  }
+
+...
+
+>  #include <linux/errno.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/regmap.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+
+Order?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
