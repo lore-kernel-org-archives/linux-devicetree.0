@@ -2,163 +2,107 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E8DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6EFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44C8206F1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:48:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="svqsAvrn"
+	by mail.kernel.org (Postfix) with ESMTP id E08A420723
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388166AbgE0IsC (ORCPT
+        id S2388190AbgE0Iuz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 04:48:02 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:15201 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388140AbgE0IsB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 04:48:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590569280; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: Cc: References: To:
- Subject: Sender; bh=uae7yIbf7LkvKzwAx7OZgJqnIs4z8A3JvYEC3/kjvas=; b=svqsAvrn5dp3Ek88jSHdTnLuAcBJRXvlikg2m1BD75oc5id1YOiiDGUEhy/zvveuHnRpNdaq
- CZovWB5TUNzdSSHZPUIB75ahyI0MpjO37UCRCiaghEUemTiSua95W83H9CxEN1Uqz4ww2K3r
- IShntwPSl+RePjj1vQlKakclC6w=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ece292d44a25e0052c0c367 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 08:47:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 79D87C433C9; Wed, 27 May 2020 08:47:40 +0000 (UTC)
-Received: from [192.168.1.227] (unknown [49.204.179.34])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 27 May 2020 04:50:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40174 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388120AbgE0Iuz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 04:50:55 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D6D3AC433C6;
-        Wed, 27 May 2020 08:47:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D6D3AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
- set DDR bandwidth
-To:     Rob Clark <robdclark@gmail.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
- <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
- <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
- <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
-Cc:     viresh.kumar@linaro.org, saravanak@google.com,
-        sibis@codeaurora.org, rnayak@codeaurora.org
-From:   Sharat Masetty <smasetty@codeaurora.org>
-Message-ID: <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org>
-Date:   Wed, 27 May 2020 14:17:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 868F22A3026;
+        Wed, 27 May 2020 09:50:53 +0100 (BST)
+Date:   Wed, 27 May 2020 10:50:50 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v5 09/21] mtd: rawnand: Create a new enumeration to
+ describe properly ECC types
+Message-ID: <20200527105050.0f171724@collabora.com>
+In-Reply-To: <20200527104430.187e5feb@collabora.com>
+References: <20200526195633.11543-1-miquel.raynal@bootlin.com>
+        <20200526195633.11543-10-miquel.raynal@bootlin.com>
+        <20200527005928.39c549e2@collabora.com>
+        <20200527103356.56e145a9@xps13>
+        <20200527104430.187e5feb@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+ more folks
+On Wed, 27 May 2020 10:44:30 +0200
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-On 5/18/2020 9:55 PM, Rob Clark wrote:
-> On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
->>> This patches replaces the previously used static DDR vote and uses
->>> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
->>> GPU frequency.
->>>
->>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
->>> ---
->>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
->>>   1 file changed, 1 insertion(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> index 2d8124b..79433d3 100644
->>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
->>>
->>>        gmu->freq = gmu->gpu_freqs[perf_index];
->>>
->>> -     /*
->>> -      * Eventually we will want to scale the path vote with the frequency but
->>> -      * for now leave it at max so that the performance is nominal.
->>> -      */
->>> -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->>> +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
->>>   }
->> This adds an implicit requirement that all targets need bandwidth settings
->> defined in the OPP or they won't get a bus vote at all. I would prefer that
->> there be an default escape valve but if not you'll need to add
->> bandwidth values for the sdm845 OPP that target doesn't regress.
->>
-> it looks like we could maybe do something like:
->
->    ret = dev_pm_opp_set_bw(...);
->    if (ret) {
->        dev_warn_once(dev, "no bandwidth settings");
->        icc_set_bw(...);
->    }
->
-> ?
->
-> BR,
-> -R
+> On Wed, 27 May 2020 10:33:56 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+> > Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 27 May
+> > 2020 00:59:28 +0200:
+> >   
+> > > On Tue, 26 May 2020 21:56:21 +0200
+> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > >     
+> > > > Now that the misleading mix between ECC engine type and OOB placement
+> > > > has been addressed, add a new enumeration to properly define ECC types
+> > > > (also called provider or mode).
+> > > > 
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > ---
+> > > >  drivers/mtd/nand/raw/nand_base.c |  7 +++++++
+> > > >  include/linux/mtd/rawnand.h      | 16 ++++++++++++++++
+> > > >  2 files changed, 23 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> > > > index 515cd4681660..5c6ab5b93270 100644
+> > > > --- a/drivers/mtd/nand/raw/nand_base.c
+> > > > +++ b/drivers/mtd/nand/raw/nand_base.c
+> > > > @@ -5018,6 +5018,13 @@ static const char * const nand_ecc_modes[] = {
+> > > >  	[NAND_ECC_ON_DIE]	= "on-die",
+> > > >  };
+> > > >  
+> > > > +static const char * const nand_ecc_engine_providers[] = {      
+> > > 
+> > > This table is not used here, are you sure it should be introduced now?
+> > >     
+> > > > +	[NAND_ECC_ENGINE_NONE] = "none",
+> > > > +	[NAND_ECC_ENGINE_SOFT] = "soft",
+> > > > +	[NAND_ECC_ENGINE_CONTROLLER] = "hw",      
+> > > 
+> > > 					^ "on-controller" ?    
+> > 
+> > This would break DT backward compatibility, I am afraid I cannot do
+> > that.  
+> 
+> You can always keep a translation table for the old prop
+> (nand-ecc-mode) and have a new one for the new prop
+> (nand-ecc-engine-type). But maybe you're not introducing a new property
+> in this series, in which case the translation table here is just fine.
 
-There is a bit of an issue here - Looks like its not possible to two icc 
-handles to the same path.  Its causing double enumeration of the paths 
-in the icc core and messing up path votes. With [1] Since opp/core 
-already gets a handle to the icc path as part of table add,  drm/msm 
-could do either
-
-a) Conditionally enumerate gpu->icc_path handle only when pm/opp core 
-has not got the icc path handle. I could use something like [2] to 
-determine if should initialize gpu->icc_path*
-
-b) Add peak-opp-configs in 845 dt and mandate all future versions to use 
-this bindings. With this, I can remove gpu->icc_path from msm/drm 
-completely and only rely on opp/core for bw voting.
-
-[1] - https://lore.kernel.org/patchwork/cover/1240687/
-
-[2] - https://patchwork.kernel.org/patch/11527573/
-
-Let me know your thoughts
-
-Sharat
-
->
->> Jordan
->>
->>>   unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
->>> --
->>> 2.7.4
->>>
->> --
->> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->> _______________________________________________
->> Freedreno mailing list
->> Freedreno@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/freedreno
+BTW, this DT prop is more a way to select among several ECC engines when
+you have a choice, so maybe it should be named
+nand-use-ecc-engine-type/nand-select-ecc-engine-type instead of
+nand-ecc-provider/nand-ecc-engine-type.
