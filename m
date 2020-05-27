@@ -2,107 +2,98 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C2FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 23:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AADC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 23:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AACED2075F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 23:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B314B21527
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 23:18:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y0NJAacY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725446AbgE0XD5 (ORCPT
+        id S1725879AbgE0XSx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 19:03:57 -0400
-Received: from mail-io1-f50.google.com ([209.85.166.50]:40318 "EHLO
-        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0XD4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 19:03:56 -0400
-Received: by mail-io1-f50.google.com with SMTP id q8so26561867iow.7;
-        Wed, 27 May 2020 16:03:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PEuMtD6LgYJonBecnZRafA5xWf0FkDz2r/VmLiB6F4s=;
-        b=dFMHw88k4N4yKO0BGZtAvwgZYh6xfDrOVsJyNOR1FX7/S19fuiW7xYD9LI+A0spfmH
-         EWopR9VouvS2ixbUpT+phYTEhKolInn2WcXoW1tA0SgCj2UmNQgNb+qX1ri+NT2DzeG5
-         R0kcB6SWVufELXlsUCRO/yy6g9pIgUQNDWBOcN4TcL3+FA174fAC//ZfqyVdJZBEZrjC
-         2Mn6dGHcGBaZBnS4ohVsCHtaNUeAa/5+7j+Hugho54Y+hI4xXBWy2oxBZ7wMCH+KTMm3
-         H+dg15y6KxZJJ5+DRovH3I/AScBvmFSFJLG+0K6rUcZIKFp/df0sX4Jsfh1wf7GlSq2X
-         QdjA==
-X-Gm-Message-State: AOAM531ESZaIyXDOrTT5g7SFGDAmVOz4ZCTNd/y0lfHsQvTHp1YOwECj
-        wFVEjZq7H3DGtK3zUnPWGMrLOLYK
-X-Google-Smtp-Source: ABdhPJw2a+9HRaAId6joPiPs/9ec0f/7MdDS4yOhdidTjAseNKKbV+nn3QKDsMicsjF1Tbcq9tz9jw==
-X-Received: by 2002:a02:958e:: with SMTP id b14mr248931jai.126.1590620634676;
-        Wed, 27 May 2020 16:03:54 -0700 (PDT)
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
-        by smtp.gmail.com with ESMTPSA id y15sm2256675ila.13.2020.05.27.16.03.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 16:03:53 -0700 (PDT)
-Received: by mail-il1-f174.google.com with SMTP id a14so25808656ilk.2;
-        Wed, 27 May 2020 16:03:53 -0700 (PDT)
-X-Received: by 2002:a92:5cc1:: with SMTP id d62mr517275ilg.95.1590620633009;
- Wed, 27 May 2020 16:03:53 -0700 (PDT)
+        Wed, 27 May 2020 19:18:53 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41104 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0XSw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 19:18:52 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RNIoeK082840;
+        Wed, 27 May 2020 18:18:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590621530;
+        bh=lNhA+E2fd/RxBR6mEdxlKPJRrv3x5UmqnhFIGQavOu4=;
+        h=From:To:CC:Subject:Date;
+        b=Y0NJAacYGFh9kJP8IThabkaeO+jmIxx5m3ZUhjip4Mc40H8duj0XeZlzrekx62o00
+         8r9b5MYE4V+estYS4vtvpEoFoaqPGAd/jzErddPdWWnsS2deIj8pqrdkjEtiH1xlAH
+         Hf9giWwP6+Nm9EoRWd5aXGdrviMq/Uf9K8CifXyo=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RNIok3088667
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 18:18:50 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 18:18:50 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 18:18:50 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RNIoxW052642;
+        Wed, 27 May 2020 18:18:50 -0500
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
+CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <sspatil@android.com>
+Subject: [PATCH v10 0/4] Add JEITA properties and introduce the bq2515x charger
+Date:   Wed, 27 May 2020 18:17:39 -0500
+Message-ID: <20200527231743.18066-1-r-rivera-matos@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200527034228.23793-1-biwen.li@oss.nxp.com> <20200527034228.23793-2-biwen.li@oss.nxp.com>
-In-Reply-To: <20200527034228.23793-2-biwen.li@oss.nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 27 May 2020 18:03:24 -0500
-X-Gmail-Original-Message-ID: <CADRPPNS9+QM3pPKpXA_QZ7nLGu5WpyfY=GPx7pJFREUS4s=55A@mail.gmail.com>
-Message-ID: <CADRPPNS9+QM3pPKpXA_QZ7nLGu5WpyfY=GPx7pJFREUS4s=55A@mail.gmail.com>
-Subject: Re: [v3 2/2] dts: ppc: t1024rdb: remove interrupts property
-To:     Biwen Li <biwen.li@oss.nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        a.zummo@towertech.it,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        lkml <linux-kernel@vger.kernel.org>, Biwen Li <biwen.li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:52 PM Biwen Li <biwen.li@oss.nxp.com> wrote:
->
-> From: Biwen Li <biwen.li@nxp.com>
->
-> Since the interrupt pin for RTC DS1339 is not connected
-> to the CPU on T1024RDB, remove the interrupt property
-> from the device tree.
->
-> This also fix the following warning for hwclock.util-linux:
-> $ hwclock.util-linux
-> hwclock.util-linux: select() to /dev/rtc0
-> to wait for clock tick timed out
->
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+Hello,
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
+This patchset adds additional health properties to the power_supply header.
+These additional properties are taken from the JEITA specification. This
+patchset also introduces the bq2515x family of charging ICs.
 
-> ---
->  arch/powerpc/boot/dts/fsl/t1024rdb.dts | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/arch/powerpc/boot/dts/fsl/t1024rdb.dts b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-> index 645caff98ed1..605ceec66af3 100644
-> --- a/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-> +++ b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-> @@ -161,7 +161,6 @@
->                         rtc@68 {
->                                 compatible = "dallas,ds1339";
->                                 reg = <0x68>;
-> -                               interrupts = <0x1 0x1 0 0>;
->                         };
->                 };
->
-> --
-> 2.17.1
->
+Dan Murphy (2):
+  power_supply: Add additional health properties to the header
+  dt-bindings: power: Convert battery.txt to battery.yaml
+
+Ricardo Rivera-Matos (2):
+  dt-bindings: power: Add the bindings for the bq2515x family of
+    chargers.
+  power: supply: bq25150 introduce the bq25150
+
+ Documentation/ABI/testing/sysfs-class-power   |    2 +-
+ .../bindings/power/supply/battery.txt         |   82 +-
+ .../bindings/power/supply/battery.yaml        |  143 ++
+ .../bindings/power/supply/bq2515x.yaml        |   91 ++
+ drivers/power/supply/Kconfig                  |   13 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bq2515x_charger.c        | 1159 +++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c     |    2 +-
+ include/linux/power_supply.h                  |    3 +
+ 9 files changed, 1413 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+ create mode 100644 drivers/power/supply/bq2515x_charger.c
+
+-- 
+2.26.2
+
