@@ -6,62 +6,57 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3365C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D6AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B304120C09
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF5B20899
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590591488;
-	bh=u2lDoZzGDayxtcZjIvEEOU3TwyrSTCxS9YF+ccmxFgI=;
+	s=default; t=1590591499;
+	bh=7nt7f9kH1JqwknAwR7cow5RhBRNUkIwiCI5pxeuJfMU=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=lU9V4v0RWsK/LogRTWwO6skKPLIGjcUc42k4ML51as9+3CXREbfFocpswjxOXmynu
-	 LfxnyJEt2o850W9VkQSTrBrGtTR2E5PjNbGjRRQ1B85Vd8fg4IZPIqSgea37rMTTbS
-	 /tizZW+RU5DSdXmRZi91cIV808rxF9WFaXetWLRw=
+	b=NXJ2hjtId31gUC1Vr7lm9y2xVtMJaAZuElRKXmTL2DU9qHEpOZVCs4DRDSJ65Nt2k
+	 1LHHEycIhDcRSDXcPH3+sRGxGzBllLSGgzhFBZJpmIZTSFCpQ1BL06qe0CbuUr52Vw
+	 1TtyfI3ye5TxG7Dp/jTYBFxJPbru/88SDL/TDqsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389427AbgE0O6I (ORCPT
+        id S2389449AbgE0O6T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 10:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 10:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389411AbgE0O6H (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 10:58:07 -0400
+        id S2389378AbgE0O6S (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 10:58:18 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03D56207CB;
-        Wed, 27 May 2020 14:58:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2EF620C09;
+        Wed, 27 May 2020 14:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590591487;
-        bh=u2lDoZzGDayxtcZjIvEEOU3TwyrSTCxS9YF+ccmxFgI=;
+        s=default; t=1590591498;
+        bh=7nt7f9kH1JqwknAwR7cow5RhBRNUkIwiCI5pxeuJfMU=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=kmFYNI8vmreNjgNmLh7kzEKqFdOwBfTIO/weUhPifpJjOaXfr5hc9W0JU/97B7wfl
-         4C4Um1kgnay0VTQKlDKaQw75Z0u//XA11up42fz+ZwR9syaSwEsDxU/ZgX6ZeOYaJh
-         V6qoD4rJSSo1HSePBbm88Xjn8ioZWZuihv8ftsLk=
-Date:   Wed, 27 May 2020 15:58:04 +0100
+        b=nILr3/dqBRQXywLSCiW1dOobDr2JN54eEm4YgnoeHGJQ1lAq/UpU67ZKSFwYe0jTi
+         Q/ve9GkzpOUeXZLPnn67itM3pqB0gd9igAqOe+yLKbbqBsUrgSp1+Ev06zNfXXgs05
+         /OcTL1YY3zSBoPT71V1YebPuOqkZFx48VSGthckA=
+Date:   Wed, 27 May 2020 15:58:15 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     lgirdwood@gmail.com, tiwai@suse.com, Dan Murphy <dmurphy@ti.com>,
         perex@perex.cz
-Cc:     linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-In-Reply-To: <20200526175247.15309-1-dmurphy@ti.com>
-References: <20200526175247.15309-1-dmurphy@ti.com>
-Subject: Re: [PATCH] ASoC: tlv320adcx140: Fix warnings when using W=1
-Message-Id: <159059147354.50918.15790917523378380090.b4-ty@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20200526200917.10385-1-dmurphy@ti.com>
+References: <20200526200917.10385-1-dmurphy@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: tlv320adcx140: Add GPI config property
+Message-Id: <159059147354.50918.139552370821784461.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 26 May 2020 12:52:47 -0500, Dan Murphy wrote:
-> Fix the warnings when using the W=1 compiler flag.
-> 
-> sound/soc/codecs/tlv320adcx140.c: In function ‘adcx140_reset’:
-> sound/soc/codecs/tlv320adcx140.c:570:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
->   570 |  int ret = 0;
->       |      ^~~
-> 
-> [...]
+On Tue, 26 May 2020 15:09:16 -0500, Dan Murphy wrote:
+> Add an array property that configures the General Purpose Input (GPI)
+> register.  The device has 4 GPI pins and each pin can be configured in 1
+> of 7 different ways.
 
 Applied to
 
@@ -69,8 +64,10 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: tlv320adcx140: Fix warnings when using W=1
-      commit: 850ba84b5c6d4ad4d1259584ebc0338eb769f2ef
+[1/2] dt-bindings: sound: tlv320adcx140: Add GPI config property
+      commit: 2465d32bea35d1d56c6cfb08a96ebea3b475d8ec
+[2/2] ASoC: tlv320adcx140: Add support for configuring GPI pins
+      commit: 3c35e79cead31c3bd79875ae90f9655dc77ad13c
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
