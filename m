@@ -2,90 +2,202 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C6CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B82C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C4D2089D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590605272;
-	bh=bZCmPc2USyfP4yx+lw2F42nqfj+D+VBXl/s9jzDLbNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BshEgUEblVBo7QtCtnh/wRAQUl50o71YwUSoxqqyqG+nSobo69y8ZcCXjnemULzmA
-	 pnrG6L4o2z6ZPk23iJeC1irSofpHE89SMrGGRbEwZwAwpnuS5t4H956ZAhSQwM/ltD
-	 srMUcIVwEhFf85uMhrpl7dUEAIfDa2q29MB0DAFs=
+	by mail.kernel.org (Postfix) with ESMTP id 2D81D20B80
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxpDFfdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgE0Srh (ORCPT
+        id S1726495AbgE0Ssb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 14:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
+        Wed, 27 May 2020 14:48:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgE0Srg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 14:47:36 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBF0C008633;
-        Wed, 27 May 2020 11:40:43 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id p20so13784543iop.11;
-        Wed, 27 May 2020 11:40:43 -0700 (PDT)
+        with ESMTP id S1727880AbgE0SsS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 14:48:18 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAB8C08C5C1;
+        Wed, 27 May 2020 11:48:18 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id nu7so2017708pjb.0;
+        Wed, 27 May 2020 11:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CdXGMbnJPFZ1OXBjluxy0OMcUuIHa8+nT3WEXVeHqe8=;
+        b=XxpDFfdG3DnSWPlywYnD96my7g+V6rp0EbPPA4JeFYNOGszeWV6JFI0iNswlLH5DOw
+         rhWrKhs3AUzq1N1qJ0iTH+ij3MP/jfhrwBRcSzIRjxzqR1dA2n8JTS8n+laKCxfrZvId
+         Vmxi/tkFlOp+RCazeM444a8KkC5Czaput6u7WZZh5n/JLN3lAvmIH3twJb+N/tFLg/JZ
+         RGp4btYD7iJ01oKNlvqRdL4S/l4cn7lNcklD/wxIxpP6e4ZPaQt556OQFBbHFdxy1Vge
+         OJcltuvQGgmhMYMY7hMbR2vewD5L4zE2l+7RUMFO2QIBzbRviBwV8Jmnwmx0yKSxTKbN
+         pDBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Gmh7khEi867Q1p2K+E8wmj2hjP4yzjtOYXkIcMdbpVQ=;
-        b=I1As+XBMvRg9gijph5P2Lk7peH1/VQ9mvVuSVDYsQmZqW+g/qzOyBKyOuAY2ndgkK2
-         NQVHPFY8PUwD9B9OD/+ZgaSR0dLHqDZgi12+Hxn4OQ7ONBwQ8exV0/aFyFvg+6V7rVFH
-         PI1d94KghP3QGVxPiifi0PCP8QCAS+4NDbcw+dxRIzilsXkJVqXcm8ZWfr6bSrIvhJVO
-         zClTRJNP3dCaTgo25pyo6a6ExwHOgWBBhx/X7XUFr4bJJceDXjLsijyPvbtTd5cc2uSb
-         x8iObz5XCvqV7tDAz6qpH0KIT1eRo2zptXwPXXNs4XgunLFX9Dsz8Jb1Xo9uXaru8Vfp
-         M9jg==
-X-Gm-Message-State: AOAM533ClhfmymtKNPVEzxqf+Hjjm4ZAQE6LVI6a0/vJPeEC6RAmE/yZ
-        dNqDZgb5N3ECkskiUToFbw==
-X-Google-Smtp-Source: ABdhPJym2U/ruXzq2JydPVxf7p+4P3gKGasMHeicBfOWFBEuOBkVOSd/wSxZqTlL5k6KdoxnjRd20g==
-X-Received: by 2002:a02:a19d:: with SMTP id n29mr7072088jah.85.1590604843286;
-        Wed, 27 May 2020 11:40:43 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v15sm2040958ila.57.2020.05.27.11.40.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 11:40:41 -0700 (PDT)
-Received: (nullmailer pid 2529615 invoked by uid 1000);
-        Wed, 27 May 2020 18:40:40 -0000
-Date:   Wed, 27 May 2020 12:40:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2] of: Fix a refcounting bug in __of_attach_node_sysfs()
-Message-ID: <20200527184040.GA2529559@bogus>
-References: <20200520120414.GE172354@mwanda>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=CdXGMbnJPFZ1OXBjluxy0OMcUuIHa8+nT3WEXVeHqe8=;
+        b=tSGa6wc6cTEuo1rTcLZjkBXjhL6un5jafLQq2sauzxYdpt9peLNdsr11m1FqSO2dF9
+         JzjW8ObicV10xZZ6UE8uk+pnZujuFT44S+GlfwqpxlpwxqriIj6oWtnY65ueO9/BaM31
+         ICQAi840Xk5vohWzRFYtOkmKwDp01Immaw5NLIEBcV0RsGRqA8A/cFQQRAYSzXb3WlSC
+         HCKLv9OGMOudgSzXOv28JRyhs6zkR+W7pzTqDCX35QHuFJ73QvAXrybXu01oZFMji4J5
+         qWj3z/Pybsr7OIhBH6ZqdLjYuiaWTM30fKJ96vShdw6tgUPEzIZcv4zCXMZZIsZ8ETzd
+         OrVw==
+X-Gm-Message-State: AOAM5319t7qIRE/oMEZLuwuy8jrTFYEj4CDhPfq4Ddli9Q7pG5v6GRTU
+        MFlRIpYLXjgowGFEuK9jqgXuYqi6
+X-Google-Smtp-Source: ABdhPJwAJfObBr8qIMwh6rD5SaQSv19q5VL+f601RZyC8mvZUHcYIoHpe+XGNBs3YrWxbCikwuw3Xg==
+X-Received: by 2002:a17:90a:c791:: with SMTP id gn17mr6623904pjb.46.1590605297501;
+        Wed, 27 May 2020 11:48:17 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l187sm2642837pfl.218.2020.05.27.11.48.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 11:48:16 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] hwmon: Add Baikal-T1 PVT sensor driver
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526133823.20466-4-Sergey.Semin@baikalelectronics.ru>
+ <20200527162549.GA225240@roeck-us.net>
+ <20200527165205.5krrdahiup3i2oq3@mobilestation>
+ <14256f0f-2977-4a54-cf01-ae7e684d10c2@roeck-us.net>
+ <20200527170524.hbjbikp5b6e5nw5l@mobilestation>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <68094bbc-6183-308e-169c-44534d19375e@roeck-us.net>
+Date:   Wed, 27 May 2020 11:48:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520120414.GE172354@mwanda>
+In-Reply-To: <20200527170524.hbjbikp5b6e5nw5l@mobilestation>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 20 May 2020 15:04:14 +0300, Dan Carpenter wrote:
-> The problem in this code is that if kobject_add() fails, then it should
-> call of_node_put(np) to drop the reference count.  I've actually moved
-> the of_node_get(np) later in the function to avoid needing to do clean
-> up.
+On 5/27/20 10:05 AM, Serge Semin wrote:
+> On Wed, May 27, 2020 at 09:58:00AM -0700, Guenter Roeck wrote:
+>> On 5/27/20 9:52 AM, Serge Semin wrote:
+>>> On Wed, May 27, 2020 at 09:25:49AM -0700, Guenter Roeck wrote:
+>>>> On Tue, May 26, 2020 at 04:38:23PM +0300, Serge Semin wrote:
+>>>
+>>> [nip]
+>>>
+>>>>> +
+>>>>> +=============================== ======= =======================================
+>>>>> +Name				Perm	Description
+>>>>> +=============================== ======= =======================================
+>>>>> +update_interval			RW	Measurements update interval per
+>>>>> +					sensor.
+>>>>> +temp1_type			RO	Sensor type (always 1 as CPU embedded
+>>>>> +					diode).
+>>>>> +temp1_label			RO	CPU Core Temperature sensor.
+>>>>> +temp1_input			RO	Measured temperature in millidegree
+>>>>> +					Celsius.
+>>>>> +temp1_min			RW	Low limit for temp input.
+>>>>> +temp1_max			RW	High limit for temp input.
+>>>>> +temp1_min_alarm			RO	Temperature input alarm. Returns 1 if
+>>>>> +					temperature input went below min limit,
+>>>>> +					0 otherwise.
+>>>>> +temp1_max_alarm			RO	Temperature input alarm. Returns 1 if
+>>>>> +					temperature input went above max limit,
+>>>>> +					0 otherwise.
+>>>>> +temp1_trim			RW	Temperature sensor trimming factor in
+>>>>> +					millidegree Celsius. It can be used to
+>>>>> +					manually adjust the temperature
+>>>>> +					measurements within 7.130 degrees
+>>>>> +					Celsius.
+>>>>
+>>>> vs. standard ABI:
+>>>>
+>>>> temp[1-*]_offset`
+>>>>                 Temperature offset which is added to the temperature reading
+>>>>                 by the chip.
+>>>>
+>>>>                 Unit: millidegree Celsius
+>>>>
+>>>> If you really think this is necessary, why not use the standard ABI ?
+>>>
+>>> That would have made much more sense.) I'll replace the handwritten temp1_trim
+>>> with the standard temp1_offset attribute in v4 shortly today. Thanks for pointing
+>>> this out.
+>>>
+>>
+>> Sorry for not realizing this earlier. The added explanation
+>> made all the difference.
 > 
-> Fixes: 5b2c2f5a0ea3 ("of: overlay: add missing of_node_get() in __of_attach_node_sysfs")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> v2: move the of_node_get() instead of doing clean up.  Also the v1 had a
->     confusing typo in the commit message.
+> No worries. I'll fix it in v4. What about the clk_get_rate() part of the code?
+> You had a comment regarding it in v2. I responded with justification that we can
+> leave it as is. If you still disagree, then I create the clock rate caching in the
+> private data at the probe() stage.
 > 
->  drivers/of/kobj.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
+Reason asking for it is that clk_get_rate() is unnecessarily costly if the rate
+doesn't change. But it isn't worth bike shedding about it.
 
-Applied, thanks!
+Guenter
+
+> -Sergey
+> 
+>>
+>> Guenter
+
