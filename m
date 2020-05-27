@@ -3,59 +3,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D63C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4E6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5093820873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D7620888
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbgE0LiX (ORCPT
+        id S1730066AbgE0Lia (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 07:38:23 -0400
-Received: from elvis.franken.de ([193.175.24.41]:41043 "EHLO elvis.franken.de"
+        Wed, 27 May 2020 07:38:30 -0400
+Received: from elvis.franken.de ([193.175.24.41]:41050 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbgE0LiX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 07:38:23 -0400
+        id S1729709AbgE0Li2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 07:38:28 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jduO3-00011U-05; Wed, 27 May 2020 13:38:19 +0200
+        id 1jduO3-00011U-02; Wed, 27 May 2020 13:38:19 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 6BEEBC0594; Wed, 27 May 2020 13:36:14 +0200 (CEST)
-Date:   Wed, 27 May 2020 13:36:14 +0200
+        id A0EB8C0594; Wed, 27 May 2020 13:34:29 +0200 (CEST)
+Date:   Wed, 27 May 2020 13:34:29 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     od@zcrc.me, devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] MIPS: ingenic: DTS: Add memory info of GCW Zero
-Message-ID: <20200527113614.GF13537@alpha.franken.de>
-References: <20200525174155.457491-1-paul@crapouillou.net>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
+Message-ID: <20200527113429.GC13537@alpha.franken.de>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
+ <20200522142550.GB15261@alpha.franken.de>
+ <20200522152210.GA15567@e121166-lin.cambridge.arm.com>
+ <20200522223656.GA22313@alpha.franken.de>
+ <20200526091227.GB19547@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525174155.457491-1-paul@crapouillou.net>
+In-Reply-To: <20200526091227.GB19547@e121166-lin.cambridge.arm.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 25, 2020 at 07:41:53PM +0200, Paul Cercueil wrote:
-> Add memory info of the GCW Zero in its devicetree. The bootloader
-> generally provides this information, but since it is fixed to 512 MiB,
-> it doesn't hurt to have it in devicetree. It allows the kernel to boot
-> without any parameter passed as argument.
+On Tue, May 26, 2020 at 10:12:27AM +0100, Lorenzo Pieralisi wrote:
+> On Sat, May 23, 2020 at 12:36:56AM +0200, Thomas Bogendoerfer wrote:
+> > On Fri, May 22, 2020 at 04:22:11PM +0100, Lorenzo Pieralisi wrote:
+> > > On Fri, May 22, 2020 at 04:25:50PM +0200, Thomas Bogendoerfer wrote:
+> > > > On Thu, May 14, 2020 at 09:16:41PM +0800, Jiaxun Yang wrote:
+> > > > > We can now enable generic PCI driver in Kconfig, and remove legacy
+> > > > > PCI driver code.
+> > > > > 
+> > > > > Radeon vbios quirk is moved to the platform folder to fit the
+> > > > > new structure.
+> > > > > 
+> > > > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > > > > --
+> > > > > v9: Fix licenses tag
+> > > > > ---
+> > > > >  arch/mips/Kconfig                  |   1 +
+> > > > >  arch/mips/loongson64/Makefile      |   2 +-
+> > > > >  arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
+> > > > >  arch/mips/pci/Makefile             |   1 -
+> > > > >  arch/mips/pci/fixup-loongson3.c    |  71 ------------------
+> > > > >  arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
+> > > > >  6 files changed, 31 insertions(+), 189 deletions(-)
+> > > > >  create mode 100644 arch/mips/loongson64/vbios_quirk.c
+> > > > >  delete mode 100644 arch/mips/pci/fixup-loongson3.c
+> > > > >  delete mode 100644 arch/mips/pci/ops-loongson3.c
+> > > > 
+> > > > Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > 
+> > > This patch (so the series) does not apply to v5.7-rc1 which is our
+> > > baseline. I reiterate the point, isn't it better to take the whole
+> > > series through the MIPS tree ?
+> > 
+> > sounds better then
+> > 
+> > > Failing that, the series has to
+> > > be rebased (or split differently so that it can be taken through
+> > > different trees), just let me know.
+> > 
+> > so let's take via mips-next. So can I add your Acked-by to the
+> > first three patches ?
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  arch/mips/boot/dts/ingenic/gcw0.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
+> I have acked patch 2, you have all required ACKs to get this series via
+> the MIPS tree now, apologies for the delay.
 
-applied patch 1-3 to mips-next.
+perfect, thanks.
 
 Thomas.
+
 
 -- 
 Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
