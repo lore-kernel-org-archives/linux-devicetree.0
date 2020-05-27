@@ -2,49 +2,49 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E753C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B57FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5944208B8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343B920DD4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgE0HiV (ORCPT
+        id S2387580AbgE0Hwo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 03:38:21 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34613 "EHLO
+        Wed, 27 May 2020 03:52:44 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46930 "EHLO
         mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729212AbgE0HiV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 03:38:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b18so18502157oti.1;
-        Wed, 27 May 2020 00:38:20 -0700 (PDT)
+        with ESMTP id S2387650AbgE0Hwn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 03:52:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g25so18458909otp.13;
+        Wed, 27 May 2020 00:52:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PNLv5z8EKY1yuhWqFKsZJ0tNJNt2riKYrmpKQdpJCq4=;
-        b=syxooSn8MTa3f2hzeY9xQvNzJ1q7Fcd6JOD5UuYQheaxtT/zgqp5BJy9MD/02ipNek
-         uKzF1cluwJ4Ju+1S3ALLDbNlpLP9VsfLGIoEzw3oFi6AUuu9+AmbS1AnEj3DWJwBFvzQ
-         P4Y8uhDEnxaUNxmG8VonaSTQIDL1Lny5AS3N7Q/u6W6rYh5Nirktew9dc43jGcSEUqdk
-         UQg/YPtCOYxMt4rAKQOvqTgI2bNeKS5GBs/jRa5Rp/yS0xC71wvY/4ZbwFCI2T7M4fiy
-         IIkXFOT8MytJnbe5HJv6T8urHJoiMOWgYqppASUMVxA31forL4OFsygtj5yWCWMY9MpE
-         x3aQ==
-X-Gm-Message-State: AOAM531ySmx8on6XLprfAJFlgw1U8PwOJhWhiD7DV3I7tU6sZJIufJ9t
-        FtF7GNgxZhH5UR1WoGzYxVw+IcZizaagBpJrocE=
-X-Google-Smtp-Source: ABdhPJxm2iQnKGPaQ8cudthAdTY+DMCSTWHl/gI3LFICJOmziwdjskV5xtEX0AQPODgatzLU0HkSgXSO28tDFRH9NJs=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr3628517otp.145.1590565100227;
- Wed, 27 May 2020 00:38:20 -0700 (PDT)
+        bh=S/vXGrBoFycwluM2P5rydMxcUoPDQRXCjdLYfWHMt+E=;
+        b=nRaSjJe3qtTsnpuPc36TJBCa8WIfR3RHp8BMv/yh6UlvBWcICMRZHdxbwBqG/bAqUa
+         oybSSVMKskrspoZDTXqHkLjGh/DRmdK9Pfd66iKCpVSSYzrMNoAOmggF5QlJZ5XqXSPu
+         3BPC2BZYdCjuh5NC7jAAgQLXt9Ooz7NnybuVEInI+18BDgHZqpyFnkCfvqDObuV9N131
+         BiitQ2Q8HYfOPrnJSJ8o9GPMDG4NnGZLCChpvkJkSip2OU+234m7U4bTt+0WvdA18c2C
+         ruTIesetsBSwqMVZMV/CMaxFB08i1dwziZO2lsR98ywQd/IzeEhfRGhwnrykEZudoR+8
+         kz+w==
+X-Gm-Message-State: AOAM533tcNNzZ+93RePWbC0mtIKfE2sddhLxntwQCTrUovsKFCTzb2/k
+        1+B89Glug4bDwN6Vo7OGIXyjTE7tvtPfEa0f4ve/nA==
+X-Google-Smtp-Source: ABdhPJyh6XnGunqKyldUQUDAVmqdF5DZz8KnpZzyv3nLlCp4H9hrYSx91YK6xYIWALYMvjLu0Y9UEg6PEXXjbHVOKSI=
+X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr3526020ote.107.1590565962830;
+ Wed, 27 May 2020 00:52:42 -0700 (PDT)
 MIME-Version: 1.0
 References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590526904-13855-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1590526904-13855-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 May 2020 09:38:08 +0200
-Message-ID: <CAMuHMdVZJoRYTohMs+Qt9oYF+2MSHVNDa56BNj6VJNnqPXPvhw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
+Date:   Wed, 27 May 2020 09:52:31 +0200
+Message-ID: <CAMuHMdWQ5i4QiMuSEPrHC4i6fDGa2aJrKO5gzyrsc=uCCdYAhQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7742: Add audio support
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -55,21 +55,27 @@ Cc:     Magnus Damm <magnus.damm@gmail.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+CC Morimoto-san
+
 On Tue, May 26, 2020 at 11:02 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document RZ/G1H (R8A7742) SoC bindings.
+> Add sound support for the RZ/G1H SoC (a.k.a. R8A7742).
+>
+> This work is based on similar work done on the R8A7744 SoC.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
 Gr{oetje,eeting}s,
 
