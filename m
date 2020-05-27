@@ -2,31 +2,32 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CEDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 21:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5C4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 21:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B3F207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 21:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37187207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 21:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgE0VTV (ORCPT
+        id S1726482AbgE0VTj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 17:19:21 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:17379 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726114AbgE0VTV (ORCPT
+        Wed, 27 May 2020 17:19:39 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:5763 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728799AbgE0VTh (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 17:19:21 -0400
+        Wed, 27 May 2020 17:19:37 -0400
 X-IronPort-AV: E=Sophos;i="5.73,442,1583161200"; 
-   d="scan'208";a="48177553"
+   d="scan'208";a="47965378"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 28 May 2020 06:19:19 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 28 May 2020 06:19:36 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 257BB400C4CB;
-        Thu, 28 May 2020 06:19:17 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6FFD7400C4CB;
+        Thu, 28 May 2020 06:19:34 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -35,9 +36,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 1/4] dt-bindings: thermal: rcar-thermal: Add device tree support for r8a7742
-Date:   Wed, 27 May 2020 22:18:37 +0100
-Message-Id: <1590614320-30160-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 4/4] ARM: dts: r8a7742: Add CMT SoC specific support
+Date:   Wed, 27 May 2020 22:18:40 +0100
+Message-Id: <1590614320-30160-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -46,30 +47,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add thermal sensor support for r8a7742 SoC. The Renesas RZ/G1H
-(r8a7742) thermal sensor module is identical to the R-Car Gen2 family.
-
-No driver change is needed due to the fallback compatible value
-"renesas,rcar-gen2-thermal".
+Add CMT[01] support to r8a7742 SoC DT.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/thermal/rcar-thermal.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/r8a7742.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-index d2f4f1b..24d9d15 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-@@ -20,6 +20,7 @@ properties:
-           - const: renesas,rcar-thermal # Generic without thermal-zone
-       - items:
-           - enum:
-+              - renesas,thermal-r8a7742 # RZ/G1H
-               - renesas,thermal-r8a7743 # RZ/G1M
-               - renesas,thermal-r8a7744 # RZ/G1N
-           - const: renesas,rcar-gen2-thermal # Generic thermal-zone
+diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+index f57db05..08af9e2 100644
+--- a/arch/arm/boot/dts/r8a7742.dtsi
++++ b/arch/arm/boot/dts/r8a7742.dtsi
+@@ -1368,6 +1368,38 @@
+ 			compatible = "renesas,prr";
+ 			reg = <0 0xff000044 0 4>;
+ 		};
++
++		cmt0: timer@ffca0000 {
++			compatible = "renesas,r8a7742-cmt0",
++				     "renesas,rcar-gen2-cmt0";
++			reg = <0 0xffca0000 0 0x1004>;
++			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 124>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 124>;
++			status = "disabled";
++		};
++
++		cmt1: timer@e6130000 {
++			compatible = "renesas,r8a7742-cmt1",
++				     "renesas,rcar-gen2-cmt1";
++			reg = <0 0xe6130000 0 0x1004>;
++			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 329>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 329>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	thermal-zones {
 -- 
 2.7.4
 
