@@ -2,126 +2,85 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746E5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD226C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559042078B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB592088E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590568506;
+	bh=4P6drQSHi9/fWQsr/Ga8r0JMRYT3l59WI9ynWwuCi20=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=FhDa+m/iDJ/7XhT5sOM4Xb1ha1Eo//v/kHhnPvaUYZbAmYTgL9uTLcHWlEItQNX4e
+	 rQNdGT/wMXXjtED2nXxcoZXi2Hu1iP0EDJM10NWDd0U4YfXnVh+2H0OMia1Yaq9spu
+	 SSfPiCj6ipDH5BRMSdYE3ozDfvRBghC6titoAlSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388035AbgE0IeW (ORCPT
+        id S2388109AbgE0IfF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 04:34:22 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:55673 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387397AbgE0IeW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 04:34:22 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id BA692240008;
-        Wed, 27 May 2020 08:33:58 +0000 (UTC)
-Date:   Wed, 27 May 2020 10:33:56 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [RESEND v5 09/21] mtd: rawnand: Create a new enumeration to
- describe properly ECC types
-Message-ID: <20200527103356.56e145a9@xps13>
-In-Reply-To: <20200527005928.39c549e2@collabora.com>
-References: <20200526195633.11543-1-miquel.raynal@bootlin.com>
-        <20200526195633.11543-10-miquel.raynal@bootlin.com>
-        <20200527005928.39c549e2@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 27 May 2020 04:35:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388082AbgE0IfE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 04:35:04 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7453D20723;
+        Wed, 27 May 2020 08:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590568504;
+        bh=4P6drQSHi9/fWQsr/Ga8r0JMRYT3l59WI9ynWwuCi20=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=OjqOTc1g6ZzEGZuUAXSx989Y9yhyWypaASH76M03vrBHEMdC2kKDvUqSFrGWTrFmH
+         1HPFcNZTtVVMVJUpFSVbdN9ObGVTdQznRmcwESXxXFFL1NCa3d9/N9vuwCqVXrJ7bO
+         igkQZANuQEZyBwRcwAGYW/38P863/fZt08cACyao=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590564453-24499-6-git-send-email-dillon.minfei@gmail.com>
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com> <1590564453-24499-6-git-send-email-dillon.minfei@gmail.com>
+Subject: Re: [PATCH v6 5/9] clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillonhua@gmail.com, dillon min <dillon.minfei@gmail.com>
+To:     airlied@linux.ie, alexandre.torgue@st.com,
+        andy.shevchenko@gmail.com, broonie@kernel.org, daniel@ffwll.ch,
+        dillon.minfei@gmail.com, linus.walleij@linaro.org,
+        mcoquelin.stm32@gmail.com, mturquette@baylibre.com,
+        noralf@tronnes.org, p.zabel@pengutronix.de, robh+dt@kernel.org,
+        sam@ravnborg.org, thierry.reding@gmail.com
+Date:   Wed, 27 May 2020 01:35:03 -0700
+Message-ID: <159056850384.88029.10852284922297394339@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Quoting dillon.minfei@gmail.com (2020-05-27 00:27:29)
+> From: dillon min <dillon.minfei@gmail.com>
+>=20
+> This is due to misuse \u2018PLL_VCO_SAI' and'PLL_SAI' in clk-stm32f4.c
+> 'PLL_SAI' is 2, 'PLL_VCO_SAI' is 7(defined in
+> include/dt-bindings/clock/stm32fx-clock.h).
+>=20
+> 'post_div' point to 'post_div_data[]', 'post_div->pll_num'
+> is PLL_I2S or PLL_SAI.
+>=20
+> 'clks[PLL_VCO_SAI]' has valid 'struct clk_hw* ' return
+> from stm32f4_rcc_register_pll() but, at line 1777 of
+> driver/clk/clk-stm32f4.c, use the 'clks[post_div->pll_num]',
+> equal to 'clks[PLL_SAI]', this is invalid array member at that time.
+>=20
+> Fixes: 517633ef630e ("clk: stm32f4: Add post divisor for I2S & SAI PLLs")
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 27 May
-2020 00:59:28 +0200:
-
-> On Tue, 26 May 2020 21:56:21 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> 
-> > Now that the misleading mix between ECC engine type and OOB placement
-> > has been addressed, add a new enumeration to properly define ECC types
-> > (also called provider or mode).
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > ---
-> >  drivers/mtd/nand/raw/nand_base.c |  7 +++++++
-> >  include/linux/mtd/rawnand.h      | 16 ++++++++++++++++
-> >  2 files changed, 23 insertions(+)
-> > 
-> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> > index 515cd4681660..5c6ab5b93270 100644
-> > --- a/drivers/mtd/nand/raw/nand_base.c
-> > +++ b/drivers/mtd/nand/raw/nand_base.c
-> > @@ -5018,6 +5018,13 @@ static const char * const nand_ecc_modes[] = {
-> >  	[NAND_ECC_ON_DIE]	= "on-die",
-> >  };
-> >  
-> > +static const char * const nand_ecc_engine_providers[] = {  
-> 
-> This table is not used here, are you sure it should be introduced now?
-> 
-> > +	[NAND_ECC_ENGINE_NONE] = "none",
-> > +	[NAND_ECC_ENGINE_SOFT] = "soft",
-> > +	[NAND_ECC_ENGINE_CONTROLLER] = "hw",  
-> 
-> 					^ "on-controller" ?
-
-This would break DT backward compatibility, I am afraid I cannot do
-that. Honnestly, I find "hw" good enough because "on-controller" is
-also too restrictive. What about an external (non-pipelined) engine
-like the one I am about to introduce?
-
-> 
-> > +	[NAND_ECC_ENGINE_ON_DIE] = "on-die",
-> > +};
-> > +
-> >  static const char * const nand_ecc_placement[] = {
-> >  	[NAND_ECC_PLACEMENT_INTERLEAVED] = "interleaved",
-> >  };
-> > diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-> > index dc909fb977c7..a2078c5f3d21 100644
-> > --- a/include/linux/mtd/rawnand.h
-> > +++ b/include/linux/mtd/rawnand.h
-> > @@ -92,6 +92,22 @@ enum nand_ecc_mode {
-> >  	NAND_ECC_ON_DIE,
-> >  };
-> >  
-> > +/**
-> > + * enum nand_ecc_engine_type - NAND ECC engine type/provider
-> > + * @NAND_ECC_ENGINE_INVALID: Invalid value
-> > + * @NAND_ECC_ENGINE_NONE: No ECC correction
-> > + * @NAND_ECC_ENGINE_SOFT: Software ECC correction
-> > + * @NAND_ECC_ENGINE_CONTROLLER: Hardware controller ECC correction
-> > + * @NAND_ECC_ENGINE_ON_DIE: On chip hardware ECC correction
-> > + */
-> > +enum nand_ecc_engine_type {
-> > +	NAND_ECC_ENGINE_INVALID,
-> > +	NAND_ECC_ENGINE_NONE,
-> > +	NAND_ECC_ENGINE_SOFT,
-> > +	NAND_ECC_ENGINE_CONTROLLER,
-> > +	NAND_ECC_ENGINE_ON_DIE,
-> > +};
-> > +
-> >  /**
-> >   * enum nand_ecc_placement - NAND ECC placement
-> >   * @NAND_ECC_PLACEMENT_FREE: The driver can decide where to put ECC bytes.  
-> 
+Acked-by: Stephen Boyd <sboyd@kernel.org>
