@@ -2,112 +2,69 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D22C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 12:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF96BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 12:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1360207D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 12:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B0F20899
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 12:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgE0M2b convert rfc822-to-8bit (ORCPT
+        id S1730022AbgE0MiV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 08:28:31 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:54951 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729812AbgE0M2a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 08:28:30 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N2E9e-1isAKI1XpO-013aAV; Wed, 27 May 2020 14:28:28 +0200
-Received: by mail-qk1-f175.google.com with SMTP id w1so649129qkw.5;
-        Wed, 27 May 2020 05:28:27 -0700 (PDT)
-X-Gm-Message-State: AOAM532osS/AFq3CkigcS15Y6Sv7PR6JWzFoZ1tv+w478Legne8yYC2Q
-        IUOGoI5OcwuDIDsny3PqaE5aIM+BZAlJ4cXL924=
-X-Google-Smtp-Source: ABdhPJwaAgzroHfp7pJ7RNhUPIcAie1aEFqd1EprpZ9PmXq2JihQh/b6bzG/FLdwRDsYzWluddqdrXxjIL6hkdgwLDI=
-X-Received: by 2002:a37:bc7:: with SMTP id 190mr3695944qkl.286.1590582507016;
- Wed, 27 May 2020 05:28:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200522120700.838-1-brgl@bgdev.pl> <20200522120700.838-7-brgl@bgdev.pl>
- <20200527073150.GA3384158@ubuntu-s3-xlarge-x86> <CAMRc=MevVsYZFDQif+8Zyv41sSkbS8XqWbKGdCvHooneXz88hg@mail.gmail.com>
- <CAK8P3a3WXGZpeX0E8Kyuo5Rkv5acdkZN6_HNS61Y1=Jh+G+pRQ@mail.gmail.com> <CAMRc=Md1w_6+dU9gCwiiB5R+dMcYMPFLPrA++RBkKp5zaY6Riw@mail.gmail.com>
-In-Reply-To: <CAMRc=Md1w_6+dU9gCwiiB5R+dMcYMPFLPrA++RBkKp5zaY6Riw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 May 2020 14:28:10 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3L6aGtKqv4ikNJc3or_mX2VvRE1sgaZZ9esD6jx+Hyug@mail.gmail.com>
-Message-ID: <CAK8P3a3L6aGtKqv4ikNJc3or_mX2VvRE1sgaZZ9esD6jx+Hyug@mail.gmail.com>
-Subject: Re: [PATCH v5 06/11] net: ethernet: mtk-star-emac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:42xuInEhqB0LXEINV+ATzXFlSMMIjNK510ngCJoHuhHdNsuqk4w
- 68JRv4VvYzZWx1vsiWvmeFS+1NeUsk0M37H9qQ5WgGs8IVw2uVu/a5xFALDPbCNQ3zFm+2P
- 508dd+urfo1iRHl5MaflH+JN9p90uLD3a8C+zj9c2lLetniKhTImGSr4IDkMFlKnaCpNRgn
- MoXoURCWf2iSPksOB9qmQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xAdFMfLVBtI=:DTxMeHJVSg8YjC8fXbe+DT
- s/o+xcigouZHqnyFyjG0dXlhkLJhSljvBRxoAP2CKpCv7v2VYsLxsRWMubVGv7YM9R9XINm/x
- 8OwWsm7+k9eP5KKUkjlkFQCWYYR7sdSiYnAEq27LrYFH2e7goybUfvb6DLuXt6Xa9xEQq7+LT
- aghXQDp7gK4F20sj/yU1wagnazrG2B1n23nJp6jwWL5WTWAmU2JTL7Q0MJn//OL0Z1MIHbMqa
- qPQCpCQXQ6hOTIC7QAleQT8agF21K/s0hmxSd4Cblf/YYQKFA4oDXlRlDPrCSvK5BdcgAYuVL
- XcVKOGQD0gL5IO7iUBciV4qqU6g+yMWKsaDhbfev6Y/Km7aGlGnz4RezjxC8XAbj9vwJYDE74
- SCbfl5UcsTncNSM929NBgl0JS9WNUe0gdhBx6l40zflwRPUeVdM3WnUyLTVwAJ+E90hwQrsRr
- 0sGSfKf/cFJJEYkNweUDOsKw2RkooDS11SQwXFS+eDHCzS4LPS2Fkipg7UySi0pvfKKBUbEuO
- Qt/reNs/nYwY0+PXJhJ0y71lKGLvQYFRrs9ZaeaTOyaQWrCqhiYKfPlXrpnqbKuCwtQjYXqWu
- /8SSP+3rFjdn8EUupqi9rVdMQ+GMkJEv9BWKpcZSVGQtV8rKveRiwSpYOJlUXj52Xl1Z6TFiV
- SgWLNjzPVwryybtSrCy4nzmjkR4uqqvcmvEhedUROHoypouBP6rKQCGXzaBFXYyuQVQcoIYuE
- +46SpmkItW5PUP2nM1lj5CezoKiJUq+m4AN579NyOyVhsnl0ZLAEOafo1IrbNwjr7x1t8Xrd6
- RfSQdrBOK2LJRkq7b+AmrJAeitmOCj/ltItIMg6rHg8qeDUcy4=
+        Wed, 27 May 2020 08:38:21 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:54815 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728964AbgE0MiV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 08:38:21 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 27 May 2020 05:38:20 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 27 May 2020 05:38:18 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id B772921800; Wed, 27 May 2020 18:08:16 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH 0/4] Add ipq6018 apcs mailbox driver
+Date:   Wed, 27 May 2020 18:08:08 +0530
+Message-Id: <1590583092-24290-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 1:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> śr., 27 maj 2020 o 13:33 Arnd Bergmann <arnd@arndb.de> napisał(a):
-> >
-> > On Wed, May 27, 2020 at 10:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > Thanks for reporting this! I have a fix ready and will send it shortly.
-> >
-> > I already have a workaround for this bug as well as another one
-> > in my tree that I'll send later today after some more testing.
-> >
-> > Feel free to wait for that, or just ignore mine if you already have a fix.
-> >
->
-> I already posted a fix[1]. Sorry for omitting you, but somehow your
-> name didn't pop up in get_maintainers.pl.
+The ipq6018 devices has apcs block for ipc interrupts, this block also
+provides a clock controller which provides cpu clocks.
 
-I'm not a maintainer for this, I just do a lot of build fixes on the side,
-as I verify the stuff that I merge myself ;-)
+This series adds support for the apcs block found in ipq6018 devices.
 
-> [1] https://lkml.org/lkml/2020/5/27/378
+This series was originally part of ipq6018 apss clock controller series
+https://lkml.org/lkml/2020/5/27/637
 
-Ok, perfect, that is indeed the correct fix and mine was wrong. I'll
-just send a fix for the other bug (unused-function warning) then.
+The patch 4 has dtb dependency with apss pll driver which can be found in
+https://lkml.org/lkml/2020/5/27/637
 
-     Arnd
+Sivaprakash Murugesan (4):
+  dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
+  dt-bindings: mailbox: Add dt-bindings for ipq6018 apcs global block
+  mailbox: qcom: Add ipq6018 apcs compatible
+  arm64: dts: ipq6018: Add support for apcs clk
+
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 88 -------------------
+ .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 99 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  8 +-
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            | 23 +++--
+ 4 files changed, 118 insertions(+), 100 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+
+-- 
+2.7.4
+
