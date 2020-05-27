@@ -2,184 +2,110 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE57C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEA1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0675C20776
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D56C20873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rT8qTnfL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="opcEzKyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgE0Pi1 (ORCPT
+        id S1729884AbgE0Plb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 11:38:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbgE0Pi1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 11:38:27 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D28E1C05BD1E;
-        Wed, 27 May 2020 08:38:26 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id e2so28574123eje.13;
-        Wed, 27 May 2020 08:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NHpRs2AUHpe17qwh7iL/x8H/hAHv0wAfBL5DthJkWTw=;
-        b=rT8qTnfL3/jcMB6h3w2l7UplpetRvKoD2TqE0eX6Dn3cnZ7ucOmmOgH172nGwzsYaR
-         hsfQF3xHXrxS9Dtj/WzvsK8SDzevpvfZD51pS4UsCoDq5EnaDpsOrSwj4bS0ghP/dyXS
-         k7RrVYt+dNmyzjoFLXeLgE4WbL4OOA4Qa9MgDlKAKqfuXm7mUA2Xo8/yO1h522Bo9sME
-         zhnk5k7t5cvsyox80lt8+/ZtrZfuROazg+poa9xbYPOmyHE1YycaLQ37bScVupgJ9VRB
-         pRndDUApjfbYkN+Kyy3w6+hL+904TiceP02wqT578C97cfrC/piW0qZkGcZLo6N26K87
-         uasw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NHpRs2AUHpe17qwh7iL/x8H/hAHv0wAfBL5DthJkWTw=;
-        b=Q2rE2M+aZ27oDfJQNbetmgKRFLEcnvoRbjxI20BxVMj7EJdKHkBeXeirDh9LXSc+5/
-         ryGU/zrfsTaVbussvOQapVJCREb8f/sKBBfPbzjK/0Eqk1wZbiUgqmn/048ElA45rhpc
-         Hwj+hkXgdkMJfSF0NQ3fk7Z2tW2Dm+bLAsBzkjgUZzOKqpq+Bg+j/mQb2bEREL05UpdF
-         DCxjroNyFQWvrjzQ7x/J2Das15soaWcJCKu09OZ1ml10IhelGrWhB7thraM4Ga3Ugnqq
-         18DhLwUgcdN6Il4HP/OS0PejKpDv3gIwFbVTBlzp/Qd7JpimlfaDtl34cuJ233k69aIf
-         4FHQ==
-X-Gm-Message-State: AOAM533/tUJ+wD8TI2hfKU9NxJUPtx9n2OFqVPwm65kezkPH89VF5wyl
-        gE5SwoGaQDpNaHU9TXWu65fJXFAXrzzC4JnMICM=
-X-Google-Smtp-Source: ABdhPJxDI/cYoTIPZsWwBMhyWTJOxrs8pYM1GI3cfUxwIP9KVzt0QzHkZ25t94IJFGU7ZcJZSnLpK8yF9yMH1JHEXCU=
-X-Received: by 2002:a17:906:1088:: with SMTP id u8mr6940291eju.428.1590593905372;
- Wed, 27 May 2020 08:38:25 -0700 (PDT)
+        Wed, 27 May 2020 11:41:31 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39752 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726807AbgE0Plb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 11:41:31 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RFfHNS004860;
+        Wed, 27 May 2020 10:41:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590594077;
+        bh=XEcyKsm3Rvw5vHQRvm9JNFUY7jNND4xv6Zl3osWxia4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=opcEzKyTMkkG0XF+VgSiPrcP3DJbkmqd1I0/Vglf0UZFuy21+0EUMovBZ/efmrMb7
+         ELXWMY0DlMVITW3WPKDNqH//uRxcrHA7YijL8Qti5jID2M2hAVD71nPPcv41apJkii
+         RJDWaIHBMXi201HP+47oJKtD/BnkFW/qSsym4XuY=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RFfHmk094289;
+        Wed, 27 May 2020 10:41:17 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 10:41:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 10:41:17 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RFfGA3097665;
+        Wed, 27 May 2020 10:41:16 -0500
+Subject: Re: [PATCH v25 06/16] dt: bindings: lp55xx: Update binding for
+ Multicolor Framework
+To:     Rob Herring <robh@kernel.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-7-dmurphy@ti.com> <20200527020101.GA891065@bogus>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <7ff61c4a-0d74-a206-2255-21ee3c7a4357@ti.com>
+Date:   Wed, 27 May 2020 10:41:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
- <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
- <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com> <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
- <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org>
-In-Reply-To: <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 27 May 2020 08:38:47 -0700
-Message-ID: <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
- set DDR bandwidth
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, saravanak@google.com,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200527020101.GA891065@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 1:47 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
->
-> + more folks
->
-> On 5/18/2020 9:55 PM, Rob Clark wrote:
-> > On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> >> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
-> >>> This patches replaces the previously used static DDR vote and uses
-> >>> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
-> >>> GPU frequency.
-> >>>
-> >>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> >>> ---
-> >>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
-> >>>   1 file changed, 1 insertion(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> >>> index 2d8124b..79433d3 100644
-> >>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> >>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> >>> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
-> >>>
-> >>>        gmu->freq = gmu->gpu_freqs[perf_index];
-> >>>
-> >>> -     /*
-> >>> -      * Eventually we will want to scale the path vote with the frequency but
-> >>> -      * for now leave it at max so that the performance is nominal.
-> >>> -      */
-> >>> -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> >>> +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
-> >>>   }
-> >> This adds an implicit requirement that all targets need bandwidth settings
-> >> defined in the OPP or they won't get a bus vote at all. I would prefer that
-> >> there be an default escape valve but if not you'll need to add
-> >> bandwidth values for the sdm845 OPP that target doesn't regress.
-> >>
-> > it looks like we could maybe do something like:
-> >
-> >    ret = dev_pm_opp_set_bw(...);
-> >    if (ret) {
-> >        dev_warn_once(dev, "no bandwidth settings");
-> >        icc_set_bw(...);
-> >    }
-> >
-> > ?
-> >
-> > BR,
-> > -R
->
-> There is a bit of an issue here - Looks like its not possible to two icc
-> handles to the same path.  Its causing double enumeration of the paths
-> in the icc core and messing up path votes. With [1] Since opp/core
-> already gets a handle to the icc path as part of table add,  drm/msm
-> could do either
->
-> a) Conditionally enumerate gpu->icc_path handle only when pm/opp core
-> has not got the icc path handle. I could use something like [2] to
-> determine if should initialize gpu->icc_path*
->
-> b) Add peak-opp-configs in 845 dt and mandate all future versions to use
-> this bindings. With this, I can remove gpu->icc_path from msm/drm
-> completely and only rely on opp/core for bw voting.
+Rob
 
-The main thing is that we want to make sure newer dtb always works on
-an older kernel without regression.. but, hmm..  I guess the
-interconnects/interconnects-names properties haven't landed yet in
-sdm845.dtsi?  Maybe that lets us go with the simpler approach (b).
-Looks like we haven't wired up interconnect for 8916 or 8996 either,
-so probably we can just mandate this for all of them?
+On 5/26/20 9:01 PM, Rob Herring wrote:
+> On Tue, May 26, 2020 at 11:46:42AM -0500, Dan Murphy wrote:
+>> Update the DT binding to include the properties to use the
+>> multicolor framework for the devices that use the LP55xx
+>> framework.
+>>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> CC: Tony Lindgren <tony@atomide.com>
+>> CC: "Benoît Cousson" <bcousson@baylibre.com>
+>> CC: Linus Walleij <linus.walleij@linaro.org>
+>> CC: Shawn Guo <shawnguo@kernel.org>
+>> CC: Sascha Hauer <s.hauer@pengutronix.de>
+>> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+>> CC: Fabio Estevam <festevam@gmail.com>
+>> CC: NXP Linux Team <linux-imx@nxp.com>
+>> ---
+>>   .../devicetree/bindings/leds/leds-lp55xx.txt  | 149 +++++++++++++++---
+>>   1 file changed, 124 insertions(+), 25 deletions(-)
+> Convert this to schema first because it's going to need to reference
+> the multi-color schema.
 
-If we have landed the interconnect dts hookup for gpu somewhere that
-I'm overlooking, I guess we would have to go with (a) and keep the
-existing interconnects/interconnects-names properties.
+OK.  This seems to be my life recently converting txt to yaml ;)
 
-BR,
--R
+Dan
 
-> [1] - https://lore.kernel.org/patchwork/cover/1240687/
->
-> [2] - https://patchwork.kernel.org/patch/11527573/
->
-> Let me know your thoughts
->
-> Sharat
->
-> >
-> >> Jordan
-> >>
-> >>>   unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
-> >>> --
-> >>> 2.7.4
-> >>>
-> >> --
-> >> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> >> a Linux Foundation Collaborative Project
-> >> _______________________________________________
-> >> Freedreno mailing list
-> >> Freedreno@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
+> Rob
