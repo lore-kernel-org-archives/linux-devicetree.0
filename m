@@ -2,187 +2,148 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545F4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F335C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3587F20899
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95002078B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VStnWt6j"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aP+vMyRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389259AbgE0Oqw (ORCPT
+        id S2389323AbgE0OwI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 10:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389117AbgE0Oqw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 10:46:52 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA463C08C5C1
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 07:46:51 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id q18so3133218ilm.5
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 07:46:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AU7716CyemDmasYys+I/AcpiH3oj4x9jWwzzxX5tgKU=;
-        b=VStnWt6jTjFgaMVpk3oAYnsncjATXU/wAutYtmJZxldXplcS0pQN70hvvNDVsOPkH4
-         vnpNBR2ZdymxIB23xtSA8Lf6Q+U1apKa27CyqmEcDbIor/6l6or9W2gJF5nwV4rqyhy5
-         zn5mI5nrRB5YSUzlGDB5NcEQTR9RL2pEiZTE8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AU7716CyemDmasYys+I/AcpiH3oj4x9jWwzzxX5tgKU=;
-        b=uIwcOR5hiW0ok1isD/GhGt1e8jLU3E6ITnHuXF8Wt69MLurNFZ31fh0Rzma+A1+fvZ
-         qqtXy9HwZgOcr4+Fsdou1RHfx4EhyCnSfX/0AMtYevngvc2wPbEMNhHTS1X629nmhfCf
-         k0k3OaMTpFSDPZvODxsDaYORZR41MocwAqSTJu4vgcDh+7H7tmDgYtVFql/I6yG4ehCP
-         eHNlaGorVcXdONzARygcazy0Q+ajwt43PqTkZxP7upEaxsxbI+5SFVsXCbXtEzARtwkr
-         igL2bf+IaobM+Bsk7TB0NT/42oq8QsJFjXtSeZmoj84bziu0uDKa4vMtWbZa0fRb4xNh
-         orng==
-X-Gm-Message-State: AOAM531AqXEccG3d3eWmOWhuQ/qvIyB2/JAz6DBFNlE8sQERhXAlOTpG
-        BOZpYGG0QGXSQyXyoHab0lMj7x44yX5lXYhkYFXOCg==
-X-Google-Smtp-Source: ABdhPJzUVd1aHH7lzmeRjgv7wJnpzxeLVtfR5lAOrmZRujWuS3ksAZB8tphWnFf4uD7EhaGC6PT22n7EI0O6IBqmsk8=
-X-Received: by 2002:a92:d182:: with SMTP id z2mr6049581ilz.47.1590590811109;
- Wed, 27 May 2020 07:46:51 -0700 (PDT)
+        Wed, 27 May 2020 10:52:08 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56424 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388621AbgE0OwI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 10:52:08 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04REq0wB049154;
+        Wed, 27 May 2020 09:52:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590591120;
+        bh=W9cUVgUiVlKpasnouxZe/jr55TOUx7dt8VfCWyPWOHU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=aP+vMyRDyKm9P2Sjpt7nL7wSiynvQE/OEyts1J6pxlgOCR5o47Do4Ebj10NYbNVU/
+         ggZ0dJaWn4ONiiuqVKkvgBAU7KAfamGpKvNcrvlVBDbzZ/kr75gYTnKU6yYj6uaykC
+         4odm5C5sFsiNEUHBBAASLICXvNfpQvZfKhodOAmk=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04REq0FV077131
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 09:52:00 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 09:52:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 09:52:00 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04REpvqM115260;
+        Wed, 27 May 2020 09:51:58 -0500
+Subject: Re: [PATCH net-next v3 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200526174716.14116-1-dmurphy@ti.com>
+ <20200526174716.14116-5-dmurphy@ti.com> <20200527005224.GF782807@lunn.ch>
+ <c0867d48-6f04-104b-8192-d61d4464a65f@ti.com>
+ <20200527131204.GB793752@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <bbbf2c2e-2238-3e53-08eb-9d7ad3fc785b@ti.com>
+Date:   Wed, 27 May 2020 09:51:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200403094033.8288-1-xia.jiang@mediatek.com> <20200403094033.8288-7-xia.jiang@mediatek.com>
- <20200521153257.GF209565@chromium.org> <1590544320.12671.10.camel@mhfsdcap03>
-In-Reply-To: <1590544320.12671.10.camel@mhfsdcap03>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 27 May 2020 16:46:39 +0200
-Message-ID: <CAHD77HkUrO4em_=7aJqHLU0WnkdsiGJYHMgEyv23fbztQfupCA@mail.gmail.com>
-Subject: Re: [PATCH v8 06/14] media: platform: Improve the implementation of
- the system PM ops
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hsu Wei-Cheng <mojahsu@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        maoguang.meng@mediatek.com, Sj Huang <sj.huang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200527131204.GB793752@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 3:58 AM Xia Jiang <xia.jiang@mediatek.com> wrote:
->
-> On Thu, 2020-05-21 at 15:32 +0000, Tomasz Figa wrote:
-> > Hi Xia,
-> >
-> > On Fri, Apr 03, 2020 at 05:40:25PM +0800, Xia Jiang wrote:
-> > > Cancel reset hw operation in suspend and resume function because this
-> > > will be done in device_run().
-> >
-> > This and...
-> >
-> > > Add spin_lock and unlock operation in irq and resume function to make
-> > > sure that the current frame is processed completely before suspend.
-> >
-> > ...this are two separate changes. Please split.
-> >
-> > >
-> > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> > > ---
-> > >  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 11 +++++++++--
-> > >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> > > index dd5cadd101ef..2fa3711fdc9b 100644
-> > > --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> > > +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> > > @@ -911,6 +911,8 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
-> > >     u32 dec_ret;
-> > >     int i;
-> > >
-> > > +   spin_lock(&jpeg->hw_lock);
-> > > +
-> >
-> > nit: For consistency, it is recommended to always use the same, i.e. the
-> > strongest, spin_(un)lock_ primitives when operating on the same spinlock.
-> > In this case it would be the irqsave(restore) variants.
-> >
-> > >     dec_ret = mtk_jpeg_dec_get_int_status(jpeg->dec_reg_base);
-> > >     dec_irq_ret = mtk_jpeg_dec_enum_result(dec_ret);
-> > >     ctx = v4l2_m2m_get_curr_priv(jpeg->m2m_dev);
-> > > @@ -941,6 +943,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
-> > >     v4l2_m2m_buf_done(src_buf, buf_state);
-> > >     v4l2_m2m_buf_done(dst_buf, buf_state);
-> > >     v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
-> > > +   spin_unlock(&jpeg->hw_lock);
-> > >     pm_runtime_put_sync(ctx->jpeg->dev);
-> > >     return IRQ_HANDLED;
-> > >  }
-> > > @@ -1191,7 +1194,6 @@ static __maybe_unused int mtk_jpeg_pm_suspend(struct device *dev)
-> > >  {
-> > >     struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
-> > >
-> > > -   mtk_jpeg_dec_reset(jpeg->dec_reg_base);
-> > >     mtk_jpeg_clk_off(jpeg);
-> > >
-> > >     return 0;
-> > > @@ -1202,19 +1204,24 @@ static __maybe_unused int mtk_jpeg_pm_resume(struct device *dev)
-> > >     struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
-> > >
-> > >     mtk_jpeg_clk_on(jpeg);
-> > > -   mtk_jpeg_dec_reset(jpeg->dec_reg_base);
-> > >
-> > >     return 0;
-> > >  }
-> > >
-> > >  static __maybe_unused int mtk_jpeg_suspend(struct device *dev)
-> > >  {
-> > > +   struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
-> > > +   unsigned long flags;
-> > >     int ret;
-> > >
-> > >     if (pm_runtime_suspended(dev))
-> > >             return 0;
-> > >
-> > > +   spin_lock_irqsave(&jpeg->hw_lock, flags);
-> >
-> > What does this spinlock protect us from? I can see that it would prevent
-> > the interrupt handler from being called, but is it okay to suspend the
-> > system without handling the interrupt?
-> Dear Tomasz,
-> I mean that if current image is processed in irq handler,suspend
-> function can not get the lock(it was locked in irq handler).Should I
-> move the spin_lock_irqsave(&jpeg->hw_lock, flags) to the start location
-> of suspend function or
+Andrew
 
-Do we have any guarantee that the interrupt handler would be executed
-and acquire the spinlock before mtk_jpeg_suspend() is called?
+On 5/27/20 8:12 AM, Andrew Lunn wrote:
+>> If the dt defines rgmii-rx/tx-id then these values are required not
+>> optional.  That was the discussion on the binding.
+> How many times do i need to say it. They are optional. If not
+> specified, default to 2ns.
 
-> use wait_event_timeout() to handle the interrupt
-> before suspend?
+OK.  I guess then the DP83867 driver is wrong because it specifically 
+states in bold
 
-Yes, that would indeed work better. :)
+     /* RX delay *must* be specified if internal delay of RX is used. */
 
-However, please refer to the v4l2_m2m suspend/resume helpers [1] and
-the MTK FD driver [2] for how to implement this nicely.
+It was signed off in commit fafc5db28a2ff
 
-[1] https://patchwork.kernel.org/patch/11272917/
-[2] https://patchwork.kernel.org/patch/11272903/
 
-Best regards,
-Tomasz
+>>>> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>>>> +				   &dp83869->tx_id_delay);
+>>>> +	if (ret) {
+>>>> +		dp83869->tx_id_delay = ret;
+>>>> +		ret = 0;
+>>>> +	}
+>>>> +
+>>>>    	return ret;
+>>>>    }
+>>>>    #else
+>>>> @@ -367,10 +388,45 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+>>>>    	return ret;
+>>>>    }
+>>>> +static int dp83869_get_delay(struct phy_device *phydev)
+>>>> +{
+>>>> +	struct dp83869_private *dp83869 = phydev->priv;
+>>>> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
+>>>> +	int tx_delay = 0;
+>>>> +	int rx_delay = 0;
+>>>> +
+>>>> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID ||
+>>>> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
+>>>> +		tx_delay = phy_get_delay_index(phydev,
+>>>> +					       &dp83869_internal_delay[0],
+>>>> +					       delay_size, dp83869->tx_id_delay,
+>>>> +					       false);
+>>>> +		if (tx_delay < 0) {
+>>>> +			phydev_err(phydev, "Tx internal delay is invalid\n");
+>>>> +			return tx_delay;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID ||
+>>>> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
+>>>> +		rx_delay = phy_get_delay_index(phydev,
+>>>> +					       &dp83869_internal_delay[0],
+>>>> +					       delay_size, dp83869->rx_id_delay,
+>>>> +					       false);
+>>>> +		if (rx_delay < 0) {
+>>>> +			phydev_err(phydev, "Rx internal delay is invalid\n");
+>>>> +			return rx_delay;
+>>>> +		}
+>>>> +	}
+>>> So any PHY using these properties is going to pretty much reproduce
+>>> this code. Meaning is should all be in a helper.
+>> The issue here is that the phy_mode may only be rgmii-txid so you only want
+>> to find the tx_delay and return.
+>>
+>> Same with the RXID.  How is the helper supposed to know what delay to return
+>> and look for?
+> How does this code do it? It looks at the value of interface.
+
+Actually I will be removing this check with setting the delays to default.
+
+Dan
+
+
+>      Andrew
