@@ -2,153 +2,188 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24055C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 05:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7409C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 06:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03C7A208DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 05:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AinJ5BZd"
+	by mail.kernel.org (Postfix) with ESMTP id C869820787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 06:00:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgE0Ftx (ORCPT
+        id S1725883AbgE0GAH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 01:49:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgE0Ftw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 01:49:52 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5108AC03E96E
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 22:49:52 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ci21so1077577pjb.3
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 22:49:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6+dxUIMKQyAy42JBGRTdVZGwXErKP5C2qIWqyTzCWlw=;
-        b=AinJ5BZdSrzd+mqf3e3TrKJ/RNxB4EpQKs3USnJ4HMNONq6kXq+IHalLSvmSioC2n5
-         IOI30WTz7y4sjD8yg0VZecK93wmNY7SovmM5O+UwPjmndzMmELDVJXCXEJtIuzsf0NPz
-         iPN8iJ4ZZbawoSEE5M/BfN5RC25bt1lrdMI7L9zQJi7UrlJYkE9u7i3AX8w4pGAQZJE9
-         tFfNYCuA0NNZnlWO+cgPG5oQVEVCTK59WoxoRU0Q0qBD5j7wB7DhwgFHyfXoMRigEoTn
-         rQDEMIej3kdjwE/UFeaH1Taes8njY4ZhB1Y8P+6919JBNuKrloxXHdWDxZ68xPme6ZKQ
-         ZwkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6+dxUIMKQyAy42JBGRTdVZGwXErKP5C2qIWqyTzCWlw=;
-        b=KymyaU/3JOi5sI8RT8kof7g/zH9brgcpoWojN5dAF1Yw4K5/vO51IWeek3GiiQJ9hu
-         IZBNhVLyIAbxaCfiNMItS/fxaJ321xtc+UKKkz4M6efG67lJB7KIX0w1oaxFnAz2MSkM
-         rVxKKyqeuZUQpAFBfnnGBaG/acVNctqFh5dOVIlyxZDPRcutGUMYBNYtp+rTMK7lyUU4
-         ObYauCtQC0+PxyM7j+HsOX8fU9Omw2lsmHmPmNWIYuVivqFKc+Tz2xdw9HpPaLfzN0eU
-         t4fFVDGBdo8BSULYCkRvUByWsiP727o/khtKW78Gb4TzHI2m4owQcd/xze26bUkRX9HD
-         B3qQ==
-X-Gm-Message-State: AOAM530p9yQMWaABlCcCjaCjutNQ6whAIOhw60t+PD6V/q/hTXo9aE3p
-        8lG6dtRpZcbwHQZIVjYBlGghCg==
-X-Google-Smtp-Source: ABdhPJwHDrxBY9CDpCjhMdKuXpvS3HOC+JAK91j6QON6YO393fqoeurzBFq9A3gzs5voZpgS6sbQxg==
-X-Received: by 2002:a17:90a:c791:: with SMTP id gn17mr3183530pjb.46.1590558591829;
-        Tue, 26 May 2020 22:49:51 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 206sm1015873pfy.97.2020.05.26.22.49.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 22:49:51 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v6 1/5] dt-bindings: remoteproc: Add Qualcomm PIL info binding
-Date:   Tue, 26 May 2020 22:48:45 -0700
-Message-Id: <20200527054850.2067032-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200527054850.2067032-1-bjorn.andersson@linaro.org>
-References: <20200527054850.2067032-1-bjorn.andersson@linaro.org>
+        Wed, 27 May 2020 02:00:07 -0400
+Received: from out28-219.mail.aliyun.com ([115.124.28.219]:46416 "EHLO
+        out28-219.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgE0GAG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 02:00:06 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07629988|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.102456-0.000676535-0.896868;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=21;RT=21;SR=0;TI=SMTPD_---.HeD3p8j_1590559199;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeD3p8j_1590559199)
+          by smtp.aliyun-inc.com(10.147.42.16);
+          Wed, 27 May 2020 14:00:00 +0800
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Subject: Re: [PATCH v8 4/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
+        paulburton@kernel.org, jiaxun.yang@flygoat.com, chenhc@lemote.com,
+        tglx@linutronix.de, daniel.lezcano@linaro.org,
+        keescook@chromium.org, paul@crapouillou.net, krzk@kernel.org,
+        hns@goldelico.com, ebiederm@xmission.com,
+        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
+        rick.tyliu@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, aric.pzqi@ingenic.com
+References: <1589898923-60048-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1589898923-60048-6-git-send-email-zhouyanjie@wanyeetech.com>
+ <20200526192947.GA140311@bogus>
+Message-ID: <b41dc785-c514-de69-4546-5c4ff3833f04@wanyeetech.com>
+Date:   Wed, 27 May 2020 13:59:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
+In-Reply-To: <20200526192947.GA140311@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a devicetree binding for the Qualcomm peripheral image loader
-relocation information region found in the IMEM.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+在 2020/5/27 上午3:29, Rob Herring 写道:
+> On Tue, May 19, 2020 at 10:35:21PM +0800, 周琰杰 (Zhou Yanjie) wrote:
+>> Document the available properties for the SoC root node and the
+>> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+>>
+>> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Tested-by: Paul Boddie <paul@boddie.org.uk>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>
+>> Notes:
+>>      v1->v2:
+>>      Change the two Document from txt to yaml.
+>>      
+>>      v2->v3:
+>>      Fix formatting errors.
+>>      
+>>      v3->v4:
+>>      Fix bugs in the two yaml files.
+>>      
+>>      v4->v5:
+>>      No change.
+>>      
+>>      v5->v6:
+>>      Rewrite the two yaml files.
+>>      
+>>      v6->v7:
+>>      1.Update compatible strings in "ingenic,cpu.yaml".
+>>      2.Fix formatting errors, and enum for compatible strings.
+>>      3.Remove unnecessary "ingenic,soc.yaml".
+>>      
+>>      v7->v8:
+>>      No change.
+>>
+>>   .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57 ++++++++++++++++++++++
+>>   1 file changed, 57 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>> new file mode 100644
+>> index 00000000..afb0207
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>> @@ -0,0 +1,57 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Bindings for Ingenic XBurst family CPUs
+>> +
+>> +maintainers:
+>> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> +
+>> +description:
+>> +  Ingenic XBurst family CPUs shall have the following properties.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +
+>> +      - description: Ingenic XBurst®1 CPU Cores
+>> +        items:
+> This is a single compatible string, right? If so, drop items.
 
-Changes since v5:
-- Picked up reviewed-bys
 
- .../bindings/remoteproc/qcom,pil-info.yaml    | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+Sure, I'll drop it. And because the SMP driver has some other work that 
+can't be completed in a short time, so I will send this patch separately.
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-new file mode 100644
-index 000000000000..87c52316ddbd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm peripheral image loader relocation info binding
-+
-+maintainers:
-+  - Bjorn Andersson <bjorn.andersson@linaro.org>
-+
-+description:
-+  The Qualcomm peripheral image loader relocation memory region, in IMEM, is
-+  used for communicating remoteproc relocation information to post mortem
-+  debugging tools.
-+
-+properties:
-+  compatible:
-+    const: qcom,pil-reloc-info
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    imem@146bf000 {
-+      compatible = "syscon", "simple-mfd";
-+      reg = <0x146bf000 0x1000>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      ranges = <0 0x146bf000 0x1000>;
-+
-+      pil-reloc@94c {
-+        compatible = "qcom,pil-reloc-info";
-+        reg = <0x94c 0xc8>;
-+      };
-+    };
-+...
--- 
-2.26.2
 
+>> +          enum:
+>> +            - ingenic,xburst-mxu1.0
+>> +            - ingenic,xburst-fpu1.0-mxu1.1
+>> +            - ingenic,xburst-fpu2.0-mxu2.0
+>> +
+>> +      - description: Ingenic XBurst®2 CPU Cores
+>> +        items:
+>> +          enum:
+>> +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
+> Just: const: ingenic,xburst2-fpu2.1-mxu2.1-smt
+>
+> Continuing to append CPU features isn't going to scale well. Does
+> 'xburst2' imply certain features? If so, not really any need to have
+> them be explicit.
+
+
+XBurst (XBurst1) is the first generation CPU core of Ingenic, its basic 
+property is single-issue in-order execution, XBurst2 is the second 
+generation CPU core of Ingenic, its basic property is daul-issue limited 
+out-of-order execution, and both CPU cores can cooperate with some 
+extended propeties,  such as different versions of FPU, different 
+versions of MXU instruction set, with or without simultaneous 
+multi-threading.
+
+Currently there is only one processor entity based on XBurst2 is 
+produced, so there is  only one string for now.
+
+
+Thanks and best regards!
+
+
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - device_type
+>> +  - compatible
+>> +  - reg
+>> +
+>> +examples:
+>> +  - |
+>> +    cpus {
+>> +    	#address-cells = <1>;
+>> +    	#size-cells = <0>;
+>> +
+>> +    	cpu0: cpu@0 {
+>> +    		device_type = "cpu";
+>> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+>> +    		reg = <0>;
+>> +    	};
+>> +
+>> +    	cpu1: cpu@1 {
+>> +    		device_type = "cpu";
+>> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+>> +    		reg = <1>;
+>> +    	};
+>> +    };
+>> +...
+>> -- 
+>> 2.7.4
+>>
