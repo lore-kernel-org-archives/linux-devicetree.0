@@ -2,96 +2,132 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797D5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4D8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5936B20873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590578752;
-	bh=oU0Y/5u25huOd72JaBmNFl5U1KrJrZttts86TRQdAFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CxKTq3HTEBqAPZtRUi8eU1vl5XQmlAvJRYremmW2jAsQY2ZyiEWAV3DPoUZQZX/dN
-	 uEAh4imdbvWSUqSkaxaTgm8iPWZmtebgIyx4CKvPktEf9jr5YshsaUCbwF7kQuF1//
-	 9AzavS5H2lCH5eRonXeJv01ZPJ4ig4b3B9MyO4B0=
+	by mail.kernel.org (Postfix) with ESMTP id 59499206DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="rbPRGHIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgE0LZv (ORCPT
+        id S1728025AbgE0L2C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 07:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgE0LZv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 07:25:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD7D6206DF;
-        Wed, 27 May 2020 11:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590578751;
-        bh=oU0Y/5u25huOd72JaBmNFl5U1KrJrZttts86TRQdAFc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NXm3eC/74XUS9k/zL2j5RrjTjlWlgrAMk2dRRne6SHvHh6vaV0IhcqR+WOSBg6g1u
-         IiI7B9chF7Hd/V77ZpvINKa+B1SfRn0AI/7Ihl+avmo5G1yjFPXHczozSdNUc6inBF
-         ZZLsgYDSrWG5OgQeNVFaqM/GCZEQUbJ37YjQUa7w=
-Date:   Wed, 27 May 2020 12:25:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
-Message-ID: <20200527112548.GD5308@sirena.org.uk>
-References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 27 May 2020 07:28:02 -0400
+Received: from mail-db8eur05on2082.outbound.protection.outlook.com ([40.107.20.82]:45153
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725883AbgE0L2B (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 07:28:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CJmRpu/hb5+ayKVywN3a+vnrqCRisD9vlF4TQt8vDaCmJPBdrX1zLcRP9mdlqJzQ8CDc+T9EdTrXVLmHCIJgCVfC2dQxDVeigvJ2Qnn9QZdfgAbp0gki2L9Cp5qxtjXYEFVsclkIC2iDK1rdUkS1scaFOcH5pCitRdnyRdyoOq6fE4GwWJgbE/bqDX1/0W2G4Taj7bGovkO5p6BXwChMyllUKdjIPPgFnJOh2ypQteBVxBIcuYYYLsQjGsH69GI5AWcqqZCTdzpAa0fa2jrk8Lmfya8FnARBiZ0PdBEebL5qj0cPTDS5gt8Z8FdTlSS40x8EKHlA9qwJ7l8JQ59FIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tT0GukeElKYbB98PcWdMfP//Sij0YgNHAYxGNl4QhPU=;
+ b=Pdh/Jb22G3g/6672pJlRPDEMI953/JkkSYHL+GD7k+81Rr4+phgyXzWfBVnzi216a2AtOCob9KWxGCTHbWkbWP4afgsgmBISUrktxBrVu9RcNAlSxFq46iphGTTxeGaMaymxvVxdie2FdpVlEevkNXa0zD+2HCwTK+JFQf69dlx0jMbfCFB8BQaU5zmT9n4xUh/0xAH6UD52tdvSy0HCKcsl4vg1pqAjA25yyaSW/HDKdYUaBp0vxucp0P7pmMWR4v6gabSEJUrerGoPBqBL2e9oDjpuxIv6WuSHCCRuGGEGGqxTWx1bTCYPzrTTDLCBGFAJ2WTsgXdc+SdSR9GBLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
+ dkim=pass header.d=vaisala.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tT0GukeElKYbB98PcWdMfP//Sij0YgNHAYxGNl4QhPU=;
+ b=rbPRGHIXrdDOtnj27dN/IL5aN/9//he5Zy6I8W1eJQyWhi/j5tBfqCIW513eiA0ikCETY5CLoaol0+kf1+HPxnVq2VOP0OsIH49CYqdqEKxMTU/B7Hudb7A+SJXt5WufFcFtzIDi0hPcH0TYDotpVDNp9Rgt7J/Qq5HA0Zbisd8=
+Received: from AM0PR06MB5185.eurprd06.prod.outlook.com (2603:10a6:208:107::25)
+ by AM0PR06MB5970.eurprd06.prod.outlook.com (2603:10a6:208:119::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Wed, 27 May
+ 2020 11:27:57 +0000
+Received: from AM0PR06MB5185.eurprd06.prod.outlook.com
+ ([fe80::4827:5dc7:d31e:2eb5]) by AM0PR06MB5185.eurprd06.prod.outlook.com
+ ([fe80::4827:5dc7:d31e:2eb5%7]) with mapi id 15.20.3045.018; Wed, 27 May 2020
+ 11:27:57 +0000
+From:   Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Rob Herring <robh@kernel.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH] i2c: xiic: Support disabling multi-master in DT
+Thread-Topic: [PATCH] i2c: xiic: Support disabling multi-master in DT
+Thread-Index: AQHV5mNyTIn2+pYf+Eu7yiopaV9KGKhOcmGAgAAnv5CAFgB+gIAA/BRAgAA+l4CAMnEssIAkGs0AgAAEdsA=
+Date:   Wed, 27 May 2020 11:27:57 +0000
+Message-ID: <AM0PR06MB5185C1DA8133409444A397E4D4B10@AM0PR06MB5185.eurprd06.prod.outlook.com>
+References: <20200218135627.24739-1-ext-jaakko.laine@vaisala.com>
+ <CAKfKVtFf+VpinkOGsBFZ2-_PKvx-C1L7G7_uhY2RCvV5dy6L_w@mail.gmail.com>
+ <AM0PR06MB5185E501349E06428093B62FD4F70@AM0PR06MB5185.eurprd06.prod.outlook.com>
+ <20200401143254.GA2409@ninjato>
+ <AM0PR06MB5185F8F51316FCD5213F0ABED4C60@AM0PR06MB5185.eurprd06.prod.outlook.com>
+ <20200402092813.GA986@ninjato>
+ <AM0PR06MB51857F4CDC7AE643CE160F9ED4A60@AM0PR06MB5185.eurprd06.prod.outlook.com>
+ <20200527110732.GA4875@ninjato>
+In-Reply-To: <20200527110732.GA4875@ninjato>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Enabled=True;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_SiteId=6d7393e0-41f5-4c2e-9b12-4c2be5da5c57;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Owner=ext-jaakko.laine@vaisala.com;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_SetDate=2020-05-27T11:27:55.3815783Z;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Name=Restricted;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_ActionId=2cbc8feb-cadb-49fd-8d63-f2ecfb2ef614;
+ MSIP_Label_d5842b46-9b7a-431a-b662-8cc44ff92a4e_Extended_MSFT_Method=Automatic;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Enabled=True;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_SiteId=6d7393e0-41f5-4c2e-9b12-4c2be5da5c57;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Owner=ext-jaakko.laine@vaisala.com;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_SetDate=2020-05-27T11:27:55.3815783Z;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Name=No Label;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_ActionId=2cbc8feb-cadb-49fd-8d63-f2ecfb2ef614;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Parent=d5842b46-9b7a-431a-b662-8cc44ff92a4e;
+ MSIP_Label_7246d30e-a6af-4059-9b44-a42233242e28_Extended_MSFT_Method=Automatic
+authentication-results: the-dreams.de; dkim=none (message not signed)
+ header.d=none;the-dreams.de; dmarc=none action=none header.from=vaisala.com;
+x-originating-ip: [81.175.223.46]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b2338f45-523b-412b-9268-08d8023101a8
+x-ms-traffictypediagnostic: AM0PR06MB5970:
+x-microsoft-antispam-prvs: <AM0PR06MB59701D3D334BBB38B6E1691CD4B10@AM0PR06MB5970.eurprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 04163EF38A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AU4ksjSG+kJdMubgwBTz+GA6afltY/lanFzCX1tYAtO3eqTpLgukqkxngvTEJj+s0QuP8SLohCOZuJy9jd8WrhWUdoeMr4twF5NzRYIvvuQYeZaUKg0XwlWg5IGsZuucXbwUK/c8Nted0HwXyRImd20f32w5XrMdhrmAQ6uH/iqiGuq8XgIlrW/oyUcxd85CvlO5nT7pEU5Qsu306uPZdm2ERu9A+L+GG+hG4l1xQ8pRAED6yGGeSQLeNItdBcjmwRsBo9JZ7cweCLHz9sYveEyGfIQj0KA3/PQH6aMnMVkdp+SQsD6EXAliOATuC0JIHPGHqS6aoCva1UTeUB8B7Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR06MB5185.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(39850400004)(366004)(346002)(396003)(478600001)(558084003)(8936002)(76116006)(2906002)(6916009)(64756008)(66556008)(66476007)(33656002)(52536014)(9686003)(71200400001)(55016002)(8676002)(186003)(6506007)(26005)(5660300002)(7696005)(86362001)(316002)(54906003)(4326008)(66946007)(66446008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 6E4ro5KuWsebrXl+PF1Keezn80C+L2E3og70fLIpSseYtsI0F11erif0ZVi+p5mBKcTqOhzhXy6EABCb5UiJJ73f7BvPQ/yobkH3qyKgjj6oD+BGcXp9JK5EO5ww7JrnVH6n/UIQwn5sC61kaKzFe53sTxy1y5GEcJB/kivvEVC/n0Ukr9iPdURnjmDiWQKbAIg6uWdrLrNkw9696I7crt4NJ6gmoiAj+FWAuCj8iNQGBZryDzdQfRAjtoB7DPz8JC5TZd9m8KkR9DI3fydH2fBlWfUCmByMq3KprFiYC38fmYTVjidmLnsswSYsuTQ6bCjVo2PY01T7TkwlLEJrOTOwNeKIufh/NT5jO0/vZw32Nav5OuDeGsKGx5qUbWx0VE1oEqEP+BAsNjeVtGB6UGU6GqS5dTKyQgM0A9y4gRHKlajn2wHyqHfqJ50DlXCSW68Kq2NWC7tLPfRXWkDtugQcjWNq7hgNEwSoCoCoeB0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
-Content-Disposition: inline
-In-Reply-To: <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Cookie: Drop in any mailbox.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: vaisala.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2338f45-523b-412b-9268-08d8023101a8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2020 11:27:57.5464
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BM+TiA3yN1/eWq7AePTSfiXaCA9eDCB5dvHGFuE4CM8ld7UhFvar1gxWtCyVbLQq47NI4sVIcwj+put+/zI5zhT94YThEyZVOJg7I3GDxFg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR06MB5970
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Thanks Wolfram for helping me out with this.
 
---zbGR4y+acU1DwHSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I will make Version 2 patch with proposed changes.
 
-On Tue, May 26, 2020 at 10:01:43PM +0100, Lad Prabhakar wrote:
+Happy hacking for you too!
 
->  				  Examples with soctypes are:
-> +				    - "renesas,rcar_sound-r8a7742" (RZ/G1H)
->  				    - "renesas,rcar_sound-r8a7743" (RZ/G1M)
->  				    - "renesas,rcar_sound-r8a7744" (RZ/G1N)
->  				    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
-
-I'd expect a matching patch adding this compatible to the driver.
-
---zbGR4y+acU1DwHSi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7OTjsACgkQJNaLcl1U
-h9DwwQf/f7ybVQEernStDVG3TFsQK7/YunjNpnQ29AOR0oZ8z5Rx4bOF8GWRtBLh
-NooWHgqGXUTPz33IDGptxlvTEwjH3GL+z8EW72NAnagxLCl1bs0IOjMvbDMLX0CG
-qhvcgAr3oR+PVOZDB8BXvotNJ/hcF6M6kvdPd1LWTa2usE52u0dg1Zb/8uoYCWyq
-calyH03qZW/1HxVgpjJRNmpeGrroXofyxLo5SSQQR1laFQgRxyxwiWAIWl5n1yO5
-tcc80ocEq1fipR69xRCkQU0VrEFBHZIZwm1prHIxWD6PRfn/W9/0P50tLMfko5ut
-fTPwT7eahVymkQkdtM++bNorrkfusg==
-=BGUJ
------END PGP SIGNATURE-----
-
---zbGR4y+acU1DwHSi--
+-Jaakko
