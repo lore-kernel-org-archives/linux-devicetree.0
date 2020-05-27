@@ -2,95 +2,274 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0E6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 05:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB91C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 05:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C79002078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 05:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143AE208B8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 05:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nz2Qeh2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725294AbgE0FEH (ORCPT
+        id S1726816AbgE0Ftz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 01:04:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
+        Wed, 27 May 2020 01:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728084AbgE0FEG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 01:04:06 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272C6C061A0F
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 22:04:06 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jdoEK-0001cv-QG; Wed, 27 May 2020 07:03:52 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jdoEI-0008BI-4d; Wed, 27 May 2020 07:03:50 +0200
-Date:   Wed, 27 May 2020 07:03:50 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
-        shawnguo@kernel.org, festevam@gmail.com,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: Re: [PATCH v8 00/13] add ecspi ERR009165 for i.mx6/7 soc family
-Message-ID: <20200527050350.GV11869@pengutronix.de>
-References: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
+        with ESMTP id S1726727AbgE0Fty (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 01:49:54 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D664C03E979
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 22:49:54 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so9744075plt.5
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 22:49:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MyuiQtsGOm2RNXiobo7aogyF18iHW8FoOP+MspWK4MQ=;
+        b=Nz2Qeh2GMSZcE/zDLdtU1D52O+L6ej8pBqq4pD6OwEZjyLbVZvaiXkzkO+YLLGYJW2
+         u+98ecPl31iJlMZD+GzPdU/IjPiO/1yfubeLzbaESWI/SMgrnohhPOIEW0kHFuTLKcxF
+         e/eA2IBHLsYQ5gxNb5x2a7XQy4P234yifiReBvRTjSR7DazLPgF19UHal109YhNR0PPD
+         4hT4ubt1JKf/Q4KyMb5G3IV02KizRIqppM4Uf7geR+ziZ0p6wk+pACBcJskP5zFDFV+E
+         WgoWRjcUwxqnrazraK9ivqpdf8GMcSoO1tly9i+B1DFMo1g5XsLFx2RqDsVkuh6pAUP5
+         EwNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MyuiQtsGOm2RNXiobo7aogyF18iHW8FoOP+MspWK4MQ=;
+        b=mBdlQBaxSUZaxGAs5ureyuC2LB/8nkhXNFkvPuqFiHXATjlXydmUjwZDV7veC8Jdcc
+         hmCqaqoGg7KdT0jleh7aSPvaeXjO10iku3e4qiqHntm/U+uYpBlGrvtwvgxEGbtb9CQ8
+         iNjKYPFdnH5fgmcrbAwmyOmOpKzCWWKGsA5dhidZmSTo2VKWAYrt8+Upfs7OK56PNfaN
+         pRaRkWg1DZQX/fyBWeJRm18eSc1ZEpMclyZJnMrTTTJR7UzRYnmdV9zLFkNu7I/61z71
+         c20qTXKWluoNcdXWzuv0YeTROccAt99Xro0ojI6x52II0Qr7QvuiL1IC0PA1YHvNfHEj
+         HrWQ==
+X-Gm-Message-State: AOAM530KE51t3hg+lkeXYh7gaEED1VXIgkb2PDonkP/Bkv7JPwpyCRr3
+        QwnA4gPoW30rF2hHA8NlUtpBCQ==
+X-Google-Smtp-Source: ABdhPJwHmuFsTys0q6ulNape8ep95x/slYY7/w3k7vtPkxRhmwZEe1wIzl7ALfKxTUR7fHUyhcFsAg==
+X-Received: by 2002:a17:902:bf02:: with SMTP id bi2mr4425100plb.330.1590558593405;
+        Tue, 26 May 2020 22:49:53 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 206sm1015873pfy.97.2020.05.26.22.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 22:49:52 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v6 2/5] remoteproc: qcom: Introduce helper to store pil info in IMEM
+Date:   Tue, 26 May 2020 22:48:46 -0700
+Message-Id: <20200527054850.2067032-3-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200527054850.2067032-1-bjorn.andersson@linaro.org>
+References: <20200527054850.2067032-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:02:31 up 97 days, 12:33, 88 users,  load average: 0.44, 0.37,
- 0.27
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 04:34:12AM +0800, Robin Gong wrote:
-> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> transfer to be send twice in DMA mode. Please get more information from:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
-> new sdma ram script which works in XCH  mode as PIO inside sdma instead
-> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
-> exist on all legacy i.mx6/7 soc family before i.mx6ul.
-> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
-> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
-> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
-> or not.
-> The first two reverted patches should be the same issue, though, it
-> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
-> have the chance to test this patch set if could fix their issues.
-> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> on i.mx8mm because the event id is zero.
+A region in IMEM is used to communicate load addresses of remoteproc to
+post mortem debug tools. Implement a helper function that can be used to
+store this information in order to enable these tools to process
+collected ramdumps.
 
-For the series:
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+Changes since v5:
+- Picked up reviewed-bys
 
-Sascha
+ drivers/remoteproc/Kconfig         |   3 +
+ drivers/remoteproc/Makefile        |   1 +
+ drivers/remoteproc/qcom_pil_info.c | 124 +++++++++++++++++++++++++++++
+ drivers/remoteproc/qcom_pil_info.h |   7 ++
+ 4 files changed, 135 insertions(+)
+ create mode 100644 drivers/remoteproc/qcom_pil_info.c
+ create mode 100644 drivers/remoteproc/qcom_pil_info.h
 
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index c4d1731295eb..f4bd96d1a1a3 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -116,6 +116,9 @@ config KEYSTONE_REMOTEPROC
+ 	  It's safe to say N here if you're not interested in the Keystone
+ 	  DSPs or just want to use a bare minimum kernel.
+ 
++config QCOM_PIL_INFO
++	tristate
++
+ config QCOM_RPROC_COMMON
+ 	tristate
+ 
+diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+index e8b886e511f0..fe398f82d550 100644
+--- a/drivers/remoteproc/Makefile
++++ b/drivers/remoteproc/Makefile
+@@ -16,6 +16,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+ obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+ obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+ obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
++obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
+ obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
+ obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
+ obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+new file mode 100644
+index 000000000000..0785c7cde2d3
+--- /dev/null
++++ b/drivers/remoteproc/qcom_pil_info.c
+@@ -0,0 +1,124 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2019-2020 Linaro Ltd.
++ */
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of_address.h>
++
++#define PIL_RELOC_NAME_LEN	8
++
++struct pil_reloc_entry {
++	char name[PIL_RELOC_NAME_LEN];
++	__le64 base;
++	__le32 size;
++} __packed;
++
++struct pil_reloc {
++	struct device *dev;
++	void __iomem *base;
++	size_t num_entries;
++};
++
++static struct pil_reloc _reloc __read_mostly;
++static DEFINE_MUTEX(reloc_mutex);
++
++static int qcom_pil_info_init(void)
++{
++	struct device_node *np;
++	struct resource imem;
++	void __iomem *base;
++	int ret;
++
++	/* Already initialized? */
++	if (_reloc.base)
++		return 0;
++
++	np = of_find_compatible_node(NULL, NULL, "qcom,pil-reloc-info");
++	if (!np)
++		return -ENOENT;
++
++	ret = of_address_to_resource(np, 0, &imem);
++	of_node_put(np);
++	if (ret < 0)
++		return ret;
++
++	base = ioremap(imem.start, resource_size(&imem));
++	if (!base) {
++		pr_err("failed to map PIL relocation info region\n");
++		return -ENOMEM;
++	}
++
++	memset_io(base, 0, resource_size(&imem));
++
++	_reloc.base = base;
++	_reloc.num_entries = resource_size(&imem) / sizeof(struct pil_reloc_entry);
++
++	return 0;
++}
++
++/**
++ * qcom_pil_info_store() - store PIL information of image in IMEM
++ * @image:	name of the image
++ * @base:	base address of the loaded image
++ * @size:	size of the loaded image
++ *
++ * Return: 0 on success, negative errno on failure
++ */
++int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
++{
++	char buf[PIL_RELOC_NAME_LEN];
++	void __iomem *entry;
++	int ret;
++	int i;
++
++	mutex_lock(&reloc_mutex);
++	ret = qcom_pil_info_init();
++	if (ret < 0) {
++		mutex_unlock(&reloc_mutex);
++		return ret;
++	}
++
++	for (i = 0; i < _reloc.num_entries; i++) {
++		entry = _reloc.base + i * sizeof(struct pil_reloc_entry);
++
++		memcpy_fromio(buf, entry, PIL_RELOC_NAME_LEN);
++
++		/*
++		 * An empty record means we didn't find it, given that the
++		 * records are packed.
++		 */
++		if (!buf[0])
++			goto found_unused;
++
++		if (!strncmp(buf, image, PIL_RELOC_NAME_LEN))
++			goto found_existing;
++	}
++
++	pr_warn("insufficient PIL info slots\n");
++	mutex_unlock(&reloc_mutex);
++	return -ENOMEM;
++
++found_unused:
++	memcpy_toio(entry, image, PIL_RELOC_NAME_LEN);
++found_existing:
++	writel(base, entry + offsetof(struct pil_reloc_entry, base));
++	writel(size, entry + offsetof(struct pil_reloc_entry, size));
++	mutex_unlock(&reloc_mutex);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(qcom_pil_info_store);
++
++static void __exit pil_reloc_exit(void)
++{
++	mutex_lock(&reloc_mutex);
++	iounmap(_reloc.base);
++	_reloc.base = NULL;
++	mutex_unlock(&reloc_mutex);
++}
++module_exit(pil_reloc_exit);
++
++MODULE_DESCRIPTION("Qualcomm PIL relocation info");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
+new file mode 100644
+index 000000000000..1b89a63ba82f
+--- /dev/null
++++ b/drivers/remoteproc/qcom_pil_info.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __QCOM_PIL_INFO_H__
++#define __QCOM_PIL_INFO_H__
++
++int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
++
++#endif
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.26.2
+
