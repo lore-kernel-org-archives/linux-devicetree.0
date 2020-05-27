@@ -2,270 +2,257 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62539C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC87C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3134F208DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590593257;
-	bh=xAFJoL70d9ptR2NlMMkE9/iL0C+dD4a1o8Ji7U0Hb74=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QDUL42MmQzAAsigO739NxiEMfV05C1n0b2/daHwthLGfbD0fSzjOknQNEwEAoVr4h
-	 3q4RtlCMh6aIrA0XuElapK0Rae7mWzV6mExAbPhpRz7tNyxUAxOKw0BtHpKCrSJh18
-	 0qSKwz+UOigzf0BNcfPPAhb/2xGyidujd4HtRgAU=
+	by mail.kernel.org (Postfix) with ESMTP id 037DD208DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:30:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oap9h53I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgE0P1g (ORCPT
+        id S2388469AbgE0PaL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 11:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgE0P1g (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 11:27:36 -0400
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370DB208E4;
-        Wed, 27 May 2020 15:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590593255;
-        bh=xAFJoL70d9ptR2NlMMkE9/iL0C+dD4a1o8Ji7U0Hb74=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=meKNxFtFPc8ejIUrmHPjvQMpux3lpz4nVSfwAHxcfmqFZ3ffOKRtZjEPFrDdeI51n
-         0cpc8RWD9qbwCysQC9ittfZSPQk7aOa49Y69A+/XEqOTxoaUO0uG5DBBrkFbDGaxIM
-         MKc9Hgg4/rrqQm3VTvEar4SzP9NNHGMqntCLgOSw=
-Received: by mail-ot1-f41.google.com with SMTP id f18so19447289otq.11;
-        Wed, 27 May 2020 08:27:35 -0700 (PDT)
-X-Gm-Message-State: AOAM531uEG9K8oUYltWeYX+9jB4THQDnBkdAaykstiFJ+C/ZrsB6lhq2
-        Iu3GkQeDcZI4J79MinXHE7vAUD1BT17nMwoqwQ==
-X-Google-Smtp-Source: ABdhPJwAUmHkMY1nUf8HbXBqDXmvGKeOnwn9QC9NkyEmRMRdlXEbaZqugbcVRvRSQNkjP5kSY2sfkSI9xI4FKt86cmQ=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr5098223ots.192.1590593254440;
- Wed, 27 May 2020 08:27:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
- <20200523084103.31276-2-dongchun.zhu@mediatek.com> <20200526182847.GA92449@bogus>
- <1590569355.8804.448.camel@mhfsdcap03>
-In-Reply-To: <1590569355.8804.448.camel@mhfsdcap03>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 27 May 2020 09:27:22 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+sN0SVidTrY0ODXEkzkxYFvG1FTnL0oRQBSKf=ynLdyQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+sN0SVidTrY0ODXEkzkxYFvG1FTnL0oRQBSKf=ynLdyQ@mail.gmail.com>
-Subject: Re: [V9, 1/2] media: dt-bindings: media: i2c: Document OV02A10 bindings
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Wed, 27 May 2020 11:30:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729416AbgE0PaL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 11:30:11 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0968AC05BD1E;
+        Wed, 27 May 2020 08:30:11 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id h9so9256963qtj.7;
+        Wed, 27 May 2020 08:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zkunrZ0oeTCMztxG/OegBl2pml7XGAS8duP4C52EX6I=;
+        b=Oap9h53IlxWOHi0RDCE66AdYN29wfAsbfyk1QJ8LaluzX9rvKMepwlSxjc73mIDafz
+         70p2spgj38vRS+A7COVFSdEnfquX4eT2K1O+d9J5DHQsDd42rCDKqkvBpPZJoPL0oM+8
+         eFsL1Kuklf2RdebuF6n8QOK76x6Rx5oQn7ITcZdgt7v7vLgXQIJalvgup7hOwdVPebRK
+         jWpSbb7AFjdj5pA9koQuF6Umyp3MisLlDy4qw5QuUd4AcckwSIGvuy6ssY/Rf4R/zg1L
+         SGO4P/6OFpvNxXznbm4ydRYLwBTlnzyO4qmfpQNj5y8gUsXVOP02M7EzPkZweaDWwjb/
+         Cz3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zkunrZ0oeTCMztxG/OegBl2pml7XGAS8duP4C52EX6I=;
+        b=qszY34hWm1gjn1UrBD5YFVOkqDj+V0DG1zT64cXbREbKsoILhdiQ1EchoyYi4T88Ao
+         zAuZ5egL9Q1xrvlU6mLtp3PUbD6AVjy55S9JUUz5OLe+cnMHXmCYscXLSPAbSBVvXOyv
+         3D064SUZ46cSRy95fI558GEh/FZwPAEOaMxl1tMBzrZos3TzOARn1Sn2ITh8K50mAwSt
+         O6Sl8xXjjrv/S9vwEAok/YJ2L9yUoxBZRL/I3CHGF7ku1YA5eJAsgKbDTuxK0LiEy+go
+         GT456IPNFzxb6gQ+3shU/emu2asHxNaT9CB5lK1WnngHmsHAEdG0SzPXrMC6RQI6lLdu
+         JTvw==
+X-Gm-Message-State: AOAM532A0jhEat4upnDmOLJsNcCB/p+PTsO8Y6KrMGWqjMyKyBsxync8
+        Kc9wUxcF+pIxmasuf43tpFg=
+X-Google-Smtp-Source: ABdhPJy7Aid9jgwaunjEzd/i0WniQ3PXIiToFKc9WwZdimCPt06wxXiwafiDs+QXwN+BKXf7pwycGA==
+X-Received: by 2002:ac8:710f:: with SMTP id z15mr4782320qto.71.1590593409980;
+        Wed, 27 May 2020 08:30:09 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id c186sm1744441qkd.102.2020.05.27.08.30.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 08:30:09 -0700 (PDT)
+Date:   Wed, 27 May 2020 17:29:58 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org, Louis Kuo <louis.kuo@mediatek.com>,
-        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
-        <shengnan.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 2/5] dt-bindings: iio: magnetometer: ak8975: convert
+ format to yaml, add maintainer
+Message-ID: <20200527152958.GA21548@ict14-OptiPlex-980>
+References: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
+ <20200525151117.32540-3-jonathan.albrieux@gmail.com>
+ <20200526222847.GA492828@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526222847.GA492828@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 2:51 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+On Tue, May 26, 2020 at 04:28:47PM -0600, Rob Herring wrote:
+> On Mon, May 25, 2020 at 05:10:36PM +0200, Jonathan Albrieux wrote:
+> > Converts documentation from txt format to yaml.
+> 
+> I would have converted to yaml and do any re-formatting/wording, then 
+> added 'interrupts', but this is fine.
 >
-> Hi Rob,
->
-> Thanks for the review. Please see my replies below.
->
-> On Tue, 2020-05-26 at 12:28 -0600, Rob Herring wrote:
-> > On Sat, May 23, 2020 at 04:41:02PM +0800, Dongchun Zhu wrote:
-> > > Add DT bindings documentation for Omnivision OV02A10 image sensor.
-> > >
-> > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > ---
-> > >  .../bindings/media/i2c/ovti,ov02a10.yaml           | 172 +++++++++++++++++++++
-> > >  MAINTAINERS                                        |   7 +
-> > >  2 files changed, 179 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
-> > > new file mode 100644
-> > > index 0000000..56f31b5
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
-> > > @@ -0,0 +1,172 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +# Copyright (c) 2020 MediaTek Inc.
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/media/i2c/ovti,ov02a10.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Omnivision OV02A10 CMOS Sensor Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > +
-> > > +description: |-
-> > > +  The Omnivision OV02A10 is a low-cost, high performance, 1/5-inch, 2 megapixel
-> > > +  image sensor, which is the latest production derived from Omnivision's CMOS
-> > > +  image sensor technology. Ihis chip supports high frame rate speeds up to 30fps
-> > > +  @ 1600x1200 (UXGA) resolution transferred over a 1-lane MIPI interface. The
-> > > +  sensor output is available via CSI-2 serial data output.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: ovti,ov02a10
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: top mux camtg clock
-> > > +      - description: divider clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: eclk
-> > > +      - const: freq_mux
-> > > +
-> > > +  clock-frequency:
-> > > +    description:
-> > > +      Frequency of the eclk clock in Hertz.
-> > > +
->
-> Rob, shall we use 'maxItems: 1' to constrain property: clock-frequency?
 
-No, because it is a scalar, not an array.
+Thank you, I'll keep that in mind for future works like this one
+ 
+> 
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> > ---
+> >  .../bindings/iio/magnetometer/ak8975.txt      | 37 ---------
+> >  .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 78 +++++++++++++++++++
+> >  2 files changed, 78 insertions(+), 37 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> > deleted file mode 100644
+> > index 0576b9df0bf2..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> > +++ /dev/null
+> > @@ -1,37 +0,0 @@
+> > -* AsahiKASEI AK8975 magnetometer sensor
+> > -
+> > -Required properties:
+> > -
+> > -  - compatible : should be "asahi-kasei,ak8975".
+> > -  - reg : the I2C address of the magnetometer.
+> > -
+> > -Optional properties:
+> > -
+> > -  - gpios : AK8975 has a "Data ready" pin (DRDY) which informs that data
+> > -      is ready to be read and is possible to listen on it. If used,
+> > -      this should be active high. Prefer interrupt over this.
+> > -
+> > -  - interrupts : interrupt for DRDY pin. Triggered on rising edge.
+> > -
+> > -  - vdd-supply: an optional regulator that needs to be on to provide VDD.
+> > -
+> > -  - mount-matrix: an optional 3x3 mounting rotation matrix.
+> > -
+> > -Example:
+> > -
+> > -ak8975@c {
+> > -        compatible = "asahi-kasei,ak8975";
+> > -        reg = <0x0c>;
+> > -        interrupt-parent = <&gpio6>;
+> > -        interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+> > -        vdd-supply = <&ldo_3v3_gnss>;
+> > -        mount-matrix = "-0.984807753012208",  /* x0 */
+> > -                       "0",                   /* y0 */
+> > -                       "-0.173648177666930",  /* z0 */
+> > -                       "0",                   /* x1 */
+> > -                       "-1",                  /* y1 */
+> > -                       "0",                   /* z1 */
+> > -                       "-0.173648177666930",  /* x2 */
+> > -                       "0",                   /* y2 */
+> > -                       "0.984807753012208";   /* z2 */
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> > new file mode 100644
+> > index 000000000000..a603659d5fa5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> > @@ -0,0 +1,78 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/magnetometer/asahi-kasei,ak8975.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: AsahiKASEI AK8975 magnetometer sensor
+> > +
+> > +maintainers:
+> > +  - Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: asahi-kasei,ak8975
+> > +      - const: asahi-kasei,ak8963
+> > +      - const: asahi-kasei,ak09911
+> > +      - const: asahi-kasei,ak09912
+> 
+> These 4 can be an enum.
+> 
+> > +      - const: ak8975
+> > +        deprecated: true
+> > +      - const: ak8963
+> > +        deprecated: true
+> > +      - const: ak09911
+> > +        deprecated: true
+> > +      - const: ak09912
+> > +        deprecated: true
+> 
+> And these 4 can be an enum+deprecated.
+> 
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: the I2C address of the magnetometer.
+> 
+> Don't need a description.
+> 
+> > +
+> > +  gpios:
+> > +    description: |
+> > +      AK8975 has a "Data ready" pin (DRDY) which informs that data
+> > +      is ready to be read and is possible to listen on it. If used,
+> > +      this should be active high. Prefer interrupt over this.
+> 
+> Need to define how many GPIOs (maxItems: 1).
+> 
 
-> Or could we adopt 'clock-frequency: true' directly here?
+Ok, I'll edit those fields as soon as possible, thank you,
 
-As-is is fine.
+Best regards,
+Jonathan Albrieux
 
-> > > +  dovdd-supply:
-> > > +    description:
-> > > +      Definition of the regulator used as Digital I/O voltage supply.
-> > > +
->
-> Shall we add 'maxItems: 1' here?
-
-No, supplies are always singular.
-
-
->
-> > > +  avdd-supply:
-> > > +    description:
-> > > +      Definition of the regulator used as Analog voltage supply.
-> > > +
->
-> Ditto.
->
-> > > +  dvdd-supply:
-> > > +    description:
-> > > +      Definition of the regulator used as Digital core voltage supply.
-> > > +
->
-> Ditto.
->
-> > > +  powerdown-gpios:
-> > > +    description:
-> > > +      Must be the device tree identifier of the GPIO connected to the
-> > > +      PD_PAD pin. This pin is used to place the OV02A10 into Standby mode
-> > > +      or Shutdown mode. As the line is active low, it should be
-> > > +      marked GPIO_ACTIVE_LOW.
-> >
-> > Need to define how many GPIOs ('maxItems: 1')
-> >
->
-> It would be fixed like this in next release.
-> powerdown-gpios:
->   maxItems: 1
->   description:
->     Must be the device tree identifier of the GPIO connected to the
->     PD_PAD pin. This pin is used to place the OV02A10 into Standby mode
->     or Shutdown mode. As the line is active low, it should be
->     marked GPIO_ACTIVE_LOW.
->
-> > > +
-> > > +  reset-gpios:
-> > > +    description:
-> > > +      Must be the device tree identifier of the GPIO connected to the
-> > > +      RST_PD pin. If specified, it will be asserted during driver probe.
-> > > +      As the line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> >
-> > Here too.
-> >
->
-> Similar as 'powerdown-gpios'.
-> Fixed in next release.
->
-> > > +
-> > > +  rotation:
-> > > +    description:
-> > > +      Definition of the sensor's placement.
-> > > +    allOf:
-> > > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > > +      - enum:
-> > > +          - 0    # Sensor Mounted Upright
-> > > +          - 180  # Sensor Mounted Upside Down
-> > > +        default: 0
-> > > +
-> > > +  ovti,mipi-tx-speed:
-> > > +    description:
-> > > +      Indication of MIPI transmission speed select, which is to control D-PHY
-> > > +      timing setting by adjusting MIPI clock voltage to improve the clock
-> > > +      driver capability.
-> > > +    allOf:
-> > > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > > +      - enum:
-> > > +          - 0    #  20MHz -  30MHz
-> > > +          - 1    #  30MHz -  50MHz
-> > > +          - 2    #  50MHz -  75MHz
-> > > +          - 3    #  75MHz - 100MHz
-> > > +          - 4    # 100MHz - 130MHz
-> > > +        default: 3
-> > > +
-> > > +  # See ../video-interfaces.txt for details
-> > > +  port:
-> > > +    type: object
-> > > +    additionalProperties: false
-> >
-> > Should have a description of what data the port has.
-> >
->
-> It would be updated as below in next release.
-> port:
->   type: object
->   additionalProperties: false
->   description:
->     Input port node, single endpoint describing the CSI-2 transmitter.
-
-Output?
-
->
-> > > +
-> > > +    properties:
-> > > +      endpoint:
-> > > +        type: object
-> > > +        additionalProperties: false
-> > > +
-> > > +        properties:
->
-> Actually I wonder whether we need to declare 'clock-lanes' here?
-
-Yes, if you are using it.
-
-Rob
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +    description: interrupt for DRDY pin. Triggered on rising edge.
+> > +
+> > +  vdd-supply:
+> > +    maxItems: 1
+> > +    description: |
+> > +      an optional regulator that needs to be on to provide VDD power to
+> > +      the sensor.
+> > +
+> > +  mount-matrix:
+> > +    description: an optional 3x3 mounting rotation matrix.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        magnetometer@c {
+> > +            compatible = "asahi-kasei,ak8975";
+> > +            reg = <0x0c>;
+> > +            interrupt-parent = <&gpio6>;
+> > +            interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+> > +            vdd-supply = <&ldo_3v3_gnss>;
+> > +            mount-matrix = "-0.984807753012208",  /* x0 */
+> > +                           "0",                   /* y0 */
+> > +                           "-0.173648177666930",  /* z0 */
+> > +                           "0",                   /* x1 */
+> > +                           "-1",                  /* y1 */
+> > +                           "0",                   /* z1 */
+> > +                           "-0.173648177666930",  /* x2 */
+> > +                           "0",                   /* y2 */
+> > +                           "0.984807753012208";   /* z2 */
+> > +        };
+> > +    };
+> > -- 
+> > 2.17.1
+> > 
