@@ -2,85 +2,97 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C737BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C76DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A88492084C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A06820C09
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="kaep8Ftj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgE0JPY (ORCPT
+        id S1728274AbgE0JP0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 05:15:24 -0400
-Received: from mga14.intel.com ([192.55.52.115]:2801 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726600AbgE0JPX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 05:15:23 -0400
-IronPort-SDR: cnGDxl3jRMnYfdI4wlawiljsnVz3dHyTTFSnu/srEniJteMbPZfeLdEQpBBE45Hod0Uxx/oz8R
- 6utRS9l7QH1Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 02:15:23 -0700
-IronPort-SDR: SF4e9Ud+NzqoSgOtLCWW0thQSwuv/BECHfAnvtDAcpsDAhHpFny/uY/6luXlxGJNppq1NgL8h+
- UvXH7gzK4b+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
-   d="scan'208";a="284741187"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 27 May 2020 02:15:18 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jds9h-009BXB-AC; Wed, 27 May 2020 12:15:21 +0300
-Date:   Wed, 27 May 2020 12:15:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v1 2/2] Add PWM driver for LGM
-Message-ID: <20200527091521.GH1634618@smile.fi.intel.com>
-References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
- <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
- <20200522085613.ktb2ruw2virj337v@pengutronix.de>
- <3a1f1e83-2d9d-ddbf-e2e6-9c8bab87372b@linux.intel.com>
+        Wed, 27 May 2020 05:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728098AbgE0JPZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 05:15:25 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB75C03E97D
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 02:15:24 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id z80so23707925qka.0
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 02:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=idtnrQWeAURzpQW+RLs00G+O8A4gS3L+K9UkeXCQe20=;
+        b=kaep8FtjTBescBuh/DTMipJrlsUmsVVNCeoJaIoHjvFY3aLX/ypieDP9Eq0bg2Z8Fy
+         mfEtfW6eHGq4NWtk78hJA1GrV3b34qvVN1y21NxIWuPsmIIXM3kXfejRW4UodWTNTGQt
+         YABx6/a5Ku1L3BTkJ0r9WGY0xs/SJ+8CxmdNMGjb3/7hEkYvKlwFZQmAKkojuQcYbqHm
+         wfcdyvs6+MwWQTqgRRzcFX/xcVW3zkg99aMg/449QxobkNDo8rTRYi2IYoVyuomDKqhv
+         sBoGhIIszOrZDFM6DGvgkQHYND20PdHpwXfvfZuf9WzJSYFFV0iDQC1JNV1jMqjJ2VlQ
+         tvhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=idtnrQWeAURzpQW+RLs00G+O8A4gS3L+K9UkeXCQe20=;
+        b=R/eSd+BSWYSw75uQnq1kau6t+z5Tey9PVgPxvGLzuglitlPrYDgCj28qUrJ34nFsau
+         JIaqOAxxDdV56WgbODTTcDnQx3YJ04OwUvILW8GsZe1URhjn4bjeI0ry+zL6lV14X/og
+         qmlsjZQI1U7iYxNAXSzUlxdFIKDzluXVed00nPYt9ZbY6ZIaOkqduFtB+vqtVXcCYGIx
+         me98RGdaNT2yldAyCP5kO2+5DuJ32XobSmk5HV6/ihdohS6KfyKJ7j5GviSfWEwGnbR5
+         m9Qo4OEGxYafbfvo9MCLUv++n8tqQWaftQNtRPZJSaZwtQSOD6sed0EI+bwL98k3IcJJ
+         dyXQ==
+X-Gm-Message-State: AOAM533stIvDJGtUY6ylNJUNVqTIYD3cWRfIGWwpHd+3xe9HZPQlIcG/
+        7pHRDzSC9Po1NXvHfmIhl3+ho/nDuO0Ji4H+sbf5lQ==
+X-Google-Smtp-Source: ABdhPJz2rYXRknrAa47G5ZoicHWOBJaEnkLv8Z2pCeyzrLZa3p9k5mhYAvQMKK0N2KMt5GCFK7O6dYRm2sJ476AKlKA=
+X-Received: by 2002:a37:6851:: with SMTP id d78mr2994513qkc.86.1590570923313;
+ Wed, 27 May 2020 02:15:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a1f1e83-2d9d-ddbf-e2e6-9c8bab87372b@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+ <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
+ <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
+ <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
+ <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
+ <20200526102018.kznh6aglpkqlp6en@gilmour.lan> <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
+ <20200527091335.7wc3uy67lbz7j4di@gilmour.lan>
+In-Reply-To: <20200527091335.7wc3uy67lbz7j4di@gilmour.lan>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Wed, 27 May 2020 17:15:12 +0800
+Message-ID: <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 02:28:53PM +0800, Tanwar, Rahul wrote:
-> On 22/5/2020 4:56 pm, Uwe Kleine-König wrote:
-> > On Fri, May 22, 2020 at 03:41:59PM +0800, Rahul Tanwar wrote:
+On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-Hong) if you
+> want.
 
-...
+That would be great, although given the potentially inconsistent
+results we've been seeing so far it would be great if you could
+additionally push a git branch somewhere.
+That way we can have higher confidence that we are applying exactly
+the same patches to the same base etc.
 
-> > I'm a unhappy to have this in the PWM driver. The PWM driver is supposed
-> > to be generic and I think this belongs into a dedicated driver.
-> 
-> Well noted about all other review concerns. I will rework the driver in v2.
-> However, i am not very sure about the above point - of having a separate
-> dedicated driver for tach_work because its logic is tightly coupled with
-> this driver.
-
-Actually I agree with Uwe.
-Here is layering violation, i.e. provider and consumer in the same pot. It's
-not good from design perspective.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks
+Daniel
