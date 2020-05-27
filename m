@@ -2,85 +2,81 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA4BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64635C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C50E207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA5A2089D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590605138;
-	bh=xQ5uJntajgExxRJRJncGIyO/OQmQ/goXrHK/3GNVHYc=;
+	s=default; t=1590605271;
+	bh=KhXH7jHlv+CUjM2JV5Ru81DLpLuKvH2wyb/r9lIBt5U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FW4oI1hmicIrfswc9oNVxlsxhcWWHe0AmUX/WFsw454tjJKsR2tWctPsHPk/qYg3P
-	 0G+sHCoMoKoQ2lA17ekhIczJcDakZWN6IOrYwslQrXlGNxISj8CgrZWBqRSMiACn2z
-	 9qoNtRsJIELNEvxlRxjdvO5V/7khkFmMQXFCBPj4=
+	b=YnlSVZ1Mm+beUuyJri2LvNjuQEqIIreziZQHnhX68SPJTX4tEFnJfcHhSOnw50sF3
+	 eVNzd2YIgXIcEPyFa7e8Z4v5a2RzmIktwbzdfjfwm1PI0zJxN/U36Sj3zy8n5i7i74
+	 sVrpQPalam949DJnCR1yV/6BhR/jSvjckGUtM7CU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725768AbgE0Sph (ORCPT
+        id S1726814AbgE0Srh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 14:45:37 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37986 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389214AbgE0S1K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 14:27:10 -0400
-Received: by mail-il1-f196.google.com with SMTP id q18so3953698ilm.5;
-        Wed, 27 May 2020 11:27:10 -0700 (PDT)
+        Wed, 27 May 2020 14:47:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgE0Srg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 14:47:36 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36CDC008635;
+        Wed, 27 May 2020 11:41:12 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id r2so16902995ioo.4;
+        Wed, 27 May 2020 11:41:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ZvQhsfkFlA/Oh3QWp+W6frDo076kraj8anhhLdL6bbk=;
-        b=aig2ieMIF9q03HwH3YnNpItHS0FHpU62g0NvauvGbTi3gtShUxZzdgyazL1aMw70JK
-         EFMpwx0JY3RgVAgQKTk0Fh8rWMufawlU+480rkZhi3FU+0+1ztu1RoPOb793svN/xw4x
-         dBnoD3N0a4rn84UtRPhGdK8jeQ1o6Z16SyU+hrObe/vE1+B2hSi4Ilh7bc5Bnn9xfeh9
-         bUspnyP4UVnZVnSIyfj/MnB1nW4t7eYlV9C0TjlM+BeHdww/c4fwTvG1UO96CyB5PijX
-         DGHT0n8pkzEkg8t+wi0K0hpDN34YbbvClXJwcXDfF72rAXiYDpNNAelFxg17x2S4M9IQ
-         ootw==
-X-Gm-Message-State: AOAM533+AoyD672spkrjwgM3EEkA4nYDicaTlkoV9B+hmd22fyYTdsbw
-        0ntWadSNy9NHfGmaGrle3g==
-X-Google-Smtp-Source: ABdhPJyZguAbhJfNPR/1LeofmJy5ESLApTtq2YSIYTTvCksLfyA5dAI/XIdpU5e6VyT3XlOgIEiElQ==
-X-Received: by 2002:a92:495d:: with SMTP id w90mr6846331ila.275.1590604029523;
-        Wed, 27 May 2020 11:27:09 -0700 (PDT)
+        bh=SZIP9gMLgQ3EMwU5hsVyfxacis5ozsWVrpZIFpNFZGc=;
+        b=G+4gJintsKdfnw7fRfaD8JBiK50z0248dtdyAiUCtgFne2vvp2IawDUNvMBn3A9gvs
+         mzywz4NvWqJDFSJ3+CHTEO5Al5lzUJf1cbR/czx2LwMpjGCTPeMKryhIqHI3mxE5i+uJ
+         Sjs0+Jnap5wVAZ+SXCyQ4ucCJdHQu0dSAWpRBXpjYbWamZ4oMKHGY1m6VKF0RM7rqyH9
+         YTCLP4GK3iyaRZm+KDUAkxI4kwaoZkbpKzgEqp7mtjn3t8NJTz2VG7QivKdnyO/i2msJ
+         c77ee5aWqlLxSQaoO2iZOL6ItyLLNhZNrpLtFlR1DNKgDUQkxRXGELllQ4cArbmdA5jc
+         g+rA==
+X-Gm-Message-State: AOAM533obs/Ln8JBjkH09fwceSH2cfUR4o9pXlmJVvzwFQwNFvJ85HD5
+        zaA6FsZof5iU6oTW7622YQ==
+X-Google-Smtp-Source: ABdhPJy9b/AK7GxNKc/ofJ9HvLdVBBl8IZ9/rlzqGnAPgtRfy+4FSAq2XENSvm4Jrr7coT1f/mQx8w==
+X-Received: by 2002:a02:90cd:: with SMTP id c13mr6859068jag.83.1590604872125;
+        Wed, 27 May 2020 11:41:12 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b22sm2051080ill.6.2020.05.27.11.27.08
+        by smtp.gmail.com with ESMTPSA id g19sm1552123iom.21.2020.05.27.11.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 11:27:08 -0700 (PDT)
-Received: (nullmailer pid 2511916 invoked by uid 1000);
-        Wed, 27 May 2020 18:27:08 -0000
-Date:   Wed, 27 May 2020 12:27:08 -0600
+        Wed, 27 May 2020 11:41:11 -0700 (PDT)
+Received: (nullmailer pid 2530396 invoked by uid 1000);
+        Wed, 27 May 2020 18:41:10 -0000
+Date:   Wed, 27 May 2020 12:41:10 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Qi Zheng <arch0.zheng@gmail.com>
-Cc:     frowand.list@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of/fdt: Remove redundant kbasename function call
-Message-ID: <20200527182708.GA2458626@bogus>
-References: <20200512154909.279788-1-arch0.zheng@gmail.com>
+Cc:     devicetree@vger.kernel.org, frowand.list@gmail.com,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt/platform: Fix comment in of_dev_lookup()
+Message-ID: <20200527184110.GA2530290@bogus>
+References: <20200524152614.69393-1-arch0.zheng@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512154909.279788-1-arch0.zheng@gmail.com>
+In-Reply-To: <20200524152614.69393-1-arch0.zheng@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 12, 2020 at 11:49:09PM +0800, Qi Zheng wrote:
-> For version 1 to 3 of the device tree, this is the node full
-> path as a zero terminated string, starting with "/". The
-> following equation will not hold, since the node name has
-> been processed in the fdt_get_name().
+On Sun, 24 May 2020 23:26:14 +0800, Qi Zheng wrote:
+> The code is using of_dev_lookup() rather than of_devname_lookup().
 > 
-> 	*pathp == '/'
+> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+> ---
+>  drivers/of/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> For version 16 and later, this is the node unit name only
-> (or an empty string for the root node). So the above
-> equation will still not hold.
-> 
-> So the kbasename() is redundant, just remove it.
 
-There's 2 occurrences of this. Can you remove the other one too.
-
-Rob
+Applied, thanks!
