@@ -2,199 +2,95 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A314C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 04:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0E6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 05:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8BF0206D5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 04:06:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WdYG8D0J"
+	by mail.kernel.org (Postfix) with ESMTP id C79002078C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 05:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgE0EGE (ORCPT
+        id S1725294AbgE0FEH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 00:06:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
+        Wed, 27 May 2020 01:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727786AbgE0EGE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 00:06:04 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A490C03E97C
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 21:06:04 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id c75so11177224pga.3
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 21:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c7mmaWIhliSekrXxz20ZW1Ppbz2gcfDYDdhA8q0rEGw=;
-        b=WdYG8D0JMfocNaSyB3kzR5gMVArCgT76OxP6MQ+pOzljOaoPmsxhznQi5FqWaStJFl
-         lmTeWzYx5wPIgZAgg5ZFh1BQ4Yr9gqWGLEB7F4urpZ1Jnzq7IObLbhJNfUvMvWly+R+k
-         uIzi49ZKS2aYnGejb8FjLfdye2J/j+BkLJZxdG64a0ETBYOjwhc09VIKUQESULFfdTCK
-         G9S93Jd404+Mqzi2cpaNktkrpkuj2pKavzR+KPzN5uwVxxzBN/r8yWL1muX8SJ/54zJo
-         H+yIYntYyYAwe+XkogvmXQcO5urNUSM7I1UFZ2l/b9ZS8OSJNlY6yxsp8jByejOISnvi
-         ofqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c7mmaWIhliSekrXxz20ZW1Ppbz2gcfDYDdhA8q0rEGw=;
-        b=DsRJ4559CmgLKecHtSQHanOApIKSYMdqZxCjPZqg9GbiN6VUXK0Wlp7Pa/ADEH6TZ+
-         +96W3xWkSXKYmUhy1+0xcLO0tJ18jeItGa0k9sFPQborylm2zh5qH3lOxY5yLZiuAtDL
-         LX87eLBWtkG4KH0J56o7HfU3zSXfqAoKPFQUsA6Kv8ssz3MhSm6y7wo2QlUW5cggCOGB
-         i1/cOMMOknjjIzCz211jLu0kf0nInJplg/ujivgGSMhcrfQ0z1jq1wEAAHwzorDegwV5
-         BJ5VllLsPo0VWEerQK7LjB3xRvIlqO6NogrpsjDZAKdyrESKXstnAbyB0Ma8duZreOZN
-         PTqA==
-X-Gm-Message-State: AOAM530aQ8BU3u5o4qGyPjlNezmWSDu6IbmBdKZgCKad9mVoKLhP3aiA
-        d7SvB32bLnKMdsEJALgHLxfwGA==
-X-Google-Smtp-Source: ABdhPJzopaTwRs6857IVLls5+Ux3GcVORnkKoE0IaW4/vMYy76PnhRsBBvhJDfafZnmxdp601/HxaA==
-X-Received: by 2002:a63:8f46:: with SMTP id r6mr2123412pgn.257.1590552363359;
-        Tue, 26 May 2020 21:06:03 -0700 (PDT)
-Received: from localhost ([122.172.60.59])
-        by smtp.gmail.com with ESMTPSA id m2sm798738pfe.141.2020.05.26.21.06.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 May 2020 21:06:01 -0700 (PDT)
-Date:   Wed, 27 May 2020 09:35:59 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org,
-        bjorn.andersson@linaro.org, saravanak@google.com, mka@chromium.org,
-        nm@ti.com, agross@kernel.org, david.brown@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com
-Subject: Re: [PATCH v4 06/12] cpufreq: qcom: Update the bandwidth levels on
- frequency change
-Message-ID: <20200527040559.5dryuxbf5ejzvpst@vireshk-i7>
-References: <20200504202243.5476-1-sibis@codeaurora.org>
- <20200504202243.5476-7-sibis@codeaurora.org>
- <20200505045012.zfx2e6chqo5f3e4n@vireshk-i7>
- <8fc5b72c9af6fd6a707a280cfc678677@codeaurora.org>
- <b7e184b2da5b780a4e7e6ee47963f9b4@codeaurora.org>
- <20200527035349.mrvvxeg3lqv53jm2@vireshk-i7>
+        with ESMTP id S1728084AbgE0FEG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 01:04:06 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272C6C061A0F
+        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 22:04:06 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jdoEK-0001cv-QG; Wed, 27 May 2020 07:03:52 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jdoEI-0008BI-4d; Wed, 27 May 2020 07:03:50 +0200
+Date:   Wed, 27 May 2020 07:03:50 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
+        shawnguo@kernel.org, festevam@gmail.com,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v8 00/13] add ecspi ERR009165 for i.mx6/7 soc family
+Message-ID: <20200527050350.GV11869@pengutronix.de>
+References: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527035349.mrvvxeg3lqv53jm2@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:02:31 up 97 days, 12:33, 88 users,  load average: 0.44, 0.37,
+ 0.27
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 27-05-20, 09:23, Viresh Kumar wrote:
-> On 26-05-20, 23:18, Sibi Sankar wrote:
-> > https://patchwork.kernel.org/cover/11548479/
-> > GPU driver uses Georgi's series
-> > for scaling and will need a way to
-> > remove the icc votes in the suspend
-> > path, (this looks like a pattern
-> > that might be used by other clients
-> > as well) I could probably update
-> > opp_set_bw to support removing bw
-> > when NULL opp is specified. Similarly
-> > opp_set_rate will need to support
-> > set bw to 0 when set_rate is passed
-> > 0 as target freq for the same use case.
-> 
-> Sure, please send a patch for that.
+On Thu, May 21, 2020 at 04:34:12AM +0800, Robin Gong wrote:
+> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> transfer to be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+> new sdma ram script which works in XCH  mode as PIO inside sdma instead
+> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+> exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+> or not.
+> The first two reverted patches should be the same issue, though, it
+> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+> have the chance to test this patch set if could fix their issues.
+> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> on i.mx8mm because the event id is zero.
 
-On a second thought, here is the patch. Please test it.
+For the series:
 
--------------------------8<-------------------------
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-Subject: [PATCH] opp: Remove bandwidth votes when target_freq is zero
+Sascha
 
-We already drop several votes when target_freq is set to zero, drop
-bandwidth votes as well.
-
-Reported-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/opp/core.c | 47 +++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 56d3022c1ca2..0c259d5ed232 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -725,6 +725,34 @@ static int _generic_set_opp_regulator(struct opp_table *opp_table,
- 	return ret;
- }
- 
-+static int _set_opp_bw(const struct opp_table *opp_table,
-+		       struct dev_pm_opp *opp, bool remove)
-+{
-+	u32 avg, peak;
-+	int i, ret;
-+
-+	if (!opp_table->paths)
-+		return 0;
-+
-+	for (i = 0; i < opp_table->path_count; i++) {
-+		if (remove) {
-+			avg = 0;
-+			peak = 0;
-+		} else {
-+			avg = opp->bandwidth[i].avg;
-+			peak = opp->bandwidth[i].peak;
-+		}
-+		ret = icc_set_bw(opp_table->paths[i], avg, peak);
-+		if (ret) {
-+			dev_err(dev, "Failed to %s bandwidth[%d]: %d\n",
-+				remove ? "remove" : "set", i, ret);
-+			retrun ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int _set_opp_custom(const struct opp_table *opp_table,
- 			   struct device *dev, unsigned long old_freq,
- 			   unsigned long freq,
-@@ -837,12 +865,17 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		if (!_get_opp_count(opp_table))
- 			return 0;
- 
--		if (!opp_table->required_opp_tables && !opp_table->regulators) {
-+		if (!opp_table->required_opp_tables && !opp_table->regulators &&
-+		    !opp_table->paths) {
- 			dev_err(dev, "target frequency can't be 0\n");
- 			ret = -EINVAL;
- 			goto put_opp_table;
- 		}
- 
-+		ret = _set_opp_bw(opp_table, opp, true);
-+		if (ret)
-+			return ret;
-+
- 		if (opp_table->regulator_enabled) {
- 			regulator_disable(opp_table->regulators[0]);
- 			opp_table->regulator_enabled = false;
-@@ -932,16 +965,8 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 			dev_err(dev, "Failed to set required opps: %d\n", ret);
- 	}
- 
--	if (!ret && opp_table->paths) {
--		for (i = 0; i < opp_table->path_count; i++) {
--			ret = icc_set_bw(opp_table->paths[i],
--					 opp->bandwidth[i].avg,
--					 opp->bandwidth[i].peak);
--			if (ret)
--				dev_err(dev, "Failed to set bandwidth[%d]: %d\n",
--					i, ret);
--		}
--	}
-+	if (!ret)
-+		ret = _set_opp_bw(opp_table, opp, false);
- 
- put_opp:
- 	dev_pm_opp_put(opp);
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
