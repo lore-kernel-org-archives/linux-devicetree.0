@@ -2,82 +2,75 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E28C433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428A4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D2820899
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2747A2075A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388812AbgE0R7V (ORCPT
+        id S2389166AbgE0SGL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 13:59:21 -0400
-Received: from out28-123.mail.aliyun.com ([115.124.28.123]:48214 "EHLO
-        out28-123.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388544AbgE0R7V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 13:59:21 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2468916|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0315748-0.000160287-0.968265;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03303;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.HeTcPrZ_1590602337;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeTcPrZ_1590602337)
-          by smtp.aliyun-inc.com(10.147.43.95);
-          Thu, 28 May 2020 01:59:16 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v12 0/7] Add support for the X1830 and fix bugs for X1000.
-Date:   Thu, 28 May 2020 01:56:28 +0800
-Message-Id: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 27 May 2020 14:06:11 -0400
+Received: from out28-99.mail.aliyun.com ([115.124.28.99]:39888 "EHLO
+        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388628AbgE0SGL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 14:06:11 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09056586|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_social|0.00537309-0.000193602-0.994433;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.HeTMIqm_1590602766;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeTMIqm_1590602766)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Thu, 28 May 2020 02:06:07 +0800
+Subject: Re: [PATCH v11 4/7] dt-bindings: clock: Add X1830 clock bindings.
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, sernia.zhou@foxmail.com,
+        sboyd@kernel.org, zhenwenjin@gmail.com, mturquette@baylibre.com,
+        yanfei.li@ingenic.com, aric.pzqi@ingenic.com, paul@crapouillou.net,
+        dongsheng.qiu@ingenic.com, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, rick.tyliu@ingenic.com,
+        linux-clk@vger.kernel.org
+References: <20200527085449.55573-1-zhouyanjie@wanyeetech.com>
+ <20200527085449.55573-5-zhouyanjie@wanyeetech.com>
+ <20200527173436.GA2411605@bogus>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <04bae797-0267-ad07-68dc-0bf98d8be59b@wanyeetech.com>
+Date:   Thu, 28 May 2020 02:06:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200527173436.GA2411605@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v10->v11:
-Split [3/6] in v10 to [3/7] in v11 and [4/7] in v11.
+Hi Rob,
 
-v11->v12:
-Use "CLK_OF_DECLARE_DRIVER" instead "CLK_OF_DECLARE",
-this modification was mentioned in the comments, but
-did not really exist in the patch.
-Reported-by: Paul Cercueil <paul@crapouillou.net>
+Could you take [3/11] in your tree? Stephen says the file named 
+"ingenic,cgu.yaml" is not in clk tree, but it is in your DT tree staged 
+for the next release, maybe you pick up the yaml file and he pick up the 
+header file is a good idea.
 
-周琰杰 (Zhou Yanjie) (7):
-  clk: Ingenic: Remove unnecessary spinlock when reading registers.
-  clk: Ingenic: Adjust cgu code to make it compatible with X1830.
-  dt-bindings: clock: Add documentation for X1830 bindings.
-  dt-bindings: clock: Add X1830 clock bindings.
-  clk: Ingenic: Add CGU driver for X1830.
-  dt-bindings: clock: Add and reorder ABI for X1000.
-  clk: X1000: Add FIXDIV for SSI clock of X1000.
+Thanks and best regards!
 
- .../devicetree/bindings/clock/ingenic,cgu.yaml     |   2 +
- drivers/clk/ingenic/Kconfig                        |  10 +
- drivers/clk/ingenic/Makefile                       |   1 +
- drivers/clk/ingenic/cgu.c                          |  28 +-
- drivers/clk/ingenic/cgu.h                          |   4 +
- drivers/clk/ingenic/jz4725b-cgu.c                  |   4 +
- drivers/clk/ingenic/jz4740-cgu.c                   |   4 +
- drivers/clk/ingenic/jz4770-cgu.c                   |   8 +-
- drivers/clk/ingenic/jz4780-cgu.c                   |   3 +
- drivers/clk/ingenic/x1000-cgu.c                    | 118 +++++-
- drivers/clk/ingenic/x1830-cgu.c                    | 443 +++++++++++++++++++++
- include/dt-bindings/clock/x1000-cgu.h              |  64 +--
- include/dt-bindings/clock/x1830-cgu.h              |  55 +++
- 13 files changed, 695 insertions(+), 49 deletions(-)
- create mode 100644 drivers/clk/ingenic/x1830-cgu.c
- create mode 100644 include/dt-bindings/clock/x1830-cgu.h
-
--- 
-2.11.0
-
+在 2020/5/28 上午1:34, Rob Herring 写道:
+> On Wed, 27 May 2020 16:54:46 +0800, 周琰杰 (Zhou Yanjie) wrote:
+>> Add the clock bindings for the X1830 Soc from Ingenic.
+>>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>
+>> Notes:
+>>      v11:
+>>      New patch, split from [3/6] in v10.
+>>
+>>   include/dt-bindings/clock/x1830-cgu.h | 55 +++++++++++++++++++++++++++++++++++
+>>   1 file changed, 55 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/x1830-cgu.h
+>>
+> Acked-by: Rob Herring <robh@kernel.org>
