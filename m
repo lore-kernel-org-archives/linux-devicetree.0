@@ -2,99 +2,68 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD58C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 21:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEE9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 21:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F63207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 21:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EAE220835
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 21:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgE0VQh (ORCPT
+        id S1728550AbgE0VTC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 17:16:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:56933 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgE0VQg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 17:16:36 -0400
-IronPort-SDR: qNdzHCkvwmR/OgGy+qJ66mcPpczBcJ7G47v2IVSElos9dO61Ac1b8aLE6JLvHYHBljK0zd9g2c
- IYS7imn0ODEw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 14:16:35 -0700
-IronPort-SDR: XCm8vub/jNoIWjRW3pQgdNpxd20fY5viVZZhDBe1JUEsvjmEBvyvBAAIgEeyHz31GajEQ6Ggny
- cgVGkXlUxPsA==
-X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
-   d="scan'208";a="468887887"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 14:16:31 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 9D86F206EA; Thu, 28 May 2020 00:16:28 +0300 (EEST)
-Date:   Thu, 28 May 2020 00:16:28 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org, Louis Kuo <louis.kuo@mediatek.com>,
-        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
-        <shengnan.wang@mediatek.com>
-Subject: Re: [V9, 1/2] media: dt-bindings: media: i2c: Document OV02A10
- bindings
-Message-ID: <20200527211628.GT7618@paasikivi.fi.intel.com>
-References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
- <20200523084103.31276-2-dongchun.zhu@mediatek.com>
- <20200526182847.GA92449@bogus>
- <1590569355.8804.448.camel@mhfsdcap03>
- <CAL_Jsq+sN0SVidTrY0ODXEkzkxYFvG1FTnL0oRQBSKf=ynLdyQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+sN0SVidTrY0ODXEkzkxYFvG1FTnL0oRQBSKf=ynLdyQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 27 May 2020 17:19:02 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:19589 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728255AbgE0VTC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 17:19:02 -0400
+X-IronPort-AV: E=Sophos;i="5.73,442,1583161200"; 
+   d="scan'208";a="47965343"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 28 May 2020 06:19:00 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 89F09400C44F;
+        Thu, 28 May 2020 06:18:58 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/4] Add thermal and CMT to R8A7742 SOC
+Date:   Wed, 27 May 2020 22:18:36 +0100
+Message-Id: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob, Dongchun,
+Hi All,
 
-On Wed, May 27, 2020 at 09:27:22AM -0600, Rob Herring wrote:
-> > > > +    properties:
-> > > > +      endpoint:
-> > > > +        type: object
-> > > > +        additionalProperties: false
-> > > > +
-> > > > +        properties:
-> >
-> > Actually I wonder whether we need to declare 'clock-lanes' here?
-> 
-> Yes, if you are using it.
+This patch series adds thermal and CMT support on RZ/G1H
+(R8A7742) SOC DT.
 
-Dongchun, can you confirm the chip has a single data and a single clock
-lane and that it does not support lane reordering?
+Cheers,
+Prabhakar
 
-So if there's nothing to convey to the driver, also the data-lanes should
-be removed IMO.
+Lad Prabhakar (4):
+  dt-bindings: thermal: rcar-thermal: Add device tree support for
+    r8a7742
+  ARM: dts: r8a7742: Add thermal device to DT
+  dt-bindings: timer: renesas,cmt: Document r8a7742 CMT support
+  ARM: dts: r8a7742: Add CMT SoC specific support
+
+ .../devicetree/bindings/thermal/rcar-thermal.yaml  |  1 +
+ .../devicetree/bindings/timer/renesas,cmt.txt      |  2 +
+ arch/arm/boot/dts/r8a7742.dtsi                     | 62 ++++++++++++++++++++++
+ 3 files changed, 65 insertions(+)
 
 -- 
-Kind regards,
+2.7.4
 
-Sakari Ailus
