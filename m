@@ -2,137 +2,85 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5443FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C737BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B5B2084C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="afFk/O5M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NfATUaw9"
+	by mail.kernel.org (Postfix) with ESMTP id A88492084C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 09:15:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725883AbgE0JNm (ORCPT
+        id S1725920AbgE0JPY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 05:13:42 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60915 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725820AbgE0JNm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 05:13:42 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 458BF580184;
-        Wed, 27 May 2020 05:13:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 05:13:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=V5epjiDGiclpAXJJpB3JE24jmk6
-        thqQZcHWLQmvyuUI=; b=afFk/O5M5iUdGGh/mcZZQSmWP9l8zSgz9lNVaE199Em
-        nbgE6W8CSw0zFL9SnUP7uXSR7qT1XxQX8tDdeDIuY63lN0z5jgxQp4K5Lzt2PKyf
-        tHXjyQicYV5VWtE3SKycCHL1AQqxyyxm30+2DEW9afNDHrvV5Vd9FwJXmT1omEjC
-        YZV4G+4eDO7d/2maCVg0uHcPCT7HbYcuC35DsDs3+0/WTRsb0gq23xUK8F2IlYX2
-        RjXIdbJykAIb8SUnCbhyKd2QczXXB1GyyYlOAryCe7ZNnjGl4O8Awk148iQP3fV/
-        0s0yWscW+JB8U/aPOF0BQrBhdHzJgelUb3Ju7GZz0Yg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=V5epji
-        DGiclpAXJJpB3JE24jmk6thqQZcHWLQmvyuUI=; b=NfATUaw901WlNTfX1Pg5wf
-        VzyV0ZCjREZzEubzT29J2zNQtbxmxgarGmO8OTcLnJFZDbjLIXpU3YkLFpApRf43
-        d65r9jucWdefHFKo0BDbhE7aiqT7SY1cq1i6OnXfumEe+D/Tof39+ge+z5byB15/
-        ow68Z6xgT68Q0RX2pF3Si0qRS9tOce+bAZdreEyzfvLOFc3JTg9wayySAW93iUgz
-        NtanODdCevcGOpqwweMlK8Gr2cUnF6hj+YrjQXuEkwsfWySc6dNXD5gmkrYuqboi
-        Tq5bKPkejPCobXrRhfgT0iKOemYDwJWFeUdfk72nOQz13dPB0YYxNb0M0zZ5/diw
-        ==
-X-ME-Sender: <xms:QS_OXsbh5mG9N37eoM9wr1nZmwvzQsVZK5HS5wtVD4XrBkrpuZoLTw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedguddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:QS_OXnYhpDwxYPnG140lqFLRlDN_P27ktwVqvxghdhSeN_ZdlZWniA>
-    <xmx:QS_OXm-bGmz1PUWtUlPhyx3yvXa3lF9sSUY1SINUu-poX_q3iI8POQ>
-    <xmx:QS_OXmpUMcCGukOP73oVLStJAyFaG9_8rlFR6rCrTeTgHqNJxkMotw>
-    <xmx:RC_OXq1jTEytyhpvWEScpxh_pvTdwfI8yH08SfBPb187Z1Mw3FSxjg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E95C43280063;
-        Wed, 27 May 2020 05:13:36 -0400 (EDT)
-Date:   Wed, 27 May 2020 11:13:35 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-Message-ID: <20200527091335.7wc3uy67lbz7j4di@gilmour.lan>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <20200427072342.5499-1-jian-hong@endlessm.com>
- <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
- <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan>
- <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
- <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
- <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
+        Wed, 27 May 2020 05:15:24 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2801 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726600AbgE0JPX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 05:15:23 -0400
+IronPort-SDR: cnGDxl3jRMnYfdI4wlawiljsnVz3dHyTTFSnu/srEniJteMbPZfeLdEQpBBE45Hod0Uxx/oz8R
+ 6utRS9l7QH1Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 02:15:23 -0700
+IronPort-SDR: SF4e9Ud+NzqoSgOtLCWW0thQSwuv/BECHfAnvtDAcpsDAhHpFny/uY/6luXlxGJNppq1NgL8h+
+ UvXH7gzK4b+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
+   d="scan'208";a="284741187"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 27 May 2020 02:15:18 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jds9h-009BXB-AC; Wed, 27 May 2020 12:15:21 +0300
+Date:   Wed, 27 May 2020 12:15:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v1 2/2] Add PWM driver for LGM
+Message-ID: <20200527091521.GH1634618@smile.fi.intel.com>
+References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
+ <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
+ <20200522085613.ktb2ruw2virj337v@pengutronix.de>
+ <3a1f1e83-2d9d-ddbf-e2e6-9c8bab87372b@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kokco5kof5hl45yv"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3a1f1e83-2d9d-ddbf-e2e6-9c8bab87372b@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, May 27, 2020 at 02:28:53PM +0800, Tanwar, Rahul wrote:
+> On 22/5/2020 4:56 pm, Uwe Kleine-König wrote:
+> > On Fri, May 22, 2020 at 03:41:59PM +0800, Rahul Tanwar wrote:
 
---kokco5kof5hl45yv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-Hi Daniel,
+> > I'm a unhappy to have this in the PWM driver. The PWM driver is supposed
+> > to be generic and I think this belongs into a dedicated driver.
+> 
+> Well noted about all other review concerns. I will rework the driver in v2.
+> However, i am not very sure about the above point - of having a separate
+> dedicated driver for tach_work because its logic is tightly coupled with
+> this driver.
 
-On Wed, May 27, 2020 at 11:49:36AM +0800, Daniel Drake wrote:
-> Hi Maxime,
->=20
-> On Tue, May 26, 2020 at 6:20 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > I gave it a try with U-Boot with my latest work and couldn't reproduce =
-it, so it
-> > seems that I fixed it along the way
->=20
-> Is your latest work available in a git branch anywhere that we could
-> test directly?
+Actually I agree with Uwe.
+Here is layering violation, i.e. provider and consumer in the same pot. It's
+not good from design perspective.
 
-I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-Hong) if y=
-ou
-want.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Maxime
 
---kokco5kof5hl45yv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXs4vPwAKCRDj7w1vZxhR
-xaGaAQCg3gZaUrnvSNp3BzxW8iTAVt5FCWnVgDC2YFeAH5wRnAD/RUVn5pMYOZX3
-CW4nLRVoZ8NFLwZqHrhV/v6g5LHIhgQ=
-=WuzX
------END PGP SIGNATURE-----
-
---kokco5kof5hl45yv--
