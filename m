@@ -2,60 +2,60 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7409C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 06:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D54C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 06:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C869820787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 06:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 405392071A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 06:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725883AbgE0GAH (ORCPT
+        id S1727813AbgE0GLM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 02:00:07 -0400
-Received: from out28-219.mail.aliyun.com ([115.124.28.219]:46416 "EHLO
-        out28-219.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgE0GAG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 02:00:06 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07629988|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.102456-0.000676535-0.896868;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=21;RT=21;SR=0;TI=SMTPD_---.HeD3p8j_1590559199;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeD3p8j_1590559199)
-          by smtp.aliyun-inc.com(10.147.42.16);
-          Wed, 27 May 2020 14:00:00 +0800
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Subject: Re: [PATCH v8 4/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
-To:     Rob Herring <robh@kernel.org>
+        Wed, 27 May 2020 02:11:12 -0400
+Received: from out28-100.mail.aliyun.com ([115.124.28.100]:37714 "EHLO
+        out28-100.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0GLL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 02:11:11 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07460527|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0449246-0.000685472-0.95439;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.HeCSSnk_1590559840;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeCSSnk_1590559840)
+          by smtp.aliyun-inc.com(10.147.41.187);
+          Wed, 27 May 2020 14:10:41 +0800
+Subject: Re: [PATCH 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
+To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
-        paulburton@kernel.org, jiaxun.yang@flygoat.com, chenhc@lemote.com,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        keescook@chromium.org, paul@crapouillou.net, krzk@kernel.org,
-        hns@goldelico.com, ebiederm@xmission.com,
-        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
-        rick.tyliu@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, aric.pzqi@ingenic.com
-References: <1589898923-60048-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1589898923-60048-6-git-send-email-zhouyanjie@wanyeetech.com>
- <20200526192947.GA140311@bogus>
-Message-ID: <b41dc785-c514-de69-4546-5c4ff3833f04@wanyeetech.com>
-Date:   Wed, 27 May 2020 13:59:59 +0800
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, hns@goldelico.com, paul@boddie.org.uk,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+References: <20200526170722.17206-1-zhouyanjie@wanyeetech.com>
+ <20200526170722.17206-2-zhouyanjie@wanyeetech.com>
+ <H9DYAQ.4YAB8VVZPLZO@crapouillou.net>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <c6798ff1-53fa-8b81-e56b-6b28f1c49ab4@wanyeetech.com>
+Date:   Wed, 27 May 2020 14:10:40 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200526192947.GA140311@bogus>
+In-Reply-To: <H9DYAQ.4YAB8VVZPLZO@crapouillou.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Paul,
 
-在 2020/5/27 上午3:29, Rob Herring 写道:
-> On Tue, May 19, 2020 at 10:35:21PM +0800, 周琰杰 (Zhou Yanjie) wrote:
+在 2020/5/27 上午3:10, Paul Cercueil 写道:
+> Hi Zhou,
+>
+> Le mer. 27 mai 2020 à 1:07, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
 >> Document the available properties for the SoC root node and the
 >> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 >>
@@ -63,38 +63,17 @@ X-Mailing-List: devicetree@vger.kernel.org
 >> Tested-by: Paul Boddie <paul@boddie.org.uk>
 >> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 >> ---
+>>  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57 
+>> ++++++++++++++++++++++
+>>  1 file changed, 57 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
 >>
->> Notes:
->>      v1->v2:
->>      Change the two Document from txt to yaml.
->>      
->>      v2->v3:
->>      Fix formatting errors.
->>      
->>      v3->v4:
->>      Fix bugs in the two yaml files.
->>      
->>      v4->v5:
->>      No change.
->>      
->>      v5->v6:
->>      Rewrite the two yaml files.
->>      
->>      v6->v7:
->>      1.Update compatible strings in "ingenic,cpu.yaml".
->>      2.Fix formatting errors, and enum for compatible strings.
->>      3.Remove unnecessary "ingenic,soc.yaml".
->>      
->>      v7->v8:
->>      No change.
->>
->>   .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57 ++++++++++++++++++++++
->>   1 file changed, 57 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>> diff --git 
+>> a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml 
+>> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
 >> new file mode 100644
->> index 00000000..afb0207
+>> index 000000000000..afb02071a756
 >> --- /dev/null
 >> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
 >> @@ -0,0 +1,57 @@
@@ -107,83 +86,83 @@ X-Mailing-List: devicetree@vger.kernel.org
 >> +title: Bindings for Ingenic XBurst family CPUs
 >> +
 >> +maintainers:
->> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 >> +
 >> +description:
->> +  Ingenic XBurst family CPUs shall have the following properties.
+>> +  Ingenic XBurst family CPUs shall have the following properties.
 >> +
 >> +properties:
->> +  compatible:
->> +    oneOf:
+>> +  compatible:
+>> +    oneOf:
 >> +
->> +      - description: Ingenic XBurst®1 CPU Cores
->> +        items:
-> This is a single compatible string, right? If so, drop items.
-
-
-Sure, I'll drop it. And because the SMP driver has some other work that 
-can't be completed in a short time, so I will send this patch separately.
-
-
->> +          enum:
->> +            - ingenic,xburst-mxu1.0
->> +            - ingenic,xburst-fpu1.0-mxu1.1
->> +            - ingenic,xburst-fpu2.0-mxu2.0
->> +
->> +      - description: Ingenic XBurst®2 CPU Cores
->> +        items:
->> +          enum:
->> +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
-> Just: const: ingenic,xburst2-fpu2.1-mxu2.1-smt
+>> +      - description: Ingenic XBurst®1 CPU Cores
+>> +        items:
 >
-> Continuing to append CPU features isn't going to scale well. Does
-> 'xburst2' imply certain features? If so, not really any need to have
-> them be explicit.
+> Strip the 'items', put the enum directly.
+>
+
+Sure, I'll drop it in the next version.
 
 
-XBurst (XBurst1) is the first generation CPU core of Ingenic, its basic 
-property is single-issue in-order execution, XBurst2 is the second 
-generation CPU core of Ingenic, its basic property is daul-issue limited 
-out-of-order execution, and both CPU cores can cooperate with some 
-extended propeties,  such as different versions of FPU, different 
-versions of MXU instruction set, with or without simultaneous 
-multi-threading.
+>> +          enum:
+>> +            - ingenic,xburst-mxu1.0
+>> +            - ingenic,xburst-fpu1.0-mxu1.1
+>> +            - ingenic,xburst-fpu2.0-mxu2.0
+>> +
+>> +      - description: Ingenic XBurst®2 CPU Cores
+>> +        items:
+>
+> Same here.
+>
 
-Currently there is only one processor entity based on XBurst2 is 
-produced, so there is  only one string for now.
+Sure.
+
+
+>> +          enum:
+>> +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - device_type
+>> +  - compatible
+>> +  - reg
+>
+> device_type is not in the list of your properties.
+>
+> Also, I think you need a clock in there.
+>
+
+Sure, I will add it.
 
 
 Thanks and best regards!
 
 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - device_type
->> +  - compatible
->> +  - reg
+> -Paul
+>
 >> +
 >> +examples:
->> +  - |
->> +    cpus {
->> +    	#address-cells = <1>;
->> +    	#size-cells = <0>;
+>> +  - |
+>> +    cpus {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
 >> +
->> +    	cpu0: cpu@0 {
->> +    		device_type = "cpu";
->> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
->> +    		reg = <0>;
->> +    	};
+>> +        cpu0: cpu@0 {
+>> +            device_type = "cpu";
+>> +            compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+>> +            reg = <0>;
+>> +        };
 >> +
->> +    	cpu1: cpu@1 {
->> +    		device_type = "cpu";
->> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
->> +    		reg = <1>;
->> +    	};
->> +    };
+>> +        cpu1: cpu@1 {
+>> +            device_type = "cpu";
+>> +            compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+>> +            reg = <1>;
+>> +        };
+>> +    };
 >> +...
 >> -- 
->> 2.7.4
+>> 2.11.0
 >>
+>
