@@ -2,184 +2,190 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1771FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 16:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB75FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7F6120787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 16:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mu8S9a3a"
+	by mail.kernel.org (Postfix) with ESMTP id A3EB220787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389184AbgE0Q6E (ORCPT
+        id S1730934AbgE0RBt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 12:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387954AbgE0Q6D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 12:58:03 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C62CC03E97D;
-        Wed, 27 May 2020 09:58:03 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n15so12081036pfd.0;
-        Wed, 27 May 2020 09:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vEZ5Sil7dAFPcsB6vg5ELG1EVw5OWJYqnN8faDzvGTM=;
-        b=mu8S9a3aG4qnaDjuWDUj+TNOFNtnHmw30/IMMDISHFBftI8Aanb/po//yzzITc6Xb3
-         fTCbRGOtT25lYE7F2qb00A89DuG6L8MC2usOvPvk4Zh0c1Kl9sD34M/zOzcyUqktgJ9g
-         ZDa3HKemQ8DVHfeLVnLgf64Lxiw90AQBsLrkxwLVNHg4dGAyhyK3icZvs2mx9/ESEgX7
-         Uo4x+L/acxnDcDgciSHH8EWHmsB5JRMtDEf+b3EFMlDnTjEZjKqfbQ/jBwrErL3y28rL
-         +didquQxXpR3tCBd0m/DF+uVn8wSheV70BsAv6qtGzGgWHoH+66Orkbp5R5TqSxtahbo
-         aUqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vEZ5Sil7dAFPcsB6vg5ELG1EVw5OWJYqnN8faDzvGTM=;
-        b=E6YAl/g4ZJV/VCSI4AfW4jTH70N02lq7gVzSEfNsuGX31R/rABhyl6QIkNaAX+fD5I
-         7LRs6NbB9i1Jk83q9BJICDiRHSVbyJnUxDE+bdi/Lns1Z6Jk/y12Jw92N5Ii0MmOLpze
-         9egcbKjziL5ECTP0VOrgpO57mVFghFxbhDwFupLSEXEAE6bxmQByW8+dVmQ8P2BrZt4a
-         eLXH5xa/NN6zEDoZxaakHQCb9hyryMkIQOTTxKzay6pURpBQcB2RMbbaHX5G/aHdkFfy
-         ANJyUPR/OwkKQZxXW2yMYT828fiTqlmRv7ouyAZ65KmwXv/oQg/djWiX8VmFmZmO0aaz
-         0VvQ==
-X-Gm-Message-State: AOAM5324vR53gZAcRLTLByhW9cRjpDsqtuC5KJiP5WgO3dK5W3QuedJn
-        GtsdzEj7/roSGj+CfHese3eJnY8n
-X-Google-Smtp-Source: ABdhPJynBEJL6DWQ6MKZVyUvuSQl6qyERBNiyMlfW8w/VBIkogVfCDDiqLDc7xr63vJ5qF3uEGXO8g==
-X-Received: by 2002:a62:ed10:: with SMTP id u16mr4973605pfh.0.1590598682380;
-        Wed, 27 May 2020 09:58:02 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 65sm2558617pfy.219.2020.05.27.09.58.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 09:58:01 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] hwmon: Add Baikal-T1 PVT sensor driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
- <20200526133823.20466-4-Sergey.Semin@baikalelectronics.ru>
- <20200527162549.GA225240@roeck-us.net>
- <20200527165205.5krrdahiup3i2oq3@mobilestation>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <14256f0f-2977-4a54-cf01-ae7e684d10c2@roeck-us.net>
-Date:   Wed, 27 May 2020 09:58:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 27 May 2020 13:01:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55708 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728883AbgE0RBt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 13:01:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6A074AC61;
+        Wed, 27 May 2020 17:01:49 +0000 (UTC)
+Message-ID: <c48ede24790b2e402ca47640ae9f1ea2a5b27530.camel@suse.de>
+Subject: Re: [PATCH v2 09/14] device core: Add ability to handle multiple
+ dma offsets
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Corey Minyard <minyard@acm.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
+Date:   Wed, 27 May 2020 19:01:43 +0200
+In-Reply-To: <CA+-6iNyOKvY-xNfXqDRa5_nJVJuqGKA-oe-ejNuJHUBt6ORu0A@mail.gmail.com>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+         <20200526191303.1492-10-james.quinlan@broadcom.com>
+         <59a0b4e1454a8ef4d3e4ebaf55dcbf3dcd2d73a2.camel@suse.de>
+         <CA+-6iNyOKvY-xNfXqDRa5_nJVJuqGKA-oe-ejNuJHUBt6ORu0A@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-zRgqKyYp8CMyrh28/srG"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-In-Reply-To: <20200527165205.5krrdahiup3i2oq3@mobilestation>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/27/20 9:52 AM, Serge Semin wrote:
-> On Wed, May 27, 2020 at 09:25:49AM -0700, Guenter Roeck wrote:
->> On Tue, May 26, 2020 at 04:38:23PM +0300, Serge Semin wrote:
-> 
-> [nip]
-> 
->>> +
->>> +=============================== ======= =======================================
->>> +Name				Perm	Description
->>> +=============================== ======= =======================================
->>> +update_interval			RW	Measurements update interval per
->>> +					sensor.
->>> +temp1_type			RO	Sensor type (always 1 as CPU embedded
->>> +					diode).
->>> +temp1_label			RO	CPU Core Temperature sensor.
->>> +temp1_input			RO	Measured temperature in millidegree
->>> +					Celsius.
->>> +temp1_min			RW	Low limit for temp input.
->>> +temp1_max			RW	High limit for temp input.
->>> +temp1_min_alarm			RO	Temperature input alarm. Returns 1 if
->>> +					temperature input went below min limit,
->>> +					0 otherwise.
->>> +temp1_max_alarm			RO	Temperature input alarm. Returns 1 if
->>> +					temperature input went above max limit,
->>> +					0 otherwise.
->>> +temp1_trim			RW	Temperature sensor trimming factor in
->>> +					millidegree Celsius. It can be used to
->>> +					manually adjust the temperature
->>> +					measurements within 7.130 degrees
->>> +					Celsius.
->>
->> vs. standard ABI:
->>
->> temp[1-*]_offset`
->>                 Temperature offset which is added to the temperature reading
->>                 by the chip.
->>
->>                 Unit: millidegree Celsius
->>
->> If you really think this is necessary, why not use the standard ABI ?
-> 
-> That would have made much more sense.) I'll replace the handwritten temp1_trim
-> with the standard temp1_offset attribute in v4 shortly today. Thanks for pointing
-> this out.
-> 
 
-Sorry for not realizing this earlier. The added explanation
-made all the difference.
+--=-zRgqKyYp8CMyrh28/srG
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Guenter
+Hi Jim,
+
+On Wed, 2020-05-27 at 11:43 -0400, Jim Quinlan wrote:
+> Hi Nicolas,
+>=20
+> On Wed, May 27, 2020 at 11:00 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Hi Jim,
+> > one thing comes to mind, there is a small test suite in
+> > drivers/of/unittest.c
+> > (specifically of_unittest_pci_dma_ranges()) you could extend it to incl=
+ude
+> > your
+> > use cases.
+> Sure, will check out.
+> > On Tue, 2020-05-26 at 15:12 -0400, Jim Quinlan wrote:
+> > > The new field in struct device 'dma_pfn_offset_map' is used to facili=
+tate
+> > > the use of multiple pfn offsets between cpu addrs and dma addrs.  It =
+is
+> > > similar to 'dma_pfn_offset' except that the offset chosen depends on =
+the
+> > > cpu or dma address involved.
+> > >=20
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > ---
+> > >  drivers/of/address.c        | 65 +++++++++++++++++++++++++++++++++++=
+--
+> > >  drivers/usb/core/message.c  |  3 ++
+> > >  drivers/usb/core/usb.c      |  3 ++
+> > >  include/linux/device.h      | 10 +++++-
+> > >  include/linux/dma-direct.h  | 10 ++++--
+> > >  include/linux/dma-mapping.h | 46 ++++++++++++++++++++++++++
+> > >  kernel/dma/Kconfig          | 13 ++++++++
+> > >  7 files changed, 144 insertions(+), 6 deletions(-)
+> > >=20
+> >=20
+> > [...]
+> >=20
+> > > @@ -977,10 +1020,19 @@ int of_dma_get_range(struct device *dev, struc=
+t
+> > > device_node *np, u64 *dma_addr,
+> > >               pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
+> > >                        range.bus_addr, range.cpu_addr, range.size);
+> > >=20
+> > > +             num_ranges++;
+> > >               if (dma_offset && range.cpu_addr - range.bus_addr !=3D
+> > > dma_offset)
+> > > {
+> > > -                     pr_warn("Can't handle multiple dma-ranges with
+> > > different
+> > > offsets on node(%pOF)\n", node);
+> > > -                     /* Don't error out as we'd break some existing =
+DTs
+> > > */
+> > > -                     continue;
+> > > +                     if (!IS_ENABLED(CONFIG_DMA_PFN_OFFSET_MAP)) {
+> > > +                             pr_warn("Can't handle multiple dma-rang=
+es
+> > > with
+> > > different offsets on node(%pOF)\n", node);
+> > > +                             pr_warn("Perhaps set
+> > > DMA_PFN_OFFSET_MAP=3Dy?\n");
+> > > +                             /*
+> > > +                              * Don't error out as we'd break some
+> > > existing
+> > > +                              * DTs that are using configs w/o
+> > > +                              * CONFIG_DMA_PFN_OFFSET_MAP set.
+> > > +                              */
+> > > +                             continue;
+> >=20
+> > dev->bus_dma_limit is set in of_dma_configure(), this function's caller=
+,
+> > based
+> > on dma_start's value (set after this continue). So you'd be effectively
+> > setting
+> > the dev->bus_dma_limit to whatever we get from the first dma-range.
+> I'm not seeing that at all.  On the  evaluation of each dma-range,
+> dma_start and dma_end are re-evaluated to be the lowest and highest
+> bus values of the  dma-ranges seen so far.  After all dma-ranges are
+> examined,  dev->bus_dma_limit being set to the highest.  In fact, the
+> current code -- ie before my commits -- already does this for multiple
+> dma-ranges as long as the cpu-bus offset is the same in the
+> dma-ranges.
+
+Sorry I got carried away, you're right.
+
+So I understand there is an underlaying assumption that the non DMAble memo=
+ry
+space will always sit on top of the bus memory space, as intertwined as it
+might be, so as to every phys_to_dma() call on non DMAble memory to fall ab=
+ove
+bus_dma_limit.
+
+Regards,
+Nicolas
+
+
+--=-zRgqKyYp8CMyrh28/srG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7OnPcACgkQlfZmHno8
+x/5FYQf9Hyg6r4xe2AQsd6Jy/LEHz47hHSEfbk6Zmqu1XLp6EQsPOCHEFLoCjExf
+aDe7lcONaDgfY45AEZOwP+W3gdL76lKuD+PIv1UP2M61toc9CkJ2MdOyzpcx+081
+g9rs8iR4JyZuGdPrIoF7gmRFQFuV54dNROs0cKTRe1BmErORF5We0IEaqhhOJ4iF
+DNKjYglQ/w2zskqEMsiN89kDjUpmWWvolH9SDIzoBYmfIfBQzQbsyiNpA0Chq9ul
+hWJwJq6uwXczXpwqWSDIoZX/DruOl5fAVLU/GZxdw7Yn3MJ5dtkDza3yRdg303JZ
+ejwGur84LCjY8lJnXEIz+VfX0wboSA==
+=CgTI
+-----END PGP SIGNATURE-----
+
+--=-zRgqKyYp8CMyrh28/srG--
+
