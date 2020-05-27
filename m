@@ -2,148 +2,142 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F335C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5873C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D95002078B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:52:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aP+vMyRD"
+	by mail.kernel.org (Postfix) with ESMTP id A153B2078B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 14:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389323AbgE0OwI (ORCPT
+        id S2389405AbgE0Oyj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 10:52:08 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56424 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388621AbgE0OwI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 10:52:08 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04REq0wB049154;
-        Wed, 27 May 2020 09:52:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590591120;
-        bh=W9cUVgUiVlKpasnouxZe/jr55TOUx7dt8VfCWyPWOHU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aP+vMyRDyKm9P2Sjpt7nL7wSiynvQE/OEyts1J6pxlgOCR5o47Do4Ebj10NYbNVU/
-         ggZ0dJaWn4ONiiuqVKkvgBAU7KAfamGpKvNcrvlVBDbzZ/kr75gYTnKU6yYj6uaykC
-         4odm5C5sFsiNEUHBBAASLICXvNfpQvZfKhodOAmk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04REq0FV077131
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 09:52:00 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
- May 2020 09:52:00 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 27 May 2020 09:52:00 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04REpvqM115260;
-        Wed, 27 May 2020 09:51:58 -0500
-Subject: Re: [PATCH net-next v3 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200526174716.14116-1-dmurphy@ti.com>
- <20200526174716.14116-5-dmurphy@ti.com> <20200527005224.GF782807@lunn.ch>
- <c0867d48-6f04-104b-8192-d61d4464a65f@ti.com>
- <20200527131204.GB793752@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <bbbf2c2e-2238-3e53-08eb-9d7ad3fc785b@ti.com>
-Date:   Wed, 27 May 2020 09:51:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 27 May 2020 10:54:39 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36364 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388738AbgE0Oyi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 10:54:38 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2E30C8030835;
+        Wed, 27 May 2020 14:54:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id E4y3rFoQNrPH; Wed, 27 May 2020 17:54:35 +0300 (MSK)
+Date:   Wed, 27 May 2020 17:54:35 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 10/11] i2c: designware: Move reg-space remapping into
+ a dedicated function
+Message-ID: <20200527145435.bfout2oyonupxlac@mobilestation>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-11-Sergey.Semin@baikalelectronics.ru>
+ <20200527135801.GB1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200527131204.GB793752@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200527135801.GB1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Andrew
+On Wed, May 27, 2020 at 04:58:01PM +0300, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 03:01:10PM +0300, Serge Semin wrote:
+> > This is a preparation patch before adding a quirk with custom registers
+> > map creation required for the Baikal-T1 System I2C support.
+> 
+> Looks good. Though one nit below.
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch, which has been created due to declining the
+> >   glue-layer approach.
+> > 
+> > Changelog v4:
+> > - Use PTR_ERR_OR_ZERO() helper in the bt1_i2c_request_regs() method.
+> > - Discard devm_platform_get_and_ioremap_resource() utilization.
+> > ---
+> >  drivers/i2c/busses/i2c-designware-platdrv.c | 18 +++++++++++++-----
+> >  1 file changed, 13 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> > index ad292de2d260..061c8d506c7c 100644
+> > --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> > +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> > @@ -108,6 +108,15 @@ static void dw_i2c_plat_pm_cleanup(struct dw_i2c_dev *dev)
+> >  		pm_runtime_put_noidle(dev->dev);
+> >  }
+> >  
+> > +static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
+> > +{
+> > +	struct platform_device *pdev = to_platform_device(dev->dev);
+> > +
+> > +	dev->base = devm_platform_ioremap_resource(pdev, 0);
+> > +
+> > +	return PTR_ERR_OR_ZERO(dev->base);
+> > +}
+> > +
+> >  static int dw_i2c_plat_probe(struct platform_device *pdev)
+> >  {
+> >  	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> > @@ -125,15 +134,14 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+> >  		return -ENOMEM;
+> >  
+> 
+> >  	dev->flags |= (uintptr_t)device_get_match_data(&pdev->dev);
+> 
+> It's related to previous patch, but I just realized that '|' is not needed
+> here. Care to amend in the previous patch?
 
-On 5/27/20 8:12 AM, Andrew Lunn wrote:
->> If the dt defines rgmii-rx/tx-id then these values are required not
->> optional.  That was the discussion on the binding.
-> How many times do i need to say it. They are optional. If not
-> specified, default to 2ns.
+Agreed. Thanks.
 
-OK.  I guess then the DP83867 driver is wrong because it specifically 
-states in bold
+-Sergey
 
-     /* RX delay *must* be specified if internal delay of RX is used. */
-
-It was signed off in commit fafc5db28a2ff
-
-
->>>> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
->>>> +				   &dp83869->tx_id_delay);
->>>> +	if (ret) {
->>>> +		dp83869->tx_id_delay = ret;
->>>> +		ret = 0;
->>>> +	}
->>>> +
->>>>    	return ret;
->>>>    }
->>>>    #else
->>>> @@ -367,10 +388,45 @@ static int dp83869_configure_mode(struct phy_device *phydev,
->>>>    	return ret;
->>>>    }
->>>> +static int dp83869_get_delay(struct phy_device *phydev)
->>>> +{
->>>> +	struct dp83869_private *dp83869 = phydev->priv;
->>>> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
->>>> +	int tx_delay = 0;
->>>> +	int rx_delay = 0;
->>>> +
->>>> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID ||
->>>> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
->>>> +		tx_delay = phy_get_delay_index(phydev,
->>>> +					       &dp83869_internal_delay[0],
->>>> +					       delay_size, dp83869->tx_id_delay,
->>>> +					       false);
->>>> +		if (tx_delay < 0) {
->>>> +			phydev_err(phydev, "Tx internal delay is invalid\n");
->>>> +			return tx_delay;
->>>> +		}
->>>> +	}
->>>> +
->>>> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID ||
->>>> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
->>>> +		rx_delay = phy_get_delay_index(phydev,
->>>> +					       &dp83869_internal_delay[0],
->>>> +					       delay_size, dp83869->rx_id_delay,
->>>> +					       false);
->>>> +		if (rx_delay < 0) {
->>>> +			phydev_err(phydev, "Rx internal delay is invalid\n");
->>>> +			return rx_delay;
->>>> +		}
->>>> +	}
->>> So any PHY using these properties is going to pretty much reproduce
->>> this code. Meaning is should all be in a helper.
->> The issue here is that the phy_mode may only be rgmii-txid so you only want
->> to find the tx_delay and return.
->>
->> Same with the RXID.  How is the helper supposed to know what delay to return
->> and look for?
-> How does this code do it? It looks at the value of interface.
-
-Actually I will be removing this check with setting the delays to default.
-
-Dan
-
-
->      Andrew
+> 
+> > -
+> > -	dev->base = devm_platform_ioremap_resource(pdev, 0);
+> > -	if (IS_ERR(dev->base))
+> > -		return PTR_ERR(dev->base);
+> > -
+> >  	dev->dev = &pdev->dev;
+> >  	dev->irq = irq;
+> >  	platform_set_drvdata(pdev, dev);
+> >  
+> > +	ret = dw_i2c_plat_request_regs(dev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> >  	dev->rst = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
+> >  	if (IS_ERR(dev->rst))
+> >  		return PTR_ERR(dev->rst);
+> > -- 
+> > 2.26.2
+> > 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
