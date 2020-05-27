@@ -2,110 +2,107 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3656BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA92AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15089207CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590578320;
-	bh=Eb5W1Mu4UnXinW4nhuzmv6KKdI/oP0r3mQb3N4LC+sU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gLc69wSci6Su8KTvmkTbfklGxeE9xUj8cs3kUh+i87sv8zk7a9IT7RWacfm3XcrU7
-	 rvqxBSFmjeimFTSsnRiENN2Lxa+YPfvyJcs25N8aWHgyaz/KCKIstrNcYPrY0u2v+B
-	 oDAAbcWHTV+hvckJUoU9O0kJPUwyT9AA57PYW154=
+	by mail.kernel.org (Postfix) with ESMTP id 9FEA22075F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387677AbgE0LSf (ORCPT
+        id S2388196AbgE0LUG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 07:18:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387619AbgE0LSe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 07:18:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9302A207CB;
-        Wed, 27 May 2020 11:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590578314;
-        bh=Eb5W1Mu4UnXinW4nhuzmv6KKdI/oP0r3mQb3N4LC+sU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XtBpaS+v/lpJ9RrOyaPoiNOws0yskW0gCFJwnq5/cqlLekMU3baEbiWM2aeapJ8di
-         CklyM05gEwvP4Kf2SWN9Va00wb2otRuEMe7bisF3ZeRBm8TTQ0bikOri9+9fyDnkXP
-         E7vBo27aAiaM9AkQWfLi96qnlVRBQMOK2vWz9Xfs=
-Date:   Wed, 27 May 2020 12:18:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     dillon min <dillon.minfei@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Hua Dillon <dillonhua@gmail.com>
-Subject: Re: [PATCH v6 8/9] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
- support for stm32f4
-Message-ID: <20200527111831.GC5308@sirena.org.uk>
-References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
- <1590564453-24499-9-git-send-email-dillon.minfei@gmail.com>
- <20200527095109.GA5308@sirena.org.uk>
- <CAL9mu0JA=XRTj_HONQGtj74X05TAV0__dW2At0AAeymwNvJhEw@mail.gmail.com>
+        Wed, 27 May 2020 07:20:06 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34554 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388146AbgE0LUF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 07:20:05 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 90624803080A;
+        Wed, 27 May 2020 11:20:02 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9Bltaobyr5kB; Wed, 27 May 2020 14:20:01 +0300 (MSK)
+Date:   Wed, 27 May 2020 14:20:01 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/12] scripts/dtc: check: Add 10bit/slave i2c reg
+ flags support
+Message-ID: <20200527112001.pxnzd4ofxsps7x57@mobilestation>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
+ <20200527011704.GA808104@bogus>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAL9mu0JA=XRTj_HONQGtj74X05TAV0__dW2At0AAeymwNvJhEw@mail.gmail.com>
-X-Cookie: Drop in any mailbox.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200527011704.GA808104@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, May 26, 2020 at 07:17:04PM -0600, Rob Herring wrote:
+> On Wed, May 27, 2020 at 12:55:17AM +0300, Serge Semin wrote:
+> > Recently the I2C-controllers slave interface support was added to the
+> > kernel I2C subsystem. In this case Linux can be used as, for example,
+> > a I2C EEPROM machine. See [1] for details. Other than instantiating
+> > the EEPROM-slave device from user-space there is a way to declare the
+> > device in dts. In this case firstly the I2C bus controller must support
+> > the slave interface. Secondly I2C-slave sub-node of that controller
+> > must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+> > declared in [2]). That flag is declared as (1 << 30), which when set
+> > makes dtc unhappy about too big address set for a I2C-slave:
+> > 
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > 
+> > Similar problem would have happened if we had set the 10-bit address
+> > flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+> > 
+> > In order to fix the problem we suggest to alter the I2C-bus reg-check
+> > algorithm, so one would be aware of the upper bits set. Normally if no
+> > flag specified, the 7-bit address is expected in the "reg"-property.
+> > If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+> > performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+> > 
+> > [1] Documentation/i2c/slave-interface.rst
+> > [2] include/dt-bindings/i2c/i2c.h
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: linux-i2c@vger.kernel.org
+> > ---
+> >  scripts/dtc/checks.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> I've lost track of who all I've said this to already for this issue, but 
+> patches to dtc should be against upstream and a version of this has been 
+> sent there already. But it seems they've lost interest in addressing the 
+> review comments. So feel free to send another one. The same comment 
+> applies here.
 
---TYecfFk8j8mZq+dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+There is another patch in this series:
+[PATCH v3 04/12] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C controller
+which is also waiting for your review. I've updated it as you requested.
+Could you take a look at that too?
 
-On Wed, May 27, 2020 at 06:45:53PM +0800, dillon min wrote:
+-Sergey
 
-> sorry, forget to remove these two patch from this submits, will not
-> include it in later submits
-> which ack other's review result.
-
-Ah, OK - no problem.
-
---TYecfFk8j8mZq+dy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7OTIcACgkQJNaLcl1U
-h9CjnAf9EH3yOA2f087uyr/KGCDeTZDdKdksfcJ4a9wlCQWW1Cur92auEEnoA3Rt
-OaZkMT9iqrDJqCSZ80c9Be1Ql4zXnjxCHU+qExkLFmDJcR448ywgqaYh9gluj6D3
-xQnn0fxJcjgY+eixxAPqszazPIQm3iHZL0TsQo5DNBU7uDO/p+HytpUoYEntT7AT
-bjn2mYE+1drgcxELR/TkQdRnV0jUiAtcpkGnI2tPO70MBQ6jcAwIAX4cBSnjwdhO
-L9bXUB58NNMcuUWSj9+c8WyJn0zssre7UWLaYiX9g92/yJEPJNzGN2SFXiM1Jsks
-PQH9axxSmBjKf8StOS7727u+sJ8H8Q==
-=Ibfd
------END PGP SIGNATURE-----
-
---TYecfFk8j8mZq+dy--
+> 
+> Rob
