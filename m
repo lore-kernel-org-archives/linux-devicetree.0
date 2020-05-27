@@ -2,127 +2,165 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5470AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F297C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E14A2089D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590600605;
-	bh=AYuJ67xsI+CFY7fGg0P0jYxtF43oU5VTBcAFmEh+qxc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cY6xAsj0yp/CUBceqD2IQIGc7wBxjdzg3GTANeyNDWKerPmqxOJyudxL+EUuzDjxj
-	 EXwVxo4IhX3CWr5ckQdZXPZVyA00CUWJzrYTsOzbcrYYbtgbwKjYwo/I52XHhJ+omc
-	 DXASlVrUq77jD/hUZnnOgLfc8lzY4HeKGeZlQ0nU=
+	by mail.kernel.org (Postfix) with ESMTP id E54322075A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pzODA/cB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgE0RaE (ORCPT
+        id S2389099AbgE0Rce (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 13:30:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbgE0RaE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 13:30:04 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D5922089D
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 17:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590600603;
-        bh=AYuJ67xsI+CFY7fGg0P0jYxtF43oU5VTBcAFmEh+qxc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EJWWhLbk5Lz6+Rnb8QcUPDoQATBQVp2Iy6kvhQD7FufGToEqZw0WNmKoEZY+OeWoD
-         4rrHCNZGyQtw7/B8k5ncP5E/pc9LDYXrZg2pq9TIrd9nknM4w/xTPrhulgOkCsTMPa
-         pFSZ0noNeWbaxVUSiUxAum/0PU6fIzcy/VTy7wWw=
-Received: by mail-oi1-f180.google.com with SMTP id l6so22417688oic.9
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 10:30:03 -0700 (PDT)
-X-Gm-Message-State: AOAM531VwHapx6JMz2cbX8GsCLZpEmgMMlg6kJ+xNAPhVyTF3Y2w8iYf
-        SRr7MijRssBHjqMZX5i3O+/MYRITp70HS0KS2g==
-X-Google-Smtp-Source: ABdhPJw6llfBTCOQ2yPHWqoilVklcwSd7RUIwXqOE8eWot1HvhdFljn/0QocEk0zHloG/X0FBFCjJl7CKzBHAp2PxaU=
-X-Received: by 2002:aca:d4d5:: with SMTP id l204mr3572243oig.147.1590600602702;
- Wed, 27 May 2020 10:30:02 -0700 (PDT)
+        Wed, 27 May 2020 13:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387923AbgE0Rce (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 13:32:34 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE2D2C03E97D
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 10:32:33 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id h9so9642724qtj.7
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 10:32:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G2BXWCTTNBns33NDU0HybwyfZx0pKtO1nI+1NJmXgJE=;
+        b=pzODA/cBQXw/CEtKpRqf9bB5Am/l0I4597dz6MLmQeN2ifmLqZSlDgaAtCARJDivD6
+         9Kw418h/RetRSvPvlL+x1EYvHZCt7sD4zm0d+hDZx69Tfhz0qgQ11EsKjvSEYaOBzTgp
+         b5DZHfScEflBLAaKm+uce0alcIP4cqrff/9d1LxSimEuSPCTi+XHIizQkk/F06h9VE6S
+         6DN9TecBtt8FayDYBd3oNgyeUAZTz0aJYB/hXdCXK0Z5zIkG2cdLLzw7lx9I2VrvchJf
+         EIe/6mDvet+14KdS1N0+L3YEdhjUBQSpsBmrCwEzjmfgZ8SIWs7uAYXrJ1EmpEsx4G5t
+         8uRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G2BXWCTTNBns33NDU0HybwyfZx0pKtO1nI+1NJmXgJE=;
+        b=HP0bJYQfRG+FzhpAFY3E9dVH8U+PrHlpAQ7ZjA9u+9n4e5iK8IeDHRUhGnpkYsBB7E
+         rKvl14IQC/YPpBeXpf83ah5rxw7TvJPregKBQZ/866sw1NVQEQDOAOA2tPA6CUmQUH+0
+         XkrjoDZupNkSNewdtQJiqlltttpf08/k/BlJ/2WuidphtpIGwMC0wl1l3PaQXBJGFt/6
+         ibZfzfdJnz6VDZE4d3LezzuGZPex4MuISlU/qV3c5cs2GhH7fd0Biusf4qSphwrXqFew
+         BR3wr6c88gj8PGwxuIdQR9c+s0sGMpgiecDN8DrxwfTGPa/o7iIbZ4T3Ahtttw84nQzN
+         SW2Q==
+X-Gm-Message-State: AOAM532nIyH1YdV28g5K3O6hEYP+VBjlRrOxbLNIPw9e3D4CJAcXF+dL
+        e09hxlC4B13pZrSxhTV719w9gZkXokG2mR2sGFBOHg==
+X-Google-Smtp-Source: ABdhPJwXpn5szmnzOAoismmK3gW+NO2iRmAMAWoX2x9kLxI2DQOfwiJkkj58xfMAJP5sIq8ExwuoK929yeVdXcjTQns=
+X-Received: by 2002:aed:312a:: with SMTP id 39mr5473720qtg.6.1590600752651;
+ Wed, 27 May 2020 10:32:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
- <20200511110611.3142-7-ricardo.canuelo@collabora.com> <20200514015412.GF7425@pendragon.ideasonboard.com>
- <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360> <20200514152239.GG5955@pendragon.ideasonboard.com>
- <20200525074335.grnjvdjnipq5g3kf@rcn-XPS-13-9360> <20200526014444.GB6179@pendragon.ideasonboard.com>
- <CAMuHMdXinhY13us9rt9h7EvrT_8zhnQg6tmOBtA0nEQ=1G1O7Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdXinhY13us9rt9h7EvrT_8zhnQg6tmOBtA0nEQ=1G1O7Q@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 27 May 2020 11:29:51 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJgQajnKdQ1Bt6YFX04fX0VGz44Q3kBdLLR04OzhWrH5A@mail.gmail.com>
-Message-ID: <CAL_JsqJgQajnKdQ1Bt6YFX04fX0VGz44Q3kBdLLR04OzhWrH5A@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt: convert
- to yaml
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
+ <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com> <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
+ <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org> <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+In-Reply-To: <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 27 May 2020 10:31:55 -0700
+Message-ID: <CAGETcx_fuS8cmTwCbZ024gqWOmeAc_ytZZ2P6yReBi7Y9O+qMQ@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
+ set DDR bandwidth
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wei Xu <xuwei5@hisilicon.com>
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 26, 2020 at 1:03 AM Geert Uytterhoeven <geert@linux-m68k.org> w=
-rote:
+On Wed, May 27, 2020 at 8:38 AM Rob Clark <robdclark@gmail.com> wrote:
 >
-> Hi Laurent,
->
-> On Tue, May 26, 2020 at 3:44 AM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> > On Mon, May 25, 2020 at 09:43:35AM +0200, Ricardo Ca=C3=B1uelo wrote:
-> > > On jue 14-05-2020 18:22:39, Laurent Pinchart wrote:
-> > > > > If we want to be more strict and require the definition of all th=
-e
-> > > > > supplies, there will be many more DTs changes in the series, and =
-I'm not
-> > > > > sure I'll be able to do that in a reasonable amount of time. I'm =
-looking
-> > > > > at them and it's not always clear which regulators to use or if t=
-hey are
-> > > > > even defined.
-> > > >
-> > > > We can decouple the two though (I think). The bindings should refle=
-ct
-> > > > what we consider right, and the dts files could be fixed on top.
-> > >
-> > > Do you have a suggestion on how to do this? If we decouple the two
-> > > tasks most of the work would be searching for DTs to fix and finding =
-a
-> > > way to fix each one of them, and unless I do this _before_ the bindin=
-g
-> > > conversion I'll get a lot of dtbs_check errors.
+> On Wed, May 27, 2020 at 1:47 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
 > >
-> > Rob should answer this question as it will be his decision, but I've
-> > personally never considered non-compliant DT sources to be an obstacle
-> > to bindings conversion to YAML. The DT sources should be fixed, but I
-> > don't see it as a prerequisite (although it's a good practice).
+> > + more folks
+> >
+> > On 5/18/2020 9:55 PM, Rob Clark wrote:
+> > > On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> > >> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
+> > >>> This patches replaces the previously used static DDR vote and uses
+> > >>> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
+> > >>> GPU frequency.
+> > >>>
+> > >>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> > >>> ---
+> > >>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
+> > >>>   1 file changed, 1 insertion(+), 5 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > >>> index 2d8124b..79433d3 100644
+> > >>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > >>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > >>> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+> > >>>
+> > >>>        gmu->freq = gmu->gpu_freqs[perf_index];
+> > >>>
+> > >>> -     /*
+> > >>> -      * Eventually we will want to scale the path vote with the frequency but
+> > >>> -      * for now leave it at max so that the performance is nominal.
+> > >>> -      */
+> > >>> -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> > >>> +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
+> > >>>   }
+> > >> This adds an implicit requirement that all targets need bandwidth settings
+> > >> defined in the OPP or they won't get a bus vote at all. I would prefer that
+> > >> there be an default escape valve but if not you'll need to add
+> > >> bandwidth values for the sdm845 OPP that target doesn't regress.
+> > >>
+> > > it looks like we could maybe do something like:
+> > >
+> > >    ret = dev_pm_opp_set_bw(...);
+> > >    if (ret) {
+> > >        dev_warn_once(dev, "no bandwidth settings");
+> > >        icc_set_bw(...);
+> > >    }
+> > >
+> > > ?
+> > >
+> > > BR,
+> > > -R
+> >
+> > There is a bit of an issue here - Looks like its not possible to two icc
+> > handles to the same path.  Its causing double enumeration of the paths
+> > in the icc core and messing up path votes. With [1] Since opp/core
+> > already gets a handle to the icc path as part of table add,  drm/msm
+> > could do either
 
-There's currently no requirement that binding schema don't introduce
-warnings in dts files. That should change when/if we get to a warning
-free state (probably per platform/family). I don't think we're close
-on any platform? (If we are, I'd like to start tracking that). It is
-good to pay attention to the warnings you get though as the schema may
-not be doing what you expect or the binding really doesn't match
-reality.
+Are you sure this is the real issue? I'd be surprised if this is a
+real limitation. And if it is, it either needs to be fixed in the ICC
+framework or OPP shouldn't be getting path handles by default (and
+maybe let the driver set the handles before using OPP APIs to change
+BW). I'd lean towards the former.
 
-> I do my best to avoid introducing regressions when the binding conversion=
-s
-> go upstream.
+> > a) Conditionally enumerate gpu->icc_path handle only when pm/opp core
+> > has not got the icc path handle. I could use something like [2] to
+> > determine if should initialize gpu->icc_path*
 
-Meaning you fix the dts files or massage the schema to match? If we
-just adjust schema to match, what's the point in this effort? We
-should find things wrong or ill defined.
+This seems like a bandaid. Let's fix it correctly in ICC framework or
+OPP framework.
 
-Rob
+> > b) Add peak-opp-configs in 845 dt and mandate all future versions to use
+> > this bindings. With this, I can remove gpu->icc_path from msm/drm
+> > completely and only rely on opp/core for bw voting.
+
+I don't know what you mean by "peak-opp-configs" but I guess you are
+referring to some kind of DT flag to say if you should vote for BW
+directly or use the OPP framework? If so, I'm pretty sure that won't
+fly. That's an OS implementation specific flag.
+
+-Saravana
