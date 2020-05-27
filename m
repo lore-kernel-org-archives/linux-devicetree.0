@@ -2,279 +2,129 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41348C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E51EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06F1520C56
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:59:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xrFHOtnA"
+	by mail.kernel.org (Postfix) with ESMTP id 6503320EDD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgE0H7s (ORCPT
+        id S1729378AbgE0IA7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 03:59:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbgE0H7s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 03:59:48 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D192BC061A0F
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 00:59:47 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id b13so8158820uav.3
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 00:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nC1TMqfprJ4W4XcfqrgFpbNgqAseys6jy1vlJXxtKz4=;
-        b=xrFHOtnACP+26w28xn0jWdYc4q+twRA4nYNBqq+GxOcK4CrGmCUxX4ODa3YOt0hVC2
-         qyL+r4oS5uYdSJM5RzfwlXajcKD1oZF94NYLP8mj4bk17zda9J1/o5eZd4fkMol6jSv1
-         CbzOlHuBw945vXlVLyqw4cLeH4v/OONzWRkHZtsOuQrw2sfM8lv+nzyMgcNV3G9MNUsz
-         visEScsBVRyt3WXAmviPU9c2tM/gIcyMgIS65Wnl4nNKXeFyzSV7w7atguhOFZZRn/0W
-         Y0HhZ+clpnI54kbpYREw24lnjm/Z7GqeQ+NuWSx3K7KjoOCRBVSpu0iGJLLLzpwjjnkm
-         tZCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nC1TMqfprJ4W4XcfqrgFpbNgqAseys6jy1vlJXxtKz4=;
-        b=JgYJouiEihwKfV58jqmjK+KryOnUtRso4JXDtXOBwNIpri4r6jwQkWsuNIouRm3j2A
-         I6iyDlyMfrue8Nf8XYaYbXpRAo4HNU5HAM2ttpoubJtrNR+S0gTEL7H/ssvxt0A0zPnT
-         cvxTi/GG1mFZwGj4r1o0zNGoHd/LIamWQowKAG/C//ptr7IHurSvzczr3SMW1JsdC3WW
-         UvN613M6HiBaKK3+2tEGCZNWJq1/nheaZM0b3TNzdFGyvjql80zSwbGn/r3K1BOhykf1
-         S5Qn2EcwqNHwcCzyLtK/4mvMQdHhjt5OtYZ2nTTFjButTh0kC6H7Gz5J/cml6AYK4jLN
-         HxHA==
-X-Gm-Message-State: AOAM531bCC5kItaU2dFZZcAlXpAaCkhZsWt/He9OCMp+plCdxItKiyiR
-        qLWl0z1aU74CFX8cpcsNl2oQSWg7RuWIQXpF2H+32g==
-X-Google-Smtp-Source: ABdhPJwlzabapp6LAdlMzLDMwiqPOJn6VaWANOgPljKotK2/jimNwANqOCumpZkJwt52NDYrLCy2/v8KD+hGOLTzLOE=
-X-Received: by 2002:ab0:13f2:: with SMTP id n47mr3757389uae.129.1590566386824;
- Wed, 27 May 2020 00:59:46 -0700 (PDT)
+        Wed, 27 May 2020 04:00:59 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:59933 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729402AbgE0IA6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 04:00:58 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 26CED200013;
+        Wed, 27 May 2020 08:00:52 +0000 (UTC)
+Date:   Wed, 27 May 2020 10:00:50 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v5 07/21] mtd: rawnand: Create a new enumeration to
+ describe OOB placement
+Message-ID: <20200527100050.7e54713a@xps13>
+In-Reply-To: <20200527003904.362e59e4@collabora.com>
+References: <20200526195633.11543-1-miquel.raynal@bootlin.com>
+        <20200526195633.11543-8-miquel.raynal@bootlin.com>
+        <20200527003904.362e59e4@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200521091356.2211020-1-lkundrak@v3.sk> <20200521091356.2211020-2-lkundrak@v3.sk>
-In-Reply-To: <20200521091356.2211020-2-lkundrak@v3.sk>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 27 May 2020 09:59:10 +0200
-Message-ID: <CAPDyKFogpp+9d44Dgc8gXmeULj2CxoUzo4EhnLp+=_1YcvXT-g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: mmc: Convert sdhci-pxa to json-schema
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 May 2020 at 11:14, Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> Convert the sdhci-pxa binding to DT schema format using json-schema.
->
-> At the same time, fix a couple of issues with the examples discovered by
-> the validation tool -- a semicolon instead of a comma and wrong node names.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Hi Boris,
 
-Rob, are you fine with this v2? I am intending to queue it up via my
-mmc tree, unless you want to pick it?
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 27 May
+2020 00:39:04 +0200:
 
-Kind regards
-Uffe
+> On Tue, 26 May 2020 21:56:19 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+> > There is currently a confusion between the ECC type/mode/provider
+> > (eg. hardware, software, on-die or none) and the ECC bytes placement.
+> > 
+> > Create a new enumeration to describe this placement.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > ---
+> >  drivers/mtd/nand/raw/nand_base.c |  4 ++++
+> >  include/linux/mtd/rawnand.h      | 12 ++++++++++++
+> >  2 files changed, 16 insertions(+)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> > index ef70ca0828c3..a4470a19c805 100644
+> > --- a/drivers/mtd/nand/raw/nand_base.c
+> > +++ b/drivers/mtd/nand/raw/nand_base.c
+> > @@ -5018,6 +5018,10 @@ static const char * const nand_ecc_modes[] = {
+> >  	[NAND_ECC_ON_DIE]	= "on-die",
+> >  };
+> >  
+> > +static const char * const nand_ecc_placement[] = {
+> > +	[NAND_ECC_PLACEMENT_INTERLEAVED] = "interleaved",
+> > +};
+> > +
+> >  static int of_get_nand_ecc_mode(struct device_node *np)
+> >  {
+> >  	const char *pm;
+> > diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+> > index 8187056dd3a0..6eb4d91b07eb 100644
+> > --- a/include/linux/mtd/rawnand.h
+> > +++ b/include/linux/mtd/rawnand.h
+> > @@ -92,6 +92,18 @@ enum nand_ecc_mode {
+> >  	NAND_ECC_ON_DIE,
+> >  };
+> >  
+> > +/**
+> > + * enum nand_ecc_placement - NAND ECC placement
+> > + * @NAND_ECC_PLACEMENT_FREE: The driver can decide where to put ECC bytes.  
+> 
+> Can we name that one UNDEFINED instead of FREE, and it's not really the
+> driver that decides (unless you have a choice or use SW ECC), more the ECC
+> engine itself.
 
->
-> ---
-> Changes since v1:
-> - move reg-names items: from the conditional to main properties:, only
->   specify maxItems and minItems in conditional branches
-> - Specify minItems and maxItems in properties/reg instad of on
->   conditional branchs
-> - Add default GPL-2.0-only license tag
-> - Fill in maintainers from MAINTAINERS file
->
->  .../devicetree/bindings/mmc/sdhci-pxa.txt     |  50 ---------
->  .../devicetree/bindings/mmc/sdhci-pxa.yaml    | 103 ++++++++++++++++++
->  2 files changed, 103 insertions(+), 50 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
-> deleted file mode 100644
-> index 3d1b449d6097..000000000000
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
-> +++ /dev/null
-> @@ -1,50 +0,0 @@
-> -* Marvell sdhci-pxa v2/v3 controller
-> -
-> -This file documents differences between the core properties in mmc.txt
-> -and the properties used by the sdhci-pxav2 and sdhci-pxav3 drivers.
-> -
-> -Required properties:
-> -- compatible: Should be "mrvl,pxav2-mmc", "mrvl,pxav3-mmc" or
-> -  "marvell,armada-380-sdhci".
-> -- reg:
-> -  * for "mrvl,pxav2-mmc" and "mrvl,pxav3-mmc", one register area for
-> -    the SDHCI registers.
-> -
-> -  * for "marvell,armada-380-sdhci", three register areas. The first
-> -    one for the SDHCI registers themselves, the second one for the
-> -    AXI/Mbus bridge registers of the SDHCI unit, the third one for the
-> -    SDIO3 Configuration register
-> -- reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
-> -  for "marvell,armada-380-sdhci"
-> -- clocks: Array of clocks required for SDHCI; requires at least one for
-> -    I/O clock.
-> -- clock-names: Array of names corresponding to clocks property; shall be
-> -    "io" for I/O clock and "core" for optional core clock.
-> -
-> -Optional properties:
-> -- mrvl,clk-delay-cycles: Specify a number of cycles to delay for tuning.
-> -
-> -Example:
-> -
-> -sdhci@d4280800 {
-> -       compatible = "mrvl,pxav3-mmc";
-> -       reg = <0xd4280800 0x800>;
-> -       bus-width = <8>;
-> -       interrupts = <27>;
-> -       clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
-> -       clock-names = "io", "core";
-> -       non-removable;
-> -       mrvl,clk-delay-cycles = <31>;
-> -};
-> -
-> -sdhci@d8000 {
-> -       compatible = "marvell,armada-380-sdhci";
-> -       reg-names = "sdhci", "mbus", "conf-sdio3";
-> -       reg = <0xd8000 0x1000>,
-> -               <0xdc000 0x100>;
-> -               <0x18454 0x4>;
-> -       interrupts = <0 25 0x4>;
-> -       clocks = <&gateclk 17>;
-> -       clock-names = "io";
-> -       mrvl,clk-delay-cycles = <0x1F>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
-> new file mode 100644
-> index 000000000000..27ea069aa5fc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
-> @@ -0,0 +1,103 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell PXA SDHCI v2/v3 bindings
-> +
-> +maintainers:
-> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> +  - Rob Herring <robh+dt@kernel.org>
-> +
-> +allOf:
-> +  - $ref: mmc-controller.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: marvell,armada-380-sdhci
-> +    then:
-> +      properties:
-> +        regs:
-> +          minItems: 3
-> +        reg-names:
-> +          minItems: 3
-> +      required:
-> +        - reg-names
-> +    else:
-> +      properties:
-> +        regs:
-> +          maxItems: 1
-> +        reg-names:
-> +          maxItems: 1
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mrvl,pxav2-mmc
-> +      - mrvl,pxav3-mmc
-> +      - marvell,armada-380-sdhci
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  reg-names:
-> +    items:
-> +      - const: sdhci
-> +      - const: mbus
-> +      - const: conf-sdio3
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: io
-> +      - const: core
-> +
-> +  mrvl,clk-delay-cycles:
-> +    description: Specify a number of cycles to delay for tuning.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/berlin2.h>
-> +    mmc@d4280800 {
-> +        compatible = "mrvl,pxav3-mmc";
-> +        reg = <0xd4280800 0x800>;
-> +        bus-width = <8>;
-> +        interrupts = <27>;
-> +        clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
-> +        clock-names = "io", "core";
-> +        non-removable;
-> +        mrvl,clk-delay-cycles = <31>;
-> +    };
-> +  - |
-> +    mmc@d8000 {
-> +        compatible = "marvell,armada-380-sdhci";
-> +        reg-names = "sdhci", "mbus", "conf-sdio3";
-> +        reg = <0xd8000 0x1000>,
-> +              <0xdc000 0x100>,
-> +              <0x18454 0x4>;
-> +        interrupts = <0 25 0x4>;
-> +        clocks = <&gateclk 17>;
-> +        clock-names = "io";
-> +        mrvl,clk-delay-cycles = <0x1F>;
-> +    };
-> +
-> +...
-> --
-> 2.26.2
->
+Ack.
+
+> 
+> > + *                           Default behavior is to put them at the end of the
+> > + *                           OOB area.  
+> 
+> I wouldn't even define a default behavior here, but instead add a value for
+> OOB/TAIL placement.
+
+This is for legacy reasons, maybe I should not say it is a default, but
+rather a common location (or say nothing).
+
+> 
+> > + * @NAND_ECC_PLACEMENT_INTERLEAVED: Syndrome layout: interleave data and OOB.  
+> 
+> 
+> 									     ^ECC bytes
+> 
+> > + */
+> > +enum nand_ecc_placement {
+> > +	NAND_ECC_PLACEMENT_FREE,
+> > +	NAND_ECC_PLACEMENT_INTERLEAVED,
+> > +};
+> > +
+> >  enum nand_ecc_algo {
+> >  	NAND_ECC_UNKNOWN,
+> >  	NAND_ECC_HAMMING,  
+> 
