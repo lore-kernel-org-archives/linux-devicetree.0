@@ -2,62 +2,120 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6B9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 00:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5EBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16EB520888
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 00:54:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="s9DR8aBc"
+	by mail.kernel.org (Postfix) with ESMTP id 5D556206F1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590542232;
+	bh=8l4JN0kpUN40ijrV7VPgvw+qnI1/iLBCBZ67DRjYRXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DGZuW6FptpsW2y/N2SbRdrmC9lQQdcFR0GIds83BSJSg65ivf3PC8uSkHTkX2u3QH
+	 qJQ4Yu0UoGG9Y/4TQYbQmPvNV2YYjCdCKr4QYQA7Xmt4mri6w0l5qWGuR8NWRS+spz
+	 mFCfq8nqp539AbVRKGy9bpauaT2x/HAuriltuwEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgE0Ayt (ORCPT
+        id S1728265AbgE0BRI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 20:54:49 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50884 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbgE0Ayt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 20:54:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=JJBJ5tzKiUCrYev+GO1lw1Nyc1phyUoroBz7fe1zVqU=; b=s9DR8aBcvEWW7DbcJbZly/BMHw
-        ycwkfbm8E8lSbW8ST8fHaMhmFGlFefu6WN8rT+Onm+YZFjmvnHAQkSGC1+JwFJKwOtCmc97wa55cN
-        9MsT+cjRpc2cs1EWxV9mwdWPHWKSWJ7SVPmmFLuufw6BpyOk5Lzz3iNDnXmk8m1dmybo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jdkLF-003LEW-FC; Wed, 27 May 2020 02:54:45 +0200
-Date:   Wed, 27 May 2020 02:54:45 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v3 4/4] net: dp83869: Add RGMII internal delay
- configuration
-Message-ID: <20200527005445.GG782807@lunn.ch>
-References: <20200526174716.14116-1-dmurphy@ti.com>
- <20200526174716.14116-5-dmurphy@ti.com>
+        Tue, 26 May 2020 21:17:08 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45302 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbgE0BRH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 21:17:07 -0400
+Received: by mail-il1-f196.google.com with SMTP id 9so3966026ilg.12;
+        Tue, 26 May 2020 18:17:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K2RpsvgqWdvk/VhLsXZfdJ8GJexHCmKIWzl61ljgxjU=;
+        b=trX2tcvJGNLZ3vRh6iUMNQJwZg3PAeZ767HnrSSHrL/ShjlrzlY1G6Ub35UFxmUFcp
+         CJAuzuINZAwP9zFwgGbo8Xq6ZaZQsegltK8J7BcqQPvjmFc48yB8NKhl6bimO77kjHS9
+         elJtWUizZ+rROzF9IrkOfyo46kvPefWOaljW9n5FIXU/ec4hnzklzD1tYV0sw0N0n0g8
+         zkrss0wCdeymyfezuwgcILTz6l0FdvSLVc7qzrv5VP5whFIEeli5ULjOtd1kDbjp7ZKQ
+         wvfCe6As6BzExlzRCW8wkOEeHq0qbDzfqtMdVWupix58FPPocHBvRybg2YfZxnqhzt5n
+         36eg==
+X-Gm-Message-State: AOAM533u3ObuLw99qB4rGR/It19jmk2Qi5MnlAR/G48ScIQM9+Oc4RW3
+        zc7bmCrLsxxREaOpVV7TfmCj+I0=
+X-Google-Smtp-Source: ABdhPJz9jOzb4M6JUeX67KjpLCWqMnC7X4U7KMu7WaisuKAW36Ms05pdr0FupZfHM0JMSMwZOAKTwg==
+X-Received: by 2002:a92:2a0d:: with SMTP id r13mr3597939ile.21.1590542225912;
+        Tue, 26 May 2020 18:17:05 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c62sm206186ill.62.2020.05.26.18.17.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 18:17:05 -0700 (PDT)
+Received: (nullmailer pid 817648 invoked by uid 1000);
+        Wed, 27 May 2020 01:17:04 -0000
+Date:   Tue, 26 May 2020 19:17:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/12] scripts/dtc: check: Add 10bit/slave i2c reg
+ flags support
+Message-ID: <20200527011704.GA808104@bogus>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526174716.14116-5-dmurphy@ti.com>
+In-Reply-To: <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +static int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500, 1750,
-> +				       2000, 2250, 2500, 2750, 3000, 3250,
-> +				       3500, 3750, 4000};
-> +
+On Wed, May 27, 2020 at 12:55:17AM +0300, Serge Semin wrote:
+> Recently the I2C-controllers slave interface support was added to the
+> kernel I2C subsystem. In this case Linux can be used as, for example,
+> a I2C EEPROM machine. See [1] for details. Other than instantiating
+> the EEPROM-slave device from user-space there is a way to declare the
+> device in dts. In this case firstly the I2C bus controller must support
+> the slave interface. Secondly I2C-slave sub-node of that controller
+> must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+> declared in [2]). That flag is declared as (1 << 30), which when set
+> makes dtc unhappy about too big address set for a I2C-slave:
+> 
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> 
+> Similar problem would have happened if we had set the 10-bit address
+> flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+> 
+> In order to fix the problem we suggest to alter the I2C-bus reg-check
+> algorithm, so one would be aware of the upper bits set. Normally if no
+> flag specified, the 7-bit address is expected in the "reg"-property.
+> If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+> performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+> 
+> [1] Documentation/i2c/slave-interface.rst
+> [2] include/dt-bindings/i2c/i2c.h
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> ---
+>  scripts/dtc/checks.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 
-You should make this const. Otherwise it takes up twice the space.
+I've lost track of who all I've said this to already for this issue, but 
+patches to dtc should be against upstream and a version of this has been 
+sent there already. But it seems they've lost interest in addressing the 
+review comments. So feel free to send another one. The same comment 
+applies here.
 
-    Andrew
+Rob
