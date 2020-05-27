@@ -2,217 +2,135 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67283C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279D7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4756E207CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590544148;
-	bh=PRfGitUSrfn8k2Z4gRtjn++4ZGpMz0ywxN2UDzywaqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CUbDsO3jL+CsGJucqMJ4vJBb7owkkgYppamCK5KiaNxtyFLBLykl+Xb0lY6jgaW56
-	 QY49n695EhN54Oq1DbzH1SPt5vztIpAucBrNQy/gjMDdn5fYRIICfs9SHXuh9aJRVW
-	 OhJkEkmu2nYmMp6ZqpY0r0TGH7AXXxYTxEZNrod4=
+	by mail.kernel.org (Postfix) with ESMTP id ECC5120787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 01:57:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XUpTR3U9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgE0BtF (ORCPT
+        id S1726222AbgE0B57 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 21:49:05 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35661 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgE0BtF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 21:49:05 -0400
-Received: by mail-io1-f66.google.com with SMTP id s18so10297518ioe.2;
-        Tue, 26 May 2020 18:49:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NpFq0R0aWjAOVLGwhQJ2XIanByWj7TpCd6S10cJEALk=;
-        b=ehLhdobTilPxhRKmxjuoc82vpr/YACLkJRS9VQ6rineCgdisQmKDlKtCc8XIwwCo5L
-         +5kXdJB5o8toyHqyDngXAF6NzPtcAAGCHtWf/bXIW6KVfNAy5gtGEN/OoK0SDk0shMGV
-         bJ3OpRp3zdIcdUOzEyAudcJ4+0wIjHvaOLVyGLxJmFtKSZcoKcpr/r0F2vbT0Rw5JiEu
-         2mandnBPZc5tdPcwUAGQLzvXeMrRsayxK9Ac9eZtBGqwKGdVWCkyK8MCUmz19ragAvHj
-         8To4k12ii+TznF93il90DrMTlluk9E1UK7vBK16naLUN9afYU9QiEt6P8+yPFvggbSe2
-         3psw==
-X-Gm-Message-State: AOAM530ckeTaJlQtf7fF5+TvPuBWFTLH0mPZJznlPaLoFx/QjnHWEiz3
-        RaQ/Ady1lFATlOtcmp8gWZV2Cbk=
-X-Google-Smtp-Source: ABdhPJwnUd9gtPnPbiK2tnmPcj4pMtkePhPFVkdrcrLBI+LLU1Mcp7uTqwffmLKF1kyjD8RFzL2RBQ==
-X-Received: by 2002:a6b:5c19:: with SMTP id z25mr2942857ioh.119.1590544143956;
-        Tue, 26 May 2020 18:49:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h23sm633451ioj.39.2020.05.26.18.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 18:49:03 -0700 (PDT)
-Received: (nullmailer pid 874370 invoked by uid 1000);
-        Wed, 27 May 2020 01:49:02 -0000
-Date:   Tue, 26 May 2020 19:49:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-Message-ID: <20200527014902.GA859634@bogus>
-References: <20200526164652.2331-1-dmurphy@ti.com>
- <20200526164652.2331-2-dmurphy@ti.com>
+        Tue, 26 May 2020 21:57:59 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:47631 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725271AbgE0B57 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 21:57:59 -0400
+X-UUID: 2d4d4ee9b12f44809e2b4bc452fe3a49-20200527
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ZKrqKJ1L5uEpCnzzklpqeT5Qk2zFyQCkc/heYv9ITnM=;
+        b=XUpTR3U9I2ql6YbBD1AN1sf+a1IszagSd55v/wuip50S9/YIF8rA9dVIwyETT7qsAB4UioxxjiJl2jorkFc3bTQscHdkOM5PYG3KJALZhcLw5rs7aCpEHTRlLV/5R55JuwVqICKGca09ozObWc59DmiNt3f5/kisqeSm05yxpfA=;
+X-UUID: 2d4d4ee9b12f44809e2b4bc452fe3a49-20200527
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 938018215; Wed, 27 May 2020 09:57:51 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 27 May
+ 2020 09:53:46 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 27 May 2020 09:53:45 +0800
+Message-ID: <1590544320.12671.10.camel@mhfsdcap03>
+Subject: Re: [PATCH v8 06/14] media: platform: Improve the implementation of
+ the system PM ops
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
+        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
+        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>
+Date:   Wed, 27 May 2020 09:52:00 +0800
+In-Reply-To: <20200521153257.GF209565@chromium.org>
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+         <20200403094033.8288-7-xia.jiang@mediatek.com>
+         <20200521153257.GF209565@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526164652.2331-2-dmurphy@ti.com>
+X-TM-SNTS-SMTP: 31B56BA102CB296BF42975F3308432FBE35B5776613BCF49476A31BDC9D305D32000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:46:37AM -0500, Dan Murphy wrote:
-> Add DT bindings for the LEDs multicolor class framework.
-> Add multicolor ID to the color ID list for device tree bindings.
-> 
-> CC: Rob Herring <robh@kernel.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../bindings/leds/leds-class-multicolor.yaml  | 71 +++++++++++++++++++
->  drivers/leds/led-core.c                       |  1 +
->  include/dt-bindings/leds/common.h             |  3 +-
->  3 files changed, 74 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> new file mode 100644
-> index 000000000000..fa6ea8e5c46b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: GPL-2.0
+T24gVGh1LCAyMDIwLTA1LTIxIGF0IDE1OjMyICswMDAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
+SGkgWGlhLA0KPiANCj4gT24gRnJpLCBBcHIgMDMsIDIwMjAgYXQgMDU6NDA6MjVQTSArMDgwMCwg
+WGlhIEppYW5nIHdyb3RlOg0KPiA+IENhbmNlbCByZXNldCBodyBvcGVyYXRpb24gaW4gc3VzcGVu
+ZCBhbmQgcmVzdW1lIGZ1bmN0aW9uIGJlY2F1c2UgdGhpcw0KPiA+IHdpbGwgYmUgZG9uZSBpbiBk
+ZXZpY2VfcnVuKCkuDQo+IA0KPiBUaGlzIGFuZC4uLg0KPiANCj4gPiBBZGQgc3Bpbl9sb2NrIGFu
+ZCB1bmxvY2sgb3BlcmF0aW9uIGluIGlycSBhbmQgcmVzdW1lIGZ1bmN0aW9uIHRvIG1ha2UNCj4g
+PiBzdXJlIHRoYXQgdGhlIGN1cnJlbnQgZnJhbWUgaXMgcHJvY2Vzc2VkIGNvbXBsZXRlbHkgYmVm
+b3JlIHN1c3BlbmQuDQo+IA0KPiAuLi50aGlzIGFyZSB0d28gc2VwYXJhdGUgY2hhbmdlcy4gUGxl
+YXNlIHNwbGl0Lg0KPiANCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWEgSmlhbmcgPHhpYS5q
+aWFuZ0BtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+bXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jIHwgMTEgKysrKysrKysrLS0NCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMgYi9k
+cml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KPiA+IGluZGV4
+IGRkNWNhZGQxMDFlZi4uMmZhMzcxMWZkYzliIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWVk
+aWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQo+ID4gKysrIGIvZHJpdmVycy9t
+ZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMNCj4gPiBAQCAtOTExLDYgKzkx
+MSw4IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBtdGtfanBlZ19kZWNfaXJxKGludCBpcnEsIHZvaWQg
+KnByaXYpDQo+ID4gIAl1MzIgZGVjX3JldDsNCj4gPiAgCWludCBpOw0KPiA+ICANCj4gPiArCXNw
+aW5fbG9jaygmanBlZy0+aHdfbG9jayk7DQo+ID4gKw0KPiANCj4gbml0OiBGb3IgY29uc2lzdGVu
+Y3ksIGl0IGlzIHJlY29tbWVuZGVkIHRvIGFsd2F5cyB1c2UgdGhlIHNhbWUsIGkuZS4gdGhlDQo+
+IHN0cm9uZ2VzdCwgc3Bpbl8odW4pbG9ja18gcHJpbWl0aXZlcyB3aGVuIG9wZXJhdGluZyBvbiB0
+aGUgc2FtZSBzcGlubG9jay4NCj4gSW4gdGhpcyBjYXNlIGl0IHdvdWxkIGJlIHRoZSBpcnFzYXZl
+KHJlc3RvcmUpIHZhcmlhbnRzLg0KPiANCj4gPiAgCWRlY19yZXQgPSBtdGtfanBlZ19kZWNfZ2V0
+X2ludF9zdGF0dXMoanBlZy0+ZGVjX3JlZ19iYXNlKTsNCj4gPiAgCWRlY19pcnFfcmV0ID0gbXRr
+X2pwZWdfZGVjX2VudW1fcmVzdWx0KGRlY19yZXQpOw0KPiA+ICAJY3R4ID0gdjRsMl9tMm1fZ2V0
+X2N1cnJfcHJpdihqcGVnLT5tMm1fZGV2KTsNCj4gPiBAQCAtOTQxLDYgKzk0Myw3IEBAIHN0YXRp
+YyBpcnFyZXR1cm5fdCBtdGtfanBlZ19kZWNfaXJxKGludCBpcnEsIHZvaWQgKnByaXYpDQo+ID4g
+IAl2NGwyX20ybV9idWZfZG9uZShzcmNfYnVmLCBidWZfc3RhdGUpOw0KPiA+ICAJdjRsMl9tMm1f
+YnVmX2RvbmUoZHN0X2J1ZiwgYnVmX3N0YXRlKTsNCj4gPiAgCXY0bDJfbTJtX2pvYl9maW5pc2go
+anBlZy0+bTJtX2RldiwgY3R4LT5maC5tMm1fY3R4KTsNCj4gPiArCXNwaW5fdW5sb2NrKCZqcGVn
+LT5od19sb2NrKTsNCj4gPiAgCXBtX3J1bnRpbWVfcHV0X3N5bmMoY3R4LT5qcGVnLT5kZXYpOw0K
+PiA+ICAJcmV0dXJuIElSUV9IQU5ETEVEOw0KPiA+ICB9DQo+ID4gQEAgLTExOTEsNyArMTE5NCw2
+IEBAIHN0YXRpYyBfX21heWJlX3VudXNlZCBpbnQgbXRrX2pwZWdfcG1fc3VzcGVuZChzdHJ1Y3Qg
+ZGV2aWNlICpkZXYpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBtdGtfanBlZ19kZXYgKmpwZWcgPSBk
+ZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiAgDQo+ID4gLQltdGtfanBlZ19kZWNfcmVzZXQoanBl
+Zy0+ZGVjX3JlZ19iYXNlKTsNCj4gPiAgCW10a19qcGVnX2Nsa19vZmYoanBlZyk7DQo+ID4gIA0K
+PiA+ICAJcmV0dXJuIDA7DQo+ID4gQEAgLTEyMDIsMTkgKzEyMDQsMjQgQEAgc3RhdGljIF9fbWF5
+YmVfdW51c2VkIGludCBtdGtfanBlZ19wbV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+
+ICAJc3RydWN0IG10a19qcGVnX2RldiAqanBlZyA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+
+ICANCj4gPiAgCW10a19qcGVnX2Nsa19vbihqcGVnKTsNCj4gPiAtCW10a19qcGVnX2RlY19yZXNl
+dChqcGVnLT5kZWNfcmVnX2Jhc2UpOw0KPiA+ICANCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+
+ID4gIA0KPiA+ICBzdGF0aWMgX19tYXliZV91bnVzZWQgaW50IG10a19qcGVnX3N1c3BlbmQoc3Ry
+dWN0IGRldmljZSAqZGV2KQ0KPiA+ICB7DQo+ID4gKwlzdHJ1Y3QgbXRrX2pwZWdfZGV2ICpqcGVn
+ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+ID4gKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiA+
+ICAJaW50IHJldDsNCj4gPiAgDQo+ID4gIAlpZiAocG1fcnVudGltZV9zdXNwZW5kZWQoZGV2KSkN
+Cj4gPiAgCQlyZXR1cm4gMDsNCj4gPiAgDQo+ID4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmanBlZy0+
+aHdfbG9jaywgZmxhZ3MpOw0KPiANCj4gV2hhdCBkb2VzIHRoaXMgc3BpbmxvY2sgcHJvdGVjdCB1
+cyBmcm9tPyBJIGNhbiBzZWUgdGhhdCBpdCB3b3VsZCBwcmV2ZW50DQo+IHRoZSBpbnRlcnJ1cHQg
+aGFuZGxlciBmcm9tIGJlaW5nIGNhbGxlZCwgYnV0IGlzIGl0IG9rYXkgdG8gc3VzcGVuZCB0aGUN
+Cj4gc3lzdGVtIHdpdGhvdXQgaGFuZGxpbmcgdGhlIGludGVycnVwdD8NCkRlYXIgVG9tYXN6LA0K
+SSBtZWFuIHRoYXQgaWYgY3VycmVudCBpbWFnZSBpcyBwcm9jZXNzZWQgaW4gaXJxIGhhbmRsZXIs
+c3VzcGVuZA0KZnVuY3Rpb24gY2FuIG5vdCBnZXQgdGhlIGxvY2soaXQgd2FzIGxvY2tlZCBpbiBp
+cnEgaGFuZGxlcikuU2hvdWxkIEkNCm1vdmUgdGhlIHNwaW5fbG9ja19pcnFzYXZlKCZqcGVnLT5o
+d19sb2NrLCBmbGFncykgdG8gdGhlIHN0YXJ0IGxvY2F0aW9uDQpvZiBzdXNwZW5kIGZ1bmN0aW9u
+IG9yIHVzZSB3YWl0X2V2ZW50X3RpbWVvdXQoKSB0byBoYW5kbGUgdGhlIGludGVycnVwdA0KYmVm
+b3JlIHN1c3BlbmQ/DQoNCkJlc3QgUmVnYXJkcywNClhpYSBKaWFuZw0KPiANCj4gPiArDQo+ID4g
+IAlyZXQgPSBtdGtfanBlZ19wbV9zdXNwZW5kKGRldik7DQo+ID4gKw0KPiANCj4gTG9va2luZyBh
+dCB0aGUgaW1wbGVtZW50YXRpb24gb2YgbXRrX2pwZWdfcG1fc3VzcGVuZCgpLCBhbGwgaXQgZG9l
+cyBpcw0KPiBkaXNhYmxpbmcgdGhlIGNsb2NrLiBIb3cgZG8gd2UgbWFrZSBzdXJlIHRoYXQgdGhl
+cmUgaXMgbm8gZnJhbWUgY3VycmVudGx5DQo+IGJlaW5nIHByb2Nlc3NlZCBieSB0aGUgaGFyZHdh
+cmU/DQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KDQo=
 
-Dual license new bindings please.
-
-GPL-2.0-only OR BSD-2-Clause
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common properties for the multicolor LED class.
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  Bindings for multi color LEDs show how to describe current outputs of
-> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-> +  modules. This is achieved by adding multi-led nodes layer to the
-> +  monochrome LED bindings.
-> +  The nodes and properties defined in this document are unique to the multicolor
-> +  LED class.  Common LED nodes and properties are inherited from the common.txt
-> +  within this documentation directory.
-> +
-> +properties:
-> +  color:
-> +    description: |
-> +      For multicolor LED support this property should be defined as
-> +      LED_COLOR_ID_MULTI and further definition can be found in
-> +      include/linux/leds/common.h.
-
-This should have:
-
-const: X  # LED_COLOR_ID_MULTI
-
-It can't use the define, so you have to use the value.
-
-> +
-> +required:
-> +  - color
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/leds/common.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        led-controller@14 {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          compatible = "ti,lp5009";
-> +          reg = <0x14>;
-> +
-> +          multi-led@1 {
-
-Define $nodename must be 'multi-led(@[0-9a-f]+)?'
-
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            reg = <1>;
-> +            color = <LED_COLOR_ID_MULTI>;
-> +            function = LED_FUNCTION_CHARGING;
-> +
-> +            led@0 {
-
-Then the schema should define child nodes named 'led'.
-
-> +              reg = <0>;
-> +              color = <LED_COLOR_ID_RED>;
-
-I assume in this case 'reg' and 'color' need to be defined as required?
-
-> +            };
-> +
-> +            led@1 {
-> +              reg = <1>;
-> +              color = <LED_COLOR_ID_GREEN>;
-> +            };
-> +
-> +            led@2 {
-> +              reg = <2>;
-> +              color = <LED_COLOR_ID_BLUE>;
-> +            };
-> +          };
-> +        };
-> +    };
-> +
-> +additionalProperties: false
-> +...
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-
-This isn't a binding file. Belongs in another patch.
-
-> index f1f718dbe0f8..846248a0693d 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
->  	[LED_COLOR_ID_VIOLET] = "violet",
->  	[LED_COLOR_ID_YELLOW] = "yellow",
->  	[LED_COLOR_ID_IR] = "ir",
-> +	[LED_COLOR_ID_MULTI] = "multicolor",
->  };
->  EXPORT_SYMBOL_GPL(led_colors);
->  
-> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-> index 0ce7dfc00dcb..a463ce6a8794 100644
-> --- a/include/dt-bindings/leds/common.h
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -30,7 +30,8 @@
->  #define LED_COLOR_ID_VIOLET	5
->  #define LED_COLOR_ID_YELLOW	6
->  #define LED_COLOR_ID_IR		7
-> -#define LED_COLOR_ID_MAX	8
-> +#define LED_COLOR_ID_MULTI	8
-> +#define LED_COLOR_ID_MAX	9
->  
->  /* Standard LED functions */
->  /* Keyboard LEDs, usually it would be input4::capslock etc. */
-> -- 
-> 2.25.1
-> 
