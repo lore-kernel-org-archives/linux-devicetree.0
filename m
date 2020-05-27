@@ -2,106 +2,116 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD2BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 10:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820A2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 10:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD8A62075F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 10:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CFD2075F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 10:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BYrPVPO0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlA8n5lt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbgE0KnC (ORCPT
+        id S1728536AbgE0Kqb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 06:43:02 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:34648 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729354AbgE0KnB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 06:43:01 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4B5D6C0519;
-        Wed, 27 May 2020 10:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1590576181; bh=c8cXuZnPUVhDrm8TnZwka2SdniDodmtUoYnu1RdfkT8=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=BYrPVPO02B5iGjtVTiNucEtRVgT09AbX2i5B5CAiriLpq3U+XuXsI87GxIjK2XUui
-         LZ+zpeyFG1abmoTpldPEeCwAqDQEjlFrlmTDhxJ5YcUTlN+wSsww6j/gEB+adHleG3
-         CmSavSgSi1kWVcbjvQmrY760lJYS7soiyKPFnOLOjRTdClelVWWiyZ6n9aqx6gaPRZ
-         2WYu9L0TTBDtMoM0eIqLb8YunOAxCTDbNOuqsrYnncVrRpTAyd/Gk15Gbsw3V1mqWP
-         FE81z+SFEgi4l9onS7Jnj6LE4imRV9ism0+RV5VSKwnrN236+ET1gLJFLryqm3gMoy
-         Twu1DPkXoG9JQ==
-Received: from tejas-VirtualBox (joglekar-e7480.internal.synopsys.com [10.146.20.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPSA id D6C91A005C;
-        Wed, 27 May 2020 10:42:57 +0000 (UTC)
-Received: by tejas-VirtualBox (sSMTP sendmail emulation); Wed, 27 May 2020 16:10:55 +0530
-Date:   Wed, 27 May 2020 16:10:55 +0530
-Message-Id: <d91b768b3827fce611ba052aa1bcca19ac09fd75.1590415123.git.joglekar@synopsys.com>
-In-Reply-To: <cover.1590415123.git.joglekar@synopsys.com>
-References: <cover.1590415123.git.joglekar@synopsys.com>
-X-SNPS-Relay: synopsys.com
-From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Subject: [PATCH v3 1/4] dt-bindings: usb: Add documentation for SG trb cache size quirk
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     John Youn <John.Youn@synopsys.com>
+        Wed, 27 May 2020 06:46:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbgE0Kqa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 06:46:30 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B924C061A0F;
+        Wed, 27 May 2020 03:46:30 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id j3so23445007ilk.11;
+        Wed, 27 May 2020 03:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jV5qqlg6B+ZoGgVeaw+flUZDliIqHLZTV9SrChni80o=;
+        b=mlA8n5ltaxaXU5Jzq9gQDdiAdLm7WHNtzEPDDmBFHHI5aY7Pd0ha50AJnDMF9b5/Xm
+         Z2ZZRZAcqCMtYbCKXy3nceVZD3RnzhXQfF+FLoOHKH8bFRYpXfHoR4oHaf9m4htN+X4B
+         kHOeUbi0Es6U1y5RBtZATXe0Vo/gA2fGm6nOOsrDYa+k5mwPj63ViOoY1u9rdK/cGq+8
+         TNYJXlgXwwoTT32s8D0Fll3n5Ele44yw479wCHp13y6U/wV9kEPFVAgD6FH+dQ8sbV4q
+         7hsp0Qisu5/+NRQsczixdYHaJcgLXXiFIaskLiZHmpQiPYObZI0OhYc25SDBa5uqdRto
+         J8OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jV5qqlg6B+ZoGgVeaw+flUZDliIqHLZTV9SrChni80o=;
+        b=N5L3jLQjaFij+uE3WYhoqmzNVPi6mofdTAXFBdxgJIbqks5h+NYPwKJjAnZm5wsHWA
+         Do6OUwR2vIvh5RWr0h+VHdr0Itme56VEu3gln0ppNLNUfLf7viLuVw2jS7uHfum79bAo
+         91WRYLjysewqTDqkSHKySBrHGiHi1C9pU/qAfwituWNx7PILmC20JnqJexIZjlJCcRJC
+         wtcLfZwmUev1MOKiUPPB60mnoplJ8V5GRbAmhohwtJE7cFMEJknXI5M5jC7yOFpeDhRD
+         c+WOmU4uqN5SKOWoPGtTgPViHg7waqDNQfJxAxCAKSNW5LHAdogdTVXwJNJkr4Qju2EY
+         zcwg==
+X-Gm-Message-State: AOAM532bxiT9wyzBGCAVfNh6XIVUb8Lnkb54wNCwVsIeMd51JUDCeW5c
+        1xLXBsRoaBQLVyWYI/x2AyMsYleEADXzFO+SyaY=
+X-Google-Smtp-Source: ABdhPJxI8DmrhVOnjKvhDVgxWJ8+FIMyXLu/ryLZET7ClD2+54nQb9OTeBYG7x2X1lNxLOkc/LfdMlqtuwE8cn4F3ds=
+X-Received: by 2002:a92:dc85:: with SMTP id c5mr4964053iln.270.1590576390035;
+ Wed, 27 May 2020 03:46:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+ <1590564453-24499-9-git-send-email-dillon.minfei@gmail.com> <20200527095109.GA5308@sirena.org.uk>
+In-Reply-To: <20200527095109.GA5308@sirena.org.uk>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Wed, 27 May 2020 18:45:53 +0800
+Message-ID: <CAL9mu0JA=XRTj_HONQGtj74X05TAV0__dW2At0AAeymwNvJhEw@mail.gmail.com>
+Subject: Re: [PATCH v6 8/9] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
+ support for stm32f4
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Hua Dillon <dillonhua@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds the documentation for sgl-trb-cache-size-quirk, and
-snps,sgl-trb-cache-size-quirk property. These when set enables the
-quirk for XHCI driver for consolidation of sg list into a temporary
-buffer when small buffer sizes are scattered over the sg list not
-making up to MPS or total transfer size within TRB cache size with
-Synopsys xHC.
+On Wed, May 27, 2020 at 5:51 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, May 27, 2020 at 03:27:32PM +0800, dillon.minfei@gmail.com wrote:
+> > From: dillon min <dillon.minfei@gmail.com>
+> >
+> > in l3gd20 driver startup, there is a setup failed error return from
+> > stm32 spi driver
+>
+> Please do not submit new versions of already applied patches, please
+> submit incremental updates to the existing code.  Modifying existing
+> commits creates problems for other users building on top of those
+> commits so it's best practice to only change pubished git commits if
+> absolutely essential.
 
-Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
----
- Documentation/devicetree/bindings/usb/dwc3.txt     | 4 ++++
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
- 2 files changed, 7 insertions(+)
+Hi Mark,
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index d03edf9d3935..0fcbaa51f66e 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -102,6 +102,10 @@ Optional properties:
- 			this and tx-thr-num-pkt-prd to a valid, non-zero value
- 			1-16 (DWC_usb31 programming guide section 1.2.3) to
- 			enable periodic ESS TX threshold.
-+ - snps,sgl-trb-cache-size-quirk: enable sg list consolidation - host mode
-+			only. Set to use SG buffers of at least MPS size
-+			by consolidating smaller SG buffers list into a
-+			single buffer.
- 
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index dc025f126d71..c53eb19ae67e 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -44,6 +44,9 @@ Optional properties:
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-   - imod-interval-ns: default interrupt moderation interval is 5000ns
-   - phys : see usb-hcd.yaml in the current directory
-+  - sgl-trb-cache-size-quirk: set if you need to consolidate sg list into a
-+    temporary buffer when small SG buffer sizes does not make upto MPS
-+    size or total transfer size across the TRB cache size.
- 
- additionally the properties from usb-hcd.yaml (in the current directory) are
- supported.
--- 
-2.11.0
+sorry, forget to remove these two patch from this submits, will not
+include it in later submits
+which ack other's review result.
 
+thanks.
+
+best regards
+
+Dillon,
