@@ -2,88 +2,162 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3419C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 19:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7CFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 19:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C394B207D3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 19:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B399220899
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 19:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590608009;
-	bh=Pq+rxZUMqNHTw/5lfv1Xy78GvJezZInVlXGQVAaZCVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xu4MPa9jasEihio46OezSdKCOtaJZxrFy7hhN7Krkc2M5uUiwtRzaw9uvYkodGJTz
-	 wzL9eyi8UOaY7tclc3BNtb7k9LeyHLXasupvyo0vXI/jwcC1oapJQSgO4pwX84Ni9w
-	 DVzGKyRih8vBl3aCcCCoTitdzgxq2Xonf8kIN6vk=
+	s=default; t=1590608145;
+	bh=fyfTwfnYczyhGudUu/tTRSlOPONlV1JmPl8Bq04dYlU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=y4lHq3npO1LZRebkF2zHnLvI2p99smwVh5X//InHohNt2XOquTkTukby18mUi6vOh
+	 agzz+StheffoUOSwnWR7Teidsc2WgwdYJ6Q530doPrM1YJspJ1GcA8TYXB39HkWstF
+	 i8BPZy1ArposTYuJHH22G+DRfgKivzuHYyno0qks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgE0Td3 (ORCPT
+        id S1726419AbgE0Tfp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 15:33:29 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34263 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgE0Td2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 15:33:28 -0400
-Received: by mail-io1-f67.google.com with SMTP id f3so27442628ioj.1;
-        Wed, 27 May 2020 12:33:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W3JSjQKNUTVDwq2jZfNyE8OlRvobHjfbDFjoKiJceQk=;
-        b=soe1lxQ6KCUovy/wCCVQfmdS/kkskn7vpqztuoVaxgE1rjOYrEcZGmxquccJPJvKdB
-         NXcOTZZnay7m9WbtzbVmZTk9IflsuIN6oPgCcz0hQn4Pf8WrbF27SZFbBEEN2Li1W2Iw
-         4vstvuRR8v6WlH3zC6P4MHzhO6EvHw0iF/vvbvsko9iqfvPA4zmsDIr5Q0ayy3SFz+O3
-         jFjj5mtHVHp+l0mhfaDaacibfKmlt5OLCvJoDaXZt3gSoQjsX60W0eeE6+bJHWyzwG1K
-         wDYfQVZwSbp7+BllR4/hbz1Nm3E32jwSpBiflwqLQXD7mwjjHuC5hQAdFsJJvNybp0ff
-         7GRw==
-X-Gm-Message-State: AOAM532xkYCF1X3aEQc3aLn7U0HHxSQKdrIhM2knikBK8UrqI+hFXFB7
-        EUqGlQnhAbAUB2f9/fKKzg==
-X-Google-Smtp-Source: ABdhPJxRWfw0O6HofA51rJdaC3d5All8AHRJ9jL/XoXkz1mv9qFlW+eJj6Id/+SWWdbo4NPhKdWj2w==
-X-Received: by 2002:a02:4d:: with SMTP id 74mr7144801jaa.141.1590608007841;
-        Wed, 27 May 2020 12:33:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t17sm2037371ilm.7.2020.05.27.12.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 12:33:27 -0700 (PDT)
-Received: (nullmailer pid 2604073 invoked by uid 1000);
-        Wed, 27 May 2020 19:33:26 -0000
-Date:   Wed, 27 May 2020 13:33:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Subject: Re: [PATCH] dt-bindings: watchdog: Convert UniPhier watchdog timer
- to json-schema
-Message-ID: <20200527193326.GA2604024@bogus>
-References: <1589348545-22244-1-git-send-email-hayashi.kunihiko@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589348545-22244-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Wed, 27 May 2020 15:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgE0Tfp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 15:35:45 -0400
+Received: from localhost.localdomain (unknown [194.230.155.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03BF72078B;
+        Wed, 27 May 2020 19:35:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590608144;
+        bh=fyfTwfnYczyhGudUu/tTRSlOPONlV1JmPl8Bq04dYlU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=H0l0W750dS/ExK3CPavpqtcEj9/eHkuYo2ijgilbuMwi+nu4aJy9fAxK4SOPs4aPx
+         xrzAVMxEQYsydkHIqq5hEuvWSteMApERMWyaSauJHZQtKcjDCXKU+r6ZJIG/r0Zoe4
+         eJ3Kl4RPtOwCZXydYdPwVdvcEs66ZNHReKYVKxKg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RESEND PATCH v4] ARM: dts: keystone: Rename "msmram" node to "sram"
+Date:   Wed, 27 May 2020 21:35:38 +0200
+Message-Id: <20200527193538.17424-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 14:42:25 +0900, Kunihiko Hayashi wrote:
-> Convert UniPhier watchdog timer binding to DT schema format.
-> 
-> Cc: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../bindings/watchdog/socionext,uniphier-wdt.yaml  | 36 ++++++++++++++++++++++
->  .../devicetree/bindings/watchdog/uniphier-wdt.txt  | 20 ------------
->  2 files changed, 36 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/socionext,uniphier-wdt.yaml
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
-> 
+The device node name should reflect generic class of a device so rename
+the "msmram" node and its children to "sram".  This will be also in sync
+with upcoming DT schema.  No functional change.
 
-Applied, thanks!
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+---
+
+Changes since v3:
+1. Rename also children.
+
+v3 is here:
+https://lore.kernel.org/linux-arm-kernel/20191002164316.14905-7-krzk@kernel.org/
+---
+ arch/arm/boot/dts/keystone-k2e.dtsi  | 4 ++--
+ arch/arm/boot/dts/keystone-k2g.dtsi  | 4 ++--
+ arch/arm/boot/dts/keystone-k2hk.dtsi | 4 ++--
+ arch/arm/boot/dts/keystone-k2l.dtsi  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
+index 085e7326ea8e..2d94faf31fab 100644
+--- a/arch/arm/boot/dts/keystone-k2e.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e.dtsi
+@@ -86,14 +86,14 @@
+ 			};
+ 		};
+ 
+-		msm_ram: msmram@c000000 {
++		msm_ram: sram@c000000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x0c000000 0x200000>;
+ 			ranges = <0x0 0x0c000000 0x200000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+-			sram-bm@1f0000 {
++			bm-sram@1f0000 {
+ 				reg = <0x001f0000 0x8000>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index 08ba31780baa..05a75019275e 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -95,14 +95,14 @@
+ 		ranges = <0x0 0x0 0x0 0xc0000000>;
+ 		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
+ 
+-		msm_ram: msmram@c000000 {
++		msm_ram: sram@c000000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x0c000000 0x100000>;
+ 			ranges = <0x0 0x0c000000 0x100000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+-			sram-bm@f7000 {
++			bm-sram@f7000 {
+ 				reg = <0x000f7000 0x8000>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
+index ca0f198ba627..8a9447703310 100644
+--- a/arch/arm/boot/dts/keystone-k2hk.dtsi
++++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
+@@ -57,14 +57,14 @@
+ &soc0 {
+ 		/include/ "keystone-k2hk-clocks.dtsi"
+ 
+-		msm_ram: msmram@c000000 {
++		msm_ram: sram@c000000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x0c000000 0x600000>;
+ 			ranges = <0x0 0x0c000000 0x600000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+-			sram-bm@5f0000 {
++			bm-sram@5f0000 {
+ 				reg = <0x5f0000 0x8000>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
+index 374c80124c4e..dff5fea72b2f 100644
+--- a/arch/arm/boot/dts/keystone-k2l.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l.dtsi
+@@ -255,14 +255,14 @@
+ 			};
+ 		};
+ 
+-		msm_ram: msmram@c000000 {
++		msm_ram: sram@c000000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x0c000000 0x200000>;
+ 			ranges = <0x0 0x0c000000 0x200000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+-			sram-bm@1f8000 {
++			bm-sram@1f8000 {
+ 				reg = <0x001f8000 0x8000>;
+ 			};
+ 		};
+-- 
+2.17.1
+
