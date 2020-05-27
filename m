@@ -2,103 +2,86 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7925EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B37CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5392084C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524D820899
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 17:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388539AbgE0R4Y (ORCPT
+        id S2391793AbgE0R7Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 13:56:24 -0400
-Received: from mga05.intel.com ([192.55.52.43]:56350 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387653AbgE0R4Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 13:56:24 -0400
-IronPort-SDR: yy5htggTAGCEhGJELTFS7dIFq8V4VKvkHmfwz8su24INBMqkFXT+AGlHty+XZcjeEVNYgDGwmV
- emtC9qeIM3ZQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 10:56:24 -0700
-IronPort-SDR: BUCmUzmT5hqdJlG/DUNApFH70adMolehOUn/c+8TgUocuItasvW4AvY+/8Pri0JuJK2agIQ2qK
- 424U6mDOdreQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
-   d="scan'208";a="255540259"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 27 May 2020 10:56:21 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1je0Hw-009GwD-0t; Wed, 27 May 2020 20:56:24 +0300
-Date:   Wed, 27 May 2020 20:56:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Rob Herring <robh@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200527175624.GT1634618@smile.fi.intel.com>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
- <20200527171204.GA2348490@bogus>
- <20200527171841.am2iaynff243xoep@mobilestation>
+        Wed, 27 May 2020 13:59:24 -0400
+Received: from out28-101.mail.aliyun.com ([115.124.28.101]:53989 "EHLO
+        out28-101.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391772AbgE0R7X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 13:59:23 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4376294|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0101614-0.000677406-0.989161;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.HeTcPrZ_1590602337;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeTcPrZ_1590602337)
+          by smtp.aliyun-inc.com(10.147.43.95);
+          Thu, 28 May 2020 01:59:19 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+Subject: [PATCH v12 3/7] dt-bindings: clock: Add documentation for X1830 bindings.
+Date:   Thu, 28 May 2020 01:56:31 +0800
+Message-Id: <20200527175635.5558-4-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
+References: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200527171841.am2iaynff243xoep@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:18:41PM +0300, Serge Semin wrote:
-> On Wed, May 27, 2020 at 11:12:04AM -0600, Rob Herring wrote:
-> > On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
-> > > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
-> > > i2c "reg" property. If it is the compiler will print a warning:
-> > > 
-> > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> > > 
-> > > In order to silence dtc up let's discard the flag from the DW I2C DT
-> > > binding example for now. Just revert this commit when dtc is fixed.
+Add documentation for the clock bindings of the X1830 Soc from Ingenic.
 
-> > >        eeprom@64 {
-> > >          compatible = "linux,slave-24c02";
-> > > -        reg = <0x40000064>;
-> > > +        reg = <0x64>;
-> > 
-> > But the compatible is a slave, so you need an example with a different 
-> > device.
-> 
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-> Ok. I'll replace the sub-node with just "atmel,24c02" compatible string then.
+Notes:
+    v11:
+    New patch, split from [3/6] in v10.
+    
+    v11->v12:
+    No change.
 
-But how it will be different to the another slave connected to the master?
+ Documentation/devicetree/bindings/clock/ingenic,cgu.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This example is specifically to show that DesingWare I�C controller may be
-switched to slave mode.
-
-> > >        };
-> > >      };
-> > >    - |
-
+diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml b/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
+index 0281cd1d7e1b..a952d5811823 100644
+--- a/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
++++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
+@@ -25,6 +25,7 @@ select:
+           - ingenic,jz4770-cgu
+           - ingenic,jz4780-cgu
+           - ingenic,x1000-cgu
++          - ingenic,x1830-cgu
+   required:
+     - compatible
+ 
+@@ -51,6 +52,7 @@ properties:
+         - ingenic,jz4770-cgu
+         - ingenic,jz4780-cgu
+         - ingenic,x1000-cgu
++        - ingenic,x1830-cgu
+       - const: simple-mfd
+     minItems: 1
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.11.0
 
