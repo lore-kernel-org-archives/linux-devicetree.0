@@ -2,91 +2,122 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1990AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 19:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AE3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 19:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECA122088E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 19:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590608693;
-	bh=DZt3wS0HDhql7bEOFRVEA2igLoTHCpYSclISd/Eul8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K/p90//3zAFFmQ6Ev6uToGv/QvG+70cTh4nMNIyBwaAwE9SfbASKkIAqwjAkGgIJj
-	 KtvQR6TThQOaFqs2tBt0orRb082vrwZz/LOagR+qdjdAEH+lfcwi63mJaFxWrdhiOE
-	 GvqyaXZ5SYW36IeXvhLI+9WC2ajn7L4xeHCOsGsE=
+	by mail.kernel.org (Postfix) with ESMTP id 9EDF6208B8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 19:53:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ccLgHZcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgE0Tor (ORCPT
+        id S1728472AbgE0Txj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 15:44:47 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33711 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgE0Toq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 15:44:46 -0400
-Received: by mail-il1-f196.google.com with SMTP id y17so23119701ilg.0;
-        Wed, 27 May 2020 12:44:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0ezqpncSP+so+GMtHN0GoHq59MSX0XPIXvACL9VZwvc=;
-        b=fYy7tnv9uoxJYRJmwOtYeideAqODFd7JRRGBXvVQVFC42mR5R5ZSHSOjqRHre46DWV
-         mMPMwj4rHn7jVjyCzweuQ7Q2ODL6eaOBe+IiwrznE+6BwDj1Q+iKOy9159Bzg+RnrLMM
-         e8U9wMg1Ph84DWOGiEwX/sYqnBoRxTSnMzTVYEQU6IhD2AKQrIzISsmRf7qPNh0pjhz4
-         xxf5lZWB5TaVgwh8YZyXZH0eZBf0fHyEdSpr9xBilLpd3cq9NkvktvzHLv949I2i5Z1+
-         epvh/cW2lhLJ2ZhWhDVeK3GLmpaziA/vBpvIpFATRdnMONkIXTWvVK85Lg9tt54yZ1wi
-         RqAQ==
-X-Gm-Message-State: AOAM530PbSV9UT5pAEvmuaz9HcpMvDEGNhLxkXldBo/5UTvFHbn0gPzn
-        8HTB72IYrRwRI1Ej96+UzA==
-X-Google-Smtp-Source: ABdhPJw5xR+WhPv+66P4Q6B5NBxNP8HoPoKWI6OCFZcUgXyvdt7rJCbZLeUp3ovW1s3gIL5w8wpIBg==
-X-Received: by 2002:a92:3d8b:: with SMTP id k11mr5468393ilf.122.1590608680896;
-        Wed, 27 May 2020 12:44:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z75sm2138197ilc.50.2020.05.27.12.44.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 12:44:40 -0700 (PDT)
-Received: (nullmailer pid 2619201 invoked by uid 1000);
-        Wed, 27 May 2020 19:44:39 -0000
-Date:   Wed, 27 May 2020 13:44:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     linus.walleij@linaro.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, cw00.choi@samsung.com,
-        robh+dt@kernel.org, lgirdwood@gmail.com,
-        patches@opensource.cirrus.com, lee.jones@linaro.org,
-        myungjoo.ham@samsung.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/7] mfd: arizona: Move binding over to dtschema
-Message-ID: <20200527194439.GA2619148@bogus>
-References: <20200513095720.8867-1-ckeepax@opensource.cirrus.com>
- <20200513095720.8867-4-ckeepax@opensource.cirrus.com>
+        Wed, 27 May 2020 15:53:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41166 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgE0Txi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 15:53:38 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RJrYc9004904;
+        Wed, 27 May 2020 14:53:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590609214;
+        bh=I7pi5mOUjhyhsQYqgRtibXFt9RQY4lMz86byA4rrrs4=;
+        h=From:To:CC:Subject:Date;
+        b=ccLgHZcRkVQFwUpbZeHLL73W78V4WV2mzrdxrfRqicZnX3oqYeNzmzjIPR0ynyL7/
+         U+CqQKYD+VRAmcP39eTeHj1R4tZ8ujyIMfpij4cefDgQEHVhX6mil7KU7TvTTLaZmx
+         Mq4H6TNlFsawcDursm3VH9yew+jJ6E3QtHVRHs/U=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RJrYxd053341
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 14:53:34 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 14:53:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 14:53:34 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RJrYw5129529;
+        Wed, 27 May 2020 14:53:34 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>,
+        <robh@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH 1/4] power_supply: Add additional health properties to the header
+Date:   Wed, 27 May 2020 14:53:24 -0500
+Message-ID: <20200527195327.23163-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513095720.8867-4-ckeepax@opensource.cirrus.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 10:57:17 +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> 
-> Changes since v2:
->  - Removed a couple more redundant descriptions
-> 
-> Thanks,
-> Charles
-> 
->  Documentation/devicetree/bindings/mfd/arizona.txt  | 101 -------
->  .../devicetree/bindings/mfd/wlf,arizona.yaml       | 289 +++++++++++++++++++++
->  MAINTAINERS                                        |   8 +-
->  3 files changed, 293 insertions(+), 105 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/arizona.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
-> 
+Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
 
-Applied, thanks!
+HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken from the JEITA spec.
+
+Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/ABI/testing/sysfs-class-power | 2 +-
+ drivers/power/supply/power_supply_sysfs.c   | 2 +-
+ include/linux/power_supply.h                | 3 +++
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index bf3b48f022dc..9f3fd01a9373 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -190,7 +190,7 @@ Description:
+ 		Valid values: "Unknown", "Good", "Overheat", "Dead",
+ 			      "Over voltage", "Unspecified failure", "Cold",
+ 			      "Watchdog timer expire", "Safety timer expire",
+-			      "Over current"
++			      "Over current", "Warm", "Cool", "Hot"
+ 
+ What:		/sys/class/power_supply/<supply_name>/precharge_current
+ Date:		June 2017
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index f37ad4eae60b..d0d549611794 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
+ static const char * const power_supply_health_text[] = {
+ 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
+ 	"Unspecified failure", "Cold", "Watchdog timer expire",
+-	"Safety timer expire", "Over current"
++	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
+ };
+ 
+ static const char * const power_supply_technology_text[] = {
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index dcd5a71e6c67..8670e90c1d51 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -61,6 +61,9 @@ enum {
+ 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+ 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+ 	POWER_SUPPLY_HEALTH_OVERCURRENT,
++	POWER_SUPPLY_HEALTH_WARM,
++	POWER_SUPPLY_HEALTH_COOL,
++	POWER_SUPPLY_HEALTH_HOT,
+ };
+ 
+ enum {
+-- 
+2.26.2
+
