@@ -2,111 +2,88 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02189C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 03:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8201DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 03:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4F4B206C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 03:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590549109;
-	bh=6cFuzz5VZ5TvXscnHkWRGdYskgy6ptj61K2CrwaExMM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=FNVykszVvpB+mv9Oo1W0e4AOabKlVdUTUSivKaTIuToIzTuPQ3Rrtv/TAYn5VOIr1
-	 RHixYX+tNxZCKBalnNcxMrApXTxBuTme3D75B1ZDPlyycINlUXyz+ZyySpn1Mg/47h
-	 PM0ZUsLrShwHWQhXtrp2kWysTgZDUDTXi4Po8gMg=
+	by mail.kernel.org (Postfix) with ESMTP id 63C86207D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 03:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgE0DLq (ORCPT
+        id S1728493AbgE0DWC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 May 2020 23:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgE0DLq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 May 2020 23:11:46 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8954D206C3;
-        Wed, 27 May 2020 03:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590549105;
-        bh=6cFuzz5VZ5TvXscnHkWRGdYskgy6ptj61K2CrwaExMM=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=D+aHxMzDG3uSTDyfydyuhQ4X7ehm072A6iFKdU9Ms94eXWUKO3fUL3rCl1wSqc1nV
-         P4151DiGp5JWvKBTAqKNwJ3I1R3E1K7HdQiy8CUDO9YuzLjqvuM/BXwlAlO+oaKE7B
-         fkWHBLqi2bnQ+f1yRVioiaBN0p19M1YvK7vBPslQ=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1589707344-8871-3-git-send-email-tdas@codeaurora.org>
-References: <1589707344-8871-1-git-send-email-tdas@codeaurora.org> <1589707344-8871-3-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Tue, 26 May 2020 20:11:44 -0700
-Message-ID: <159054910485.88029.14861222587907627358@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Tue, 26 May 2020 23:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgE0DWC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 May 2020 23:22:02 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D453C061A0F;
+        Tue, 26 May 2020 20:22:02 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BA035127803B0;
+        Tue, 26 May 2020 20:22:01 -0700 (PDT)
+Date:   Tue, 26 May 2020 20:22:00 -0700 (PDT)
+Message-Id: <20200526.202200.2254002991885460192.davem@davemloft.net>
+To:     fugang.duan@nxp.com
+Cc:     andrew@lunn.ch, martin.fuzzey@flowbird.group,
+        s.hauer@pengutronix.de, netdev@vger.kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, devicetree@vger.kernel.org, kuba@kernel.org
+Subject: Re: [PATCH net v3 0/4] net: ethernet: fec: move GPR reigster
+ offset and bit into DT
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1590424033-16906-1-git-send-email-fugang.duan@nxp.com>
+References: <1590424033-16906-1-git-send-email-fugang.duan@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 26 May 2020 20:22:02 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2020-05-17 02:22:22)
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscor=
-ecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.=
-yaml
-> new file mode 100644
-> index 0000000..c025a0ae
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-> @@ -0,0 +1,101 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm LPASS Core Clock Controller Binding for SC7180
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm LPASS core clock control module which supports the clocks and
-> +  power domains on SC7180.
-> +
-> +  See also:
-> +  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sc7180-lpasshm
-> +      - qcom,sc7180-lpasscorecc
-> +
-> +  clocks:
-> +    items:
-> +      - description: gcc_lpass_sway clock from GCC
-> +
-> +  clock-names:
-> +    items:
-> +      - const: gcc_lpass_sway
+From: fugang.duan@nxp.com
+Date: Tue, 26 May 2020 00:27:09 +0800
 
-As said on patch #4, maybe "iface" instead?
+> From: Fugang Duan <fugang.duan@nxp.com>
+> 
+> The commit da722186f654 (net: fec: set GPR bit on suspend by
+> DT configuration) set the GPR reigster offset and bit in driver
+> for wol feature support.
+> 
+> It brings trouble to enable wol feature on imx6sx/imx6ul/imx7d
+> platforms that have multiple ethernet instances with different
+> GPR bit for stop mode control. So the patch set is to move GPR
+> register offset and bit define into DT, and enable imx6q/imx6dl
+> imx6qp/imx6sx/imx6ul/imx7d stop mode support.
+> 
+> Currently, below NXP i.MX boards support wol:
+> - imx6q/imx6dl/imx6qp sabresd
+> - imx6sx sabreauto
+> - imx7d sdb
+> 
+> imx6q/imx6dl/imx6qp sabresd board dts file miss the property
+> "fsl,magic-packet;", so patch#4 is to add the property for stop
+> mode support.
+> 
+> 
+> v1 -> v2:
+>  - driver: switch back to store the quirks bitmask in driver_data
+>  - dt-bindings: rename 'gpr' property string to 'fsl,stop-mode'
+>  - imx6/7 dtsi: add imx6sx/imx6ul/imx7d ethernet stop mode property
+> v2 -> v3:
+>  - driver: suggested by Sascha Hauer, use a struct fec_devinfo for
+>    abstracting differences between different hardware variants,
+>    it can give more freedom to describe the differences.
+>  - imx6/7 dtsi: correct one typo pointed out by Andrew.
+> 
+> Thanks Martin, Andrew and Sascha Hauer for the review.
 
-> +
-> +  power-domains:
-> +    items:
-> +      - description: LPASS CORE HM GSDCR
-> +
+Series applied to net-next, thanks.
