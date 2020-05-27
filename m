@@ -2,164 +2,238 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B017C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 22:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BA2C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 22:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D64552078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 22:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0E32065F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 22:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OrUSiKp5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NcXYcKIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725766AbgE0WGe (ORCPT
+        id S1725267AbgE0WLU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 18:06:34 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54076 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0WGe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 18:06:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RM6JMC027110;
-        Wed, 27 May 2020 17:06:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590617179;
-        bh=wHq3GUk6tsshZfXmIGKnDN4gAiFx1/8S5VNAsQF6aUI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OrUSiKp5bsBc5ZXTvXvnjoBh7y5cW5Pl1xWZ+u16iP4DZrzl9cE38cGyolacbSAwn
-         Zo+9OrtH66DhqQeKxD07qnql0hbgqaYBbryCQY8AULI9Cvtd5PK9VUA6lM8p2URc2F
-         crKYqnkUMugBmcwsHOn0IuUdAJ5EIz/C8KZ9Y5D0=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RM6JpY043916
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 17:06:19 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
- May 2020 17:06:19 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 27 May 2020 17:06:18 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RM6EbP092800;
-        Wed, 27 May 2020 17:06:15 -0500
-Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
- perform only 32-bit accesses
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devicetree@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200522033631.32574-1-kishon@ti.com>
- <20200522033631.32574-4-kishon@ti.com>
- <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
- <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
- <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
- <b3663862-44df-867f-0824-28802909f224@ti.com>
- <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <457db3ae-e68a-d2fc-ba5f-5393ad464413@ti.com>
-Date:   Thu, 28 May 2020 03:36:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 18:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbgE0WLP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 18:11:15 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E4BAC08C5C2
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 15:11:15 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id 1so14644645vsl.9
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 15:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ib++0cCLLitVx1shV2jGQa+ni4nOQcBF64cPLDTrgCc=;
+        b=NcXYcKIVwG0ueKs966DI5d737p2jqNpsHmdvqJgR5Ck2iSd69RDowe2cbDvVSielEW
+         4f4lDTsaueLXnEUlskfiQPVLfIGMNLtm+QHarALLKVNc2VVcQWaft+Ihz6qri+7/WBZj
+         pqaDs2RMNbRSOwWWEDWMuRuS01IjqvQlxSczM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ib++0cCLLitVx1shV2jGQa+ni4nOQcBF64cPLDTrgCc=;
+        b=TrNW5m/cKn04B5QlaNvurqRAYiFN3IhMGSIbrOlDd6dci6DzMrw0mrdG07BrNZCUOI
+         e9cUXrWYtxnfCvDFmcPOA4xSPMRY2Zrc+2pWHjwk7D5MYmKSTgHl07yiKN7cPzXQU6Lv
+         p3eOWi+gd1XbUo54SYLQaKtQPQRKH6mQscU+tl2ZH/mmR/rx2QQvsYhL8VJC0q74G4p2
+         HPPSZtQzRdmmZIYB9iusLd8olGMVK96S5EYyyx/j6ODoZs58sn/VmUYSFuPXNI0ji61Z
+         d6dPPzbg2YLUPBBOPE41fQahNsZ778+ic2r/EPaW7iDktXd7q+wwj/yf4leUpabCGSy0
+         0ThQ==
+X-Gm-Message-State: AOAM533QGgNTdXFNG6npRWAt/G/P6RxB81cKhOyV+nQw6WTqlxhQ/Uhr
+        2xZYiRFls8vGEUO/pYIqHMklHNwhrFE=
+X-Google-Smtp-Source: ABdhPJz7qHrXy+kklXrrnbICUe4V3ec6/vb23BWdHRGmTsFcfKC3/VEwn4f4fkePubeIOITSW8WQMw==
+X-Received: by 2002:a67:f55a:: with SMTP id z26mr7115vsn.4.1590617474280;
+        Wed, 27 May 2020 15:11:14 -0700 (PDT)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id u74sm35447vkb.12.2020.05.27.15.11.12
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 15:11:13 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id a68so3807196vsd.8
+        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 15:11:12 -0700 (PDT)
+X-Received: by 2002:a67:e884:: with SMTP id x4mr6706217vsn.106.1590617472047;
+ Wed, 27 May 2020 15:11:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1588339863-1322-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAD=FV=UJGivCyp=t0J++1DbSFDVf+5zSCcXgh83VZtssBmavjg@mail.gmail.com>
+ <32c01e9a5277bdbdbab868eb71688184@codeaurora.org> <CAD=FV=VVi6oUDx_2Yf543ZphS1oQJiQU8St0XNUHs7HyPkoTeg@mail.gmail.com>
+In-Reply-To: <CAD=FV=VVi6oUDx_2Yf543ZphS1oQJiQU8St0XNUHs7HyPkoTeg@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 27 May 2020 15:11:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XphGpmBwZdL0jZ5HEFdxY3L7nH+s9_A0Kjamtg7j3R9w@mail.gmail.com>
+Message-ID: <CAD=FV=XphGpmBwZdL0jZ5HEFdxY3L7nH+s9_A0Kjamtg7j3R9w@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH] drm/msm/dpu: ensure device suspend happens
+ during PM sleep
+To:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, mkrishn@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        travitej@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On 5/27/2020 10:07 PM, Rob Herring wrote:
-> On Wed, May 27, 2020 at 4:49 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Rob,
->>
->> On 5/26/2020 8:42 PM, Rob Herring wrote:
->>> On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>
->>>> Hi Rob,
->>>>
->>>> On 5/22/2020 9:24 PM, Rob Herring wrote:
->>>>> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>>>
->>>>>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
->>>>>> 32-bit accesses for reading or writing to Cadence registers. Convert all
->>>>>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
->>>>>> for adding PCIe support in TI's J721E SoC.
->>>>>
->>>>> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
->>>>> with this and never can be given the PCI_COMMAND and PCI_STATUS
->>>>> registers are in the same word (IIRC, that's the main reason 32-bit
->>>>> config space accesses are broken). So this isn't going to work at
->>>>
->>>> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
->>>> could be reset while raising legacy interrupt. While this cannot be avoided for
->>>> TI's J721E, other platforms doesn't have to have this limitation.
->>>>> least for EP accesses. And maybe you need a custom .raise_irq() hook
->>>>> to minimize any problems (such as making the RMW atomic at least from
->>>>> the endpoint's perspective).
->>>>
->>>> This is to make sure EP doesn't update in-consistent state when RC is updating
->>>> the PCI_STATUS register? Since this involves two different systems, how do we
->>>> make this atomic?
->>>
->>> You can't make it atomic WRT both systems, but is there locking around
->>> each RMW? Specifically, are preemption and interrupts disabled to
->>> ensure time between a read and write are minimized? You wouldn't want
->>> interrupts disabled during the delay too though (i.e. around
->>> .raise_irq()).
->>
->> Okay, I'll add spin spin_lock_irqsave() in cdns_pcie_write_sz(). As you also
->> pointed below that delay for legacy interrupt is wrong and it has to be fixed
->> (with a later series).
-> 
-> But you don't need a lock everywhere. You need locks in the callers
-> (and only sometimes).
+On Fri, May 15, 2020 at 9:37 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Fri, May 15, 2020 at 5:06 AM <kalyan_t@codeaurora.org> wrote:
+> >
+> > On 2020-05-14 21:47, Doug Anderson wrote:
+> > > Hi,
+> > >
+> > > On Fri, May 1, 2020 at 6:31 AM Kalyan Thota <kalyan_t@codeaurora.org>
+> > > wrote:
+> > >>
+> > >> "The PM core always increments the runtime usage counter
+> > >> before calling the ->suspend() callback and decrements it
+> > >> after calling the ->resume() callback"
+> > >>
+> > >> DPU and DSI are managed as runtime devices. When
+> > >> suspend is triggered, PM core adds a refcount on all the
+> > >> devices and calls device suspend, since usage count is
+> > >> already incremented, runtime suspend was not getting called
+> > >> and it kept the clocks on which resulted in target not
+> > >> entering into XO shutdown.
+> > >>
+> > >> Add changes to force suspend on runtime devices during pm sleep.
+> > >>
+> > >> Changes in v1:
+> > >>  - Remove unnecessary checks in the function
+> > >>     _dpu_kms_disable_dpu (Rob Clark).
+> > >>
+> > >> Changes in v2:
+> > >>  - Avoid using suspend_late to reset the usagecount
+> > >>    as suspend_late might not be called during suspend
+> > >>    call failures (Doug).
+> > >>
+> > >> Changes in v3:
+> > >>  - Use force suspend instead of managing device usage_count
+> > >>    via runtime put and get API's to trigger callbacks (Doug).
+> > >>
+> > >> Changes in v4:
+> > >>  - Check the return values of pm_runtime_force_suspend and
+> > >>    pm_runtime_force_resume API's and pass appropriately (Doug).
+> > >>
+> > >> Changes in v5:
+> > >
+> > > Can you please put the version number properly in your subject?  It's
+> > > really hard to tell one version of your patch from another.
+> > >
+> > >
+> > >>  - With v4 patch, test cycle has uncovered issues in device resume.
+> > >>
+> > >>    On bubs: cmd tx failures were seen as SW is sending panel off
+> > >>    commands when the dsi resources are turned off.
+> > >>
+> > >>    Upon suspend, DRM driver will issue a NULL composition to the
+> > >>    dpu, followed by turning off all the HW blocks.
+> > >>
+> > >>    v5 changes will serialize the NULL commit and resource unwinding
+> > >>    by handling them under PM prepare and PM complete phases there by
+> > >>    ensuring that clks are on when panel off commands are being
+> > >>    processed.
+> > >
+> > > I'm still most definitely not an expert in how all the DRM pieces all
+> > > hook up together, but the solution you have in this patch seems wrong
+> > > to me.  As far as I can tell the "prepare" state isn't supposed to be
+> > > actually doing the suspend work and here that's exactly what you're
+> > > doing.  I think you should find a different solution to ensure
+> > > ordering is correct.
+> > >
+> > > -Doug
+> > >
+> >
+> > Hi,
+>
+> Quite honestly I'm probably not the right person to be reviewing this
+> code.  I mostly just noticed one of your early patches and it looked
+> strange to me.  Hopefully someone with actual experience in how all
+> the DRM components work together can actually review and see if this
+> makes sense.  Maybe Sean would know better?
+>
+> That being said, let me at least look at what you're saying...
+>
+>
+> > Prepare and Complete are callbacks defined as part of Sleep and Resume
+> > sequence
+> >
+> > Entering PM SUSPEND the phases are : prepare --> suspend -->
+> > suspend_late --> suspend_noirq.
+> > While leaving PM SUSPEND the phases are: resume_noirq --> resume_early
+> > --> resume --> complete.
+>
+> Sure, it's part of the sequence.  It's also documented in pm.h as:
+>
+>  * The principal role of this callback is to prevent new children of
+>  * the device from being registered after it has returned (the driver's
+>  * subsystem and generally the rest of the kernel is supposed to prevent
+>  * new calls to the probe method from being made too once @prepare() has
+>  * succeeded).
+>
+> It does not feel like that matches your usage of this call.
+>
+>
+> > The reason to push drm suspend handling to PM prepare phase is that
+> > parent here will trigger a modeset to turn off the timing and
+> > subsequently the panel.
+> > the child devices should not turn of their clocks before parent unwinds
+> > the composition. Hence they are serialized as per the sequence mentioned
+> > above.
+>
+> So the general model in Linux is that children suspend before their
+> parents, right?  So you're saying that, in this case, the parent needs
+> to act on the child before the child suspends.  Is that correct?
+>
+> Rather than hijacking the prepare/complete, I'd be at least slightly
+> inclined to move the other driver to turn off its clocks in
+> suspend_late and to turn them back on in resume_early?  That seems to
+> be what was done in "analogix_dp-rockchip.c" to solve a similar
+> problem.
+>
+>
+> > A similar approach is taken by other driver that use drm framework. In
+> > this driver, the device registers for prepare and complete callbacks to
+> > handle drm_suspend and drm_resume.
+> > https://gitlab.freedesktop.org/drm/msm/-/blob/msm-next/drivers/gpu/drm/exynos/exynos_drm_drv.c#L163
+>
+> OK, if there is another driver in DRM then I guess I won't object too
+> strongly.  Note that when searching for other drivers I noticed this
+> bit in todo.rst:
+>
+> * Most drivers (except i915 and nouveau) that use
+> * drm_atomic_helper_suspend/resume() can probably be converted to use
+> * drm_mode_config_helper_suspend/resume(). Also there's still open-coded version
+> * of the atomic suspend/resume code in older atomic modeset drivers.
+>
+> Does anything get fixed if you do that?  It seems like it'd cleanup
+> your code a bit so maybe worth doing anyway...
+>
+> ---
+>
+> I guess the last question I'd want resolved is why you have this asymmetry:
+>
+> SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, msm_pm_resume)
+>
+> Why couldn't you use pm_runtime_force_resume()?
 
-Okay, the locks should be added only for registers where HOST can also write to
-the same register? Maybe only raise_irq then..
+I'm curious if you had answers to any of the questions I posed in my review.
 
-> 
->> How do you want to handle cdns_pcie_ep_fn_writew() now? Because now we are
->> changing the default implementation to perform only 32-bit access (used for
->> legacy interrupt, msi-x interrupt and while writing standard headers) and it's
->> not okay only for legacy interrupts for platforms other than TI.
-> 
-> Now I'm wondering how set_msi is not racy in the current code with the
-> host setting/clearing PCI_MSI_FLAGS_ENABLE? Maybe that bit is RO from
-> the EP side?
-
-set_msi/set_msix is a one time configuration that is invoked before the host
-establishes the link with the endpoint. I don't think we have to consider this
-as racy.
-
-Thanks
-Kishon
-
-> 
-> Ultimately I think you're going to have to provide your own endpoint
-> functions or you need accessors for specific registers like
-> PCI_MSI_FLAGS. Then for example, you just rely on the 2 bytes before
-> PCI_MSI_FLAGS being reserved and do a 32-bit access without a RMW.
-> Trying to abstract this at the register read/write level is going to
-> be fragile
-> 
-> Rob
-> 
+-Doug
