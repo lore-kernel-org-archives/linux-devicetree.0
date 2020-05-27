@@ -2,123 +2,85 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C90DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA4BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B682075A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C50E207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 18:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590605138;
+	bh=xQ5uJntajgExxRJRJncGIyO/OQmQ/goXrHK/3GNVHYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FW4oI1hmicIrfswc9oNVxlsxhcWWHe0AmUX/WFsw454tjJKsR2tWctPsHPk/qYg3P
+	 0G+sHCoMoKoQ2lA17ekhIczJcDakZWN6IOrYwslQrXlGNxISj8CgrZWBqRSMiACn2z
+	 9qoNtRsJIELNEvxlRxjdvO5V/7khkFmMQXFCBPj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391933AbgE0SSU convert rfc822-to-8bit (ORCPT
+        id S1725768AbgE0Sph (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 14:18:20 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45879 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391932AbgE0SST (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 14:18:19 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d191so22520201oib.12
-        for <devicetree@vger.kernel.org>; Wed, 27 May 2020 11:18:19 -0700 (PDT)
+        Wed, 27 May 2020 14:45:37 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37986 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389214AbgE0S1K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 14:27:10 -0400
+Received: by mail-il1-f196.google.com with SMTP id q18so3953698ilm.5;
+        Wed, 27 May 2020 11:27:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Var6zB7r/K27Y0hKiyg6WYBIMMgMr1FRwYS50LiCuf4=;
-        b=c30cx5+bdKbxvejB3jqzehEM73oFObVtXCYdjbW43OpZEuXEN18gapU1o1+KpdsmhA
-         Ht+XpoYdto1rzGK7qKXu6C0NRSLwSWI29yzdF7A8/lZEVyznFO4uHo3e4xozhoLb1veZ
-         nnJxgDNAdIM82NFU4IRcN4pOcwGNFTc98TL0DPNWg5t7UaoLqRufW3jnwFhZ4rEeqkdI
-         lmDFoyCjERMlnLwTnjUCQ/5/Lm4C/tPS5GIGbz9kZtO61YQH/q6Vg3k/d+qn8VPoHPMo
-         LN9PKLZeAXfDVw6/C2QeVICfhg4RxbOZP0QD/ybnItWYz6V1Ao3HfbO5wQRWT+vjLtCE
-         DsVA==
-X-Gm-Message-State: AOAM533RURgS4Lza6jWn5M+E57dv47iKBC3On1Kkwgt4pzopPXFkFo6a
-        5ulr/Sy3d7ABEDopYyEnUjZe1scIx/HnsyolELe8AA==
-X-Google-Smtp-Source: ABdhPJwDA4zHg5WB5PjjdXFgYfKNq5akaZGI8EL531AovJiaDg7KWPSpYl/RVEBlXbX6o0CsK9tXlv/w5MWsVk++Glo=
-X-Received: by 2002:a05:6808:1:: with SMTP id u1mr3675937oic.54.1590603498756;
- Wed, 27 May 2020 11:18:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZvQhsfkFlA/Oh3QWp+W6frDo076kraj8anhhLdL6bbk=;
+        b=aig2ieMIF9q03HwH3YnNpItHS0FHpU62g0NvauvGbTi3gtShUxZzdgyazL1aMw70JK
+         EFMpwx0JY3RgVAgQKTk0Fh8rWMufawlU+480rkZhi3FU+0+1ztu1RoPOb793svN/xw4x
+         dBnoD3N0a4rn84UtRPhGdK8jeQ1o6Z16SyU+hrObe/vE1+B2hSi4Ilh7bc5Bnn9xfeh9
+         bUspnyP4UVnZVnSIyfj/MnB1nW4t7eYlV9C0TjlM+BeHdww/c4fwTvG1UO96CyB5PijX
+         DGHT0n8pkzEkg8t+wi0K0hpDN34YbbvClXJwcXDfF72rAXiYDpNNAelFxg17x2S4M9IQ
+         ootw==
+X-Gm-Message-State: AOAM533+AoyD672spkrjwgM3EEkA4nYDicaTlkoV9B+hmd22fyYTdsbw
+        0ntWadSNy9NHfGmaGrle3g==
+X-Google-Smtp-Source: ABdhPJyZguAbhJfNPR/1LeofmJy5ESLApTtq2YSIYTTvCksLfyA5dAI/XIdpU5e6VyT3XlOgIEiElQ==
+X-Received: by 2002:a92:495d:: with SMTP id w90mr6846331ila.275.1590604029523;
+        Wed, 27 May 2020 11:27:09 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b22sm2051080ill.6.2020.05.27.11.27.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 11:27:08 -0700 (PDT)
+Received: (nullmailer pid 2511916 invoked by uid 1000);
+        Wed, 27 May 2020 18:27:08 -0000
+Date:   Wed, 27 May 2020 12:27:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Qi Zheng <arch0.zheng@gmail.com>
+Cc:     frowand.list@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of/fdt: Remove redundant kbasename function call
+Message-ID: <20200527182708.GA2458626@bogus>
+References: <20200512154909.279788-1-arch0.zheng@gmail.com>
 MIME-Version: 1.0
-References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
- <20200511110611.3142-7-ricardo.canuelo@collabora.com> <20200514015412.GF7425@pendragon.ideasonboard.com>
- <20200514093617.dwhmqaasc3z5ixy6@rcn-XPS-13-9360> <20200514152239.GG5955@pendragon.ideasonboard.com>
- <20200525074335.grnjvdjnipq5g3kf@rcn-XPS-13-9360> <20200526014444.GB6179@pendragon.ideasonboard.com>
- <CAMuHMdXinhY13us9rt9h7EvrT_8zhnQg6tmOBtA0nEQ=1G1O7Q@mail.gmail.com> <CAL_JsqJgQajnKdQ1Bt6YFX04fX0VGz44Q3kBdLLR04OzhWrH5A@mail.gmail.com>
-In-Reply-To: <CAL_JsqJgQajnKdQ1Bt6YFX04fX0VGz44Q3kBdLLR04OzhWrH5A@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 May 2020 20:18:07 +0200
-Message-ID: <CAMuHMdXQQXOcVuq7Zhfp4qGH0vmLtxp3fdCJ+7VSAMQYSdjsTg@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] dt-bindings: drm: bridge: adi,adv7511.txt: convert
- to yaml
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wei Xu <xuwei5@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512154909.279788-1-arch0.zheng@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Tue, May 12, 2020 at 11:49:09PM +0800, Qi Zheng wrote:
+> For version 1 to 3 of the device tree, this is the node full
+> path as a zero terminated string, starting with "/". The
+> following equation will not hold, since the node name has
+> been processed in the fdt_get_name().
+> 
+> 	*pathp == '/'
+> 
+> For version 16 and later, this is the node unit name only
+> (or an empty string for the root node). So the above
+> equation will still not hold.
+> 
+> So the kbasename() is redundant, just remove it.
 
-On Wed, May 27, 2020 at 7:30 PM Rob Herring <robh+dt@kernel.org> wrote:
-> On Tue, May 26, 2020 at 1:03 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Tue, May 26, 2020 at 3:44 AM Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > > On Mon, May 25, 2020 at 09:43:35AM +0200, Ricardo Cañuelo wrote:
-> > > > On jue 14-05-2020 18:22:39, Laurent Pinchart wrote:
-> > > > > > If we want to be more strict and require the definition of all the
-> > > > > > supplies, there will be many more DTs changes in the series, and I'm not
-> > > > > > sure I'll be able to do that in a reasonable amount of time. I'm looking
-> > > > > > at them and it's not always clear which regulators to use or if they are
-> > > > > > even defined.
-> > > > >
-> > > > > We can decouple the two though (I think). The bindings should reflect
-> > > > > what we consider right, and the dts files could be fixed on top.
-> > > >
-> > > > Do you have a suggestion on how to do this? If we decouple the two
-> > > > tasks most of the work would be searching for DTs to fix and finding a
-> > > > way to fix each one of them, and unless I do this _before_ the binding
-> > > > conversion I'll get a lot of dtbs_check errors.
-> > >
-> > > Rob should answer this question as it will be his decision, but I've
-> > > personally never considered non-compliant DT sources to be an obstacle
-> > > to bindings conversion to YAML. The DT sources should be fixed, but I
-> > > don't see it as a prerequisite (although it's a good practice).
->
-> There's currently no requirement that binding schema don't introduce
-> warnings in dts files. That should change when/if we get to a warning
-> free state (probably per platform/family). I don't think we're close
-> on any platform? (If we are, I'd like to start tracking that). It is
-> good to pay attention to the warnings you get though as the schema may
-> not be doing what you expect or the binding really doesn't match
-> reality.
+There's 2 occurrences of this. Can you remove the other one too.
 
-OK.
-
-> > I do my best to avoid introducing regressions when the binding conversions
-> > go upstream.
->
-> Meaning you fix the dts files or massage the schema to match? If we
-> just adjust schema to match, what's the point in this effort? We
-> should find things wrong or ill defined.
-
-I fix up DTS files, and fast-track those fixes, so they appear upstream before
-the DT binding conversion, where possible.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob
