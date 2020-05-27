@@ -2,106 +2,115 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C2AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 13:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C829CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 13:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3B9207CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 13:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE235207D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 13:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbgE0Ng4 (ORCPT
+        id S2388082AbgE0Njv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 09:36:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:32006 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387581AbgE0Ng4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 09:36:56 -0400
-IronPort-SDR: KEhTh1JpNi/U/YkWUhqnIblRjtOWypbT9abLQdWEyMKIpaheV+A4jZbJPajTGc/jKEBPrBC7r3
- Rjl4wu0CN4Yw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:36:55 -0700
-IronPort-SDR: znFbgevaueWvVVuU1HEBaUyl6TZuapozyshN0ew9BhJ1e9rR1ruTKeC7m5B6UD4C+CgDk9UK78
- +O5YpSRlwq/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="255468688"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 27 May 2020 06:36:53 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdwEq-009Eh5-3x; Wed, 27 May 2020 16:36:56 +0300
-Date:   Wed, 27 May 2020 16:36:56 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     devicetree-compiler@vger.kernel.org,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] check: Add 10bit/slave i2c reg flags support
-Message-ID: <20200527133656.GV1634618@smile.fi.intel.com>
-References: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
+        Wed, 27 May 2020 09:39:51 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46978 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387682AbgE0Nju (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 09:39:50 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2EB6E1C0300; Wed, 27 May 2020 15:39:49 +0200 (CEST)
+Date:   Wed, 27 May 2020 15:39:48 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
+ documention
+Message-ID: <20200527133948.GA5011@amd>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-2-dmurphy@ti.com>
+ <20200527014902.GA859634@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
 Content-Disposition: inline
-In-Reply-To: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200527014902.GA859634@bogus>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:25:25PM +0300, Serge Semin wrote:
-> Recently the I2C-controllers slave interface support was added to the
-> kernel I2C subsystem. In this case Linux can be used as, for example,
-> a I2C EEPROM machine. See [1] for details. Other than instantiating
-> the EEPROM-slave device from user-space there is a way to declare the
-> device in dts. In this case firstly the I2C bus controller must support
-> the slave interface. Secondly I2C-slave sub-node of that controller
-> must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
-> declared in [2]). That flag is declared as (1 << 30), which when set
-> makes dtc unhappy about too big address set for a I2C-slave:
-> 
-> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> 
-> Similar problem would have happened if we had set the 10-bit address
-> flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
-> 
-> In order to fix the problem we suggest to alter the I2C-bus reg-check
-> algorithm, so one would be aware of the upper bits set. Normally if no
-> flag specified, the 7-bit address is expected in the "reg"-property.
-> If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
-> performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
-> 
-> [1] kernel/Documentation/i2c/slave-interface.rst
-> [2] kernel/include/dt-bindings/i2c/i2c.h
 
-...
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +		addr = reg & 0x3FFFFFFFU;
-> +		if ((reg & (1 << 31)) && addr > 0x3ff)
->  			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
-> -				  reg);
-> -
-> +				  addr);
-> +		else if (!(reg & (1 << 31)) && addr > 0x7f)
-> +			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
-> +				  addr);
+Hi!
 
-1 << 31 is UB.
+Thanks for reviews!
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > +additionalProperties: false
+> > +...
+> > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>=20
+> This isn't a binding file. Belongs in another patch.
 
+These constants are directly related to the binding. It makes sense to
+go in one patch...
 
+Best regards,
+								Pavel
+
+> > index f1f718dbe0f8..846248a0693d 100644
+> > --- a/drivers/leds/led-core.c
+> > +++ b/drivers/leds/led-core.c
+> > @@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] =3D {
+> >  	[LED_COLOR_ID_VIOLET] =3D "violet",
+> >  	[LED_COLOR_ID_YELLOW] =3D "yellow",
+> >  	[LED_COLOR_ID_IR] =3D "ir",
+> > +	[LED_COLOR_ID_MULTI] =3D "multicolor",
+> >  };
+> >  EXPORT_SYMBOL_GPL(led_colors);
+> > =20
+> > diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/le=
+ds/common.h
+> > index 0ce7dfc00dcb..a463ce6a8794 100644
+> > --- a/include/dt-bindings/leds/common.h
+> > +++ b/include/dt-bindings/leds/common.h
+> > @@ -30,7 +30,8 @@
+> >  #define LED_COLOR_ID_VIOLET	5
+> >  #define LED_COLOR_ID_YELLOW	6
+> >  #define LED_COLOR_ID_IR		7
+> > -#define LED_COLOR_ID_MAX	8
+> > +#define LED_COLOR_ID_MULTI	8
+> > +#define LED_COLOR_ID_MAX	9
+> > =20
+> >  /* Standard LED functions */
+> >  /* Keyboard LEDs, usually it would be input4::capslock etc. */
+> > --=20
+> > 2.25.1
+> >=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7ObaQACgkQMOfwapXb+vKDUQCgvKwSBIpK3Ho7ZIPhCUNgU/kp
+toUAnjGIr5U3J+haA7vXpJm0QHecHNkG
+=Ow+v
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
