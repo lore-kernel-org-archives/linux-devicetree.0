@@ -4,120 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784AAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746E5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 614BE2078B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559042078B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 08:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgE0I1k (ORCPT
+        id S2388035AbgE0IeW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 04:27:40 -0400
-Received: from out28-220.mail.aliyun.com ([115.124.28.220]:50240 "EHLO
-        out28-220.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729349AbgE0I1k (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 04:27:40 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08245211|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0548406-0.00016241-0.944997;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HeHIDqW_1590568053;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeHIDqW_1590568053)
-          by smtp.aliyun-inc.com(10.147.44.145);
-          Wed, 27 May 2020 16:27:34 +0800
-Subject: Re: [PATCH v10 3/6] dt-bindings: clock: Add X1830 bindings.
-To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-References: <20200526144044.71413-1-zhouyanjie@wanyeetech.com>
- <20200526144044.71413-5-zhouyanjie@wanyeetech.com>
- <159056716225.88029.7227987261941853085@swboyd.mtv.corp.google.com>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <19e7793b-c7d1-e91f-c1d9-f3e7f6112360@wanyeetech.com>
-Date:   Wed, 27 May 2020 16:27:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 27 May 2020 04:34:22 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:55673 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387397AbgE0IeW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 04:34:22 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id BA692240008;
+        Wed, 27 May 2020 08:33:58 +0000 (UTC)
+Date:   Wed, 27 May 2020 10:33:56 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v5 09/21] mtd: rawnand: Create a new enumeration to
+ describe properly ECC types
+Message-ID: <20200527103356.56e145a9@xps13>
+In-Reply-To: <20200527005928.39c549e2@collabora.com>
+References: <20200526195633.11543-1-miquel.raynal@bootlin.com>
+        <20200526195633.11543-10-miquel.raynal@bootlin.com>
+        <20200527005928.39c549e2@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <159056716225.88029.7227987261941853085@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-在 2020/5/27 下午4:12, Stephen Boyd 写道:
-> Quoting 周琰杰 (Zhou Yanjie) (2020-05-26 07:40:41)
->> Add the clock bindings for the X1830 Soc from Ingenic.
->>
->> Signed-off-by: \u5468\u7430\u6770 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>
->> Notes:
->>      v2->v3:
->>      Adjust order from [3/5] in v2 to [4/5] in v3.
->>      
->>      v3->v4:
->>      Adjust order from [4/5] in v3 to [3/4] in v4.
->>      
->>      v4->v5:
->>      Rebase on top of kernel 5.6-rc1.
->>      
->>      v5->v6:
->>      Add missing part of X1830's CGU.
->>      
->>      v6->v7:
->>      No change.
->>      
->>      v7->v8:
->>      Rebase on top of linux-next.
->>      
->>      v8->v9:
->>      No change.
->>      
->>      v9->v10:
->>      Add missing "X1830_CLK_TCU".
->>
->>   .../devicetree/bindings/clock/ingenic,cgu.yaml     |  2 +
->>   include/dt-bindings/clock/x1830-cgu.h              | 55 ++++++++++++++++++++++
->>   2 files changed, 57 insertions(+)
->>   create mode 100644 include/dt-bindings/clock/x1830-cgu.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml b/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
-> This file is in Rob's DT tree staged for the next release, not in the
-> clk tree. Can you split this patch into two, one for the compatible
-> update and another for the header file update and send again? Then Rob
-> can pick up the yaml file change and I can pick up the header file
-> change.
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 27 May
+2020 00:59:28 +0200:
 
+> On Tue, 26 May 2020 21:56:21 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+> > Now that the misleading mix between ECC engine type and OOB placement
+> > has been addressed, add a new enumeration to properly define ECC types
+> > (also called provider or mode).
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > ---
+> >  drivers/mtd/nand/raw/nand_base.c |  7 +++++++
+> >  include/linux/mtd/rawnand.h      | 16 ++++++++++++++++
+> >  2 files changed, 23 insertions(+)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> > index 515cd4681660..5c6ab5b93270 100644
+> > --- a/drivers/mtd/nand/raw/nand_base.c
+> > +++ b/drivers/mtd/nand/raw/nand_base.c
+> > @@ -5018,6 +5018,13 @@ static const char * const nand_ecc_modes[] = {
+> >  	[NAND_ECC_ON_DIE]	= "on-die",
+> >  };
+> >  
+> > +static const char * const nand_ecc_engine_providers[] = {  
+> 
+> This table is not used here, are you sure it should be introduced now?
+> 
+> > +	[NAND_ECC_ENGINE_NONE] = "none",
+> > +	[NAND_ECC_ENGINE_SOFT] = "soft",
+> > +	[NAND_ECC_ENGINE_CONTROLLER] = "hw",  
+> 
+> 					^ "on-controller" ?
 
-OK, I will do it right away.
+This would break DT backward compatibility, I am afraid I cannot do
+that. Honnestly, I find "hw" good enough because "on-controller" is
+also too restrictive. What about an external (non-pipelined) engine
+like the one I am about to introduce?
 
-
-Thansk and best regards!
-
-
->> index 0281cd1d7e1b..a952d5811823 100644
->> --- a/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
->> +++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
->> @@ -25,6 +25,7 @@ select:
->>             - ingenic,jz4770-cgu
->>             - ingenic,jz4780-cgu
->>             - ingenic,x1000-cgu
->> +          - ingenic,x1830-cgu
->>     required:
->>       - compatible
->>   
->> @@ -51,6 +52,7 @@ properties:
->>           - ingenic,jz4770-cgu
->>           - ingenic,jz4780-cgu
->>           - ingenic,x1000-cgu
->> +        - ingenic,x1830-cgu
->>         - const: simple-mfd
->>       minItems: 1
->>
+> 
+> > +	[NAND_ECC_ENGINE_ON_DIE] = "on-die",
+> > +};
+> > +
+> >  static const char * const nand_ecc_placement[] = {
+> >  	[NAND_ECC_PLACEMENT_INTERLEAVED] = "interleaved",
+> >  };
+> > diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+> > index dc909fb977c7..a2078c5f3d21 100644
+> > --- a/include/linux/mtd/rawnand.h
+> > +++ b/include/linux/mtd/rawnand.h
+> > @@ -92,6 +92,22 @@ enum nand_ecc_mode {
+> >  	NAND_ECC_ON_DIE,
+> >  };
+> >  
+> > +/**
+> > + * enum nand_ecc_engine_type - NAND ECC engine type/provider
+> > + * @NAND_ECC_ENGINE_INVALID: Invalid value
+> > + * @NAND_ECC_ENGINE_NONE: No ECC correction
+> > + * @NAND_ECC_ENGINE_SOFT: Software ECC correction
+> > + * @NAND_ECC_ENGINE_CONTROLLER: Hardware controller ECC correction
+> > + * @NAND_ECC_ENGINE_ON_DIE: On chip hardware ECC correction
+> > + */
+> > +enum nand_ecc_engine_type {
+> > +	NAND_ECC_ENGINE_INVALID,
+> > +	NAND_ECC_ENGINE_NONE,
+> > +	NAND_ECC_ENGINE_SOFT,
+> > +	NAND_ECC_ENGINE_CONTROLLER,
+> > +	NAND_ECC_ENGINE_ON_DIE,
+> > +};
+> > +
+> >  /**
+> >   * enum nand_ecc_placement - NAND ECC placement
+> >   * @NAND_ECC_PLACEMENT_FREE: The driver can decide where to put ECC bytes.  
+> 
