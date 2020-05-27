@@ -2,127 +2,126 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F837C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 06:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797CFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC53207CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 06:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cPWisZ+A"
+	by mail.kernel.org (Postfix) with ESMTP id 537CE2078C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590563177;
+	bh=Bnwio/T0f8/rO+4l0ETfUXCahBdmz6vzX2tvqweK3c4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=v5+T3Xi/mEqOyurT7m8YkF1a3BniQ4x/MkUtnkE8SPNAFagd6+wXCTrbAdYUMsf0E
+	 VKLDE0ipCixfEHi8OT43NqdYLCz3A4GF/G7fJ/pIgE47lxQg2j2qnLTcVnHc+gllPL
+	 8EObFvdSJgXtmxGbEHHXdK+HBFwNbJWM6ptyzWAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgE0Gxt (ORCPT
+        id S1728303AbgE0HGO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 02:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728757AbgE0Gxs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 02:53:48 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481D7C03E97A
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 23:53:48 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id n5so1936134wmd.0
-        for <devicetree@vger.kernel.org>; Tue, 26 May 2020 23:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=KaQOkQA7F9aEmTtrQs4AHoVIEVINLPeKbMlE71dR8YI=;
-        b=cPWisZ+A4SR3iQJ6RsEDeDne0OUCVjnfpAGxMjkPrCxzFO71csUJv0xmdBRl7npeZh
-         AeFPi1ZmAv1VwihKmOwSRiZrJsJ1i6kwIn8Nkt2Ls6PrSh4pmaZSr97snzWfE0Tn5x79
-         bn5tQlmvjopqjhhwA+8717mpKH4FIRbM2wsps9Yaybn+1Sbdk7PQ6e6xPJok7tTW3hQT
-         6R8cBzso9tSPzo2k0UZJPVj9XZDBCfP717btD4AxbyDHH0f/x517SgR/trJkcSQlO6BB
-         UekgSoUHoJVz0M2m9h5Iu/ibOmd2JCvlYeh977CW4E0Cm+pKuCkVczG89O4X7pFde+o4
-         gPzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=KaQOkQA7F9aEmTtrQs4AHoVIEVINLPeKbMlE71dR8YI=;
-        b=DDebBufLZ7AFHabtAwPs8TN735qpjM2+GnlRhjTxJI3pen4b3H/wL81VrE/uyX6eb8
-         2uHSs4F+AUJkUgMhYTEy8rXijHhCQjy6soes948PfUK4z7obA66b1J3fXt7OB9LRzjCR
-         p+5Ioqv+x9V/3aa7hnPkn//kLDzM6w9YedEPK7w40qVD0aJK+/bB9ryVSzzr5yMPXewn
-         94Evtlo4psXjXtwWZPUxsZpuIA1JAyRbmxGT/BHbgDPjwYJhBZM3OTfgXkpOWpg1+f3A
-         3ljIPKz57QzXlzbxI5j3p/Y47fIHvMpJyFjWjFeWugvxCHYL255TTcceWYvo5rD1IfOU
-         6G8g==
-X-Gm-Message-State: AOAM530h6nHcLS7lA5drsjGqe7besOFfqO7xvfoJWOgHgFhduUXhu9wb
-        W5kjc7Fi4N92w6IkBgBAF2r4Og==
-X-Google-Smtp-Source: ABdhPJzEz2uP3oWCohWVrLCnTYgAhvZIGv77IRU3z+lWX42qdjUmDcj2EC+NMT9wwZk7n/CATpsnBg==
-X-Received: by 2002:a1c:25c3:: with SMTP id l186mr2814857wml.103.1590562426704;
-        Tue, 26 May 2020 23:53:46 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id p23sm1900743wma.17.2020.05.26.23.53.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 23:53:46 -0700 (PDT)
-Date:   Wed, 27 May 2020 07:53:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200527065344.GP3628@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
- <20200515102848.GH271301@dell>
- <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
- <20200526072427.GC3628@dell>
- <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
- <20200526160336.GV1634618@smile.fi.intel.com>
+        Wed, 27 May 2020 03:06:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbgE0HGO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 03:06:14 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85A65206F1;
+        Wed, 27 May 2020 07:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590563173;
+        bh=Bnwio/T0f8/rO+4l0ETfUXCahBdmz6vzX2tvqweK3c4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=oF/iNegV3lDmsHA8jl2XuOdgHsm3ArbmfhqDo4tj/ixgr/8+hjuVwgK2omrt1GHqK
+         lftYRB6EtnDGNvsW0OlYmy8Cp4c40r1rRUvQnh70Y1+AmlskJw2okPi3Ha7N8yyMaB
+         MuI4eAKk/rPw1yzcI9NKh9tcdk+KZvcMyWAF4ovE=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526160336.GV1634618@smile.fi.intel.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a1efabae8d7df30c987bff10544c2071e906e07a.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech> <a1efabae8d7df30c987bff10544c2071e906e07a.1587742492.git-series.maxime@cerno.tech>
+Subject: Re: [PATCH v2 25/91] clk: bcm: Add BCM2711 DVP driver
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date:   Wed, 27 May 2020 00:06:12 -0700
+Message-ID: <159056317280.88029.13256292035418533462@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 26 May 2020, Andy Shevchenko wrote:
+Quoting Maxime Ripard (2020-04-24 08:34:06)
+> The HDMI block has a block that controls clocks and reset signals to the
+> HDMI0 and HDMI1 controllers.
+>=20
+> Let's expose that through a clock driver implementing a clock and reset
+> provider.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
 
-> On Tue, May 26, 2020 at 05:54:38PM +0200, Michael Walle wrote:
-> > Am 2020-05-26 09:24, schrieb Lee Jones:
-> 
-> ...
-> 
-> > Like I said, in the long term I would like to have support for
-> > different versions of the board management controller
-> 
-> > without having to change the device tree and have device tree bindings for the
-> > subdevices at the same time.
-> 
-> But isn't device tree to describe *very specific platform* rather than *class
-> of platforms*?
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
-Yes.  Device Tree describes the hardware.
+> diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2=
+711-dvp.c
+> new file mode 100644
+> index 000000000000..c1c4b5857d32
+> --- /dev/null
+> +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
+> @@ -0,0 +1,127 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +// Copyright 2020 Cerno
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/module.h>
+[...]
+> +
+> +static int clk_dvp_probe(struct platform_device *pdev)
+> +{
+> +       struct clk_hw_onecell_data *data;
+> +       struct resource *res;
+> +       struct clk_dvp *dvp;
+> +       void __iomem *base;
+> +       int ret;
+> +
+> +       dvp =3D devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
+> +       if (!dvp)
+> +               return -ENOMEM;
+> +       platform_set_drvdata(pdev, dvp);
+> +
+> +       dvp->data =3D devm_kzalloc(&pdev->dev,
+> +                                struct_size(dvp->data, hws, NR_CLOCKS),
+> +                                GFP_KERNEL);
+> +       if (!dvp->data)
+> +               return -ENOMEM;
+> +       data =3D dvp->data;
+> +
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       base =3D devm_ioremap_resource(&pdev->dev, res);
 
-If the hardware changes, so must the Device Tree.
+devm_platform_ioremap_resource()?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
