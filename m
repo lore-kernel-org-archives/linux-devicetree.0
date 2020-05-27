@@ -2,97 +2,101 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BDCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BDDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8534B207D3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F538206DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 11:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="sUF1W1M4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AN2mzep8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgE0Lau (ORCPT
+        id S1728760AbgE0Lcz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 07:30:50 -0400
-Received: from www.zeus03.de ([194.117.254.33]:51804 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728181AbgE0Lat (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 07:30:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=k1; bh=RPqfp5JAjnlhA1hGxeYIBkakIEm
-        4RB79RU0WY6O57b8=; b=sUF1W1M4UQZsSRy0Dfl2sjIgnJA8O+QHjUOpqZAGvPz
-        4CgF33p4F2cHPPgkd+Oc51dcovWDhvdlO2MLkQW4utvWykL5IzeWgf8bDetatExa
-        Jlmepsv72o7q5XjqJNm9+DCw6dCPpcXdAFeWg0ib2EibFCyR9SXg+QfkLhalwiFw
-        =
-Received: (qmail 3135896 invoked from network); 27 May 2020 13:30:47 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 May 2020 13:30:47 +0200
-X-UD-Smtp-Session: l3s3148p1@RUwci5+m9IggAwDPXwcUAGXYC40/aiEi
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
-Subject: [PATCH] i2c: add 'single-master' property to generic bindings
-Date:   Wed, 27 May 2020 13:30:39 +0200
-Message-Id: <20200527113039.5380-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 27 May 2020 07:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725964AbgE0Lcz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 07:32:55 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D425C061A0F;
+        Wed, 27 May 2020 04:32:55 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id c187so4922858ooc.2;
+        Wed, 27 May 2020 04:32:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LCm08sq66Q3U++l+V74WsB7Hkmk+EFqTJfvHJknMZU4=;
+        b=AN2mzep8xZkr/JRqPxTyR34FkdcROkPVXOMdrWjGCDE5MdlvyeFy/89eNu+FFYgNaJ
+         0O3zZCpub0fl1Qd+fkpWx+OYeAzC4QB5c5bMJgO1L9DjxiuPVNNQW62XYsimpE6xTHxF
+         XZEXc6/6+Ln/57fWjJzSyyzCWTCnZUtWCzefe6KL2fHnrp3vW8ZSJjPf7dWsUtcrA7fh
+         twyibzWV/U3IcEUCkjCvINUksHSqIyZnuRLPIoiNkSouJj4DwlSDNmmbMf2G4eoOtNHs
+         wRRkQZ50jLzVaxqeAL5LZC621iLjbukVTj3nSjySbtq7dLoaQ5gGIL26SU0ysfMsY3Pj
+         MxOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LCm08sq66Q3U++l+V74WsB7Hkmk+EFqTJfvHJknMZU4=;
+        b=rHHDnpnNr9P0dcKAvfqtnMQwS92i+Qd1hDoDXL5dhzOv+yIxIuimWXVRo50jksvceF
+         GaN+JD735/5c6Uim/eNz4wmuDCvTCO5OWWMguCq6mN8W96gywqnO0718J5kbMY+kwkm4
+         NPenya+7jG8sR6JTt3m7H3WXm5STDVmnNRFpxqMJXtyOaMoPXAUI0Q/ALNLpwSDCpMKr
+         nlZINHFvtyoXhpFi2wkQ7f0jNW1+vewBXfmIvfIKMFDFLRHosuJJi1Bf0tueB9dCrU9J
+         S7aBUOxO0tDiQpzB4QbNZzXMebX0pQraXcnd34sor9Ui9O762RJm11K2LSCW6m7xjIPK
+         fohg==
+X-Gm-Message-State: AOAM532Q0Dw99xDaR3KCrDkJFuKkJpHYzgypW+b4DUTTt070Y/fabhkk
+        m9zgZRoGPoh3r9R2MfdkpN86d++uN2Z4J+6Gzhk=
+X-Google-Smtp-Source: ABdhPJzjplcHCSKcgSqbLouxesEL59Ah0jAiA+aLZBUPeJrNy6hJ0Vv/xmju6otXj6ZALV+lhsBCAWTs4T/C+2XR4rU=
+X-Received: by 2002:a4a:bf14:: with SMTP id r20mr2745052oop.18.1590579174656;
+ Wed, 27 May 2020 04:32:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200527112548.GD5308@sirena.org.uk>
+In-Reply-To: <20200527112548.GD5308@sirena.org.uk>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 27 May 2020 12:32:28 +0100
+Message-ID: <CA+V-a8v0i71MCTNTPVD3XHuyGZiVjzuCkCUnvoUczeMr416ouQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It is useful to know if we are the only master on a given bus. Because
-this is a HW description of the bus, add it to the generic bindings.
+Hi Mark,
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
----
+Thank you for the review.
 
-We added 'multi-master' back then because most busses are single-master
-and 'multi-master' was the exception. In hindsight, however, this was a
-bad choice because 'multi-master' should be the default, i.e. if you
-know nothing, you should assume there could be another master.
+On Wed, May 27, 2020 at 12:25 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, May 26, 2020 at 10:01:43PM +0100, Lad Prabhakar wrote:
+>
+> >                                 Examples with soctypes are:
+> > +                                 - "renesas,rcar_sound-r8a7742" (RZ/G1H)
+> >                                   - "renesas,rcar_sound-r8a7743" (RZ/G1M)
+> >                                   - "renesas,rcar_sound-r8a7744" (RZ/G1N)
+> >                                   - "renesas,rcar_sound-r8a7745" (RZ/G1E)
+>
+> I'd expect a matching patch adding this compatible to the driver.
 
-So, we can't deduce that a missing 'multi-master' property automatically
-means 'single-master'. That's why we need this new property.
+The Renesas R-Car sound for RZ/G1H is identical to the R-Car Gen2
+family. So no driver change is needed and  the fallback compatible
+value "renesas,rcar_sound-gen2" will be used in the SOC DT.
 
-I am a bit tempted to mark 'multi-master' as deprecated because the
-default should be multi-master. However, it might also be a bit more
-descriptive to let "no property" still mean "we don't know". I'd be
-thankful for more opinions here.
-
-Thanks and happy hacking,
-
-   Wolfram
-
- Documentation/devicetree/bindings/i2c/i2c.txt | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index 819436b48fae..438ae123107e 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -70,7 +70,12 @@ wants to support one of the below features, it should adapt these bindings.
- - multi-master
- 	states that there is another master active on this bus. The OS can use
- 	this information to adapt power management to keep the arbitration awake
--	all the time, for example.
-+	all the time, for example. Can not be combined with 'single-master'.
-+
-+- single-master
-+	states that there is no other master active on this bus. The OS can use
-+	this information to detect a stalled bus more reliably, for example.
-+	Can not be combined with 'multi-master'.
- 
- Required properties (per child device)
- --------------------------------------
--- 
-2.20.1
-
+Cheers,
+--Prabhakar Lad
