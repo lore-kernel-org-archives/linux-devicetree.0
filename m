@@ -2,88 +2,143 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7FBC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE79EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6074C20776
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FC820776
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="k8lQDKuv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YOSOEb9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390726AbgE0P5b (ORCPT
+        id S1730358AbgE0P5x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 11:57:31 -0400
-Received: from mga09.intel.com ([134.134.136.24]:46751 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389098AbgE0P5a (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 11:57:30 -0400
-IronPort-SDR: /RmBll3NcqzurLjWivv0Ghnq5xxgj2jb78FFbvo/j95HEIbawZi2Ty6mY8fSVXBSvyIAIbdPHw
- uVF0hID3qgQQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 08:57:28 -0700
-IronPort-SDR: 48nmseDxO4buDj9BHJ72XfM7rkj0ZuzQrmlgWuQGxqfSjijDZadQB+8NIQrLGd5GtUaD3f9rrI
- YhKw3Kbh5dwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="255505955"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 27 May 2020 08:57:23 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdyQn-009Ftm-Uq; Wed, 27 May 2020 18:57:25 +0300
-Date:   Wed, 27 May 2020 18:57:25 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 07/11] i2c: designware: Discard Cherry Trail model flag
-Message-ID: <20200527155725.GK1634618@smile.fi.intel.com>
-References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
- <20200527153046.6172-8-Sergey.Semin@baikalelectronics.ru>
+        Wed, 27 May 2020 11:57:53 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:49315 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390095AbgE0Ptb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 11:49:31 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C6153581FE2;
+        Wed, 27 May 2020 11:49:29 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=FMKLC09xuIf9F
+        IYI+xqoFdFwX3vaShvGRIMTND5Z/+g=; b=k8lQDKuvjJyZSQm0zYsOKK/831vfI
+        dwF1eR+LmaE1HsHlUvJQCpTYqRs5bv4zuqQF+QqsikMNrK44lkJeU5tAK2EuZ1iV
+        ZJ2C/KC3olPmDpmkVU/4fL+8NhNjwbVHXEvo13urDJby5JD7+wQTg2t0rN4cXJuU
+        UjIkOGnLMfWlsxEtrcvm65gbIKG642h1prlAs6MJwlNJlxFI0dsz6Lv2IkE5O7Kd
+        k0UDuXS/GLC2sWdgvxfM9LZ3+uWq+7HXS//U3VIDRAosErI8uRAxG6i2Huat4O16
+        XeS5x0emvICPiGZhnBitoksaGQi0y1nyZWubzPqMRW6Qe3RoIS3drhTeQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=FMKLC09xuIf9FIYI+xqoFdFwX3vaShvGRIMTND5Z/+g=; b=YOSOEb9R
+        WsTOlJuCWYivbI7VpnVMB2Se0EQjIOllck6yN9f0J3mGCR9AAVuJLTyWBTZllI5I
+        L4yWYz9nCaXFcd2Sv0k1i3eU4y03j5lSiEvdQBTX2q61SUqihhPNUev11mdmsDpp
+        jZtFfkSkCcz8cyVIV4om9dQLZuOyDNyQ8aQ8z7ROYMFdoAT6WjWLyptBXx0i380u
+        cpo6JT3FCj/iuoho4aMPPlRR2KcGgZMh194VEQLhhbpd2jUxCFSW+Z2povLbeLhg
+        NpnikkBbsW1ZvInF6S/yPdCGWqMc+mY2uF7QwcYXfP79let6sEezM557vxWdDdk/
+        C6gt9ar6YTZ4Mg==
+X-ME-Sender: <xms:CYzOXo3k5ggk4CMwUXr4-QjPEHgDZ5wxvRkmItNAHgZM4Ddb2W7JHg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdejne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:CYzOXjEamHtenIDCn-_P7UuJat8hSAjGK8tXSvIIdLW87gJ844uE_g>
+    <xmx:CYzOXg6F1-Elxg63MvQ6RAhOYNMMMAkV8NMV37ryabHpJ6Xiw4zosQ>
+    <xmx:CYzOXh2nGdwYQm7Bqs5tVe3YdnhlwB01W2KDu6mcTCggWRHBFLv4ug>
+    <xmx:CYzOXiDJCszV65p7WjgGUYa6NwaOP-FbahYUafV-Ig9MORX3d-JMww>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 648093280060;
+        Wed, 27 May 2020 11:49:29 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v3 008/105] dt-bindings: display: vc4: dsi: Add missing clock properties
+Date:   Wed, 27 May 2020 17:47:38 +0200
+Message-Id: <867813ae6b3e9cff0e9627e6ed09569dee5573bc.1590594512.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527153046.6172-8-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 06:30:42PM +0300, Serge Semin wrote:
-> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
-> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
-> bus pm_disabled workaround"), but the flag most likely by mistake has been
-> left in the Dw I2C drivers. Let's remove it.
+While the device tree and the driver expected a clock-names and a
+clock-cells properties, it wasn't explicitly documented in the previous
+binding. Make sure it is now.
 
-Same comment as per previous version.
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml | 11 +++++++-
+ 1 file changed, 11 insertions(+)
 
-> Since MODEL_MSCC_OCELOT is
-> the only model-flag left, redefine it to be 0x100 so setting a very first
-> bit in the MODEL_MASK bits range.
-
-Cool, but why should we care?
-
-> -#define MODEL_MSCC_OCELOT	0x00000200
-> +#define MODEL_MSCC_OCELOT	0x00000100
-
-We have 4 bits for that, and you are going to reuse this anyway.
-
-I consider this unneeded churn.
-
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+index 3887675f844e..3c643b227a70 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+@@ -10,6 +10,9 @@ maintainers:
+   - Eric Anholt <eric@anholt.net>
+ 
+ properties:
++  "#clock-cells":
++    const: 1
++
+   compatible:
+     enum:
+       - brcm,bcm2835-dsi0
+@@ -24,6 +27,12 @@ properties:
+       - description: The DSI ESC clock
+       - description: The DSI pixel clock
+ 
++  clock-names:
++    items:
++      - const: phy
++      - const: escape
++      - const: pixel
++
+   clock-output-names: true
+     # FIXME: The meta-schemas don't seem to allow it for now
+     # items:
+@@ -35,9 +44,11 @@ properties:
+     maxItems: 1
+ 
+ required:
++  - "#clock-cells"
+   - compatible
+   - reg
+   - clocks
++  - clock-names
+   - clock-output-names
+   - interrupts
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+git-series 0.9.1
