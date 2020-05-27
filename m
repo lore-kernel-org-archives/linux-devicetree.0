@@ -2,119 +2,89 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B512EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993BEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9294F20873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WIujI7Wh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wn93fV+R"
+	by mail.kernel.org (Postfix) with ESMTP id 820C120899
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 15:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbgE0Puv (ORCPT
+        id S2390286AbgE0PxY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 11:50:51 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:43213 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730605AbgE0Puv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 11:50:51 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E600B5820B3;
-        Wed, 27 May 2020 11:50:49 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=mIo2yTnIciTwR
-        AfqGqPRdeUMoEIyJ/WFBxN68ut8oG8=; b=WIujI7WharlAGicvX2WyOiv3jX+w/
-        sT18coLSjEtk5L6aOGZY5lEKGgnwldzH3cLD8lbkMcVhqvgRz3ICcqIxnBGeRMrw
-        sCG3316RnFnMeU3i7e5daLdaLKRYg7+FjeHtF0AEpaV0IQ7C+1MFLC+CbSpOWUq8
-        Vn3+NbxUHP5RNbgafLj5MOlPPLpXGsan+WRemQ9AKtNZ2fkjRbsrk4Q9CHqW1crt
-        s6Fmu23OKv0wtN4mphn96mVswCajMnF677jS+WpYpaTucREJhPkTggCh8/UYY8FJ
-        1UyDuHxaMWLdKntiSlyOJfz2o7MBprRWdDO6lqtxZMkVGXND67UCYIgTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=mIo2yTnIciTwRAfqGqPRdeUMoEIyJ/WFBxN68ut8oG8=; b=Wn93fV+R
-        q1M2XVFtqYnkqegBnI2+hcYd65lr3f+m4BIGlxHmdf6Hgre9IShj5JSu7XGCoXz8
-        yE1eZdm5wV5arOOa4w2NiU3YeUN8gw1fXX0yU9Xr9IsJBNuQpRC7Lu/HNUDfddqG
-        0USSPnOFBnuYyRh5hEXkMrmMlWQUGDXpxlYp5yza7lRjsl25J+ZZ5Rqqqyiczz5A
-        6Y+vrG7MRNzE+ptXg9W/IzFwduiWxOZeFqevg0I2owrehgdm2zYHq5DfTMITEczi
-        4H8DDAVfixWaqZKs/4sqtQ3QLwSfPAA3lKzrTRRx7b0vRpBPbHEebDd9YmMP+y7/
-        KAovOHXo2fb26w==
-X-ME-Sender: <xms:WYzOXuaXTafeeH1qBIUAYGWr3X21ebDrB9dOHZ8wFMBc7C6HItNLbg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepgedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:WYzOXhZtgLYNhhexBOTBA6ekPuv5j5tLZn190Cf_lBBfLsUgv6Q65A>
-    <xmx:WYzOXo-OWLJuw1Pf0HRrPKQfBDUL3huWfJqU7z1Qe1pA2PzsrA7jDw>
-    <xmx:WYzOXgqZgDKyETahtm56zYeJtFcIIQQ75t6Ma4356fq1LYgp97pVng>
-    <xmx:WYzOXk0QdgkupH8rqEGRjj03brjLl77Z9AxUQD2EfQ-GxsT29GxhBA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8671B3280069;
-        Wed, 27 May 2020 11:50:49 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v3 058/105] dt-bindings: display: vc4: pv: Add BCM2711 pixel valves
-Date:   Wed, 27 May 2020 17:48:28 +0200
-Message-Id: <38e915fcfcbc6896344423eb651f60cc04273caa.1590594512.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+        Wed, 27 May 2020 11:53:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18233 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730681AbgE0Pwk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 11:52:40 -0400
+IronPort-SDR: 2PmsTAisMn82Rly0A7ZkBfdS8Qmx0dzj7UdC7KTSbbRIQeQZvZvmZkAbhh1/XaFK1Cjd4gNrZN
+ B1ptQ9kMo98w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 08:52:39 -0700
+IronPort-SDR: 6YhWIySeoBxP4RHsRtDP4kdHvHlwrWX91anzrnOVHK/y5q7DzF2CnJFga66qMCQf60brEM38t5
+ 0uDaifa1ajXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="442571050"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 27 May 2020 08:52:36 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdyMB-009Fql-2r; Wed, 27 May 2020 18:52:39 +0300
+Date:   Wed, 27 May 2020 18:52:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 11/11] i2c: designware: Add Baikal-T1 System I2C
+ support
+Message-ID: <20200527155239.GI1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-12-Sergey.Semin@baikalelectronics.ru>
+ <20200527140303.GC1634618@smile.fi.intel.com>
+ <20200527150431.z25aibkn6edplneh@mobilestation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527150431.z25aibkn6edplneh@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BCM2711 comes with other pixelvalves that have different requirements
-and capabilities. Let's document their compatible.
+On Wed, May 27, 2020 at 06:04:31PM +0300, Serge Semin wrote:
+> On Wed, May 27, 2020 at 05:03:03PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 03:01:11PM +0300, Serge Semin wrote:
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+...
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
-index e60791db1fa1..4e1ba03f6477 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
-@@ -15,6 +15,11 @@ properties:
-       - brcm,bcm2835-pixelvalve0
-       - brcm,bcm2835-pixelvalve1
-       - brcm,bcm2835-pixelvalve2
-+      - brcm,bcm2711-pixelvalve0
-+      - brcm,bcm2711-pixelvalve1
-+      - brcm,bcm2711-pixelvalve2
-+      - brcm,bcm2711-pixelvalve3
-+      - brcm,bcm2711-pixelvalve4
- 
-   reg:
-     maxItems: 1
+> > > +static struct regmap_config bt1_i2c_cfg = {
+> > > +	.reg_bits = 32,
+> > > +	.val_bits = 32,
+> > > +	.reg_stride = 4,
+> > > +	.fast_io = true,
+> > > +	.reg_read = bt1_i2c_read,
+> > > +	.reg_write = bt1_i2c_write,
+> > > +	.max_register = DW_IC_COMP_TYPE
+
+And perhaps add a comma?
+
+> > > +};
+
 -- 
-git-series 0.9.1
+With Best Regards,
+Andy Shevchenko
+
+
