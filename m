@@ -2,126 +2,178 @@ Return-Path: <SRS0=aO3b=7J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797CFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51703C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 537CE2078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590563177;
-	bh=Bnwio/T0f8/rO+4l0ETfUXCahBdmz6vzX2tvqweK3c4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=v5+T3Xi/mEqOyurT7m8YkF1a3BniQ4x/MkUtnkE8SPNAFagd6+wXCTrbAdYUMsf0E
-	 VKLDE0ipCixfEHi8OT43NqdYLCz3A4GF/G7fJ/pIgE47lxQg2j2qnLTcVnHc+gllPL
-	 8EObFvdSJgXtmxGbEHHXdK+HBFwNbJWM6ptyzWAk=
+	by mail.kernel.org (Postfix) with ESMTP id 2B7AA20E65
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 May 2020 07:27:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLxklYnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgE0HGO (ORCPT
+        id S1729171AbgE0H1l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 03:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgE0HGO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 03:06:14 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85A65206F1;
-        Wed, 27 May 2020 07:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590563173;
-        bh=Bnwio/T0f8/rO+4l0ETfUXCahBdmz6vzX2tvqweK3c4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=oF/iNegV3lDmsHA8jl2XuOdgHsm3ArbmfhqDo4tj/ixgr/8+hjuVwgK2omrt1GHqK
-         lftYRB6EtnDGNvsW0OlYmy8Cp4c40r1rRUvQnh70Y1+AmlskJw2okPi3Ha7N8yyMaB
-         MuI4eAKk/rPw1yzcI9NKh9tcdk+KZvcMyWAF4ovE=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 27 May 2020 03:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbgE0H1l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 03:27:41 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1450AC061A0F;
+        Wed, 27 May 2020 00:27:41 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id c75so11386662pga.3;
+        Wed, 27 May 2020 00:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8/pnqpOF5kxfkVhRDe0RiihBA49v54di4gIOur7X7TI=;
+        b=LLxklYnNzudxPlgcrT/fJNH2MPem+uGxJgHfy7oOISPLHa6ikpirtHb4EbdRGht7SY
+         WvJUMfY8ftB39R8dNXZmU0Tsi2+8gVyzbQCdw8JVrCCtOYOTkA4VPmul/BxC4cxSn7b2
+         pJcm00a/TAQ3Hkvjqm+ckwrHB8AcyPl9jNbg/EnnpbvIKqDkgcQMjJZnehn3ZjSV+LbB
+         YopiG1L1bRkwjA1To3JPFquX6uVMApyoXGMGTYtvF5qp8ill3bfFy8od9hHGwd+ADjFS
+         C4AH+ZC+zqbKPpKFcdUQ4GzSfrAoHBsQ5Drwozv/8sGHx5h3hzJvvdBCpRm14Hg22v5Q
+         a5Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8/pnqpOF5kxfkVhRDe0RiihBA49v54di4gIOur7X7TI=;
+        b=ltujOWTqbkJ7aXCuOVgK85f1s86baCew6Yxyjx2tmJCKanpIObHvMaA6YX9rVclbp/
+         G67Uekb3uXqtp+7sSEDHKZ9t71y3i21YrV2Ki/BPUMrWWBY4D/5KVlOaqmo5u2FwdpvB
+         nTzPwDTR/bLDEmnqUVPlutnRM6CLhnoKzMt/cr4Ug1BIwXidFK7poUS030DGAwKHuRqZ
+         mnmW3opoaDvHmgerxa4xQGS/Pte9mq3oQFER8ZkXYUDplrJW2akBRNtnamywJ1a0tS3h
+         W9AG4ynFvRPXzqN6Jry/p7qYN8qt1/acl5h1q0kg4fxSO0sfdiOR3+m/0Ptz+5ZwJeoW
+         Gheg==
+X-Gm-Message-State: AOAM531bwlbnxzrzTrWaXdYEHAJbOI0yxYLkEKxjnCZcf51EqYbSOAWt
+        jOe99hWulse+3RBnjIjlg6Q=
+X-Google-Smtp-Source: ABdhPJxTLPr+jP/ArwpWxHxmn/pRT0kb8dD0HedLtdqVNcsMKzf6roH/kNinnVypb58H7dXiI1M8vg==
+X-Received: by 2002:a63:fd57:: with SMTP id m23mr2859284pgj.325.1590564460640;
+        Wed, 27 May 2020 00:27:40 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.44])
+        by smtp.gmail.com with ESMTPSA id q201sm1371842pfq.40.2020.05.27.00.27.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 May 2020 00:27:40 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     robh+dt@kernel.org, p.zabel@pengutronix.de,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
+        daniel@ffwll.ch, mturquette@baylibre.com, sboyd@kernel.org,
+        andy.shevchenko@gmail.com, noralf@tronnes.org,
+        linus.walleij@linaro.org, broonie@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillonhua@gmail.com, dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH v6 0/9] Enable ili9341 and l3gd20 on stm32f429-disco
+Date:   Wed, 27 May 2020 15:27:24 +0800
+Message-Id: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <a1efabae8d7df30c987bff10544c2071e906e07a.1587742492.git-series.maxime@cerno.tech>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech> <a1efabae8d7df30c987bff10544c2071e906e07a.1587742492.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH v2 25/91] clk: bcm: Add BCM2711 DVP driver
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Wed, 27 May 2020 00:06:12 -0700
-Message-ID: <159056317280.88029.13256292035418533462@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Maxime Ripard (2020-04-24 08:34:06)
-> The HDMI block has a block that controls clocks and reset signals to the
-> HDMI0 and HDMI1 controllers.
->=20
-> Let's expose that through a clock driver implementing a clock and reset
-> provider.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
+From: dillon min <dillon.minfei@gmail.com>
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+V6:
+1 separate '[PATCH v5 5/8]' patchs to two, each one has a Fixes tags according
+  to Stephen Boyd's suggestion
+2 fix panel-ilitek-ili9341 compile warning 'warning: Function parameter or
+  member xxx not described in xxx' with W=1
 
-> diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2=
-711-dvp.c
-> new file mode 100644
-> index 000000000000..c1c4b5857d32
-> --- /dev/null
-> +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
-> @@ -0,0 +1,127 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright 2020 Cerno
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/module.h>
-[...]
-> +
-> +static int clk_dvp_probe(struct platform_device *pdev)
-> +{
-> +       struct clk_hw_onecell_data *data;
-> +       struct resource *res;
-> +       struct clk_dvp *dvp;
-> +       void __iomem *base;
-> +       int ret;
-> +
-> +       dvp =3D devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
-> +       if (!dvp)
-> +               return -ENOMEM;
-> +       platform_set_drvdata(pdev, dvp);
-> +
-> +       dvp->data =3D devm_kzalloc(&pdev->dev,
-> +                                struct_size(dvp->data, hws, NR_CLOCKS),
-> +                                GFP_KERNEL);
-> +       if (!dvp->data)
-> +               return -ENOMEM;
-> +       data =3D dvp->data;
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       base =3D devm_ioremap_resource(&pdev->dev, res);
+V5's update based on Mark Brown's suggestion, use 'SPI_MASTER_MUST_RX'
+for SPI_SIMPLEX_RX mode on stm32 spi controller.
 
-devm_platform_ioremap_resource()?
+V5:
+1 instead of add send dummy data out under SIMPLEX_RX mode,
+  add flags 'SPI_CONTROLLER_MUST_TX' for stm32 spi driver
+2 bypass 'SPI_CONTROLLER_MUST_TX' and 'SPI_CONTROLLER_MUST_RX' under
+  'SPI_3WIRE' mode
 
-> +       if (IS_ERR(base))
-> +               return PTR_ERR(base);
-> +
+V4:
+  According to alexandre torgue's suggestion, combine ili9341 and
+  l3gd20's modification on stm32f429-disco board to one patchset.
+
+Changes:
+
+ili9341:
+
+1 update ili9341 panel driver according to Linus's suggestion
+2 drop V1's No.5 patch, sumbit new changes for clk-stm32f4
+3 merge l3gd20's change to this patchset
+
+V3:
+1 merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
+  to support serial spi & parallel rgb interface in one driver.
+2 update ilitek,ili9341.yaml dts binding documentation.
+3 update stm32f429-disco dts binding
+
+V2:
+1 verify ilitek,ili9341.yaml with make O=../linux-stm32
+  dt_binding_check
+  DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+  ilitek,ili9341.yaml
+
+V1:
+1 add ili9341 drm panel driver
+2 add ltdc, spi5 controller for stm32f429-disco
+3 add ltdc, spi5 pin map for stm32f429-disco
+4 add docs about ili9341
+5 fix ltdc driver loading hang in clk set rate bug
+
+
+L3gd20:
+
+V3:
+1 merge stm32f429-disco dtbs binding with ili9341 part
+
+V2:
+1 insert blank line at stm32f420-disco.dts line 143
+2 add more description for l3gd20 in commit message
+
+V1:
+1 enable spi5 controller on stm32f429-disco (dts)
+2 add spi5 pinmap for stm32f429-disco  (dts)
+3 add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+
+
+dillon min (9):
+  ARM: dts: stm32: Add dma config for spi5
+  ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
+  ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on    
+    stm32429-disco board
+  dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+  clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate
+  clk: stm32: Fix ltdc's clock turn off by clk_disable_unused() after
+    kernel     startup
+  drm/panel: Add ilitek ili9341 panel driver
+  spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+  spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
+    be     coexit with 'SPI_3WIRE' mode
+
+ .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
+ drivers/clk/clk-stm32f4.c                          |    7 +-
+ drivers/gpu/drm/panel/Kconfig                      |   12 +
+ drivers/gpu/drm/panel/Makefile                     |    1 +
+ drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1288 ++++++++++++++++++++
+ drivers/spi/spi-stm32.c                            |   19 +-
+ drivers/spi/spi.c                                  |    3 +-
+ 10 files changed, 1508 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+
+-- 
+2.7.4
+
