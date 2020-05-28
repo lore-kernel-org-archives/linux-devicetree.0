@@ -2,90 +2,108 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FCEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91897207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590677300;
-	bh=glegTNbyG4+ZKT/Nw1GpsorARuAp8OyhZCm4KzAL2PE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rwPEfhe4G6kJ2yYfXo1v8chk/0O/+noNlbE49PLBYfr5c6x8FPpRxeBqzW/M6oE0z
-	 3KpmSazSuMVeTlJejh/RP22nty8vWs5Bip6APfnittlwerDWC0eZG9DmE9oLEVbX6X
-	 RFlEXZuEpSqd8R0BNqcrNsBCNQap62JUiDyTWxGg=
+	by mail.kernel.org (Postfix) with ESMTP id F2B75207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgE1OsI (ORCPT
+        id S1728599AbgE1Otb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:48:08 -0400
-Received: from mail-io1-f51.google.com ([209.85.166.51]:33619 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728456AbgE1OsH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:48:07 -0400
-Received: by mail-io1-f51.google.com with SMTP id k18so30309579ion.0;
-        Thu, 28 May 2020 07:48:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sk3NhDpltS42mXxoOytbsMAa+03NQ034Rus+VTvtCUM=;
-        b=JqCrMGmbZC+J+rMzOJ4CIvW8gVlCeeB06UNjRaJQTuEHHs5wi0nbAdwbO6A/EgCRRK
-         2+f4ArgZILv3U1EyHzctu32wOAuIxNNeN3PVZ35iogYEYxg7PSCkND9wqqtAeDZTeX/p
-         GT2Onv7asHJUQcdlQxgIRCuFuc/ROEZl9NYNoJGnhdS4KwjLhpa0ROHtlWPwDhQXoGyJ
-         RPUgidZ6wlrKZPwC3MhCwQTGOzMtKZLQWbv75gMsxqTeN3csazFsYLFbwrg5p9GAh7VY
-         UFoddPx7cidmiJDeYBNld0bRe4R1kELzfel52x3WNUpoyWG8MHw+GimEfhe1+XYtc2qz
-         AM5A==
-X-Gm-Message-State: AOAM533WpuwMkCJt5Rc0EDDeK1EA2cizFFKXhme6UFKAgzAqBf971lB4
-        wfWuJrhfWwzt5cqmWu7Sog==
-X-Google-Smtp-Source: ABdhPJyqWSoedQ4uoSVKakZIQqvkZaTL4iJfxqNE8vRynVhBNqESQfFiekM/SqxTlkXC5Mdjt6q1qw==
-X-Received: by 2002:a02:93a1:: with SMTP id z30mr2833528jah.25.1590677285689;
-        Thu, 28 May 2020 07:48:05 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id o18sm3204484ils.30.2020.05.28.07.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:48:04 -0700 (PDT)
-Received: (nullmailer pid 37765 invoked by uid 1000);
-        Thu, 28 May 2020 14:48:03 -0000
-Date:   Thu, 28 May 2020 08:48:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCHv3 0/2] Add support for replicators which loses context on
- clock removal
-Message-ID: <20200528144803.GA36440@bogus>
-References: <cover.1590171891.git.saiprakash.ranjan@codeaurora.org>
- <20200525161553.GA31527@xps15>
+        Thu, 28 May 2020 10:49:31 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:33229 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728598AbgE1Ota (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:49:30 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 6AE4FC0007;
+        Thu, 28 May 2020 14:49:27 +0000 (UTC)
+Date:   Thu, 28 May 2020 16:49:26 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <weijie.gao@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Julien Su <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v6 16/18] mtd: nand: Convert generic NAND bits to use
+ the ECC framework
+Message-ID: <20200528164926.3b99f848@xps13>
+In-Reply-To: <20200528163907.6539e2a1@collabora.com>
+References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
+        <20200528113113.9166-17-miquel.raynal@bootlin.com>
+        <20200528163907.6539e2a1@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525161553.GA31527@xps15>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 25, 2020 at 10:15:53AM -0600, Mathieu Poirier wrote:
-> Hi Sai,
+
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 28 May
+2020 16:39:07 +0200:
+
+> On Thu, 28 May 2020 13:31:11 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 > 
-> On Sat, May 23, 2020 at 12:06:50AM +0530, Sai Prakash Ranjan wrote:
-> > This series is mainly to add support for replicators
-> > which lose context on removing AMBA clock like on SC7180
-> > SoC where replicator in AOSS domain loses context.
+> > Embed a generic NAND ECC high-level object in the nand_device
+> > structure to carry all the ECC engine configuration/data. Adapt the
+> > raw NAND and SPI-NAND cores to fit the change.
 > > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> >  drivers/mtd/nand/Kconfig                     |  1 +
+> >  drivers/mtd/nand/raw/atmel/nand-controller.c |  9 +++--
+> >  drivers/mtd/nand/raw/brcmnand/brcmnand.c     |  7 ++--
+> >  drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c   | 12 +++---
+> >  drivers/mtd/nand/raw/marvell_nand.c          |  7 ++--
+> >  drivers/mtd/nand/raw/mtk_nand.c              |  4 +-
+> >  drivers/mtd/nand/raw/nand_base.c             | 25 ++++++------
+> >  drivers/mtd/nand/raw/nand_esmt.c             | 11 +++---
+> >  drivers/mtd/nand/raw/nand_hynix.c            | 41 ++++++++++----------
+> >  drivers/mtd/nand/raw/nand_jedec.c            |  4 +-
+> >  drivers/mtd/nand/raw/nand_micron.c           | 14 ++++---
+> >  drivers/mtd/nand/raw/nand_onfi.c             |  8 ++--
+> >  drivers/mtd/nand/raw/nand_samsung.c          | 19 ++++-----
+> >  drivers/mtd/nand/raw/nand_toshiba.c          | 11 +++---
+> >  drivers/mtd/nand/raw/sunxi_nand.c            |  5 ++-
+> >  drivers/mtd/nand/raw/tegra_nand.c            |  9 +++--
+> >  drivers/mtd/nand/spi/core.c                  |  8 ++--
+> >  drivers/mtd/nand/spi/macronix.c              |  6 +--
+> >  drivers/mtd/nand/spi/toshiba.c               |  6 +--
+> >  include/linux/mtd/nand.h                     |  8 ++--
+> >  20 files changed, 115 insertions(+), 100 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+> > index a4478ffa279d..3327d8539a73 100644
+> > --- a/drivers/mtd/nand/Kconfig
+> > +++ b/drivers/mtd/nand/Kconfig
+> > @@ -13,6 +13,7 @@ menu "ECC engine support"
+> >  
+> >  config MTD_NAND_ECC
+> >  	bool
+> > +	select MTD_NAND_CORE  
 > 
-> I am good with this set but need a reviewed-by on the DT binding before I can
-> add it to my tree.  The same goes for your other set[1].
+> This select looks suspicious. Shouldn't it be a depends on, and more
+> importantly, I think it should be part of patch 15.
 
-Then why is it already in linux-next?
+Wouldn't we break a lot of users by using depends on?
 
-In any case,
-
-Acked-by: Rob Herring <robh@kernel.org>
+Or maybe we can turn it on by default?
