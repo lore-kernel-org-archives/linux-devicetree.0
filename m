@@ -2,86 +2,106 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34290C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FD6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0226D2075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590678180;
-	bh=FlElzWr+Sp5QKJidb+0J5RSKJXutVhvf/ybI9w4urPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fS67lksSGbs9BroTl0drKtqlBbQ0C5u02emDJqUKuoa4zezLiv2jsB6cb1L1ngxQf
-	 9ZxC6lBNOx8jggWQqEiNt9PIXyryB/xyTdfPa/whFWI/yLbCfC96YReVis8g2SwEsr
-	 Lol4YoZkq9MXy/ayXby85wMPyMgayrJNViYqIbAI=
+	by mail.kernel.org (Postfix) with ESMTP id 9D7542084C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403934AbgE1PC7 (ORCPT
+        id S2403912AbgE1PDu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:02:59 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38453 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403912AbgE1PCx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:02:53 -0400
-Received: by mail-io1-f66.google.com with SMTP id d7so30342812ioq.5;
-        Thu, 28 May 2020 08:02:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Qgmco4ffaTrukcokfI+4N6+JaZOIcIstDQ+dZwHwNQw=;
-        b=UqUwomZsg9Ht1iMFnOh/Loay+FPVyQ39547mvHvlQsAMZHT6Z4ubRloFERhi9i2YyP
-         XcTcbUZe90wJiBBTjq0ON/hs4u2apx8cOHIAaaf/tENl4UjRjwW8oD4l6HQNWen0d7gq
-         9afO9z6tIF+dkejKfbnyNGmtXgDYapC19tqId/TCMQLVg4mHLPO1HRW/gLOEm1xjBLwC
-         T0zQxjOEPDp3ZCLD9xYxnAAgudSEhibMXF+Mvim0xrQgaHz9daMiir/oAa9bBsS3CwRs
-         HuDdToZEOx/rLdHzJ1lJCuZFgNs/Zz54rJT9wNz40LRPYlIVizENNfap0iJMO/dO97eh
-         CxLA==
-X-Gm-Message-State: AOAM531RyQAUh7JM7F7eE3GDSRJFr8s2r6SoDD791XjMrWi9fs27jCRT
-        RtzM2qZp/a07OAXLmmOkdRLjUbs=
-X-Google-Smtp-Source: ABdhPJyuBA73B/aLP9SLW5z3RxwwrWs7+0j5gkm719znfP/EHR8vhewhVVFrOLI7s7LuGdVfJ6o7UQ==
-X-Received: by 2002:a02:3f25:: with SMTP id d37mr3051023jaa.142.1590678171651;
-        Thu, 28 May 2020 08:02:51 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w70sm3379101ili.78.2020.05.28.08.02.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:02:50 -0700 (PDT)
-Received: (nullmailer pid 64380 invoked by uid 1000);
-        Thu, 28 May 2020 15:02:49 -0000
-Date:   Thu, 28 May 2020 09:02:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc:     devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com,
-        Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
-Subject: Re: [PATCH v3] video: fbdev: ssd1307fb: Added support to Column
- offset
-Message-ID: <20200528150249.GA64321@bogus>
-References: <1589395691-8762-1-git-send-email-alencar.fmce@imbel.gov.br>
+        Thu, 28 May 2020 11:03:50 -0400
+Received: from mga05.intel.com ([192.55.52.43]:26365 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403901AbgE1PDt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 11:03:49 -0400
+IronPort-SDR: T0Gx3S+1NnyGgLRJKpvK8ZqMaC/usWv+kn5tDWPRuBLdyDMoPJf0EI4LNQy8XBy68xZy20hSf8
+ JzdV5+YreAmQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:03:48 -0700
+IronPort-SDR: VCP24WwpwTZQMISVT31BpFmDM2ZKPpBO2QU5tNkPxtdm/saoNw2Q2QS82qfDVk1hdz1UxhZQdu
+ 4XiBex7pwm4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="469143502"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 28 May 2020 08:03:47 -0700
+Received: from [10.214.148.6] (vramuthx-mobl1.gar.corp.intel.com [10.214.148.6])
+        by linux.intel.com (Postfix) with ESMTP id 8928D5803E3;
+        Thu, 28 May 2020 08:03:41 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v9 1/2] dt-bindings: mtd: Add Nand Flash Controller
+ support for Intel LGM SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org, arnd@arndb.de,
+        hauke.mehrtens@intel.com, linux-mips@vger.kernel.org,
+        richard@nod.at, qi-ming.wu@intel.com, tglx@linutronix.de,
+        brendanhiggins@google.com, linux-mtd@lists.infradead.org,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        miquel.raynal@bootlin.com, andriy.shevchenko@intel.com,
+        robh+dt@kernel.org, masonccyang@mxic.com.tw
+References: <20200528051211.3063-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200528051211.3063-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200528140606.GA4173978@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <9ef6560e-9981-57a8-8d6d-88ba40b2be88@linux.intel.com>
+Date:   Thu, 28 May 2020 23:03:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589395691-8762-1-git-send-email-alencar.fmce@imbel.gov.br>
+In-Reply-To: <20200528140606.GA4173978@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 15:48:11 -0300, Rodrigo Alencar wrote:
-> From: Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
-> 
-> This patch provides support for displays like VGM128064B0W10,
-> which requires a column offset of 2, i.e., its segments starts
-> in SEG2 and ends in SEG129.
-> 
-> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-> ---
->  Documentation/devicetree/bindings/display/ssd1307fb.txt | 1 +
->  drivers/video/fbdev/ssd1307fb.c                         | 8 ++++++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
+Hi Rob,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 28/5/2020 10:06 pm, Rob Herring wrote:
+> On Thu, 28 May 2020 13:12:10 +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add YAML file for dt-bindings to support NAND Flash Controller
+>> on Intel's Lightning Mountain SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 93 ++++++++++++++++++++++
+>>   1 file changed, 93 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>>
+> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: '#address-cells', '#size-cells' do not match any of the regexes: '^nand@[a-f0-9]+$', 'pinctrl-[0-9]+'
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: nand@0: '#address-cells', '#size-cells', 'nand-on-flash-bbt' do not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> See https://patchwork.ozlabs.org/patch/1299399
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
+Thank you!!!
+
+Oh my bad, used old dtc compiler path and didn't see the error, will fix.
+
+Regards
+Vadivel
+
+> 
