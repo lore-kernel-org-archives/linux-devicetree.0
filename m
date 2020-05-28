@@ -2,106 +2,124 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FD6C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E219FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7542084C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77072075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403912AbgE1PDu (ORCPT
+        id S2404000AbgE1PEZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:03:50 -0400
-Received: from mga05.intel.com ([192.55.52.43]:26365 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403901AbgE1PDt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 11:03:49 -0400
-IronPort-SDR: T0Gx3S+1NnyGgLRJKpvK8ZqMaC/usWv+kn5tDWPRuBLdyDMoPJf0EI4LNQy8XBy68xZy20hSf8
- JzdV5+YreAmQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:03:48 -0700
-IronPort-SDR: VCP24WwpwTZQMISVT31BpFmDM2ZKPpBO2QU5tNkPxtdm/saoNw2Q2QS82qfDVk1hdz1UxhZQdu
- 4XiBex7pwm4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="469143502"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 28 May 2020 08:03:47 -0700
-Received: from [10.214.148.6] (vramuthx-mobl1.gar.corp.intel.com [10.214.148.6])
-        by linux.intel.com (Postfix) with ESMTP id 8928D5803E3;
-        Thu, 28 May 2020 08:03:41 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v9 1/2] dt-bindings: mtd: Add Nand Flash Controller
- support for Intel LGM SoC
-To:     Rob Herring <robh@kernel.org>
-Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org, arnd@arndb.de,
-        hauke.mehrtens@intel.com, linux-mips@vger.kernel.org,
-        richard@nod.at, qi-ming.wu@intel.com, tglx@linutronix.de,
-        brendanhiggins@google.com, linux-mtd@lists.infradead.org,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        miquel.raynal@bootlin.com, andriy.shevchenko@intel.com,
-        robh+dt@kernel.org, masonccyang@mxic.com.tw
-References: <20200528051211.3063-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200528051211.3063-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200528140606.GA4173978@bogus>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <9ef6560e-9981-57a8-8d6d-88ba40b2be88@linux.intel.com>
-Date:   Thu, 28 May 2020 23:03:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 28 May 2020 11:04:25 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:52143 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403980AbgE1PEZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:04:25 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A9D7A240003;
+        Thu, 28 May 2020 15:04:20 +0000 (UTC)
+Date:   Thu, 28 May 2020 17:04:19 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <weijie.gao@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Julien Su <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v6 16/18] mtd: nand: Convert generic NAND bits to use
+ the ECC framework
+Message-ID: <20200528170419.0c2ba99a@xps13>
+In-Reply-To: <20200528165217.6582f9aa@collabora.com>
+References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
+        <20200528113113.9166-17-miquel.raynal@bootlin.com>
+        <20200528163907.6539e2a1@collabora.com>
+        <20200528164926.3b99f848@xps13>
+        <20200528165217.6582f9aa@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200528140606.GA4173978@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 28/5/2020 10:06 pm, Rob Herring wrote:
-> On Thu, 28 May 2020 13:12:10 +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add YAML file for dt-bindings to support NAND Flash Controller
->> on Intel's Lightning Mountain SoC.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 93 ++++++++++++++++++++++
->>   1 file changed, 93 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
->>
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: '#address-cells', '#size-cells' do not match any of the regexes: '^nand@[a-f0-9]+$', 'pinctrl-[0-9]+'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: nand@0: '#address-cells', '#size-cells', 'nand-on-flash-bbt' do not match any of the regexes: 'pinctrl-[0-9]+'
-> 
-> See https://patchwork.ozlabs.org/patch/1299399
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-Thank you!!!
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 28 May
+2020 16:52:17 +0200:
 
-Oh my bad, used old dtc compiler path and didn't see the error, will fix.
-
-Regards
-Vadivel
-
+> On Thu, 28 May 2020 16:49:26 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 > 
+> > Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 28 May
+> > 2020 16:39:07 +0200:
+> >   
+> > > On Thu, 28 May 2020 13:31:11 +0200
+> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > >     
+> > > > Embed a generic NAND ECC high-level object in the nand_device
+> > > > structure to carry all the ECC engine configuration/data. Adapt the
+> > > > raw NAND and SPI-NAND cores to fit the change.
+> > > > 
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > ---
+> > > >  drivers/mtd/nand/Kconfig                     |  1 +
+> > > >  drivers/mtd/nand/raw/atmel/nand-controller.c |  9 +++--
+> > > >  drivers/mtd/nand/raw/brcmnand/brcmnand.c     |  7 ++--
+> > > >  drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c   | 12 +++---
+> > > >  drivers/mtd/nand/raw/marvell_nand.c          |  7 ++--
+> > > >  drivers/mtd/nand/raw/mtk_nand.c              |  4 +-
+> > > >  drivers/mtd/nand/raw/nand_base.c             | 25 ++++++------
+> > > >  drivers/mtd/nand/raw/nand_esmt.c             | 11 +++---
+> > > >  drivers/mtd/nand/raw/nand_hynix.c            | 41 ++++++++++----------
+> > > >  drivers/mtd/nand/raw/nand_jedec.c            |  4 +-
+> > > >  drivers/mtd/nand/raw/nand_micron.c           | 14 ++++---
+> > > >  drivers/mtd/nand/raw/nand_onfi.c             |  8 ++--
+> > > >  drivers/mtd/nand/raw/nand_samsung.c          | 19 ++++-----
+> > > >  drivers/mtd/nand/raw/nand_toshiba.c          | 11 +++---
+> > > >  drivers/mtd/nand/raw/sunxi_nand.c            |  5 ++-
+> > > >  drivers/mtd/nand/raw/tegra_nand.c            |  9 +++--
+> > > >  drivers/mtd/nand/spi/core.c                  |  8 ++--
+> > > >  drivers/mtd/nand/spi/macronix.c              |  6 +--
+> > > >  drivers/mtd/nand/spi/toshiba.c               |  6 +--
+> > > >  include/linux/mtd/nand.h                     |  8 ++--
+> > > >  20 files changed, 115 insertions(+), 100 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+> > > > index a4478ffa279d..3327d8539a73 100644
+> > > > --- a/drivers/mtd/nand/Kconfig
+> > > > +++ b/drivers/mtd/nand/Kconfig
+> > > > @@ -13,6 +13,7 @@ menu "ECC engine support"
+> > > >  
+> > > >  config MTD_NAND_ECC
+> > > >  	bool
+> > > > +	select MTD_NAND_CORE      
+> > > 
+> > > This select looks suspicious. Shouldn't it be a depends on, and more
+> > > importantly, I think it should be part of patch 15.    
+> > 
+> > Wouldn't we break a lot of users by using depends on?
+> > 
+> > Or maybe we can turn it on by default?  
+> 
+> It's a sub-functionality of the NAND core, so it should be a depends on
+> in my opinion. Why would that break users. Aren't you selecting
+> MTD_NAND_CORE in MTD_RAWNAND now? Those options should really remain
+> hidden, and be selected at the SPI/raw NAND framework level.
+
+I remembered we discussed that point already, yes the generic core is
+selected by the SPI/raw NAND layers, so it should be fine. I'll move
+this as a depends on in the previous patch.
