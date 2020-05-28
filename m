@@ -2,243 +2,380 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE549C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A039C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADC8E20814
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZ7TdFTO"
+	by mail.kernel.org (Postfix) with ESMTP id 560F52075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390897AbgE1OKx (ORCPT
+        id S2390934AbgE1OOk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390727AbgE1OKv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:10:51 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21ED3C05BD1E;
-        Thu, 28 May 2020 07:10:50 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id v19so3328545wmj.0;
-        Thu, 28 May 2020 07:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8ovARypadL/ZYBPm0KsZkF3DEU6tbOUy5lfVb0WIp/o=;
-        b=GZ7TdFTOB6zw5kkRCwoJJ1vJK10R9yr5ZRw+XRIBgpYs9NtAtix4scFM3+k7PAquBo
-         lBbUHUaljxQejoXN++bnFoimAtWw7+SR9jVtKfSpgAC8oTbnjwFcbkiFDxGmroO00y74
-         yN7HFftzmKKpN7BYXcuEZ6duWOqXd33TN1SPh4XVokO4IJGTCQKXUfvc/BNIVfd+JtFk
-         /b+a+6yto/oShznbZ00InvCx8ZRToNk4mv78bkwKUFFYm4kINcEtEhNbGguKO/RNEdHt
-         rI6iXiF68kxXKKG+5+y+206rlgNT78fs8XhDcVRD22CCcQhTB4Z9kp3IB0InRnNJe8pE
-         JoYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8ovARypadL/ZYBPm0KsZkF3DEU6tbOUy5lfVb0WIp/o=;
-        b=ZfpkjYdgGIC3Pf4aeEksEbfGXaGEho/xWg7GiQAOWbvjD5VWeXdXepztWMECz+wl1r
-         69maypZEUUL7JAgwbCg74Hpj7QmuqHSYspW9M2yR8vS6LhJMrCXpB9ESKVC5/NlRawDd
-         OzPwJCv0e+pTEyQuUIanmatDRYs4bEf2mO7cPmeKYSFN10DzQxqjQgoUv7VzVbp6bUBt
-         +xXkR99mnCQUZPoNla7O2cJ3jTqCB6lSUpCZOPqVUjbnOwkMMKALAscGtyVr1T/uA2Mv
-         hpw3cZ4c6T+3uNRPXRh6i3IGQ4w+Jh55FDnxPM32eZAz1HmwfhJGirSgsX1yjxH677ox
-         BqPw==
-X-Gm-Message-State: AOAM531NomR7Yr9KsXxDMRjT/jfyPFAuFvYnjeqoYp15X06LjZh0QumQ
-        2mekLF1j2LVhx7/fVXERuZg=
-X-Google-Smtp-Source: ABdhPJyfmwT6bu0XzTg7BOfXbPsxinfsn0I7VdYmhbwakBJQ6sin+5o9AkS/XwdDYLBmApRy16Uwlw==
-X-Received: by 2002:a1c:2183:: with SMTP id h125mr2015266wmh.88.1590675048753;
-        Thu, 28 May 2020 07:10:48 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id w10sm6124957wrp.16.2020.05.28.07.10.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 07:10:48 -0700 (PDT)
-Subject: Re: [PATCH v4 4/4] dmaengine: mediatek-cqdma: add dma mask for
- capability
-To:     EastL <EastL.Lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com
-References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
- <1590659832-31476-5-git-send-email-EastL.Lee@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ea26fb2c-aec0-c031-ac30-9e5099943d9c@gmail.com>
-Date:   Thu, 28 May 2020 16:10:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 28 May 2020 10:14:40 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54612 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390932AbgE1OOj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:14:39 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0C4D72A3F6D;
+        Thu, 28 May 2020 15:14:36 +0100 (BST)
+Date:   Thu, 28 May 2020 16:14:33 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <weijie.gao@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Julien Su <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v6 03/18] mtd: rawnand: Separate the ECC engine type and
+ the OOB placement
+Message-ID: <20200528161433.71cf79d6@collabora.com>
+In-Reply-To: <20200528113113.9166-4-miquel.raynal@bootlin.com>
+References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
+        <20200528113113.9166-4-miquel.raynal@bootlin.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1590659832-31476-5-git-send-email-EastL.Lee@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, 28 May 2020 13:30:58 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-
-On 28/05/2020 11:57, EastL wrote:
-> This patch add dma mask for capability.
+> The use of "syndrome" placement should not be encoded in the ECC
+> engine mode/type.
 > 
-> Change-Id: I31f4622f9541d769702029532e5f5f185815dda2
+> Create a "placement" field in NAND chip and change all occurrences of
+> the NAND_ECC_HW_SYNDROME enumeration to be just NAND_ECC_HW and
+> possibly a placement entry like NAND_ECC_PLACEMENT_INTERLEAVED.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-No Change-Id in the commit message please.
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-> Signed-off-by: EastL <EastL.Lee@mediatek.com>
+I'm not a big fan of the extra indentation level you add to the davinci
+driver, but I can live with it.
+
 > ---
->  drivers/dma/mediatek/mtk-cqdma.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  arch/arm/mach-davinci/board-dm355-leopard.c |   3 +-
+>  drivers/mtd/nand/raw/cafe_nand.c            |   3 +-
+>  drivers/mtd/nand/raw/davinci_nand.c         |   5 +-
+>  drivers/mtd/nand/raw/denali.c               |   3 +-
+>  drivers/mtd/nand/raw/diskonchip.c           |   3 +-
+>  drivers/mtd/nand/raw/lpc32xx_slc.c          |   3 +-
+>  drivers/mtd/nand/raw/nand_base.c            | 109 +++++++++++---------
+>  drivers/mtd/nand/raw/r852.c                 |   3 +-
+>  include/linux/mtd/rawnand.h                 |   6 +-
+>  include/linux/platform_data/mtd-davinci.h   |   1 +
+>  10 files changed, 81 insertions(+), 58 deletions(-)
 > 
-> diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-> index bca7118..1805a76 100644
-> --- a/drivers/dma/mediatek/mtk-cqdma.c
-> +++ b/drivers/dma/mediatek/mtk-cqdma.c
-> @@ -117,6 +117,7 @@ struct mtk_cqdma_vchan {
->   * @clk:                    The clock that device internal is using
->   * @dma_requests:           The number of VCs the device supports to
->   * @dma_channels:           The number of PCs the device supports to
-> + * @dma_mask:               A mask for DMA capability
->   * @vc:                     The pointer to all available VCs
->   * @pc:                     The pointer to all the underlying PCs
->   */
-> @@ -126,6 +127,7 @@ struct mtk_cqdma_device {
->  
->  	u32 dma_requests;
->  	u32 dma_channels;
-> +	u32 dma_mask;
->  	struct mtk_cqdma_vchan *vc;
->  	struct mtk_cqdma_pchan **pc;
+> diff --git a/arch/arm/mach-davinci/board-dm355-leopard.c b/arch/arm/mach-davinci/board-dm355-leopard.c
+> index b9e9950dd300..4c8a592754ac 100644
+> --- a/arch/arm/mach-davinci/board-dm355-leopard.c
+> +++ b/arch/arm/mach-davinci/board-dm355-leopard.c
+> @@ -76,7 +76,8 @@ static struct davinci_nand_pdata davinci_nand_data = {
+>  	.mask_chipsel		= BIT(14),
+>  	.parts			= davinci_nand_partitions,
+>  	.nr_parts		= ARRAY_SIZE(davinci_nand_partitions),
+> -	.ecc_mode		= NAND_ECC_HW_SYNDROME,
+> +	.ecc_mode		= NAND_HW_ECC_ENGINE,
+> +	.ecc_placement		= NAND_ECC_PLACEMENT_INTERLEAVED,
+>  	.ecc_bits		= 4,
+>  	.bbt_options		= NAND_BBT_USE_FLASH,
 >  };
-> @@ -549,6 +551,7 @@ static void mtk_cqdma_hw_deinit(struct mtk_cqdma_device *cqdma)
->  };
->  MODULE_DEVICE_TABLE(of, mtk_cqdma_match);
->  
-> +static u64 cqdma_dmamask;
->  static int mtk_cqdma_probe(struct platform_device *pdev)
->  {
->  	struct mtk_cqdma_device *cqdma;
-> @@ -607,6 +610,16 @@ static int mtk_cqdma_probe(struct platform_device *pdev)
->  		cqdma->dma_channels = MTK_CQDMA_NR_PCHANS;
+> diff --git a/drivers/mtd/nand/raw/cafe_nand.c b/drivers/mtd/nand/raw/cafe_nand.c
+> index 92173790f20b..2bf8ab542e38 100644
+> --- a/drivers/mtd/nand/raw/cafe_nand.c
+> +++ b/drivers/mtd/nand/raw/cafe_nand.c
+> @@ -629,7 +629,8 @@ static int cafe_nand_attach_chip(struct nand_chip *chip)
+>  		goto out_free_dma;
 >  	}
 >  
-> +	if (pdev->dev.of_node && of_property_read_u32(pdev->dev.of_node,
-> +						      "dma-channel-mask",
-> +						      &cqdma->dma_mask)) {
-
-I'd prefer:
-
-if (pdev->dev.of_node)
-    ret = of_property_read_u32(pdev->dev.of_node,
-                               "dma-channel-mask",
-                               &cqdma->dma_mask))
-if (ret) {
-    dev_warn(&pdev->dev,
-             "Using 0 as missing dma-channel-mask
-              property\n");
-    cqdma->dma_mask = 0;
-}
-
-> +		dev_info(&pdev->dev,
-> +			 "Using 0 as missing dma-channel-mask property\n");
-
-dev_warn should be OK.
-
-> +	} else {
-> +		cqdma_dmamask = DMA_BIT_MASK(cqdma->dma_mask);
-> +		pdev->dev.dma_mask = &cqdma_dmamask;
-
-if (dma_set_mask(&pdev->dev,
-    DMA_BIT_MASK(cqdma->dma_mask)) {
-         /* error out */
-}
-
-> +	}
+> -	cafe->nand.ecc.mode = NAND_ECC_HW_SYNDROME;
+> +	cafe->nand.ecc.mode = NAND_ECC_HW;
+> +	cafe->nand.ecc.placement = NAND_ECC_PLACEMENT_INTERLEAVED;
+>  	cafe->nand.ecc.size = mtd->writesize;
+>  	cafe->nand.ecc.bytes = 14;
+>  	cafe->nand.ecc.strength = 4;
+> diff --git a/drivers/mtd/nand/raw/davinci_nand.c b/drivers/mtd/nand/raw/davinci_nand.c
+> index d975a62caaa5..2e5d6c113b56 100644
+> --- a/drivers/mtd/nand/raw/davinci_nand.c
+> +++ b/drivers/mtd/nand/raw/davinci_nand.c
+> @@ -168,7 +168,7 @@ static int nand_davinci_correct_1bit(struct nand_chip *chip, u_char *dat,
+>  /*
+>   * 4-bit hardware ECC ... context maintained over entire AEMIF
+>   *
+> - * This is a syndrome engine, but we avoid NAND_ECC_HW_SYNDROME
+> + * This is a syndrome engine, but we avoid NAND_ECC_PLACEMENT_INTERLEAVED
+>   * since that forces use of a problematic "infix OOB" layout.
+>   * Among other things, it trashes manufacturer bad block markers.
+>   * Also, and specific to this hardware, it ECC-protects the "prepad"
+> @@ -851,6 +851,7 @@ static int nand_davinci_probe(struct platform_device *pdev)
+>  
+>  	/* Use board-specific ECC config */
+>  	info->chip.ecc.mode	= pdata->ecc_mode;
+> +	info->chip.ecc.placement = pdata->ecc_placement;
+>  
+>  	spin_lock_irq(&davinci_nand_lock);
+>  
+> @@ -897,7 +898,7 @@ static int nand_davinci_remove(struct platform_device *pdev)
+>  	int ret;
+>  
+>  	spin_lock_irq(&davinci_nand_lock);
+> -	if (info->chip.ecc.mode == NAND_ECC_HW_SYNDROME)
+> +	if (info->chip.ecc.placement == NAND_ECC_PLACEMENT_INTERLEAVED)
+>  		ecc4_busy = false;
+>  	spin_unlock_irq(&davinci_nand_lock);
+>  
+> diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
+> index 4e6e1578aa2d..514a97ea4450 100644
+> --- a/drivers/mtd/nand/raw/denali.c
+> +++ b/drivers/mtd/nand/raw/denali.c
+> @@ -1237,7 +1237,8 @@ int denali_chip_init(struct denali_controller *denali,
+>  	chip->bbt_options |= NAND_BBT_USE_FLASH;
+>  	chip->bbt_options |= NAND_BBT_NO_OOB;
+>  	chip->options |= NAND_NO_SUBPAGE_WRITE;
+> -	chip->ecc.mode = NAND_ECC_HW_SYNDROME;
+> +	chip->ecc.mode = NAND_ECC_HW;
+> +	chip->ecc.placement = NAND_ECC_PLACEMENT_INTERLEAVED;
+>  	chip->ecc.read_page = denali_read_page;
+>  	chip->ecc.write_page = denali_write_page;
+>  	chip->ecc.read_page_raw = denali_read_page_raw;
+> diff --git a/drivers/mtd/nand/raw/diskonchip.c b/drivers/mtd/nand/raw/diskonchip.c
+> index 43721863a0d8..40360352136b 100644
+> --- a/drivers/mtd/nand/raw/diskonchip.c
+> +++ b/drivers/mtd/nand/raw/diskonchip.c
+> @@ -1456,7 +1456,8 @@ static int __init doc_probe(unsigned long physadr)
+>  	nand->ecc.calculate	= doc200x_calculate_ecc;
+>  	nand->ecc.correct	= doc200x_correct_data;
+>  
+> -	nand->ecc.mode		= NAND_ECC_HW_SYNDROME;
+> +	nand->ecc.mode		= NAND_ECC_HW;
+> +	nand->ecc.placement	= NAND_ECC_PLACEMENT_INTERLEAVED;
+>  	nand->ecc.size		= 512;
+>  	nand->ecc.bytes		= 6;
+>  	nand->ecc.strength	= 2;
+> diff --git a/drivers/mtd/nand/raw/lpc32xx_slc.c b/drivers/mtd/nand/raw/lpc32xx_slc.c
+> index b151fd000815..ccb189c8e343 100644
+> --- a/drivers/mtd/nand/raw/lpc32xx_slc.c
+> +++ b/drivers/mtd/nand/raw/lpc32xx_slc.c
+> @@ -881,7 +881,8 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, host);
+>  
+>  	/* NAND callbacks for LPC32xx SLC hardware */
+> -	chip->ecc.mode = NAND_ECC_HW_SYNDROME;
+> +	chip->ecc.mode = NAND_ECC_HW;
+> +	chip->ecc.placement = NAND_ECC_PLACEMENT_INTERLEAVED;
+>  	chip->legacy.read_byte = lpc32xx_nand_read_byte;
+>  	chip->legacy.read_buf = lpc32xx_nand_read_buf;
+>  	chip->legacy.write_buf = lpc32xx_nand_write_buf;
+> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> index 4d2d444f9db9..9fbd2a474b62 100644
+> --- a/drivers/mtd/nand/raw/nand_base.c
+> +++ b/drivers/mtd/nand/raw/nand_base.c
+> @@ -5772,61 +5772,74 @@ static int nand_scan_tail(struct nand_chip *chip)
+>  
+>  	switch (ecc->mode) {
+>  	case NAND_ECC_HW:
+> -		/* Use standard hwecc read page function? */
+> -		if (!ecc->read_page)
+> -			ecc->read_page = nand_read_page_hwecc;
+> -		if (!ecc->write_page)
+> -			ecc->write_page = nand_write_page_hwecc;
+> -		if (!ecc->read_page_raw)
+> -			ecc->read_page_raw = nand_read_page_raw;
+> -		if (!ecc->write_page_raw)
+> -			ecc->write_page_raw = nand_write_page_raw;
+> -		if (!ecc->read_oob)
+> -			ecc->read_oob = nand_read_oob_std;
+> -		if (!ecc->write_oob)
+> -			ecc->write_oob = nand_write_oob_std;
+> -		if (!ecc->read_subpage)
+> -			ecc->read_subpage = nand_read_subpage;
+> -		if (!ecc->write_subpage && ecc->hwctl && ecc->calculate)
+> -			ecc->write_subpage = nand_write_subpage_hwecc;
+> -		fallthrough;
+> -	case NAND_ECC_HW_SYNDROME:
+> -		if ((!ecc->calculate || !ecc->correct || !ecc->hwctl) &&
+> -		    (!ecc->read_page ||
+> -		     ecc->read_page == nand_read_page_hwecc ||
+> -		     !ecc->write_page ||
+> -		     ecc->write_page == nand_write_page_hwecc)) {
+> -			WARN(1, "No ECC functions supplied; hardware ECC not possible\n");
+> -			ret = -EINVAL;
+> -			goto err_nand_manuf_cleanup;
+> -		}
+> -		/* Use standard syndrome read/write page function? */
+> -		if (!ecc->read_page)
+> -			ecc->read_page = nand_read_page_syndrome;
+> -		if (!ecc->write_page)
+> -			ecc->write_page = nand_write_page_syndrome;
+> -		if (!ecc->read_page_raw)
+> -			ecc->read_page_raw = nand_read_page_raw_syndrome;
+> -		if (!ecc->write_page_raw)
+> -			ecc->write_page_raw = nand_write_page_raw_syndrome;
+> -		if (!ecc->read_oob)
+> -			ecc->read_oob = nand_read_oob_syndrome;
+> -		if (!ecc->write_oob)
+> -			ecc->write_oob = nand_write_oob_syndrome;
+> +		switch (ecc->placement) {
+> +		case NAND_ECC_PLACEMENT_UNKNOWN:
+> +		case NAND_ECC_PLACEMENT_OOB:
+> +			/* Use standard hwecc read page function? */
+> +			if (!ecc->read_page)
+> +				ecc->read_page = nand_read_page_hwecc;
+> +			if (!ecc->write_page)
+> +				ecc->write_page = nand_write_page_hwecc;
+> +			if (!ecc->read_page_raw)
+> +				ecc->read_page_raw = nand_read_page_raw;
+> +			if (!ecc->write_page_raw)
+> +				ecc->write_page_raw = nand_write_page_raw;
+> +			if (!ecc->read_oob)
+> +				ecc->read_oob = nand_read_oob_std;
+> +			if (!ecc->write_oob)
+> +				ecc->write_oob = nand_write_oob_std;
+> +			if (!ecc->read_subpage)
+> +				ecc->read_subpage = nand_read_subpage;
+> +			if (!ecc->write_subpage && ecc->hwctl && ecc->calculate)
+> +				ecc->write_subpage = nand_write_subpage_hwecc;
+> +			fallthrough;
+>  
+> -		if (mtd->writesize >= ecc->size) {
+> -			if (!ecc->strength) {
+> -				WARN(1, "Driver must set ecc.strength when using hardware ECC\n");
+> +		case NAND_ECC_PLACEMENT_INTERLEAVED:
+> +			if ((!ecc->calculate || !ecc->correct || !ecc->hwctl) &&
+> +			    (!ecc->read_page ||
+> +			     ecc->read_page == nand_read_page_hwecc ||
+> +			     !ecc->write_page ||
+> +			     ecc->write_page == nand_write_page_hwecc)) {
+> +				WARN(1, "No ECC functions supplied; hardware ECC not possible\n");
+>  				ret = -EINVAL;
+>  				goto err_nand_manuf_cleanup;
+>  			}
+> +			/* Use standard syndrome read/write page function? */
+> +			if (!ecc->read_page)
+> +				ecc->read_page = nand_read_page_syndrome;
+> +			if (!ecc->write_page)
+> +				ecc->write_page = nand_write_page_syndrome;
+> +			if (!ecc->read_page_raw)
+> +				ecc->read_page_raw = nand_read_page_raw_syndrome;
+> +			if (!ecc->write_page_raw)
+> +				ecc->write_page_raw = nand_write_page_raw_syndrome;
+> +			if (!ecc->read_oob)
+> +				ecc->read_oob = nand_read_oob_syndrome;
+> +			if (!ecc->write_oob)
+> +				ecc->write_oob = nand_write_oob_syndrome;
 > +
->  	cqdma->pc = devm_kcalloc(&pdev->dev, cqdma->dma_channels,
->  				 sizeof(*cqdma->pc), GFP_KERNEL);
->  	if (!cqdma->pc)
-> 
+> +			if (mtd->writesize >= ecc->size) {
+> +				if (!ecc->strength) {
+> +					WARN(1, "Driver must set ecc.strength when using hardware ECC\n");
+> +					ret = -EINVAL;
+> +					goto err_nand_manuf_cleanup;
+> +				}
+> +				break;
+> +			}
+> +			pr_warn("%d byte HW ECC not possible on %d byte page size, fallback to SW ECC\n",
+> +				ecc->size, mtd->writesize);
+> +			ecc->mode = NAND_ECC_SOFT;
+> +			ecc->algo = NAND_ECC_HAMMING;
+>  			break;
+> +
+> +		default:
+> +			pr_warn("Invalid NAND_ECC_PLACEMENT %d\n",
+> +				ecc->placement);
+> +			ret = -EINVAL;
+> +			goto err_nand_manuf_cleanup;
+>  		}
+> -		pr_warn("%d byte HW ECC not possible on %d byte page size, fallback to SW ECC\n",
+> -			ecc->size, mtd->writesize);
+> -		ecc->mode = NAND_ECC_SOFT;
+> -		ecc->algo = NAND_ECC_HAMMING;
+>  		fallthrough;
+> +
+>  	case NAND_ECC_SOFT:
+>  		ret = nand_set_ecc_soft_ops(chip);
+>  		if (ret) {
+> diff --git a/drivers/mtd/nand/raw/r852.c b/drivers/mtd/nand/raw/r852.c
+> index f865e3a47b01..f0988cda4479 100644
+> --- a/drivers/mtd/nand/raw/r852.c
+> +++ b/drivers/mtd/nand/raw/r852.c
+> @@ -859,7 +859,8 @@ static int  r852_probe(struct pci_dev *pci_dev, const struct pci_device_id *id)
+>  	chip->legacy.write_buf = r852_write_buf;
+>  
+>  	/* ecc */
+> -	chip->ecc.mode = NAND_ECC_HW_SYNDROME;
+> +	chip->ecc.mode = NAND_ECC_HW;
+> +	chip->ecc.placement = NAND_ECC_PLACEMENT_INTERLEAVED;
+>  	chip->ecc.size = R852_DMA_LEN;
+>  	chip->ecc.bytes = SM_OOB_SIZE;
+>  	chip->ecc.strength = 2;
+> diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+> index 5e014807e050..f6ffd174abb7 100644
+> --- a/include/linux/mtd/rawnand.h
+> +++ b/include/linux/mtd/rawnand.h
+> @@ -325,6 +325,7 @@ static const struct nand_ecc_caps __name = {			\
+>  /**
+>   * struct nand_ecc_ctrl - Control structure for ECC
+>   * @mode:	ECC mode
+> + * @placement:	OOB bytes placement
+>   * @algo:	ECC algorithm
+>   * @steps:	number of ECC steps per page
+>   * @size:	data bytes per ECC step
+> @@ -352,7 +353,7 @@ static const struct nand_ecc_caps __name = {			\
+>   *			controller and always return contiguous in-band and
+>   *			out-of-band data even if they're not stored
+>   *			contiguously on the NAND chip (e.g.
+> - *			NAND_ECC_HW_SYNDROME interleaves in-band and
+> + *			NAND_ECC_PLACEMENT_INTERLEAVED interleaves in-band and
+>   *			out-of-band data).
+>   * @write_page_raw:	function to write a raw page without ECC. This function
+>   *			should hide the specific layout used by the ECC
+> @@ -360,7 +361,7 @@ static const struct nand_ecc_caps __name = {			\
+>   *			in-band and out-of-band data. ECC controller is
+>   *			responsible for doing the appropriate transformations
+>   *			to adapt to its specific layout (e.g.
+> - *			NAND_ECC_HW_SYNDROME interleaves in-band and
+> + *			NAND_ECC_PLACEMENT_INTERLEAVED interleaves in-band and
+>   *			out-of-band data).
+>   * @read_page:	function to read a page according to the ECC generator
+>   *		requirements; returns maximum number of bitflips corrected in
+> @@ -377,6 +378,7 @@ static const struct nand_ecc_caps __name = {			\
+>   */
+>  struct nand_ecc_ctrl {
+>  	enum nand_ecc_mode mode;
+> +	enum nand_ecc_placement placement;
+>  	enum nand_ecc_algo algo;
+>  	int steps;
+>  	int size;
+> diff --git a/include/linux/platform_data/mtd-davinci.h b/include/linux/platform_data/mtd-davinci.h
+> index 03e92c71b3fa..3383101c233b 100644
+> --- a/include/linux/platform_data/mtd-davinci.h
+> +++ b/include/linux/platform_data/mtd-davinci.h
+> @@ -69,6 +69,7 @@ struct davinci_nand_pdata {		/* platform_data */
+>  	 * using it with large page chips.
+>  	 */
+>  	enum nand_ecc_mode	ecc_mode;
+> +	enum nand_ecc_placement	ecc_placement;
+>  	u8			ecc_bits;
+>  
+>  	/* e.g. NAND_BUSWIDTH_16 */
+
