@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C924AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2772C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A51BD207BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF96A207F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZc05fC2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UmyhKM4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404604AbgE1PrP (ORCPT
+        id S2404714AbgE1Pr1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54276 "EHLO
+        Thu, 28 May 2020 11:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404692AbgE1PrL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:47:11 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9B30C08C5C6
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 08:47:11 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y18so13687248pfl.9
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 08:47:11 -0700 (PDT)
+        with ESMTP id S2404704AbgE1PrT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:47:19 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9672AC08C5C6
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 08:47:19 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x18so10581571pll.6
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 08:47:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rABvwzpSHjK9Um87JqwSpNf8fC8athc+8D0QEbmnNrI=;
-        b=IZc05fC2hVRUdUctuTSvYWOzikAy0ps/zfWm31qMoGvq8hMp11Ml1/B1izUv24mB/z
-         qjx2bsJVmW1srtAT3T+hcQdqnAHP+f8TCZnv0y1UqVS7WbEAxeRk/WqixTbiB8RL0YY9
-         m8mWtnqA2MudUteutSztsLrsBGssFZyvS+onP1qztgMV+TgCpQxVFzTQkLZOzrGbkGc3
-         zPGdP8Fhnmfk91gHo3mKGpbZ2X+X46tO+8LcM0LCAdZCyS37HAvaUVoVl66RSVlIbIdY
-         eV6hRazLof97B8v4DgFZjJMi5fpUP/cmI439a9eTChRUvH1T2d9c9BKt3dPvlm0Yrqxh
-         7j8g==
+        bh=LsQCDM2neDPMHnH/0t80dBq+lQkYA0nzb5LOU64sDRo=;
+        b=UmyhKM4Jpks9J00t8FKaJjhwAp3CWXCfbjL0jeNN7H8h731llMvtFA/1uul7nDsSW2
+         r8lXAjZppv+TRe5sk5OVwRVS6NZpwNufyz7lViBxNmscU7XlWTvv/lpCQa1JA/1yofpT
+         FJ+u7puB6jtYSEkZSTzF//xkcIvATOriQAypxMkieuU+topZgBCiB11v3kPtuO8XpZam
+         6DiqgMRySkj6CFgQJbEwT2VaI+MUYJv4HL9RQ5JcTsPn1z8ysZeOlNZXZorE/M6c8DgK
+         0nQv9rse0TS88b5U/AjkWMPuzVM0WTMRWkAqLP1rBt2Szu7f3FBLcBq4flH0YlSO2vj1
+         pphA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rABvwzpSHjK9Um87JqwSpNf8fC8athc+8D0QEbmnNrI=;
-        b=MuCLINi8Lr+fSJjviIBTCOSfzBXcLcnvMFqIoI8GvJ/xLGHgnfINzZQ9MV+68E4xLX
-         1LUECkqQFPRajauO7PlDDNY/8hQTv/zDTytCSrKfaTq/lk5OkkE54MeH3vIRiXprutmo
-         Vkrsvztf9cXCYgvu4fj4GOWglFMMoHQsljLt8HNt+Q0k+qXeHVB3N2AEDJ2PJIN3zTYs
-         JLV+LY52KbSdcCBL9AcnuzxnUXsKEa0sjNYGnBFhtqp+kbFcUNP+SAvPgZd5YbhDWuT3
-         v2KLFBqurzUhgxVyPllX3aN5uUZnLSJ4OSl3GPKP1cyU6a31iAoBpXMQB73CeKOxiGLn
-         GPAw==
-X-Gm-Message-State: AOAM531AnpnRgI/tiaZT0m7zKX5mbU3ed0IL/hEFhuoSeptSFiw+YGBZ
-        RLE7zOr5abWmVNuAAnG/e33Bng==
-X-Google-Smtp-Source: ABdhPJxdahc+f9DIB9SjORBE5j/wBNbjZIfowfCBK8fCGznSzu7kQcY5h/uN99JQRFhu2gKfrlSHyQ==
-X-Received: by 2002:a65:534d:: with SMTP id w13mr3471439pgr.18.1590680831305;
-        Thu, 28 May 2020 08:47:11 -0700 (PDT)
+        bh=LsQCDM2neDPMHnH/0t80dBq+lQkYA0nzb5LOU64sDRo=;
+        b=gPvFnreRAZ6fS5/D/UHQhBxYQjwmnrQI43wrpS6YskV+uE2XZtO/sUBCLQwr8/mknQ
+         WyuhmD8R6dkapzAMCJ6j3+5P3LGT/QOO8K9uKXhYnQRkODpZI0RgzzPkgAECF6gTwPQa
+         HWikis8VJRJZvljaCRbgq7kK02NxChq1cD3AaUPUzuwHA7QhU/7aci2fuOYMW09UKxtD
+         T6GjaIIiwK1sJvcxmQ60V4CHw3jgK8eOlZBZBSBGr+GOrA8b1aXYMjDgMZxLbThzMLth
+         xpv0etDQ4/XgfiQWKfpT98xE0EKbQibDfK/NoVT9QpHMZmsxYtfajFLdd3DBvqmtd3dc
+         H1Ww==
+X-Gm-Message-State: AOAM530JywmY/6rVWPoKgU6XZxI9gYukZwWZaHFqWjBSYu7l46h8DKKw
+        h6vXQtsAHglkVs0F3KE9zxXi9Q==
+X-Google-Smtp-Source: ABdhPJwrGVxnRHPAj6hGG65lrdgZ7wwXriSr+ERPGBBU3/A2TNUzw23m8eel0A7JJcN7JnWbDwY3XA==
+X-Received: by 2002:a17:90a:c788:: with SMTP id gn8mr4431712pjb.230.1590680838985;
+        Thu, 28 May 2020 08:47:18 -0700 (PDT)
 Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id y22sm5212551pfc.132.2020.05.28.08.47.07
+        by smtp.gmail.com with ESMTPSA id y22sm5212551pfc.132.2020.05.28.08.47.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:47:10 -0700 (PDT)
+        Thu, 28 May 2020 08:47:18 -0700 (PDT)
 From:   Sumit Semwal <sumit.semwal@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         broonie@kernel.org, robh+dt@kernel.org
@@ -65,9 +65,9 @@ Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         kgunda@codeaurora.org, rnayak@codeaurora.org,
         Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v3 3/5] arm64: dts: qcom: pmi8998: Add nodes for LAB and IBB regulators
-Date:   Thu, 28 May 2020 21:16:23 +0530
-Message-Id: <20200528154625.17742-4-sumit.semwal@linaro.org>
+Subject: [PATCH v3 5/5] regulator: qcom: labibb: Add SC interrupt handling
+Date:   Thu, 28 May 2020 21:16:25 +0530
+Message-Id: <20200528154625.17742-6-sumit.semwal@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200528154625.17742-1-sumit.semwal@linaro.org>
 References: <20200528154625.17742-1-sumit.semwal@linaro.org>
@@ -80,43 +80,186 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Nisha Kumari <nishakumari@codeaurora.org>
 
-This patch adds devicetree nodes for LAB and IBB regulators.
+Add Short circuit interrupt handling and recovery for the lab and
+ibb regulators on qcom platforms.
+
+The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
+notification which will be triggered on short circuit. They should
+try to enable the regulator once, and if it doesn't get enabled,
+handle shutting down the panel accordingly.
 
 Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
 Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
 
 --
-v2: sumits: updated for better compatible string and names
-v3: sumits: updated interrupt-names as per review comments
+v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
+     per-regulator instead of clearing both lab and ibb errors on either irq
+     triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
+     notification to clients.
+v3: sumits: updated as per review comments of v2: removed spurious check for
+     irq in handler and some unused variables; inlined some of the code,
+     omitted IRQF_TRIGGER_RISING as it's coming from DT.
 
 ---
- arch/arm64/boot/dts/qcom/pmi8998.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/regulator/qcom-labibb-regulator.c | 92 +++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/pmi8998.dtsi b/arch/arm64/boot/dts/qcom/pmi8998.dtsi
-index 23f9146a161e..1a72fe92f1a6 100644
---- a/arch/arm64/boot/dts/qcom/pmi8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pmi8998.dtsi
-@@ -25,5 +25,19 @@ pmi8998_lsid1: pmic@3 {
- 		reg = <0x3 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
+index 634d08461c6e..695ffac71e81 100644
+--- a/drivers/regulator/qcom-labibb-regulator.c
++++ b/drivers/regulator/qcom-labibb-regulator.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ // Copyright (c) 2020, The Linux Foundation. All rights reserved.
+ 
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of_irq.h>
+ #include <linux/of.h>
+@@ -18,6 +19,7 @@
+ #define REG_LABIBB_ENABLE_CTL		0x46
+ #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
+ #define LABIBB_CONTROL_ENABLE		BIT(7)
++#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
+ 
+ #define LAB_ENABLE_CTL_MASK		BIT(7)
+ #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
+@@ -27,12 +29,17 @@
+ #define IBB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 10)
+ #define LABIBB_OFF_ON_DELAY		(8200)
+ 
++#define POLLING_SCP_DONE_INTERVAL_US	5000
++#define POLLING_SCP_TIMEOUT		16000
 +
-+		labibb: labibb {
-+			compatible = "qcom,pmi8998-lab-ibb";
-+
-+			ibb: ibb {
-+				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>;
-+				interrupt-names = "sc-err";
-+			};
-+
-+			lab: lab {
-+				interrupts = <0x3 0xde 0x0 IRQ_TYPE_EDGE_RISING>;
-+				interrupt-names = "sc-err";
-+			};
-+		};
- 	};
+ struct labibb_regulator {
+ 	struct regulator_desc		desc;
+ 	struct device			*dev;
+ 	struct regmap			*regmap;
+ 	struct regulator_dev		*rdev;
+ 	u16				base;
++	int				sc_irq;
++	int				vreg_enabled;
+ 	u8				type;
  };
+ 
+@@ -65,6 +72,8 @@ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+ 	if (ret < 0)
+ 		dev_err(reg->dev, "Write failed: enable %s regulator\n",
+ 			reg->desc.name);
++	else
++		reg->vreg_enabled = 1;
+ 
+ 	return ret;
+ }
+@@ -78,6 +87,8 @@ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
+ 	if (ret < 0)
+ 		dev_err(reg->dev, "Disable failed: disable %s\n",
+ 			reg->desc.name);
++	else
++		reg->vreg_enabled = 0;
+ 
+ 	return ret;
+ }
+@@ -88,11 +99,70 @@ static struct regulator_ops qcom_labibb_ops = {
+ 	.is_enabled		= qcom_labibb_regulator_is_enabled,
+ };
+ 
++static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
++{
++	int ret;
++	u16 reg;
++	unsigned int val;
++	struct labibb_regulator *labibb_reg = _reg;
++	bool in_sc_err, scp_done = false;
++
++	ret = regmap_read(labibb_reg->regmap,
++			  labibb_reg->base + REG_LABIBB_STATUS1, &val);
++	if (ret < 0) {
++		dev_err(labibb_reg->dev, "sc_err_irq: Read failed, ret=%d\n",
++			ret);
++		return IRQ_HANDLED;
++	}
++
++	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
++		labibb_reg->desc.name, val);
++
++	in_sc_err = !!(val & LABIBB_STATUS1_SC_DETECT_BIT);
++
++	/*
++	 * The SC(short circuit) fault would trigger PBS(Portable Batch
++	 * System) to disable regulators for protection. This would
++	 * cause the SC_DETECT status being cleared so that it's not
++	 * able to get the SC fault status.
++	 * Check if the regulator is enabled in the driver but
++	 * disabled in hardware, this means a SC fault had happened
++	 * and SCP handling is completed by PBS.
++	 */
++	if (!in_sc_err) {
++
++		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
++
++		ret = regmap_read_poll_timeout(labibb_reg->regmap,
++					reg, val,
++					!(val & LABIBB_CONTROL_ENABLE),
++					POLLING_SCP_DONE_INTERVAL_US,
++					POLLING_SCP_TIMEOUT);
++
++		if (!ret && labibb_reg->vreg_enabled) {
++			dev_dbg(labibb_reg->dev,
++				"%s has been disabled by SCP\n",
++				labibb_reg->desc.name);
++			scp_done = true;
++		}
++	}
++
++	if (in_sc_err || scp_done) {
++		regulator_lock(labibb_reg->rdev);
++		regulator_notifier_call_chain(labibb_reg->rdev,
++						REGULATOR_EVENT_OVER_CURRENT,
++						NULL);
++		regulator_unlock(labibb_reg->rdev);
++	}
++	return IRQ_HANDLED;
++}
++
+ static int register_labibb_regulator(struct labibb_regulator *reg,
+ 				const struct labibb_regulator_data *reg_data,
+ 				struct device_node *of_node)
+ {
+ 	struct regulator_config cfg = {};
++	int ret;
+ 
+ 	reg->base = reg_data->base;
+ 	reg->type = reg_data->type;
+@@ -108,6 +178,28 @@ static int register_labibb_regulator(struct labibb_regulator *reg,
+ 	reg->desc.poll_enabled_time = reg_data->poll_enabled_time;
+ 	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
+ 
++	reg->sc_irq = -EINVAL;
++	ret = of_irq_get_byname(of_node, "sc-err");
++	if (ret < 0) {
++		dev_err(reg->dev, "Unable to get sc-err, ret = %d\n",
++			ret);
++		return ret;
++	} else
++		reg->sc_irq = ret;
++
++	if (reg->sc_irq > 0) {
++		ret = devm_request_threaded_irq(reg->dev,
++						reg->sc_irq,
++						NULL, labibb_sc_err_handler,
++						IRQF_ONESHOT,
++						"sc-err", reg);
++		if (ret) {
++			dev_err(reg->dev, "Failed to register sc-err irq ret=%d\n",
++				ret);
++			return ret;
++		}
++	}
++
+ 	cfg.dev = reg->dev;
+ 	cfg.driver_data = reg;
+ 	cfg.regmap = reg->regmap;
 -- 
 2.26.2
 
