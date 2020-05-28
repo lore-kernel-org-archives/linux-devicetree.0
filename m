@@ -2,177 +2,185 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0430C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7103B207BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 16:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RmscZzcL"
+	by mail.kernel.org (Postfix) with ESMTP id 94C99207BC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405298AbgE1Q42 (ORCPT
+        id S2405301AbgE1RCk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 12:56:28 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26957 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405310AbgE1Q4Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 12:56:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590684984; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=AIpbCmMCznCXVtiVrbRFoTwG+u7mFH1W+SY+3jGOkts=; b=RmscZzcL2gdWRd4V7tHrqgkl+Ul9y3tJECdQSWpZOWPnhKc0j6vx1hpxjfekeMaV9A+aE7XJ
- jC/ohpFUHMk5eeFzjKSOKvKW6YHrvGDi+gTGxuWXjH3aLLs95cHhEt40gzJOU1qy9YXbK3a3
- nrVudhH0qojfKh9a/Pkl1RLf/ss=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ecfed382dd9e15ae3105b9e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 16:56:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CA669C433A0; Thu, 28 May 2020 16:56:23 +0000 (UTC)
-Received: from jprakash-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E6B3C433AD;
-        Thu, 28 May 2020 16:56:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E6B3C433AD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
-From:   Jishnu Prakash <jprakash@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
-        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org
-Cc:     linux-arm-msm-owner@vger.kernel.org,
-        Jishnu Prakash <jprakash@codeaurora.org>
-Subject: [PATCH V6 7/7] iio: adc: Add a common read function for PMIC5 and PMIC7
-Date:   Thu, 28 May 2020 22:24:29 +0530
-Message-Id: <1590684869-15400-8-git-send-email-jprakash@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590684869-15400-1-git-send-email-jprakash@codeaurora.org>
-References: <1590684869-15400-1-git-send-email-jprakash@codeaurora.org>
+        Thu, 28 May 2020 13:02:40 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56354 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405222AbgE1RCf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 13:02:35 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 9CD2E2A06B2
+Received: by earth.universe (Postfix, from userid 1000)
+        id 060CD3C08C7; Thu, 28 May 2020 19:02:31 +0200 (CEST)
+Date:   Thu, 28 May 2020 19:02:30 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] power: supply: max17040: Set rcomp value
+Message-ID: <20200528170230.62c7jvmyjkhpoykj@earth.universe>
+References: <20200504221300.3153-1-xc-racer2@live.ca>
+ <BN6PR04MB066057B881DEFC0C48208589A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nqhtmfaqtt3aelfj"
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB066057B881DEFC0C48208589A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a common function used for read_raw callback for both PMIC5
-and PMIC7 ADCs.
 
-Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
----
- drivers/iio/adc/qcom-spmi-adc5.c | 53 +++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 28 deletions(-)
+--nqhtmfaqtt3aelfj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
-index 0f9af66..fe49741 100644
---- a/drivers/iio/adc/qcom-spmi-adc5.c
-+++ b/drivers/iio/adc/qcom-spmi-adc5.c
-@@ -449,6 +449,13 @@ static int adc7_do_conversion(struct adc5_chip *adc,
- 	return ret;
- }
- 
-+struct adc_do_conversion {
-+	int (*adc_do_conversion)(struct adc5_chip *adc,
-+			struct adc5_channel_prop *prop,
-+			struct iio_chan_spec const *chan,
-+			u16 *data_volt, u16 *data_cur);
-+};
-+
- static irqreturn_t adc5_isr(int irq, void *dev_id)
- {
- 	struct adc5_chip *adc = dev_id;
-@@ -487,9 +494,9 @@ static int adc7_of_xlate(struct iio_dev *indio_dev,
- 	return -EINVAL;
- }
- 
--static int adc5_read_raw(struct iio_dev *indio_dev,
-+static int adc_read_raw_common(struct iio_dev *indio_dev,
- 			 struct iio_chan_spec const *chan, int *val, int *val2,
--			 long mask)
-+			 long mask, struct adc_do_conversion do_conv)
- {
- 	struct adc5_chip *adc = iio_priv(indio_dev);
- 	struct adc5_channel_prop *prop;
-@@ -500,8 +507,8 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_PROCESSED:
--		ret = adc5_do_conversion(adc, prop, chan,
--				&adc_code_volt, &adc_code_cur);
-+		ret = do_conv.adc_do_conversion(adc, prop, chan,
-+					&adc_code_volt, &adc_code_cur);
- 		if (ret)
- 			return ret;
- 
-@@ -518,36 +525,26 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
- 	}
- }
- 
--static int adc7_read_raw(struct iio_dev *indio_dev,
-+static int adc5_read_raw(struct iio_dev *indio_dev,
- 			 struct iio_chan_spec const *chan, int *val, int *val2,
- 			 long mask)
- {
--	struct adc5_chip *adc = iio_priv(indio_dev);
--	struct adc5_channel_prop *prop;
--	u16 adc_code_volt, adc_code_cur;
--	int ret;
--
--	prop = &adc->chan_props[chan->address];
--
--	switch (mask) {
--	case IIO_CHAN_INFO_PROCESSED:
--		ret = adc7_do_conversion(adc, prop, chan,
--					&adc_code_volt, &adc_code_cur);
--		if (ret)
--			return ret;
-+	struct adc_do_conversion do_conv;
- 
--		ret = qcom_adc5_hw_scale(prop->scale_fn_type,
--			&adc5_prescale_ratios[prop->prescale],
--			adc->data,
--			adc_code_volt, val);
-+	do_conv.adc_do_conversion = adc5_do_conversion;
-+	return adc_read_raw_common(indio_dev, chan, val, val2,
-+				mask, do_conv);
-+}
- 
--		if (ret)
--			return ret;
-+static int adc7_read_raw(struct iio_dev *indio_dev,
-+			 struct iio_chan_spec const *chan, int *val, int *val2,
-+			 long mask)
-+{
-+	struct adc_do_conversion do_conv;
- 
--		return IIO_VAL_INT;
--	default:
--		return -EINVAL;
--	}
-+	do_conv.adc_do_conversion = adc7_do_conversion;
-+	return adc_read_raw_common(indio_dev, chan, val, val2,
-+				mask, do_conv);
- }
- 
- static const struct iio_info adc5_info = {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Hi,
 
+This patch does not even compile, how did you test it?
+
+-- Sebastian
+
+On Mon, May 04, 2020 at 03:13:00PM -0700, Jonathan Bakker wrote:
+> According to the datasheet (1), the rcomp parameter can
+> vary based on the typical operating temperature and the
+> battery chemistry.  If provided, make sure we set it after
+> we reset the chip on boot.
+>=20
+> 1) https://datasheets.maximintegrated.com/en/ds/MAX17040-MAX17041.pdf
+>=20
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+>  drivers/power/supply/max17040_battery.c | 33 +++++++++++++++++++++----
+>  1 file changed, 28 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supp=
+ly/max17040_battery.c
+> index 48aa44665e2f..f66e2fdc0a8a 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/mutex.h>
+> +#include <linux/property.h>
+>  #include <linux/err.h>
+>  #include <linux/i2c.h>
+>  #include <linux/delay.h>
+> @@ -31,6 +32,8 @@
+> =20
+>  #define MAX17040_ATHD_MASK		0xFFC0
+>  #define MAX17040_ATHD_DEFAULT_POWER_UP	4
+> +#define MAX17040_RCOMP_MASK		0xFF
+> +#define MAX17040_RCOMP_DEFAULT_POWER_UP	0x97
+> =20
+>  struct max17040_chip {
+>  	struct i2c_client		*client;
+> @@ -48,6 +51,8 @@ struct max17040_chip {
+>  	int status;
+>  	/* Low alert threshold from 32% to 1% of the State of Charge */
+>  	u32 low_soc_alert;
+> +	/* Optimization for specific chemistries */
+> +	u8 rcomp_value;
+>  };
+> =20
+>  static int max17040_get_property(struct power_supply *psy,
+> @@ -119,6 +124,20 @@ static int max17040_set_low_soc_alert(struct i2c_cli=
+ent *client, u32 level)
+>  	return ret;
+>  }
+> =20
+> +static int max17040_set_rcomp(struct i2c_client *client, u32 val)
+> +{
+> +	int ret;
+> +	u16 data;
+> +
+> +	data =3D max17040_read_reg(client, MAX17040_RCOMP);
+> +	/* clear the rcomp val and set MSb 8 bits */
+> +	data &=3D MAX17040_RCOMP_MASK;
+> +	data |=3D val << 8;
+> +	ret =3D max17040_write_reg(client, MAX17040_RCOMP, data);
+> +
+> +	return ret;
+> +}
+> +
+>  static void max17040_get_vcell(struct i2c_client *client)
+>  {
+>  	struct max17040_chip *chip =3D i2c_get_clientdata(client);
+> @@ -190,8 +209,14 @@ static int max17040_get_of_data(struct max17040_chip=
+ *chip)
+>  				 "maxim,alert-low-soc-level",
+>  				 &chip->low_soc_alert);
+> =20
+> -	if (chip->low_soc_alert <=3D 0 || chip->low_soc_alert >=3D 33)
+> +	if (chip->low_soc_alert <=3D 0 || chip->low_soc_alert >=3D 33) {
+> +		dev_err(&client->dev,
+> +			"failed: low SOC alert OF data out of bounds\n");
+>  		return -EINVAL;
+> +	}
+> +
+> +	chip->rcomp_value =3D MAX17040_RCOMP_DEFAULT_POWER_UP;
+> +	device_property_read_u8(dev, "maxim,rcomp-value", &chip->rcomp_value);
+> =20
+>  	return 0;
+>  }
+> @@ -289,11 +314,8 @@ static int max17040_probe(struct i2c_client *client,
+>  	chip->client =3D client;
+>  	chip->pdata =3D client->dev.platform_data;
+>  	ret =3D max17040_get_of_data(chip);
+> -	if (ret) {
+> -		dev_err(&client->dev,
+> -			"failed: low SOC alert OF data out of bounds\n");
+> +	if (ret)
+>  		return ret;
+> -	}
+> =20
+>  	i2c_set_clientdata(client, chip);
+>  	psy_cfg.drv_data =3D chip;
+> @@ -307,6 +329,7 @@ static int max17040_probe(struct i2c_client *client,
+> =20
+>  	max17040_reset(client);
+>  	max17040_get_version(client);
+> +	max17040_set_rcomp(client, chip->rcomp_value);
+> =20
+>  	/* check interrupt */
+>  	if (client->irq && of_device_is_compatible(client->dev.of_node,
+> --=20
+> 2.20.1
+>=20
+
+--nqhtmfaqtt3aelfj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7P7p0ACgkQ2O7X88g7
++polOw//TbWDyeYt0SVYsvSufjbPELbiro/Mh8PC1zxE5Tr8iAWeqHvmaDk9O1/C
+Hs5NsP7aWv52eE3nq+NlJPyQfpWMEtkBAC14hk8SEYMpgpvKY3pJb4/Q8tu17em9
+hvk26fCX3mYpUgjLcKHwGN36gIdevpDBOgjDtNFKxKepspRWYVHqu4DRWavjeatA
+sYtxO6xtG+aHmwnxSLTfvSjrvFpEZvfWJHQbPJNiMoFo9EuUcOyC8B6gliAbvMOa
+bNh6NyyMoHZbnrhCAq0JbMj4hLop4Mn7CuXMToVHQvz3vrSOx5AEkfGFOitn50S1
+ZudrRBqokCwp2wn6NRkqQ6IIE08uAF5zCIAyldWIC5zDfYnoU5K+i2aWk/4IbSUo
+uP8ur9MTZlT3lDaOPvE253givUmEWtM80LjY9ZPkhggDS1EXwlLdjbCFofI1zKIh
+HPKm+6wGAvyhJ4OrsHbNnacGhbz7nZKi+RGTVh6ncFBq2rqttRK0b5r3BWIIncEO
+VZnlNUpMFg5htTMo2nHx3jitNtjVMYp81ZQsJVU107BOwxc2FpGCOsImtI3VNL4w
+rlWWKgF0rocDC2BuQ+aMTkxDM+HBYsHPp5DIdVo1TPgOvfrFeDTXsIUL8WtBZfUT
+5chE6+Pufz/MP16YOfMA5YKdCEObvtEmpwDBN2aDtSy09qSSsk0=
+=kop8
+-----END PGP SIGNATURE-----
+
+--nqhtmfaqtt3aelfj--
