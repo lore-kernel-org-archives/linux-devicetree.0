@@ -2,190 +2,385 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F930C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A13CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAA8D20721
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590705860;
-	bh=Of5qUS3iNNYn924FnJ7Bx2pbtxirKh2MJA2vT9aP9lY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0kQtnFnJ3CHgzOUxJO9VFGGlzSOAvYLfsg/nFj8iFb0GoE5QvKHM/UDPtwN3ybLpL
-	 9kZghFWmW4qqDwzbEONMVTzUUN+05xdgOGjTPOlpjxt1IM90U62YjOL3mivisILBmG
-	 w4amwuRl8qnci00n20ciW7+XAE4/cOZLCJM7Lt1c=
+	by mail.kernel.org (Postfix) with ESMTP id 205A720721
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:48:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iPjFXLNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437285AbgE1WoM (ORCPT
+        id S2437206AbgE1WsN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 18:44:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437279AbgE1WoK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 18:44:10 -0400
-Received: from earth.universe (dyndsl-095-033-156-068.ewe-ip-backbone.de [95.33.156.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C88720721;
-        Thu, 28 May 2020 22:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590705850;
-        bh=Of5qUS3iNNYn924FnJ7Bx2pbtxirKh2MJA2vT9aP9lY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ddkZuwXVe27DsXGWGbCeIgI2/VifW2NWwIBlSNGfi6UBSPXuwKiu2pgSwH4tKK+pJ
-         ZQGcjwYDXL0Jr2mfqeksQz/JnFE9WfpQe9viNu/ySc/CJ0ziiLKt6zDnNMZUA030iC
-         v1F10TzRGZIlBqGp030eqpLduipe7ajSpztNuUfY=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 59CDF3C08C7; Fri, 29 May 2020 00:44:08 +0200 (CEST)
-Date:   Fri, 29 May 2020 00:44:08 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv1 00/19] Improve SBS battery support
-Message-ID: <20200528224408.4fo44kdjoqekpnpn@earth.universe>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+        Thu, 28 May 2020 18:48:13 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55960 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437209AbgE1WsM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:48:12 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SMm1Ia005754;
+        Thu, 28 May 2020 17:48:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590706081;
+        bh=x39oPaJDl+ZUFHxrbMEevXYzU0cRrJYQpFZWOXtqJZA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iPjFXLNYNCLSHYs0sfS5iGoy3U/WdjtL1/cWcIgNdPdAm9C2X+/l0L7hYc6Qtr4cr
+         YgaZAxrq/323O4FWs6Q1S0CHgE7cpJQoc8qztf85xlpsAeLCtHdLc9bCLyI07lbnzF
+         UGS60tmDjzIYUL+NLCXzsXSvqDQB4XvWsLuBfsAo=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SMm1fN033075
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 17:48:01 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 17:48:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 17:48:01 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SMm0Qe064457;
+        Thu, 28 May 2020 17:48:00 -0500
+Subject: Re: [PATCH v2 2/4] dt-bindings: remoteproc: Add bindings for C66x
+ DSPs on TI K3 SoCs
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200521001006.2725-1-s-anna@ti.com>
+ <20200521001006.2725-3-s-anna@ti.com> <20200528223228.GA785633@bogus>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <594b649d-eca6-1cd4-3621-c8297a6a9492@ti.com>
+Date:   Thu, 28 May 2020 17:47:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kq3ssriyb4k4re57"
-Content-Disposition: inline
-In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+In-Reply-To: <20200528223228.GA785633@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
---kq3ssriyb4k4re57
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/28/20 5:32 PM, Rob Herring wrote:
+> On Wed, May 20, 2020 at 07:10:04PM -0500, Suman Anna wrote:
+>> Some Texas Instruments K3 family of SoCs have one of more Digital Signal
+>> Processor (DSP) subsystems that are comprised of either a TMS320C66x
+>> CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
+>> Add the device tree bindings document for the C66x DSP devices on these
+>> SoCs. The added example illustrates the DT nodes for the first C66x DSP
+>> device present on the K3 J721E family of SoCs.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> v2:
+>>   - Updated the example to include the root-node to fix the bot errors from v1
+> 
+> Pretty sure that was not why you had errors.
 
-Hi,
+It is because of the default values used for #address-cells and 
+#size-cells in the example_template and example_start variables used in 
+the dt-extract-example script. They are 1 by default, so the generated 
+template ended up with the root-node using 1, and the actual example 
+using 2 resulting in the mismatch.
 
-I queued this series to power-supply's for-next branch.
+When I updated the script to use 2 for both #address-cells and 
+#size-cells, then the warnings go away. This is the reason, dtbs_check 
+on my actual dts files goes through fine.
 
--- Sebastian
+> 
+>>   - Added maxItems to resets, mboxes, memory-region, sram properties
+>>   - Changed the ti,sci-proc-ids $ref to uint-array from uint-matrix
+>>   - Addressed the minor review comments from Mathieu
+>> v1: https://patchwork.kernel.org/patch/11458571/
+>>
+>>   .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 190 ++++++++++++++++++
+>>   1 file changed, 190 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+>> new file mode 100644
+>> index 000000000000..cdf649655838
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+>> @@ -0,0 +1,190 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: TI K3 DSP devices
+>> +
+>> +maintainers:
+>> +  - Suman Anna <s-anna@ti.com>
+>> +
+>> +description: |
+>> +  The TI K3 family of SoCs usually have one or more TI DSP Core sub-systems
+>> +  that are used to offload some of the processor-intensive tasks or algorithms,
+>> +  for achieving various system level goals.
+>> +
+>> +  These processor sub-systems usually contain additional sub-modules like
+>> +  L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
+>> +  controller, a dedicated local power/sleep controller etc. The DSP processor
+>> +  cores in the K3 SoCs are usually either a TMS320C66x CorePac processor or a
+>> +  TMS320C71x CorePac processor.
+>> +
+>> +  Each DSP Core sub-system is represented as a single DT node. Each node has a
+>> +  number of required or optional properties that enable the OS running on the
+>> +  host processor (Arm CorePac) to perform the device management of the remote
+>> +  processor and to communicate with the remote processor.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: ti,j721e-c66-dsp
+>> +    description:
+>> +      Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
+> 
+> What else are you going to use? There's only one compatible string. Drop
+> description.
 
-On Wed, May 13, 2020 at 08:55:56PM +0200, Sebastian Reichel wrote:
-> This patchset improves support for SBS compliant batteries. Due to
-> the changes, the battery now exposes 32 power supply properties and
-> (un)plugging it generates a backtrace containing the following message
-> without the first patch in this series:
->=20
-> ---------------------------
-> WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4/0=
-x104
-> add_uevent_var: too many keys
-> ---------------------------
->=20
-> For references this is what an SBS battery status looks like after
-> the patch series has been applied:
->=20
-> cat /sys/class/power_supply/sbs-0-000b/uevent=20
-> POWER_SUPPLY_NAME=3Dsbs-0-000b
-> POWER_SUPPLY_TYPE=3DBattery
-> POWER_SUPPLY_STATUS=3DDischarging
-> POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-> POWER_SUPPLY_HEALTH=3DGood
-> POWER_SUPPLY_PRESENT=3D1
-> POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-> POWER_SUPPLY_CYCLE_COUNT=3D12
-> POWER_SUPPLY_VOLTAGE_NOW=3D11441000
-> POWER_SUPPLY_CURRENT_NOW=3D-26000
-> POWER_SUPPLY_CURRENT_AVG=3D-24000
-> POWER_SUPPLY_CAPACITY=3D76
-> POWER_SUPPLY_CAPACITY_ERROR_MARGIN=3D1
-> POWER_SUPPLY_TEMP=3D198
-> POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D438600
-> POWER_SUPPLY_TIME_TO_FULL_AVG=3D3932100
-> POWER_SUPPLY_SERIAL_NUMBER=3D0000
-> POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D10800000
-> POWER_SUPPLY_VOLTAGE_MAX_DESIGN=3D10800000
-> POWER_SUPPLY_ENERGY_NOW=3D31090000
-> POWER_SUPPLY_ENERGY_FULL=3D42450000
-> POWER_SUPPLY_ENERGY_FULL_DESIGN=3D41040000
-> POWER_SUPPLY_CHARGE_NOW=3D2924000
-> POWER_SUPPLY_CHARGE_FULL=3D3898000
-> POWER_SUPPLY_CHARGE_FULL_DESIGN=3D3800000
-> POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3D3000000
-> POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=3D12300000
-> POWER_SUPPLY_MANUFACTURE_YEAR=3D2017
-> POWER_SUPPLY_MANUFACTURE_MONTH=3D7
-> POWER_SUPPLY_MANUFACTURE_DAY=3D3
-> POWER_SUPPLY_MANUFACTURER=3DUR18650A
-> POWER_SUPPLY_MODEL_NAME=3DGEHC
->=20
-> -- Sebastian
->=20
-> Jean-Francois Dagenais (1):
->   power: supply: sbs-battery: add ability to disable charger broadcasts
->=20
-> Sebastian Reichel (18):
->   kobject: increase allowed number of uevent variables
->   power: supply: core: add capacity error margin property
->   power: supply: core: add manufacture date properties
->   power: supply: core: add POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED
->   power: supply: sbs-battery: Add TI BQ20Z65 support
->   power: supply: sbs-battery: add
->     POWER_SUPPLY_PROP_CAPACITY_ERROR_MARGIN support
->   power: supply: sbs-battery: simplify read_read_string_data
->   power: supply: sbs-battery: add PEC support
->   power: supply: sbs-battery: add POWER_SUPPLY_PROP_CURRENT_AVG support
->   power: supply: sbs-battery: Improve POWER_SUPPLY_PROP_TECHNOLOGY
->     support
->   power: supply: sbs-battery: add
->     POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT/VOLTAGE_MAX support
->   power: supply: sbs-battery: add MANUFACTURE_DATE support
->   power: supply: sbs-battery: add
->     POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED support
->   power: supply: sbs-battery: fix idle battery status
->   power: supply: sbs-battery: switch from of_property_* to
->     device_property_*
->   power: supply: sbs-battery: switch to i2c's probe_new
->   power: supply: sbs-battery: constify power-supply property array
->   dt-bindings: power: sbs-battery: Convert to yaml
->=20
->  Documentation/ABI/testing/sysfs-class-power   |  45 ++-
->  .../power/supply/sbs,sbs-battery.yaml         |  83 +++++
->  .../bindings/power/supply/sbs_sbs-battery.txt |  27 --
->  drivers/power/supply/power_supply_sysfs.c     |   5 +
->  drivers/power/supply/sbs-battery.c            | 348 +++++++++++++-----
->  include/linux/kobject.h                       |   2 +-
->  include/linux/power_supply.h                  |   5 +
->  7 files changed, 404 insertions(+), 111 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/sbs,sb=
-s-battery.yaml
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/sbs_sb=
-s-battery.txt
->=20
-> --=20
-> 2.26.2
->=20
+Is updated in a subsequent binding update where I added the C71 support.
 
---kq3ssriyb4k4re57
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+>> +
+>> +  reg:
+>> +    description: |
+>> +      Should contain an entry for each value in 'reg-names'.
+>> +      Each entry should have the memory region's start address
+>> +      and the size of the region, the representation matching
+>> +      the parent node's '#address-cells' and '#size-cells' values.
+> 
+> Don't need generic descriptions. That's every 'reg'.
+> 
+> What you can do is an 'items' list describing what each region is.
 
------BEGIN PGP SIGNATURE-----
+OK, I am bit confused here. I have listed the items under the reg-names, 
+while using just the minItems or maxItems here. What is the convention, 
+aren't reg and reg-names associative.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7QPq0ACgkQ2O7X88g7
-+pqduw//X98/LG8aTNRLOt8MjdJhqNI1GdcnfavsVOnT5Tec9ZPRqxaqpvdOkmHD
-R2lQ0FUaiTJTRp7bW/PsQK9iz8nVcSp4P8WMvqeazhOzvkMFtdWinCoThlUm994w
-QblthPhHT334gBQ2kP9vqXYHM/vwsBVEydJoUJtaMb5n83cgdyp6Kb393x1IGNPG
-jCTUGT+NXYwFSkCZuSi0EAtGGD6s6nkAsgxx85Ta46en9ByOngAAqKQo0uwjYPl4
-osYWtH0aXrQ2n/uV8Rxfy4GoPu1iEZ13WaThU2pzc5iQiz2PLpOLEMgf9oRTwS7v
-Abo6SDBFvlaZQaCCWgpHEUCj4tQWckzMrXb6sp6YVMKm/5DE7hLOoNNwLvp3U/S+
-M4B7bFsAlrez6sTIOQ56ORN+gV3I649Opz4lWIvSl4diRSGz1rdCGXawKTJYb2rd
-ZHZZSi5lZUm52/mPkOEH4SgJixfD2sdW4Dksvug341NuLJ0mw49LqTm+p0eCa4Lt
-a2tp0zEgIZ2k59hHkgQA33ifVsT941YK21TLcF2LTpjuFqlfrN0Ge3nF64w99FMh
-0EjMrDUJpzGwr+/6KDoSCQAk3W+a5df7BFYzdzWp9iD+5pylpliB/WetUDCkQ3oP
-hGNPvE5hXR544iBvr+fUeDUFc/9X7zOjQXh6jTqq9qiT5JVst+Y=
-=tJEb
------END PGP SIGNATURE-----
+> 
+>> +    minItems: 3
+>> +    maxItems: 3
+>> +
+>> +  reg-names:
+>> +    description: |
+>> +      Should contain strings with the names of the specific internal
+>> +      memory regions, and should be defined in this order
+> 
+> Again, drop.
 
---kq3ssriyb4k4re57--
+OK
+
+> 
+>> +    maxItems: 3
+>> +    items:
+>> +      - const: l2sram
+>> +      - const: l1pram
+>> +      - const: l1dram
+>> +
+>> +  ti,sci:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description:
+>> +      Should be a phandle to the TI-SCI System Controller node
+>> +
+>> +  ti,sci-dev-id:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Should contain the TI-SCI device id corresponding to the DSP core.
+>> +      Please refer to the corresponding System Controller documentation
+>> +      for valid values for the DSP cores.
+>> +
+>> +  ti,sci-proc-ids:
+>> +    description: Should contain a single tuple of <proc_id host_id>.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +      - maxItems: 1
+>> +        items:
+>> +          items:
+>> +            - description: TI-SCI processor id for the DSP core device
+>> +            - description: TI-SCI host id to which processor control
+>> +                           ownership should be transferred to
+> 
+> I assume these properties appear in multiple TI nodes? We don't need
+> them defined multiple times. Create a schema for them that you can
+> include here.
+
+Only the remoteprocs, so they are limited to this binding and one more 
+R5F remoteproc binding.
+
+> 
+>> +
+>> +  resets:
+>> +    description: |
+>> +      Should contain the phandle to the reset controller node
+>> +      managing the local resets for this device, and a reset
+>> +      specifier. Please refer to the following reset bindings
+>> +      for the reset argument specifier,
+>> +      Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+> 
+> Drop.
+
+Entire description or just the reference to the reset bindings file?
+
+> 
+>> +    maxItems: 1
+>> +
+>> +  firmware-name:
+>> +    description: |
+>> +      Should contain the name of the default firmware image
+>> +      file located on the firmware search path
+>> +
+>> +  mboxes:
+>> +    description: |
+>> +      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+>> +      communication with the remote processor. This property should match
+>> +      with the sub-mailbox node used in the firmware image. The specifier
+>> +      format is as per the bindings,
+>> +      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+> 
+> Drop. What mailbox provider is used is outside the scope of this
+> binding.
+
+OK.
+
+> 
+>> +    maxItems: 1
+>> +
+>> +  memory-region:
+>> +    minItems: 2
+>> +    maxItems: 8
+>> +    description: |
+>> +      phandle to the reserved memory nodes to be associated with the remoteproc
+>> +      device. There should be at least two reserved memory nodes defined - the
+>> +      first one would be used for dynamic DMA allocations like vrings and vring
+>> +      buffers, and the remaining ones used for the firmware image sections. The
+>> +      reserved memory nodes should be carveout nodes, and should be defined as
+>> +      per the bindings in
+>> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> 
+> items:
+>    - description: dynamic DMA allocations like vrings and vring buffers
+>    - description: firmware image section ???
+>    - description: firmware image section ???
+
+Yeah, this is scalable if we will have multiple separate DDR regions. I 
+had to choose a decent maxItems value, so I chose 8. Wouldn't listing 
+the individual items override the number of minItems/maxItems?
+
+> 
+>> +
+>> +# Optional properties:
+>> +# --------------------
+>> +
+>> +  sram:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    minItems: 1
+>> +    maxItems: 4
+>> +    description: |
+>> +      phandles to one or more reserved on-chip SRAM regions. The regions
+>> +      should be defined as child nodes of the respective SRAM node, and
+>> +      should be defined as per the generic bindings in,
+>> +      Documentation/devicetree/bindings/sram/sram.yaml
+>> +
+>> +required:
+>> + - compatible
+>> + - reg
+>> + - reg-names
+>> + - ti,sci
+>> + - ti,sci-dev-id
+>> + - ti,sci-proc-ids
+>> + - resets
+>> + - firmware-name
+>> + - mboxes
+>> + - memory-region
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    / {
+>> +        model = "Texas Instruments K3 J721E SoC";
+>> +        compatible = "ti,j721e";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        /* DSP Carveout reserved memory nodes */
+>> +        reserved-memory {
+>> +            #address-cells = <2>;
+>> +            #size-cells = <2>;
+>> +            ranges;
+>> +
+>> +            c66_0_dma_memory_region: c66-dma-memory@a6000000 {
+>> +                compatible = "shared-dma-pool";
+>> +                reg = <0x00 0xa6000000 0x00 0x100000>;
+>> +                no-map;
+>> +            };
+>> +
+>> +            c66_0_memory_region: c66-memory@a6100000 {
+>> +                compatible = "shared-dma-pool";
+>> +                reg = <0x00 0xa6100000 0x00 0xf00000>;
+>> +                no-map;
+>> +            };
+>> +        };
+> 
+> Drop all of this. Outside the scope of this binding. And will likely
+> start failing validation as schemas become more complete.
+
+This is a complete example because of the memory-region references below.
+
+> 
+>> +
+>> +        cbass_main: bus@100000 {
+> 
+> Drop unused labels.
+
+OK.
+
+regards
+Suman
+
+> 
+>> +            compatible = "simple-bus";
+>> +            #address-cells = <2>;
+>> +            #size-cells = <2>;
+>> +            ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
+>> +                     <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
+>> +                     <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
+>> +
+>> +            /* J721E C66_0 DSP node */
+>> +            c66_0: dsp@4d80800000 {
+>> +                compatible = "ti,j721e-c66-dsp";
+>> +                reg = <0x4d 0x80800000 0x00 0x00048000>,
+>> +                      <0x4d 0x80e00000 0x00 0x00008000>,
+>> +                      <0x4d 0x80f00000 0x00 0x00008000>;
+>> +                reg-names = "l2sram", "l1pram", "l1dram";
+>> +                ti,sci = <&dmsc>;
+>> +                ti,sci-dev-id = <142>;
+>> +                ti,sci-proc-ids = <0x03 0xFF>;
+>> +                resets = <&k3_reset 142 1>;
+>> +                firmware-name = "j7-c66_0-fw";
+>> +                memory-region = <&c66_0_dma_memory_region>,
+>> +                                <&c66_0_memory_region>;
+>> +                mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
+>> +            };
+>> +        };
+>> +    };
+>> -- 
+>> 2.26.0
+>>
+
