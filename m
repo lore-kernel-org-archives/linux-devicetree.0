@@ -2,62 +2,60 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C56AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5355C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8BF207BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06A5207BC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmhEN8oi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8SUqqrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406317AbgE1TYa (ORCPT
+        id S2406338AbgE1TVX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 15:24:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59400 "EHLO
+        Thu, 28 May 2020 15:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406348AbgE1TV1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:21:27 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38773C08C5C7;
-        Thu, 28 May 2020 12:21:27 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id g5so2556877pfm.10;
-        Thu, 28 May 2020 12:21:27 -0700 (PDT)
+        with ESMTP id S2406334AbgE1TVT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:21:19 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481C9C08C5C7;
+        Thu, 28 May 2020 12:21:19 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so11988453plo.7;
+        Thu, 28 May 2020 12:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EOwNR1IN+6tSpzRKC8EVCwTKESR+c+/dhEdssUNTwVU=;
-        b=BmhEN8oiwdt7ses/ggCwe2nC5jG+JmsBk1k6wD5mH/LH3tFZHc6yqkaJzKqD39rnOz
-         jdIPfZYQwt0fIhwGZDyr/LOc/nkLneaoI8yDUysKvpH0EK7mqZVQq18VdAoBLQ2etccr
-         /ek9fRbf4Ha51kF1YwCQ5/rvy4cD+N1krCKw2lsaJ5WqhOHBMvfL8Ci7bKpFkdwnrgUl
-         UTZPJc1+VxJmJO69yQG8F/x4IJewMrDNoRvncoHgRCvO/rncibQrMVEY4QhtclXsFftn
-         kPscS8LsRtKSVThXnGoJwZlJOxnIaLi7aveesRYJqpXwavFnJ2CyNCunGiXVHTsaqk0e
-         IPcw==
+        h=from:to:cc:subject:date:message-id;
+        bh=B8Hdvve5uJORZwdFRagi6o1BCEBLQjgLebb0Dnob25E=;
+        b=r8SUqqrQNkixcPuUi9GwBFK+NW+JPPPsTTov0p+ezk1FGS7cu3lJrm0BPcqNKuJvpj
+         rm3cm4LsUsS9XFSUB82mav+DmSeCKLSf+R5exs26EX1JmxptKoZefrAHUW6HCq1ljgw5
+         mR6qmxwaXGE724U1mqLNBrUHbI4U2+LPem9AC9qA8OZC8f50T2R1E/LGbrvqWzBOM1Fu
+         5jYTIvSI7MUrqHX44IY96w5W1f+cWSOWelpwGa/k5EXI3VGwPw0tHZ5naACRBx7HNmXY
+         QIEaPblt5K9Kcc5VzWSRMaEWZTMDYm/NTKQQnT3HEZ+JxZy+xN+g6oldCJL6cpjzT0CY
+         EPLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EOwNR1IN+6tSpzRKC8EVCwTKESR+c+/dhEdssUNTwVU=;
-        b=JTPwwyGNsc0dlnCVk8gyLb/8bsHTsOFlSA0LVArYtLLop6vEX9t8bFjlFD4eK5u7Jr
-         r+rOnrsXMRm2d4yX0nxn7dH8venN8ZNjgeNHcFe2KNIze8BBshQBtfCc4mG322Dnbitd
-         sg68D0ac5keIWmg4OtbkgOpVo+xBkT7evvSh9ucmxD5U9tgN3GXNHRPHjSY3v/xM10lk
-         Qe9bBDHOQY51f/GADdhbh1Y6QQ4pHPZT8fxHVhDGDa5zaFHGaTYomIT4JBxqDw1amF31
-         6g/+0CsB8LzYu2GNZmD8Z9LlqBGPgyaI2KP+gxAeOQWCKH2CYBV7ZQM3P9hrBEmmfDlL
-         Bkow==
-X-Gm-Message-State: AOAM532IDBVYjKOtVNHLJrtYfXNHIGHGRAT5LuI99VtphUd094mPvAcH
-        4TcnKdYEEc56og70qE/eKblICSIJ
-X-Google-Smtp-Source: ABdhPJywtcGNOyCPafoSIsx60XaQRccc9364PFMH+dMdMlO1CwvlLtPzu9Qsruop2xhhzdtdsYEc8w==
-X-Received: by 2002:a63:ce0d:: with SMTP id y13mr4465577pgf.90.1590693686278;
-        Thu, 28 May 2020 12:21:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B8Hdvve5uJORZwdFRagi6o1BCEBLQjgLebb0Dnob25E=;
+        b=SnJk3LddDGod1pL56ybz2lUVDZv0y4r6LHEbf/J8fN6cDWLpZG+YfqisP+2Ki8LAMp
+         euxBPrUAC4ci1zaoNE9Kb9SKfyQfLjJMCjcfC3iFnM9/cLUeU1YpRGUAi9s9CIVvRV1B
+         uZkJCfr2UBXTBHGW6VINXsyMfJUiD+ZXZey6fl7YIIABt5BMZ/MqfaCj8oDJ+7GJ3AzB
+         uwlTAmqoCbtOQCFGYOD6HmLmR4bwTkioVPMMrcyb+/2Eug69YMwCLVxSrjxtz1rSsJTB
+         fseQCfojT6xnsuhN6/D85rAznSASOZmPkvvTM3G+vD3yWB35SHWNqRntMgTULXex1XMg
+         0HBA==
+X-Gm-Message-State: AOAM530Nf9ckwFdq2Kzd/81uHOqYbhpfRrhihLakMtLni8cPfbpB4wdY
+        LShu9RykPw5KjCwTQQktjT7KK6GQ
+X-Google-Smtp-Source: ABdhPJzsaTAhbFH9bPSpGMqTYVYwf8Z9HNBSKJz5l4Np3QDbfQNWp+Ujm8NaLEnlihMIVuvErsXcRA==
+X-Received: by 2002:a17:902:502:: with SMTP id 2mr4998553plf.134.1590693678392;
+        Thu, 28 May 2020 12:21:18 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h11sm5460561pjk.20.2020.05.28.12.21.24
+        by smtp.gmail.com with ESMTPSA id h11sm5460561pjk.20.2020.05.28.12.21.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 12:21:25 -0700 (PDT)
+        Thu, 28 May 2020 12:21:17 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -77,132 +75,34 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH 4/4] pinctrl: bcm2835: Add support for wake-up interrupts
-Date:   Thu, 28 May 2020 12:21:12 -0700
-Message-Id: <20200528192112.26123-5-f.fainelli@gmail.com>
+Subject: [PATCH 0/4] pinctrl: bcm2835: Support for wake-up interrupts
+Date:   Thu, 28 May 2020 12:21:08 -0700
+Message-Id: <20200528192112.26123-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200528192112.26123-1-f.fainelli@gmail.com>
-References: <20200528192112.26123-1-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Leverage the IRQCHIP_MASK_ON_SUSPEND flag in order to avoid having to
-specifically treat the GPIO interrupts during suspend and resume, and
-simply implement an irq_set_wake() callback that is responsible for
-enabling the parent wake-up interrupt as a wake-up interrupt.
+Hi Linus,
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 58 ++++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+This patch series updates the bcm2835 pinctrl driver to support
+the BCM7211 SoC which is quite similar to 2711 (Raspberry Pi 4)
+except that it also supports wake-up interrupts.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index e8ad1824c6b3..367fd8e19f92 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -19,6 +19,7 @@
- #include <linux/irq.h>
- #include <linux/irqdesc.h>
- #include <linux/init.h>
-+#include <linux/interrupt.h>
- #include <linux/of_address.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
-@@ -76,6 +77,7 @@
- struct bcm2835_pinctrl {
- 	struct device *dev;
- 	void __iomem *base;
-+	int wake_irq[BCM2835_NUM_IRQS];
- 
- 	/* note: locking assumes each bank will have its own unsigned long */
- 	unsigned long enabled_irq_map[BCM2835_NUM_BANKS];
-@@ -435,6 +437,11 @@ static void bcm2835_gpio_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(host_chip, desc);
- }
- 
-+static irqreturn_t bcm2835_gpio_wake_irq_handler(int irq, void *dev_id)
-+{
-+	return IRQ_HANDLED;
-+}
-+
- static inline void __bcm2835_gpio_irq_config(struct bcm2835_pinctrl *pc,
- 	unsigned reg, unsigned offset, bool enable)
- {
-@@ -634,6 +641,31 @@ static void bcm2835_gpio_irq_ack(struct irq_data *data)
- 	bcm2835_gpio_set_bit(pc, GPEDS0, gpio);
- }
- 
-+static int bcm2835_gpio_irq_set_wake(struct irq_data *data, unsigned int on)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct bcm2835_pinctrl *pc = gpiochip_get_data(chip);
-+	unsigned gpio = irqd_to_hwirq(data);
-+	unsigned int irqgroup;
-+	int ret = -EINVAL;
-+
-+	if (gpio <= 27)
-+		irqgroup = 0;
-+	else if (gpio >= 28 && gpio <= 45)
-+		irqgroup = 1;
-+	else if (gpio >= 46 && gpio <= 53)
-+		irqgroup = 2;
-+	else
-+		return ret;
-+
-+	if (on)
-+		ret = enable_irq_wake(pc->wake_irq[irqgroup]);
-+	else
-+		ret = disable_irq_wake(pc->wake_irq[irqgroup]);
-+
-+	return ret;
-+}
-+
- static struct irq_chip bcm2835_gpio_irq_chip = {
- 	.name = MODULE_NAME,
- 	.irq_enable = bcm2835_gpio_irq_enable,
-@@ -642,6 +674,8 @@ static struct irq_chip bcm2835_gpio_irq_chip = {
- 	.irq_ack = bcm2835_gpio_irq_ack,
- 	.irq_mask = bcm2835_gpio_irq_disable,
- 	.irq_unmask = bcm2835_gpio_irq_enable,
-+	.irq_set_wake = bcm2835_gpio_irq_set_wake,
-+	.flags = IRQCHIP_MASK_ON_SUSPEND,
- };
- 
- static int bcm2835_pctl_get_groups_count(struct pinctrl_dev *pctldev)
-@@ -1221,8 +1255,30 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	 * bank that was firing the IRQ and look up the per-group
- 	 * and bank data.
- 	 */
--	for (i = 0; i < BCM2835_NUM_IRQS; i++)
-+	for (i = 0; i < BCM2835_NUM_IRQS; i++) {
-+		int len;
-+		char *name;
-+
- 		girq->parents[i] = irq_of_parse_and_map(np, i);
-+		/* Skip over the all banks interrupts */
-+		pc->wake_irq[i] = irq_of_parse_and_map(np, i +
-+						       BCM2835_NUM_IRQS + 1);
-+
-+		len = strlen(dev_name(pc->dev)) + 16;
-+		name = devm_kzalloc(pc->dev, len, GFP_KERNEL);
-+		if (!name)
-+			return -ENOMEM;
-+
-+		snprintf(name, len, "%s:bank%d", dev_name(pc->dev), i);
-+
-+		/* These are optional interrupts */
-+		err = devm_request_irq(dev, pc->wake_irq[i],
-+				       bcm2835_gpio_wake_irq_handler,
-+				       IRQF_SHARED, name, pc);
-+		if (err)
-+			dev_warn(dev, "unable to request wake IRQ %d\n",
-+				 pc->wake_irq[i]);
-+	}
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_level_irq;
- 
+Thanks!
+
+Florian Fainelli (4):
+  dt-bindings: pinctrl: Document 7211 compatible for
+    brcm,bcm2835-gpio.txt
+  dt-bindings: pinctrl: Document optional BCM7211 wake-up interrupts
+  pinctrl: bcm2835: Match BCM7211 compatible string
+  pinctrl: bcm2835: Add support for wake-up interrupts
+
+ .../bindings/pinctrl/brcm,bcm2835-gpio.txt    |  5 +-
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c         | 62 ++++++++++++++++++-
+ 2 files changed, 65 insertions(+), 2 deletions(-)
+
 -- 
 2.17.1
 
