@@ -2,431 +2,88 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFC3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CD0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86274206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:16:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="JOXqC2FP"
+	by mail.kernel.org (Postfix) with ESMTP id 18985207F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390194AbgE1NQ2 (ORCPT
+        id S2390371AbgE1NXd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 09:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58854 "EHLO
+        Thu, 28 May 2020 09:23:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390174AbgE1NQ0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:16:26 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31105C08C5C8
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:16:25 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id g9so23883edw.10
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iqKMn25ghIDtIXucJCbywseOlPbDZquXgrvlvR4IihM=;
-        b=JOXqC2FPe+drkIb2qujqAoHrLEGH6ZEe8YTuQVuX4HAfx9hP5vws0zf8khe8JwImwC
-         D3J8gIpp4FugLc6DwHIarJCdvmYM7/ZkFohXqOLhEY6eRFZ44iWAImUFrv19SGJbYBAz
-         MDAhBkVyVuXC7gjxKIrex60Luqfr3K5qgG3crsRUPWrl4cFeUUT5NdSMxyWGTfkdgG8z
-         9wvU8IcDU9KPpdV27kQDDVtmHl3Fxheqgs6Ee3Z8jyktcMuNUTBX97UGdC2ix2WKTY+O
-         4r8g3dneoWUdHVXRLIOES9zW8IlAD3pdX3kdqWVHw/8aW4OwNlW0eClS7HKFdTCVPe3n
-         05+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iqKMn25ghIDtIXucJCbywseOlPbDZquXgrvlvR4IihM=;
-        b=mle4CBjrVDyKtVexWgDJtUehh7Rnjwk++ppHQOpocx0mU4ZrU9T97LMqL4LT0xNZdk
-         T1S9GO9zGeGfLIOwOJKRt1XzYTSNkhF9qQ5UBmGLQt8wjkwf0k9Uh6NIHxmRv79m7vMm
-         As23pKAHBrofmkiP8iBqwO5X2Bp8HbUd2FTRbIiECNqYQ2iAUPMDVprafDy9L+IZtkjt
-         AxrIKJgl5J/Cmws2hbA7+OdLOssACiOj9pE2/UmSqZcgrl4MjB7t+xj2gMYpJwnVVZzi
-         G5MQwb4DhgBP5PZr8/eeoFJn/8Aju2LcautW9HbpKKMbBYryDsBd0+eL7K/RVoTrD6uF
-         flAg==
-X-Gm-Message-State: AOAM530OovGrHvlKwdQc1FlIq2oLJTfqQSgIqgZE+dadmilo0ZfurqRi
-        c+FKDAErPBeX1Hi7M22jnfd3QgGFlxrfrw==
-X-Google-Smtp-Source: ABdhPJxG6elKfq42kcoKvE62jrC+3DX94/ng73q2KvXhiUWtTuII1WWLa0QQ6BWOU/rl8MG+72JNLQ==
-X-Received: by 2002:aa7:d787:: with SMTP id s7mr3121428edq.104.1590671783626;
-        Thu, 28 May 2020 06:16:23 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id g13sm5172783ejh.119.2020.05.28.06.16.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 06:16:22 -0700 (PDT)
-Date:   Thu, 28 May 2020 15:16:20 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: Re: [PATCH v2] arm: dts: am335x-boneblack: add gpio-line-names
-Message-ID: <20200528131620.GA3126290@x1>
-References: <20200521200926.GC429020@x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521200926.GC429020@x1>
+        with ESMTP id S2390368AbgE1NXa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:23:30 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16ED8C05BD1E
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:23:29 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:21:946d:6344:ccc1])
+        by albert.telenet-ops.be with bizsmtp
+        id kDPT2200155ue4H06DPT2l; Thu, 28 May 2020 15:23:27 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jeIVK-0007sC-TW; Thu, 28 May 2020 15:23:26 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jeIVK-0007tH-Rd; Thu, 28 May 2020 15:23:26 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH dt-schema] Fix interrupt controllers with interrupt-map
+Date:   Thu, 28 May 2020 15:23:23 +0200
+Message-Id: <20200528132323.30288-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 10:09:26PM +0200, Drew Fustini wrote:
-> The BeagleBone Black has P8 and P9 headers [0] which expose many of the
-> AM3358 ZCZ SoC balls to stacking expansion boards called "capes", or to
-> other external connections like jumper wires connected to a breadboard.
-> BeagleBone users will often refer to the "Cape Exanpsion Headers" pin
-> diagram [1] as it is in the "Bone101" getting started tutorial. [2]
-> 
-> Most of the P8 and P9 header pins can muxed to a GPIO line.  The
-> gpio-line-names describe which P8 or P9 pin that line goes to and the
-> default mux for that P8 or P9 pin if it is not GPIO.
-> 
-> For example, gpiochip 1 line 0 is connected to P8 header pin 25 (P8_25)
-> however the default device tree has the corresponding BGA ball (ZCZ U7)
-> muxed to mmc1_dat0 as it is used for the on-board eMMC chip.  For that
-> GPIO line to be used, one would need to modify the device tree to
-> disable the eMMC and change the pin mux for that ball to GPIO mode.
-> 
-> Some of the AM3358 ZCZ balls corresponding to GPIO lines are not routed
-> to a P8 or P9 header, but are instead wired to some peripheral device
-> like on-board eMMC, HDMI framer IC, or status LEDs.  Those names are in
-> brackets to denote those GPIO lines can not be used.
-> 
-> Some GPIO lines are named "[NC]" as the corresponding balls are not
-> routed to anything on the PCB.
-> 
-> The goal for these names is to make it easier for a user viewing the
-> output of gpioinfo to determine which P8 or P9 pin is connected to a
-> GPIO line.  The output of gpioinfo on a BeagleBone Black would be:
-> 
-> gpiochip0 - 32 lines:
-> 	line   0: "[ethernet]"       unused   input  active-high 
-> 	line   1: "[ethernet]"       unused   input  active-high 
-> 	line   2: "P9_22 [spi0_sclk]" unused input active-high 
-> 	line   3: "P9_21 [spi0_d0]" unused input active-high 
-> 	line   4: "P9_18 [spi0_d1]" unused input active-high 
-> 	line   5: "P9_17 [spi0_cs0]" unused input active-high 
-> 	line   6:  "[sd card]"         "cd"   input   active-low [used]
-> 	line   7: "P9_42A [ecappwm0]" unused input active-high 
-> 	line   8: "P8_35 [hdmi]" unused input active-high 
-> 	line   9: "P8_33 [hdmi]" unused input active-high 
-> 	line  10: "P8_31 [hdmi]" unused input active-high 
-> 	line  11: "P8_32 [hdmi]" unused input active-high 
-> 	line  12: "P9_20 [i2c2_sda]" unused input active-high 
-> 	line  13: "P9_19 [i2c2_scl]" unused input active-high 
-> 	line  14: "P9_26 [uart1_rxd]" unused input active-high 
-> 	line  15: "P9_24 [uart1_txd]" unused input active-high 
-> 	line  16: "[ethernet]"       unused   input  active-high 
-> 	line  17: "[ethernet]"       unused   input  active-high 
-> 	line  18:      "[usb]"       unused   input  active-high 
-> 	line  19:     "[hdmi]"       unused   input  active-high 
-> 	line  20:     "P9_41B"       unused   input  active-high 
-> 	line  21: "[ethernet]"       unused   input  active-high 
-> 	line  22: "P8_19 [ehrpwm2a]" unused input active-high 
-> 	line  23: "P8_13 [ehrpwm2b]" unused input active-high 
-> 	line  24:       "[NC]"       unused   input  active-high 
-> 	line  25:       "[NC]"       unused   input  active-high 
-> 	line  26:      "P8_14"       unused   input  active-high 
-> 	line  27:      "P8_17"       unused   input  active-high 
-> 	line  28: "[ethernet]"       unused   input  active-high 
-> 	line  29: "[ethernet]"       unused   input  active-high 
-> 	line  30: "P9_11 [uart4_rxd]" unused input active-high 
-> 	line  31: "P9_13 [uart4_txd]" unused input active-high 
-> gpiochip1 - 32 lines:
-> 	line   0: "P8_25 [emmc]" unused input active-high 
-> 	line   1:     "[emmc]"       unused   input  active-high 
-> 	line   2: "P8_5 [emmc]" unused input active-high 
-> 	line   3: "P8_6 [emmc]" unused input active-high 
-> 	line   4: "P8_23 [emmc]" unused input active-high 
-> 	line   5: "P8_22 [emmc]" unused input active-high 
-> 	line   6: "P8_3 [emmc]" unused input active-high 
-> 	line   7: "P8_4 [emmc]" unused input active-high 
-> 	line   8:       "[NC]"       unused   input  active-high 
-> 	line   9:       "[NC]"       unused   input  active-high 
-> 	line  10:       "[NC]"       unused   input  active-high 
-> 	line  11:       "[NC]"       unused   input  active-high 
-> 	line  12:      "P8_12"       unused   input  active-high 
-> 	line  13:      "P8_11"       unused   input  active-high 
-> 	line  14:      "P8_16"       unused   input  active-high 
-> 	line  15:      "P8_15"       unused   input  active-high 
-> 	line  16:     "P9_15A"       unused   input  active-high 
-> 	line  17:      "P9_23"       unused   input  active-high 
-> 	line  18: "P9_14 [ehrpwm1a]" unused input active-high 
-> 	line  19: "P9_16 [ehrpwm1b]" unused input active-high 
-> 	line  20:     "[emmc]"       unused   input  active-high 
-> 	line  21: "[usr0 led]" "beaglebone:green:heartbeat" output active-high [used]
-> 	line  22: "[usr1 led]" "beaglebone:green:mmc0" output active-high [used]
-> 	line  23: "[usr2 led]" "beaglebone:green:usr2" output active-high [used]
-> 	line  24: "[usr3 led]" "beaglebone:green:usr3" output active-high [used]
-> 	line  25:     "[hdmi]"  "interrupt"   input  active-high [used]
-> 	line  26:      "[usb]"       unused   input  active-high 
-> 	line  27: "[hdmi audio]" "enable" output active-high [used]
-> 	line  28:      "P9_12"       unused   input  active-high 
-> 	line  29:      "P8_26"       unused   input  active-high 
-> 	line  30: "P8_21 [emmc]" unused input active-high 
-> 	line  31: "P8_20 [emmc]" unused input active-high 
-> gpiochip2 - 32 lines:
-> 	line   0:     "P9_15B"       unused   input  active-high 
-> 	line   1:      "P8_18"       unused   input  active-high 
-> 	line   2:       "P8_7"       unused   input  active-high 
-> 	line   3:       "P8_8"       unused   input  active-high 
-> 	line   4:      "P8_10"       unused   input  active-high 
-> 	line   5:       "P8_9"       unused   input  active-high 
-> 	line   6: "P8_45 [hdmi]" unused input active-high 
-> 	line   7: "P8_46 [hdmi]" unused input active-high 
-> 	line   8: "P8_43 [hdmi]" unused input active-high 
-> 	line   9: "P8_44 [hdmi]" unused input active-high 
-> 	line  10: "P8_41 [hdmi]" unused input active-high 
-> 	line  11: "P8_42 [hdmi]" unused input active-high 
-> 	line  12: "P8_39 [hdmi]" unused input active-high 
-> 	line  13: "P8_40 [hdmi]" unused input active-high 
-> 	line  14: "P8_37 [hdmi]" unused input active-high 
-> 	line  15: "P8_38 [hdmi]" unused input active-high 
-> 	line  16: "P8_36 [hdmi]" unused input active-high 
-> 	line  17: "P8_34 [hdmi]" unused input active-high 
-> 	line  18: "[ethernet]"       unused   input  active-high 
-> 	line  19: "[ethernet]"       unused   input  active-high 
-> 	line  20: "[ethernet]"       unused   input  active-high 
-> 	line  21: "[ethernet]"       unused   input  active-high 
-> 	line  22: "P8_27 [hdmi]" unused input active-high 
-> 	line  23: "P8_29 [hdmi]" unused input active-high 
-> 	line  24: "P8_28 [hdmi]" unused input active-high 
-> 	line  25: "P8_30 [hdmi]" unused input active-high 
-> 	line  26:     "[emmc]"       unused   input  active-high 
-> 	line  27:     "[emmc]"       unused   input  active-high 
-> 	line  28:     "[emmc]"       unused   input  active-high 
-> 	line  29:     "[emmc]"       unused   input  active-high 
-> 	line  30:     "[emmc]"       unused   input  active-high 
-> 	line  31:     "[emmc]"       unused   input  active-high 
-> gpiochip3 - 32 lines:
-> 	line   0: "[ethernet]"       unused   input  active-high 
-> 	line   1: "[ethernet]"       unused   input  active-high 
-> 	line   2: "[ethernet]"       unused   input  active-high 
-> 	line   3: "[ethernet]"       unused   input  active-high 
-> 	line   4: "[ethernet]"       unused   input  active-high 
-> 	line   5:     "[i2c0]"       unused   input  active-high 
-> 	line   6:     "[i2c0]"       unused   input  active-high 
-> 	line   7:      "[emu]"       unused   input  active-high 
-> 	line   8:      "[emu]"       unused   input  active-high 
-> 	line   9: "[ethernet]"       unused   input  active-high 
-> 	line  10: "[ethernet]"       unused   input  active-high 
-> 	line  11:       "[NC]"       unused   input  active-high 
-> 	line  12:       "[NC]"       unused   input  active-high 
-> 	line  13:      "[usb]"       unused   input  active-high 
-> 	line  14: "P9_31 [spi1_sclk]" unused input active-high 
-> 	line  15: "P9_29 [spi1_d0]" unused input active-high 
-> 	line  16: "P9_30 [spi1_d1]" unused input active-high 
-> 	line  17: "P9_28 [spi1_cs0]" unused input active-high 
-> 	line  18: "P9_42B [ecappwm0]" unused input active-high 
-> 	line  19:      "P9_27"       unused   input  active-high 
-> 	line  20:     "P9_41A"       unused   input  active-high 
-> 	line  21:      "P9_25"       unused   input  active-high 
-> 	line  22:       "[NC]"       unused   input  active-high 
-> 	line  23:       "[NC]"       unused   input  active-high 
-> 	line  24:       "[NC]"       unused   input  active-high 
-> 	line  25:       "[NC]"       unused   input  active-high 
-> 	line  26:       "[NC]"       unused   input  active-high 
-> 	line  27:       "[NC]"       unused   input  active-high 
-> 	line  28:       "[NC]"       unused   input  active-high 
-> 	line  29:       "[NC]"       unused   input  active-high 
-> 	line  30:       "[NC]"       unused   input  active-high 
-> 	line  31:       "[NC]"       unused   input  active-high 
-> 
-> [0] https://git.io/JfgOd
-> [1] https://beagleboard.org/capes
-> [1] https://beagleboard.org/Support/bone101
-> [2] https://beagleboard.org/static/images/cape-headers.png
-> 
-> Reviewed-by: Jason Kridner <jason@beagleboard.org>
-> Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
-> V2 change:
-> - include output of gpioinfo to illustrate how the gpio-line-names
-> will appear. My apologies for forgetting to include in V1.
-> 
-> V1 note:
-> I had posted a patch with these line names for am335x-bone-common.dtsi
-> but Grygorii Strashko pointed out that the names are not applicable to
-> all BeagleBone models.  Thus I have created this patch to add these
-> names just for the BeagleBone Black.
-> 
->  arch/arm/boot/dts/am335x-boneblack.dts | 144 +++++++++++++++++++++++++
->  1 file changed, 144 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-> index d3928662aed4..5f31e832eb82 100644
-> --- a/arch/arm/boot/dts/am335x-boneblack.dts
-> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
-> @@ -23,3 +23,147 @@ oppnitro-1000000000 {
->  		opp-supported-hw = <0x06 0x0100>;
->  	};
->  };
-> +
-> +&gpio0 {
-> +	gpio-line-names =
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"P9_22 [spi0_sclk]",
-> +		"P9_21 [spi0_d0]",
-> +		"P9_18 [spi0_d1]",
-> +		"P9_17 [spi0_cs0]",
-> +		"[sd card]",
-> +		"P9_42A [ecappwm0]",
-> +		"P8_35 [hdmi]",
-> +		"P8_33 [hdmi]",
-> +		"P8_31 [hdmi]",
-> +		"P8_32 [hdmi]",
-> +		"P9_20 [i2c2_sda]",
-> +		"P9_19 [i2c2_scl]",
-> +		"P9_26 [uart1_rxd]",
-> +		"P9_24 [uart1_txd]",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"[usb]",
-> +		"[hdmi]",
-> +		"P9_41B",
-> +		"[ethernet]",
-> +		"P8_19 [ehrpwm2a]",
-> +		"P8_13 [ehrpwm2b]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P8_14",
-> +		"P8_17",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"P9_11 [uart4_rxd]",
-> +		"P9_13 [uart4_txd]";
-> +};
-> +
-> +&gpio1 {
-> +	gpio-line-names =
-> +		"P8_25 [emmc]",
-> +		"[emmc]",
-> +		"P8_5 [emmc]",
-> +		"P8_6 [emmc]",
-> +		"P8_23 [emmc]",
-> +		"P8_22 [emmc]",
-> +		"P8_3 [emmc]",
-> +		"P8_4 [emmc]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P8_12",
-> +		"P8_11",
-> +		"P8_16",
-> +		"P8_15",
-> +		"P9_15A",
-> +		"P9_23",
-> +		"P9_14 [ehrpwm1a]",
-> +		"P9_16 [ehrpwm1b]",
-> +		"[emmc]",
-> +		"[usr0 led]",
-> +		"[usr1 led]",
-> +		"[usr2 led]",
-> +		"[usr3 led]",
-> +		"[hdmi]",
-> +		"[usb]",
-> +		"[hdmi audio]",
-> +		"P9_12",
-> +		"P8_26",
-> +		"P8_21 [emmc]",
-> +		"P8_20 [emmc]";
-> +};
-> +
-> +&gpio2 {
-> +	gpio-line-names =
-> +		"P9_15B",
-> +		"P8_18",
-> +		"P8_7",
-> +		"P8_8",
-> +		"P8_10",
-> +		"P8_9",
-> +		"P8_45 [hdmi]",
-> +		"P8_46 [hdmi]",
-> +		"P8_43 [hdmi]",
-> +		"P8_44 [hdmi]",
-> +		"P8_41 [hdmi]",
-> +		"P8_42 [hdmi]",
-> +		"P8_39 [hdmi]",
-> +		"P8_40 [hdmi]",
-> +		"P8_37 [hdmi]",
-> +		"P8_38 [hdmi]",
-> +		"P8_36 [hdmi]",
-> +		"P8_34 [hdmi]",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"P8_27 [hdmi]",
-> +		"P8_29 [hdmi]",
-> +		"P8_28 [hdmi]",
-> +		"P8_30 [hdmi]",
-> +		"[emmc]",
-> +		"[emmc]",
-> +		"[emmc]",
-> +		"[emmc]",
-> +		"[emmc]",
-> +		"[emmc]";
-> +};
-> +
-> +&gpio3 {
-> +	gpio-line-names =
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"[i2c0]",
-> +		"[i2c0]",
-> +		"[emu]",
-> +		"[emu]",
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[usb]",
-> +		"P9_31 [spi1_sclk]",
-> +		"P9_29 [spi1_d0]",
-> +		"P9_30 [spi1_d1]",
-> +		"P9_28 [spi1_cs0]",
-> +		"P9_42B [ecappwm0]",
-> +		"P9_27",
-> +		"P9_41A",
-> +		"P9_25",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]";
-> +};
-> -- 
-> 2.25.1
-> 
+When an interrupt controller has an "interrupt-map" property, an "is
+valid under each of" error is triggered.
 
+Fix this by allowing "interrupt-controller" and "interrupt-map" to
+coexist, in both the interrrupts meta-schema and the
+interrupt-controller schema.
 
-FYI - Linus W. provided an Acked-by in related thread [0].
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ meta-schemas/interrupts.yaml      | 2 +-
+ schemas/interrupt-controller.yaml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Anyone else have any review comments?
+diff --git a/meta-schemas/interrupts.yaml b/meta-schemas/interrupts.yaml
+index 7073063486d44dab..93d8e4cafca679d3 100644
+--- a/meta-schemas/interrupts.yaml
++++ b/meta-schemas/interrupts.yaml
+@@ -26,7 +26,7 @@ properties:
+ dependencies:
+   interrupt-map: ['#interrupt-cells', 'interrupt-map-mask']
+   '#interrupt-cells':
+-    oneOf:
++    anyOf:
+       - required:
+           - interrupt-controller
+       - required:
+diff --git a/schemas/interrupt-controller.yaml b/schemas/interrupt-controller.yaml
+index f65d5f6d2f1ac524..5dce87d839959489 100644
+--- a/schemas/interrupt-controller.yaml
++++ b/schemas/interrupt-controller.yaml
+@@ -30,7 +30,7 @@ dependencies:
+   interrupt-controller: ['#interrupt-cells']
+   interrupt-map: ['#interrupt-cells', 'interrupt-map-mask']
+   "#interrupt-cells":
+-    oneOf:
++    anyOf:
+       - required:
+           - interrupt-controller
+       - required:
+-- 
+2.17.1
 
-thank you,
-drew
-
-[0] https://lore.kernel.org/linux-devicetree/CACRpkdZLRjcE0FGwVR-Q7a50aEmpB=xO4q6H8_EaV199fGr0OA@mail.gmail.com/
