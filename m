@@ -2,510 +2,139 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15377C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997AFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE97D20B80
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6626E20B80
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:06:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UkMAW1vw"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IDMRoK7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgE1Htv (ORCPT
+        id S1726330AbgE1IGm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 03:49:51 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:38624 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbgE1Htu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 03:49:50 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200528074946epoutp031562e49ba0e6433b2848fbeced3d9fe9~TIbxdZPwC2963829638epoutp03Q
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 07:49:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200528074946epoutp031562e49ba0e6433b2848fbeced3d9fe9~TIbxdZPwC2963829638epoutp03Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590652186;
-        bh=w3hreuHdGghvCf2Cl/nWNgKq1iwxko3TlSXpUoS52lM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UkMAW1vwFpypFoFOaDfPTBXoG3fSc7H0rZBF/YQ/uPFwc8ko6+gT90eV8w/2uyTVg
-         RZoltUBuDxjMu5xzPXofGsRG99NrKKhSEAcqVSgA2eJt4/OjU7y02ehaKeA59+XU08
-         OxXV5sDqMxu4iIr5K0mSlEwiUKQrLhrULEXheKnU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200528074945epcas1p172b17c4112659cf6dabc62c9f20b7370~TIbwhnbd52989429894epcas1p16;
-        Thu, 28 May 2020 07:49:45 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49Xfx117FLzMqYkk; Thu, 28 May
-        2020 07:49:41 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D3.6B.04645.51D6FCE5; Thu, 28 May 2020 16:49:41 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200528074939epcas1p2ca03b0b59c893dc7ddfa8234a3695ada~TIbreJvlm2019520195epcas1p2H;
-        Thu, 28 May 2020 07:49:39 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200528074939epsmtrp197bdf2aa05e142c1a9eaf872a5e7ee7b~TIbrdGRMc3121731217epsmtrp1i;
-        Thu, 28 May 2020 07:49:39 +0000 (GMT)
-X-AuditID: b6c32a36-f67ff70000001225-e5-5ecf6d155cea
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1E.07.08382.31D6FCE5; Thu, 28 May 2020 16:49:39 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200528074939epsmtip1f20abb71f55e25d652757989898ee798~TIbrJ4l_71298712987epsmtip1v;
-        Thu, 28 May 2020 07:49:39 +0000 (GMT)
-Subject: Re: [PATCH 09/12] devfreq: add mediatek cci devfreq
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 28 May 2020 04:06:42 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:47752 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725859AbgE1IGm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 04:06:42 -0400
+X-UUID: 0a855f739526435198e75b7b2b12af42-20200528
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vdtwpDh+BfZcY9fDqODOL1gT1h9erHJDlZqiyVdKXQw=;
+        b=IDMRoK7fCZBli2i3w6DRX53TBA8Vt+bgLN79INQdHYH6mykU28MIKvMszxnQoWFWJ37clhUb9qYosQ2nnC4SpSZikGTDunFCTqv3kGrdyTnlfJW/C4GaoXh8DmF3GN5cu+qs3zDCa0SaOO7DYuMh+fFhdFXa+eVqonnf8YfP7Io=;
+X-UUID: 0a855f739526435198e75b7b2b12af42-20200528
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1314655395; Thu, 28 May 2020 16:06:32 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 28 May
+ 2020 16:06:29 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 28 May 2020 16:06:30 +0800
+Message-ID: <1590653082.8804.517.camel@mhfsdcap03>
+Subject: Re: [V9, 1/2] media: dt-bindings: media: i2c: Document OV02A10
+ bindings
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Organization: Samsung Electronics
-Message-ID: <75e95e7f-6038-fd5a-3d2c-37df2c6b2cc8@samsung.com>
-Date:   Thu, 28 May 2020 17:00:00 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Louis Kuo <louis.kuo@mediatek.com>,
+        "Shengnan Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=A3=E7=94=B7=29?=" 
+        <shengnan.wang@mediatek.com>
+Date:   Thu, 28 May 2020 16:04:42 +0800
+In-Reply-To: <20200528072332.GW7618@paasikivi.fi.intel.com>
+References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
+         <20200523084103.31276-2-dongchun.zhu@mediatek.com>
+         <20200526182847.GA92449@bogus> <1590569355.8804.448.camel@mhfsdcap03>
+         <CAL_Jsq+sN0SVidTrY0ODXEkzkxYFvG1FTnL0oRQBSKf=ynLdyQ@mail.gmail.com>
+         <20200527211628.GT7618@paasikivi.fi.intel.com>
+         <1590636882.8804.474.camel@mhfsdcap03>
+         <20200528072332.GW7618@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <c39e4f30-805a-78c4-b1c4-e55a03e2408e@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIJsWRmVeSWpSXmKPExsWy7bCmvq5o7vk4gy8/2Cy2r3/BajH14RM2
-        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
-        j7NMFmdOX2K1aN17hN3i37WNLBbT7wpZbPzq4SDksWbeGkaPnbPusntsWtXJ5nHn2h42j81L
-        6j1aTu5n8dhytZ3Fo2/LKkaP4ze2M3l83iQXwBWVbZORmpiSWqSQmpecn5KZl26r5B0c7xxv
-        amZgqGtoaWGupJCXmJtqq+TiE6DrlpkD9JKSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYp
-        tSAlp8CyQK84Mbe4NC9dLzk/18rQwMDIFKgwITuj43Una8H5iIoPKzrZGhhvuncxcnJICJhI
-        fHt1gQnEFhLYwSjx5kFoFyMXkP2JUWLSj7lMEM43Ron5678ywnQ8vnaDDSKxl1Fi0+Z9UFXv
-        GSXeP90MNktYwEZi+cImVhCbTUBLYv8LkA5ODhGB28wSE2aHgDQwCxxklJh+6SJYA7+AosTV
-        H4/BVvAK2Em0/l4FFOfgYBFQldh8vBIkLCoQJnFyWwtUiaDEyZlPWEBsTgF7idmLO8F2MQuI
-        S9x6Mp8JwpaX2P52DjPILgmBfk6Ju6f/s0O84CJx9ONHKFtY4tXxLVC2lMTL/jYou1pi5ckj
-        bBDNHYwSW/ZfYIVIGEvsXzoZ7DhmAU2J9bv0IcKKEjt/z2WEWMwn8e5rDytIiYQAr0RHmxBE
-        ibLE5Qd3mSBsSYnF7Z1sExiVZiF5ZxaSF2YheWEWwrIFjCyrGMVSC4pz01OLDQuMkGN7EyM4
-        uWuZ7WBcdM7nEKMAB6MSD2+H17k4IdbEsuLK3EOMEhzMSiK8TmdPxwnxpiRWVqUW5ccXleak
-        Fh9iNAUG9kRmKdHkfGDmySuJNzQ1MjY2tjAxNDM1NFQS553/40yckEB6YklqdmpqQWoRTB8T
-        B6dUA+M6IT/O+hVJ/9ZXhtqqyvxS237J+fSyZyaP9ZRiLbpXhyScj1r4NL3mp7BNbJFT8saQ
-        NDs7S/GY1qb9QvpZIb+LWjgPqojcVq09oGsX5WBWbz7rkvZb9ozLLB7fL3H9Xr0/pIrh/ayI
-        yf4KreKB38SPf1paecXrvKjMpuSF3oe+sBrz1XEeU2Ipzkg01GIuKk4EANdo+O0EBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsWy7bCSnK5w7vk4g1ev9Cy2r3/BajH14RM2
-        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
-        j7NMFmdOX2K1aN17hN3i37WNLBbT7wpZbPzq4SDksWbeGkaPnbPusntsWtXJ5nHn2h42j81L
-        6j1aTu5n8dhytZ3Fo2/LKkaP4ze2M3l83iQXwBXFZZOSmpNZllqkb5fAldHxupO14HxExYcV
-        nWwNjDfduxg5OSQETCQeX7vB1sXIxSEksJtRYs3cH+wQCUmJaRePMncxcgDZwhKHDxdD1Lxl
-        lNh74w8jSI2wgI3E8oVNrCA2m4CWxP4XEINEBO4zSyy/exXMYRY4yCjxrPsPO0R7M5NE653H
-        zCAt/AKKEld/PAYbxStgJ9H6exUTyDoWAVWJzccrQcKiAmESO5c8ZoIoEZQ4OfMJC4jNKWAv
-        MXtxJ9hmZgF1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYhaZmFpGUBI8sqRsnU
-        guLc9NxiwwLDvNRyveLE3OLSvHS95PzcTYzgSNfS3MG4fdUHvUOMTByMhxglOJiVRHidzp6O
-        E+JNSaysSi3Kjy8qzUktPsQozcGiJM57o3BhnJBAemJJanZqakFqEUyWiYNTqoFpCZvH5KV7
-        uQw+2075vqHe89mNDvs1FfJnnQuWv29+dHHdkfSFXw57sruxvNmndkAz12HZqVmWb+KVb23h
-        OHG50dt0rZ3etNnnvyz5UcG6wSgid233apYPym/0dk/cPourJSxMtZLV9JwN49Kpqq09xcce
-        eAmt1Z/ozJHC735LQd9bTnZRqwGPA2d0je6/oJcy05scNtt8bH5+/bBf6P8XWYebk0+s2HZ6
-        fsu+wyI+PDMs2Rl1fxz+Gj99IluTwKycX2n3bm5lfhNz8GO/YkyN+4M5K1+FGEnrMbzOX+q8
-        Xi1V78Fpi3/mR50D9m82MtL9EM489dg53RSpVtuzj0o2fVx1Tf7Gl7kMR6eu6UqMU2Ipzkg0
-        1GIuKk4EAGBovQVjAwAA
-X-CMS-MailID: 20200528074939epcas1p2ca03b0b59c893dc7ddfa8234a3695ada
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200520034338epcas1p1b3c7eb91a37dfd1d9cfc150a2310f120
-References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
-        <CGME20200520034338epcas1p1b3c7eb91a37dfd1d9cfc150a2310f120@epcas1p1.samsung.com>
-        <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
-        <c39e4f30-805a-78c4-b1c4-e55a03e2408e@samsung.com>
+X-TM-SNTS-SMTP: 40A29D3792692DD8CE5B51233948BE224921176E99DFDF64883FC26B2B3119662000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrew-sh.Cheng,
+SGkgU2FrYXJpLA0KDQpPbiBUaHUsIDIwMjAtMDUtMjggYXQgMTA6MjMgKzAzMDAsIFNha2FyaSBB
+aWx1cyB3cm90ZToNCj4gSGkgRG9uZ2NodW4sDQo+IA0KPiBPbiBUaHUsIE1heSAyOCwgMjAyMCBh
+dCAxMTozNDo0MkFNICswODAwLCBEb25nY2h1biBaaHUgd3JvdGU6DQo+ID4gSGkgU2FrYXJpLCBS
+b2IsDQo+ID4gDQo+ID4gT24gVGh1LCAyMDIwLTA1LTI4IGF0IDAwOjE2ICswMzAwLCBTYWthcmkg
+QWlsdXMgd3JvdGU6DQo+ID4gPiBIaSBSb2IsIERvbmdjaHVuLA0KPiA+ID4gDQo+ID4gPiBPbiBX
+ZWQsIE1heSAyNywgMjAyMCBhdCAwOToyNzoyMkFNIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToN
+Cj4gPiA+ID4gPiA+ID4gKyAgICBwcm9wZXJ0aWVzOg0KPiA+ID4gPiA+ID4gPiArICAgICAgZW5k
+cG9pbnQ6DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgIHR5cGU6IG9iamVjdA0KPiA+ID4gPiA+ID4g
+PiArICAgICAgICBhZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiA+ID4gPiA+ID4gKw0K
+PiA+ID4gPiA+ID4gPiArICAgICAgICBwcm9wZXJ0aWVzOg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4g
+QWN0dWFsbHkgSSB3b25kZXIgd2hldGhlciB3ZSBuZWVkIHRvIGRlY2xhcmUgJ2Nsb2NrLWxhbmVz
+JyBoZXJlPw0KPiA+ID4gPiANCj4gPiA+ID4gWWVzLCBpZiB5b3UgYXJlIHVzaW5nIGl0Lg0KPiA+
+ID4gDQo+ID4gPiBEb25nY2h1biwgY2FuIHlvdSBjb25maXJtIHRoZSBjaGlwIGhhcyBhIHNpbmds
+ZSBkYXRhIGFuZCBhIHNpbmdsZSBjbG9jaw0KPiA+ID4gbGFuZSBhbmQgdGhhdCBpdCBkb2VzIG5v
+dCBzdXBwb3J0IGxhbmUgcmVvcmRlcmluZz8NCj4gPiA+IA0KPiA+IA0KPiA+IEZyb20gdGhlIGRh
+dGFzaGVldCwgJ01JUEkgaW5zaWRlIHRoZSBPVjAyQTEwIHByb3ZpZGVzIG9uZSBzaW5nbGUNCj4g
+PiB1bmktZGlyZWN0aW9uYWwgY2xvY2sgbGFuZSBhbmQgb25lIGJpLWRpcmVjdGlvbmFsIGRhdGEg
+bGFuZSBzb2x1dGlvbiBmb3INCj4gPiBjb21tdW5pY2F0aW9uIGxpbmtzIGJldHdlZW4gY29tcG9u
+ZW50cyBpbnNpZGUgYSBtb2JpbGUgZGV2aWNlLg0KPiA+IFRoZSBkYXRhIGxhbmUgaGFzIGZ1bGwg
+c3VwcG9ydCBmb3IgSFModW5pLWRpcmVjdGlvbmFsKSBhbmQNCj4gPiBMUChiaS1kaXJlY3Rpb25h
+bCkgZGF0YSB0cmFuc2ZlciBtb2RlLicNCj4gPiANCj4gPiBUaGUgc2Vuc29yIGRvZXNuJ3Qgc3Vw
+cG9ydCBsYW5lIHJlb3JkZXJpbmcsIHNvICdjbG9jay1sYW5lcycgcHJvcGVydHkNCj4gPiB3b3Vs
+ZCBub3QgYmUgYWRkZWQgaW4gbmV4dCByZWxlYXNlLg0KPiA+IA0KPiA+ID4gU28gaWYgdGhlcmUn
+cyBub3RoaW5nIHRvIGNvbnZleSB0byB0aGUgZHJpdmVyLCBhbHNvIHRoZSBkYXRhLWxhbmVzIHNo
+b3VsZA0KPiA+ID4gYmUgcmVtb3ZlZCBJTU8uDQo+ID4gPiANCj4gPiANCj4gPiBIb3dldmVyLCAn
+ZGF0YS1sYW5lcycgcHJvcGVydHkgbWF5IHN0aWxsIGJlIHJlcXVpcmVkLg0KPiA+IEl0IGlzIGtu
+b3duIHRoYXQgZWl0aGVyIGRhdGEtbGFuZXMgb3IgY2xvY2stbGFuZXMgaXMgYW4gYXJyYXkgb2YN
+Cj4gPiBwaHlzaWNhbCBkYXRhIGxhbmUgaW5kZXhlcy4gUG9zaXRpb24gb2YgYW4gZW50cnkgZGV0
+ZXJtaW5lcyB0aGUgbG9naWNhbA0KPiA+IGxhbmUgbnVtYmVyLCB3aGlsZSB0aGUgdmFsdWUgb2Yg
+YW4gZW50cnkgaW5kaWNhdGVzIHBoeXNpY2FsIGxhbmUsIGUuZy4sDQo+ID4gZm9yIDEtbGFuZSBN
+SVBJIENTSS0yIGJ1cyB3ZSBjb3VsZCBoYXZlICJkYXRhLWxhbmVzID0gPDE+OyIsIGFzc3VtaW5n
+DQo+ID4gdGhlIGNsb2NrIGxhbmUgaXMgb24gaGFyZHdhcmUgbGFuZSAwLg0KPiA+IA0KPiA+IEFz
+IG1lbnRpb25lZCBlYXJsaWVyLCB0aGUgT1YwMkExMCBzZW5zb3Igc3VwcG9ydHMgb25seSAxQzFE
+IGFuZCBkb2VzIG5vdA0KPiA+IHN1cHBvcnQgbGFuZSByZW9yZGVyaW5nLCBzbyBoZXJlIHdlIHNo
+YWxsIHVzZSAnZGF0YS1sYW5lcyA9IDwxPicgYXMNCj4gPiB0aGVyZSBpcyBvbmx5IGEgY2xvY2sg
+bGFuZSBmb3IgT1YwMkExMC4NCj4gPiANCj4gPiBSZW1pbmRlcjoNCj4gPiBJZiAnZGF0YS1sYW5l
+cycgcHJvcGVydHkgaXMgbm90IHByZXNlbnQsIHRoZSBkcml2ZXIgd291bGQgYXNzdW1lDQo+ID4g
+Zm91ci1sYW5lIG9wZXJhdGlvbi4gVGhpcyBtZWFucyBmb3Igb25lLWxhbmUgb3IgdHdvLWxhbmUg
+b3BlcmF0aW9uLCB0aGlzDQo+ID4gcHJvcGVydHkgbXVzdCBiZSBwcmVzZW50IGFuZCBzZXQgdG8g
+dGhlIHJpZ2h0IHBoeXNpY2FsIGxhbmUgaW5kZXhlcy4NCj4gPiBJZiB0aGUgaGFyZHdhcmUgZG9l
+cyBub3Qgc3VwcG9ydCBsYW5lIHJlb3JkZXJpbmcsIG1vbm90b25pY2FsbHkNCj4gPiBpbmNyZW1l
+bnRlZCB2YWx1ZXMgc2hhbGwgYmUgdXNlZCBmcm9tIDAgb3IgMSBvbndhcmRzLCBkZXBlbmRpbmcg
+b24NCj4gPiB3aGV0aGVyIG9yIG5vdCB0aGVyZSBpcyBhbHNvIGEgY2xvY2sgbGFuZS4NCj4gDQo+
+IEhvdyBjYW4gdGhlIGRyaXZlciB1c2UgZm91ciBsYW5lcywgY29uc2lkZXJpbmcgdGhlIGRldmlj
+ZSBvbmx5IHN1cHBvcnRzIGENCj4gc2luZ2xlIGxhbmU/Pw0KPiANCg0KSSB1bmRlcnN0b29kIHlv
+dXIgbWVhbmluZy4NCklmIHdlIG9taXQgdGhlIHByb3BlcnR5ICdkYXRhLWxhbmVzJywgdGhlIHNl
+bnNvciBzaG91bGQgd29yayBzdGlsbC4NCkJ1dCB0aGVuIHdoYXQncyB0aGUgbWVhbmluZyBvZiB0
+aGUgZXhpc3RlbmNlIG9mICdkYXRhLWxhbmVzJz8NCklmIHRoaXMgcHJvcGVydHkgJ2RhdGEtbGFu
+ZXMnIGlzIGFsd2F5cyBvcHRpb25hbCwgdGhlbiB3aHkgZHQtYmluZGluZ3MNCnByb3ZpZGUgdGhl
+IGludGVyZmFjZT8NCg0KSW4gdGhlIG1lYW50aW1lLCBpZiBvbWl0dGluZyAnZGF0YS1sYW5lcycg
+Zm9yIG9uZSBzZW5zb3IodHJhbnNtaXR0ZXIpDQp0aGF0IGhhcyBvbmx5IG9uZSBwaHlzaWNhbCBk
+YXRhIGxhbmUsIE1JUEkgcmVjZWl2ZXIoZS5nLiwgTUlQSSBDU0ktMikNCnNoYWxsIGVuYWJsZSBm
+b3VyLWxhbmUgY29uZmlndXJhdGlvbiwgd2hpY2ggbWF5IGluY3JlYXNlIGNvbnN1bXB0aW9uIG9m
+DQpib3RoIHBvd2VyIGFuZCByZXNvdXJjZSBpbiB0aGUgcHJvY2VzcyBvZiBJSUMgY29tbXVuaWNh
+dGlvbi4NCg==
 
-On 5/28/20 4:35 PM, Chanwoo Choi wrote:
-> Hi Andrew-sh.Cheng,
-> 
-> On 5/20/20 12:43 PM, Andrew-sh.Cheng wrote:
->> This adds a devfreq driver for the Cache Coherent Interconnect (CCI)
->> of the Mediatek MT8183.
->>
->> On the MT8183 the CCI is supplied by the same regulator as the LITTLE
->> cores. The driver is notified when the regulator voltage changes
->> (driven by cpufreq) and adjusts the CCI frequency to the maximum
->> possible value.
-
-I understood that the mt8183-cci.c and mt8183 cpufreq driver (ARM_MEDIATEK_CPUFREQ)
-shared the same regulator. So, when mt8183 cpufreq driver
-changes the CPU frequency and voltage, the mt8183-cci.c
-changes the CCI frequency according to the new mt8183 frequency
-with passive governor. 
-
-I think that mt8183-cci.c don't need to change the voltage
-because already mt8183 cpufreq changed the voltage of shared regulator.
-Why do you change the voltage in this driver?
-
->>
->> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
->> ---
->>  drivers/devfreq/Kconfig              |  10 ++
->>  drivers/devfreq/Makefile             |   1 +
->>  drivers/devfreq/mt8183-cci-devfreq.c | 206 +++++++++++++++++++++++++++++++++++
-> 
-> The mt8183-cci.c is enough for driver name.
-> 
->>  3 files changed, 217 insertions(+)
->>  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
->>
->> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->> index d9067950af6a..4ed7116271ee 100644
->> --- a/drivers/devfreq/Kconfig
->> +++ b/drivers/devfreq/Kconfig
->> @@ -103,6 +103,16 @@ config ARM_IMX8M_DDRC_DEVFREQ
->>  	  This adds the DEVFREQ driver for the i.MX8M DDR Controller. It allows
->>  	  adjusting DRAM frequency.
->>  
->> +config ARM_MT8183_CCI_DEVFREQ
->> +	tristate "MT8183 CCI DEVFREQ Driver"
->> +	depends on ARM_MEDIATEK_CPUFREQ
->> +	help
->> +		This adds a devfreq driver for Cache Coherent Interconnect
->> +		of Mediatek MT8183, which is shared the same regulator
->> +		with cpu cluster.
->> +		It can track buck voltage and update a proper cci frequency.
-> 
-> s/cci/CCI
-> 
->> +		Use notification to get regulator status.
->> +
->>  config ARM_TEGRA_DEVFREQ
->>  	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
->>  	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || \
->> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
->> index 3eb4d5e6635c..5b1b670c954d 100644
->> --- a/drivers/devfreq/Makefile
->> +++ b/drivers/devfreq/Makefile
->> @@ -10,6 +10,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
->>  # DEVFREQ Drivers
->>  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
->>  obj-$(CONFIG_ARM_IMX8M_DDRC_DEVFREQ)	+= imx8m-ddrc.o
->> +obj-$(CONFIG_ARM_MT8183_CCI_DEVFREQ)	+= mt8183-cci-devfreq.o
->>  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
->>  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
->>  obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+= tegra20-devfreq.o
->> diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
->> new file mode 100644
->> index 000000000000..cd7929a83bf8
->> --- /dev/null
->> +++ b/drivers/devfreq/mt8183-cci-devfreq.c
->> @@ -0,0 +1,206 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2019 MediaTek Inc.
-> 
-> s/2019/2020
-> 
->> +
->> + * Author: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/devfreq.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regulator/consumer.h>
->> +#include <linux/time.h>
->> +
->> +#include "governor.h"
-> 
-> It is not needed. Please remove it.
-> 
->> +
->> +#define MAX_VOLT_LIMIT		(1150000)
->> +
->> +struct cci_devfreq {
->> +	struct devfreq *devfreq;
->> +	struct regulator *proc_reg;
-> 
-> 'proc' means the 'processor'?
-> Instead of 'proc_reg', you better to use 'cpu_reg'.
-> 
->> +	struct clk *cci_clk;
->> +	int old_vproc;
->> +	unsigned long old_freq;
->> +};
->> +
->> +static int mtk_cci_set_voltage(struct cci_devfreq *cci_df, int vproc)
->> +{
->> +	int ret;
->> +
->> +	ret = regulator_set_voltage(cci_df->proc_reg, vproc,
->> +				    MAX_VOLT_LIMIT);
->> +	if (!ret)
->> +		cci_df->old_vproc = vproc;
->> +	return ret;
->> +}
->> +
->> +static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
->> +				  u32 flags)
->> +{
->> +	int ret;
->> +	struct cci_devfreq *cci_df = dev_get_drvdata(dev);
->> +	struct dev_pm_opp *opp;
->> +	unsigned long opp_rate, opp_voltage, old_voltage;
->> +
->> +	if (!cci_df)
->> +		return -EINVAL;
->> +
->> +	if (cci_df->old_freq == *freq)
->> +		return 0;
->> +
->> +	opp_rate = *freq;
->> +	opp = dev_pm_opp_find_freq_floor(dev, &opp_rate);
->> +	opp_voltage = dev_pm_opp_get_voltage(opp);
->> +	dev_pm_opp_put(opp);
-> 
-> 
-> You can use the helper function for getting the rate 
-> with devfreq_recommended_opp(). You can refer the following code
-> in drivers/devfreq/exynos-bus.c
-> 
-> 	opp = devfreq_recommended_opp(dev, freq, flags);
-> 	if (IS_ERR(opp)) {
-> 		dev_err(dev, "failed to get recommended opp instance\n");
-> 		return PTR_ERR(opp);
-> 	}
-> 	dev_pm_opp_put(opp);
-> 
->> +
->> +	old_voltage = cci_df->old_vproc;
->> +	if (old_voltage == 0)
->> +		old_voltage = regulator_get_voltage(cci_df->proc_reg);
->> +
->> +	// scale up: set voltage first then freq
->> +	if (opp_voltage > old_voltage) {
->> +		ret = mtk_cci_set_voltage(cci_df, opp_voltage);
->> +		if (ret) {
->> +			pr_err("cci: failed to scale up voltage\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	ret = clk_set_rate(cci_df->cci_clk, *freq);
->> +	if (ret) {
->> +		pr_err("%s: failed cci to set rate: %d\n", __func__,
->> +		       ret);
->> +		mtk_cci_set_voltage(cci_df, old_voltage);
->> +		return ret;
->> +	}
->> +
->> +	// scale down: set freq first then voltage
->> +	if (opp_voltage < old_voltage) {
->> +		ret = mtk_cci_set_voltage(cci_df, opp_voltage);
->> +		if (ret) {
->> +			pr_err("cci: failed to scale down voltage\n");
->> +			clk_set_rate(cci_df->cci_clk, cci_df->old_freq);
->> +			return ret;
->> +		}
->> +	}
-> 
-> 
-> I recommend that dev_pm_opp_set_rate() and dev_pm_opp_set_regulator()
-> instead of 'clk_set_rate' and 'regulator_set_voltage'.
-> In the dev_pm_opp_set_rate(), handle the these sequence.
-> You can refer the merged patch[1].
-> 
-> [1] commit 4294a779bd8dff6c65e7e85ffe7a1ea236e92a68
-> - PM / devfreq: exynos-bus: Convert to use dev_pm_opp_set_rate()
-> 
-> 
->> +
->> +	cci_df->old_freq = *freq;
->> +
->> +	return 0;
->> +}
->> +
->> +static struct devfreq_dev_profile cci_devfreq_profile = {
->> +	.target = mtk_cci_devfreq_target,
-> 
-> Need to add '.exit' for calling dev_pm_opp_of_remove_table().
-> You can refer the merged devfreq patches like exynos_bus.c, imx-bus.c.
-> 
->> +};
->> +
->> +static int mtk_cci_devfreq_probe(struct platform_device *pdev)
->> +{
->> +	struct device *cci_dev = &pdev->dev;
->> +	struct cci_devfreq *cci_df;
->> +	struct devfreq_passive_data *passive_data;
->> +	int ret;
->> +
->> +	cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
->> +	if (!cci_df)
->> +		return -ENOMEM;
->> +
->> +	cci_df->cci_clk = devm_clk_get(cci_dev, "cci_clock");
->> +	ret = PTR_ERR_OR_ZERO(cci_df->cci_clk);
->> +	if (ret) {
->> +		if (ret != -EPROBE_DEFER)
->> +			dev_err(cci_dev, "failed to get clock for CCI: %d\n",
->> +				ret);
->> +		return ret;
->> +	}
->> +	cci_df->proc_reg = devm_regulator_get_optional(cci_dev, "proc");
->> +	ret = PTR_ERR_OR_ZERO(cci_df->proc_reg);
->> +	if (ret) {
->> +		if (ret != -EPROBE_DEFER)
->> +			dev_err(cci_dev, "failed to get regulator for CCI: %d\n",
->> +				ret);
->> +		return ret;
->> +	}
-> 
-> I recommend that use dev_pm_opp_set_regulators.
-> You can refer the merged patch[1].
-> 
-> [1] commit 4294a779bd8dff6c65e7e85ffe7a1ea236e92a68
-> - PM / devfreq: exynos-bus: Convert to use dev_pm_opp_set_rate()
-> 
-> 
->> +	ret = regulator_enable(cci_df->proc_reg);
->> +	if (ret) {
->> +		pr_warn("enable buck for cci fail\n");
-> 
-> Use dev_err instead of 'pr_warn'.
-> 
->> +		return ret;
->> +	}
->> +
->> +	ret = dev_pm_opp_of_add_table(cci_dev);
->> +	if (ret) {
->> +		dev_err(cci_dev, "Fail to init CCI OPP table: %d\n", ret);
-> 
-> How about changing the error log as following
-> because in this driver, use the 'failed to' sentence for error handling?
-> 
-> 	failed to get OPP table for CCI:L %d
-> 
->> +		return ret;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, cci_df);
->> +
->> +	passive_data = devm_kzalloc(cci_dev, sizeof(*passive_data), GFP_KERNEL);
->> +	if (!passive_data)
->> +		return -ENOMEM;
-> 
-> On this error case, you have to call dev_pm_opp_of_remove_table().
-> You better to make the 'err_opp' jump lable and then add 'goto err_opp'.
-> 
->> +
->> +	passive_data->parent_type = CPUFREQ_PARENT_DEV;
->> +
->> +	cci_df->devfreq = devm_devfreq_add_device(cci_dev,
->> +						  &cci_devfreq_profile,
->> +						  DEVFREQ_GOV_PASSIVE,
->> +						  passive_data);
->> +	if (IS_ERR(cci_df->devfreq)) {
->> +		ret = PTR_ERR(cci_df->devfreq);
->> +		dev_err(cci_dev, "cannot create cci devfreq device:%d\n", ret);
->> +		dev_pm_opp_of_remove_table(cci_dev);
-> 
-> Instead of direct call, use 'goto err_opp'.
-> 
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int mtk_cci_devfreq_remove(struct platform_device *pdev)
->> +{
->> +	struct device *cci_dev = &pdev->dev;
->> +	struct cci_devfreq *cci_df;
->> +	struct notifier_block *opp_nb;
->> +
->> +	cci_df = platform_get_drvdata(pdev);
->> +	opp_nb = &cci_df->opp_nb;
->> +
->> +	dev_pm_opp_unregister_notifier(cci_dev, opp_nb);
-> 
-> This patch doesn't call the dev_pm_opp_register_notifier.
-> Please remove it.
-> 
->> +	devm_devfreq_remove_device(cci_dev, cci_df->devfreq);
-> 
-> Don't need to call this function because you used devm_devfreq_add_device().
-> 
->> +	dev_pm_opp_of_remove_table(cci_dev)> +	regulator_disable(cci_df->proc_reg);
->> +
->> +	return 0;
->> +}
->> +
->> +static const __maybe_unused struct of_device_id
->> +	mediatek_cci_devfreq_of_match[] = {
-> 
-> Make it on one line and remove '__maybe_unused' keyword.
-> - mediatek_cci_devfreq_of_match-> mediatek_cci_of_match
-> 
->> +	{ .compatible = "mediatek,mt8183-cci" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, mediatek_cci_devfreq_of_match);
-> 
-> ditto.
-> 
->> +
->> +static struct platform_driver cci_devfreq_driver = {
->> +	.probe	= mtk_cci_devfreq_probe,
->> +	.remove	= mtk_cci_devfreq_remove,
->> +	.driver = {
->> +		.name = "mediatek-cci-devfreq",
->> +		.of_match_table = of_match_ptr(mediatek_cci_devfreq_of_match),
-> 
-> ditto.
-> 
->> +	},
->> +};
->> +
->> +static int __init mtk_cci_devfreq_init(void)
->> +{
->> +	return platform_driver_register(&cci_devfreq_driver);
->> +}
->> +module_init(mtk_cci_devfreq_init)
->> +
->> +static void __exit mtk_cci_devfreq_exit(void)
->> +{
->> +	platform_driver_unregister(&cci_devfreq_driver);
->> +}
->> +module_exit(mtk_cci_devfreq_exit)
-> 
-> Use 'module_platform_driver' instead of module_init and module_exit.
-> 
->> +
->> +MODULE_DESCRIPTION("Mediatek CCI devfreq driver");
->> +MODULE_AUTHOR("Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>");
->> +MODULE_LICENSE("GPL v2");
->>
-> 
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
