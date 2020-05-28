@@ -6,88 +6,83 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A79C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA45C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040B320721
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB402072D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590688232;
-	bh=FWqlnzwi+ui9rkhIxlcApnvt9jo1kVM/WhI7EZT7Yg0=;
+	s=default; t=1590688450;
+	bh=+Ve9zokIrQzTVNOgy8RCXY3l+nBlJOKxQ+nR8Acns7c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mIChgihoX7ORkcWpL7xIQFU3POX3aWr4VVw5ffbPL9889fu2rIx6GL2hHMRwM61MS
-	 FHocJBSebo42rhv1rZqq8GopF/KwwCkBUMfrpW5tRrV713vQUhtztDxp6sakY+yQpP
-	 z7/6El9d0Ira13LOzeKcYpwVR2/cXmeDQvBZgjNk=
+	b=Gc7gRvRYRDHR29V6qjxCkcIEwchZo858+voInqNcM/YzunhJEbSqIdftxciS8URid
+	 8AX5NQG/NfxX3JxsRxTH1kyvwhL4pNUBwP1RtwpaC38TBfBsS/zqjZkG+6Xvgz1SiH
+	 +ITZGiN3s44E9ySpHc/DU0YwDOH5tjtd1z3xhXvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405657AbgE1Rub (ORCPT
+        id S2405644AbgE1RyJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 13:50:31 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44239 "EHLO
+        Thu, 28 May 2020 13:54:09 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35117 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405580AbgE1Ru3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 13:50:29 -0400
-Received: by mail-io1-f68.google.com with SMTP id p20so17588638iop.11;
-        Thu, 28 May 2020 10:50:29 -0700 (PDT)
+        with ESMTP id S2405636AbgE1RyI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 13:54:08 -0400
+Received: by mail-io1-f68.google.com with SMTP id s18so17067655ioe.2;
+        Thu, 28 May 2020 10:54:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TPQiU9UZD0QCGydYcyf9Oph36s0ecW9luN+RtFrgCuU=;
-        b=Uj8Vxj8clb5WmFBv5VHR8tr0OnO4sRBEoM4QmaJHQn2ZckLEbmUzWY1XijIoP+rIm8
-         t+97tUD+451DDeJKco+G0niRK1F7MHiAY2Z9NNa519lEruDHzy3Mx3tjtHn6gcnVkwOK
-         y8LY/5z+IUQkF137tfRyNa7nn9qw6WY9HYL16abFCHsczkTjuZNKmfx+XqWLTYlXaiYA
-         D0VMzp8KkdRfLSdB5a9PmLAjy+d7FDCtFdLaidmGXVIJ6rStZrAqLhLcbVDQlcZLlL1w
-         AnnzuUjuefEbOha9WWNjHMdGqgWx1XyrRbJOA13KTNYsealfTp56mw5qyIdZkeEqGbIm
-         +HrA==
-X-Gm-Message-State: AOAM533m76DdoYZDEqzBJBHdCut+sDx3TRcb8VRDwii3bxq633YKsVZ8
-        LBnvzUP7ssSglVePe9wdJ4Z6+Ug=
-X-Google-Smtp-Source: ABdhPJyF8cxzDw1wr6IvvmAgMfrH4AVUuJeZSVLXqFRWZnNTmB8zN2zxOx5/fbk7MU6lAfxss4nsDg==
-X-Received: by 2002:a02:58c3:: with SMTP id f186mr3709201jab.120.1590688228923;
-        Thu, 28 May 2020 10:50:28 -0700 (PDT)
+        bh=BXLE+hw0w6RsVL8ujWxDddinVNOPcbe8oeBiGx4U4y0=;
+        b=Omn6ncrsA0wqpeEsY8d0dQtfshZ75h0jp1aP0iJPskVjw81XLu3Y14+8wRXuh9KKZb
+         6I8VH+UWsG5itUGKzBjPGzTG4hANxG0HsHw7VTIslxefe8hlVT78a6dJf5u+e2UjAx3Q
+         P1arSfMORRfTWNO0Mdno2coA3/fBt3zA3LgYUNb4ntsh0byL0QNKmF/HLRqgR1qjppCk
+         xYbEvgso1TCfgLXzynpmxQHVuJ+UONWPYFX0J+pwR7/l/FKCI1i8TL8hF1VJNr+dR3w5
+         nOvJGx/+dBNwu5ni2cWAg3ebpdCpUofPo+0cqHLRbWydLftsys/9WhY7OCYZz4yrrvv7
+         yv1w==
+X-Gm-Message-State: AOAM530/jZclg2tR55RypHGddv3Ud/lJSQzc17In+wSy8ey/wgWZLSgF
+        w2WcSjEETWenWFWQcYub/w==
+X-Google-Smtp-Source: ABdhPJzdsnGxr8r+P/rlFxY5YLuI/SYV2Z9WGs0abHlvHKPzWqYRrgz+p4NnKzOb6gC0k77vqvF6Xg==
+X-Received: by 2002:a5d:965a:: with SMTP id d26mr3299182ios.33.1590688447831;
+        Thu, 28 May 2020 10:54:07 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a13sm3561765ill.51.2020.05.28.10.50.27
+        by smtp.gmail.com with ESMTPSA id v14sm3418726ilm.66.2020.05.28.10.54.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 10:50:28 -0700 (PDT)
-Received: (nullmailer pid 390821 invoked by uid 1000);
-        Thu, 28 May 2020 17:50:27 -0000
-Date:   Thu, 28 May 2020 11:50:27 -0600
+        Thu, 28 May 2020 10:54:07 -0700 (PDT)
+Received: (nullmailer pid 399169 invoked by uid 1000);
+        Thu, 28 May 2020 17:54:06 -0000
+Date:   Thu, 28 May 2020 11:54:06 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1.2 4/4] dt-bindings: display: bridge: renesas, lvds:
- Convert binding to YAML
-Message-ID: <20200528175027.GA390737@bogus>
-References: <20200514213742.GO5955@pendragon.ideasonboard.com>
- <20200514214211.9036-1-laurent.pinchart+renesas@ideasonboard.com>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     sre@kernel.org, krzk@kernel.org, jonghwa3.lee@samsung.com,
+        tglx@linutronix.de, kstewart@linuxfoundation.org,
+        baolin.wang7@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/10] dt-bindings: power: supply: Cleanup
+ charger-manager bindings
+Message-ID: <20200528175406.GA391088@bogus>
+References: <20200514230435.11798-1-xc-racer2@live.ca>
+ <BN6PR04MB0660E57423994D19C84370A3A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514214211.9036-1-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <BN6PR04MB0660E57423994D19C84370A3A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 15 May 2020 00:42:11 +0300, Laurent Pinchart wrote:
-> Convert the Renesas R-Car LVDS encoder text binding to YAML.
+On Thu, May 14, 2020 at 04:04:35PM -0700, Jonathan Bakker wrote:
+> The bindings for charger-manager were very unclear and didn't
+> specify allowable values in many cases.  Clean these up to show
+> what each value does and make sure all properties are documented
+> here rather than using wildcards.
 > 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Acked-by: Maxime Ripard <mripard@kernel.org>
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 > ---
-> Changes since v1:
-> 
-> - Mention RZ/G1 and R2/G2 explicitly
-> - Drop the part numbers in comments, only keep the SoC names
-> - Use one address and size cell in the examples
-> ---
->  .../bindings/display/bridge/renesas,lvds.txt  |  85 ------
->  .../bindings/display/bridge/renesas,lvds.yaml | 248 ++++++++++++++++++
->  2 files changed, 248 insertions(+), 85 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
-> 
+>  .../bindings/power/supply/charger-manager.txt | 30 ++++++++++++-------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I guess you're just documenting what already exists, but I think this is 
+not really a binding we want to continue using...
+
+Acked-by: Rob Herring <robh@kernel.org>
