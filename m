@@ -2,152 +2,70 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428DEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 09:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F156AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 09:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A866208A7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 09:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590659528;
-	bh=vj1kkI4Ru7iyOwZSqGh7mKAl+q5nxlB4nhccrEZ3RkM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bHBC2OVWYa9oo9tCKgkSXgeT75CdnpZx13kKluiOdrX8QYq9cK80nnF2RU/Vwwx+C
-	 UX3tdlTybjDSqNDRigcRsua/UtrRgXEi8IpZzQCcxVbxUYJk70mbNYqvu4oLIOV21a
-	 93Fv9mVtTC6AeSKOEHk46ISoUEAyF/QVIn+1nZvk=
+	by mail.kernel.org (Postfix) with ESMTP id C2F10208B8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 09:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FjdVOj5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387456AbgE1JwC (ORCPT
+        id S2387619AbgE1J52 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 05:52:02 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38681 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387440AbgE1JwB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 05:52:01 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 202so16214744lfe.5;
-        Thu, 28 May 2020 02:51:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C1jeUHCaajt+ex7tP6wzXy2BUh7vgRg4hvPENzAT8xU=;
-        b=dBi7PMI7inivJdVtZcESqmcfp0orcZs4UcpSJtgA0YsoVuP85KjKdnKCx1RtPERDwO
-         HiAXf6JIYEfSnR1tU1YIXsoXLWcC2GVnTYejQ7Yjy7h3c3SUlTV9ZQ3flGDyUF2x/ktm
-         74pTUVCoe5Ea+C66tJHdef6D5okQ9U+Nscd/wiKz+TrBAJ+YZl91cdFKur5on4ZRrB9n
-         SRGBtV7mcmjSSunZcT304ohNg6l4JJGOSryjYWvCbIduDxBWWXriXDqmt0ggHXpvKMX5
-         bRjJ+iAogGmRjGroeIANj3iZAHs8MVpNV3npRFMLyICuMa2k5u6h/1j2xooSOHw5Pq0C
-         pZig==
-X-Gm-Message-State: AOAM532PDh8KauUbVpdSA2i+wupd89vpcNV6V7IMp0NMLxbbRhMpfchD
-        30Ef4Jtc9+FqGmi9dGMzLM8=
-X-Google-Smtp-Source: ABdhPJxaMoiBxiBTkBBuuHSa7VweEudLSh4UTf5kllxZAlKXbN2ojWNXhY+cVfOP6GXjVB9EEWKZUw==
-X-Received: by 2002:a19:a405:: with SMTP id q5mr1237521lfc.164.1590659518686;
-        Thu, 28 May 2020 02:51:58 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id a10sm1507517ljd.126.2020.05.28.02.51.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 02:51:57 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jeFCZ-0003RU-3w; Thu, 28 May 2020 11:51:51 +0200
-Date:   Thu, 28 May 2020 11:51:51 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 3/6] dt-bindings: serdev: ngsm: Add binding for GNSS
- child node
-Message-ID: <20200528095151.GE10358@localhost>
-References: <20200512214713.40501-1-tony@atomide.com>
- <20200512214713.40501-4-tony@atomide.com>
- <20200527192817.GA2587830@bogus>
+        Thu, 28 May 2020 05:57:28 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:24695 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387432AbgE1J52 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 05:57:28 -0400
+X-UUID: 829f924e41534aa484e467417301eae4-20200528
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=r2yyS/GzdhkWnjygzbbMG8mX4hLDdpXfT3ti9OAQv6Y=;
+        b=FjdVOj5nQMZrE/2dPDdOslYWp14mlFOrWpw9YZmqdPG+vIQ6WWQT5U/zCnXfXkJKTeaQV+UhmZ8NUXsmvxWoJVQSnpDfQB95VGd6Bc2yijhxOjDItpPOablIdRq+/OT0AdeWNfK093W8QPkASwvisv3UeJHikkwejFUgMbupBuY=;
+X-UUID: 829f924e41534aa484e467417301eae4-20200528
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2051785732; Thu, 28 May 2020 17:57:25 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 28 May 2020 17:57:17 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 28 May 2020 17:57:17 +0800
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Sean Wang <sean.wang@mediatek.com>
+CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Subject: [PATCH v4] dmaengine: mediatek-cqdma: add dt-bindings and remove redundant queue
+Date:   Thu, 28 May 2020 17:57:08 +0800
+Message-ID: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527192817.GA2587830@bogus>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:28:17PM -0600, Rob Herring wrote:
-> On Tue, May 12, 2020 at 02:47:10PM -0700, Tony Lindgren wrote:
-> > For motorola modem case, we may have a GNSS device on channel 4.
-> > Let's add that to the binding and example.
-> > 
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > ---
-> >  .../devicetree/bindings/serdev/serdev-ngsm.yaml          | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> > --- a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> > +++ b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> > @@ -42,6 +42,10 @@ allOf:
-> >            description: Name of the USB PHY
-> >            const: usb
-> >  
-> > +        compatible:
-> > +          description: GNSS receiver
-> > +          const: motorola,mapphone-mdm6600-gnss
-> 
-> I'm not sure how this isn't failing on the example because it is wrong.
-> 
-> You're saying this compatible belongs at the same level as 
-> phys/phy-names, but that would be the parent which already has a 
-> compatible. You have to define a child node property (gnss@4) and have 
-> 'compatible' under it. At that point, this schema becomes very much 
-> Motorola specific.
-> 
-> > +
-> >        required:
-> >          - phys
-> >          - phy-names
-> > @@ -61,4 +65,9 @@ examples:
-> >        phy-names = "usb";
-> >        #address-cells = <1>;
-> >        #size-cells = <0>;
-> > +
-> > +      gnss@4 {
-> > +         compatible = "motorola,mapphone-mdm6600-gnss";
-> > +         reg = <4>;
-> > +      };
-> >      };
-> > -- 
-> > 2.26.2
+VGhpcyBwYXRjaCBzZXQgYWRkcyBkb2N1bWVudCB0aGUgZGV2aWNldHJlZSBiaW5kaW5ncyBmb3Ig
+TWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciwNCmFuZCByZW1vdmUgcmVkdW5k
+YW50IHF1ZXVlIHN0cnVjdHVyZSwgYWRkIGRtYS1jaGFubmVsLW1hc2sgZm9yIERNQSBjYXBhYmls
+aXR5IGFuZCBmaXggY29tcGF0aWJsZS4NCg0KQ2hhbmdlcyBzaW5jZSB2MzoNCi0gZml4IGR0X2Jp
+bmRpbmdfY2hlY2sgZXJyb3JzDQoNCkNoYW5nZXMgc2luY2UgdjI6DQotIGFkZCBkZXZpY2V0cmVl
+IGJpbmRpbmdzIGZvciBNZWRpYVRlayBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyDQoNCkNo
+YW5nZXMgc2luY2UgdjE6DQotIHJlbW92ZSByZWR1bmRhbnQgcXVldWUgc3RydWN0dXJlDQotIGZp
+eCB3cm9uZyBkZXNjcmlwdGlvbiBhbmQgdGFncyBpbiB0aGUgZWFybGllciBwYXRjaA0KLSBhZGQg
+ZG1hLWNoYW5uZWwtbWFzayBmb3IgRE1BIGNhcGFiaWxpdHkNCi0gZml4IGNvbXBhdGlibGUgZm9y
+IGNvbW1vbg0K
 
-And since we're describing a mux, I think you need nodes for the virtual
-ports rather than a reg property in what should be a serial client. That
-is something like
-
-	serial@nnn {
-		modem {
-			compatible = "etsi,ts27001-mux";
-
-			serial@4 {
-				compatible = "etsi,ts27001-serial";
-				reg = <4>;
-
-				gnss {
-					compatible = "motorola,motmdm-gnss";
-				};
-			};
-		};
-	};
-
-This way you can actually use serdev for the client drivers (e.g. for
-gnss), and those drivers also be used for non-muxed ports if needed
-(e.g. over USB).
-
-Johan
