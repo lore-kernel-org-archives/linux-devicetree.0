@@ -6,85 +6,82 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE4CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C54C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BED4A207CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D286D207CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590633469;
-	bh=MwMUv2HQCDfRQkk7gBlgsYSBbHe3WlVCYhzmEGYFv/s=;
+	s=default; t=1590633609;
+	bh=7PVXd+L/NhOeaHY5YGZ3G3u0uuWIVpKEaMp57ivX39E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jNsDFzdaRm6QE9DX722VAJLCH0y7IZ//yGt1RLebDnFTxFSgv+CwAEzq4ewXrqrB4
-	 XOaHlUc8orqCgGTo47uuZDcWmyHb7WzvesYFuOdi7q2T2qL9JYzwEZ6Pwqv10rVmDl
-	 1WEW5xAlQRktub7Dm2RB7ReLua+0rgIvAMF6gh2g=
+	b=ZXiNRlxRMDV72AghLgIyhhcpfT7nebzonS1ah9L3emZjXnk/d9vXjKwtCx4tTFsf1
+	 Ogyq1vtqPaVk5jIkkN++okIDTpa/V+2nr/0G0IQIIjX4uAbto4RIEQO8OqwfTQfdOn
+	 kslhvJyne1HM3NMOwUlpPL1Pa+ptL287VUB0C+Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgE1Cht (ORCPT
+        id S1726393AbgE1CkJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 22:37:49 -0400
-Received: from mail-il1-f173.google.com ([209.85.166.173]:36430 "EHLO
-        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgE1Cht (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 22:37:49 -0400
-Received: by mail-il1-f173.google.com with SMTP id 17so26190144ilj.3;
-        Wed, 27 May 2020 19:37:48 -0700 (PDT)
+        Wed, 27 May 2020 22:40:09 -0400
+Received: from mail-il1-f175.google.com ([209.85.166.175]:40218 "EHLO
+        mail-il1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgE1CkJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 22:40:09 -0400
+Received: by mail-il1-f175.google.com with SMTP id a18so8892726ilp.7;
+        Wed, 27 May 2020 19:40:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Z4hq3G7x3ppxeCNs2d4Tddnb3w+t9fJRDF8t6tEJy78=;
-        b=IyopJv4BxIDS690BLE2JVB2YgeANHTReaRiOwf5cG2m7hczqOuLM8pmeGTGQlF9a4V
-         vGAJw8anWLeILxKfOImk/DDNqeQDIoAqET8DhCMhJiiHMcS6GTats3SzKSNarMi4rWAu
-         s3hmZYa+cHrsnPOf75UhrfJyYRM8R7VEfjfVTwtjhFfwp+HvkXJ5cvcmIUZufAB1lB4f
-         q9wMEHQGdU+OWwFHEARkgXYO/Q8w9Y3FsO/e7W+V8nzNUgX3dY/rAoQEs0USUm0nBvnW
-         pmHWspVBG1iTWiNbYwVVTIiySLjYlYX/SXcd4/bSHvY+bRHtjRvWZYvoOktedCx7lrCy
-         Bxtw==
-X-Gm-Message-State: AOAM530cwGReT40jeCCWXFscHoa76NQycqpTPaOLN+J6PpNYSrLpx2+q
-        vKc3JBjOtZVOXztOxSjEpw==
-X-Google-Smtp-Source: ABdhPJwBxgsdgMbJfm1wkXmxJAFNeJK0GwcD0ZSIcUpww4e79m8N3gPGaWxpZHNuoxuy1YTg8wuMAQ==
-X-Received: by 2002:a92:cb91:: with SMTP id z17mr1008436ilo.305.1590633467906;
-        Wed, 27 May 2020 19:37:47 -0700 (PDT)
+        bh=Q/b8+vil2c5/mUJG0KmMizu2N1xJ207ZEvkbx+vGTLM=;
+        b=iDE9OscS5FTs/yv8wHBM1co4T8K5dLl5xvDZsFXkIDidulHIncgb3jlMy3FTRzGuq3
+         owQIBZk+9joJVKm0GCg0xba+uT3Huxj1Eq1h8HqLB1QrvRI8ipmj1Jhhu6yvVqcYlG0u
+         E6MRGrEtG4MSiQ6JufRKmlWPddTuyWGm4fUMT7uQXSdVGl/jMYR+0bMvqtytkCJUzuCk
+         qCybZqq7decT2cT5/6sn4JRPf+Y3iRx0idfVaUxcnoYuOYU4t4nuZ1oUm9617AdIwy0w
+         KFs3ZdaE6xyFzjCJhf/7r5RYz8+hJJSuvyFm3aQYQOCITZd78+R37VAv3A1QEs+vUhmy
+         Yx3w==
+X-Gm-Message-State: AOAM531j9CyNwI/SVNRqhXcTFOdEc6pF7PrP5bX4YZEe3WXzDR/FQuuK
+        KYKxmm/PScxS3B07JhalBQ==
+X-Google-Smtp-Source: ABdhPJwYBCuH/4rhSMVSlk4sAIWXL1+/RSzIHHx+Yhr9XE/1CjMAqyOYGFESKnuRN8k4rahiKF4fgw==
+X-Received: by 2002:a92:8c8a:: with SMTP id s10mr1094610ill.14.1590633606866;
+        Wed, 27 May 2020 19:40:06 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f9sm2570509ile.39.2020.05.27.19.37.46
+        by smtp.gmail.com with ESMTPSA id l3sm2162132iow.55.2020.05.27.19.40.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 19:37:47 -0700 (PDT)
-Received: (nullmailer pid 3255257 invoked by uid 1000);
-        Thu, 28 May 2020 02:37:46 -0000
-Date:   Wed, 27 May 2020 20:37:46 -0600
+        Wed, 27 May 2020 19:40:05 -0700 (PDT)
+Received: (nullmailer pid 3258363 invoked by uid 1000);
+        Thu, 28 May 2020 02:40:04 -0000
+Date:   Wed, 27 May 2020 20:40:04 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>, kernel@collabora.com,
+Cc:     Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
         devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv1 05/19] power: supply: sbs-battery: Add TI BQ20Z65
- support
-Message-ID: <20200528023746.GA3255207@bogus>
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv1 19/19] dt-bindings: power: sbs-battery: Convert to yaml
+Message-ID: <20200528024004.GA3258314@bogus>
 References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
- <20200513185615.508236-6-sebastian.reichel@collabora.com>
+ <20200513185615.508236-20-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513185615.508236-6-sebastian.reichel@collabora.com>
+In-Reply-To: <20200513185615.508236-20-sebastian.reichel@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 20:56:01 +0200, Sebastian Reichel wrote:
-> Add support for BQ20Z65 manufacturer data to the sbs-battery
-> driver. Implementation has been verified using the public TRM
-> available from [0] and tested using a GE Flex 3S2P battery.
-> 
-> [0] http://www.ti.com/lit/pdf/sluu386
+On Wed, 13 May 2020 20:56:15 +0200, Sebastian Reichel wrote:
+> Convert sbs-battery bindings to YAML.
 > 
 > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 > ---
->  .../bindings/power/supply/sbs_sbs-battery.txt     |  1 +
->  drivers/power/supply/sbs-battery.c                | 15 ++++++++++-----
->  2 files changed, 11 insertions(+), 5 deletions(-)
+>  .../power/supply/sbs,sbs-battery.yaml         | 83 +++++++++++++++++++
+>  .../bindings/power/supply/sbs_sbs-battery.txt | 30 -------
+>  2 files changed, 83 insertions(+), 30 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/sbs,sbs-battery.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
