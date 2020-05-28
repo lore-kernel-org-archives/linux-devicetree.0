@@ -2,155 +2,167 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644F4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63F6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4301B208B8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB00C208A7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MLmno7iv"
+	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="dCycvlnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbgE1KYK (ORCPT
+        id S2387899AbgE1KjB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 06:24:10 -0400
-Received: from mail-am6eur05on2054.outbound.protection.outlook.com ([40.107.22.54]:6069
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        Thu, 28 May 2020 06:39:01 -0400
+Received: from mail-eopbgr700099.outbound.protection.outlook.com ([40.107.70.99]:26592
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387872AbgE1KYD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 06:24:03 -0400
+        id S2387852AbgE1KjA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 06:39:00 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QviM4m5HSXZ4odqs7ftu2sD+dPsI4kdoV51svBJhgDR6gKU4EkKMrxaReRvsyXe3gENaToqMqzrV53Efk7OIWT3AzNMR+KWm57dRG7mdYBkUPBzYciT7qJCyMGku8wOtGl9hEuoCR+mlWJIoCuAZX30rmz3SzjOF29H7Py/kcwdP55uWuw4+X0+ELjZLpBJ2y+9pUhj8nJ2HHyIwKeBRBOOFnzUpN1gaM4ZUGOV094VsEWvpZDVl+F3wivFo+Jlx2DNh45dOTv2zSWG37ZJF/eW72TtvzrCd0kOo7uHu734Y8pF0v6QSZv0mQCu70+Xizxx4IlYfr4UDrAb6t/sIrg==
+ b=UzJdfV6nqob57WFGB7ZC/aX2wTI2YpiuqFa1hUVTV8Hd+1B2wciMLlciL+tGRRMa9JMnAoUQ/ZVD6POp8tnV4vN29IffrlO2z0sNOtztxd3O/tP5YQkgTmZ0cq7vQ6kN1sJLj1dgL2XkD57CuSAD73D24HFTofHP0sXHKj549HwFGOvz5MIvxnrEJmglhRmai9axbo1nSDWFtwVfG0beC7td2yn2NepE9nAPKv5638tOlb931P9jOpG6AbXrgjwDCn2G0zGXWHDij1/yw6Wm1ZRXlYPXbY7ZoDl7GF1P6donLNrAOvQX37kb+d53CL6cIYmgO16n/kJgoJcDpxnelQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GFi/wOtHX56MMEoarjJxi2VPm9qDyNr9C75tR6Jkkdw=;
- b=EBMewNZdQy/OEDc/5CBEED1VLYL498NcVu2/QrdbUcwvKGpn2xSgWL91fozwrVc42gQ5FOfX/hEs/5k1PXpyuscYLB92cKUaoTEBOh8r+W0gjHBesxCBcX1w5Siwea9Blef1seEcEGlaV/XzIMRE/rFu1TqFVu0bwztbs8tHSAyEeOvhc9nd97Spuzu1EZv/2k5XyBKiwyTfRgqRaq4QU52oDpWZIJvEGMA4gmk5ICJmJA/wQ2tYoIUpJbt85U/ohmw215/fU0jeALoxR6DzJpIx2JZTdHdTplRDGJ7TPHtlutBv0nIQrZwwla410+o+MWZju5D7v9Z9PRZovaOpVw==
+ bh=avu9Y04WZuMh4391AGHTo20Ol8+DxdCDGcsos98Gjic=;
+ b=oaqXmh+YAqvHSHA14qeXPZQiQT3STudqPC3FL2Vdr3FIgK6DA81GpGvbZvb3H99KxwhMMs87j8GOokmZqB+PX/BEaOEmbddmcM7zcjaynvaMR7wjmvkd3OPznfNZYjq/gnWjEWmUhj3zMQ125q4FiNES3uLd/wzyy0aXxRHsHeQ3NUUPCvE2oiQ4Amkzj5MTcSt4xVRPa8Uqm85tvagOdrg+4nTBhSa++xObKc69ApHkRuFC3kOZgI2OpeF+1cQFNfgl6pYxC6rT6DVllHwiVvv9VsI8kCpMpg1OlKCpnZIpoi9En5pgPjDG2/tMIBXPMu6ja48MWweu9K6YBW6gVg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
+ header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=maximintegrated.onmicrosoft.com;
+ s=selector2-maximintegrated-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GFi/wOtHX56MMEoarjJxi2VPm9qDyNr9C75tR6Jkkdw=;
- b=MLmno7ivpsxJtKt/dzDT8ikN0Arjf46pIO1YO7Dg8gUHoUQRwi6FRHiGgwnNz2eI7EnXIIIZtzJrPP9SIGgUDvco6JCuFeAkzozp6+SJXJj7lQYUmqM3gCYEa4M1BubgYgTSfDW1p9vyE9mTJWdOU2saAeeZEat2SYxlDG12a1c=
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM6PR0402MB3591.eurprd04.prod.outlook.com
- (2603:10a6:209:8::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Thu, 28 May
- 2020 10:23:59 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 10:23:59 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "aford173@gmail.com" <aford173@gmail.com>, Jun Li <jun.li@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 0/4] Change i.MX/MXS SoCs ocotp/iim node name to efuse
-Thread-Topic: [PATCH 0/4] Change i.MX/MXS SoCs ocotp/iim node name to efuse
-Thread-Index: AQHWNJ9Qc3eKhmeCkkefYIr7+smDLqi9Sr6A
-Date:   Thu, 28 May 2020 10:23:59 +0000
-Message-ID: <AM6PR0402MB36074774F61793C6D460C7E7FF8E0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-References: <1590635570-8541-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1590635570-8541-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ff032d7c-bd3d-4ae7-f36e-08d802f13c8f
-x-ms-traffictypediagnostic: AM6PR0402MB3591:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0402MB359109CC71DAFF57ACB39A4AFF8E0@AM6PR0402MB3591.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: D8bh+btM5ktNbmQCvBm3TyA7bnOJZVgfAUe2RtqeJphqmAjwGuXwSF4np6c4sRQVpYa2QkEeEms0TEqmULdsL5Y3o80x755EtChIGbLizYFEbBmavE52sj4iALRn22j93K5I1dTY5CQ+qSOUxK9CoJWwH6mq7iOOTvpBE86up0bbCEkCRHR+/qrf9Upe0umy/29pA2CdVfFTWEr926iNr9X8OqWkBsxRf2oH7z9o7zwPr1rlGoc18O4f5yZiSgdZ5snjCYXxCnhqNGN+mkeyFUaNCCmFoAHSon8e2oBdat18061lG0YeA94BclPCLyw5x/CHh2l/uPp12UC5ByRQ3lRyxSBM8MvkkLbFJZsoXgjjYdEhgvEiciwN7MjwSp/N
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(39860400002)(376002)(396003)(346002)(366004)(136003)(8936002)(64756008)(316002)(26005)(66476007)(8676002)(66446008)(186003)(478600001)(9686003)(55016002)(66946007)(7696005)(2906002)(71200400001)(4326008)(5660300002)(83380400001)(6506007)(76116006)(52536014)(7416002)(66556008)(86362001)(33656002)(110136005)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: ltM0D42e6hEWzx2xif6RTQmgvNDXyRhqytDFjrGSsJy5GFS5cmjLHlGtfLovs/cuNWtpJvRD3rvTUmYdQzDRxxdm6754zC9p3PdCnFVjKuYEvtfRkik2jgOu0LzPEsJoRD8nWxR0105LFNsKihZAH8LbP/oxA+76+gKINzqvqkMoBBnyCe6loLvvIEbewDB47VQ0+AdNl5yIc/RA0NSz0/bQrtcwi53yc/TJg2r0JJipnY5h/tIsQOGNtt0XMMFzZbNvHdGaay1PmsdV+BxQM8JcB1HrmwKsLOaRV/fTlB0Fxp8Bk8stW4BJVMAf65v12izGRrdF4jBjNyGK85n5uD52fdGDnAPz9js7rMYMiayJ4t9nCHo5qrT1hlyoqVFO2VsgzB3dQ55cDGKBSKn3GAruFX9kYNWHsGgGdnQdsB8k4LI+YYolyQji+ljATuMY8Uqmes/RFAfar0ZaE2BZZ0rVHzOrHc5rhkvED0avUYZGPm9jSRo/+rivuq/oYg6O
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=avu9Y04WZuMh4391AGHTo20Ol8+DxdCDGcsos98Gjic=;
+ b=dCycvlnJDZelqNcja/P9WoDEK1xLz3p49Id4Q8wD6K6kCgmRcu4GOWymnqUrKKcI/F0SC6hqA8hO6t1qR1gEMofl1n/aRxURna9XRHXJUizLm5hGC7eWzG5g+w4crQ+uX/5yI0JICd2kPx32HR7wt3iuqMh5aNOEnu7UydAdnn4=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none
+ header.from=maximintegrated.com;
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
+ by MWHPR11MB1613.namprd11.prod.outlook.com (2603:10b6:301:e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 28 May
+ 2020 10:38:56 +0000
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3021.030; Thu, 28 May 2020
+ 10:38:56 +0000
+From:   Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
+        steves.lee.maxim@gmail.com,
+        Steve Lee <steves.lee@maximintegrated.com>
+Subject: [V6 PATCH 1/2] dt-bindings: Added device tree binding for max98390
+Date:   Thu, 28 May 2020 19:37:55 +0900
+Message-Id: <20200528103755.17381-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SL2PR01CA0010.apcprd01.prod.exchangelabs.com
+ (2603:1096:100:41::22) To MWHPR11MB2047.namprd11.prod.outlook.com
+ (2603:10b6:300:2a::12)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff032d7c-bd3d-4ae7-f36e-08d802f13c8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 10:23:59.8023
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (2001:2d8:e22f:b8e8:5407:3d9a:e3a8:441) by SL2PR01CA0010.apcprd01.prod.exchangelabs.com (2603:1096:100:41::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Thu, 28 May 2020 10:38:52 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [2001:2d8:e22f:b8e8:5407:3d9a:e3a8:441]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e7567213-1a73-4a0a-d40c-08d802f3527f
+X-MS-TrafficTypeDiagnostic: MWHPR11MB1613:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR11MB1613015E901B9A9DDA75DB99928E0@MWHPR11MB1613.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 0417A3FFD2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TSsJ2dvfS3lwowPqqmDAKmDRWk/YypAWZkZ/YaSxzPpRw06Lj5ICbBdNigvAdcaPHAq8hisp1tZu0ihGYM/NvBkaEd+K+zFBirwTDGLbsdfj4WDkLDgq4CS3PqohdB7ECewddydLnKPM7Rip4IwKYAht9ktc6jKXoTvs7E3X8uWMqkM4dwoiZ2VtfadY+1fRINCkHmx35kdGkE7beJj0BE7luRoJ4tsEgPvOn0z3xmRwLJFJHzehPBqf81lwq+h44FbkxctkYlw3GD9iO5N+pGGdPQchlvIDvNmp8vFTDDC8faZHL9IwA71AAPGP8UCMuqbZ2whMHsHB3BVCN41cW91WkvgxKv3R9UX98L2SurOcmIm27OwUZsjtT8cZ89mUVEizhW0O/CyJ9Y+ry0nl2fxN/i7wmDI+mFaDco4OQ/aoBViVruHJ1C8GE5pGXjWnCiKRa8EChNgxBVWW0tVNOw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(346002)(396003)(376002)(136003)(8936002)(86362001)(6486002)(69590400007)(8676002)(6512007)(2616005)(1076003)(478600001)(52116002)(16526019)(2906002)(6506007)(36756003)(186003)(966005)(66946007)(107886003)(316002)(66476007)(4326008)(66556008)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: LGiaRLMJjGOwDvfBQ9dO6oxRJf2LNCvNuqDW1ocqhU20+2ZKxO2jhamskErHoMuIg1Wbs6V++h6gQdNOqcmOBzjCGVmhfk8Qjv+aTKApkudI4jbLPp1GAx3k3vWOo958Ymtm8rgfgna1y9xQohb7aMyRk8CAl2tKpqkaLG7Bi1/UeeOnQRKe+aqohccT9AmWAOBTTFvrIlddjKkDBPHVT4wSLoYTszlBdj+4a2yVqPnCXuicM098wIiccDO5MBZAK2jIBZh0wQXWoZI31dpqbtw7jT8hM8moQLn4sxki/YOuw7r7br3uZpq42/oSQQwb6MMxn0AEHL4K7V7nuULuGla1h8a0NEnlihvbxMisIT3kMNWolFFxoWerZR6KyL+tp6B49CZcQwc+sA1Opy+X9U9jr/PG0uImfukQq4m5Joq1CYyN/DrB6sFjPxckqX1C1tOwUEY5MCuiTKP4OY76NKQS9UYy1VJBI/AwRWbdvijkXmlxD2o37eXc6lGxkTMBRDqClRFQlRQuZcTt7oa/2IoLwUCZJC1PdqMLhsH+6Ss=
+X-OriginatorOrg: maximintegrated.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7567213-1a73-4a0a-d40c-08d802f3527f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 10:38:56.1990
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gxErtIuS/UW46mjpxAKHGN8UoO/lpc8qD4HHFWHyd2LtbTj0+PJ1ooljPlcU0caE6XuGCkHo/ktbyA+BaUTD0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3591
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: u/UOArI1tJA1bwdEeFhqdHPGBg61Rebl5PgRHMjIlfOVliHQeZVMar0cFHLAlcZDm7TE4hC6TRBQ4w6KoeZbpTQBmJtL05ACAp1+KrMD4Jg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1613
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com> Sent: Thursday, May 28, 2020 11:13 =
-AM
-> In the nvmem yaml schema, it requires the nodename to be one of
-> "eeprom|efuse|nvram", so need to change all i.MX/MXS SoCs ocotp/iim node
-> name to efuse:
->=20
-> MXS platforms: i.MX23/28;
-> i.MX platforms with IIM: i.MX25/27/31/35/51/53.
-> i.MX ARMv7 platforms with OCOTP: i.MX6QDL/6SL/6SX/6SLL/6UL/7S/7ULP.
-> i.MX ARMv8 platforms with OCOTP: i.MX8MQ/8MM/8MN/8MP.
+Add DT binding of max98390 amplifier driver.
 
-Reviewed-by: Fugang Duan <fugang.duan@nxp.com>
->=20
-> Anson Huang (4):
->   ARM: dts: imx: change ocotp node name on i.MX6/7 SoCs
->   arm64: dts: imx8m: change ocotp node name on i.MX8M SoCs
->   ARM: dts: imx: change ocotp node name on MXS SoCs
->   ARM: dts: imx: change iim node name on i.MX SoCs
->=20
->  arch/arm/boot/dts/imx23.dtsi              | 2 +-
->  arch/arm/boot/dts/imx25.dtsi              | 2 +-
->  arch/arm/boot/dts/imx27.dtsi              | 2 +-
->  arch/arm/boot/dts/imx28.dtsi              | 2 +-
->  arch/arm/boot/dts/imx31.dtsi              | 2 +-
->  arch/arm/boot/dts/imx35.dtsi              | 2 +-
->  arch/arm/boot/dts/imx51.dtsi              | 2 +-
->  arch/arm/boot/dts/imx53.dtsi              | 2 +-
->  arch/arm/boot/dts/imx6qdl.dtsi            | 2 +-
->  arch/arm/boot/dts/imx6sl.dtsi             | 2 +-
->  arch/arm/boot/dts/imx6sll.dtsi            | 2 +-
->  arch/arm/boot/dts/imx6sx.dtsi             | 2 +-
->  arch/arm/boot/dts/imx6ul.dtsi             | 2 +-
->  arch/arm/boot/dts/imx7s.dtsi              | 2 +-
->  arch/arm/boot/dts/imx7ulp.dtsi            | 2 +-
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
-> arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 +-
-> arch/arm64/boot/dts/freescale/imx8mp.dtsi | 2 +-
-> arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
->  19 files changed, 19 insertions(+), 19 deletions(-)
->=20
-> --
-> 2.7.4
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+---
+Changed since V5:
+	* Change txt to yaml and fix up the examples.
+Changed since V4:
+	* No changes.
+Changed since V3:
+	* No changes.
+Changed since V2:
+	* No changes.
+Changed since V1:
+	* Modified sample text in example
+
+ .../bindings/sound/maxim,max98390.yaml        | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+new file mode 100644
+index 000000000000..1ed4ab9e1c37
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/maxim,max98390.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim Integrated MAX98390 Speaker Amplifier with Integrated Dynamic Speaker Management
++
++maintainers:
++  - Steve Lee <steves.lee@maximintegrated.com>
++
++properties:
++  compatible:
++      const: maxim,max98390
++
++  reg:
++    maxItems: 1
++    description: I2C address of the device.
++
++  temperature_calib:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
++
++  r0_calib:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This is r0 calibration data which was measured in factory mode.
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    max98390: amplifier@38 {
++            compatible = "maxim,max98390";
++            reg = <0x38>;
++            maxim,temperature_calib = <1024>;
++            maxim,r0_calib = <100232>;
++    };
+-- 
+2.17.1
 
