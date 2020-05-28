@@ -2,109 +2,91 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D82C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB74C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88327207BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF29207BC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590629866;
+	bh=kJtP+7Irq4CmN81f4Wnz0MAfkfOnlRY0LJtOZ2B99eE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZdjzbPIAlT+4ZpZvKftQ9Jb7nwNoCjuwA9ErjjjBstFKUsUNyDTyqiUhFxINCWe8r
+	 a1uXeoSDozJBPW+K6m6B91iIJI/2jjVbFrtPSuT4wK+GGrOrKU8wHwBfL9KX1PoV2T
+	 S7yPiLGlPqJSEuPy8x2tMPd9VxGgJa8jC+eAD4O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725768AbgE1BfW (ORCPT
+        id S1726459AbgE1Bhn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 21:35:22 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5294 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbgE1BfV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 21:35:21 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4A5E2CDD85FBA056B940;
-        Thu, 28 May 2020 09:35:19 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 28 May 2020
- 09:35:12 +0800
-Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier for
- userspace
-To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        "Rob Herring" <robh@kernel.org>
-References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
- <20200512073115.14177-2-qiangqing.zhang@nxp.com>
- <20200519185125.GB453195@bogus> <20200520073304.GA23534@willie-the-truck>
- <CAL_JsqJfQ0PFy5mmwSG4aM91ghq5xiAEPR2YZOymws+BfGa+uA@mail.gmail.com>
- <20200521130415.GB5949@willie-the-truck>
- <c3be06c5-781f-384f-768b-d809da99b7e0@huawei.com>
- <51aa7cbc-0ce2-b96d-b056-fcc6013ccecf@huawei.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        "Joakim Zhang" <qiangqing.zhang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <36a5bf0c-fcf5-ad74-b5ee-1b4502705aec@hisilicon.com>
-Date:   Thu, 28 May 2020 09:35:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Wed, 27 May 2020 21:37:43 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34902 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgE1Bhn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 21:37:43 -0400
+Received: by mail-io1-f67.google.com with SMTP id s18so14314314ioe.2;
+        Wed, 27 May 2020 18:37:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nbx5PheTegOHEEr/4nd2amubzWo0SUuwMck94zzOXno=;
+        b=a+3UM0baI2Xq+V5W/OamNlccaOq9aPipXutXBuxQJwajdivNgqzAiGKxJtAqZjdBKk
+         8yyfaLfTshmBBpUgu2fht5SPNBeA0pEufYuhNC7w3QSPPdyLGJ1eng/49yq56o+kn6F4
+         ZRVIXoIOZk2H74eZOjN/7MeV2rL29sT2O8Ql6ouWbpzNgeu2L9kGkimNSCthXvycS36H
+         3v0wW6q5tZ7owO23Av+0Sj5cncHR5pvGrZyAqYhLFRuMbdx2f+CKWXpF9MOXwy70C833
+         NLWBl3FSgJ6k+t44FEDD8GWg/nrbBPILba7muj3jmIvPotBHtYEXH1ptC3zZ5cU5UQk+
+         6NuQ==
+X-Gm-Message-State: AOAM5322kMDj+PGe37DZlID6Hgnofv6VqTWYqxVSHtQrbh+AbT2bF6WJ
+        p8Ly8iwbzpLD1BRn7WxhZA==
+X-Google-Smtp-Source: ABdhPJyw9o9EnKs0HcIDKMaQ4TcrHd2XeHo+9zjE0fdpnilS5FbjfGLGSCLKvxuGkF3aQHm53AYG2g==
+X-Received: by 2002:a02:3705:: with SMTP id r5mr648818jar.29.1590629861926;
+        Wed, 27 May 2020 18:37:41 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n17sm2046869ili.1.2020.05.27.18.37.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 18:37:41 -0700 (PDT)
+Received: (nullmailer pid 3175224 invoked by uid 1000);
+        Thu, 28 May 2020 01:37:40 -0000
+Date:   Wed, 27 May 2020 19:37:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for
+ LT9611
+Message-ID: <20200528013739.GA3174723@bogus>
+References: <20200513100533.42996-1-vkoul@kernel.org>
+ <20200513100533.42996-3-vkoul@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <51aa7cbc-0ce2-b96d-b056-fcc6013ccecf@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513100533.42996-3-vkoul@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On 2020/5/27 22:34, John Garry wrote:
->>>>>
->>>>> I also really dislike this. What's the preferred way to identify the SoC
->>>>> from userspace?
->>>>
->>>> /proc/cpuinfo? ;)
->>>
->>> The *SoC*!
->>>
->>>> For an non-firmware specific case, I'd say soc_device should be. I'd
->>>> guess ACPI systems don't use it and for them it's dmidecode typically.
->>>> The other problem I have with soc_device is it is optional.
->>>
->>
->> Hi Will,
->>
->>> John -- what do you think about using soc_device to expose this information,
->>> with ACPI systems using DMI data instead?
->>
->> Generally I don't think that DMI is reliable, and I saw this as the least preferred choice. I'm looking at the sysfs DMI info for my dev board, and I don't even see anything like a SoC identifier.
->>
->> As for the event_source device sysfs identifier file, it would not always contain effectively the same as the SoC ID.
->>
->> Certain PMUs which I'm interested in plan to have probe-able identification info available in future.
->>
+On Wed, 13 May 2020 15:35:32 +0530, Vinod Koul wrote:
+> Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
+> and I2S port as input and one HDMI port as output
 > 
-> BTW, Shaokun now tells me that the HiSi uncore PMU HW have such registers to identify the implementation. I didn't know.
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../display/bridge/lontium,lt9611.yaml        | 178 ++++++++++++++++++
+>  1 file changed, 178 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
 > 
 
-Right, we have this register which shows the PMU version.
-
-Thanks,
-Shaokun
-
-
-> So we could add that identifier file for those PMUs as proof-of-concept, exposing that register.
-> 
-> As for other PMUs which I'm interested in, again, future versions should have such registers to self-identify.
-> 
-> So using something derived from the DT compat string would hopefully be the uncommon case.
-> 
-> Cheers,
-> John
-> 
-> .
-> 
-
+Reviewed-by: Rob Herring <robh@kernel.org>
