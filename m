@@ -2,98 +2,113 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7991C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 09:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EB9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 985A7207F5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 09:57:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZOiJQDrO"
+	by mail.kernel.org (Postfix) with ESMTP id D7BD320721
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387652AbgE1J5m (ORCPT
+        id S2387558AbgE1KAC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 05:57:42 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5527 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387644AbgE1J5l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 05:57:41 -0400
-X-UUID: 2eb1f388023944828e72e2a8620472e5-20200528
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Hhp4Gq/lAQxSghJRwoF92XaAxe8EL9n2NHwdPyaDOAY=;
-        b=ZOiJQDrOsxf+NlhP5UYip6cN6QhIqSKTsMaNft0avbZI9+0PBxsthMGhLaI+6onCF/hMgN3E0IDbnkSXfNTOxIpb6dtqf39F9vDFBtfbmo7VudvufHsUaVcpjJmFNAgEaXQSPozR+CRbV1m7ZCW3muQE+rZVxtKQDCbdYmhjrNc=;
-X-UUID: 2eb1f388023944828e72e2a8620472e5-20200528
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1936306507; Thu, 28 May 2020 17:57:37 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 28 May 2020 17:57:29 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 28 May 2020 17:57:29 +0800
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>
-CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, EastL <EastL.Lee@mediatek.com>
-Subject: [PATCH v4 4/4] dmaengine: mediatek-cqdma: add dma mask for capability
-Date:   Thu, 28 May 2020 17:57:12 +0800
-Message-ID: <1590659832-31476-5-git-send-email-EastL.Lee@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
-References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
+        Thu, 28 May 2020 06:00:02 -0400
+Received: from mga09.intel.com ([134.134.136.24]:39342 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387535AbgE1KAB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 06:00:01 -0400
+IronPort-SDR: 3eTb4oBxZKr8AD5gXY9zeg+FJ+UVykDX39EUnWqBeP5gvpdNPVY6BIt9KnNfOTTlDNOpJbwOig
+ yDIJFN3TiT1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 03:00:01 -0700
+IronPort-SDR: C422pIESa4+FCLd5eukMTbvxYRexqJQsydMgHFSYaVD8nn2JqrmmyMX5EiITzUwVB49luQE+0J
+ rM1juCqmjPyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="270799732"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 28 May 2020 02:59:58 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeFKS-009P7x-UZ; Thu, 28 May 2020 13:00:00 +0300
+Date:   Thu, 28 May 2020 13:00:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+Message-ID: <20200528100000.GF1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
+ <20200527171204.GA2348490@bogus>
+ <20200527171841.am2iaynff243xoep@mobilestation>
+ <20200527175624.GT1634618@smile.fi.intel.com>
+ <20200528083923.yjlm5ur7cslgxdau@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: F93B03554329BDCDD88F2B63E056675CC432FAFBAF2E0F0D0441441AD2A2C1902000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200528083923.yjlm5ur7cslgxdau@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgZG1hIG1hc2sgZm9yIGNhcGFiaWxpdHkuDQoNCkNoYW5nZS1JZDogSTMx
-ZjQ2MjJmOTU0MWQ3Njk3MDIwMjk1MzJlNWY1ZjE4NTgxNWRkYTINClNpZ25lZC1vZmYtYnk6IEVh
-c3RMIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9kbWEvbWVkaWF0ZWsv
-bXRrLWNxZG1hLmMgfCAxMyArKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDEzIGluc2Vy
-dGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL21lZGlhdGVrL210ay1jcWRtYS5j
-IGIvZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1hLmMNCmluZGV4IGJjYTcxMTguLjE4MDVh
-NzYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGstY3FkbWEuYw0KKysrIGIv
-ZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1hLmMNCkBAIC0xMTcsNiArMTE3LDcgQEAgc3Ry
-dWN0IG10a19jcWRtYV92Y2hhbiB7DQogICogQGNsazogICAgICAgICAgICAgICAgICAgIFRoZSBj
-bG9jayB0aGF0IGRldmljZSBpbnRlcm5hbCBpcyB1c2luZw0KICAqIEBkbWFfcmVxdWVzdHM6ICAg
-ICAgICAgICBUaGUgbnVtYmVyIG9mIFZDcyB0aGUgZGV2aWNlIHN1cHBvcnRzIHRvDQogICogQGRt
-YV9jaGFubmVsczogICAgICAgICAgIFRoZSBudW1iZXIgb2YgUENzIHRoZSBkZXZpY2Ugc3VwcG9y
-dHMgdG8NCisgKiBAZG1hX21hc2s6ICAgICAgICAgICAgICAgQSBtYXNrIGZvciBETUEgY2FwYWJp
-bGl0eQ0KICAqIEB2YzogICAgICAgICAgICAgICAgICAgICBUaGUgcG9pbnRlciB0byBhbGwgYXZh
-aWxhYmxlIFZDcw0KICAqIEBwYzogICAgICAgICAgICAgICAgICAgICBUaGUgcG9pbnRlciB0byBh
-bGwgdGhlIHVuZGVybHlpbmcgUENzDQogICovDQpAQCAtMTI2LDYgKzEyNyw3IEBAIHN0cnVjdCBt
-dGtfY3FkbWFfZGV2aWNlIHsNCiANCiAJdTMyIGRtYV9yZXF1ZXN0czsNCiAJdTMyIGRtYV9jaGFu
-bmVsczsNCisJdTMyIGRtYV9tYXNrOw0KIAlzdHJ1Y3QgbXRrX2NxZG1hX3ZjaGFuICp2YzsNCiAJ
-c3RydWN0IG10a19jcWRtYV9wY2hhbiAqKnBjOw0KIH07DQpAQCAtNTQ5LDYgKzU1MSw3IEBAIHN0
-YXRpYyB2b2lkIG10a19jcWRtYV9od19kZWluaXQoc3RydWN0IG10a19jcWRtYV9kZXZpY2UgKmNx
-ZG1hKQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbXRrX2NxZG1hX21hdGNoKTsNCiAN
-CitzdGF0aWMgdTY0IGNxZG1hX2RtYW1hc2s7DQogc3RhdGljIGludCBtdGtfY3FkbWFfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiB7DQogCXN0cnVjdCBtdGtfY3FkbWFfZGV2
-aWNlICpjcWRtYTsNCkBAIC02MDcsNiArNjEwLDE2IEBAIHN0YXRpYyBpbnQgbXRrX2NxZG1hX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQljcWRtYS0+ZG1hX2NoYW5uZWxz
-ID0gTVRLX0NRRE1BX05SX1BDSEFOUzsNCiAJfQ0KIA0KKwlpZiAocGRldi0+ZGV2Lm9mX25vZGUg
-JiYgb2ZfcHJvcGVydHlfcmVhZF91MzIocGRldi0+ZGV2Lm9mX25vZGUsDQorCQkJCQkJICAgICAg
-ImRtYS1jaGFubmVsLW1hc2siLA0KKwkJCQkJCSAgICAgICZjcWRtYS0+ZG1hX21hc2spKSB7DQor
-CQlkZXZfaW5mbygmcGRldi0+ZGV2LA0KKwkJCSAiVXNpbmcgMCBhcyBtaXNzaW5nIGRtYS1jaGFu
-bmVsLW1hc2sgcHJvcGVydHlcbiIpOw0KKwl9IGVsc2Ugew0KKwkJY3FkbWFfZG1hbWFzayA9IERN
-QV9CSVRfTUFTSyhjcWRtYS0+ZG1hX21hc2spOw0KKwkJcGRldi0+ZGV2LmRtYV9tYXNrID0gJmNx
-ZG1hX2RtYW1hc2s7DQorCX0NCisNCiAJY3FkbWEtPnBjID0gZGV2bV9rY2FsbG9jKCZwZGV2LT5k
-ZXYsIGNxZG1hLT5kbWFfY2hhbm5lbHMsDQogCQkJCSBzaXplb2YoKmNxZG1hLT5wYyksIEdGUF9L
-RVJORUwpOw0KIAlpZiAoIWNxZG1hLT5wYykNCi0tIA0KMS45LjENCg==
+On Thu, May 28, 2020 at 11:39:23AM +0300, Serge Semin wrote:
+> On Wed, May 27, 2020 at 08:56:24PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 08:18:41PM +0300, Serge Semin wrote:
+> > > On Wed, May 27, 2020 at 11:12:04AM -0600, Rob Herring wrote:
+> > > > On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
+> > > > > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> > > > > i2c "reg" property. If it is the compiler will print a warning:
+> > > > > 
+> > > > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > > > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > > > > 
+> > > > > In order to silence dtc up let's discard the flag from the DW I2C DT
+> > > > > binding example for now. Just revert this commit when dtc is fixed.
+> > 
+> > > > >        eeprom@64 {
+> > > > >          compatible = "linux,slave-24c02";
+> > > > > -        reg = <0x40000064>;
+> > > > > +        reg = <0x64>;
+> > > > 
+> > > > But the compatible is a slave, so you need an example with a different 
+> > > > device.
+> > > 
+> > 
+> > > Ok. I'll replace the sub-node with just "atmel,24c02" compatible string then.
+> > 
+> > But how it will be different to the another slave connected to the master?
+> > 
+> > This example is specifically to show that DesingWare I²C controller may be
+> > switched to slave mode.
+> 
+> Well, dtc doesn't support it and prints warning that the address is invalid.
+> Though I do understand you concern and is mostly agree with it. Let's do this in
+> the next way. I'll resend the series with eeprom@64 sub-node replaced with just
+> a normal eeprom-device. The message log will have an info why this has been
+> done. In the non-mergeable section of the patch I'll suggest to Rob reconsider
+> the patch acking, since we can leave the slave-marked sub-node and just live
+> with the dtc warning until it's fixed in there.
+
+Thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
