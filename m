@@ -2,167 +2,188 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63F6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B96C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB00C208A7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72AF920888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:03:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="dCycvlnJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jkSIOzdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387899AbgE1KjB (ORCPT
+        id S2387926AbgE1LDX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 06:39:01 -0400
-Received: from mail-eopbgr700099.outbound.protection.outlook.com ([40.107.70.99]:26592
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387852AbgE1KjA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 06:39:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UzJdfV6nqob57WFGB7ZC/aX2wTI2YpiuqFa1hUVTV8Hd+1B2wciMLlciL+tGRRMa9JMnAoUQ/ZVD6POp8tnV4vN29IffrlO2z0sNOtztxd3O/tP5YQkgTmZ0cq7vQ6kN1sJLj1dgL2XkD57CuSAD73D24HFTofHP0sXHKj549HwFGOvz5MIvxnrEJmglhRmai9axbo1nSDWFtwVfG0beC7td2yn2NepE9nAPKv5638tOlb931P9jOpG6AbXrgjwDCn2G0zGXWHDij1/yw6Wm1ZRXlYPXbY7ZoDl7GF1P6donLNrAOvQX37kb+d53CL6cIYmgO16n/kJgoJcDpxnelQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=avu9Y04WZuMh4391AGHTo20Ol8+DxdCDGcsos98Gjic=;
- b=oaqXmh+YAqvHSHA14qeXPZQiQT3STudqPC3FL2Vdr3FIgK6DA81GpGvbZvb3H99KxwhMMs87j8GOokmZqB+PX/BEaOEmbddmcM7zcjaynvaMR7wjmvkd3OPznfNZYjq/gnWjEWmUhj3zMQ125q4FiNES3uLd/wzyy0aXxRHsHeQ3NUUPCvE2oiQ4Amkzj5MTcSt4xVRPa8Uqm85tvagOdrg+4nTBhSa++xObKc69ApHkRuFC3kOZgI2OpeF+1cQFNfgl6pYxC6rT6DVllHwiVvv9VsI8kCpMpg1OlKCpnZIpoi9En5pgPjDG2/tMIBXPMu6ja48MWweu9K6YBW6gVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
- header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=maximintegrated.onmicrosoft.com;
- s=selector2-maximintegrated-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=avu9Y04WZuMh4391AGHTo20Ol8+DxdCDGcsos98Gjic=;
- b=dCycvlnJDZelqNcja/P9WoDEK1xLz3p49Id4Q8wD6K6kCgmRcu4GOWymnqUrKKcI/F0SC6hqA8hO6t1qR1gEMofl1n/aRxURna9XRHXJUizLm5hGC7eWzG5g+w4crQ+uX/5yI0JICd2kPx32HR7wt3iuqMh5aNOEnu7UydAdnn4=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none
- header.from=maximintegrated.com;
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
- by MWHPR11MB1613.namprd11.prod.outlook.com (2603:10b6:301:e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 28 May
- 2020 10:38:56 +0000
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3021.030; Thu, 28 May 2020
- 10:38:56 +0000
-From:   Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee.maxim@gmail.com,
-        Steve Lee <steves.lee@maximintegrated.com>
-Subject: [V6 PATCH 1/2] dt-bindings: Added device tree binding for max98390
-Date:   Thu, 28 May 2020 19:37:55 +0900
-Message-Id: <20200528103755.17381-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SL2PR01CA0010.apcprd01.prod.exchangelabs.com
- (2603:1096:100:41::22) To MWHPR11MB2047.namprd11.prod.outlook.com
- (2603:10b6:300:2a::12)
+        Thu, 28 May 2020 07:03:23 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:60269 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388224AbgE1LDW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 07:03:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590663800; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Cun8HK2gcH9EvzGyJWpeBqNsioNPtJ+qdy5W+mMvL8Y=; b=jkSIOzdRBNsBewd3WCNUjD9zKXVkqfcbRvPHButnsMaWd68pnpVep9kAiVnpF7MCJXER5nF1
+ eIZ1qLC+Jp0phHNzl9n+EdZ6+9cDmtsBi1HDtqXw3bTUZ1qmPOTPowgMsKPe1VaEl7I/zL7u
+ QmuZLccW3f7Cjqt87LQvxxWFaOA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ecf9a6a2c549984755cceeb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 11:03:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D85C4C433A1; Thu, 28 May 2020 11:03:05 +0000 (UTC)
+Received: from [192.168.1.227] (unknown [49.204.177.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E396C433C6;
+        Thu, 28 May 2020 11:03:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E396C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
+ set DDR bandwidth
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, saravanak@google.com,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
+ <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
+ <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
+ <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org>
+ <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+From:   Sharat Masetty <smasetty@codeaurora.org>
+Message-ID: <46976ed1-d732-cb77-bb0c-c2c6a566b95b@codeaurora.org>
+Date:   Thu, 28 May 2020 16:32:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (2001:2d8:e22f:b8e8:5407:3d9a:e3a8:441) by SL2PR01CA0010.apcprd01.prod.exchangelabs.com (2603:1096:100:41::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Thu, 28 May 2020 10:38:52 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [2001:2d8:e22f:b8e8:5407:3d9a:e3a8:441]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e7567213-1a73-4a0a-d40c-08d802f3527f
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1613:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR11MB1613015E901B9A9DDA75DB99928E0@MWHPR11MB1613.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-Forefront-PRVS: 0417A3FFD2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TSsJ2dvfS3lwowPqqmDAKmDRWk/YypAWZkZ/YaSxzPpRw06Lj5ICbBdNigvAdcaPHAq8hisp1tZu0ihGYM/NvBkaEd+K+zFBirwTDGLbsdfj4WDkLDgq4CS3PqohdB7ECewddydLnKPM7Rip4IwKYAht9ktc6jKXoTvs7E3X8uWMqkM4dwoiZ2VtfadY+1fRINCkHmx35kdGkE7beJj0BE7luRoJ4tsEgPvOn0z3xmRwLJFJHzehPBqf81lwq+h44FbkxctkYlw3GD9iO5N+pGGdPQchlvIDvNmp8vFTDDC8faZHL9IwA71AAPGP8UCMuqbZ2whMHsHB3BVCN41cW91WkvgxKv3R9UX98L2SurOcmIm27OwUZsjtT8cZ89mUVEizhW0O/CyJ9Y+ry0nl2fxN/i7wmDI+mFaDco4OQ/aoBViVruHJ1C8GE5pGXjWnCiKRa8EChNgxBVWW0tVNOw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(346002)(396003)(376002)(136003)(8936002)(86362001)(6486002)(69590400007)(8676002)(6512007)(2616005)(1076003)(478600001)(52116002)(16526019)(2906002)(6506007)(36756003)(186003)(966005)(66946007)(107886003)(316002)(66476007)(4326008)(66556008)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: LGiaRLMJjGOwDvfBQ9dO6oxRJf2LNCvNuqDW1ocqhU20+2ZKxO2jhamskErHoMuIg1Wbs6V++h6gQdNOqcmOBzjCGVmhfk8Qjv+aTKApkudI4jbLPp1GAx3k3vWOo958Ymtm8rgfgna1y9xQohb7aMyRk8CAl2tKpqkaLG7Bi1/UeeOnQRKe+aqohccT9AmWAOBTTFvrIlddjKkDBPHVT4wSLoYTszlBdj+4a2yVqPnCXuicM098wIiccDO5MBZAK2jIBZh0wQXWoZI31dpqbtw7jT8hM8moQLn4sxki/YOuw7r7br3uZpq42/oSQQwb6MMxn0AEHL4K7V7nuULuGla1h8a0NEnlihvbxMisIT3kMNWolFFxoWerZR6KyL+tp6B49CZcQwc+sA1Opy+X9U9jr/PG0uImfukQq4m5Joq1CYyN/DrB6sFjPxckqX1C1tOwUEY5MCuiTKP4OY76NKQS9UYy1VJBI/AwRWbdvijkXmlxD2o37eXc6lGxkTMBRDqClRFQlRQuZcTt7oa/2IoLwUCZJC1PdqMLhsH+6Ss=
-X-OriginatorOrg: maximintegrated.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7567213-1a73-4a0a-d40c-08d802f3527f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 10:38:56.1990
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u/UOArI1tJA1bwdEeFhqdHPGBg61Rebl5PgRHMjIlfOVliHQeZVMar0cFHLAlcZDm7TE4hC6TRBQ4w6KoeZbpTQBmJtL05ACAp1+KrMD4Jg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1613
+In-Reply-To: <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT binding of max98390 amplifier driver.
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
----
-Changed since V5:
-	* Change txt to yaml and fix up the examples.
-Changed since V4:
-	* No changes.
-Changed since V3:
-	* No changes.
-Changed since V2:
-	* No changes.
-Changed since V1:
-	* Modified sample text in example
+On 5/27/2020 9:08 PM, Rob Clark wrote:
+> On Wed, May 27, 2020 at 1:47 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>> + more folks
+>>
+>> On 5/18/2020 9:55 PM, Rob Clark wrote:
+>>> On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>>>> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
+>>>>> This patches replaces the previously used static DDR vote and uses
+>>>>> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
+>>>>> GPU frequency.
+>>>>>
+>>>>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+>>>>> ---
+>>>>>    drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
+>>>>>    1 file changed, 1 insertion(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>>>> index 2d8124b..79433d3 100644
+>>>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>>>> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+>>>>>
+>>>>>         gmu->freq = gmu->gpu_freqs[perf_index];
+>>>>>
+>>>>> -     /*
+>>>>> -      * Eventually we will want to scale the path vote with the frequency but
+>>>>> -      * for now leave it at max so that the performance is nominal.
+>>>>> -      */
+>>>>> -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+>>>>> +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
+>>>>>    }
+>>>> This adds an implicit requirement that all targets need bandwidth settings
+>>>> defined in the OPP or they won't get a bus vote at all. I would prefer that
+>>>> there be an default escape valve but if not you'll need to add
+>>>> bandwidth values for the sdm845 OPP that target doesn't regress.
+>>>>
+>>> it looks like we could maybe do something like:
+>>>
+>>>     ret = dev_pm_opp_set_bw(...);
+>>>     if (ret) {
+>>>         dev_warn_once(dev, "no bandwidth settings");
+>>>         icc_set_bw(...);
+>>>     }
+>>>
+>>> ?
+>>>
+>>> BR,
+>>> -R
+>> There is a bit of an issue here - Looks like its not possible to two icc
+>> handles to the same path.  Its causing double enumeration of the paths
+>> in the icc core and messing up path votes. With [1] Since opp/core
+>> already gets a handle to the icc path as part of table add,  drm/msm
+>> could do either
+>>
+>> a) Conditionally enumerate gpu->icc_path handle only when pm/opp core
+>> has not got the icc path handle. I could use something like [2] to
+>> determine if should initialize gpu->icc_path*
+>>
+>> b) Add peak-opp-configs in 845 dt and mandate all future versions to use
+>> this bindings. With this, I can remove gpu->icc_path from msm/drm
+>> completely and only rely on opp/core for bw voting.
+> The main thing is that we want to make sure newer dtb always works on
+> an older kernel without regression.. but, hmm..  I guess the
+> interconnects/interconnects-names properties haven't landed yet in
+> sdm845.dtsi?  Maybe that lets us go with the simpler approach (b).
+> Looks like we haven't wired up interconnect for 8916 or 8996 either,
+> so probably we can just mandate this for all of them?
 
- .../bindings/sound/maxim,max98390.yaml        | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+I checked all three 845, 820 and 8916 and none of them have the 
+interconnect configs for GPU. So, I think we are good here. I'll go with 
+option (b) and re-spin v3. Adding interconnects and opp-peak-kBps 
+configs for previous chips can be taken up as a separate activity.
 
-diff --git a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-new file mode 100644
-index 000000000000..1ed4ab9e1c37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/maxim,max98390.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Maxim Integrated MAX98390 Speaker Amplifier with Integrated Dynamic Speaker Management
-+
-+maintainers:
-+  - Steve Lee <steves.lee@maximintegrated.com>
-+
-+properties:
-+  compatible:
-+      const: maxim,max98390
-+
-+  reg:
-+    maxItems: 1
-+    description: I2C address of the device.
-+
-+  temperature_calib:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-+
-+  r0_calib:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: This is r0 calibration data which was measured in factory mode.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    max98390: amplifier@38 {
-+            compatible = "maxim,max98390";
-+            reg = <0x38>;
-+            maxim,temperature_calib = <1024>;
-+            maxim,r0_calib = <100232>;
-+    };
--- 
-2.17.1
+Sharat
 
+> If we have landed the interconnect dts hookup for gpu somewhere that
+> I'm overlooking, I guess we would have to go with (a) and keep the
+> existing interconnects/interconnects-names properties.
+>
+> BR,
+> -R
+>
+>> [1] - https://lore.kernel.org/patchwork/cover/1240687/
+>>
+>> [2] - https://patchwork.kernel.org/patch/11527573/
+>>
+>> Let me know your thoughts
+>>
+>> Sharat
+>>
+>>>> Jordan
+>>>>
+>>>>>    unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+>>>>> --
+>>>>> 2.7.4
+>>>>>
+>>>> --
+>>>> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+>>>> a Linux Foundation Collaborative Project
+>>>> _______________________________________________
+>>>> Freedreno mailing list
+>>>> Freedreno@lists.freedesktop.org
+>>>> https://lists.freedesktop.org/mailman/listinfo/freedreno
