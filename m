@@ -2,102 +2,91 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E74FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92DBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28B1C207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C435020888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590676393;
+	bh=UN2rnZyWpLMqF8ExVnHsDsnDlZA39XDQP/BvQVtEDTo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pWBQ45ikql+3xHErBEcItKnFAWY2dRKyGR46qb3I3QTzNB9xV/GlPwFP+T04XWyaV
+	 kpDgT4smzO0J0a6Stxt06riz2AWcKd70ffVl7gBQ1sLAazKAnG8mJu3NzRqQb4hfCC
+	 /6AiTdqcBe0B2TlHWQGRqCkyeqa2+NS9ZJWVMsQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391089AbgE1Obz (ORCPT
+        id S2391174AbgE1OdN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391060AbgE1Obz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:31:55 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C3CC05BD1E
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 07:31:55 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 28 May 2020 10:33:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391060AbgE1OdL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 10:33:11 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6A0A72A0AA8;
-        Thu, 28 May 2020 15:31:53 +0100 (BST)
-Date:   Thu, 28 May 2020 16:31:50 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v6 08/18] mtd: rawnand: Use the new ECC engine type
- enumeration
-Message-ID: <20200528163150.6ad71fcc@collabora.com>
-In-Reply-To: <20200528113113.9166-9-miquel.raynal@bootlin.com>
-References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
-        <20200528113113.9166-9-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 159F2208DB;
+        Thu, 28 May 2020 14:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590676391;
+        bh=UN2rnZyWpLMqF8ExVnHsDsnDlZA39XDQP/BvQVtEDTo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=b+vldjs4gnjLoWxmvcqq5AyLYuS5kZtIwnn6GUD7lv0/EVgVH5QvYHaHIH4okfxxE
+         jWafMsKhTdQxjZBr+xr/yGkBFyOu4z0hlYzwxdkavv0guaQM663BHhp7sQRwGCJa9Q
+         lthAll+uCepibhP0gjK4Hy/3z3rgfcgIEMQva0t4=
+Received: by mail-ot1-f53.google.com with SMTP id b18so2525533oti.1;
+        Thu, 28 May 2020 07:33:11 -0700 (PDT)
+X-Gm-Message-State: AOAM531DsH3xq6ZnWPVM2Lvor0fRlVsMZw8K4JA4LWco3DKefBRFoqjj
+        6Oh5k9y/jJkLKt7uEnFi53mQeQalTjKstn71gA==
+X-Google-Smtp-Source: ABdhPJzSac9fblEg4fvh1xMALOim19c1Ul+G+BxgigsqfG3+dwRkFMrik7yaQaER/EVzB2pW8mIWcXlAZrXsUMHziys=
+X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr2288369ote.107.1590676390311;
+ Thu, 28 May 2020 07:33:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200526200917.10385-1-dmurphy@ti.com> <20200528140525.GA4166160@bogus>
+ <23500301-1076-ac47-327e-f7731525657c@ti.com>
+In-Reply-To: <23500301-1076-ac47-327e-f7731525657c@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 28 May 2020 08:32:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLPDahwYakepLP4b-Cf4fRAYrGoW0qit_ET3AKbYOYERg@mail.gmail.com>
+Message-ID: <CAL_JsqLPDahwYakepLP4b-Cf4fRAYrGoW0qit_ET3AKbYOYERg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: tlv320adcx140: Add GPI config property
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 13:31:03 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Thu, May 28, 2020 at 8:20 AM Dan Murphy <dmurphy@ti.com> wrote:
+>
+> Rob
+>
+> On 5/28/20 9:05 AM, Rob Herring wrote:
+> > On Tue, May 26, 2020 at 03:09:16PM -0500, Dan Murphy wrote:
+> >> Add an array property that configures the General Purpose Input (GPI)
+> >> register.  The device has 4 GPI pins and each pin can be configured in 1
+> >> of 7 different ways.
+> > Dan seems to have trouble running get_maintainers.pl and Cc'ing the DT
+> > list. Running 'make dt_binding_check' also seems to be a problem. Now
+> > linux-next has these warnings:
+>
+> I don't have an issue with doing get_maintainers.  All the maintainers
+> listed were added to the patch.
+>
+> And devicetree@vger.kernel.org was cc'd.
 
-> Mechanical switch from the legacy "mode" enumeration to the new
-> "engine type" enumeration in drivers and board files.
-> 
-> The device tree parsing is also updated to return the new enumeration
-> from the old strings.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Indeed, sorry for my rant. Some reason my search didn't find it.
 
-I didn't check all the changes, but I'm fine with the approach
+Not sure why my tester didn't flag this either...
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
-> diff --git a/include/linux/platform_data/mtd-davinci.h b/include/linux/platform_data/mtd-davinci.h
-> index 3383101c233b..dd474dd44848 100644
-> --- a/include/linux/platform_data/mtd-davinci.h
-> +++ b/include/linux/platform_data/mtd-davinci.h
-> @@ -60,16 +60,16 @@ struct davinci_nand_pdata {		/* platform_data */
->  	struct mtd_partition	*parts;
->  	unsigned		nr_parts;
->  
-> -	/* none  == NAND_ECC_NONE (strongly *not* advised!!)
-> -	 * soft  == NAND_ECC_SOFT
-> -	 * else  == NAND_ECC_HW, according to ecc_bits
-> +	/* none  == NAND_ECC_ENGINE_TYPE_NONE (strongly *not* advised!!)
-> +	 * soft  == NAND_ECC_ENGINE_TYPE_SOFT
-> +	 * else  == NAND_ECC_ENGINE_TYPE_ON_HOST, according to ecc_bits
->  	 *
->  	 * All DaVinci-family chips support 1-bit hardware ECC.
->  	 * Newer ones also support 4-bit ECC, but are awkward
->  	 * using it with large page chips.
->  	 */
-> -	enum nand_ecc_mode	ecc_mode;
-> -	enum nand_ecc_placement	ecc_placement;
-> +	enum nand_ecc_engine_type engine_type;
-> +	enum nand_ecc_placement ecc_placement;
-
-Nitpick: if you want to use a space instead of tab, it should be done in
-patch 3.
+Rob
