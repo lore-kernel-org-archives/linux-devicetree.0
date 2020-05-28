@@ -2,91 +2,302 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9784C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB79C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCF520888
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1194E204EA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:48:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YOlmFgTy"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sdVgaQBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgE1BqP (ORCPT
+        id S1725747AbgE1Bs4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 21:46:15 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59007 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726495AbgE1BqO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 21:46:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590630373; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=1hyDgIykoZJ9DSC+C5mC832OZycm4ondX9+/X9rRqhM=; b=YOlmFgTyaJn2hZfk7Inu5nfxuf7VnX7hWdX0Aja88uFCnMJPRtgJ1vReMChrn0ep65x1IE/+
- iE0AivA+Gq4hdM3rGrZsyEAJaFMh6P1ushrUFAiAUOXJxffHLramZSazsrhtgk2DBruVkDJC
- 9qNh+/msg8oYesr2IDcvu84mZ6g=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ecf17e32dd9e15ae36f1931 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 01:46:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 62174C433C6; Thu, 28 May 2020 01:46:10 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90424C43391;
-        Thu, 28 May 2020 01:46:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90424C43391
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, agross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [RFC v3 2/3] arm64: boot: dts: qcom: sm8150: Enable dynamic TX FIFO resize logic
-Date:   Wed, 27 May 2020 18:46:02 -0700
-Message-Id: <1590630363-3934-3-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
-References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
+        Wed, 27 May 2020 21:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgE1Bs4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 21:48:56 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0213C05BD1E;
+        Wed, 27 May 2020 18:48:55 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C59812A3;
+        Thu, 28 May 2020 03:48:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590630532;
+        bh=U4kq/jSbwNGuKVGeEHlzWvc3R7NEee14LdRS0610D+0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sdVgaQBICro/JkQEixC7dLVChef2a3hJuZPkokvJZsnUfJam/kJl/yhEOuU6HqF5K
+         sACsXGtsSlhkcr+GTq6mlcw04pdgZ2qXhQD+yzwVIMRr3ocYdxVDKbzxfGkKOlXm/+
+         rnuP7/X2gLmOLmoMh33OLsGIZh49vnc5EbSVBmvc=
+Date:   Thu, 28 May 2020 04:48:37 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for
+ LT9611
+Message-ID: <20200528014837.GD4670@pendragon.ideasonboard.com>
+References: <20200513100533.42996-1-vkoul@kernel.org>
+ <20200513100533.42996-3-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200513100533.42996-3-vkoul@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable the flexible TX FIFO resize logic on SM8150.  Using a larger TX FIFO
-SZ can help account for situations when system latency is greater than the
-USB bus transmission latency.
+Hi Vinod,
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Thank you for the patch.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index a36512d..c285233 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -708,6 +708,7 @@
- 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
-+				tx-fifo-resize;
- 				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
- 				phy-names = "usb2-phy", "usb3-phy";
- 			};
+On Wed, May 13, 2020 at 03:35:32PM +0530, Vinod Koul wrote:
+> Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
+> and I2S port as input and one HDMI port as output
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../display/bridge/lontium,lt9611.yaml        | 178 ++++++++++++++++++
+>  1 file changed, 178 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+> new file mode 100644
+> index 000000000000..77ee8cc35cd8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+> @@ -0,0 +1,178 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/lontium,lt9611.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Lontium LT9611 2 Port MIPI to HDMI Bridge
+> +
+> +maintainers:
+> +  - Vinod Koul <vkoul@kernel.org>
+> +
+> +description: |
+> +  The LT9611 is a bridge device which converts DSI to HDMI
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - lontium,lt9611
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: base I2C address of the device.
+> +
+> +  "#sound-dai-cells":
+> +    const: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: interrupt line for the chip
+
+I think you could drop the descriptions for the reg and interrupt
+properties, they don't add much.
+
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: GPIO connected to active high RESET pin.
+> +
+> +  vdd-supply:
+> +    description: Regulator for 1.8V MIPI phy power.
+> +
+> +  vcc-supply:
+> +    description: Regulator for 3.3V IO power.
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description: |
+> +          HDMI port for HDMI output
+
+The usual practice is to have the input ports first, followed by the
+output ports. Is there a reason not to follow that rule ?
+
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +        patternProperties:
+> +          endpoint:
+
+If you want to use patternProperties, this should be
+
+          "^endpoint@[0-9]+$":
+
+(including the quotes). Same below.
+
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+
+How about
+
+              remote-endpoint:
+                $ref: /schemas/types.yaml#/definitions/phandle
+
+and the same below ?
+
+You also need a reg property if multiple endpoints are present.
+
+> +
+> +        required:
+> +          - reg
+> +
+> +      port@1:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description: |
+> +          MIPI port-1 for MIPI input
+> +
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +        patternProperties:
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +        required:
+> +          - reg
+> +
+> +      port@2:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description: |
+> +          MIPI port-2 for MIPI input
+
+A description of how the two MIPI inputs differ would be useful. In
+particular, are both mandatory, or is it valid to connect only one of
+the two ? If using a single input is supported, can it be either, or
+does it have to be the first one ? When using both inputs, what should
+be connected to them ?
+
+> +
+> +        properties:
+> +          reg:
+> +            const: 2
+> +
+> +        patternProperties:
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +        required:
+> +          - reg
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - vdd-supply
+> +  - vcc-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c10 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      lt9611_codec: hdmi-bridge@3b {
+
+Please drop unused labels.
+
+> +        compatible = "lontium,lt9611";
+> +        reg = <0x3b>;
+> +
+> +        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
+> +        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +        vdd-supply = <&lt9611_1v8>;
+> +        vcc-supply = <&lt9611_3v3>;
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +            lt9611_out: endpoint {
+> +              remote-endpoint = <&hdmi_con>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg = <1>;
+> +            lt9611_a: endpoint {
+> +              remote-endpoint = <&dsi0_out>;
+> +            };
+> +          };
+> +
+> +          port@2 {
+> +            reg = <2>;
+> +            lt9611_b: endpoint {
+> +              remote-endpoint = <&dsi1_out>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
+
+It's customary to end YAML schema files with ... on a separate line.
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
 
+Laurent Pinchart
