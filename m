@@ -2,88 +2,107 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E7FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 20:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEC0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 20:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1471E2073B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 20:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590698135;
-	bh=u+K741HYPxdhXfJGCFjaeK7AwIj2C/A7JDaXNQqEF90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jv+YGAEhQbnWwTclm7wZG1DgSSgCttL8GXc7+pifP9SutBTTs2oqh2XBEgjL3P1IW
-	 /Uij5MimIs+VZQiT/sOtB/TiHNO9O1JAanHS2maYqQpdG4oChKsgdzDblkv+tGkKEU
-	 AuqoSeA0FdMJpdlepu6KKmXiDRfFq8iWOhzEq3To=
+	by mail.kernel.org (Postfix) with ESMTP id 6EA212088E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 20:38:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1cMDUG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407273AbgE1Ufd (ORCPT
+        id S2407323AbgE1Uir (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 16:35:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42497 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407267AbgE1Ufc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 16:35:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id d5so22152665ios.9;
-        Thu, 28 May 2020 13:35:31 -0700 (PDT)
+        Thu, 28 May 2020 16:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407218AbgE1Uip (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 16:38:45 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9010CC08C5C6;
+        Thu, 28 May 2020 13:38:45 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d10so143813pgn.4;
+        Thu, 28 May 2020 13:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uUmAHxoLCci70CIyQKHJVkgQVBujsUNyRL0aI0R0aqo=;
+        b=I1cMDUG4Wbl6ZX/z5HWJTm2du5yh0gMU/JPmyLOA29gjDIaqZCuFlq1Akwl3x2elMt
+         ocKJz6UFSs9RV8uUTGDo6qDUWd3ujnAqcC0wVQzxSf5C4KAdnYFrC2ux/mp9wHzQoU3I
+         8sxF6hLFmWwdrvdGrJQR23vCVeXjvY3uf4ee+i0j7VVO7ldGgG6UHkEwvEs7NSJvucXr
+         u/HX7g9A/JHwTmtNm/pizzgaEFtaHRhTXL/OSQZU6alHCgQkzALi5i6A9EqjaPivx4Ho
+         YuugbZTUH2NeinzeiTFXp2XiO++0eeSonK5SMIVAiaoA3IMaWw/M6AJvPgZqSbvhlFLk
+         lFIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R1LLM7xnfdvcgFQRKV14YzdSlvQJ4RI+sB1xnpIODbo=;
-        b=EADPYqQc+4Y1n4IfWTm1INZXCIljSKNbWg3XP8KFEU7O7H+OLYWlg64TrlsCsNQjZc
-         ojhkA5J+/RScb5qkeSWPPa+Es5K5axsC1dtqPC3yySffYVxEgdQsbZ/bfOhe3/uWMqcp
-         gr9QOBOkOpvtNcVNyUuk18HAJuYN7u+A3E7T84cSv+a66X1JhnytCb3dG992jNroL4V2
-         AXRoKXym3GXdJnmFm2thCaJICzfdlKAUbaJzkoNI8+5FqA6Mn11lrtHH3aDeg+aHxdxA
-         szbz5ov4pY7s9wXo/y/dwIygR08xgmBJur3FXV/W6ZPJmLUyT1gDM7M8rsVzMQjNm9m0
-         HkfA==
-X-Gm-Message-State: AOAM533VXYNvfPlbFS00nku5XE/FpXR1dTqrEBf1633/2ZoefHqGdmY1
-        72bnX/l7GI+GMtOkRoM2aQ==
-X-Google-Smtp-Source: ABdhPJxLNPfzvPou+nEraMmQPrlQ/n6yBhSboqmWZZKjRfj8axP7upEERZ+wrmhmueCUpUq9OGYxPQ==
-X-Received: by 2002:a02:58c3:: with SMTP id f186mr4317387jab.120.1590698131111;
-        Thu, 28 May 2020 13:35:31 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y13sm3007418iob.51.2020.05.28.13.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:35:30 -0700 (PDT)
-Received: (nullmailer pid 633109 invoked by uid 1000);
-        Thu, 28 May 2020 20:35:29 -0000
-Date:   Thu, 28 May 2020 14:35:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, maz@kernel.org,
-        jason@lakedaemon.net, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, Linux-imx@nxp.com,
-        l.stach@pengutronix.de
-Subject: Re: [PATCH V3] dt-bindings: interrupt-controller: Convert imx
- irqsteer to json-schema
-Message-ID: <20200528203529.GA633058@bogus>
-References: <1589790957-7904-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uUmAHxoLCci70CIyQKHJVkgQVBujsUNyRL0aI0R0aqo=;
+        b=IxfjS8uS3RD4gupLgRT3aQi0J1qxkiIQW8burB1ym+nuF6AbCWIJwtbFL5h1xsBNH+
+         eU7ycey3at/NcmDQMpKsMYM9IRqMz0hdNjD2ZioW6pdWdPIA3I9jWc6o6jDHcJKOjWBS
+         rt53vx1V3BJy53ODlDc/PZI5jwN/5xYVVY4OgnGjTZrceKGGDQr57eVXaUhc7qvxCcll
+         M00oitiocwwMAQo3gs4HvIiLoLzLlBElYDyG0JBOa2tbxZPs2WrJkKYREhUp3yC/s0Zv
+         hLGh0bJwK5Ja+mUXQQCrhqZqCXS1WaIxjKFmYc8VQDwqaXqKGvolOWD4C6BS6uWG1ec1
+         A1nA==
+X-Gm-Message-State: AOAM531wGp0ZtG3xBvNfUpzdu9rBHP+Pd5VibI6KiUHzhzTmvCl5wPr5
+        bgzA1RdRMbH5Iu2FxCh4FvYL6UwO90DnPSm0Qfc=
+X-Google-Smtp-Source: ABdhPJwe8DmfXiHurV89f6av71936kl+HM4lp/ZzAxpMRXlN2Qv/GB4+dYblIxf4soDqHWyWkLuJ27OfLk4KVGGMVXw=
+X-Received: by 2002:aa7:99c8:: with SMTP id v8mr5137217pfi.36.1590698325132;
+ Thu, 28 May 2020 13:38:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589790957-7904-1-git-send-email-Anson.Huang@nxp.com>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
+ <20200528145224.GT1634618@smile.fi.intel.com> <20200528154022.3reghhjcd4dnsr3g@mobilestation>
+In-Reply-To: <20200528154022.3reghhjcd4dnsr3g@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 28 May 2020 23:38:28 +0300
+Message-ID: <CAHp75VcPVO6yOmyrSBfjVk5eSYhC4J0QXAfOhjRXGd4=FemezA@mail.gmail.com>
+Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw config
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 18 May 2020 16:35:57 +0800, Anson Huang wrote:
-> Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> Changes since V2:
-> 	- Improve the interrupt items description.
-> ---
->  .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
->  .../interrupt-controller/fsl,irqsteer.yaml         | 89 ++++++++++++++++++++++
->  2 files changed, 89 insertions(+), 35 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-> 
+On Thu, May 28, 2020 at 6:43 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Thu, May 28, 2020 at 05:52:24PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
 
-Applied, thanks!
+...
+
+> > Perhaps,
+> >
+> >       /* DesignWare DMA supports burst value from 0 */
+> >       caps->min_burst = 0;
+>
+> Regarding min_burst being zero. I don't fully understand what it means.
+> It means no burst or burst with minimum length or what?
+> In fact DW DMA burst length starts from 1. Remember the burst-length run-time
+> parameter we were arguing about? Anyway the driver makes sure that both
+> 0 and 1 requested burst length are setup as burst length of 1 in the
+> CTLx.SRC_MSIZE, CTLx.DST_MSIZE fields.
+
+Yeah, I also thought about it after I sent a message. 1 sounds better.
+
+-- 
+With Best Regards,
+Andy Shevchenko
