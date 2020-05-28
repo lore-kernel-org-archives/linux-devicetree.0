@@ -2,141 +2,145 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554A3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0B9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31B932075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:57:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="buvCKmjh"
+	by mail.kernel.org (Postfix) with ESMTP id A07E92075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403803AbgE1O5r (ORCPT
+        id S2403935AbgE1O6E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403787AbgE1O5p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:57:45 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946CAC08C5C6;
-        Thu, 28 May 2020 07:57:45 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id w90so249078qtd.8;
-        Thu, 28 May 2020 07:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xh10qpgo8ZBw04J26d6TmP95SZB7leV7haVSlHLd2KM=;
-        b=buvCKmjhmmNh95OXQOYAHAM2JXnioPPtZVlMoCCsXWBaJ3npB99IVwgHzFzJtc6zSP
-         zDjcxjevo3MiKIzQ9qD2q4UN54h+GgmyrSayNYjdsKD0gqkbwgsmER+rP6mJd3fHzcRd
-         5x01uE9OP109aSO+MJbm3KtnapOmJqn4wx2SWY1EPUOUJQTXW/88KJFjmZdBpEx+HfF5
-         ij8wcGSaSrH8O+zdmKr1AxorBSDOh/iFZm0o9Dxtm9KxvsVj6+cz7QttVQnGSbyYV/d3
-         AXZgy+kakANhfFsMRviQYQKjBwivSIHY0XkbNd7VFw2ELV/m7bMgGxgPRM3hpFmCr/Vh
-         jPWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xh10qpgo8ZBw04J26d6TmP95SZB7leV7haVSlHLd2KM=;
-        b=uc2qwrgR7Q0npWB5pasIU6+oXyNh3xbIj0tbUFxODaEx9SOPBzNRhYYDHR2ZNUfEwM
-         Lr0PupT84Oi/LazVKLKLYJBTMqOYj8+YJvHhqzWBntEpc5+SlnhhX8QaILi8XIoVSPqf
-         eoIywXB4nV95MquKmgvgxqhHEer46ty9vcsHnRALhEc8On+o9kVindIFgCc9E9LtUHQI
-         W7xEdWbad3TKLxnmGUMXe7n/4oy+L+IdG+JDj87+xLsu39v0pga3W9FumGPp4yBzK7vp
-         hBz0zhWZim005gUUdCvrcgspZFXiAVlMbvUyV5b3HtKLW3mdmqxZy49PiU1Tar5atoet
-         ND9w==
-X-Gm-Message-State: AOAM531avRyRSXf08HwS0gcLmD3e8jhRgbwmacCRCmm/KDnC2kJNMNqz
-        0TzN8MqPX3o5neBAydhdZg0Jub1W7ic=
-X-Google-Smtp-Source: ABdhPJyWo3QAAo1dPoftO2PinkN6bcnQYbJ0FqVZ+8djxEm/X53BTqJcBHwILXOjtO5Ln5D/WVF+5w==
-X-Received: by 2002:ac8:e8f:: with SMTP id v15mr3413836qti.391.1590677864325;
-        Thu, 28 May 2020 07:57:44 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id s74sm5116876qka.54.2020.05.28.07.57.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:57:43 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: [PATCH v7 0/5] iio: magnetometer: ak8975: Add gpio reset support
-Date:   Thu, 28 May 2020 16:56:03 +0200
-Message-Id: <20200528145631.11608-1-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 28 May 2020 10:58:04 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:55513 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403926AbgE1O6D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:58:03 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 98167FF810;
+        Thu, 28 May 2020 14:57:56 +0000 (UTC)
+Date:   Thu, 28 May 2020 16:57:54 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <weijie.gao@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Julien Su <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v6 14/18] mtd: nand: Add more parameters to the
+ nand_ecc_props structure
+Message-ID: <20200528165754.35985b62@xps13>
+In-Reply-To: <20200528163424.6677597c@collabora.com>
+References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
+        <20200528113113.9166-15-miquel.raynal@bootlin.com>
+        <20200528163424.6677597c@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v7:
- - fix documentation style, removing documentation unnecessary parts
 
-v6:
- - reword documentation for gpios, add interrupt documentation
-https://lore.kernel.org/linux-iio/20200525151117.32540-1-jonathan.albrieux@gmail.com/
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 28 May
+2020 16:34:24 +0200:
 
-v5:
- - add maintainer
-https://lore.kernel.org/linux-iio/20200520163417.27805-1-jonathan.albrieux@gmail.com/
+> On Thu, 28 May 2020 13:31:09 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+> > Prepare the migration to the generic ECC framework by adding more
+> > fields to the nand_ecc_props structure which will be used widely to
+> > describe different kind of ECC properties.
+> > 
+> > Doing this imposes to move the engine type, ECC placement and
+> > algorithm enumerations in a shared place: nand.h.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> >  include/linux/mtd/nand.h    | 52 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/mtd/rawnand.h | 44 -------------------------------
+> >  2 files changed, 52 insertions(+), 44 deletions(-)
+> > 
+> > diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+> > index 6add464fd18b..2e9af24936cd 100644
+> > --- a/include/linux/mtd/nand.h
+> > +++ b/include/linux/mtd/nand.h
+> > @@ -127,14 +127,66 @@ struct nand_page_io_req {
+> >  	int mode;
+> >  };
+> >  
+> > +/**
+> > + * enum nand_ecc_engine_type - NAND ECC engine type
+> > + * @NAND_ECC_ENGINE_TYPE_INVALID: Invalid value
+> > + * @NAND_ECC_ENGINE_TYPE_NONE: No ECC correction
+> > + * @NAND_ECC_ENGINE_TYPE_SOFT: Software ECC correction
+> > + * @NAND_ECC_ENGINE_TYPE_ON_HOST: On host hardware ECC correction
+> > + * @NAND_ECC_ENGINE_TYPE_ON_DIE: On chip hardware ECC correction
+> > + */
+> > +enum nand_ecc_engine_type {
+> > +	NAND_ECC_ENGINE_TYPE_INVALID,
+> > +	NAND_ECC_ENGINE_TYPE_NONE,
+> > +	NAND_ECC_ENGINE_TYPE_SOFT,
+> > +	NAND_ECC_ENGINE_TYPE_ON_HOST,
+> > +	NAND_ECC_ENGINE_TYPE_ON_DIE,
+> > +};
+> > +
+> > +/**
+> > + * enum nand_ecc_placement - NAND ECC bytes placement
+> > + * @NAND_ECC_PLACEMENT_UNKNOWN: The actual position of the ECC bytes is unknown
+> > + * @NAND_ECC_PLACEMENT_OOB: The ECC bytes are located in the OOB area
+> > + * @NAND_ECC_PLACEMENT_INTERLEAVED: Syndrome layout, there are ECC bytes
+> > + *                                  interleaved with regular data in the main
+> > + *                                  area
+> > + */
+> > +enum nand_ecc_placement {
+> > +	NAND_ECC_PLACEMENT_UNKNOWN,
+> > +	NAND_ECC_PLACEMENT_OOB,
+> > +	NAND_ECC_PLACEMENT_INTERLEAVED,
+> > +};
+> > +
+> > +/**
+> > + * enum nand_ecc_algo - NAND ECC algorithm
+> > + * @NAND_ECC_ALGO_UNKNOWN: Unknown algorithm
+> > + * @NAND_ECC_ALGO_HAMMING: Hamming algorithm
+> > + * @NAND_ECC_ALGO_BCH: Bose-Chaudhuri-Hocquenghem algorithm
+> > + * @NAND_ECC_ALGO_RS: Reed-Solomon algorithm
+> > + */
+> > +enum nand_ecc_algo {
+> > +	NAND_ECC_ALGO_UNKNOWN,
+> > +	NAND_ECC_ALGO_HAMMING,
+> > +	NAND_ECC_ALGO_BCH,
+> > +	NAND_ECC_ALGO_RS,
+> > +};
+> > +
+> >  /**
+> >   * struct nand_ecc_props - NAND ECC properties
+> > + * @engine_type: ECC engine type
+> > + * @placement: OOB placement (if relevant)
+> > + * @algo: ECC algorithm (if relevant)
+> >   * @strength: ECC strength
+> >   * @step_size: Number of bytes per step
+> > + * @flags: Misc properties  
+> 
+> I'd like to hear more about that one. What is this about? I'd rather
+> not add a field if it's not needed.
+> 
 
-v4:
- - fix some typo
- - use gpio's dt-bindings for more clarity in documentation
- - set compatible properties without vendor prefix as deprecated
-https://lore.kernel.org/linux-iio/20200520073125.30808-1-jonathan.albrieux@gmail.com/
-
-v3:
- - fix patch messages style
- - align reset gpio comment to kernel doc reccomendation
- - introduce changelog
-https://lore.kernel.org/linux-iio/20200519124402.26076-1-jonathan.albrieux@gmail.com/
-
-v2:
- - rewording of reset gpio comment and patch messages to better clarify
-   reset gpio behaviour
-https://lore.kernel.org/linux-iio/20200518133645.19127-1-jonathan.albrieux@gmail.com/
-
-v1:
- - initial patch submission
-https://lore.kernel.org/linux-iio/20200519065749.4624-1-jonathan.albrieux@gmail.com/
-
-Convert documentation from txt format to yaml. Add documentation about
-reset-gpio.
-
-Deassert reset on ak8975_power_on(), assert reset on ak8975_power_off().
-
-Without reset's deassertion during ak8975_power_on(), driver's probe fails
-on ak8975_who_i_am() while checking for device identity for AK09911 chip.
-
-AK09911 has an active low reset gpio to handle register's reset.
-AK09911 datasheet says that, if not used, reset pin should be connected
-to VID. This patch emulates this situation.
-
-JonnyMe (5):
-  dt-bindings: iio: magnetometer: ak8975: reword gpios, add interrupts,
-    fix style
-  dt-bindings: iio: magnetometer: ak8975: convert format to yaml, add
-    maintainer
-  dt-bindings: iio: magnetometer: ak8975: add gpio reset support
-  iio: magnetometer: ak8975: Fix typo, uniform measurement unit style
-  iio: magnetometer: ak8975: Add gpio reset support
-
- .../bindings/iio/magnetometer/ak8975.txt      | 30 -------
- .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 84 +++++++++++++++++++
- drivers/iio/magnetometer/ak8975.c             | 22 ++++-
- 3 files changed, 104 insertions(+), 32 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
- create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-
--- 
-2.17.1
-
+It is used in patch 18/18 to store the NAND_ECC_MAXIMIZE flag. And I
+expect others to come later...
