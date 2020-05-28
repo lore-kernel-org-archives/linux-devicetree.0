@@ -2,118 +2,126 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706D8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814EEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5127E208DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590654277;
-	bh=1XpzYMmYZp/Qk1kJtW0aiug2LeRfEo1uHDMQ6LmkHPA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z0Gd74w3BmRTEFqGCof7L+K3mRMb4YBoQvC4m+zL/BQS1Uuw2FDEw5ullRYdXz32o
-	 sqVGhqObxjt+TAP0BxdbIDwqXrh9ZOoPdRPk5iBuUT1mlqhRUwwc6SDyCbK9gybc3N
-	 WOkoEFknwMQUF3NzBSTOFr1a2TLwgfjNc0bbrFfc=
+	by mail.kernel.org (Postfix) with ESMTP id 673402075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgE1IYd (ORCPT
+        id S1727028AbgE1Ib4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 04:24:33 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34427 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgE1IYd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 04:24:33 -0400
-Received: by mail-lj1-f193.google.com with SMTP id b6so32328787ljj.1;
-        Thu, 28 May 2020 01:24:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=htN54AV/Ihu6JzPNFvenMo8mjoWrRH1sjEjPiN8cCzk=;
-        b=ulMG+2s1laMLyaQ/fBjFjyudzzlg7UtXeIjTVIUmI7fAj+LV6xjDjYHVh+qMcwd4v5
-         AgsBTyX6iz8C5hSEm+tuhvyVEHEjBCuXAXMrj6Uzay/OKj47Rm2IUPzQ2aikMF04RAtL
-         YsupteV2O9uk6Pwz0+fGUg/RenlHSq9rRB18cWkHe/s6c39SPi/WY67QX6l4LDN+LxPz
-         3ZvUHO7/Hqz3ikBplcMMDmcS82XaxHYTUZzNt0jHn2qUwp+okOWo2UJV+sVYV9Lt3lnC
-         flgaCihZ0sYEarDkfTl1FXP415xHiOFJ8KxT+Kq89wuQfqQextNpo0M8kTM2Gncgq97y
-         4G0Q==
-X-Gm-Message-State: AOAM531fSwjDNtKbA6tqDDAVw7pJGHep1v1H8deLs5sDeoCcWeUrcRc+
-        keyA8rU+bB/nAPs25VGn6rs=
-X-Google-Smtp-Source: ABdhPJw0lfniAdlAI2ff5VOzb5wHTOW7tmV6sPriJoXUvYGZu9htTeK/qTi3Nk+AwKcKnzJOR4uUXA==
-X-Received: by 2002:a2e:a171:: with SMTP id u17mr953864ljl.225.1590654269229;
-        Thu, 28 May 2020 01:24:29 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id u16sm1292531lji.58.2020.05.28.01.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 01:24:28 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jeDps-00035C-Ur; Thu, 28 May 2020 10:24:21 +0200
-Date:   Thu, 28 May 2020 10:24:20 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200528082420.GA10358@localhost>
-References: <20200421232752.3070-1-tony@atomide.com>
- <20200423114326.GQ18608@localhost>
- <20200423153756.GE37466@atomide.com>
+        Thu, 28 May 2020 04:31:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40166 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgE1Ib4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 04:31:56 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 262EF80307C0;
+        Thu, 28 May 2020 08:31:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mso_D6x-Sr2v; Thu, 28 May 2020 11:31:46 +0300 (MSK)
+Date:   Thu, 28 May 2020 11:31:44 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND v3 0/2] syscon: Alter syscon and reboot drivers
+Message-ID: <20200528083144.5r2qn3mule4dvvgf@mobilestation>
+References: <20200526135102.21236-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528070311.uj6bxlplxe2bths5@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200423153756.GE37466@atomide.com>
+In-Reply-To: <20200528070311.uj6bxlplxe2bths5@earth.universe>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tony,
-
-Sorry about the late reply on this.
-
-On Thu, Apr 23, 2020 at 08:37:56AM -0700, Tony Lindgren wrote:
-> * Johan Hovold <johan@kernel.org> [200423 11:44]:
-
-> > I know the location of this driver has been up for discussion already,
-> > but drivers/tty/serdev/protocol still isn't right (e.g. we don't have an
-> > drivers/i2c/protocol directory where we stuff random i2c client
-> > drivers).
+On Thu, May 28, 2020 at 09:03:11AM +0200, Sebastian Reichel wrote:
+> Hi,
 > 
-> Argh, the location of driver again.. So we do have the custom motorola
-> layer to deal with on top of TS 27.010, but the custom handling is
-> contained within the driver. So maybe just drivers/serial for the
-> custom driver then.
-
-Yeah, that should do for now; n_gsm is a serial driver (exposing tty
-devices) after all.
-
-> > Last, it seems you've based the serdev-ngsm-motmdm.c chardev
-> > implementation on a more or less verbatim copy of drivers/gnss/core.c.
-> > I'd appreciate if you could mention that in the file header and
-> > reproduce the copyright notice if you end up keeping that interface.
+> On Tue, May 26, 2020 at 04:50:59PM +0300, Serge Semin wrote:
+> > This is a small patchset about tuning the syscon infrastructure a bit.
+> > As it's going to be general in the framework of the Baikal-T1 SoC support
+> > integration into the kernel, we suggest to replace the legacy text-based
+> > syscon-reboot-mode dts-bindings file with yaml-based one. Then seeing a
+> > syscon reboot block is normally expected to be a part of a system
+> > controller and based on the discussion
+> > https://lore.kernel.org/linux-pm/20200306130402.1F4F0803079F@mail.baikalelectronics.ru/
+> > we decided to alter the syscon reboot driver so one would also try to fetch
+> > the syscon registers map from a parental DT node. regmap property is left
+> > supported although it's marked as deprecated from now.
+> > 
+> > This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+> > 0e698dfa2822 ("Linux 5.7-rc4")
+> > tag: v5.7-rc4
+> > 
+> > Changelog v2:
+> > - Add Sebastian' Acked-by tag to patch 1.
+> > - Use a shorter summary describing the bindings modification patches.
+> > - Our corporate email server doesn't change Message-Id anymore, so the patchset
+> >   is resubmitted being in the cover-letter-threaded format.
+> > - Discard patch with syscon "-endian" property support. As Rob said It shall be
+> >   in the common dt-schema.
+> > - Replace patches of adding a regmap property support to the syscon-reboot-mode
+> >   with patches making syscon-reboot a sub-node of a system controller node.
+> > - Mark regmap property as deprecated from now.
+> > 
+> > Link: https://lore.kernel.org/linux-pm/20200507233846.11548-1-Sergey.Semin@baikalelectronics.ru/
+> > Changelog v3:
+> > - Discard the commit 6acd3ecd88ff ("dt-bindings: power: reset: Convert
+> >   syscon-reboot-mode to DT schema") since it has been merged in by Sebatian.
+> > - Add Rob's Reviewed-by tag to the patch "dt-bindings: power: reset: Unrequire
+> >   regmap property in syscon-reboot node"
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+> > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> > Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> > Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+> > Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+> > Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > 
+> > Serge Semin (2):
+> >   dt-bindings: power: reset: Unrequire regmap property in syscon-reboot
+> >     node
+> >   power: reset: syscon-reboot: Add parental syscon support
+> > 
+> >  .../bindings/power/reset/syscon-reboot.yaml       | 15 ++++++++++-----
+> >  drivers/power/reset/syscon-reboot.c               |  7 +++++--
+> >  2 files changed, 15 insertions(+), 7 deletions(-)
 > 
-> Oh yes indeed, thanks for pointing that out. I'll add it to the next
-> version. The chardev code is for sure based on drivers/gnss.
+> Thanks, I queued both patches to power-supply's for-next branch.
 > 
-> To explain my ignorance, I added the chardev support initially as an
-> experiment to see if I can handle the motorola packet layer better
-> that way compared to the n_gsm ttys and userspace handling. It ended
-> up working quite nicely, so I kept it but then I accidentally left
-> out references to the source. Sorry about that.
+> -- Sebastian
 
-No worries.
+Great! Thanks.
 
-Johan
+-Sergey
