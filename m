@@ -2,242 +2,314 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED299C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9EFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4CB2072D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590702168;
-	bh=SIudycdY7PVCiLE2RROg6WuByw5DbBOQ+t3p7L2629I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VwO52zZgxqKPE1PfVZW0ZbPkZAoNhCk1w1ipVXmvxqt1cCC+tdhd/HEBzdmPcQ3p3
-	 4S5Es6PChhErU+LXH3LNmsXOcp0PEBkBA2gKxdXXyQA18fFE8FDerwC24EKTet0dgv
-	 uQsM28qwR85dJOzWXHLg6JbtJCCGUF9bkpug1/8I=
+	by mail.kernel.org (Postfix) with ESMTP id A2FCA2088E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:43:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="knV4J03F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436626AbgE1Vms (ORCPT
+        id S2436693AbgE1Vn1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 17:42:48 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40495 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436581AbgE1Vmq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 17:42:46 -0400
-Received: by mail-il1-f194.google.com with SMTP id a18so458496ilp.7;
-        Thu, 28 May 2020 14:42:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kKfMEdEPf1qQORIeLe3Cv29R1EeXGe6brVInGMzh/i8=;
-        b=bbtrpU57Eb48sz9j5rF7mf9ITYpOwEmLH1+ZRRptqPYHKqZQeK5XOAs5gqCG4l9zCQ
-         VBx3XUWy/mxw9VQ93lKLd64w0D+gwZCANRcZzENq8ArWccbWwp5a50o8nxMYECZU0tel
-         DxA4p71XO+a/C1coIUMJcwbi9OuIu7gfNNRzjoUDIeyLGZfplxry2gtEQ186Ex810/vO
-         ldFMIp7mSSPIbu1GowRIt3b3iYTuGZG8sF8A6lAVpONQFjv95/iDeJK9wLxW9Bsear4q
-         cFnGL39ADlkWnG/W12SJhT9vlElfyBLgQaNtTUoeNVu/Bpu6DhhsolDtq5cR3q746ZXA
-         RGgA==
-X-Gm-Message-State: AOAM532XWTob9/xdu6PUmDYjRxNy3j+OUhyA4VO/u5fuVYeTcLuIAjMB
-        8XCHyuSwmx7wOTQrIiqcpg==
-X-Google-Smtp-Source: ABdhPJwzMqJMjsR6qnJhFZThxIFACTIgnQWqf3/oGxPMvS4qxVMWPovqxkHZ6ABDo7bKbNCpywwDYQ==
-X-Received: by 2002:a05:6e02:11a5:: with SMTP id 5mr4857068ilj.108.1590702165155;
-        Thu, 28 May 2020 14:42:45 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h10sm3115504ioe.3.2020.05.28.14.42.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 14:42:44 -0700 (PDT)
-Received: (nullmailer pid 735075 invoked by uid 1000);
-        Thu, 28 May 2020 21:42:43 -0000
-Date:   Thu, 28 May 2020 15:42:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Convert ingenic,pinctrl.txt
- to YAML
-Message-ID: <20200528214243.GA711753@bogus>
-References: <20200520002234.418025-1-paul@crapouillou.net>
+        Thu, 28 May 2020 17:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436630AbgE1Vn0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 17:43:26 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A674C08C5C7
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 14:43:26 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 72FF92A8;
+        Thu, 28 May 2020 23:43:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590702203;
+        bh=lVRrtft3Q3HW0F0MzcKFD2zkYsG7/OJgc9sKNar2LaE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=knV4J03F2tqhx+g5MmFqG2spyc7y4n2nUF31Q2aJVVY/Mdkeh6Cwiqvy+EVmRNYWf
+         w/O/VfqDF9wlYwbqvbfikkiVC2n+qpbPe2xB7Jyvzb1Y96s4y4YtGjmpMtay4/aNs0
+         qj1DOxzLHsrvf9WCcszekcFlGq0yYdN5tZAY6gv4=
+Date:   Fri, 29 May 2020 00:43:09 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net,
+        tomi.valkeinen@ti.com, robh+dt@kernel.org, airlied@linux.ie,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v2 3/4] dt-bindings: display: ti,tfp410.txt: convert to
+ yaml
+Message-ID: <20200528214309.GA21433@pendragon.ideasonboard.com>
+References: <20200514143612.2094-1-ricardo.canuelo@collabora.com>
+ <20200514143612.2094-4-ricardo.canuelo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200520002234.418025-1-paul@crapouillou.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200514143612.2094-4-ricardo.canuelo@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:22:32AM +0200, Paul Cercueil wrote:
-> Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
+Hi Ricardo,
+
+Thank you for the patch.
+
+On Thu, May 14, 2020 at 04:36:11PM +0200, Ricardo Cañuelo wrote:
+> Convert the DT binding documentation for the TI TFP410 DPI-to-DVI
+> encoder to json-schema.
 > 
-> In the process, some compatible strings now require a fallback, as the
-> corresponding SoCs are pin-compatible with their fallback variant.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> The 'ti,deskew' is now an unsigned value from 0 to 7 instead of a signed
+> value from -4 to 3. The rest of the binding is a direct translation from
+> the old one.
+
+I would have modified this in a separate patch.
+
+> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 > ---
+>  .../bindings/display/bridge/ti,tfp410.txt     |  66 ----------
+>  .../bindings/display/bridge/ti,tfp410.yaml    | 124 ++++++++++++++++++
+>  2 files changed, 124 insertions(+), 66 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
 > 
-> Notes:
->     v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
->         - remove 'additionalProperties: false' since we will have pin conf nodes
-
-You need to describe those nodes and not just allow anything.
-
-> 
->  .../bindings/pinctrl/ingenic,pinctrl.txt      |  81 -----------
->  .../bindings/pinctrl/ingenic,pinctrl.yaml     | 136 ++++++++++++++++++
->  2 files changed, 136 insertions(+), 81 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
+> deleted file mode 100644
+> index 5ff4f64ef8e8..000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
+> +++ /dev/null
+> @@ -1,66 +0,0 @@
+> -TFP410 DPI to DVI encoder
+> -=========================
+> -
+> -Required properties:
+> -- compatible: "ti,tfp410"
+> -
+> -Optional properties:
+> -- powerdown-gpios: power-down gpio
+> -- reg: I2C address. If and only if present the device node should be placed
+> -  into the I2C controller node where the TFP410 I2C is connected to.
+> -- ti,deskew: data de-skew in 350ps increments, from -4 to +3, as configured
+> -  through th DK[3:1] pins. This property shall be present only if the TFP410
+> -  is not connected through I2C.
+> -
+> -Required nodes:
+> -
+> -This device has two video ports. Their connections are modeled using the OF
+> -graph bindings specified in [1]. Each port node shall have a single endpoint.
+> -
+> -- Port 0 is the DPI input port. Its endpoint subnode shall contain a
+> -  pclk-sample and bus-width property and a remote-endpoint property as specified
+> -  in [1].
+> -  - If pclk-sample is not defined, pclk-sample = 0 should be assumed for
+> -    backward compatibility.
+> -  - If bus-width is not defined then bus-width = 24 should be assumed for
+> -    backward compatibility.
+> -    bus-width = 24: 24 data lines are connected and single-edge mode
+> -    bus-width = 12: 12 data lines are connected and dual-edge mode
+> -
+> -- Port 1 is the DVI output port. Its endpoint subnode shall contain a
+> -  remote-endpoint property is specified in [1].
+> -
+> -[1] Documentation/devicetree/bindings/media/video-interfaces.txt
+> -
+> -
+> -Example
+> --------
+> -
+> -tfp410: encoder@0 {
+> -	compatible = "ti,tfp410";
+> -	powerdown-gpios = <&twl_gpio 2 GPIO_ACTIVE_LOW>;
+> -	ti,deskew = <4>;
+> -
+> -	ports {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		port@0 {
+> -			reg = <0>;
+> -
+> -			tfp410_in: endpoint@0 {
+> -				pclk-sample = <1>;
+> -				bus-width = <24>;
+> -				remote-endpoint = <&dpi_out>;
+> -			};
+> -		};
+> -
+> -		port@1 {
+> -			reg = <1>;
+> -
+> -			tfp410_out: endpoint@0 {
+> -				remote-endpoint = <&dvi_connector_in>;
+> -			};
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
 > new file mode 100644
-> index 000000000000..5be2b1e95b36
+> index 000000000000..a9f4fd8ea621
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
+> @@ -0,0 +1,124 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pinctrl/ingenic,pinctrl.yaml#
+> +$id: http://devicetree.org/schemas/display/bridge/ti,tfp410.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Ingenic SoCs pin controller devicetree bindings
-> +
-> +description: >
-> +  Please refer to pinctrl-bindings.txt in this directory for details of the
-> +  common pinctrl bindings used by client devices, including the meaning of the
-> +  phrase "pin configuration node".
-> +
-> +  For the Ingenic SoCs, pin control is tightly bound with GPIO ports. All pins
-> +  may be used as GPIOs, multiplexed device functions are configured within the
-> +  GPIO port configuration registers and it is typical to refer to pins using the
-> +  naming scheme "PxN" where x is a character identifying the GPIO port with
-> +  which the pin is associated and N is an integer from 0 to 31 identifying the
-> +  pin within that GPIO port. For example PA0 is the first pin in GPIO port A,
-> +  and PB31 is the last pin in GPIO port B. The JZ4740, the X1000 and the X1830
-> +  contains 4 GPIO ports, PA to PD, for a total of 128 pins. The JZ4760, the
-> +  JZ4770 and the JZ4780 contains 6 GPIO ports, PA to PF, for a total of 192
-> +  pins.
+> +title: TFP410 DPI to DVI encoder
 > +
 > +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
+> +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
+> +  - Jyri Sarha <jsarha@ti.com>
 > +
 > +properties:
-> +  nodename:
-
-It's $nodename as that's not a real property. And that will expose the 
-error in the example for you.
-
-> +    pattern: "^pinctrl@[0-9a-f]+$"
-> +
 > +  compatible:
-> +    oneOf:
-> +      - enum:
-> +        - ingenic,jz4740-pinctrl
-> +        - ingenic,jz4725b-pinctrl
-> +        - ingenic,jz4760-pinctrl
-> +        - ingenic,jz4770-pinctrl
-> +        - ingenic,jz4780-pinctrl
-> +        - ingenic,x1000-pinctrl
-> +        - ingenic,x1500-pinctrl
-> +        - ingenic,x1830-pinctrl
-> +      - items:
-> +        - const: ingenic,jz4760b-pinctrl
-> +        - const: ingenic,jz4760-pinctrl
-> +      - items:
-> +        - const: ingenic,x1000e-pinctrl
-> +        - const: ingenic,x1000-pinctrl
+> +    const: ti,tfp410
 > +
 > +  reg:
+> +    description: I2C address of the device.
 > +    maxItems: 1
 > +
-> +  "#address-cells":
-> +    const: 1
+> +  powerdown-gpios:
+> +    maxItems: 1
 > +
-> +  "#size-cells":
-> +    const: 0
+> +  ti,deskew:
+> +    description:
+> +      Data de-skew value in 350ps increments, from 0 to 7, as configured
+> +      through the DK[3:1] pins. The de-skew multiplier is computed as
+> +      (DK[3:1] - 4), so it ranges from -4 to 3. This property shall be
+> +      present only if the TFP410 is not connected through I2C.
+
+I'd replace the last sentence with
+
+if:
+  required:
+    - reg
+then:
+  properties:
+    ti,deskew: false
+else:
+  required:
+    - ti,deskew
+
+(between the required: and additionalProperties: objects below)
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0
+> +    maximum: 7
 > +
-> +patternProperties:
-> +  "^gpio@[0-9]$":
+> +  ports:
+> +    description:
+> +      A node containing input and output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
 > +    type: object
+> +
 > +    properties:
-> +      compatible:
-> +        enum:
-> +          - ingenic,jz4740-gpio
-> +          - ingenic,jz4725b-gpio
-> +          - ingenic,jz4760-gpio
-> +          - ingenic,jz4770-gpio
-> +          - ingenic,jz4780-gpio
-> +          - ingenic,x1000-gpio
-> +          - ingenic,x1500-gpio
-> +          - ingenic,x1830-gpio
+> +      port@0:
+> +        description: DPI input port.
+> +        type: object
 > +
-> +      reg:
-> +        items:
-> +          - description: The GPIO bank number
+> +        properties:
+> +          reg:
+> +            const: 0
 > +
-> +      gpio-controller: true
+> +          endpoint:
+> +            type: object
 > +
-> +      "#gpio-cells":
-> +        const: 2
+> +            properties:
+> +              pclk-sample:
+> +                description:
+> +                  Endpoint sampling edge. If not defined, pclk-sample =
+> +                  0 should be assumed for backwards compatibility.
+
+Should the second sentence be dropped, as it's expressed with default: 0
+?
+
+> +                enum:
+> +                  - 0  # Falling edge
+> +                  - 1  # Rising edge
+> +                default: 0
 > +
-> +      gpio-ranges:
-> +        maxItems: 1
+> +              bus-width:
+> +                description:
+> +                  Endpoint bus width. If not defined, bus-width = 24
+> +                  should be assumed for backwards compatibility.
+
+Same here for the second sentence.
+
+With these small issues fixed,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +                enum:
+> +                  - 12  # 12 data lines connected and dual-edge mode
+> +                  - 24  # 24 data lines connected and single-edge mode
+> +                default: 24
 > +
-> +      interrupt-controller: true
+> +      port@1:
+> +        description: DVI output port.
+> +        type: object
 > +
-> +      "#interrupt-cells":
-> +        const: 2
-> +        description:
-> +          Refer to ../interrupt-controller/interrupts.txt for more details.
+> +        properties:
+> +          reg:
+> +            const: 1
 > +
-> +      interrupts:
-> +        maxItems: 1
+> +          endpoint:
+> +            type: object
 > +
 > +    required:
-> +      - compatible
-> +      - reg
-> +      - gpio-controller
-> +      - "#gpio-cells"
-> +      - interrupts
-> +      - interrupt-controller
-> +      - "#interrupt-cells"
-> +
-> +    additionalProperties: false
+> +      - port@0
+> +      - port@1
 > +
 > +required:
 > +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
+> +  - ports
+> +
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    pin-controller@10010000 {
-> +      compatible = "ingenic,jz4770-pinctrl";
-> +      reg = <0x10010000 0x600>;
+> +    #include <dt-bindings/gpio/gpio.h>
 > +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
+> +    tfp410: encoder {
+> +        compatible = "ti,tfp410";
+> +        powerdown-gpios = <&twl_gpio 2 GPIO_ACTIVE_LOW>;
+> +        ti,deskew = <3>;
 > +
-> +      gpio@0 {
-> +        compatible = "ingenic,jz4770-gpio";
-> +        reg = <0>;
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
 > +
-> +        gpio-controller;
-> +        gpio-ranges = <&pinctrl 0 0 32>;
-> +        #gpio-cells = <2>;
+> +            port@0 {
+> +                reg = <0>;
+> +                tfp410_in: endpoint {
+> +                    pclk-sample = <1>;
+> +                    bus-width = <24>;
+> +                    remote-endpoint = <&dpi_out>;
+> +                };
+> +            };
 > +
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +
-> +        interrupt-parent = <&intc>;
-> +        interrupts = <17>;
-> +      };
+> +            port@1 {
+> +                reg = <1>;
+> +                tfp410_out: endpoint {
+> +                    remote-endpoint = <&dvi_connector_in>;
+> +                };
+> +            };
+> +        };
 > +    };
-> -- 
-> 2.26.2
-> 
+> +
+> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
