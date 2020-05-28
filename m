@@ -2,98 +2,136 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B6BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ECBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABA1205CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0845920814
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 17:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590688127;
+	bh=qm1yodtXdXhUsnVGkXqYp7N6i7TbwHniFGimYtTF4/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WJK0z2dl7bAFINN3ZLFQ70pUb2FudmX29ZTqv3n1mArD/cMTaszsoUozWSizS7gom
+	 eo9RImK/ZK6rEpYCkQOtuc2TBF1Npik6zs7yWLkweOTkjotH5QQTHP0GWXgZ6UhGlY
+	 6bbKWov6y1EPTYKFjBmi061SHiIfgmhYK+KuI210=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405631AbgE1RpR (ORCPT
+        id S2405630AbgE1Rsj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 13:45:17 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:54658 "EHLO mail.manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405597AbgE1RpQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 13:45:16 -0400
-X-Greylist: delayed 1143 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 May 2020 13:45:16 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 62E2937CC722;
-        Thu, 28 May 2020 19:26:14 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Kr2DGfvXLuqX; Thu, 28 May 2020 19:26:08 +0200 (CEST)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc:     devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH 1/1] arm64: dts: rockchip: add fuel gauge to Pinebook Pro dts
-Date:   Thu, 28 May 2020 19:25:50 +0200
-Message-Id: <20200528172550.2324722-2-t.schramm@manjaro.org>
-In-Reply-To: <20200528172550.2324722-1-t.schramm@manjaro.org>
-References: <20200528172550.2324722-1-t.schramm@manjaro.org>
+        Thu, 28 May 2020 13:48:39 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43475 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405580AbgE1Rsi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 13:48:38 -0400
+Received: by mail-il1-f193.google.com with SMTP id l20so1045594ilj.10;
+        Thu, 28 May 2020 10:48:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xA+8ZtZwDMfjZ7DO84uhGqtfaAhbDdUqKkUCy7pUj1U=;
+        b=o+w1UfduJs4do4KLMy2/g5AVIuhSXOK4cAOa15yjsKwBZ6gXzX5ymR1x3XRfcKQeDk
+         TAeQuKDdbm3LNzC7YRnSxoXUtaL2heRpuK0bK9U4abmNtX/fo4WSNViENyR9oOVg6r6e
+         C5IeUi2S0+qG0N13H/FWu2SK/HHR1h72uoXaseXvPB+wgvUxdaMgImXKNQ+TNqQLTAH8
+         4MOQtuDXcT2cDshJmIFKllsWvPacndCYGKIpOsjKoSOm2IIe0/uMvFVKcabBcJwYoPoW
+         txx9tgJbLp6/Yl++p+OZcAvUP8rcqewksppxw1cxnB8uaptyKRoshswa3qNXZswflmwv
+         E7xQ==
+X-Gm-Message-State: AOAM532SC8b9xve2eQ31R4wLptZt7Wg8kUBG+eZMAqQnLlI2gUP0f/g+
+        nsZXCfZY7f7guP4gzBXNrImNaYM=
+X-Google-Smtp-Source: ABdhPJwzEtC0+3YsXMxFaCJjXuihCzBokX+wvcFWsqh4QHEzCQNWPg5pzbjV9o2mQN+7xsl1C7j/7w==
+X-Received: by 2002:a92:b111:: with SMTP id t17mr3992506ilh.241.1590688117320;
+        Thu, 28 May 2020 10:48:37 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id r20sm3682147ilk.44.2020.05.28.10.48.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 10:48:36 -0700 (PDT)
+Received: (nullmailer pid 386101 invoked by uid 1000);
+        Thu, 28 May 2020 17:48:35 -0000
+Date:   Thu, 28 May 2020 11:48:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next 1/2] dt-bindings: net: dp83822: Add TI dp83822
+ phy
+Message-ID: <20200528174835.GA362519@bogus>
+References: <20200514173055.15013-1-dmurphy@ti.com>
+ <20200514173055.15013-2-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514173055.15013-2-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds cw2015 fuel gauge and battery to the Pinebook Pro dts.
+On Thu, May 14, 2020 at 12:30:54PM -0500, Dan Murphy wrote:
+> Add a dt binding for the TI dp83822 ethernet phy device.
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/net/ti,dp83822.yaml   | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> new file mode 100644
+> index 000000000000..60afd43ad3b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/net/ti,dp83822.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI DP83822 ethernet PHY
+> +
+> +allOf:
+> +  - $ref: "ethernet-controller.yaml#"
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
----
- .../boot/dts/rockchip/rk3399-pinebook-pro.dts | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Not an ethernet controller. Drop. (The ethernet-phy.yaml schema will be 
+applied based on node name).
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-index 5ea281b55fe2..28afe89ca283 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-@@ -28,6 +28,13 @@ backlight: edp-backlight {
- 		pwms = <&pwm0 0 740740 0>;
- 	};
- 
-+	bat: battery {
-+		compatible = "simple-battery";
-+		charge-full-design-microamp-hours = <9800000>;
-+		voltage-max-design-microvolt = <4350000>;
-+		voltage-min-design-microvolt = <3000000>;
-+	};
-+
- 	edp_panel: edp-panel {
- 		compatible = "boe,nv140fhmn49";
- 		backlight = <&backlight>;
-@@ -740,6 +747,24 @@ usbc_dp: endpoint {
- 			};
- 		};
- 	};
-+
-+	cw2015@62 {
-+		compatible = "cellwise,cw2015";
-+		reg = <0x62>;
-+		cellwise,battery-profile = /bits/ 8 <
-+			0x17 0x67 0x80 0x73 0x6E 0x6C 0x6B 0x63
-+			0x77 0x51 0x5C 0x58 0x50 0x4C 0x48 0x36
-+			0x15 0x0C 0x0C 0x19 0x5B 0x7D 0x6F 0x69
-+			0x69 0x5B 0x0C 0x29 0x20 0x40 0x52 0x59
-+			0x57 0x56 0x54 0x4F 0x3B 0x1F 0x7F 0x17
-+			0x06 0x1A 0x30 0x5A 0x85 0x93 0x96 0x2D
-+			0x48 0x77 0x9C 0xB3 0x80 0x52 0x94 0xCB
-+			0x2F 0x00 0x64 0xA5 0xB5 0x11 0xF0 0x11
-+		>;
-+		cellwise,monitor-interval-ms = <5000>;
-+		monitored-battery = <&bat>;
-+		power-supplies = <&mains_charger>, <&fusb0>;
-+	};
- };
- 
- &i2s1 {
--- 
-2.26.0
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  The DP83822 is a low-power, single-port, 10/100 Mbps Ethernet PHY. It
+> +  provides all of the physical layer functions needed to transmit and receive
+> +  data over standard, twisted-pair cables or to connect to an external,
+> +  fiber-optic transceiver. Additionally, the DP83822 provides flexibility to
+> +  connect to a MAC through a standard MII, RMII, or RGMII interface
+> +
+> +  Specifications about the charger can be found at:
+> +    http://www.ti.com/lit/ds/symlink/dp83822i.pdf
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ti,signal-polarity-low:
 
+What signal? 
+
+> +    type: boolean
+> +    description: |
+> +       DP83822 PHY in Fiber mode only.
+> +       Sets the DP83822 to detect a link drop condition when the signal goes
+> +       high.  If not set then link drop will occur when the signal goes low.
+
+The naming is not clear that low is for link drop. So maybe:
+
+ti,link-loss-low
+
+Rob
