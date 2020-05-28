@@ -2,97 +2,128 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8ABC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68C7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA8202074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590706493;
-	bh=v+iJcwsoYY5Rh6A6wbiLBdbYD+8naok+oM2a4WgIJyU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZZUmaB/xN6aBsrTRD7vUIHOolHDuXKmdjykP3lkaIl32VGXsO6CmkGtyb9gOIqBsI
-	 KZf8nPTNmm081/BoXosLb7/TiF47zHUbLo/YIEy/BU8tBtjFkyNBJ+4aDIkn50M3Xr
-	 ecti8s7GaU2qlr4AnnsQgn6CELvTr/xFRiPQypzw=
+	by mail.kernel.org (Postfix) with ESMTP id 7DA652074B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:55:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nZ//AuWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437392AbgE1Wyt (ORCPT
+        id S2437457AbgE1Wz3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 18:54:49 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:39503 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437426AbgE1Wyr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:54:47 -0400
-Received: by mail-il1-f193.google.com with SMTP id c20so636432ilk.6;
-        Thu, 28 May 2020 15:54:47 -0700 (PDT)
+        Thu, 28 May 2020 18:55:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437456AbgE1WzX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:55:23 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8E3C08C5C7
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 15:55:23 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id l67so199299ybl.4
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 15:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=94grXSLlKz8pt9Y0CHgxlWm5jQqtItEcnxP1GZOMo0Y=;
+        b=nZ//AuWi6emFoMvlpgZ2523d/5KVjGEwQU0zLwnXPLqGYbQkyGyGihPS3pEL0kTBOR
+         +7LAvogyO+1aMWyYOH/0CMMeAuN+6TF6HDQj4/FZOsZHR0OugIOemMNUiQhCkj8mONP1
+         z0bkDBFCqQ9m+UQoQjvRBbbdsF79kjdkJaPfw3lILiowMeazXOckTlEax3r9a4AQDDRH
+         IR0PfzU4mxf5+853e3n+ASqudDF1uQ3vcx1AZ/g1mHJHCrnOh6rj2XTy9R2We31zzKH7
+         ROc05j59mxGEMpvrmyLn83UAErvunVxien7bYi68tWe7498ciEMKzxiqIm+YXy4uL/fC
+         Vl1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fHTcd6mWpJbJXhPxK/FEpQ2LRlSdDHwTREj7/ugkb8o=;
-        b=J+eKmhTmAQOtphNGVTR5rw9u6ML83gdgb8MQla1lFfcP68kajqYn46drXHb94+8yyR
-         yMlCegvJ1CB2EQo3MzG1caWanHzTKfbGiZa3d8LGvfK2xe9LqZyH1dVpGe37fxhMQWKo
-         pXn1K7p8t4QLo9d1AJNrtMGmmB7q4/nWxTCOInQkfM3n7p3p9PhNt5z3jfQZah0r0wWm
-         xpTI6rVR/G+PFkhluVlzk8q/bK+JCVTCgcd5PvWbs2LUx9ktM1Q+zdpU3KnBga5WTTfR
-         OTpswGCOJ838PKf7b1eaRA4OYHhJ1c72vt71dz13ccNA0y/V8rezVcchlSrcDkAxFUxr
-         FYvw==
-X-Gm-Message-State: AOAM531TLNQVaxradgxxcGmHgBeYrzzOZRc7lUx/32OnhhL1tU4DoqeY
-        ZGJsIThos/Odkcyryz7BLQ==
-X-Google-Smtp-Source: ABdhPJzhfQ0MMJipRgtSPxtaAn3yPH1kW6NrGMRNpCd+X5e+SOVycOllyPQEgLEwN36Ol5zaHVHGKA==
-X-Received: by 2002:a92:8b13:: with SMTP id i19mr5129875ild.46.1590706486779;
-        Thu, 28 May 2020 15:54:46 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f10sm3739295ilj.85.2020.05.28.15.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 15:54:46 -0700 (PDT)
-Received: (nullmailer pid 830413 invoked by uid 1000);
-        Thu, 28 May 2020 22:54:45 -0000
-Date:   Thu, 28 May 2020 16:54:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/9] dt-bindings: mmc: Convert sdhci-pxa to json-schema
-Message-ID: <20200528225445.GB815881@bogus>
-References: <20200521091356.2211020-1-lkundrak@v3.sk>
- <20200521091356.2211020-2-lkundrak@v3.sk>
- <CAPDyKFogpp+9d44Dgc8gXmeULj2CxoUzo4EhnLp+=_1YcvXT-g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=94grXSLlKz8pt9Y0CHgxlWm5jQqtItEcnxP1GZOMo0Y=;
+        b=FZ+Td4huowxMhPI8JWO9IBG07YJLMRnjNsrrD2qut0UVO71r8vQ60dg4Em2ocXlkqj
+         /Qb5cRb+A2eXXXfKfJCqSNcYm7XqJMBoTp7/7cAhEIhyeZekTtLBY9mSNvqMxkxSt8Bz
+         DmZeNJAoKFO9J4r/OyRgAfppICgCCkgGx4bcBI1rZbteFHFwB6izKTE3H8mNCGQgqL8G
+         hJQvsTrhe1bmY+b2Kv1+1JFMUo+2kOYxTJ9nsXS3MUrsobMz1xNuzGc11yLegKWXP2fT
+         WvyNcLlnbbdstRD4cL7hHnpUsngAoFFvfREoXAsr05SK2PNRHHSf8Xarnlo5rUBNn7EP
+         klgQ==
+X-Gm-Message-State: AOAM533o3y2OLHGxti/Dd3N2NlP9UDUl3UawqMEkQjMdhQ32z2LkP7vn
+        9e4UqsiXU+QLpur7Sppygk3lV7z+7KnBAdF9QiVyPA==
+X-Google-Smtp-Source: ABdhPJxVczRAAaGyfbjE3IbRMi+VMRiTSvNSq0RMNxiI7vs2fJbAppPLAdzMqbFICxJQrUWEOOeJsyvXMb1DypuA2Dc=
+X-Received: by 2002:a25:38cb:: with SMTP id f194mr8941327yba.250.1590706522197;
+ Thu, 28 May 2020 15:55:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFogpp+9d44Dgc8gXmeULj2CxoUzo4EhnLp+=_1YcvXT-g@mail.gmail.com>
+References: <20200515025159.101081-1-jnchase@google.com> <20200515025159.101081-3-jnchase@google.com>
+ <fe268ad4-1a46-b6de-54e1-c9e6731a96d3@xs4all.nl>
+In-Reply-To: <fe268ad4-1a46-b6de-54e1-c9e6731a96d3@xs4all.nl>
+From:   Jeff Chase <jnchase@google.com>
+Date:   Thu, 28 May 2020 18:55:10 -0400
+Message-ID: <CALTkaQ1pyAB1JVtifa75RuyTQCeNDTObZH+BvdFQVhLLhAeosg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] media: cec: i2c: ch7322: Add ch7322 CEC controller driver
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 09:59:10AM +0200, Ulf Hansson wrote:
-> On Thu, 21 May 2020 at 11:14, Lubomir Rintel <lkundrak@v3.sk> wrote:
-> >
-> > Convert the sdhci-pxa binding to DT schema format using json-schema.
-> >
-> > At the same time, fix a couple of issues with the examples discovered by
-> > the validation tool -- a semicolon instead of a comma and wrong node names.
-> >
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> Rob, are you fine with this v2? I am intending to queue it up via my
-> mmc tree, unless you want to pick it?
+> > +
+> > +/* This device is always enabled */
+> > +static int ch7322_cec_adap_enable(struct cec_adapter *adap, bool enable)
+> > +{
+>
+> I'd disable the interrupt here if enable is false.
 
-You can take it if you drop my name from 'maintainers'. Ideally, it 
-shouldn't be your name either (should have called it 'owners' 
-instead...).
+Ok I can do that.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> There is a power down mode as well, so perhaps that's something that can be
+> done here too.
+>
+
+I think I'd prefer to use power down mode in a potential follow up
+patch that adds PM to the driver.
+
+> > +     return 0;
+> > +}
+> > +
+> > +static int ch7322_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
+> > +{
+> > +     struct ch7322 *ch7322 = cec_get_drvdata(adap);
+> > +     int ret;
+> > +
+> > +     mutex_lock(&ch7322->mutex);
+> > +     ret = regmap_update_bits(ch7322->regmap, CH7322_ADDLW,
+> > +                              CH7322_ADDLW_MASK, log_addr << 4);
+> > +     mutex_unlock(&ch7322->mutex);
+>
+> If log_addr is CEC_LOG_ADDR_INVALID, then that means that the current
+> logical address configuration is to be cleared. In this case the logical
+> address is set to 0xf (unregistered/broadcast). That should mean that the
+> CEC device will not Ack any logical addresses, correct?
+
+Correct.
+
+>
+> But it does receive broadcast messages and (I think) also messages from
+> other logical addresses, except that those will not be Acked by this
+> CEC adapter.
+>
+
+I was wrong about this before. It does not pass on messages from other LAs.
+
+> If it still receives messages from other LAs, then that means that you can
+> add the CEC_CAP_MONITOR_ALL capability. I.e., 'sudo cec-ctl -M' without
+> configuring anything should see all CEC traffic.
+>
+> What is the default value of CH7322_ADDLW? It should start with 0xf as
+> the logical address (i.e. no received messages should be Acked).
+
+The default value is 0xf.
+
+Thanks,
+Jeff
