@@ -2,113 +2,157 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EB9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4089EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7BD320721
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19911208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:03:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJpSZTSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387558AbgE1KAC (ORCPT
+        id S2387659AbgE1KCy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 06:00:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:39342 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387535AbgE1KAB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 06:00:01 -0400
-IronPort-SDR: 3eTb4oBxZKr8AD5gXY9zeg+FJ+UVykDX39EUnWqBeP5gvpdNPVY6BIt9KnNfOTTlDNOpJbwOig
- yDIJFN3TiT1w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 03:00:01 -0700
-IronPort-SDR: C422pIESa4+FCLd5eukMTbvxYRexqJQsydMgHFSYaVD8nn2JqrmmyMX5EiITzUwVB49luQE+0J
- rM1juCqmjPyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
-   d="scan'208";a="270799732"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 28 May 2020 02:59:58 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jeFKS-009P7x-UZ; Thu, 28 May 2020 13:00:00 +0300
-Date:   Thu, 28 May 2020 13:00:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200528100000.GF1634618@smile.fi.intel.com>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
- <20200527171204.GA2348490@bogus>
- <20200527171841.am2iaynff243xoep@mobilestation>
- <20200527175624.GT1634618@smile.fi.intel.com>
- <20200528083923.yjlm5ur7cslgxdau@mobilestation>
+        Thu, 28 May 2020 06:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387643AbgE1KCx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 06:02:53 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7793C08C5C5;
+        Thu, 28 May 2020 03:02:52 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id c11so30481538ljn.2;
+        Thu, 28 May 2020 03:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I/h3gNMyb53kQmKAThGHtCMjDN3Ct7BvAp2TJgMXdZA=;
+        b=WJpSZTSoXxOoQNFiNdn06UQLrPFVP7QspnEg1drKRgsC5f8Nx1hiN8zz9Z2vyNHKdn
+         ITNwk3XNuaSbSVUe0EXZEmi7i50HofTw9v+2R5yRgBMmXkDGFGCMvvHubV4yBLyR16GL
+         FP4oUpJVYVMfaKfVW8+s4LSpLZlmjsY8fgCxYYsOVDlHHl9nLEQxbl4830z8gHZMMJv/
+         AWxk6I60V+gGP8EmM9PChMkBxBbWXuPoaOksra8i9XEzslhMxoX0mhOsZ0a/xgKQEGXx
+         P0yYH6cE97WBgGOyrLTF+pXyBYBnlbUWi/+LV910wzbJzzhssmqPUjOrMmj2oIlNc0z9
+         nTpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I/h3gNMyb53kQmKAThGHtCMjDN3Ct7BvAp2TJgMXdZA=;
+        b=j4Ps/OJqUxmG8pzA5WNcmTeeOarQPtRvAUp1RRm65n5zvISJyXhNYlUjRQkiUrTScD
+         rQ8RmhKUoZfXSZU0p1hwpXZbSgu9BmFNgQA39tIcxp+tB6T/6/XJ5PGUqUN60W7oHL68
+         1ffMYEg6QspVhRVN4pmitpWTrV4kwBrnTK5N+kiqXc0JMCiE2wQFPdbFG0FMNCs6sP6m
+         qFm6gcfQbxCCQV3I/ALp6zvaDfMngWIZagS8uXXBbm0q1g7j32wIFw+3kDMiZ85qB4+E
+         fVzc1bEdScCPip9NqaQt2vafmrfJQjzryUydToE/SveKHcGvEzN711MEDyOuvXMjtUlg
+         CeUQ==
+X-Gm-Message-State: AOAM532EaM+zCX9Jk3Ff38vxFx2WfWQT17E6aOL3PHYiITEHdgYd1J2g
+        I4KqUBqaOAmRk7Eb+7fR9Q9UbMMAUASvYOcSYbE=
+X-Google-Smtp-Source: ABdhPJyZid/lyuqY1E3XF3MpNA5pp/s7NOjWjcLahYBAhDGX3VlzICBAygFi9yx1WwgtsGZ7kz96rCT/FdXyTiDgFzo=
+X-Received: by 2002:a2e:711c:: with SMTP id m28mr1088182ljc.104.1590660171385;
+ Thu, 28 May 2020 03:02:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200528083923.yjlm5ur7cslgxdau@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200518004930.20973-1-steves.lee@maximintegrated.com> <20200526223642.GA506893@bogus>
+In-Reply-To: <20200526223642.GA506893@bogus>
+From:   Steve Lee <steves.lee.maxim@gmail.com>
+Date:   Thu, 28 May 2020 19:02:38 +0900
+Message-ID: <CABff4NR7MJM8VmM_gXnspEh2h+MEwv9WDW_Ra6t_Tv2SjrHSFQ@mail.gmail.com>
+Subject: Re: [RESEND][V5 PATCH 1/2] dt-bindings: Added device tree binding for max98390
+To:     Rob Herring <robh@kernel.org>
+Cc:     Steve Lee <steves.lee@maximintegrated.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 11:39:23AM +0300, Serge Semin wrote:
-> On Wed, May 27, 2020 at 08:56:24PM +0300, Andy Shevchenko wrote:
-> > On Wed, May 27, 2020 at 08:18:41PM +0300, Serge Semin wrote:
-> > > On Wed, May 27, 2020 at 11:12:04AM -0600, Rob Herring wrote:
-> > > > On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
-> > > > > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
-> > > > > i2c "reg" property. If it is the compiler will print a warning:
-> > > > > 
-> > > > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> > > > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> > > > > 
-> > > > > In order to silence dtc up let's discard the flag from the DW I2C DT
-> > > > > binding example for now. Just revert this commit when dtc is fixed.
-> > 
-> > > > >        eeprom@64 {
-> > > > >          compatible = "linux,slave-24c02";
-> > > > > -        reg = <0x40000064>;
-> > > > > +        reg = <0x64>;
-> > > > 
-> > > > But the compatible is a slave, so you need an example with a different 
-> > > > device.
-> > > 
-> > 
-> > > Ok. I'll replace the sub-node with just "atmel,24c02" compatible string then.
-> > 
-> > But how it will be different to the another slave connected to the master?
-> > 
-> > This example is specifically to show that DesingWare I²C controller may be
-> > switched to slave mode.
-> 
-> Well, dtc doesn't support it and prints warning that the address is invalid.
-> Though I do understand you concern and is mostly agree with it. Let's do this in
-> the next way. I'll resend the series with eeprom@64 sub-node replaced with just
-> a normal eeprom-device. The message log will have an info why this has been
-> done. In the non-mergeable section of the patch I'll suggest to Rob reconsider
-> the patch acking, since we can leave the slave-marked sub-node and just live
-> with the dtc warning until it's fixed in there.
+On Wed, May 27, 2020 at 7:36 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, May 18, 2020 at 09:49:30AM +0900, Steve Lee wrote:
+> > Add documentation for DT binding of max98390 amplifier driver.
+> >
+> > Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+> > ---
+> >
+> >
+> > Changed since V4:
+> >       * No changes.
+> > Changed since V3:
+> >       * No changes.
+> > Changed since V2:
+> >       * No changes.
+> > Changed since V1:
+> >       * Modified sample text in example
+>
+> You are obviously sending patches too quickly. Give folks a chance to
+> review.
 
-Thanks!
+ Thanks for your feedback !.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>
+> >
+> >  .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
+>
+> Bindings are now in DT schema format. Please convert this. See
+> Documentation/devicetree/writing-schema.rst
 
+ Thanks for review. I will change txt to yaml version.
 
+>
+> >  1 file changed, 26 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
+> > new file mode 100644
+> > index 000000000000..0ddd4c6ae55e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/max98390.txt
+> > @@ -0,0 +1,26 @@
+> > +Maxim Integrated MAX98390 Speaker Amplifier
+> > +
+> > +This device supports I2C.
+> > +
+> > +Required properties:
+> > +
+> > + - compatible : "maxim,max98390"
+> > +
+> > + - reg : the I2C address of the device.
+> > +
+> > +Optional properties:
+> > +
+> > +- maxim,temperature_calib
+> > +  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
+> > +
+> > +- maxim,r0_calib
+> > +  u32. This is r0 calibration data which was measured in factory mode.
+>
+> Unless these are shared already with other Maxim chips, s/_/-/.
+>
+> > +
+> > +Example:
+> > +
+> > +codec: max98390@38 {
+>
+> amplifier@38
+
+ I will change example as you advise.
+
+>
+> > +     compatible = "maxim,max98390";
+> > +     reg = <0x38>;
+> > +     maxim,temperature_calib = <1024>;
+> > +     maxim,r0_calib = <100232>;
+> > +};
+> > --
+> > 2.17.1
+> >
