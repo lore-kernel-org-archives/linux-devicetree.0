@@ -2,155 +2,86 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BECC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34290C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729B32075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0226D2075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590678180;
+	bh=FlElzWr+Sp5QKJidb+0J5RSKJXutVhvf/ybI9w4urPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fS67lksSGbs9BroTl0drKtqlBbQ0C5u02emDJqUKuoa4zezLiv2jsB6cb1L1ngxQf
+	 9ZxC6lBNOx8jggWQqEiNt9PIXyryB/xyTdfPa/whFWI/yLbCfC96YReVis8g2SwEsr
+	 Lol4YoZkq9MXy/ayXby85wMPyMgayrJNViYqIbAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403789AbgE1PCl (ORCPT
+        id S2403934AbgE1PC7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:02:41 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:58465 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403800AbgE1PCl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:02:41 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 22B84240017;
-        Thu, 28 May 2020 15:02:34 +0000 (UTC)
-Date:   Thu, 28 May 2020 17:02:33 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v6 14/18] mtd: nand: Add more parameters to the
- nand_ecc_props structure
-Message-ID: <20200528170233.0b91986b@xps13>
-In-Reply-To: <20200528170022.5cd5b46c@collabora.com>
-References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
-        <20200528113113.9166-15-miquel.raynal@bootlin.com>
-        <20200528163424.6677597c@collabora.com>
-        <20200528165754.35985b62@xps13>
-        <20200528170022.5cd5b46c@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 28 May 2020 11:02:59 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38453 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403912AbgE1PCx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:02:53 -0400
+Received: by mail-io1-f66.google.com with SMTP id d7so30342812ioq.5;
+        Thu, 28 May 2020 08:02:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qgmco4ffaTrukcokfI+4N6+JaZOIcIstDQ+dZwHwNQw=;
+        b=UqUwomZsg9Ht1iMFnOh/Loay+FPVyQ39547mvHvlQsAMZHT6Z4ubRloFERhi9i2YyP
+         XcTcbUZe90wJiBBTjq0ON/hs4u2apx8cOHIAaaf/tENl4UjRjwW8oD4l6HQNWen0d7gq
+         9afO9z6tIF+dkejKfbnyNGmtXgDYapC19tqId/TCMQLVg4mHLPO1HRW/gLOEm1xjBLwC
+         T0zQxjOEPDp3ZCLD9xYxnAAgudSEhibMXF+Mvim0xrQgaHz9daMiir/oAa9bBsS3CwRs
+         HuDdToZEOx/rLdHzJ1lJCuZFgNs/Zz54rJT9wNz40LRPYlIVizENNfap0iJMO/dO97eh
+         CxLA==
+X-Gm-Message-State: AOAM531RyQAUh7JM7F7eE3GDSRJFr8s2r6SoDD791XjMrWi9fs27jCRT
+        RtzM2qZp/a07OAXLmmOkdRLjUbs=
+X-Google-Smtp-Source: ABdhPJyuBA73B/aLP9SLW5z3RxwwrWs7+0j5gkm719znfP/EHR8vhewhVVFrOLI7s7LuGdVfJ6o7UQ==
+X-Received: by 2002:a02:3f25:: with SMTP id d37mr3051023jaa.142.1590678171651;
+        Thu, 28 May 2020 08:02:51 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id w70sm3379101ili.78.2020.05.28.08.02.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 08:02:50 -0700 (PDT)
+Received: (nullmailer pid 64380 invoked by uid 1000);
+        Thu, 28 May 2020 15:02:49 -0000
+Date:   Thu, 28 May 2020 09:02:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc:     devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        b.zolnierkie@samsung.com,
+        Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
+Subject: Re: [PATCH v3] video: fbdev: ssd1307fb: Added support to Column
+ offset
+Message-ID: <20200528150249.GA64321@bogus>
+References: <1589395691-8762-1-git-send-email-alencar.fmce@imbel.gov.br>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589395691-8762-1-git-send-email-alencar.fmce@imbel.gov.br>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 28 May
-2020 17:00:22 +0200:
-
-> On Thu, 28 May 2020 16:57:54 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Wed, 13 May 2020 15:48:11 -0300, Rodrigo Alencar wrote:
+> From: Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
 > 
-> > Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 28 May
-> > 2020 16:34:24 +0200:
-> >   
-> > > On Thu, 28 May 2020 13:31:09 +0200
-> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > >     
-> > > > Prepare the migration to the generic ECC framework by adding more
-> > > > fields to the nand_ecc_props structure which will be used widely to
-> > > > describe different kind of ECC properties.
-> > > > 
-> > > > Doing this imposes to move the engine type, ECC placement and
-> > > > algorithm enumerations in a shared place: nand.h.
-> > > > 
-> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > > ---
-> > > >  include/linux/mtd/nand.h    | 52 +++++++++++++++++++++++++++++++++++++
-> > > >  include/linux/mtd/rawnand.h | 44 -------------------------------
-> > > >  2 files changed, 52 insertions(+), 44 deletions(-)
-> > > > 
-> > > > diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-> > > > index 6add464fd18b..2e9af24936cd 100644
-> > > > --- a/include/linux/mtd/nand.h
-> > > > +++ b/include/linux/mtd/nand.h
-> > > > @@ -127,14 +127,66 @@ struct nand_page_io_req {
-> > > >  	int mode;
-> > > >  };
-> > > >  
-> > > > +/**
-> > > > + * enum nand_ecc_engine_type - NAND ECC engine type
-> > > > + * @NAND_ECC_ENGINE_TYPE_INVALID: Invalid value
-> > > > + * @NAND_ECC_ENGINE_TYPE_NONE: No ECC correction
-> > > > + * @NAND_ECC_ENGINE_TYPE_SOFT: Software ECC correction
-> > > > + * @NAND_ECC_ENGINE_TYPE_ON_HOST: On host hardware ECC correction
-> > > > + * @NAND_ECC_ENGINE_TYPE_ON_DIE: On chip hardware ECC correction
-> > > > + */
-> > > > +enum nand_ecc_engine_type {
-> > > > +	NAND_ECC_ENGINE_TYPE_INVALID,
-> > > > +	NAND_ECC_ENGINE_TYPE_NONE,
-> > > > +	NAND_ECC_ENGINE_TYPE_SOFT,
-> > > > +	NAND_ECC_ENGINE_TYPE_ON_HOST,
-> > > > +	NAND_ECC_ENGINE_TYPE_ON_DIE,
-> > > > +};
-> > > > +
-> > > > +/**
-> > > > + * enum nand_ecc_placement - NAND ECC bytes placement
-> > > > + * @NAND_ECC_PLACEMENT_UNKNOWN: The actual position of the ECC bytes is unknown
-> > > > + * @NAND_ECC_PLACEMENT_OOB: The ECC bytes are located in the OOB area
-> > > > + * @NAND_ECC_PLACEMENT_INTERLEAVED: Syndrome layout, there are ECC bytes
-> > > > + *                                  interleaved with regular data in the main
-> > > > + *                                  area
-> > > > + */
-> > > > +enum nand_ecc_placement {
-> > > > +	NAND_ECC_PLACEMENT_UNKNOWN,
-> > > > +	NAND_ECC_PLACEMENT_OOB,
-> > > > +	NAND_ECC_PLACEMENT_INTERLEAVED,
-> > > > +};
-> > > > +
-> > > > +/**
-> > > > + * enum nand_ecc_algo - NAND ECC algorithm
-> > > > + * @NAND_ECC_ALGO_UNKNOWN: Unknown algorithm
-> > > > + * @NAND_ECC_ALGO_HAMMING: Hamming algorithm
-> > > > + * @NAND_ECC_ALGO_BCH: Bose-Chaudhuri-Hocquenghem algorithm
-> > > > + * @NAND_ECC_ALGO_RS: Reed-Solomon algorithm
-> > > > + */
-> > > > +enum nand_ecc_algo {
-> > > > +	NAND_ECC_ALGO_UNKNOWN,
-> > > > +	NAND_ECC_ALGO_HAMMING,
-> > > > +	NAND_ECC_ALGO_BCH,
-> > > > +	NAND_ECC_ALGO_RS,
-> > > > +};
-> > > > +
-> > > >  /**
-> > > >   * struct nand_ecc_props - NAND ECC properties
-> > > > + * @engine_type: ECC engine type
-> > > > + * @placement: OOB placement (if relevant)
-> > > > + * @algo: ECC algorithm (if relevant)
-> > > >   * @strength: ECC strength
-> > > >   * @step_size: Number of bytes per step
-> > > > + * @flags: Misc properties      
-> > > 
-> > > I'd like to hear more about that one. What is this about? I'd rather
-> > > not add a field if it's not needed.
-> > >     
-> > 
-> > It is used in patch 18/18 to store the NAND_ECC_MAXIMIZE flag. And I
-> > expect others to come later...  
+> This patch provides support for displays like VGM128064B0W10,
+> which requires a column offset of 2, i.e., its segments starts
+> in SEG2 and ends in SEG129.
 > 
-> Then I think it should be introduced in this patch, not here.
+> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/display/ssd1307fb.txt | 1 +
+>  drivers/video/fbdev/ssd1307fb.c                         | 8 ++++++--
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
 
-I'm fine with that.
+Acked-by: Rob Herring <robh@kernel.org>
