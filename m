@@ -2,205 +2,782 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD59C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 05:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144F2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 06:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A65972084C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 05:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91DD2084C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 06:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BfSBRQ1z"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NS75LoYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725811AbgE1F4k (ORCPT
+        id S1727801AbgE1GEY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 01:56:40 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:1141 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725789AbgE1F4k (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 01:56:40 -0400
-X-UUID: b040d94b729b4d89974c3bebf92758f6-20200528
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=GKJ7cZiMqfb2VfBlip933OA74rr18gz1+qPKGEU9fns=;
-        b=BfSBRQ1z1Z25V66fzmjLDGCqXjHhJ2q2q6iFyLHloXhlUsHR6tgSbPz3mAMceEWikFqjpnmlfFpGOli2JESG9irvENpvbu6xdWOz32TBISeEVQXyV8pnqDCIwM7y3GjVjQ/ZCt0Yn3DNfWhZm0jLbGqYIQ7aXdcdSUvpQAtXH9U=;
-X-UUID: b040d94b729b4d89974c3bebf92758f6-20200528
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 524423193; Thu, 28 May 2020 13:55:55 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 28 May
- 2020 13:55:50 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 28 May 2020 13:55:31 +0800
-Message-ID: <1590645223.8804.498.camel@mhfsdcap03>
-Subject: Re: [V9, 1/2] media: dt-bindings: media: i2c: Document OV02A10
- bindings
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thu, 28 May 2020 02:04:24 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:16657 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgE1GEY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 02:04:24 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200528060417epoutp02d138148fe56c4325821d34bc4b5430a8~TG-rXP-0M2986629866epoutp025
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:04:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200528060417epoutp02d138148fe56c4325821d34bc4b5430a8~TG-rXP-0M2986629866epoutp025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590645857;
+        bh=bsWWGBc7XFv7+O4U9b6YFrCFo8z9ka4wANPexUZ1KK0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=NS75LoYzmyGS61GA+UbhhOYNgd2ksapOo8dAXEMDAioeg5Yz3omt/7eGG2r6ze5nA
+         ow8vbFVSJYIlVISn7ZGMH87CTEPWmP3GnXDqXEVjmna1uKlBbueBfQDhOlNo9DJeVi
+         xaCus364AMorsSsSMgS6KWapD7ch6OOlImVY90Nc=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200528060416epcas1p1b8d0948a3b164930d2ace585e6992758~TG-qnSoPu0417904179epcas1p1h;
+        Thu, 28 May 2020 06:04:16 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49XcbL0PZFzMqYkf; Thu, 28 May
+        2020 06:04:14 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6E.3D.04395.D545FCE5; Thu, 28 May 2020 15:04:13 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200528060413epcas1p4567f813b4524d36985cd4862c36f2347~TG-niNbI71578115781epcas1p4W;
+        Thu, 28 May 2020 06:04:13 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200528060413epsmtrp2160ad869cc83b4215c4a4a1afe529840~TG-ng47Rn3138131381epsmtrp2L;
+        Thu, 28 May 2020 06:04:13 +0000 (GMT)
+X-AuditID: b6c32a39-46b9a9e00000112b-27-5ecf545d28f5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        34.4D.08382.D545FCE5; Thu, 28 May 2020 15:04:13 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200528060413epsmtip1ec9a316f45ef34a1be0805bd46df56d8~TG-nKCf7o2629926299epsmtip1I;
+        Thu, 28 May 2020 06:04:13 +0000 (GMT)
+Subject: Re: [PATCH 06/12] PM / devfreq: Add cpu based scaling support to
+ passive_governor
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Louis Kuo <louis.kuo@mediatek.com>,
-        Shengnan Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=A3=E7=94=B7=29?= 
-        <shengnan.wang@mediatek.com>, <dongchun.zhu@medaitek.com>
-Date:   Thu, 28 May 2020 13:53:43 +0800
-In-Reply-To: <CAL_Jsq+sN0SVidTrY0ODXEkzkxYFvG1FTnL0oRQBSKf=ynLdyQ@mail.gmail.com>
-References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
-         <20200523084103.31276-2-dongchun.zhu@mediatek.com>
-         <20200526182847.GA92449@bogus> <1590569355.8804.448.camel@mhfsdcap03>
-         <CAL_Jsq+sN0SVidTrY0ODXEkzkxYFvG1FTnL0oRQBSKf=ynLdyQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, Sibi Sankar <sibis@codeaurora.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <64b81eea-641c-811d-9830-718b28db4188@samsung.com>
+Date:   Thu, 28 May 2020 15:14:33 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 5202DC9C4A6DAD8E5332356556DAFB0DC31C7CBC60798AF4CE88C6F8C832C7CA2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200520034307.20435-7-andrew-sh.cheng@mediatek.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDJsWRmVeSWpSXmKPExsWy7bCmnm5syPk4g2tvbSy2r3/BajH14RM2
+        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
+        j7NMFmdOX2K1aN17hN3i37WNLBbXFr5ntZh+V8hi41cPB2GPNfPWMHpc7utl8tg56y67x6ZV
+        nWwed67tYfPYvKTeo+XkfhaPLVfbWTz6tqxi9Dh+YzuTx+dNcgHcUdk2GamJKalFCql5yfkp
+        mXnptkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUDPKSmUJeaUAoUCEouLlfTtbIry
+        S0tSFTLyi0tslVILUnIKLAv0ihNzi0vz0vWS83OtDA0MjEyBChOyM05u0ijYtJixYt+OCcwN
+        jCsaGLsYOTkkBEwkdjV/Y+1i5OIQEtjBKHF/2Rs2COcTo0TzjmOMEM43Rolnqw6yw7Ssmnyf
+        BSKxl1Fi9sWjzBDOe0aJNXvOglUJC8RIvNnbzwxiiwjcZpaYMDsEpIhZ4DmjxKemNSwgCTYB
+        LYn9L26wgdj8AooSV388BruKV8BOovnpAbBmFgFVifn/F4PFRQXCJE5ua4GqEZQ4OfMJ2BxO
+        ASeJ9ydmgNnMAuISt57MZ4Kw5SW2v53DDHH2fE6J9iUCXYwcQLaLxNJ5ohBhYYlXx7dAfSYl
+        8fndXjYIu1pi5ckj4LCQEOhglNiy/wIrRMJYYv/SyUwgc5gFNCXW79KHCCtK7Pw9lxFiLZ/E
+        u689rBCreCU62oQgSpQlLj+4ywRhS0osbu9km8CoNAvJM7OQPDALyQOzEJYtYGRZxSiWWlCc
+        m55abFhgihzdmxjBKV/LcgfjsXM+hxgFOBiVeHgNPM7FCbEmlhVX5h5ilOBgVhLhdTp7Ok6I
+        NyWxsiq1KD++qDQntfgQoykwrCcyS4km5wPzUV5JvKGpkbGxsYWJoZmpoaGSOO/8H2fihATS
+        E0tSs1NTC1KLYPqYODilGhi3/9zvaDFfvfnrptDHD7ivKN24NOW9eKan56U9gpk8F59NzvWP
+        Fe8pad0tsDr9zKx3myc8t5zREV8x1XjVq+t3EtS7FhbbSZkGWUZETrm0voKvx3jC1UeZuekv
+        dRqE9kwT/+EV+r/J9Z5D6jafPaaLzq7kbOGrZLSe6KVyNiQvvOvlMnsGvnYlluKMREMt5qLi
+        RACDlyTIDwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsWy7bCSnG5syPk4g2+r+C22r3/BajH14RM2
+        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
+        j7NMFmdOX2K1aN17hN3i37WNLBbXFr5ntZh+V8hi41cPB2GPNfPWMHpc7utl8tg56y67x6ZV
+        nWwed67tYfPYvKTeo+XkfhaPLVfbWTz6tqxi9Dh+YzuTx+dNcgHcUVw2Kak5mWWpRfp2CVwZ
+        JzdpFGxazFixb8cE5gbGFQ2MXYycHBICJhKrJt9n6WLk4hAS2M0ocevIDiaIhKTEtItHmbsY
+        OYBsYYnDh4shat4ySjRc2Q/WLCwQI/Fmbz8zSEJE4D6zxPK7V9lAHGaB54wSS5uPskG0nGWU
+        +N3zDayFTUBLYv+LG2wgNr+AosTVH4/B4rwCdhLNTw8wg9gsAqoS8/8vBouLCoRJ7FzymAmi
+        RlDi5MwnLCA2p4CTxPsTM8BsZgF1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYh
+        aZmFpGUBI8sqRsnUguLc9NxiwwLDvNRyveLE3OLSvHS95PzcTYzgBKCluYNx+6oPeocYmTgY
+        DzFKcDArifA6nT0dJ8SbklhZlVqUH19UmpNafIhRmoNFSZz3RuHCOCGB9MSS1OzU1ILUIpgs
+        EwenVAPT6ky9yO8uUinuLgwZt9Sfm75Lf7lPe2fHVpH7B54q7J2Veujszk/f/xi0pzdbv5nf
+        +vt/0a6PVee/Wqk8k209fi7wmvuC42VTu5lXLTY+tf50THfKO80HP7Q3PL407aNH1uZu73qz
+        8JlvHj84a/9L5pP0vZ4qy7LOcMtPu2e/fJaXfbN0m+fL82KzguMu+PqE3N1gb9j5Iql0SRiv
+        d42O9Hdpi2m8E8Jja8JVZvlbclk3Xp8Yfktvfu3dtx2cQkdnTK58qzbxxuSrSfNLD+Qcvm8x
+        7UPgZaEl8es0Q1QmVZ7Tl9vz7jjntl8Lb3892hqRIBfvv/JfxyP+Lasyg2b/T1lt/L3EiveL
+        5Dnx8ski0UosxRmJhlrMRcWJAKveo6FvAwAA
+X-CMS-MailID: 20200528060413epcas1p4567f813b4524d36985cd4862c36f2347
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520034335epcas1p45a321a1a878fb7cd7b9c9ada0a474ef7
+References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+        <CGME20200520034335epcas1p45a321a1a878fb7cd7b9c9ada0a474ef7@epcas1p4.samsung.com>
+        <20200520034307.20435-7-andrew-sh.cheng@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBXZWQsIDIwMjAtMDUtMjcgYXQgMDk6MjcgLTA2MDAsIFJvYiBIZXJyaW5n
-IHdyb3RlOg0KPiBPbiBXZWQsIE1heSAyNywgMjAyMCBhdCAyOjUxIEFNIERvbmdjaHVuIFpodSA8
-ZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBSb2IsDQo+ID4N
-Cj4gPiBUaGFua3MgZm9yIHRoZSByZXZpZXcuIFBsZWFzZSBzZWUgbXkgcmVwbGllcyBiZWxvdy4N
-Cj4gPg0KPiA+IE9uIFR1ZSwgMjAyMC0wNS0yNiBhdCAxMjoyOCAtMDYwMCwgUm9iIEhlcnJpbmcg
-d3JvdGU6DQo+ID4gPiBPbiBTYXQsIE1heSAyMywgMjAyMCBhdCAwNDo0MTowMlBNICswODAwLCBE
-b25nY2h1biBaaHUgd3JvdGU6DQo+ID4gPiA+IEFkZCBEVCBiaW5kaW5ncyBkb2N1bWVudGF0aW9u
-IGZvciBPbW5pdmlzaW9uIE9WMDJBMTAgaW1hZ2Ugc2Vuc29yLg0KPiA+ID4gPg0KPiA+ID4gPiBT
-aWduZWQtb2ZmLWJ5OiBEb25nY2h1biBaaHUgPGRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20+DQo+
-ID4gPiA+IC0tLQ0KPiA+ID4gPiAgLi4uL2JpbmRpbmdzL21lZGlhL2kyYy9vdnRpLG92MDJhMTAu
-eWFtbCAgICAgICAgICAgfCAxNzIgKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICBNQUlO
-VEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNyArDQo+
-ID4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE3OSBpbnNlcnRpb25zKCspDQo+ID4gPiA+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2ky
-Yy9vdnRpLG92MDJhMTAueWFtbA0KPiA+ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdnRpLG92MDJhMTAueWFtbCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Z0aSxvdjAyYTEw
-LnlhbWwNCj4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gaW5kZXggMDAwMDAw
-MC4uNTZmMzFiNQ0KPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Z0aSxvdjAyYTEwLnlhbWwNCj4g
-PiA+ID4gQEAgLTAsMCArMSwxNzIgQEANCj4gPiA+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZp
-ZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkNCj4gPiA+ID4gKyMgQ29weXJpZ2h0IChjKSAy
-MDIwIE1lZGlhVGVrIEluYy4NCj4gPiA+ID4gKyVZQU1MIDEuMg0KPiA+ID4gPiArLS0tDQo+ID4g
-PiA+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL21lZGlhL2kyYy9vdnRpLG92
-MDJhMTAueWFtbCMNCj4gPiA+ID4gKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRh
-LXNjaGVtYXMvY29yZS55YW1sIw0KPiA+ID4gPiArDQo+ID4gPiA+ICt0aXRsZTogT21uaXZpc2lv
-biBPVjAyQTEwIENNT1MgU2Vuc29yIERldmljZSBUcmVlIEJpbmRpbmdzDQo+ID4gPiA+ICsNCj4g
-PiA+ID4gK21haW50YWluZXJzOg0KPiA+ID4gPiArICAtIERvbmdjaHVuIFpodSA8ZG9uZ2NodW4u
-emh1QG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gKw0KPiA+ID4gPiArZGVzY3JpcHRpb246IHwtDQo+
-ID4gPiA+ICsgIFRoZSBPbW5pdmlzaW9uIE9WMDJBMTAgaXMgYSBsb3ctY29zdCwgaGlnaCBwZXJm
-b3JtYW5jZSwgMS81LWluY2gsIDIgbWVnYXBpeGVsDQo+ID4gPiA+ICsgIGltYWdlIHNlbnNvciwg
-d2hpY2ggaXMgdGhlIGxhdGVzdCBwcm9kdWN0aW9uIGRlcml2ZWQgZnJvbSBPbW5pdmlzaW9uJ3Mg
-Q01PUw0KPiA+ID4gPiArICBpbWFnZSBzZW5zb3IgdGVjaG5vbG9neS4gSWhpcyBjaGlwIHN1cHBv
-cnRzIGhpZ2ggZnJhbWUgcmF0ZSBzcGVlZHMgdXAgdG8gMzBmcHMNCj4gPiA+ID4gKyAgQCAxNjAw
-eDEyMDAgKFVYR0EpIHJlc29sdXRpb24gdHJhbnNmZXJyZWQgb3ZlciBhIDEtbGFuZSBNSVBJIGlu
-dGVyZmFjZS4gVGhlDQo+ID4gPiA+ICsgIHNlbnNvciBvdXRwdXQgaXMgYXZhaWxhYmxlIHZpYSBD
-U0ktMiBzZXJpYWwgZGF0YSBvdXRwdXQuDQo+ID4gPiA+ICsNCj4gPiA+ID4gK3Byb3BlcnRpZXM6
-DQo+ID4gPiA+ICsgIGNvbXBhdGlibGU6DQo+ID4gPiA+ICsgICAgY29uc3Q6IG92dGksb3YwMmEx
-MA0KPiA+ID4gPiArDQo+ID4gPiA+ICsgIHJlZzoNCj4gPiA+ID4gKyAgICBtYXhJdGVtczogMQ0K
-PiA+ID4gPiArDQo+ID4gPiA+ICsgIGNsb2NrczoNCj4gPiA+ID4gKyAgICBpdGVtczoNCj4gPiA+
-ID4gKyAgICAgIC0gZGVzY3JpcHRpb246IHRvcCBtdXggY2FtdGcgY2xvY2sNCj4gPiA+ID4gKyAg
-ICAgIC0gZGVzY3JpcHRpb246IGRpdmlkZXIgY2xvY2sNCj4gPiA+ID4gKw0KPiA+ID4gPiArICBj
-bG9jay1uYW1lczoNCj4gPiA+ID4gKyAgICBpdGVtczoNCj4gPiA+ID4gKyAgICAgIC0gY29uc3Q6
-IGVjbGsNCj4gPiA+ID4gKyAgICAgIC0gY29uc3Q6IGZyZXFfbXV4DQo+ID4gPiA+ICsNCj4gPiA+
-ID4gKyAgY2xvY2stZnJlcXVlbmN5Og0KPiA+ID4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ID4g
-PiArICAgICAgRnJlcXVlbmN5IG9mIHRoZSBlY2xrIGNsb2NrIGluIEhlcnR6Lg0KPiA+ID4gPiAr
-DQo+ID4NCj4gPiBSb2IsIHNoYWxsIHdlIHVzZSAnbWF4SXRlbXM6IDEnIHRvIGNvbnN0cmFpbiBw
-cm9wZXJ0eTogY2xvY2stZnJlcXVlbmN5Pw0KPiANCj4gTm8sIGJlY2F1c2UgaXQgaXMgYSBzY2Fs
-YXIsIG5vdCBhbiBhcnJheS4NCj4gDQoNCkdvdCBpdC4NCg0KPiA+IE9yIGNvdWxkIHdlIGFkb3B0
-ICdjbG9jay1mcmVxdWVuY3k6IHRydWUnIGRpcmVjdGx5IGhlcmU/DQo+IA0KPiBBcy1pcyBpcyBm
-aW5lLg0KPiANCg0KVW5kZXJzdG9vZC4NCg0KPiA+ID4gPiArICBkb3ZkZC1zdXBwbHk6DQo+ID4g
-PiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gPiA+ICsgICAgICBEZWZpbml0aW9uIG9mIHRoZSBy
-ZWd1bGF0b3IgdXNlZCBhcyBEaWdpdGFsIEkvTyB2b2x0YWdlIHN1cHBseS4NCj4gPiA+ID4gKw0K
-PiA+DQo+ID4gU2hhbGwgd2UgYWRkICdtYXhJdGVtczogMScgaGVyZT8NCj4gDQo+IE5vLCBzdXBw
-bGllcyBhcmUgYWx3YXlzIHNpbmd1bGFyLg0KPiANCg0KRmluZS4NCg0KPiA+DQo+ID4gPiA+ICsg
-IGF2ZGQtc3VwcGx5Og0KPiA+ID4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ID4gPiArICAgICAg
-RGVmaW5pdGlvbiBvZiB0aGUgcmVndWxhdG9yIHVzZWQgYXMgQW5hbG9nIHZvbHRhZ2Ugc3VwcGx5
-Lg0KPiA+ID4gPiArDQo+ID4NCj4gPiBEaXR0by4NCj4gPg0KPiA+ID4gPiArICBkdmRkLXN1cHBs
-eToNCj4gPiA+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiA+ID4gKyAgICAgIERlZmluaXRpb24g
-b2YgdGhlIHJlZ3VsYXRvciB1c2VkIGFzIERpZ2l0YWwgY29yZSB2b2x0YWdlIHN1cHBseS4NCj4g
-PiA+ID4gKw0KPiA+DQo+ID4gRGl0dG8uDQo+ID4NCj4gPiA+ID4gKyAgcG93ZXJkb3duLWdwaW9z
-Og0KPiA+ID4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ID4gPiArICAgICAgTXVzdCBiZSB0aGUg
-ZGV2aWNlIHRyZWUgaWRlbnRpZmllciBvZiB0aGUgR1BJTyBjb25uZWN0ZWQgdG8gdGhlDQo+ID4g
-PiA+ICsgICAgICBQRF9QQUQgcGluLiBUaGlzIHBpbiBpcyB1c2VkIHRvIHBsYWNlIHRoZSBPVjAy
-QTEwIGludG8gU3RhbmRieSBtb2RlDQo+ID4gPiA+ICsgICAgICBvciBTaHV0ZG93biBtb2RlLiBB
-cyB0aGUgbGluZSBpcyBhY3RpdmUgbG93LCBpdCBzaG91bGQgYmUNCj4gPiA+ID4gKyAgICAgIG1h
-cmtlZCBHUElPX0FDVElWRV9MT1cuDQo+ID4gPg0KPiA+ID4gTmVlZCB0byBkZWZpbmUgaG93IG1h
-bnkgR1BJT3MgKCdtYXhJdGVtczogMScpDQo+ID4gPg0KPiA+DQo+ID4gSXQgd291bGQgYmUgZml4
-ZWQgbGlrZSB0aGlzIGluIG5leHQgcmVsZWFzZS4NCj4gPiBwb3dlcmRvd24tZ3Bpb3M6DQo+ID4g
-ICBtYXhJdGVtczogMQ0KPiA+ICAgZGVzY3JpcHRpb246DQo+ID4gICAgIE11c3QgYmUgdGhlIGRl
-dmljZSB0cmVlIGlkZW50aWZpZXIgb2YgdGhlIEdQSU8gY29ubmVjdGVkIHRvIHRoZQ0KPiA+ICAg
-ICBQRF9QQUQgcGluLiBUaGlzIHBpbiBpcyB1c2VkIHRvIHBsYWNlIHRoZSBPVjAyQTEwIGludG8g
-U3RhbmRieSBtb2RlDQo+ID4gICAgIG9yIFNodXRkb3duIG1vZGUuIEFzIHRoZSBsaW5lIGlzIGFj
-dGl2ZSBsb3csIGl0IHNob3VsZCBiZQ0KPiA+ICAgICBtYXJrZWQgR1BJT19BQ1RJVkVfTE9XLg0K
-PiA+DQoNClRvbWFzeiwgSSBkb24ndCBrbm93IHdoZXRoZXIgeW91IG5vdGljZWQgdGhpcyBkZXNj
-cmlwdGlvbi4NCkhlcmUgSSBzaW1wbHkgZGVmaW5lZCBvbmUgbmVjZXNzYXJ5IEdQSU8gcG9sYXJp
-dHkgaW4gRFQgd2hpY2ggZHJpdmVyDQpzZXR0aW5ncyBuZWVkIHRvIGZvbGxvdy4NCg0KPiA+ID4g
-PiArDQo+ID4gPiA+ICsgIHJlc2V0LWdwaW9zOg0KPiA+ID4gPiArICAgIGRlc2NyaXB0aW9uOg0K
-PiA+ID4gPiArICAgICAgTXVzdCBiZSB0aGUgZGV2aWNlIHRyZWUgaWRlbnRpZmllciBvZiB0aGUg
-R1BJTyBjb25uZWN0ZWQgdG8gdGhlDQo+ID4gPiA+ICsgICAgICBSU1RfUEQgcGluLiBJZiBzcGVj
-aWZpZWQsIGl0IHdpbGwgYmUgYXNzZXJ0ZWQgZHVyaW5nIGRyaXZlciBwcm9iZS4NCj4gPiA+ID4g
-KyAgICAgIEFzIHRoZSBsaW5lIGlzIGFjdGl2ZSBoaWdoLCBpdCBzaG91bGQgYmUgbWFya2VkIEdQ
-SU9fQUNUSVZFX0hJR0guDQo+ID4gPg0KPiA+ID4gSGVyZSB0b28uDQo+ID4gPg0KPiA+DQo+ID4g
-U2ltaWxhciBhcyAncG93ZXJkb3duLWdwaW9zJy4NCj4gPiBGaXhlZCBpbiBuZXh0IHJlbGVhc2Uu
-DQo+ID4NCj4gPiA+ID4gKw0KPiA+ID4gPiArICByb3RhdGlvbjoNCj4gPiA+ID4gKyAgICBkZXNj
-cmlwdGlvbjoNCj4gPiA+ID4gKyAgICAgIERlZmluaXRpb24gb2YgdGhlIHNlbnNvcidzIHBsYWNl
-bWVudC4NCj4gPiA+ID4gKyAgICBhbGxPZjoNCj4gPiA+ID4gKyAgICAgIC0gJHJlZjogIi9zY2hl
-bWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMiINCj4gPiA+ID4gKyAgICAgIC0gZW51
-bToNCj4gPiA+ID4gKyAgICAgICAgICAtIDAgICAgIyBTZW5zb3IgTW91bnRlZCBVcHJpZ2h0DQo+
-ID4gPiA+ICsgICAgICAgICAgLSAxODAgICMgU2Vuc29yIE1vdW50ZWQgVXBzaWRlIERvd24NCj4g
-PiA+ID4gKyAgICAgICAgZGVmYXVsdDogMA0KPiA+ID4gPiArDQo+ID4gPiA+ICsgIG92dGksbWlw
-aS10eC1zcGVlZDoNCj4gPiA+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiA+ID4gKyAgICAgIElu
-ZGljYXRpb24gb2YgTUlQSSB0cmFuc21pc3Npb24gc3BlZWQgc2VsZWN0LCB3aGljaCBpcyB0byBj
-b250cm9sIEQtUEhZDQo+ID4gPiA+ICsgICAgICB0aW1pbmcgc2V0dGluZyBieSBhZGp1c3Rpbmcg
-TUlQSSBjbG9jayB2b2x0YWdlIHRvIGltcHJvdmUgdGhlIGNsb2NrDQo+ID4gPiA+ICsgICAgICBk
-cml2ZXIgY2FwYWJpbGl0eS4NCj4gPiA+ID4gKyAgICBhbGxPZjoNCj4gPiA+ID4gKyAgICAgIC0g
-JHJlZjogIi9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMiINCj4gPiA+ID4g
-KyAgICAgIC0gZW51bToNCj4gPiA+ID4gKyAgICAgICAgICAtIDAgICAgIyAgMjBNSHogLSAgMzBN
-SHoNCj4gPiA+ID4gKyAgICAgICAgICAtIDEgICAgIyAgMzBNSHogLSAgNTBNSHoNCj4gPiA+ID4g
-KyAgICAgICAgICAtIDIgICAgIyAgNTBNSHogLSAgNzVNSHoNCj4gPiA+ID4gKyAgICAgICAgICAt
-IDMgICAgIyAgNzVNSHogLSAxMDBNSHoNCj4gPiA+ID4gKyAgICAgICAgICAtIDQgICAgIyAxMDBN
-SHogLSAxMzBNSHoNCj4gPiA+ID4gKyAgICAgICAgZGVmYXVsdDogMw0KPiA+ID4gPiArDQo+ID4g
-PiA+ICsgICMgU2VlIC4uL3ZpZGVvLWludGVyZmFjZXMudHh0IGZvciBkZXRhaWxzDQo+ID4gPiA+
-ICsgIHBvcnQ6DQo+ID4gPiA+ICsgICAgdHlwZTogb2JqZWN0DQo+ID4gPiA+ICsgICAgYWRkaXRp
-b25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ID4gPg0KPiA+ID4gU2hvdWxkIGhhdmUgYSBkZXNjcmlw
-dGlvbiBvZiB3aGF0IGRhdGEgdGhlIHBvcnQgaGFzLg0KPiA+ID4NCj4gPg0KPiA+IEl0IHdvdWxk
-IGJlIHVwZGF0ZWQgYXMgYmVsb3cgaW4gbmV4dCByZWxlYXNlLg0KPiA+IHBvcnQ6DQo+ID4gICB0
-eXBlOiBvYmplY3QNCj4gPiAgIGFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+ICAgZGVz
-Y3JpcHRpb246DQo+ID4gICAgIElucHV0IHBvcnQgbm9kZSwgc2luZ2xlIGVuZHBvaW50IGRlc2Ny
-aWJpbmcgdGhlIENTSS0yIHRyYW5zbWl0dGVyLg0KPiANCj4gT3V0cHV0Pw0KPiANCg0KU29ycnkg
-Zm9yIHRoZSB0eXBvLg0KWWVzLCB0aGlzIHNob3VsZCBiZSBvdXRwdXQgcG9ydCBub2RlLg0KDQo+
-ID4NCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgIHByb3BlcnRpZXM6DQo+ID4gPiA+ICsgICAgICBl
-bmRwb2ludDoNCj4gPiA+ID4gKyAgICAgICAgdHlwZTogb2JqZWN0DQo+ID4gPiA+ICsgICAgICAg
-IGFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAg
-IHByb3BlcnRpZXM6DQo+ID4NCj4gPiBBY3R1YWxseSBJIHdvbmRlciB3aGV0aGVyIHdlIG5lZWQg
-dG8gZGVjbGFyZSAnY2xvY2stbGFuZXMnIGhlcmU/DQo+IA0KPiBZZXMsIGlmIHlvdSBhcmUgdXNp
-bmcgaXQuDQo+IA0KDQpMb29raW5nIGJhY2sgdG8gdGhlIHVwc3RyZWFtZWQgcGF0Y2hlcywgaXQg
-c2VlbXMgdGhhdCB0aGVyZSBpcyBhIGRlZXANCmRpdmlkZSBpbiB0aGUgc2V0dGluZyBvZiAnY2xv
-Y2stbGFuZXMnIHByb3BlcnR5Lg0KDQpBcyB0aGUgbGFzdCBjb21tZW50IEkganVzdCBwb3NlZCwg
-Zm9yIE9WMDJBMTAsICdjbG9jay1sYW5lcycgc2hvdWxkIGJlDQpzZXQgdG8gPDA+IChjbG9jayBs
-YW5lIG9uIGhhcmR3YXJlIGxhbmUgMCkuDQpCdXQgaGVyZSB3ZSBtYXkgZm9sbG93IElNWDIxOSBw
-YXRjaCwgd2hpY2ggcmVtb3ZlZCAnY2xvY2stbGFuZXMnDQpwcm9wZXJ0eSBkdWUgdG8gdGhlIGZh
-Y3QgdGhhdCBzZW5zb3IgaGFyZHdhcmUgZG9lcyBub3Qgc3VwcG9ydCBsYW5lDQpyZW9yZGVyaW5n
-Lg0KDQpSb2IsIFNha2FyaSwgd2hhdCdzIHlvdXIgb3BpbmlvbnM/DQoNCj4gUm9iDQoNCg==
+Hi Andrew-sh.Cheng,
 
+Thanks for your posting. I like this approach absolutely.
+I think that it is necessary. When I developed the embedded product,
+I needed this feature always. 
+
+I add the comments on below.
+
+
+And the following email is not valid. So, I dropped this email
+from Cc list.
+Saravana Kannan <skannan@codeaurora.org>
+
+
+On 5/20/20 12:43 PM, Andrew-sh.Cheng wrote:
+> From: Saravana Kannan <skannan@codeaurora.org>
+> 
+> Many CPU architectures have caches that can scale independent of the
+> CPUs. Frequency scaling of the caches is necessary to make sure that the
+> cache is not a performance bottleneck that leads to poor performance and
+> power. The same idea applies for RAM/DDR.
+> 
+> To achieve this, this patch adds support for cpu based scaling to the
+> passive governor. This is accomplished by taking the current frequency
+> of each CPU frequency domain and then adjust the frequency of the cache
+> (or any devfreq device) based on the frequency of the CPUs. It listens
+> to CPU frequency transition notifiers to keep itself up to date on the
+> current CPU frequency.
+> 
+> To decide the frequency of the device, the governor does one of the
+> following:
+> * Derives the optimal devfreq device opp from required-opps property of
+>   the parent cpu opp_table.
+> 
+> * Scales the device frequency in proportion to the CPU frequency. So, if
+>   the CPUs are running at their max frequency, the device runs at its
+>   max frequency. If the CPUs are running at their min frequency, the
+>   device runs at its min frequency. It is interpolated for frequencies
+>   in between.
+> 
+> Andrew-sh.Cheng change
+> dev_pm_opp_xlate_opp to dev_pm_opp_xlate_required_opp devfreq->max_freq
+> to devfreq->user_min_freq_req.data.freq.qos->min_freq.target_value
+> for kernel-5.7
+> 
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> [Sibi: Integrated cpu-freqmap governor into passive_governor]
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  drivers/devfreq/Kconfig            |   2 +
+>  drivers/devfreq/governor_passive.c | 278 ++++++++++++++++++++++++++++++++++---
+>  include/linux/devfreq.h            |  40 +++++-
+>  3 files changed, 299 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 0b1df12e0f21..d9067950af6a 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -73,6 +73,8 @@ config DEVFREQ_GOV_PASSIVE
+>  	  device. This governor does not change the frequency by itself
+>  	  through sysfs entries. The passive governor recommends that
+>  	  devfreq device uses the OPP table to get the frequency/voltage.
+> +	  Alternatively the governor can also be chosen to scale based on
+> +	  the online CPUs current frequency.
+>  
+>  comment "DEVFREQ Drivers"
+>  
+> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+> index 2d67d6c12dce..7dcda02a5bb7 100644
+> --- a/drivers/devfreq/governor_passive.c
+> +++ b/drivers/devfreq/governor_passive.c
+> @@ -8,11 +8,89 @@
+>   */
+>  
+>  #include <linux/module.h>
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/cpumask.h>
+>  #include <linux/device.h>
+>  #include <linux/devfreq.h>
+> +#include <linux/slab.h>
+>  #include "governor.h"
+>  
+> -static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+> +static unsigned int xlate_cpufreq_to_devfreq(struct devfreq_passive_data *data,
+
+Need to change 'unsigned int' to 'unsigned long'.
+
+> +					     unsigned int cpu)
+> +{
+> +	unsigned int cpu_min, cpu_max, dev_min, dev_max, cpu_percent, max_state;
+
+Better to define them separately as following and then need to rename
+the variable. Usually, use the 'min_freq' and 'max_freq' word for
+the minimum/maximum frequency.
+
+	unsigned int cpu_min_freq, cpu_max_freq, cpu_curr_freq, cpu_percent;
+	unsigned long dev_min_freq, dev_max_freq, dev_max_state,
+
+The devfreq used 'unsigned long'. The cpufreq used 'unsigned long'
+and 'unsigned int'. You need to handle them properly.
+
+
+> +	struct devfreq_cpu_state *cpu_state = data->cpu_state[cpu];
+> +	struct devfreq *devfreq = (struct devfreq *)data->this;
+> +	unsigned long *freq_table = devfreq->profile->freq_table;
+
+In this function, use 'cpu' work for cpufreq and use 'dev' for devfreq.
+So, I think 'dev_freq_table' is proper name instead of 'freq_table'
+for the readability.
+
+	freq_table -> dev_freq_table
+
+> +	struct dev_pm_opp *opp = NULL, *cpu_opp = NULL;
+
+In the get_target_freq_with_devfreq(), use 'p_opp' indicating
+the OPP of parent device. For the consistency, I think that
+use 'p_opp' instead of 'cpu_opp'. 
+
+> +	unsigned long cpu_freq, freq;
+
+Define the 'cpu_freq' on above with cpu_min_freq/cpu_max_freq definition.
+	cpu_freq -> cpu_curr_freq.
+
+> +
+> +	if (!cpu_state || cpu_state->first_cpu != cpu ||
+> +	    !cpu_state->opp_table || !devfreq->opp_table)
+> +		return 0;
+> +
+> +	cpu_freq = cpu_state->freq * 1000;
+> +	cpu_opp = devfreq_recommended_opp(cpu_state->dev, &cpu_freq, 0);
+> +	if (IS_ERR(cpu_opp))
+> +		return 0;
+> +
+> +	opp = dev_pm_opp_xlate_required_opp(cpu_state->opp_table,
+> +					    devfreq->opp_table, cpu_opp);
+> +	dev_pm_opp_put(cpu_opp);
+> +
+> +	if (!IS_ERR(opp)) {
+> +		freq = dev_pm_opp_get_freq(opp);
+> +		dev_pm_opp_put(opp);
+
+Better to add the 'out' goto statement.
+If you use 'goto out', you can reduce the one indentation
+without 'else' statement.
+	
+
+> +	} else {
+
+As I commented, when dev_pm_opp_xlate_required_opp() return successfully
+, use 'goto out'. We can remove 'else' and then reduce the unneeded indentation.
+
+
+> +		/* Use Interpolation if required opps is not available */
+> +		cpu_min = cpu_state->min_freq;
+> +		cpu_max = cpu_state->max_freq;
+> +		cpu_freq = cpu_state->freq;
+> +
+> +		if (freq_table) {
+> +			/* Get minimum frequency according to sorting order */
+> +			max_state = freq_table[devfreq->profile->max_state - 1];
+> +			if (freq_table[0] < max_state) {
+> +				dev_min = freq_table[0];
+> +				dev_max = max_state;
+> +			} else {
+> +				dev_min = max_state;
+> +				dev_max = freq_table[0];
+> +			}
+> +		} else {
+> +			if (devfreq->user_max_freq_req.data.freq.qos->max_freq.target_value
+> +			    <= devfreq->user_min_freq_req.data.freq.qos->min_freq.target_value)
+> +				return 0;
+> +			dev_min =
+> +			devfreq->user_min_freq_req.data.freq.qos->min_freq.target_value;
+> +			dev_max =
+> +			devfreq->user_max_freq_req.data.freq.qos->max_freq.target_value;
+
+I think it is not proper to access the variable of pm_qos structure directly.
+Instead of direct access, you have to use the exported PM QoS function such as
+- pm_qos_read_value(devfreq->dev.parent, DEV_PM_QOS_MIN_FREQUENCY);
+- pm_qos_read_value(devfreq->dev.parent, DEV_PM_QOS_MAX_FREQUENCY);
+
+> +		}
+> +		cpu_percent = ((cpu_freq - cpu_min) * 100) / cpu_max - cpu_min;
+> +		freq = dev_min + mult_frac(dev_max - dev_min, cpu_percent, 100);
+> +	}
+
+
+I think that you better to add 'out' jump label as following:
+
+out:
+
+> +
+> +	return freq;
+> +}
+> +
+> +static int get_target_freq_with_cpufreq(struct devfreq *devfreq,
+> +					unsigned long *freq)
+> +{
+> +	struct devfreq_passive_data *p_data =
+> +				(struct devfreq_passive_data *)devfreq->data;
+> +	unsigned int cpu, target_freq = 0;
+
+Need to define 'target_freq' with 'unsigned long' type.
+
+> +
+> +	for_each_online_cpu(cpu)
+> +		target_freq = max(target_freq,
+> +				  xlate_cpufreq_to_devfreq(p_data, cpu));
+> +
+> +	*freq = target_freq;
+> +
+> +	return 0;
+> +}
+> +
+> +static int get_target_freq_with_devfreq(struct devfreq *devfreq,
+>  					unsigned long *freq)
+>  {
+>  	struct devfreq_passive_data *p_data
+> @@ -23,16 +101,6 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+>  	int i, count, ret = 0;
+>  
+>  	/*
+> -	 * If the devfreq device with passive governor has the specific method
+> -	 * to determine the next frequency, should use the get_target_freq()
+> -	 * of struct devfreq_passive_data.
+> -	 */
+> -	if (p_data->get_target_freq) {
+> -		ret = p_data->get_target_freq(devfreq, freq);
+> -		goto out;
+> -	}
+> -
+> -	/*
+>  	 * If the parent and passive devfreq device uses the OPP table,
+>  	 * get the next frequency by using the OPP table.
+>  	 */
+> @@ -102,6 +170,37 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+>  	return ret;
+>  }
+>  
+> +static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+> +					   unsigned long *freq)
+> +{
+> +	struct devfreq_passive_data *p_data =
+> +				(struct devfreq_passive_data *)devfreq->data;
+> +	int ret;
+> +
+> +	/*
+> +	 * If the devfreq device with passive governor has the specific method
+> +	 * to determine the next frequency, should use the get_target_freq()
+> +	 * of struct devfreq_passive_data.
+> +	 */
+> +	if (p_data->get_target_freq)
+> +		return p_data->get_target_freq(devfreq, freq);
+> +
+> +	switch (p_data->parent_type) {
+> +	case DEVFREQ_PARENT_DEV:
+> +		ret = get_target_freq_with_devfreq(devfreq, freq);
+> +		break;
+> +	case CPUFREQ_PARENT_DEV:
+> +		ret = get_target_freq_with_cpufreq(devfreq, freq);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		dev_err(&devfreq->dev, "Invalid parent type\n");
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
+>  {
+>  	int ret;
+> @@ -156,6 +255,140 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
+>  	return NOTIFY_DONE;
+>  }
+>  
+> +static int cpufreq_passive_notifier_call(struct notifier_block *nb,
+> +					 unsigned long event, void *ptr)
+> +{
+> +	struct devfreq_passive_data *data =
+> +			container_of(nb, struct devfreq_passive_data, nb);
+> +	struct devfreq *devfreq = (struct devfreq *)data->this;
+> +	struct devfreq_cpu_state *cpu_state;
+> +	struct cpufreq_freqs *freq = ptr;
+
+How about changing 'freq' to 'cpu_freqs'?
+
+In the drivers/cpufreq/cpufreq.c, use 'freqs' name indicating
+the instance of 'struct cpufreq_freqs'. And in order to
+identfy, how about adding 'cpu_' prefix for variable name?
+
+> +	unsigned int current_freq;
+
+Need to define curr_freq with 'unsigned long' type
+and better to use 'curr_freq' variable name.
+
+> +	int ret;
+> +
+> +	if (event != CPUFREQ_POSTCHANGE || !freq ||
+> +	    !data->cpu_state[freq->policy->cpu])
+> +		return 0;
+> +
+> +	cpu_state = data->cpu_state[freq->policy->cpu];
+> +	if (cpu_state->freq == freq->new)
+> +		return 0;
+> +
+> +	/* Backup current freq and pre-update cpu state freq*/
+> +	current_freq = cpu_state->freq;
+> +	cpu_state->freq = freq->new;
+> +
+> +	mutex_lock(&devfreq->lock);
+> +	ret = update_devfreq(devfreq);
+> +	mutex_unlock(&devfreq->lock);
+> +	if (ret) {
+> +		cpu_state->freq = current_freq;
+> +		dev_err(&devfreq->dev, "Couldn't update the frequency.\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cpufreq_passive_register(struct devfreq_passive_data **p_data)
+> +{
+> +	struct devfreq_passive_data *data = *p_data;
+> +	struct devfreq *devfreq = (struct devfreq *)data->this;
+> +	struct device *dev = devfreq->dev.parent;
+> +	struct opp_table *opp_table = NULL;
+> +	struct devfreq_cpu_state *state;
+
+For the readability, I thinkt 'cpu_state' is proper instead of 'state'.
+
+> +	struct cpufreq_policy *policy;
+> +	struct device *cpu_dev;
+> +	unsigned int cpu;
+> +	int ret;
+> +
+> +	get_online_cpus();
+
+Add blank line.
+
+> +	data->nb.notifier_call = cpufreq_passive_notifier_call;
+> +	ret = cpufreq_register_notifier(&data->nb,
+> +					CPUFREQ_TRANSITION_NOTIFIER);
+> +	if (ret) {
+> +		dev_err(dev, "Couldn't register cpufreq notifier.\n");
+> +		data->nb.notifier_call = NULL;
+> +		goto out;
+> +	}
+> +
+> +	/* Populate devfreq_cpu_state */
+> +	for_each_online_cpu(cpu) {
+> +		if (data->cpu_state[cpu])
+> +			continue;
+> +
+> +		policy = cpufreq_cpu_get(cpu);
+
+cpufreq_cpu_get() might return 'NULL'. I think you need to handle
+return value as following:
+
+		if (!policy) {
+			ret = -EINVAL;
+			goto out;
+		} else if (PTR_ERR(policy) == -EPROBE_DEFER) {
+			goto out;
+		} else if (IS_ERR(policy) {
+			ret = PTR_ERR(policy);
+			dev_err(dev, "Couldn't get the cpufreq_poliy.\n");
+			goto out;
+		}
+
+If cpufreq_cpu_get() return successfully, to do next.
+It reduces the one indentaion.
+
+
+
+> +		if (policy) {
+> +			state = kzalloc(sizeof(*state), GFP_KERNEL);
+> +			if (!state) {
+> +				ret = -ENOMEM;
+> +				goto out;
+> +			}
+> +
+> +			cpu_dev = get_cpu_device(cpu);
+> +			if (!cpu_dev) {
+> +				dev_err(dev, "Couldn't get cpu device.\n");
+> +				ret = -ENODEV;
+> +				goto out;
+> +			}
+> +
+> +			opp_table = dev_pm_opp_get_opp_table(cpu_dev);
+> +			if (IS_ERR(devfreq->opp_table)) {
+> +				ret = PTR_ERR(opp_table);
+> +				goto out;
+> +			}
+> +
+> +			state->dev = cpu_dev;
+> +			state->opp_table = opp_table;
+> +			state->first_cpu = cpumask_first(policy->related_cpus);
+> +			state->freq = policy->cur;
+> +			state->min_freq = policy->cpuinfo.min_freq;
+> +			state->max_freq = policy->cpuinfo.max_freq;
+> +			data->cpu_state[cpu] = state;
+
+Add blank line.
+
+> +			cpufreq_cpu_put(policy);
+> +		} else {
+> +			ret = -EPROBE_DEFER;
+> +			goto out;
+> +		}
+> +	}
+
+Add blank line.
+
+> +out:
+> +	put_online_cpus();
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Update devfreq */
+> +	mutex_lock(&devfreq->lock);
+> +	ret = update_devfreq(devfreq);
+> +	mutex_unlock(&devfreq->lock);
+> +	if (ret)
+> +		dev_err(dev, "Couldn't update the frequency.\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int cpufreq_passive_unregister(struct devfreq_passive_data **p_data)
+> +{
+> +	struct devfreq_passive_data *data = *p_data;
+> +	struct devfreq_cpu_state *cpu_state;
+> +	int cpu;
+> +
+> +	if (data->nb.notifier_call)
+> +		cpufreq_unregister_notifier(&data->nb,
+> +					    CPUFREQ_TRANSITION_NOTIFIER);
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		cpu_state = data->cpu_state[cpu];
+> +		if (cpu_state) {
+> +			if (cpu_state->opp_table)
+> +				dev_pm_opp_put_opp_table(cpu_state->opp_table);
+> +			kfree(cpu_state);
+> +			cpu_state = NULL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>  				unsigned int event, void *data)
+>  {
+> @@ -165,7 +398,7 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>  	struct notifier_block *nb = &p_data->nb;
+>  	int ret = 0;
+>  
+> -	if (!parent)
+> +	if (p_data->parent_type == DEVFREQ_PARENT_DEV && !parent)
+>  		return -EPROBE_DEFER;
+
+If you modify the devfreq_passive_event_handler() as following,
+you can move this condition for DEVFREQ_PARENT_DEV into 
+(register|unregister)_parent_dev_notifier.
+
+	switch (event) {                                                                                  
+	case DEVFREQ_GOV_START:                                               
+		ret = register_parent_dev_notifier(p_data);
+		break;
+	case DEVFREQ_GOV_STOP:                                             
+		ret = unregister_parent_dev_notifier(p_data);
+		break;
+	default: 
+		ret = -EINVAL;
+		break;
+	}
+                                                                                              
+	return ret;
+
+>  
+>  	switch (event) {
+> @@ -173,13 +406,24 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>  		if (!p_data->this)
+>  			p_data->this = devfreq;
+>  
+> -		nb->notifier_call = devfreq_passive_notifier_call;
+> -		ret = devfreq_register_notifier(parent, nb,
+> -					DEVFREQ_TRANSITION_NOTIFIER);
+> +		if (p_data->parent_type == DEVFREQ_PARENT_DEV) {
+> +			nb->notifier_call = devfreq_passive_notifier_call;
+> +			ret = devfreq_register_notifier(parent, nb,
+> +						DEVFREQ_TRANSITION_NOTIFIER);
+> +		} else if (p_data->parent_type == CPUFREQ_PARENT_DEV) {
+> +			ret = cpufreq_passive_register(&p_data);
+
+I think that we better to collect the code related to notifier registration
+into one function like devfreq_pass_register_notifier() instead of
+cpufreq_passive_register() as following: I think it is more simple and readable.
+
+If you have more proper function name of register_parent_dev_notifier,
+please give your opinion.
+
+
+	int register_parent_dev_notifier(struct devfreq_passive_data **p_data)
+		switch (p_data->parent_type) {
+		case DEVFREQ_PARENT_DEV:
+			nb->notifier_call = devfreq_passive_notifier_call;
+			ret = devfreq_register_notifier(parent, nb,
+			break;
+		case CPUFREQ_PARENT_DEV:
+			cpufreq_register_notifier(...)
+			...
+			break;
+		}
+		
+
+> +		} else {
+> +			ret = -EINVAL;
+> +		}
+>  		break;
+>  	case DEVFREQ_GOV_STOP:
+> -		WARN_ON(devfreq_unregister_notifier(parent, nb,
+> -					DEVFREQ_TRANSITION_NOTIFIER));
+> +		if (p_data->parent_type == DEVFREQ_PARENT_DEV)
+> +			WARN_ON(devfreq_unregister_notifier(parent, nb,
+> +						DEVFREQ_TRANSITION_NOTIFIER));
+> +		else if (p_data->parent_type == CPUFREQ_PARENT_DEV)
+> +			cpufreq_passive_unregister(&p_data);
+> +		else
+> +			ret = -EINVAL;
+
+ditto. unregister_parent_dev_notifier(struct devfreq_passive_data **p_data)
+
+>  		break;
+>  	default:
+>  		break;
+> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+> index a4b19d593151..04ce576fd6f1 100644
+> --- a/include/linux/devfreq.h
+> +++ b/include/linux/devfreq.h
+> @@ -278,6 +278,32 @@ struct devfreq_simple_ondemand_data {
+>  
+>  #if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
+>  /**
+> + * struct devfreq_cpu_state - holds the per-cpu state
+> + * @freq:	the current frequency of the cpu.
+> + * @min_freq:	the min frequency of the cpu.
+> + * @max_freq:	the max frequency of the cpu.
+> + * @first_cpu:	the cpumask of the first cpu of a policy.
+> + * @dev:	reference to cpu device.
+> + * @opp_table:	reference to cpu opp table.
+> + *
+> + * This structure stores the required cpu_state of a cpu.
+> + * This is auto-populated by the governor.
+> + */
+> +struct devfreq_cpu_state {> +	unsigned int freq;
+
+It is better to change from 'freq' to 'curr_freq'
+for more correct expression.
+
+> +	unsigned int min_freq;
+> +	unsigned int max_freq;
+> +	unsigned int first_cpu;
+> +	struct device *dev;
+
+How about changing the name 'dev' to 'cpu_dev'?
+
+
+> +	struct opp_table *opp_table;
+> +};
+
+devfreq_cpu_state is only handled by within driver/devfreq/governor_passive.c.
+
+So, you can move it into drivers/devfreq/governor_passive.c
+and just add the definition into include/linux/devfreq.h as following:
+It is able to prevent the access of variable of 'struct devfreq_cpu_state'
+outside.
+
+	struct devfreq_cpu_state;
+
+> +
+> +enum devfreq_parent_dev_type {
+> +	DEVFREQ_PARENT_DEV,
+> +	CPUFREQ_PARENT_DEV,
+> +};
+> +
+> +/**
+>   * struct devfreq_passive_data - ``void *data`` fed to struct devfreq
+>   *	and devfreq_add_device
+>   * @parent:	the devfreq instance of parent device.
+> @@ -288,13 +314,15 @@ struct devfreq_simple_ondemand_data {
+>   *			using governors except for passive governor.
+>   *			If the devfreq device has the specific method to decide
+>   *			the next frequency, should use this callback.
+> - * @this:	the devfreq instance of own device.
+> - * @nb:		the notifier block for DEVFREQ_TRANSITION_NOTIFIER list
+> + * @parent_type		parent type of the device
+
+Need to add ':' at the end of word. -> "parent_type:".
+
+> + * @this:		the devfreq instance of own device.
+> + * @nb:			the notifier block for DEVFREQ_TRANSITION_NOTIFIER list
+
+I knew that you make them with same indentation.
+But, actually, it is not related to this patch like clean-up code.
+Even if it is not pretty, you better to don't touch 'this' and 'nb' indentaion.
+
+> + * @cpu_state:		the state min/max/current frequency of all online cpu's
+>   *
+>   * The devfreq_passive_data have to set the devfreq instance of parent
+>   * device with governors except for the passive governor. But, don't need to
+> - * initialize the 'this' and 'nb' field because the devfreq core will handle
+> - * them.
+> + * initialize the 'this', 'nb' and 'cpu_state' field because the devfreq core
+> + * will handle them.
+>   */
+>  struct devfreq_passive_data {
+>  	/* Should set the devfreq instance of parent device */
+> @@ -303,9 +331,13 @@ struct devfreq_passive_data {
+>  	/* Optional callback to decide the next frequency of passvice device */
+>  	int (*get_target_freq)(struct devfreq *this, unsigned long *freq);
+>  
+> +	/* Should set the type of parent device */
+> +	enum devfreq_parent_dev_type parent_type;
+> +
+>  	/* For passive governor's internal use. Don't need to set them */
+>  	struct devfreq *this;
+>  	struct notifier_block nb;
+> +	struct devfreq_cpu_state *cpu_state[NR_CPUS];
+>  };
+>  #endif
+>  
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
