@@ -2,128 +2,125 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC3EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63B0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152BB207CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0076208C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590628378;
+	bh=hBO4N/AXK+LB2rPfZlEp7PblZQvv+rHSIrH7lefK8pk=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=nfXLiCt39kD9WvkTPreM2XhIIWY++vRj+evXjW15zIYF/lr7abvJgIEHi5AXz50Wp
+	 dsCNYciKaFn129uY8irBs/eHxATyh1iHikCXaJDLyaKm/3o/9Ko0N8hbqHSZWlZVsb
+	 NrjdmiPfR6BsuwxLW1NPQ3J2i0G1cequyhV0NIaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgE1BCa (ORCPT
+        id S1725939AbgE1BMz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 21:02:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48056 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbgE1BCa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 21:02:30 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 066332A3B03
-Message-ID: <ded561992900a23e9a0135855e9455a07c67ddaf.camel@collabora.com>
-Subject: Re: [PATCH v6 3/4] arm64: dts: imx8mq: enable Hantro G1/G2 VPU
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de,
-        devicetree@vger.kernel.org
-Date:   Wed, 27 May 2020 22:02:17 -0300
-In-Reply-To: <58431830e527c8acb873487f5173e437bee712a6.camel@pengutronix.de>
-References: <20200320131256.23294-1-p.zabel@pengutronix.de>
-         <20200320131256.23294-4-p.zabel@pengutronix.de>
-         <58431830e527c8acb873487f5173e437bee712a6.camel@pengutronix.de>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Wed, 27 May 2020 21:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgE1BMy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 21:12:54 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 297B22078C;
+        Thu, 28 May 2020 01:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590628374;
+        bh=hBO4N/AXK+LB2rPfZlEp7PblZQvv+rHSIrH7lefK8pk=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=CNcMPAQnQ31fGrhuIAtzs5ukAtItClWFFzUAQFYoWiCft0d6vkBMTJCj4jB529FDr
+         NR4XGjAX0Zz3uNKVuK+K3L4DNMWJPIpWlk/sW9WpjJbIFu7sIkbKBLGZDcO9oYN9Ff
+         hGeBrcEhwDgLsTzSJEZF3R181Gvb6saMepcNpy1s=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200527175635.5558-8-zhouyanjie@wanyeetech.com>
+References: <20200527175635.5558-1-zhouyanjie@wanyeetech.com> <20200527175635.5558-8-zhouyanjie@wanyeetech.com>
+Subject: Re: [PATCH v12 7/7] clk: X1000: Add FIXDIV for SSI clock of X1000.
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+To:     linux-clk@vger.kernel.org, Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Date:   Wed, 27 May 2020 18:12:53 -0700
+Message-ID: <159062837338.69627.14365746093599072888@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2020-05-27 at 18:19 +0200, Philipp Zabel wrote:
-> Hi Shawn,
-> 
-> On Fri, 2020-03-20 at 14:12 +0100, Philipp Zabel wrote:
-> > Add the i.MX8MQ VPU module which comprises Hantro G1 and G2 video
-> > decoder cores and a reset/control block.
-> > 
-> > Hook up the bus clock to the VPU power domain to enable handshakes, and
-> > configure the core clocks to 600 MHz and the bus clock to 800 MHz by
-> > default.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> could you pick up this patch? The driver and binding parts have been
-> merged in media/master.
-> 
+Quoting Zhou Yanjie (2020-05-27 10:56:35)
+> @@ -40,8 +43,47 @@
+>  #define OPCR_SPENDN0           BIT(7)
+>  #define OPCR_SPENDN1           BIT(6)
+> =20
+> +/* bits within the USBPCR register */
+> +#define USBPCR_SIDDQ           BIT(21)
+> +#define USBPCR_OTG_DISABLE     BIT(20)
+> +
+>  static struct ingenic_cgu *cgu;
+> =20
+> +static int x1000_usb_phy_enable(struct clk_hw *hw)
+> +{
+> +       void __iomem *reg_opcr          =3D cgu->base + CGU_REG_OPCR;
+> +       void __iomem *reg_usbpcr        =3D cgu->base + CGU_REG_USBPCR;
+> +
+> +       writel(readl(reg_opcr) | OPCR_SPENDN0, reg_opcr);
 
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Tested-by: Ezequiel Garcia <ezequiel@collabora.com>
+Please include linux/io.h for writel/readl.
 
-It looks good and it matches the downstream device tree.
+> +       writel(readl(reg_usbpcr) & ~USBPCR_OTG_DISABLE & ~USBPCR_SIDDQ, r=
+eg_usbpcr);
+> +       return 0;
+> +}
+> +
+> +static void x1000_usb_phy_disable(struct clk_hw *hw)
+> +{
+> +       void __iomem *reg_opcr          =3D cgu->base + CGU_REG_OPCR;
+> +       void __iomem *reg_usbpcr        =3D cgu->base + CGU_REG_USBPCR;
+> +
+> +       writel(readl(reg_opcr) & ~OPCR_SPENDN0, reg_opcr);
+> +       writel(readl(reg_usbpcr) | USBPCR_OTG_DISABLE | USBPCR_SIDDQ, reg=
+_usbpcr);
+> +}
+> +
+> +static int x1000_usb_phy_is_enabled(struct clk_hw *hw)
+> +{
+> +       void __iomem *reg_opcr          =3D cgu->base + CGU_REG_OPCR;
+> +       void __iomem *reg_usbpcr        =3D cgu->base + CGU_REG_USBPCR;
+> +
+> +       return (readl(reg_opcr) & OPCR_SPENDN0) &&
+> +               !(readl(reg_usbpcr) & USBPCR_SIDDQ) &&
+> +               !(readl(reg_usbpcr) & USBPCR_OTG_DISABLE);
+> +}
+> +
+> +static const struct clk_ops x1000_otg_phy_ops =3D {
+> +       .enable         =3D x1000_usb_phy_enable,
+> +       .disable        =3D x1000_usb_phy_disable,
+> +       .is_enabled     =3D x1000_usb_phy_is_enabled,
+> +};
+> +
+>  static const s8 pll_od_encoding[8] =3D {
+>         0x0, 0x1, -1, 0x2, -1, -1, -1, 0x3,
+>  };
+> @@ -277,4 +377,4 @@ static void __init x1000_cgu_init(struct device_node =
+*np)
+> =20
+>         ingenic_cgu_register_syscore_ops(cgu);
+>  }
+> -CLK_OF_DECLARE(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
+> +CLK_OF_DECLARE_DRIVER(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
 
-Thanks,
-Ezequiel
-
-> regards
-> Philipp
-> 
-> > ---
-> > New in v6.
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 27 +++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > index 6a1e83922c71..98e464ecb68a 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > @@ -666,6 +666,7 @@
-> >  					pgc_vpu: power-domain@6 {
-> >  						#power-domain-cells = <0>;
-> >  						reg = <IMX8M_POWER_DOMAIN_VPU>;
-> > +						clocks = <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
-> >  					};
-> >  
-> >  					pgc_disp: power-domain@7 {
-> > @@ -1130,6 +1131,32 @@
-> >  			status = "disabled";
-> >  		};
-> >  
-> > +		vpu: video-codec@38300000 {
-> > +			compatible = "nxp,imx8mq-vpu";
-> > +			reg = <0x38300000 0x10000>,
-> > +			      <0x38310000 0x10000>,
-> > +			      <0x38320000 0x10000>;
-> > +			reg-names = "g1", "g2", "ctrl";
-> > +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-names = "g1", "g2";
-> > +			clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
-> > +				 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
-> > +				 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
-> > +			clock-names = "g1", "g2", "bus";
-> > +			assigned-clocks = <&clk IMX8MQ_CLK_VPU_G1>,
-> > +					  <&clk IMX8MQ_CLK_VPU_G2>,
-> > +					  <&clk IMX8MQ_CLK_VPU_BUS>,
-> > +					  <&clk IMX8MQ_VPU_PLL_BYPASS>;
-> > +			assigned-clock-parents = <&clk IMX8MQ_VPU_PLL_OUT>,
-> > +						 <&clk IMX8MQ_VPU_PLL_OUT>,
-> > +						 <&clk IMX8MQ_SYS1_PLL_800M>,
-> > +						 <&clk IMX8MQ_VPU_PLL>;
-> > +			assigned-clock-rates = <600000000>, <600000000>,
-> > +					       <800000000>, <0>;
-> > +			power-domains = <&pgc_vpu>;
-> > +		};
-> > +
-> >  		pcie0: pcie@33800000 {
-> >  			compatible = "fsl,imx8mq-pcie";
-> >  			reg = <0x33800000 0x400000>,
-
-
+Why does this change to DECLARE_DRIVER? Can you please add a comment
+here in the code indicating what other driver is probing this compatible
+string?
