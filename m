@@ -2,136 +2,155 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6840C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDB0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C25BE2075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:16:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zLpIZu/f"
+	by mail.kernel.org (Postfix) with ESMTP id 034CE2075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:17:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590675475;
+	bh=zqc71Q27/B8/dUwRLhvm0S+/HIhHCNTNHUpNdVv+Lzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yl95yUWHBN0f80A1VEmcFP1WgfZ3qDuwG3iRKPk3T/B6oVWaU6ybqkbSKTWU/alPM
+	 4wpkqfpw461MMmLNN0pwMqqzyHV96X8djhzqgiH9keD0xQYqHRpUagUm5DAVrOfEUX
+	 tch80ImEeXyanNkN8DNwjXj2f7FexAKpiM3hq0+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390900AbgE1OQz (ORCPT
+        id S2391066AbgE1ORy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:16:55 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33046 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390866AbgE1OQy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:16:54 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGp14098090;
-        Thu, 28 May 2020 09:16:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590675411;
-        bh=HK7CIXSj8i46BQmDUrCSsRlBvvZmdKuuQKRIbzW1ZlA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zLpIZu/fzYxPLkDiHtSjc5YRXzSzbYQrNN1MSi9OU2JnFqWL/Poxzw4fEjBEwZEsr
-         H3E11fEShawKz/Ljq6mNRS7ejrYAxqlRBHDZFFDE8XAqXx+iQ6Q8P0+Fw+0qKU2MMT
-         kwSo9gzjbi5qhqDsb8KwQsSJ7y+uAhNGUIvIly+8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGp3Q039378;
-        Thu, 28 May 2020 09:16:51 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 09:16:51 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 09:16:51 -0500
-Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGn6o049544;
-        Thu, 28 May 2020 09:16:50 -0500
-Subject: Re: [PATCH v11 1/4] power_supply: Add additional health properties to
- the header
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
-        <pali@kernel.org>, <robh@kernel.org>
-CC:     <dmurphy@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sspatil@android.com>, Guru Das Srinagesh <gurus@codeaurora.org>
-References: <20200528140546.25260-1-r-rivera-matos@ti.com>
- <20200528140546.25260-2-r-rivera-matos@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <66823f18-dc74-107f-39ae-aade2d3738c0@ti.com>
-Date:   Thu, 28 May 2020 10:16:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 10:17:54 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43014 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390953AbgE1ORw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:17:52 -0400
+Received: by mail-io1-f67.google.com with SMTP id h10so30110855iob.10;
+        Thu, 28 May 2020 07:17:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BQyivfejSNXbCqlTdGdrhX0zYMkRgbdRvewpKbUjPCY=;
+        b=Dv1T5prLKuzwbUBcUepbVsAyZlBdUeMeG9WYo2EeWgvHycfJBrRs770zkO3Iijsg8l
+         jUZl3VEb64xbCNURpo/DOfYh2+vNQzF0+LI4aNKdUfKKTiM26CJvBBCu8HGmh3uZiPZ+
+         6rLmeUCYxveYV8T/GVqNakXqFe0H8a9T2Kx0lgieRvrCsO3DmaP6K8aVealyHgiMBqr5
+         bgEDCEOhjWf5IIBXRfMGvJqvspPiLasXDS95AX4DSSo70H3xLXzCjh/ILnMq67YKu2vZ
+         dP9H3qLONiq2Hap7PcImJrvENINkDIQFDg8//f6MRdBtdvpBgHN1+GUiJrF+vZqQtJ1E
+         y4vg==
+X-Gm-Message-State: AOAM531JzXRHLNo55YlE9JfaF3VnGcphW0RO7adt2dP45VMUjPg5+viv
+        xYxquSwwFuC9/UW0KzIw6g==
+X-Google-Smtp-Source: ABdhPJz80onPAITqqpwaWbabl4SgfiYAPqN/MWHUc1QI9/knq0XMJmKYbmvkCambm8IbFEAYxixOHg==
+X-Received: by 2002:a05:6602:2e05:: with SMTP id o5mr2566148iow.28.1590675470945;
+        Thu, 28 May 2020 07:17:50 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id z3sm2623657ior.45.2020.05.28.07.17.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:17:50 -0700 (PDT)
+Received: (nullmailer pid 4189639 invoked by uid 1000);
+        Thu, 28 May 2020 14:17:49 -0000
+Date:   Thu, 28 May 2020 08:17:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Steve Lee <steves.lee@maximintegrated.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ryan.lee.maxim@gmail.com,
+        ryans.lee@maximintegrated.com, steves.lee.maxim@gmail.com
+Subject: Re: [V6 PATCH 1/2] dt-bindings: Added device tree binding for
+ max98390
+Message-ID: <20200528141749.GB4186430@bogus>
+References: <20200528103755.17381-1-steves.lee@maximintegrated.com>
 MIME-Version: 1.0
-In-Reply-To: <20200528140546.25260-2-r-rivera-matos@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528103755.17381-1-steves.lee@maximintegrated.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/28/20 10:05 AM, Ricardo Rivera-Matos wrote:
-> From: Dan Murphy <dmurphy@ti.com>
+On Thu, May 28, 2020 at 07:37:55PM +0900, Steve Lee wrote:
+> Add DT binding of max98390 amplifier driver.
 > 
-> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
-> 
-> HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken from the JEITA spec.
-
-
-Wouldn't hurt to list the specific version of the spec these are from,
-but not super important,
-
-Acked-by: Andrew F. Davis <afd@ti.com>
-
-
-> 
-> Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
 > ---
->  Documentation/ABI/testing/sysfs-class-power | 2 +-
->  drivers/power/supply/power_supply_sysfs.c   | 2 +-
->  include/linux/power_supply.h                | 3 +++
->  3 files changed, 5 insertions(+), 2 deletions(-)
+> Changed since V5:
+> 	* Change txt to yaml and fix up the examples.
+> Changed since V4:
+> 	* No changes.
+> Changed since V3:
+> 	* No changes.
+> Changed since V2:
+> 	* No changes.
+> Changed since V1:
+> 	* Modified sample text in example
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index bf3b48f022dc..9f3fd01a9373 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -190,7 +190,7 @@ Description:
->  		Valid values: "Unknown", "Good", "Overheat", "Dead",
->  			      "Over voltage", "Unspecified failure", "Cold",
->  			      "Watchdog timer expire", "Safety timer expire",
-> -			      "Over current"
-> +			      "Over current", "Warm", "Cool", "Hot"
->  
->  What:		/sys/class/power_supply/<supply_name>/precharge_current
->  Date:		June 2017
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> index f37ad4eae60b..d0d549611794 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
->  static const char * const power_supply_health_text[] = {
->  	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
->  	"Unspecified failure", "Cold", "Watchdog timer expire",
-> -	"Safety timer expire", "Over current"
-> +	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
->  };
->  
->  static const char * const power_supply_technology_text[] = {
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index dcd5a71e6c67..8670e90c1d51 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -61,6 +61,9 @@ enum {
->  	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
->  	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
->  	POWER_SUPPLY_HEALTH_OVERCURRENT,
-> +	POWER_SUPPLY_HEALTH_WARM,
-> +	POWER_SUPPLY_HEALTH_COOL,
-> +	POWER_SUPPLY_HEALTH_HOT,
->  };
->  
->  enum {
+>  .../bindings/sound/maxim,max98390.yaml        | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+> new file mode 100644
+> index 000000000000..1ed4ab9e1c37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/maxim,max98390.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim Integrated MAX98390 Speaker Amplifier with Integrated Dynamic Speaker Management
+> +
+> +maintainers:
+> +  - Steve Lee <steves.lee@maximintegrated.com>
+> +
+> +properties:
+> +  compatible:
+> +      const: maxim,max98390
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: I2C address of the device.
+> +
+> +  temperature_calib:
+
+s/_/-/
+
+And missing 'maxim' prefix.
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
+
+Any constraints? 0-2^32 are valid values?
+
+> +
+> +  r0_calib:
+
+Same here.
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: This is r0 calibration data which was measured in factory mode.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+Add:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    max98390: amplifier@38 {
+> +            compatible = "maxim,max98390";
+> +            reg = <0x38>;
+> +            maxim,temperature_calib = <1024>;
+> +            maxim,r0_calib = <100232>;
+> +    };
+> -- 
+> 2.17.1
 > 
