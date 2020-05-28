@@ -2,143 +2,282 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB35C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444C6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C0A20B80
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19AE42075A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J14crb2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387713AbgE1KGg (ORCPT
+        id S2387746AbgE1KO6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 06:06:36 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6225 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387706AbgE1KGg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 06:06:36 -0400
-IronPort-SDR: E06La9BxAu65vz/ApsD0ZMw8/L+savWliUpSXTupIXts+Na4uV3KNJ9a2zJtAV/+bhyQDdRZFc
- enfXGNHM426Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 03:06:35 -0700
-IronPort-SDR: AN2/jzQ5CBTrxQLBA8tjjMQka8qHDC7uGh+gVH3nlbqGnxJHhnsuXSoVGQNX6eOlmvWlM1b1D6
- Yya/j8512gZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
-   d="scan'208";a="267165215"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 28 May 2020 03:06:32 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jeFQp-009PBt-1u; Thu, 28 May 2020 13:06:35 +0300
-Date:   Thu, 28 May 2020 13:06:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 07/11] i2c: designware: Discard Cherry Trail model flag
-Message-ID: <20200528100635.GH1634618@smile.fi.intel.com>
-References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
- <20200528093322.23553-8-Sergey.Semin@baikalelectronics.ru>
+        Thu, 28 May 2020 06:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387768AbgE1KOz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 06:14:55 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B23C08C5C7
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 03:14:55 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id e1so1954340vkd.1
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 03:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nAUj/kEpfoZ0ia6NxEX2fFXuOIBIRYCGa6eSme4RY3s=;
+        b=J14crb2jF9tUh4DBD+9prVqZRXyqwpMPCCoiq3C3clPk+7pQSKNtaR/dtNcGVhrm1Z
+         wftbzhxx4VuNfR7Mj0qLKISYCIIasNLr2ZQsftLNmlDjOoP8vd9joIw9yMvacBmtXXPd
+         OL/pO/Xvy1+3hSIR+kmwzL4wqUa1geIwnkH3/rNO8Ioh9RhU0VwOkYEvaEAFBz0sqTMo
+         EuPdF7vQtph678iNA6gvkTv8eeOmT65lGS12wyibdgNvUqsa1hGh4cqd7+PWCpfvz0r/
+         A4zIleIdI2x90N3u2yZF5fe2gE/Osg8/AWGrmNx+JniMxHitmIWAiimEp/94GiqtDN2w
+         IXEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nAUj/kEpfoZ0ia6NxEX2fFXuOIBIRYCGa6eSme4RY3s=;
+        b=PmbjeD7renjuVfeAFU1dppLrZ4WEXQT0WL+bOA1qzGC8njk7mT5d4jcF//oDKOwcPN
+         nVWOLzwpFHQU193/EFfuQU4OvmtYI1WRHvRDOIYQ8bfN31YWQPtM25PtOIhHc16UqjC9
+         bJJ6Bz9IjcfUtb7TB44EEnoCFJfHloqjACX3QV8A8MIwx42J0NoiVCkTRcACpTNBsDUa
+         TbQS7mdVoCO/978XmdlP9dl6iAijhyBFzce1XI3t9mgMb/vPNVscZ2gcTf678CL2l+31
+         2NKr+WJsdme+tDoaXMbAtDu7b47HvhIKjqSZWiBGXg+QND8rIoDpA3N8hoSalqMFr4Bz
+         mndg==
+X-Gm-Message-State: AOAM530IUCBuFV0owWd6uChq8ExKKCg9coWf9tG9KkhlLkZELsRtQSAI
+        0+gwPlwQEHeXEnylVvKThqqc5Wu2ljD9+iIMgBaqYw==
+X-Google-Smtp-Source: ABdhPJxH0XoMIdAuMN9qtVZvUJ9sj6A/MlzwZDxbfNcwdSU12eGT1pIEGZkSv3XqTj/sGL9tbJEEdxMOaMo/Gu1xFtw=
+X-Received: by 2002:a1f:1188:: with SMTP id 130mr1448071vkr.25.1590660894032;
+ Thu, 28 May 2020 03:14:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528093322.23553-8-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200526062758.17642-1-wan.ahmad.zainie.wan.mohamad@intel.com> <20200526062758.17642-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+In-Reply-To: <20200526062758.17642-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 28 May 2020 12:14:16 +0200
+Message-ID: <CAPDyKFr+u5vzTJAdKR6RzKOxPMiMzpVX9Zs4hms_CYnG2S6fVQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mmc: sdhci-of-arasan: Add support for Intel Keem Bay
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:33:17PM +0300, Serge Semin wrote:
-> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
-> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
-> bus pm_disabled workaround"), but the flag most likely by mistake has been
-> left in the Dw I2C drivers. Let's remove it. Since MODEL_MSCC_OCELOT is
-> the only model-flag left, redefine it to be 0x100 so setting a very first
-> bit in the MODEL_MASK bits range.
+On Tue, 26 May 2020 at 08:29, Wan Ahmad Zainie
+<wan.ahmad.zainie.wan.mohamad@intel.com> wrote:
+>
+> Intel Keem Bay SoC eMMC/SD/SDIO controller is based on
+> Arasan SD 3.0 / eMMC 5.1 host controller IP.
+>
+> However, it does not support 64-bit access as its AXI interface
+> has 32-bit address ports.
+>
+> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Applied for next, thanks!
 
-Conditionally, in case Wolfram and Jarkko are fine with shuffling model
-defines, which I consider an unneeded churn.
+Kind regards
+Uffe
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
+
 > ---
-> 
-> Changelog v3:
-> - Since MSCC and Baikal-T1 will be a part of the platform driver code, we
->   have to preserve the MODEL_MASK macro to use it to filter the model
->   flags during the IP-specific quirks activation.
-> ---
->  drivers/i2c/busses/i2c-designware-core.h    | 3 +--
->  drivers/i2c/busses/i2c-designware-pcidrv.c  | 1 -
->  drivers/i2c/busses/i2c-designware-platdrv.c | 2 +-
->  3 files changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-> index 150de5e5c31b..b9ef9b0deef0 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.h
-> +++ b/drivers/i2c/busses/i2c-designware-core.h
-> @@ -289,8 +289,7 @@ struct dw_i2c_dev {
->  #define ACCESS_INTR_MASK	0x00000004
->  #define ACCESS_NO_IRQ_SUSPEND	0x00000008
->  
-> -#define MODEL_CHERRYTRAIL	0x00000100
-> -#define MODEL_MSCC_OCELOT	0x00000200
-> +#define MODEL_MSCC_OCELOT	0x00000100
->  #define MODEL_MASK		0x00000f00
->  
->  u32 dw_readl(struct dw_i2c_dev *dev, int offset);
-> diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
-> index 11a5e4751eab..947c096f86e3 100644
-> --- a/drivers/i2c/busses/i2c-designware-pcidrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
-> @@ -149,7 +149,6 @@ static struct dw_pci_controller dw_pci_controllers[] = {
->  	},
->  	[cherrytrail] = {
->  		.bus_num = -1,
-> -		.flags = MODEL_CHERRYTRAIL,
->  		.scl_sda_cfg = &byt_config,
->  	},
->  	[elkhartlake] = {
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index f6d2c96e35ce..ca057aa9eac4 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -44,7 +44,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] = {
->  	{ "INT3432", 0 },
->  	{ "INT3433", 0 },
->  	{ "80860F41", ACCESS_NO_IRQ_SUSPEND },
-> -	{ "808622C1", ACCESS_NO_IRQ_SUSPEND | MODEL_CHERRYTRAIL },
-> +	{ "808622C1", ACCESS_NO_IRQ_SUSPEND },
->  	{ "AMD0010", ACCESS_INTR_MASK },
->  	{ "AMDI0010", ACCESS_INTR_MASK },
->  	{ "AMDI0510", 0 },
-> -- 
-> 2.26.2
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  drivers/mmc/host/sdhci-of-arasan.c | 123 +++++++++++++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 2fe2c4dcc280..db9b544465cd 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -75,6 +75,7 @@ struct sdhci_arasan_soc_ctl_field {
+>   *
+>   * @baseclkfreq:       Where to find corecfg_baseclkfreq
+>   * @clockmultiplier:   Where to find corecfg_clockmultiplier
+> + * @support64b:                Where to find SUPPORT64B bit
+>   * @hiword_update:     If true, use HIWORD_UPDATE to access the syscon
+>   *
+>   * It's up to the licensee of the Arsan IP block to make these available
+> @@ -84,6 +85,7 @@ struct sdhci_arasan_soc_ctl_field {
+>  struct sdhci_arasan_soc_ctl_map {
+>         struct sdhci_arasan_soc_ctl_field       baseclkfreq;
+>         struct sdhci_arasan_soc_ctl_field       clockmultiplier;
+> +       struct sdhci_arasan_soc_ctl_field       support64b;
+>         bool                                    hiword_update;
+>  };
+>
+> @@ -180,6 +182,13 @@ static const struct sdhci_arasan_soc_ctl_map intel_lgm_sdxc_soc_ctl_map = {
+>         .hiword_update = false,
+>  };
+>
+> +static const struct sdhci_arasan_soc_ctl_map intel_keembay_soc_ctl_map = {
+> +       .baseclkfreq = { .reg = 0x0, .width = 8, .shift = 14 },
+> +       .clockmultiplier = { .reg = 0x4, .width = 8, .shift = 14 },
+> +       .support64b = { .reg = 0x4, .width = 1, .shift = 24 },
+> +       .hiword_update = false,
+> +};
+> +
+>  /**
+>   * sdhci_arasan_syscon_write - Write to a field in soc_ctl registers
+>   *
+> @@ -1095,6 +1104,50 @@ static struct sdhci_arasan_of_data sdhci_arasan_generic_data = {
+>         .clk_ops = &arasan_clk_ops,
+>  };
+>
+> +static const struct sdhci_pltfm_data sdhci_keembay_emmc_pdata = {
+> +       .ops = &sdhci_arasan_cqe_ops,
+> +       .quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+> +               SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+> +               SDHCI_QUIRK_NO_LED |
+> +               SDHCI_QUIRK_32BIT_DMA_ADDR |
+> +               SDHCI_QUIRK_32BIT_DMA_SIZE |
+> +               SDHCI_QUIRK_32BIT_ADMA_SIZE,
+> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +               SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
+> +               SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400 |
+> +               SDHCI_QUIRK2_STOP_WITH_TC |
+> +               SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
+> +};
+> +
+> +static const struct sdhci_pltfm_data sdhci_keembay_sd_pdata = {
+> +       .ops = &sdhci_arasan_ops,
+> +       .quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+> +               SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+> +               SDHCI_QUIRK_NO_LED |
+> +               SDHCI_QUIRK_32BIT_DMA_ADDR |
+> +               SDHCI_QUIRK_32BIT_DMA_SIZE |
+> +               SDHCI_QUIRK_32BIT_ADMA_SIZE,
+> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +               SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
+> +               SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON |
+> +               SDHCI_QUIRK2_STOP_WITH_TC |
+> +               SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
+> +};
+> +
+> +static const struct sdhci_pltfm_data sdhci_keembay_sdio_pdata = {
+> +       .ops = &sdhci_arasan_ops,
+> +       .quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+> +               SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+> +               SDHCI_QUIRK_NO_LED |
+> +               SDHCI_QUIRK_32BIT_DMA_ADDR |
+> +               SDHCI_QUIRK_32BIT_DMA_SIZE |
+> +               SDHCI_QUIRK_32BIT_ADMA_SIZE,
+> +       .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +               SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
+> +               SDHCI_QUIRK2_HOST_OFF_CARD_ON |
+> +               SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
+> +};
+> +
+>  static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
+>         .soc_ctl_map = &rk3399_soc_ctl_map,
+>         .pdata = &sdhci_arasan_cqe_pdata,
+> @@ -1140,6 +1193,21 @@ static struct sdhci_arasan_of_data sdhci_arasan_versal_data = {
+>         .clk_ops = &versal_clk_ops,
+>  };
+>
+> +static struct sdhci_arasan_of_data intel_keembay_emmc_data = {
+> +       .soc_ctl_map = &intel_keembay_soc_ctl_map,
+> +       .pdata = &sdhci_keembay_emmc_pdata,
+> +};
+> +
+> +static struct sdhci_arasan_of_data intel_keembay_sd_data = {
+> +       .soc_ctl_map = &intel_keembay_soc_ctl_map,
+> +       .pdata = &sdhci_keembay_sd_pdata,
+> +};
+> +
+> +static struct sdhci_arasan_of_data intel_keembay_sdio_data = {
+> +       .soc_ctl_map = &intel_keembay_soc_ctl_map,
+> +       .pdata = &sdhci_keembay_sdio_pdata,
+> +};
+> +
+>  static const struct of_device_id sdhci_arasan_of_match[] = {
+>         /* SoC-specific compatible strings w/ soc_ctl_map */
+>         {
+> @@ -1154,6 +1222,18 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
+>                 .compatible = "intel,lgm-sdhci-5.1-sdxc",
+>                 .data = &intel_lgm_sdxc_data,
+>         },
+> +       {
+> +               .compatible = "intel,keembay-sdhci-5.1-emmc",
+> +               .data = &intel_keembay_emmc_data,
+> +       },
+> +       {
+> +               .compatible = "intel,keembay-sdhci-5.1-sd",
+> +               .data = &intel_keembay_sd_data,
+> +       },
+> +       {
+> +               .compatible = "intel,keembay-sdhci-5.1-sdio",
+> +               .data = &intel_keembay_sdio_data,
+> +       },
+>         /* Generic compatible below here */
+>         {
+>                 .compatible = "arasan,sdhci-8.9a",
+> @@ -1297,6 +1377,40 @@ static void sdhci_arasan_unregister_sdclk(struct device *dev)
+>         of_clk_del_provider(dev->of_node);
+>  }
+>
+> +/**
+> + * sdhci_arasan_update_support64b - Set SUPPORT_64B (64-bit System Bus Support)
+> + *
+> + * This should be set based on the System Address Bus.
+> + * 0: the Core supports only 32-bit System Address Bus.
+> + * 1: the Core supports 64-bit System Address Bus.
+> + *
+> + * NOTES:
+> + * - For Keem Bay, it is required to clear this bit. Its default value is 1'b1.
+> + *   Keem Bay does not support 64-bit access.
+> + *
+> + * @host               The sdhci_host
+> + */
+> +static void sdhci_arasan_update_support64b(struct sdhci_host *host, u32 value)
+> +{
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
+> +       const struct sdhci_arasan_soc_ctl_map *soc_ctl_map =
+> +               sdhci_arasan->soc_ctl_map;
+> +
+> +       /* Having a map is optional */
+> +       if (!soc_ctl_map)
+> +               return;
+> +
+> +       /* If we have a map, we expect to have a syscon */
+> +       if (!sdhci_arasan->soc_ctl_base) {
+> +               pr_warn("%s: Have regmap, but no soc-ctl-syscon\n",
+> +                       mmc_hostname(host->mmc));
+> +               return;
+> +       }
+> +
+> +       sdhci_arasan_syscon_write(host, &soc_ctl_map->support64b, value);
+> +}
+> +
+>  /**
+>   * sdhci_arasan_register_sdclk - Register the sdcardclk for a PHY to use
+>   *
+> @@ -1469,6 +1583,15 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>                                     "rockchip,rk3399-sdhci-5.1"))
+>                 sdhci_arasan_update_clockmultiplier(host, 0x0);
+>
+> +       if (of_device_is_compatible(np, "intel,keembay-sdhci-5.1-emmc") ||
+> +           of_device_is_compatible(np, "intel,keembay-sdhci-5.1-sd") ||
+> +           of_device_is_compatible(np, "intel,keembay-sdhci-5.1-sdio")) {
+> +               sdhci_arasan_update_clockmultiplier(host, 0x0);
+> +               sdhci_arasan_update_support64b(host, 0x0);
+> +
+> +               host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+> +       }
+> +
+>         sdhci_arasan_update_baseclkfreq(host);
+>
+>         ret = sdhci_arasan_register_sdclk(sdhci_arasan, clk_xin, &pdev->dev);
+> --
+> 2.17.1
+>
