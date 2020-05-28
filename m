@@ -4,84 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096C7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E832C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8050206F1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BFD62074B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590703411;
-	bh=YVK8Lpb2pcQzYPa+g9E7u52SbRROFJJiP5k3r+Piq9k=;
+	s=default; t=1590703554;
+	bh=QMfBoi1gpPPlRgRt2L1M0Zav79KSki4++tO6kjK5YnA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EgWjxXfRvHYWYSKwQB4RQ2BsWf6MzQdrB4NxYOydz+OU+QOD+goN21NPH2tL3c20z
-	 /dUcz8DydgVoBuaMzZd6ABxtUPWQ+WWRLxYWrxF/wV5R3a6MS5rWCjKZ/nDvx7d5oL
-	 7eonYQmpuglXh3aL8Iu4HcD3ZYqP7/fRVNd/xy1A=
+	b=vLGjXQrr9cyCkfw0FVPEeaUwKbHBMDSbp3EBSc2rd2FjyeRnWf5Xe9kRU1CfQ7TjD
+	 uVIRJ1tk0uaYDB3dPvOrp0hNjcCTPcHScN1uaCRZALrZk6D1ywpaa0BZEHiA7Jvm/7
+	 Ms53tYfbJpEivXv4tX1w+dXG2NfAQIttyuhNxn/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436849AbgE1WDL (ORCPT
+        id S2436836AbgE1WFu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 18:03:11 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44872 "EHLO
+        Thu, 28 May 2020 18:05:50 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43823 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436845AbgE1WDE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:03:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id p20so142738iop.11;
-        Thu, 28 May 2020 15:03:04 -0700 (PDT)
+        with ESMTP id S2436758AbgE1WFt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:05:49 -0400
+Received: by mail-io1-f65.google.com with SMTP id h10so154974iob.10;
+        Thu, 28 May 2020 15:05:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=BVo7bwcyHNQhbNQlvK9k2FqD/huUhkXJ3cTPpto8QjM=;
-        b=Xha2xGn9u+dU0dRqRg1JI4LTW2jA2Hs4bgFLLsEPTdstdLk3+wXs8DXGk1i0hrX1UF
-         8Ety1poX1I17LNYAoKDz6/xcIxaiIiFNSwdkmQZzXg03L26N2IPbvzRiuoDTTRfmGwpW
-         6cpeN5ocIng4Oy1mWV92Zz9kkpNiiJWHSH0OXo9umsH3MICyMxUumWrWKJlbQxr1XhUq
-         KD336NL9s8BHwxlzMWTCWc9C0zzSEL4J0V9F1VaGcoadHsBZGhSWLrS1sGMdBq67JFOZ
-         2IrCfDtmxcOPap7a7U28d4deLylSsWrcarBFpIthl310bd1PYkQhquDi7VTNQqYHpOAS
-         zduA==
-X-Gm-Message-State: AOAM533AbMb2hR3P7jlI2NHWEGRFAOnxSWkTUVTkgWeZeenJVLnkcKxw
-        u6MB0gW8LfzdrH9C3Qy3xg==
-X-Google-Smtp-Source: ABdhPJzNW5gQ4aaMX82/bIdYGNG7tdR9dwc4EDAGFh0RCIznKrCd+mSB4tA6dHiC/erY5Uap94ohQw==
-X-Received: by 2002:a5e:a705:: with SMTP id b5mr4126254iod.12.1590703383914;
-        Thu, 28 May 2020 15:03:03 -0700 (PDT)
+        bh=JCx+B8/wy3Lm5+1erx0AXzwlVtooOFiW3OXY1z5WrVI=;
+        b=sgVZIayis9cHF4pQBVLFJg7qlgQStkoVJzQ17llCq+f3BlZAqIBoHGa9VPRb/Egj4w
+         e2RLtLn6NU2ACCqYP+Asxg7YvP7as7FZwHHMSg2ouaB+dbGL6dKX5yMhO+WvsAhw6s/7
+         zo/HXypjsPfPt9Q2jL3WCYiSyKNmJ+1Mgb1z8mXqGnLX7o8qF7wIikh7bMOhd+5BqJUw
+         3gkesRVShXDJMxfPbjzgSxWq0RCghQqhEdXRpWZzs2JrvVIIfMKSAIWXvsiiy9Nv9nWy
+         uczcjZOehwN+LdgHY/qVnW7/T8AwXvZGQS2m3vcxTzw64zX5hqipGBX8fVc05Ut6D2Qo
+         clVg==
+X-Gm-Message-State: AOAM533/sErPQ/CXfY19kaXB/egnK7cCjMy+0gZipAL1oylcbjlWGZPG
+        ScC7OoRT8HWdhPreOq5we3lsD0o=
+X-Google-Smtp-Source: ABdhPJymRsKL3lqmN13SyW5hyaIflvljxb+U0UEli++/rLp1hKpM3QJkg33Adjy7OEh4BconDlGkxA==
+X-Received: by 2002:a02:3002:: with SMTP id q2mr4432217jaq.19.1590703548599;
+        Thu, 28 May 2020 15:05:48 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v15sm3962090ila.57.2020.05.28.15.03.02
+        by smtp.gmail.com with ESMTPSA id n8sm3030119ioo.2.2020.05.28.15.05.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 15:03:03 -0700 (PDT)
-Received: (nullmailer pid 762177 invoked by uid 1000);
-        Thu, 28 May 2020 22:03:02 -0000
-Date:   Thu, 28 May 2020 16:03:02 -0600
+        Thu, 28 May 2020 15:05:47 -0700 (PDT)
+Received: (nullmailer pid 765873 invoked by uid 1000);
+        Thu, 28 May 2020 22:05:46 -0000
+Date:   Thu, 28 May 2020 16:05:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com
-Subject: Re: [PATCH v3 1/3] dt-bindings: mailbox: Add devicetree binding for
- Qcom IPCC
-Message-ID: <20200528220302.GA762089@bogus>
-References: <20200520084854.19729-1-manivannan.sadhasivam@linaro.org>
- <20200520084854.19729-2-manivannan.sadhasivam@linaro.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        daniel.lezcano@linaro.org, kernel@pengutronix.de,
+        Linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, linux-pm@vger.kernel.org,
+        festevam@gmail.com
+Subject: Re: [PATCH V4] dt-bindings: thermal: Convert i.MX to json-schema
+Message-ID: <20200528220546.GA765825@bogus>
+References: <1589967737-1128-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520084854.19729-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1589967737-1128-1-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 20 May 2020 14:18:52 +0530, Manivannan Sadhasivam wrote:
-> Add devicetree YAML binding for Qualcomm Inter-Processor Communication
-> Controller (IPCC) block.
+On Wed, 20 May 2020 17:42:17 +0800, Anson Huang wrote:
+> Convert the i.MX thermal binding to DT schema format using json-schema
 > 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
->  .../bindings/mailbox/qcom-ipcc.yaml           | 80 +++++++++++++++++++
->  include/dt-bindings/mailbox/qcom-ipcc.h       | 33 ++++++++
->  2 files changed, 113 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
->  create mode 100644 include/dt-bindings/mailbox/qcom-ipcc.h
+> Changes since V3:
+> 	- improve "fsl,tempmon" description.
+> ---
+>  .../devicetree/bindings/thermal/imx-thermal.txt    |  61 ------------
+>  .../devicetree/bindings/thermal/imx-thermal.yaml   | 102 +++++++++++++++++++++
+>  2 files changed, 102 insertions(+), 61 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
