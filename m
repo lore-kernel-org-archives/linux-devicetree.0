@@ -2,91 +2,205 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92DBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01DAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C435020888
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590676393;
-	bh=UN2rnZyWpLMqF8ExVnHsDsnDlZA39XDQP/BvQVtEDTo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pWBQ45ikql+3xHErBEcItKnFAWY2dRKyGR46qb3I3QTzNB9xV/GlPwFP+T04XWyaV
-	 kpDgT4smzO0J0a6Stxt06riz2AWcKd70ffVl7gBQ1sLAazKAnG8mJu3NzRqQb4hfCC
-	 /6AiTdqcBe0B2TlHWQGRqCkyeqa2+NS9ZJWVMsQg=
+	by mail.kernel.org (Postfix) with ESMTP id D604120897
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391174AbgE1OdN (ORCPT
+        id S1725308AbgE1Oe3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:33:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391060AbgE1OdL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 10:33:11 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 28 May 2020 10:34:29 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54878 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgE1Oe2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:34:28 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 159F2208DB;
-        Thu, 28 May 2020 14:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590676391;
-        bh=UN2rnZyWpLMqF8ExVnHsDsnDlZA39XDQP/BvQVtEDTo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=b+vldjs4gnjLoWxmvcqq5AyLYuS5kZtIwnn6GUD7lv0/EVgVH5QvYHaHIH4okfxxE
-         jWafMsKhTdQxjZBr+xr/yGkBFyOu4z0hlYzwxdkavv0guaQM663BHhp7sQRwGCJa9Q
-         lthAll+uCepibhP0gjK4Hy/3z3rgfcgIEMQva0t4=
-Received: by mail-ot1-f53.google.com with SMTP id b18so2525533oti.1;
-        Thu, 28 May 2020 07:33:11 -0700 (PDT)
-X-Gm-Message-State: AOAM531DsH3xq6ZnWPVM2Lvor0fRlVsMZw8K4JA4LWco3DKefBRFoqjj
-        6Oh5k9y/jJkLKt7uEnFi53mQeQalTjKstn71gA==
-X-Google-Smtp-Source: ABdhPJzSac9fblEg4fvh1xMALOim19c1Ul+G+BxgigsqfG3+dwRkFMrik7yaQaER/EVzB2pW8mIWcXlAZrXsUMHziys=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr2288369ote.107.1590676390311;
- Thu, 28 May 2020 07:33:10 -0700 (PDT)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id CDF1F2A3FA6;
+        Thu, 28 May 2020 15:34:26 +0100 (BST)
+Date:   Thu, 28 May 2020 16:34:24 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <weijie.gao@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Julien Su <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v6 14/18] mtd: nand: Add more parameters to the
+ nand_ecc_props structure
+Message-ID: <20200528163424.6677597c@collabora.com>
+In-Reply-To: <20200528113113.9166-15-miquel.raynal@bootlin.com>
+References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
+        <20200528113113.9166-15-miquel.raynal@bootlin.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200526200917.10385-1-dmurphy@ti.com> <20200528140525.GA4166160@bogus>
- <23500301-1076-ac47-327e-f7731525657c@ti.com>
-In-Reply-To: <23500301-1076-ac47-327e-f7731525657c@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 28 May 2020 08:32:58 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLPDahwYakepLP4b-Cf4fRAYrGoW0qit_ET3AKbYOYERg@mail.gmail.com>
-Message-ID: <CAL_JsqLPDahwYakepLP4b-Cf4fRAYrGoW0qit_ET3AKbYOYERg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: tlv320adcx140: Add GPI config property
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 8:20 AM Dan Murphy <dmurphy@ti.com> wrote:
->
-> Rob
->
-> On 5/28/20 9:05 AM, Rob Herring wrote:
-> > On Tue, May 26, 2020 at 03:09:16PM -0500, Dan Murphy wrote:
-> >> Add an array property that configures the General Purpose Input (GPI)
-> >> register.  The device has 4 GPI pins and each pin can be configured in 1
-> >> of 7 different ways.
-> > Dan seems to have trouble running get_maintainers.pl and Cc'ing the DT
-> > list. Running 'make dt_binding_check' also seems to be a problem. Now
-> > linux-next has these warnings:
->
-> I don't have an issue with doing get_maintainers.  All the maintainers
-> listed were added to the patch.
->
-> And devicetree@vger.kernel.org was cc'd.
+On Thu, 28 May 2020 13:31:09 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Indeed, sorry for my rant. Some reason my search didn't find it.
+> Prepare the migration to the generic ECC framework by adding more
+> fields to the nand_ecc_props structure which will be used widely to
+> describe different kind of ECC properties.
+> 
+> Doing this imposes to move the engine type, ECC placement and
+> algorithm enumerations in a shared place: nand.h.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  include/linux/mtd/nand.h    | 52 +++++++++++++++++++++++++++++++++++++
+>  include/linux/mtd/rawnand.h | 44 -------------------------------
+>  2 files changed, 52 insertions(+), 44 deletions(-)
+> 
+> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+> index 6add464fd18b..2e9af24936cd 100644
+> --- a/include/linux/mtd/nand.h
+> +++ b/include/linux/mtd/nand.h
+> @@ -127,14 +127,66 @@ struct nand_page_io_req {
+>  	int mode;
+>  };
+>  
+> +/**
+> + * enum nand_ecc_engine_type - NAND ECC engine type
+> + * @NAND_ECC_ENGINE_TYPE_INVALID: Invalid value
+> + * @NAND_ECC_ENGINE_TYPE_NONE: No ECC correction
+> + * @NAND_ECC_ENGINE_TYPE_SOFT: Software ECC correction
+> + * @NAND_ECC_ENGINE_TYPE_ON_HOST: On host hardware ECC correction
+> + * @NAND_ECC_ENGINE_TYPE_ON_DIE: On chip hardware ECC correction
+> + */
+> +enum nand_ecc_engine_type {
+> +	NAND_ECC_ENGINE_TYPE_INVALID,
+> +	NAND_ECC_ENGINE_TYPE_NONE,
+> +	NAND_ECC_ENGINE_TYPE_SOFT,
+> +	NAND_ECC_ENGINE_TYPE_ON_HOST,
+> +	NAND_ECC_ENGINE_TYPE_ON_DIE,
+> +};
+> +
+> +/**
+> + * enum nand_ecc_placement - NAND ECC bytes placement
+> + * @NAND_ECC_PLACEMENT_UNKNOWN: The actual position of the ECC bytes is unknown
+> + * @NAND_ECC_PLACEMENT_OOB: The ECC bytes are located in the OOB area
+> + * @NAND_ECC_PLACEMENT_INTERLEAVED: Syndrome layout, there are ECC bytes
+> + *                                  interleaved with regular data in the main
+> + *                                  area
+> + */
+> +enum nand_ecc_placement {
+> +	NAND_ECC_PLACEMENT_UNKNOWN,
+> +	NAND_ECC_PLACEMENT_OOB,
+> +	NAND_ECC_PLACEMENT_INTERLEAVED,
+> +};
+> +
+> +/**
+> + * enum nand_ecc_algo - NAND ECC algorithm
+> + * @NAND_ECC_ALGO_UNKNOWN: Unknown algorithm
+> + * @NAND_ECC_ALGO_HAMMING: Hamming algorithm
+> + * @NAND_ECC_ALGO_BCH: Bose-Chaudhuri-Hocquenghem algorithm
+> + * @NAND_ECC_ALGO_RS: Reed-Solomon algorithm
+> + */
+> +enum nand_ecc_algo {
+> +	NAND_ECC_ALGO_UNKNOWN,
+> +	NAND_ECC_ALGO_HAMMING,
+> +	NAND_ECC_ALGO_BCH,
+> +	NAND_ECC_ALGO_RS,
+> +};
+> +
+>  /**
+>   * struct nand_ecc_props - NAND ECC properties
+> + * @engine_type: ECC engine type
+> + * @placement: OOB placement (if relevant)
+> + * @algo: ECC algorithm (if relevant)
+>   * @strength: ECC strength
+>   * @step_size: Number of bytes per step
+> + * @flags: Misc properties
 
-Not sure why my tester didn't flag this either...
+I'd like to hear more about that one. What is this about? I'd rather
+not add a field if it's not needed.
 
-Rob
+>   */
+>  struct nand_ecc_props {
+> +	enum nand_ecc_engine_type engine_type;
+> +	enum nand_ecc_placement placement;
+> +	enum nand_ecc_algo algo;
+>  	unsigned int strength;
+>  	unsigned int step_size;
+> +	unsigned int flags;
+>  };
+>  
+>  #define NAND_ECCREQ(str, stp) { .strength = (str), .step_size = (stp) }
+> diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+> index c3411a08ce61..8f7f1cce3b4b 100644
+> --- a/include/linux/mtd/rawnand.h
+> +++ b/include/linux/mtd/rawnand.h
+> @@ -92,50 +92,6 @@ enum nand_ecc_mode {
+>  	NAND_ECC_ON_DIE,
+>  };
+>  
+> -/**
+> - * enum nand_ecc_engine_type - NAND ECC engine type
+> - * @NAND_ECC_ENGINE_TYPE_INVALID: Invalid value
+> - * @NAND_ECC_ENGINE_TYPE_NONE: No ECC correction
+> - * @NAND_ECC_ENGINE_TYPE_SOFT: Software ECC correction
+> - * @NAND_ECC_ENGINE_TYPE_ON_HOST: On host hardware ECC correction
+> - * @NAND_ECC_ENGINE_TYPE_ON_DIE: On chip hardware ECC correction
+> - */
+> -enum nand_ecc_engine_type {
+> -	NAND_ECC_ENGINE_TYPE_INVALID,
+> -	NAND_ECC_ENGINE_TYPE_NONE,
+> -	NAND_ECC_ENGINE_TYPE_SOFT,
+> -	NAND_ECC_ENGINE_TYPE_ON_HOST,
+> -	NAND_ECC_ENGINE_TYPE_ON_DIE,
+> -};
+> -
+> -/**
+> - * enum nand_ecc_placement - NAND ECC bytes placement
+> - * @NAND_ECC_PLACEMENT_UNKNOWN: The actual position of the ECC bytes is unknown
+> - * @NAND_ECC_PLACEMENT_OOB: The ECC bytes are located in the OOB area
+> - * @NAND_ECC_PLACEMENT_INTERLEAVED: Syndrome layout, there are ECC bytes
+> - *                                  interleaved with regular data in the main
+> - *                                  area
+> - */
+> -enum nand_ecc_placement {
+> -	NAND_ECC_PLACEMENT_UNKNOWN,
+> -	NAND_ECC_PLACEMENT_OOB,
+> -	NAND_ECC_PLACEMENT_INTERLEAVED,
+> -};
+> -
+> -/**
+> - * enum nand_ecc_algo - NAND ECC algorithm
+> - * @NAND_ECC_ALGO_UNKNOWN: Unknown algorithm
+> - * @NAND_ECC_ALGO_HAMMING: Hamming algorithm
+> - * @NAND_ECC_ALGO_BCH: Bose-Chaudhuri-Hocquenghem algorithm
+> - * @NAND_ECC_ALGO_RS: Reed-Solomon algorithm
+> - */
+> -enum nand_ecc_algo {
+> -	NAND_ECC_ALGO_UNKNOWN,
+> -	NAND_ECC_ALGO_HAMMING,
+> -	NAND_ECC_ALGO_BCH,
+> -	NAND_ECC_ALGO_RS,
+> -};
+> -
+>  /*
+>   * Constants for Hardware ECC
+>   */
+
