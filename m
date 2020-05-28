@@ -2,88 +2,122 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CD0C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44735C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18985207F5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D55D207F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:25:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0lTwkvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390371AbgE1NXd (ORCPT
+        id S2390202AbgE1NZy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 09:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59960 "EHLO
+        Thu, 28 May 2020 09:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390368AbgE1NXa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:23:30 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16ED8C05BD1E
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:23:29 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:21:946d:6344:ccc1])
-        by albert.telenet-ops.be with bizsmtp
-        id kDPT2200155ue4H06DPT2l; Thu, 28 May 2020 15:23:27 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jeIVK-0007sC-TW; Thu, 28 May 2020 15:23:26 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jeIVK-0007tH-Rd; Thu, 28 May 2020 15:23:26 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH dt-schema] Fix interrupt controllers with interrupt-map
-Date:   Thu, 28 May 2020 15:23:23 +0200
-Message-Id: <20200528132323.30288-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S2390161AbgE1NZx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:25:53 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4646C05BD1E;
+        Thu, 28 May 2020 06:25:51 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y11so3268222plt.12;
+        Thu, 28 May 2020 06:25:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZKHFIuRb8JFzqwgI1/TTV1c2cdYlcWtWooy7HhzqQ7o=;
+        b=f0lTwkvPsjEGSI+BRI7kDWY7T7QMJZBBjNSt80WryFEz5AtJUDysU0IozJWfDpadRX
+         +SQ9hum9XQJrvIIcdEf21QUlcTu+sc1p+fcbM+1U2ZLrXzWpf0dgNbq1o9mMi1H8R9Oc
+         7H5AakLypHuixotL+DR9NLguz8BRhuzL4+Y1Qa3NEHEb7midtfFz6hEW6uKkZLAwh9HF
+         uQhT/laUdwHt7V4gziNDIEiHUPmnNq0BI4WsbZUN/jwNeIRIceaNDpTUikfKBPxpfJNM
+         YsoCB0YB8/DvJEBjrczbb15h5uke20uYjL9YZHXWXui5/o92/lf7BIXAOefSQeDYJ7LR
+         M73g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZKHFIuRb8JFzqwgI1/TTV1c2cdYlcWtWooy7HhzqQ7o=;
+        b=fqhpflhQ/XYe5JmQM6VNi70pvRvs0tXhuOsc2JYqmlsIfmJuff22IYo4ePK0c3B1dz
+         gWxf87oI6V2GlqDMPDBMumzOgSuGvke9ZzR46aeS3gk7CLkEabjQJ8pWpRj0P4ff/TWP
+         26c1H8WjNBscye0+rezdqr7x1ESKFbwA/7RN+jt5422yzMJl28kJfuvD1hS4VVv4ttf1
+         MtdOAy5H1aunuytd3Kw+qPjjUeNAEgZoVscFSe+qOUThtELRVPKDfokJ1X9EY9dFUfD4
+         0S8ZkUwas3zgCAlWiWs78MFeQlYSsDKfBUi3hPKm4BaBjylqOGp1CntqjIRCyjLokfjk
+         vNLg==
+X-Gm-Message-State: AOAM533+HXbZSRR5CksRa5on/D7zvP6ptQMTpyJXdF3Osg7QNAsUEZ11
+        QlSZLD791/6dSA81/dROlz/NL1tvK+g=
+X-Google-Smtp-Source: ABdhPJz8VC7DQMsEmrHiOxWQ16KQoUAxc+7rIER6X1Qw+ve5Duj50GcgF9uNeOXubcm5LHp+efFVgg==
+X-Received: by 2002:a17:902:bc86:: with SMTP id bb6mr3414568plb.243.1590672351462;
+        Thu, 28 May 2020 06:25:51 -0700 (PDT)
+Received: from localhost.localdomain ([198.211.10.140])
+        by smtp.gmail.com with ESMTPSA id j26sm4869359pfr.215.2020.05.28.06.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 06:25:50 -0700 (PDT)
+From:   Qi Zheng <arch0.zheng@gmail.com>
+To:     robh+dt@kernel.org, robh@kernel.org, frowand.list@gmail.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qi Zheng <arch0.zheng@gmail.com>
+Subject: [PATCH v2] of/fdt: Remove redundant kbasename function call
+Date:   Thu, 28 May 2020 21:25:41 +0800
+Message-Id: <20200528132541.463300-1-arch0.zheng@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When an interrupt controller has an "interrupt-map" property, an "is
-valid under each of" error is triggered.
+For version 1 to 3 of the device tree, this is the node full
+path as a zero terminated string, starting with "/". The
+following equation will not hold, since the node name has
+been processed in the fdt_get_name().
 
-Fix this by allowing "interrupt-controller" and "interrupt-map" to
-coexist, in both the interrrupts meta-schema and the
-interrupt-controller schema.
+	*pathp == '/'
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+For version 16 and later, this is the node unit name only
+(or an empty string for the root node). So the above
+equation will still not hold.
+
+So the kbasename() is redundant, just remove it.
+
+Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
 ---
- meta-schemas/interrupts.yaml      | 2 +-
- schemas/interrupt-controller.yaml | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/meta-schemas/interrupts.yaml b/meta-schemas/interrupts.yaml
-index 7073063486d44dab..93d8e4cafca679d3 100644
---- a/meta-schemas/interrupts.yaml
-+++ b/meta-schemas/interrupts.yaml
-@@ -26,7 +26,7 @@ properties:
- dependencies:
-   interrupt-map: ['#interrupt-cells', 'interrupt-map-mask']
-   '#interrupt-cells':
--    oneOf:
-+    anyOf:
-       - required:
-           - interrupt-controller
-       - required:
-diff --git a/schemas/interrupt-controller.yaml b/schemas/interrupt-controller.yaml
-index f65d5f6d2f1ac524..5dce87d839959489 100644
---- a/schemas/interrupt-controller.yaml
-+++ b/schemas/interrupt-controller.yaml
-@@ -30,7 +30,7 @@ dependencies:
-   interrupt-controller: ['#interrupt-cells']
-   interrupt-map: ['#interrupt-cells', 'interrupt-map-mask']
-   "#interrupt-cells":
--    oneOf:
-+    anyOf:
-       - required:
-           - interrupt-controller
-       - required:
+Change in v2:
+	remove another kbasename() also.
+
+ drivers/of/fdt.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 38619e9ef6b2..4602e467ca8b 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -643,8 +643,6 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ 	     offset = fdt_next_node(blob, offset, &depth)) {
+ 
+ 		pathp = fdt_get_name(blob, offset, NULL);
+-		if (*pathp == '/')
+-			pathp = kbasename(pathp);
+ 		rc = it(offset, pathp, depth, data);
+ 	}
+ 	return rc;
+@@ -671,8 +669,6 @@ int __init of_scan_flat_dt_subnodes(unsigned long parent,
+ 		int rc;
+ 
+ 		pathp = fdt_get_name(blob, node, NULL);
+-		if (*pathp == '/')
+-			pathp = kbasename(pathp);
+ 		rc = it(node, pathp, data);
+ 		if (rc)
+ 			return rc;
 -- 
-2.17.1
+2.25.1
 
