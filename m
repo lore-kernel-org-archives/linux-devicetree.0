@@ -2,91 +2,92 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB74C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB3AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF29207BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590629866;
-	bh=kJtP+7Irq4CmN81f4Wnz0MAfkfOnlRY0LJtOZ2B99eE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZdjzbPIAlT+4ZpZvKftQ9Jb7nwNoCjuwA9ErjjjBstFKUsUNyDTyqiUhFxINCWe8r
-	 a1uXeoSDozJBPW+K6m6B91iIJI/2jjVbFrtPSuT4wK+GGrOrKU8wHwBfL9KX1PoV2T
-	 S7yPiLGlPqJSEuPy8x2tMPd9VxGgJa8jC+eAD4O4=
+	by mail.kernel.org (Postfix) with ESMTP id 7258F20888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y7VGGugc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726459AbgE1Bhn (ORCPT
+        id S1726419AbgE1BqN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 21:37:43 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34902 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgE1Bhn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 21:37:43 -0400
-Received: by mail-io1-f67.google.com with SMTP id s18so14314314ioe.2;
-        Wed, 27 May 2020 18:37:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nbx5PheTegOHEEr/4nd2amubzWo0SUuwMck94zzOXno=;
-        b=a+3UM0baI2Xq+V5W/OamNlccaOq9aPipXutXBuxQJwajdivNgqzAiGKxJtAqZjdBKk
-         8yyfaLfTshmBBpUgu2fht5SPNBeA0pEufYuhNC7w3QSPPdyLGJ1eng/49yq56o+kn6F4
-         ZRVIXoIOZk2H74eZOjN/7MeV2rL29sT2O8Ql6ouWbpzNgeu2L9kGkimNSCthXvycS36H
-         3v0wW6q5tZ7owO23Av+0Sj5cncHR5pvGrZyAqYhLFRuMbdx2f+CKWXpF9MOXwy70C833
-         NLWBl3FSgJ6k+t44FEDD8GWg/nrbBPILba7muj3jmIvPotBHtYEXH1ptC3zZ5cU5UQk+
-         6NuQ==
-X-Gm-Message-State: AOAM5322kMDj+PGe37DZlID6Hgnofv6VqTWYqxVSHtQrbh+AbT2bF6WJ
-        p8Ly8iwbzpLD1BRn7WxhZA==
-X-Google-Smtp-Source: ABdhPJyw9o9EnKs0HcIDKMaQ4TcrHd2XeHo+9zjE0fdpnilS5FbjfGLGSCLKvxuGkF3aQHm53AYG2g==
-X-Received: by 2002:a02:3705:: with SMTP id r5mr648818jar.29.1590629861926;
-        Wed, 27 May 2020 18:37:41 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n17sm2046869ili.1.2020.05.27.18.37.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 18:37:41 -0700 (PDT)
-Received: (nullmailer pid 3175224 invoked by uid 1000);
-        Thu, 28 May 2020 01:37:40 -0000
-Date:   Wed, 27 May 2020 19:37:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for
- LT9611
-Message-ID: <20200528013739.GA3174723@bogus>
-References: <20200513100533.42996-1-vkoul@kernel.org>
- <20200513100533.42996-3-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513100533.42996-3-vkoul@kernel.org>
+        Wed, 27 May 2020 21:46:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:25237 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725849AbgE1BqM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 May 2020 21:46:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590630372; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=T5uyWh141j14dDmpOPzNQPyq6EKSVYr1V2BHk++nrpc=; b=Y7VGGugcR3MJeH39GgtE7CmBsIpYvKge6LG3uKOpRw7IenwLdvieovD+JHNuocCfgjsVE4vz
+ 3EnwhKGV93JoCHnSrbBBtzm3nJMQD+9coqEjnHqRPcyEOGVGuSMTn308N3rBletl2koDcZ02
+ iVrueNBHmbezBrL1+kQMG+P2iuE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ecf17e3cb045869331af90c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 01:46:11
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E40F3C433AD; Thu, 28 May 2020 01:46:10 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32A55C433CB;
+        Thu, 28 May 2020 01:46:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 32A55C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org, agross@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [RFC v3 3/3] dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
+Date:   Wed, 27 May 2020 18:46:03 -0700
+Message-Id: <1590630363-3934-4-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
+References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 15:35:32 +0530, Vinod Koul wrote:
-> Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
-> and I2S port as input and one HDMI port as output
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  .../display/bridge/lontium,lt9611.yaml        | 178 ++++++++++++++++++
->  1 file changed, 178 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-> 
+Re-introduce the comment for the tx-fifo-resize setting for the DWC3
+controller.  This allows for vendors to control if they require the TX FIFO
+resizing logic on their HW, as the default FIFO size configurations may
+already be sufficient.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 9946ff9..489f5da 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -105,7 +105,7 @@ Optional properties:
+ 			1-16 (DWC_usb31 programming guide section 1.2.3) to
+ 			enable periodic ESS TX threshold.
+ 
+- - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
++ - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+ 			register, undefined length INCR burst type enable and INCRx type.
+ 			When just one value, which means INCRX burst mode enabled. When
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
