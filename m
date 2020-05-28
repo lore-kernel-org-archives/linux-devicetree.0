@@ -2,143 +2,257 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EFDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE127C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 132D020899
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C3A20899
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:13:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uMCaXWSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725859AbgE1HJn (ORCPT
+        id S1725852AbgE1HNN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 03:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE1HJn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 03:09:43 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51961C05BD1E;
-        Thu, 28 May 2020 00:09:43 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id EBC5D2A3C90
-Received: by earth.universe (Postfix, from userid 1000)
-        id 356733C08C7; Thu, 28 May 2020 09:09:39 +0200 (CEST)
-Date:   Thu, 28 May 2020 09:09:39 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Saravanan Sekar <sravanhome@gmail.com>, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [GIT PULL] Immutable branch between MFD, IIO and Power due for
- the v5.8 merge window
-Message-ID: <20200528070939.7btxjwuqn7bhf4xe@earth.universe>
-References: <20200526090646.25827-1-sravanhome@gmail.com>
- <20200526094702.GN3628@dell>
+        Thu, 28 May 2020 03:13:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:11384 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgE1HNN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 03:13:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590649991; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=4Wp8FUOA+gtgDBp4CnR6tacVRDKfqb4xSu2rmvMHUck=; b=uMCaXWSPfN9GpSeUT5zPr84UsWLNJL2LhUKAXCIELdpPnFspJCUKL9q491g4+dwAdOWz8oml
+ NiAcd+Svy43wNMLcpVRpYGjANoJhFuIgA6JmIL/d6LZP8YBPxcJVeHWgVrhi7j0DthOPZMI1
+ rK5b6DID1qg8qtvM8bnFV9IZc5Q=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ecf648776fccbb4c8b22ec9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 07:13:11
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5184AC43387; Thu, 28 May 2020 07:13:10 +0000 (UTC)
+Received: from [192.168.0.106] (unknown [183.83.65.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 570CBC433C6;
+        Thu, 28 May 2020 07:13:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 570CBC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
+ <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
+ <20200521190739.GC1331782@builder.lan>
+ <08d11687-7aee-2c62-9435-670be1afb21e@codeaurora.org>
+ <20200522170415.GI11847@yoga>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <b2db3743-63bd-9a34-3fcb-d9faac96dfee@codeaurora.org>
+Date:   Thu, 28 May 2020 12:43:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u56qdvhxw5elq2g6"
-Content-Disposition: inline
-In-Reply-To: <20200526094702.GN3628@dell>
+In-Reply-To: <20200522170415.GI11847@yoga>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---u56qdvhxw5elq2g6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/22/2020 10:34 PM, Bjorn Andersson wrote:
+> On Fri 22 May 06:27 PDT 2020, Veerabhadrarao Badiganti wrote:
+>
+>> Hi Bjorn,
+>>
+>> On 5/22/2020 12:37 AM, Bjorn Andersson wrote:
+>>> On Thu 21 May 08:23 PDT 2020, Veerabhadrarao Badiganti wrote:
+>>>
+>>>> On qcom SD host controllers voltage switching be done after the HW
+>>>> is ready for it. The HW informs its readiness through power irq.
+>>>> The voltage switching should happen only then.
+>>>>
+>>>> Use the internal voltage switching and then control the voltage
+>>>> switching using power irq.
+>>>>
+>>>> Set the regulator load as well so that regulator can be configured
+>>>> in LPM mode when in is not being used.
+>>>>
+>>>> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
+>>>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+>>>> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
+>>>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+>>>> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>>> Looks better, thanks.
+>>>
+>>>> ---
+>>>>    drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
+>>>>    1 file changed, 198 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>>> [..]
+>>>>    static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+>>>> @@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
+>>>>    		sdhci_msm_hs400(host, &mmc->ios);
+>>>>    }
+>>>> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	if (IS_ERR(mmc->supply.vmmc))
+>>>> +		return 0;
+>>>> +
+>>>> +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
+>>>> +	if (ret)
+>>>> +		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
+>>>> +			mmc_hostname(mmc), mmc->ios.vdd, ret);
+>>> Missed this one on v1, in the event that mmc_regulator_set_ocr() return
+>>> a non-zero value it has already printed an error message. So please
+>>> replace the tail with just:
+>>>
+>>> 	return mmc_regulator_set_ocr(...);
+>>>
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
+>>>> +			      struct mmc_host *mmc, bool level)
+>>>> +{
+>>>> +	int load, ret;
+>>>> +	struct mmc_ios ios;
+>>>> +
+>>>> +	if (IS_ERR(mmc->supply.vqmmc)			 ||
+>>>> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
+>>>> +	    (msm_host->vqmmc_enabled == level))
+>>>> +		return 0;
+>>>> +
+>>>> +	if (msm_host->vqmmc_load) {
+>>>> +		load = level ? msm_host->vqmmc_load : 0;
+>>>> +		ret = regulator_set_load(mmc->supply.vqmmc, load);
+>>> Sorry for the late reply on v1, but please see my explanation regarding
+>>> load and always-on regulators there.
+>> <Merging your comment from V1 here>
+>>
+>>>> You should still call regulator_enable()/regulator_disable() on your
+>>>> consumer regulator in this driver. When you do this the regulator core
+>>>> will conclude that the regulator_dev (i.e. the part that represents the
+>>>> hardware) is marked always_on and will not enable/disable the regulator.
+>>>> But it will still invoke _regulator_handle_consumer_enable() and
+>>>> _regulator_handle_consumer_disable(), which will aggregate the "load" of
+>>>> all client regulators and update the regulator's load.
+>>>> So this will apply the load as you expect regardless of it being
+>>>> supplied by a regulator marked as always_on.
+>> Since I'm not turning off this regulator for eMMC, I wanted to keep it in
+>> LPM mode
+>> to save some power.
+>> When the regulator configured in auto mode (RPMH_REGULATOR_MODE_AUTO) it
+>> switches to LPM/HPM mode based on the active load.
+>> So i have to minimize my driver load requirement so that I can let this
+>> regulator
+>> in LPM mode.
+>> So i need to set load every-time I disable/enable the regulator.
+>>
+> You call regulator_enable(vqmmc) and regulator_disable() below, so you
+> are telling the regulator framework that your struct regulator should be
+> "on" or "off".
+>
+> This will cause the sum of all struct regulator's for the underlying
+> struct regulator_dev to be recalculated. So after calling
+> regulator_disable() below your effective addition to the load
+> calculation is 0, regardless of which load you have specified.
+>
+> Independent of this the property regulator-always-on (always_on in
+> struct regulator_dev) will determine if the enable/disable request will
+> actually be sent to the RPMh.
+>
+>
+> So, if you where to not call regulator_disable() for eMMC your argument
+> is correct, but as far as I can see you are and you're relying on the
+> regulator core to keep it always-on - and then the load logic is in
+> effect still.
+Thanks for the details Bjorn.
+My requirement is, for eMMC i shouldn't be turning this regulator off. 
+But has to configure in LPM mode.
+For SD-card, i have to turn-off this regulator.
+So I'm planning to update the logic as below, let me know if you have 
+any other suggestions.
 
-Hi,
-
-Thanks for taking care of it Lee, merged!
-
--- Sebastian
-
-On Tue, May 26, 2020 at 10:47:02AM +0100, Lee Jones wrote:
-> Enjoy!
->=20
-> The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f31=
-36:
->=20
->   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
->=20
-> are available in the Git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-i=
-io-power-v5.8
->=20
-> for you to fetch changes up to 904ac71f4b0c1c26ec47ff597cb3d3c7d36e618d:
->=20
->   MAINTAINERS: Add entry for mp2629 Battery Charger driver (2020-05-26 10=
-:42:02 +0100)
->=20
-> ----------------------------------------------------------------
-> Immutable branch between MFD, IIO and Power due for the v5.8 merge window
->=20
-> ----------------------------------------------------------------
-> Saravanan Sekar (6):
->       dt-bindings: mfd: Add document bindings for mp2629
->       mfd: mp2629: Add support for mps battery charger
->       iio: adc: mp2629: Add support for mp2629 ADC driver
->       power: supply: Add support for mps mp2629 battery charger
->       power: supply: mp2629: Add impedance compensation config
->       MAINTAINERS: Add entry for mp2629 Battery Charger driver
->=20
->  Documentation/ABI/testing/sysfs-class-power-mp2629 |   8 +
->  .../devicetree/bindings/mfd/mps,mp2629.yaml        |  62 ++
->  MAINTAINERS                                        |   5 +
->  drivers/iio/adc/Kconfig                            |  10 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/mp2629_adc.c                       | 208 +++++++
->  drivers/mfd/Kconfig                                |   9 +
->  drivers/mfd/Makefile                               |   2 +
->  drivers/mfd/mp2629.c                               |  79 +++
->  drivers/power/supply/Kconfig                       |  10 +
->  drivers/power/supply/Makefile                      |   1 +
->  drivers/power/supply/mp2629_charger.c              | 669 +++++++++++++++=
-++++++
->  include/linux/mfd/mp2629.h                         |  26 +
->  13 files changed, 1090 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
->  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->  create mode 100644 drivers/iio/adc/mp2629_adc.c
->  create mode 100644 drivers/mfd/mp2629.c
->  create mode 100644 drivers/power/supply/mp2629_charger.c
->  create mode 100644 include/linux/mfd/mp2629.h
->=20
-> --=20
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
---u56qdvhxw5elq2g6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7PY7IACgkQ2O7X88g7
-+poM1Q/7BstB7OTUZNZlaC3toSNbFJvmHo/CweUuu6n3S6ma19S+EhqKyHMmnM7V
-d639+SscU+s9STHZVe25IRiQtq2SuXLvYtr0L5KyU7ImnLjck7zcLLV55omb9MdH
-OtXW1WaqFar+tnI73HJNgpvEc6uD/yJWsW2z4TZaMQCrvPeCiBQ5VYqfzRIjG9Ws
-F2WhzFpxwqq4C0FOPEuXRCbCQHYgyXr6de6meuEZg0SzMkKwN+ZMHDjJtTZu1xhT
-DqrbDq+3SnGUKbPXmLS043SCHvc4bSh1GY3i02lClmUa1bZXxevSPe+UVOL4rvst
-EmRxmgatGLI5BJIUg7IpIQUnX2bti6xfZRlG86HI+4OYVVDu/7XYRX0Eb6HR9TGQ
-hux2kdG70ziIkVFXpWobUOsyI7/OJ6CRjD+McejZuKRkzBTM6A9tmiZhdh0i3+cY
-VAQWLhf8sDcd9FRxSGX8pIB2/M0nSggh0BbbaZK6CjFHOooNrM6MfDE5K7wSa+lk
-xu/8X5NLFVRsQM8pfBd8Q3vQSioXBlrqaYNgX+5B5sGsPQWLzayu738StP+6SK2j
-ea4AU6ydsnkSbB/bs8MhxGAXIbY8vZWA/lo5xvg9v8QpTMiFGMRJiIvxneMhy7/w
-Z0SAo1anPC5lVefMxQc+rOjiD7Sc7dMvGfLv5ZCt6sQRTz78oic=
-=Y15j
------END PGP SIGNATURE-----
-
---u56qdvhxw5elq2g6--
++static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
++                             struct mmc_host *mmc, bool level)
++{
++       int ret;
++       bool always_on;
++
++       if (IS_ERR(mmc->supply.vqmmc)           ||
++           (mmc->ios.power_mode == MMC_POWER_UNDEFINED))
++               return 0;
++       /*
++        * For eMMC don't turn off Vqmmc, Instead just configure it in LPM
++        * and HPM modes by setting the right amount of load.
++        */
++       always_on = mmc->card && mmc_card_mmc(mmc->card);
++
++       if (always_on)
++               ret = msm_config_vqmmc_mode(msm_host, mmc, level);
++       else
++               ret = msm_toggle_vqmmc(msm_host, mmc, level);
++
++       return ret;
++}
+> Regards,
+> Bjorn
+>
+>>>> +		if (ret) {
+>>>> +			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
+>>>> +				mmc_hostname(mmc), ret);
+>>>> +			goto out;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	if (level) {
+>>>> +		/* Set the IO voltage regulator to default voltage level */
+>>>> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
+>>>> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
+>>>> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
+>>>> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
+>>>> +
+>>>> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
+>>>> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
+>>>> +			if (ret < 0) {
+>>>> +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
+>>>> +					mmc_hostname(mmc), ret);
+>>>> +				goto out;
+>>>> +			}
+>>>> +		}
+>>>> +		ret = regulator_enable(mmc->supply.vqmmc);
+>>>> +	} else {
+>>>> +		ret = regulator_disable(mmc->supply.vqmmc);
+>>>> +	}
+>>>> +
+>>>> +	if (ret)
+>>>> +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
+>>>> +			mmc_hostname(mmc), level ? "en":"dis", ret);
+>>>> +	else
+>>>> +		msm_host->vqmmc_enabled = level;
+>>>> +out:
+>>>> +	return ret;
+>>>> +}
