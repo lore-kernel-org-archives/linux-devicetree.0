@@ -3,70 +3,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136B8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 16:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63994C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 16:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED4012053B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 16:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42975207F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 16:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404788AbgE1QAL (ORCPT
+        id S2405169AbgE1QrG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 12:00:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55742 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404631AbgE1QAK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 12:00:10 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E086E2A383F;
-        Thu, 28 May 2020 17:00:05 +0100 (BST)
-Date:   Thu, 28 May 2020 18:00:03 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v6 16/18] mtd: nand: Convert generic NAND bits to use
- the ECC framework
-Message-ID: <20200528180003.0f682e6f@collabora.com>
-In-Reply-To: <20200528113113.9166-17-miquel.raynal@bootlin.com>
-References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
-        <20200528113113.9166-17-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 28 May 2020 12:47:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:55218 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405105AbgE1QrF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 12:47:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 890F830E;
+        Thu, 28 May 2020 09:47:04 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12BB13F6C4;
+        Thu, 28 May 2020 09:47:02 -0700 (PDT)
+Date:   Thu, 28 May 2020 17:46:57 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v4 0/2]  PCI: Add new UniPhier PCIe endpoint driver
+Message-ID: <20200528164657.GA30482@e121166-lin.cambridge.arm.com>
+References: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 13:31:11 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Thu, May 14, 2020 at 09:03:19PM +0900, Kunihiko Hayashi wrote:
+> This series adds PCIe endpoint controller driver for Socionext UniPhier
+> SoCs. This controller is based on the DesignWare PCIe core.
+> 
+> This driver supports Pro5 SoC only, so Pro5 needs multiple clocks and
+> resets in devicetree node.
+> 
+> Changes since v3:
+> - dt-bindings: Convert with dt-schema
+> - Replace with devm_platform_ioremap_resource()
+> - Add a commnet that mutex covers raising legacy IRQ
+> 
+> Changes since v2:
+> - dt-bindings: Add clock-names, reset-names, and fix example for Pro5
+> - Remove 'is_legacy' indicating that the compatible is for legacy SoC
+> - Use pci_epc_features instead of defining uniphier_soc_data
+> - Remove redundant register read access
+> - Clean up return code on uniphier_add_pcie_ep()
+> - typo: intx -> INTx
+> 
+> Changes since v1:
+> - dt-bindings: Add Reviewed-by line
+> - Fix register value to set EP mode
+> - Add error message when failed to get phy
+> - Replace INTx assertion time with macro
+> 
+> Kunihiko Hayashi (2):
+>   dt-bindings: PCI: Add UniPhier PCIe endpoint controller description
+>   PCI: uniphier: Add Socionext UniPhier Pro5 PCIe endpoint controller
+>     driver
+> 
+>  .../bindings/pci/socionext,uniphier-pcie-ep.yaml   |  92 +++++
+>  MAINTAINERS                                        |   4 +-
+>  drivers/pci/controller/dwc/Kconfig                 |  13 +-
+>  drivers/pci/controller/dwc/Makefile                |   1 +
+>  drivers/pci/controller/dwc/pcie-uniphier-ep.c      | 383 +++++++++++++++++++++
+>  5 files changed, 489 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
+>  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
 
-> Embed a generic NAND ECC high-level object in the nand_device
-> structure to carry all the ECC engine configuration/data. Adapt the
-> raw NAND and SPI-NAND cores to fit the change.
+Applied to pci/dwc, thanks !
 
-I would also split that one:
-
-1/ s/nand_ecc_props/nand_ecc/ in the core + change the spi nand
-   framework accordingly
-
-2/ update rawnand to use the generic layer
+Lorenzo
