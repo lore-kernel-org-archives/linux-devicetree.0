@@ -6,86 +6,85 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4F7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815C3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB4A2088E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C67207BC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590699612;
-	bh=BjArEo4VPxFIcDcJ11T2p1bysqYq0yKGznUPxrfGEeY=;
+	s=default; t=1590699938;
+	bh=0gq5N5O9OYxt24WbyTvf7criS3kDxMncss8BRMtiFSI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fm7d79L/58CxxFAJARb5/y1cprIgd9IhYwFem/QhbqljxWQAZ9OArfNpwjVMPUDFG
-	 J0/a4BHApVUz1IS9fL8rlANZ25mpNVylQbgDfhoddiN/D5vOBo+j6uviPrYpL5hQiq
-	 4IUbt7WLKciadq2pSzozNVyHTaUgW6aQH+GdEsWI=
+	b=Bkonn6YluOLNQm08higaIIzVCOnlZo5+ricm6ETfjeipvv+5OFzvPF1+Kw0ThP0Y8
+	 ELmkNYLgx14OEyIE5l4k+bXcsKrikUwuLANSiJkGuYARazx+tMgQyAFUbY/6ipvKJg
+	 1+7S1GYdECDXLe4PROvG+rWVdhYVJoizy3pf8/M8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407453AbgE1VAJ (ORCPT
+        id S2407549AbgE1VFe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 17:00:09 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34947 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407396AbgE1VAH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 17:00:07 -0400
-Received: by mail-il1-f193.google.com with SMTP id a14so381178ilk.2;
-        Thu, 28 May 2020 14:00:06 -0700 (PDT)
+        Thu, 28 May 2020 17:05:34 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35624 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407445AbgE1VF1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 17:05:27 -0400
+Received: by mail-il1-f196.google.com with SMTP id a14so397268ilk.2;
+        Thu, 28 May 2020 14:05:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=j9/zXo1D/MaHPT4W5dtBptKFjKcNZZ5DUc8Iw936Zdg=;
-        b=jk54fGZEG0C+EwMxg9g/IFIDxkNUb7BNpEC37W5a9WocIGGbSGULnPObAky1eE6Bar
-         Rwh7SFp7zPGfqgfULn7rpVWE8w2SdvB+/WH6ZK9jx/4ThV5sfO5DhG5SHB+Xbh9hRb4M
-         LZUtBJ710seW5faTuhRpW1xGQL2t14XCrevmImGXEp2icDe5mSdq9LTBhvVrfRjfVyHe
-         OuGWV0DKUwBPTnfsaFVPjMrawGrs7GIddXB85tVRGh9QsNM4knYCdYCxlHZ3Eydj9327
-         W9F3TjUb23xAmnrJyEmT6jpIbrAoW8dEyKP4p9VVz9z4nW7iuGN2PKHHLMXuxwRZsM2b
-         weSw==
-X-Gm-Message-State: AOAM532mP+9ViuoRiN7sun91hQ43N4et9QkI3+1Lwelyp2lxtpLs+Zy2
-        /o+3eFlRYtRqsOBF7RbJfQ==
-X-Google-Smtp-Source: ABdhPJxGSDGqe1jHsfiIWe7poFysMf6a/HV4i8103L/vkn9OHjEfZF/3cHeecQok/kGcda130WSE2w==
-X-Received: by 2002:a05:6e02:965:: with SMTP id q5mr4481965ilt.272.1590699606434;
-        Thu, 28 May 2020 14:00:06 -0700 (PDT)
+        bh=hk4Dv3GPLQpOdrZKF0P13wwN6w2ZLeEznW43zeiADx0=;
+        b=fjpS3skOtvYvZrUYU1asabfoO2BkMbH2O/UaJA78/IXApBZk/6klUJZf9lbL4ADui8
+         ojChXeKPZd/zOGPvt1ZuU3uWfMjj+DbcDiX9TcI/DMUqKnw6wASU2g7HwZs+ppIFoIJ9
+         0S/RfeSXrfZ3SWx8bX6ameYctn/3E/2wlmsPkbcfffJ3R5kXIpgLfARStMebbC3gJAUG
+         IGz+7Rk8KW7hYBn+4nlCVpLZaYHYcnsqBVTZ9NGW6GkNeOsEg038A9akM+L3vt59Lbz8
+         BaN9uJD1fLIsCj8RZ7imnQ99ajQXbok5nEo+krMsQbTBmRydWzEz6b4kJCAoG0Vcnkxp
+         lr7w==
+X-Gm-Message-State: AOAM531a9YwC9mNU/zMV0Gs8bC6JjspYh4WEgvMKyzMPvL9VN1tYVUk4
+        K2xLqwxf58duJdF9bnEP1Q==
+X-Google-Smtp-Source: ABdhPJz3sDumZpFFAsFr3f0K4Ivu0qZ0d2FIwN8qvSWZuZrkItYZtK69n6KFlLSaN4wGevCkuCX91Q==
+X-Received: by 2002:a05:6e02:dd3:: with SMTP id l19mr4201718ilj.154.1590699926818;
+        Thu, 28 May 2020 14:05:26 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k18sm3038277iok.4.2020.05.28.14.00.05
+        by smtp.gmail.com with ESMTPSA id f12sm3025468ioj.26.2020.05.28.14.05.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 14:00:05 -0700 (PDT)
-Received: (nullmailer pid 666474 invoked by uid 1000);
-        Thu, 28 May 2020 21:00:04 -0000
-Date:   Thu, 28 May 2020 15:00:04 -0600
+        Thu, 28 May 2020 14:05:26 -0700 (PDT)
+Received: (nullmailer pid 680799 invoked by uid 1000);
+        Thu, 28 May 2020 21:05:24 -0000
+Date:   Thu, 28 May 2020 15:05:24 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     aisheng.dong@nxp.com, devicetree@vger.kernel.org,
-        Linux-imx@nxp.com, daniel.lezcano@linaro.org, ping.bai@nxp.com,
-        linux-kernel@vger.kernel.org, s.hauer@pengutronix.de,
-        robh+dt@kernel.org, tglx@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, festevam@gmail.com,
-        shawnguo@kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH V2 3/3] dt-bindings: timer: Convert i.MX SYSCTR to
- json-schema
-Message-ID: <20200528210004.GA666410@bogus>
-References: <1589860547-3207-1-git-send-email-Anson.Huang@nxp.com>
- <1589860547-3207-4-git-send-email-Anson.Huang@nxp.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: media: Add missing clock domain description
+Message-ID: <20200528210524.GA669520@bogus>
+References: <20200519074229.22308-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589860547-3207-4-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200519074229.22308-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 19 May 2020 11:55:47 +0800, Anson Huang wrote:
-> Convert the i.MX SYSCTR binding to DT schema format using json-schema.
+On Tue, May 19, 2020 at 09:42:29AM +0200, Geert Uytterhoeven wrote:
+> make dtbs_check:
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> No changes.
-> ---
->  .../devicetree/bindings/timer/nxp,sysctr-timer.txt | 25 ----------
->  .../bindings/timer/nxp,sysctr-timer.yaml           | 54 ++++++++++++++++++++++
->  2 files changed, 54 insertions(+), 25 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
+>     arch/arm/boot/dts/r7s72100-genmai.dt.yaml: camera@e8210000: 'clocks', 'power-domains' do not match any of the regexes: 'pinctrl-[0-9]+'
 > 
+> Fix this by documenting the missing properties.
+> Update the example to match reality.
+> 
+> Fixes: 7f464532b05dadc8 ("dt-bindings: Add missing 'additionalProperties: false'")
 
-Applied, thanks!
+The above is not a error in this commit. It just exposed an error in 
+the binding. So I don't think Fixes is appropriate. I'll drop when 
+applying.
+
+> Fixes: 58361eaa11d561f3 ("dt-bindings: media: renesas,ceu: Convert to yaml")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/media/renesas,ceu.yaml        | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
