@@ -2,109 +2,195 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CB5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6B9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C872088E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCDE2088E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590695842;
+	bh=WdjZb2iePlc27XuysorsJpBilXlRt3WRFcZxlXNQpY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jsz/9OhqtxyjuTpCf/gPjhNvdH61tW3+lkayOVMhb8E5b9kUm8RRS/5Rok8Rxwo6H
+	 jRsaSpmoKzOWj16vN8z6TrEDa2lILunzcpOvUhCucwW5M11cdYzQEUqlj7tRUh5g5j
+	 4bnwDcuMu6H3kvENy0Lfq9vZh/KTWTCT61qW9DwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406847AbgE1Txn (ORCPT
+        id S2406766AbgE1T5W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 15:53:43 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44018 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406687AbgE1Txm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:53:42 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6A6A38030839;
-        Thu, 28 May 2020 19:53:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id NGsEWW3ofFNe; Thu, 28 May 2020 22:53:38 +0300 (MSK)
-Date:   Thu, 28 May 2020 22:53:38 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200528195338.yzl35nhogmyikv43@mobilestation>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
- <20200528145224.GT1634618@smile.fi.intel.com>
- <20200528154022.3reghhjcd4dnsr3g@mobilestation>
+        Thu, 28 May 2020 15:57:22 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41138 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406687AbgE1T5V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:57:21 -0400
+Received: by mail-io1-f67.google.com with SMTP id o5so31455633iow.8;
+        Thu, 28 May 2020 12:57:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=C1yxG+5EPv3E4hC3r9qMne3qQ1WLqR3rVkfPRz5Lf7A=;
+        b=KESz+RH2pOl6VIua9FOmCwgjXTqa/IlGXvkhr/5sIjnxjGZcajx8n/DdcRahir1pNZ
+         QGWRHNy9T56tdSGNG9vqBBWa7f3YMi2Yv2wGwaF5L6wc26mvbACoDFpzU4CDYDCoYqx0
+         6TeQaEPqSBV180LS97zQwM5e8rLihY3M49B25xR7geoWFLHleqYepOUDxDOw62vsxGzH
+         uNqnLbNJ9p7Ca+5NuF1y+V0MisGajxt9gNYIJlOr0nKHZr4PvmigIuNr7bvGTvFHazQQ
+         BiNOUN8i3vlq/6jWSI++U+FSkLMsUpfAM1QcFgbhjgQaRWAxLvbSEaeUljwG7uAjWGWp
+         MvAw==
+X-Gm-Message-State: AOAM531NRScDwHC6KOcBYPgIWDpiKv4pzpSYLo1oFi59pUYlbRL3xgPK
+        qu2E/vj1NMw2ctDLj5fqjA==
+X-Google-Smtp-Source: ABdhPJwSH+qxIcWv8h/fKAo6SOTAQdcOfw2m0OYWjSIpa6W5m47BsalTXqPIM9X9CbE4u2CeC3MeOw==
+X-Received: by 2002:a02:95a6:: with SMTP id b35mr4047016jai.40.1590695839998;
+        Thu, 28 May 2020 12:57:19 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b18sm3627485ilh.77.2020.05.28.12.57.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:57:19 -0700 (PDT)
+Received: (nullmailer pid 580805 invoked by uid 1000);
+        Thu, 28 May 2020 19:57:17 -0000
+Date:   Thu, 28 May 2020 13:57:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 4/6] drm/bridge/nwl-dsi: Drop mux handling
+Message-ID: <20200528195717.GA568887@bogus>
+References: <cover.1589548223.git.agx@sigxcpu.org>
+ <951688795f969ebcbf9fb3c38065ccce6f488235.1589548223.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200528154022.3reghhjcd4dnsr3g@mobilestation>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <951688795f969ebcbf9fb3c38065ccce6f488235.1589548223.git.agx@sigxcpu.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:40:22PM +0300, Serge Semin wrote:
-> On Thu, May 28, 2020 at 05:52:24PM +0300, Andy Shevchenko wrote:
-> > On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
-> > > IP core of the DW DMA controller may be synthesized with different
-> > > max burst length of the transfers per each channel. According to Synopsis
-> > > having the fixed maximum burst transactions length may provide some
-> > > performance gain. At the same time setting up the source and destination
-> > > multi size exceeding the max burst length limitation may cause a serious
-> > > problems. In our case the DMA transaction just hangs up. In order to fix
-> > > this lets introduce the max burst length platform config of the DW DMA
-> > > controller device and don't let the DMA channels configuration code
-> > > exceed the burst length hardware limitation.
-> > > 
-> > > Note the maximum burst length parameter can be detected either in runtime
-> > > from the DWC parameter registers or from the dedicated DT property.
-> > > Depending on the IP core configuration the maximum value can vary from
-> > > channel to channel so by overriding the channel slave max_burst capability
-> > > we make sure a DMA consumer will get the channel-specific max burst
-> > > length.
-> > 
-> > ...
-> > 
-> > >  static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
-> > >  {
-> > > +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
-> > >  
-> > 
-> 
-> > Perhaps,
-> > 
-> > 	/* DesignWare DMA supports burst value from 0 */
-> > 	caps->min_burst = 0;
-> 
-> Regarding min_burst being zero. I don't fully understand what it means.
-> It means no burst or burst with minimum length or what?
-> In fact DW DMA burst length starts from 1. Remember the burst-length run-time
-> parameter we were arguing about? Anyway the driver makes sure that both
-> 0 and 1 requested burst length are setup as burst length of 1 in the
-> CTLx.SRC_MSIZE, CTLx.DST_MSIZE fields.
-> 
-> I agree with the rest of your comments below.
-> 
-> -Sergey
-> 
-> > 
+On Fri, May 15, 2020 at 03:12:13PM +0200, Guido Günther wrote:
+> This will be handled via the mux-input-bridge.
 
-It would be also better to initialize the dw->dma.min_burst field instead
-of setting caps->min_burst in the dwc_caps callback, since the min burst length
-can't vary from channel to channel and it will be copied to the caps->min_burst
-field anyway in the dma_get_slave_caps() method.
+You can't do this. What happens booting a kernel with this change and an 
+un-modified dtb? You just broke it.
 
--Sergey
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  drivers/gpu/drm/bridge/Kconfig   |  1 -
+>  drivers/gpu/drm/bridge/nwl-dsi.c | 61 --------------------------------
+>  2 files changed, 62 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 3886c0f41bdd..11444f841e35 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -78,7 +78,6 @@ config DRM_NWL_MIPI_DSI
+>  	select DRM_PANEL_BRIDGE
+>  	select GENERIC_PHY_MIPI_DPHY
+>  	select MFD_SYSCON
+> -	select MULTIPLEXER
+>  	select REGMAP_MMIO
+>  	help
+>  	  This enables the Northwest Logic MIPI DSI Host controller as
+> diff --git a/drivers/gpu/drm/bridge/nwl-dsi.c b/drivers/gpu/drm/bridge/nwl-dsi.c
+> index b14d725bf609..8839f333f39c 100644
+> --- a/drivers/gpu/drm/bridge/nwl-dsi.c
+> +++ b/drivers/gpu/drm/bridge/nwl-dsi.c
+> @@ -12,7 +12,6 @@
+>  #include <linux/math64.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+> -#include <linux/mux/consumer.h>
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/phy/phy.h>
+> @@ -44,9 +43,6 @@ enum transfer_direction {
+>  	DSI_PACKET_RECEIVE,
+>  };
+>  
+> -#define NWL_DSI_ENDPOINT_LCDIF 0
+> -#define NWL_DSI_ENDPOINT_DCSS 1
+> -
+>  struct nwl_dsi_plat_clk_config {
+>  	const char *id;
+>  	struct clk *clk;
+> @@ -94,7 +90,6 @@ struct nwl_dsi {
+>  	struct reset_control *rst_esc;
+>  	struct reset_control *rst_dpi;
+>  	struct reset_control *rst_pclk;
+> -	struct mux_control *mux;
+>  
+>  	/* DSI clocks */
+>  	struct clk *phy_ref_clk;
+> @@ -1018,14 +1013,6 @@ static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
+>  	}
+>  	dsi->tx_esc_clk = clk;
+>  
+> -	dsi->mux = devm_mux_control_get(dsi->dev, NULL);
+> -	if (IS_ERR(dsi->mux)) {
+> -		ret = PTR_ERR(dsi->mux);
+> -		if (ret != -EPROBE_DEFER)
+> -			DRM_DEV_ERROR(dsi->dev, "Failed to get mux: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+>  	base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+> @@ -1073,47 +1060,6 @@ static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
+>  	return 0;
+>  }
+>  
+> -static int nwl_dsi_select_input(struct nwl_dsi *dsi)
+> -{
+> -	struct device_node *remote;
+> -	u32 use_dcss = 1;
+> -	int ret;
+> -
+> -	remote = of_graph_get_remote_node(dsi->dev->of_node, 0,
+> -					  NWL_DSI_ENDPOINT_LCDIF);
+> -	if (remote) {
+> -		use_dcss = 0;
+> -	} else {
+> -		remote = of_graph_get_remote_node(dsi->dev->of_node, 0,
+> -						  NWL_DSI_ENDPOINT_DCSS);
+> -		if (!remote) {
+> -			DRM_DEV_ERROR(dsi->dev,
+> -				      "No valid input endpoint found\n");
+> -			return -EINVAL;
+> -		}
+> -	}
+> -
+> -	DRM_DEV_INFO(dsi->dev, "Using %s as input source\n",
+> -		     (use_dcss) ? "DCSS" : "LCDIF");
+> -	ret = mux_control_try_select(dsi->mux, use_dcss);
+> -	if (ret < 0)
+> -		DRM_DEV_ERROR(dsi->dev, "Failed to select input: %d\n", ret);
+> -
+> -	of_node_put(remote);
+> -	return ret;
+> -}
+
+You could however make these functions generic for any bridge to use. 
+Define a function that checks for mux-control property and if found sets 
+up the mux (IIRC, there's already a concept of a default state). That 
+should be callable from somewhere generic too.
+
+Rob
