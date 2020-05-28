@@ -2,356 +2,116 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866F9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B159C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57F7B20897
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:29:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="TnaNU5x1"
+	by mail.kernel.org (Postfix) with ESMTP id EA994207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404429AbgE1P3H (ORCPT
+        id S2404430AbgE1PdT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:29:07 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:34604 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404409AbgE1P24 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:28:56 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 361B720F0F;
-        Thu, 28 May 2020 15:28:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1590679735; bh=YBUn3Oz5CnhmVZaWN0CnLBfCQOSFI6MPNke/jZ3j1CA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnaNU5x1lqfcxt30YPR4CMMJVMlOnl3N1huHXoySWc52hzIRYsyjHSaeyrxBduWyA
-         6Lxf5k1nLhCR+pJlHLFRUw0iz9ky94XBKJCBF4Tusb2EuEDo6GxX9qCiBNs5MElt+T
-         n2zSWsF4wi8D8mlPHN0hDUcP33XLCIlS+/ztebYATIoNmq3HU88iIXvzpDoCzQqRh7
-         n41XTSRmg4kBChTAOBMmW4KZcB7IWh2sNiFQ6QHkJVxObd3bDKl58+pvLiZAzCea1p
-         uGexTNDvv0hsvMW8nKi/BgkRVRiquS8vW0Ma1h8EsxHBpdZcUctNJnj814TWd4glD4
-         VQnvSKF0ymhoQ==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH v5 3/6] irqchip: Add Loongson PCH PIC controller
-Date:   Thu, 28 May 2020 23:27:51 +0800
-Message-Id: <20200528152757.1028711-4-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
-References: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
+        Thu, 28 May 2020 11:33:19 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:33014 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404218AbgE1PdS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:33:18 -0400
+Received: by mail-oo1-f66.google.com with SMTP id q6so5822386oot.0;
+        Thu, 28 May 2020 08:33:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BwvPrfZ8wSg4ph9zMdOEHVQNrGJxP0cUS3oI9/YOGpQ=;
+        b=QpwqjFTsadK3mu7urI3IfM1rL6tr9ztPKMnoyrW7GQqMX5igix/k9dhHLHJKlX+QoI
+         XBBoQSXFkwTM3UbSizQhWIndyeBKKk/1TjOK5wgzYCqYOVL9Mh3Hf5vqvbsiZcAKVH2U
+         i5m4Z3iR7AAXWrMp+pTab7419V0Yf8Moo3G3dM5JSTJDjNasCsFH2Q3N8y3VTXDLUbiQ
+         VYms1wPIp8aymnP4bneBUlrU0U+vp+MmMoXqlUbAC/pP6SHCNNIsiyHkdOUiHAMNpetR
+         FGIubYztWG5GSahTJrFvbyq56zPluCH5YtmAS7fEUpHNBoZaJtYtifg6rs4WO4OcCgeO
+         sX1Q==
+X-Gm-Message-State: AOAM533NAu2ppUzQserN6stdvj2DRLSH+vNElmo1XKqd42FoWSzqxH4S
+        7I4AxZXGoUxOohLtIwrdZYqsYFguYz4bSXbIuko=
+X-Google-Smtp-Source: ABdhPJzYnIPD026r8y0hPgfUlAn0bDcx+vTjLCisCeIZ4o+tCY/6uQdRsn4J2v/VaqLjNOwZ97xJOv6mtqydzoFJdxQ=
+X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr2914462oot.1.1590679997128;
+ Thu, 28 May 2020 08:33:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 28 May 2020 17:33:06 +0200
+Message-ID: <CAMuHMdVNi2dwrbsX9Zbxo3GGaGZ6EwtsVhFFORNTYkcGfynkQQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] R8A7742 add support for HSUSB and USB2.0/3.0
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This controller appears on Loongson LS7A family of PCH to transform
-interrupts from devices into HyperTransport vectorized interrrupts
-and send them to procrssor's HT vector controller.
+Hi Lorenzo,
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
-v2:
-	- Style clean-ups
-	- Use IRQ_FASTEOI_HIERARCHY_HANDLERS
-	- Move lock into bitclr & bitset
-	- Make loongson,pic-base-vec as required property
-v4:
-	- Fix variable declear ordering
-	- Remove irqsave for spin-locks
----
- drivers/irqchip/Kconfig                |   9 +
- drivers/irqchip/Makefile               |   1 +
- drivers/irqchip/irq-loongson-pch-pic.c | 243 +++++++++++++++++++++++++
- 3 files changed, 253 insertions(+)
- create mode 100644 drivers/irqchip/irq-loongson-pch-pic.c
+On Thu, May 28, 2020 at 4:21 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+> On Sun, May 24, 2020 at 10:37:49PM +0100, Lad Prabhakar wrote:
+> > This patch series adds support for HSUSB, USB2.0 and USB3.0 to
+> > R8A7742 SoC DT.
+> >
+> > This patch series applies on-top of [1].
+> >
+> > [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=288491
+>
+> I think Geert will pull this series, so I'd drop it from the PCI
+> patchwork unless there is a reason I should not, please let me know.
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index de4564e2ea88..5524a621638c 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -540,4 +540,13 @@ config LOONGSON_HTVEC
- 	help
- 	  Support for the Loongson3 HyperTransport Interrupt Vector Controller.
- 
-+config LOONGSON_PCH_PIC
-+	bool "Loongson PCH PIC Controller"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	default MACH_LOONGSON64
-+	select IRQ_DOMAIN_HIERARCHY
-+	select IRQ_FASTEOI_HIERARCHY_HANDLERS
-+	help
-+	  Support for the Loongson PCH PIC Controller.
-+
- endmenu
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 74561879f5a7..acc72331cec8 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -108,3 +108,4 @@ obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
- obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
-+obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-new file mode 100644
-index 000000000000..2a05b9305012
---- /dev/null
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -0,0 +1,243 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson PCH PIC support
-+ */
-+
-+#define pr_fmt(fmt) "pch-pic: " fmt
-+
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+
-+/* Registers */
-+#define PCH_PIC_MASK		0x20
-+#define PCH_PIC_HTMSI_EN	0x40
-+#define PCH_PIC_EDGE		0x60
-+#define PCH_PIC_CLR		0x80
-+#define PCH_PIC_AUTO0		0xc0
-+#define PCH_PIC_AUTO1		0xe0
-+#define PCH_INT_ROUTE(irq)	(0x100 + irq)
-+#define PCH_INT_HTVEC(irq)	(0x200 + irq)
-+#define PCH_PIC_POL		0x3e0
-+
-+#define PIC_COUNT_PER_REG	32
-+#define PIC_REG_COUNT		2
-+#define PIC_COUNT		(PIC_COUNT_PER_REG * PIC_REG_COUNT)
-+#define PIC_REG_IDX(irq_id)	((irq_id) / PIC_COUNT_PER_REG)
-+#define PIC_REG_BIT(irq_id)	((irq_id) % PIC_COUNT_PER_REG)
-+
-+struct pch_pic {
-+	void __iomem		*base;
-+	struct irq_domain	*pic_domain;
-+	u32			ht_vec_base;
-+	raw_spinlock_t		pic_lock;
-+};
-+
-+static void pch_pic_bitset(struct pch_pic *priv, int offset, int bit)
-+{
-+	u32 reg;
-+	void __iomem *addr = priv->base + offset + PIC_REG_IDX(bit) * 4;
-+
-+	raw_spin_lock(&priv->pic_lock);
-+	reg = readl(addr);
-+	reg |= BIT(PIC_REG_BIT(bit));
-+	writel(reg, addr);
-+	raw_spin_unlock(&priv->pic_lock);
-+}
-+
-+static void pch_pic_bitclr(struct pch_pic *priv, int offset, int bit)
-+{
-+	u32 reg;
-+	void __iomem *addr = priv->base + offset + PIC_REG_IDX(bit) * 4;
-+
-+	raw_spin_lock(&priv->pic_lock);
-+	reg = readl(addr);
-+	reg &= ~BIT(PIC_REG_BIT(bit));
-+	writel(reg, addr);
-+	raw_spin_unlock(&priv->pic_lock);
-+}
-+
-+static void pch_pic_eoi_irq(struct irq_data *d)
-+{
-+	u32 idx = PIC_REG_IDX(d->hwirq);
-+	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-+
-+	writel(BIT(PIC_REG_BIT(d->hwirq)),
-+			priv->base + PCH_PIC_CLR + idx * 4);
-+}
-+
-+static void pch_pic_mask_irq(struct irq_data *d)
-+{
-+	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-+
-+	pch_pic_bitset(priv, PCH_PIC_MASK, d->hwirq);
-+	irq_chip_mask_parent(d);
-+}
-+
-+static void pch_pic_unmask_irq(struct irq_data *d)
-+{
-+	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-+
-+	irq_chip_unmask_parent(d);
-+	pch_pic_bitclr(priv, PCH_PIC_MASK, d->hwirq);
-+}
-+
-+static int pch_pic_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-+	int ret = 0;
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		pch_pic_bitset(priv, PCH_PIC_EDGE, d->hwirq);
-+		pch_pic_bitclr(priv, PCH_PIC_POL, d->hwirq);
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		pch_pic_bitset(priv, PCH_PIC_EDGE, d->hwirq);
-+		pch_pic_bitset(priv, PCH_PIC_POL, d->hwirq);
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		pch_pic_bitclr(priv, PCH_PIC_EDGE, d->hwirq);
-+		pch_pic_bitclr(priv, PCH_PIC_POL, d->hwirq);
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		pch_pic_bitclr(priv, PCH_PIC_EDGE, d->hwirq);
-+		pch_pic_bitset(priv, PCH_PIC_POL, d->hwirq);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static struct irq_chip pch_pic_irq_chip = {
-+	.name			= "PCH PIC",
-+	.irq_mask		= pch_pic_mask_irq,
-+	.irq_unmask		= pch_pic_unmask_irq,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_eoi		= pch_pic_eoi_irq,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_set_type		= pch_pic_set_type,
-+};
-+
-+static int pch_pic_alloc(struct irq_domain *domain, unsigned int virq,
-+			      unsigned int nr_irqs, void *arg)
-+{
-+	int err;
-+	unsigned int type;
-+	unsigned long hwirq;
-+	struct irq_fwspec fwspec;
-+	struct pch_pic *priv = domain->host_data;
-+
-+	irq_domain_translate_twocell(domain, arg, &hwirq, &type);
-+
-+	fwspec.fwnode = domain->parent->fwnode;
-+	fwspec.param_count = 1;
-+	fwspec.param[0] = hwirq + priv->ht_vec_base;
-+
-+	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-+	if (err)
-+		return err;
-+
-+	irq_domain_set_info(domain, virq, hwirq,
-+			    &pch_pic_irq_chip, priv,
-+			    handle_fasteoi_ack_irq, NULL, NULL);
-+	irq_set_probe(virq);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops pch_pic_domain_ops = {
-+	.translate	= irq_domain_translate_twocell,
-+	.alloc		= pch_pic_alloc,
-+	.free		= irq_domain_free_irqs_parent,
-+};
-+
-+static void pch_pic_reset(struct pch_pic *priv)
-+{
-+	int i;
-+
-+	for (i = 0; i < PIC_COUNT; i++) {
-+		/* Write vectore ID */
-+		writeb(priv->ht_vec_base + i, priv->base + PCH_INT_HTVEC(i));
-+		/* Hardcode route to HT0 Lo */
-+		writeb(1, priv->base + PCH_INT_ROUTE(i));
-+	}
-+
-+	for (i = 0; i < PIC_REG_COUNT; i++) {
-+		/* Clear IRQ cause registers, mask all interrupts */
-+		writel_relaxed(0xFFFFFFFF, priv->base + PCH_PIC_MASK + 4 * i);
-+		writel_relaxed(0xFFFFFFFF, priv->base + PCH_PIC_CLR + 4 * i);
-+		/* Clear auto bounce, we don't need that */
-+		writel_relaxed(0, priv->base + PCH_PIC_AUTO0 + 4 * i);
-+		writel_relaxed(0, priv->base + PCH_PIC_AUTO1 + 4 * i);
-+		/* Enable HTMSI transformer */
-+		writel_relaxed(0xFFFFFFFF, priv->base + PCH_PIC_HTMSI_EN + 4 * i);
-+	}
-+}
-+
-+static int pch_pic_of_init(struct device_node *node,
-+				struct device_node *parent)
-+{
-+	struct pch_pic *priv;
-+	struct irq_domain *parent_domain;
-+	int err;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	raw_spin_lock_init(&priv->pic_lock);
-+	priv->base = of_iomap(node, 0);
-+	if (!priv->base) {
-+		err = -ENOMEM;
-+		goto free_priv;
-+	}
-+
-+	parent_domain = irq_find_host(parent);
-+	if (!parent_domain) {
-+		pr_err("Failed to find the parent domain\n");
-+		err = -ENXIO;
-+		goto iounmap_base;
-+	}
-+
-+	if (of_property_read_u32(node, "loongson,pic-base-vec",
-+				&priv->ht_vec_base)) {
-+		pr_err("Failed to determine pic-base-vec\n");
-+		err = -EINVAL;
-+		goto iounmap_base;
-+	}
-+
-+	priv->pic_domain = irq_domain_create_hierarchy(parent_domain, 0,
-+						       PIC_COUNT,
-+						       of_node_to_fwnode(node),
-+						       &pch_pic_domain_ops,
-+						       priv);
-+	if (!priv->pic_domain) {
-+		pr_err("Failed to create IRQ domain\n");
-+		err = -ENOMEM;
-+		goto iounmap_base;
-+	}
-+
-+	pch_pic_reset(priv);
-+
-+	return 0;
-+
-+iounmap_base:
-+	iounmap(priv->base);
-+free_priv:
-+	kfree(priv);
-+
-+	return err;
-+}
-+
-+IRQCHIP_DECLARE(pch_pic, "loongson,pch-pic-1.0", pch_pic_of_init);
+I'll take the DTS patches only.
+
+You may want to take 2/8, or leave it to Rob.
+
+> > Lad Prabhakar (8):
+> >   dt-bindings: phy: rcar-gen2: Add r8a7742 support
+> >   dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r8a7742
+> >   dt-bindings: usb: renesas,usbhs: Add support for r8a7742
+> >   dt-bindings: dmaengine: renesas,usb-dmac: Add binding for r8a7742
+> >   dt-bindings: usb: usb-xhci: Document r8a7742 support
+> >   ARM: dts: r8a7742: Add USB 2.0 host support
+> >   ARM: dts: r8a7742: Add USB-DMAC and HSUSB device nodes
+> >   ARM: dts: r8a7742: Add xhci support
+> >
+> >  .../devicetree/bindings/dma/renesas,usb-dmac.yaml  |   1 +
+> >  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |   3 +-
+> >  .../devicetree/bindings/phy/rcar-gen2-phy.txt      |   3 +-
+> >  .../devicetree/bindings/usb/renesas,usbhs.yaml     |   1 +
+> >  Documentation/devicetree/bindings/usb/usb-xhci.txt |   1 +
+> >  arch/arm/boot/dts/r8a7742.dtsi                     | 173 +++++++++++++++++++++
+> >  6 files changed, 180 insertions(+), 2 deletions(-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0.rc0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
