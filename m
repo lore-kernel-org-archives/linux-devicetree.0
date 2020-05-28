@@ -2,126 +2,104 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC91C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 12:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D921EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 12:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78195206F1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 12:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DC3206F1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 12:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389801AbgE1Mow (ORCPT
+        id S2389939AbgE1M54 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 08:44:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:34447 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389783AbgE1Mov (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 08:44:51 -0400
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mc1hn-1j0q9W2ejP-00dTHr; Thu, 28 May 2020 14:44:49 +0200
-Received: by mail-qt1-f178.google.com with SMTP id i68so22037278qtb.5;
-        Thu, 28 May 2020 05:44:49 -0700 (PDT)
-X-Gm-Message-State: AOAM533WnvN07rc9kn9iA2pOoNSxdYddSO0XUjH6YdXgd55UJILAr8km
-        up99alB8WtsYb9lfPalvPz442EBTtCqw1+osyWk=
-X-Google-Smtp-Source: ABdhPJxZXUChaKTDliaMUeX0epZa/YK95/W0ULpyjKRLy+WFzLvw+joqo7cKUbQkQVsTL7VO0+fof/I8H1lW60z6P/E=
-X-Received: by 2002:ac8:1b56:: with SMTP id p22mr2842856qtk.304.1590669888325;
- Thu, 28 May 2020 05:44:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
- <20200526125928.17096-5-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VcfkPPy5YjNrcv8c6doyQz5C47QyREE0v6tfQjXYrBijQ@mail.gmail.com>
- <CAK8P3a2WMqTRitUU86hSV3HSK12-hF_RDoFg51PRGTLmXwznvA@mail.gmail.com> <20200528122738.rbl2dkgep4ipr2je@mobilestation>
-In-Reply-To: <20200528122738.rbl2dkgep4ipr2je@mobilestation>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 28 May 2020 14:44:32 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1ctV8Lj4PGJyzZ_eRMcXxoW1T7Wbk_2wkT4HUcFUTqdQ@mail.gmail.com>
-Message-ID: <CAK8P3a1ctV8Lj4PGJyzZ_eRMcXxoW1T7Wbk_2wkT4HUcFUTqdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] bus: Add Baikal-T1 AXI-bus driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thu, 28 May 2020 08:57:56 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48068 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389936AbgE1M54 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 08:57:56 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id C57CB1C037C; Thu, 28 May 2020 14:57:53 +0200 (CEST)
+Date:   Thu, 28 May 2020 14:57:53 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "soc@kernel.org" <soc@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:IQDK3DI2FiEo5W/E3yLMWFY0APen8SVNQA3vx4FpFNeu+sk2UjA
- AtyC5KOHWPMxYI3ubOHRjxmmtKAHftzKsKALFrFmQqFmxv2Bm5Bbx73Isv+nAitDKMW3w20
- WMKXTqmMSdFFijamMnOwpmYP41S1vOvK3u2vS/MSpmWmP8WlLfp+pSvBwszC+wLueWMG4rA
- YwRDSh9AzDpMoFMPjjhVw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WEZNJkvZYx4=:4hr8MA/5d0870mqr9bFoq7
- jJIgyNj7DvLkbFB3/30ALt4kcUfAiYRoTGxhEHoUK/XSiqEkgqzAstCcuaUsHmBzQjx520IQt
- zzLMyiJXEDNBpVWiE6/3wqnbZMSFDYUXr9D+DW2KREnue1T6V4QucmW7aBco3zjdYicCd6+Qd
- SOtjDlyRMhsLkkYCEZKbd2JkD3MVn8cCEhV9IkaKD98m247z6j0AE/swQMSe5pfeBdzak9xqK
- qgqHN2+Bw+JazSf8I1zV5B/JzkEX5Sx49rQuq3jgIWGJuceJieq5x4Q49aOKTlaEHzF7Jqrje
- AU1Eo3VYintIZwvtOwMPB/9/MPHuAYxQX9Nh6e1c93pYTDiw4yh8cBER9QJoLvbmF+oDvt/XS
- l9ceVthdMFRw4jwFmmNyBJYv51wWVpzMheSWhfswdf//pramYtDBxuUmMxVzUa1hfpEgIVp/J
- DhOiS7ZEf3WdUUoUcD+znBaS89I0sQX1kABmPSBknX0rxQjFaOHZHdmVmZlNFUEDf9jj+Rhrm
- QrBbo4usm2GJ1iPqn3DevI9Xj7aCttsWQlvlnZVRZ4rp6zrH6kI3BMBzOzF5de9JXNMP/IUi8
- CdLQZCb497VYAD79/TvRTnTOo1z2wOXrPj4ByCORy1THa/g+jsC45v150hG+c2I7TnX1DNGsJ
- xWRfgzehnvPNcOIL74AxY0LqokQVUSBlDQw/3ILSoLiX8M4xcsPEML5QjS2MrXWzzDXJftDBC
- xFkv/JanSFM6BDjFI9WH0BNWanp7CsCRJwvsRnbEJYbP54fdKodfTZTeTBzirzvb6ByEQAPbg
- qqL3iOCxaxHCU3IwUW8EGbS7TwxaK1OwOXnnb+Dqs9Ni0qrsw4=
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200528125753.GD22054@duo.ucw.cz>
+References: <20200512214713.40501-1-tony@atomide.com>
+ <20200528083918.GB10358@localhost>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="cQXOx3fnlpmgJsTP"
+Content-Disposition: inline
+In-Reply-To: <20200528083918.GB10358@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 2:27 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> On Thu, May 28, 2020 at 02:14:58PM +0200, Arnd Bergmann wrote:
-> > On Thu, May 28, 2020 at 12:01 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Tuesday, May 26, 2020, Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >>
-> > >> AXI3-bus is the main communication bus connecting all high-speed
-> > >> peripheral IP-cores with RAM controller and MIPS P5600 cores on Baikal-T1
-> > >> SoC. Bus traffic arbitration is done by means of DW AMBA 3 AXI
-> > >> Interconnect (so called AXI Main Interconnect) routing IO requests from
-> > >> one SoC block to another. This driver provides a way to detect any bus
-> > >> protocol errors and device not responding situations by means of an
-> > >> embedded on top of the interconnect errors handler block (EHB). AXI
-> > >> Interconnect QoS arbitration tuning is currently unsupported.
-> > >> The bus doesn't provide a way to detect the interconnected devices,
-> > >> so they are supposed to be statically defined like by means of the
-> > >> simple-bus sub-nodes.
-> > >
-> > >
-> > >
-> > > Few comments in case if you need a new version. Main point is about sysfs_streq().
-> >
-> > I've applied the patch now and folded in fixes for the build warnings and
-> > errors pointed out by the test robot, but I did not include the changes you
-> > suggested.
->
-> Are you saying that the build-errors and warnings have already been fixed by
-> you, right? If so could you please give me a link to the repo with those
-> commits, so I'd work with the up-to-date code?
 
-I've pushed it to https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/,
+--cQXOx3fnlpmgJsTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I made a local "baikal/drivers" branch with just your patches, updated
-to address the build reports. This is merged into the "arm/drivers"
-branch that contains all driver specific changes across all SoCs and
-this is what I'll send to Linus next week.
+On Thu 2020-05-28 10:39:18, Johan Hovold wrote:
+> On Tue, May 12, 2020 at 02:47:07PM -0700, Tony Lindgren wrote:
+> > Hi all,
+> >=20
+> > Here's the updated set of these patches fixed up for Johan's and
+> > Pavel's earlier comments.
+> >=20
+> > This series does the following:
+> >=20
+> > 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
+> >=20
+> > 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+> >    TTY ports configured in devicetree with help of n_gsm.c
+> >=20
+> > 3. Allows the use of standard Linux device drivers for dedicated
+> >    TS 27.010 channels for devices like GNSS and ALSA found on some
+> >    modems for example
+>=20
+> Unfortunately that does not seem to be the case just yet. Your gnss
+> driver is still aware that it's using n_gsm for the transport and calls
+> into the "parent" serdev-ngsm driver instead of using the serdev
+> interface (e.g. as if this was still and MFD driver).
+>=20
+> If you model this right, the GNSS driver should work equally well
+> regardless of whether you use the serial interface (with n_gsm) or USB
+> (e.g. cdc-acm or usb-serial).
 
-There is also the "for-next" branch that contains all arm/* branches,
-and this is what gets pulled into linux-next, so your patches will show
-up there tomorrow as well.
+I believe we are pretty sure we'll not see that protocol anywhere
+else.
 
-You can normally check the status of any submission to soc@kernel.org
-at https://patchwork.kernel.org/project/linux-soc/list/, but it seems that
-has not picked up the status yet, and I'll have to update it manually.
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-       Arnd
+--cQXOx3fnlpmgJsTP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXs+1UQAKCRAw5/Bqldv6
+8o6oAJ4ynA1fL1tIB/TUTTntEtvfMxREqgCgo8ciNkb8jdFhjdPpKw0gQn7EyQE=
+=ka09
+-----END PGP SIGNATURE-----
+
+--cQXOx3fnlpmgJsTP--
