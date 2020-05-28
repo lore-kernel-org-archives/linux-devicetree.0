@@ -2,116 +2,105 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92022C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E2EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB4220897
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D5A20888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgE1Onr convert rfc822-to-8bit (ORCPT
+        id S1725922AbgE1Opo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:43:47 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:44114 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728473AbgE1Onq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:43:46 -0400
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id BA50A67A7D5;
-        Thu, 28 May 2020 16:43:43 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 28 May
- 2020 16:43:43 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.007; Thu, 28 May 2020 16:43:43 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Fabio Estevam <festevam@gmail.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "NXP Linux Team" <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Thu, 28 May 2020 10:45:44 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:50833 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbgE1Opn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:45:43 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 4C0F4C0009;
+        Thu, 28 May 2020 14:45:37 +0000 (UTC)
+Date:   Thu, 28 May 2020 16:45:35 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <weijie.gao@mediatek.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/2] ARM: dts: Change WDOG_ANY signal from push-pull to
- open-drain
-Thread-Topic: [PATCH 2/2] ARM: dts: Change WDOG_ANY signal from push-pull to
- open-drain
-Thread-Index: AQHWNP5ijHzvHqv1VUeZ8FZvaT2asA==
-Date:   Thu, 28 May 2020 14:43:43 +0000
-Message-ID: <20200528144312.25980-2-frieder.schrempf@kontron.de>
-References: <20200528144312.25980-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20200528144312.25980-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Julien Su <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v6 08/18] mtd: rawnand: Use the new ECC engine type
+ enumeration
+Message-ID: <20200528164535.3655ffcb@xps13>
+In-Reply-To: <20200528163150.6ad71fcc@collabora.com>
+References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
+        <20200528113113.9166-9-miquel.raynal@bootlin.com>
+        <20200528163150.6ad71fcc@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: BA50A67A7D5.AF756
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org, robh@kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-The WDOG_ANY signal is connected to the RESET_IN signal of the SoM
-and baseboard. It is currently configured as push-pull, which means
-that if some external device like a programmer wants to assert the
-RESET_IN signal by pulling it to ground, it drives against the high
-level WDOG_ANY output of the SoC.
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 28 May
+2020 16:31:50 +0200:
 
-To fix this we set the WDOG_ANY signal to open-drain configuration.
-That way we make sure that the RESET_IN can be asserted by the
-watchdog as well as by external devices.
+> On Thu, 28 May 2020 13:31:03 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+> > Mechanical switch from the legacy "mode" enumeration to the new
+> > "engine type" enumeration in drivers and board files.
+> > 
+> > The device tree parsing is also updated to return the new enumeration
+> > from the old strings.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>  
+> 
+> I didn't check all the changes, but I'm fine with the approach
+> 
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> 
+> > diff --git a/include/linux/platform_data/mtd-davinci.h b/include/linux/platform_data/mtd-davinci.h
+> > index 3383101c233b..dd474dd44848 100644
+> > --- a/include/linux/platform_data/mtd-davinci.h
+> > +++ b/include/linux/platform_data/mtd-davinci.h
+> > @@ -60,16 +60,16 @@ struct davinci_nand_pdata {		/* platform_data */
+> >  	struct mtd_partition	*parts;
+> >  	unsigned		nr_parts;
+> >  
+> > -	/* none  == NAND_ECC_NONE (strongly *not* advised!!)
+> > -	 * soft  == NAND_ECC_SOFT
+> > -	 * else  == NAND_ECC_HW, according to ecc_bits
+> > +	/* none  == NAND_ECC_ENGINE_TYPE_NONE (strongly *not* advised!!)
+> > +	 * soft  == NAND_ECC_ENGINE_TYPE_SOFT
+> > +	 * else  == NAND_ECC_ENGINE_TYPE_ON_HOST, according to ecc_bits
+> >  	 *
+> >  	 * All DaVinci-family chips support 1-bit hardware ECC.
+> >  	 * Newer ones also support 4-bit ECC, but are awkward
+> >  	 * using it with large page chips.
+> >  	 */
+> > -	enum nand_ecc_mode	ecc_mode;
+> > -	enum nand_ecc_placement	ecc_placement;
+> > +	enum nand_ecc_engine_type engine_type;
+> > +	enum nand_ecc_placement ecc_placement;  
+> 
+> Nitpick: if you want to use a space instead of tab, it should be done in
+> patch 3.
 
-Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-index fc316408721d..61ba21a605a8 100644
---- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-@@ -116,7 +116,7 @@
- 
- 	pinctrl_wdog: wdoggrp {
- 		fsl,pins = <
--			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x30b0
-+			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x18b0
- 		>;
- 	};
- };
--- 
-2.17.1
+Right, fixed!
