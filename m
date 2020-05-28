@@ -2,393 +2,166 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4235C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 18:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0337C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1E92074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 18:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8901D2078C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590693612;
+	bh=09oDmvOPRdc9yFqYMrXb+8rgwczqoqW1l57ivUBL3eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lww/6J4zgG5qoMCE5207Xki2wvuBVio/bPlUbHdu07QfwOyiT1pvZflFavKkQglKk
+	 Oq106d+9T/hbv0EJIHXUho2PZtq3kHorNStDmb9elu1nDA162RNwBXPIGuEldhndD2
+	 yriHsl2b01zmGuzIaueONl0I/axlEXE0W2oeChyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405944AbgE1SxA convert rfc822-to-8bit (ORCPT
+        id S2406231AbgE1TUL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 14:53:00 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57290 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405912AbgE1Sw6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 14:52:58 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B9CBB2A1638;
-        Thu, 28 May 2020 19:52:54 +0100 (BST)
-Date:   Thu, 28 May 2020 20:52:51 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Julien Su <juliensu@mxic.com.tw>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 15/18] mtd: nand: Introduce the ECC engine
- abstraction
-Message-ID: <20200528205251.5e8abdd1@collabora.com>
-In-Reply-To: <20200528113113.9166-16-miquel.raynal@bootlin.com>
-References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
-        <20200528113113.9166-16-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 28 May 2020 15:20:11 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41886 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406174AbgE1TUJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:20:09 -0400
+Received: by mail-io1-f67.google.com with SMTP id o5so31308019iow.8;
+        Thu, 28 May 2020 12:20:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tVeDlV6NVoD0UCrRZuL6pb5QLcWmItD89ccv8vXcKkk=;
+        b=UYkvlBFljzvklaK77Xx5i11WTU2mbFqQZw8uQF6am8AEW4Hgx6Sab20XZ5jCuGp0VQ
+         JO2kgBJntW6E3/pWW0ifj1VRC+cEVcADgNjWcgzkf74fx3IvgCgRPYuKWixz6y5f8L+i
+         5voquT7TJh797IcLprkW+N5kRWXGnNY85/vJlJd1i+5Vj2Yu88ohUOXx1aPeXxXkdJw+
+         FHsys4yEeymvu08Un67UZY1oqyXf+YCpA2g3lj8QMD7VAcygtbWO9cQLhL1Nrg6IQ/sr
+         awsCz3UOu108tjaLpgCscPN+lnK5CVY0G0gtTe2a/uZlkFOhnGU3tvV2RL79Bijbqi+g
+         6JfQ==
+X-Gm-Message-State: AOAM532C0LPSLfPxn1qM2cqrFmU+LmS9qWxBVObzH2AsG/F9K95j7+S7
+        AQJPe9xDD0E2xAb2NDfO5Q==
+X-Google-Smtp-Source: ABdhPJzF8L1ZbZJieZLdPk1C1tH8PhgkvZo0aCDEh9YnWAnyDMjl9zwYPeJUQcYomxH+ZFHE9EUD4g==
+X-Received: by 2002:a02:707:: with SMTP id f7mr3824681jaf.119.1590693607804;
+        Thu, 28 May 2020 12:20:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id h23sm2890867ioj.39.2020.05.28.12.20.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:20:07 -0700 (PDT)
+Received: (nullmailer pid 530453 invoked by uid 1000);
+        Thu, 28 May 2020 19:20:05 -0000
+Date:   Thu, 28 May 2020 13:20:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200528192005.GA494874@bogus>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 13:31:10 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-
-> Create a generic ECC engine object.
+On Fri, May 15, 2020 at 10:47:38AM +0530, Viresh Kumar wrote:
+> From: Sudeep Holla <sudeep.holla@arm.com>
 > 
-> Later the ecc.c file will receive more generic code coming from
-> the raw NAND specific part. This is a base to instantiate ECC engine
-> objects.
+> Hi Rob, Arnd and Jassi,
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/mtd/nand/Kconfig  |   7 ++
->  drivers/mtd/nand/Makefile |   2 +
->  drivers/mtd/nand/ecc.c    | 138 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mtd/nand.h  |  67 ++++++++++++++++++
->  4 files changed, 214 insertions(+)
->  create mode 100644 drivers/mtd/nand/ecc.c
+> This stuff has been doing rounds on the mailing list since several years
+> now with no agreed conclusion by all the parties. And here is another
+> attempt to get some feedback from everyone involved to close this once
+> and for ever. Your comments will very much be appreciated.
 > 
-> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-> index c1a45b071165..a4478ffa279d 100644
-> --- a/drivers/mtd/nand/Kconfig
-> +++ b/drivers/mtd/nand/Kconfig
-> @@ -9,4 +9,11 @@ source "drivers/mtd/nand/onenand/Kconfig"
->  source "drivers/mtd/nand/raw/Kconfig"
->  source "drivers/mtd/nand/spi/Kconfig"
->  
-> +menu "ECC engine support"
-> +
-> +config MTD_NAND_ECC
-> +	bool
-> +
-> +endmenu
-> +
->  endmenu
-> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-> index 7ecd80c0a66e..981372953b56 100644
-> --- a/drivers/mtd/nand/Makefile
-> +++ b/drivers/mtd/nand/Makefile
-> @@ -6,3 +6,5 @@ obj-$(CONFIG_MTD_NAND_CORE) += nandcore.o
->  obj-y	+= onenand/
->  obj-y	+= raw/
->  obj-y	+= spi/
-> +
-> +nandcore-$(CONFIG_MTD_NAND_ECC) += ecc.o
-> diff --git a/drivers/mtd/nand/ecc.c b/drivers/mtd/nand/ecc.c
-> new file mode 100644
-> index 000000000000..e4f2b6fcbb12
-> --- /dev/null
-> +++ b/drivers/mtd/nand/ecc.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Generic Error-Correcting Code (ECC) engine
-> + *
-> + * Copyright (C) 2019 Macronix
-> + * Author:
-> + *     Miquèl RAYNAL <miquel.raynal@bootlin.com>
-> + *
-> + *
-> + * This file describes the abstraction of any NAND ECC engine. It has been
-> + * designed to fit most cases, including parallel NANDs and SPI-NANDs.
-> + *
-> + * There are three main situations where instantiating this ECC engine makes
-> + * sense:
-> + *   - "external": The ECC engine is outside the NAND pipeline, typically this
+> The ARM MHU is defined here in the TRM [1] for your reference, which
+> states following:
+> 
+> 	"The MHU drives the signal using a 32-bit register, with all 32
+> 	bits logically ORed together. The MHU provides a set of
+> 	registers to enable software to set, clear, and check the status
+> 	of each of the bits of this register independently.  The use of
+> 	32 bits for each interrupt line enables software to provide more
+> 	information about the source of the interrupt. For example, each
+> 	bit of the register can be associated with a type of event that
+> 	can contribute to raising the interrupt."
+> 
+> On few other platforms, like qcom, similar doorbell mechanism is present
+> with separate interrupt for each of the bits (that's how I understood
+> it), while in case of ARM MHU, there is a single interrupt line for all
+> the 32 bits. Also in case of ARM MHU, these registers and interrupts
+> have 3 copies for different priority levels, i.e. low priority
+> non-secure, high priority non-secure and secure channels.
+> 
+> For ARM MHU, both the dt bindings and the Linux driver support 3
+> channels for the different priorities right now and support sending a 32
+> bit data on every transfer in a locked fashion, i.e. only one transfer
+> can be done at once and the other have to wait for it to finish first.
+> 
+> Here are the point of view of the parties involved on this subject:
+> 
+> Jassi's viewpoint:
+> 
+> - Virtualization of channels should be discouraged in software based on
+>   specific usecases of the application. This may invite other mailbox
+>   driver authors to ask for doing virtualization in their drivers.
+> 
+> - In mailbox's terminology, every channel is equivalent to a signal,
+>   since there is only one signal generated here by the MHU, there should
+>   be only one channel per priority level.
+> 
+> - The clients should send data (of just setting 1 bit or many in the 32
+>   bit word) using the existing mechanism as the delays due to
+>   serialization shouldn't be significant anyway.
+> 
+> - The driver supports 90% of the users with the current implementation
+>   and it shouldn't be extended to support doorbell and implement two
+>   different modes by changing value of #mbox-cells field in bindings.
+> 
+> Sudeep (ARM) and myself as well to some extent:
+> 
+> - The hardware gives us the capability to write the register in
+>   parallel, i.e. we can write 0x800 and 0x400 together without any
+>   software locks, and so these 32 bits should be considered as separate
+>   channel even if only one interrupt is issued by the hardware finally.
+>   This shouldn't be called as virtualization of the channels, as the
+>   hardware supports this (as clearly mentioned in the TRM) and it takes
+>   care of handling the signal properly.
+> 
+> - With serialization, if we use only one channel as today at every
+>   priority, if there are 5 requests to send signal to the receiver and
+>   the dvfs request is the last one in queue (which may be called from
+>   scheduler's hot path with fast switching), it unnecessarily needs to
+>   wait for the first four transfers to finish due to the software
+>   locking imposed by the mailbox framework. This adds additional delay,
+>   maybe of few ms only, which isn't required by the hardware but just by
+>   the software and few ms can be important in scheduler's hotpath.
+> 
+> - With the current approach it isn't possible to assign different bits
+>   (or doorbell numbers) to clients from DT and the only way of doing
+>   that without adding new bindings is by extending #mbox-cells to accept
+>   a value of 2 as done in this patch.
+> 
+> Jassi and Sudeep, I hope I was able to represent both the view points
+> properly here. Please correct me if I have made a mistake here.
+> 
+> This is it. It would be nice to get the views of everyone now on this
+> and how should this be handled.
 
-I'm not sure why you put quotes around those names.
+I am perfectly fine with adding another cell which seems appropriate 
+here. You can have 5 cells for all I care if that makes sense for 
+the h/w. That has nothing to do with the Linux design. Whether Linux 
+requires serializing mailbox accesses is a separate issue. On that side, 
+it seems silly to not allow driving the h/w in the most efficient way 
+possible.
 
-> + *                 is a software ECC engine. One can also imagine a generic
-
-				  		^ or an hardware
-	engine that's outside the NAND controller pipeline.
-
-You can the drop the "One can also imagine ..." since it's more than a
-theoretical use case, we already have a few engines that fall in this
-category.
-
-> + *                 hardware ECC engine which would be an IP itself. Interacting
-> + *                 with a SPI-NAND device without on-die ECC could be achieved
-
-								 ^can
-
-> + *                 thanks to the use of such external engine.
-
-But I think I would simply drop this last sentence.
-
-> + *   - "pipelined": The ECC engine is inside the NAND pipeline, ie. on the
-> + *                  controller's side. This is the case of most of the raw NAND
-> + *                  controllers. These controllers usually embed an hardware ECC
-> + *                  engine which is managed thanks to the same register set as
-> + *                  the controller's.
-
-Again, I would drop the last sentence here. I think saying the ECC
-bytes are generated/data corrected on the fly when a page is
-written/read would be more useful.
-
-> + *   - "ondie": The ECC engine is inside the NAND pipeline, on the chip's side.
-> + *              Some NAND chips can correct themselves the data. The on-die
-> + *              correction can be enabled, disabled and the status of the
-> + *              correction after a read may be retrieved with a NAND command
-> + *              (may be vendor specific).
-
-"The on-die correction can be enabled, disabled" -> this is true for
-any kind of ECC engine :P.
-
-> + *
-> + * Besides the initial setup and final cleanups, the interfaces are rather
-> + * simple:
-> + *   - "prepare": Prepare an I/O request, check the ECC engine is enabled or
-
-						   ^if/whether
-
-> + *                disabled as requested before the I/O. In case of software
-
-How about "Enable/disable the ECC engine based on the I/O request type."
-
-> + *                correction, this step may involve to derive the ECC bytes and
-> + *                place them in the OOB area before a write.
-
-This is also true for external hardware ECC engines.
-
-> + *   - "finish": Finish an I/O request, check the status of the operation ie.
-> + *               the data validity in case of a read (report to the upper layer
-> + *               any bitflip/errors).
-
-It's all about correcting/reporting errors, right. Let's try to put
-that into simple words: "Correct the data in case of a read request and
-report the number of corrected bits/uncorrectable errors. Most likely
-empty for write operations, unless you have hardware specific stuff to
-do, like shutting down the engine to save some power"
-
-> + *
-> + * Both prepare/finish callbacks are supposed to enclose I/O request and will
-
-"The I/O request should be enclosed in a prepare()/finish() pair of
-calls" or "The prepare/finish call should surround the I/O request".
-
-> + * behave differently depending on the desired correction:
-
-					   ^requested I/O type
-
-> + *   - "raw": Correction disabled
-> + *   - "ecc": Correction enabled
-> + *
-> + * The request direction is impacting the logic as well:
-> + *   - "read": Load data from the NAND chip
-> + *   - "write": Store data in the NAND chip
-> + *
-> + * Mixing all this combinations together gives the following behavior.
-
-Mention that those are just examples, and drivers are free to add
-custom steps in their prepare/finish hooks.
-
-> + *
-> + * ["external" ECC engine]
-> + *   - external + prepare + raw + read: do nothing
-> + *   - external + finish  + raw + read: do nothing
-> + *   - external + prepare + raw + write: do nothing
-> + *   - external + finish  + raw + write: do nothing
-> + *   - external + prepare + ecc + read: do nothing
-> + *   - external + finish  + ecc + read: calculate expected ECC bytes, extract
-> + *                                      ECC bytes from OOB buffer, correct
-> + *                                      and report any bitflip/error
-> + *   - external + prepare + ecc + write: calculate ECC bytes and store them at
-> + *                                       the right place in the OOB buffer based
-> + *                                       on the OOB layout
-> + *   - external + finish  + ecc + write: do nothing
-> + *
-> + * ["pipelined" ECC engine]
-> + *   - pipelined + prepare + raw + read: disable the controller's ECC engine if
-> + *                                       activated
-> + *   - pipelined + finish  + raw + read: do nothing
-> + *   - pipelined + prepare + raw + write: disable the controller's ECC engine if
-> + *                                        activated
-> + *   - pipelined + finish  + raw + write: do nothing
-> + *   - pipelined + prepare + ecc + read: enable the controller's ECC engine if
-> + *                                       deactivated
-> + *   - pipelined + finish  + ecc + read: check the status, report any
-> + *                                       error/bitflip
-> + *   - pipelined + prepare + ecc + write: enable the controller's ECC engine if
-> + *                                        deactivated
-> + *   - pipelined + finish  + ecc + write: do nothing
-> + *
-> + * ["ondie" ECC engine]
-> + *   - ondie + prepare + raw + read: send commands to disable the on-chip ECC
-> + *                                   engine if activated
-> + *   - ondie + finish  + raw + read: do nothing
-> + *   - ondie + prepare + raw + write: send commands to disable the on-chip ECC
-> + *                                    engine if activated
-> + *   - ondie + finish  + raw + write: do nothing
-> + *   - ondie + prepare + ecc + read: send commands to enable the on-chip ECC
-> + *                                   engine if deactivated
-> + *   - ondie + finish  + ecc + read: send commands to check the status, report
-> + *                                   any error/bitflip
-> + *   - ondie + prepare + ecc + write: send commands to enable the on-chip ECC
-> + *                                    engine if deactivated
-> + *   - ondie + finish  + ecc + write: do nothing
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/mtd/nand.h>
-> +
-
-Shouldn't we have kernel-docs for those functions?
-
-> +int nand_ecc_init_ctx(struct nand_device *nand)
-> +{
-> +	if (!nand->ecc.engine->ops->init_ctx)
-> +		return 0;
-> +
-> +	return nand->ecc.engine->ops->init_ctx(nand);
-> +}
-> +EXPORT_SYMBOL(nand_ecc_init_ctx);
-> +
-> +void nand_ecc_cleanup_ctx(struct nand_device *nand)
-> +{
-> +	if (nand->ecc.engine->ops->cleanup_ctx)
-> +		nand->ecc.engine->ops->cleanup_ctx(nand);
-> +}
-> +EXPORT_SYMBOL(nand_ecc_cleanup_ctx);
-> +
-> +int nand_ecc_prepare_io_req(struct nand_device *nand,
-> +			    struct nand_page_io_req *req)
-> +{
-> +	if (!nand->ecc.engine->ops->prepare_io_req)
-> +		return 0;
-> +
-> +	return nand->ecc.engine->ops->prepare_io_req(nand, req);
-> +}
-> +EXPORT_SYMBOL(nand_ecc_prepare_io_req);
-> +
-> +int nand_ecc_finish_io_req(struct nand_device *nand,
-> +			   struct nand_page_io_req *req)
-> +{
-> +	if (!nand->ecc.engine->ops->finish_io_req)
-> +		return 0;
-> +
-> +	return nand->ecc.engine->ops->finish_io_req(nand, req);
-> +}
-> +EXPORT_SYMBOL(nand_ecc_finish_io_req);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Miquel Raynal <miquel.raynal@bootlin.com>");
-> +MODULE_DESCRIPTION("Generic ECC engine");
-> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-> index 2e9af24936cd..0be260fd2f86 100644
-> --- a/include/linux/mtd/nand.h
-> +++ b/include/linux/mtd/nand.h
-> @@ -221,6 +221,73 @@ struct nand_ops {
->  	bool (*isbad)(struct nand_device *nand, const struct nand_pos *pos);
->  };
->  
-> +/**
-> + * struct nand_ecc_context - Context for the ECC engine
-> + * @conf: basic ECC engine parameters
-> + * @total: Total number of bytes used for storing ECC codes, this is used by
-
-Sometimes you start your description with an uppercase, sometimes not.
-
-> + *         generic OOB layouts
-> + * @priv: ECC engine driver private data
-> + */
-> +struct nand_ecc_context {
-> +	struct nand_ecc_props conf;
-> +	unsigned int total;
-> +	void *priv;
-> +};
-> +
-> +/**
-> + * struct nand_ecc_engine_ops - Generic ECC engine operations
-
-				    ^s/Generic//
-
-> + * @init_ctx: given a desired user configuration for the pointed NAND device,
-> + *            requests the ECC engine driver to setup a configuration with
-> + *            values it supports.
-> + * @cleanup_ctx: clean the context initialized by @init_ctx.
-> + * @prepare_io_req: is called before reading/writing a page to prepare the I/O
-> + *                  request to be performed with ECC correction.
-> + * @finish_io_req: is called after reading/writing a page to terminate the I/O
-> + *                 request and ensure proper ECC correction.
-> + */
-> +struct nand_ecc_engine_ops {
-> +	int (*init_ctx)(struct nand_device *nand);
-> +	void (*cleanup_ctx)(struct nand_device *nand);
-> +	int (*prepare_io_req)(struct nand_device *nand,
-> +			      struct nand_page_io_req *req);
-> +	int (*finish_io_req)(struct nand_device *nand,
-> +			     struct nand_page_io_req *req);
-> +};
-> +
-> +/**
-> + * struct nand_ecc_engine - Generic ECC engine abstraction for NAND devices
-
-				^s/Generic//
-
-> + * @ops: ECC engine operations
-> + */
-> +struct nand_ecc_engine {
-> +	struct nand_ecc_engine_ops *ops;
-> +};
-> +
-> +int nand_ecc_init_ctx(struct nand_device *nand);
-> +void nand_ecc_cleanup_ctx(struct nand_device *nand);
-> +int nand_ecc_prepare_io_req(struct nand_device *nand,
-> +			    struct nand_page_io_req *req);
-> +int nand_ecc_finish_io_req(struct nand_device *nand,
-> +			   struct nand_page_io_req *req);
-> +
-> +/**
-> + * struct nand_ecc - High-level ECC object
-
-I think you can drop the "High-level" and just say "Information
-relative to the ECC"
-
-> + * @defaults: Default values, depend on the underlying subsystem
-> + * @requirements: ECC requirements from the NAND chip perspective
-> + * @user_conf: User desires in terms of ECC parameters
-> + * @ctx: ECC context for the ECC engine, derived from the device @requirements
-> + *       the @user_conf and the @defaults
-> + * @ondie_engine: On-die ECC engine reference, if any
-> + * @engine: ECC engine actually bound
-> + */
-> +struct nand_ecc {
-> +	struct nand_ecc_props defaults;
-> +	struct nand_ecc_props requirements;
-> +	struct nand_ecc_props user_conf;
-> +	struct nand_ecc_context ctx;
-> +	struct nand_ecc_engine *ondie_engine;
-> +	struct nand_ecc_engine *engine;
-> +};
-> +
->  /**
->   * struct nand_device - NAND device
->   * @mtd: MTD instance attached to the NAND device
-
+Rob
