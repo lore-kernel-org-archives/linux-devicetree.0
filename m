@@ -2,82 +2,94 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFC4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735C9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D537207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42EA9207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fj2mj9If"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgE1Opr (ORCPT
+        id S1728501AbgE1OsE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:45:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgE1Opq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:45:46 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EACDC05BD1E
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 07:45:46 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 620552A3D6A;
-        Thu, 28 May 2020 15:45:44 +0100 (BST)
-Date:   Thu, 28 May 2020 16:45:41 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v6 18/18] mtd: rawnand: Move generic bits to the ECC
- framework
-Message-ID: <20200528164541.106bbde9@collabora.com>
-In-Reply-To: <20200528113113.9166-19-miquel.raynal@bootlin.com>
-References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
-        <20200528113113.9166-19-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 28 May 2020 10:48:04 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56870 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728456AbgE1OsE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:48:04 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SElEkQ065813;
+        Thu, 28 May 2020 09:47:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590677234;
+        bh=CwsQyU0kGD7NKy6DRPmze5/2bojdN83sfQuVVs2kAlw=;
+        h=From:To:CC:Subject:Date;
+        b=fj2mj9If70OikaVh3UgLkqEuc8IfCIg4Q1JfcGqO0Xi5Sp786sjeg7apqi3GZZDD6
+         NQDrViI4Gm2x9gNUpKOvUrtNiFS59qpcQm5G7P2fC/jaf/GgLWMP2RDHX4BVO16qsk
+         u6glrZNzpuKwO+DGg3HMVmCGefjXR3xnKPwHVCBY=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SElEs3082844;
+        Thu, 28 May 2020 09:47:14 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 09:47:13 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 09:47:13 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SElCKp108735;
+        Thu, 28 May 2020 09:47:13 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] dt-bindings: sound: tlv320adcx140: Fix dt-binding-check issue
+Date:   Thu, 28 May 2020 09:47:11 -0500
+Message-ID: <20200528144711.18065-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 13:31:13 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+Fix dt-binding-check issue
 
-> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-> index ce936ffb9f42..1cc6d71c2b45 100644
-> --- a/include/linux/mtd/nand.h
-> +++ b/include/linux/mtd/nand.h
-> @@ -127,6 +127,10 @@ struct nand_page_io_req {
->  	int mode;
->  };
->  
-> +extern const struct mtd_ooblayout_ops nand_ooblayout_sp_ops;
-> +extern const struct mtd_ooblayout_ops nand_ooblayout_lp_ops;
-> +extern const struct mtd_ooblayout_ops nand_ooblayout_lp_hamming_ops;
+ti,gpi-config:0:0: 4 is greater than the maximum of 1
+ti,gpi-config:0:1: 5 is greater than the maximum of 1
+ti,gpi-config:0:2: 6 is greater than the maximum of 1
+ti,gpi-config:0:3: 7 is greater than the maximum of 1
 
-While we move that to the generic NAND layer, can we hide that behind
-helpers so we don't have the objects directly exposed?
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/sound/tlv320adcx140.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-const struct mtd_ooblayout_ops *nand_get_small_page_layout();
-const struct mtd_ooblayout_ops *nand_get_large_page_layout();
-const struct mtd_ooblayout_ops *nand_get_large_page_hamming_layout();
+diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+index e8a69b1c7ca9..306ac3d006dc 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
++++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+@@ -109,7 +109,7 @@ properties:
+       - minItems: 1
+         maxItems: 4
+         items:
+-          maximum: 1
++          maximum: 7
+         default: [0, 0, 0, 0]
+ 
+ required:
+-- 
+2.26.2
+
