@@ -2,77 +2,81 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B7EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A09C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2CE20897
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ABCC2089D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590679675;
+	bh=PC5ZGAW1z0kRwxC+3U2R7+ZxiyeIt8FsZCX1VLAV8xc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x8/367OkRdCJyOmXzLoW2FBE+r1JrgvzAt+5NEtYOvWG5Afdi0T6viky8P8kb2hwQ
+	 aU0n3h289O7PZ2bKryIf3cSmERIOUA+8jS9bSrl2O2lHzB9SeD4RcCnbNq/ODiTy6m
+	 GKapYDS6m3XW+ea+uk1442abhhA0b/n6r98ruJTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404216AbgE1P1o (ORCPT
+        id S2404364AbgE1P1y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:27:44 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43132 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404080AbgE1P1n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:27:43 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 527E980307C0;
-        Thu, 28 May 2020 15:27:41 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id OIK7Ou4SGDs1; Thu, 28 May 2020 18:27:40 +0300 (MSK)
-Date:   Thu, 28 May 2020 18:27:40 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 08/10] dmaengine: dw: Add dummy device_caps callback
-Message-ID: <20200528152740.ggld7wkmaqiq4g6o@mobilestation>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-9-Sergey.Semin@baikalelectronics.ru>
- <20200528145303.GU1634618@smile.fi.intel.com>
+        Thu, 28 May 2020 11:27:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39473 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404080AbgE1P1w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:27:52 -0400
+Received: by mail-io1-f68.google.com with SMTP id c8so10039880iob.6;
+        Thu, 28 May 2020 08:27:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B9AjAF204kGqafZ8qch9ULXofKx7NjkIMEqK2VlDI5g=;
+        b=MYjj5xLbgy6dECgPz8JNt5yEeLUlHnQ7V0mFoy7ch6yyrkFta5bRACQ4SlLVXFpIIX
+         DJ7xMT01ZdQqvX0/XmMm1w5XwA+y9RJLHgfwI7EWIXXu/osIUjE1iAKtdK8/2A2VA/6G
+         nTKjmHUUvhIPBBVWQTVd4O5rjUmQBzBxsTxA3WVVRImcxizqrjLWYJ0x0JVHJsfqCe8z
+         G5HbOivFUOg2jji3UMFDk/ffUCBrGrBEz/Jk880uOx1eirY4XB/MFlxCTr396agJnpJt
+         pPd2buU/+EKnUJwKtGwh4LUub7U0TTv/oCt72e9IQfj76of/QH1ODYMtSZWA+iFlVqZf
+         yCNQ==
+X-Gm-Message-State: AOAM532h92LTzNC9JKG4vZu21TwYwr6ljcqZBpliwHnYoJgVcdVrELq1
+        Mtgs8ocgEVSxeaewDIk/kQ==
+X-Google-Smtp-Source: ABdhPJy07N+4IrsKSktm0ndsurbG5LTql9W08jU7Y9tQsWYLTpgglW+dKz7oQ4cI8JXhUDU6+gzvPg==
+X-Received: by 2002:a02:6d0a:: with SMTP id m10mr3013911jac.133.1590679672105;
+        Thu, 28 May 2020 08:27:52 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l3sm2846942iow.55.2020.05.28.08.27.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 08:27:51 -0700 (PDT)
+Received: (nullmailer pid 112685 invoked by uid 1000);
+        Thu, 28 May 2020 15:27:50 -0000
+Date:   Thu, 28 May 2020 09:27:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org
+Subject: Re: [PATCH 1/1] dt-bindings: rng: Convert OMAP RNG to schema
+Message-ID: <20200528152750.GA108124@bogus>
+References: <20200514131947.28094-1-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528145303.GU1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200514131947.28094-1-t-kristo@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 05:53:03PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 01:50:19AM +0300, Serge Semin wrote:
-> > Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-> > have non-uniform DMA capabilities per device channels, let's add
-> > the DW DMA specific device_caps callback to expose that specifics up to
-> > the DMA consumer. It's a dummy function for now. We'll fill it in with
-> > capabilities overrides in the next commits.
+On Thu, 14 May 2020 16:19:47 +0300, Tero Kristo wrote:
+> Convert TI OMAP Random number generator bindings to DT schema.
 > 
-> I think per se it is not worth to have it separated. Squash into the next one.
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  .../devicetree/bindings/rng/omap_rng.txt      | 38 ---------
+>  .../devicetree/bindings/rng/ti,omap-rng.yaml  | 77 +++++++++++++++++++
+>  2 files changed, 77 insertions(+), 38 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rng/omap_rng.txt
+>  create mode 100644 Documentation/devicetree/bindings/rng/ti,omap-rng.yaml
+> 
 
-bikeshadding? There is no any difference whether I add a dummy callback, then
-fill it in in a following up patch, or have the callback added together
-with some content. Let's see what Vinod thinks of it. Until then I'll stick with
-the current solution.
-
--Sergey
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
