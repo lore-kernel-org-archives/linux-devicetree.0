@@ -2,98 +2,120 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25973C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53343C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 09:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBBAA2088E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304CE2075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 09:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="un1Guamk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HrPY9C3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgE1I6J (ORCPT
+        id S1728200AbgE1JY1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 04:58:09 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37281 "EHLO
+        Thu, 28 May 2020 05:24:27 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:42438 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728073AbgE1I6J (ORCPT
+        by vger.kernel.org with ESMTP id S1728161AbgE1JY0 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 04:58:09 -0400
+        Thu, 28 May 2020 05:24:26 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590656288; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=TNqDL40LlCjpsjbz12NhEYJJSkincfYBy8FmVcop5ek=;
- b=un1Guamk731ECamhPZu6kMW+3kcBi54VyO9lQAUW8ntKcoJa6hwG6iAglrXMUx9A+iFdNd2u
- QMebZLL/UYrhmBwiJr625vpiG8hArkUOGISnb/DYd9uAwrFyQSMc3aper1Zbb+upjDGw8NqU
- Bwb0Vw3Ub60o4+LWc5eHd8RX2es=
+ s=smtp; t=1590657865; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=iMb1wbf6uPwfZB8sG11hmQ4ZThGw/6wXcct0WODPnkE=; b=HrPY9C3Ta07NfeaGvCHHYyNSuh84yn7gmi5kUXusqTsJavrKFeL2sAXosTF/E+YLFKtc8tgn
+ /29dk8iy3hsQ51rbRgiKm8qSafci5XEk6AC4yUNuB/4jTgxULeUusPgCLlnhgW69om8UUMDy
+ BUkLztg2XMKfcoqyJA0eqV92osI=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5ecf7d1fc6d4683243c5810a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 08:58:07
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ecf8344c6d4683243ce189b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 09:24:20
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 86AD7C43391; Thu, 28 May 2020 08:58:07 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id 9D2DFC43391; Thu, 28 May 2020 09:24:20 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D3E5C433C6;
-        Thu, 28 May 2020 08:58:07 +0000 (UTC)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0BCF3C433C9;
+        Thu, 28 May 2020 09:24:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0BCF3C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Felipe Balbi <balbi@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <878shu4uwk.fsf@kernel.org> <875zcy4uuj.fsf@kernel.org>
+ <20200514171352.GP4525@google.com>
+ <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org> <87tv0h3fpv.fsf@kernel.org>
+ <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org> <87r1vl3e42.fsf@kernel.org>
+ <20200518183512.GE2165@builder.lan>
+ <b20775ba-7870-b0ca-7c65-d72a08fdacb2@codeaurora.org>
+ <0723aee9-9ea4-dab5-e083-3cf3858a8f96@linaro.org> <871rn63orz.fsf@kernel.org>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <158003c3-6d8a-52c2-cfd6-3904ac7376c5@codeaurora.org>
+Date:   Thu, 28 May 2020 14:54:12 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 28 May 2020 14:28:06 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org, mka@chromium.org,
-        devicetree-owner@vger.kernel.org, robin.murphy@arm.com
-Subject: Re: [v1] drm/msm: add shutdown support for display platform_driver
-In-Reply-To: <1590655103-21568-1-git-send-email-mkrishn@codeaurora.org>
-References: <1590655103-21568-1-git-send-email-mkrishn@codeaurora.org>
-Message-ID: <219625b5b2cc0eddb2e975d457a2c40d@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <871rn63orz.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krishna,
 
-On 2020-05-28 14:08, Krishna Manikandan wrote:
-> Define shutdown callback for display drm driver,
-> so as to disable all the CRTCS when shutdown
-> notification is received by the driver.
-> 
+On 5/26/2020 5:13 PM, Felipe Balbi wrote:
+> Hi,
+>
+> Georgi Djakov <georgi.djakov@linaro.org> writes:
+>> On 26.05.20 14:04, Sandeep Maheswaram (Temp) wrote:
+>>> Hi Felipe,
+>>>
+>>> Please let me know how to go forward with this patch
+> (don't top-post!)
+>
+>> Please just add a patch to fix the allmodconfig error. Felipe has
+>> suggested to introduce a separate patch which exports the
+>> device_is_bound() function. This export should precede the addition
+>> of interconnect support.
+>>
+>> Also regarding the "depends on INTERCONNECT || !INTERCONNECT" change,
+>> no "depends on" would be needed, as we just made the interconnect
+>> framework bool.
+> y'all have lost the current merge window, I guess. I'm not sure Greg
+> will take last minute changes to drivers base and I have already sent
+> him my pull request for v5.8. On the plus side, this gives you the
+> chance to run hundreds of randbuilds with your patches.
+Hi  Georgi,
 
-Would be nice to add some more context for adding this shutdown callback
-something like below:
-
-If the hardware is still accessing memory after SMMU translation is 
-disabled
-as part of smmu shutdown callback,  then the IOVAs(I/O virtual address) 
-which
-it was using will go on the bus as the physical addresses which will 
-result
-in unknown crashes (NoC/interconnect errors on QCOM SoCs).
-
-PS: Credits for description: Robin Murphy
-
-Thanks,
-Sai
+I am assuming that the patch which exports the device_is_bound() function will solve the allmodconfig error.
+Or do i need to change anything in dwc3 driver?
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
