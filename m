@@ -2,1024 +2,393 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E0AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 18:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4235C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 18:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9002074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 18:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590691970;
-	bh=IeAFqApY6k0LNXcqTMzXqVSRIvyxxmuc2m6NbXbwoYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YHUNX3km30EkINC/KybMbnSbxnW61vaicbZh4ypnn2igLTkf04C13ofKz4FXuQpwm
-	 +v2JrOCncPgW4F0AbbgqaA//LNcLRYmktsX6GL3kbsqVI1gvBizANW1JCbL8yDhgvd
-	 w2yjCYbrudozst7n2rn97fACOZ4RIn3hFRJgRFuM=
+	by mail.kernel.org (Postfix) with ESMTP id 8D1E92074B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 18:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406007AbgE1Swu (ORCPT
+        id S2405944AbgE1SxA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 14:52:50 -0400
-Received: from mail-il1-f173.google.com ([209.85.166.173]:34119 "EHLO
-        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405912AbgE1Sws (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 14:52:48 -0400
-Received: by mail-il1-f173.google.com with SMTP id v11so1324396ilh.1;
-        Thu, 28 May 2020 11:52:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0Fz5MiaQp70eeOuFCJV3/xefSBjk2vY90EIv5bN2fzc=;
-        b=ds1Id//+Eb9MXgrymjePVJjSLm6iGxYG79+Z8py4pV0lzxS3R2xXyb/a1Vun6UQSoB
-         oXfghalZZWC2QwdmwGnhSONyvhEc5U0tGwqwJVQ3H3ks8IPoL5swAIk/nhA20fRaxW4K
-         shZF2JOqYoSCSBh/eOxE1PZgr3wNTvZfQz9bZasn4DRNhqcVfDYvrIbs3AoJ2FgvaKkj
-         BUO4GHK/BiMevle7K0x9lg3gcbfskBbN7Zki6qr2cLRUVl5LytWkHl/i2qOgUlYqdJv5
-         rF7IzPYD1of47snS5zMkJnK31j2kXmkqPIIPO2ji6/AF7KFxq93Sd1vkeHc7yapR/srD
-         8brA==
-X-Gm-Message-State: AOAM532Z7FCJvIglmvUF2Rrw5JJSULoQfn3Cbnv4dwj9EP8xKC/NMFH8
-        uJGNeCQIz2W8SFK2WeK9Fg==
-X-Google-Smtp-Source: ABdhPJyLlPhUl64Hn0pkxe+N3RGm14+0RM4I2mONub/Ar8vKVBhN64jxsXqzZ+iO5OFXRcHQPrx0xw==
-X-Received: by 2002:a92:290c:: with SMTP id l12mr3947053ilg.279.1590691965834;
-        Thu, 28 May 2020 11:52:45 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n12sm2713758iog.25.2020.05.28.11.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 11:52:45 -0700 (PDT)
-Received: (nullmailer pid 494588 invoked by uid 1000);
-        Thu, 28 May 2020 18:52:44 -0000
-Date:   Thu, 28 May 2020 12:52:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: display: renesas,du: Convert binding to YAML
-Message-ID: <20200528185244.GA400585@bogus>
-References: <20200515003340.18191-1-laurent.pinchart+renesas@ideasonboard.com>
+        Thu, 28 May 2020 14:53:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57290 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405912AbgE1Sw6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 14:52:58 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B9CBB2A1638;
+        Thu, 28 May 2020 19:52:54 +0100 (BST)
+Date:   Thu, 28 May 2020 20:52:51 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, Julien Su <juliensu@mxic.com.tw>,
+        Weijie Gao <weijie.gao@mediatek.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 15/18] mtd: nand: Introduce the ECC engine
+ abstraction
+Message-ID: <20200528205251.5e8abdd1@collabora.com>
+In-Reply-To: <20200528113113.9166-16-miquel.raynal@bootlin.com>
+References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
+        <20200528113113.9166-16-miquel.raynal@bootlin.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515003340.18191-1-laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:33:40AM +0300, Laurent Pinchart wrote:
-> Convert the Renesas R-Car DU text binding to YAML.
+On Thu, 28 May 2020 13:31:10 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+
+> Create a generic ECC engine object.
 > 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Later the ecc.c file will receive more generic code coming from
+> the raw NAND specific part. This is a base to instantiate ECC engine
+> objects.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  .../bindings/display/renesas,du.txt           | 139 ---
->  .../bindings/display/renesas,du.yaml          | 915 ++++++++++++++++++
-
-A 'normal' conversion is about double the lines. I guess this is a sign 
-that the original was not well specified.
-
-Maybe this can be split to reduce some of the if/then? One way is define 
-a common 'include' file that each specific instance can reference
-
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/display/renesas,du.yaml b/Documentation/devicetree/bindings/display/renesas,du.yaml
+>  drivers/mtd/nand/Kconfig  |   7 ++
+>  drivers/mtd/nand/Makefile |   2 +
+>  drivers/mtd/nand/ecc.c    | 138 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/mtd/nand.h  |  67 ++++++++++++++++++
+>  4 files changed, 214 insertions(+)
+>  create mode 100644 drivers/mtd/nand/ecc.c
+> 
+> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+> index c1a45b071165..a4478ffa279d 100644
+> --- a/drivers/mtd/nand/Kconfig
+> +++ b/drivers/mtd/nand/Kconfig
+> @@ -9,4 +9,11 @@ source "drivers/mtd/nand/onenand/Kconfig"
+>  source "drivers/mtd/nand/raw/Kconfig"
+>  source "drivers/mtd/nand/spi/Kconfig"
+>  
+> +menu "ECC engine support"
+> +
+> +config MTD_NAND_ECC
+> +	bool
+> +
+> +endmenu
+> +
+>  endmenu
+> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+> index 7ecd80c0a66e..981372953b56 100644
+> --- a/drivers/mtd/nand/Makefile
+> +++ b/drivers/mtd/nand/Makefile
+> @@ -6,3 +6,5 @@ obj-$(CONFIG_MTD_NAND_CORE) += nandcore.o
+>  obj-y	+= onenand/
+>  obj-y	+= raw/
+>  obj-y	+= spi/
+> +
+> +nandcore-$(CONFIG_MTD_NAND_ECC) += ecc.o
+> diff --git a/drivers/mtd/nand/ecc.c b/drivers/mtd/nand/ecc.c
 > new file mode 100644
-> index 000000000000..ca48065afe1f
+> index 000000000000..e4f2b6fcbb12
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/renesas,du.yaml
-> @@ -0,0 +1,915 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/renesas,du.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas R-Car Display Unit (DU)
-> +
-> +maintainers:
-> +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> +
-> +description: |
-> +  These DT bindings describe the Display Unit embedded in the Renesas R-Car
-> +  Gen1, R-Car Gen2, R-Car Gen3, RZ/G1 and RZ/G2 SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - renesas,du-r8a7743 # for RZ/G1M compatible DU
-> +      - renesas,du-r8a7744 # for RZ/G1N compatible DU
-> +      - renesas,du-r8a7745 # for RZ/G1E compatible DU
-> +      - renesas,du-r8a77470 # for RZ/G1C compatible DU
-> +      - renesas,du-r8a774a1 # for RZ/G2M compatible DU
-> +      - renesas,du-r8a774b1 # for RZ/G2N compatible DU
-> +      - renesas,du-r8a774c0 # for RZ/G2E compatible DU
-> +      - renesas,du-r8a7779 # for R-Car H1 compatible DU
-> +      - renesas,du-r8a7790 # for R-Car H2 compatible DU
-> +      - renesas,du-r8a7791 # for R-Car M2-W compatible DU
-> +      - renesas,du-r8a7792 # for R-Car V2H compatible DU
-> +      - renesas,du-r8a7793 # for R-Car M2-N compatible DU
-> +      - renesas,du-r8a7794 # for R-Car E2 compatible DU
-> +      - renesas,du-r8a7795 # for R-Car H3 compatible DU
-> +      - renesas,du-r8a7796 # for R-Car M3-W compatible DU
-> +      - renesas,du-r8a77965 # for R-Car M3-N compatible DU
-> +      - renesas,du-r8a77970 # for R-Car V3M compatible DU
-> +      - renesas,du-r8a77980 # for R-Car V3H compatible DU
-> +      - renesas,du-r8a77990 # for R-Car E3 compatible DU
-> +      - renesas,du-r8a77995 # for R-Car D3 compatible DU
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  # See compatible-specific constraints below.
-> +  clocks: true
-> +  clock-names: true
-> +  interrupts: true
-> +  resets: true
-> +  reset-names: true
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      The connections to the DU output video ports are modeled using the OF
-> +      graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> +      The number of ports and their assignment are model-dependent. Each port
-> +      shall have a single endpoint.
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^port@[0-3]$":
-> +        type: object
-> +
-> +        properties:
-> +          reg:
-> +            maxItems: 1
-> +
-> +          endpoint:
-> +            type: object
-> +
-> +            properties:
-> +              remote-endpoint:
-> +                $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +            required:
-> +              - remote-endpoint
-> +
-> +            additionalProperties: false
-> +
-> +        additionalProperties: false
+> +++ b/drivers/mtd/nand/ecc.c
+> @@ -0,0 +1,138 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Generic Error-Correcting Code (ECC) engine
+> + *
+> + * Copyright (C) 2019 Macronix
+> + * Author:
+> + *     Miquèl RAYNAL <miquel.raynal@bootlin.com>
+> + *
+> + *
+> + * This file describes the abstraction of any NAND ECC engine. It has been
+> + * designed to fit most cases, including parallel NANDs and SPI-NANDs.
+> + *
+> + * There are three main situations where instantiating this ECC engine makes
+> + * sense:
+> + *   - "external": The ECC engine is outside the NAND pipeline, typically this
 
-You can drop this and assume there's a generic check for this. Though I 
-guess this does ensure only 'remote-endpoint' is present which a generic 
-schema couldn't do.
+I'm not sure why you put quotes around those names.
 
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +    additionalProperties: false
-> +
-> +  renesas,cmms:
-> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      A list of phandles to the CMM instances present in the SoC, one for each
-> +      available DU channel.
-> +
-> +  renesas,vsps:
-> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      A list of phandle and channel index tuples to the VSPs that handle the
-> +      memory interfaces for the DU channels. The phandle identifies the VSP
-> +      instance that serves the DU channel, and the channel index identifies
-> +      the LIF instance in that VSP.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - interrupts
-> +  - resets
-> +  - ports
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: renesas,du-r8a7779
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 1
-> +          maxItems: 3
-> +          items:
-> +            - description: Functional clock
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +
-> +        clock-names:
-> +          minItems: 1
-> +          maxItems: 3
-> +          items:
-> +            - const: du.0
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
+> + *                 is a software ECC engine. One can also imagine a generic
 
-Here and elsewhere:
+				  		^ or an hardware
+	engine that's outside the NAND controller pipeline.
 
-- pattern: "^dclkin\.[01]$"
+You can the drop the "One can also imagine ..." since it's more than a
+theoretical use case, we already have a few engines that fall in this
+category.
 
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +
-> +        interrupts:
-> +          maxItems: 1
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: DPAD 1
-> +            # port@2 is TCON, not supported yet
+> + *                 hardware ECC engine which would be an IP itself. Interacting
+> + *                 with a SPI-NAND device without on-die ECC could be achieved
 
-Does that matter?
+								 ^can
 
-> +            port@2: false
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +
-> +      required:
-> +        - interrupts
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a7743
-> +              - renesas,du-r8a7744
-> +              - renesas,du-r8a7791
-> +              - renesas,du-r8a7793
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +
-> +        clock-names:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +
-> +        interrupts:
-> +          maxItems: 2
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: LVDS 0
-> +            # port@2 is TCON, not supported yet
-> +            port@2: false
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a7745
-> +              - renesas,du-r8a7792
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +
-> +        clock-names:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +
-> +        interrupts:
-> +          maxItems: 2
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: DPAD 1
-> +            port@2: false
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a7794
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +
-> +        clock-names:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +
-> +        interrupts:
-> +          maxItems: 2
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: DPAD 1
-> +            # port@2 is TCON, not supported yet
-> +            port@2: false
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a77470
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +
-> +        clock-names:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +
-> +        interrupts:
-> +          maxItems: 2
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: DPAD 1
-> +            port@2:
-> +              description: LVDS 0
-> +            # port@3 is DVENC, not supported yet
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +            - port@2
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a7790
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 3
-> +          maxItems: 6
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: Functional clock for DU2
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +            - description: DU_DOTCLKIN2 input clock
-> +
-> +        clock-names:
-> +          minItems: 3
-> +          maxItems: 6
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - const: du.2
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +
-> +        interrupts:
-> +          maxItems: 3
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: LVDS 0
-> +            port@2:
-> +              description: LVDS 1
-> +            # port@3 is TCON, not supported yet
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +            - port@2
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a7795
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 4
-> +          maxItems: 8
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: Functional clock for DU2
-> +            - description: Functional clock for DU4
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +            - description: DU_DOTCLKIN2 input clock
-> +            - description: DU_DOTCLKIN3 input clock
-> +
-> +        clock-names:
-> +          minItems: 4
-> +          maxItems: 8
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - const: du.2
-> +            - const: du.3
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +              - dclkin.3
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +              - dclkin.3
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +              - dclkin.3
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +              - dclkin.3
-> +
-> +        interrupts:
-> +          maxItems: 4
-> +
-> +        resets:
-> +          maxItems: 2
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +            - const: du.2
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: HDMI 0
-> +            port@2:
-> +              description: HDMI 1
-> +            port@3:
-> +              description: LVDS 0
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +            - port@2
-> +            - port@3
-> +
-> +        renesas,cmms:
-> +          minItems: 4
-> +
-> +        renesas,vsps:
-> +          minItems: 4
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +        - renesas,vsps
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a774a1
-> +              - renesas,du-r8a7796
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 3
-> +          maxItems: 6
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: Functional clock for DU2
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +            - description: DU_DOTCLKIN2 input clock
-> +
-> +        clock-names:
-> +          minItems: 3
-> +          maxItems: 6
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - const: du.2
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.2
-> +
-> +        interrupts:
-> +          maxItems: 3
-> +
-> +        resets:
-> +          maxItems: 2
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +            - const: du.2
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: HDMI 0
-> +            port@2:
-> +              description: LVDS 0
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +            - port@2
-> +
-> +        renesas,cmms:
-> +          minItems: 3
-> +
-> +        renesas,vsps:
-> +          minItems: 3
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +        - renesas,vsps
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a774b1
-> +              - renesas,du-r8a77965
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 3
-> +          maxItems: 6
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: Functional clock for DU3
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +            - description: DU_DOTCLKIN3 input clock
-> +
-> +        clock-names:
-> +          minItems: 3
-> +          maxItems: 6
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - const: du.3
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.3
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.3
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +              - dclkin.3
-> +
-> +        interrupts:
-> +          maxItems: 3
-> +
-> +        resets:
-> +          maxItems: 2
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +            - const: du.3
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: HDMI 0
-> +            port@2:
-> +              description: LVDS 0
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +            - port@2
-> +
-> +        renesas,cmms:
-> +          minItems: 3
-> +
-> +        renesas,vsps:
-> +          minItems: 3
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +        - renesas,vsps
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a77970
-> +              - renesas,du-r8a77980
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 1
-> +          maxItems: 2
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: DU_DOTCLKIN0 input clock
-> +
-> +        clock-names:
-> +          minItems: 1
-> +          maxItems: 2
-> +          items:
-> +            - const: du.0
-> +            - const: dclkin.0
-> +
-> +        interrupts:
-> +          maxItems: 1
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: LVDS 0
-> +            port@2: false
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +
-> +        renesas,vsps:
-> +          minItems: 1
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +        - renesas,vsps
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,du-r8a774c0
-> +              - renesas,du-r8a77990
-> +              - renesas,du-r8a77995
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - description: Functional clock for DU0
-> +            - description: Functional clock for DU1
-> +            - description: DU_DOTCLKIN0 input clock
-> +            - description: DU_DOTCLKIN1 input clock
-> +
-> +        clock-names:
-> +          minItems: 2
-> +          maxItems: 4
-> +          items:
-> +            - const: du.0
-> +            - const: du.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +            - enum:
-> +              - dclkin.0
-> +              - dclkin.1
-> +
-> +        interrupts:
-> +          maxItems: 2
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          items:
-> +            - const: du.0
-> +
-> +        ports:
-> +          properties:
-> +            port@0:
-> +              description: DPAD 0
-> +            port@1:
-> +              description: LVDS 0
-> +            port@2:
-> +              description: LVDS 1
-> +            # port@3 is TCON, not supported yet
-> +            port@3: false
-> +
-> +          required:
-> +            - port@0
-> +            - port@1
-> +            - port@2
-> +
-> +        renesas,cmms:
-> +          minItems: 2
-> +
-> +        renesas,vsps:
-> +          minItems: 2
-> +
-> +      required:
-> +        - clock-names
-> +        - interrupts
-> +        - resets
-> +        - reset-names
-> +        - renesas,vsps
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # R-Car H3 ES2.0 DU
-> +  - |
-> +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    display@feb00000 {
-> +        compatible = "renesas,du-r8a7795";
-> +        reg = <0xfeb00000 0x80000>;
-> +        interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&cpg CPG_MOD 724>,
-> +                 <&cpg CPG_MOD 723>,
-> +                 <&cpg CPG_MOD 722>,
-> +                 <&cpg CPG_MOD 721>;
-> +        clock-names = "du.0", "du.1", "du.2", "du.3";
-> +        resets = <&cpg 724>, <&cpg 722>;
-> +        reset-names = "du.0", "du.2";
-> +
-> +        renesas,cmms = <&cmm0>, <&cmm1>, <&cmm2>, <&cmm3>;
-> +        renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                reg = <0>;
-> +                endpoint {
-> +                    remote-endpoint = <&adv7123_in>;
-> +                };
-> +            };
-> +            port@1 {
-> +                reg = <1>;
-> +                endpoint {
-> +                    remote-endpoint = <&dw_hdmi0_in>;
-> +                };
-> +            };
-> +            port@2 {
-> +                reg = <2>;
-> +                endpoint {
-> +                    remote-endpoint = <&dw_hdmi1_in>;
-> +                };
-> +            };
-> +            port@3 {
-> +                reg = <3>;
-> +                endpoint {
-> +                    remote-endpoint = <&lvds0_in>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+> + *                 thanks to the use of such external engine.
+
+But I think I would simply drop this last sentence.
+
+> + *   - "pipelined": The ECC engine is inside the NAND pipeline, ie. on the
+> + *                  controller's side. This is the case of most of the raw NAND
+> + *                  controllers. These controllers usually embed an hardware ECC
+> + *                  engine which is managed thanks to the same register set as
+> + *                  the controller's.
+
+Again, I would drop the last sentence here. I think saying the ECC
+bytes are generated/data corrected on the fly when a page is
+written/read would be more useful.
+
+> + *   - "ondie": The ECC engine is inside the NAND pipeline, on the chip's side.
+> + *              Some NAND chips can correct themselves the data. The on-die
+> + *              correction can be enabled, disabled and the status of the
+> + *              correction after a read may be retrieved with a NAND command
+> + *              (may be vendor specific).
+
+"The on-die correction can be enabled, disabled" -> this is true for
+any kind of ECC engine :P.
+
+> + *
+> + * Besides the initial setup and final cleanups, the interfaces are rather
+> + * simple:
+> + *   - "prepare": Prepare an I/O request, check the ECC engine is enabled or
+
+						   ^if/whether
+
+> + *                disabled as requested before the I/O. In case of software
+
+How about "Enable/disable the ECC engine based on the I/O request type."
+
+> + *                correction, this step may involve to derive the ECC bytes and
+> + *                place them in the OOB area before a write.
+
+This is also true for external hardware ECC engines.
+
+> + *   - "finish": Finish an I/O request, check the status of the operation ie.
+> + *               the data validity in case of a read (report to the upper layer
+> + *               any bitflip/errors).
+
+It's all about correcting/reporting errors, right. Let's try to put
+that into simple words: "Correct the data in case of a read request and
+report the number of corrected bits/uncorrectable errors. Most likely
+empty for write operations, unless you have hardware specific stuff to
+do, like shutting down the engine to save some power"
+
+> + *
+> + * Both prepare/finish callbacks are supposed to enclose I/O request and will
+
+"The I/O request should be enclosed in a prepare()/finish() pair of
+calls" or "The prepare/finish call should surround the I/O request".
+
+> + * behave differently depending on the desired correction:
+
+					   ^requested I/O type
+
+> + *   - "raw": Correction disabled
+> + *   - "ecc": Correction enabled
+> + *
+> + * The request direction is impacting the logic as well:
+> + *   - "read": Load data from the NAND chip
+> + *   - "write": Store data in the NAND chip
+> + *
+> + * Mixing all this combinations together gives the following behavior.
+
+Mention that those are just examples, and drivers are free to add
+custom steps in their prepare/finish hooks.
+
+> + *
+> + * ["external" ECC engine]
+> + *   - external + prepare + raw + read: do nothing
+> + *   - external + finish  + raw + read: do nothing
+> + *   - external + prepare + raw + write: do nothing
+> + *   - external + finish  + raw + write: do nothing
+> + *   - external + prepare + ecc + read: do nothing
+> + *   - external + finish  + ecc + read: calculate expected ECC bytes, extract
+> + *                                      ECC bytes from OOB buffer, correct
+> + *                                      and report any bitflip/error
+> + *   - external + prepare + ecc + write: calculate ECC bytes and store them at
+> + *                                       the right place in the OOB buffer based
+> + *                                       on the OOB layout
+> + *   - external + finish  + ecc + write: do nothing
+> + *
+> + * ["pipelined" ECC engine]
+> + *   - pipelined + prepare + raw + read: disable the controller's ECC engine if
+> + *                                       activated
+> + *   - pipelined + finish  + raw + read: do nothing
+> + *   - pipelined + prepare + raw + write: disable the controller's ECC engine if
+> + *                                        activated
+> + *   - pipelined + finish  + raw + write: do nothing
+> + *   - pipelined + prepare + ecc + read: enable the controller's ECC engine if
+> + *                                       deactivated
+> + *   - pipelined + finish  + ecc + read: check the status, report any
+> + *                                       error/bitflip
+> + *   - pipelined + prepare + ecc + write: enable the controller's ECC engine if
+> + *                                        deactivated
+> + *   - pipelined + finish  + ecc + write: do nothing
+> + *
+> + * ["ondie" ECC engine]
+> + *   - ondie + prepare + raw + read: send commands to disable the on-chip ECC
+> + *                                   engine if activated
+> + *   - ondie + finish  + raw + read: do nothing
+> + *   - ondie + prepare + raw + write: send commands to disable the on-chip ECC
+> + *                                    engine if activated
+> + *   - ondie + finish  + raw + write: do nothing
+> + *   - ondie + prepare + ecc + read: send commands to enable the on-chip ECC
+> + *                                   engine if deactivated
+> + *   - ondie + finish  + ecc + read: send commands to check the status, report
+> + *                                   any error/bitflip
+> + *   - ondie + prepare + ecc + write: send commands to enable the on-chip ECC
+> + *                                    engine if deactivated
+> + *   - ondie + finish  + ecc + write: do nothing
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/mtd/nand.h>
+> +
+
+Shouldn't we have kernel-docs for those functions?
+
+> +int nand_ecc_init_ctx(struct nand_device *nand)
+> +{
+> +	if (!nand->ecc.engine->ops->init_ctx)
+> +		return 0;
+> +
+> +	return nand->ecc.engine->ops->init_ctx(nand);
+> +}
+> +EXPORT_SYMBOL(nand_ecc_init_ctx);
+> +
+> +void nand_ecc_cleanup_ctx(struct nand_device *nand)
+> +{
+> +	if (nand->ecc.engine->ops->cleanup_ctx)
+> +		nand->ecc.engine->ops->cleanup_ctx(nand);
+> +}
+> +EXPORT_SYMBOL(nand_ecc_cleanup_ctx);
+> +
+> +int nand_ecc_prepare_io_req(struct nand_device *nand,
+> +			    struct nand_page_io_req *req)
+> +{
+> +	if (!nand->ecc.engine->ops->prepare_io_req)
+> +		return 0;
+> +
+> +	return nand->ecc.engine->ops->prepare_io_req(nand, req);
+> +}
+> +EXPORT_SYMBOL(nand_ecc_prepare_io_req);
+> +
+> +int nand_ecc_finish_io_req(struct nand_device *nand,
+> +			   struct nand_page_io_req *req)
+> +{
+> +	if (!nand->ecc.engine->ops->finish_io_req)
+> +		return 0;
+> +
+> +	return nand->ecc.engine->ops->finish_io_req(nand, req);
+> +}
+> +EXPORT_SYMBOL(nand_ecc_finish_io_req);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Miquel Raynal <miquel.raynal@bootlin.com>");
+> +MODULE_DESCRIPTION("Generic ECC engine");
+> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+> index 2e9af24936cd..0be260fd2f86 100644
+> --- a/include/linux/mtd/nand.h
+> +++ b/include/linux/mtd/nand.h
+> @@ -221,6 +221,73 @@ struct nand_ops {
+>  	bool (*isbad)(struct nand_device *nand, const struct nand_pos *pos);
+>  };
+>  
+> +/**
+> + * struct nand_ecc_context - Context for the ECC engine
+> + * @conf: basic ECC engine parameters
+> + * @total: Total number of bytes used for storing ECC codes, this is used by
+
+Sometimes you start your description with an uppercase, sometimes not.
+
+> + *         generic OOB layouts
+> + * @priv: ECC engine driver private data
+> + */
+> +struct nand_ecc_context {
+> +	struct nand_ecc_props conf;
+> +	unsigned int total;
+> +	void *priv;
+> +};
+> +
+> +/**
+> + * struct nand_ecc_engine_ops - Generic ECC engine operations
+
+				    ^s/Generic//
+
+> + * @init_ctx: given a desired user configuration for the pointed NAND device,
+> + *            requests the ECC engine driver to setup a configuration with
+> + *            values it supports.
+> + * @cleanup_ctx: clean the context initialized by @init_ctx.
+> + * @prepare_io_req: is called before reading/writing a page to prepare the I/O
+> + *                  request to be performed with ECC correction.
+> + * @finish_io_req: is called after reading/writing a page to terminate the I/O
+> + *                 request and ensure proper ECC correction.
+> + */
+> +struct nand_ecc_engine_ops {
+> +	int (*init_ctx)(struct nand_device *nand);
+> +	void (*cleanup_ctx)(struct nand_device *nand);
+> +	int (*prepare_io_req)(struct nand_device *nand,
+> +			      struct nand_page_io_req *req);
+> +	int (*finish_io_req)(struct nand_device *nand,
+> +			     struct nand_page_io_req *req);
+> +};
+> +
+> +/**
+> + * struct nand_ecc_engine - Generic ECC engine abstraction for NAND devices
+
+				^s/Generic//
+
+> + * @ops: ECC engine operations
+> + */
+> +struct nand_ecc_engine {
+> +	struct nand_ecc_engine_ops *ops;
+> +};
+> +
+> +int nand_ecc_init_ctx(struct nand_device *nand);
+> +void nand_ecc_cleanup_ctx(struct nand_device *nand);
+> +int nand_ecc_prepare_io_req(struct nand_device *nand,
+> +			    struct nand_page_io_req *req);
+> +int nand_ecc_finish_io_req(struct nand_device *nand,
+> +			   struct nand_page_io_req *req);
+> +
+> +/**
+> + * struct nand_ecc - High-level ECC object
+
+I think you can drop the "High-level" and just say "Information
+relative to the ECC"
+
+> + * @defaults: Default values, depend on the underlying subsystem
+> + * @requirements: ECC requirements from the NAND chip perspective
+> + * @user_conf: User desires in terms of ECC parameters
+> + * @ctx: ECC context for the ECC engine, derived from the device @requirements
+> + *       the @user_conf and the @defaults
+> + * @ondie_engine: On-die ECC engine reference, if any
+> + * @engine: ECC engine actually bound
+> + */
+> +struct nand_ecc {
+> +	struct nand_ecc_props defaults;
+> +	struct nand_ecc_props requirements;
+> +	struct nand_ecc_props user_conf;
+> +	struct nand_ecc_context ctx;
+> +	struct nand_ecc_engine *ondie_engine;
+> +	struct nand_ecc_engine *engine;
+> +};
+> +
+>  /**
+>   * struct nand_device - NAND device
+>   * @mtd: MTD instance attached to the NAND device
+
