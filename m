@@ -2,172 +2,122 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D586C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E50AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 461782078C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:37:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcnIkGcJ"
+	by mail.kernel.org (Postfix) with ESMTP id 503112088E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590695322;
+	bh=D2r1sFVCo87uGvflG87lx9zXVSyz6xCgbRu8Nf53FjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vs/9ur3V2f0ScMRvk2RaH7lCk/z4VbeOuIEoodMqw7hAu8tClEH2hkSBajv/Fib6x
+	 5v15EJFDqMZECMASRWejGPIIw69/jliIh8xmMzJHMEmIz6b8QOvveS6r54zi9DO5AU
+	 PRXv49J9UMU2tP5Y29bLDhocnXJ7BUl5kD3yS6y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406678AbgE1Thd (ORCPT
+        id S2406784AbgE1Tsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 15:37:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406676AbgE1Tha (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:37:30 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39884C08C5C7;
-        Thu, 28 May 2020 12:37:30 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x29so11875qtv.4;
-        Thu, 28 May 2020 12:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JFF264SusAUehjXwP9Goi3exYGSw95TFftOywym8sME=;
-        b=mcnIkGcJMYx5FNx609XJu0TkCeY5ioSR8B+qiRtl6z8YeClrkkXkxW/neQnC3rew06
-         Znl8RX3FVG5z9wA0bZw6Hd7zW/F46iyFkyByKlpUCt+t76idGuYKj3D0Y2KMPGdKCMqq
-         W3hR2h4/f1Rv0FzJcKBZmmX78/kEia/TUZ3eJeX6Uwsl92bOVdOR+2wJPYsk1jRlH82z
-         vgJEaAFalRs5JRZmS6ZY/9L0/vRAtLaWKM/Z9KFs+tZkrQmTv8fsItgY4wOj6pW7drHy
-         2gMJEWAlJ3dhRbP+IGyNdDZ/jB3i0Lsh6oYb4kj42vIsLPVxVTqoRDMQWpvYgG3fq1Wd
-         pFHw==
+        Thu, 28 May 2020 15:48:41 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45776 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406780AbgE1Tsi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:48:38 -0400
+Received: by mail-il1-f195.google.com with SMTP id 9so68670ilg.12;
+        Thu, 28 May 2020 12:48:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JFF264SusAUehjXwP9Goi3exYGSw95TFftOywym8sME=;
-        b=eZ8obGbARxCkUQM+7ywgTWyAVGO9LDR491MRM+gSSC6zeIX8RrrnjTPdtKMCfRXk7u
-         R4pmZSzqe6pph4USzBffkHZ71UmMQG9SztqfHFuFCM0pmY1jmhHAxHoXdGXVHrK6dlh7
-         bZrscNBsYWShraHp41HloPoWBl4QB9BG+HRJngwsHHH17tUEcYd+YyXd4ehS2yXrt4zd
-         NgtT0fF1rOHZaXkJd1kzJFic3EEjPR6CMXATeOUzucOnPSXX1K2EsEry3fhERK67H3c5
-         CKt+joR89uGAQE2rAIKmL+IxHOx2gAzXtqx54di9S/tzc4riNVqzzIWAYDCedJfXwOAt
-         bQRA==
-X-Gm-Message-State: AOAM530XBNtbOk8/YPwb1774onsQIZxosCmfrgvCG4ZpqDGJr+sah2vH
-        Ag765LXJhjANHDtPYrdYOdM=
-X-Google-Smtp-Source: ABdhPJwPUzR2IDBQb5dG8Gy5FhzEuIqk3+vykCQTGssKl/GIYIPBOn3d3hNc8cBc0fECly0dbEKOaQ==
-X-Received: by 2002:ac8:7112:: with SMTP id z18mr5018357qto.274.1590694648920;
-        Thu, 28 May 2020 12:37:28 -0700 (PDT)
-Received: from [192.168.1.209] (pool-108-51-35-162.washdc.fios.verizon.net. [108.51.35.162])
-        by smtp.googlemail.com with ESMTPSA id d21sm5975052qtr.45.2020.05.28.12.37.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 12:37:27 -0700 (PDT)
-Subject: Re: [PATCH 5/5] dt-bindings: timer: Add CLINT bindings
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     anup@brainfault.org, Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        devicetree@vger.kernel.org, Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv@lists.infradead.org
-References: <mhng-0995a264-b39c-4790-9aa5-b8c598b43ffd@palmerdabbelt-glaptop1>
-From:   Sean Anderson <seanga2@gmail.com>
-Autocrypt: addr=seanga2@gmail.com; prefer-encrypt=mutual; keydata=
- mQENBFe74PkBCACoLC5Zq2gwrDcCkr+EPGsT14bsxrW07GiYzQhLCgwnPdEpgU95pXltbFhw
- 46GfyffABWxHKO2x+3L1S6ZxC5AiKbYXo7lpnTBYjamPWYouz+VJEVjUx9aaSEByBah5kX6a
- lKFZWNbXLAJh+dE1HFaMi3TQXXaInaREc+aO1F7fCa2zNE75ja+6ah8L4TPRFZ2HKQzve0/Y
- GXtoRw97qmnm3U36vKWT/m2AiLF619F4T1mHvlfjyd9hrVwjH5h/2rFyroXVXBZHGA9Aj8eN
- F2si35dWSZlIwXkNu9bXp0/pIu6FD0bI+BEkD5S7aH1G1iAcMFi5Qq2RNa041DfQSDDHABEB
- AAG0K1NlYW4gR2FsbGFnaGVyIEFuZGVyc29uIDxzZWFuZ2EyQGdtYWlsLmNvbT6JAVcEEwEK
- AEECGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQYR1bzo1I0gPoYCg+6I/stKEQ
- bgUCXT+S2AUJB2TlXwAKCRA+6I/stKEQbhNOB/9ooea0hU9Sgh7PBloU6CgaC5mlqPLB7NTp
- +JkB+nh3Fqhk+qLZwzEynnuDLl6ESpVHIc0Ym1lyF4gT3DsrlGT1h0Gzw7vUwd1+ZfN0CuIx
- Rn861U/dAUjvbtN5kMBqOI4/5ea+0r7MACcIVnKF/wMXBD8eypHsorT2sJTzwZ6DRCNP70C5
- N1ahpqqNmXe0uLdP0pu55JCqhrGw2SinkRMdWyhSxT56uNwIVHGhLTqH7Q4t1N6G1EH626qa
- SvIJsWlNpll6Y3AYLDw2/Spw/hqieS2PQ/Ky3rPZnvJt7/aSNYsKoFGX0yjkH67Uq8Lx0k1L
- w8jpXnbEPQN3A2ZJCbeMuQENBF0/k2UBCADhvSlHblNc/aRAWtCFDblCJJMN/8Sd7S9u4ZRS
- w1wIB4tTF7caxc8yfCHa+FjMFeVu34QPtMOvd/gfHz0mr+t0PiTAdDSbd6o7tj+g5ylm+FhT
- OTUtJQ6mx6L9GzMmIDEbLxJMB9RfJaL2mT5JkujKxEst6nlHGV/lEQ54xBl5ImrPvuR5Dbnr
- zWQYlafb1IC5ZFwSMpBeSfhS7/kGPtFY3NkpLrii/CF+ME0DYYWxlkDIycqF3fsUGGfb3HIq
- z2l95OB45+mCs9DrIDZXRT6mFjLcl35UzuEErNIskCl9NKlbvAMAl+gbDH275SnE44ocC4qu
- 0tMe7Z5jpOy6J8nNABEBAAGJATwEGAEKACYWIQSQYR1bzo1I0gPoYCg+6I/stKEQbgUCXT+T
- ZQIbDAUJAeEzgAAKCRA+6I/stKEQbjAGB/4mYRqZTTEFmcS+f+8zsmjt2CfWvm38kR+sJFWB
- vz82pFiUWbUM5xvcuOQhz698WQnIazbDGSYaOipyVNS52YiuYJDqMszzgw++DrcSuu0oRYWN
- EWCkJjxMqjGg8uY0OZ6FJG+gYRN5wMFErGfV1OqQ7l00FYA9OzpOEuW9PzPZEutFnAbbh77i
- zvxbQtT7IJCL24A4KutNYKmWg98im4mCzQcJCxE86Bv69ErLVPUyYbp4doLadScilXlvkkjL
- iq1wOt3rRzOuw+qnWVgWGBPxdDftz0Wck941tYF9XE0aMgkf4o1sGoDZFUFPCQdfEYPzzV7O
- S5hN3/mP5UeooFHb
-Message-ID: <51c82a3f-15d1-3c1b-9bee-d89fea706e28@gmail.com>
-Date:   Thu, 28 May 2020 15:37:26 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Go6xO5WoC3zEQRJwVmH9bUe++RxJSEnlCwIRvUl4+dQ=;
+        b=fLOPCfN3UPdZMn+WVDutvbQQORGLazd0mnxnXTvMwrVZAV4TnOpaNt5l77yLUiV9RN
+         JhECmQLNPRjPNFYkeEk9q0G13S50XFZX1diPrsbMiY3/1FfciCbw3rk6LGKTNTzpPSki
+         awsZuuUE/uEC8BcgIYKS8wR7tawrzvqUy0oyRUdypEQZ9jL/hhVcw3l0jVSD1n/QBgmd
+         rtPwOURwim2kSv9UiEj64EUbLMBW5UVbgA8XoHowAqgN7DTtaxz+9wfj5AfTIFrqHYHq
+         qG/RefjXpH/u+LlaJ4wtodIU/wVFCEtYYCq/SbuAoI/cJeuL2MG6n4NNu3Q98Nl7NL1o
+         RahA==
+X-Gm-Message-State: AOAM533O3x9SFUZGHx8D78aR0maXmHx7frBx0kI7AxQzTICZCQdnnAV3
+        fdvdx6N35jwIizqG2h3X/Q==
+X-Google-Smtp-Source: ABdhPJxdVc8I3c5Wd+1g7euGl5ed0EkKErorxTkquQmiCvhOLVCyVbgdKy+eSwMN7mVRv2h0Ec4qUQ==
+X-Received: by 2002:a92:c809:: with SMTP id v9mr4288575iln.209.1590695318014;
+        Thu, 28 May 2020 12:48:38 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y13sm2960819iob.51.2020.05.28.12.48.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:48:16 -0700 (PDT)
+Received: (nullmailer pid 568649 invoked by uid 1000);
+        Thu, 28 May 2020 19:48:04 -0000
+Date:   Thu, 28 May 2020 13:48:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 1/6] dt-bindings: display/bridge: Add binding for
+ input mux bridge
+Message-ID: <20200528194804.GA541078@bogus>
+References: <cover.1589548223.git.agx@sigxcpu.org>
+ <14a44a664f40584ffa25c1764aab5ebf97809c71.1589548223.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-In-Reply-To: <mhng-0995a264-b39c-4790-9aa5-b8c598b43ffd@palmerdabbelt-glaptop1>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <14a44a664f40584ffa25c1764aab5ebf97809c71.1589548223.git.agx@sigxcpu.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/26/20 8:32 PM, Palmer Dabbelt wrote:
-> On Thu, 21 May 2020 23:29:36 PDT (-0700), seanga2@gmail.com wrote:
->> On 5/22/20 1:54 AM, Anup Patel wrote:
->>> On Fri, May 22, 2020 at 1:35 AM Sean Anderson <seanga2@gmail.com> wrote:
->>>>
->>>> On 5/21/20 9:45 AM, Anup Patel wrote:
->>>>> +Required properties:
->>>>> +- compatible : "sifive,clint-1.0.0" and a string identifying the actual
->>>>> +  detailed implementation in case that specific bugs need to be worked around.
->>>>
->>>> Should the "riscv,clint0" compatible string be documented here? This
->>>
->>> Yes, I forgot to add this compatible string. I will add in v2.
->>>
->>>> peripheral is not really specific to sifive, as it is present in most
->>>> rocket-chip cores.
->>>
->>> I agree that CLINT is present in a lot of non-SiFive RISC-V SOCs and
->>> FPGAs but this IP is only documented as part of SiFive FU540 SOC.
->>> (Refer, https://static.dev.sifive.com/FU540-C000-v1.0.pdf)
->>>
->>> The RISC-V foundation should host the CLINT spec independently
->>> under https://github.com/riscv and make CLINT spec totally open.
->>>
->>> For now, I have documented it just like PLIC DT bindings found at:
->>> Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
->>
->> The PLIC seems to have its own RISC-V-sponsored documentation [1] which
->> was split off from the older privileged specs. By your logic above,
->> should it be renamed to riscv,plic0.txt (with a corresponding change in
->> the documented compatible strings)?
->>
->> [1] https://github.com/riscv/riscv-plic-spec
+On Fri, May 15, 2020 at 03:12:10PM +0200, Guido Günther wrote:
+> The bridge allows to select the input source via a mux controller.
 > 
-> Let's propose tagging that PLIC spec as v1.0.0 in the platform spec group, but
-> I don't see a reason why that wouldn't be viable.  Assuming that's all OK, we
-> can start calling this a RISC-V PLIC (in addition to a SiFive PLIC, as they'll
-> be compatible).
-
-Is there a version anyewhere in that spec? I looked around a bit and
-couldn't find one.
-
->>>
->>> If RISC-V maintainers agree then I will document it as "RISC-V CLINT".
->>>
->>> @Palmer ?? @Paul ??
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  .../display/bridge/mux-input-bridge.yaml      | 123 ++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
 > 
-> The CLINT is a SiFive spec.  It has open source RTL so it's been implemented in
-> other designs, but it's not a RISC-V spec.  The CLIC, which is a superset of
-> the CLINT, is a RISC-V spec.  IIRC it's not finished yet (it's the fast
-> interrupts task group), but presumably we should have a "riscv,clic-2.0.0" (or
-> whatever it ends up being called) compat string to go along with the
-> specification.
+> diff --git a/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml b/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+> new file mode 100644
+> index 000000000000..4029cf63ee5c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+> @@ -0,0 +1,123 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/mux-input-bridge.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: DRM input source selection via multiplexer
 
-The rocket chip is a Chips Alliance project on github; presumably the
-"proper" compatibility string would be something like
-"chips-alliance,clint"? Alternatively, it is already referred to as
-"riscv,clint0" in U-Boot, following the pattern of the plic.
+DRM is not a hardware thing.
 
---Sean
+The graph binding is already designed to support muxing. Generally, 
+multiple endpoints on an input node is a mux. So either the device with 
+the input ports knows how to select the input, or you just need a 
+mux-control property for the port to have some other device implement 
+the control.
+
+You could do it like you have below. That would be appropriate if 
+there's a separate h/w device controlling the muxing. Say for example 
+some board level device controlled by i2c.
+
+Rob
