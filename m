@@ -6,82 +6,94 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC0EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C91C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BFA207BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13A2207BC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590693996;
-	bh=IUOQVvL3DxNNky/BDhd+KVb0t6WF+aGKmuDdjZmE6kA=;
+	s=default; t=1590694618;
+	bh=/7kHFBqmcXUzywK3Zg26OL14ofFFyyZj6hSKx1od/WU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AwecTYGwqfl4e9d0hPdS5F7v/ltUsuZWz7f5ih+T51b8gpVLKtitkJ/YnRYW7qlXE
-	 YpzBRVab9Ih1eVtofr/xCxhxvGktVNlYYUrfXkUtZIhAWsxk4iIcmWgBHZScUTvt6Q
-	 YssZENIknb61SkBEXcOBjXnak6pLoKMmUonYUJh8=
+	b=0nWzTW2LgLK4LKodHNxlys5kbDgodm/Iv6mKhca7dHLutpILQYFzA8bmCSXi3aP8n
+	 cHxnNmA6VnsZmuawz3IAUw6VnGfJ1Q6dfc/l48nj5ek+4pVOuF2goy5oPfBlavXtzc
+	 /1jwle12K2XnVZ/NWdr8WZG4G0VRJOO+PIrQBJBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406445AbgE1T0e (ORCPT
+        id S2406632AbgE1Tgs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 15:26:34 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33899 "EHLO
+        Thu, 28 May 2020 15:36:48 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45740 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406258AbgE1T0d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:26:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id f3so31427669ioj.1;
-        Thu, 28 May 2020 12:26:32 -0700 (PDT)
+        with ESMTP id S2406319AbgE1Tgq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:36:46 -0400
+Received: by mail-io1-f66.google.com with SMTP id y5so8596721iob.12;
+        Thu, 28 May 2020 12:36:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=hPV9O47er4xNAMd5wglL6Z5Z1lhGUqlcSginv9j4tJY=;
-        b=iKJZE1nlq6F6nJp+puvkmCfCYym1L+VVG+kmnaU1d4f62PhOg8U+V+8IbbvzXo8HDN
-         78drb/ptOtpGReVqyjC4Z2LLcqgyLwbiPJ+2R6lcaQ9G3alZs+k/UimOzC3zbf61yOWB
-         YQiR38Wc7/TSsda+qdCx94WiXfkyMyksqo0FpAeRNRnyOYuC+d1rpZBMptBT8yf68QcN
-         MD8lMcpMoBU5r9XuXZG1kLVH1+ERVFtvDYawCdAgdOZT7HTKdolbJguCkIBb7TUBD4pG
-         dMI89JOIF5C47sJAFCASJtQZPOjeQbUd/YF8h8O+9uIw/+lXd/1oebuWgL12DfE6ImeG
-         r5+Q==
-X-Gm-Message-State: AOAM531ahsT7rl0vdxByAVsabNGLIc8oNt1isUMqiIJkbR+z1MGq4qeF
-        mnwJkUabddHTXv2P1QRSWg==
-X-Google-Smtp-Source: ABdhPJzCyFeUg7Z9IIEN+Krc+e5kutkL4mnELlbgP88jXAg66vChno/VzYMMvtVbSJ8HNuZC5aYN2w==
-X-Received: by 2002:a02:9f90:: with SMTP id a16mr3987752jam.65.1590693992020;
-        Thu, 28 May 2020 12:26:32 -0700 (PDT)
+        bh=anLARnrJJYeYAOB5KTKHSKOnzH0boPrtofWMELzWPU8=;
+        b=eszk8+Dr5DGsMPVkuuDZkT9s0FqOEuL1kSXDU6CHHdpAyv3w59G8WWWangxo2itI7P
+         gdqo/85HaK7KV1rX91Tm/xqSvCXUQIWJLGSWEOPsbfb9Jek0r5nY6Pd9cMomYu3b5QdG
+         TCkRoRjcXt5EzyBPYCfdagT+RCcARPRm1LhSEftBII4FSKFbwPF1ioV1QxX5kqHUsOh/
+         6BBQuE6OH7gMfQqJg965LiGH+xTj+M3aSWJKtro02rXNBHZf0eAYqhkqV3i3D2ikH2c2
+         espqQS17WeqLU0FNHkkk/Jy/i9yrNWyWmE9TOqorkJXyWlEU60T+zlJrqqdTW1NcJUUO
+         G6xA==
+X-Gm-Message-State: AOAM5331Wh+sRBbU3q3jArtjh/jDaaPjv5624qImiZdzwnCBUfJrKtjx
+        rbXVztGWDclvMpWfPr9eorkUj2k=
+X-Google-Smtp-Source: ABdhPJxAbgV9QaVK5dOC48fScjQWHA5Gld2FnTR86BVEq9Vbv9X4kGVbNWcHJZhyKd7pm6KmH4S+0Q==
+X-Received: by 2002:a5d:88d3:: with SMTP id i19mr3781474iol.194.1590694605038;
+        Thu, 28 May 2020 12:36:45 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id g19sm2933855iom.21.2020.05.28.12.26.30
+        by smtp.gmail.com with ESMTPSA id v2sm1938613iol.36.2020.05.28.12.36.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 12:26:31 -0700 (PDT)
-Received: (nullmailer pid 539224 invoked by uid 1000);
-        Thu, 28 May 2020 19:26:29 -0000
-Date:   Thu, 28 May 2020 13:26:29 -0600
+        Thu, 28 May 2020 12:36:44 -0700 (PDT)
+Received: (nullmailer pid 553763 invoked by uid 1000);
+        Thu, 28 May 2020 19:36:42 -0000
+Date:   Thu, 28 May 2020 13:36:42 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     cristian.birsan@microchip.com
-Cc:     linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com,
-        alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, balbi@kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com
-Subject: Re: [PATCH v2 2/7] dt-bindings: usb: atmel: Update DT bindings
- documentation for sam9x60
-Message-ID: <20200528192629.GA539191@bogus>
-References: <20200515111631.31210-1-cristian.birsan@microchip.com>
- <20200515111631.31210-3-cristian.birsan@microchip.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 03/10] dt-bindings: serial: renesas,scifa: Document
+ r8a7742 bindings
+Message-ID: <20200528193642.GA552811@bogus>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200512222056.GA7267@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515111631.31210-3-cristian.birsan@microchip.com>
+In-Reply-To: <20200512222056.GA7267@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 15 May 2020 14:16:26 +0300, cristian.birsan@microchip.com wrote:
-> From: Cristian Birsan <cristian.birsan@microchip.com>
+On Tue, May 12, 2020 at 05:20:56PM -0500, Rob Herring wrote:
+> On Sun,  3 May 2020 22:46:47 +0100, Lad Prabhakar wrote:
+> > RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFA ports,
+> > so document the SoC specific bindings.
+> > 
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  Documentation/devicetree/bindings/serial/renesas,scifa.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
 > 
-> Add sam9x60 binding.
-> 
-> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-> ---
->  Documentation/devicetree/bindings/usb/atmel-usb.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Geert asked me to apply this one, so I have now.
+
+Rob
