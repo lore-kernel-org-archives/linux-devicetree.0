@@ -2,84 +2,138 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEC8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5565C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3552F20888
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590677734;
-	bh=1+0Mgnz53w/RdoAvOb2WEd3xtONTE02iakPJTjv6xSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IOOVCsozEsqSXGOTI+sVuffkni4S1Q0rI/6Ec2Kz6WShyiVmpYltsAmt7pwGJJNxM
-	 rlLRpZBnPqT/lYDW1Xar6m/2EE3nIzuh3scRVON+zCjTPSzLQPliBqPIhr5JRVhEGZ
-	 7y0S1/1W2lxbayRkimQK6rNIockqVqcZJ+HYEO8U=
+	by mail.kernel.org (Postfix) with ESMTP id 8FBD12075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391320AbgE1Oz3 (ORCPT
+        id S2403862AbgE1O4c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:55:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37170 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391314AbgE1Oz2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:55:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id r2so19953710ioo.4;
-        Thu, 28 May 2020 07:55:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V9q1pziYt0m1nKSry3Jo6IofP6yHLLawIxH8HrvbkSs=;
-        b=eYAGGGqR6Mh7wTfu4GebqMW/1iwZsS3J0fxs+PbJH1RgeSjgolEXffTrn4OVYZQP+G
-         kSDVHLHFcXxsRcu46rKNn276I6UPdbpdwLM991yeSqDx8OOkXYGWEr7B2zVl6J6ru3v5
-         IhFZkZ3JiLM12QQ337xWGG3MT5UeQGHCEEUWdwMPqUU13RvjCOtMGTC21Rtz8X4DSHF/
-         7sIbO0Vkbw1gycTsuHADF+hHNSsQXnZHVWrsB6obGYFs9upFeJeANNwyoSNV3iMQn57N
-         cj9VHN0j5KaHovSXW4U/XHRhmOArADO9MZY48e945ii5kqxUzKngGBHqcVA9mbFf+Bl3
-         +Ebw==
-X-Gm-Message-State: AOAM531CmrQVJMlwTwUi6XyzAIWow4TIUAMLEwybH1w01zRM7H2dsElJ
-        xDCImTqnRE7dBsr71oPZ2w==
-X-Google-Smtp-Source: ABdhPJxgsg0zCerw2qnN08IcsRx2AWNyPK9QS8PlC0mEQceT82QnF20dOb575GIlcF9ISPrl8ADfXQ==
-X-Received: by 2002:a5d:860b:: with SMTP id f11mr2576671iol.104.1590677725988;
-        Thu, 28 May 2020 07:55:25 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w26sm3482778ill.19.2020.05.28.07.55.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:55:24 -0700 (PDT)
-Received: (nullmailer pid 52001 invoked by uid 1000);
-        Thu, 28 May 2020 14:55:23 -0000
-Date:   Thu, 28 May 2020 08:55:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, agross@kernel.org,
-        linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC v3 3/3] dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
-Message-ID: <20200528145523.GA51866@bogus>
-References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
- <1590630363-3934-4-git-send-email-wcheng@codeaurora.org>
+        Thu, 28 May 2020 10:56:32 -0400
+Received: from mga03.intel.com ([134.134.136.65]:22928 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403856AbgE1O4b (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 10:56:31 -0400
+IronPort-SDR: Z+MLV+sAeMSBjmKCUUIEDqzmEl09hTjz+Z0QZtnqu+YHylte+gzYfQiM+xnTirh7RkZ236gJ7l
+ GRSgux8OQoMg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:56:30 -0700
+IronPort-SDR: 9GMNO2dpZ8QHEws0zoKx0e5A/SnV4klKacWqjY2NfFml2EkkB8oynn2CAv6xDVVdBX+drSM/66
+ 3qbgPnlal6tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="267241338"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 28 May 2020 07:56:27 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeJxO-009Rcl-2C; Thu, 28 May 2020 17:56:30 +0300
+Date:   Thu, 28 May 2020 17:56:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/10] dmaengine: dw: Initialize max_sg_nents with
+ nollp flag
+Message-ID: <20200528145630.GV1634618@smile.fi.intel.com>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590630363-3934-4-git-send-email-wcheng@codeaurora.org>
+In-Reply-To: <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 May 2020 18:46:03 -0700, Wesley Cheng wrote:
-> Re-introduce the comment for the tx-fifo-resize setting for the DWC3
-> controller.  This allows for vendors to control if they require the TX FIFO
-> resizing logic on their HW, as the default FIFO size configurations may
-> already be sufficient.
-> 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, May 27, 2020 at 01:50:21AM +0300, Serge Semin wrote:
+> Multi-block support provides a way to map the kernel-specific SG-table so
+> the DW DMA device would handle it as a whole instead of handling the
+> SG-list items or so called LLP block items one by one. So if true LLP
+> list isn't supported by the DW DMA engine, then soft-LLP mode will be
+> utilized to load and execute each LLP-block one by one. The soft-LLP mode
+> of the DMA transactions execution might not work well for some DMA
+> consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
+> expose the nollp flag indicating the soft-LLP mode by means of the
+> max_sg_nents capability, so the DMA consumer would be ready to somehow
+> workaround errors caused by such mode being utilized.
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+In principal I agree, one nit below.
+If you are okay with it, feel free to add my Rb tag.
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v3:
+> - This is a new patch created as a result of the discussion with Vinud and
+>   Andy in the framework of DW DMA burst and LLP capabilities.
+> ---
+>  drivers/dma/dw/core.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+> index 29c4ef08311d..b850eb7fd084 100644
+> --- a/drivers/dma/dw/core.c
+> +++ b/drivers/dma/dw/core.c
+> @@ -1054,6 +1054,15 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>  	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+>  
+>  	caps->max_burst = dwc->max_burst;
+> +
+> +	/*
+> +	 * It might be crucial for some devices to have the hardware
+> +	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
+> +	 * notation. So if LLPs are supported then max_sg_nents is set to
+> +	 * zero which means unlimited number of SG entries can be handled in a
+> +	 * single DMA transaction, otherwise it's just one SG entry.
+> +	 */
+
+> +	caps->max_sg_nents = dwc->nollp;
+
+To be on the safer side I would explicitly do it like
+
+	if (dwc->nollp)
+	 /* your nice comment */
+	 = 1;
+	else
+	 /* Unlimited */
+	 = 0;
+
+type or content of nollp theoretically can be changed and this will affect maximum segments.
+
+>  }
+>  
+>  int do_dma_probe(struct dw_dma_chip *chip)
+> -- 
+> 2.26.2
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
