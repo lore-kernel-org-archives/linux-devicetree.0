@@ -4,151 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAB2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D198FC433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C46E2075A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34CF208A7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 10:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTVqEOr6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKXLgYnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387771AbgE1KO6 (ORCPT
+        id S2387821AbgE1KQE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 06:14:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58866 "EHLO
+        Thu, 28 May 2020 06:16:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387763AbgE1KOt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 06:14:49 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05AAC05BD1E
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 03:14:48 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id m23so265215vko.2
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 03:14:48 -0700 (PDT)
+        with ESMTP id S2387765AbgE1KPM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 06:15:12 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA84AC08C5C9
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 03:15:06 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id z13so2941972vsn.10
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 03:15:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yW+IZMKg5JfFJMCtNiUNXYczOaHQV0AlWP2cb6ww+2o=;
-        b=VTVqEOr6mFaIVPNhNtawBK+MOEO6Zip8G1r98/95aKyBzU6AAcTYWgaHro383U4qM2
-         bQ5+66X6utmIzRPHkTY40N+Of779nxqfEB0c0bJJVFGbAWTvM3SyFiUqj8zyczWBTJHK
-         4pDHtK0XKMfnAWRKtfM5eVEfIcjiIUSWzvbjZ0HOdE5AnEwwj8nRWQmi0iRdnLAmAbgu
-         NkRwXjaTqVNr4a9sYFqkcpseXCe0HVDnkMIVDvMeNWDBfQrUhTAaRMXQV/WTWZ7ezQq2
-         5325jM7xywFyJqR+8ph9mciWMGrPrdPt4tezivjmocy4e7qQJPCJm63OQDrPGnE715XS
-         HY0Q==
+        bh=NnFvkEinSu8JNeeiaCqqDDP3KthjxwCRXHN9I0khteE=;
+        b=JKXLgYnRrXprs68FC8fP4Hq7I9VPldQJYeOyc/9tZMIvKGkf3t5OoImS5K4atsMnAN
+         r27FPxAuUszQNOJP2Mc0e0W6PepVkbJr7xfkUcfmu59eRZHeKzQsqFqgPrCLjhZ2QcZm
+         B98a7+5hvdsR4PehdNAbX2Q5Irc8IRfgouLxpRWRu9GLQmRxE+zYRiXyI51m7zoRSkTJ
+         +rswdazaCjsE26eujh5yTeYERp1E0iZsmhEVLg3VEOfm4tqR8fEEMp3c4DUPAf0RW48B
+         6C4TICJ1VGKAY2wPQ1LKT6XGF2yPvJNdhTWDNUDY6Dvh2AZDUdM0GPcSLgQ5yRXyb7ex
+         BfEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yW+IZMKg5JfFJMCtNiUNXYczOaHQV0AlWP2cb6ww+2o=;
-        b=LY1/dCy3saUucPZQdFqMeMkwoI+Gl2awPsPVCrG0AjsW1th8Pgh3QfdgtMa1oRGiDS
-         UugaGx64v6hvm53aqOMdviJ4ezQel/vcE1LrdIVsf9nRAsujMp82BAGDjgZGzmehfExo
-         hfBRq6baO2Qk23yq44hZhrI9tz7ngyXRiipSXzdrjDZ3+HuwU6pqosJOfgi5XtOYFsKi
-         yCI7IKCsYT5ZfsYaWTzzJB/QK8qF+kHAxxrdizba8AOY3D/uwQfhloE695uOu83IRfNh
-         ayVsj0MlZVKJuQL/dOmB7bEqJxlDfpy+uYam/f2E5J/ippAcRci9MfXmZQEieTsHjE0h
-         8SAg==
-X-Gm-Message-State: AOAM5313tVEfPTvnTI45Qo1BaK/zcoaftsaO49yCw6JpUQens8NLt7ro
-        06DZ+xPAGueppM9/A2GFE+n4ASCylFgRCMM+hN9hcQ==
-X-Google-Smtp-Source: ABdhPJz5IGENALXCmSdQWShSp8vql2GZi49pbi4SppKQwQNGlCylI2/mfwnx1tgNSliv7QU4ohjZ/zN0y1vcSxYkzhU=
-X-Received: by 2002:a1f:25d7:: with SMTP id l206mr1519148vkl.53.1590660888103;
- Thu, 28 May 2020 03:14:48 -0700 (PDT)
+        bh=NnFvkEinSu8JNeeiaCqqDDP3KthjxwCRXHN9I0khteE=;
+        b=irT2DadGLLxeSgmkiQ/xU5gdPpj2poufje/XqBPNNmoo+lgelA/d5H48FtjBzQG2wg
+         2dgp/OsNjfDx94w+93JHkailcggOYi2npg0znA0FConnQHeVDGX9BePVmZZPuf9visiq
+         cTUcqq0lmmKdZ7jRkXc7f4nE4UgS5CHdx3lQdRXEP5ZTGGi4L1tCldyzP7LXpIk0JC05
+         rQOnk61HxDQAmXlrjTxzvxXCH3chqxQKz9dFlGDuu1PTD3ilz8igQPKykMSnwscjQP+Z
+         h0HXJO+IELuybTVsmlvNF68iZMeEMujdjCmuqDdNNd1r0Ug2yY7HGXMSMtyr3ynY/ahK
+         PvgQ==
+X-Gm-Message-State: AOAM530xD3grNcz2zhyY35cfpbLLqje7Gmzg3ML1UOAuEfWTGHO724lF
+        gwGZ9V52Z+xXGDI2OmxXCvpjG5dlEwDuweRccm5CmA==
+X-Google-Smtp-Source: ABdhPJzVo18IfEZvDNjehMuUK+Er1KC2DxaDvMSbNlAbvNzpRPVY17HtVDdF3JBPl18RRNoiV/BlCC6N4HoAjWTgSlA=
+X-Received: by 2002:a67:ec58:: with SMTP id z24mr1378822vso.200.1590660905952;
+ Thu, 28 May 2020 03:15:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526062758.17642-1-wan.ahmad.zainie.wan.mohamad@intel.com> <20200526062758.17642-2-wan.ahmad.zainie.wan.mohamad@intel.com>
-In-Reply-To: <20200526062758.17642-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+References: <20200526155103.12514-1-ludovic.barre@st.com> <20200526155103.12514-3-ludovic.barre@st.com>
+In-Reply-To: <20200526155103.12514-3-ludovic.barre@st.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 28 May 2020 12:14:10 +0200
-Message-ID: <CAPDyKFrVxFYEKFUSaeCj-+9O5onHjFexP9rrZXCCNq9XdUEDPA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: arasan: Add compatible strings
- for Intel Keem Bay
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Date:   Thu, 28 May 2020 12:14:28 +0200
+Message-ID: <CAPDyKForRHZFGEzn=5OVY8YP6okFj7G2e6QTJFH5-Q_xP3QLBw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mmc: mmci_sdmmc: fix DMA API warning max segment size
+To:     Ludovic Barre <ludovic.barre@st.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 26 May 2020 at 08:29, Wan Ahmad Zainie
-<wan.ahmad.zainie.wan.mohamad@intel.com> wrote:
+On Tue, 26 May 2020 at 17:51, Ludovic Barre <ludovic.barre@st.com> wrote:
 >
-> Add new compatible strings in sdhci-of-arasan.c to support Intel Keem Bay
-> eMMC/SD/SDIO controller, based on Arasan SDHCI 5.1.
+> Turning on CONFIG_DMA_API_DEBUG_SG results in the following warning:
+> WARNING: CPU: 1 PID: 85 at kernel/dma/debug.c:1302 debug_dma_map_sg+0x2a0/0x3cc
+> mmci-pl18x 58005000.sdmmc: DMA-API: mapping sg segment longer than device claims to support [len=126976] [max=65536]
 >
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> dma api debug checks and compares the segment size to
+> dma_get_max_seg_size (dev->dma_parms->max_segment_size),
+> the sdmmc variant has an internal DMA and should define
+> its max_segment_size constraint to avoid this warning.
+>
+> This Patch defines the dev->dma_parms->max_segment_size
+> with the constraint already set for mmc core
+> (host->mmc->max_seg_size).
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 
 Applied for next, thanks!
+
+Note, a manual backport is needed for stable, as
+dma_set_max_seg_size() will fail for older kernels.
+We needed to revert 9495b7e92f7 ("driver core: platform: Initialize
+dma_parms for platform devices"), for stable kernels [1].
 
 Kind regards
 Uffe
 
+[1]
+https://lkml.org/lkml/2020/5/26/1216
+
 
 > ---
->  .../devicetree/bindings/mmc/arasan,sdhci.txt  | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
+>  drivers/mmc/host/mmci_stm32_sdmmc.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> index 630fe707f5c4..f29bf7dd2ece 100644
-> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> @@ -27,6 +27,12 @@ Required Properties:
->        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
->      - "intel,lgm-sdhci-5.1-sdxc", "arasan,sdhci-5.1": Intel LGM SDXC PHY
->        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
-> +    - "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1": Intel Keem Bay eMMC
-> +      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
-> +    - "intel,keembay-sdhci-5.1-sd": Intel Keem Bay SD controller
-> +      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
-> +    - "intel,keembay-sdhci-5.1-sdio": Intel Keem Bay SDIO controller
-> +      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+> index 2965b1c062e1..51db30acf4dc 100644
+> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
+> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+> @@ -119,20 +119,19 @@ static void sdmmc_idma_unprep_data(struct mmci_host *host,
+>  static int sdmmc_idma_setup(struct mmci_host *host)
+>  {
+>         struct sdmmc_idma *idma;
+> +       struct device *dev = mmc_dev(host->mmc);
 >
->    [5] Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+> -       idma = devm_kzalloc(mmc_dev(host->mmc), sizeof(*idma), GFP_KERNEL);
+> +       idma = devm_kzalloc(dev, sizeof(*idma), GFP_KERNEL);
+>         if (!idma)
+>                 return -ENOMEM;
 >
-> @@ -148,3 +154,39 @@ Example:
->                 phy-names = "phy_arasan";
->                 arasan,soc-ctl-syscon = <&sysconf>;
->         };
-> +
-> +       mmc: mmc@33000000 {
-> +               compatible = "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1";
-> +               interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +               reg = <0x0 0x33000000 0x0 0x300>;
-> +               clock-names = "clk_xin", "clk_ahb";
-> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>,
-> +                        <&scmi_clk KEEM_BAY_PSS_EMMC>;
-> +               phys = <&emmc_phy>;
-> +               phy-names = "phy_arasan";
-> +               assigned-clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>;
-> +               assigned-clock-rates = <200000000>;
-> +               clock-output-names = "emmc_cardclock";
-> +               #clock-cells = <0>;
-> +               arasan,soc-ctl-syscon = <&mmc_phy_syscon>;
-> +       };
-> +
-> +       sd0: mmc@31000000 {
-> +               compatible = "intel,keembay-sdhci-5.1-sd";
-> +               interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +               reg = <0x0 0x31000000 0x0 0x300>;
-> +               clock-names = "clk_xin", "clk_ahb";
-> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD0>,
-> +                        <&scmi_clk KEEM_BAY_PSS_SD0>;
-> +               arasan,soc-ctl-syscon = <&sd0_phy_syscon>;
-> +       };
-> +
-> +       sd1: mmc@32000000 {
-> +               compatible = "intel,keembay-sdhci-5.1-sdio";
-> +               interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +               reg = <0x0 0x32000000 0x0 0x300>;
-> +               clock-names = "clk_xin", "clk_ahb";
-> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD1>,
-> +                        <&scmi_clk KEEM_BAY_PSS_SD1>;
-> +               arasan,soc-ctl-syscon = <&sd1_phy_syscon>;
-> +       };
+>         host->dma_priv = idma;
+>
+>         if (host->variant->dma_lli) {
+> -               idma->sg_cpu = dmam_alloc_coherent(mmc_dev(host->mmc),
+> -                                                  SDMMC_LLI_BUF_LEN,
+> +               idma->sg_cpu = dmam_alloc_coherent(dev, SDMMC_LLI_BUF_LEN,
+>                                                    &idma->sg_dma, GFP_KERNEL);
+>                 if (!idma->sg_cpu) {
+> -                       dev_err(mmc_dev(host->mmc),
+> -                               "Failed to alloc IDMA descriptor\n");
+> +                       dev_err(dev, "Failed to alloc IDMA descriptor\n");
+>                         return -ENOMEM;
+>                 }
+>                 host->mmc->max_segs = SDMMC_LLI_BUF_LEN /
+> @@ -143,7 +142,7 @@ static int sdmmc_idma_setup(struct mmci_host *host)
+>                 host->mmc->max_seg_size = host->mmc->max_req_size;
+>         }
+>
+> -       return 0;
+> +       return dma_set_max_seg_size(dev, host->mmc->max_seg_size);
+>  }
+>
+>  static int sdmmc_idma_start(struct mmci_host *host, unsigned int *datactrl)
 > --
 > 2.17.1
 >
