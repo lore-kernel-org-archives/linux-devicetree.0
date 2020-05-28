@@ -2,139 +2,116 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A93C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA61CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E379E2084C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB4D20814
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="miP7UbEn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390697AbgE1N4M (ORCPT
+        id S2390763AbgE1N7K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 09:56:12 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:42164 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390608AbgE1N4L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:56:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C94A9803083A;
-        Thu, 28 May 2020 13:56:07 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rjgT4CY67bg7; Thu, 28 May 2020 16:56:07 +0300 (MSK)
-Date:   Thu, 28 May 2020 16:56:06 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
+        Thu, 28 May 2020 09:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390569AbgE1N7H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:59:07 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D78EBC05BD1E
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:59:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r15so3265944wmh.5
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z4Mht0hOJ/x269vYNUbhZmvFvBpXKo/z9k8ZE3MlgiM=;
+        b=miP7UbEnqGNLwbuCqX3AjlcLiVr/EEW+iM9ZpMml9MEg9sEtBhsE1bnK0HHD2uRhfF
+         ADhtu3NmeTdU1c/V4b/dzY7krJThryWtxqu9nO06W+kDnFqn9IS9Sfknoz7lVfmo899S
+         eDnBBRKKKyv6X5DgQFNmSm6ReWWv49Rd3VQbPJ2J0GJTRVXxJVR4yKEPRHo/F/K2rrur
+         wtwbTHAPGLqhAzcaiKZCw8Sxw3dIK8TCHAMTYW2WnbKUh9rmUlyYwoziHLLhZm6zhmnw
+         XokQF5+qlAi+Y/cFuLWs/+HMfeny26GRAeu553j7xxdsSymRXQPvz3pB+w/CKf3GFHJX
+         0S9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z4Mht0hOJ/x269vYNUbhZmvFvBpXKo/z9k8ZE3MlgiM=;
+        b=Tzp+XMhMG//xAijAcGmosUl9hPL7X7ka8KvEZW5PBkQQJ12JZjEMSsVMh42KHXXtD9
+         UlRYbURda1cvj1YTLjqY2D2Coonly467EHM+svDh/1XHh85csy8u//F+vEVvitGKhQxq
+         ek4J9fGtST1SuFUEOWXgd7SQ4Faz6TwtZAo0djUrZN2TR78Unf0UgwrqUvMngx1MEPVg
+         Am5dOesb0E4tLJ8y0t5z4yp8fbTrt1fNkViPur1m7/y2v1OxXlBFUTKZckL6YPaJGkqe
+         RAKnKJUGpCKivUXeGyEKI2y8Gz382T0AMUYOqY9uTNDghMCviOrig3sGK5b/P2OREPBw
+         r5Qg==
+X-Gm-Message-State: AOAM531ngpxfX/WTvN5o01Wk92DgmNxz44yFpkUvXGtu5Nwh0CW+m/Wr
+        3Y5F3JzN36IGjhhgYC0GRUCW6w==
+X-Google-Smtp-Source: ABdhPJwa2kiLYWJHItumPfhGeufMSpJNKjrDcHYRwjVY19oFSl+hS6FpEyyraLAC5F2EWT/iMGIlLA==
+X-Received: by 2002:a7b:ca47:: with SMTP id m7mr1760608wml.173.1590674345652;
+        Thu, 28 May 2020 06:59:05 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id f2sm6395917wrg.17.2020.05.28.06.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 06:59:04 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "soc@kernel.org" <soc@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/6] bus: Add Baikal-T1 AXI-bus driver
-Message-ID: <20200528135606.n67gty2ddjhin2fo@mobilestation>
-References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
- <20200526125928.17096-5-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VcfkPPy5YjNrcv8c6doyQz5C47QyREE0v6tfQjXYrBijQ@mail.gmail.com>
- <20200528134046.scxig3she3wyjyko@mobilestation>
- <CAHp75VfqnLTK-fT-KdzN-3=u=dLTJjo=9+b=oKXUoUOsbeg00Q@mail.gmail.com>
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH net-next v2] dt-bindings: net: rename the bindings document for MediaTek STAR EMAC
+Date:   Thu, 28 May 2020 15:59:02 +0200
+Message-Id: <20200528135902.14041-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfqnLTK-fT-KdzN-3=u=dLTJjo=9+b=oKXUoUOsbeg00Q@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:51:03PM +0300, Andy Shevchenko wrote:
-> On Thu, May 28, 2020 at 4:40 PM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > On Thu, May 28, 2020 at 01:00:57AM +0300, Andy Shevchenko wrote:
-> > > On Tuesday, May 26, 2020, Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > wrote:
-> > >
-> > > > AXI3-bus is the main communication bus connecting all high-speed
-> > > > peripheral IP-cores with RAM controller and MIPS P5600 cores on Baikal-T1
-> > > > SoC. Bus traffic arbitration is done by means of DW AMBA 3 AXI
-> > > > Interconnect (so called AXI Main Interconnect) routing IO requests from
-> > > > one SoC block to another. This driver provides a way to detect any bus
-> > > > protocol errors and device not responding situations by means of an
-> > > > embedded on top of the interconnect errors handler block (EHB). AXI
-> > > > Interconnect QoS arbitration tuning is currently unsupported.
-> > > > The bus doesn't provide a way to detect the interconnected devices,
-> > > > so they are supposed to be statically defined like by means of the
-> > > > simple-bus sub-nodes.
-> > >
-> > >
-> > >
-> > > Few comments in case if you need a new version. Main point is about
-> > > sysfs_streq().
-> >
-> > Hello, Andy. Thanks for your comments. I'll address most of them in a follow-up
-> > patches. See just one note below.
-> >
-> > >
-> > >
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > > Cc: Paul Burton <paulburton@kernel.org>
-> > > > Cc: Olof Johansson <olof@lixom.net>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: linux-mips@vger.kernel.org
-> > > > Cc: soc@kernel.org
-> > > > Cc: devicetree@vger.kernel.org
-> > > >
-> >
-> > [nip]
-> >
-> > > > +
-> > > > +static void bt1_axi_clear_data(void *data)
-> > > > +{
-> > > > +       struct bt1_axi *axi = data;
-> > > > +       struct platform_device *pdev = to_platform_device(axi->dev);
-> > > > +
-> > > > +       platform_set_drvdata(pdev, NULL);
-> > >
-> > >
-> >
-> > > Doesn't device driver core do this already?
-> >
-> > It doesn't on remove.
-> 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> __device_release_driver() calls dev_set_drvdata(dev, NULL);
-> What did I miss?
-> 
-> > This cleanups the drvdata pointer when the driver is
-> > unloaded at the moment of remove() callback calling. This is a good
-> > practice to leave the device the same as it has been before usage including
-> > the pointer value. In this case if theoretically someone (though very
-> > unlikely, but anyway) would try to use the pointer without having it
-> > initialized, the NULL-dereference would pop up, otherwise we may
-> > corrupt someones memory, which is very nasty.
-> 
-> The above is right and I agree with.
+The driver itself was renamed before getting merged into mainline, but
+the binding document kept the old name. This makes both names consistent.
 
-Hm, good point. I missed that part of __device_release_driver(). So do you
-suggest to remove that cleanup?
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+v1 -> v2:
+- update the id field as well
 
--Sergey
+ .../net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml}      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml} (96%)
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
+similarity index 96%
+rename from Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
+rename to Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
+index f85d91a9d6e5..aea88e621792 100644
+--- a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
++++ b/Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/net/mediatek,eth-mac.yaml#
++$id: http://devicetree.org/schemas/net/mediatek,star-emac.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+ title: MediaTek STAR Ethernet MAC Controller
+-- 
+2.26.1
+
