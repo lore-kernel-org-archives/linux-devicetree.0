@@ -2,257 +2,107 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE127C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C3A20899
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804FC2145D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uMCaXWSP"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="nDJk+/il"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgE1HNN (ORCPT
+        id S1726598AbgE1HWK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 03:13:13 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:11384 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE1HNN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 03:13:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590649991; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=4Wp8FUOA+gtgDBp4CnR6tacVRDKfqb4xSu2rmvMHUck=; b=uMCaXWSPfN9GpSeUT5zPr84UsWLNJL2LhUKAXCIELdpPnFspJCUKL9q491g4+dwAdOWz8oml
- NiAcd+Svy43wNMLcpVRpYGjANoJhFuIgA6JmIL/d6LZP8YBPxcJVeHWgVrhi7j0DthOPZMI1
- rK5b6DID1qg8qtvM8bnFV9IZc5Q=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ecf648776fccbb4c8b22ec9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 07:13:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5184AC43387; Thu, 28 May 2020 07:13:10 +0000 (UTC)
-Received: from [192.168.0.106] (unknown [183.83.65.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 570CBC433C6;
-        Thu, 28 May 2020 07:13:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 570CBC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
- <20200521190739.GC1331782@builder.lan>
- <08d11687-7aee-2c62-9435-670be1afb21e@codeaurora.org>
- <20200522170415.GI11847@yoga>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <b2db3743-63bd-9a34-3fcb-d9faac96dfee@codeaurora.org>
-Date:   Thu, 28 May 2020 12:43:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 28 May 2020 03:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE1HWK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 03:22:10 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93ADCC05BD1E;
+        Thu, 28 May 2020 00:22:09 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id k8so6277277edq.4;
+        Thu, 28 May 2020 00:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n4tBqrHHH015OrQnVw44NXP8wN1moQE/VCGYfLYhYdM=;
+        b=nDJk+/ilcTY5g3WooqU4ASS72DOIy/+CsGkeFXI6o5HqLogDfJueIM6ZQKHkg3Ojcl
+         gnPnvgdOMCm9ixt3t4fHxUqqBNZo8GuaHbybuNVbJOh1huL0IKFtoVPt0NGFheVnskTM
+         9K1gjCVQ5K9hg6BAy6DRt5824wcrgyrdWUeGA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n4tBqrHHH015OrQnVw44NXP8wN1moQE/VCGYfLYhYdM=;
+        b=dhRShogeMFyYmduCV7yA2zE07JnZJFn/nFKtwOP1t6yKvGaMjTPd2ikxJaNWRxoPCr
+         jvy7GjsvN6X91E52hQVrIqcyefdDI/UcAzcMLwEJBaeJ769eYfCcOmq3q3mj25LPn12W
+         jT6cVVObSKD1gqDGFbniuMvvnk48yg2Fk2gboJ2Br9UNGgeW3pKiV+/VTvnKwfKCTpnK
+         qjwtMwuY0OMPn2bWzAcITM+Jg001FK1A3mRxWvzKSleVqVyqKUf2FfDHQ4EcqPuPSjVW
+         3dg0dmkKy8YXRWpFrM3d6yhTmuO4i+jpokehmccR5kaOtuEGudIR1uMEjjx+FGg66yX7
+         JCEw==
+X-Gm-Message-State: AOAM5316y+DrraOwfAgFabdUspzSx+uLkFh2rX8PWZ5b+gVKuJE5AUeM
+        zKVgZVnk0JOzsaw8g1HhQSNB4fwhW5CDwkyp5uBfpYIt
+X-Google-Smtp-Source: ABdhPJwEwZAhHDft77mB5JK0NRgMsjUb79eJIRkORoZxijEz0fO5+COmADUM8RxYzt2rFE0Wm4P5ghj3W/q76Zrw9qU=
+X-Received: by 2002:a50:e444:: with SMTP id e4mr1608372edm.191.1590650528266;
+ Thu, 28 May 2020 00:22:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200522170415.GI11847@yoga>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200507091008.1bd38185@canb.auug.org.au> <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
+ <CACPK8XcUydETZvJEkWPvLnLXatAg3D-MfA1yeDzE0epc-hisJQ@mail.gmail.com>
+ <CAL_JsqJWXH4JMZgRQa9r_aPLW6Muz6BRtf_NmeqJv21Aefji1A@mail.gmail.com>
+ <CACPK8Xd4651vtBTbBoGk0G7daunmF2CCOsDZ-ceto7Yu6A5z5g@mail.gmail.com>
+ <20200522101638.052bd0a2@canb.auug.org.au> <CAK8P3a323rPCDDws+us4UYo7ZO6XvkZ13hBChZ40_DwCxBZj_g@mail.gmail.com>
+ <CACPK8Xdm91DwuKcm_d9xh_+8gPzxWpWWAzJzq8pAFVc79x-q1A@mail.gmail.com>
+In-Reply-To: <CACPK8Xdm91DwuKcm_d9xh_+8gPzxWpWWAzJzq8pAFVc79x-q1A@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 28 May 2020 07:21:56 +0000
+Message-ID: <CACPK8Xf=cH4JY6Jd0ep4-KKQLDuV30Z_NbvuO=op8xJ5NHHJkQ@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the aspeed tree
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Olof Johansson <olof@lixom.net>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Vijay Khemka <vkhemka@fb.com>,
+        David Gibson <david@gibson.dropbear.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, 28 May 2020 at 06:09, Joel Stanley <joel@jms.id.au> wrote:
+>
+> On Fri, 22 May 2020 at 08:16, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Fri, May 22, 2020 at 2:16 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > On Wed, 20 May 2020 07:56:36 +0000 Joel Stanley <joel@jms.id.au> wrote:
+> > > > I've sent the patch so it applies to the dtc tree. It would be good to
+> > > > see that change propagate over to -next as others have reported this
+> > > > warning.
+> > >
+> > > These warnings now appear in the arm-soc tree.
+> >
+> > Right, I also saw them earlier.
+> >
+> > Joel, have you sent your patch to David Gibson for integration into
+> > upstream dtc?
+> > I don't know who sent the other patch, but as long as one of them
+> > gets merged, I'd hope we can pull that into kernel as well.
+>
+> David asked for some extra features (and a typo fix) before he would
+> merge it. I'll take a look at that now.
 
-On 5/22/2020 10:34 PM, Bjorn Andersson wrote:
-> On Fri 22 May 06:27 PDT 2020, Veerabhadrarao Badiganti wrote:
->
->> Hi Bjorn,
->>
->> On 5/22/2020 12:37 AM, Bjorn Andersson wrote:
->>> On Thu 21 May 08:23 PDT 2020, Veerabhadrarao Badiganti wrote:
->>>
->>>> On qcom SD host controllers voltage switching be done after the HW
->>>> is ready for it. The HW informs its readiness through power irq.
->>>> The voltage switching should happen only then.
->>>>
->>>> Use the internal voltage switching and then control the voltage
->>>> switching using power irq.
->>>>
->>>> Set the regulator load as well so that regulator can be configured
->>>> in LPM mode when in is not being used.
->>>>
->>>> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
->>>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
->>>> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
->>>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->>>> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>> Looks better, thanks.
->>>
->>>> ---
->>>>    drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
->>>>    1 file changed, 198 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->>> [..]
->>>>    static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
->>>> @@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->>>>    		sdhci_msm_hs400(host, &mmc->ios);
->>>>    }
->>>> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
->>>> +{
->>>> +	int ret;
->>>> +
->>>> +	if (IS_ERR(mmc->supply.vmmc))
->>>> +		return 0;
->>>> +
->>>> +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
->>>> +	if (ret)
->>>> +		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
->>>> +			mmc_hostname(mmc), mmc->ios.vdd, ret);
->>> Missed this one on v1, in the event that mmc_regulator_set_ocr() return
->>> a non-zero value it has already printed an error message. So please
->>> replace the tail with just:
->>>
->>> 	return mmc_regulator_set_ocr(...);
->>>
->>>> +
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
->>>> +			      struct mmc_host *mmc, bool level)
->>>> +{
->>>> +	int load, ret;
->>>> +	struct mmc_ios ios;
->>>> +
->>>> +	if (IS_ERR(mmc->supply.vqmmc)			 ||
->>>> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
->>>> +	    (msm_host->vqmmc_enabled == level))
->>>> +		return 0;
->>>> +
->>>> +	if (msm_host->vqmmc_load) {
->>>> +		load = level ? msm_host->vqmmc_load : 0;
->>>> +		ret = regulator_set_load(mmc->supply.vqmmc, load);
->>> Sorry for the late reply on v1, but please see my explanation regarding
->>> load and always-on regulators there.
->> <Merging your comment from V1 here>
->>
->>>> You should still call regulator_enable()/regulator_disable() on your
->>>> consumer regulator in this driver. When you do this the regulator core
->>>> will conclude that the regulator_dev (i.e. the part that represents the
->>>> hardware) is marked always_on and will not enable/disable the regulator.
->>>> But it will still invoke _regulator_handle_consumer_enable() and
->>>> _regulator_handle_consumer_disable(), which will aggregate the "load" of
->>>> all client regulators and update the regulator's load.
->>>> So this will apply the load as you expect regardless of it being
->>>> supplied by a regulator marked as always_on.
->> Since I'm not turning off this regulator for eMMC, I wanted to keep it in
->> LPM mode
->> to save some power.
->> When the regulator configured in auto mode (RPMH_REGULATOR_MODE_AUTO) it
->> switches to LPM/HPM mode based on the active load.
->> So i have to minimize my driver load requirement so that I can let this
->> regulator
->> in LPM mode.
->> So i need to set load every-time I disable/enable the regulator.
->>
-> You call regulator_enable(vqmmc) and regulator_disable() below, so you
-> are telling the regulator framework that your struct regulator should be
-> "on" or "off".
->
-> This will cause the sum of all struct regulator's for the underlying
-> struct regulator_dev to be recalculated. So after calling
-> regulator_disable() below your effective addition to the load
-> calculation is 0, regardless of which load you have specified.
->
-> Independent of this the property regulator-always-on (always_on in
-> struct regulator_dev) will determine if the enable/disable request will
-> actually be sent to the RPMh.
->
->
-> So, if you where to not call regulator_disable() for eMMC your argument
-> is correct, but as far as I can see you are and you're relying on the
-> regulator core to keep it always-on - and then the load logic is in
-> effect still.
-Thanks for the details Bjorn.
-My requirement is, for eMMC i shouldn't be turning this regulator off. 
-But has to configure in LPM mode.
-For SD-card, i have to turn-off this regulator.
-So I'm planning to update the logic as below, let me know if you have 
-any other suggestions.
+Here we go:
 
-+static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
-+                             struct mmc_host *mmc, bool level)
-+{
-+       int ret;
-+       bool always_on;
-+
-+       if (IS_ERR(mmc->supply.vqmmc)           ||
-+           (mmc->ios.power_mode == MMC_POWER_UNDEFINED))
-+               return 0;
-+       /*
-+        * For eMMC don't turn off Vqmmc, Instead just configure it in LPM
-+        * and HPM modes by setting the right amount of load.
-+        */
-+       always_on = mmc->card && mmc_card_mmc(mmc->card);
-+
-+       if (always_on)
-+               ret = msm_config_vqmmc_mode(msm_host, mmc, level);
-+       else
-+               ret = msm_toggle_vqmmc(msm_host, mmc, level);
-+
-+       return ret;
-+}
-> Regards,
-> Bjorn
->
->>>> +		if (ret) {
->>>> +			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
->>>> +				mmc_hostname(mmc), ret);
->>>> +			goto out;
->>>> +		}
->>>> +	}
->>>> +
->>>> +	if (level) {
->>>> +		/* Set the IO voltage regulator to default voltage level */
->>>> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
->>>> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
->>>> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
->>>> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
->>>> +
->>>> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
->>>> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
->>>> +			if (ret < 0) {
->>>> +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
->>>> +					mmc_hostname(mmc), ret);
->>>> +				goto out;
->>>> +			}
->>>> +		}
->>>> +		ret = regulator_enable(mmc->supply.vqmmc);
->>>> +	} else {
->>>> +		ret = regulator_disable(mmc->supply.vqmmc);
->>>> +	}
->>>> +
->>>> +	if (ret)
->>>> +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
->>>> +			mmc_hostname(mmc), level ? "en":"dis", ret);
->>>> +	else
->>>> +		msm_host->vqmmc_enabled = level;
->>>> +out:
->>>> +	return ret;
->>>> +}
+https://lore.kernel.org/lkml/20200528072037.1402346-1-joel@jms.id.au/
