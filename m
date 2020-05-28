@@ -2,197 +2,334 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9D1C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7FCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F042208B8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21C820C56
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590705155;
+	bh=hiIVcOB9zDMhtlOg+537fpD+ryBzyvkqlEjVqF+GA1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Qh8GKwTa7ok5Sf+FAo5sD4YMSO+iwf3yeww8wXBDMEKZroSmaf1e7JCSWInNwYTg
+	 2Vbu4Hk889ds/m8M0GrJXBDJoLZ/kp0bgcBNuW/7GOzrCb/ucAQ5AaS6+PUBDEC8Hh
+	 kg6vl41FmkMTVpsNMLmBNs+c2rK/Zdad1omcRjxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437067AbgE1W3A (ORCPT
+        id S2437098AbgE1Wce (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 18:29:00 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44514 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436979AbgE1WYP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:24:15 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 821DC80307C7;
-        Thu, 28 May 2020 22:24:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id uzcmceul0Kpr; Fri, 29 May 2020 01:24:08 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 00/11] dmaengine: dw: Take Baikal-T1 SoC DW DMAC peculiarities into account
-Date:   Fri, 29 May 2020 01:23:50 +0300
-Message-ID: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 28 May 2020 18:32:34 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46066 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436952AbgE1Wcc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:32:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id y5so219088iob.12;
+        Thu, 28 May 2020 15:32:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2iWkmtIIPdkQ7s2OlH5ICkwWkQE9JDegAoIkBuC4Mh8=;
+        b=Pt5qzLEk8u4Vj0eMPinhlr2fre6hqfndBnnQE8TuN1RhaC7YHBcotVmU59Y7rklB+L
+         wCvILnTlwERbB15GziQMWNsoytZKo9WPmRPjwbjEvAlQgxYEGqhQIeGNbb2MVNs7I4kT
+         iRsEr1udJF202Y9PAWZjPTVdGA3psMScd56PWK4wgZADYVE/TqSig0w3ZhlWLAyYD484
+         NMFj5VHXu3c0Q0oeDXcxsUaKZguww8ehoWaQE0wKiMPmFS6VfedEz5EGK/zkBuFrqJGV
+         TmotOR0WhWTDyURWD/J24tY4VOPyWclPBwBsETRrPCAjlQnUbQ7S1I11yNZPtSHf673T
+         R8lQ==
+X-Gm-Message-State: AOAM531PBuiWcSv4Tv4JIGOlIGIq3nPpCPvr+VsASzp1EYLfi9FMXyPc
+        TQgUWXDiSKBgOWWTm4xnug==
+X-Google-Smtp-Source: ABdhPJwgO1mB4nZ0UFl0QlAt68U8U2JNLntupIY0/f1e3wwkTyNZyAnbKB9gbovv/3kUpAWC6z7GTw==
+X-Received: by 2002:a5e:de03:: with SMTP id e3mr4247972iok.0.1590705150063;
+        Thu, 28 May 2020 15:32:30 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id 4sm3980244ilc.34.2020.05.28.15.32.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 15:32:29 -0700 (PDT)
+Received: (nullmailer pid 801318 invoked by uid 1000);
+        Thu, 28 May 2020 22:32:28 -0000
+Date:   Thu, 28 May 2020 16:32:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: remoteproc: Add bindings for C66x
+ DSPs on TI K3 SoCs
+Message-ID: <20200528223228.GA785633@bogus>
+References: <20200521001006.2725-1-s-anna@ti.com>
+ <20200521001006.2725-3-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521001006.2725-3-s-anna@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-with currently implemented in the kernel DW DMAC driver, but there are some
-peculiarities which must be taken into account in order to have the device
-fully supported.
+On Wed, May 20, 2020 at 07:10:04PM -0500, Suman Anna wrote:
+> Some Texas Instruments K3 family of SoCs have one of more Digital Signal
+> Processor (DSP) subsystems that are comprised of either a TMS320C66x
+> CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
+> Add the device tree bindings document for the C66x DSP devices on these
+> SoCs. The added example illustrates the DT nodes for the first C66x DSP
+> device present on the K3 J721E family of SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+> v2:
+>  - Updated the example to include the root-node to fix the bot errors from v1
 
-First of all traditionally we replaced the legacy plain text-based dt-binding
-file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-channels, which alas have different max burst length configuration.
-In particular first two channels may burst up to 128 bits (16 bytes) at a time
-while the rest of them just up to 32 bits. We must make sure that the DMA
-subsystem doesn't set values exceeding these limitations otherwise the
-controller will hang up. In third currently we discovered the problem in using
-the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-natively implemented multi-block LLP transfers support and the SPI-transfer
-length exceeds the max lock size. In this case due to asynchronous handling of
-Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-the DMAC to asynchronously execute the transfers we'd have to at least warn
-the user of the possible errors. In forth it's worth to set the DMA device max
-segment size with max block size config specific to the DW DMA controller. It
-shall help the DMA clients to create size-optimized SG-list items for the
-controller. This in turn will cause less dw_desc allocations, less LLP
-reinitializations, better DMA device performance.
+Pretty sure that was not why you had errors.
 
-Finally there is a bug in the algorithm of the nollp flag detection.
-In particular even if DW DMAC parameters state the multi-block transfers
-support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-by the driver true multi-block LLP functionality unusable. This happens cause'
-if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-contiguous multi-block transfers will be only supported. We must take the
-flag into account when detecting the LLP support otherwise the driver just
-won't work correctly.
+>  - Added maxItems to resets, mboxes, memory-region, sram properties
+>  - Changed the ti,sci-proc-ids $ref to uint-array from uint-matrix
+>  - Addressed the minor review comments from Mathieu
+> v1: https://patchwork.kernel.org/patch/11458571/
+> 
+>  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 190 ++++++++++++++++++
+>  1 file changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> new file mode 100644
+> index 000000000000..cdf649655838
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> @@ -0,0 +1,190 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI K3 DSP devices
+> +
+> +maintainers:
+> +  - Suman Anna <s-anna@ti.com>
+> +
+> +description: |
+> +  The TI K3 family of SoCs usually have one or more TI DSP Core sub-systems
+> +  that are used to offload some of the processor-intensive tasks or algorithms,
+> +  for achieving various system level goals.
+> +
+> +  These processor sub-systems usually contain additional sub-modules like
+> +  L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
+> +  controller, a dedicated local power/sleep controller etc. The DSP processor
+> +  cores in the K3 SoCs are usually either a TMS320C66x CorePac processor or a
+> +  TMS320C71x CorePac processor.
+> +
+> +  Each DSP Core sub-system is represented as a single DT node. Each node has a
+> +  number of required or optional properties that enable the OS running on the
+> +  host processor (Arm CorePac) to perform the device management of the remote
+> +  processor and to communicate with the remote processor.
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,j721e-c66-dsp
+> +    description:
+> +      Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
 
-This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-0e698dfa2822 ("Linux 5.7-rc4")
-tag: v5.7-rc4
+What else are you going to use? There's only one compatible string. Drop 
+description.
 
-Changelog v2:
-- Rearrange SoBs.
-- Move $ref to the root level of the properties. So do do with the
-  constraints in the DT binding.
-- Replace "additionalProperties: false" with "unevaluatedProperties: false"
-  property in the DT binding file.
-- Discard default settings defined out of property enum constraint.
-- Set default max-burst-len to 256 TR-WIDTH words in the DT binding.
-- Discard noLLP and block_size accessors.
-- Set max segment size of the DMA device structure with the DW DMA block size
-  config.
-- Print warning if noLLP flag is set.
-- Discard max burst length accessor.
-- Add comment about why hardware accelerated LLP list support depends
-  on both MBLK_EN and HC_LLP configs setting.
-- Use explicit bits state comparison operator in noLLP flag setting.
+> +
+> +  reg:
+> +    description: |
+> +      Should contain an entry for each value in 'reg-names'.
+> +      Each entry should have the memory region's start address
+> +      and the size of the region, the representation matching
+> +      the parent node's '#address-cells' and '#size-cells' values.
 
-Link: https://lore.kernel.org/dmaengine/20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru/
-Changelog v3:
-- Use the block_size found for the very first channel instead of looking for
-  the maximum of maximum block sizes.
-- Don't define device-specific device_dma_parameters object, since it has
-  already been defined by the platform device core.
-- Add more details into the property description about what limitations
-  snps,max-burst-len defines.
-- Move commit fb7e3bbfc830 ("dmaengine: dw: Take HC_LLP flag into account for
-  noLLP auto-config") to the head of the series.
-- Add a new patch "dmaengine: Introduce min burst length capability" as a
-  result of the discussion with Vinod and Andy regarding the burst length
-  capability.
-- Add a new patch "dmaengine: Introduce max SG list entries capability"
-  suggested by Andy.
-- Add a new patch "dmaengine: Introduce DMA-device device_caps callback" as
-  a result of the discussion with Vinud and Andy in the framework of DW DMA
-  burst and LLP capabilities.
-- Add a new patch "dmaengine: dw: Add dummy device_caps callback" as a
-  preparation commit before setting the max_burst and max_sg_nents
-  DW DMA capabilities.
-- Override the slave channel max_burst capability instead of calculating
-  the minimum value of max burst lengths and setting the DMA-device
-  generic capability.
-- Add a new patch "dmaengine: dw: Initialize max_sg_nents with nollp flag".
-  This is required to fix the DW APB SSI issue of the Tx and Rx DMA
-  channels de-synchronization.
+Don't need generic descriptions. That's every 'reg'.
 
-Link: https://lore.kernel.org/dmaengine/20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru/
-Changelog v4:
-- Use explicit if-else statement when assigning the max_sg_nents field.
-- Clamp the dst and src burst lengths in the generic dwc_config() method
-  instead of doing that in the encode_maxburst() callback.
-- Define max_burst with u32 type in struct dw_dma_platform_data.
-- Perform of_property_read_u32_array() with the platform data
-  max_burst member passed directly.
-- Add a new patch "dmaengine: dw: Initialize min_burst capability",
-  which initializes the min_burst capability with 1.
-- Fix of->if typo. It should be definitely "of" in the max_sg_list
-  capability description.
+What you can do is an 'items' list describing what each region is.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: dmaengine@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+> +    minItems: 3
+> +    maxItems: 3
+> +
+> +  reg-names:
+> +    description: |
+> +      Should contain strings with the names of the specific internal
+> +      memory regions, and should be defined in this order
 
-Serge Semin (11):
-  dt-bindings: dma: dw: Convert DW DMAC to DT binding
-  dt-bindings: dma: dw: Add max burst transaction length property
-  dmaengine: Introduce min burst length capability
-  dmaengine: Introduce max SG list entries capability
-  dmaengine: Introduce DMA-device device_caps callback
-  dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
-  dmaengine: dw: Set DMA device max segment size parameter
-  dmaengine: dw: Add dummy device_caps callback
-  dmaengine: dw: Initialize min_burst capability
-  dmaengine: dw: Introduce max burst length hw config
-  dmaengine: dw: Initialize max_sg_nents capability
+Again, drop.
 
- .../bindings/dma/snps,dma-spear1340.yaml      | 176 ++++++++++++++++++
- .../devicetree/bindings/dma/snps-dma.txt      |  69 -------
- drivers/dma/dmaengine.c                       |   5 +
- drivers/dma/dw/core.c                         |  47 ++++-
- drivers/dma/dw/of.c                           |   5 +
- drivers/dma/dw/regs.h                         |   3 +
- include/linux/dmaengine.h                     |  14 ++
- include/linux/platform_data/dma-dw.h          |   4 +
- 8 files changed, 253 insertions(+), 70 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
+> +    maxItems: 3
+> +    items:
+> +      - const: l2sram
+> +      - const: l1pram
+> +      - const: l1dram
+> +
+> +  ti,sci:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Should be a phandle to the TI-SCI System Controller node
+> +
+> +  ti,sci-dev-id:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Should contain the TI-SCI device id corresponding to the DSP core.
+> +      Please refer to the corresponding System Controller documentation
+> +      for valid values for the DSP cores.
+> +
+> +  ti,sci-proc-ids:
+> +    description: Should contain a single tuple of <proc_id host_id>.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - maxItems: 1
+> +        items:
+> +          items:
+> +            - description: TI-SCI processor id for the DSP core device
+> +            - description: TI-SCI host id to which processor control
+> +                           ownership should be transferred to
 
--- 
-2.26.2
+I assume these properties appear in multiple TI nodes? We don't need 
+them defined multiple times. Create a schema for them that you can 
+include here.
 
+> +
+> +  resets:
+> +    description: |
+> +      Should contain the phandle to the reset controller node
+> +      managing the local resets for this device, and a reset
+> +      specifier. Please refer to the following reset bindings
+> +      for the reset argument specifier,
+> +      Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+
+Drop.
+
+> +    maxItems: 1
+> +
+> +  firmware-name:
+> +    description: |
+> +      Should contain the name of the default firmware image
+> +      file located on the firmware search path
+> +
+> +  mboxes:
+> +    description: |
+> +      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+> +      communication with the remote processor. This property should match
+> +      with the sub-mailbox node used in the firmware image. The specifier
+> +      format is as per the bindings,
+> +      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+
+Drop. What mailbox provider is used is outside the scope of this 
+binding.
+
+> +    maxItems: 1
+> +
+> +  memory-region:
+> +    minItems: 2
+> +    maxItems: 8
+> +    description: |
+> +      phandle to the reserved memory nodes to be associated with the remoteproc
+> +      device. There should be at least two reserved memory nodes defined - the
+> +      first one would be used for dynamic DMA allocations like vrings and vring
+> +      buffers, and the remaining ones used for the firmware image sections. The
+> +      reserved memory nodes should be carveout nodes, and should be defined as
+> +      per the bindings in
+> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+
+items:
+  - description: dynamic DMA allocations like vrings and vring buffers
+  - description: firmware image section ???
+  - description: firmware image section ???
+
+> +
+> +# Optional properties:
+> +# --------------------
+> +
+> +  sram:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    minItems: 1
+> +    maxItems: 4
+> +    description: |
+> +      phandles to one or more reserved on-chip SRAM regions. The regions
+> +      should be defined as child nodes of the respective SRAM node, and
+> +      should be defined as per the generic bindings in,
+> +      Documentation/devicetree/bindings/sram/sram.yaml
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - reg-names
+> + - ti,sci
+> + - ti,sci-dev-id
+> + - ti,sci-proc-ids
+> + - resets
+> + - firmware-name
+> + - mboxes
+> + - memory-region
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    / {
+> +        model = "Texas Instruments K3 J721E SoC";
+> +        compatible = "ti,j721e";
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        /* DSP Carveout reserved memory nodes */
+> +        reserved-memory {
+> +            #address-cells = <2>;
+> +            #size-cells = <2>;
+> +            ranges;
+> +
+> +            c66_0_dma_memory_region: c66-dma-memory@a6000000 {
+> +                compatible = "shared-dma-pool";
+> +                reg = <0x00 0xa6000000 0x00 0x100000>;
+> +                no-map;
+> +            };
+> +
+> +            c66_0_memory_region: c66-memory@a6100000 {
+> +                compatible = "shared-dma-pool";
+> +                reg = <0x00 0xa6100000 0x00 0xf00000>;
+> +                no-map;
+> +            };
+> +        };
+
+Drop all of this. Outside the scope of this binding. And will likely 
+start failing validation as schemas become more complete.
+
+> +
+> +        cbass_main: bus@100000 {
+
+Drop unused labels.
+
+> +            compatible = "simple-bus";
+> +            #address-cells = <2>;
+> +            #size-cells = <2>;
+> +            ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
+> +                     <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
+> +                     <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
+> +
+> +            /* J721E C66_0 DSP node */
+> +            c66_0: dsp@4d80800000 {
+> +                compatible = "ti,j721e-c66-dsp";
+> +                reg = <0x4d 0x80800000 0x00 0x00048000>,
+> +                      <0x4d 0x80e00000 0x00 0x00008000>,
+> +                      <0x4d 0x80f00000 0x00 0x00008000>;
+> +                reg-names = "l2sram", "l1pram", "l1dram";
+> +                ti,sci = <&dmsc>;
+> +                ti,sci-dev-id = <142>;
+> +                ti,sci-proc-ids = <0x03 0xFF>;
+> +                resets = <&k3_reset 142 1>;
+> +                firmware-name = "j7-c66_0-fw";
+> +                memory-region = <&c66_0_dma_memory_region>,
+> +                                <&c66_0_memory_region>;
+> +                mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.26.0
+> 
