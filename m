@@ -2,372 +2,154 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858E1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EDAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 563D5207BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:47:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iajg5mUW"
+	by mail.kernel.org (Postfix) with ESMTP id 825152053B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404702AbgE1PrS (ORCPT
+        id S2404542AbgE1PuX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:47:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404696AbgE1PrP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:47:15 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2BD8C08C5C7
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 08:47:15 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q24so3268501pjd.1
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 08:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Wx5aZAA2kgOq4IleLhAQPeiiPlraf5A+rXTLPd1JNIw=;
-        b=Iajg5mUWeIxX1zJJkELZJT/Zl2KfR9vwzR3UF9/3IEr1PB4nWrK9x5+aZdvYCf3GP2
-         Itw3yhcx38OyWurkVcM4w5ATZNtZPB3fOMgIZe7LUFZ7Bc/9al0kUV3+99pssDrp+AWa
-         PcolB9Sf2IrT4GL9Y7m5xy6QvVCaSB9r/qCk8yGAr50KBokrDJx3UFWPbDndLr8Fiasx
-         QHQQuzjIR3T+BrkKa/79g2RP80MOO/YZpEg2XA9JeSTP0PyEw9Su9UlrnU9rcmxPCvve
-         fgjC+P7/emKojWRifaOHfHDW2ubilZ7oLyBDZrrQQ6ZkVoFfQD4U7Prm1MJ/iv6HmLSO
-         uebg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Wx5aZAA2kgOq4IleLhAQPeiiPlraf5A+rXTLPd1JNIw=;
-        b=YSx/0aONvEUJSXEFR8quUAvalCpozuypP/H229g0qkFFjTx4QLjXj/1XK2y5LQUyAs
-         5LNy0vQ5CW4DD9KOnMjySR7yn/0AQHzb9l0e6olNLZV13XEnOwngSZSTdFpvLFJHPN8E
-         TZcXq4oCO2OrRsBKkBy3vPeXs2ZhVG4qPnzVwTZ7ihBrA7iMtLMFgCpQoF/JdnA9t/mv
-         2qTlr0kcxPbIbu8L7v5b72btgReJNYzJUPJRxqwIsI2kgkV1E2u9i2KJypSAGBd2MMhC
-         p5s06txAswOfoq2TYLO+EEe6BO5fW6NrENlLwY0rurL5K0niNA/+zofJaEACTymLoh9v
-         KHQQ==
-X-Gm-Message-State: AOAM531w2O6zsmffcoK41ObaeEHNn83B4+vOwQLgMWUKPXQeOSThYPCl
-        Bw1Hv0IXPA49QiizHjkgbHtZ6Q==
-X-Google-Smtp-Source: ABdhPJzpnu42SCdBn7Y6SErNPbPXGO6hYpLYNPmuXtb2Qv5qU0QdRex0sC0meUd5ni27cu/StKFINA==
-X-Received: by 2002:a17:902:bd07:: with SMTP id p7mr3946318pls.293.1590680835189;
-        Thu, 28 May 2020 08:47:15 -0700 (PDT)
-Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id y22sm5212551pfc.132.2020.05.28.08.47.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:47:14 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org
-Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v3 4/5] regulator: qcom: Add labibb driver
-Date:   Thu, 28 May 2020 21:16:24 +0530
-Message-Id: <20200528154625.17742-5-sumit.semwal@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200528154625.17742-1-sumit.semwal@linaro.org>
-References: <20200528154625.17742-1-sumit.semwal@linaro.org>
+        Thu, 28 May 2020 11:50:23 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:43234 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404503AbgE1PuW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:50:22 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 226DD803083A;
+        Thu, 28 May 2020 15:50:19 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id scf8l9YyCqMo; Thu, 28 May 2020 18:50:18 +0300 (MSK)
+Date:   Thu, 28 May 2020 18:50:17 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 10/10] dmaengine: dw: Initialize max_sg_nents with
+ nollp flag
+Message-ID: <20200528155017.ayetroojyvxl74kb@mobilestation>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
+ <20200528145630.GV1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200528145630.GV1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nisha Kumari <nishakumari@codeaurora.org>
+On Thu, May 28, 2020 at 05:56:30PM +0300, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 01:50:21AM +0300, Serge Semin wrote:
+> > Multi-block support provides a way to map the kernel-specific SG-table so
+> > the DW DMA device would handle it as a whole instead of handling the
+> > SG-list items or so called LLP block items one by one. So if true LLP
+> > list isn't supported by the DW DMA engine, then soft-LLP mode will be
+> > utilized to load and execute each LLP-block one by one. The soft-LLP mode
+> > of the DMA transactions execution might not work well for some DMA
+> > consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
+> > expose the nollp flag indicating the soft-LLP mode by means of the
+> > max_sg_nents capability, so the DMA consumer would be ready to somehow
+> > workaround errors caused by such mode being utilized.
+> > 
+> 
+> In principal I agree, one nit below.
+> If you are okay with it, feel free to add my Rb tag.
+> 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch created as a result of the discussion with Vinud and
+> >   Andy in the framework of DW DMA burst and LLP capabilities.
+> > ---
+> >  drivers/dma/dw/core.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+> > index 29c4ef08311d..b850eb7fd084 100644
+> > --- a/drivers/dma/dw/core.c
+> > +++ b/drivers/dma/dw/core.c
+> > @@ -1054,6 +1054,15 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+> >  	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+> >  
+> >  	caps->max_burst = dwc->max_burst;
+> > +
+> > +	/*
+> > +	 * It might be crucial for some devices to have the hardware
+> > +	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
+> > +	 * notation. So if LLPs are supported then max_sg_nents is set to
+> > +	 * zero which means unlimited number of SG entries can be handled in a
+> > +	 * single DMA transaction, otherwise it's just one SG entry.
+> > +	 */
+> 
+> > +	caps->max_sg_nents = dwc->nollp;
+> 
 
-Qualcomm platforms have LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost)
-regulators, labibb for short, which are used as power supply for
-LCD Mode displays.
+> To be on the safer side I would explicitly do it like
+> 
+> 	if (dwc->nollp)
+> 	 /* your nice comment */
+> 	 = 1;
+> 	else
+> 	 /* Unlimited */
+> 	 = 0;
+> 
+> type or content of nollp theoretically can be changed and this will affect maximum segments.
 
-This patch adds labibb regulator driver for pmi8998 PMIC, found on
-SDM845 platforms.
+Agree. Though I don't like formatting you suggested. If I add my nice comment
+between if-statement and assignment the the former will be look detached from
+the if-statement, which seems a bit ugly. So I'd leave the comment above the
+whole if-else statement, especially seeing I've already mentioned there about
+the unlimited number of SG entries there.
 
-Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+	/*
+	 * It might be crucial for some devices to have the hardware
+	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
+	 * notation. So if LLPs are supported then max_sg_nents is set to
+	 * zero which means unlimited number of SG entries can be handled in a
+	 * single DMA transaction, otherwise it's just one SG entry.
+	 */
+ 	if (dwc->nollp)
+ 		caps->max_sg_nents = 1;
+ 	else
+ 		caps->max_sg_nents = 0;
 
---
-v2: sumits: reworked the driver for more common code, and addressed
-     review comments from v1
-v3: sumits: addressed review comments from v2; moved to use core
-     regulator features like enable_time, off_on_delay, and the newly
-     added poll_enabled_time. Moved the check_enabled functionality
-     to core framework via poll_enabled_time.
+-Sergey
 
----
- drivers/regulator/Kconfig                 |  10 +
- drivers/regulator/Makefile                |   1 +
- drivers/regulator/qcom-labibb-regulator.c | 224 ++++++++++++++++++++++
- 3 files changed, 235 insertions(+)
- create mode 100644 drivers/regulator/qcom-labibb-regulator.c
-
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index f4b72cb098ef..58704a9fd05d 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -1167,5 +1167,15 @@ config REGULATOR_WM8994
- 	  This driver provides support for the voltage regulators on the
- 	  WM8994 CODEC.
- 
-+config REGULATOR_QCOM_LABIBB
-+	tristate "QCOM LAB/IBB regulator support"
-+	depends on SPMI || COMPILE_TEST
-+	help
-+	  This driver supports Qualcomm's LAB/IBB regulators present on the
-+	  Qualcomm's PMIC chip pmi8998. QCOM LAB and IBB are SPMI
-+	  based PMIC implementations. LAB can be used as positive
-+	  boost regulator and IBB can be used as a negative boost regulator
-+	  for LCD display panel.
-+
- endif
- 
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 6610ee001d9a..5b313786c0e8 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -87,6 +87,7 @@ obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
- obj-$(CONFIG_REGULATOR_MT6358)	+= mt6358-regulator.o
- obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
- obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
-+obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
-diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-new file mode 100644
-index 000000000000..634d08461c6e
---- /dev/null
-+++ b/drivers/regulator/qcom-labibb-regulator.c
-@@ -0,0 +1,225 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+
-+#define REG_PERPH_TYPE                  0x04
-+#define QCOM_LAB_TYPE			0x24
-+#define QCOM_IBB_TYPE			0x20
-+
-+#define REG_LABIBB_STATUS1		0x08
-+#define REG_LABIBB_ENABLE_CTL		0x46
-+#define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
-+#define LABIBB_CONTROL_ENABLE		BIT(7)
-+
-+#define LAB_ENABLE_CTL_MASK		BIT(7)
-+#define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
-+
-+#define LABIBB_ENABLE_TIME		1000
-+#define LAB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 2)
-+#define IBB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 10)
-+#define LABIBB_OFF_ON_DELAY		(8200)
-+
-+struct labibb_regulator {
-+	struct regulator_desc		desc;
-+	struct device			*dev;
-+	struct regmap			*regmap;
-+	struct regulator_dev		*rdev;
-+	u16				base;
-+	u8				type;
-+};
-+
-+struct labibb_regulator_data {
-+	u16				base;
-+	const char			*name;
-+	u8				type;
-+	unsigned int			poll_enabled_time;
-+};
-+
-+static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	unsigned int val;
-+	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-+
-+	ret = regmap_read(reg->regmap, reg->base + REG_LABIBB_STATUS1, &val);
-+	if (ret < 0) {
-+		dev_err(reg->dev, "Read register failed ret = %d\n", ret);
-+		return ret;
-+	}
-+	return !!(val & LABIBB_STATUS1_VREG_OK_BIT);
-+}
-+
-+static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-+
-+	ret = regulator_enable_regmap(rdev);
-+	if (ret < 0)
-+		dev_err(reg->dev, "Write failed: enable %s regulator\n",
-+			reg->desc.name);
-+
-+	return ret;
-+}
-+
-+static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
-+{
-+	int ret = 0;
-+	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-+
-+	ret = regulator_disable_regmap(rdev);
-+	if (ret < 0)
-+		dev_err(reg->dev, "Disable failed: disable %s\n",
-+			reg->desc.name);
-+
-+	return ret;
-+}
-+
-+static struct regulator_ops qcom_labibb_ops = {
-+	.enable			= qcom_labibb_regulator_enable,
-+	.disable		= qcom_labibb_regulator_disable,
-+	.is_enabled		= qcom_labibb_regulator_is_enabled,
-+};
-+
-+static int register_labibb_regulator(struct labibb_regulator *reg,
-+				const struct labibb_regulator_data *reg_data,
-+				struct device_node *of_node)
-+{
-+	struct regulator_config cfg = {};
-+
-+	reg->base = reg_data->base;
-+	reg->type = reg_data->type;
-+	reg->desc.enable_reg = reg->base + REG_LABIBB_ENABLE_CTL;
-+	reg->desc.enable_val = LABIBB_CONTROL_ENABLE;
-+	reg->desc.of_match = reg_data->name;
-+	reg->desc.name = reg_data->name;
-+	reg->desc.owner = THIS_MODULE;
-+	reg->desc.type = REGULATOR_VOLTAGE;
-+	reg->desc.ops = &qcom_labibb_ops;
-+
-+	reg->desc.enable_time = LABIBB_ENABLE_TIME;
-+	reg->desc.poll_enabled_time = reg_data->poll_enabled_time;
-+	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
-+
-+	cfg.dev = reg->dev;
-+	cfg.driver_data = reg;
-+	cfg.regmap = reg->regmap;
-+	cfg.of_node = of_node;
-+
-+	reg->rdev = devm_regulator_register(reg->dev, &reg->desc, &cfg);
-+	return PTR_ERR_OR_ZERO(reg->rdev);
-+}
-+
-+static const struct labibb_regulator_data pmi8998_labibb_data[] = {
-+	{0xde00, "lab", QCOM_LAB_TYPE, LAB_POLL_ENABLED_TIME},
-+	{0xdc00, "ibb", QCOM_IBB_TYPE, IBB_POLL_ENABLED_TIME},
-+	{ },
-+};
-+
-+static const struct of_device_id qcom_labibb_match[] = {
-+	{ .compatible = "qcom,pmi8998-lab-ibb", .data = &pmi8998_labibb_data},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qcom_labibb_match);
-+
-+static int qcom_labibb_regulator_probe(struct platform_device *pdev)
-+{
-+	struct labibb_regulator *labibb_reg;
-+	struct device *dev;
-+	struct device_node *child;
-+	const struct of_device_id *match;
-+	const struct labibb_regulator_data *reg_data;
-+	struct regmap *reg_regmap;
-+	unsigned int type;
-+	int ret;
-+
-+	reg_regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!reg_regmap) {
-+		dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
-+		return -ENODEV;
-+	}
-+
-+	dev = &pdev->dev;
-+
-+	match = of_match_device(qcom_labibb_match, &pdev->dev);
-+	if (!match)
-+		return -ENODEV;
-+
-+	for (reg_data = match->data; reg_data->name; reg_data++) {
-+		child = of_get_child_by_name(pdev->dev.of_node, reg_data->name);
-+
-+		/* TODO: This validates if the type of regulator is indeed
-+		 * what's mentioned in DT.
-+		 * I'm not sure if this is needed, but we'll keep it for now.
-+		 */
-+		ret = regmap_read(reg_regmap, reg_data->base + REG_PERPH_TYPE,
-+				  &type);
-+		if (ret < 0) {
-+			dev_err(dev,
-+				"Peripheral type read failed ret=%d\n",
-+				ret);
-+			return -EINVAL;
-+		}
-+
-+		if ((type != QCOM_LAB_TYPE) && (type != QCOM_IBB_TYPE)) {
-+			dev_err(dev,
-+				"qcom_labibb: unknown peripheral type\n");
-+			return -EINVAL;
-+		} else if (type != reg_data->type) {
-+			dev_err(dev,
-+				"qcom_labibb: type %x doesn't match DT %x\n",
-+				type, reg_data->type);
-+			return -EINVAL;
-+		}
-+
-+		labibb_reg  = devm_kzalloc(&pdev->dev, sizeof(*labibb_reg),
-+					   GFP_KERNEL);
-+		if (!labibb_reg)
-+			return -ENOMEM;
-+
-+		labibb_reg->regmap = reg_regmap;
-+		labibb_reg->dev = dev;
-+
-+		switch (reg_data->type) {
-+		case QCOM_LAB_TYPE:
-+			labibb_reg->desc.enable_mask = LAB_ENABLE_CTL_MASK;
-+			break;
-+
-+		case QCOM_IBB_TYPE:
-+			labibb_reg->desc.enable_mask = IBB_ENABLE_CTL_MASK;
-+			break;
-+		}
-+
-+		dev_info(dev, "Registering %s regulator\n", child->full_name);
-+
-+		ret = register_labibb_regulator(labibb_reg, reg_data, child);
-+		if (ret < 0) {
-+			dev_err(dev,
-+				"qcom_labibb: error registering %s : %d\n",
-+				child->full_name, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver qcom_labibb_regulator_driver = {
-+	.driver		= {
-+		.name		= "qcom-lab-ibb-regulator",
-+		.of_match_table	= qcom_labibb_match,
-+	},
-+	.probe		= qcom_labibb_regulator_probe,
-+};
-+module_platform_driver(qcom_labibb_regulator_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm labibb driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.26.2
-
+> 
+> >  }
+> >  
+> >  int do_dma_probe(struct dw_dma_chip *chip)
+> > -- 
+> > 2.26.2
+> > 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
