@@ -4,81 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50391C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D309C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8872075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24372075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590678992;
-	bh=fM4F1w6NV1k7auo1H+fbUWfZ78d+B9IuoHTVg3AINx0=;
+	s=default; t=1590679086;
+	bh=feCslDXnfABS0LMJgJkW1Cuz0T3bqAdIXOmhQSI78Ug=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A1QqLm9VdzZ3nD5xpdu/Mw3PqFqzxjarIf2ALp/LGC0ZS+zyWEc89/Ve3IL4sxv34
-	 NE63ZF6qN4Ka5eNxLPd+PzEFSOxiS2wUSmxUO9yivcJM1/Ke4ImfZf140eHmoBWTcz
-	 CxX32rePxR8JKoMJq5RnPwOEb802v7FBLFgkn3vw=
+	b=ekxcp98MBn2aq/Lgp9/6zI+mQ/zCj79VlnBHvRwsvqTSz2QaPCdGnMJwl/nzS28nZ
+	 90rK3ItqbkmlI29TwTuYGJAv6IffvILEJRgeKac6CBq8h3d7u7La5g5Q0q3dOmUShy
+	 rXi6qZbxlie3vYANQrTYaOuPVAM4ckDP1BbYn1+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404317AbgE1PQb (ORCPT
+        id S2404268AbgE1PSD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:16:31 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33074 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404316AbgE1PQ2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:16:28 -0400
-Received: by mail-io1-f66.google.com with SMTP id k18so30433478ion.0;
-        Thu, 28 May 2020 08:16:28 -0700 (PDT)
+        Thu, 28 May 2020 11:18:03 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39661 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403988AbgE1PSC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:18:02 -0400
+Received: by mail-il1-f195.google.com with SMTP id c20so490596ilk.6;
+        Thu, 28 May 2020 08:18:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=SK1AraOAAlqE21Qv8uTbFSbwYc166rll0a90faCZX3A=;
-        b=n2Ni6MA9ApkNFpOWC8AuIg6j0ezi/T+RdJBQ5Ks3GvO2GJizgq+t3Qq63iYY65HhbM
-         mY7k8jYZINkqrOPQcn+eeYWP3ab0dIxhKx25u3Aq98Xaow1xn6AVzKnwMIY2uqZOIX27
-         g8SrYbsCG1pV060qKH2NTpKG/tcO0Qyq3vkTDIxiZyMhS47uP9MhruVAgZ6m0Z9UURJT
-         Tzbu7ioezCK4+PwcoFRXHUlfiqwFDrNu6jbEDoljnNmxUgMfK5mKFYSk8hgnqFpYc3iR
-         krxUzV3WHRe4zkaAHhJtLczTlggAxcrdPqoiNoXV9VSh5F2dPvNfWSfN+NqXWxQtWsyK
-         PTlw==
-X-Gm-Message-State: AOAM533dtlKrz0QObif225WMslsdTI3yC8A2QFTo0EYYwYXyfgN0x+MC
-        UNmN6cHsntUGMqtaEyXbqw==
-X-Google-Smtp-Source: ABdhPJzmgPWUpkGPyzRGjKihzjiiWgeQjD31EW0rWTqKLz0Ks44iHfmJ3jSZTagSQSChiX3iKeEzJw==
-X-Received: by 2002:a02:3002:: with SMTP id q2mr2972953jaq.19.1590678987065;
-        Thu, 28 May 2020 08:16:27 -0700 (PDT)
+        bh=W7JmnXWUA2/w+QHNp/eqEXBvmT29Vv/u+hNrqukjKRk=;
+        b=PdLYU4KF3vk/uK/91E0dqxZGbnl5+ijaUl1RIydfoW+VaieP47YZuhppMf3XOEU26w
+         n/IcVZ67+5t0gl9e/o23vhij7qw3bNUTSkO13PRcm/38sHfSvW3W9zQyzZ5LucTrgjvR
+         v5WrZDvIK1rJtqBok2Bm2vqMrBABpIrno++ILfXgO6Gk3SPu6ffCvFwJJTY0TLKnLs2a
+         nQrFiSzSIm4RFQTHYwmpWV9gFkCmwJ1jq1LBMicYe052+ZPdDjVkWx61fsbpVacwuI0I
+         b6XcmtdG00VjjLwZTOcLVWUPBrWb+oEpYJFEaMndx6JIngHzrRfXdxMCgDao7VBJWf8p
+         k5cw==
+X-Gm-Message-State: AOAM532sshpvdnZREpuRHm8ON/7ukkuXK0SY5X+D0cYrw+fMokBnNOf0
+        9tOVlEHfIQzBRLI6iY4CHA==
+X-Google-Smtp-Source: ABdhPJy17QiQkvGntGRPHg1QXf6YjP6QEce0EoeS5H/2FJ/lRag/QSP6MsKOWiaBQklm+VwqeLG28w==
+X-Received: by 2002:a92:c88b:: with SMTP id w11mr3179656ilo.244.1590679081204;
+        Thu, 28 May 2020 08:18:01 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j9sm3295362ilr.18.2020.05.28.08.16.25
+        by smtp.gmail.com with ESMTPSA id o12sm2612140iob.6.2020.05.28.08.17.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:16:26 -0700 (PDT)
-Received: (nullmailer pid 87549 invoked by uid 1000);
-        Thu, 28 May 2020 15:16:25 -0000
-Date:   Thu, 28 May 2020 09:16:25 -0600
+        Thu, 28 May 2020 08:18:00 -0700 (PDT)
+Received: (nullmailer pid 91846 invoked by uid 1000);
+        Thu, 28 May 2020 15:17:59 -0000
+Date:   Thu, 28 May 2020 09:17:59 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: auxdisplay: hd44780: Convert to json-schema
-Message-ID: <20200528151625.GA87494@bogus>
-References: <20200514113003.19067-1-geert@linux-m68k.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        Linux-imx@nxp.com, u.kleine-koenig@pengutronix.de,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
+Message-ID: <20200528151759.GA91686@bogus>
+References: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514113003.19067-1-geert@linux-m68k.org>
+In-Reply-To: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 14 May 2020 13:30:02 +0200, Geert Uytterhoeven wrote:
-> Convert the Hitachi HD44780 Character LCD Controller Device Tree binding
-> documentation to json-schema.
+On Thu, 14 May 2020 19:41:10 +0800, Anson Huang wrote:
+> Convert the mxs pwm binding to DT schema format using json-schema.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../bindings/auxdisplay/hit,hd44780.txt       | 45 ---------
->  .../bindings/auxdisplay/hit,hd44780.yaml      | 96 +++++++++++++++++++
->  2 files changed, 96 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
->  create mode 100644 Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+>  Documentation/devicetree/bindings/pwm/mxs-pwm.txt  | 17 ---------
+>  Documentation/devicetree/bindings/pwm/mxs-pwm.yaml | 43 ++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 17 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
 > 
 
 Applied, thanks!
