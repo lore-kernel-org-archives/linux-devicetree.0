@@ -2,138 +2,141 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5565C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554A3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBD12075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B932075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:57:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="buvCKmjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403862AbgE1O4c (ORCPT
+        id S2403803AbgE1O5r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:56:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:22928 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403856AbgE1O4b (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 10:56:31 -0400
-IronPort-SDR: Z+MLV+sAeMSBjmKCUUIEDqzmEl09hTjz+Z0QZtnqu+YHylte+gzYfQiM+xnTirh7RkZ236gJ7l
- GRSgux8OQoMg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:56:30 -0700
-IronPort-SDR: 9GMNO2dpZ8QHEws0zoKx0e5A/SnV4klKacWqjY2NfFml2EkkB8oynn2CAv6xDVVdBX+drSM/66
- 3qbgPnlal6tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="267241338"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 28 May 2020 07:56:27 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jeJxO-009Rcl-2C; Thu, 28 May 2020 17:56:30 +0300
-Date:   Thu, 28 May 2020 17:56:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 10/10] dmaengine: dw: Initialize max_sg_nents with
- nollp flag
-Message-ID: <20200528145630.GV1634618@smile.fi.intel.com>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Thu, 28 May 2020 10:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403787AbgE1O5p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:57:45 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946CAC08C5C6;
+        Thu, 28 May 2020 07:57:45 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id w90so249078qtd.8;
+        Thu, 28 May 2020 07:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xh10qpgo8ZBw04J26d6TmP95SZB7leV7haVSlHLd2KM=;
+        b=buvCKmjhmmNh95OXQOYAHAM2JXnioPPtZVlMoCCsXWBaJ3npB99IVwgHzFzJtc6zSP
+         zDjcxjevo3MiKIzQ9qD2q4UN54h+GgmyrSayNYjdsKD0gqkbwgsmER+rP6mJd3fHzcRd
+         5x01uE9OP109aSO+MJbm3KtnapOmJqn4wx2SWY1EPUOUJQTXW/88KJFjmZdBpEx+HfF5
+         ij8wcGSaSrH8O+zdmKr1AxorBSDOh/iFZm0o9Dxtm9KxvsVj6+cz7QttVQnGSbyYV/d3
+         AXZgy+kakANhfFsMRviQYQKjBwivSIHY0XkbNd7VFw2ELV/m7bMgGxgPRM3hpFmCr/Vh
+         jPWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xh10qpgo8ZBw04J26d6TmP95SZB7leV7haVSlHLd2KM=;
+        b=uc2qwrgR7Q0npWB5pasIU6+oXyNh3xbIj0tbUFxODaEx9SOPBzNRhYYDHR2ZNUfEwM
+         Lr0PupT84Oi/LazVKLKLYJBTMqOYj8+YJvHhqzWBntEpc5+SlnhhX8QaILi8XIoVSPqf
+         eoIywXB4nV95MquKmgvgxqhHEer46ty9vcsHnRALhEc8On+o9kVindIFgCc9E9LtUHQI
+         W7xEdWbad3TKLxnmGUMXe7n/4oy+L+IdG+JDj87+xLsu39v0pga3W9FumGPp4yBzK7vp
+         hBz0zhWZim005gUUdCvrcgspZFXiAVlMbvUyV5b3HtKLW3mdmqxZy49PiU1Tar5atoet
+         ND9w==
+X-Gm-Message-State: AOAM531avRyRSXf08HwS0gcLmD3e8jhRgbwmacCRCmm/KDnC2kJNMNqz
+        0TzN8MqPX3o5neBAydhdZg0Jub1W7ic=
+X-Google-Smtp-Source: ABdhPJyWo3QAAo1dPoftO2PinkN6bcnQYbJ0FqVZ+8djxEm/X53BTqJcBHwILXOjtO5Ln5D/WVF+5w==
+X-Received: by 2002:ac8:e8f:: with SMTP id v15mr3413836qti.391.1590677864325;
+        Thu, 28 May 2020 07:57:44 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id s74sm5116876qka.54.2020.05.28.07.57.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:57:43 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: [PATCH v7 0/5] iio: magnetometer: ak8975: Add gpio reset support
+Date:   Thu, 28 May 2020 16:56:03 +0200
+Message-Id: <20200528145631.11608-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:50:21AM +0300, Serge Semin wrote:
-> Multi-block support provides a way to map the kernel-specific SG-table so
-> the DW DMA device would handle it as a whole instead of handling the
-> SG-list items or so called LLP block items one by one. So if true LLP
-> list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> utilized to load and execute each LLP-block one by one. The soft-LLP mode
-> of the DMA transactions execution might not work well for some DMA
-> consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
-> expose the nollp flag indicating the soft-LLP mode by means of the
-> max_sg_nents capability, so the DMA consumer would be ready to somehow
-> workaround errors caused by such mode being utilized.
-> 
+v7:
+ - fix documentation style, removing documentation unnecessary parts
 
-In principal I agree, one nit below.
-If you are okay with it, feel free to add my Rb tag.
+v6:
+ - reword documentation for gpios, add interrupt documentation
+https://lore.kernel.org/linux-iio/20200525151117.32540-1-jonathan.albrieux@gmail.com/
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch created as a result of the discussion with Vinud and
->   Andy in the framework of DW DMA burst and LLP capabilities.
-> ---
->  drivers/dma/dw/core.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> index 29c4ef08311d..b850eb7fd084 100644
-> --- a/drivers/dma/dw/core.c
-> +++ b/drivers/dma/dw/core.c
-> @@ -1054,6 +1054,15 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
->  	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
->  
->  	caps->max_burst = dwc->max_burst;
-> +
-> +	/*
-> +	 * It might be crucial for some devices to have the hardware
-> +	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
-> +	 * notation. So if LLPs are supported then max_sg_nents is set to
-> +	 * zero which means unlimited number of SG entries can be handled in a
-> +	 * single DMA transaction, otherwise it's just one SG entry.
-> +	 */
+v5:
+ - add maintainer
+https://lore.kernel.org/linux-iio/20200520163417.27805-1-jonathan.albrieux@gmail.com/
 
-> +	caps->max_sg_nents = dwc->nollp;
+v4:
+ - fix some typo
+ - use gpio's dt-bindings for more clarity in documentation
+ - set compatible properties without vendor prefix as deprecated
+https://lore.kernel.org/linux-iio/20200520073125.30808-1-jonathan.albrieux@gmail.com/
 
-To be on the safer side I would explicitly do it like
+v3:
+ - fix patch messages style
+ - align reset gpio comment to kernel doc reccomendation
+ - introduce changelog
+https://lore.kernel.org/linux-iio/20200519124402.26076-1-jonathan.albrieux@gmail.com/
 
-	if (dwc->nollp)
-	 /* your nice comment */
-	 = 1;
-	else
-	 /* Unlimited */
-	 = 0;
+v2:
+ - rewording of reset gpio comment and patch messages to better clarify
+   reset gpio behaviour
+https://lore.kernel.org/linux-iio/20200518133645.19127-1-jonathan.albrieux@gmail.com/
 
-type or content of nollp theoretically can be changed and this will affect maximum segments.
+v1:
+ - initial patch submission
+https://lore.kernel.org/linux-iio/20200519065749.4624-1-jonathan.albrieux@gmail.com/
 
->  }
->  
->  int do_dma_probe(struct dw_dma_chip *chip)
-> -- 
-> 2.26.2
-> 
+Convert documentation from txt format to yaml. Add documentation about
+reset-gpio.
+
+Deassert reset on ak8975_power_on(), assert reset on ak8975_power_off().
+
+Without reset's deassertion during ak8975_power_on(), driver's probe fails
+on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+
+AK09911 has an active low reset gpio to handle register's reset.
+AK09911 datasheet says that, if not used, reset pin should be connected
+to VID. This patch emulates this situation.
+
+JonnyMe (5):
+  dt-bindings: iio: magnetometer: ak8975: reword gpios, add interrupts,
+    fix style
+  dt-bindings: iio: magnetometer: ak8975: convert format to yaml, add
+    maintainer
+  dt-bindings: iio: magnetometer: ak8975: add gpio reset support
+  iio: magnetometer: ak8975: Fix typo, uniform measurement unit style
+  iio: magnetometer: ak8975: Add gpio reset support
+
+ .../bindings/iio/magnetometer/ak8975.txt      | 30 -------
+ .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 84 +++++++++++++++++++
+ drivers/iio/magnetometer/ak8975.c             | 22 ++++-
+ 3 files changed, 104 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
