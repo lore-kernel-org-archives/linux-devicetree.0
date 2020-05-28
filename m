@@ -6,88 +6,94 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F6BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA72C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84843207CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF0820C56
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590633312;
-	bh=YjUVOOtDwn4d3cVCrABZcd+2aGtjoVQ+8dNoUnsfrxQ=;
+	s=default; t=1590633376;
+	bh=AYhapquTvkqfp0kDdtAYXF0leD/wg6YtePPBOkPLpNg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MOGtQQM2i9/xoU0QYEp5xewpxERRsxmyP6rTAYED2yGO3mc/y46ztKxQo9UZYe/zN
-	 6Vb432d1Eacew0//ZV+Eu1iea0nUCbYSlxusJpX9Zv/dy7HyVtBStanGhj0j8GgBGp
-	 Sj4NYnFATLzqgzAtCEVCjr3TtCayWG+2uQB+2C1k=
+	b=UFfAwr5eVNOqos1okUCr/5P6dWIYQp1OX3OPQVYK4407NuuxtrHG6uvZXXJSYWLYx
+	 SpMIAbemF3oY+rM+wOB12bk5mkQXP4ijb2H+L49lajnOWMwZsioebifPx+jSgk+4wB
+	 c0Pd1FhXpBq3IEkPxKqqxqMniO0PsseEYnwYmDmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgE1CfM (ORCPT
+        id S1726086AbgE1CgP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 22:35:12 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44905 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgE1CfL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 22:35:11 -0400
-Received: by mail-io1-f66.google.com with SMTP id p20so14943733iop.11;
-        Wed, 27 May 2020 19:35:10 -0700 (PDT)
+        Wed, 27 May 2020 22:36:15 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:42962 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgE1CgP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 22:36:15 -0400
+Received: by mail-il1-f194.google.com with SMTP id 18so26184543iln.9;
+        Wed, 27 May 2020 19:36:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u/PpNpDq33wQ8xTbOoeK0ybsgUquiVhQDT9k1mJd3Ww=;
-        b=OGuzkBXduGCKBYi8qGmvnOYDPFl0HKOvrI6cUz+P5x0mR3D0thd83cPQ/BVHbjiu1A
-         vRBFTIV/Vor5MWwFc8bs7HtkEyUjEpTe9SfXPku/7AirE482XWOkrhsJKUpPvaFsYhKk
-         H9paTKmrmBHpDWnsNd7alfuPERh6K/bUsp6/oZAWG/e9wVei6WWSiCwKRdW5/hhNHJAC
-         yAKRc9AbmxDcQbLYQHTck2nyy99jgwtH+e+05J2viGo/8mBs7pqlwfZB52rrFV88bCTV
-         /fcapsOYnDglhe2CIvgSLExuWJmtf70vWcTUV8Z32o8pIfBxVUFLBMN98mn6VybkW1Ei
-         L21g==
-X-Gm-Message-State: AOAM533W40xGywxtMFkKedVDTjG5u2GL6MSaP/0A7AahfFYkS+1GfkRO
-        m+XI/ZrgeRuSy0Oy1/pNmg==
-X-Google-Smtp-Source: ABdhPJyqrqqmOmLOGh+9h8XWMQ5/kD3UO07/QUdxEeNf8swgGrODBM+jiAODXcQp9bhZRn9CeHtJqg==
-X-Received: by 2002:a05:6602:2408:: with SMTP id s8mr696349ioa.78.1590633310262;
-        Wed, 27 May 2020 19:35:10 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cfF5ModUsW5GewbfxK9GxhBwZ2W/pqCfiivqf9BZ1sk=;
+        b=Y2WVKRNpHhc/XZbRKsJRhdKY3N5ytCCPwWggFJ/G9CK8O5TWfO1Dwfpdp48leZS3o1
+         qUgV0uBRyQ1Kj4WewivwshlnNL297n0G7LB0/895YChYNBOr5t/kipCSH59V4OY3MXP7
+         fxVsmhaBT1yx0IUS4QKVzeI1XwbLAR5TTYWTmbJ6b4IgUhjZHbwPiE/KwMsja8KldSVY
+         ZFfvlwAetQz2ycPyI6iU77hWEmLmwCYTYYJTtujPt/MO+CArbY8IEZFHVHIIJimYPWr+
+         4/E8Jqb7onhbeFqycw7SiAilBKzeWp3ZK88oc+s0GWM1Vmbc7KCqGT0psBj++UbXjAhH
+         YDlg==
+X-Gm-Message-State: AOAM530lr2YdmOpVhtDCvAoLQrcSm1lY4yReoiYxptzEpYBd9oZKHf8N
+        /xfuJfOZeTGY7BYs/H2+Pogytdo=
+X-Google-Smtp-Source: ABdhPJwB7K+cKDEtAU45Y/v8mgS6JexHSFOP39UYC/lJSWkv0WAitwS2bu+kl1okpo6Wymv3WZiWEg==
+X-Received: by 2002:a92:1b86:: with SMTP id f6mr1103938ill.9.1590633373147;
+        Wed, 27 May 2020 19:36:13 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u25sm1931639iob.19.2020.05.27.19.35.09
+        by smtp.gmail.com with ESMTPSA id l7sm2799356ilh.54.2020.05.27.19.36.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 19:35:09 -0700 (PDT)
-Received: (nullmailer pid 3251663 invoked by uid 1000);
-        Thu, 28 May 2020 02:35:08 -0000
-Date:   Wed, 27 May 2020 20:35:08 -0600
+        Wed, 27 May 2020 19:36:12 -0700 (PDT)
+Received: (nullmailer pid 3253074 invoked by uid 1000);
+        Thu, 28 May 2020 02:36:11 -0000
+Date:   Wed, 27 May 2020 20:36:11 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     robh+dt@kernel.org, patches@opensource.cirrus.com,
-        linus.walleij@linaro.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        cw00.choi@samsung.com, devicetree@vger.kernel.org,
-        broonie@kernel.org, myungjoo.ham@samsung.com
-Subject: Re: [PATCH v3 7/7] mfd: madera: Move binding over to dtschema
-Message-ID: <20200528023508.GC3251118@bogus>
-References: <20200513095720.8867-1-ckeepax@opensource.cirrus.com>
- <20200513095720.8867-7-ckeepax@opensource.cirrus.com>
+To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: thermal: rcar-gen3-thermal: Convert
+ bindings to json-schema
+Message-ID: <20200528023611.GA3253026@bogus>
+References: <20200513151201.1258162-1-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200513095720.8867-7-ckeepax@opensource.cirrus.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200513151201.1258162-1-niklas.soderlund+renesas@ragnatech.se>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 May 2020 10:57:20 +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+On Wed, 13 May 2020 17:12:01 +0200, Niklas Söderlund wrote:
+> Convert Renesas R-Car Gen3 Thermal bindings documentation to
+> json-schema.
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
+> * Changes since v2
+> - Use reg = <0xe6198000 0x100> instead of reg = <0 0xe6198000 0 0x100>
+>   in examples due to #{address,size}-cells = <1>.
 > 
-> Changes since v2:
->  - Removed some more redundant descriptions
->  - Updated pinctrl node naming in the example
-> 
-> Thanks,
-> Charles
-> 
->  .../devicetree/bindings/mfd/cirrus,madera.yaml     | 311 +++++++++++++++++++++
->  Documentation/devicetree/bindings/mfd/madera.txt   | 114 --------
->  MAINTAINERS                                        |   6 +-
->  3 files changed, 314 insertions(+), 117 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/madera.txt
+> * Changes since v1
+> - Improved on reg and interrupt descriptions with the use of 'items:'
+> - Improved the examples inside the yaml file
+> - Added compatibility value renesas,r8a77961-thermal for R-Car M3-W+
+>   which was merged in the text binding description.
+> ---
+>  .../bindings/thermal/rcar-gen3-thermal.txt    | 60 -----------
+>  .../bindings/thermal/rcar-gen3-thermal.yaml   | 99 +++++++++++++++++++
+>  2 files changed, 99 insertions(+), 60 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
 > 
 
 Applied, thanks!
