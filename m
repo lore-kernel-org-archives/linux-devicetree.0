@@ -2,71 +2,79 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44735C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB5AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D55D207F5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF945207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0lTwkvP"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XhU9Ag1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390202AbgE1NZy (ORCPT
+        id S2390392AbgE1N2I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 09:25:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60326 "EHLO
+        Thu, 28 May 2020 09:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390161AbgE1NZx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:25:53 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4646C05BD1E;
-        Thu, 28 May 2020 06:25:51 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y11so3268222plt.12;
-        Thu, 28 May 2020 06:25:51 -0700 (PDT)
+        with ESMTP id S2390383AbgE1N14 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:27:56 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24D0C08C5C7
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:27:55 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f185so2046002wmf.3
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZKHFIuRb8JFzqwgI1/TTV1c2cdYlcWtWooy7HhzqQ7o=;
-        b=f0lTwkvPsjEGSI+BRI7kDWY7T7QMJZBBjNSt80WryFEz5AtJUDysU0IozJWfDpadRX
-         +SQ9hum9XQJrvIIcdEf21QUlcTu+sc1p+fcbM+1U2ZLrXzWpf0dgNbq1o9mMi1H8R9Oc
-         7H5AakLypHuixotL+DR9NLguz8BRhuzL4+Y1Qa3NEHEb7midtfFz6hEW6uKkZLAwh9HF
-         uQhT/laUdwHt7V4gziNDIEiHUPmnNq0BI4WsbZUN/jwNeIRIceaNDpTUikfKBPxpfJNM
-         YsoCB0YB8/DvJEBjrczbb15h5uke20uYjL9YZHXWXui5/o92/lf7BIXAOefSQeDYJ7LR
-         M73g==
+        bh=9cN8WC7B8xH4SW3c0YEgj3hG2uP+gsYVa8Phs/daLJo=;
+        b=XhU9Ag1ZLhT6nRnPcN/QI44p0PvvTskUnXmbN7WZRjd0YK63lIUd2JzL7Ymo5MnHpF
+         CKuiJgYA8GajqzmjbrwTZBPpRm1rdmf9aUTcTr1Ptu7f5DEizfgwzQrBN1yqo1ZynKXM
+         gsHFRlzRGEEKjj4pUGIUil9HKgvMyyc+xTk3o3rxmRZ/WDY2zuuNKPNoGZvDvhFReQPU
+         JmRi9ZP6d6BgpPtIXPvFqOgY2ngEhp0ozEYddVmRNK/q3inC/U8ubvRcTlBaypFAdyte
+         9nV1SyMkXnOZOBNr6wmwBL5sDwijzaWBPwXlRsa4Qmfc7ohCOkuaeKf+EOcAtG2Tvg/2
+         dM+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZKHFIuRb8JFzqwgI1/TTV1c2cdYlcWtWooy7HhzqQ7o=;
-        b=fqhpflhQ/XYe5JmQM6VNi70pvRvs0tXhuOsc2JYqmlsIfmJuff22IYo4ePK0c3B1dz
-         gWxf87oI6V2GlqDMPDBMumzOgSuGvke9ZzR46aeS3gk7CLkEabjQJ8pWpRj0P4ff/TWP
-         26c1H8WjNBscye0+rezdqr7x1ESKFbwA/7RN+jt5422yzMJl28kJfuvD1hS4VVv4ttf1
-         MtdOAy5H1aunuytd3Kw+qPjjUeNAEgZoVscFSe+qOUThtELRVPKDfokJ1X9EY9dFUfD4
-         0S8ZkUwas3zgCAlWiWs78MFeQlYSsDKfBUi3hPKm4BaBjylqOGp1CntqjIRCyjLokfjk
-         vNLg==
-X-Gm-Message-State: AOAM533+HXbZSRR5CksRa5on/D7zvP6ptQMTpyJXdF3Osg7QNAsUEZ11
-        QlSZLD791/6dSA81/dROlz/NL1tvK+g=
-X-Google-Smtp-Source: ABdhPJz8VC7DQMsEmrHiOxWQ16KQoUAxc+7rIER6X1Qw+ve5Duj50GcgF9uNeOXubcm5LHp+efFVgg==
-X-Received: by 2002:a17:902:bc86:: with SMTP id bb6mr3414568plb.243.1590672351462;
-        Thu, 28 May 2020 06:25:51 -0700 (PDT)
-Received: from localhost.localdomain ([198.211.10.140])
-        by smtp.gmail.com with ESMTPSA id j26sm4869359pfr.215.2020.05.28.06.25.47
+        bh=9cN8WC7B8xH4SW3c0YEgj3hG2uP+gsYVa8Phs/daLJo=;
+        b=tEn1wKzXwx5I4wluB4aYvjW9TOoTJI/cGdayhfH01lY3UY4KixRx8DyOPy/OPNujF2
+         O8KRbx4zQvqpBsPfWAYftXhpkDpQK9rsVB1WDLOD+++UTnqs43/oMaLpJ0VJF4KjTm+W
+         8rAEEIJTiWb1DaQrRhgKdo+2Xo2roT7xuJR9xjbJSg4ZJQXOrEFrxVdE6k7GCO7umC8i
+         IqDQZN4q13lJpCms95RnLMGoR6jQlsC2vNeDE64SPpSdnT5d4df8lbaF94OyGxrYxoqJ
+         iNmTt4LzVGHEqPoRaGJw8GuHwJIItJ0XqpyyD7isEbLTeSnEgHgW6f6Uo3LJxpzkYkVb
+         NH3Q==
+X-Gm-Message-State: AOAM5305qIAmyZ7wZDY4wT3DvMeU+0aIkFUnvC6LXlJWExj82m97UlqK
+        rJTok2gmz9ijFL1kV1w05x5ZIw==
+X-Google-Smtp-Source: ABdhPJwGxbatIHlP4QiBp7yS7pM9Cy7ihGVx/tvTL9NgArY/12jr4DGk9+/NG/bPpKAD3mawZpovqQ==
+X-Received: by 2002:a1c:a943:: with SMTP id s64mr3345147wme.103.1590672474339;
+        Thu, 28 May 2020 06:27:54 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id q15sm6175408wrf.87.2020.05.28.06.27.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 06:25:50 -0700 (PDT)
-From:   Qi Zheng <arch0.zheng@gmail.com>
-To:     robh+dt@kernel.org, robh@kernel.org, frowand.list@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qi Zheng <arch0.zheng@gmail.com>
-Subject: [PATCH v2] of/fdt: Remove redundant kbasename function call
-Date:   Thu, 28 May 2020 21:25:41 +0800
-Message-Id: <20200528132541.463300-1-arch0.zheng@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 28 May 2020 06:27:53 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH net-next] dt-bindings: net: rename the bindings document for MediaTek STAR MAC
+Date:   Thu, 28 May 2020 15:27:43 +0200
+Message-Id: <20200528132743.9221-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -74,50 +82,21 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For version 1 to 3 of the device tree, this is the node full
-path as a zero terminated string, starting with "/". The
-following equation will not hold, since the node name has
-been processed in the fdt_get_name().
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-	*pathp == '/'
+The driver itself was renamed before getting merged into mainline, but
+the binding document kept the old name. This makes both names consistent.
 
-For version 16 and later, this is the node unit name only
-(or an empty string for the root node). So the above
-equation will still not hold.
-
-So the kbasename() is redundant, just remove it.
-
-Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
+ .../net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml}        | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml} (100%)
 
-Change in v2:
-	remove another kbasename() also.
-
- drivers/of/fdt.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 38619e9ef6b2..4602e467ca8b 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -643,8 +643,6 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- 	     offset = fdt_next_node(blob, offset, &depth)) {
- 
- 		pathp = fdt_get_name(blob, offset, NULL);
--		if (*pathp == '/')
--			pathp = kbasename(pathp);
- 		rc = it(offset, pathp, depth, data);
- 	}
- 	return rc;
-@@ -671,8 +669,6 @@ int __init of_scan_flat_dt_subnodes(unsigned long parent,
- 		int rc;
- 
- 		pathp = fdt_get_name(blob, node, NULL);
--		if (*pathp == '/')
--			pathp = kbasename(pathp);
- 		rc = it(node, pathp, data);
- 		if (rc)
- 			return rc;
+diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
+similarity index 100%
+rename from Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
+rename to Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
 -- 
-2.25.1
+2.26.1
 
