@@ -2,104 +2,89 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2968C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 06:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AEEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 06:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1FAC2075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 06:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908BD2078C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 06:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="EMACQIRR"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hIAZb1pu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgE1GJV (ORCPT
+        id S1727837AbgE1GSz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 02:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbgE1GJV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 02:09:21 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8BEAC05BD1E;
-        Wed, 27 May 2020 23:09:19 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id nr22so14377280ejb.6;
-        Wed, 27 May 2020 23:09:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AFkvUrZ53K38iM6K70Bw5BpYtWPs5fTKAiJKykq/90E=;
-        b=EMACQIRRY/P23fjlJGO2UQeQf22ld2CCr6OmhYHqxzorlBalEfk3VGwP2VlKG0rhak
-         K2zv43+W/YL2Ebniw7ttQmRfIOw5csqY/r/i5sosJfIPYe0sx7GjxlKU6Pn4Ujjg0R9i
-         AEGOQRlJAh32jxh6ElxMREnz1Yu/6raWjNA7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AFkvUrZ53K38iM6K70Bw5BpYtWPs5fTKAiJKykq/90E=;
-        b=m6C7YN35zfntyjCdtrP5JvOd5wbIlzaptTrxvto0Ts2Vj/pUn6E1dJ7KqnMW70RYi3
-         v7n8OjKthZpExZebb8+nAXt84OswaESInA87OdeyYORJ7jFa4rlVTHFGh1sOssDWx/af
-         D1Nmo75tVeJ8noJzTkYC5wCOC+gHbSYWdU7f7lzvHbJ/yt66HDR+K7HDEWoir1PU2mc5
-         VlDR2CoC51O9ElqzkdBQH9WNugL8r7J4NsUBr4zM1OAeS7VNoQRr+kP0QI2tkR/cLfWW
-         RVaNJRTiV0fTbtdKAyt2TiDUE8oJrYEMUgW0MQTL2/tz4NE0d/kIuJ3DGAnQWYaC9+D6
-         s8DQ==
-X-Gm-Message-State: AOAM531FzFjT8jw8x79rAw3yBZVTtb/pYrwCxkrEbosJXfFbJzbkOrCT
-        uBtEe9f9hq6H0F1RlVMqwQw1cai1YBkrE2UG2QA=
-X-Google-Smtp-Source: ABdhPJyuTSOUAFBgEP95VIDfhaFlrkd6ylLcaIdXIcwRQEKEvcQbU7GYjOW7HH937u+OUqKn0oohu7sGUdGjY8dQzGk=
-X-Received: by 2002:a17:906:9243:: with SMTP id c3mr1541260ejx.400.1590646158509;
- Wed, 27 May 2020 23:09:18 -0700 (PDT)
+        Thu, 28 May 2020 02:18:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:40887 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726913AbgE1GSy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 02:18:54 -0400
+X-UUID: 5089073cb53a4d67ac27a7c76a50a6ae-20200528
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=k9n3h0/X69wAHhYT1nFTsKcL3wy3KEtSe7PgG0o+trw=;
+        b=hIAZb1puZnLEPVjq5jDmEkjVsbzUDIAt6MA0YBUDYkSkrXCtKWMYhOx7bqxk1MEBjozlQmX9srmcs67BfeqDYGT+EMtoEOAVnv9cvBYun9/Na6JQsNKGjFxIRNUB+2P0SSEGwb7wViOOFuUdFPTj7vHeJskAeY0zxtmq/2qBYrE=;
+X-UUID: 5089073cb53a4d67ac27a7c76a50a6ae-20200528
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1704384534; Thu, 28 May 2020 14:18:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 28 May 2020 14:18:47 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 28 May 2020 14:18:46 +0800
+From:   <chuanjia.liu@mediatek.com>
+To:     <robh+dt@kernel.org>, <ryder.lee@mediatek.com>,
+        <matthias.bgg@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <bhelgaas@google.com>,
+        <chuanjia.liu@mediatek.com>, <jianjun.wang@mediatek.com>,
+        <yong.wu@mediatek.com>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v2 0/4] Spilt PCIe node to comply with hardware design
+Date:   Thu, 28 May 2020 14:16:44 +0800
+Message-ID: <20200528061648.32078-1-chuanjia.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20200507091008.1bd38185@canb.auug.org.au> <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
- <CACPK8XcUydETZvJEkWPvLnLXatAg3D-MfA1yeDzE0epc-hisJQ@mail.gmail.com>
- <CAL_JsqJWXH4JMZgRQa9r_aPLW6Muz6BRtf_NmeqJv21Aefji1A@mail.gmail.com>
- <CACPK8Xd4651vtBTbBoGk0G7daunmF2CCOsDZ-ceto7Yu6A5z5g@mail.gmail.com>
- <20200522101638.052bd0a2@canb.auug.org.au> <CAK8P3a323rPCDDws+us4UYo7ZO6XvkZ13hBChZ40_DwCxBZj_g@mail.gmail.com>
-In-Reply-To: <CAK8P3a323rPCDDws+us4UYo7ZO6XvkZ13hBChZ40_DwCxBZj_g@mail.gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 28 May 2020 06:09:06 +0000
-Message-ID: <CACPK8Xdm91DwuKcm_d9xh_+8gPzxWpWWAzJzq8pAFVc79x-q1A@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the aspeed tree
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Olof Johansson <olof@lixom.net>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Vijay Khemka <vkhemka@fb.com>,
-        David Gibson <david@gibson.dropbear.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8CF1375321BD3043410D80C9D460D099090CF36CFC4DCB666F3A8866FC761E1E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 22 May 2020 at 08:16, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, May 22, 2020 at 2:16 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > On Wed, 20 May 2020 07:56:36 +0000 Joel Stanley <joel@jms.id.au> wrote:
-> > > I've sent the patch so it applies to the dtc tree. It would be good to
-> > > see that change propagate over to -next as others have reported this
-> > > warning.
-> >
-> > These warnings now appear in the arm-soc tree.
->
-> Right, I also saw them earlier.
->
-> Joel, have you sent your patch to David Gibson for integration into
-> upstream dtc?
-> I don't know who sent the other patch, but as long as one of them
-> gets merged, I'd hope we can pull that into kernel as well.
+VGhlcmUgYXJlIHR3byBpbmRlcGVuZGVudCBQQ0llIGNvbnRyb2xsZXJzIGluIE1UMjcxMi9NVDc2
+MjIgcGxhdGZvcm0sDQphbmQgZWFjaCBvZiB0aGVtIHNob3VsZCBjb250YWluIGFuIGluZGVwZW5k
+ZW50IE1TSSBkb21haW4uDQoNCkluIGN1cnJlbnQgYXJjaGl0ZWN0dXJlLCBNU0kgZG9tYWluIHdp
+bGwgYmUgaW5oZXJpdGVkIGZyb20gdGhlIHJvb3QNCmJyaWRnZSwgYW5kIGFsbCBvZiB0aGUgZGV2
+aWNlcyB3aWxsIHNoYXJlIHRoZSBzYW1lIE1TSSBkb21haW4uDQpIZW5jZSB0aGF0LCB0aGUgUENJ
+ZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVybHkgaWYgdGhlIGlycSBudW1iZXINCndoaWNo
+IHJlcXVpcmVkIGlzIG1vcmUgdGhhbiAzMi4NCg0KU3BsaXQgdGhlIFBDSWUgbm9kZSBmb3IgTVQy
+NzEyL01UNzYyMiBwbGF0Zm9ybSB0byBmaXggTVNJIGlzc3VlIGFuZA0KY29tcGx5IHdpdGggdGhl
+IGhhcmR3YXJlIGRlc2lnbi4NCg0KY2hhbmdlIG5vdGU6DQp2MjogY2hhbmdlIHRoZSBhbGxvY2F0
+aW9uIG9mIG10MjcxMiBQQ0llIE1NSU8gc3BhY2UgZHVlIHRvIHRoZSBhbGxjYXRpb24NCnNpemUg
+aXMgbm90IHJpZ2h0IGluIHYxLg0KDQpjaHVhbmppYS5saXUgKDQpOg0KICBkdC1iaW5kaW5nczog
+UENJOiBNZWRpYXRlazogVXBkYXRlIFBDSWUgYmluZGluZw0KICBQQ0k6IG1lZGlhdGVrOiBVc2Ug
+cmVnbWFwIHRvIGdldCBzaGFyZWQgcGNpZS1jZmcgYmFzZQ0KICBhcm02NDogZHRzOiBtZWRpYXRl
+azogU3BsaXQgUENJZSBub2RlIGZvciBNVDI3MTIvTVQ3NjIyDQogIEFSTTogZHRzOiBtZWRpYXRl
+azogVXBkYXRlIG10NzYyOSBQQ0llIG5vZGUNCg0KIC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0ZWst
+cGNpZS1jZmcueWFtbCAgICAgICB8ICAzOCArKysrKw0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BjaS9tZWRpYXRlay1wY2llLnR4dCB8IDE0NCArKysrKysrKysrKy0tLS0tLS0NCiBhcmNoL2Fy
+bS9ib290L2R0cy9tdDc2MjktcmZiLmR0cyAgICAgICAgICAgICAgfCAgIDMgKy0NCiBhcmNoL2Fy
+bS9ib290L2R0cy9tdDc2MjkuZHRzaSAgICAgICAgICAgICAgICAgfCAgMjMgKy0tDQogYXJjaC9h
+cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDI3MTJlLmR0c2kgICAgIHwgIDc1ICsrKysrLS0tLQ0K
+IC4uLi9kdHMvbWVkaWF0ZWsvbXQ3NjIyLWJhbmFuYXBpLWJwaS1yNjQuZHRzICB8ICAxNiArLQ0K
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLXJmYjEuZHRzICB8ICAgNiArLQ0K
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLmR0c2kgICAgICB8ICA2OCArKysr
+KystLS0NCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYyAgICAgICAgfCAg
+MjUgKystDQogOSBmaWxlcyBjaGFuZ2VkLCAyNTggaW5zZXJ0aW9ucygrKSwgMTQwIGRlbGV0aW9u
+cygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGNpL21lZGlhdGVrLXBjaWUtY2ZnLnlhbWwNCg0KLS0NCjIuMTguMA0KDQo=
 
-David asked for some extra features (and a typo fix) before he would
-merge it. I'll take a look at that now.
-
-The patch is 20200520075134.1048589-1-joel@jms.id.au on
-devicetree-compiler@vger.kernel.org, which doesn't appear to be
-archived on lore.
