@@ -2,81 +2,83 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A09C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE27C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ABCC2089D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590679675;
-	bh=PC5ZGAW1z0kRwxC+3U2R7+ZxiyeIt8FsZCX1VLAV8xc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x8/367OkRdCJyOmXzLoW2FBE+r1JrgvzAt+5NEtYOvWG5Afdi0T6viky8P8kb2hwQ
-	 aU0n3h289O7PZ2bKryIf3cSmERIOUA+8jS9bSrl2O2lHzB9SeD4RcCnbNq/ODiTy6m
-	 GKapYDS6m3XW+ea+uk1442abhhA0b/n6r98ruJTE=
+	by mail.kernel.org (Postfix) with ESMTP id 1D49720888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 15:28:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="aQvEiZuj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404364AbgE1P1y (ORCPT
+        id S2404394AbgE1P2q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 11:27:54 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39473 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404080AbgE1P1w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:27:52 -0400
-Received: by mail-io1-f68.google.com with SMTP id c8so10039880iob.6;
-        Thu, 28 May 2020 08:27:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B9AjAF204kGqafZ8qch9ULXofKx7NjkIMEqK2VlDI5g=;
-        b=MYjj5xLbgy6dECgPz8JNt5yEeLUlHnQ7V0mFoy7ch6yyrkFta5bRACQ4SlLVXFpIIX
-         DJ7xMT01ZdQqvX0/XmMm1w5XwA+y9RJLHgfwI7EWIXXu/osIUjE1iAKtdK8/2A2VA/6G
-         nTKjmHUUvhIPBBVWQTVd4O5rjUmQBzBxsTxA3WVVRImcxizqrjLWYJ0x0JVHJsfqCe8z
-         G5HbOivFUOg2jji3UMFDk/ffUCBrGrBEz/Jk880uOx1eirY4XB/MFlxCTr396agJnpJt
-         pPd2buU/+EKnUJwKtGwh4LUub7U0TTv/oCt72e9IQfj76of/QH1ODYMtSZWA+iFlVqZf
-         yCNQ==
-X-Gm-Message-State: AOAM532h92LTzNC9JKG4vZu21TwYwr6ljcqZBpliwHnYoJgVcdVrELq1
-        Mtgs8ocgEVSxeaewDIk/kQ==
-X-Google-Smtp-Source: ABdhPJy07N+4IrsKSktm0ndsurbG5LTql9W08jU7Y9tQsWYLTpgglW+dKz7oQ4cI8JXhUDU6+gzvPg==
-X-Received: by 2002:a02:6d0a:: with SMTP id m10mr3013911jac.133.1590679672105;
-        Thu, 28 May 2020 08:27:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l3sm2846942iow.55.2020.05.28.08.27.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:27:51 -0700 (PDT)
-Received: (nullmailer pid 112685 invoked by uid 1000);
-        Thu, 28 May 2020 15:27:50 -0000
-Date:   Thu, 28 May 2020 09:27:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org
-Subject: Re: [PATCH 1/1] dt-bindings: rng: Convert OMAP RNG to schema
-Message-ID: <20200528152750.GA108124@bogus>
-References: <20200514131947.28094-1-t-kristo@ti.com>
+        Thu, 28 May 2020 11:28:46 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:34564 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404080AbgE1P2p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 11:28:45 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 17B9C20F0E;
+        Thu, 28 May 2020 15:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1590679723; bh=/Ixh27PBvMYRfXZQb8LgHMfG0KTPCk5wgWM8dpeEr7c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aQvEiZujSef6TU/HwlGHcOd4VU2sUCSplbXoDgeA38yzDsLwn4h6FSauBeLBNvCOF
+         5bF5LSVqtJ7PIuIhPdxcTHi3mRpv25MTrjNnnosCV6AU0ExBCnl/dh1ub6LIvIY9nl
+         vsgB9axrPiiPUYm/NF32ky7VWYL4S7Tdpx2mTy4DS8Ce2f4cUCbOJGMsa2iFiOTiah
+         bEs7/gH+s64WzC6bUR9iChWSqoi5T11lwDdreTX0S22RTlcztGKfMTmmXlbr7fkJaW
+         fPW15cxgcWP4G2Dwqgn0gb6u0j+V+hPPE8TmX01AsHzqpexque2lWtYmXk8OrdhHvE
+         fEAPQiTLUohYg==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     maz@kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: [PATCH v5 0/6] Three Loongson irqchip support
+Date:   Thu, 28 May 2020 23:27:48 +0800
+Message-Id: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514131947.28094-1-t-kristo@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 14 May 2020 16:19:47 +0300, Tero Kristo wrote:
-> Convert TI OMAP Random number generator bindings to DT schema.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  .../devicetree/bindings/rng/omap_rng.txt      | 38 ---------
->  .../devicetree/bindings/rng/ti,omap-rng.yaml  | 77 +++++++++++++++++++
->  2 files changed, 77 insertions(+), 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rng/omap_rng.txt
->  create mode 100644 Documentation/devicetree/bindings/rng/ti,omap-rng.yaml
-> 
+v5:
+  - Add some range checks in dt-schema
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Jiaxun Yang (6):
+  irqchip: Add Loongson HyperTransport Vector support
+  dt-bindings: interrupt-controller: Add Loongson HTVEC
+  irqchip: Add Loongson PCH PIC controller
+  dt-bindings: interrupt-controller: Add Loongson PCH PIC
+  irqchip: Add Loongson PCH MSI controller
+  dt-bindings: interrupt-controller: Add Loongson PCH MSI
+
+ .../interrupt-controller/loongson,htvec.yaml  |  57 ++++
+ .../loongson,pch-msi.yaml                     |  62 +++++
+ .../loongson,pch-pic.yaml                     |  56 ++++
+ drivers/irqchip/Kconfig                       |  27 ++
+ drivers/irqchip/Makefile                      |   3 +
+ drivers/irqchip/irq-loongson-htvec.c          | 214 +++++++++++++++
+ drivers/irqchip/irq-loongson-pch-msi.c        | 255 ++++++++++++++++++
+ drivers/irqchip/irq-loongson-pch-pic.c        | 243 +++++++++++++++++
+ 8 files changed, 917 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+ create mode 100644 drivers/irqchip/irq-loongson-htvec.c
+ create mode 100644 drivers/irqchip/irq-loongson-pch-msi.c
+ create mode 100644 drivers/irqchip/irq-loongson-pch-pic.c
+
+-- 
+2.27.0.rc0
+
