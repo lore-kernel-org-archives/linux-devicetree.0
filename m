@@ -2,99 +2,126 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19EAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D228C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4133207F9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590706368;
-	bh=Ci5Q9Rz1oBZG4KK23knviog2z7Dbw0z2Q0/7CIJpeMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jkZ7GLTSHwFoVnPvaOT2+n5bqGJ19skrp7d895T0gtTSLtI6VWLS/Cm6tvVdDcJLW
-	 LYFGet13S/03/tdV1Dfatm55VSMGmQPYRzKVm/hDgKwfR+Pww5N2UG5ig5ljU+26sO
-	 UgmQfsFZQoG25KyBqrdgd1Loja4+s3cTB/7VM8+U=
+	by mail.kernel.org (Postfix) with ESMTP id 6832320897
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:54:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZXOmmUht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437276AbgE1Wws (ORCPT
+        id S2437366AbgE1WyQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 18:52:48 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37991 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437268AbgE1Wwr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:52:47 -0400
-Received: by mail-il1-f196.google.com with SMTP id q18so640223ilm.5;
-        Thu, 28 May 2020 15:52:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0vhQp9XNZNfZUF651FAD7AKZcJtfFmbMwFLrNqs62EI=;
-        b=U1S3miAEvCIJT0Du4xWtkhwP8n1lXdu/mOvFp+q+74TYHFdt+HmwopgaEor68hVlF1
-         LOmQQPkikBxgb5AkNb/qlXhBvrgH1okhl7lwcudA0Cxz5/0/DXsgQKxtl8RnI8QUyUay
-         uo29qG1b4SNfzfhNLFebfoZafaS2DP+Z05d4ChCCntYBznE3Ipxs68c5dRpQ+Y9X8tKI
-         uLsdnhJeF1Vh8uIMAp7J9bcRClhii6gmmi3NR2ahxUtmGtdT8Gel1OU2Bq8THEONmdiL
-         p9q0A5K+BfW+eRSrWuBwMMGl3ZOLNawYnT4/+dQOjLXMkmaA5n5tBeVQvZLSlL7sXePZ
-         tDRQ==
-X-Gm-Message-State: AOAM530JOBeDHJgeTs6YKIoNSQhjBs3GA71h2BUyyYU4nZeUsDSfWnFG
-        +R3A7T2QxWUTnX46sAJguQ==
-X-Google-Smtp-Source: ABdhPJxfyyr0KlQzRC18dEL6/3PLPwBdp8yogKP7UhKR3e9n5p0nKXKeN/j2owSpSRZWGV9PJz9CoQ==
-X-Received: by 2002:a05:6e02:11a5:: with SMTP id 5mr5080394ilj.108.1590706366514;
-        Thu, 28 May 2020 15:52:46 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w29sm2074753ila.26.2020.05.28.15.52.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 15:52:45 -0700 (PDT)
-Received: (nullmailer pid 827788 invoked by uid 1000);
-        Thu, 28 May 2020 22:52:44 -0000
-Date:   Thu, 28 May 2020 16:52:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] DT: Improve validation for Marvell SoCs
-Message-ID: <20200528225244.GA815881@bogus>
-References: <20200521091356.2211020-1-lkundrak@v3.sk>
+        Thu, 28 May 2020 18:54:16 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54854 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437364AbgE1WyN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:54:13 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SMs84V059793;
+        Thu, 28 May 2020 17:54:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590706448;
+        bh=ePuSuo+IB93Yt7ihRKaF3P9gIbzPY6BeDA4CMt78CJ4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ZXOmmUhtsK0MRvHBCHBjAA2g2C2TL3JR96acezUfKQ4K+8ZfuQE/yxUOQ+HZU0ylu
+         TIhQe5hUCMGuuBTi6DLz8MV6ddOyj455TS73SDJ9NFIi8l1eEp1zB2/tiVadixh8Zi
+         7IZEi9ZIjstNz55ZjzeRGG32ZsCVH0R48oEKa+6E=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SMs8Ln097405;
+        Thu, 28 May 2020 17:54:08 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 17:54:08 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 17:54:08 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SMs86N101782;
+        Thu, 28 May 2020 17:54:08 -0500
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
+CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <sspatil@android.com>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH v12 1/4] power_supply: Add additional health properties to the header
+Date:   Thu, 28 May 2020 17:53:47 -0500
+Message-ID: <20200528225350.661-2-r-rivera-matos@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200528225350.661-1-r-rivera-matos@ti.com>
+References: <20200528225350.661-1-r-rivera-matos@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521091356.2211020-1-lkundrak@v3.sk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:13:47AM +0200, Lubomir Rintel wrote:
-> Hi,
-> 
-> chained to this message is a second version of remaining patches from the
-> first spin of the "DT: Improve validation for Marvell SoCs" [1] patch set.
-> 
-> [1] https://lore.kernel.org/lkml/20200317093922.20785-1-lkundrak@v3.sk/
-> 
-> I've attempted to address the review of the v1, each patch includes a
-> detailed change log.
-> 
-> Compared to v1, wherever the license or maintainer information was
-> missing, I've filled in GPL-2.0-only and people listed in MAINTAINERS
-> file. As I've indicated in v1 cover letter, am not sure whether this is
-> the optimal course of action. However I've included the relevant people
-> in v1 Cc list and asked for clarifications, but didn't really get any
-> feedback to that.
+From: Dan Murphy <dmurphy@ti.com>
 
-Find someone that would care if the bindings are deleted. I'm fine 
-if you put yourself. Maybe subsystem maintainers are willing to take 
-orphans. I really only want my name on common things.
+Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
 
-Rob
+HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken
+from JEITA specification JISC8712:2015
+
+Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/ABI/testing/sysfs-class-power | 2 +-
+ drivers/power/supply/power_supply_sysfs.c   | 2 +-
+ include/linux/power_supply.h                | 3 +++
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index bf3b48f022dc..9f3fd01a9373 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -190,7 +190,7 @@ Description:
+ 		Valid values: "Unknown", "Good", "Overheat", "Dead",
+ 			      "Over voltage", "Unspecified failure", "Cold",
+ 			      "Watchdog timer expire", "Safety timer expire",
+-			      "Over current"
++			      "Over current", "Warm", "Cool", "Hot"
+ 
+ What:		/sys/class/power_supply/<supply_name>/precharge_current
+ Date:		June 2017
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index f37ad4eae60b..d0d549611794 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
+ static const char * const power_supply_health_text[] = {
+ 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
+ 	"Unspecified failure", "Cold", "Watchdog timer expire",
+-	"Safety timer expire", "Over current"
++	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
+ };
+ 
+ static const char * const power_supply_technology_text[] = {
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index dcd5a71e6c67..8670e90c1d51 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -61,6 +61,9 @@ enum {
+ 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+ 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+ 	POWER_SUPPLY_HEALTH_OVERCURRENT,
++	POWER_SUPPLY_HEALTH_WARM,
++	POWER_SUPPLY_HEALTH_COOL,
++	POWER_SUPPLY_HEALTH_HOT,
+ };
+ 
+ enum {
+-- 
+2.26.2
+
