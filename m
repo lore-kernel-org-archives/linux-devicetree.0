@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F6C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCDEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF14A2075A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E8C207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388420AbgE1Lbx (ORCPT
+        id S2388381AbgE1Lb4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 07:31:53 -0400
+        Thu, 28 May 2020 07:31:56 -0400
 Received: from relay12.mail.gandi.net ([217.70.178.232]:53363 "EHLO
         relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388418AbgE1Lbw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 07:31:52 -0400
+        with ESMTP id S2388421AbgE1Lbz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 07:31:55 -0400
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 8E2B8200008;
-        Thu, 28 May 2020 11:31:48 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 65AC220000B;
+        Thu, 28 May 2020 11:31:52 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
@@ -39,9 +39,9 @@ Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
         Mason Yang <masonccyang@mxic.com.tw>,
         Julien Su <juliensu@mxic.com.tw>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v6 15/18] mtd: nand: Introduce the ECC engine abstraction
-Date:   Thu, 28 May 2020 13:31:10 +0200
-Message-Id: <20200528113113.9166-16-miquel.raynal@bootlin.com>
+Subject: [PATCH v6 17/18] mtd: rawnand: Write a compatibility layer
+Date:   Thu, 28 May 2020 13:31:12 +0200
+Message-Id: <20200528113113.9166-18-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200528113113.9166-1-miquel.raynal@bootlin.com>
 References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
@@ -53,269 +53,262 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Create a generic ECC engine object.
-
-Later the ecc.c file will receive more generic code coming from
-the raw NAND specific part. This is a base to instantiate ECC engine
-objects.
+Before moving generic bits from the raw NAND core to the generic NAND
+core, let's disociate clearly what is a rawnand legacy property, and
+what should be made public to other NAND users.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/mtd/nand/Kconfig  |   7 ++
- drivers/mtd/nand/Makefile |   2 +
- drivers/mtd/nand/ecc.c    | 138 ++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/nand.h  |  67 ++++++++++++++++++
- 4 files changed, 214 insertions(+)
- create mode 100644 drivers/mtd/nand/ecc.c
+ drivers/mtd/nand/raw/nand_base.c | 158 +++++++++++++++++++++----------
+ 1 file changed, 107 insertions(+), 51 deletions(-)
 
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index c1a45b071165..a4478ffa279d 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -9,4 +9,11 @@ source "drivers/mtd/nand/onenand/Kconfig"
- source "drivers/mtd/nand/raw/Kconfig"
- source "drivers/mtd/nand/spi/Kconfig"
+diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+index bc2d5d2e8f4c..98a61071f775 100644
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -5010,14 +5010,6 @@ static int nand_detect(struct nand_chip *chip, struct nand_flash_dev *type)
+ 	return ret;
+ }
  
-+menu "ECC engine support"
-+
-+config MTD_NAND_ECC
-+	bool
-+
-+endmenu
-+
- endmenu
-diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-index 7ecd80c0a66e..981372953b56 100644
---- a/drivers/mtd/nand/Makefile
-+++ b/drivers/mtd/nand/Makefile
-@@ -6,3 +6,5 @@ obj-$(CONFIG_MTD_NAND_CORE) += nandcore.o
- obj-y	+= onenand/
- obj-y	+= raw/
- obj-y	+= spi/
-+
-+nandcore-$(CONFIG_MTD_NAND_ECC) += ecc.o
-diff --git a/drivers/mtd/nand/ecc.c b/drivers/mtd/nand/ecc.c
-new file mode 100644
-index 000000000000..e4f2b6fcbb12
---- /dev/null
-+++ b/drivers/mtd/nand/ecc.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Generic Error-Correcting Code (ECC) engine
-+ *
-+ * Copyright (C) 2019 Macronix
-+ * Author:
-+ *     Miquèl RAYNAL <miquel.raynal@bootlin.com>
-+ *
-+ *
-+ * This file describes the abstraction of any NAND ECC engine. It has been
-+ * designed to fit most cases, including parallel NANDs and SPI-NANDs.
-+ *
-+ * There are three main situations where instantiating this ECC engine makes
-+ * sense:
-+ *   - "external": The ECC engine is outside the NAND pipeline, typically this
-+ *                 is a software ECC engine. One can also imagine a generic
-+ *                 hardware ECC engine which would be an IP itself. Interacting
-+ *                 with a SPI-NAND device without on-die ECC could be achieved
-+ *                 thanks to the use of such external engine.
-+ *   - "pipelined": The ECC engine is inside the NAND pipeline, ie. on the
-+ *                  controller's side. This is the case of most of the raw NAND
-+ *                  controllers. These controllers usually embed an hardware ECC
-+ *                  engine which is managed thanks to the same register set as
-+ *                  the controller's.
-+ *   - "ondie": The ECC engine is inside the NAND pipeline, on the chip's side.
-+ *              Some NAND chips can correct themselves the data. The on-die
-+ *              correction can be enabled, disabled and the status of the
-+ *              correction after a read may be retrieved with a NAND command
-+ *              (may be vendor specific).
-+ *
-+ * Besides the initial setup and final cleanups, the interfaces are rather
-+ * simple:
-+ *   - "prepare": Prepare an I/O request, check the ECC engine is enabled or
-+ *                disabled as requested before the I/O. In case of software
-+ *                correction, this step may involve to derive the ECC bytes and
-+ *                place them in the OOB area before a write.
-+ *   - "finish": Finish an I/O request, check the status of the operation ie.
-+ *               the data validity in case of a read (report to the upper layer
-+ *               any bitflip/errors).
-+ *
-+ * Both prepare/finish callbacks are supposed to enclose I/O request and will
-+ * behave differently depending on the desired correction:
-+ *   - "raw": Correction disabled
-+ *   - "ecc": Correction enabled
-+ *
-+ * The request direction is impacting the logic as well:
-+ *   - "read": Load data from the NAND chip
-+ *   - "write": Store data in the NAND chip
-+ *
-+ * Mixing all this combinations together gives the following behavior.
-+ *
-+ * ["external" ECC engine]
-+ *   - external + prepare + raw + read: do nothing
-+ *   - external + finish  + raw + read: do nothing
-+ *   - external + prepare + raw + write: do nothing
-+ *   - external + finish  + raw + write: do nothing
-+ *   - external + prepare + ecc + read: do nothing
-+ *   - external + finish  + ecc + read: calculate expected ECC bytes, extract
-+ *                                      ECC bytes from OOB buffer, correct
-+ *                                      and report any bitflip/error
-+ *   - external + prepare + ecc + write: calculate ECC bytes and store them at
-+ *                                       the right place in the OOB buffer based
-+ *                                       on the OOB layout
-+ *   - external + finish  + ecc + write: do nothing
-+ *
-+ * ["pipelined" ECC engine]
-+ *   - pipelined + prepare + raw + read: disable the controller's ECC engine if
-+ *                                       activated
-+ *   - pipelined + finish  + raw + read: do nothing
-+ *   - pipelined + prepare + raw + write: disable the controller's ECC engine if
-+ *                                        activated
-+ *   - pipelined + finish  + raw + write: do nothing
-+ *   - pipelined + prepare + ecc + read: enable the controller's ECC engine if
-+ *                                       deactivated
-+ *   - pipelined + finish  + ecc + read: check the status, report any
-+ *                                       error/bitflip
-+ *   - pipelined + prepare + ecc + write: enable the controller's ECC engine if
-+ *                                        deactivated
-+ *   - pipelined + finish  + ecc + write: do nothing
-+ *
-+ * ["ondie" ECC engine]
-+ *   - ondie + prepare + raw + read: send commands to disable the on-chip ECC
-+ *                                   engine if activated
-+ *   - ondie + finish  + raw + read: do nothing
-+ *   - ondie + prepare + raw + write: send commands to disable the on-chip ECC
-+ *                                    engine if activated
-+ *   - ondie + finish  + raw + write: do nothing
-+ *   - ondie + prepare + ecc + read: send commands to enable the on-chip ECC
-+ *                                   engine if deactivated
-+ *   - ondie + finish  + ecc + read: send commands to check the status, report
-+ *                                   any error/bitflip
-+ *   - ondie + prepare + ecc + write: send commands to enable the on-chip ECC
-+ *                                    engine if deactivated
-+ *   - ondie + finish  + ecc + write: do nothing
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/mtd/nand.h>
-+
-+int nand_ecc_init_ctx(struct nand_device *nand)
-+{
-+	if (!nand->ecc.engine->ops->init_ctx)
-+		return 0;
-+
-+	return nand->ecc.engine->ops->init_ctx(nand);
+-static const char * const nand_ecc_modes[] = {
+-	[NAND_ECC_NONE]		= "none",
+-	[NAND_ECC_SOFT]		= "soft",
+-	[NAND_ECC_HW]		= "hw",
+-	[NAND_ECC_HW_SYNDROME]	= "hw_syndrome",
+-	[NAND_ECC_ON_DIE]	= "on-die",
+-};
+-
+ static const char * const nand_ecc_placement[] = {
+ 	[NAND_ECC_PLACEMENT_OOB] = "oob",
+ 	[NAND_ECC_PLACEMENT_INTERLEAVED] = "interleaved",
+@@ -5026,7 +5018,30 @@ static const char * const nand_ecc_placement[] = {
+ static enum nand_ecc_engine_type
+ of_get_nand_ecc_engine_type(struct device_node *np)
+ {
+-	enum nand_ecc_mode eng_type;
++	return NAND_ECC_ENGINE_TYPE_INVALID;
 +}
-+EXPORT_SYMBOL(nand_ecc_init_ctx);
 +
-+void nand_ecc_cleanup_ctx(struct nand_device *nand)
++static enum nand_ecc_engine_type
++of_get_rawnand_ecc_engine_type_legacy(struct device_node *np)
 +{
-+	if (nand->ecc.engine->ops->cleanup_ctx)
-+		nand->ecc.engine->ops->cleanup_ctx(nand);
-+}
-+EXPORT_SYMBOL(nand_ecc_cleanup_ctx);
-+
-+int nand_ecc_prepare_io_req(struct nand_device *nand,
-+			    struct nand_page_io_req *req)
-+{
-+	if (!nand->ecc.engine->ops->prepare_io_req)
-+		return 0;
-+
-+	return nand->ecc.engine->ops->prepare_io_req(nand, req);
-+}
-+EXPORT_SYMBOL(nand_ecc_prepare_io_req);
-+
-+int nand_ecc_finish_io_req(struct nand_device *nand,
-+			   struct nand_page_io_req *req)
-+{
-+	if (!nand->ecc.engine->ops->finish_io_req)
-+		return 0;
-+
-+	return nand->ecc.engine->ops->finish_io_req(nand, req);
-+}
-+EXPORT_SYMBOL(nand_ecc_finish_io_req);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Miquel Raynal <miquel.raynal@bootlin.com>");
-+MODULE_DESCRIPTION("Generic ECC engine");
-diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-index 2e9af24936cd..0be260fd2f86 100644
---- a/include/linux/mtd/nand.h
-+++ b/include/linux/mtd/nand.h
-@@ -221,6 +221,73 @@ struct nand_ops {
- 	bool (*isbad)(struct nand_device *nand, const struct nand_pos *pos);
- };
++	enum nand_ecc_legacy_mode {
++		NAND_ECC_INVALID,
++		NAND_ECC_NONE,
++		NAND_ECC_SOFT,
++		NAND_ECC_SOFT_BCH,
++		NAND_ECC_HW,
++		NAND_ECC_HW_SYNDROME,
++		NAND_ECC_ON_DIE,
++	};
++	const char * const nand_ecc_legacy_modes[] = {
++		[NAND_ECC_NONE]		= "none",
++		[NAND_ECC_SOFT]		= "soft",
++		[NAND_ECC_SOFT_BCH]	= "soft_bch",
++		[NAND_ECC_HW]		= "hw",
++		[NAND_ECC_HW_SYNDROME]	= "hw_syndrome",
++		[NAND_ECC_ON_DIE]	= "on-die",
++	};
++	enum nand_ecc_legacy_mode eng_type;
+ 	const char *pm;
+ 	int err;
  
-+/**
-+ * struct nand_ecc_context - Context for the ECC engine
-+ * @conf: basic ECC engine parameters
-+ * @total: Total number of bytes used for storing ECC codes, this is used by
-+ *         generic OOB layouts
-+ * @priv: ECC engine driver private data
-+ */
-+struct nand_ecc_context {
-+	struct nand_ecc_props conf;
-+	unsigned int total;
-+	void *priv;
-+};
+@@ -5035,12 +5050,13 @@ of_get_nand_ecc_engine_type(struct device_node *np)
+ 		return NAND_ECC_ENGINE_TYPE_INVALID;
+ 
+ 	for (eng_type = NAND_ECC_NONE;
+-	     eng_type < ARRAY_SIZE(nand_ecc_modes); eng_type++) {
+-		if (!strcasecmp(pm, nand_ecc_modes[eng_type])) {
++	     eng_type < ARRAY_SIZE(nand_ecc_legacy_modes); eng_type++) {
++		if (!strcasecmp(pm, nand_ecc_legacy_modes[eng_type])) {
+ 			switch (eng_type) {
+ 			case NAND_ECC_NONE:
+ 				return NAND_ECC_ENGINE_TYPE_NONE;
+ 			case NAND_ECC_SOFT:
++			case NAND_ECC_SOFT_BCH:
+ 				return NAND_ECC_ENGINE_TYPE_SOFT;
+ 			case NAND_ECC_HW:
+ 			case NAND_ECC_HW_SYNDROME:
+@@ -5053,14 +5069,6 @@ of_get_nand_ecc_engine_type(struct device_node *np)
+ 		}
+ 	}
+ 
+-	/*
+-	 * For backward compatibility we support few obsoleted values that don't
+-	 * have their mappings into the nand_ecc_engine_providers enum anymore
+-	 * (they were merged with other enums).
+-	 */
+-	if (!strcasecmp(pm, "soft_bch"))
+-		return NAND_ECC_ENGINE_TYPE_SOFT;
+-
+ 	return NAND_ECC_ENGINE_TYPE_INVALID;
+ }
+ 
+@@ -5072,17 +5080,22 @@ enum nand_ecc_placement of_get_nand_ecc_placement(struct device_node *np)
+ 
+ 	err = of_property_read_string(np, "nand-ecc-placement", &pm);
+ 	if (!err) {
+-		for (placement = NAND_ECC_PLACEMENT_INTERLEAVED;
++		for (placement = NAND_ECC_PLACEMENT_OOB;
+ 		     placement < ARRAY_SIZE(nand_ecc_placement); placement++) {
+ 			if (!strcasecmp(pm, nand_ecc_placement[placement]))
+ 				return placement;
+ 		}
+ 	}
+ 
+-	/*
+-	 * For backward compatibility we support few obsoleted values that don't
+-	 * have their mappings into the nand_ecc_placement enum anymore.
+-	 */
++	return NAND_ECC_PLACEMENT_UNKNOWN;
++}
 +
-+/**
-+ * struct nand_ecc_engine_ops - Generic ECC engine operations
-+ * @init_ctx: given a desired user configuration for the pointed NAND device,
-+ *            requests the ECC engine driver to setup a configuration with
-+ *            values it supports.
-+ * @cleanup_ctx: clean the context initialized by @init_ctx.
-+ * @prepare_io_req: is called before reading/writing a page to prepare the I/O
-+ *                  request to be performed with ECC correction.
-+ * @finish_io_req: is called after reading/writing a page to terminate the I/O
-+ *                 request and ensure proper ECC correction.
-+ */
-+struct nand_ecc_engine_ops {
-+	int (*init_ctx)(struct nand_device *nand);
-+	void (*cleanup_ctx)(struct nand_device *nand);
-+	int (*prepare_io_req)(struct nand_device *nand,
-+			      struct nand_page_io_req *req);
-+	int (*finish_io_req)(struct nand_device *nand,
-+			     struct nand_page_io_req *req);
-+};
++enum nand_ecc_placement
++of_get_rawnand_ecc_placement_legacy(struct device_node *np)
++{
++	const char *pm;
++	int err;
 +
-+/**
-+ * struct nand_ecc_engine - Generic ECC engine abstraction for NAND devices
-+ * @ops: ECC engine operations
-+ */
-+struct nand_ecc_engine {
-+	struct nand_ecc_engine_ops *ops;
-+};
+ 	err = of_property_read_string(np, "nand-ecc-mode", &pm);
+ 	if (!err) {
+ 		if (!strcasecmp(pm, "hw_syndrome"))
+@@ -5114,10 +5127,14 @@ static enum nand_ecc_algo of_get_nand_ecc_algo(struct device_node *np)
+ 		}
+ 	}
+ 
+-	/*
+-	 * For backward compatibility we also read "nand-ecc-mode" checking
+-	 * for some obsoleted values that were specifying ECC algorithm.
+-	 */
++	return NAND_ECC_ALGO_UNKNOWN;
++}
 +
-+int nand_ecc_init_ctx(struct nand_device *nand);
-+void nand_ecc_cleanup_ctx(struct nand_device *nand);
-+int nand_ecc_prepare_io_req(struct nand_device *nand,
-+			    struct nand_page_io_req *req);
-+int nand_ecc_finish_io_req(struct nand_device *nand,
-+			   struct nand_page_io_req *req);
++static enum nand_ecc_algo of_get_rawnand_ecc_algo_legacy(struct device_node *np)
++{
++	const char *pm;
++	int err;
 +
-+/**
-+ * struct nand_ecc - High-level ECC object
-+ * @defaults: Default values, depend on the underlying subsystem
-+ * @requirements: ECC requirements from the NAND chip perspective
-+ * @user_conf: User desires in terms of ECC parameters
-+ * @ctx: ECC context for the ECC engine, derived from the device @requirements
-+ *       the @user_conf and the @defaults
-+ * @ondie_engine: On-die ECC engine reference, if any
-+ * @engine: ECC engine actually bound
-+ */
-+struct nand_ecc {
-+	struct nand_ecc_props defaults;
-+	struct nand_ecc_props requirements;
-+	struct nand_ecc_props user_conf;
-+	struct nand_ecc_context ctx;
-+	struct nand_ecc_engine *ondie_engine;
-+	struct nand_ecc_engine *engine;
-+};
+ 	err = of_property_read_string(np, "nand-ecc-mode", &pm);
+ 	if (!err) {
+ 		if (!strcasecmp(pm, "soft"))
+@@ -5147,6 +5164,41 @@ static int of_get_nand_ecc_strength(struct device_node *np)
+ 	return ret ? ret : val;
+ }
+ 
++static void nand_ecc_read_user_conf(struct nand_chip *chip)
++{
++	struct device_node *dn = nand_get_flash_node(chip);
++	struct nand_device *nand = &chip->base;
++	int strength, size;
 +
- /**
-  * struct nand_device - NAND device
-  * @mtd: MTD instance attached to the NAND device
++	nand->ecc.user_conf.engine_type = of_get_nand_ecc_engine_type(dn);
++	nand->ecc.user_conf.algo = of_get_nand_ecc_algo(dn);
++	nand->ecc.user_conf.placement = of_get_nand_ecc_placement(dn);
++
++	strength = of_get_nand_ecc_strength(dn);
++	if (strength >= 0)
++		nand->ecc.user_conf.strength = strength;
++
++	size = of_get_nand_ecc_step_size(dn);
++	if (size >= 0)
++		nand->ecc.user_conf.step_size = size;
++}
++
++static void rawnand_ecc_read_legacy_user_conf(struct nand_chip *chip)
++{
++	struct device_node *dn = nand_get_flash_node(chip);
++	struct nand_device *nand = &chip->base;
++	struct nand_ecc_props *user_conf = &nand->ecc.user_conf;
++
++	if (user_conf->engine_type != NAND_ECC_ENGINE_TYPE_INVALID)
++		user_conf->engine_type = of_get_rawnand_ecc_engine_type_legacy(dn);
++
++	if (user_conf->algo != NAND_ECC_ALGO_UNKNOWN)
++		user_conf->algo = of_get_rawnand_ecc_algo_legacy(dn);
++
++	if (user_conf->placement != NAND_ECC_PLACEMENT_UNKNOWN)
++		user_conf->placement = of_get_rawnand_ecc_placement_legacy(dn);
++}
++
+ static int of_get_nand_bus_width(struct device_node *np)
+ {
+ 	u32 val;
+@@ -5168,12 +5220,10 @@ static bool of_get_nand_on_flash_bbt(struct device_node *np)
+ 	return of_property_read_bool(np, "nand-on-flash-bbt");
+ }
+ 
+-static int nand_dt_init(struct nand_chip *chip)
++static int rawnand_dt_init(struct nand_chip *chip)
+ {
++	struct nand_device *nand = mtd_to_nanddev(nand_to_mtd(chip));
+ 	struct device_node *dn = nand_get_flash_node(chip);
+-	enum nand_ecc_engine_type ecc_type;
+-	enum nand_ecc_algo ecc_algo;
+-	int ecc_strength, ecc_step;
+ 
+ 	if (!dn)
+ 		return 0;
+@@ -5187,27 +5237,33 @@ static int nand_dt_init(struct nand_chip *chip)
+ 	if (of_get_nand_on_flash_bbt(dn))
+ 		chip->bbt_options |= NAND_BBT_USE_FLASH;
+ 
+-	ecc_type = of_get_nand_ecc_engine_type(dn);
+-	ecc_algo = of_get_nand_ecc_algo(dn);
+-	chip->ecc.placement = of_get_nand_ecc_placement(dn);
+-	ecc_strength = of_get_nand_ecc_strength(dn);
+-	ecc_step = of_get_nand_ecc_step_size(dn);
+-
+-	if (ecc_type != NAND_ECC_ENGINE_TYPE_INVALID)
+-		chip->ecc.engine_type = ecc_type;
+-
+-	if (ecc_algo != NAND_ECC_ALGO_UNKNOWN)
+-		chip->ecc.algo = ecc_algo;
+-
+-	if (ecc_strength >= 0)
+-		chip->ecc.strength = ecc_strength;
+-
+-	if (ecc_step > 0)
+-		chip->ecc.size = ecc_step;
+-
+ 	if (of_property_read_bool(dn, "nand-ecc-maximize"))
+ 		chip->ecc.options |= NAND_ECC_MAXIMIZE;
+ 
++	nand_ecc_read_user_conf(chip);
++	rawnand_ecc_read_legacy_user_conf(chip);
++
++	/*
++	 * If neither the user nor the NAND controller have requested a specific
++	 * ECC engine type, we will default to NAND_ECC_ENGINE_TYPE_ON_HOST.
++	 */
++	nand->ecc.defaults.engine_type = NAND_ECC_ENGINE_TYPE_ON_HOST;
++
++	/*
++	 * Use the user requested engine type, unless there is none, in this
++	 * case default to the NAND controller choice, otherwise fallback to
++	 * the raw NAND default one.
++	 */
++	if (nand->ecc.user_conf.engine_type != NAND_ECC_ENGINE_TYPE_INVALID)
++		chip->ecc.engine_type = nand->ecc.user_conf.engine_type;
++	if (chip->ecc.engine_type == NAND_ECC_ENGINE_TYPE_INVALID)
++		chip->ecc.engine_type = nand->ecc.defaults.engine_type;
++
++	chip->ecc.placement = nand->ecc.user_conf.placement;
++	chip->ecc.algo = nand->ecc.user_conf.algo;
++	chip->ecc.strength = nand->ecc.user_conf.strength;
++	chip->ecc.size = nand->ecc.user_conf.step_size;
++
+ 	return 0;
+ }
+ 
+@@ -5244,7 +5300,7 @@ static int nand_scan_ident(struct nand_chip *chip, unsigned int maxchips,
+ 	/* Enforce the right timings for reset/detection */
+ 	onfi_fill_data_interface(chip, NAND_SDR_IFACE, 0);
+ 
+-	ret = nand_dt_init(chip);
++	ret = rawnand_dt_init(chip);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.20.1
 
