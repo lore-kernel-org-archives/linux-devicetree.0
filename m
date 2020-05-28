@@ -2,86 +2,107 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B646BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9750121475
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471E32063A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 08:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgE1Iia (ORCPT
+        id S1727869AbgE1Ij2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 04:38:30 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:47804 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727102AbgE1Ii3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 04:38:29 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 May 2020 14:08:26 +0530
-Received: from mkrishn-linux.qualcomm.com ([10.204.66.35])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 28 May 2020 14:08:26 +0530
-Received: by mkrishn-linux.qualcomm.com (Postfix, from userid 438394)
-        id DE28247C1; Thu, 28 May 2020 14:08:24 +0530 (IST)
-From:   Krishna Manikandan <mkrishn@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org, mka@chromium.org
-Subject: [v1] drm/msm: add shutdown support for display platform_driver
-Date:   Thu, 28 May 2020 14:08:23 +0530
-Message-Id: <1590655103-21568-1-git-send-email-mkrishn@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 28 May 2020 04:39:28 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40208 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbgE1Ij2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 04:39:28 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6C2CF80307C0;
+        Thu, 28 May 2020 08:39:25 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ionmEv71tfBL; Thu, 28 May 2020 11:39:24 +0300 (MSK)
+Date:   Thu, 28 May 2020 11:39:23 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+Message-ID: <20200528083923.yjlm5ur7cslgxdau@mobilestation>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
+ <20200527171204.GA2348490@bogus>
+ <20200527171841.am2iaynff243xoep@mobilestation>
+ <20200527175624.GT1634618@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200527175624.GT1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define shutdown callback for display drm driver,
-so as to disable all the CRTCS when shutdown
-notification is received by the driver.
+On Wed, May 27, 2020 at 08:56:24PM +0300, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 08:18:41PM +0300, Serge Semin wrote:
+> > On Wed, May 27, 2020 at 11:12:04AM -0600, Rob Herring wrote:
+> > > On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
+> > > > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> > > > i2c "reg" property. If it is the compiler will print a warning:
+> > > > 
+> > > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > > > 
+> > > > In order to silence dtc up let's discard the flag from the DW I2C DT
+> > > > binding example for now. Just revert this commit when dtc is fixed.
+> 
+> > > >        eeprom@64 {
+> > > >          compatible = "linux,slave-24c02";
+> > > > -        reg = <0x40000064>;
+> > > > +        reg = <0x64>;
+> > > 
+> > > But the compatible is a slave, so you need an example with a different 
+> > > device.
+> > 
+> 
+> > Ok. I'll replace the sub-node with just "atmel,24c02" compatible string then.
+> 
+> But how it will be different to the another slave connected to the master?
+> 
+> This example is specifically to show that DesingWare I²C controller may be
+> switched to slave mode.
 
-Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
----
- drivers/gpu/drm/msm/msm_drv.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Well, dtc doesn't support it and prints warning that the address is invalid.
+Though I do understand you concern and is mostly agree with it. Let's do this in
+the next way. I'll resend the series with eeprom@64 sub-node replaced with just
+a normal eeprom-device. The message log will have an info why this has been
+done. In the non-mergeable section of the patch I'll suggest to Rob reconsider
+the patch acking, since we can leave the slave-marked sub-node and just live
+with the dtc warning until it's fixed in there.
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index e4b750b..7a8953f 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1322,6 +1322,18 @@ static int msm_pdev_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static void msm_pdev_shutdown(struct platform_device *pdev)
-+{
-+	struct drm_device *drm = platform_get_drvdata(pdev);
-+
-+	if (!drm) {
-+		DRM_ERROR("Invalid drm device node\n");
-+		return;
-+	}
-+
-+	drm_atomic_helper_shutdown(drm);
-+}
-+
- static const struct of_device_id dt_match[] = {
- 	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
- 	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
-@@ -1334,6 +1346,7 @@ static int msm_pdev_remove(struct platform_device *pdev)
- static struct platform_driver msm_platform_driver = {
- 	.probe      = msm_pdev_probe,
- 	.remove     = msm_pdev_remove,
-+	.shutdown   = msm_pdev_shutdown,
- 	.driver     = {
- 		.name   = "msm",
- 		.of_match_table = dt_match,
--- 
-1.9.1
+-Sergey
 
+> 
+> > > >        };
+> > > >      };
+> > > >    - |
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
