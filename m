@@ -2,68 +2,128 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB3AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC3EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72D820888
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590627713;
-	bh=ktm4pRzhf1NV+YzaN6U4bH9oGe9Z7m0BKz8OebZtXV4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=zqQe5pJxX8P+TV3d5//K2yPQ1QqviU5WMgVZCrS0U7pCY5M+hFO5VchIVGq5sbMcp
-	 zNadtQ9qVQ/luxj4ujijzT78g5MZwadJuAszUbwii9epL5F++nyW9qZqA5K+o2ugbw
-	 UGm+fOBRYQFiQZWDF4g6iRjBZ5wWE33vbOZb1zCA=
+	by mail.kernel.org (Postfix) with ESMTP id 152BB207CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgE1BBP (ORCPT
+        id S1725834AbgE1BCa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 21:01:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgE1BBO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 May 2020 21:01:14 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A2820888;
-        Thu, 28 May 2020 01:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590627673;
-        bh=ktm4pRzhf1NV+YzaN6U4bH9oGe9Z7m0BKz8OebZtXV4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=bGQAVXnrqqYj5PIC4HmEiIEF1X9H/Ia6ZctYMMYMP9cVlqeuH6/pUCSX/x7WaA+z+
-         c6hhnjEfLiycahb1z2jYP9y/P/w0D7ipCE6p/U/rgabHHb2Nk4yQjLScOLI5fenqK9
-         X8eBp9NIH0X6E3BkAPwsqlnIHYnSlRXj4etAmzlE=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 27 May 2020 21:02:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48056 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbgE1BCa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 21:02:30 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 066332A3B03
+Message-ID: <ded561992900a23e9a0135855e9455a07c67ddaf.camel@collabora.com>
+Subject: Re: [PATCH v6 3/4] arm64: dts: imx8mq: enable Hantro G1/G2 VPU
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de,
+        devicetree@vger.kernel.org
+Date:   Wed, 27 May 2020 22:02:17 -0300
+In-Reply-To: <58431830e527c8acb873487f5173e437bee712a6.camel@pengutronix.de>
+References: <20200320131256.23294-1-p.zabel@pengutronix.de>
+         <20200320131256.23294-4-p.zabel@pengutronix.de>
+         <58431830e527c8acb873487f5173e437bee712a6.camel@pengutronix.de>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200519224151.2074597-6-lkundrak@v3.sk>
-References: <20200519224151.2074597-1-lkundrak@v3.sk> <20200519224151.2074597-6-lkundrak@v3.sk>
-Subject: Re: [PATCH v3 05/13] clk: mmp2: Move thermal register defines up a bit
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Date:   Wed, 27 May 2020 18:01:13 -0700
-Message-ID: <159062767309.69627.11783454941191458083@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Lubomir Rintel (2020-05-19 15:41:43)
-> A trivial change to keep the sorting sane. The APBC registers are happier
-> when they are grouped together, instead of mixed with the APMU ones.
->=20
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
+On Wed, 2020-05-27 at 18:19 +0200, Philipp Zabel wrote:
+> Hi Shawn,
+> 
+> On Fri, 2020-03-20 at 14:12 +0100, Philipp Zabel wrote:
+> > Add the i.MX8MQ VPU module which comprises Hantro G1 and G2 video
+> > decoder cores and a reset/control block.
+> > 
+> > Hook up the bus clock to the VPU power domain to enable handshakes, and
+> > configure the core clocks to 600 MHz and the bus clock to 800 MHz by
+> > default.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> could you pick up this patch? The driver and binding parts have been
+> merged in media/master.
+> 
 
-Applied to clk-next
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Tested-by: Ezequiel Garcia <ezequiel@collabora.com>
+
+It looks good and it matches the downstream device tree.
+
+Thanks,
+Ezequiel
+
+> regards
+> Philipp
+> 
+> > ---
+> > New in v6.
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 27 +++++++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > index 6a1e83922c71..98e464ecb68a 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > @@ -666,6 +666,7 @@
+> >  					pgc_vpu: power-domain@6 {
+> >  						#power-domain-cells = <0>;
+> >  						reg = <IMX8M_POWER_DOMAIN_VPU>;
+> > +						clocks = <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
+> >  					};
+> >  
+> >  					pgc_disp: power-domain@7 {
+> > @@ -1130,6 +1131,32 @@
+> >  			status = "disabled";
+> >  		};
+> >  
+> > +		vpu: video-codec@38300000 {
+> > +			compatible = "nxp,imx8mq-vpu";
+> > +			reg = <0x38300000 0x10000>,
+> > +			      <0x38310000 0x10000>,
+> > +			      <0x38320000 0x10000>;
+> > +			reg-names = "g1", "g2", "ctrl";
+> > +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> > +			interrupt-names = "g1", "g2";
+> > +			clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
+> > +				 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
+> > +				 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
+> > +			clock-names = "g1", "g2", "bus";
+> > +			assigned-clocks = <&clk IMX8MQ_CLK_VPU_G1>,
+> > +					  <&clk IMX8MQ_CLK_VPU_G2>,
+> > +					  <&clk IMX8MQ_CLK_VPU_BUS>,
+> > +					  <&clk IMX8MQ_VPU_PLL_BYPASS>;
+> > +			assigned-clock-parents = <&clk IMX8MQ_VPU_PLL_OUT>,
+> > +						 <&clk IMX8MQ_VPU_PLL_OUT>,
+> > +						 <&clk IMX8MQ_SYS1_PLL_800M>,
+> > +						 <&clk IMX8MQ_VPU_PLL>;
+> > +			assigned-clock-rates = <600000000>, <600000000>,
+> > +					       <800000000>, <0>;
+> > +			power-domains = <&pgc_vpu>;
+> > +		};
+> > +
+> >  		pcie0: pcie@33800000 {
+> >  			compatible = "fsl,imx8mq-pcie";
+> >  			reg = <0x33800000 0x400000>,
+
+
