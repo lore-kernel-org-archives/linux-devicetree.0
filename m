@@ -2,165 +2,90 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B33C433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9841EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3630208FE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D164207E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 07:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Rgn0mOUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgE1HiV (ORCPT
+        id S1725928AbgE1HjO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 03:38:21 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39090 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgE1HiT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 03:38:19 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 270AB200A1F;
-        Thu, 28 May 2020 09:38:17 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 54085200A1D;
-        Thu, 28 May 2020 09:38:11 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 48AF8402BF;
-        Thu, 28 May 2020 15:38:04 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, shc_work@mail.ru, s.trumtrar@pengutronix.de,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/9] dt-bindings: clock: Convert i.MX5 clock to json-schema
-Date:   Thu, 28 May 2020 15:27:51 +0800
-Message-Id: <1590650879-18288-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590650879-18288-1-git-send-email-Anson.Huang@nxp.com>
-References: <1590650879-18288-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 28 May 2020 03:39:14 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:64274 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725839AbgE1HjN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 03:39:13 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04S7cAos017153;
+        Thu, 28 May 2020 09:38:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=1lcgbL/rxGsDAqjZW9JrG35AHt9dvjJGVv5G7y5dl7U=;
+ b=Rgn0mOUxRpssrSLPHqhK1vfcK7aNcIion3VK+PPT2GZkS1vbu7RkZkfMO6Ay3tEGf+/D
+ /7/J4SU84mXeTBdyC6eqmGwukNqada7gTEmFlFhoFeS+kjpp6C9cAtLLmw5LMhyxMO6B
+ j617JlYBP9tUPPYQR29Ggpy7sJUqGyqkYnjXkPGb2fflfsKnQsjUBFfyyf59f2V8xoR2
+ Iy5Yt3yqIlmeBQZuvpZNaWxuxyqm058uI3WctRj3K0RZ5O7kLlCYs0p1twTst8c1A46X
+ GKDV/go4p0arIvn1cT+HqqtWCSaviPSpQb57cBmVDewttDrS7TBvS4H79QbzhIDC5yf4 7Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 316sa29wn2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 May 2020 09:38:58 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B1A7710002A;
+        Thu, 28 May 2020 09:38:57 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9BEEC2B187F;
+        Thu, 28 May 2020 09:38:57 +0200 (CEST)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 May 2020 09:38:57
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 0/3] STM32 update uart4 pin configuration for low power
+Date:   Thu, 28 May 2020 09:38:50 +0200
+Message-ID: <20200528073853.24759-1-erwan.leray@st.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-28_02:2020-05-28,2020-05-27 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX5 clock binding to DT schema format using json-schema.
+Update uart4 pin configuration for low power in pinctrl, and for ed/ev
+and dkx boards.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/clock/imx5-clock.txt       | 28 ----------
- .../devicetree/bindings/clock/imx5-clock.yaml      | 63 ++++++++++++++++++++++
- 2 files changed, 63 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/imx5-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/imx5-clock.yaml
+Erwan Le Ray (3):
+  ARM: dts: stm32: update uart4 pin configuration for low power on
+    stm32mp157
+  ARM: dts: stm32: Update pin states for uart4 on stm32mp157c-ed1
+  ARM: dts: stm32: Update UART4 pin states on stm32mp15xx-dkx
 
-diff --git a/Documentation/devicetree/bindings/clock/imx5-clock.txt b/Documentation/devicetree/bindings/clock/imx5-clock.txt
-deleted file mode 100644
-index a24ca9e..0000000
---- a/Documentation/devicetree/bindings/clock/imx5-clock.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Clock bindings for Freescale i.MX5
--
--Required properties:
--- compatible: Should be "fsl,<soc>-ccm" , where <soc> can be imx51 or imx53
--- reg: Address and length of the register set
--- interrupts: Should contain CCM interrupt
--- #clock-cells: Should be <1>
--
--The clock consumer should specify the desired clock by having the clock
--ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx5-clock.h
--for the full list of i.MX5 clock IDs.
--
--Examples (for mx53):
--
--clks: ccm@53fd4000{
--	compatible = "fsl,imx53-ccm";
--	reg = <0x53fd4000 0x4000>;
--	interrupts = <0 71 0x04 0 72 0x04>;
--	#clock-cells = <1>;
--};
--
--can1: can@53fc8000 {
--	compatible = "fsl,imx53-flexcan", "fsl,p1010-flexcan";
--	reg = <0x53fc8000 0x4000>;
--	interrupts = <82>;
--	clocks = <&clks IMX5_CLK_CAN1_IPG_GATE>, <&clks IMX5_CLK_CAN1_SERIAL_GATE>;
--	clock-names = "ipg", "per";
--};
-diff --git a/Documentation/devicetree/bindings/clock/imx5-clock.yaml b/Documentation/devicetree/bindings/clock/imx5-clock.yaml
-new file mode 100644
-index 0000000..e4c405c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx5-clock.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/imx5-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Clock bindings for Freescale i.MX5
-+
-+maintainers:
-+  - Fabio Estevam <fabio.estevam@freescale.com>
-+
-+description: |
-+  The clock consumer should specify the desired clock by having the clock
-+  ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx5-clock.h
-+  for the full list of i.MX5 clock IDs.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx53-ccm
-+      - fsl,imx51-ccm
-+      - fsl,imx50-ccm
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: CCM provides 2 interrupt requests, request 1 is to generate
-+      interrupt for frequency or mux change, request 2 is to generate
-+      interrupt for oscillator read or PLL lock.
-+    items:
-+      - description: CCM interrupt request 1
-+      - description: CCM interrupt request 2
-+
-+  '#clock-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#clock-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx5-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    clock-controller@53fd4000{
-+        compatible = "fsl,imx53-ccm";
-+        reg = <0x53fd4000 0x4000>;
-+        interrupts = <0 71 IRQ_TYPE_LEVEL_HIGH>,
-+                     <0 72 IRQ_TYPE_LEVEL_HIGH>;
-+        #clock-cells = <1>;
-+    };
-+
-+    can@53fc8000 {
-+        compatible = "fsl,imx53-flexcan", "fsl,p1010-flexcan";
-+        reg = <0x53fc8000 0x4000>;
-+        interrupts = <82>;
-+        clocks = <&clks IMX5_CLK_CAN1_IPG_GATE>, <&clks IMX5_CLK_CAN1_SERIAL_GATE>;
-+        clock-names = "ipg", "per";
-+    };
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 17 +++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts    |  4 +++-
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi   |  4 +++-
+ 3 files changed, 23 insertions(+), 2 deletions(-)
+
 -- 
-2.7.4
+2.17.1
 
