@@ -2,1168 +2,230 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71239C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A2DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358172075A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008ED2075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 11:51:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OEagUgwR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388419AbgE1LcC (ORCPT
+        id S2388511AbgE1Lvu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 07:32:02 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:53363 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388422AbgE1LcB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 07:32:01 -0400
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 30549200005;
-        Thu, 28 May 2020 11:31:54 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Thu, 28 May 2020 07:51:50 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:24048 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388480AbgE1Lvt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 07:51:49 -0400
+X-UUID: 17f6788531644e64862e87f3a4345f7a-20200528
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=YVrqE+b0jJL6qq2mzSiCunvxXu5L2fN/bU2r03efkZU=;
+        b=OEagUgwR9LYPAf2kJYXJgskfgLQF1He6YXgSlgGuwNN+iLvnuKDRlSymrpKIQOEElmcN/dBu4lEvoBl4HLxddkQoEp0kKGdNqh9f6iY5nxNj+mX4MhBdsXkWTVilimlCJ/T+m4SvWogQEbS+nO4uJjhEWxyyUaAvebMDbLxu4s0=;
+X-UUID: 17f6788531644e64862e87f3a4345f7a-20200528
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 716234532; Thu, 28 May 2020 19:51:40 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 28 May 2020 19:51:34 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 28 May 2020 19:51:34 +0800
+Message-ID: <1590666697.4266.3.camel@mtkswgap22>
+Subject: Re: [PATCH v5 1/6] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v6 18/18] mtd: rawnand: Move generic bits to the ECC framework
-Date:   Thu, 28 May 2020 13:31:13 +0200
-Message-Id: <20200528113113.9166-19-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200528113113.9166-1-miquel.raynal@bootlin.com>
-References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Sean Wang" <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Thu, 28 May 2020 19:51:37 +0800
+In-Reply-To: <CAL_Jsq+Znnk=L=ztTyVrs4i0tiN0TrWwcaujAm_Lp1wd9pWiZQ@mail.gmail.com>
+References: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com>
+         <1585128694-13881-2-git-send-email-hanks.chen@mediatek.com>
+         <CAL_Jsq+Znnk=L=ztTyVrs4i0tiN0TrWwcaujAm_Lp1wd9pWiZQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 76EFB800843570EE696089F86D3EED9F62273D2F798FACA43FE04CE2DBF5199F2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Many OOB layouts and helpers are generic to all NAND chips, they
-should not be restricted to be only used by raw NAND controller
-drivers. They might later be used by generic ECC engines and SPI-NAND
-devices as well so move them into a more generic place.
-
-To avoid moving all the raw NAND core "history" into the generic NAND
-layer, we already moved certain bits into legacy helpers in the raw
-NAND core to ensure backward compatibility.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/mtd/nand/Kconfig                      |  11 +
- drivers/mtd/nand/Makefile                     |   1 +
- .../mtd/nand/{raw/nand_bch.c => ecc-sw-bch.c} |   2 +-
- drivers/mtd/nand/ecc.c                        | 299 +++++++++++++++++
- drivers/mtd/nand/raw/Kconfig                  |  11 +-
- drivers/mtd/nand/raw/Makefile                 |   1 -
- drivers/mtd/nand/raw/atmel/nand-controller.c  |   3 +-
- drivers/mtd/nand/raw/denali.c                 |   3 +
- drivers/mtd/nand/raw/nand_base.c              | 313 +-----------------
- drivers/mtd/nand/raw/nand_toshiba.c           |   2 +
- drivers/mtd/nand/raw/nandsim.c                |   2 +-
- drivers/mtd/nand/raw/omap2.c                  |   2 +-
- drivers/mtd/nand/raw/sunxi_nand.c             |   3 +-
- drivers/mtd/nand/raw/tegra_nand.c             |   3 +-
- .../mtd/{nand_bch.h => nand-ecc-sw-bch.h}     |   6 +-
- include/linux/mtd/nand.h                      |  20 ++
- include/linux/mtd/rawnand.h                   |  17 +-
- 17 files changed, 364 insertions(+), 335 deletions(-)
- rename drivers/mtd/nand/{raw/nand_bch.c => ecc-sw-bch.c} (99%)
- rename include/linux/mtd/{nand_bch.h => nand-ecc-sw-bch.h} (92%)
-
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index 3327d8539a73..316da271a3a1 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -15,6 +15,17 @@ config MTD_NAND_ECC
- 	bool
- 	select MTD_NAND_CORE
- 
-+config MTD_NAND_ECC_SW_BCH
-+	bool "Software BCH ECC engine"
-+	select BCH
-+	select MTD_NAND_ECC
-+	default n
-+	help
-+	  This enables support for software BCH error correction. Binary BCH
-+	  codes are more powerful and cpu intensive than traditional Hamming
-+	  ECC codes. They are used with NAND devices requiring more than 1 bit
-+	  of error correction.
-+
- endmenu
- 
- endmenu
-diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-index 981372953b56..c7179ff23753 100644
---- a/drivers/mtd/nand/Makefile
-+++ b/drivers/mtd/nand/Makefile
-@@ -8,3 +8,4 @@ obj-y	+= raw/
- obj-y	+= spi/
- 
- nandcore-$(CONFIG_MTD_NAND_ECC) += ecc.o
-+nandcore-$(CONFIG_MTD_NAND_ECC_SW_BCH) += ecc-sw-bch.o
-diff --git a/drivers/mtd/nand/raw/nand_bch.c b/drivers/mtd/nand/ecc-sw-bch.c
-similarity index 99%
-rename from drivers/mtd/nand/raw/nand_bch.c
-rename to drivers/mtd/nand/ecc-sw-bch.c
-index d5af8c5fd02f..d0dc84cfdbdc 100644
---- a/drivers/mtd/nand/raw/nand_bch.c
-+++ b/drivers/mtd/nand/ecc-sw-bch.c
-@@ -13,7 +13,7 @@
- #include <linux/bitops.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/rawnand.h>
--#include <linux/mtd/nand_bch.h>
-+#include <linux/mtd/nand-ecc-sw-bch.h>
- #include <linux/bch.h>
- 
- /**
-diff --git a/drivers/mtd/nand/ecc.c b/drivers/mtd/nand/ecc.c
-index e4f2b6fcbb12..91f0969210c4 100644
---- a/drivers/mtd/nand/ecc.c
-+++ b/drivers/mtd/nand/ecc.c
-@@ -133,6 +133,305 @@ int nand_ecc_finish_io_req(struct nand_device *nand,
- }
- EXPORT_SYMBOL(nand_ecc_finish_io_req);
- 
-+/* Define default oob placement schemes for large and small page devices */
-+static int nand_ooblayout_ecc_sp(struct mtd_info *mtd, int section,
-+				 struct mtd_oob_region *oobregion)
-+{
-+	struct nand_device *nand = mtd_to_nanddev(mtd);
-+	unsigned int total_ecc_bytes = nand->ecc.ctx.total;
-+
-+	if (section > 1)
-+		return -ERANGE;
-+
-+	if (!section) {
-+		oobregion->offset = 0;
-+		if (mtd->oobsize == 16)
-+			oobregion->length = 4;
-+		else
-+			oobregion->length = 3;
-+	} else {
-+		if (mtd->oobsize == 8)
-+			return -ERANGE;
-+
-+		oobregion->offset = 6;
-+		oobregion->length = total_ecc_bytes - 4;
-+	}
-+
-+	return 0;
-+}
-+
-+static int nand_ooblayout_free_sp(struct mtd_info *mtd, int section,
-+				  struct mtd_oob_region *oobregion)
-+{
-+	if (section > 1)
-+		return -ERANGE;
-+
-+	if (mtd->oobsize == 16) {
-+		if (section)
-+			return -ERANGE;
-+
-+		oobregion->length = 8;
-+		oobregion->offset = 8;
-+	} else {
-+		oobregion->length = 2;
-+		if (!section)
-+			oobregion->offset = 3;
-+		else
-+			oobregion->offset = 6;
-+	}
-+
-+	return 0;
-+}
-+
-+const struct mtd_ooblayout_ops nand_ooblayout_sp_ops = {
-+	.ecc = nand_ooblayout_ecc_sp,
-+	.free = nand_ooblayout_free_sp,
-+};
-+EXPORT_SYMBOL_GPL(nand_ooblayout_sp_ops);
-+
-+static int nand_ooblayout_ecc_lp(struct mtd_info *mtd, int section,
-+				 struct mtd_oob_region *oobregion)
-+{
-+	struct nand_device *nand = mtd_to_nanddev(mtd);
-+	unsigned int total_ecc_bytes = nand->ecc.ctx.total;
-+
-+	if (section || !total_ecc_bytes)
-+		return -ERANGE;
-+
-+	oobregion->length = total_ecc_bytes;
-+	oobregion->offset = mtd->oobsize - oobregion->length;
-+
-+	return 0;
-+}
-+
-+static int nand_ooblayout_free_lp(struct mtd_info *mtd, int section,
-+				  struct mtd_oob_region *oobregion)
-+{
-+	struct nand_device *nand = mtd_to_nanddev(mtd);
-+	unsigned int total_ecc_bytes = nand->ecc.ctx.total;
-+
-+	if (section)
-+		return -ERANGE;
-+
-+	oobregion->length = mtd->oobsize - total_ecc_bytes - 2;
-+	oobregion->offset = 2;
-+
-+	return 0;
-+}
-+
-+const struct mtd_ooblayout_ops nand_ooblayout_lp_ops = {
-+	.ecc = nand_ooblayout_ecc_lp,
-+	.free = nand_ooblayout_free_lp,
-+};
-+EXPORT_SYMBOL_GPL(nand_ooblayout_lp_ops);
-+
-+/*
-+ * Support the old "large page" layout used for 1-bit Hamming ECC where ECC
-+ * are placed at a fixed offset.
-+ */
-+static int nand_ooblayout_ecc_lp_hamming(struct mtd_info *mtd, int section,
-+					 struct mtd_oob_region *oobregion)
-+{
-+	struct nand_device *nand = mtd_to_nanddev(mtd);
-+	unsigned int total_ecc_bytes = nand->ecc.ctx.total;
-+
-+	if (section)
-+		return -ERANGE;
-+
-+	switch (mtd->oobsize) {
-+	case 64:
-+		oobregion->offset = 40;
-+		break;
-+	case 128:
-+		oobregion->offset = 80;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	oobregion->length = total_ecc_bytes;
-+	if (oobregion->offset + oobregion->length > mtd->oobsize)
-+		return -ERANGE;
-+
-+	return 0;
-+}
-+
-+static int nand_ooblayout_free_lp_hamming(struct mtd_info *mtd, int section,
-+					  struct mtd_oob_region *oobregion)
-+{
-+	struct nand_device *nand = mtd_to_nanddev(mtd);
-+	unsigned int total_ecc_bytes = nand->ecc.ctx.total;
-+	int ecc_offset = 0;
-+
-+	if (section < 0 || section > 1)
-+		return -ERANGE;
-+
-+	switch (mtd->oobsize) {
-+	case 64:
-+		ecc_offset = 40;
-+		break;
-+	case 128:
-+		ecc_offset = 80;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (section == 0) {
-+		oobregion->offset = 2;
-+		oobregion->length = ecc_offset - 2;
-+	} else {
-+		oobregion->offset = ecc_offset + total_ecc_bytes;
-+		oobregion->length = mtd->oobsize - oobregion->offset;
-+	}
-+
-+	return 0;
-+}
-+
-+const struct mtd_ooblayout_ops nand_ooblayout_lp_hamming_ops = {
-+	.ecc = nand_ooblayout_ecc_lp_hamming,
-+	.free = nand_ooblayout_free_lp_hamming,
-+};
-+EXPORT_SYMBOL_GPL(nand_ooblayout_lp_hamming_ops);
-+
-+static enum nand_ecc_engine_type
-+of_get_nand_ecc_engine_type(struct device_node *np)
-+{
-+	return NAND_ECC_ENGINE_TYPE_INVALID;
-+}
-+
-+static const char * const nand_ecc_placement[] = {
-+	[NAND_ECC_PLACEMENT_OOB] = "oob",
-+	[NAND_ECC_PLACEMENT_INTERLEAVED] = "interleaved",
-+};
-+
-+enum nand_ecc_placement of_get_nand_ecc_placement(struct device_node *np)
-+{
-+	enum nand_ecc_placement placement;
-+	const char *pm;
-+	int err;
-+
-+	err = of_property_read_string(np, "nand-ecc-placement", &pm);
-+	if (!err) {
-+		for (placement = NAND_ECC_PLACEMENT_OOB;
-+		     placement < ARRAY_SIZE(nand_ecc_placement); placement++) {
-+			if (!strcasecmp(pm, nand_ecc_placement[placement]))
-+				return placement;
-+		}
-+	}
-+
-+	return NAND_ECC_PLACEMENT_UNKNOWN;
-+}
-+
-+static const char * const nand_ecc_algos[] = {
-+	[NAND_ECC_ALGO_HAMMING]	= "hamming",
-+	[NAND_ECC_ALGO_BCH]	= "bch",
-+	[NAND_ECC_ALGO_RS]	= "rs",
-+};
-+
-+static enum nand_ecc_algo of_get_nand_ecc_algo(struct device_node *np)
-+{
-+	enum nand_ecc_algo ecc_algo;
-+	const char *pm;
-+	int err;
-+
-+	err = of_property_read_string(np, "nand-ecc-algo", &pm);
-+	if (!err) {
-+		for (ecc_algo = NAND_ECC_ALGO_HAMMING;
-+		     ecc_algo < ARRAY_SIZE(nand_ecc_algos);
-+		     ecc_algo++) {
-+			if (!strcasecmp(pm, nand_ecc_algos[ecc_algo]))
-+				return ecc_algo;
-+		}
-+	}
-+
-+	return NAND_ECC_ALGO_UNKNOWN;
-+}
-+
-+static int of_get_nand_ecc_step_size(struct device_node *np)
-+{
-+	int ret;
-+	u32 val;
-+
-+	ret = of_property_read_u32(np, "nand-ecc-step-size", &val);
-+	return ret ? ret : val;
-+}
-+
-+static int of_get_nand_ecc_strength(struct device_node *np)
-+{
-+	int ret;
-+	u32 val;
-+
-+	ret = of_property_read_u32(np, "nand-ecc-strength", &val);
-+	return ret ? ret : val;
-+}
-+
-+static inline bool of_get_nand_ecc_maximize(struct device_node *np)
-+{
-+	return of_property_read_bool(np, "nand-ecc-maximize");
-+}
-+
-+void nand_ecc_read_user_conf(struct nand_device *nand)
-+{
-+	struct device_node *dn = nanddev_get_flash_node(nand);
-+	int strength, size;
-+
-+	nand->ecc.user_conf.engine_type = of_get_nand_ecc_engine_type(dn);
-+	nand->ecc.user_conf.algo = of_get_nand_ecc_algo(dn);
-+	nand->ecc.user_conf.placement = of_get_nand_ecc_placement(dn);
-+
-+	strength = of_get_nand_ecc_strength(dn);
-+	if (strength >= 0)
-+		nand->ecc.user_conf.strength = strength;
-+
-+	size = of_get_nand_ecc_step_size(dn);
-+	if (size >= 0)
-+		nand->ecc.user_conf.step_size = size;
-+
-+	if (of_get_nand_ecc_maximize(dn))
-+		nand->ecc.user_conf.flags |= NAND_ECC_MAXIMIZE;
-+}
-+EXPORT_SYMBOL(nand_ecc_read_user_conf);
-+
-+/**
-+ * nand_ecc_correction_is_enough - Check if the chip configuration meets the
-+ *                                 datasheet requirements.
-+ *
-+ * @nand: Device to check
-+ *
-+ * If our configuration corrects A bits per B bytes and the minimum
-+ * required correction level is X bits per Y bytes, then we must ensure
-+ * both of the following are true:
-+ *
-+ * (1) A / B >= X / Y
-+ * (2) A >= X
-+ *
-+ * Requirement (1) ensures we can correct for the required bitflip density.
-+ * Requirement (2) ensures we can correct even when all bitflips are clumped
-+ * in the same sector.
-+ */
-+bool nand_ecc_correction_is_enough(struct nand_device *nand)
-+{
-+	struct nand_ecc_props *reqs = &nand->ecc.requirements;
-+	struct nand_ecc_props *conf = &nand->ecc.ctx.conf;
-+	struct mtd_info *mtd = nanddev_to_mtd(nand);
-+	int corr, ds_corr;
-+
-+	if (conf->step_size == 0 || reqs->step_size == 0)
-+		/* Not enough information */
-+		return true;
-+
-+	/*
-+	 * We get the number of corrected bits per page to compare
-+	 * the correction density.
-+	 */
-+	corr = (mtd->writesize * conf->strength) / conf->step_size;
-+	ds_corr = (mtd->writesize * reqs->strength) / reqs->step_size;
-+
-+	return corr >= ds_corr && conf->strength >= reqs->strength;
-+}
-+EXPORT_SYMBOL(nand_ecc_correction_is_enough);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Miquel Raynal <miquel.raynal@bootlin.com>");
- MODULE_DESCRIPTION("Generic ECC engine");
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index 85280e327bfe..9f24f8fa9a23 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -13,6 +13,7 @@ config MTD_NAND_ECC_SW_HAMMING_SMC
- menuconfig MTD_RAW_NAND
- 	tristate "Raw/Parallel NAND Device Support"
- 	select MTD_NAND_CORE
-+	select MTD_NAND_ECC
- 	select MTD_NAND_ECC_SW_HAMMING
- 	help
- 	  This enables support for accessing all type of raw/parallel
-@@ -21,16 +22,6 @@ menuconfig MTD_RAW_NAND
- 
- if MTD_RAW_NAND
- 
--config MTD_NAND_ECC_SW_BCH
--	bool "Support software BCH ECC"
--	select BCH
--	default n
--	help
--	  This enables support for software BCH error correction. Binary BCH
--	  codes are more powerful and cpu intensive than traditional Hamming
--	  ECC codes. They are used with NAND devices requiring more than 1 bit
--	  of error correction.
--
- comment "Raw/parallel NAND flash controllers"
- 
- config MTD_NAND_DENALI
-diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-index 2930f5b9015d..76904305d091 100644
---- a/drivers/mtd/nand/raw/Makefile
-+++ b/drivers/mtd/nand/raw/Makefile
-@@ -2,7 +2,6 @@
- 
- obj-$(CONFIG_MTD_RAW_NAND)		+= nand.o
- obj-$(CONFIG_MTD_NAND_ECC_SW_HAMMING)	+= nand_ecc.o
--nand-$(CONFIG_MTD_NAND_ECC_SW_BCH)	+= nand_bch.o
- obj-$(CONFIG_MTD_SM_COMMON) 		+= sm_common.o
- 
- obj-$(CONFIG_MTD_NAND_CAFE)		+= cafe_nand.o
-diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-index 2ebcf3087d8d..7ce45b6edb6d 100644
---- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-+++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-@@ -1045,6 +1045,7 @@ static int atmel_nand_pmecc_init(struct nand_chip *chip)
- {
- 	struct nand_ecc_props *requirements = &chip->base.ecc.requirements;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct nand_device *nanddev = mtd_to_nanddev(mtd);
- 	struct atmel_nand *nand = to_atmel_nand(chip);
- 	struct atmel_nand_controller *nc;
- 	struct atmel_pmecc_user_req req;
-@@ -1069,7 +1070,7 @@ static int atmel_nand_pmecc_init(struct nand_chip *chip)
- 			chip->ecc.size = val;
- 	}
- 
--	if (chip->ecc.options & NAND_ECC_MAXIMIZE)
-+	if (nanddev->ecc.user_conf.flags & NAND_ECC_MAXIMIZE)
- 		req.ecc.strength = ATMEL_PMECC_MAXIMIZE_ECC_STRENGTH;
- 	else if (chip->ecc.strength)
- 		req.ecc.strength = chip->ecc.strength;
-diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
-index a6a6464974ec..51bc014ebc0a 100644
---- a/drivers/mtd/nand/raw/denali.c
-+++ b/drivers/mtd/nand/raw/denali.c
-@@ -1181,6 +1181,7 @@ int denali_chip_init(struct denali_controller *denali,
- {
- 	struct nand_chip *chip = &dchip->chip;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct nand_device *nanddev = mtd_to_nanddev(mtd);
- 	struct denali_chip *dchip2;
- 	int i, j, ret;
- 
-@@ -1248,6 +1249,8 @@ int denali_chip_init(struct denali_controller *denali,
- 
- 	mtd_set_ooblayout(mtd, &denali_ooblayout_ops);
- 
-+	nanddev->ecc.user_conf.flags |= NAND_ECC_MAXIMIZE;
-+
- 	ret = nand_scan(chip, dchip->nsels);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-index 98a61071f775..a15cf4ec16e7 100644
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -34,8 +34,9 @@
- #include <linux/mm.h>
- #include <linux/types.h>
- #include <linux/mtd/mtd.h>
-+#include <linux/mtd/nand.h>
- #include <linux/mtd/nand_ecc.h>
--#include <linux/mtd/nand_bch.h>
-+#include <linux/mtd/nand-ecc-sw-bch.h>
- #include <linux/interrupt.h>
- #include <linux/bitops.h>
- #include <linux/io.h>
-@@ -45,166 +46,6 @@
- 
- #include "internals.h"
- 
--/* Define default oob placement schemes for large and small page devices */
--static int nand_ooblayout_ecc_sp(struct mtd_info *mtd, int section,
--				 struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--
--	if (section > 1)
--		return -ERANGE;
--
--	if (!section) {
--		oobregion->offset = 0;
--		if (mtd->oobsize == 16)
--			oobregion->length = 4;
--		else
--			oobregion->length = 3;
--	} else {
--		if (mtd->oobsize == 8)
--			return -ERANGE;
--
--		oobregion->offset = 6;
--		oobregion->length = ecc->total - 4;
--	}
--
--	return 0;
--}
--
--static int nand_ooblayout_free_sp(struct mtd_info *mtd, int section,
--				  struct mtd_oob_region *oobregion)
--{
--	if (section > 1)
--		return -ERANGE;
--
--	if (mtd->oobsize == 16) {
--		if (section)
--			return -ERANGE;
--
--		oobregion->length = 8;
--		oobregion->offset = 8;
--	} else {
--		oobregion->length = 2;
--		if (!section)
--			oobregion->offset = 3;
--		else
--			oobregion->offset = 6;
--	}
--
--	return 0;
--}
--
--const struct mtd_ooblayout_ops nand_ooblayout_sp_ops = {
--	.ecc = nand_ooblayout_ecc_sp,
--	.free = nand_ooblayout_free_sp,
--};
--EXPORT_SYMBOL_GPL(nand_ooblayout_sp_ops);
--
--static int nand_ooblayout_ecc_lp(struct mtd_info *mtd, int section,
--				 struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--
--	if (section || !ecc->total)
--		return -ERANGE;
--
--	oobregion->length = ecc->total;
--	oobregion->offset = mtd->oobsize - oobregion->length;
--
--	return 0;
--}
--
--static int nand_ooblayout_free_lp(struct mtd_info *mtd, int section,
--				  struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--
--	if (section)
--		return -ERANGE;
--
--	oobregion->length = mtd->oobsize - ecc->total - 2;
--	oobregion->offset = 2;
--
--	return 0;
--}
--
--const struct mtd_ooblayout_ops nand_ooblayout_lp_ops = {
--	.ecc = nand_ooblayout_ecc_lp,
--	.free = nand_ooblayout_free_lp,
--};
--EXPORT_SYMBOL_GPL(nand_ooblayout_lp_ops);
--
--/*
-- * Support the old "large page" layout used for 1-bit Hamming ECC where ECC
-- * are placed at a fixed offset.
-- */
--static int nand_ooblayout_ecc_lp_hamming(struct mtd_info *mtd, int section,
--					 struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--
--	if (section)
--		return -ERANGE;
--
--	switch (mtd->oobsize) {
--	case 64:
--		oobregion->offset = 40;
--		break;
--	case 128:
--		oobregion->offset = 80;
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	oobregion->length = ecc->total;
--	if (oobregion->offset + oobregion->length > mtd->oobsize)
--		return -ERANGE;
--
--	return 0;
--}
--
--static int nand_ooblayout_free_lp_hamming(struct mtd_info *mtd, int section,
--					  struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--	int ecc_offset = 0;
--
--	if (section < 0 || section > 1)
--		return -ERANGE;
--
--	switch (mtd->oobsize) {
--	case 64:
--		ecc_offset = 40;
--		break;
--	case 128:
--		ecc_offset = 80;
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	if (section == 0) {
--		oobregion->offset = 2;
--		oobregion->length = ecc_offset - 2;
--	} else {
--		oobregion->offset = ecc_offset + ecc->total;
--		oobregion->length = mtd->oobsize - oobregion->offset;
--	}
--
--	return 0;
--}
--
--static const struct mtd_ooblayout_ops nand_ooblayout_lp_hamming_ops = {
--	.ecc = nand_ooblayout_ecc_lp_hamming,
--	.free = nand_ooblayout_free_lp_hamming,
--};
--
- static int nand_pairing_dist3_get_info(struct mtd_info *mtd, int page,
- 				       struct mtd_pairing_info *info)
- {
-@@ -5010,17 +4851,6 @@ static int nand_detect(struct nand_chip *chip, struct nand_flash_dev *type)
- 	return ret;
- }
- 
--static const char * const nand_ecc_placement[] = {
--	[NAND_ECC_PLACEMENT_OOB] = "oob",
--	[NAND_ECC_PLACEMENT_INTERLEAVED] = "interleaved",
--};
--
--static enum nand_ecc_engine_type
--of_get_nand_ecc_engine_type(struct device_node *np)
--{
--	return NAND_ECC_ENGINE_TYPE_INVALID;
--}
--
- static enum nand_ecc_engine_type
- of_get_rawnand_ecc_engine_type_legacy(struct device_node *np)
- {
-@@ -5072,24 +4902,6 @@ of_get_rawnand_ecc_engine_type_legacy(struct device_node *np)
- 	return NAND_ECC_ENGINE_TYPE_INVALID;
- }
- 
--enum nand_ecc_placement of_get_nand_ecc_placement(struct device_node *np)
--{
--	enum nand_ecc_placement placement;
--	const char *pm;
--	int err;
--
--	err = of_property_read_string(np, "nand-ecc-placement", &pm);
--	if (!err) {
--		for (placement = NAND_ECC_PLACEMENT_OOB;
--		     placement < ARRAY_SIZE(nand_ecc_placement); placement++) {
--			if (!strcasecmp(pm, nand_ecc_placement[placement]))
--				return placement;
--		}
--	}
--
--	return NAND_ECC_PLACEMENT_UNKNOWN;
--}
--
- enum nand_ecc_placement
- of_get_rawnand_ecc_placement_legacy(struct device_node *np)
- {
-@@ -5105,31 +4917,6 @@ of_get_rawnand_ecc_placement_legacy(struct device_node *np)
- 	return NAND_ECC_PLACEMENT_UNKNOWN;
- }
- 
--static const char * const nand_ecc_algos[] = {
--	[NAND_ECC_ALGO_HAMMING]	= "hamming",
--	[NAND_ECC_ALGO_BCH]	= "bch",
--	[NAND_ECC_ALGO_RS]	= "rs",
--};
--
--static enum nand_ecc_algo of_get_nand_ecc_algo(struct device_node *np)
--{
--	enum nand_ecc_algo ecc_algo;
--	const char *pm;
--	int err;
--
--	err = of_property_read_string(np, "nand-ecc-algo", &pm);
--	if (!err) {
--		for (ecc_algo = NAND_ECC_ALGO_HAMMING;
--		     ecc_algo < ARRAY_SIZE(nand_ecc_algos);
--		     ecc_algo++) {
--			if (!strcasecmp(pm, nand_ecc_algos[ecc_algo]))
--				return ecc_algo;
--		}
--	}
--
--	return NAND_ECC_ALGO_UNKNOWN;
--}
--
- static enum nand_ecc_algo of_get_rawnand_ecc_algo_legacy(struct device_node *np)
- {
- 	const char *pm;
-@@ -5146,48 +4933,10 @@ static enum nand_ecc_algo of_get_rawnand_ecc_algo_legacy(struct device_node *np)
- 	return NAND_ECC_ALGO_UNKNOWN;
- }
- 
--static int of_get_nand_ecc_step_size(struct device_node *np)
--{
--	int ret;
--	u32 val;
--
--	ret = of_property_read_u32(np, "nand-ecc-step-size", &val);
--	return ret ? ret : val;
--}
--
--static int of_get_nand_ecc_strength(struct device_node *np)
--{
--	int ret;
--	u32 val;
--
--	ret = of_property_read_u32(np, "nand-ecc-strength", &val);
--	return ret ? ret : val;
--}
--
--static void nand_ecc_read_user_conf(struct nand_chip *chip)
--{
--	struct device_node *dn = nand_get_flash_node(chip);
--	struct nand_device *nand = &chip->base;
--	int strength, size;
--
--	nand->ecc.user_conf.engine_type = of_get_nand_ecc_engine_type(dn);
--	nand->ecc.user_conf.algo = of_get_nand_ecc_algo(dn);
--	nand->ecc.user_conf.placement = of_get_nand_ecc_placement(dn);
--
--	strength = of_get_nand_ecc_strength(dn);
--	if (strength >= 0)
--		nand->ecc.user_conf.strength = strength;
--
--	size = of_get_nand_ecc_step_size(dn);
--	if (size >= 0)
--		nand->ecc.user_conf.step_size = size;
--}
--
- static void rawnand_ecc_read_legacy_user_conf(struct nand_chip *chip)
- {
- 	struct device_node *dn = nand_get_flash_node(chip);
--	struct nand_device *nand = &chip->base;
--	struct nand_ecc_props *user_conf = &nand->ecc.user_conf;
-+	struct nand_ecc_props *user_conf = &chip->base.ecc.user_conf;
- 
- 	if (user_conf->engine_type != NAND_ECC_ENGINE_TYPE_INVALID)
- 		user_conf->engine_type = of_get_rawnand_ecc_engine_type_legacy(dn);
-@@ -5237,10 +4986,7 @@ static int rawnand_dt_init(struct nand_chip *chip)
- 	if (of_get_nand_on_flash_bbt(dn))
- 		chip->bbt_options |= NAND_BBT_USE_FLASH;
- 
--	if (of_property_read_bool(dn, "nand-ecc-maximize"))
--		chip->ecc.options |= NAND_ECC_MAXIMIZE;
--
--	nand_ecc_read_user_conf(chip);
-+	nand_ecc_read_user_conf(nand);
- 	rawnand_ecc_read_legacy_user_conf(chip);
- 
- 	/*
-@@ -5370,6 +5116,7 @@ static void nand_scan_ident_cleanup(struct nand_chip *chip)
- static int nand_set_ecc_soft_ops(struct nand_chip *chip)
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct nand_device *nanddev = mtd_to_nanddev(mtd);
- 	struct nand_ecc_ctrl *ecc = &chip->ecc;
- 
- 	if (WARN_ON(ecc->engine_type != NAND_ECC_ENGINE_TYPE_SOFT))
-@@ -5445,7 +5192,7 @@ static int nand_set_ecc_soft_ops(struct nand_chip *chip)
- 		 * used.
- 		 */
- 		if (mtd->ooblayout == &nand_ooblayout_lp_ops &&
--		    ecc->options & NAND_ECC_MAXIMIZE) {
-+		    nanddev->ecc.user_conf.flags & NAND_ECC_MAXIMIZE) {
- 			int steps, bytes;
- 
- 			/* Always prefer 1k blocks over 512bytes ones */
-@@ -5683,11 +5430,12 @@ nand_maximize_ecc(struct nand_chip *chip,
-  * @caps: ECC engine caps info structure
-  * @oobavail: OOB size that the ECC engine can use
-  *
-- * Choose the ECC configuration according to following logic
-+ * Choose the ECC configuration according to following logic.
-  *
-  * 1. If both ECC step size and ECC strength are already set (usually by DT)
-  *    then check if it is supported by this controller.
-- * 2. If NAND_ECC_MAXIMIZE is set, then select maximum ECC strength.
-+ * 2. If the user provided the nand-ecc-maximize property, then select maximum
-+ *    ECC strength.
-  * 3. Otherwise, try to match the ECC step size and ECC strength closest
-  *    to the chip's requirement. If available OOB size can't fit the chip
-  *    requirement then fallback to the maximum ECC step size and ECC strength.
-@@ -5698,6 +5446,7 @@ int nand_ecc_choose_conf(struct nand_chip *chip,
- 			 const struct nand_ecc_caps *caps, int oobavail)
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct nand_device *nanddev = mtd_to_nanddev(mtd);
- 
- 	if (WARN_ON(oobavail < 0 || oobavail > mtd->oobsize))
- 		return -EINVAL;
-@@ -5705,7 +5454,7 @@ int nand_ecc_choose_conf(struct nand_chip *chip,
- 	if (chip->ecc.size && chip->ecc.strength)
- 		return nand_check_ecc_caps(chip, caps, oobavail);
- 
--	if (chip->ecc.options & NAND_ECC_MAXIMIZE)
-+	if (nanddev->ecc.user_conf.flags & NAND_ECC_MAXIMIZE)
- 		return nand_maximize_ecc(chip, caps, oobavail);
- 
- 	if (!nand_match_ecc_req(chip, caps, oobavail))
-@@ -5715,42 +5464,6 @@ int nand_ecc_choose_conf(struct nand_chip *chip,
- }
- EXPORT_SYMBOL_GPL(nand_ecc_choose_conf);
- 
--/*
-- * Check if the chip configuration meet the datasheet requirements.
--
-- * If our configuration corrects A bits per B bytes and the minimum
-- * required correction level is X bits per Y bytes, then we must ensure
-- * both of the following are true:
-- *
-- * (1) A / B >= X / Y
-- * (2) A >= X
-- *
-- * Requirement (1) ensures we can correct for the required bitflip density.
-- * Requirement (2) ensures we can correct even when all bitflips are clumped
-- * in the same sector.
-- */
--static bool nand_ecc_strength_good(struct nand_chip *chip)
--{
--	struct mtd_info *mtd = nand_to_mtd(chip);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--	struct nand_ecc_props *requirements = &chip->base.ecc.requirements;
--	int corr, ds_corr;
--
--	if (ecc->size == 0 || requirements->step_size == 0)
--		/* Not enough information */
--		return true;
--
--	/*
--	 * We get the number of corrected bits per page to compare
--	 * the correction density.
--	 */
--	corr = (mtd->writesize * ecc->strength) / ecc->size;
--	ds_corr = (mtd->writesize * requirements->strength) /
--		  requirements->step_size;
--
--	return corr >= ds_corr && ecc->strength >= requirements->strength;
--}
--
- static int rawnand_erase(struct nand_device *nand, const struct nand_pos *pos)
- {
- 	struct nand_chip *chip = container_of(nand, struct nand_chip,
-@@ -5806,6 +5519,7 @@ static const struct nand_ops rawnand_ops = {
- static int nand_scan_tail(struct nand_chip *chip)
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct nand_device *nanddev = mtd_to_nanddev(mtd);
- 	struct nand_ecc_ctrl *ecc = &chip->ecc;
- 	int ret, i;
- 
-@@ -6015,6 +5729,7 @@ static int nand_scan_tail(struct nand_chip *chip)
- 		goto err_nand_manuf_cleanup;
- 	}
- 	ecc->total = ecc->steps * ecc->bytes;
-+	chip->base.ecc.ctx.total = ecc->total;
- 	if (ecc->total > mtd->oobsize) {
- 		WARN(1, "Total number of ECC bytes exceeded oobsize\n");
- 		ret = -EINVAL;
-@@ -6032,7 +5747,7 @@ static int nand_scan_tail(struct nand_chip *chip)
- 	mtd->oobavail = ret;
- 
- 	/* ECC sanity check: warn if it's too weak */
--	if (!nand_ecc_strength_good(chip))
-+	if (!nand_ecc_correction_is_enough(nanddev))
- 		pr_warn("WARNING: %s: the ECC used on your system (%db/%dB) is too weak compared to the one required by the NAND chip (%db/%dB)\n",
- 			mtd->name,
- 			chip->base.ecc.ctx.conf.strength,
-diff --git a/drivers/mtd/nand/raw/nand_toshiba.c b/drivers/mtd/nand/raw/nand_toshiba.c
-index 1180068007a9..6901fbba3750 100644
---- a/drivers/mtd/nand/raw/nand_toshiba.c
-+++ b/drivers/mtd/nand/raw/nand_toshiba.c
-@@ -6,6 +6,8 @@
-  * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-  */
- 
-+#include <linux/mtd/nand.h>
-+
- #include "internals.h"
- 
- /* Bit for detecting BENAND */
-diff --git a/drivers/mtd/nand/raw/nandsim.c b/drivers/mtd/nand/raw/nandsim.c
-index 9c2115fe2111..c7733e5d43a0 100644
---- a/drivers/mtd/nand/raw/nandsim.c
-+++ b/drivers/mtd/nand/raw/nandsim.c
-@@ -23,7 +23,7 @@
- #include <linux/string.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/rawnand.h>
--#include <linux/mtd/nand_bch.h>
-+#include <linux/mtd/nand-ecc-sw-bch.h>
- #include <linux/mtd/partitions.h>
- #include <linux/delay.h>
- #include <linux/list.h>
-diff --git a/drivers/mtd/nand/raw/omap2.c b/drivers/mtd/nand/raw/omap2.c
-index 512f60780a50..0ef209e1cd87 100644
---- a/drivers/mtd/nand/raw/omap2.c
-+++ b/drivers/mtd/nand/raw/omap2.c
-@@ -23,7 +23,7 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- 
--#include <linux/mtd/nand_bch.h>
-+#include <linux/mtd/nand-ecc-sw-bch.h>
- #include <linux/platform_data/elm.h>
- 
- #include <linux/omap-gpmc.h>
-diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-index a5eefdf89660..5fc1378fe94e 100644
---- a/drivers/mtd/nand/raw/sunxi_nand.c
-+++ b/drivers/mtd/nand/raw/sunxi_nand.c
-@@ -1609,12 +1609,13 @@ static int sunxi_nand_hw_ecc_ctrl_init(struct nand_chip *nand,
- 	static const u8 strengths[] = { 16, 24, 28, 32, 40, 48, 56, 60, 64 };
- 	struct sunxi_nfc *nfc = to_sunxi_nfc(nand->controller);
- 	struct mtd_info *mtd = nand_to_mtd(nand);
-+	struct nand_device *nanddev = mtd_to_nanddev(mtd);
- 	struct sunxi_nand_hw_ecc *data;
- 	int nsectors;
- 	int ret;
- 	int i;
- 
--	if (ecc->options & NAND_ECC_MAXIMIZE) {
-+	if (nanddev->ecc.user_conf.flags & NAND_ECC_MAXIMIZE) {
- 		int bytes;
- 
- 		ecc->size = 1024;
-diff --git a/drivers/mtd/nand/raw/tegra_nand.c b/drivers/mtd/nand/raw/tegra_nand.c
-index 8264bb991d03..d642a1dd2e16 100644
---- a/drivers/mtd/nand/raw/tegra_nand.c
-+++ b/drivers/mtd/nand/raw/tegra_nand.c
-@@ -840,7 +840,8 @@ static int tegra_nand_get_strength(struct nand_chip *chip, const int *strength,
- 				   int strength_len, int bits_per_step,
- 				   int oobsize)
- {
--	bool maximize = chip->ecc.options & NAND_ECC_MAXIMIZE;
-+	struct nand_device *nanddev = mtd_to_nanddev(nand_to_mtd(chip));
-+	bool maximize = nanddev->ecc.user_conf.flags & NAND_ECC_MAXIMIZE;
- 	int i;
- 
- 	/*
-diff --git a/include/linux/mtd/nand_bch.h b/include/linux/mtd/nand-ecc-sw-bch.h
-similarity index 92%
-rename from include/linux/mtd/nand_bch.h
-rename to include/linux/mtd/nand-ecc-sw-bch.h
-index d5956cc48ba9..1e1ee3af82b1 100644
---- a/include/linux/mtd/nand_bch.h
-+++ b/include/linux/mtd/nand-ecc-sw-bch.h
-@@ -5,8 +5,8 @@
-  * This file is the header for the NAND BCH ECC implementation.
-  */
- 
--#ifndef __MTD_NAND_BCH_H__
--#define __MTD_NAND_BCH_H__
-+#ifndef __MTD_NAND_ECC_SW_BCH_H__
-+#define __MTD_NAND_ECC_SW_BCH_H__
- 
- struct mtd_info;
- struct nand_chip;
-@@ -63,4 +63,4 @@ static inline void nand_bch_free(struct nand_bch_control *nbc) {}
- 
- #endif /* CONFIG_MTD_NAND_ECC_SW_BCH */
- 
--#endif /* __MTD_NAND_BCH_H__ */
-+#endif /* __MTD_NAND_ECC_SW_BCH_H__ */
-diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-index ce936ffb9f42..1cc6d71c2b45 100644
---- a/include/linux/mtd/nand.h
-+++ b/include/linux/mtd/nand.h
-@@ -127,6 +127,10 @@ struct nand_page_io_req {
- 	int mode;
- };
- 
-+extern const struct mtd_ooblayout_ops nand_ooblayout_sp_ops;
-+extern const struct mtd_ooblayout_ops nand_ooblayout_lp_ops;
-+extern const struct mtd_ooblayout_ops nand_ooblayout_lp_hamming_ops;
-+
- /**
-  * enum nand_ecc_engine_type - NAND ECC engine type
-  * @NAND_ECC_ENGINE_TYPE_INVALID: Invalid value
-@@ -191,6 +195,9 @@ struct nand_ecc_props {
- 
- #define NAND_ECCREQ(str, stp) { .strength = (str), .step_size = (stp) }
- 
-+/* NAND ECC misc flags */
-+#define NAND_ECC_MAXIMIZE BIT(0)
-+
- /**
-  * struct nand_bbt - bad block table object
-  * @cache: in memory BBT cache
-@@ -262,12 +269,14 @@ struct nand_ecc_engine {
- 	struct nand_ecc_engine_ops *ops;
- };
- 
-+void nand_ecc_read_user_conf(struct nand_device *nand);
- int nand_ecc_init_ctx(struct nand_device *nand);
- void nand_ecc_cleanup_ctx(struct nand_device *nand);
- int nand_ecc_prepare_io_req(struct nand_device *nand,
- 			    struct nand_page_io_req *req);
- int nand_ecc_finish_io_req(struct nand_device *nand,
- 			   struct nand_page_io_req *req);
-+bool nand_ecc_correction_is_enough(struct nand_device *nand);
- 
- /**
-  * struct nand_ecc - High-level ECC object
-@@ -356,6 +365,17 @@ static inline struct mtd_info *nanddev_to_mtd(struct nand_device *nand)
- 	return &nand->mtd;
- }
- 
-+/**
-+ * nanddev_get_flash_node() - Get the device node attached to a NAND device
-+ * @nand: NAND device
-+ *
-+ * Return: the device node linked to @nand.
-+ */
-+static inline struct device_node *nanddev_get_flash_node(struct nand_device *nand)
-+{
-+	return mtd_get_of_node(nanddev_to_mtd(nand));
-+}
-+
- /*
-  * nanddev_bits_per_cell() - Get the number of bits per cell
-  * @nand: NAND device
-diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-index 8f7f1cce3b4b..9d69fa6608ae 100644
---- a/include/linux/mtd/rawnand.h
-+++ b/include/linux/mtd/rawnand.h
-@@ -14,6 +14,7 @@
- #define __LINUX_MTD_RAWNAND_H
- 
- #include <linux/mtd/mtd.h>
-+#include <linux/mtd/nand.h>
- #include <linux/mtd/flashchip.h>
- #include <linux/mtd/bbm.h>
- #include <linux/mtd/jedec.h>
-@@ -80,18 +81,6 @@ struct nand_chip;
- 
- #define NAND_DATA_IFACE_CHECK_ONLY	-1
- 
--/*
-- * Constants for ECC_MODES
-- */
--enum nand_ecc_mode {
--	NAND_ECC_INVALID,
--	NAND_ECC_NONE,
--	NAND_ECC_SOFT,
--	NAND_ECC_HW,
--	NAND_ECC_HW_SYNDROME,
--	NAND_ECC_ON_DIE,
--};
--
- /*
-  * Constants for Hardware ECC
-  */
-@@ -109,7 +98,6 @@ enum nand_ecc_mode {
-  * pages and you want to rely on the default implementation.
-  */
- #define NAND_ECC_GENERIC_ERASED_CHECK	BIT(0)
--#define NAND_ECC_MAXIMIZE		BIT(1)
- 
- /*
-  * Option constants for bizarre disfunctionality and real
-@@ -1159,9 +1147,6 @@ struct nand_chip {
- 	int (*unlock_area)(struct nand_chip *chip, loff_t ofs, uint64_t len);
- };
- 
--extern const struct mtd_ooblayout_ops nand_ooblayout_sp_ops;
--extern const struct mtd_ooblayout_ops nand_ooblayout_lp_ops;
--
- static inline struct nand_chip *mtd_to_nand(struct mtd_info *mtd)
- {
- 	return container_of(mtd, struct nand_chip, base.mtd);
--- 
-2.20.1
+T24gVGh1LCAyMDIwLTAzLTI2IGF0IDExOjQzIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gV2VkLCBNYXIgMjUsIDIwMjAgYXQgMzozMSBBTSBIYW5rcyBDaGVuIDxoYW5rcy5jaGVuQG1l
+ZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBBbmR5IFRlbmcgPGFuZHkudGVuZ0Bt
+ZWRpYXRlay5jb20+DQo+ID4NCj4gPiBBZGQgZGV2aWNldHJlZSBiaW5kaW5ncyBmb3IgTWVkaWFU
+ZWsgTVQ2Nzc5IHBpbmN0cmwgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5keSBU
+ZW5nIDxhbmR5LnRlbmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3Mv
+cGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sICB8ICAyMDggKysrKysrKysrKysr
+KysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIwOCBpbnNlcnRpb25zKCspDQo+ID4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3Ry
+bC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+IA0KPiBUaGUgaGVhZGVyIGJlbG9uZ3Mg
+aW4gdGhpcyBwYXRjaCBzbyB0aGF0ICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIHdvcmtzLg0KPiAN
+Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwueWFtbA0KPiA+
+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uNWY5YmJmMQ0KPiA+IC0t
+LSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+ID4gQEAgLTAsMCArMSwyMDgg
+QEANCj4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICslWUFNTCAx
+LjINCj4gPiArLS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvcGlu
+Y3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8v
+ZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxl
+OiBNZWRpYXRlayBNVDY3NzkgUGluIENvbnRyb2xsZXIgRGV2aWNlIFRyZWUgQmluZGluZ3MNCj4g
+PiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gQW5keSBUZW5nIDxhbmR5LnRlbmdAbWVk
+aWF0ZWsuY29tPg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246IHwrDQo+ID4gKyAgVGhlIHBpbiBj
+b250cm9sbGVyIG5vZGUgc2hvdWxkIGJlIHRoZSBjaGlsZCBvZiBhIHN5c2NvbiBub2RlIHdpdGgg
+dGhlDQo+ID4gKyAgcmVxdWlyZWQgcHJvcGVydHk6DQo+ID4gKyAgLSBjb21wYXRpYmxlOiAic3lz
+Y29uIg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiArICBjb21wYXRpYmxlOg0KPiA+ICsg
+ICAgY29uc3Q6IG1lZGlhdGVrLG10Njc3OS1waW5jdHJsDQo+ID4gKw0KPiA+ICsgIHJlZzoNCj4g
+PiArICAgIG1pbkl0ZW1zOiA5DQo+ID4gKyAgICBtYXhJdGVtczogOQ0KPiA+ICsgICAgZGVzY3Jp
+cHRpb246IHwNCj4gPiArICAgICAgcGh5c2ljYWwgYWRkcmVzcyBiYXNlIGZvciBncGlvLXJlbGF0
+ZWQgY29udHJvbCByZWdpc3RlcnMuDQo+ID4gKw0KPiA+ICsgIHJlZy1uYW1lczoNCj4gPiArICAg
+IGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIEdQSU8gYmFzZSByZWdpc3RlciBuYW1lcy4NCj4g
+DQo+IE5lZWQgdG8gZGVmaW5lIHdoYXQgdGhlIG5hbWVzIGFyZSBhbmQgdGhlIG9yZGVyLg0KDQpH
+b3QgaXQsIEknbGwgYWRkIGl0IGluIG5leHQgdmVyc2lvbi4NClRoYW5rcw0KDQo+IA0KPiA+ICsN
+Cj4gPiArICBncGlvLWNvbnRyb2xsZXI6IHRydWUNCj4gPiArDQo+ID4gKyAgIiNncGlvLWNlbGxz
+IjoNCj4gPiArICAgIGNvbnN0OiAyDQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAg
+ICBOdW1iZXIgb2YgY2VsbHMgaW4gR1BJTyBzcGVjaWZpZXIuIFNpbmNlIHRoZSBnZW5lcmljIEdQ
+SU8NCj4gPiArICAgICAgYmluZGluZyBpcyB1c2VkLCB0aGUgYW1vdW50IG9mIGNlbGxzIG11c3Qg
+YmUgc3BlY2lmaWVkIGFzIDIuIFNlZSB0aGUgYmVsb3cNCj4gPiArICAgICAgbWVudGlvbmVkIGdw
+aW8gYmluZGluZyByZXByZXNlbnRhdGlvbiBmb3IgZGVzY3JpcHRpb24gb2YgcGFydGljdWxhciBj
+ZWxscy4NCj4gPiArDQo+ID4gKyAgZ3Bpby1yYW5nZXM6DQo+ID4gKyAgICBtaW5JdGVtczogMQ0K
+PiA+ICsgICAgbWF4SXRlbXM6IDUNCj4gPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAg
+IEdQSU8gdmFsaWQgbnVtYmVyIHJhbmdlLg0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHQtY29udHJv
+bGxlcjogdHJ1ZQ0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgbWluSXRlbXM6
+IDENCj4gPiArICAgIG1heEl0ZW1zOiA0DQo+IA0KPiBOZWVkIHRvIGRlZmluZSB3aGF0IHRoZSBp
+bnRlcnJ1cHRzIGFyZS4NCj4gDQpHb3QgaXQsIEknbGwgYWRkIGl0IGluIHRoZSBuZXh0IHZlcnNp
+b24uDQpUaGFua3MuDQoNCj4gPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIFRoZSBp
+bnRlcnJ1cHQgb3V0cHV0cyB0byBzeXNpcnEuDQo+ID4gKw0KPiA+ICsgICIjaW50ZXJydXB0LWNl
+bGxzIjoNCj4gPiArICAgIGNvbnN0OiAyDQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoNCj4gPiArICAt
+IGNvbXBhdGlibGUNCj4gPiArICAtIHJlZw0KPiA+ICsgIC0gcmVnLW5hbWVzDQo+ID4gKyAgLSBn
+cGlvLWNvbnRyb2xsZXINCj4gPiArICAtICIjZ3Bpby1jZWxscyINCj4gPiArICAtIGdwaW8tcmFu
+Z2VzDQo+ID4gKyAgLSBpbnRlcnJ1cHQtY29udHJvbGxlcg0KPiA+ICsgIC0gaW50ZXJydXB0cw0K
+PiA+ICsgIC0gIiNpbnRlcnJ1cHQtY2VsbHMiDQo+ID4gKw0KPiA+ICtwYXR0ZXJuUHJvcGVydGll
+czoNCj4gPiArICAnXnBpbnMqJCc6DQo+IA0KPiAnLXBpbnMkJyB3b3VsZCBiZSBwcmVmZXJyZWQu
+DQo+IA0KDQpHb3QgaXQsIEknbGwgZml4IGl0IGluIG5leHQgdmVyc2lvbi4NClRoYW5rcy4NCg0K
+PiA+ICsgICAgdHlwZTogb2JqZWN0DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAg
+ICBBIHBpbmN0cmwgbm9kZSBzaG91bGQgY29udGFpbiBhdCBsZWFzdCBvbmUgc3Vibm9kZXMgcmVw
+cmVzZW50aW5nIHRoZQ0KPiA+ICsgICAgICBwaW5jdHJsIGdyb3VwcyBhdmFpbGFibGUgb24gdGhl
+IG1hY2hpbmUuIEVhY2ggc3Vibm9kZSB3aWxsIGxpc3QgdGhlDQo+ID4gKyAgICAgIHBpbnMgaXQg
+bmVlZHMsIGFuZCBob3cgdGhleSBzaG91bGQgYmUgY29uZmlndXJlZCwgd2l0aCByZWdhcmQgdG8g
+bXV4ZXINCj4gPiArICAgICAgY29uZmlndXJhdGlvbiwgcHVsbHVwcywgZHJpdmUgc3RyZW5ndGgs
+IGlucHV0IGVuYWJsZS9kaXNhYmxlIGFuZCBpbnB1dCBzY2htaXR0Lg0KPiA+ICsNCj4gPiArICAg
+IHByb3BlcnRpZXM6DQo+ID4gKyAgICAgIHBpbm11eDoNCj4gDQo+IFRoZXJlJ3MgYSBjb21tb24g
+c2NoZW1hIGZvciBhbGwgdGhlc2UgcHJvcGVydGllcy4gWW91IG5lZWQgdG8NCj4gcmVmZXJlbmNl
+IGl0ICh3aXRoICRyZWYpIGFuZCBvbmx5IGRlZmluZSB3aGljaCBwcm9wZXJ0aWVzIHlvdSBhcmUN
+Cj4gdXNpbmcgYW5kIGFueSBhZGRpdGlvbmFsIGNvbnN0cmFpbnRzLg0KPiANCkdvdCBpdCwgdGh4
+IQ0KDQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgICAgICBpbnRlZ2VyIGFy
+cmF5LCByZXByZXNlbnRzIGdwaW8gcGluIG51bWJlciBhbmQgbXV4IHNldHRpbmcuDQo+ID4gKyAg
+ICAgICAgICBTdXBwb3J0ZWQgcGluIG51bWJlciBhbmQgbXV4IHZhcmllcyBmb3IgZGlmZmVyZW50
+IFNvQ3MsIGFuZCBhcmUgZGVmaW5lZA0KPiA+ICsgICAgICAgICAgYXMgbWFjcm9zIGluIGJvb3Qv
+ZHRzLzxzb2M+LXBpbmZ1bmMuaCBkaXJlY3RseS4NCj4gPiArICAgICAgICBhbGxPZjoNCj4gPiAr
+ICAgICAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMy
+LWFycmF5DQo+ID4gKyAgICAgIGJpYXMtZGlzYWJsZToNCj4gPiArICAgICAgICB0eXBlOiBib29s
+ZWFuDQo+ID4gKw0KPiA+ICsgICAgICBiaWFzLXB1bGwtdXA6DQo+ID4gKyAgICAgICAgb25lT2Y6
+DQo+ID4gKyAgICAgICAgICAtIHR5cGU6IGJvb2xlYW4NCj4gPiArICAgICAgICAgIC0gJHJlZjog
+L3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyDQo+ID4gKw0KPiA+ICsgICAg
+ICBiaWFzLXB1bGwtZG93bjoNCj4gPiArICAgICAgICBvbmVPZjoNCj4gPiArICAgICAgICAgIC0g
+dHlwZTogYm9vbGVhbg0KPiA+ICsgICAgICAgICAgLSAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1s
+Iy9kZWZpbml0aW9ucy91aW50MzINCj4gPiArDQo+ID4gKyAgICAgIGlucHV0LWVuYWJsZToNCj4g
+PiArICAgICAgICB0eXBlOiBib29sZWFuDQo+ID4gKw0KPiA+ICsgICAgICBpbnB1dC1kaXNhYmxl
+Og0KPiA+ICsgICAgICAgIHR5cGU6IGJvb2xlYW4NCj4gPiArDQo+ID4gKyAgICAgIG91dHB1dC1s
+b3c6DQo+ID4gKyAgICAgICAgdHlwZTogYm9vbGVhbg0KPiA+ICsNCj4gPiArICAgICAgb3V0cHV0
+LWhpZ2g6DQo+ID4gKyAgICAgICAgdHlwZTogYm9vbGVhbg0KPiA+ICsNCj4gPiArICAgICAgaW5w
+dXQtc2NobWl0dC1lbmFibGU6DQo+ID4gKyAgICAgICAgdHlwZTogYm9vbGVhbg0KPiA+ICsNCj4g
+PiArICAgICAgaW5wdXQtc2NobWl0dC1kaXNhYmxlOg0KPiA+ICsgICAgICAgIHR5cGU6IGJvb2xl
+YW4NCj4gPiArDQo+ID4gKyAgICAgIG1lZGlhdGVrLHB1bGwtdXAtYWR2Og0KPiA+ICsgICAgICAg
+IGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgICAgICBQdWxsIHVwIHNldGluZ3MgZm9yIDIgcHVs
+bCByZXNpc3RvcnMsIFIwIGFuZCBSMS4gVXNlciBjYW4NCj4gPiArICAgICAgICAgIGNvbmZpZ3Vy
+ZSB0aG9zZSBzcGVjaWFsIHBpbnMuIFZhbGlkIGFyZ3VtZW50cyBhcmUgZGVzY3JpYmVkIGFzIGJl
+bG93Og0KPiA+ICsgICAgICAgICAgMDogKFIxLCBSMCkgPSAoMCwgMCkgd2hpY2ggbWVhbnMgUjEg
+ZGlzYWJsZWQgYW5kIFIwIGRpc2FibGUuDQo+ID4gKyAgICAgICAgICAxOiAoUjEsIFIwKSA9ICgw
+LCAxKSB3aGljaCBtZWFucyBSMSBkaXNhYmxlZCBhbmQgUjAgZW5hYmxlZC4NCj4gPiArICAgICAg
+ICAgIDI6IChSMSwgUjApID0gKDEsIDApIHdoaWNoIG1lYW5zIFIxIGVuYWJsZWQgYW5kIFIwIGRp
+c2FibGVkLg0KPiA+ICsgICAgICAgICAgMzogKFIxLCBSMCkgPSAoMSwgMSkgd2hpY2ggbWVhbnMg
+UjEgZW5hYmxlZCBhbmQgUjAgZW5hYmxlZC4NCj4gPiArICAgICAgICBhbGxPZjoNCj4gPiArICAg
+ICAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyDQo+
+ID4gKyAgICAgICAgICAtIGVudW06IFswLCAxLCAyLCAzXQ0KPiA+ICsNCj4gPiArICAgICAgbWVk
+aWF0ZWsscHVsbC1kb3duLWFkdjoNCj4gPiArICAgICAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsg
+ICAgICAgICAgUHVsbCBkb3duIHNldHRpbmdzIGZvciAyIHB1bGwgcmVzaXN0b3JzLCBSMCBhbmQg
+UjEuIFVzZXIgY2FuDQo+ID4gKyAgICAgICAgICBjb25maWd1cmUgdGhvc2Ugc3BlY2lhbCBwaW5z
+LiBWYWxpZCBhcmd1bWVudHMgYXJlIGRlc2NyaWJlZCBhcyBiZWxvdzoNCj4gPiArICAgICAgICAg
+IDA6IChSMSwgUjApID0gKDAsIDApIHdoaWNoIG1lYW5zIFIxIGRpc2FibGVkIGFuZCBSMCBkaXNh
+YmxlLg0KPiA+ICsgICAgICAgICAgMTogKFIxLCBSMCkgPSAoMCwgMSkgd2hpY2ggbWVhbnMgUjEg
+ZGlzYWJsZWQgYW5kIFIwIGVuYWJsZWQuDQo+ID4gKyAgICAgICAgICAyOiAoUjEsIFIwKSA9ICgx
+LCAwKSB3aGljaCBtZWFucyBSMSBlbmFibGVkIGFuZCBSMCBkaXNhYmxlZC4NCj4gPiArICAgICAg
+ICAgIDM6IChSMSwgUjApID0gKDEsIDEpIHdoaWNoIG1lYW5zIFIxIGVuYWJsZWQgYW5kIFIwIGVu
+YWJsZWQuDQo+ID4gKyAgICAgICAgYWxsT2Y6DQo+ID4gKyAgICAgICAgICAtICRyZWY6IC9zY2hl
+bWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KPiA+ICsgICAgICAgICAgLSBlbnVt
+OiBbMCwgMSwgMiwgM10NCj4gPiArDQo+ID4gKyAgICAgIGRyaXZlLXN0cmVuZ3RoOg0KPiA+ICsg
+ICAgICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgICAgICBTZWxlY3RzIHRoZSBkcml2ZSBz
+dHJlbmd0aCBmb3IgdGhlIHNwZWNpZmllZCBwaW5zIGluIG1BLg0KPiA+ICsgICAgICAgIGFsbE9m
+Og0KPiA+ICsgICAgICAgICAgLSAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9u
+cy91aW50MzINCj4gPiArICAgICAgICAgIC0gZW51bTogWzIsIDQsIDYsIDgsIDEwLCAxMiwgMTQs
+IDE2XQ0KPiA+ICsNCj4gPiArICAgIHJlcXVpcmVkOg0KPiA+ICsgICAgICAtIHBpbm11eA0KPiAN
+Cj4gQWRkOg0KPiANCj4gICAgIGFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiANCj4gYWRk
+aXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+IA0KDQpHb3QgaXQsIEknbGwgYWRkIGl0LCB0aHgh
+DQoNCj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+ICsgICAgI2luY2x1ZGUg
+PGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS5oPg0KPiA+ICsgICAgI2luY2x1
+ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2FybS1naWMuaD4NCj4gPiArICAg
+ICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9waW5jdHJsL210Njc3OS1waW5mdW5jLmg+DQo+ID4gKw0K
+PiA+ICsgICAgcGlvOiBwaW5jdHJsQDEwMDA1MDAwIHsNCj4gPiArICAgICAgICBjb21wYXRpYmxl
+ID0gIm1lZGlhdGVrLG10Njc3OS1waW5jdHJsIjsNCj4gPiArICAgICAgICByZWcgPSA8MCAweDEw
+MDA1MDAwIDAgMHgxMDAwPiwNCj4gPiArICAgICAgICAgICAgPDAgMHgxMWMyMDAwMCAwIDB4MTAw
+MD4sDQo+ID4gKyAgICAgICAgICAgIDwwIDB4MTFkMTAwMDAgMCAweDEwMDA+LA0KPiA+ICsgICAg
+ICAgICAgICA8MCAweDExZTIwMDAwIDAgMHgxMDAwPiwNCj4gPiArICAgICAgICAgICAgPDAgMHgx
+MWU3MDAwMCAwIDB4MTAwMD4sDQo+ID4gKyAgICAgICAgICAgIDwwIDB4MTFlYTAwMDAgMCAweDEw
+MDA+LA0KPiA+ICsgICAgICAgICAgICA8MCAweDExZjIwMDAwIDAgMHgxMDAwPiwNCj4gPiArICAg
+ICAgICAgICAgPDAgMHgxMWYzMDAwMCAwIDB4MTAwMD4sDQo+ID4gKyAgICAgICAgICAgIDwwIDB4
+MTAwMGIwMDAgMCAweDEwMDA+Ow0KPiA+ICsgICAgICAgIHJlZy1uYW1lcyA9ICJncGlvIiwgImlv
+Y2ZnX3JtIiwNCj4gPiArICAgICAgICAgICJpb2NmZ19iciIsICJpb2NmZ19sbSIsDQo+ID4gKyAg
+ICAgICAgICAiaW9jZmdfbGIiLCAiaW9jZmdfcnQiLA0KPiA+ICsgICAgICAgICAgImlvY2ZnX2x0
+IiwgImlvY2ZnX3RsIiwNCj4gPiArICAgICAgICAgICJlaW50IjsNCj4gPiArICAgICAgICBncGlv
+LWNvbnRyb2xsZXI7DQo+ID4gKyAgICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47DQo+ID4gKyAgICAg
+ICAgZ3Bpby1yYW5nZXMgPSA8JnBpbyAwIDAgMjEwPjsNCj4gPiArICAgICAgICBpbnRlcnJ1cHQt
+Y29udHJvbGxlcjsNCj4gPiArICAgICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDI+Ow0KPiA+ICsg
+ICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAyMDQgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+
+ID4gKw0KPiA+ICsgICAgICAgIG1tYzBfcGluc19kZWZhdWx0OiBtbWMwZGVmYXVsdCB7DQo+ID4g
+KyAgICAgICAgICAgIHBpbnNfY21kX2RhdCB7DQo+IA0KPiBUaGUgMiBsZXZlbHMgb2Ygbm9kZXMg
+aGVyZSBkb2Vzbid0IG1hdGNoIHlvdXIgc2NoZW1hLg0KPiANCj4gQWxzbywgZG9uJ3QgdXNlICdf
+JyBpbiBub2RlIG5hbWVzLg0KPiANCg0KSSdsbCBmaXggaXQgaW4gbmV4dCB2ZXJzaW9uLCB0aHgh
+DQoNCj4gPiArICAgICAgICAgICAgICAgIHBpbm11eCA9IDxQSU5NVVhfR1BJTzE2OF9fRlVOQ19N
+U0RDMF9EQVQwPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICA8UElOTVVYX0dQSU8xNzJfX0ZV
+TkNfTVNEQzBfREFUMT4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgPFBJTk1VWF9HUElPMTY5
+X19GVU5DX01TREMwX0RBVDI+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgIDxQSU5NVVhfR1BJ
+TzE3N19fRlVOQ19NU0RDMF9EQVQzPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICA8UElOTVVY
+X0dQSU8xNzBfX0ZVTkNfTVNEQzBfREFUND4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgPFBJ
+Tk1VWF9HUElPMTczX19GVU5DX01TREMwX0RBVDU+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+IDxQSU5NVVhfR1BJTzE3MV9fRlVOQ19NU0RDMF9EQVQ2PiwNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICA8UElOTVVYX0dQSU8xNzRfX0ZVTkNfTVNEQzBfREFUNz4sDQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgPFBJTk1VWF9HUElPMTY3X19GVU5DX01TREMwX0NNRD47DQo+ID4gKyAgICAgICAg
+ICAgICAgICBpbnB1dC1lbmFibGU7DQo+ID4gKyAgICAgICAgICAgICAgICBtZWRpYXRlayxwdWxs
+LXVwLWFkdiA9IDwxPjsNCj4gPiArICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgcGlu
+c19jbGsgew0KPiA+ICsgICAgICAgICAgICAgICAgcGlubXV4ID0gPFBJTk1VWF9HUElPMTc2X19G
+VU5DX01TREMwX0NMSz47DQo+ID4gKyAgICAgICAgICAgICAgICBtZWRpYXRlayxwdWxsLWRvd24t
+YWR2ID0gPDI+Ow0KPiA+ICsgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICBwaW5zX3Jz
+dCB7DQo+ID4gKyAgICAgICAgICAgICAgICBwaW5tdXggPSA8UElOTVVYX0dQSU8xNzhfX0ZVTkNf
+TVNEQzBfUlNUQj47DQo+ID4gKyAgICAgICAgICAgICAgICBtZWRpYXRlayxwdWxsLXVwLWFkdiA9
+IDwwPjsNCj4gPiArICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICB9Ow0KPiA+ICsNCj4gPiAr
+ICAgICAgICBtbWMwIHsNCj4gPiArICAgICAgICAgIHBpbmN0cmwtMCA9IDwmbW1jMF9waW5zX2Rl
+ZmF1bHQ+Ow0KPiA+ICsgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAr
+ICAgICAgICB9Ow0KPiA+ICsgICAgfTsNCj4gPiArDQo+ID4gLS0NCj4gPiAxLjcuOS41DQoNCg==
 
