@@ -2,174 +2,89 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F2CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51880C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA78220C56
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CvoRxINZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2BB1C2145D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 01:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590629691;
+	bh=woKO7HJ9mnkaTPsmPBdNbwbHdLix88c2g+RKMTPCsMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h+BXeS8imGhIMRQcFQxucETmeq9sa0eOZ6Xt8iCl7y5hD577kOfveA0arylNSMZm7
+	 QTqnm0k4r1ADLQOqqwk6meIcb37honU9Mrz9xsDa8+e+fOavifg8nBM7CFDHxEVVCY
+	 XBvy1jsHAqs7//YO8l47cH88c+FWbdTSs8YQK3lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgE1Bca (ORCPT
+        id S1725836AbgE1Beu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 21:32:30 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:34971 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgE1Bc3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 21:32:29 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200528013226epoutp029a22eb7350d254560426c8a56f1ae31e~TDSU_Gn_Z2976829768epoutp02A
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 01:32:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200528013226epoutp029a22eb7350d254560426c8a56f1ae31e~TDSU_Gn_Z2976829768epoutp02A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590629547;
-        bh=HK/1/VP5ov7EOoNpQ0X08DtlhI52O+2EyAZ3cTvlQkI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CvoRxINZ+mTA0agfax3yn8vaVWRUB4f66icmLId8+zfOpcwEMhCYxa0k+OYZEi70Z
-         Mucv/EMsS5s7qmzsXpGQwvHBgWolcatxZoJxXRgWUiRlD8T4AnUlsOTxOPQ1/4fwu3
-         3dPCOoABm1KZ89Whsp0WX/xXVNzZy36RYPAGx5mg=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20200528013226epcas5p17c56ec6d989480e834855950b36e2334~TDSUe02Wh1882918829epcas5p1c;
-        Thu, 28 May 2020 01:32:26 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        76.00.09467.AA41FCE5; Thu, 28 May 2020 10:32:26 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200528013226epcas5p1c73527c71424679443c10daf8bf561df~TDSUD0My00728507285epcas5p10;
-        Thu, 28 May 2020 01:32:26 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200528013226epsmtrp2285c64bdb564c4513d91654752e6b269~TDSUC227J2107921079epsmtrp2d;
-        Thu, 28 May 2020 01:32:26 +0000 (GMT)
-X-AuditID: b6c32a49-fba88a80000024fb-0d-5ecf14aa192c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D8.77.08303.9A41FCE5; Thu, 28 May 2020 10:32:25 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200528013223epsmtip1efd3432a48365af5ec1348fbaaf4812d~TDSSJ3bxJ1673116731epsmtip1k;
-        Thu, 28 May 2020 01:32:23 +0000 (GMT)
-From:   Alim Akhtar <alim.akhtar@samsung.com>
-To:     robh@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
-        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
-        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
-        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v10 01/10] scsi: ufs: add quirk to fix mishandling
- utrlclr/utmrlclr
-Date:   Thu, 28 May 2020 06:46:49 +0530
-Message-Id: <20200528011658.71590-2-alim.akhtar@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200528011658.71590-1-alim.akhtar@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZdlhTS3eVyPk4g7XnJS0ezNvGZvHy51U2
-        i0/rl7FazD9yjtXi/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
-        sXTrTUYHXo/Lfb1MHptWdbJ5bF5S79Fycj+Lx8ent1g8+rasYvT4vEnOo/1AN1MARxSXTUpq
-        TmZZapG+XQJXxouja1gKdgtU7P9wnLmB8TVvFyMnh4SAicTHD2vZuxi5OIQEdjNKHGx/zArh
-        fGKUeLziDhOE85lRYvGUB4wwLSvWLGGBSOxilPhxajkrSEJIoIVJYsVsXRCbTUBb4u70LUwg
-        toiAsMSRb21gzcwCN5gkHqx0AbGFBUIljuztZAexWQRUJa6dfgtWzytgI3F+z0ZWiGXyEqs3
-        HGDuYuTg4BSwldg7wQFkr4RAL4fEn7XT2SFqXCR+rfrNBGELS7w6vgUqLiXx+d1eNpBeCYFs
-        iZ5dxhDhGoml846xQNj2EgeuzGEBKWEW0JRYv0sf4ko+id7fT5ggOnklOtqEIKpVJZrfXYXq
-        lJaY2N0NdaSHxKpDB9kgITKBUWLbr7/sExhlZyFMXcDIuIpRMrWgODc9tdi0wDAvtVyvODG3
-        uDQvXS85P3cTIziZaHnuYLz74IPeIUYmDsZDjBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYf
-        YpTmYFES51X6cSZOSCA9sSQ1OzW1ILUIJsvEwSnVwDStxFvUST1otld5oEWxBwdf0d1ck2gt
-        wXa2pM4CP8PkdTYTH98QY+s3sJwZcuHye/kTJY4JokvtHE4r6+0IFnutnLhvmcilWfHNClsb
-        sjZ+vc29/ZWs+Je383u9jJrrJneEFllonvzRUXlc+9WP28y6c5pfiV2/tl3D67TFjtVy/urf
-        olcaS71RvSt1Ty+S0+w/e9zjc/bKnesVhVgVdbR2HD64eE7t7ZWad56rztRZN617ZarQC75t
-        nXVJX6uzA65lil+8fCirp5fv3m+51z/Fn8lIzo/M3shVv0DG5J7d5Cti1lzVynunySVnN7C4
-        vF6+pNlof5Zum8XdGznRp0716hl8uR57VFTccFOTEktxRqKhFnNRcSIAqIW44ZUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsWy7bCSnO5KkfNxBidfmFk8mLeNzeLlz6ts
-        Fp/WL2O1mH/kHKvF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
-        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYAjigum5TU
-        nMyy1CJ9uwSujBdH17AU7Bao2P/hOHMD42veLkZODgkBE4kVa5awdDFycQgJ7GCUeNP7gA0i
-        IS1xfeMEdghbWGLlv+fsEEVNTBKdDxcwgiTYBLQl7k7fwgRiiwAVHfnWBhZnFnjGJHHqYSmI
-        LSwQLHG67z8LiM0ioCpx7fRbsHpeARuJ83s2skIskJdYveEAcxcjBwengK3E3gkOIGEhoJIJ
-        q/YyTmDkW8DIsIpRMrWgODc9t9iwwCgvtVyvODG3uDQvXS85P3cTIziYtbR2MO5Z9UHvECMT
-        B+MhRgkOZiURXqezp+OEeFMSK6tSi/Lji0pzUosPMUpzsCiJ836dtTBOSCA9sSQ1OzW1ILUI
-        JsvEwSnVwJTxSLjlzsKc9XKPWGZpbv98ZcEv/73uR20Cvi+/f5nxzceo03c2s+Zv5Os04fj/
-        dseaKkn27g/HFwQEyv7w15zmsH9Fg7j4nmtXPr1inMd3miXL5N7b/TExDSznvpYav2xauUAt
-        Ii1x8QaXx+czah5Yh9212fP4VPO27nlRT/PWbLeMWLhgv4RrwsNL3Ndz2SyUzSqD2ydOFE2b
-        WZp6XPpGbSXzx/MPdV1rGE3/r001VZq2+GQt16Fcw2AV940TjsbfilQJ5st0/eAvlH93ffub
-        EMbpN77+3vfptm12+nyHF9/li7o4zHdIGlu+sz9zOuI6f3BOjIhquvoCdx5Fw00lTc8+PPug
-        Nfl7snTfmRtKLMUZiYZazEXFiQAvvvT61QIAAA==
-X-CMS-MailID: 20200528013226epcas5p1c73527c71424679443c10daf8bf561df
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200528013226epcas5p1c73527c71424679443c10daf8bf561df
-References: <20200528011658.71590-1-alim.akhtar@samsung.com>
-        <CGME20200528013226epcas5p1c73527c71424679443c10daf8bf561df@epcas5p1.samsung.com>
+        Wed, 27 May 2020 21:34:50 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46974 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgE1Beu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 21:34:50 -0400
+Received: by mail-il1-f195.google.com with SMTP id h3so3523168ilh.13;
+        Wed, 27 May 2020 18:34:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nc1xYCw1KD9ef91XiAdzK+QPSDWo/LFHJ3pQwzb/o8c=;
+        b=D7nm92qkKmlxxc3ZQk2SOda/m6atE7TkoGgw6fSTSEQ8qM1WrBJghX6N+IvsCX3W89
+         efeD+aKQvaDDyoN4RyN5RQgri4AT4BkqVa8e9INfeJG71e9sy22WuWqNcgFEAqx7hbOT
+         732mGeJuWF9C3sR5m0Ts5+PoLYao5vtgSjy1HbtxAZ4RtKUgQ6OkfRurzhmuLfHN4hyf
+         WNFEZrDQUEvBFFNbJKzUOm1uDqJbyUBq6X3M796zeLiTW7PP+xw4Du8ZyfMmeph+SS1V
+         sNSLnWFrUhydRS5LaqAW1+8zzPSZQTwSgL1BC0AKk8+GdQCt+8wmBGGfPmY58bldD1FS
+         n2fg==
+X-Gm-Message-State: AOAM53010Nqs0TIVn30Ie4zJyU8Zkz/3sgU4OeesTgzAgLh8xZ1pYOmg
+        gOrk9u+Lpndua+vLs7UVxg==
+X-Google-Smtp-Source: ABdhPJwymYNAx4sILLom9EnIknxnjsBziqxYdE/dhdeJiSyDuDoWGYDh8BcOShip3SBpBmyPzfQqxA==
+X-Received: by 2002:a92:5dd4:: with SMTP id e81mr959365ilg.288.1590629688029;
+        Wed, 27 May 2020 18:34:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id d16sm2507512ilg.71.2020.05.27.18.34.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 18:34:47 -0700 (PDT)
+Received: (nullmailer pid 3167518 invoked by uid 1000);
+        Thu, 28 May 2020 01:34:44 -0000
+Date:   Wed, 27 May 2020 19:34:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Clark <robdclark@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: vendor-prefixes: Add Lontium vendor
+ prefix
+Message-ID: <20200528013444.GA3166896@bogus>
+References: <20200513100533.42996-1-vkoul@kernel.org>
+ <20200513100533.42996-2-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513100533.42996-2-vkoul@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In the right behavior, setting the bit to '0' indicates clear and '1'
-indicates no change. If host controller handles this the other way,
-UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR can be used.
+On Wed, 13 May 2020 15:35:31 +0530, Vinod Koul wrote:
+> Add prefix for Lontium Semiconductor Corporation
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- drivers/scsi/ufs/ufshcd.c | 11 +++++++++--
- drivers/scsi/ufs/ufshcd.h |  5 +++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 698e8d20b4ba..3655b88fc862 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -645,7 +645,11 @@ static inline int ufshcd_get_tr_ocs(struct ufshcd_lrb *lrbp)
-  */
- static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
- {
--	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
-+		ufshcd_writel(hba, (1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
-+	else
-+		ufshcd_writel(hba, ~(1 << pos),
-+				REG_UTP_TRANSFER_REQ_LIST_CLEAR);
- }
- 
- /**
-@@ -655,7 +659,10 @@ static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
-  */
- static inline void ufshcd_utmrl_clear(struct ufs_hba *hba, u32 pos)
- {
--	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
-+		ufshcd_writel(hba, (1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
-+	else
-+		ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
- }
- 
- /**
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 6ffc08ad85f6..071f0edf3f64 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -518,6 +518,11 @@ enum ufshcd_quirks {
- 	 * ops (get_ufs_hci_version) to get the correct version.
- 	 */
- 	UFSHCD_QUIRK_BROKEN_UFS_HCI_VERSION		= 1 << 5,
-+
-+	/*
-+	 * Clear handling for transfer/task request list is just opposite.
-+	 */
-+	UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR		= 1 << 6,
- };
- 
- enum ufshcd_caps {
--- 
-2.17.1
-
+Acked-by: Rob Herring <robh@kernel.org>
