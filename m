@@ -2,166 +2,116 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0337C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1366DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8901D2078C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590693612;
-	bh=09oDmvOPRdc9yFqYMrXb+8rgwczqoqW1l57ivUBL3eg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lww/6J4zgG5qoMCE5207Xki2wvuBVio/bPlUbHdu07QfwOyiT1pvZflFavKkQglKk
-	 Oq106d+9T/hbv0EJIHXUho2PZtq3kHorNStDmb9elu1nDA162RNwBXPIGuEldhndD2
-	 yriHsl2b01zmGuzIaueONl0I/axlEXE0W2oeChyg=
+	by mail.kernel.org (Postfix) with ESMTP id E55E82078C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 19:21:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ieu+GmkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406231AbgE1TUL (ORCPT
+        id S2406358AbgE1TV3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 15:20:11 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41886 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406174AbgE1TUJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:20:09 -0400
-Received: by mail-io1-f67.google.com with SMTP id o5so31308019iow.8;
-        Thu, 28 May 2020 12:20:08 -0700 (PDT)
+        Thu, 28 May 2020 15:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406344AbgE1TVZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 15:21:25 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3168C08C5C6;
+        Thu, 28 May 2020 12:21:24 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id v2so8976192pfv.7;
+        Thu, 28 May 2020 12:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=mn9ohrlxKhWlCLsT8/tQGjuXefbQkhXfEEa1XEFrFM8=;
+        b=Ieu+GmkCMg7jmgthscjTaf2F4XyLjRN4/eSDhtKpTgfGoq6sIfW5LJ+7Qjx9HawsNl
+         AZXc6PkYulXnWMzIeGGZfVpBGX9rIzvwM22KBXedqeisJA2MKAHaubh+KExlsKHTZbe3
+         7AIUE2FJenGo0Q+bRv8n3CSVMS/Rg2OkvgtpzbOxEUlYZKkPtupuaEg7iK+caCUlRVNM
+         aBcOCzIh569EY1uIeKrsRm9sUevXDxgzu2xP0qS+yr4PIvTDoiU/o0ewAaDEqkOpmq0t
+         Z7w0EfApVjF0/9jVitcg7sgqk2gMh9+DDqcVtrEsR2CB2ATBmvBmCMD9EfUduCC19E/y
+         UGOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tVeDlV6NVoD0UCrRZuL6pb5QLcWmItD89ccv8vXcKkk=;
-        b=UYkvlBFljzvklaK77Xx5i11WTU2mbFqQZw8uQF6am8AEW4Hgx6Sab20XZ5jCuGp0VQ
-         JO2kgBJntW6E3/pWW0ifj1VRC+cEVcADgNjWcgzkf74fx3IvgCgRPYuKWixz6y5f8L+i
-         5voquT7TJh797IcLprkW+N5kRWXGnNY85/vJlJd1i+5Vj2Yu88ohUOXx1aPeXxXkdJw+
-         FHsys4yEeymvu08Un67UZY1oqyXf+YCpA2g3lj8QMD7VAcygtbWO9cQLhL1Nrg6IQ/sr
-         awsCz3UOu108tjaLpgCscPN+lnK5CVY0G0gtTe2a/uZlkFOhnGU3tvV2RL79Bijbqi+g
-         6JfQ==
-X-Gm-Message-State: AOAM532C0LPSLfPxn1qM2cqrFmU+LmS9qWxBVObzH2AsG/F9K95j7+S7
-        AQJPe9xDD0E2xAb2NDfO5Q==
-X-Google-Smtp-Source: ABdhPJzF8L1ZbZJieZLdPk1C1tH8PhgkvZo0aCDEh9YnWAnyDMjl9zwYPeJUQcYomxH+ZFHE9EUD4g==
-X-Received: by 2002:a02:707:: with SMTP id f7mr3824681jaf.119.1590693607804;
-        Thu, 28 May 2020 12:20:07 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h23sm2890867ioj.39.2020.05.28.12.20.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=mn9ohrlxKhWlCLsT8/tQGjuXefbQkhXfEEa1XEFrFM8=;
+        b=bviJgO5GtAU3sckWywY74dXwObcrUAf6FnZf/qsWPQLcIwZk1GB/RikDc/U0hT2bVi
+         UA5Np6gD1u4oJahUj1fU2b8RIWkrrM7sw4Th070XrG8Q6xTPijqb8GAIi9+PmLuhC7p9
+         zvF4f2/FwEkKHvruXY5VMbsAsSNfmOQaXWcXS+XqaA+YbmUMxAmZvqfNhnvbJ8ABSGHF
+         pYNARH88vaGNJoTFBUmSEWs7oeZIjpQaFHRS+StwQCj9jSKsQLWbOnRmSUlRMLgyG31H
+         kXLSchoZu+wqeQ61jdmr4tNeL3cUO71iTTIRG8R9W5gnfv/O9ekojoWbuDyKS0eoh8WV
+         PT5w==
+X-Gm-Message-State: AOAM533+O7K9JgxpGEfLcRZERQgn6qqG751fXTS34OpuIZz/Vtmt7W0S
+        /kX2ED8OkryFmd8ols2lyu3oUK01
+X-Google-Smtp-Source: ABdhPJwRb+nr4rhFloIJTFA7lJNjNqO/d11rldmRfSoxQeHoYbRkWhxEAG1rw3MH8Ot6loYluXa8fA==
+X-Received: by 2002:a62:1a53:: with SMTP id a80mr4572305pfa.50.1590693684050;
+        Thu, 28 May 2020 12:21:24 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h11sm5460561pjk.20.2020.05.28.12.21.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 12:20:07 -0700 (PDT)
-Received: (nullmailer pid 530453 invoked by uid 1000);
-        Thu, 28 May 2020 19:20:05 -0000
-Date:   Thu, 28 May 2020 13:20:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200528192005.GA494874@bogus>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+        Thu, 28 May 2020 12:21:23 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH 3/4] pinctrl: bcm2835: Match BCM7211 compatible string
+Date:   Thu, 28 May 2020 12:21:11 -0700
+Message-Id: <20200528192112.26123-4-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200528192112.26123-1-f.fainelli@gmail.com>
+References: <20200528192112.26123-1-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:47:38AM +0530, Viresh Kumar wrote:
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> Hi Rob, Arnd and Jassi,
-> 
-> This stuff has been doing rounds on the mailing list since several years
-> now with no agreed conclusion by all the parties. And here is another
-> attempt to get some feedback from everyone involved to close this once
-> and for ever. Your comments will very much be appreciated.
-> 
-> The ARM MHU is defined here in the TRM [1] for your reference, which
-> states following:
-> 
-> 	"The MHU drives the signal using a 32-bit register, with all 32
-> 	bits logically ORed together. The MHU provides a set of
-> 	registers to enable software to set, clear, and check the status
-> 	of each of the bits of this register independently.  The use of
-> 	32 bits for each interrupt line enables software to provide more
-> 	information about the source of the interrupt. For example, each
-> 	bit of the register can be associated with a type of event that
-> 	can contribute to raising the interrupt."
-> 
-> On few other platforms, like qcom, similar doorbell mechanism is present
-> with separate interrupt for each of the bits (that's how I understood
-> it), while in case of ARM MHU, there is a single interrupt line for all
-> the 32 bits. Also in case of ARM MHU, these registers and interrupts
-> have 3 copies for different priority levels, i.e. low priority
-> non-secure, high priority non-secure and secure channels.
-> 
-> For ARM MHU, both the dt bindings and the Linux driver support 3
-> channels for the different priorities right now and support sending a 32
-> bit data on every transfer in a locked fashion, i.e. only one transfer
-> can be done at once and the other have to wait for it to finish first.
-> 
-> Here are the point of view of the parties involved on this subject:
-> 
-> Jassi's viewpoint:
-> 
-> - Virtualization of channels should be discouraged in software based on
->   specific usecases of the application. This may invite other mailbox
->   driver authors to ask for doing virtualization in their drivers.
-> 
-> - In mailbox's terminology, every channel is equivalent to a signal,
->   since there is only one signal generated here by the MHU, there should
->   be only one channel per priority level.
-> 
-> - The clients should send data (of just setting 1 bit or many in the 32
->   bit word) using the existing mechanism as the delays due to
->   serialization shouldn't be significant anyway.
-> 
-> - The driver supports 90% of the users with the current implementation
->   and it shouldn't be extended to support doorbell and implement two
->   different modes by changing value of #mbox-cells field in bindings.
-> 
-> Sudeep (ARM) and myself as well to some extent:
-> 
-> - The hardware gives us the capability to write the register in
->   parallel, i.e. we can write 0x800 and 0x400 together without any
->   software locks, and so these 32 bits should be considered as separate
->   channel even if only one interrupt is issued by the hardware finally.
->   This shouldn't be called as virtualization of the channels, as the
->   hardware supports this (as clearly mentioned in the TRM) and it takes
->   care of handling the signal properly.
-> 
-> - With serialization, if we use only one channel as today at every
->   priority, if there are 5 requests to send signal to the receiver and
->   the dvfs request is the last one in queue (which may be called from
->   scheduler's hot path with fast switching), it unnecessarily needs to
->   wait for the first four transfers to finish due to the software
->   locking imposed by the mailbox framework. This adds additional delay,
->   maybe of few ms only, which isn't required by the hardware but just by
->   the software and few ms can be important in scheduler's hotpath.
-> 
-> - With the current approach it isn't possible to assign different bits
->   (or doorbell numbers) to clients from DT and the only way of doing
->   that without adding new bindings is by extending #mbox-cells to accept
->   a value of 2 as done in this patch.
-> 
-> Jassi and Sudeep, I hope I was able to represent both the view points
-> properly here. Please correct me if I have made a mistake here.
-> 
-> This is it. It would be nice to get the views of everyone now on this
-> and how should this be handled.
+The BCM7211 SoC uses the same pinconf_ops as the ones defined for the
+BCM2711 SoC, match the compatible string and use the correct set of
+options.
 
-I am perfectly fine with adding another cell which seems appropriate 
-here. You can have 5 cells for all I care if that makes sense for 
-the h/w. That has nothing to do with the Linux design. Whether Linux 
-requires serializing mailbox accesses is a separate issue. On that side, 
-it seems silly to not allow driving the h/w in the most efficient way 
-possible.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Rob
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index 06bd2b70af3c..e8ad1824c6b3 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -1137,6 +1137,10 @@ static const struct of_device_id bcm2835_pinctrl_match[] = {
+ 		.compatible = "brcm,bcm2711-gpio",
+ 		.data = &bcm2711_plat_data,
+ 	},
++	{
++		.compatible = "brcm,bcm7211-gpio",
++		.data = &bcm2711_pinconf_ops,
++	},
+ 	{}
+ };
+ 
+-- 
+2.17.1
+
