@@ -2,122 +2,134 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFB7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B47C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA90F208DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 21:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aNNmYmnx"
+	by mail.kernel.org (Postfix) with ESMTP id A78D9206F1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 22:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590703333;
+	bh=uu+8nf8bnWrT37FH2V/XTBII6xejURjcoq5c+CpQXHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uAWhbhEQtFyCgRjlq2zfiwbHn/KjqvZdQA8dts7QRotQon51mA8/0s0Zna1vcBgHH
+	 rqLKjiBJ+sYradSDHEGSr6Js7AXg9s1zkTDJBoGFUtiHJ8/Ls4mmEH2YH7ZC6kt3VL
+	 dlAbFw/C6Ju211xrq9at2jI72lKm3FKAOuFtmjkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436659AbgE1VqZ (ORCPT
+        id S2436818AbgE1WBo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 17:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436630AbgE1VqX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 17:46:23 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69837C08C5C6
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 14:46:23 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BF5BB2A8;
-        Thu, 28 May 2020 23:46:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1590702381;
-        bh=2kQLJ6ihq2PvrAL0aFkV0qdd4HEG8jQjlPEKzcWA4zI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aNNmYmnx/YtiaQVF0zhm6NKUhO6tyxYre9WWwiDlNS9QeKkblOPHKa6HLKEXjG+4j
-         lNUPQzPegoZeRz0wrGN3ySSpAhmrl3OfbCK8+SDVn8I76Sr/WH83NJZ3j3uohoSBvM
-         OYwD8YwyTzk36wLhNTnG1MiavALmhYO0KitlmpBg=
-Date:   Fri, 29 May 2020 00:46:07 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net,
-        tomi.valkeinen@ti.com, robh+dt@kernel.org, airlied@linux.ie,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v2 4/4] drm/bridge: tfp410: Fix setup and hold time
- calculation
-Message-ID: <20200528214607.GB14756@pendragon.ideasonboard.com>
-References: <20200514143612.2094-1-ricardo.canuelo@collabora.com>
- <20200514143612.2094-5-ricardo.canuelo@collabora.com>
+        Thu, 28 May 2020 18:01:44 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40421 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436810AbgE1WBk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 18:01:40 -0400
+Received: by mail-il1-f194.google.com with SMTP id a18so501799ilp.7;
+        Thu, 28 May 2020 15:01:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ypTe2PhllcbFDiwKFVMlag8IDVx6GgqoGKohXERCZBQ=;
+        b=nNIzupTrdmf9NfYSrznPeZOZaB6auMqjmpaOaCMkgLy4aYVigIfndKo6MLM1EXwA/8
+         f7PK8HSnjlnoeVC8aPUe3A9/iAYMB8BHlIzMK4Kv2R8S1Gq4m54FAShxFPLmyL1XFpqJ
+         4PezSh6/rt1AH4P/IOHuIn/FdFjsdlMKZB4gkOopdRUxdZzRVNC/nTKz9J9I4vLqAn+/
+         Lf2+W+3ssLF/rg4eSkTbIhTDIcRklSKWhyj9A5ZLRfTc8/DUYwHGs+5wvfZO04fEyNAa
+         fM8CieQd8B4MbM947f8RX5pcx5NOTpBaVRdQi8FY9OEQlpr6/NRR7g+YlSKf4c7OLONN
+         CE2w==
+X-Gm-Message-State: AOAM531FCt23Q8J/iQXVfomO3RLWE7E0X6PUh5hd4+SKbAIB8vTXWS0r
+        w/WS+YR0Xl6I0IjF+V20xw==
+X-Google-Smtp-Source: ABdhPJzFT3oU/vjsNRn309VDH/DNiO+Z5WPTFKoWeipwpTJAZ6V1gzsWGOibx8+mO77rr6DZOlHjqA==
+X-Received: by 2002:a92:2801:: with SMTP id l1mr5040474ilf.132.1590703298885;
+        Thu, 28 May 2020 15:01:38 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id f9sm3853884ile.39.2020.05.28.15.01.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 15:01:38 -0700 (PDT)
+Received: (nullmailer pid 760172 invoked by uid 1000);
+        Thu, 28 May 2020 22:01:36 -0000
+Date:   Thu, 28 May 2020 16:01:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Johan Jonker <jbx6244@gmail.com>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg
+ property
+Message-ID: <20200528220136.GA748777@bogus>
+References: <20200520073327.6016-1-jbx6244@gmail.com>
+ <20200520171324.GS89269@dtor-ws>
+ <4727344.YYj2SkWT1V@diego>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200514143612.2094-5-ricardo.canuelo@collabora.com>
+In-Reply-To: <4727344.YYj2SkWT1V@diego>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ricardo,
-
-Thank you for the patch.
-
-On Thu, May 14, 2020 at 04:36:12PM +0200, Ricardo Cañuelo wrote:
-> The tfp410 has a data de-skew feature that allows the user to compensate
-> the skew between IDCK and the pixel data and control signals.
+On Wed, May 20, 2020 at 08:41:59PM +0200, Heiko St�bner wrote:
+> Hi Dmitry,
 > 
-> In the driver, the setup and hold times are calculated from the de-skew
-> value. This retrieves the deskew value from the DT using the proper
-> datatype and range check as described by the binding (u32 from 0 to 7)
-> and fixes the calculation of the setup and hold times.
-
-How about mentioning that the fix results from a change in the DT
-bindings ? Otherwise it sounds it was a bug in the driver.
-
-I would also mention that the patch fixes the min() calculation, which
-was clearly wrong. I think I would have split this in two patches.
-
-With this addressed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-> ---
->  drivers/gpu/drm/bridge/ti-tfp410.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+> Am Mittwoch, 20. Mai 2020, 19:13:24 CEST schrieb Dmitry Torokhov:
+> > Hi Johan,
+> > 
+> > On Wed, May 20, 2020 at 09:33:27AM +0200, Johan Jonker wrote:
+> > > A test with the command below gives this error:
+> > > 
+> > > arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
+> > > touchscreen@3e: reg:0:0: 56 was expected
+> > > 
+> > > The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
+> > > was shipped with different addresses then the binding currently allows.
+> > > Change the reg property that any address will pass.
+> > > 
+> > > make ARCH=arm dtbs_check
+> > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
+> > > edt-ft5x06.yaml
+> > > 
+> > > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> > > index 383d64a91..baa8e8f7e 100644
+> > > --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> > > @@ -42,7 +42,7 @@ properties:
+> > >        - focaltech,ft6236
+> > >  
+> > >    reg:
+> > > -    const: 0x38
+> > > +    maxItems: 1
+> > 
+> > Should we have a list of valid addresses instead of allowing any
+> > address? Controllers usually have only a couple of addresses that they
+> > support.
 > 
-> diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
-> index e3eb6364c0f7..21d99b4ea0c9 100644
-> --- a/drivers/gpu/drm/bridge/ti-tfp410.c
-> +++ b/drivers/gpu/drm/bridge/ti-tfp410.c
-> @@ -220,7 +220,7 @@ static int tfp410_parse_timings(struct tfp410 *dvi, bool i2c)
->  	struct device_node *ep;
->  	u32 pclk_sample = 0;
->  	u32 bus_width = 24;
-> -	s32 deskew = 0;
-> +	u32 deskew = 0;
->  
->  	/* Start with defaults. */
->  	*timings = tfp410_default_timings;
-> @@ -274,12 +274,12 @@ static int tfp410_parse_timings(struct tfp410 *dvi, bool i2c)
->  	}
->  
->  	/* Get the setup and hold time from vendor-specific properties. */
-> -	of_property_read_u32(dvi->dev->of_node, "ti,deskew", (u32 *)&deskew);
-> -	if (deskew < -4 || deskew > 3)
-> +	of_property_read_u32(dvi->dev->of_node, "ti,deskew", &deskew);
-> +	if (deskew > 7)
->  		return -EINVAL;
->  
-> -	timings->setup_time_ps = min(0, 1200 - 350 * deskew);
-> -	timings->hold_time_ps = min(0, 1300 + 350 * deskew);
-> +	timings->setup_time_ps = 1200 - 350 * ((s32)deskew - 4);
-> +	timings->hold_time_ps = max(0, 1300 + 350 * ((s32)deskew - 4));
->  
->  	return 0;
->  }
+> from what I've read, the fdt touchscreen controllers are just a generic
+> cpu with device-specific (or better panel-specific) firmware, which seems
+> to include the address as well - so it looks to be variable.
+> 
+> But of course that is only 2nd hand knowledge for me ;-)
+> 
+> 
+> But also, the i2c address is something you cannot really mess up,
+> either it is correct and your touchscreen works, or it isn't and and
+> adding entries to this list every time a new address variant pops up
+> feels clumsy.
 
--- 
-Regards,
+Is that an Ack?
 
-Laurent Pinchart
+I'm fine either way. It's really only useful if there's a single 
+address because with a list it could still be wrong just as any other 
+data like an interrupt number could be wrong.
+
+Rob
