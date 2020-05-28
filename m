@@ -4,236 +4,197 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9123DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90076C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA15208DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1C0208DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 02:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590631596;
-	bh=Oz9w11MN25URxg3SBjO67dK0vS29Qyd85Hx1KDFN7l4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q11U5x/0k5waIgY8UX2WtP92wEDfIhSE02x4zyD2EGKi/GpyL2H0YPi45T8byb0MG
-	 2fasds6B8h5BnbpYn+Jn8W3ZU4jZrVp2ueTclNyWHeNjSSJhy/+QMKOGTy7lUzI8fN
-	 msOX6C3MvcX1b0Kg8XXngIIT9JB40eaaYDXHeRIY=
+	s=default; t=1590631905;
+	bh=asJD/3t/zHweutpV8BFPslQh/6BkbEzl3h/0Wlk8ORE=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=qpjGFIcr8cy3WUxyo7ykrUjb+tU0DByGdK2PQj6X4UoTBAARaot0KKYdT8pQwi7Gm
+	 IXVYQEj2cUEVrweVY5Z+GjDp77Fdytkm0yJOAUxgdAwo5P5idUWjTo00KM7OY1UYpL
+	 oQ/WgRsHXQ3bOYZ+asJTWkpthh1Z1Gesd1x5tOro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgE1CGg (ORCPT
+        id S1726063AbgE1CLm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 May 2020 22:06:36 -0400
-Received: from mail-io1-f43.google.com ([209.85.166.43]:38548 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgE1CGf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 22:06:35 -0400
-Received: by mail-io1-f43.google.com with SMTP id d7so28362261ioq.5;
-        Wed, 27 May 2020 19:06:34 -0700 (PDT)
+        Wed, 27 May 2020 22:11:42 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46712 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgE1CLm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 May 2020 22:11:42 -0400
+Received: by mail-il1-f194.google.com with SMTP id h3so3581561ilh.13;
+        Wed, 27 May 2020 19:11:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=e0JdTAh/sH1xhLv5fA+UWq+PNY013b4LCOvIOpzDEg8=;
-        b=BUXpsZAX2eW+NlUi12xGcIdUM5KfEygCVBexXFiwFXPR+YGU4s8qzVvfEBd4Ly0ZVj
-         yyjncjr3otY4XjJI4yaavqT9oP7DuUOEf5LFpSaEv9D8xCobzrhEkTosxPcUB9ENjR4C
-         N1jTqUJss1zn3u21wPMq8mnZ3pTTKFOpk4zXEs9nZlLo/WyDy4vquAMB5pvVpM2f12BK
-         y9s+oMkM3JyDaAWPy51+5tMoGTfC2YRbYX0nrYjllqa89AmBcaitRPNQRsByHmGhDv0Z
-         4PHU8GEjUTda8LRbWcvcYgElUlBHucnti/SmPxs86qX/HlagsiFL3aB0ffRioTgWUTXF
-         umeg==
-X-Gm-Message-State: AOAM533jX06RYJqljC80id4ys48CU2M67XoiyHrVCJHA/ZMpZZ+7N8MN
-        dMBCR2HwDHZ+2CbHL5/ncw==
-X-Google-Smtp-Source: ABdhPJzBXlXqNm6zjTvpUegdAoReVOZFmSVXnwBwUSxdfkNW24PCybA278OPvjw9EwqDBZI4/cp0ag==
-X-Received: by 2002:a05:6638:134b:: with SMTP id u11mr715500jad.102.1590631594041;
-        Wed, 27 May 2020 19:06:34 -0700 (PDT)
+        bh=8/7AtcVQnogEJMITKMjo/+NbsrcSCHvci6t4MVh9Kc8=;
+        b=d5LCXuCw9SWG3qJRvbpPLoPX1fFN0k4rSS+k2b8ciZ5tLE7LW9rVeDljwHKt9HwMoA
+         eM61FFhMlHVN64eSvJR5u/HQoNULb5gbqImMZbJo5PvmXVkKDJ2h6cn86Sgsh04DThd8
+         97VEYkK+vGvbd9unwiqtfnQ2HBOaoMHZjHKm6KxfOduTUMGko90uCLYw0bn1kHCM6Yu3
+         cxXDurYVoUWSleiS2WVJMsZmjvDrnGiDH8UATpGIQWQWNM2ujKy6akwRcgi9q7WeIq4M
+         Y6sgDzTFzcDX0LL9ijawjdCj30I7K97QcHL/I+OTdAUH8doYLC/cV4TiuyVoE/jBu+18
+         IWtw==
+X-Gm-Message-State: AOAM531dUBirf/D4cLh3LG/F1Wus7fGl1zqBFkhbePHwf0SIveYPD0N7
+        hWUBbVuCy55tujqk8YRqaQ==
+X-Google-Smtp-Source: ABdhPJyarlfDg0topsEF4LLMlLljnAFIUiSejKfnwzERU46ep1pIjMA9nxf26wH/i1HT1FPTA9wZsg==
+X-Received: by 2002:a92:2907:: with SMTP id l7mr1061985ilg.48.1590631899776;
+        Wed, 27 May 2020 19:11:39 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j9sm2461867ilr.18.2020.05.27.19.06.32
+        by smtp.gmail.com with ESMTPSA id b18sm2458167ilh.77.2020.05.27.19.11.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 19:06:33 -0700 (PDT)
-Received: (nullmailer pid 3214169 invoked by uid 1000);
-        Thu, 28 May 2020 02:06:32 -0000
-Date:   Wed, 27 May 2020 20:06:32 -0600
+        Wed, 27 May 2020 19:11:39 -0700 (PDT)
+Received: (nullmailer pid 3220699 invoked by uid 1000);
+        Thu, 28 May 2020 02:11:37 -0000
+Date:   Wed, 27 May 2020 20:11:37 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv1 2/2] dt-bindings: power: supply: gpio-charger: convert
- to yaml
-Message-ID: <20200528020632.GA3201271@bogus>
-References: <20200513115601.360642-1-sebastian.reichel@collabora.com>
- <20200513115601.360642-2-sebastian.reichel@collabora.com>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 05/14] dt-bindings: arm: sparx5: Add documentation for
+ Microchip Sparx5 SoC
+Message-ID: <20200528021137.GA3214411@bogus>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com>
+ <20200513125532.24585-6-lars.povlsen@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513115601.360642-2-sebastian.reichel@collabora.com>
+In-Reply-To: <20200513125532.24585-6-lars.povlsen@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 01:56:01PM +0200, Sebastian Reichel wrote:
-> Convert the gpio-charger bindings from text format to
-> new YAML based representation.
+On Wed, May 13, 2020 at 02:55:23PM +0200, Lars Povlsen wrote:
+> This adds the main Sparx5 SoC DT documentation file, with information
+> abut the supported board types.
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
->  .../bindings/power/supply/gpio-charger.txt    | 38 ----------
->  .../bindings/power/supply/gpio-charger.yaml   | 75 +++++++++++++++++++
->  2 files changed, 75 insertions(+), 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/gpio-charger.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+>  .../bindings/arm/microchip,sparx5.yaml        | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> deleted file mode 100644
-> index dbfd29029f69..000000000000
-> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> +++ /dev/null
-> @@ -1,38 +0,0 @@
-> -gpio-charger
-> -
-> -Required properties :
-> - - compatible : "gpio-charger"
-> - - charger-type : power supply type, one of
-> -     unknown
-> -     battery
-> -     ups
-> -     mains
-> -     usb-sdp (USB standard downstream port)
-> -     usb-dcp (USB dedicated charging port)
-> -     usb-cdp (USB charging downstream port)
-> -     usb-aca (USB accessory charger adapter)
-> -
-> -Optional properties:
-> - - gpios : GPIO indicating the charger presence.
-> -   See GPIO binding in bindings/gpio/gpio.txt .
-> - - charge-status-gpios: GPIO indicating whether a battery is charging.
-> - - charge-current-limit-gpios: Output GPIOs specifiers for limiting the charge current
-> - - charge-current-limit-mapping: List of touples with current in uA and a GPIO bitmap (in this order).
-> -                                The GPIOs are encoded in the same order as specified in charge-current-limit-gpios.
-> -				The touples must be provided in descending order of the current limit.
-> -
-> -Example:
-> -
-> -	usb_charger: charger {
-> -		compatible = "gpio-charger";
-> -		charger-type = "usb-sdp";
-> -		gpios = <&gpd 28 GPIO_ACTIVE_LOW>;
-> -		charge-status-gpios = <&gpc 27 GPIO_ACTIVE_LOW>;
-> -
-> -		charge-current-limit-gpios = <&gpioA 11 GPIO_ACTIVE_HIGH>, <&gpioA 12 GPIO_ACTIVE_HIGH>;
-> -		charge-current-limit-mapping = <2500000 0x00>, <700000 0x01>, <0 0x02>;
-> -	};
-> -
-> -	battery {
-> -		power-supplies = <&usb_charger>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+> diff --git a/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
 > new file mode 100644
-> index 000000000000..14fb3e54f861
+> index 0000000000000..83b36d1217988
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> +++ b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/power/supply/gpio-charger.yaml#
+> +$id: http://devicetree.org/schemas/arm/microchip,sparx5.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: simple battery chargers only communicating through GPIOs
+> +title: Microchip Sparx5 Boards Device Tree Bindings
 > +
 > +maintainers:
-> +  - Sebastian Reichel <sre@kernel.org>
+> +  - Lars Povlsen <lars.povlsen@microchip.com>
 > +
-> +description: |
-
-Can drop '|' if formatting is not important.
-
-> +  This binding is for all chargers, which are working more
-> +  or less autonomously, only providing some status GPIOs
-> +  and possibly some GPIOs for limited control over the
-> +  charging process.
+> +description: |+
+> +   The Microchip Sparx5 SoC is a ARMv8-based used in a family of
+> +   gigabit TSN-capable gigabit switches.
+> +
+> +   The SparX-5 Ethernet switch family provides a rich set of switching
+> +   features such as advanced TCAM-based VLAN and QoS processing
+> +   enabling delivery of differentiated services, and security through
+> +   TCAM-based frame processing using versatile content aware processor
+> +   (VCAP)
 > +
 > +properties:
+> +  $nodename:
+> +    const: '/'
 > +  compatible:
-> +    const: gpio-charger
-> +
-> +  charger-type:
 > +    oneOf:
-> +      - const: unknown
-> +      - const: battery
-> +      - const: ups
-> +      - const: mains
-> +      - const: usb-sdp                   # USB standard downstream port
-> +      - const: usb-dcp                   # USB dedicated charging port
-> +      - const: usb-cdp                   # USB charging downstream port
-> +      - const: usb-aca                   # USB accessory charger adapter
+> +      - description: The Sparx5 pcb125 board is a modular board,
+> +          which has both spi-nor and eMMC storage. The modular design
+> +          allows for connection of different network ports.
+> +        items:
+> +          - const: microchip,sparx5-pcb125
+> +          - const: microchip,sparx5
+> +
+> +      - description: The Sparx5 pcb134 is a pizzabox form factor
+> +          gigabit switch with 20 SFP ports. It features spi-nor and
+> +          either spi-nand or eMMC storage (mount option).
+> +        items:
+> +          - const: microchip,sparx5-pcb134
+> +          - const: microchip,sparx5
+> +
+> +      - description: The Sparx5 pcb135 is a pizzabox form factor
+> +          gigabit switch with 48+4 Cu ports. It features spi-nor and
+> +          either spi-nand or eMMC storage (mount option).
+> +        items:
+> +          - const: microchip,sparx5-pcb135
+> +          - const: microchip,sparx5
+> +
+> +  axi@600000000:
+> +    type: object
+> +    description: the root node in the Sparx5 platforms must contain
+> +      an axi bus child node. They are always at physical address
+> +      0x600000000 in all the Sparx5 variants.
+> +    properties:
+> +      compatible:
+> +        items:
+> +          - const: simple-bus
+> +      reg:
+> +        maxItems: 1
 
-Use enum rather than oneOf+const
-
-Should have a description too.
+simple-bus doesn't have 'reg'. If there's bus registers, then it's not 
+simple.
 
 > +
-> +  gpios:
-> +    maxItems: 1
-> +    description: GPIO indicating the charger presence
+> +    required:
+> +      - compatible
+> +      - reg
 > +
-> +  charge-status-gpios:
-> +    maxItems: 1
-> +    description: GPIO indicating the charging status
+> +patternProperties:
+> +  "^syscon@[0-9a-f]+$":
+
+This should be under a bus node.
+
+> +    description: All Sparx5 boards must provide a system controller,
+> +      typically under the axi bus node. It contain reset registers and
+> +      other system control.
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        items:
+> +          - const: microchip,sparx5-cpu-syscon
+> +          - const: syscon
+
+This probably should be in its own document. If really this simple, 
+there's already syscon.yaml you can add to. 
+
+> +      reg:
+> +        maxItems: 1
 > +
-> +  charge-current-limit-gpios:
-> +    minItems: 1
-> +    maxItems: 32
-> +    description: GPIOs used for current limiting
-> +
-> +  charge-current-limit-mapping:
-> +    description: List of touples with current in uA and a GPIO bitmap (in
-> +      this order). The GPIOs are encoded in the same order as specified in
-> +      charge-current-limit-gpios. The touples must be provided in descending
-> +      order of the current limit.
-> +    $ref: "/meta-schemas/cell.yaml#array"
-
-That's a first... A meta-schema is what checks this document. Not what 
-you want. Should be like this:
-
-$ref: /schemas/types.yaml#/definitions/uint32-matrix
-items:
-  items:
-    - description: Current limit in uA
-    - description: Encoded GPIO setting...
-
-I guess there's not any more constraints we can add here.
-
+> +    required:
+> +      - compatible
+> +      - reg
 > +
 > +required:
 > +  - compatible
-
-blank line
-
-At least 1 of the gpio properties is required, right? Can be expressed 
-with required entries under a oneOf or anyOf.
-
-> +additionalProperties: false
+> +  - axi@600000000
+> +  - syscon@600000000
 > +
-> +dependencies:
-> +  charge-current-limit-gpios: [ charge-current-limit-mapping ]
-> +  charge-current-limit-mapping: [ charge-current-limit-gpios ]
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    charger {
-> +      compatible = "gpio-charger";
-> +      charger-type = "usb-sdp";
-> +
-> +      gpios = <&gpd 28 GPIO_ACTIVE_LOW>;
-> +      charge-status-gpios = <&gpc 27 GPIO_ACTIVE_LOW>;
-> +
-> +      charge-current-limit-gpios = <&gpioA 11 GPIO_ACTIVE_HIGH>,
-> +                                   <&gpioA 12 GPIO_ACTIVE_HIGH>;
-> +      charge-current-limit-mapping = <2500000 0x00>, <700000 0x01>, <0 0x02>;
-> +    };
-> -- 
+> +...
+> --
 > 2.26.2
-> 
