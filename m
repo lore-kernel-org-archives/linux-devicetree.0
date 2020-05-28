@@ -2,83 +2,84 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD877C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEC8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951AD2075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3552F20888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590677734;
+	bh=1+0Mgnz53w/RdoAvOb2WEd3xtONTE02iakPJTjv6xSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IOOVCsozEsqSXGOTI+sVuffkni4S1Q0rI/6Ec2Kz6WShyiVmpYltsAmt7pwGJJNxM
+	 rlLRpZBnPqT/lYDW1Xar6m/2EE3nIzuh3scRVON+zCjTPSzLQPliBqPIhr5JRVhEGZ
+	 7y0S1/1W2lxbayRkimQK6rNIockqVqcZJ+HYEO8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391349AbgE1Ox0 (ORCPT
+        id S2391320AbgE1Oz3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:53:26 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:56893 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391244AbgE1OxZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:53:25 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C190F20000C;
-        Thu, 28 May 2020 14:53:17 +0000 (UTC)
-Date:   Thu, 28 May 2020 16:53:16 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v6 17/18] mtd: rawnand: Write a compatibility layer
-Message-ID: <20200528165316.647f9cb0@xps13>
-In-Reply-To: <20200528164217.4eec33ae@collabora.com>
-References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
-        <20200528113113.9166-18-miquel.raynal@bootlin.com>
-        <20200528164217.4eec33ae@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 28 May 2020 10:55:29 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37170 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391314AbgE1Oz2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:55:28 -0400
+Received: by mail-io1-f68.google.com with SMTP id r2so19953710ioo.4;
+        Thu, 28 May 2020 07:55:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V9q1pziYt0m1nKSry3Jo6IofP6yHLLawIxH8HrvbkSs=;
+        b=eYAGGGqR6Mh7wTfu4GebqMW/1iwZsS3J0fxs+PbJH1RgeSjgolEXffTrn4OVYZQP+G
+         kSDVHLHFcXxsRcu46rKNn276I6UPdbpdwLM991yeSqDx8OOkXYGWEr7B2zVl6J6ru3v5
+         IhFZkZ3JiLM12QQ337xWGG3MT5UeQGHCEEUWdwMPqUU13RvjCOtMGTC21Rtz8X4DSHF/
+         7sIbO0Vkbw1gycTsuHADF+hHNSsQXnZHVWrsB6obGYFs9upFeJeANNwyoSNV3iMQn57N
+         cj9VHN0j5KaHovSXW4U/XHRhmOArADO9MZY48e945ii5kqxUzKngGBHqcVA9mbFf+Bl3
+         +Ebw==
+X-Gm-Message-State: AOAM531CmrQVJMlwTwUi6XyzAIWow4TIUAMLEwybH1w01zRM7H2dsElJ
+        xDCImTqnRE7dBsr71oPZ2w==
+X-Google-Smtp-Source: ABdhPJxgsg0zCerw2qnN08IcsRx2AWNyPK9QS8PlC0mEQceT82QnF20dOb575GIlcF9ISPrl8ADfXQ==
+X-Received: by 2002:a5d:860b:: with SMTP id f11mr2576671iol.104.1590677725988;
+        Thu, 28 May 2020 07:55:25 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id w26sm3482778ill.19.2020.05.28.07.55.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:55:24 -0700 (PDT)
+Received: (nullmailer pid 52001 invoked by uid 1000);
+        Thu, 28 May 2020 14:55:23 -0000
+Date:   Thu, 28 May 2020 08:55:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, agross@kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v3 3/3] dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
+Message-ID: <20200528145523.GA51866@bogus>
+References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
+ <1590630363-3934-4-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590630363-3934-4-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Thu, 28 May
-2020 16:42:17 +0200:
-
-> On Thu, 28 May 2020 13:31:12 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Wed, 27 May 2020 18:46:03 -0700, Wesley Cheng wrote:
+> Re-introduce the comment for the tx-fifo-resize setting for the DWC3
+> controller.  This allows for vendors to control if they require the TX FIFO
+> resizing logic on their HW, as the default FIFO size configurations may
+> already be sufficient.
 > 
-> > +static enum nand_ecc_engine_type
-> > +of_get_rawnand_ecc_engine_type_legacy(struct device_node *np)
-> > +{
-> > +	enum nand_ecc_legacy_mode {
-> > +		NAND_ECC_INVALID,
-> > +		NAND_ECC_NONE,
-> > +		NAND_ECC_SOFT,
-> > +		NAND_ECC_SOFT_BCH,
-> > +		NAND_ECC_HW,
-> > +		NAND_ECC_HW_SYNDROME,
-> > +		NAND_ECC_ON_DIE,
-> > +	};  
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> You're redefining an enum, but I don't see the old enum/defines being
-> removed, is that expected?
 
-Oh yeah, my desire was to get rid of this public enumeration and mov it
-to the single legacy function using it, but indeed I am removing it in
-the next patch as part of the global move to nand/core.c. I will do it
-in this patch.
+Acked-by: Rob Herring <robh@kernel.org>
