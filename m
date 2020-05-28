@@ -2,124 +2,176 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69F3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E251AC433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 927C520888
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C525E207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391106AbgE1OWu (ORCPT
+        id S2391059AbgE1OXa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:22:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391035AbgE1OWt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:22:49 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC6FC05BD1E
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 07:22:49 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BC36F2A3DAD;
-        Thu, 28 May 2020 15:22:47 +0100 (BST)
-Date:   Thu, 28 May 2020 16:22:44 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v6 04/18] mtd: rawnand: Create a helper to retrieve the
- ECC placement
-Message-ID: <20200528162244.7f1c6c50@collabora.com>
-In-Reply-To: <20200528113113.9166-5-miquel.raynal@bootlin.com>
-References: <20200528113113.9166-1-miquel.raynal@bootlin.com>
-        <20200528113113.9166-5-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 28 May 2020 10:23:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:16004 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391124AbgE1OXU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 10:23:20 -0400
+IronPort-SDR: lxxeuY1xtGBc8ReuYBabQ3YbmTCLgKOBZVaZBGat8znseOXQbEf8t8xzcrkTXY/ihdAGvjqkkk
+ LmyFF2JpMlsA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:22:21 -0700
+IronPort-SDR: gNo5fESEi88ICadxnRas20uQR259e56xhdit7Lv5R8UYFfHWazi64BmuzHavftCD2mQZeNAS9d
+ d118Lf7jKUyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="267231578"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 28 May 2020 07:22:18 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeJQL-009RLS-03; Thu, 28 May 2020 17:22:21 +0300
+Date:   Thu, 28 May 2020 17:22:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200528142220.GR1634618@smile.fi.intel.com>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-5-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526225022.20405-5-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 13:30:59 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-
-> Use it from nand_dt_init() to initialize the ECC structure.
+On Wed, May 27, 2020 at 01:50:15AM +0300, Serge Semin wrote:
+> Some devices may lack the support of the hardware accelerated SG list
+> entries automatic walking through and execution. In this case a burden of
+> the SG list traversal and DMA engine re-initialization lies on the
+> DMA engine driver (normally implemented by using a DMA transfer completion
+> IRQ to recharge the DMA device with a next SG list entry). But such
+> solution may not be suitable for some DMA consumers. In particular SPI
+> devices need both Tx and Rx DMA channels work synchronously in order
+> to avoid the Rx FIFO overflow. In case if Rx DMA channel is paused for
+> some time while the Tx DMA channel works implicitly pulling data into the
+> Rx FIFO, the later will be eventually overflown, which will cause the data
+> loss. So if SG list entries aren't automatically fetched by the DMA
+> engine, but are one-by-one manually selected for execution in the
+> ISRs/deferred work/etc., such problem will eventually happen due to the
+> non-deterministic latencies of the service execution.
 > 
-> This allows the deprecation of the hw_syndrome ECC mode.
+> In order to let the DMA consumer know about the DMA device capabilities
+> regarding the hardware accelerated SG list traversal we introduce the
+> max_sg_list capability. It is supposed to be initialized by the DMA engine
+> driver with 0 if there is no limitation for the number of SG entries
+> atomically executed and with non-zero value if there is such constraints,
+> so the upper limit is determined by the number set to the property.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+But see below.
+
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
 > ---
->  drivers/mtd/nand/raw/nand_base.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
 > 
-> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> index 9fbd2a474b62..fd0bfe9bf7ae 100644
-> --- a/drivers/mtd/nand/raw/nand_base.c
-> +++ b/drivers/mtd/nand/raw/nand_base.c
-> @@ -5047,6 +5047,34 @@ static int of_get_nand_ecc_mode(struct device_node *np)
->  	return -ENODEV;
->  }
+> Changelog v3:
+> - This is a new patch created as a result of the discussion with Vinud and
+>   Andy in the framework of DW DMA burst and LLP capabilities.
+> ---
+>  drivers/dma/dmaengine.c   | 1 +
+>  include/linux/dmaengine.h | 8 ++++++++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index b332ffe52780..ad56ad58932c 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>  	caps->directions = device->directions;
+>  	caps->min_burst = device->min_burst;
+>  	caps->max_burst = device->max_burst;
+> +	caps->max_sg_nents = device->max_sg_nents;
+>  	caps->residue_granularity = device->residue_granularity;
+>  	caps->descriptor_reuse = device->descriptor_reuse;
+>  	caps->cmd_pause = !!device->device_pause;
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 0c7403b27133..6801200c76b6 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -467,6 +467,9 @@ enum dma_residue_granularity {
+>   *	should be checked by controller as well
+>   * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+> + * @max_sg_nents: max number of SG list entries executed in a single atomic
+> + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> + *	value means unlimited number if entries.
+
+if -> of ?
+
+>   * @cmd_pause: true, if pause is supported (i.e. for reading residue or
+>   *	       for resume later)
+>   * @cmd_resume: true, if resume is supported
+> @@ -481,6 +484,7 @@ struct dma_slave_caps {
+>  	u32 directions;
+>  	u32 min_burst;
+>  	u32 max_burst;
+> +	u32 max_sg_nents;
+>  	bool cmd_pause;
+>  	bool cmd_resume;
+>  	bool cmd_terminate;
+> @@ -773,6 +777,9 @@ struct dma_filter {
+>   *	should be checked by controller as well
+>   * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+> + * @max_sg_nents: max number of SG list entries executed in a single atomic
+> + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> + *	value means unlimited number if entries.
+
+Ditto.
+
+>   * @residue_granularity: granularity of the transfer residue reported
+>   *	by tx_status
+>   * @device_alloc_chan_resources: allocate resources and return the
+> @@ -844,6 +851,7 @@ struct dma_device {
+>  	u32 directions;
+>  	u32 min_burst;
+>  	u32 max_burst;
+> +	u32 max_sg_nents;
+>  	bool descriptor_reuse;
+>  	enum dma_residue_granularity residue_granularity;
 >  
-> +enum nand_ecc_placement of_get_nand_ecc_placement(struct device_node *np)
-> +{
-> +	enum nand_ecc_placement placement;
-> +	const char *pm;
-> +	int err;
-> +
-> +	err = of_property_read_string(np, "nand-ecc-placement", &pm);
-> +	if (!err) {
-> +		for (placement = NAND_ECC_PLACEMENT_INTERLEAVED;
-> +		     placement < ARRAY_SIZE(nand_ecc_placement); placement++) {
-> +			if (!strcasecmp(pm, nand_ecc_placement[placement]))
-> +				return placement;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * For backward compatibility we support few obsoleted values that don't
-> +	 * have their mappings into the nand_ecc_placement enum anymore.
-> +	 */
-> +	err = of_property_read_string(np, "nand-ecc-mode", &pm);
-> +	if (!err) {
-> +		if (!strcasecmp(pm, "hw_syndrome"))
-> +			return NAND_ECC_PLACEMENT_INTERLEAVED;
-> +	}
-> +
-> +	return NAND_ECC_PLACEMENT_UNKNOWN;
-> +}
-> +
->  static const char * const nand_ecc_algos[] = {
->  	[NAND_ECC_HAMMING]	= "hamming",
->  	[NAND_ECC_BCH]		= "bch",
-> @@ -5143,6 +5171,7 @@ static int nand_dt_init(struct nand_chip *chip)
->  
->  	ecc_mode = of_get_nand_ecc_mode(dn);
->  	ecc_algo = of_get_nand_ecc_algo(dn);
-> +	chip->ecc.placement = of_get_nand_ecc_placement(dn);
->  	ecc_strength = of_get_nand_ecc_strength(dn);
->  	ecc_step = of_get_nand_ecc_step_size(dn);
->  
+> -- 
+> 2.26.2
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
