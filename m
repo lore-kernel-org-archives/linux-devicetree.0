@@ -2,105 +2,116 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7230C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EB9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 944DA207F5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590671273;
-	bh=8+bOiBn4UNeBdFBuZD/p0QmjYGJU/3XrtqwKS+6zzpg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=B+FiljhM44tRAewEcfS1Kp5TJ/SG9WmMfgvgPOlyCSMHno3hj3JI+Xeqwr/7u90T+
-	 M5Ol8tGiJVqJHlepIkyePHWaA893TE19FA1wb/PG1Hr8bAE4nahv11L1n45L/KvMgF
-	 2Xh5vaU4gBIRAKZXuuG18rPo50/GMQsE/zEDUjcA=
+	by mail.kernel.org (Postfix) with ESMTP id 1A59420814
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390049AbgE1NHw (ORCPT
+        id S2390242AbgE1NNM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 09:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390031AbgE1NHv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 May 2020 09:07:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1D9206C3;
-        Thu, 28 May 2020 13:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590671271;
-        bh=8+bOiBn4UNeBdFBuZD/p0QmjYGJU/3XrtqwKS+6zzpg=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=CxtiDCqlNaippwrhA4i2xZr+ffnMK/syNCND6rSfmhvdLl4OLl9mmx8kY7nE93W5s
-         gFCpgBwgHAgBjfUey3uaWcHyjuyeCGvqSx2H/MhxcrhYkn1Wf2fxmp3Rlt1Jb7TWmj
-         G/Q1OSL6UUWc8xQBW6jE+loSktf5coi1ahy7ch48=
-Date:   Thu, 28 May 2020 14:07:47 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     catalin.marinas@arm.com, vkoul@kernel.org, mark.rutland@arm.com,
-        will.deacon@arm.com, s.hauer@pengutronix.de, festevam@gmail.com,
-        dan.j.williams@intel.com, Robin Gong <yibin.gong@nxp.com>,
-        shawnguo@kernel.org, u.kleine-koenig@pengutronix.de,
-        martin.fuzzey@flowbird.group, robh+dt@kernel.org
-Cc:     linux-imx@nxp.com, linux-spi@vger.kernel.org,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
-References: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
-Subject: Re: [PATCH v8 00/13] add ecspi ERR009165 for i.mx6/7 soc family
-Message-Id: <159067126729.55053.2503604469157949492.b4-ty@kernel.org>
+        Thu, 28 May 2020 09:13:12 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41922 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390241AbgE1NNL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:13:11 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 94FCE80307C0;
+        Thu, 28 May 2020 13:13:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id U40uSsS2PPMI; Thu, 28 May 2020 16:13:08 +0300 (MSK)
+Date:   Thu, 28 May 2020 16:13:07 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        SoC Team <soc@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 5/6] bus: Add Baikal-T1 APB-bus driver
+Message-ID: <20200528131307.phopcjymtqhl2jyr@mobilestation>
+References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526125928.17096-6-Sergey.Semin@baikalelectronics.ru>
+ <CAK8P3a1KT6G0pcLt56spm2O_Q5m_s+cdHfUrp2YUStS0wGigwQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1KT6G0pcLt56spm2O_Q5m_s+cdHfUrp2YUStS0wGigwQ@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 May 2020 04:34:12 +0800, Robin Gong wrote:
-> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> transfer to be send twice in DMA mode. Please get more information from:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
-> new sdma ram script which works in XCH  mode as PIO inside sdma instead
-> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
-> exist on all legacy i.mx6/7 soc family before i.mx6ul.
-> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
-> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
-> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
-> or not.
-> The first two reverted patches should be the same issue, though, it
-> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
-> have the chance to test this patch set if could fix their issues.
-> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> on i.mx8mm because the event id is zero.
+On Thu, May 28, 2020 at 02:17:17PM +0200, Arnd Bergmann wrote:
+> On Tue, May 26, 2020 at 2:59 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > Baikal-T1 AXI-APB bridge is used to access the SoC subsystem CSRs.
+> > IO requests are routed to this bus by means of the DW AMBA 3 AXI
+> > Interconnect. In case if an attempted APB transaction stays with no
+> > response for a pre-defined time an interrupt occurs and the bus gets
+> > freed for a next operation. This driver provides the interrupt handler
+> > to detect the erroneous address, prints an error message about the
+> > address fault, updates an errors counter. The counter and the APB-bus
+> > operations timeout can be accessed via corresponding sysfs nodes.
+> > A dedicated sysfs-node can be also used to artificially cause the
+> > bus errors described above.
+> >
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Olof Johansson <olof@lixom.net>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: soc@kernel.org
+> > Cc: devicetree@vger.kernel.org
+> >
+> > ---
 > 
-> [...]
+> Applied with this fixup:
 
-Applied to
+I'm afraid linux/io.h is also needed here.(
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+-Sergey
 
-Thanks!
-
-[1/1] spi: imx: fallback to PIO if dma setup failure
-      commit: bcd8e7761ec9c128b9102b0833d9c7052ae2dbcf
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> 
+> --- a/drivers/bus/bt1-apb.c
+> +++ b/drivers/bus/bt1-apb.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/nmi.h>
+> +#include <linux/of.h>
+>  #include <linux/regmap.h>
+>  #include <linux/clk.h>
+>  #include <linux/reset.h>
+> @@ -309,13 +310,13 @@ static ssize_t timeout_store(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RW(timeout);
+> 
+> -static int inject_error_show(struct device *dev, struct device_attribute *attr,
+> +static ssize_t inject_error_show(struct device *dev, struct
+> device_attribute *attr,
+>                              char *buf)
+>  {
+>         return scnprintf(buf, PAGE_SIZE, "Error injection: nodev irq\n");
+>  }
+> 
+> -static int inject_error_store(struct device *dev,
+> +static ssize_t inject_error_store(struct device *dev,
+>                               struct device_attribute *attr,
+>                               const char *data, size_t count)
+>  {
