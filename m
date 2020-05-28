@@ -2,101 +2,203 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB5AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B22C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF945207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:28:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XhU9Ag1Z"
+	by mail.kernel.org (Postfix) with ESMTP id E35EF207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 13:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390392AbgE1N2I (ORCPT
+        id S2390310AbgE1N31 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 09:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60658 "EHLO
+        Thu, 28 May 2020 09:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390383AbgE1N14 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:27:56 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24D0C08C5C7
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:27:55 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f185so2046002wmf.3
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:27:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9cN8WC7B8xH4SW3c0YEgj3hG2uP+gsYVa8Phs/daLJo=;
-        b=XhU9Ag1ZLhT6nRnPcN/QI44p0PvvTskUnXmbN7WZRjd0YK63lIUd2JzL7Ymo5MnHpF
-         CKuiJgYA8GajqzmjbrwTZBPpRm1rdmf9aUTcTr1Ptu7f5DEizfgwzQrBN1yqo1ZynKXM
-         gsHFRlzRGEEKjj4pUGIUil9HKgvMyyc+xTk3o3rxmRZ/WDY2zuuNKPNoGZvDvhFReQPU
-         JmRi9ZP6d6BgpPtIXPvFqOgY2ngEhp0ozEYddVmRNK/q3inC/U8ubvRcTlBaypFAdyte
-         9nV1SyMkXnOZOBNr6wmwBL5sDwijzaWBPwXlRsa4Qmfc7ohCOkuaeKf+EOcAtG2Tvg/2
-         dM+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9cN8WC7B8xH4SW3c0YEgj3hG2uP+gsYVa8Phs/daLJo=;
-        b=tEn1wKzXwx5I4wluB4aYvjW9TOoTJI/cGdayhfH01lY3UY4KixRx8DyOPy/OPNujF2
-         O8KRbx4zQvqpBsPfWAYftXhpkDpQK9rsVB1WDLOD+++UTnqs43/oMaLpJ0VJF4KjTm+W
-         8rAEEIJTiWb1DaQrRhgKdo+2Xo2roT7xuJR9xjbJSg4ZJQXOrEFrxVdE6k7GCO7umC8i
-         IqDQZN4q13lJpCms95RnLMGoR6jQlsC2vNeDE64SPpSdnT5d4df8lbaF94OyGxrYxoqJ
-         iNmTt4LzVGHEqPoRaGJw8GuHwJIItJ0XqpyyD7isEbLTeSnEgHgW6f6Uo3LJxpzkYkVb
-         NH3Q==
-X-Gm-Message-State: AOAM5305qIAmyZ7wZDY4wT3DvMeU+0aIkFUnvC6LXlJWExj82m97UlqK
-        rJTok2gmz9ijFL1kV1w05x5ZIw==
-X-Google-Smtp-Source: ABdhPJwGxbatIHlP4QiBp7yS7pM9Cy7ihGVx/tvTL9NgArY/12jr4DGk9+/NG/bPpKAD3mawZpovqQ==
-X-Received: by 2002:a1c:a943:: with SMTP id s64mr3345147wme.103.1590672474339;
-        Thu, 28 May 2020 06:27:54 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id q15sm6175408wrf.87.2020.05.28.06.27.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 06:27:53 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH net-next] dt-bindings: net: rename the bindings document for MediaTek STAR MAC
-Date:   Thu, 28 May 2020 15:27:43 +0200
-Message-Id: <20200528132743.9221-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S2390411AbgE1N25 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 09:28:57 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA16C08C5C6
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 06:28:56 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:21:946d:6344:ccc1])
+        by michel.telenet-ops.be with bizsmtp
+        id kDUu2200G55ue4H06DUu0H; Thu, 28 May 2020 15:28:55 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jeIac-000869-NQ; Thu, 28 May 2020 15:28:54 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jeIac-0000T6-LX; Thu, 28 May 2020 15:28:54 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Chris Brandt <chris.brandt@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: irqchip: renesas-rza1-irqc: Convert to json-schema
+Date:   Thu, 28 May 2020 15:28:53 +0200
+Message-Id: <20200528132853.1751-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Convert the Renesas RZ/A1 Interrupt Controller Device Tree binding
+documentation to json-schema.
 
-The driver itself was renamed before getting merged into mainline, but
-the binding document kept the old name. This makes both names consistent.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml}        | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml} (100%)
+Validation depends on "[PATCH dt-schema] Fix interrupt controllers with
+interrupt-map".
+http://lore.kernel.org/r/20200528132323.30288-1-geert+renesas@glider.be
+---
+ .../renesas,rza1-irqc.txt                     | 43 ----------
+ .../renesas,rza1-irqc.yaml                    | 80 +++++++++++++++++++
+ 2 files changed, 80 insertions(+), 43 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
-similarity index 100%
-rename from Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
-rename to Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+deleted file mode 100644
+index 727b7e4cd6e01110..0000000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-DT bindings for the Renesas RZ/A1 Interrupt Controller
+-
+-The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+-RZ/A1 and RZ/A2 SoCs:
+-  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+-    interrupts,
+-  - NMI edge select.
+-
+-Required properties:
+-  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+-		fallback.
+-		Examples with soctypes are:
+-		  - "renesas,r7s72100-irqc" (RZ/A1H)
+-		  - "renesas,r7s9210-irqc" (RZ/A2M)
+-  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+-				 in interrupts.txt in this directory)
+-  - #address-cells: Must be zero
+-  - interrupt-controller: Marks the device as an interrupt controller
+-  - reg: Base address and length of the memory resource used by the interrupt
+-         controller
+-  - interrupt-map: Specifies the mapping from external interrupts to GIC
+-		   interrupts
+-  - interrupt-map-mask: Must be <7 0>
+-
+-Example:
+-
+-	irqc: interrupt-controller@fcfef800 {
+-		compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
+-		#interrupt-cells = <2>;
+-		#address-cells = <0>;
+-		interrupt-controller;
+-		reg = <0xfcfef800 0x6>;
+-		interrupt-map =
+-			<0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+-			<1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+-			<2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+-			<3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+-			<4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+-			<5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+-			<6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+-			<7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-map-mask = <7 0>;
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml
+new file mode 100644
+index 0000000000000000..755cdfabfcd06c85
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/renesas,rza1-irqc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/A1 Interrupt Controller
++
++maintainers:
++  - Chris Brandt <chris.brandt@renesas.com>
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++
++description: |
++  The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas RZ/A1 and
++  RZ/A2 SoCs:
++    - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI interrupts,
++    - NMI edge select.
++
++allOf:
++  - $ref: /schemas/interrupt-controller.yaml#
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r7s72100-irqc # RZ/A1H
++          - renesas,r7s9210-irqc  # RZ/A2M
++      - const: renesas,rza1-irqc
++
++  '#interrupt-cells':
++    const: 2
++
++  '#address-cells':
++    const: 0
++
++  interrupt-controller: true
++
++  reg:
++    maxItems: 1
++
++  interrupt-map:
++    maxItems: 8
++    description: Specifies the mapping from external interrupts to GIC interrupts.
++
++  interrupt-map-mask:
++    items:
++      - const: 7
++      - const: 0
++
++required:
++  - compatible
++  - '#interrupt-cells'
++  - '#address-cells'
++  - interrupt-controller
++  - reg
++  - interrupt-map
++  - interrupt-map-mask
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    irqc: interrupt-controller@fcfef800 {
++            compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
++            #interrupt-cells = <2>;
++            #address-cells = <0>;
++            interrupt-controller;
++            reg = <0xfcfef800 0x6>;
++            interrupt-map =
++                    <0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++                    <1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++                    <2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++                    <3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++                    <4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++                    <5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++                    <6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++                    <7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-map-mask = <7 0>;
++    };
 -- 
-2.26.1
+2.17.1
 
