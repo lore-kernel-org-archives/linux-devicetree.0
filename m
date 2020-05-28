@@ -2,101 +2,143 @@ Return-Path: <SRS0=2ZKK=7K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F856C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F597C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBEA208DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:04:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="csRnMECV"
+	by mail.kernel.org (Postfix) with ESMTP id 019B420721
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 May 2020 14:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590674736;
+	bh=y1z9dlJ3EhIXj2RWA0vbMrF2xmkbQlAPyyia0RW25Rc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NbeNB5tei5abKRfb0OzdBGohNlrvMDKjWuCYmq16buevFBJnKg0p0IvAC2XgU0D0c
+	 1BpLB/HHiQe4ClCmc/HXH+gZn2IlKi3GrERnh/2FJyb1VvqFc1YQsolpWUdGlzRzYD
+	 0GrsdRVHcLxBchWTeyrmYN5XoQv3dSDr3qjEM8i8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390821AbgE1ODz (ORCPT
+        id S2390665AbgE1OFe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 10:03:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51528 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390540AbgE1ODy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:03:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SE3qOZ053937;
-        Thu, 28 May 2020 09:03:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590674632;
-        bh=j+jYUA7ka/3qyjpxH/nDKvWzSCPoUhZ1c6rVQDSScB8=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=csRnMECVMfu7GrC4mbKtruH14oxp2yNBYNcPrRN9+BuAwBnO+yK+uSKajHV0I3v+2
-         TnXbSyPvwExCPBGUtXdRcbpTJVQYO9GQCApPTB5G4NKeH/14JoNPVWdEbFBUIBOiYH
-         Y4eIaHGOCxT3unsxGHv92wyMg91NJy6f6cr/6KJs=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SE3q8T078279
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 09:03:52 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 09:03:52 -0500
-Received: from DFLE110.ent.ti.com ([fe80::c545:bde0:ab70:bae9]) by
- DFLE110.ent.ti.com ([fe80::c545:bde0:ab70:bae9%19]) with mapi id
- 15.01.1979.003; Thu, 28 May 2020 09:03:51 -0500
-From:   "Rivera-Matos, Ricardo" <r-rivera-matos@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "Murphy, Dan" <dmurphy@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "sspatil@android.com" <sspatil@android.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Davis, Andrew" <afd@ti.com>, "sre@kernel.org" <sre@kernel.org>,
-        "pali@kernel.org" <pali@kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH v10 3/4] dt-bindings: power: Add the
- bindings for the bq2515x family of chargers.
-Thread-Topic: [EXTERNAL] Re: [PATCH v10 3/4] dt-bindings: power: Add the
- bindings for the bq2515x family of chargers.
-Thread-Index: AQHWNH0upizOK6Pkw0S1By7U4xiB96i92X4A//+vKWU=
-Date:   Thu, 28 May 2020 14:03:51 +0000
-Message-ID: <5936FE36-AF55-41EF-80DA-786A4111BAF2@ti.com>
-References: <20200527231743.18066-1-r-rivera-matos@ti.com>
- <20200527231743.18066-4-r-rivera-matos@ti.com>,<20200528135312.GA4156923@bogus>
-In-Reply-To: <20200528135312.GA4156923@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 28 May 2020 10:05:34 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42301 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390596AbgE1OF3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 10:05:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id d5so20567626ios.9;
+        Thu, 28 May 2020 07:05:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SLMEy6Ytljxjg8a2KXQ/FizRno8giPzwlWNr4nIvO0E=;
+        b=Y1QmPcCNT+4dpmz3ep3znCua571UqhZRq6K2HRWcArhtge1giNZ+gbPZwOExXiDkqY
+         qctOyP9SO9n5kYruKrBy4Zkv1rUvCSluZzSHeM8RyesSp1Lnrtgu83cTa8auVFuCGOJc
+         KxuGkkN3XQ9XBRiTF6UolmKrkXaM1yBQ2ItrCRFa3g3iojQqVZJBdUNEGVcroxx10R9h
+         aHssLK3ZDEBOaFTobfEQiDN0BVC6f2/tFGB74eOLes2ONauX8eToETQIA7xQJ8ntNb+b
+         Z8pvoB+IWLZ/bOJuH+AvVdyuADaoOroCO8t8VtFU2wSJoGZs7tmnPrQIfWCZBIQ5D249
+         vH7w==
+X-Gm-Message-State: AOAM530EuzDKDZD7WotmrwWn2UIvZ1BbbIZH6J0Wawoh5crDG138XEs+
+        9MPH6Pu3dKMukhsCHSODmA==
+X-Google-Smtp-Source: ABdhPJzoX/OrRJgrF0RLFSzW9vlhDIhoXc7lQcsFo+49D/RYaTtv2OthkVdqcft8AlGIdyG+p7PixA==
+X-Received: by 2002:a5d:9dd2:: with SMTP id 18mr2468310ioo.196.1590674728083;
+        Thu, 28 May 2020 07:05:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n27sm3317522ild.76.2020.05.28.07.05.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:05:26 -0700 (PDT)
+Received: (nullmailer pid 4173461 invoked by uid 1000);
+        Thu, 28 May 2020 14:05:25 -0000
+Date:   Thu, 28 May 2020 08:05:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: sound: tlv320adcx140: Add GPI config
+ property
+Message-ID: <20200528140525.GA4166160@bogus>
+References: <20200526200917.10385-1-dmurphy@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526200917.10385-1-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCj4gT24gTWF5IDI4LCAyMDIwLCBhdCAwODo1MywgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6DQo+IA0KPiDvu79PbiBXZWQsIDI3IE1heSAyMDIwIDE4OjE3OjQyIC0wNTAw
-LCBSaWNhcmRvIFJpdmVyYS1NYXRvcyB3cm90ZToNCj4+IFRoZSBCUTI1MTVYIGZhbWlseSBvZiBk
-ZXZpY2VzIGFyZSBoaWdobHkgaW50ZWdyYXRlZCBiYXR0ZXJ5IG1hbmFnZW1lbnQNCj4+IElDcyB0
-aGF0IGludGVncmF0ZSB0aGUgbW9zdCBjb21tb24gZnVuY3Rpb25zIGZvciB3ZWFyYWJsZSBkZXZp
-Y2VzDQo+PiBuYW1lbHkgYSBjaGFyZ2VyLCBhbiBvdXRwdXQgdm9sdGFnZSByYWlsLCBBREMgZm9y
-IGJhdHRlcnkgYW5kIHN5c3RlbQ0KPj4gbW9uaXRvcmluZywgYW5kIGEgcHVzaC1idXR0b24gY29u
-dHJvbGxlci4NCj4+IA0KPj4gRGF0YXNoZWV0czoNCj4+IGh0dHA6Ly93d3cudGkuY29tL2xpdC9k
-cy9zeW1saW5rL2JxMjUxNTAucGRmDQo+PiBodHRwOi8vd3d3LnRpLmNvbS9saXQvZHMvc3ltbGlu
-ay9icTI1MTU1LnBkZg0KPj4gDQo+PiBTaWduZWQtb2ZmLWJ5OiBSaWNhcmRvIFJpdmVyYS1NYXRv
-cyA8ci1yaXZlcmEtbWF0b3NAdGkuY29tPg0KPj4gLS0tDQo+PiAuLi4vYmluZGluZ3MvcG93ZXIv
-c3VwcGx5L2JxMjUxNXgueWFtbCAgICAgICAgfCA5MSArKysrKysrKysrKysrKysrKysrDQo+PiAx
-IGZpbGUgY2hhbmdlZCwgOTEgaW5zZXJ0aW9ucygrKQ0KPj4gY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBwbHkvYnEyNTE1eC55YW1s
-DQo+PiANCj4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21ha2UgZHRfYmlu
-ZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4gDQo+IC9idWlsZHMvcm9iaGVycmluZy9saW51
-eC1kdC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3N1cHBs
-eS9icTI1MTV4LmV4YW1wbGUuZHQueWFtbDogY2hhcmdlckA2YjogJ2xvdy1wb3dlci1ncGlvcycg
-ZG9lcyBub3QgbWF0Y2ggYW55IG9mIHRoZSByZWdleGVzOiAncGluY3RybC1bMC05XSsnDQo+IA0K
-PiBTZWUgaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMjk5MjYxDQo+IA0KPiBJ
-ZiB5b3UgYWxyZWFkeSByYW4gJ21ha2UgZHRfYmluZGluZ19jaGVjaycgYW5kIGRpZG4ndCBzZWUg
-dGhlIGFib3ZlDQo+IGVycm9yKHMpLCB0aGVuIG1ha2Ugc3VyZSBkdC1zY2hlbWEgaXMgdXAgdG8g
-ZGF0ZToNCj4gDQo+IHBpcDMgaW5zdGFsbCBnaXQraHR0cHM6Ly9naXRodWIuY29tL2RldmljZXRy
-ZWUtb3JnL2R0LXNjaGVtYS5naXRAbWFzdGVyIC0tdXBncmFkZQ0KPiANCj4gUGxlYXNlIGNoZWNr
-IGFuZCByZS1zdWJtaXQuDQpBQ0sNCj4gDQo=
+On Tue, May 26, 2020 at 03:09:16PM -0500, Dan Murphy wrote:
+> Add an array property that configures the General Purpose Input (GPI)
+> register.  The device has 4 GPI pins and each pin can be configured in 1
+> of 7 different ways.
+
+Dan seems to have trouble running get_maintainers.pl and Cc'ing the DT 
+list. Running 'make dt_binding_check' also seems to be a problem. Now 
+linux-next has these warnings:
+
+/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/sound/tlv320adcx140.example.dt.yaml: codec@4c: ti,gpi-config:0:0: 4 is greater than the maximum of 1
+/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/sound/tlv320adcx140.example.dt.yaml: codec@4c: ti,gpi-config:0:1: 5 is greater than the maximum of 1
+/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/sound/tlv320adcx140.example.dt.yaml: codec@4c: ti,gpi-config:0:2: 6 is greater than the maximum of 1
+/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/sound/tlv320adcx140.example.dt.yaml: codec@4c: ti,gpi-config:0:3: 7 is greater than the maximum of 1
+
+Please send a fix.
+
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../bindings/sound/tlv320adcx140.yaml         | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+> index daa6cc0e031b..e8a69b1c7ca9 100644
+> --- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+> +++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+> @@ -86,6 +86,32 @@ properties:
+>            maximum: 1
+>          default: [0, 0, 0, 0]
+>  
+> +  ti,gpi-config:
+> +    description: |
+> +       Defines the configuration for the general purpose input pins (GPI).
+> +       The array is defined as <GPI1 GPI2 GPI3 GPI4>.
+> +
+> +       0 - (default) disabled
+> +       1 - GPIX is configured as a general-purpose input (GPI)
+> +       2 - GPIX is configured as a master clock input (MCLK)
+> +       3 - GPIX is configured as an ASI input for daisy-chain (SDIN)
+> +       4 - GPIX is configured as a PDM data input for channel 1 and channel
+> +            (PDMDIN1)
+> +       5 - GPIX is configured as a PDM data input for channel 3 and channel
+> +            (PDMDIN2)
+> +       6 - GPIX is configured as a PDM data input for channel 5 and channel
+> +            (PDMDIN3)
+> +       7 - GPIX is configured as a PDM data input for channel 7 and channel
+> +            (PDMDIN4)
+> +
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - minItems: 1
+> +        maxItems: 4
+> +        items:
+> +          maximum: 1
+
+I believe you want '7' here.
+
+> +        default: [0, 0, 0, 0]
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -101,6 +127,7 @@ examples:
+>          reg = <0x4c>;
+>          ti,mic-bias-source = <6>;
+>          ti,pdm-edge-select = <0 1 0 1>;
+> +        ti,gpi-config = <4 5 6 7>;
+>          reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+>        };
+>      };
+> -- 
+> 2.26.2
+> 
