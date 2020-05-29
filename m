@@ -2,115 +2,96 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FDCC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 09:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F992C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBAF7207D4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 09:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5EF207D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590747142;
+	bh=Yl+5FEwzOOeZ8hYUoXsCXAbU3LDBkX87gD4CrrxKtSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iEjifDcuyPKkNdHwcIg5UaTZNMCtpJAo5NcYzEdZ/9CgBwrrMOcfheJXKB8e2rHXb
+	 UymwjDOGzsf92UljmGW286Ox1blYTnRI6LcSsHw+eHQytS/jAjJqvP3Xw4QUbtLBvZ
+	 iMZ554D7HXEwNHeDp1wpW1KJwFuTV5lVKCUBD9uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbgE2J4s (ORCPT
+        id S1726555AbgE2KMS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 05:56:48 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:46958 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE2J4s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 05:56:48 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E2EF08030807;
-        Fri, 29 May 2020 09:56:44 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Vh2S5JHfX0OB; Fri, 29 May 2020 12:56:44 +0300 (MSK)
-Date:   Fri, 29 May 2020 12:56:43 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 03/16] spi: dw: Locally wait for the DMA transactions
- completion
-Message-ID: <20200529095643.q3pa5lqg63dgf3kf@mobilestation>
-References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
- <20200529035915.20790-4-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VcT2zKnuRW3uxCQtbF0A65cbS20OFpz9sX0hftbjFp1hA@mail.gmail.com>
- <20200529081204.e2j5unvvfikr2y7v@mobilestation>
- <20200529092610.GX1634618@smile.fi.intel.com>
+        Fri, 29 May 2020 06:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgE2KMR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 06:12:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99C412074D;
+        Fri, 29 May 2020 10:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590747137;
+        bh=Yl+5FEwzOOeZ8hYUoXsCXAbU3LDBkX87gD4CrrxKtSs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yNzc+6/JphBjd5egkaD9BnpKWOOfFI4ax9kFqcSb30A43a5fGOeZLBcjqQ5K12KpQ
+         BBhsv8gKvsvILykkAjdjQv8OBLRXBiUK1QcJD+1VHoovufrAK8bAlisdKfQycTSCqg
+         VLyxNIVURxjUGEHIJg9LzB1m/DgVdPm8VbkzD7iA=
+Date:   Fri, 29 May 2020 12:12:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        agross@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [RFC v3 0/3] Re-introduce TX FIFO resize for larger EP bursting
+Message-ID: <20200529101214.GA1321073@kroah.com>
+References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529092610.GX1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 12:26:10PM +0300, Andy Shevchenko wrote:
-> On Fri, May 29, 2020 at 11:12:04AM +0300, Serge Semin wrote:
-> > On Fri, May 29, 2020 at 10:55:32AM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 29, 2020 at 7:02 AM Serge Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > Even if DMA transactions are finished it doesn't mean that the SPI
-> > > > transfers are also completed. It's specifically concerns the Tx-only
-> > > > SPI transfers, since there might be data left in the SPI Tx FIFO after
-> > > > the DMA engine notifies that the Tx DMA procedure is done. In order to
-> > > > completely fix the problem first the driver has to wait for the DMA
-> > > > transaction completion, then for the corresponding SPI operations to be
-> > > > finished. In this commit we implement the former part of the solution.
-> > > >
-> > > > Note we can't just move the SPI operations wait procedure to the DMA
-> > > > completion callbacks, since these callbacks might be executed in the
-> > > > tasklet context (and they will be in case of the DW DMA). In case of
-> > > > slow SPI bus it can cause significant system performance drop.
-> > > 
-> > 
-> > > I read commit message, I read the code. What's going on here since you
-> > > repeated xfer_completion (and its wait routine) from SPI core and I'm
-> > > wondering what happened to it? Why we are not calling
-> > > spi_finalize_current_transfer()?
-> > 
-> > We discussed that in v4. You complained about using ndelay() for slow SPI bus,
-> > which may cause too long atomic context execution. We agreed. Since we can't wait
-> > in the tasklet context and using a dedicated kernel thread for waiting would be too
-> > much, Me and Mark agreed, that
+On Wed, May 27, 2020 at 06:46:00PM -0700, Wesley Cheng wrote:
+> Changes in V3:
+>  - Removed "Reviewed-by" tags
+>  - Renamed series back to RFC
+>  - Modified logic to ensure that fifo_size is reset if we pass the minimum
+>    threshold.  Tested with binding multiple FDs requesting 6 FIFOs.
 > 
+> Changes in V2:
+>  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
+>    FIFO.
+>  - Removed dev_dbg() prints and fixed typos from patches
+>  - Added some more description on the dt-bindings commit message
+> 
+> Currently, there is no functionality to allow for resizing the TXFIFOs, and
+> relying on the HW default setting for the TXFIFO depth.  In most cases, the
+> HW default is probably sufficient, but for USB compositions that contain
+> multiple functions that require EP bursting, the default settings
+> might not be enough.  Also to note, the current SW will assign an EP to a
+> function driver w/o checking to see if the TXFIFO size for that particular
+> EP is large enough. (this is a problem if there are multiple HW defined
+> values for the TXFIFO size)
+> 
+> It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
+> is required for an EP that supports bursting.  Otherwise, there may be
+> frequent occurences of bursts ending.  For high bandwidth functions,
+> such as data tethering (protocols that support data aggregation), mass
+> storage, and media transfer protocol (over FFS), the bMaxBurst value can be
+> large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
+> throughput. (which can be associated to system access latency, etc...)  It
+> allows for a more consistent burst of traffic, w/o any interruptions, as
+> data is readily available in the FIFO.
+> 
+> With testing done using the mass storage function driver, the results show
+> that with a larger TXFIFO depth, the bandwidth increased significantly.
 
-> > even if it causes us of the local wait-function
-> > re-implementation the best approach would be not to use the generic
-> > spi_transfer_wait() method, but instead wait for the DMA transactions locally
-> > in the DMA driver and just return 0 from the transfer_one callback indicating
-> > that the SPI transfer is finished and there is no need for SPI core to wait. As
-> > a lot of DMA-based SPI drivers do.
-> 
-> The above is missed in the commit message.
-> 
-> > If you don't understand what the commit message says, just say so. I'll
-> > reformulate it.
-> 
-> See above. A bit of elaboration would be good. Thank you!
+Why is this still a "RFC" series?  That implies you don't want this
+applied...
 
-Agreed. I'll create a more detailed commit description, which will have the
-info you cited.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
