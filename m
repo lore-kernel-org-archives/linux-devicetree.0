@@ -6,84 +6,93 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461B1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C32EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24403207D4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A49207D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590779366;
-	bh=OSybS1bdQYxysAIMkZfUgLzKA8fRtglHj1x/ukrDWjE=;
+	s=default; t=1590779646;
+	bh=ddlofDIYR6Dl6040lB0eo6IJrVQZJ6cZJugQ0IZwV9o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZvJ86KlSqxfLH/QQvTKrczcrCbLGL/EW2NDFQwBQ8KsLconWEySo7Pn+mzBfqmBRO
-	 E9jWA/k7PiYfN7hrRrs/fFZSE5O7w5l+MhoX8jnmzKs0AP2uFdwOObjiDqzcvvaMwK
-	 12yjZufcz7h7TznZ4k21HhvQ1vSmVE4jXh6ReDAQ=
+	b=YJ3ZJ6O9dmM2wilhz3PoryQY9fX6RiJrlynh9kP6ryAJi0z4Bu0KsJAX3yfRO7SGk
+	 ek6zNFOG4chf9kXqo+oRITITMJiUBbJgSrK+HQqFnym7sh0ZZOw+DFl5bHv+tchUIM
+	 whmxNS+RKDK8SKyfuaCyYwuF7AVRCAG6kElBSs1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgE2TJZ (ORCPT
+        id S1727909AbgE2TOG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 15:09:25 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35626 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbgE2TJY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:09:24 -0400
-Received: by mail-io1-f66.google.com with SMTP id s18so528306ioe.2;
-        Fri, 29 May 2020 12:09:24 -0700 (PDT)
+        Fri, 29 May 2020 15:14:06 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46309 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbgE2TOG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:14:06 -0400
+Received: by mail-io1-f67.google.com with SMTP id j8so465681iog.13;
+        Fri, 29 May 2020 12:14:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Rr1goXJK8BMxAGVSV4RpdwFQVhpZLMMrPGCvMyp8M2M=;
-        b=GlA5mzJk2pCUd4TiFIavzq2FHAfrJ1qlUsBw+zkB9cEwpjhoyKkAuhMX8J1Aqhgibo
-         m/S5guwEQ52UHpdR+zSKL70bUwVqk0soe1bu1gjCw3yyAU67KiygAElZakapBvuPEWJo
-         v6i1ATm8+HSvmFgLmED3rGMoGqkcmPpBVC/HR/zhIba8XVVYHeI+tOi/PXUSpjvA5brR
-         EoWtEI+Pwf1k/O+5FvriHNBCe8+++Or4dRizP85hmHpm3sFUp3IFH2APAdhLEQyHTP+4
-         JOjz9urm8wfJxFH2wOrE+rEal8LzmWOEVD/vbc6ieGLHTO4IVfiEWSDz6fGKjhxoyIN/
-         iVyQ==
-X-Gm-Message-State: AOAM530U2qem2DKGFi/HdhuiIil5T6W6f1P31/soAod8cL8OhGIjscDO
-        yjyz755i67u9KoQL8anXTw==
-X-Google-Smtp-Source: ABdhPJwKqVKIdiKJxA/Zb76IXqGFs3RbwY+WvmRL/MwdmRswaz9K1wqJnciiP6ylwbuMEU9HjSjG/g==
-X-Received: by 2002:a6b:7841:: with SMTP id h1mr7950694iop.101.1590779363667;
-        Fri, 29 May 2020 12:09:23 -0700 (PDT)
+        bh=patu6bOLsBycuGCIEsa9IJnB9XRHTZoUGaSCrN0jEK8=;
+        b=m5F0iFup/WtRRAXbvrH3M6vg3u6qIR3fE+AQArBoddHWrsWkFtR0xn9/HXk76mT+tL
+         hBYz14a8GdYxo8yvxidyIVN9DIN8SFKOFzZXNHqi+N5YhYmjNVUz86ecRMAZHRYx/wc+
+         Eqna5+Fz/34aoie8CCjvQMXrAtRoOFrFWqEPpSnB0me+8og4M7yBQ8ZZW/dltP2ovw4k
+         RlSbGf1XOC5a/Eb1/PF3pNR8b7zJ9nF4YJ92iVsZNNt+ELugOq1IDrwTlxEHCQ9hbvwI
+         1ypjpl+zn9e3SxsGqI6fsMNXZynflDZb/em1775tg00SejodZJSPY6A5/VmbB6YHaPve
+         BlzA==
+X-Gm-Message-State: AOAM531l4+K4c8zrrrCLvMoUtitSUhmqRpXmWMLo9ZVfRu4CJUoL5Vgv
+        i33GmTEBSItBSbXl7COyOmN7OY2XAA==
+X-Google-Smtp-Source: ABdhPJzP8tAzNW8lGMh87KDtVvukZdpyVgGAXw8egTyzuJqRvIwXhIErM7CQrL7OxIcpOluDlRLCUA==
+X-Received: by 2002:a02:c802:: with SMTP id p2mr8758691jao.111.1590779644584;
+        Fri, 29 May 2020 12:14:04 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a17sm5134377ild.31.2020.05.29.12.09.21
+        by smtp.gmail.com with ESMTPSA id j9sm5188179ilr.18.2020.05.29.12.14.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:09:22 -0700 (PDT)
-Received: (nullmailer pid 2770980 invoked by uid 1000);
-        Fri, 29 May 2020 19:09:20 -0000
-Date:   Fri, 29 May 2020 13:09:20 -0600
+        Fri, 29 May 2020 12:14:03 -0700 (PDT)
+Received: (nullmailer pid 2778355 invoked by uid 1000);
+        Fri, 29 May 2020 19:14:02 -0000
+Date:   Fri, 29 May 2020 13:14:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: thermal: rcar-thermal: Add device tree
- support for r8a7742
-Message-ID: <20200529190920.GA2770927@bogus>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: timer: renesas,cmt: Document r8a7742
+ CMT support
+Message-ID: <20200529191402.GA2771130@bogus>
 References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590614320-30160-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590614320-30160-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdX+m7WixJiNJyrpHxjnp5vFHi3ULuT7QgPOA93NE1XiHQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590614320-30160-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <CAMuHMdX+m7WixJiNJyrpHxjnp5vFHi3ULuT7QgPOA93NE1XiHQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 May 2020 22:18:37 +0100, Lad Prabhakar wrote:
-> Add thermal sensor support for r8a7742 SoC. The Renesas RZ/G1H
-> (r8a7742) thermal sensor module is identical to the R-Car Gen2 family.
+On Fri, May 29, 2020 at 02:53:02PM +0200, Geert Uytterhoeven wrote:
+> Hi Prabhakar,
 > 
-> No driver change is needed due to the fallback compatible value
-> "renesas,rcar-gen2-thermal".
+> On Wed, May 27, 2020 at 11:19 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Document SoC specific compatible strings for r8a7742. No driver change
+> > is needed as the fallback strings will activate the right code.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/thermal/rcar-thermal.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
+> Please note this DT binding is under yamlization, cfr.
+> "[PATCH v2] dt-bindings: timer: renesas: cmt: Convert to json-schema"
+> (20200505155127.4836-1-geert+renesas@glider.be).
 
-Applied, thanks!
+Do I need to pick that one up? Doesn't look like it's been applied 
+AFAICT.
+
+Rob
