@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3BDC433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B324EC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1E252145D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFB821531
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgE2NNI (ORCPT
+        id S1727063AbgE2NMX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 09:13:08 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48170 "EHLO
+        Fri, 29 May 2020 09:12:23 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48080 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgE2NMY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 09:12:24 -0400
+        with ESMTP id S1726687AbgE2NMQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 09:12:16 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 08AD58029EA4;
-        Fri, 29 May 2020 13:12:22 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4B43D80307C7;
+        Fri, 29 May 2020 13:12:13 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nvj17jvvXrid; Fri, 29 May 2020 16:12:21 +0300 (MSK)
+        with ESMTP id T_m59eqelD5K; Fri, 29 May 2020 16:12:12 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
         Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 11/16] spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
-Date:   Fri, 29 May 2020 16:12:00 +0300
-Message-ID: <20200529131205.31838-12-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 01/16] spi: dw: Set xfer effective_speed_hz
+Date:   Fri, 29 May 2020 16:11:50 +0300
+Message-ID: <20200529131205.31838-2-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,43 +53,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since there is a generic method available to initialize the DW SPI DMA
-interface on any DT and ACPI-based platforms, which in general can be
-designed with not only DW DMAC but with any DMA engine on board, we can
-freely remove the CONFIG_DW_DMAC_PCI config from dependency list of
-CONFIG_SPI_DW_DMA. Especially seeing that we don't use anything DW DMAC
-specific in the new driver.
+Seeing DW APB SSI controller doesn't support setting the exactly
+requested SPI bus frequency, but only a rounded frequency determined
+by means of the odd-numbered half-worded reference clock divider,
+it would be good to tune the SPI core up and initialize the current
+transfer effective_speed_hz. By doing so the core will be able to
+execute the xfer-related delays with better accuracy.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Feng Tang <feng.tang@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 ---
- drivers/spi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-dw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 03b061975f70..6a84f3dad35c 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -228,7 +228,7 @@ config SPI_DESIGNWARE
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 9d6904d30104..050cb2ea0812 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -352,6 +352,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 		spi_set_clk(dws, chip->clk_div);
+ 	}
  
- config SPI_DW_DMA
- 	bool "DMA support for DW SPI controller"
--	depends on SPI_DESIGNWARE && DW_DMAC_PCI
-+	depends on SPI_DESIGNWARE
++	transfer->effective_speed_hz = dws->max_freq / chip->clk_div;
+ 	dws->n_bytes = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
  
- config SPI_DW_PCI
- 	tristate "PCI interface driver for DW SPI core"
+ 	cr0 = dws->update_cr0(master, spi, transfer);
 -- 
 2.26.2
 
