@@ -2,89 +2,92 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EEEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C724C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED61207F5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06CA2145D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590771086;
-	bh=8hJyhwyGGs/0tKnBqIAqpCQeA1UaPiuW2q/Yba8rG2A=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ooDRO9ofj7tckpTrv3i43sqOLyJhmcwNOiJ8rDYJnTsl0AaIi7b5zS9MNs8CidzoJ
-	 Q66aRtmyvt+OCBudnHqbNqSKfz5Pkfub4BQ9AS8E2eLWGQyDRUjA3ZukhbVoAgh0ux
-	 +i+zOZdToK1NG3Erd6DCqZZ43Ttp9jWNuKnUP+0k=
+	s=default; t=1590772071;
+	bh=ipKku03JalwgOXBCDtQMaYK28+5sAWvnBS9z3ig3sMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yJnsoxBUxytiQ1b0MjSNg1FbrKY3aXTeTkG+qN9Rez+SAfIXW/QyQ0vagFNHCmVvi
+	 F8HuMJG3xOc85dkCi9BDlPOxs6WQ++nVVLhlqYMVbaDqlvql576SanKS+YfSceXj+Y
+	 TSsuebZRHlq3W91pAANCIoOfyGO/6Zp+LMa8DTos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgE2QvZ (ORCPT
+        id S1725914AbgE2RHs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 12:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbgE2QvZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 12:51:25 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD032075A;
-        Fri, 29 May 2020 16:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590771084;
-        bh=8hJyhwyGGs/0tKnBqIAqpCQeA1UaPiuW2q/Yba8rG2A=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=xTh6HGyQlX4zqwbUrNz3iAsu6j6fKl+92as/zI12pq54MScl2Ktl8fu8CGKmQCdb2
-         VQk1U53m8s0saNnDXaHJgcUFZ+V9ko7YAFCzOl9D1v+ztOuu+p/9fCRGqtpg+XlbXP
-         FnUOJmDlzVpC+yu9ph8me/CTVidt5YGREPmixYXU=
-Date:   Fri, 29 May 2020 17:51:21 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>, lgirdwood@gmail.com, perex@perex.cz,
-        robh@kernel.org, tiwai@suse.com
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200528144711.18065-1-dmurphy@ti.com>
-References: <20200528144711.18065-1-dmurphy@ti.com>
-Subject: Re: [PATCH] dt-bindings: sound: tlv320adcx140: Fix dt-binding-check issue
-Message-Id: <159077105220.28617.4274589938858936015.b4-ty@kernel.org>
+        Fri, 29 May 2020 13:07:48 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41963 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2RHs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:07:48 -0400
+Received: by mail-il1-f193.google.com with SMTP id d1so3181715ila.8;
+        Fri, 29 May 2020 10:07:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MUooCf11G+wzFa88ewKcb5EHAEEa+XEEiZTRljzO3gM=;
+        b=KlQW+GxlLEh/0KTfk6YJU1Rfo/2EMPJ+t6nNxB2sXdKVIdQ1QaSrdUH9smVn/A43ZF
+         jKIVbnIf1gAbcolVffFUeMwyMFhxnmoijMwDOTsSB+2b+TMED5cy9zvR5qrWD3OAjzJ/
+         RUFqBuuziYcqILrU6TtcKSy5a9qMwhP/et7ONtNI8SLLSja88gtsNVyBSnuZzN3ixtTm
+         EkwvAZ210Za0052iTqNa7xMz6prBepmV1zc/uA8mzu1kA87FycgPWPAjzR2a/Ib9Mm6i
+         HTit7FY3EGWQ23QTukvuW1yTAYBSRCGxQj4B7QDdj4uNUxDl7of0C4AJyma6egXdf8mb
+         4duA==
+X-Gm-Message-State: AOAM532UBEV/7vZge/sWbbF4dpR6xYMWE72OM0y7XsCWnSPY3J87kJbs
+        WX03EF76kXF5TqdIa/kvBQ==
+X-Google-Smtp-Source: ABdhPJxBmlK7urpI9ApsfbfQd7gBioqSkjdj2dSXUO1JzWzfzgFdYXxVnOPUDRqf46kOGQCOV5afxQ==
+X-Received: by 2002:a92:8496:: with SMTP id y22mr1243486ilk.115.1590772067110;
+        Fri, 29 May 2020 10:07:47 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c23sm3276894ioc.28.2020.05.29.10.07.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:07:45 -0700 (PDT)
+Received: (nullmailer pid 2577192 invoked by uid 1000);
+        Fri, 29 May 2020 17:07:44 -0000
+Date:   Fri, 29 May 2020 11:07:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        heiko@sntech.de, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com, robh+dt@kernel.org
+Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg
+ property
+Message-ID: <20200529170744.GA2577033@bogus>
+References: <20200520073327.6016-1-jbx6244@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520073327.6016-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 09:47:11 -0500, Dan Murphy wrote:
-> Fix dt-binding-check issue
+On Wed, 20 May 2020 09:33:27 +0200, Johan Jonker wrote:
+> A test with the command below gives this error:
 > 
-> ti,gpi-config:0:0: 4 is greater than the maximum of 1
-> ti,gpi-config:0:1: 5 is greater than the maximum of 1
-> ti,gpi-config:0:2: 6 is greater than the maximum of 1
-> ti,gpi-config:0:3: 7 is greater than the maximum of 1
+> arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
+> touchscreen@3e: reg:0:0: 56 was expected
+> 
+> The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
+> was shipped with different addresses then the binding currently allows.
+> Change the reg property that any address will pass.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
+> edt-ft5x06.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/1] ASoC: tlv320adcx140: Fix dt-binding-check issue
-      commit: c8b47d63ad8755780b6b70dbe57ab8333bcc4a0f
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Applied, thanks!
