@@ -2,234 +2,598 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA9CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039D5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D908420897
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D50207F9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qcss8VbI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oKDEn1qh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgE2Q3F (ORCPT
+        id S1725681AbgE2QpK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 12:29:05 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:18253 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbgE2Q3E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 12:29:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590769743; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=++5XVB1edF20k7ZuQoruhRB+Yzom05jHCSFa/0b0SXY=; b=Qcss8VbIDPAotATSqXWSjaQomyZt5fXw4qCw4dJnH87SUl2QJWNS90vD5La7mUvM9TGlamDn
- pObVDtw24HyMX7hPaq3hASucGGrO9di3yjeuIB/VreQ6PEwQEdlvkj3z5ZhJpPJwTrVoyixp
- HPbh2zk8u3MUq5mAiQvBL3uqch0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ed1384f3131442d952d6353 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 16:29:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 113ECC433C6; Fri, 29 May 2020 16:29:02 +0000 (UTC)
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jackp)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B31CDC433C9;
-        Fri, 29 May 2020 16:29:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B31CDC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Fri, 29 May 2020 09:28:56 -0700
-From:   Jack Pham <jackp@codeaurora.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [RFC v3 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
- requirements
-Message-ID: <20200529162856.GA10327@jackp-linux.qualcomm.com>
-References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
- <1590630363-3934-2-git-send-email-wcheng@codeaurora.org>
+        Fri, 29 May 2020 12:45:10 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52874 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2QpJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 12:45:09 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TGj61X123903;
+        Fri, 29 May 2020 11:45:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590770706;
+        bh=+BsaNXkX96cr4oyzkZvNbppPpMOHw0Q+X59UUJg7nAI=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=oKDEn1qhMwnhKFGHwnuO1P7Fu04LvOExZnrR7Z+O3IysqX2u5fEczdZkSm68LWtWf
+         epkijJD8ZP8AFf/6txzEUOsic0yUhe2QxfC2EjbwjOGZU1027ySwTvYeXhUzaZZV74
+         ZjrZUKdpYotNqPeY+C4UXN5rcYvR+gNJV5CKnhVs=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TGj5QM001262;
+        Fri, 29 May 2020 11:45:06 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
+ May 2020 11:45:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 29 May 2020 11:45:05 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id 04TGj40c005218;
+        Fri, 29 May 2020 11:45:04 -0500
+Date:   Fri, 29 May 2020 11:45:02 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 1/2] dt-binbings: media: ti-vpe: Document the VIP driver
+Message-ID: <20200529164502.iuecqrirwm34mcyx@ti.com>
+References: <20200522225412.29440-1-bparrot@ti.com>
+ <20200522225412.29440-2-bparrot@ti.com>
+ <20200528233933.GA881467@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1590630363-3934-2-git-send-email-wcheng@codeaurora.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200528233933.GA881467@bogus>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wesley,
+Hi Rob,
 
-On Wed, May 27, 2020 at 06:46:01PM -0700, Wesley Cheng wrote:
-> Some devices have USB compositions which may require multiple endpoints
-> that support EP bursting.  HW defined TX FIFO sizes may not always be
-> sufficient for these compositions.  By utilizing flexible TX FIFO
-> allocation, this allows for endpoints to request the required FIFO depth to
-> achieve higher bandwidth.  With some higher bMaxBurst configurations, using
-> a larger TX FIFO size results in better TX throughput.
+Thanks for the review.
+
+Rob Herring <robh@kernel.org> wrote on Thu [2020-May-28 17:39:33 -0600]:
+> On Fri, May 22, 2020 at 05:54:11PM -0500, Benoit Parrot wrote:
+> > Device Tree bindings for the Video Input Port (VIP) driver.
 > 
-> Ensure that one TX FIFO is reserved for every IN endpoint.  This allows for
-> the FIFO logic to prevent running out of FIFO space.
+> Bindings document h/w, not drivers.
+
+I'll fix that.
+
 > 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  .../devicetree/bindings/media/ti,vip.yaml     | 394 ++++++++++++++++++
+> >  MAINTAINERS                                   |   1 +
+> >  2 files changed, 395 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/ti,vip.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/ti,vip.yaml b/Documentation/devicetree/bindings/media/ti,vip.yaml
+> > new file mode 100644
+> > index 000000000000..8a9084e42329
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/ti,vip.yaml
+> > @@ -0,0 +1,394 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/ti,vip.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Texas Instruments DRA7x VIDEO INPUT PORT (VIP) Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Benoit Parrot <bparrot@ti.com>
+> > +
+> > +description: |-
+> > +  The Video Input Port (VIP) is a key component for image capture
+> > +  applications. The capture module provides the system interface and the
+> > +  processing capability to connect parallel image-sensor as well as
+> > +  BT.656/1120 capable encoder chip to DRA7x device.
+> > +
+> > +  Each VIP instance supports 2 independently configurable external video
+> > +  input capture slices (Slice 0 and Slice 1) each providing up to two video
+> > +  input ports (Port A and Port B) where Port A can be configured as
+> > +  24/16/8-bit port and Port B is fixed as 8-bit port.
+> > +  Here these ports a represented as follows
+> > +    port@0 -> Slice 0 Port A
+> > +    port@1 -> Slice 0 Port B
+> > +    port@2 -> Slice 1 Port A
+> > +    port@3 -> Slice 1 Port B
+> > +
+> > +  Each camera port nodes should contain a 'port' child node with child
+> > +  'endpoint' node. Please refer to the bindings defined in
+> > +  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: ti,dra7-vip
+> > +
+> > +  label:
+> > +    description: Instance name
+> 
+> Kind of odd for this type of binding. Are there a define set or pattern 
+> of values.
 
-<snip>
+The label here are used to 'name' each H/W instance. And so far there can
+be a up to 3 instances with the currently available devices, but that
+doesn't mean there couldn't be more in the future. So I did not want to
+limit it here.
 
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 00746c2..9b09528 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -540,6 +540,117 @@ static int dwc3_gadget_start_config(struct dwc3_ep *dep)
->  	return 0;
->  }
->  
-> +/*
-> + * dwc3_gadget_resize_tx_fifos - reallocate fifo spaces for current use-case
-> + * @dwc: pointer to our context structure
-> + *
-> + * This function will a best effort FIFO allocation in order
-> + * to improve FIFO usage and throughput, while still allowing
-> + * us to enable as many endpoints as possible.
-> + *
-> + * Keep in mind that this operation will be highly dependent
-> + * on the configured size for RAM1 - which contains TxFifo -,
-> + * the amount of endpoints enabled on coreConsultant tool, and
-> + * the width of the Master Bus.
-> + *
-> + * In general, FIFO depths are represented with the following equation:
-> + *
-> + * fifo_size = mult * ((max_packet + mdwidth)/mdwidth + 1) + 1
-> + *
-> + * Conversions can be done to the equation to derive the number of packets that
-> + * will fit to a particular FIFO size value.
-> + */
-> +static int dwc3_gadget_resize_tx_fifos(struct dwc3 *dwc, struct dwc3_ep *dep)
+> 
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: The VIP main register region
+> > +      - description: Video Data Parser (PARSER) register region for Slice0
+> > +      - description: Color Space Conversion (CSC) register region for Slice0
+> > +      - description: Scaler (SC) register region for Slice0
+> > +      - description: Video Data Parser (PARSER) register region for Slice1
+> > +      - description: Color Space Conversion (CSC) register region for Slice1
+> > +      - description: Scaler (SC) register region for Slice1
+> > +      - description: Video Port Direct Memory Access (VPDMA) register region
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: vip
+> > +      - const: parser0
+> > +      - const: csc0
+> > +      - const: sc0
+> > +      - const: parser1
+> > +      - const: csc1
+> > +      - const: sc1
+> > +      - const: vpdma
+> > +
+> > +  interrupts:
+> > +    minItems: 2
+> > +    description:
+> > +      IRQ index 0 is used for Slice0 interrupts
+> > +      IRQ index 1 is used for Slice1 interrupts
+> > +
+> > +  ti,vip-clk-polarity:
+> > +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> > +    description:
+> > +      phandle to the device control module. The 1st argument should
+> > +      contain the register offset to the CTRL_CORE_SMA_SW_1 register.
+> > +      2nd argument contains the bit field to slice 0 port A,
+> > +      3rd argument contains the bit field to slice 0 port B,
+> > +      4th argument contains the bit field to slice 1 port A,
+> > +      5th argument contains the bit field to slice 1 port B.
+> > +
+> > +  # See ./video-interfaces.txt for details
+> > +  ports:
+> > +    type: object
+> > +    additionalProperties: false
+> > +
+> > +    properties:
+> > +      "#address-cells":
+> > +        const: 1
+> > +
+> > +      "#size-cells":
+> > +        const: 0
+> > +
+> > +      port@0:
+> > +        type: object
+> > +        additionalProperties: false
+> > +
+> > +        properties:
+> > +          reg:
+> > +            const: 0
+> > +            description: Slice 0 Port A
+> > +
+> > +          label:
+> > +            description: Port name. Usually the pin group name
+> > +
+> > +        patternProperties:
+> > +          endpoint:
+> > +            type: object
+> > +            additionalProperties: false
+> > +
+> > +            properties:
+> > +              hsync-active:
+> > +                maxItems: 1
+> 
+> Not an array. Just:
+> 
+> hsync-active: true
 
-The 'dep' param should be sufficient; we can just get 'dwc' from
-dep->dwc. That will make it more clear this function operates on each
-endpoint that needs resizing.
+OK I'll fix all of those.
 
-> +{
-> +	int ram1_depth, mdwidth, fifo_0_start, tmp, num_in_ep;
-> +	int min_depth, remaining, fifo_size, mult = 1, fifo, max_packet = 1024;
-> +
-> +	if (!dwc->needs_fifo_resize)
-> +		return 0;
-> +
-> +	/* resize IN endpoints except ep0 */
-> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <= 1)
-> +		return 0;
-> +
-> +	/* Don't resize already resized IN endpoint */
-> +	if (dep->fifo_depth)
-> +		return 0;
-> +
-> +	ram1_depth = DWC3_RAM1_DEPTH(dwc->hwparams.hwparams7);
-> +	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
-> +	/* MDWIDTH is represented in bits, we need it in bytes */
-> +	mdwidth >>= 3;
-> +
-> +	if (((dep->endpoint.maxburst > 1) &&
-> +			usb_endpoint_xfer_bulk(dep->endpoint.desc))
-> +			|| usb_endpoint_xfer_isoc(dep->endpoint.desc))
-> +		mult = 3;
-> +
-> +	if ((dep->endpoint.maxburst > 6) &&
-> +			usb_endpoint_xfer_bulk(dep->endpoint.desc)
-> +			&& dwc3_is_usb31(dwc))
-> +		mult = 6;
-> +
-> +	/* FIFO size for a single buffer */
-> +	fifo = (max_packet + mdwidth)/mdwidth;
-> +	fifo++;
-> +
-> +	/* Calculate the number of remaining EPs w/o any FIFO */
-> +	num_in_ep = dwc->num_eps/2;
-> +	num_in_ep -= dwc->num_ep_resized;
-> +	/* Ignore EP0 IN */
-> +	num_in_ep--;
-> +
-> +	/* Reserve at least one FIFO for the number of IN EPs */
-> +	min_depth = num_in_ep * (fifo+1);
-> +	remaining = ram1_depth - min_depth - dwc->last_fifo_depth;
-> +
-> +	/* We've already reserved 1 FIFO per EP, so check what we can fit in
-> +	 * addition to it.  If there is not enough remaining space, allocate
-> +	 * all the remaining space to the EP.
-> +	 */
-> +	fifo_size = (mult-1) * fifo;
-> +	if (remaining < fifo_size) {
-> +		if (remaining > 0)
-> +			fifo_size = remaining;
-> +		else
-> +			fifo_size = 0;
-> +	}
-> +
-> +	fifo_size += fifo;
-> +	fifo_size++;
-> +	dep->fifo_depth = fifo_size;
-> +
-> +	/* Check if TXFIFOs start at non-zero addr */
-> +	tmp = dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
-> +	fifo_0_start = DWC3_GTXFIFOSIZ_TXFSTADDR(tmp);
-> +
-> +	fifo_size |= (fifo_0_start + (dwc->last_fifo_depth << 16));
-> +	if (dwc3_is_usb31(dwc))
-> +		dwc->last_fifo_depth += DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
-> +	else
-> +		dwc->last_fifo_depth += DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
-> +
-> +	/* Check fifo size allocation doesn't exceed available RAM size. */
-> +	if (dwc->last_fifo_depth >= ram1_depth) {
-> +		dev_err(dwc->dev, "Fifosize(%d) > RAM size(%d) %s depth:%d\n",
-> +				(dwc->last_fifo_depth * mdwidth), ram1_depth,
-> +				dep->endpoint.name, fifo_size);
+> 
+> > +
+> > +              vsync-active:
+> > +                maxItems: 1
+> > +
+> > +              pclk-sample:
+> > +                maxItems: 1
+> > +
+> > +              bus-width:
+> > +                maxItems: 1
+> 
+> Not an array. What subset of values are allowed?
 
-Use dev_WARN() here and eliminate the WARN_ON(1) below?
+So something like oneOf with a list then?
 
-> +		if (dwc3_is_usb31(dwc))
-> +			fifo_size = DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
-> +		else
-> +			fifo_size = DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
-> +		dwc->last_fifo_depth -= fifo_size;
-> +		dep->fifo_depth = 0;
-> +		WARN_ON(1);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	dwc3_writel(dwc->regs, DWC3_GTXFIFOSIZ(dep->number >> 1), fifo_size);
-> +	dwc->num_ep_resized++;
-> +	return 0;
-> +}
-> +
->  static int dwc3_gadget_set_ep_config(struct dwc3_ep *dep, unsigned int action)
->  {
->  	const struct usb_ss_ep_comp_descriptor *comp_desc;
-> @@ -620,6 +731,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
->  	int			ret;
->  
->  	if (!(dep->flags & DWC3_EP_ENABLED)) {
-> +		ret = dwc3_gadget_resize_tx_fifos(dwc, dep);
-> +		if (ret)
-> +			return ret;
-> +
->  		ret = dwc3_gadget_start_config(dep);
->  		if (ret)
->  			return ret;
+> 
+> > +
+> > +              ti,vip-pixel-mux:
+> > +                type: boolean
+> > +                description:
+> > +                  In BT656/1120 mode, this enable pixel-muxing if
+> > +                  the number of channels is either 1, 2 or 4. If this
+> > +                  property is present then pixel-muxing is enabled
+> > +                  otherwise it will use line-muxing.
+> > +
+> > +              ti,vip-channels:
+> > +                $ref: "/schemas/types.yaml#definitions/uint8-array"
+> > +                minItems: 1
+> > +                maxItems: 16
+> > +                description: |-
+> > +                  In BT656/1120 mode, list of channel ids to be captured.
+> > +                  If the property is not present then 1 channel is assumed.
+> > +
+> > +              remote-endpoint: true
+> > +
+> > +        required:
+> > +          - reg
+> > +          - label
+> > +
+> > +      port@1:
+> > +        type: object
+> > +        additionalProperties: false
+> > +
+> > +        properties:
+> > +          reg:
+> > +            const: 1
+> > +            description: Slice 0 Port B
+> > +
+> > +          label:
+> > +            description: Port name. Usually the pin group name
+> > +
+> > +        patternProperties:
+> > +          endpoint:
+> > +            type: object
+> > +            additionalProperties: false
+> > +
+> > +            properties:
+> > +              hsync-active:
+> > +                maxItems: 1
+> > +
+> > +              vsync-active:
+> > +                maxItems: 1
+> > +
+> > +              pclk-sample:
+> > +                maxItems: 1
+> > +
+> > +              bus-width:
+> > +                maxItems: 1
+> > +
+> > +              ti,vip-pixel-mux:
+> > +                type: boolean
+> > +                description:
+> > +                  In BT656/1120 mode, this enable pixel-muxing if
+> > +                  the number of channels is either 1, 2 or 4. If this
+> > +                  property is present then pixel-muxing is enabled
+> > +                  otherwise it will use line-muxing.
+> > +
+> > +              ti,vip-channels:
+> > +                $ref: "/schemas/types.yaml#definitions/uint8-array"
+> > +                minItems: 1
+> > +                maxItems: 16
+> > +                description:
+> > +                  In BT656/1120 mode, list of channel ids to be captured.
+> > +                  If the property is not present then 1 channel is assumed.
+> > +
+> > +              remote-endpoint: true
+> > +
+> > +        required:
+> > +          - reg
+> > +          - label
+> > +
+> > +      port@2:
+> > +        type: object
+> > +        additionalProperties: false
+> > +
+> > +        properties:
+> > +          reg:
+> > +            const: 2
+> > +            description: Slice 1 Port A
+> > +
+> > +          label:
+> > +            description: Port name. Usually the pin group name
+> > +
+> > +        patternProperties:
+> > +          endpoint:
+> > +            type: object
+> > +            additionalProperties: false
+> > +
+> > +            properties:
+> > +              hsync-active:
+> > +                maxItems: 1
+> > +
+> > +              vsync-active:
+> > +                maxItems: 1
+> > +
+> > +              pclk-sample:
+> > +                maxItems: 1
+> > +
+> > +              bus-width:
+> > +                maxItems: 1
+> > +
+> > +              ti,vip-pixel-mux:
+> > +                type: boolean
+> > +                description:
+> > +                  In BT656/1120 mode, this enable pixel-muxing if
+> > +                  the number of channels is either 1, 2 or 4. If this
+> > +                  property is present then pixel-muxing is enabled
+> > +                  otherwise it will use line-muxing.
+> > +
+> > +              ti,vip-channels:
+> > +                $ref: "/schemas/types.yaml#definitions/uint8-array"
+> > +                minItems: 1
+> > +                maxItems: 16
+> > +                description:
+> > +                  In BT656/1120 mode, list of channel ids to be captured.
+> > +                  If the property is not present then 1 channel is assumed.
+> > +
+> > +              remote-endpoint: true
+> > +
+> > +        required:
+> > +          - reg
+> > +          - label
+> > +
+> > +      port@3:
+> > +        type: object
+> > +        additionalProperties: false
+> > +
+> > +        properties:
+> > +          reg:
+> > +            const: 3
+> > +            description: Slice 1 Port B
+> > +
+> > +          label:
+> > +            description: Port name. Usually the pin group name
+> > +
+> > +        patternProperties:
+> > +          endpoint:
+> > +            type: object
+> > +            additionalProperties: false
+> > +
+> > +            properties:
+> > +              hsync-active:
+> > +                maxItems: 1
+> > +
+> > +              vsync-active:
+> > +                maxItems: 1
+> > +
+> > +              pclk-sample:
+> > +                maxItems: 1
+> > +
+> > +              bus-width:
+> > +                maxItems: 1
+> > +
+> > +              ti,vip-pixel-mux:
+> > +                type: boolean
+> > +                description:
+> > +                  In BT656/1120 mode, this enable pixel-muxing if
+> > +                  the number of channels is either 1, 2 or 4. If this
+> > +                  property is present then pixel-muxing is enabled
+> > +                  otherwise it will use line-muxing.
+> > +
+> > +              ti,vip-channels:
+> > +                $ref: "/schemas/types.yaml#definitions/uint8-array"
+> > +                minItems: 1
+> > +                maxItems: 16
+> > +                description:
+> > +                  In BT656/1120 mode, list of channel ids to be captured.
+> > +                  If the property is not present then 1 channel is assumed.
+> > +
+> > +              remote-endpoint: true
+> 
+> If all the properties are the same across ports, then do a 
+> patternProperties with '^port@' and define them there. You'll still need 
+> 'port@0', etc. to define what each port is.
 
-Jack
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Yeah I had tried to define something like that but I couldn't make pass
+dt-binding-check wihtout any errors/warnings.
+
+Can you point me to a recent example using this syntax?
+Last time I check I couldn't find one.
+
+Also I am not quite clear on the mechanism, you said to create a
+patterProperties and then I wouols also have to define the individual port
+themselves so I would have something like this:
+
+      port@0:
+        type: object
+        additionalProperties: false
+
+        properties:
+          reg:
+            const: 0
+            description: Slice 0 Port A
+
+          label:
+            description: Port name. Usually the pin group name
+
+      port@1:
+        type: object
+        additionalProperties: false
+
+        properties:
+          reg:
+            const: 1
+            description: Slice 0 Port B
+
+          label:
+            description: Port name. Usually the pin group name
+
+      port@2:
+        type: object
+        additionalProperties: false
+
+        properties:
+          reg:
+            const: 2
+            description: Slice 1 Port A
+
+          label:
+            description: Port name. Usually the pin group name
+
+      port@3:
+        type: object
+        additionalProperties: false
+
+        properties:
+          reg:
+            const: 3
+            description: Slice 1 Port B
+
+          label:
+            description: Port name. Usually the pin group name
+
+And then in some way reference the patternProperties?
+Or just put it before the individual ports?
+
+> 
+> > +
+> > +        required:
+> > +          - reg
+> > +          - label
+> > +
+> > +    required:
+> > +      - "#address-cells"
+> > +      - "#size-cells"
+> > +      - port@0
+> > +
+> > +required:
+> > +  - compatible
+> > +  - label
+> > +  - reg
+> > +  - reg-names
+> > +  - interrupts
+> > +  - ti,vip-clk-polarity
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    vip1: vip@48970000 {
+> > +        compatible = "ti,dra7-vip";
+> > +        label = "vip1";
+> > +        reg = <0x48970000 0x114>,
+> > +              <0x48975500 0xD8>,
+> > +              <0x48975700 0x18>,
+> > +              <0x48975800 0x80>,
+> > +              <0x48975a00 0xD8>,
+> > +              <0x48975c00 0x18>,
+> > +              <0x48975d00 0x80>,
+> > +              <0x4897d000 0x400>;
+> > +        reg-names = "vip",
+> > +                    "parser0",
+> > +                    "csc0",
+> > +                    "sc0",
+> > +                    "parser1",
+> > +                    "csc1",
+> > +                    "sc1",
+> > +                    "vpdma";
+> > +        interrupts = <GIC_SPI 351 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH>;
+> > +        ti,vip-clk-polarity = <&scm_conf 0x534 0x1 0x4 0x2 0x8>;
+> > +
+> > +        ports {
+> > +              #address-cells = <1>;
+> > +              #size-cells = <0>;
+> > +
+> > +              vin1a: port@0 {
+> > +                    reg = <0>;
+> > +                    label = "vin1a";
+> > +
+> > +                    vin1a_ep: endpoint {
+> > +                           remote-endpoint = <&camera1>;
+> > +                           hsync-active = <1>;
+> > +                           vsync-active = <1>;
+> > +                           pclk-sample = <0>;
+> > +                           bus-width = <8>;
+> > +                    };
+> > +              };
+> > +              vin1b: port@1 {
+> > +                    reg = <1>;
+> > +                    label = "vin1b";
+> > +              };
+> > +              vin2a: port@2 {
+> > +                    reg = <2>;
+> > +                    label = "vin2a";
+> > +              };
+> > +              vin2b: port@3 {
+> > +                    reg = <3>;
+> > +                    label = "vin2b";
+> > +              };
+> > +         };
+> > +    };
+> > +
+> > +    i2c {
+> > +        clock-frequency = <400000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +         camera@37 {
+> > +              compatible = "ovti,ov10633";
+> > +              reg = <0x37>;
+> > +
+> > +              clocks = <&fixed_clock>;
+> > +              clocks-names = "xvclk";
+> > +
+> > +              port {
+> > +                   camera1: endpoint {
+> > +                           remote-endpoint = <&vin1a_ep>;
+> > +                           hsync-active = <1>;
+> > +                           vsync-active = <1>;
+> > +                           pclk-sample = <0>;
+> > +                           bus-width = <8>;
+> > +                   };
+> > +              };
+> > +         };
+> > +    };
+> > +
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 2e9a5f6e4ff7..06856d05b53b 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -16947,6 +16947,7 @@ S:	Maintained
+> >  W:	http://linuxtv.org/
+> >  Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+> >  F:	Documentation/devicetree/bindings/media/ti,cal.yaml
+> > +F:	Documentation/devicetree/bindings/media/ti,vip.yaml
+> >  F:	Documentation/devicetree/bindings/media/ti,vpe.yaml
+> >  F:	drivers/media/platform/ti-vpe/
+> >  
+> > -- 
+> > 2.17.1
+> > 
+
+Regards,
+Benoit
