@@ -2,110 +2,146 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F1CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 12:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5BFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 12:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC68207F5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 12:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="usAGhpVo"
+	by mail.kernel.org (Postfix) with ESMTP id 0D453208B8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 12:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgE2MBQ (ORCPT
+        id S1725901AbgE2MHa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 08:01:16 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:48959 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725775AbgE2MBQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 08:01:16 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id edhGjcgpjdPgTedhJjDXFM; Fri, 29 May 2020 14:01:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1590753674; bh=ZO+Ovlnua++hBFv9+UDMBx46AxdYoQ+jNl/2tbUseB4=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=usAGhpVos51u7CqOpVa+RE79Fhd8k/XX42QtDi3Wwx9L4kaI/MaJ5NxmFjJPXzUuv
-         T0yf6f1dVNYykqhpoHFQIpkHQXwI1mZ6mtkT5F0SadRipcXbEbW1OrDvLpj9d4Vu8B
-         0snD8xTvlM0DgY/XQaTTlTXY4rpdoKlbc0YIUNnRiok9IyJJUjMb3FwV53+TCLuhaj
-         x0H+SC8oo6ip5XTuffY662u5/MaIWrQAqbA9By73sJQ2gKnbyzfzWuWfNI75CMuu+M
-         MBvKFioufaSgshGXuthqaMXVey8cRB5hbOfqCErLhKflB1AQPzA8KsJOAFbzWaqWVg
-         96YhmC35rQy2w==
-Subject: Re: Fwd: [PATCH v3 2/2] media: cec: i2c: ch7322: Add ch7322 CEC
- controller driver
-To:     Jeff Chase <jnchase@google.com>, linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <20200529030012.254592-1-jnchase@google.com>
- <20200529030012.254592-3-jnchase@google.com>
- <CALTkaQ2OR+bc2QGeucA5aP3SiM5HLnx5=DoZQ51E_1d99Hb5Uw@mail.gmail.com>
- <CALTkaQ0NLgjS7H7De=7jy9jRG1xMFSbzdmxrFNerNU+o1rRzpg@mail.gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <d7e759d1-9bdf-0ab3-143a-f0e374667f04@xs4all.nl>
-Date:   Fri, 29 May 2020 14:01:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 29 May 2020 08:07:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:53559 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgE2MHa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 08:07:30 -0400
+IronPort-SDR: Bfer6wk03mT2tGuEflGjNjQD/LpdEBmp5JhZ/T+oUfWY7DvE/81ziwYLTi/IuiTWTh0AZvxyOk
+ Nz+cOjOJWI+Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 05:07:29 -0700
+IronPort-SDR: yNF5DTHG6JqN87OhLTLFaURzZ477+cwiYfgK44kzkk2DhB1+OHlJPVL9/MYVx5OI27TQLQ/gqt
+ 4nIfwZ55QgOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
+   d="scan'208";a="311223866"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 29 May 2020 05:07:26 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jednN-009bv3-Jq; Fri, 29 May 2020 15:07:29 +0300
+Date:   Fri, 29 May 2020 15:07:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 03/11] dmaengine: Introduce min burst length capability
+Message-ID: <20200529120729.GJ1634618@smile.fi.intel.com>
+References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528222401.26941-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <CALTkaQ0NLgjS7H7De=7jy9jRG1xMFSbzdmxrFNerNU+o1rRzpg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfA4WEQQaSpTxqoVzO5MrZE8ZXaWtwLVL1BTv23YT389yYkODRh7A1sdvdfn6PAwLOOHjcRbPbwug3QRxbwRdpu2FNp3zPadZAZ8Jq18pcMhzTB4iMzXR
- SizGCUBSSRSeyxXb1aNx4fRMUbbnuG0S3MRq6FYlKp7X8qgOlHB3Ln+vxD8vImxkt5hEmZMeqn22FSskRZvcb3UhTWwTyM2XwGcHTJ2Pg6rw7msvuSsu1hpF
- 1jJDUSlwUR2r+qx1xFmLqtDG7XXJkD92/2SYGgWBbI5bscKzcCIWhc8wlK49eq/dosNl0wUopxr3A0qXObbQ1Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528222401.26941-4-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/05/2020 08:10, Jeff Chase wrote:
-> (Resending as plain text, sorry)
+On Fri, May 29, 2020 at 01:23:53AM +0300, Serge Semin wrote:
+> Some hardware aside from default 0/1 may have greater minimum burst
+> transactions length constraints. Here we introduce the DMA device
+> and slave capability, which if required can be initialized by the DMA
+> engine driver with the device-specific value.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 > 
->> +static int ch7322_cec_adap_enable(struct cec_adapter *adap, bool enable)
->> +{
->> +       struct ch7322 *ch7322 = cec_get_drvdata(adap);
->> +       int ret;
->> +
->> +       if (enable)
->> +               ret = ch7322_unmask_interrupt(ch7322);
->> +       else
->> +               ret = ch7322_mask_interrupt(ch7322);
->> +
->> +       return ret;
->> +}
->> +
+> ---
 > 
-> I just realized that doing this here is broken -- the driver depends
-> on the interrupt to detect when the physical address changes. I could
-> mask only the tx/rx interrupt here instead but that is starting to
-> feel a bit pointless.
-
-Ah, OK. Just drop this then.
-
+> Changelog v3:
+> - This is a new patch created as a result of the discussion with Vinud and
+>   Andy in the framework of DW DMA burst and LLP capabilities.
+> ---
+>  drivers/dma/dmaengine.c   | 1 +
+>  include/linux/dmaengine.h | 4 ++++
+>  2 files changed, 5 insertions(+)
 > 
-> I haven't looked into the cec notifier mechanism yet but would it be
-> better to try to use that instead if possible and just ignore this
-> device's physical address detection? Then I could do more of a proper
-> reset in this enable op. But I'm not sure if I can properly associate
-> the device with an HDMI port on my platform unless I make some changes
-> to coreboot.
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index d31076d9ef25..b332ffe52780 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -590,6 +590,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>  	caps->src_addr_widths = device->src_addr_widths;
+>  	caps->dst_addr_widths = device->dst_addr_widths;
+>  	caps->directions = device->directions;
+> +	caps->min_burst = device->min_burst;
+>  	caps->max_burst = device->max_burst;
+>  	caps->residue_granularity = device->residue_granularity;
+>  	caps->descriptor_reuse = device->descriptor_reuse;
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index e1c03339918f..0c7403b27133 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -465,6 +465,7 @@ enum dma_residue_granularity {
+>   *	Since the enum dma_transfer_direction is not defined as bit flag for
+>   *	each type, the dma controller should set BIT(<TYPE>) and same
+>   *	should be checked by controller as well
+> + * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+>   * @cmd_pause: true, if pause is supported (i.e. for reading residue or
+>   *	       for resume later)
+> @@ -478,6 +479,7 @@ struct dma_slave_caps {
+>  	u32 src_addr_widths;
+>  	u32 dst_addr_widths;
+>  	u32 directions;
+> +	u32 min_burst;
+>  	u32 max_burst;
+>  	bool cmd_pause;
+>  	bool cmd_resume;
+> @@ -769,6 +771,7 @@ struct dma_filter {
+>   *	Since the enum dma_transfer_direction is not defined as bit flag for
+>   *	each type, the dma controller should set BIT(<TYPE>) and same
+>   *	should be checked by controller as well
+> + * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+>   * @residue_granularity: granularity of the transfer residue reported
+>   *	by tx_status
+> @@ -839,6 +842,7 @@ struct dma_device {
+>  	u32 src_addr_widths;
+>  	u32 dst_addr_widths;
+>  	u32 directions;
+> +	u32 min_burst;
+>  	u32 max_burst;
+>  	bool descriptor_reuse;
+>  	enum dma_residue_granularity residue_granularity;
+> -- 
+> 2.26.2
+> 
 
-I don't think this is useful: it's nice to have the CEC adapter do the
-physical address detection.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-One question about that though: if there is no physical address, can this
-driver still transmit CEC messages? Specifically Image View On. This is
-important to wake up displays that pull down the HPD when in standby.
 
-The easiest way to test this is with a Pulse-Eight CEC adapter.
-
-See also the section "CEC Without HPD" here:
-
-https://hverkuil.home.xs4all.nl/cec-status.txt
-
-Regards,
-
-	Hans
