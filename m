@@ -2,88 +2,112 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74E5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E192EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5AF6214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590781007;
-	bh=z7ZR7hhgo/DzTMh/wyL0HjNLMwCgiFg7VAc9F6j2hoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w+zbSnX70+zXEKzkGzOoTQUbxDPH84PUvIrg/esQ4CBRgIi+Vo0FTPDiRUP4LFUZW
-	 j6dufVL/qqQfhKXg3ZUgA1H4IxRZMApAcD8RFdLElEK8J6Ykk+M5Eoy+ZKHWYtpkN8
-	 IMR9JUgvb6CNDt6mIGPWVzxBAomK9hhu83PGMUWw=
+	by mail.kernel.org (Postfix) with ESMTP id BB84F208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:39:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y8IOIIbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgE2Tgr (ORCPT
+        id S1726966AbgE2Tjf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 15:36:47 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36395 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE2Tgq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:36:46 -0400
-Received: by mail-il1-f195.google.com with SMTP id 17so3664215ilj.3;
-        Fri, 29 May 2020 12:36:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u4JJuz4TAar60F38SQZw2KBTCJrS5nElM3p5G9Nq7yQ=;
-        b=kFAOC7/BdGdB+xX+accui/3ZkWeOykFfFrU57UP/RHW2Nroua+Zylk078lDBBojFgp
-         eOVrX44wJT/CYsmrceni/AMXapgTtBEreRDFulDh5AGN/RwppdjIdlfRUYFE3MlA6m4Z
-         +xnYgHzQbmII4E4mpea28SfCKrkSoD8J/WnfUBLJFsc6JVxYaNoDXQ9DtTmZIgHcoPsm
-         CmCJAAf73OfCKg1yCSSMpPrkqQp7NbRPTC6lcO4f112bggwVSqOEnz6Fsc+AZ4CwbkmA
-         YYS2tWEq1/PRp0eHW701PhJXHKeTXkVy0H+opkV3pxeySOAzK70opY4K8GlqPFEjmou5
-         H7wA==
-X-Gm-Message-State: AOAM533x7QHsmin+RC1zn0fAgn6A/s/m1cR/43EnktET4gEXiaSx97kw
-        tIH8fLI3kH0oGYlCftoMnA==
-X-Google-Smtp-Source: ABdhPJz+wV8UcwQ0Kd/c679Va6YB924PcALUTRcMGJuXlpRNr8Q7V/3QZdJFrUIiLqnJWf5HqXDRvQ==
-X-Received: by 2002:a92:cd11:: with SMTP id z17mr7965249iln.12.1590781005909;
-        Fri, 29 May 2020 12:36:45 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s15sm5239645iln.49.2020.05.29.12.36.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:36:45 -0700 (PDT)
-Received: (nullmailer pid 2815499 invoked by uid 1000);
-        Fri, 29 May 2020 19:36:44 -0000
-Date:   Fri, 29 May 2020 13:36:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, s.hauer@pengutronix.de,
-        robh+dt@kernel.org, daniel.lezcano@linaro.org, shawnguo@kernel.org,
-        Linux-imx@nxp.com, festevam@gmail.com, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de
-Subject: Re: [PATCH V3] dt-bindings: timer: Convert i.MX GPT to json-schema
-Message-ID: <20200529193644.GA2815265@bogus>
-References: <1590717882-20922-1-git-send-email-Anson.Huang@nxp.com>
+        Fri, 29 May 2020 15:39:35 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43606 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgE2Tjf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:39:35 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TJdP6B037266;
+        Fri, 29 May 2020 14:39:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590781165;
+        bh=wQ582Jun/nwakMpVHCTGC+XK6lct9XsIpF/gTKCzB4E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=y8IOIIbgm87LrsXCKCcUbTGdAcKHRwAu8QJEeHzVJRcjRZ/e7U8Hh8xCeF08Tsyp1
+         NsIfBDRAbDXOZIXycPjJWkWr63uGpgIkutvuZU/LiPTM7gbbSePlsCZS7b3vmjcTYb
+         6QMjwKrczyzOuEgiZDYA2k5QEjJKpKnLUjEdwkHA=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04TJdPXe124917
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 14:39:25 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
+ May 2020 14:39:24 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 29 May 2020 14:39:24 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TJdMYP008147;
+        Fri, 29 May 2020 14:39:22 -0500
+Subject: Re: [PATCH v4 0/2] soc: ti: add k3 platforms chipid module driver
+To:     <santosh.shilimkar@oracle.com>, Arnd Bergmann <arnd@arndb.de>
+CC:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>
+References: <20200512123449.16517-1-grygorii.strashko@ti.com>
+ <a132765e-f4e4-a1e8-fb43-239188fecf1b@ti.com>
+ <CAK8P3a31DYOn1TyjxCYM7ebc9nL5EFKsNpSHkq55bG54Bns+MA@mail.gmail.com>
+ <cb980673-d3ad-53b8-9351-196ff3f47c45@oracle.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <f06a6285-aa9f-918b-044c-c0ba1f0ad1fc@ti.com>
+Date:   Fri, 29 May 2020 22:39:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590717882-20922-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <cb980673-d3ad-53b8-9351-196ff3f47c45@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 May 2020 10:04:42 +0800, Anson Huang wrote:
-> Convert the i.MX GPT binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- in compatible properties, group all the ones with the same
-> 	  fallback to a single 'items' list using enum for the first entry.
-> ---
->  .../devicetree/bindings/timer/fsl,imxgpt.txt       | 45 --------------
->  .../devicetree/bindings/timer/fsl,imxgpt.yaml      | 72 ++++++++++++++++++++++
->  2 files changed, 72 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxgpt.yaml
-> 
 
-Applied, thanks!
+
+On 29/05/2020 22:19, santosh.shilimkar@oracle.com wrote:
+> On 5/29/20 11:34 AM, Arnd Bergmann wrote:
+>> On Fri, May 29, 2020 at 8:22 PM Grygorii Strashko
+>> <grygorii.strashko@ti.com> wrote:
+>>> On 12/05/2020 15:34, Grygorii Strashko wrote:
+>>
+>>>>    .../bindings/soc/ti/k3-socinfo.yaml           |  40 +++++
+>>>>    drivers/soc/ti/Kconfig                        |  10 ++
+>>>>    drivers/soc/ti/Makefile                       |   1 +
+>>>>    drivers/soc/ti/k3-socinfo.c                   | 152 ++++++++++++++++++
+>>>>    4 files changed, 203 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+>>>>    create mode 100644 drivers/soc/ti/k3-socinfo.c
+>>>>
+>>>
+>>> Any chances you can pick this up?
+>>
+>> I merged a version of this driver from Santosh's pull request into the
+>> arm/drviers tree yesterday.
+>>
+>> Is there something missing?
+>>
+> Nope. I was going to reply on the thread but missed it.
+
+Oh. Thanks. I've missed that it was already picked up.
+
+Thanks again.
+
+-- 
+Best regards,
+grygorii
