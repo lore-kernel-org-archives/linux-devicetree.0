@@ -2,116 +2,97 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F9DC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 09:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDD1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 09:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBC22072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 09:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CE5214F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 09:36:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="xfIhAUOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgE2J0M (ORCPT
+        id S1726411AbgE2JgW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 05:26:12 -0400
-Received: from mga05.intel.com ([192.55.52.43]:42856 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgE2J0M (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 05:26:12 -0400
-IronPort-SDR: 1fW3LORCQsV7Ek5VdS+OJCo8gEgzD6OCL1l5m4fnWR2F2WOE3TMpqVLQQIdcKQjCpgF2UStt/V
- xjSrFyM686xA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 02:26:11 -0700
-IronPort-SDR: eV3HSNzOlNkNU0dRGF6h01o7RWVOKKfgkYKSky63r56KGxKAekid2lcuvuTGLbJcyagbUx4KIN
- cKkcGqv52ezg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="414915783"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 29 May 2020 02:26:08 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jebHG-009aJ4-Qp; Fri, 29 May 2020 12:26:10 +0300
-Date:   Fri, 29 May 2020 12:26:10 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 03/16] spi: dw: Locally wait for the DMA transactions
- completion
-Message-ID: <20200529092610.GX1634618@smile.fi.intel.com>
-References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
- <20200529035915.20790-4-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VcT2zKnuRW3uxCQtbF0A65cbS20OFpz9sX0hftbjFp1hA@mail.gmail.com>
- <20200529081204.e2j5unvvfikr2y7v@mobilestation>
+        Fri, 29 May 2020 05:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgE2JgV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 05:36:21 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B5EC08C5C8
+        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 02:36:21 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id l6so2014798oic.9
+        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 02:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fWC9mFwdb/sTGcJVbmC/E7dvGoWX0ipuEF4o83/3TTY=;
+        b=xfIhAUOSReKKsQs/hRm2VJ4Jq0uggWVCpICOHGe8w6zWIZzx1Au0H1Qk61eUsbzTgi
+         3Ci0Ce1HTxRMmvPy9Ss587g3ZN6x4jTlo1U/BpIC7mVx0vGQXVwthBcuYXYIauZY889G
+         27qoep9RV4qxinsGbtFgMR1MHtZPxwUgZaFkLmo2ZPBDFmWx8opBLgnvkR7unEue2RqN
+         snsBoQwdFNgDZEMWE4n9jzehscZTF05ANygobVuuQzkF0iOyySyvLYi97xZkxIyk4bAC
+         Ed09Y839uB89UZYkHnpW03uPXxnFTqaNhpwAjWtfNhTxx/JzE3wV2Po3CbuBhBkkXH6N
+         PNww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fWC9mFwdb/sTGcJVbmC/E7dvGoWX0ipuEF4o83/3TTY=;
+        b=DlLGoDyJkNKsCHKCP0TquzT3618+VBiSgsoO0eqr63up/XePZxiuW66YhcrnKkiFYp
+         cYE+eGCW48oxw45ztjeR4YKDuFYk1pwlAvATRymaZP9vPs5a+NeohYqcc9A3mjRO/4Ix
+         JJKuzWl0vNcIf2t/CtNPhrNvPhirb3udTLoLWl/5hWcSfIiOLJj8evD3XXYl8Wj6syp3
+         tdRxrVOy2m3ehb4amWolvaINxmNcCUooFKuF33kmvmK4+6kPAYyMqzLI4qZdbGwz/JLm
+         yHzarJ+YbNUiGbjUVqcmKEtcwn2SBKSEoeINNONuABCH0RhQOe7hgQPXB6VB4ULONIeR
+         YK/w==
+X-Gm-Message-State: AOAM533hnjlCzSzBMlzUNDKdpigg4wqUhxHrHlIKUXZ2bjYMpEwhcIfX
+        tGfYle9zaQ7L5zKhsLGWjzcpmpn3/08bnEs5XBITSg==
+X-Google-Smtp-Source: ABdhPJwXtpTuUA91P1AUPcbP8wpLOoGZnz+TNZUWWVHXWHFimcQxq/KQIPyQ0xEj6UyvG6cfqUnKUODWSspb97RS2/o=
+X-Received: by 2002:aca:a8c3:: with SMTP id r186mr5029193oie.173.1590744980879;
+ Fri, 29 May 2020 02:36:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529081204.e2j5unvvfikr2y7v@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200503201823.531757-1-robert.marko@sartura.hr>
+ <20200503201823.531757-3-robert.marko@sartura.hr> <20200504073914.GQ1375924@vkoul-mobl>
+In-Reply-To: <20200504073914.GQ1375924@vkoul-mobl>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Fri, 29 May 2020 11:36:09 +0200
+Message-ID: <CA+HBbNEiB+o4KxonAu4-ra+P11Yb649v6AFaPjFc8JQDQ8T=CA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] ARM: dts: qcom: ipq4019: add USB devicetree nodes
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:12:04AM +0300, Serge Semin wrote:
-> On Fri, May 29, 2020 at 10:55:32AM +0300, Andy Shevchenko wrote:
-> > On Fri, May 29, 2020 at 7:02 AM Serge Semin
-> > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >
-> > > Even if DMA transactions are finished it doesn't mean that the SPI
-> > > transfers are also completed. It's specifically concerns the Tx-only
-> > > SPI transfers, since there might be data left in the SPI Tx FIFO after
-> > > the DMA engine notifies that the Tx DMA procedure is done. In order to
-> > > completely fix the problem first the driver has to wait for the DMA
-> > > transaction completion, then for the corresponding SPI operations to be
-> > > finished. In this commit we implement the former part of the solution.
-> > >
-> > > Note we can't just move the SPI operations wait procedure to the DMA
-> > > completion callbacks, since these callbacks might be executed in the
-> > > tasklet context (and they will be in case of the DW DMA). In case of
-> > > slow SPI bus it can cause significant system performance drop.
-> > 
-> 
-> > I read commit message, I read the code. What's going on here since you
-> > repeated xfer_completion (and its wait routine) from SPI core and I'm
-> > wondering what happened to it? Why we are not calling
-> > spi_finalize_current_transfer()?
-> 
-> We discussed that in v4. You complained about using ndelay() for slow SPI bus,
-> which may cause too long atomic context execution. We agreed. Since we can't wait
-> in the tasklet context and using a dedicated kernel thread for waiting would be too
-> much, Me and Mark agreed, that
+On Mon, May 4, 2020 at 9:39 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 03-05-20, 22:18, Robert Marko wrote:
+> > From: John Crispin <john@phrozen.org>
+> >
+> > Since we now have driver for the USB PHY, lets add the necessary nodes to DTSI.
+>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+>
+> Bjorn, I have picked the phy and dt binding, feel free to apply this one
+>
+> Thanks
+> --
+> ~Vinod
 
-> even if it causes us of the local wait-function
-> re-implementation the best approach would be not to use the generic
-> spi_transfer_wait() method, but instead wait for the DMA transactions locally
-> in the DMA driver and just return 0 from the transfer_one callback indicating
-> that the SPI transfer is finished and there is no need for SPI core to wait. As
-> a lot of DMA-based SPI drivers do.
+Any chance of this landing into 5.7?
+Driver and bindings have been merged, but I don't see DT nodes queued.
 
-The above is missed in the commit message.
-
-> If you don't understand what the commit message says, just say so. I'll
-> reformulate it.
-
-See above. A bit of elaboration would be good. Thank you!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Robert
