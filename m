@@ -2,133 +2,119 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C04BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286E0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEC620810
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:58:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVPKo3yG"
+	by mail.kernel.org (Postfix) with ESMTP id E070E2074B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590779041;
+	bh=O+yg5ZONK07DFYctiVpO++37ruA3Jl9AKAj6O+fdKfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=04opahOAc4rwK1/u8Vcai2YN3rFIVLhDw1DBMCiPUppAJl8Pc6WLN2n7Uerf9LEv6
+	 FIaWctXt6AtfAhgKlNnFgVHugVPzK+XjR/g6nE4nk24AvKdBL5GSsEIe2iG1IQPJ9S
+	 ps1htFPs0mWepgVdvEY1j5zW51uSQ0I7ZjvwNrAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgE2S63 (ORCPT
+        id S1726901AbgE2TEA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 14:58:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgE2S62 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 14:58:28 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B48AC03E969;
-        Fri, 29 May 2020 11:58:28 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so534177ljn.4;
-        Fri, 29 May 2020 11:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Cu18taknHbe/FbD9yOGPOycvyvQ+EsO0Ye+2x5fPqno=;
-        b=FVPKo3yGU/mqVlof1F0Z4UeYJc9h5xv7/3XxCkDtBAAKy6ndK3q+aMFXbt9ZgXKo+a
-         RjWfLlgoHohemD0C+CcKo4DZF1SN+Hd87TNBq/Pzk5LACsVyZvjFmy7Z+0CE0/KSaRVd
-         VtTEzv/an3wNcUdmNGjjT7Xr0whgTHsGns7eu9m7BN9ixJM5RTezvL5BlUsaToD2bivY
-         koARdORhLmLdVBhjYa2TSPy4O94JBRajg0V+KiuubXrEl3zUK7GvYqfO9bSKl4E8mpJq
-         NMdVIsio7ddwg1yhS73Rgt9gnRDG40Nr6o1/d8HodgZ8dHd86pIxeS4+5x7K9oxa48iM
-         gLPA==
+        Fri, 29 May 2020 15:04:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32888 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgE2TD7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:03:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id k18so525692ion.0;
+        Fri, 29 May 2020 12:03:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Cu18taknHbe/FbD9yOGPOycvyvQ+EsO0Ye+2x5fPqno=;
-        b=SDPgCHwIRpVOsLiDAvx3sETuZ7p6P6C3EgLbMjWLCyoynebZ9N3+TRqyVmcyiVYbc0
-         /kOeQWrWm7jGHA/vrHEBkiL1lcmA7peIYqj2YMT/BuOJhfBLOvRLwiVrBb24wa8ly9xX
-         FQIrZzyWYLB2mE4FDmiNpwJvloMp25mS6ytxxktjePDIu45AIq2Fx0LS30+UuUOabgx0
-         bh1QVsuyHxZmhtOmQQrFeIHQO+xx77VjdCSj+9uS3GLVUSuU9k6kpJ7t/WwctjsEaGvB
-         FQgzByaRVgDVRngwBxxWRJItSaW5bkAYUgC6lKPN9KqSqv9/Bdn84d9rFALUiDMiHwp4
-         0PfA==
-X-Gm-Message-State: AOAM530E8wdQXzas+2vjgQ8R9dLYA8Rddy83Og1fiOf3Z9EgYFnIZkmE
-        aSbRowZPKG+KxP3ptPJ99EM=
-X-Google-Smtp-Source: ABdhPJwOPjYAcHWCc0NuNTt+necJgZaSRwtcOXXAuB93AaP9HMLV/49dJxDvmDNMLS9f08cR0TweJw==
-X-Received: by 2002:a2e:8956:: with SMTP id b22mr5129992ljk.16.1590778706764;
-        Fri, 29 May 2020 11:58:26 -0700 (PDT)
-Received: from mobilestation ([95.79.222.123])
-        by smtp.gmail.com with ESMTPSA id q4sm2425667lfm.93.2020.05.29.11.58.25
+        bh=l2RZz+6GuxvNjpeyZJkWBZVVO4iGwz6tayj5VLgfgkc=;
+        b=AqjnYwwioMG5/MW4ABOBzh6Cb6lBmtD2X6AD6py+rutG6hjbMjIFERRGkfl3FJgiTs
+         kfdQrbJVKAI/1C5iW9VSkVyDDO2zDPjEl44Pk2xDuAcGhadA+3TNAg5X7gU2wX85INRR
+         CUiXHFq9tauFB1G1ttKmE0qEsaq/N5LGzGnpls/ALKa0uZc3N3kcLkjJGb+4d4ThVQBR
+         r3sNWrAo604ipDjJ04OO0C9sxpORF6pZXitlaOg8ua/tF/wO0O1CAGdS6L6gmKr+MP+1
+         gyEyRaftJflMSEimzsKzqBLiM7qeLgrY0jiCUslIDOF3d95tdptRmap+3AtOaOM01AXX
+         OKtQ==
+X-Gm-Message-State: AOAM533ZO45h+mdM3Z6FZVT6bQQhnnntiCVa8EMQFS/xigViwFcWa+gx
+        +KApInTB8HmmLEevObzZWQ==
+X-Google-Smtp-Source: ABdhPJynGVuna3BmTmeIk8V4t9AUMe7nA4T9Yip/KLyNpLizPAvXuuYAwJAxSTUTz4tbKORQVK+8+A==
+X-Received: by 2002:a02:908b:: with SMTP id x11mr8217368jaf.41.1590779038686;
+        Fri, 29 May 2020 12:03:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n25sm4137090ioa.29.2020.05.29.12.03.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 11:58:26 -0700 (PDT)
-Date:   Fri, 29 May 2020 21:58:24 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/11] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200529185824.o2vcpxe4f63aw465@mobilestation>
-References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
- <20200527153046.6172-3-Sergey.Semin@baikalelectronics.ru>
- <20200527153351.rmzguymz7lm6gvsx@mobilestation>
- <20200529181338.GA2676189@bogus>
- <20200529182256.3bp4uvvrvz3ddlrq@mobilestation>
- <20200529184201.GX1634618@smile.fi.intel.com>
- <20200529184534.wyyv5i7hcto5y3d3@mobilestation>
+        Fri, 29 May 2020 12:03:57 -0700 (PDT)
+Received: (nullmailer pid 2762082 invoked by uid 1000);
+        Fri, 29 May 2020 19:03:56 -0000
+Date:   Fri, 29 May 2020 13:03:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v4 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+Message-ID: <20200529190356.GA2758033@bogus>
+References: <20200527164934.28651-1-dmurphy@ti.com>
+ <20200527164934.28651-4-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529184534.wyyv5i7hcto5y3d3@mobilestation>
+In-Reply-To: <20200527164934.28651-4-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 09:45:37PM +0300, Serge Semin wrote:
-> On Fri, May 29, 2020 at 09:42:01PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 29, 2020 at 09:22:56PM +0300, Serge Semin wrote:
-> > > On Fri, May 29, 2020 at 12:13:38PM -0600, Rob Herring wrote:
-> > > > On Wed, May 27, 2020 at 06:33:51PM +0300, Serge Semin wrote:
-> > 
-> > > > you're sending 
-> > > > new versions too fast. Give people time to review.
-> > > 
-> > > Yeah, you did. Sorry for sending the new versions very fast. Normally I prefer
-> > > to keep up with comments so to past a particular maintainer review as fast as
-> > > possible without long delays. In my experience the longer you wait, the lesser
-> > > maintainers remember about your patchset, the harder for one to continue the
-> > > next versions review.
-> > 
+On Wed, May 27, 2020 at 11:49:33AM -0500, Dan Murphy wrote:
+> Add the internal delay values into the header and update the binding
+> with the internal delay properties.
 > 
-
-> > Documentation/process/submitting-patches.rst:
-> > 
-> > "Wait for a minimum of one week before resubmitting or pinging reviewers -
-> > possibly longer during busy times like merge windows."
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/net/ti,dp83869.yaml      | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> Good to know what I already know.) How much do you personally wait before
-> resubmitting? In my experience reviewing your DW APB GPIO patches, no longer
-> than a few hours.
+> diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+> index 5b69ef03bbf7..2971dd3fc039 100644
+> --- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+> +++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+> @@ -64,6 +64,20 @@ properties:
+>         Operational mode for the PHY.  If this is not set then the operational
+>         mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
+>  
+> +  rx-internal-delay-ps:
+> +    $ref: "#/properties/rx-internal-delay-ps"
 
-Moreover the statement you cited is about the patches, which doesn't get any
-attention from the maintainers/reviewers for quite some time. In this case I
-normally resubmit the patches no sooner than a week. I was talking about the
-situation when you get the review comments, which need to be addressed.
+This just creates a circular reference which probably blows up.
 
--Sergey
-
+> +    description: Delay is in pico seconds
+> +    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
+> +            3250, 3500, 3750, 4000 ]
+> +    default: 2000
+> +
+> +  tx-internal-delay-ps:
+> +    $ref: "#/properties/tx-internal-delay-ps"
+> +    description: Delay is in pico seconds
+> +    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
+> +            3250, 3500, 3750, 4000 ]
+> +    default: 2000
+> +
+>  required:
+>    - reg
+>  
+> @@ -80,5 +94,7 @@ examples:
+>          ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
+>          ti,max-output-impedance = "true";
+>          ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
+> +        rx-internal-delay-ps = <2000>;
+> +        tx-internal-delay-ps = <2000>;
+>        };
+>      };
+> -- 
+> 2.26.2
 > 
-> -Sergey
-> 
-> > 
-> > 
-> > -- 
-> > With Best Regards,
-> > Andy Shevchenko
-> > 
-> > 
