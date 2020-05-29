@@ -2,89 +2,63 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965D3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F544C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A293208B8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590772746;
-	bh=VHVB3ZEMfoIWVXNsm9ILDnKy8ezRAfAuuDIi/779PI8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=0tlBhluCLidSJ6TFQ1z44HtAVcnuv50y2Z4ll6as1e2OsypUhi8jaC8NPwO8vm7Fj
-	 VxelKCuMEbIuAjbrotUhsGYiiCO+NhHSR3aJhzY9N0U8/cHy2Rij4BIsdKBkpw4rGo
-	 bBRIB5c+zk/NSwmRbKVXPlBd52XB9wIOnMcV1ng8=
+	by mail.kernel.org (Postfix) with ESMTP id 05EC92151B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgE2RTF (ORCPT
+        id S1725821AbgE2RVM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 13:19:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38352 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 13:21:12 -0400
+Received: from muru.com ([72.249.23.125]:56186 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgE2RTF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 13:19:05 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B54B2074D;
-        Fri, 29 May 2020 17:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590772745;
-        bh=VHVB3ZEMfoIWVXNsm9ILDnKy8ezRAfAuuDIi/779PI8=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Hkc+ylfCfo/AEO4hHSf9XaKOsw1Py/vnQqh9Dt4ITxfxh3RF414V2yZ2GwboWfluz
-         yJMbB1s6N8dEDqhtl5leOXb2KeFu+40XaHb0OChUWFrazUb621x65p9D3dLtiTRLOZ
-         eDAezfM2xGi2p1RQ3giv0loFCOp0n26XvRe0hFqY=
-Date:   Fri, 29 May 2020 18:19:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        Sergey.Semin@baikalelectronics.ru,
-        Liang Jin J <liang.j.jin@ericsson.com>,
-        lars.povlsen@microchip.com, andriy.shevchenko@linux.intel.com,
-        fancer.lancer@gmail.com, robh+dt@kernel.org
-In-Reply-To: <20200527204110.25676-1-dinguyen@kernel.org>
-References: <20200527204110.25676-1-dinguyen@kernel.org>
-Subject: Re: [PATCHv3 1/2] spi: dw: add reset control
-Message-Id: <159077271265.17043.9965324824608502053.b4-ty@kernel.org>
+        id S1727008AbgE2RVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 13:21:12 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AD89D8030;
+        Fri, 29 May 2020 17:22:01 +0000 (UTC)
+Date:   Fri, 29 May 2020 10:21:08 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: Re: [PATCH v2] arm: dts: am335x-boneblack: add gpio-line-names
+Message-ID: <20200529172108.GS37466@atomide.com>
+References: <20200521200926.GC429020@x1>
+ <20200528131620.GA3126290@x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528131620.GA3126290@x1>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 May 2020 15:41:09 -0500, Dinh Nguyen wrote:
-> Add mechanism to get the reset control and deassert it in order to bring
-> the IP out of reset.
+* Drew Fustini <drew@beagleboard.org> [200528 13:17]:
+> FYI - Linus W. provided an Acked-by in related thread [0].
+> 
+> Anyone else have any review comments?
 
-Applied to
+Looks good to me thanks. But as the merge window is about
+to open, let's do fixes only at this point and leave this
+for v5.9.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Regards,
 
-Thanks!
+Tony
 
-[1/2] spi: dw: add reset control
-      commit: 7830c0ef26cb73b653c2db2f3ca7be08f44fa046
-[2/2] dt-bindings: snps,dw-apb-ssi: add optional reset property
-      commit: 2604d48702fe14fb3e97701269dd5e66b392b904
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> 
+> [0] https://lore.kernel.org/linux-devicetree/CACRpkdZLRjcE0FGwVR-Q7a50aEmpB=xO4q6H8_EaV199fGr0OA@mail.gmail.com/
