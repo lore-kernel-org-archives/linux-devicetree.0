@@ -2,164 +2,123 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618F2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813F4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE652073B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:04:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="URWVUOZq"
+	by mail.kernel.org (Postfix) with ESMTP id 60CEA20707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgE2OEj (ORCPT
+        id S1726901AbgE2OF7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 10:04:39 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:8703 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgE2OEi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 10:04:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590761078; x=1622297078;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=sAGWaqia1JF0ryeRDXVzFPeaOltQyl1NGW+wvlqDi/E=;
-  b=URWVUOZqjoRzONnnH/q05xZjn/+tJ5OFy7pO4A+Xk04NClzFwzEmk4o0
-   oCWnUXvIo8Wr+e7NX4gZd3ZxcXRAD91ziqCgppCunRr+bfiTFYkbpxvnr
-   yRJPrOPmoTdwXF89Mps9VhpjPZi0eYEoLE9KGjR2p9lCx2JEm2MTt6Kpi
-   1dNTJhotEvcLn4RhZUA0Q1SRj3UuAhNBR2cur/hAD4kAbfpqiyUtRjhSV
-   8GYqQJw47Wu3LzpeGDd1dAwwUKdE5YkCycXSX2rgERb7R6YAmHsEcSCIb
-   h++3ncSfc75VYDZJ0DWPYwEwcmUVFsLrokUlKsOY7EfsbW+oN3GThFvoF
-   Q==;
-IronPort-SDR: xpzqGjpyykV5Ih2wHq02FXx0AqsGr/X8yLZnO6sUmywda4kivT2QCL6RfgUMu/+Mo7l9o/BFdz
- eE5+qVqCa2lVZL5SDnAKAB9ZWgFApKonr+D6Tn6LKVvhGj0EMsHHtXKOQO4hBQk4pAhpJdC3/T
- oSeo8ia8aXe0OQprk4ftk7b2Q5mkFCr7fBh1lEuOKj3veab6yAchm6/zODKBhgT3fNGupVkkZX
- NyNMfNrLKlKmDbgry41qbg+dHhM/zAN07j+tX4W+FU0kPMqY2yjRRAJZ5m8BXBRwZSwDb8/s93
- CCI=
-X-IronPort-AV: E=Sophos;i="5.73,448,1583218800"; 
-   d="scan'208";a="76764161"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 May 2020 07:04:37 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 29 May 2020 07:04:40 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 29 May 2020 07:04:25 -0700
-References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-11-lars.povlsen@microchip.com> <159054759981.88029.2630901114208720574@swboyd.mtv.corp.google.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, SoC Team <soc@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 10/14] dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
-In-Reply-To: <159054759981.88029.2630901114208720574@swboyd.mtv.corp.google.com>
-Date:   Fri, 29 May 2020 16:04:32 +0200
-Message-ID: <87lflaq1lb.fsf@soft-dev15.microsemi.net>
+        Fri, 29 May 2020 10:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgE2OF7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 10:05:59 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F445C03E969;
+        Fri, 29 May 2020 07:05:59 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 3E8312A45CA
+Received: by earth.universe (Postfix, from userid 1000)
+        id EFFA33C08C7; Fri, 29 May 2020 16:05:55 +0200 (CEST)
+Date:   Fri, 29 May 2020 16:05:55 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
+Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
+Message-ID: <20200529140555.ozlvz4egihkvo3aw@earth.universe>
+References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
+ <20200424093226.GB2647@amd>
+ <20200424124423.jo25ai5oifvalgpr@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4xpce4ocym4xo3vs"
+Content-Disposition: inline
+In-Reply-To: <20200424124423.jo25ai5oifvalgpr@earth.universe>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-Stephen Boyd writes:
+--4xpce4ocym4xo3vs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Quoting Lars Povlsen (2020-05-13 05:55:28)
->> diff --git a/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
->> new file mode 100644
->> index 0000000000000..594007d8fc59a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
->> @@ -0,0 +1,46 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/clock/microchip,sparx5-dpll.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Microchip Sparx5 DPLL Clock
->> +
->> +maintainers:
->> +  - Lars Povlsen <lars.povlsen@microchip.com>
->> +
->> +description: |
->> +  The Sparx5 DPLL clock controller generates and supplies clock to
->> +  various peripherals within the SoC.
->> +
->> +  This binding uses common clock bindings
->> +  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->
-> I don't think we need this sentence. Please drop it.
+Hi,
 
-OK. (Assuming the "This binding ..." part).
+ping?
 
->
->> +
->> +properties:
->> +  compatible:
->> +    const: microchip,sparx5-dpll
->> +
->> +  reg:
->> +    items:
->> +      - description: dpll registers
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  # Clock provider for eMMC:
->> +  - |
->> +    clks: clks@61110000c {
->
-> Node name should be clock-controller@61110000c
+-- Sebastian
 
-Ok.
+On Fri, Apr 24, 2020 at 02:44:23PM +0200, Sebastian Reichel wrote:
+> Hi,
+>=20
+> On Fri, Apr 24, 2020 at 11:32:26AM +0200, Pavel Machek wrote:
+> > On Thu 2020-04-16 16:51:23, Sebastian Reichel wrote:
+> > > From: Ian Ray <ian.ray@ge.com>
+> > >=20
+> > > Use kernel LED interface for the alarm LEDs.
+> >=20
+> > Could we get these changes cced to LED maintainers?
+>=20
+> Sorry, you are not turning up via get_maintainer.pl and usually
+> subsystem maintainers are not CC'd for every DT device instance.
+> E.g. I do not want to be always CC'd for DT board file containing
+> a battery/charger. I'm quite surprised you want to be CC'd for
+> them, just looking at ARM DT files there are over 1000 instances
+> of leds.
+>=20
+> > > +		alarm1 {
+> > > +			label =3D "alarm:red";
+> > > +			gpios =3D <&gpio7 3 GPIO_ACTIVE_HIGH>;
+> > > +		};
+> >=20
+> > So... What is function of these leds, and can we get naming more
+> > consistent with rest of the kernel?
+>=20
+> The device is a medical patient monitor and these are alarm LEDs
+> informing about critical device or patient status. They are
+> referenced by their color (those are discrete LEDs, not a
+> multi-color one) basically everywhere. The only exception is
+> "silenced", which means that audible alarm is surpressed. I
+> don't think we have something comparable for any of those LEDs
+> in the mainline tree.
+>=20
+> -- Sebastian
 
->
->> +         compatible = "microchip,sparx5-dpll";
->> +         #clock-cells = <1>;
->> +         reg = <0x1110000c 0x24>;
->
-> Does it consume any clks itself? I'd expect to see some sort of 'clocks'
-> property in this node.
->
->> +    };
+--4xpce4ocym4xo3vs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I changed the driver to use a fixed-rate input clock, replacing the
-BASE_CLOCK define(s). Additionally, I made the ahb_clock into
-fixed-factor clock using the A53 cpu clock as a base.
+-----BEGIN PGP SIGNATURE-----
 
-So I updated the example and added 'clocks' to the schema.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7RFrwACgkQ2O7X88g7
++pqyWA/+OhqVYXC7LKpDLzUQ9Fn41dekQwHZyxIw9VOLiU7mZFHAoKyIhUQHtyvd
+J/FCTtlBipQ/wRTZvcsSHWwl6pXSO7w8uQ2MJD9Z+PCKAdB2HdLbTM8YKZFWAuMM
+SxE0cKaioHfJrC584weNyABNideKrNuk933eChhIZA1MqF5VJE5r84oceNajCrLp
+p+SsJaR+uDr7zRvVRRHTTLQjE9eSqO0SdPSc+my9fqwmDka+ZldGP70Dsg+zi733
+852SRtkVnrcy9+j5bLPo6Cl9TB0ZS8+U/rFTmPcltV2UjVtADnQE9Es0AHRrUXv1
+pcfvKHEFrj+CImoMIABanxYpgam0Arp2hUWKgryYw9SyGaJSQSOvYScy73i/NvU5
+FU9yanHaDLQ984zpkpHfwYPyPe3a9CT4WlM49xdMXvXoXehN9lWX81Rz+hl4z9o4
+ZssN/DDRtNcSliQWgLbtQeZFXxOfKnPmBSNWxBGrPzwQppk0QrcT+telWxD7ZPbd
+8i7ueX/dPFSNuy09x3wYrxfJbvrVqHS6EPbrl4N0T0EPRKK/AnjOtl/dL5XT6viV
+5zoXvJ6IVWNwTrmvgERv9oy2eonj5CxYm9AdsDTRbSRcfs6JfANVQXJrB/joHutH
+cFWV17FeOL2naQpcPL8JfeQU92ddf9ed0TTd0352W0ivmGZCpvE=
+=Xr9A
+-----END PGP SIGNATURE-----
 
-I will send you a new series shortly.
-
-Thank you for the comments.
-
---
-Lars Povlsen,
-Microchip
+--4xpce4ocym4xo3vs--
