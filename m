@@ -2,117 +2,105 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF8AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC88C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7E12072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:49:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="kaFjl6ha"
+	by mail.kernel.org (Postfix) with ESMTP id C6C4220776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590742365;
+	bh=lM0pqY9A9HZVoYYkL4jwxKyhd9Qx14GNUqXeaDFjVOo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VrpinKj5jll/giQ96Ztkaa+iRTG6Hzut7STBxi0LXQR/C5Sr2uCWLOJ4PjrLfq3XT
+	 APZBlxw9KZS0Q83PLHoSWRm6G/nST3ZbdacydzT1hJzMMhepTofx6SAlpby9qc//cO
+	 wvdpqz6RoKJyJRA5stx5g+D2krn/lzFaTMlYeSN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgE2Itb (ORCPT
+        id S1726756AbgE2Iwh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 04:49:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2Ita (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 04:49:30 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 924E4C03E969
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 01:49:29 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id k5so1594374lji.11
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 01:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1l4xtGOxhqqlxgIkGPyKhx55xNwxZ5usjoQR3ai/dCs=;
-        b=kaFjl6haj8O8E8+DmE686PPUoSGeVZy1HTTpnNUDRBpxA/k+lKvri2wRisWgT2iT2y
-         FVKLgHhA10JSdaHrsa+l2lQXc9FLLoHrOqQ0zr5/4PL+ZemuzIFMFMe7aYdCnLSIIH9w
-         UuceE594b7VMWDsCtVStURZka3tsH9a4a64zzX9Cw2fizZalzwZnQhFwrnuGla08HZV+
-         2TxIq4Zmk5oq2Y7/UPSUkPKe2A7rHEV7qxIuz2z7gS+xakAlKAsi/vqsq28SyAgPSHjF
-         KqTlfO7kMhzOBOBgxvy4KyFKzshw/66MYuiLhXcsYo2Hds8lD9tN+I3Hdl3t3ORl9dOt
-         a80Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1l4xtGOxhqqlxgIkGPyKhx55xNwxZ5usjoQR3ai/dCs=;
-        b=XUhGXTGpvFb3XIIrV7TGRfjsZH38EqRlZPKwjYVu6YkZs3EaS5GFP7gGVpouTK+4oB
-         OuAq/wvL9HyNfz1LozB53xsKpZSZi5EREr20WxcsO02BaCE2Os3EpCS2xZ8xqyeV7EA9
-         WWx3D/2EFSfyINNG4Rr0S1CqYdINdinVHJfzcBqVdWqRUfFM4v2+dw1Q8ydlwcx6w2WQ
-         OqvM5Z8baufwevaogN9schZn56o1rrpcOUWmqV9L5zrE52YTTiE4Z2ThX4Hem2sO9+9p
-         zY8Eds1DH+IJo+pSKW09IQUWPib0IlAgQnA6Jhmo3WF4BE6c2rt6wfhGzrk5JL46PUYA
-         D4iQ==
-X-Gm-Message-State: AOAM533wyA607lGngbQM/XytLt35YdNOO6rUmUCi1fuP+YVvBPqm8aN7
-        8u3b1OgwUIFn0rLJCIm1eAWtBA==
-X-Google-Smtp-Source: ABdhPJzXUde5z0UiZwHiMG/jkD4n9ZihV6t4jN0gXDun6HT126YSr0NDTPIAn28I3N14iaTVHdMcYg==
-X-Received: by 2002:a2e:7f08:: with SMTP id a8mr3840705ljd.332.1590742168088;
-        Fri, 29 May 2020 01:49:28 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:2d5:373e:50fc:221d:1226:f18a? ([2a00:1fa0:2d5:373e:50fc:221d:1226:f18a])
-        by smtp.gmail.com with ESMTPSA id l16sm2119454lfg.2.2020.05.29.01.49.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 01:49:27 -0700 (PDT)
-Subject: Re: [PATCH v5 01/16] spi: dw: Set xfer effective_speed_hz
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
- <20200529035915.20790-2-Sergey.Semin@baikalelectronics.ru>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <afdf414a-df95-b130-85e8-cda5bf4e9405@cogentembedded.com>
-Date:   Fri, 29 May 2020 11:49:12 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 29 May 2020 04:52:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgE2Iwh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 04:52:37 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64BD020776;
+        Fri, 29 May 2020 08:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590742356;
+        bh=lM0pqY9A9HZVoYYkL4jwxKyhd9Qx14GNUqXeaDFjVOo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZgClWNM0sAw4ZxYh9THr6qbNd7jM70YaNC0SdMPioFnxjGn4TcS7nYa5LWy/VP0+i
+         ExwrRSZ7UhSxoLq0udFelaLxB5gmonMSGF/EV90Bh2Km2pWII+L0wohxOBx5xnDnGc
+         a7Klo8lfxdyhf3TgBAi2FGW440lqLHzZp6h9SrS8=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jeakk-00GDsx-Na; Fri, 29 May 2020 09:52:34 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        Huacai Chen <chenhc@lemote.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 0/6] Three Loongson irqchip support
+Date:   Fri, 29 May 2020 09:52:13 +0100
+Message-Id: <159074223979.887186.1909053030258448427.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
+References: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529035915.20790-2-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-kernel@vger.kernel.org, jason@lakedaemon.net, chenhc@lemote.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
-
-On 29.05.2020 6:58, Serge Semin wrote:
-
-> Seeing DW APB SSI controller doesn't support setting the exactly
-> requested SPI bus frequency, but only a rounded frequency determined
-> by means of the odd-numbered half-worded reference clock divider,
-> it would be good tune the SPI core up and initialize the current
-                   ^ to?
-
-> transfer effective_speed_hz. By doing so the core will be able to
-> execute the xfer-related delays with better accuracy.
+On Thu, 28 May 2020 23:27:48 +0800, Jiaxun Yang wrote:
+> v5:
+>   - Add some range checks in dt-schema
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Feng Tang <feng.tang@intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-[...]
+> Jiaxun Yang (6):
+>   irqchip: Add Loongson HyperTransport Vector support
+>   dt-bindings: interrupt-controller: Add Loongson HTVEC
+>   irqchip: Add Loongson PCH PIC controller
+>   dt-bindings: interrupt-controller: Add Loongson PCH PIC
+>   irqchip: Add Loongson PCH MSI controller
+>   dt-bindings: interrupt-controller: Add Loongson PCH MSI
+> 
+> [...]
 
-MBR, Sergei
+Applied to irq/irqchip-next, thanks!
+
+[1/6] irqchip: Add Loongson HyperTransport Vector support
+      commit: 818e915fbac518e8c78e1877a0048d92d4965e5a
+[2/6] dt-bindings: interrupt-controller: Add Loongson HTVEC
+      commit: 6c2832c3c6edc38ab58bad29731b4951c0a90cf8
+[3/6] irqchip: Add Loongson PCH PIC controller
+      commit: ef8c01eb64ca6719da449dab0aa9424e13c58bd0
+[4/6] dt-bindings: interrupt-controller: Add Loongson PCH PIC
+      commit: b6e4bc125fc517969f97d901b1845ebf47bbea26
+[5/6] irqchip: Add Loongson PCH MSI controller
+      commit: 632dcc2c75ef6de3272aa4ddd8f19da1f1ace323
+[6/6] dt-bindings: interrupt-controller: Add Loongson PCH MSI
+      commit: da10a4b626657387845f32d37141fc7d48ebbdb3
+
+I've cherry-picked Rob's Rbs that were posted on the v4 series.
+
+Cheers,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
+
+
