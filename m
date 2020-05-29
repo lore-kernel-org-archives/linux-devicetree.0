@@ -4,108 +4,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F719C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F97C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB55A20810
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07E8206A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590787039;
-	bh=sME8ruLxoroLuY9q/Uj9rGG2wjg9pRbFEdETtL61H4c=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=voNBISDw/Zx1c9nGYY3z97fekJ6WDtCLVW2/4WGFKj/79LcCzxfJr2nSG9KHOAhZ7
-	 cpOlGrVIvmg2BLWskHEbYeI7z+vwcn5Sna/+b0tBjpcxDew944XjJ8ZnNrsup494B6
-	 G9I3Fgkkqd09jRt4stwu+kkIXLzZEqYsCK153XJk=
+	s=default; t=1590787076;
+	bh=vpKoyoWN5r6O3rlLTDJNlJPVdlLTIMxaOA92uuObPJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eu0JkDNUG2TgzSICNIzpL69cTaIeB0j7UxAl8Fwq5zMIuBbxHsk6MKKAbiNFOKSFq
+	 L1ljXJqd5mRsSa6J4QRMDGbJecsyOxa0Zc57LgrfodjOI/fNihW8cXRaQHrr0PGd3j
+	 kxY4djhCAA306Y3GnAzALqXukFQzPX5BGsOeuFy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgE2VRS (ORCPT
+        id S1728369AbgE2VR4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 17:17:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgE2VRR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 17:17:17 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E984F206A4;
-        Fri, 29 May 2020 21:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590787037;
-        bh=sME8ruLxoroLuY9q/Uj9rGG2wjg9pRbFEdETtL61H4c=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=vhe6AHZO5O8RimaLFP7kzVzLRMLJhrLNePtmAG5uLBJjUaQ6JRJAYxPp8SIUcbzUs
-         DxbCTECsbuw/0iJvghP5Ltn4P3z1K0hDb6+5rMpyxS3TiIJ/PsmbweAge1MhAiQEHW
-         kQFaEt+erIFhX8IAvajkqKCxoc30++m7FjXXi7DA=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 29 May 2020 17:17:56 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39940 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbgE2VRz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:17:55 -0400
+Received: by mail-il1-f194.google.com with SMTP id t8so3362045ilm.7;
+        Fri, 29 May 2020 14:17:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vUXcWEVyGeAOrT4sCouBuRywKuKYWtHu45lPmV+EjrM=;
+        b=nO/VaQfVLUdP+MS002zaTmo62t4ug3fpAAZ0LSjsfV++CwAfYYECsveush6QrupusU
+         uG3KkB5qfaHqlRMRrtF9ctG1IjqNo2zgeqgj22TFnKIouV/ZatSdpC22KKRjVFMropb4
+         pl9xnGu6LvysL6hW/hHLewnRCrCKMaZVWpWb4AcoaYh+VYgHKXTXd0jup36FMc6ekg7K
+         F5xV6/s6BQ8edtgFL0A1aG8nrwGtluS25hzt8j/jnvu9RrZkbPTLiuIpg9rMzClJRRlQ
+         m4h0YHMd/Y2f+FNVA6Pttj8kGxDsHVVtyPH0S1VJHoQtlYHSDR7cOo2DYy2+GFhNvo1l
+         IKgQ==
+X-Gm-Message-State: AOAM533bciewWWeIEK4Y+EaU/3wF5+2rdq8FNkoSd4g4mXhmH0D8LMcY
+        9J7OAuj3yhyStAeyNTXpw7C8HD8MOg==
+X-Google-Smtp-Source: ABdhPJyVQopdodmrG1J/7Gqr/xZs0tHWJIN9wz1LuRxvYuIRTOK2a60ioznc8C+lv3tHwhikdv876w==
+X-Received: by 2002:a05:6e02:8ee:: with SMTP id n14mr8971926ilt.189.1590787074907;
+        Fri, 29 May 2020 14:17:54 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id a17sm5194699ilr.68.2020.05.29.14.17.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 14:17:54 -0700 (PDT)
+Received: (nullmailer pid 2984285 invoked by uid 1000);
+        Fri, 29 May 2020 21:17:53 -0000
+Date:   Fri, 29 May 2020 15:17:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     alexandru.tachici@analog.com
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux@roeck-us.net
+Subject: Re: [PATCH v3 6/6] dt-bindings: hwmon: Add bindings for ADM1266
+Message-ID: <20200529211753.GA2981084@bogus>
+References: <20200529130506.73511-1-alexandru.tachici@analog.com>
+ <20200529130506.73511-7-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <919e2f2f13583d4d53d0e95b81fc3fb8a7606107.1590594293.git-series.maxime@cerno.tech>
-References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech> <919e2f2f13583d4d53d0e95b81fc3fb8a7606107.1590594293.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH v3 02/25] dt-bindings: clock: Add a binding for the RPi Firmware clocks
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Fri, 29 May 2020 14:17:16 -0700
-Message-ID: <159078703613.69627.13627047580756230984@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529130506.73511-7-alexandru.tachici@analog.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Maxime Ripard (2020-05-27 08:44:58)
-> The firmware running on the RPi VideoCore can be used to discover and
-> change the various clocks running in the BCM2711. Since devices will
-> need to use them through the DT, let's add a pretty simple binding.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+On Fri, May 29, 2020 at 04:05:06PM +0300, alexandru.tachici@analog.com wrote:
+> From: Alexandru Tachici <alexandru.tachici@analog.com>
+> 
+> Add bindings for the Analog Devices ADM1266 sequencer.
+> 
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 > ---
-
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm283=
-5-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm=
-2835-firmware.yaml
-> index cec540c052b6..b48ed875eb8e 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmw=
-are.yaml
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmw=
-are.yaml
-> @@ -22,6 +22,25 @@ properties:
->        Phandle to the firmware device's Mailbox.
->        (See: ../mailbox/mailbox.txt for more information)
-> =20
-> +  clocks:
-> +    type: object
+>  .../bindings/hwmon/adi,adm1266.yaml           | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+> new file mode 100644
+> index 000000000000..76b62be48d56
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hwmon/adi,adm1266.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +    properties:
-> +      compatible:
-> +        const: raspberrypi,firmware-clocks
+> +title: Analog Devices ADM1266 Cascadable Super Sequencer with Margin
+> +  Control and Fault Recording
 > +
-> +      "#clock-cells":
-> +        const: 1
-> +        description: >
-
-Just curious if this is the same as the | syntax? I haven't seen this
-used before.
-
-> +          The argument is the ID of the clocks contained by the
-> +          firmware messages.
+> +maintainers:
+> +  - Alexandru Tachici <alexandru.tachici@analog.com>
 > +
+> +description: |
+> +  Analog Devices ADM1266 Cascadable Super Sequencer with Margin
+> +  Control and Fault Recording.
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adm1266
+> +
+> +  reg:
+> +    description: |
+> +      I2C address of slave device.
+> +    items:
+> +      minimum: 0x40
+> +      maximum: 0x4F
+> +
+> +  avcc-supply:
+> +    description: |
+> +      Phandle to the Avcc power supply.
+> +
+> +  adi,master-adm1266:
+> +    description: |
+> +      Represents phandle of a master ADM1266 device cascaded through the IDB.
+> +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+Add:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        adm1266@40 {
+> +                compatible = "adi,adm1266";
+> +                reg = <0x40>;
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +        };
+> +    };
+> +...
+> -- 
+> 2.20.1
+> 
