@@ -2,123 +2,193 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94155C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17985C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 724E9206A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590775553;
-	bh=r77XAoN5fd638oLmE3+GQc9P2h1ARPtV4kP03iQo/88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sv2EyUyBWS6ym1Foj1nM6ClI9+LTY4ouqUJm3FSBkbpck4IWvlkKo5JpWG5Mr5PZb
-	 HFLP9aeDnRSccG2tn82RjWNludZPtWyVnywSli6cYH9VBpGaaxh8EZWsx2jYrwVNtM
-	 Tz2ThRM4H37eEmNJDNYGMvVJahzUs/wSrLTOVnJk=
+	by mail.kernel.org (Postfix) with ESMTP id EF087206A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:06:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DspHGxQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgE2SFw (ORCPT
+        id S1725839AbgE2SGf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 14:05:52 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35878 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgE2SFw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 14:05:52 -0400
-Received: by mail-il1-f194.google.com with SMTP id 17so3405875ilj.3;
-        Fri, 29 May 2020 11:05:51 -0700 (PDT)
+        Fri, 29 May 2020 14:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbgE2SGe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 14:06:34 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AAE8C03E969;
+        Fri, 29 May 2020 11:06:34 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u13so4518107wml.1;
+        Fri, 29 May 2020 11:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=upQJf5klT3BJhtYCik8Xt8ZFwpOd8Ec+MHPem0ZBw8c=;
+        b=DspHGxQfaOC5kX6RIxvC1n0CE1qXRgsL4blUue2WedwR0X4NsElEG3XCCag9mBzcQl
+         SoDHlqHZQhspzDo2d39Tk8dusf7LAbUo2KjrJmovrmVwFR0zVdMp+mPfJ4uN6KNOoqCq
+         RlF4tIZ2BjAg8cVTd871wAQoep+io91MgCroMR7R03/Bbh1m0bmhDcsNtSCXPlkMEroT
+         9rsOHe/mfn+oieHO8JQ52AzRCk02VeLf96AkXC6H87KqMhteuJw/6cFM89V5xstClfv4
+         e67/ytujHYHO8XkBTNYkMKN36PBwQTDSsZENgnT6pft3mm5PbQyjIIwn0KQqJxc95uap
+         qVWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6MPQeJvwFRTgbgwMrp+Kir/wUqqdjEZ7jsT2I5deov8=;
-        b=mFuNDrjoT4CfSHAmDfhHzkIWZjcMaVWNQXE5oqDq+RrPbsOxQuDIHxpecsPas50lF5
-         Cv3QcD8l7uRFa8DHrLsmswHre5KZ9Js4IPe1ip22ro8nkCJ46QsybsfPqE4nhVyUcz4M
-         nPhVx+gn780t20ZF03P71kdDe/KEaetMvzcrOurlRDCUPBQ2O7XRTLwWzED24BQzslC8
-         SZnGCZ6IokLeF3d/ZwMHTM9lmvNoWogDVmoHxK0wcOXHd4RLhAcUZeEcaSLoXehxhND0
-         wChVQhboVV8GsmAKgPbAy5T4VD63mMzeNhyRcPaaGRkN3o6EW351Hgg0YLBj0o3wNRyc
-         bDCA==
-X-Gm-Message-State: AOAM533+0QcGaFjLFa5KkSZ1KiFH0zDc+6bzlABOETmbpQWzafv5xs/A
-        mEytbZilI9kEJPtrmZGx4g==
-X-Google-Smtp-Source: ABdhPJzv0a953fnw5nmavyZAUFL9HJTvVrPtcJWDLGyQzSHQIuiZm4yg096cKyrTDUX96bx+f0I/7A==
-X-Received: by 2002:a92:a1d1:: with SMTP id b78mr4067029ill.164.1590775551476;
-        Fri, 29 May 2020 11:05:51 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r17sm5288597ilc.33.2020.05.29.11.05.50
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=upQJf5klT3BJhtYCik8Xt8ZFwpOd8Ec+MHPem0ZBw8c=;
+        b=BUEv85iIC5DbB5tW7ST5ULv77qZOLwkUE7JxTeSQ5MK9fQ/urpmpTJUlY2HT5doQur
+         zeXhtLqdte3YDybs13cj87ZNOsuuZk+tfyKCyAcEXN4gpGa/zj1nvUYDd6o+y+FWO2Bj
+         M++bUBrbr1EkhAw0kzPgDsbYOP6FB9+alz+2PCWeZDAwpd25RaGjbp5s93L8NF8Ns3+n
+         ThUVVmzMOFdVx6MQIB+WYzuv/lNSHiijqtPHMOr8n3s9extNnmFTz8hcsuNZMBKpg8hH
+         XD/Ap8jsNqMV2S21L2Bh35DAB6jMVpj8bLa9Shf1OVCxce2q8pbUJhoX8fLIso0IVLVi
+         pf9g==
+X-Gm-Message-State: AOAM5333HASH9Yz85YzAZeTqvAMbSkzyzvmIziqv3LOveJQQw/DsouV8
+        pTS4xZ/flTSmlOO8m3r18Sg=
+X-Google-Smtp-Source: ABdhPJxECAbSxRGc7r2e70SdPbZdEqtqwn8on6WG0NbbGyW+QD1yZ66KVZEWblueeLh61ipr8/Nl1Q==
+X-Received: by 2002:a1c:a905:: with SMTP id s5mr9433945wme.120.1590775593019;
+        Fri, 29 May 2020 11:06:33 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id t185sm299618wmt.28.2020.05.29.11.06.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 11:05:50 -0700 (PDT)
-Received: (nullmailer pid 2671061 invoked by uid 1000);
-        Fri, 29 May 2020 18:05:50 -0000
-Date:   Fri, 29 May 2020 12:05:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+        Fri, 29 May 2020 11:06:32 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        John Youn <John.Youn@synopsys.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: usb: Add documentation for SG trb
- cache size quirk
-Message-ID: <20200529180550.GA2665183@bogus>
-References: <cover.1590415123.git.joglekar@synopsys.com>
- <d91b768b3827fce611ba052aa1bcca19ac09fd75.1590415123.git.joglekar@synopsys.com>
+        Prashant Malani <pmalani@chromium.org>,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: Merge gpio-usb-b-connector with usb-connector
+Date:   Fri, 29 May 2020 20:06:31 +0200
+Message-Id: <20200529180631.3200680-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d91b768b3827fce611ba052aa1bcca19ac09fd75.1590415123.git.joglekar@synopsys.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 04:10:55PM +0530, Tejas Joglekar wrote:
-> This commit adds the documentation for sgl-trb-cache-size-quirk, and
-> snps,sgl-trb-cache-size-quirk property. These when set enables the
-> quirk for XHCI driver for consolidation of sg list into a temporary
-> buffer when small buffer sizes are scattered over the sg list not
-> making up to MPS or total transfer size within TRB cache size with
-> Synopsys xHC.
-> 
-> Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt     | 4 ++++
->  Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index d03edf9d3935..0fcbaa51f66e 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -102,6 +102,10 @@ Optional properties:
->  			this and tx-thr-num-pkt-prd to a valid, non-zero value
->  			1-16 (DWC_usb31 programming guide section 1.2.3) to
->  			enable periodic ESS TX threshold.
-> + - snps,sgl-trb-cache-size-quirk: enable sg list consolidation - host mode
-> +			only. Set to use SG buffers of at least MPS size
-> +			by consolidating smaller SG buffers list into a
-> +			single buffer.
->  
->   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->   - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index dc025f126d71..c53eb19ae67e 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -44,6 +44,9 @@ Optional properties:
->    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
->    - imod-interval-ns: default interrupt moderation interval is 5000ns
->    - phys : see usb-hcd.yaml in the current directory
-> +  - sgl-trb-cache-size-quirk: set if you need to consolidate sg list into a
-> +    temporary buffer when small SG buffer sizes does not make upto MPS
-> +    size or total transfer size across the TRB cache size.
+From: Thierry Reding <treding@nvidia.com>
 
-Still don't understand why you have 2 properties? Is this a generic 
-issue for multiple XHCI controllers? If yes, you don't need the first 
-one. If no, then you don't need the second one.
+The binding for usb-connector is a superset of gpio-usb-b-connector. One
+major difference is that gpio-usb-b-connector requires at least one of
+the vbus-gpios and id-gpios properties to be specified. Merge the two
+bindings by adding the compatible string combination for the GPIO USB-B
+variant and an extra conditional for the required properties list to the
+usb-connector.yaml file.
 
-Really, I'd prefer neither, and this should be implied by a specific 
-compatible string. Having a separate property doesn't work if you find 
-this issue later on after already adding XHCI support. IOW, don't make 
-users update their DT to handle a quirk.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ .../bindings/connector/usb-connector.yaml     | 39 +++++++++++++++++--
+ .../devicetree/bindings/usb/usb-conn-gpio.txt | 30 --------------
+ 2 files changed, 35 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+index 03b92b6f35fa..9bd52e63c935 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
++++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+@@ -15,10 +15,15 @@ description:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - usb-a-connector
+-      - usb-b-connector
+-      - usb-c-connector
++    oneOf:
++      - enum:
++          - usb-a-connector
++          - usb-b-connector
++          - usb-c-connector
++
++      - items:
++          - const: gpio-usb-b-connector
++          - const: usb-b-connector
+ 
+   label:
+     description: Symbolic name for the connector.
+@@ -140,6 +145,19 @@ properties:
+ required:
+   - compatible
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: gpio-usb-b-connector
++    then:
++      anyOf:
++        - required:
++            - vbus-gpios
++        - required:
++            - id-gpios
++
+ examples:
+   # Micro-USB connector with HS lines routed via controller (MUIC).
+   - |
+@@ -202,3 +220,16 @@ examples:
+         op-sink-microwatt = <10000000>;
+       };
+     };
++
++  # USB connector with GPIO control lines
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    usb {
++      connector {
++        compatible = "gpio-usb-b-connector", "usb-b-connector";
++        type = "micro";
++        id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
++        vbus-supply = <&usb_p0_vbus>;
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+deleted file mode 100644
+index ec80641208a5..000000000000
+--- a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-USB GPIO Based Connection Detection
+-
+-This is typically used to switch dual role mode from the USB ID pin connected
+-to an input GPIO, and also used to enable/disable device mode from the USB
+-Vbus pin connected to an input GPIO.
+-
+-Required properties:
+-- compatible : should include "gpio-usb-b-connector" and "usb-b-connector".
+-- id-gpios, vbus-gpios : input gpios, either one of them must be present,
+-	and both can be present as well.
+-	see connector/usb-connector.yaml
+-
+-Optional properties:
+-- vbus-supply : can be present if needed when supports dual role mode.
+-	see connector/usb-connector.yaml
+-
+-- Sub-nodes:
+-	- port : can be present.
+-		see graph.txt
+-
+-Example:
+-
+-&mtu3 {
+-	connector {
+-		compatible = "gpio-usb-b-connector", "usb-b-connector";
+-		type = "micro";
+-		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
+-		vbus-supply = <&usb_p0_vbus>;
+-	};
+-};
+-- 
+2.24.1
+
