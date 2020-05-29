@@ -4,86 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C31C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD00C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD57207D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3B9207D3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590721080;
-	bh=iPmB3JWPcj6hcX+GM4Z9KiVf7IWOIqBs78YCYwQJcXA=;
+	s=default; t=1590721137;
+	bh=vHl7MtUtMB049QR3RJzoF4LPTtbcjRmk+Xv5R0hoO7g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DAFezxzpeVg57tk/yHnnUEYImX5/qDP68Xj0r84JpSA+rZrvfIpDE0bPkxYvxToRS
-	 My2seBo+FIblmeI67qZEe8f6mKDlN8tz/TbUw12F2ghjClRjQX6J2jpzJz+BRpUHWv
-	 y/aKcFpC1YajphTnxX8xRDLbmbl2733lxqq56XyE=
+	b=cxxcsVq5rJksSpycvnJKRQfnMPAel7kWyL9Iij+jwtXwW1NFBJqBsnkPtBw+tJHf8
+	 SpgX2kCAWV5bRnmmkQA6d6gMPCSvImY3W6KtULX9rw569rh74E9DGA5OrMClXIU0G4
+	 mMSmICYvruVw07ZoPTli1m2510niUmByvAfsV5Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405263AbgE2C54 (ORCPT
+        id S2407575AbgE2C6u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 22:57:56 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38958 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405441AbgE2C54 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 22:57:56 -0400
-Received: by mail-io1-f67.google.com with SMTP id c8so795436iob.6;
-        Thu, 28 May 2020 19:57:55 -0700 (PDT)
+        Thu, 28 May 2020 22:58:50 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43900 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407560AbgE2C6u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 22:58:50 -0400
+Received: by mail-il1-f193.google.com with SMTP id l20so1027444ilj.10;
+        Thu, 28 May 2020 19:58:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=N8uzOIIIpGWPdsbJ0u56sDBNVwHqBhAgIf0P1oCYCNE=;
-        b=O9AJAfR/8rhofn6F/AzTotLksq6smiSpRqnZCRJOGTsobHdccPg/ygPzcMcO8XNcf0
-         8n20bOwWV3euT8g2zwKlxWE2J/3mcnHXa6grjpJdgHy3pZ015VNyO45UYTZ65+cu/H5F
-         mayLVcRsw3Xtiu5GhGteij1JSlIpzstjgU9gD75vOsqbT2CYKbG18lYrYlAssv0mOf53
-         1bEG995YYBdSPNlm0rvtlN6AzWCdrucXMk1CLRBA5Yt4ZAcvHyboH8neCalm7Zjr6KQ3
-         xcF0iZ9NZy6nB8FYXvDozCV0x2G5pqjXO9Raj3gh6SVB/Fg3QZ6MC9nyugrFgV4htRKL
-         YaeA==
-X-Gm-Message-State: AOAM5337vujBOmc+sD2nQGzr2EBIwZ37WRwY3PrA66qyDE6lXW8XizrS
-        Ex2yKBF9CsnMbz+dBrwpVTBE4g4dCg==
-X-Google-Smtp-Source: ABdhPJwRskpCuBE+lThP/koIQUNPkZDL+l+1TJDpkepXryb0z7iuhU6IrhSELPJjS7dWvkLtOOKvag==
-X-Received: by 2002:a6b:c706:: with SMTP id x6mr4878118iof.112.1590721074936;
-        Thu, 28 May 2020 19:57:54 -0700 (PDT)
+        bh=m6kcwlIC7SKtx9thDsfIOgDZfkogbuD8SNG7gHAFV2g=;
+        b=s4aBb0TzRVNe4K4CCs7+pXaeD3TSO/nKwYdZEBOfCxcoFziIt4BIumIb6at8uYdYfl
+         dPgxXy0B59b2s0iXzcpIZgueiagK9VHXJY443wAs2Xx0BUfcwmrInnZ75E6E3EpIbWgm
+         Y+UgA/Q9q6ohu6mhImnsmukzkKrjyBgoK+AjiWeS6BU7joyGodbylH9ZSmhMm5/f2FVD
+         JC5ZmiNDbZ1iGY8TNVAE81VPBLdinmHahZ/+aoFseUMUVkhDYtOdhY8SMSb2VXJnEs55
+         YVIG5HmeqAE00DuynVHTD4qkN/SjAQ6x39tJ1kFjGm9p7Ih2FaKiabYltgiaIWAGmzXG
+         HK6A==
+X-Gm-Message-State: AOAM530iCUN34/HSFeexXqoOki8wfTQZ5AW7g4K1Kg0YI1ZTl5rmSDYK
+        13ySgXlwlxiXxAIMffAaSg==
+X-Google-Smtp-Source: ABdhPJzvfcF83aDlvSVv+tXYOmvv+ugf8LjGNXP4oxa2f48ct9MiDm/qpBCJ2AWztc8Ety30ZSqprg==
+X-Received: by 2002:a92:9c04:: with SMTP id h4mr5267706ili.190.1590721128061;
+        Thu, 28 May 2020 19:58:48 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y19sm3285195iod.41.2020.05.28.19.57.53
+        by smtp.gmail.com with ESMTPSA id p75sm4101531ilb.23.2020.05.28.19.58.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 19:57:54 -0700 (PDT)
-Received: (nullmailer pid 1185493 invoked by uid 1000);
-        Fri, 29 May 2020 02:57:53 -0000
-Date:   Thu, 28 May 2020 20:57:53 -0600
+        Thu, 28 May 2020 19:58:47 -0700 (PDT)
+Received: (nullmailer pid 1186722 invoked by uid 1000);
+        Fri, 29 May 2020 02:58:46 -0000
+Date:   Thu, 28 May 2020 20:58:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: timer: renesas: mtu2: Convert to json-schema
-Message-ID: <20200529025753.GA1185443@bogus>
-References: <20200528133033.4191-1-geert+renesas@glider.be>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: sound: tlv320adcx140: Fix dt-binding-check
+ issue
+Message-ID: <20200529025846.GA1185629@bogus>
+References: <20200528144711.18065-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528133033.4191-1-geert+renesas@glider.be>
+In-Reply-To: <20200528144711.18065-1-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 15:30:33 +0200, Geert Uytterhoeven wrote:
-> Convert the Renesas Multi-Function Timer Pulse Unit 2 (MTU2) Device Tree
-> binding documentation to json-schema.
+On Thu, May 28, 2020 at 09:47:11AM -0500, Dan Murphy wrote:
+> Fix dt-binding-check issue
 > 
-> Add missing properties.
-> Update the example to match reality.
+> ti,gpi-config:0:0: 4 is greater than the maximum of 1
+> ti,gpi-config:0:1: 5 is greater than the maximum of 1
+> ti,gpi-config:0:2: 6 is greater than the maximum of 1
+> ti,gpi-config:0:3: 7 is greater than the maximum of 1
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reported-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  .../bindings/timer/renesas,mtu2.txt           | 42 ----------
->  .../bindings/timer/renesas,mtu2.yaml          | 76 +++++++++++++++++++
->  2 files changed, 76 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/renesas,mtu2.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/renesas,mtu2.yaml
-> 
+>  Documentation/devicetree/bindings/sound/tlv320adcx140.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied, thanks!
+Thanks for the quick fix.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
