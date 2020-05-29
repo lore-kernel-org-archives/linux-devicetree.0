@@ -2,59 +2,80 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD20C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB022C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7BB42145D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B462B21475
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgE2Nek (ORCPT
+        id S1726845AbgE2Njt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 09:34:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgE2Nei (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 09:34:38 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34468C03E969;
-        Fri, 29 May 2020 06:34:38 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jef9d-0005JK-K9; Fri, 29 May 2020 15:34:33 +0200
-Date:   Fri, 29 May 2020 15:34:33 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/9] dt-bindings: atmel-tcb: convert bindings to
- json-schema
-Message-ID: <20200529133433.mr3fp4rfd5l4scxw@linutronix.de>
-References: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
- <20200506080554.283177-2-alexandre.belloni@bootlin.com>
- <20200529101314.2ueuhgnrqq3a764f@linutronix.de>
- <20200529132118.GF3972@piout.net>
+        Fri, 29 May 2020 09:39:49 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:44707 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgE2Njt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 09:39:49 -0400
+Received: by mail-oo1-f66.google.com with SMTP id u40so471114ooi.11;
+        Fri, 29 May 2020 06:39:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q3f28yw0QDcaEzHgGdMpHejbPMhbDBFHHK/0bqlZmX8=;
+        b=c2hq2C7XLX/A4vgjrqP4tMtYamwq+4CpsDaft7zDOumqUlXvVFXuj8OtPTlDts+3Bz
+         TRuWjjzNvmvjityh53YTx6C05kjYAvw9aALkUQzBMVAzRHSj1ONpd8GwlafoBmVA/yyl
+         wn1tA8eiUHBXTBISj94tJ7zzwaM/espgXKdap6UMXvwIMuynei7cu9Zae4ndsDZZzWwX
+         GRe2ZKiV1c7aI9s/CGYi58ezZBGmGrBkoF88vBbDLlgEDj2GPPAT+V1A50rhpqBjgRcA
+         oH8gr9B4irRdmBNDPn6oH+5U9jfZZ7pWYsRRMZncTVjSQTlVFi94teaSi/iZ+VBp3INq
+         xaeg==
+X-Gm-Message-State: AOAM532ie1ocITZr8FqUiN9gZk5VFKKRtW0CrxjJEXOk5kPHECPFyCGz
+        ThxvX3PCdOexh9EfRQ92PXiGzgs6IyZXTJRJg2U=
+X-Google-Smtp-Source: ABdhPJwm/rZ3o5sWjux4TP2w0te6CgxFjYJHWYjLax6PNzOmNuPAKH/6xILv9+rUMhcbfW2+qjgQ5Z3waEshJY+3lRk=
+X-Received: by 2002:a4a:95d0:: with SMTP id p16mr6533251ooi.40.1590759587218;
+ Fri, 29 May 2020 06:39:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200529132118.GF3972@piout.net>
+References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590614320-30160-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1590614320-30160-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 29 May 2020 15:39:33 +0200
+Message-ID: <CAMuHMdXYJ1W3KPvFusKivv21hJNgFT_qLLxCOiem85NBxKMwKA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: r8a7742: Add CMT SoC specific support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-29 15:21:18 [+0200], Alexandre Belloni wrote:
-> There is actually one comment I need to address that Rob made on another
-> series that was also including this patch. I'll send a new version
-> today.
+On Wed, May 27, 2020 at 11:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add CMT[01] support to r8a7742 SoC DT.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Ah, okay. Thanks for the info, that thread looked dead.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-Sebastian
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
