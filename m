@@ -2,151 +2,102 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F97C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B4FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C07E8206A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A013F20776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590787076;
-	bh=vpKoyoWN5r6O3rlLTDJNlJPVdlLTIMxaOA92uuObPJs=;
+	s=default; t=1590787350;
+	bh=xV/m9LMIXCFEOT1sghkZyJJWUmlMCJyxKMr32qX/xgA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eu0JkDNUG2TgzSICNIzpL69cTaIeB0j7UxAl8Fwq5zMIuBbxHsk6MKKAbiNFOKSFq
-	 L1ljXJqd5mRsSa6J4QRMDGbJecsyOxa0Zc57LgrfodjOI/fNihW8cXRaQHrr0PGd3j
-	 kxY4djhCAA306Y3GnAzALqXukFQzPX5BGsOeuFy0=
+	b=I541+4gc7vHK425ULQtFRJp3loI59N7orAWpdWV+qjsndJN+5H85WQWv9i4BN7z9N
+	 p41v+V6KbwrMJZ9iubQn/yx4IrW+QfimKSXYKm787E+9MHDHqvfDh4kU2LXXeSFXri
+	 UOSdmlSnDuXbKnQ+2zMnn1cbuTZpdk8HJceWn1T8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgE2VR4 (ORCPT
+        id S1728354AbgE2VWa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 17:17:56 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:39940 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgE2VRz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:17:55 -0400
-Received: by mail-il1-f194.google.com with SMTP id t8so3362045ilm.7;
-        Fri, 29 May 2020 14:17:55 -0700 (PDT)
+        Fri, 29 May 2020 17:22:30 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42631 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727879AbgE2VW3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:22:29 -0400
+Received: by mail-io1-f68.google.com with SMTP id d5so860279ios.9;
+        Fri, 29 May 2020 14:22:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=vUXcWEVyGeAOrT4sCouBuRywKuKYWtHu45lPmV+EjrM=;
-        b=nO/VaQfVLUdP+MS002zaTmo62t4ug3fpAAZ0LSjsfV++CwAfYYECsveush6QrupusU
-         uG3KkB5qfaHqlRMRrtF9ctG1IjqNo2zgeqgj22TFnKIouV/ZatSdpC22KKRjVFMropb4
-         pl9xnGu6LvysL6hW/hHLewnRCrCKMaZVWpWb4AcoaYh+VYgHKXTXd0jup36FMc6ekg7K
-         F5xV6/s6BQ8edtgFL0A1aG8nrwGtluS25hzt8j/jnvu9RrZkbPTLiuIpg9rMzClJRRlQ
-         m4h0YHMd/Y2f+FNVA6Pttj8kGxDsHVVtyPH0S1VJHoQtlYHSDR7cOo2DYy2+GFhNvo1l
-         IKgQ==
-X-Gm-Message-State: AOAM533bciewWWeIEK4Y+EaU/3wF5+2rdq8FNkoSd4g4mXhmH0D8LMcY
-        9J7OAuj3yhyStAeyNTXpw7C8HD8MOg==
-X-Google-Smtp-Source: ABdhPJyVQopdodmrG1J/7Gqr/xZs0tHWJIN9wz1LuRxvYuIRTOK2a60ioznc8C+lv3tHwhikdv876w==
-X-Received: by 2002:a05:6e02:8ee:: with SMTP id n14mr8971926ilt.189.1590787074907;
-        Fri, 29 May 2020 14:17:54 -0700 (PDT)
+        bh=qZYvDr2j6Dv3sRGAtruzxneua5DcH3zuqmue20TSj2E=;
+        b=BLp9qmw5gcU0zKx3SVABPMzUUkHIu6s3uB8KuV7PtuzI5sk9X8SeXuqu1AyljJ6mL5
+         Ubx7/Et56jMsWqIOYhpI3jmAns3YGIWsnvUyZlijOX2DcggoiZZbUtZdBkVu3IYeoLjw
+         TDLVeMtg9BvyhS98Oi4N6qYgDOuHIDbDlshCOoRmse4Veam47hNGnX8tp5LJHMs94PDL
+         ohFUHsZDBTqoV3affN5jOm6aobmCUxsgtlbVC/s05hIOXJz7I08X3CZFsxIDf+fTEmz6
+         bBiK7KnQsaLxBkA3Kisq9TElXsRM6NXrxhfP5fKwTRnHz7xAKXsgJ2TkLcwRJ2ptgC3V
+         DzBA==
+X-Gm-Message-State: AOAM532LPY3lxDUgceuWFs9vwWr1Nn/tk6sfpRL/4/GhS2wjhkwjeY82
+        GiF1luda02SBL1+Xq2Pqng==
+X-Google-Smtp-Source: ABdhPJwVWPTcpvZek2C4OAFK9fa1KtWLIaDBiGIryiDD1izJ8OIhWd6dYL11PZoj7cvyVedQ/KZzNQ==
+X-Received: by 2002:a05:6638:38a:: with SMTP id y10mr9407413jap.131.1590787348508;
+        Fri, 29 May 2020 14:22:28 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a17sm5194699ilr.68.2020.05.29.14.17.54
+        by smtp.gmail.com with ESMTPSA id h15sm2473595iol.9.2020.05.29.14.22.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 14:17:54 -0700 (PDT)
-Received: (nullmailer pid 2984285 invoked by uid 1000);
-        Fri, 29 May 2020 21:17:53 -0000
-Date:   Fri, 29 May 2020 15:17:53 -0600
+        Fri, 29 May 2020 14:22:27 -0700 (PDT)
+Received: (nullmailer pid 2991462 invoked by uid 1000);
+        Fri, 29 May 2020 21:22:26 -0000
+Date:   Fri, 29 May 2020 15:22:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     alexandru.tachici@analog.com
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux@roeck-us.net
-Subject: Re: [PATCH v3 6/6] dt-bindings: hwmon: Add bindings for ADM1266
-Message-ID: <20200529211753.GA2981084@bogus>
-References: <20200529130506.73511-1-alexandru.tachici@analog.com>
- <20200529130506.73511-7-alexandru.tachici@analog.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200529212226.GA2984630@bogus>
+References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+ <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
+ <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
+ <20200529173325.GR4610@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529130506.73511-7-alexandru.tachici@analog.com>
+In-Reply-To: <20200529173325.GR4610@sirena.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:05:06PM +0300, alexandru.tachici@analog.com wrote:
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
+On Fri, May 29, 2020 at 06:33:25PM +0100, Mark Brown wrote:
+> On Fri, May 29, 2020 at 08:26:42PM +0300, Serge Semin wrote:
 > 
-> Add bindings for the Analog Devices ADM1266 sequencer.
+> > You must have missed the patch 16:
+> > 0e8332aaf059 dt-bindings: spi: Convert DW SPI binding to DT schema
+> > As you can see it has been acked by Rob. So you can also merge it into your
+> > repo. Though It has to be rebased first due to the Dinh Nguyen patches
+> > recently merged in. Do you want me to do the rebasing?
 > 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/hwmon/adi,adm1266.yaml           | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-> new file mode 100644
-> index 000000000000..76b62be48d56
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/adi,adm1266.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-> +  Control and Fault Recording
-> +
-> +maintainers:
-> +  - Alexandru Tachici <alexandru.tachici@analog.com>
-> +
-> +description: |
-> +  Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-> +  Control and Fault Recording.
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adm1266
-> +
-> +  reg:
-> +    description: |
-> +      I2C address of slave device.
-> +    items:
-> +      minimum: 0x40
-> +      maximum: 0x4F
-> +
-> +  avcc-supply:
-> +    description: |
-> +      Phandle to the Avcc power supply.
-> +
-> +  adi,master-adm1266:
-> +    description: |
-> +      Represents phandle of a master ADM1266 device cascaded through the IDB.
-> +    $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +required:
-> +  - compatible
-> +  - reg
+> Please rebase.  TBH I'd not noticed Rob's review so I just left it
+> waiting for that, there's such a huge backlog there it didn't occur to
+> me that it might've been reviewed.
 
-Add:
+Hey, I'm down to about 10 patches now. I think I'll take the rest of the 
+week off.
 
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        adm1266@40 {
-> +                compatible = "adi,adm1266";
-> +                reg = <0x40>;
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +        };
-> +    };
-> +...
-> -- 
-> 2.20.1
-> 
+Rob
