@@ -2,148 +2,95 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747BDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F8EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4167E20810
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1908D20897
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590787601;
-	bh=4PcmKVXv3+Pm537ytXY6tA02wQ0lM4OxDXfeD1RfrVg=;
+	s=default; t=1590787745;
+	bh=owlI+0lXB9zQV69nRV96LG0IqM3mYRi2tFsvKjKJXu0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PS+q1j6ByqRZqWBTXus4rthTTgwfKoXxc9DKvKojfzB6P17134VmdngQoBmxo/dE/
-	 d9M6m2gHL+TGeLLMda8nAmimAv0SUiuM+lrexD9rIwVfNH1300N+o8vs+5S3D59PGn
-	 4fZC+Gk/p65DH4upzFHvq4ZlXX2eXbsJ55JSKE0I=
+	b=F+w86LaI3uQ5cHBKggNc6pJCImHClpt3JrMMY8oCXrefkN/a4EH0UYcB3QnraIXDn
+	 2+GDKOgq6MlV5PeIaFTzAt/6F9282PluxvJhXkRs0ZBWMkWlwGg1ynQPT6mOAFlldA
+	 1Cg5eZmpALdF9ci/rEsVCaOkMqMJiKKUEa3mhbzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgE2V0k (ORCPT
+        id S1727964AbgE2V3E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 17:26:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35846 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbgE2V0k (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:26:40 -0400
-Received: by mail-il1-f196.google.com with SMTP id 17so3942588ilj.3;
-        Fri, 29 May 2020 14:26:39 -0700 (PDT)
+        Fri, 29 May 2020 17:29:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39430 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbgE2V3E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:29:04 -0400
+Received: by mail-io1-f65.google.com with SMTP id c8so893145iob.6;
+        Fri, 29 May 2020 14:29:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+2I2uh+lCRQ53KIyx03FmW/+jeIMFqOBrGTcbc9lM4s=;
-        b=Pikg9MLLTqzQ2jwqEe6IFmOXh4LISsKfaPmROxgGYDuQJutrBVTO1HxCvEdzFITZwj
-         Ltn14m37MHv6e5VpR6KBH58k4f2UqWaW57jpw7Tn6c2VxucQoRKkGYkMbRGSh+GvcOe6
-         +iSHFUloRI9U8NOmyw81mQSJiVTBnvsJQfqoCpEyeMjC9yHhVlMWB5MLr9SxFULCB8JZ
-         VgxSiRY/eY+eWUt0qgp/+z36Zdk+nt5yJAw65TEXozYwafSeT+qbFpRF0VJC0/Vz7kfL
-         HUv8ebxvm0nglmxeLL94l8/722pdSt2oCymRNEIs07FarCPIePNFO8eR0zOAWau7e0fq
-         x1cA==
-X-Gm-Message-State: AOAM531Ud/gU7ndHtfVtDsFI0GoGiCvsdVgTPEVNjKrB7ATe0D2FNBBc
-        dkcwRLpE2nsDnevokxYFoVxgKubrhg==
-X-Google-Smtp-Source: ABdhPJzR/qUOw/XdsiMltbuXXMqaCmOfvW7wTfv0VjXShbJx2eIblPx7c2mxeaGCHZ4eWqhGUoRnAQ==
-X-Received: by 2002:a92:8488:: with SMTP id y8mr2707079ilk.262.1590787599226;
-        Fri, 29 May 2020 14:26:39 -0700 (PDT)
+        bh=EkE+6//HPeALlSFIVg26ucZzI23gJBcyX6L2mQ0CHFs=;
+        b=cZaSzUQZGN1emh1zU0wqcDOGdmS4sjd1QtKidYEsml1bZDRhj1ImCJMi3vflY87Nny
+         ApuVW12+UAcJQG4NnCHpMrxmE06Vk3Htuq3mqnh9hX5Rj+aLRLhIc1ZJijSQiimrlx+M
+         RrQomsilsUNWQdrWjMknE0RNhU9B2lBeEkmDYh6o+ixDxcU04u3XniWxQKzoO9gOc2RK
+         FjFdkGSioEeD/VkFDeTKB7szlCLrdeNKWAynylJBUiMH1aj4UFlHul4qPPyhxpU6VyKp
+         TluP8Sz5Qwa84UxXJkF8I6b+dr/prpse0oQUZT8WYFg/+OoYHBWdC0klbnvRnBqWNaKN
+         A4kw==
+X-Gm-Message-State: AOAM530wA8O3/N8ymURSKm+iaycgMKXrYAy2neOGC7MUb/kn4JsTf/9R
+        oqeWbdRXPgEia9hiJ+TutJ+ZNvnK4g==
+X-Google-Smtp-Source: ABdhPJy6pahK2/QoZLOirJ/eOuHSg4yWPD0tIkE0E0gvSPYs2cAWTAlQy6a6rNMU7W6RfA/dmm7/pQ==
+X-Received: by 2002:a02:b88e:: with SMTP id p14mr8865236jam.36.1590787743197;
+        Fri, 29 May 2020 14:29:03 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t65sm1498148ilk.38.2020.05.29.14.26.38
+        by smtp.gmail.com with ESMTPSA id v14sm5258547ilm.66.2020.05.29.14.29.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 14:26:38 -0700 (PDT)
-Received: (nullmailer pid 2998245 invoked by uid 1000);
-        Fri, 29 May 2020 21:26:37 -0000
-Date:   Fri, 29 May 2020 15:26:37 -0600
+        Fri, 29 May 2020 14:29:02 -0700 (PDT)
+Received: (nullmailer pid 3002091 invoked by uid 1000);
+        Fri, 29 May 2020 21:29:01 -0000
+Date:   Fri, 29 May 2020 15:29:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Felix Fietkau <nbd@nbd.name>
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: net: wireless: mt76: add power-limits
- node
-Message-ID: <20200529212637.GA2994957@bogus>
-References: <20200529161929.24751-1-nbd@nbd.name>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: timer: renesas: cmt: Convert to
+ json-schema
+Message-ID: <20200529212901.GA3000996@bogus>
+References: <20200505155127.4836-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529161929.24751-1-nbd@nbd.name>
+In-Reply-To: <20200505155127.4836-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:19:27PM +0200, Felix Fietkau wrote:
-> This subnode can be used to set per-rate tx power limits either per
-> country code / regdomain or globally.
-> These limits are typically provided by the device manufacturers and are
-> used to limit sideband emissions and stay within regulatory limits
-
-How do other WiFi chips handle this? If this is added to DT, then it 
-should be common for all WiFi h/w.
- 
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+On Tue, May 05, 2020 at 05:51:27PM +0200, Geert Uytterhoeven wrote:
+> Convert the Renesas Compare Match Timer (CMT) Device Tree binding
+> documentation to json-schema.
+> 
+> Document missing properties.
+> Update the example to match reality.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  .../bindings/net/wireless/mediatek,mt76.txt   | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> index ab7e7a00e534..9d9ace0cfbf9 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> @@ -36,6 +36,7 @@ Optional nodes:
->  - led: Properties for a connected LED
->    Optional properties:
->      - led-sources: See Documentation/devicetree/bindings/leds/common.txt
-> +- power-limits: contains per-regdomain/channel rate power limit subnodes
->  
->  &pcie {
->  	pcie0 {
-> @@ -76,3 +77,49 @@ wmac: wmac@18000000 {
->  
->  	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
->  };
-> +
-> +
-> +Subnodes of power-limits:
-> +
-> +Properties:
-> +- country: One or more country codes, as used by the cfg80211 regdomain code
-> +- regdomain: "FCC", "ETSI" or "JP"
-> +
-> +If neither country, nor regdomain is specified, the power limits node is used
-> +as a fallback when no other subnode matches.
-> +
-> +Subnodes txpower-2g, txpower-5g:
-> +
-> +Properties:
-> +- channels: pairs of first and last channel number
-> +- cck: 4 half-dBm per-rate power limit values
-> +- ofdm: 8 half-dBm per-rate power limit values
-> +- mcs:
-> +	sets of per-rate power limit values for 802.11n/802.11ac rates for
-> +	multiple channel bandwidth settings.
-> +	Each set starts with the number of channel bandwidth settings for
-> +	which the rate set applies, followed by either 8 (MT7603/MT7628) or
-> +	10 (all other chips) power limit values.
-> +	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
-> +
-> +
-> +power-limit example:
-> +
-> +power-limits {
-> +	r0 {
-> +		regdomain = "FCC";
-> +		txpower-5g {
-> +			r1 {
-> +				channels = <36 48>;
-> +				ofdm = <23 23 23 23 23 23 23 23>;
-> +				mcs = <1 23 23 23 23 23 23 23 23 23 23>,
-> +					  <3 22 22 22 22 22 22 22 22 22 22>;
-> +			};
-> +			r2 {
-> +				channels = <100 181>;
-> +				ofdm = <14 14 14 14 14 14 14 14>;
-> +				mcs = <4 14 14 14 14 14 14 14 14 14 14>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.24.0
-> 
+> v2:
+>   - Add missing "additionalProperties: false",
+>   - Add Reviewed-by.
+> ---
+>  .../devicetree/bindings/timer/renesas,cmt.txt | 110 -----------
+>  .../bindings/timer/renesas,cmt.yaml           | 182 ++++++++++++++++++
+>  2 files changed, 182 insertions(+), 110 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.yaml
+
+Looks like this didn't get applied yet, so I've applied it.
+
+Rob
