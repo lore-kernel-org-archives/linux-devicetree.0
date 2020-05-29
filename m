@@ -2,78 +2,132 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD2CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A942C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9CD72074D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590726581;
-	bh=qVwgudvkBtdmAIlD05bceR/5bThoNQ+jc6K0uU7r05o=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=Tb6b4fXKw54JkF914s5MoJMXkRb9l4IaZ/CwBwmeIcKznh6jqn/r2pkTHxJdqpUuI
-	 GIkKskbkUrnF9iYAFtUqBBQkCTy4fFRI8G07XXBg+D73VAa3Z347rpNcxbEm3mUqZl
-	 rWcWsKoRsJj5WLjjsAziZLHyVEIpwIh/FjvRISMo=
+	by mail.kernel.org (Postfix) with ESMTP id 482C0206A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:37:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="dRak7D3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725808AbgE2E3i (ORCPT
+        id S1725808AbgE2EhE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 00:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbgE2E3h (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 00:29:37 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C732074D;
-        Fri, 29 May 2020 04:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590726577;
-        bh=qVwgudvkBtdmAIlD05bceR/5bThoNQ+jc6K0uU7r05o=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=iBFpgg1dHzFrT/weRqTvj39XGlmHSCtBfRIp2QoPRp21XePD4GcU5jUpYhaxcjY34
-         RPIvDgrnZxH/RbcNOSrJpjZsIb9mvvGZ9eMRtVGZHbs43D7WruhNswwpKxieG2D3OR
-         D1RBZC4nzQtcdZJQ3i50zrQ02s89R9jiJmlqYT34=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200502122126.188001-1-aford173@gmail.com>
-References: <20200502122126.188001-1-aford173@gmail.com>
-Subject: Re: [PATCH V2 1/3] clk: vc5: Allow Versaclock driver to support multiple instances
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     aford@beaconembedded.com, charles.stevens@logicpd.com,
-        Adam Ford <aford173@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
+        Fri, 29 May 2020 00:37:04 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17751 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgE2EhE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 00:37:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1590727006; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=lWSPfm98Y1jJKvPQ+zqEgwZKWQ+dXI8RRe12Uf+NwnSxF6lY+LSqfSyZYggTHjvIIL/5uwrWXiDhwzgZohufayND5VkI/FY0P0kxbpway9c4JR+WO1eToWKqasYLQ1BAhxnrZtvuj9/N4lCgkiywdbO+49jasBfOs9zVEU7DQis=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1590727006; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=O1OREt7nYCnv4UCHr9osSF6UWeM6plYBdi9iXc26Tog=; 
+        b=Rxh8XNcvWXhEjfvZKMvGHU9QIFoYNpU9ffCU/4d//cP7WY4kVqHjuVKLuLn23xETJjj30Ln5rl0hOFYo/uA/AYgXJHR2kK/Im9bH35voaasqdcHbnt1LCU3HzwejYu3RS8u18+Qg2ozEBoMyJpcJc9ZOvf/nx/EFhwX8+l6H5dk=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1590727006;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=O1OREt7nYCnv4UCHr9osSF6UWeM6plYBdi9iXc26Tog=;
+        b=dRak7D3Berg9lhxTTkFmLCivUWgTl4Hh3+VjjePj9fPkEr9cJ4g9WbfQ4vRX3/Hl
+        iDJGstJX+RrC4jYL1G3dnZIw2q7D+Xbm0gwGOQTKkcPns0sr9hJ1FUW5tM1gfGNIHEj
+        sf0PrS9Q9ays5AJptPphh0JNlEqoeHl7NsEabYg0=
+Received: from [127.0.0.1] (60.177.188.90 [60.177.188.90]) by mx.zoho.com.cn
+        with SMTPS id 159072700356037.37654661644967; Fri, 29 May 2020 12:36:43 +0800 (CST)
+Date:   Fri, 29 May 2020 12:36:41 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Huacai Chen <chenhc@lemote.com>
+CC:     Marc Zyngier <maz@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org
-Date:   Thu, 28 May 2020 21:29:36 -0700
-Message-ID: <159072657670.69627.7898870559369627169@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] MIPS: Loongson64: Initial LS7A PCH support
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <CAAhV-H5B+6drcEiz=JCexa0LC3JAPS0K5WZ0zwndvuKv-e9NRQ@mail.gmail.com>
+References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com> <CAAhV-H5B+6drcEiz=JCexa0LC3JAPS0K5WZ0zwndvuKv-e9NRQ@mail.gmail.com>
+Message-ID: <82608FDB-FEF8-45FA-85D7-236B46F906B7@flygoat.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Adam Ford (2020-05-02 05:21:24)
-> diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
-> index fa96659f8023..81255d923f00 100644
-> --- a/drivers/clk/clk-versaclock5.c
-> +++ b/drivers/clk/clk-versaclock5.c
-> @@ -881,6 +871,8 @@ static int vc5_probe(struct i2c_client *client,
->                 goto err_clk;
->         }
-> =20
-> +       dev_info(&client->dev, "probed");
-> +
 
-Please remove this.
 
->         return 0;
-> =20
->  err_clk:
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=8829=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+2:13:36, Huacai Chen <chenhc@lemote=2Ecom> =E5=86=99=E5=88=B0:
+>Hi, Jiaxun,
+>
+>On Fri, May 29, 2020 at 11:45 AM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom=
+> wrote:
+>>
+>> With this series, LS7A and Loongson-3A4000 is finally supported
+>> note that this series should depend on irqchip support[1], which
+>> is likely to get merged soon=2E
+>>
+>> Thanks=2E
+>>
+>> [1]: https://lkml=2Eorg/lkml/2020/5/16/72
+>>
+>> Jiaxun Yang (3):
+>>   dt-bindings: mips: Document two Loongson generic boards
+>>   MIPS: Loongson64: DeviceTree for LS7A PCH
+>>   MIPS: Loongson64:Load LS7A dtbs
+>>
+>>  =2E=2E=2E/bindings/mips/loongson/devices=2Eyaml       |   8 +
+>>  arch/mips/boot/dts/loongson/Makefile          |   5 +-
+>>  =2E=2E=2E/dts/loongson/loongson3-r4-package=2Edtsi    |  74 +++++++
+>>  =2E=2E=2E/dts/loongson/loongson3_4core_ls7a=2Edts     |  25 +++
+>>  =2E=2E=2E/boot/dts/loongson/loongson3_r4_ls7a=2Edts   |  10 +
+>>  arch/mips/boot/dts/loongson/ls7a-pch=2Edtsi     | 185 ++++++++++++++++=
+++
+>>  =2E=2E=2E/asm/mach-loongson64/builtin_dtbs=2Eh        |   2 +
+>>  arch/mips/loongson64/env=2Ec                    |  56 +++---
+>>  8 files changed, 342 insertions(+), 23 deletions(-)
+>>  create mode 100644 arch/mips/boot/dts/loongson/loongson3-r4-package=2E=
+dtsi
+>>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_ls7a=2E=
+dts
+>>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_r4_ls7a=2Edts
+>>  create mode 100644 arch/mips/boot/dts/loongson/ls7a-pch=2Edtsi
+>I think the naming can be like this: Old processor (Loongson 3A R1~R3)
+>use loongson64c_ prefix instead of loongson3, new processor (Loongson
+>3A R4) use loongson64g_ prefix instead of loongson3_r4, and
+>Loongson-2K use loongson64r_ prefix, this makes them consistent with
+>their PRID definitions=2E
+
+
+DeviceTree bindings have stable ABI=2E Although they're currently=20
+only used internally in Kernel=2E I don't think it's a good idea
+to rename existing bindings=2E
+
+Also, Loongson64C/64G/64R never came to a part of Loongson's
+official naming=2E I doubt if end users will recognize these names=2E
+
+I'd prefer keep naming as is=2E It's really not a big deal=2E
+
+Thanks=2E
+
+
+>
+>>
+>> --
+>> 2=2E27=2E0=2Erc0
+>>
+
+--=20
+Jiaxun Yang
