@@ -2,422 +2,207 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88E4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CC2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F6220814
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IEnVHh6q"
+	by mail.kernel.org (Postfix) with ESMTP id 6F6212068D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404282AbgE2CF0 (ORCPT
+        id S2404557AbgE2CJ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 22:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390961AbgE2CFX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 22:05:23 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2CCC08C5C8
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 19:05:23 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id z15so2630787pjb.0
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 19:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=scMPyp0Cd4obDzXIcULUzWcz6qsbcJHLwkXHbhN3T8s=;
-        b=IEnVHh6qMTtKRaskM5/V2ACzCO1WO6gXLfvZe+UT6aMUw4D30kUUTVM9Io0sPADR5E
-         OVt1aoy61cFPjhdF/d9iWl/PSRIpnxeOraTvRdYec4ts6W1A3TBbE8E0CrnJ+GgmYL1q
-         eoQ1MklVvW6xT5guC/wVGlanQvMvXiYeYOZosfzr0N41kOQkB7GqfoWf2rrcCjKm7IlL
-         dJ8zQodFqP20gPtyIOwbqdRmMffECbuco9aR8Dhpq7e89FFzL+CjIr1RhiuiWDxtYYDQ
-         KI4eSnrkpQTG7Ni72d2pQs+xDim8FiVl89EtvtbkLoakuHfDfihdzxf5SzjHoaa3cOpL
-         SkYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=scMPyp0Cd4obDzXIcULUzWcz6qsbcJHLwkXHbhN3T8s=;
-        b=SQALuSA7yftnvQIKm/MQwoE/xhNxkViTcROTOAP+v2jZGSexCEY3kdwpHU6ZimPa8E
-         qJmgGjO/CMhUsUoZblvQWfYGPchwqLFWiskbLU6V28d+H2WLA95zJupkC9MYYFhdNyaR
-         BWHIoO0NMrYNKNSjplUVDFeJyXFqgdtkK6UwB3p3epQ7RHVLvRxtItUrt/SNph0H00Lp
-         L6sgrv13JBvBbrBr+XHMzVf3XLQUhInw2XUvICK87+JwAgxDDHFSVp24+sCRm6jFFsLf
-         +l0HjIBgr1q1MKxBf/aJBdpP8KFpcyQ2AfMsrisAw8+wlPvaFNGIBiB8DNDGbAcrMDQW
-         3Gnw==
-X-Gm-Message-State: AOAM533zSa111dPvsmUMVLo8ZmiCzywBNBEvHoj4+37uUKndY/LXnF+3
-        FcBdzV8HOLCzfPpIAImQTx2lDQ==
-X-Google-Smtp-Source: ABdhPJyu/U/zFyc1Mj2/7NmzBqox/bFC5Paz7MNXaGMPwenYVkipIgKqQyDmgko+QzT+0liCcAVNqw==
-X-Received: by 2002:a17:902:a711:: with SMTP id w17mr6535954plq.173.1590717922705;
-        Thu, 28 May 2020 19:05:22 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e21sm5312043pga.71.2020.05.28.19.05.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 19:05:22 -0700 (PDT)
-Date:   Thu, 28 May 2020 19:04:16 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH v3 4/5] regulator: qcom: Add labibb driver
-Message-ID: <20200529020416.GN279327@builder.lan>
-References: <20200528154625.17742-1-sumit.semwal@linaro.org>
- <20200528154625.17742-5-sumit.semwal@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528154625.17742-5-sumit.semwal@linaro.org>
+        Thu, 28 May 2020 22:09:26 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:34098 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404458AbgE2CJ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 22:09:26 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6EA48200D12;
+        Fri, 29 May 2020 04:09:23 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B993200056;
+        Fri, 29 May 2020 04:09:20 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 04788402D3;
+        Fri, 29 May 2020 10:09:15 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        paul.liu@linaro.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] dt-bindings: regulator: Convert anatop regulator to json-schema
+Date:   Fri, 29 May 2020 09:59:11 +0800
+Message-Id: <1590717551-20772-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 28 May 08:46 PDT 2020, Sumit Semwal wrote:
+Convert the anatop regulator binding to DT schema format using json-schema.
 
-> From: Nisha Kumari <nishakumari@codeaurora.org>
-> 
-> Qualcomm platforms have LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost)
-> regulators, labibb for short, which are used as power supply for
-> LCD Mode displays.
-> 
-> This patch adds labibb regulator driver for pmi8998 PMIC, found on
-> SDM845 platforms.
-> 
-> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> 
-> --
-> v2: sumits: reworked the driver for more common code, and addressed
->      review comments from v1
-> v3: sumits: addressed review comments from v2; moved to use core
->      regulator features like enable_time, off_on_delay, and the newly
->      added poll_enabled_time. Moved the check_enabled functionality
->      to core framework via poll_enabled_time.
-> 
-> ---
->  drivers/regulator/Kconfig                 |  10 +
->  drivers/regulator/Makefile                |   1 +
->  drivers/regulator/qcom-labibb-regulator.c | 224 ++++++++++++++++++++++
->  3 files changed, 235 insertions(+)
->  create mode 100644 drivers/regulator/qcom-labibb-regulator.c
-> 
-> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-> index f4b72cb098ef..58704a9fd05d 100644
-> --- a/drivers/regulator/Kconfig
-> +++ b/drivers/regulator/Kconfig
-> @@ -1167,5 +1167,15 @@ config REGULATOR_WM8994
->  	  This driver provides support for the voltage regulators on the
->  	  WM8994 CODEC.
->  
-> +config REGULATOR_QCOM_LABIBB
-> +	tristate "QCOM LAB/IBB regulator support"
-> +	depends on SPMI || COMPILE_TEST
-> +	help
-> +	  This driver supports Qualcomm's LAB/IBB regulators present on the
-> +	  Qualcomm's PMIC chip pmi8998. QCOM LAB and IBB are SPMI
-> +	  based PMIC implementations. LAB can be used as positive
-> +	  boost regulator and IBB can be used as a negative boost regulator
-> +	  for LCD display panel.
-> +
->  endif
->  
-> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-> index 6610ee001d9a..5b313786c0e8 100644
-> --- a/drivers/regulator/Makefile
-> +++ b/drivers/regulator/Makefile
-> @@ -87,6 +87,7 @@ obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
->  obj-$(CONFIG_REGULATOR_MT6358)	+= mt6358-regulator.o
->  obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
->  obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
-> +obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
->  obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
->  obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
->  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
-> diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-> new file mode 100644
-> index 000000000000..634d08461c6e
-> --- /dev/null
-> +++ b/drivers/regulator/qcom-labibb-regulator.c
-> @@ -0,0 +1,225 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/of_regulator.h>
-> +
-> +#define REG_PERPH_TYPE                  0x04
-> +#define QCOM_LAB_TYPE			0x24
-> +#define QCOM_IBB_TYPE			0x20
-> +
-> +#define REG_LABIBB_STATUS1		0x08
-> +#define REG_LABIBB_ENABLE_CTL		0x46
-> +#define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
-> +#define LABIBB_CONTROL_ENABLE		BIT(7)
-> +
-> +#define LAB_ENABLE_CTL_MASK		BIT(7)
-> +#define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
-> +
-> +#define LABIBB_ENABLE_TIME		1000
-> +#define LAB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 2)
-> +#define IBB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 10)
-> +#define LABIBB_OFF_ON_DELAY		(8200)
-> +
-> +struct labibb_regulator {
-> +	struct regulator_desc		desc;
-> +	struct device			*dev;
-> +	struct regmap			*regmap;
-> +	struct regulator_dev		*rdev;
-> +	u16				base;
-> +	u8				type;
-> +};
-> +
-> +struct labibb_regulator_data {
-> +	u16				base;
-> +	const char			*name;
-> +	u8				type;
-> +	unsigned int			poll_enabled_time;
-> +};
-> +
-> +static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
-> +{
-> +	int ret;
-> +	unsigned int val;
-> +	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> +
-> +	ret = regmap_read(reg->regmap, reg->base + REG_LABIBB_STATUS1, &val);
-> +	if (ret < 0) {
-> +		dev_err(reg->dev, "Read register failed ret = %d\n", ret);
-> +		return ret;
-> +	}
-> +	return !!(val & LABIBB_STATUS1_VREG_OK_BIT);
-> +}
-> +
-> +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
-> +{
-> +	int ret;
-> +	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> +
-> +	ret = regulator_enable_regmap(rdev);
-> +	if (ret < 0)
-> +		dev_err(reg->dev, "Write failed: enable %s regulator\n",
-> +			reg->desc.name);
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- remove definition of "regulator-name" which is a standrad property;
+	- add "unevaluatedProperties: false".
+---
+ .../bindings/regulator/anatop-regulator.txt        | 40 ---------
+ .../bindings/regulator/anatop-regulator.yaml       | 94 ++++++++++++++++++++++
+ 2 files changed, 94 insertions(+), 40 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/anatop-regulator.yaml
 
-If you return a negative value the various callers of
-_regulator_do_enable() and _regulator_do_disable() will print an error
-message for you.
+diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+deleted file mode 100644
+index a3106c7..0000000
+--- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
++++ /dev/null
+@@ -1,40 +0,0 @@
+-Anatop Voltage regulators
+-
+-Required properties:
+-- compatible: Must be "fsl,anatop-regulator"
+-- regulator-name: A string used as a descriptive name for regulator outputs
+-- anatop-reg-offset: Anatop MFD register offset
+-- anatop-vol-bit-shift: Bit shift for the register
+-- anatop-vol-bit-width: Number of bits used in the register
+-- anatop-min-bit-val: Minimum value of this register
+-- anatop-min-voltage: Minimum voltage of this regulator
+-- anatop-max-voltage: Maximum voltage of this regulator
+-
+-Optional properties:
+-- anatop-delay-reg-offset: Anatop MFD step time register offset
+-- anatop-delay-bit-shift: Bit shift for the step time register
+-- anatop-delay-bit-width: Number of bits used in the step time register
+-- vin-supply: The supply for this regulator
+-- anatop-enable-bit: Regulator enable bit offset
+-
+-Any property defined as part of the core regulator
+-binding, defined in regulator.txt, can also be used.
+-
+-Example:
+-
+-	regulator-vddpu {
+-		compatible = "fsl,anatop-regulator";
+-		regulator-name = "vddpu";
+-		regulator-min-microvolt = <725000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-always-on;
+-		anatop-reg-offset = <0x140>;
+-		anatop-vol-bit-shift = <9>;
+-		anatop-vol-bit-width = <5>;
+-		anatop-delay-reg-offset = <0x170>;
+-		anatop-delay-bit-shift = <24>;
+-		anatop-delay-bit-width = <2>;
+-		anatop-min-bit-val = <1>;
+-		anatop-min-voltage = <725000>;
+-		anatop-max-voltage = <1300000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.yaml b/Documentation/devicetree/bindings/regulator/anatop-regulator.yaml
+new file mode 100644
+index 0000000..e7b3abe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.yaml
+@@ -0,0 +1,94 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/anatop-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Anatop Voltage Regulators
++
++maintainers:
++  - Ying-Chun Liu (PaulLiu) <paul.liu@linaro.org>
++
++allOf:
++  - $ref: "regulator.yaml#"
++
++properties:
++  compatible:
++    const: fsl,anatop-regulator
++
++  regulator-name: true
++
++  anatop-reg-offset:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the anatop MFD register offset.
++
++  anatop-vol-bit-shift:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the bit shift for the register.
++
++  anatop-vol-bit-width:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the number of bits used in the register.
++
++  anatop-min-bit-val:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the minimum value of this register.
++
++  anatop-min-voltage:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the minimum voltage of this regulator.
++
++  anatop-max-voltage:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the maximum voltage of this regulator.
++
++  anatop-delay-reg-offset:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the anatop MFD step time register offset.
++
++  anatop-delay-bit-shift:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the bit shift for the step time register.
++
++  anatop-delay-bit-width:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the number of bits used in the step time register.
++
++  anatop-enable-bit:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing regulator enable bit offset.
++
++  vin-supply:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: input supply phandle.
++
++required:
++  - compatible
++  - regulator-name
++  - anatop-reg-offset
++  - anatop-vol-bit-shift
++  - anatop-vol-bit-width
++  - anatop-min-bit-val
++  - anatop-min-voltage
++  - anatop-max-voltage
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    regulator-vddpu {
++        compatible = "fsl,anatop-regulator";
++        regulator-name = "vddpu";
++        regulator-min-microvolt = <725000>;
++        regulator-max-microvolt = <1300000>;
++        regulator-always-on;
++        anatop-reg-offset = <0x140>;
++        anatop-vol-bit-shift = <9>;
++        anatop-vol-bit-width = <5>;
++        anatop-delay-reg-offset = <0x170>;
++        anatop-delay-bit-shift = <24>;
++        anatop-delay-bit-width = <2>;
++        anatop-min-bit-val = <1>;
++        anatop-min-voltage = <725000>;
++        anatop-max-voltage = <1300000>;
++    };
+-- 
+2.7.4
 
-As such you don't need these wrappers and should be able to just specify
-regulator_enable_regmap and regulator_disable_regmap as you enable and
-disable functions in qcom_labibb_ops directly.
-
-> +
-> +	return ret;
-> +}
-> +
-> +static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
-> +{
-> +	int ret = 0;
-> +	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> +
-> +	ret = regulator_disable_regmap(rdev);
-> +	if (ret < 0)
-> +		dev_err(reg->dev, "Disable failed: disable %s\n",
-> +			reg->desc.name);
-> +
-> +	return ret;
-> +}
-> +
-> +static struct regulator_ops qcom_labibb_ops = {
-> +	.enable			= qcom_labibb_regulator_enable,
-> +	.disable		= qcom_labibb_regulator_disable,
-> +	.is_enabled		= qcom_labibb_regulator_is_enabled,
-> +};
-> +
-> +static int register_labibb_regulator(struct labibb_regulator *reg,
-> +				const struct labibb_regulator_data *reg_data,
-> +				struct device_node *of_node)
-> +{
-> +	struct regulator_config cfg = {};
-> +
-> +	reg->base = reg_data->base;
-> +	reg->type = reg_data->type;
-> +	reg->desc.enable_reg = reg->base + REG_LABIBB_ENABLE_CTL;
-> +	reg->desc.enable_val = LABIBB_CONTROL_ENABLE;
-> +	reg->desc.of_match = reg_data->name;
-> +	reg->desc.name = reg_data->name;
-> +	reg->desc.owner = THIS_MODULE;
-> +	reg->desc.type = REGULATOR_VOLTAGE;
-> +	reg->desc.ops = &qcom_labibb_ops;
-> +
-> +	reg->desc.enable_time = LABIBB_ENABLE_TIME;
-> +	reg->desc.poll_enabled_time = reg_data->poll_enabled_time;
-> +	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
-> +
-> +	cfg.dev = reg->dev;
-> +	cfg.driver_data = reg;
-> +	cfg.regmap = reg->regmap;
-> +	cfg.of_node = of_node;
-> +
-> +	reg->rdev = devm_regulator_register(reg->dev, &reg->desc, &cfg);
-> +	return PTR_ERR_OR_ZERO(reg->rdev);
-
-If you change the return type to struct regulator_dev *, you can clean
-this up by just:
-
-	return devm_regulator_register()
-
-And then if (IS_ERR()) that in the caller.
-
-> +}
-> +
-> +static const struct labibb_regulator_data pmi8998_labibb_data[] = {
-> +	{0xde00, "lab", QCOM_LAB_TYPE, LAB_POLL_ENABLED_TIME},
-> +	{0xdc00, "ibb", QCOM_IBB_TYPE, IBB_POLL_ENABLED_TIME},
-> +	{ },
-> +};
-> +
-> +static const struct of_device_id qcom_labibb_match[] = {
-> +	{ .compatible = "qcom,pmi8998-lab-ibb", .data = &pmi8998_labibb_data},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, qcom_labibb_match);
-> +
-> +static int qcom_labibb_regulator_probe(struct platform_device *pdev)
-> +{
-> +	struct labibb_regulator *labibb_reg;
-> +	struct device *dev;
-> +	struct device_node *child;
-> +	const struct of_device_id *match;
-> +	const struct labibb_regulator_data *reg_data;
-> +	struct regmap *reg_regmap;
-> +	unsigned int type;
-> +	int ret;
-> +
-> +	reg_regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!reg_regmap) {
-> +		dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	dev = &pdev->dev;
-
-Do this as you declare "dev" above.
-
-> +
-> +	match = of_match_device(qcom_labibb_match, &pdev->dev);
-> +	if (!match)
-> +		return -ENODEV;
-> +
-> +	for (reg_data = match->data; reg_data->name; reg_data++) {
-> +		child = of_get_child_by_name(pdev->dev.of_node, reg_data->name);
-> +
-> +		/* TODO: This validates if the type of regulator is indeed
-> +		 * what's mentioned in DT.
-> +		 * I'm not sure if this is needed, but we'll keep it for now.
-> +		 */
-> +		ret = regmap_read(reg_regmap, reg_data->base + REG_PERPH_TYPE,
-> +				  &type);
-> +		if (ret < 0) {
-> +			dev_err(dev,
-> +				"Peripheral type read failed ret=%d\n",
-> +				ret);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if ((type != QCOM_LAB_TYPE) && (type != QCOM_IBB_TYPE)) {
-
-Given that you don't actually validate the information in DT, but rather
-just check that the data in the pmi8998_labibb_data is accurate this is
-merely a sanity check during development. So I think you should reduce
-this to:
-
-		if (WARN_ON(type != reg_data->type))
-			return -EINVAL;
-
-You can thereby remove the TODO comment above as well.
-
-
-What you should do though is check that "child" is not NULL - to catch
-the case where the DT doesn't specify both lab and ibb.
-
-> +			dev_err(dev,
-> +				"qcom_labibb: unknown peripheral type\n");
-> +			return -EINVAL;
-> +		} else if (type != reg_data->type) {
-> +			dev_err(dev,
-> +				"qcom_labibb: type %x doesn't match DT %x\n",
-> +				type, reg_data->type);
-> +			return -EINVAL;
-> +		}
-> +
-> +		labibb_reg  = devm_kzalloc(&pdev->dev, sizeof(*labibb_reg),
-> +					   GFP_KERNEL);
-> +		if (!labibb_reg)
-> +			return -ENOMEM;
-> +
-> +		labibb_reg->regmap = reg_regmap;
-> +		labibb_reg->dev = dev;
-> +
-> +		switch (reg_data->type) {
-> +		case QCOM_LAB_TYPE:
-> +			labibb_reg->desc.enable_mask = LAB_ENABLE_CTL_MASK;
-
-All other parts of labibb_reg->desc are filled out inside
-register_labibb_regulator(), pass the mask as an argument instead to
-consolidate the setup.
-
-> +			break;
-> +
-> +		case QCOM_IBB_TYPE:
-> +			labibb_reg->desc.enable_mask = IBB_ENABLE_CTL_MASK;
-> +			break;
-> +		}
-> +
-> +		dev_info(dev, "Registering %s regulator\n", child->full_name);
-> +
-> +		ret = register_labibb_regulator(labibb_reg, reg_data, child);
-> +		if (ret < 0) {
-> +			dev_err(dev,
-> +				"qcom_labibb: error registering %s : %d\n",
-> +				child->full_name, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver qcom_labibb_regulator_driver = {
-> +	.driver		= {
-> +		.name		= "qcom-lab-ibb-regulator",
-> +		.of_match_table	= qcom_labibb_match,
-> +	},
-> +	.probe		= qcom_labibb_regulator_probe,
-> +};
-
-I think you should drop the tabs before the various = in this
-definition.
-
-Regards,
-Bjorn
-
-> +module_platform_driver(qcom_labibb_regulator_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm labibb driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.26.2
-> 
