@@ -2,252 +2,158 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3775FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 07:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C564C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 07:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17A4420810
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 07:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C2F207D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 07:55:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMC2fYoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgE2HjO (ORCPT
+        id S1725865AbgE2Hzu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 03:39:14 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43666 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgE2HjN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 03:39:13 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5AA131A003B;
-        Fri, 29 May 2020 09:39:10 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5342A1A0034;
-        Fri, 29 May 2020 09:39:06 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 50235402A7;
-        Fri, 29 May 2020 15:39:01 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        hongtao.jia@freescale.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: thermal: Convert qoriq to json-schema
-Date:   Fri, 29 May 2020 15:28:58 +0800
-Message-Id: <1590737338-7318-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 29 May 2020 03:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgE2Hzt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 03:55:49 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F482C03E969;
+        Fri, 29 May 2020 00:55:49 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d10so1041788pgn.4;
+        Fri, 29 May 2020 00:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z6s9/IaXr38uOMZ+KBf1YjM+loSDtVV15aQ5SUi0HAc=;
+        b=fMC2fYocOCX/Im4iA/3EX4G9gDKBG7O9eP4LUGsZgCVv66R7lTBjYYYhYhhKjmpj0g
+         p0xCkjTLNdHk8YRT95VVHiPtTL5pXPkAdwJg7iXmOHX/K/DoKoX7lvpueEQILVddYCk7
+         BIvsDQIG/GrfCahFkmedOQcoeWqB1D/yVMdECGdjNTABpxzIykzIl0J9DdrrUfYq7dPk
+         Mt4eG4vKx0/0eads3hx6C2T8omGrgLIvqKP77b/wOGy3RIztME6uHkfeSP5Ph1597w5b
+         xyJPhQkzAV5IIql3/FCEdspoE/odHk4CRiG2p+FLZwONEPBSKvjlgKzLJLViAytdJYmf
+         1SiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z6s9/IaXr38uOMZ+KBf1YjM+loSDtVV15aQ5SUi0HAc=;
+        b=pRjjXncrVUrPGqBhH4V6o811uB0ussUBujwg2RwX4rkotW++k35lR8xCeO3XQ+5lXY
+         j67v+Xl+wBOlxwD1dMoi6WkHi3/VNen5pFaXUA8F20LrMqi/US6qEi+XxIm+YWkt/gj3
+         u4IfEzYuw5fSxkzNQ9WtNw3OSK4US3tYgNaDPx2YI0nqWwnja8Ly9US5E/k3/CH52yUz
+         wmDanbiSgF62u7PKWUdMRRAS2eXLAHGHfplyH42yDMQCtokx3AORE5/+9Im+gEo2f/FS
+         5PJAQHimuxo1+bp6aEoHOBpW4OK7J3u0k3g5Udo13ocE59dJd1iNow92jGa4fPt82ue3
+         dltg==
+X-Gm-Message-State: AOAM531apg32BLoohv0HKq3QgYQJ40U2bmjzKPbdQmwvRQ+hQnzj1oXr
+        V91l34T7mO1Nv55xwL7VFB7jLsD3RTde2IfNc74=
+X-Google-Smtp-Source: ABdhPJztQPvnGR2j1lYeQ00/q9iGVvqSwY7oChWZphjYzN55gXTDuT+PJSQMkK+P5HpKDJN8mMSW9rH8kKjsRQY2Epw=
+X-Received: by 2002:a63:c109:: with SMTP id w9mr683396pgf.203.1590738948699;
+ Fri, 29 May 2020 00:55:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru> <20200529035915.20790-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200529035915.20790-4-Sergey.Semin@baikalelectronics.ru>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 29 May 2020 10:55:32 +0300
+Message-ID: <CAHp75VcT2zKnuRW3uxCQtbF0A65cbS20OFpz9sX0hftbjFp1hA@mail.gmail.com>
+Subject: Re: [PATCH v5 03/16] spi: dw: Locally wait for the DMA transactions completion
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the qoriq thermal binding to DT schema format using json-schema
+On Fri, May 29, 2020 at 7:02 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> Even if DMA transactions are finished it doesn't mean that the SPI
+> transfers are also completed. It's specifically concerns the Tx-only
+> SPI transfers, since there might be data left in the SPI Tx FIFO after
+> the DMA engine notifies that the Tx DMA procedure is done. In order to
+> completely fix the problem first the driver has to wait for the DMA
+> transaction completion, then for the corresponding SPI operations to be
+> finished. In this commit we implement the former part of the solution.
+>
+> Note we can't just move the SPI operations wait procedure to the DMA
+> completion callbacks, since these callbacks might be executed in the
+> tasklet context (and they will be in case of the DW DMA). In case of
+> slow SPI bus it can cause significant system performance drop.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
- .../devicetree/bindings/thermal/qoriq-thermal.yaml | 111 +++++++++++++++++++++
- 2 files changed, 111 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
- create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+I read commit message, I read the code. What's going on here since you
+repeated xfer_completion (and its wait routine) from SPI core and I'm
+wondering what happened to it? Why we are not calling
+spi_finalize_current_transfer()?
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-deleted file mode 100644
-index 28f2cba..0000000
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ /dev/null
-@@ -1,71 +0,0 @@
--* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
--
--Required properties:
--- compatible : Must include "fsl,qoriq-tmu" or "fsl,imx8mq-tmu". The
--	version of the device is determined by the TMU IP Block Revision
--	Register (IPBRR0) at offset 0x0BF8.
--	Table of correspondences between IPBRR0 values and example  chips:
--		Value           Device
--		----------      -----
--		0x01900102      T1040
--- reg : Address range of TMU registers.
--- interrupts : Contains the interrupt for TMU.
--- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
--	the SoC reference manual. The first cell is TTR0CR, the second is
--	TTR1CR, etc.
--- fsl,tmu-calibration : A list of cell pairs containing temperature
--	calibration data, as specified by the SoC reference manual.
--	The first cell of each pair is the value to be written to TTCFGR,
--	and the second is the value to be written to TSCFGR.
--- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
--	site ID, and represents the "n" in TRITSRn and TRATSRn.
--
--Optional property:
--- little-endian : If present, the TMU registers are little endian. If absent,
--	the default is big endian.
--- clocks : the clock for clocking the TMU silicon.
--
--Example:
--
--tmu@f0000 {
--	compatible = "fsl,qoriq-tmu";
--	reg = <0xf0000 0x1000>;
--	interrupts = <18 2 0 0>;
--	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
--	fsl,tmu-calibration = <0x00000000 0x00000025
--			       0x00000001 0x00000028
--			       0x00000002 0x0000002d
--			       0x00000003 0x00000031
--			       0x00000004 0x00000036
--			       0x00000005 0x0000003a
--			       0x00000006 0x00000040
--			       0x00000007 0x00000044
--			       0x00000008 0x0000004a
--			       0x00000009 0x0000004f
--			       0x0000000a 0x00000054
--
--			       0x00010000 0x0000000d
--			       0x00010001 0x00000013
--			       0x00010002 0x00000019
--			       0x00010003 0x0000001f
--			       0x00010004 0x00000025
--			       0x00010005 0x0000002d
--			       0x00010006 0x00000033
--			       0x00010007 0x00000043
--			       0x00010008 0x0000004b
--			       0x00010009 0x00000053
--
--			       0x00020000 0x00000010
--			       0x00020001 0x00000017
--			       0x00020002 0x0000001f
--			       0x00020003 0x00000029
--			       0x00020004 0x00000031
--			       0x00020005 0x0000003c
--			       0x00020006 0x00000042
--			       0x00020007 0x0000004d
--			       0x00020008 0x00000056
--
--			       0x00030000 0x00000012
--			       0x00030001 0x0000001d>;
--	#thermal-sensor-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-new file mode 100644
-index 0000000..bfbfa04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-@@ -0,0 +1,111 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/qoriq-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
-+
-+maintainers:
-+  - Hongtao Jia <hongtao.jia@freescale.com>
-+
-+properties:
-+  compatible:
-+    description: |
-+      The version of the device is determined by the TMU IP Block Revision
-+      Register (IPBRR0) at offset 0x0BF8.
-+      Table of correspondences between IPBRR0 values and example chips:
-+            Value           Device
-+            ----------      -----
-+            0x01900102      T1040
-+    enum:
-+      - fsl,qoriq-tmu
-+      - fsl,imx8mq-tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,tmu-range:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-array'
-+    description: |
-+      The values to be programmed into TTRnCR, as specified by the SoC
-+      reference manual. The first cell is TTR0CR, the second is TTR1CR, etc.
-+
-+  fsl,tmu-calibration:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-array'
-+    description: |
-+      A list of cell pairs containing temperature calibration data, as
-+      specified by the SoC reference manual. The first cell of each pair
-+      is the value to be written to TTCFGR, and the second is the value
-+      to be written to TSCFGR.
-+
-+  little-endian:
-+    description: |
-+      boolean, if present, the TMU registers are little endian. If absent,
-+      the default is big endian.
-+    type: boolean
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 1
-+    description: |
-+      Number of cells required to uniquely identify the thermal sensors. This
-+      is set to 1 for multiple sensors.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - fsl,tmu-range
-+  - fsl,tmu-calibration
-+  - '#thermal-sensor-cells'
-+
-+examples:
-+  - |
-+    tmu@f0000 {
-+        compatible = "fsl,qoriq-tmu";
-+        reg = <0xf0000 0x1000>;
-+        interrupts = <18 2 0 0>;
-+        fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
-+        fsl,tmu-calibration = <0x00000000 0x00000025
-+                               0x00000001 0x00000028
-+                               0x00000002 0x0000002d
-+                               0x00000003 0x00000031
-+                               0x00000004 0x00000036
-+                               0x00000005 0x0000003a
-+                               0x00000006 0x00000040
-+                               0x00000007 0x00000044
-+                               0x00000008 0x0000004a
-+                               0x00000009 0x0000004f
-+                               0x0000000a 0x00000054
-+
-+                               0x00010000 0x0000000d
-+                               0x00010001 0x00000013
-+                               0x00010002 0x00000019
-+                               0x00010003 0x0000001f
-+                               0x00010004 0x00000025
-+                               0x00010005 0x0000002d
-+                               0x00010006 0x00000033
-+                               0x00010007 0x00000043
-+                               0x00010008 0x0000004b
-+                               0x00010009 0x00000053
-+
-+                               0x00020000 0x00000010
-+                               0x00020001 0x00000017
-+                               0x00020002 0x0000001f
-+                               0x00020003 0x00000029
-+                               0x00020004 0x00000031
-+                               0x00020005 0x0000003c
-+                               0x00020006 0x00000042
-+                               0x00020007 0x0000004d
-+                               0x00020008 0x00000056
-+
-+                               0x00030000 0x00000012
-+                               0x00030001 0x0000001d>;
-+        #thermal-sensor-cells = <1>;
-+    };
+...
+
+>         dws->master->cur_msg->status = -EIO;
+> -       spi_finalize_current_transfer(dws->master);
+> +       complete(&dws->dma_completion);
+>         return IRQ_HANDLED;
+
+...
+
+> +static int dw_spi_dma_wait(struct dw_spi *dws, struct spi_transfer *xfer)
+> +{
+> +       unsigned long long ms;
+> +
+> +       ms = xfer->len * MSEC_PER_SEC * BITS_PER_BYTE;
+> +       do_div(ms, xfer->effective_speed_hz);
+> +       ms += ms + 200;
+> +
+> +       if (ms > UINT_MAX)
+> +               ms = UINT_MAX;
+> +
+> +       ms = wait_for_completion_timeout(&dws->dma_completion,
+> +                                        msecs_to_jiffies(ms));
+> +
+> +       if (ms == 0) {
+> +               dev_err(&dws->master->cur_msg->spi->dev,
+> +                       "DMA transaction timed out\n");
+> +               return -ETIMEDOUT;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  /*
+>   * dws->dma_chan_busy is set before the dma transfer starts, callback for tx
+>   * channel will clear a corresponding bit.
+> @@ -155,7 +184,7 @@ static void dw_spi_dma_tx_done(void *arg)
+>                 return;
+>
+>         dw_writel(dws, DW_SPI_DMACR, 0);
+> -       spi_finalize_current_transfer(dws->master);
+> +       complete(&dws->dma_completion);
+>  }
+>
+>  static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+> @@ -204,7 +233,7 @@ static void dw_spi_dma_rx_done(void *arg)
+>                 return;
+>
+>         dw_writel(dws, DW_SPI_DMACR, 0);
+> -       spi_finalize_current_transfer(dws->master);
+> +       complete(&dws->dma_completion);
+>  }
+
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
