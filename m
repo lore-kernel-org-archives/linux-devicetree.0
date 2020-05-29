@@ -2,85 +2,134 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343D6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056F2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A54A20776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D943220776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590775735;
-	bh=PwrrNplCLDicZ8vy304qeYfh+vYEmr4LzYXl+kUWrvQ=;
+	s=default; t=1590776022;
+	bh=AKZfwR0JxlHu3s1HVkgAARCa7UvkLMo2iNxmyl+SG28=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2HL8lyGjrk4ZvjeD2+O2+905V59/6dVBAPhhEn5H0Hi6xZTHWf74JgEtPz/C2jlvH
-	 8OKoYgX3827/zh+tr0mRCdsqThnt3rd3SEwmffQFxa0/PTuWnfTPChzMRdoJhHHLxl
-	 hmAYfsiwBT2jpJ9e/XHXBOrHUZhoIKTpzyoKFFF8=
+	b=iCXYelBrAM91ItONzanhtDJrSytUe1rpHl3xFDtt5U/gqOeB7JsZJMZmF77SmC5wX
+	 dtvgTAgPAq1SXvmk6lnuySDtbGYmNeY2kveC57iMnkEEL0TrKa9Ng6Pey7jsbXl8Sm
+	 pj6nQNy8tXwWS7JxU2C5MtKtoqSu3l8O4wyRUL3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgE2SIt (ORCPT
+        id S1726857AbgE2SNm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 14:08:49 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:39405 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2SIt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 14:08:49 -0400
-Received: by mail-il1-f196.google.com with SMTP id p5so2278985ile.6;
-        Fri, 29 May 2020 11:08:47 -0700 (PDT)
+        Fri, 29 May 2020 14:13:42 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37039 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgE2SNl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 14:13:41 -0400
+Received: by mail-il1-f193.google.com with SMTP id r2so3408551ila.4;
+        Fri, 29 May 2020 11:13:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=fAPMvdCxZ4POBY6nc3rFtmxuB69MEYTi1r/Uyy3CO6U=;
-        b=CJ1gcnfHb0uqMNSviITu7tnUmxP1Kd7gxKvAxux5FfahvE26454qsxxreXIOVtr+BN
-         9eV9MJbI3wKDr2DpMx7rnio/WRF5/jPqlwn9172hwCs28xjKTfnxgvJfwxVbt8EnHe5e
-         3PzaCHTxb/9vSdSkcys1IuxbwPhnRUqKrFwETBhnCw2CJBB5teF4Gixev4KJ2m0/TLaS
-         XWU2atkoEYuoyRwG58pNQC78vzMhTMMLs4T2juJI3J2Wok01D8XkhqhFNVR1Q2hj4G+u
-         +CThok9NoUNTjMLB/aySncXh5PY/gk4qGi4CxZ/OyfGI5QNxJK/KKygJZIOwOI22rLzM
-         jPYw==
-X-Gm-Message-State: AOAM533YkVEWxTdhxmLC5EK0Vkz2cgfuZ/mAoT2LpjOhm8+VUUGh1seS
-        VgX/1Qc6priYy1am7c10YK5VxSiTrg==
-X-Google-Smtp-Source: ABdhPJzEmzJB88im0xX+IWa3CP3v6ng1HOhnw9shue3L5SsITUFoekqj4bb3cfmDpdg1x2MhNSNdFA==
-X-Received: by 2002:a92:40dc:: with SMTP id d89mr7919510ill.170.1590775727092;
-        Fri, 29 May 2020 11:08:47 -0700 (PDT)
+        bh=aRBnenMFveSAABdwlROP/FvdOi6pos1MRvJer5gJKo8=;
+        b=N1eI2QxLX3cf32YTIZjABQ7XNWHMFsKWSy5ANpfndBGWwagRpX8dASVBY7b4ajLpnW
+         D+TQ+MZwcNjhS1seiMODaniq1IaRh7boiR7+/LEGOMjiDRamwg/yVa2Z50XaoLJiiFRH
+         DFIG4WAehP8gLlFy1mD0c0W44LfFkhpXf3w8f5ocQqJA2LtO/DcG6A6m2+Kitq83BqQe
+         LrLl0tVEQ5IKe5BToTbiN2Ju7w5hJIdykHzFPlVRZE+Hwu+Ezko6K+7478wvszfoTr97
+         mxWDTLV+T5+1RWJUVNc2GA6E/+BB8/EiK5dOzwAip0axUs/+FbhR9f5dODZmqZWCV8qq
+         YGhw==
+X-Gm-Message-State: AOAM533jIf2LExfJNOEeagr2prIlil9HfZNmHGZKlDYXwavX9YIXTmJe
+        f0ENtcrbU2ivjKZAnjtjSw==
+X-Google-Smtp-Source: ABdhPJx2nW8lDxavRSJmbF0k3z1CkhwQPOmSKpswzKd6H4iHfuG5Z9SNcWxYWDtEg0wux3hPuBSakA==
+X-Received: by 2002:a92:d34b:: with SMTP id a11mr8638435ilh.180.1590776020832;
+        Fri, 29 May 2020 11:13:40 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j63sm1233170ilg.50.2020.05.29.11.08.46
+        by smtp.gmail.com with ESMTPSA id p3sm4173510iog.31.2020.05.29.11.13.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 11:08:46 -0700 (PDT)
-Received: (nullmailer pid 2675913 invoked by uid 1000);
-        Fri, 29 May 2020 18:08:45 -0000
-Date:   Fri, 29 May 2020 12:08:45 -0600
+        Fri, 29 May 2020 11:13:39 -0700 (PDT)
+Received: (nullmailer pid 2683492 invoked by uid 1000);
+        Fri, 29 May 2020 18:13:38 -0000
+Date:   Fri, 29 May 2020 12:13:38 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     sboyd@kernel.org, robh+dt@kernel.org, agross@kernel.org,
-        mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: Re: [PATCH V6 3/5] clk: qcom: Add DT bindings for ipq6018 apss clock
- controller
-Message-ID: <20200529180845.GA2675856@bogus>
-References: <1590582292-13314-1-git-send-email-sivaprak@codeaurora.org>
- <1590582292-13314-4-git-send-email-sivaprak@codeaurora.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+Message-ID: <20200529181338.GA2676189@bogus>
+References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527153046.6172-3-Sergey.Semin@baikalelectronics.ru>
+ <20200527153351.rmzguymz7lm6gvsx@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590582292-13314-4-git-send-email-sivaprak@codeaurora.org>
+In-Reply-To: <20200527153351.rmzguymz7lm6gvsx@mobilestation>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 May 2020 17:54:50 +0530, Sivaprakash Murugesan wrote:
-> Add dt-binding for ipq6018 apss clock controller
-> 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
-> [V6]
->  * Addressed review comment from Stephen
->  include/dt-bindings/clock/qcom,apss-ipq.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
-> 
+On Wed, May 27, 2020 at 06:33:51PM +0300, Serge Semin wrote:
+> Rob,
+> Could you pay attention to this patch? The patchset review procedure is
+> nearly over, while the DT part is only partly reviewed by you.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Pretty sure I commented on this. Not sure what version, you're sending 
+new versions too fast. Give people time to review.
+
+> 
+> Thanks
+> -Sergey
+> 
+> On Wed, May 27, 2020 at 06:30:37PM +0300, Serge Semin wrote:
+> > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> > i2c "reg" property. If it is the compiler will print a warning:
+> > 
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > 
+> > In order to silence dtc up let's discard the flag from the DW I2C DT
+> > binding example for now. Just revert this commit when dtc is fixed.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: linux-mips@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch created as a result of the Rob request to remove
+> >   the EEPROM-slave bit setting in the DT binndings example until the dtc
+> >   is fixed.
+> > ---
+> >  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > index 4bd430b2b41d..101d78e8f19d 100644
+> > --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > @@ -137,7 +137,7 @@ examples:
+> >  
+> >        eeprom@64 {
+> >          compatible = "linux,slave-24c02";
+> > -        reg = <0x40000064>;
+> > +        reg = <0x64>;
+
+This is wrong though because "linux,slave-24c02" should have bit 30 set. 
+(And either the unit-address was wrong or we can define the unit-address 
+does not include the high bits.)
+
+Rob
