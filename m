@@ -2,91 +2,128 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E90BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1539DC433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C5921475
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590769062;
-	bh=YAe/SQtiau0TeUoIyQ5dRn4TMi0/OuLjw+eQkeMqbxk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W+Q2nfJ3jEJ2J+4MfeziOzAhAAj/EOVXUgYJh++a+Pr63FhcufvMXvsAzXbzA6sty
-	 5ztCbPI8CvI3TQSE06AXn8qugPFxkfx5aP7ngPw3IisXEHzDLeUhHK+EGGkGmdcbwc
-	 9uAGbG8VCMXSWz2gtzgNtUolKZMky3dXq9tWo1ek=
+	by mail.kernel.org (Postfix) with ESMTP id EA73021475
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="ErFV4aKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgE2QRj (ORCPT
+        id S1726954AbgE2QTg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 12:17:39 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38043 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE2QRi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 12:17:38 -0400
-Received: by mail-il1-f193.google.com with SMTP id q18so3044195ilm.5;
-        Fri, 29 May 2020 09:17:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1WA+w4gWKVFAKdOjyjOP/tEtWPocATjUQITVK+3DOw8=;
-        b=PDY+zC261G1ze5ju591N9UrtXa3empNkOHi/d6aSVDxgN1Nty79WfF68uWvE6OvPd3
-         6KjVsuHnHZ5l+WeShXbBux6sAI1SzOUdyLyko/06X8jXUiJf+MsEnxIO4RmJz0GZstSA
-         p4hel2i10k519xHSGNdCc+CZ2KMstaolJMaytNUe/NP0Ex50v+6Mn0kf2zPWwFE9U2NH
-         PT4NV9n0gaIc7uW+WeoPdm91L8GUQB8IoEr27oF+BX2X8WMqjOtF8mANaRDzcZv65tTO
-         ANQyaB4BEtjGXZP/yDzLeAaOIpYmFDaKP7smGZhZfol/6n2Lbu/ZI848LnWdHNn0YEY9
-         DtnA==
-X-Gm-Message-State: AOAM5322RZm09Iwx18hoiEXZ4aY962uhLi2+HVcJtIUukOuM/xqqFNQ6
-        NuJ9eJi/3TQlnWs/TqKGAg==
-X-Google-Smtp-Source: ABdhPJzaiMsri3Ce6ct811n/Nx3VT+C3nOOEcWn2ikVVXzQHkkLZAWZnsnOcN0C90jGOSCtG3QTx+Q==
-X-Received: by 2002:a92:9142:: with SMTP id t63mr6838165ild.191.1590769056769;
-        Fri, 29 May 2020 09:17:36 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j63sm1083926ilg.50.2020.05.29.09.17.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 09:17:35 -0700 (PDT)
-Received: (nullmailer pid 2494095 invoked by uid 1000);
-        Fri, 29 May 2020 16:17:32 -0000
-Date:   Fri, 29 May 2020 10:17:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     dillon.minfei@gmail.com
-Cc:     robh+dt@kernel.org, alexandre.torgue@st.com, dillonhua@gmail.com,
-        daniel@ffwll.ch, linux-spi@vger.kernel.org,
-        mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        sam@ravnborg.org, mcoquelin.stm32@gmail.com,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org, thierry.reding@gmail.com,
-        sboyd@kernel.org, broonie@kernel.org, noralf@tronnes.org,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        p.zabel@pengutronix.de, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v6 4/9] dt-bindings: display: panel: Add ilitek ili9341
- panel bindings
-Message-ID: <20200529161732.GA2493963@bogus>
-References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
- <1590564453-24499-5-git-send-email-dillon.minfei@gmail.com>
+        Fri, 29 May 2020 12:19:36 -0400
+Received: from nbd.name ([46.4.11.11]:39410 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727816AbgE2QTf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 12:19:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AylzNCRVoQbwIAp6arjQA9caBIZ3bOW9933qSf24gyE=; b=ErFV4aKkxTpdawqH5VUVhccEF9
+        S/Y+MqMnwHWzBt9hoMmlyaoYlxVcjYz09IHgkVaaA3dDKzIAsGFG2J2u9bThIXEr3jqY8gyjfFZWy
+        PF8MNGLJWz6Krf/2ExHLygtQdEvlC0NCEL0Tkr4OQE7Ck/HG2521C5TIRZoCFTKQGDfo=;
+Received: from p4ff13c20.dip0.t-ipconnect.de ([79.241.60.32] helo=maeck.lan)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1jehjG-0007eI-PN; Fri, 29 May 2020 18:19:30 +0200
+Received: by maeck.lan (Postfix, from userid 501)
+        id BD5F98917448; Fri, 29 May 2020 18:19:29 +0200 (CEST)
+From:   Felix Fietkau <nbd@nbd.name>
+To:     linux-wireless@vger.kernel.org
+Cc:     devicetree@vger.kernel.org
+Subject: [PATCH 1/3] dt-bindings: net: wireless: mt76: add power-limits node
+Date:   Fri, 29 May 2020 18:19:27 +0200
+Message-Id: <20200529161929.24751-1-nbd@nbd.name>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590564453-24499-5-git-send-email-dillon.minfei@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 May 2020 15:27:28 +0800, dillon.minfei@gmail.com wrote:
-> From: dillon min <dillon.minfei@gmail.com>
-> 
-> Add documentation for "ilitek,ili9341" panel.
-> 
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> ---
->  .../bindings/display/panel/ilitek,ili9341.yaml     | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
-> 
+This subnode can be used to set per-rate tx power limits either per
+country code / regdomain or globally.
+These limits are typically provided by the device manufacturers and are
+used to limit sideband emissions and stay within regulatory limits
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ .../bindings/net/wireless/mediatek,mt76.txt   | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+index ab7e7a00e534..9d9ace0cfbf9 100644
+--- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
++++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+@@ -36,6 +36,7 @@ Optional nodes:
+ - led: Properties for a connected LED
+   Optional properties:
+     - led-sources: See Documentation/devicetree/bindings/leds/common.txt
++- power-limits: contains per-regdomain/channel rate power limit subnodes
+ 
+ &pcie {
+ 	pcie0 {
+@@ -76,3 +77,49 @@ wmac: wmac@18000000 {
+ 
+ 	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
+ };
++
++
++Subnodes of power-limits:
++
++Properties:
++- country: One or more country codes, as used by the cfg80211 regdomain code
++- regdomain: "FCC", "ETSI" or "JP"
++
++If neither country, nor regdomain is specified, the power limits node is used
++as a fallback when no other subnode matches.
++
++Subnodes txpower-2g, txpower-5g:
++
++Properties:
++- channels: pairs of first and last channel number
++- cck: 4 half-dBm per-rate power limit values
++- ofdm: 8 half-dBm per-rate power limit values
++- mcs:
++	sets of per-rate power limit values for 802.11n/802.11ac rates for
++	multiple channel bandwidth settings.
++	Each set starts with the number of channel bandwidth settings for
++	which the rate set applies, followed by either 8 (MT7603/MT7628) or
++	10 (all other chips) power limit values.
++	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
++
++
++power-limit example:
++
++power-limits {
++	r0 {
++		regdomain = "FCC";
++		txpower-5g {
++			r1 {
++				channels = <36 48>;
++				ofdm = <23 23 23 23 23 23 23 23>;
++				mcs = <1 23 23 23 23 23 23 23 23 23 23>,
++					  <3 22 22 22 22 22 22 22 22 22 22>;
++			};
++			r2 {
++				channels = <100 181>;
++				ofdm = <14 14 14 14 14 14 14 14>;
++				mcs = <4 14 14 14 14 14 14 14 14 14 14>;
++			};
++		};
++	};
++};
+-- 
+2.24.0
+
