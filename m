@@ -2,90 +2,141 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39D3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50934C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6A49206A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F4A206A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590774546;
+	bh=P0UfxUn59TBgODAkkR1p5Fu2q/qr2hoNA6PpLGpZCd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rvhC2pXy7ga9YPNjIsck7UqFhHPy+ZD37uDiCtfH5vJrg2hXbc8osFqMsuD0zpuRg
+	 x1FnwQqnsG+DvDpd8f+Qsr5vrAUcrTSU/1+PH4FWQhCRcgoXhThinP7aVVQzdTwykm
+	 KYKRtQ+UgEn31A78o5gz12GbbP4BPZhAYwmRGQmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgE2Rry (ORCPT
+        id S1726487AbgE2RtC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 13:47:54 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50328 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2Rry (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:47:54 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9FE718030772;
-        Fri, 29 May 2020 17:47:51 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Sa_1CdlC5E-r; Fri, 29 May 2020 20:47:51 +0300 (MSK)
-Date:   Fri, 29 May 2020 20:47:50 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Fri, 29 May 2020 13:49:02 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39959 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2RtC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:49:02 -0400
+Received: by mail-io1-f65.google.com with SMTP id q8so233545iow.7;
+        Fri, 29 May 2020 10:49:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BLn5568WhOcT6+u2ym9/jBhSyqxnYH4n/L9rj2t60QE=;
+        b=d54Y283E1oQ+RjivvIpjdY9uNABr5wdispcYRSKOHcKa9/rUU34cTLD3XdajfnzzhS
+         FDFS/frsja7WGqBBmoDx9cvAp/dh+A9b504SX8x3NwTQJcGDnOoI5tU3AA5Nb6HvUvQy
+         QlJ0a578sr6ytgdqOzjJ2VyU7DUAwz5FNQOgQPuyy55+kdT5gYl64R8oB7BI+SIbsJDh
+         Fn4HG7ms2wSFzurdV6NebxCkPVzOI3HUPUZkHnya7L93gsW6w57D7iJeIBYnoLfxaYVD
+         4+yScvvXkk5+NO6LukXr9A1qjTJYWg7XJUryX0UOxCdjzquhBvW46DLWD1Z+pjd/liYF
+         NyiA==
+X-Gm-Message-State: AOAM53259brQHbu8tkTd9wo8PEiTLcvulzL/TY3G9AXUwJ3Ct+a1SEk9
+        JP1MuK57hR+lwPpywtMsxg==
+X-Google-Smtp-Source: ABdhPJy7YUF3lpxrD7YMnpI0UvB3HdDPYFVO6rRfufgNQwXAXOB9FeWO8U/8UblJM9K1CPtEmWfdwQ==
+X-Received: by 2002:a02:1443:: with SMTP id 64mr2603674jag.43.1590774540749;
+        Fri, 29 May 2020 10:49:00 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t22sm4001987iom.49.2020.05.29.10.48.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:49:00 -0700 (PDT)
+Received: (nullmailer pid 2643995 invoked by uid 1000);
+        Fri, 29 May 2020 17:48:58 -0000
+Date:   Fri, 29 May 2020 11:48:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Corey Minyard <minyard@acm.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
+        Julien Grall <julien.grall@arm.com>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
         Mark Brown <broonie@kernel.org>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Feng Tang <feng.tang@intel.com>, <devicetree@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        <linux-mips@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200529174750.wi3q27rxcsbpikoy@mobilestation>
-References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
- <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
- <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
- <20200529174312.GU1634618@smile.fi.intel.com>
+        Oliver Neukum <oneukum@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v2 00/14] PCI: brcmstb: enable PCIe for STB chips
+Message-ID: <20200529174858.GA2640397@bogus>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529174312.GU1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 08:43:12PM +0300, Andy Shevchenko wrote:
-> On Fri, May 29, 2020 at 08:26:42PM +0300, Serge Semin wrote:
-> > On Fri, May 29, 2020 at 06:18:32PM +0100, Mark Brown wrote:
-> > > On Fri, 29 May 2020 16:11:49 +0300, Serge Semin wrote:
-> > > > Baikal-T1 SoC provides a DW DMA controller to perform low-speed peripherals
-> > > > Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
-> > > > APB SSI devices embedded into the SoC. Currently the DMA-based transfers
-> > > > are supported by the DW APB SPI driver only as a middle layer code for
-> > > > Intel MID/Elkhart PCI devices. Seeing the same code can be used for normal
-> > > > platform DMAC device we introduced a set of patches to fix it within this
-> > > > series.
+On Tue, May 26, 2020 at 03:12:39PM -0400, Jim Quinlan wrote:
+> v2:
+> Commit: "device core: Add ability to handle multiple dma offsets"
+>   o Added helper func attach_dma_pfn_offset_map() in address.c (Chistoph)
+>   o Helpers funcs added to __phys_to_dma() & __dma_to_phys() (Christoph)
+>   o Added warning when multiple offsets are needed and !DMA_PFN_OFFSET_MAP
+>   o dev->dma_pfn_map => dev->dma_pfn_offset_map
+>   o s/frm/from/ for dma_pfn_offset_frm_{phys,dma}_addr() (Christoph)
+>   o In device.h: s/const void */const struct dma_pfn_offset_region */
+>   o removed 'unlikely' from unlikely(dev->dma_pfn_offset_map) since
+>     guarded by CONFIG_DMA_PFN_OFFSET_MAP (Christoph)
+>   o Since dev->dma_pfn_offset is copied in usb/core/{usb,message}.c, now
+>     dev->dma_pfn_offset_map is copied as well.
+>   o Merged two of the DMA commits into one (Christoph).
 > 
-> > As you can see it has been acked by Rob. So you can also merge it into your
-> > repo. Though It has to be rebased first due to the Dinh Nguyen patches
-> > recently merged in. Do you want me to do the rebasing?
+> Commit "arm: dma-mapping: Invoke dma offset func if needed":
+>   o Use helper functions instead of #if CONFIG_DMA_PFN_OFFSET
 > 
-> I guess now you need to rebase it, because as I see the Dinh's patches are in
-> the tree as well as yours.
+> Other commits' changes:
+>   o Removed need for carrying of_id var in priv (Nicolas)
+>   o Commit message rewordings (Bjorn)
+>   o Commit log messages filled to 75 chars (Bjorn)
+>   o devm_reset_control_get_shared())
+>     => devm_reset_control_get_optional_shared (Philipp)
+>   o Add call to reset_control_assert() in PCIe remove routines (Philipp)
+> 
+> v1:
+> This patchset expands the usefulness of the Broadcom Settop Box PCIe
+> controller by building upon the PCIe driver used currently by the
+> Raspbery Pi.  Other forms of this patchset were submitted by me years
+> ago and not accepted; the major sticking point was the code required
+> for the DMA remapping needed for the PCIe driver to work [1].
+> 
+> There have been many changes to the DMA and OF subsystems since that
+> time, making a cleaner and less intrusive patchset possible.  This
+> patchset implements a generalization of "dev->dma_pfn_offset", except
+> that instead of a single scalar offset it provides for multiple
+> offsets via a function which depends upon the "dma-ranges" property of
+> the PCIe host controller.  This is required for proper functionality
+> of the BrcmSTB PCIe controller and possibly some other devices.
 
-Right. That's what I am doing at the moment.)
+If you can enable the h/w support without the multiple offset support, 
+then I'd split up this series. The latter part might take a bit more 
+time.
 
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Rob
