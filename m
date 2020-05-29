@@ -2,97 +2,89 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252C1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38D5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0244D2078C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC3920814
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590725981;
+	bh=lPI6A83ttQ/c1j1m7UcKEFeIJazjx5XcZ050fvSwitM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=FvSZw/t6J52L6Y01ojf3O6y/y6HSDIOG3Y0IMAKf6xrVqFwZp6KEbNBmYbhQf/8yz
+	 VIIOUGXX9ChdvcgZ8qITAvf3QEnhQ9B5ZFb7kN7XpKPqMnDTRUwwtalbyTenhIPa7X
+	 afzm2zB1Qg0szObmkQ2NcZHUNt4SEwE3M6FTIZNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbgE2ENu (ORCPT
+        id S1727102AbgE2ETk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 00:13:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45690 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgE2ENt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 00:13:49 -0400
-Received: by mail-io1-f68.google.com with SMTP id y5so883032iob.12;
-        Thu, 28 May 2020 21:13:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ABZvl1lYM8QmTi5wYB82oie/IHyifCzA4I+u8FVXCCk=;
-        b=M+F0feJLse2P2zSVkvT0MZzYb8c16WgZysW4VuP39Qugg1+4LbukY6YrkKiGLcyNMA
-         vgW/clZBODJTAf2IXIOW+wiVyTrAtRtUbRDYWHl/penhd/7gzAXgwrsUo5xKivw+AEyg
-         uWCMx0Fd6v0+4CVFV8KYFfr81Yn9KVmE3kJWLYmi4a16rwLSmK/FXZnlalA30xFsYjDc
-         Ui+yFb2UmTzuaOO605Ui5KAlTmDtmivbGpNNuM5wD8d3PUMzPIgYneoc/Z7URRUdhiI7
-         wXmRrRXtC8Gcd9Z+sziDa8JxKJtP2h8XofqFBVz1tEyzcElnfoHYIYyW3N4Td3J2rcUK
-         qseQ==
-X-Gm-Message-State: AOAM53243GMdpL2TL5COLHPYy7nzBjTaGrckPtL3hEDwXTn5sTSAdaU7
-        ySjVIsb8BiZe6vaK+ygc/vj0gMNk47RGkTQOxmk=
-X-Google-Smtp-Source: ABdhPJybBRL6g2+y9ues5WQUZezbWfYKjLjV6r21ZAwE6BCNViK/CnxVBl3JYWz06stSzVCdBYSnlGcrd9zuIMbZ7qI=
-X-Received: by 2002:a5d:9cc2:: with SMTP id w2mr5176349iow.42.1590725627953;
- Thu, 28 May 2020 21:13:47 -0700 (PDT)
+        Fri, 29 May 2020 00:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgE2ETk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 00:19:40 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C252207D3;
+        Fri, 29 May 2020 04:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590725979;
+        bh=lPI6A83ttQ/c1j1m7UcKEFeIJazjx5XcZ050fvSwitM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=FLoDt9ZaYlmcWVtsbov0qFpFQnYWpDrZlJE8pluEIXwGBFctnyQ70IBUVDMCHnTPC
+         ySnCdMFeCBEQag+v9idxiHKADP31tRaLwg7xGqsD5++rkjuyvjLtAS7mWz8zzH+1oL
+         RdrggKyTQ+m2k9Nwbzkj658elIKf729eZieXBJCg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200529034338.1137776-1-jiaxun.yang@flygoat.com>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Fri, 29 May 2020 12:13:36 +0800
-Message-ID: <CAAhV-H5B+6drcEiz=JCexa0LC3JAPS0K5WZ0zwndvuKv-e9NRQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] MIPS: Loongson64: Initial LS7A PCH support
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582278742-1626-2-git-send-email-macpaul.lin@mediatek.com>
+References: <1582278742-1626-1-git-send-email-macpaul.lin@mediatek.com> <1582278742-1626-2-git-send-email-macpaul.lin@mediatek.com>
+Subject: Re: [PATCH 1/5] dt-bindings: clock: mediatek: document clk bindings for Mediatek MT6765 SoC
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Owen Chen <owen.chen@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        mtk01761 <wendell.lin@mediatek.com>
+Date:   Thu, 28 May 2020 21:19:38 -0700
+Message-ID: <159072597842.69627.10940278621295452958@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Jiaxun,
+Quoting Macpaul Lin (2020-02-21 01:52:18)
+> This patch adds the binding documentation for apmixedsys, audsys, camsys,
+> imgsys, infracfg, mmsys, pericfg, topckgen
+>=20
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> ---
 
-On Fri, May 29, 2020 at 11:45 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> With this series, LS7A and Loongson-3A4000 is finally supported
-> note that this series should depend on irqchip support[1], which
-> is likely to get merged soon.
->
-> Thanks.
->
-> [1]: https://lkml.org/lkml/2020/5/16/72
->
-> Jiaxun Yang (3):
->   dt-bindings: mips: Document two Loongson generic boards
->   MIPS: Loongson64: DeviceTree for LS7A PCH
->   MIPS: Loongson64:Load LS7A dtbs
->
->  .../bindings/mips/loongson/devices.yaml       |   8 +
->  arch/mips/boot/dts/loongson/Makefile          |   5 +-
->  .../dts/loongson/loongson3-r4-package.dtsi    |  74 +++++++
->  .../dts/loongson/loongson3_4core_ls7a.dts     |  25 +++
->  .../boot/dts/loongson/loongson3_r4_ls7a.dts   |  10 +
->  arch/mips/boot/dts/loongson/ls7a-pch.dtsi     | 185 ++++++++++++++++++
->  .../asm/mach-loongson64/builtin_dtbs.h        |   2 +
->  arch/mips/loongson64/env.c                    |  56 +++---
->  8 files changed, 342 insertions(+), 23 deletions(-)
->  create mode 100644 arch/mips/boot/dts/loongson/loongson3-r4-package.dtsi
->  create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_ls7a.dts
->  create mode 100644 arch/mips/boot/dts/loongson/loongson3_r4_ls7a.dts
->  create mode 100644 arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-I think the naming can be like this: Old processor (Loongson 3A R1~R3)
-use loongson64c_ prefix instead of loongson3, new processor (Loongson
-3A R4) use loongson64g_ prefix instead of loongson3_r4, and
-Loongson-2K use loongson64r_ prefix, this makes them consistent with
-their PRID definitions.
-
->
-> --
-> 2.27.0.rc0
->
+Applied to clk-next
