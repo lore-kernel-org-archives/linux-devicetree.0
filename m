@@ -2,99 +2,113 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81B4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8F1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E46920810
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590779675;
-	bh=u2w5DMX9SLKz3u3UEB2CnBtE1clrrOYOtv93QhklISk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CnfZirURd3tkyLvVv5gKYHV9pIxiYsicg4DMwWMZY0G3g7YgbfAchWZfDodpaDfaf
-	 xqYjm8BRDF3lq6+HhI5N5hhT3pG2xsmB7kwcsU13WfUFc/Asag5JnQ/U4gEZQbGo7X
-	 IW9cb26ovq+mqkb73fRDGTAtMt0OWprYqdlATu6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2588820723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcuiL7Nk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgE2TOf (ORCPT
+        id S1726898AbgE2TQw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 15:14:35 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41119 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgE2TOe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:14:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id o5so494090iow.8;
-        Fri, 29 May 2020 12:14:34 -0700 (PDT)
+        Fri, 29 May 2020 15:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2TQv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:16:51 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AAE3C03E969;
+        Fri, 29 May 2020 12:16:50 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh7so1616480plb.11;
+        Fri, 29 May 2020 12:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=W8tHM5A9x7hCqXrGZPnl9PrgU0zBShy7MiBX6R7IaoQ=;
+        b=vcuiL7NkFG8ibcD+t4OJB+dwcTKukbeTVrKXO6VB7PLb24zP+KGR/q7WmfKrlyL0g1
+         2qyiprG+r2j83U+/1nRNIDegSL9MGMUBcdHwLP8j71QJ2v8OKQ5hSIzhMx6OMAtOCU30
+         7tG2fhk9zL9qksdFlHKguAmz4SR4Zjf74/6M/z2CKhO7bBOZme5m4J3/2f5+MylBXrUc
+         AgiSj+fM1UBbUruXsKRSVt7L0RUAR2wImmE+eMgCU3n/gbXr6Zl7mzZjs6U4EpcVNoJY
+         PUN0pd7X2xTd07ik9+NxJTr7YYKA4+A4gp4/TCXkEpPDcPpj4Rthqzelse7XBqzpLrjI
+         XKVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=IMboAeBywaKQGMVGQN5Urn1Fr7u4wdf1ZFcW9jks0WY=;
-        b=ndxwWQcnLWl3xF3zoGGYusQ3VsFBtQNAxz8ZdqqBSBTWxwEfJv8TJu5dK12SwuICip
-         IX5rQNbnIc3HtQG7ahCEvpS7yVcTAylm5IyipfFj4cPGoKmQjdkGLQ5DYa0SFeKvJYKd
-         OlTZRW0W33dy0DegIY3UYmcZ35nROWcGRsnIH+EmzdHu+EUaMuoJV26w73lkrtIP2G2B
-         hEXotApj3HVd+8aP53Nf/knBF2ADhixxWvS52iyXasdbr8iIjbH+c+/XKjy4Jj5N4Q47
-         xD0yLmP2mDbD2pkINYGaZXTsYxzPcgFS3LU8urCFP+fytM052vrKc35APSFKyAlOnRwl
-         b2Zg==
-X-Gm-Message-State: AOAM532ScVvLkiCAlOj09BClNFNgVQKRLM6BLREfIB3P2XZFa19oyfAA
-        VznAR0dC31EozAYwxhv6lA==
-X-Google-Smtp-Source: ABdhPJy+ef3k9N4zyOPhHF5avCCR6xmI0bM0RJea8UC82QEtbVGkNrIQ1JvUNYzsLIzDtOpFHLzxzg==
-X-Received: by 2002:a6b:6414:: with SMTP id t20mr7908234iog.32.1590779673757;
-        Fri, 29 May 2020 12:14:33 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f1sm5307391ilh.17.2020.05.29.12.14.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=W8tHM5A9x7hCqXrGZPnl9PrgU0zBShy7MiBX6R7IaoQ=;
+        b=ZvpmeZkv/0eu/g/qdl6EXNz++sM33XjvcTsimiafgN1boAVehzBftk0FGN//BDAFG2
+         MvPJnkcpw52oramDimQT613E6aJw65M4vzknGpuFu+IWKOq+rRsnw+JEX/coA+XxtuwZ
+         bwvyye35T1d1nY4UH/mVldhHKWZdTpgAwyAZEIKjnRj2lKPItwe5vrqYH7t3yb7D9Wfi
+         Gb7+ISfNSAYJERGVViwUh2mtMLzY571zGvJiEKhur0sgA0QXKZ/3noP5F06WEj4usUVH
+         s0BABmrXMmGzSxtGJS/szjgsDoOxokDMIS7/idc0J+9V9ZC5CHrUIQuLIW7jDfw+UBbD
+         pYyw==
+X-Gm-Message-State: AOAM531+kLxbRC0CF6nuEcScxZUTD6K4AebeUKnOEGgqYGMEZwKFG9r3
+        cSBmHmIosra/dd1DwtHIa1xA30ax
+X-Google-Smtp-Source: ABdhPJzEcRhz8HJANDPWTtoAXzpRH7F78bIl5xxDea2VL93YQoccdWOgpSwJNj5a/nZywqr9nj+hLA==
+X-Received: by 2002:a17:902:bd47:: with SMTP id b7mr10457105plx.79.1590779809488;
+        Fri, 29 May 2020 12:16:49 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g92sm202505pje.13.2020.05.29.12.16.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:14:32 -0700 (PDT)
-Received: (nullmailer pid 2779230 invoked by uid 1000);
-        Fri, 29 May 2020 19:14:31 -0000
-Date:   Fri, 29 May 2020 13:14:31 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     mturquette@baylibre.com, robh+dt@kernel.org, sboyd@kernel.org,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, zhenwenjin@gmail.com,
-        sernia.zhou@foxmail.com, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 3/7] dt-bindings: clock: Add documentation for X1830
- bindings.
-Message-ID: <20200529191431.GA2779176@bogus>
-References: <20200528031549.13846-1-zhouyanjie@wanyeetech.com>
- <20200528031549.13846-4-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200528031549.13846-4-zhouyanjie@wanyeetech.com>
+        Fri, 29 May 2020 12:16:48 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH v2 0/4] pinctrl: bcm2835: Support for wake-up interrupts
+Date:   Fri, 29 May 2020 12:15:18 -0700
+Message-Id: <20200529191522.27938-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 11:15:45 +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Add documentation for the clock bindings of the X1830 Soc from Ingenic.
-> 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Notes:
->     v11:
->     New patch, split from [3/6] in v10.
-> 
->     v11->v12:
->     No change.
-> 
->     v12->v13:
->     No change.
-> 
->  Documentation/devicetree/bindings/clock/ingenic,cgu.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Hi Linus,
 
-Acked-by: Rob Herring <robh@kernel.org>
+This patch series updates the bcm2835 pinctrl driver to support
+the BCM7211 SoC which is quite similar to 2711 (Raspberry Pi 4)
+except that it also supports wake-up interrupts.
+
+Thanks!
+
+Changes in v2:
+
+- fixed patch #3 to reference the correct data structure (Stefan)
+- fixed patch #4 to use conditional initialization and fetching of
+  interrupt resources to limit the memory overhead for non-7211 chips
+
+Florian Fainelli (4):
+  dt-bindings: pinctrl: Document 7211 compatible for
+    brcm,bcm2835-gpio.txt
+  dt-bindings: pinctrl: Document optional BCM7211 wake-up interrupts
+  pinctrl: bcm2835: Match BCM7211 compatible string
+  pinctrl: bcm2835: Add support for wake-up interrupts
+
+ .../bindings/pinctrl/brcm,bcm2835-gpio.txt    |  5 +-
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c         | 80 ++++++++++++++++++-
+ 2 files changed, 83 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
