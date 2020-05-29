@@ -2,87 +2,104 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD00C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35763C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3B9207D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590721137;
-	bh=vHl7MtUtMB049QR3RJzoF4LPTtbcjRmk+Xv5R0hoO7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cxxcsVq5rJksSpycvnJKRQfnMPAel7kWyL9Iij+jwtXwW1NFBJqBsnkPtBw+tJHf8
-	 SpgX2kCAWV5bRnmmkQA6d6gMPCSvImY3W6KtULX9rw569rh74E9DGA5OrMClXIU0G4
-	 mMSmICYvruVw07ZoPTli1m2510niUmByvAfsV5Lo=
+	by mail.kernel.org (Postfix) with ESMTP id 0FF5A2071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iR0wgaCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407575AbgE2C6u (ORCPT
+        id S2391745AbgE2DA0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 22:58:50 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43900 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407560AbgE2C6u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 22:58:50 -0400
-Received: by mail-il1-f193.google.com with SMTP id l20so1027444ilj.10;
-        Thu, 28 May 2020 19:58:48 -0700 (PDT)
+        Thu, 28 May 2020 23:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391727AbgE2DAU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 23:00:20 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31341C08C5C6
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 20:00:20 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id y64so812847qkc.19
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 20:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=lI0Q6FZINWMsCqdHMNmAEdxWrOY+He9ibCjQyKGbuIo=;
+        b=iR0wgaCZ4Cqh0pE/qgXOa1suDs5YWBzaulscmYb2YUgV2sA9zHfS7zjVfINGwrhkbc
+         fXtlLJjqejfEsL9x/WY3TnkaK31HM9lA9kLPZKCFCXqPgzulGPgSaekSdykIR/L3bKRS
+         psMXsaG96OSATMQYHeszaY8qIlH9zRIcec5GO2GW30+YDzXVdJtw15i7O4TR9IOnOJz0
+         0uM5kQG8T+JiH00KK3Dep7OSuWu1R3h+109QXLT0lyeVaxp3ggzgcOqfGJ381DyiJLpU
+         xcoEh6fmE8Jmn9/2n8yjFemuB6qC2NhcB8FJjwPO8tYSKKQ9ydrtvjgiGyf4mLiJWQKX
+         vYdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m6kcwlIC7SKtx9thDsfIOgDZfkogbuD8SNG7gHAFV2g=;
-        b=s4aBb0TzRVNe4K4CCs7+pXaeD3TSO/nKwYdZEBOfCxcoFziIt4BIumIb6at8uYdYfl
-         dPgxXy0B59b2s0iXzcpIZgueiagK9VHXJY443wAs2Xx0BUfcwmrInnZ75E6E3EpIbWgm
-         Y+UgA/Q9q6ohu6mhImnsmukzkKrjyBgoK+AjiWeS6BU7joyGodbylH9ZSmhMm5/f2FVD
-         JC5ZmiNDbZ1iGY8TNVAE81VPBLdinmHahZ/+aoFseUMUVkhDYtOdhY8SMSb2VXJnEs55
-         YVIG5HmeqAE00DuynVHTD4qkN/SjAQ6x39tJ1kFjGm9p7Ih2FaKiabYltgiaIWAGmzXG
-         HK6A==
-X-Gm-Message-State: AOAM530iCUN34/HSFeexXqoOki8wfTQZ5AW7g4K1Kg0YI1ZTl5rmSDYK
-        13ySgXlwlxiXxAIMffAaSg==
-X-Google-Smtp-Source: ABdhPJzvfcF83aDlvSVv+tXYOmvv+ugf8LjGNXP4oxa2f48ct9MiDm/qpBCJ2AWztc8Ety30ZSqprg==
-X-Received: by 2002:a92:9c04:: with SMTP id h4mr5267706ili.190.1590721128061;
-        Thu, 28 May 2020 19:58:48 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p75sm4101531ilb.23.2020.05.28.19.58.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 19:58:47 -0700 (PDT)
-Received: (nullmailer pid 1186722 invoked by uid 1000);
-        Fri, 29 May 2020 02:58:46 -0000
-Date:   Thu, 28 May 2020 20:58:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: sound: tlv320adcx140: Fix dt-binding-check
- issue
-Message-ID: <20200529025846.GA1185629@bogus>
-References: <20200528144711.18065-1-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528144711.18065-1-dmurphy@ti.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=lI0Q6FZINWMsCqdHMNmAEdxWrOY+He9ibCjQyKGbuIo=;
+        b=tsbwYlPWXvbyrN4lLCXByjQMwKOVT2IGvMmwrwvOQkQuSSud2CXOGOElk0HRvvEKW/
+         2Xkz3qSwmOrZD39ZYwumCjUiyNAWRaDrnQx3fQeF0RLrUs7vafTGQnDcmDEYWMrzL+gj
+         Xz1taNZi42e6gDGnK0V87XXIEVhIu2+zF18SuShNRdBbJXwxfdsDLrRVTWWGP9/3Rixy
+         rozJnjNG0htQV4MsML8nvyok5MGRXwtwyyHo+FIAtf3tIX7RZqCrDrmHCQe2ytqVzOYP
+         91roNHNSvKgneGL2j/5LNoichB9JX/aby059iqdbf0BE6GAxt+P3kOdal8Jm76dTmpB6
+         FJtg==
+X-Gm-Message-State: AOAM5336TntRM3qf1nMIaVz+Jh64kKF/9GfiVe0sgYbtYMB7oT+9Rc5b
+        JR6mwkEjW1FTFgjR1ts0sCXYDdPTCd2C
+X-Google-Smtp-Source: ABdhPJyZfiv7R2c/sS2hwIC+F1gIlp+a63vWm1DnHY3Ra0l1F2/057hmvFvmeEuVeO/iQwjJe9keFhdI1x9x
+X-Received: by 2002:a0c:e48f:: with SMTP id n15mr6380735qvl.73.1590721219377;
+ Thu, 28 May 2020 20:00:19 -0700 (PDT)
+Date:   Thu, 28 May 2020 23:00:10 -0400
+Message-Id: <20200529030012.254592-1-jnchase@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH v3 0/2] CH7322 CEC controller driver
+From:   Jeff Chase <jnchase@google.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, Jeff Chase <jnchase@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 09:47:11AM -0500, Dan Murphy wrote:
-> Fix dt-binding-check issue
-> 
-> ti,gpi-config:0:0: 4 is greater than the maximum of 1
-> ti,gpi-config:0:1: 5 is greater than the maximum of 1
-> ti,gpi-config:0:2: 6 is greater than the maximum of 1
-> ti,gpi-config:0:3: 7 is greater than the maximum of 1
-> 
-> Reported-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  Documentation/devicetree/bindings/sound/tlv320adcx140.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Add device driver and device tree bindings for a Chrontel CEC
+conroller. This is an I2C device that can send and receive CEC
+messages.
 
-Thanks for the quick fix.
+Changes from v2:
+- fix formatting errors
+- mask and unmask interrupt in cec adapter enable
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes from v1:
+- fix formatpatch.pl --strict errors
+- additional comments
+- enable and program logical address register
+- add flags to aid interpreting transmit done status
+- move ch7322 out of devicetree trivial devices
+
+Jeff Chase (2):
+  dt-bindings: Add ch7322 media i2c device
+  media: cec: i2c: ch7322: Add ch7322 CEC controller driver
+
+ .../bindings/media/i2c/chrontel,ch7322.yaml   |  65 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   8 +
+ drivers/media/cec/Kconfig                     |   1 +
+ drivers/media/cec/Makefile                    |   2 +-
+ drivers/media/cec/i2c/Kconfig                 |  14 +
+ drivers/media/cec/i2c/Makefile                |   5 +
+ drivers/media/cec/i2c/ch7322.c                | 523 ++++++++++++++++++
+ 8 files changed, 619 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
+ create mode 100644 drivers/media/cec/i2c/Kconfig
+ create mode 100644 drivers/media/cec/i2c/Makefile
+ create mode 100644 drivers/media/cec/i2c/ch7322.c
+
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
