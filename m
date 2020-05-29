@@ -6,53 +6,56 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48061C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3877CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F97B20810
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1921F208A7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590749485;
-	bh=8U5a1MO/z+2ZYlwKk6XRLF8rVuKQjTLWUExCB3LYACU=;
+	s=default; t=1590749659;
+	bh=iItic/SJFuDHh9NK1YYlCZaWzpJMgEyjk4VirrtCP2A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rnfgwTW1FJjpM1elgfa1YT1woKL7UJxjESVegqiatWNW/MvJ0HIhlSwdWl5QUvfLl
-	 qSlrWJLQgnQrmBbmHOjnxouol4bqSGp22pQgIDaIf7GHFCGH7w6GrVK1aPCr3TIuJz
-	 m/ovIBl+jActTSiLAz//5SoCI5SK+M3ElTDm16GY=
+	b=SVu3Mia4U5j/k02GqO0H5JXqckJ5iR6sSJoL8U08hBkxxD3BF1EoLEjLej567TuLI
+	 dlZNr3iCgHqbfVxul1APsFz6JifKwHJFo3TnvogLxTZYA5jtrrntB0CVfP7KdC4mxm
+	 2uCUjB4Awic5bws8KxC4szvQnGRshYaApcBh8s2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgE2KvY (ORCPT
+        id S1725808AbgE2KyP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 06:51:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58846 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 06:54:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgE2KvY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 06:51:24 -0400
+        id S1725562AbgE2KyP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 06:54:15 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FF12075A;
-        Fri, 29 May 2020 10:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E884207F5;
+        Fri, 29 May 2020 10:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590749483;
-        bh=8U5a1MO/z+2ZYlwKk6XRLF8rVuKQjTLWUExCB3LYACU=;
+        s=default; t=1590749655;
+        bh=iItic/SJFuDHh9NK1YYlCZaWzpJMgEyjk4VirrtCP2A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sFWxS1ztgF79SyVpUQemcY9sOvMWx3w6HJQdHEx1bdpMD5OZsd5mn7/PwlwJnJEDG
-         frMwXDfE3HEbu80flevuCV7MI9KwVQPmilVIuKv14juyus32XuYXir8hUr2/1Zdmvd
-         Ll9nzqBDCb03dLnFfDLWmTcRuBxC0LnfdZ4RcA8I=
-Date:   Fri, 29 May 2020 11:51:20 +0100
+        b=FNSw5BXXedvJT9Ua90q6xqOYTCbeqPvGFfbiYPL9CTKGdgVAP3Sj+40vOJfOkz1py
+         2rgHIVW9NVEq086q1iMAAVHt+My02HGlXOk5kDMRsVBF8XTnMb4ao4vP7xAAhZDAio
+         IWrksg6Abg+2bWQIjYM8URGmgjigRqwj3BK6/dzE=
+Date:   Fri, 29 May 2020 11:54:11 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh@kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: sound: tlv320adcx140: Fix dt-binding-check
- issue
-Message-ID: <20200529105120.GE4610@sirena.org.uk>
-References: <20200528144711.18065-1-dmurphy@ti.com>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH v3 1/5] regulator: Allow regulators to verify enabled
+ during enable()
+Message-ID: <20200529105411.GF4610@sirena.org.uk>
+References: <20200528154625.17742-1-sumit.semwal@linaro.org>
+ <20200528154625.17742-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qFgkTsE6LiHkLPZw"
+        protocol="application/pgp-signature"; boundary="O98KdSgI27dgYlM5"
 Content-Disposition: inline
-In-Reply-To: <20200528144711.18065-1-dmurphy@ti.com>
+In-Reply-To: <20200528154625.17742-2-sumit.semwal@linaro.org>
 X-Cookie: The Killer Ducks are coming!!!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -61,33 +64,35 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---qFgkTsE6LiHkLPZw
+--O98KdSgI27dgYlM5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 28, 2020 at 09:47:11AM -0500, Dan Murphy wrote:
+On Thu, May 28, 2020 at 09:16:21PM +0530, Sumit Semwal wrote:
 
-> Fix dt-binding-check issue
+> +		while (time_remaining > 0) {
+> +			/* We've already waited for enable_time above;
+> +			 * so we can start with immediate check of the
+> +			 * status of the regulator.
+> +			 */
+> +			if (rdev->desc->ops->is_enabled(rdev))
+> +				break;
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+I'd expect to prefer to get_status() if it's available.
 
---qFgkTsE6LiHkLPZw
+--O98KdSgI27dgYlM5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Q6ScACgkQJNaLcl1U
-h9Al+Qf/QviqRDpXTXjaVEBeM9WTzOiVI+TAiCq5U+WkWU9w/gz3bgkFgNvZzs8R
-dK+hJsKzDojpzy/B7rewKyte5BjkUuoOBM+LNCkWn+Qiz9qEJ+XuL1Z+CA5gjUGa
-dMtWxHnfgLJb14xcPJLH0BFkRu4aSqvOc7m8v6efre4tXJt7TAV5MaPG0nRHoMM/
-9ASsWT2VUmMRpSzeCFGq+azL8NoZJLJpCtmGNSbsrAF5s98TAPibUpVbmvmchDW+
-ZubEbXbfnhspEIbzRk/iFvC8SremBRme9Dsga7r3i7VcRRp/HVeU0RGnE/RUPSB+
-P88zBO0iQmEjlYXnUZdtBSOdfc2b7w==
-=STRG
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Q6dIACgkQJNaLcl1U
+h9DsdQf/XvF7XSA3+wsHApX3Vw3vgnDX0EIbdCj+mAhN4yXaRDNBh9h+nYatUqVI
+4IuubtGTRY0RtBsggRNfd51POUPwItWmPkQNGi50gaYlXCUFTS9DFAxPw+L3HwQS
+8DXWUoESsD+kkk6gnbz7cYxbvojECkeyDERrAYXaXbbYCU037zNhr42FrYI+owAm
+T+3BDj0hsuaDBYbcbzDGntieQ/eedOPfz2XAbm6bGZH95NcT13VYEBXhTxGgtdyP
+6x4Tv7B5/G82rWeWn4+SI6SfWva3ZP81c4JPZnZ6alG+8csxR1qz2nnGCg+x53H3
+JMHXL8TmkGhD5LB7bLIp8whI9v5Yiw==
+=33t3
 -----END PGP SIGNATURE-----
 
---qFgkTsE6LiHkLPZw--
+--O98KdSgI27dgYlM5--
