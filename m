@@ -4,182 +4,193 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDA7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D5DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDE920707
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D98207D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590780626;
-	bh=dZxAossct7l3kPPzLFMu9PucVRsl85lqvpBdxPsAmNw=;
+	s=default; t=1590780694;
+	bh=kOZQuXSiTpJ5UOjVe26HuKZ6wx5xyJCXAMLojXiS4T0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PJY2bvtCppKE4vkEZeNqI2BsONhOVLjzmKvqb2U4fKDDv2Rz6oApC6z9ouI9atqx8
-	 AGhfq0wTWaLi8PhBgpdnjWsrPbJ8HUIiV/QdxEIeQBwtuh4zT6AxJBbgt8ZRstDXJ5
-	 5a0sVxaK3TRSJk12WiKW7ugvcYLFd/dzmcx6sxAU=
+	b=cRzSogN9fLGgxy24ruuWe2aaZXpBbDTs5SJ7UmPjefP3iJVCeFClgc9+RucIWAhPf
+	 MUzGymY6F7ETzGpSIjcbQmvcZst8bDLWy/mckYhFpW9hIWKYS+UeoBsR8ydqIjXC74
+	 XrPgCW2TSpneOzZeSvilDR4oLzfA5QlIKSQystdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgE2TaZ (ORCPT
+        id S1727094AbgE2Tbe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 15:30:25 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40578 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE2TaZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:30:25 -0400
-Received: by mail-io1-f66.google.com with SMTP id q8so553249iow.7;
-        Fri, 29 May 2020 12:30:24 -0700 (PDT)
+        Fri, 29 May 2020 15:31:34 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41743 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgE2Tbd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:31:33 -0400
+Received: by mail-io1-f65.google.com with SMTP id o5so545089iow.8;
+        Fri, 29 May 2020 12:31:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FfaDXY2um+sxHha+SiROBPgi9RgI7khtKYrJysqehQg=;
-        b=jn7ibgg5KeFHFP34ztuqFtZTcPoZ2Y2f7Pw7rDa8epc4W8lcZPJjdMeXt+OQq/tFAg
-         VGJnNyvkbBCrbochSujUlmVUM3tj/XmWdnb0xeubnTb3HJieEBLrgkGDMSfqdFfW+hk1
-         cMUqeRbpbzxEHboYIDbZ1buJiCEp0I7HOSExBOPS2jNrREn5vebuCas6lytrsnHMrEOS
-         0nmmIun7sc6kDg2bETYQjpDAFOtPFDwZetNOq808Wl9/QLv30jF0xedcs8wN8JojRVzX
-         6e2NcbAVpofAe2EgsfeJtQJVoukj/fWv6lr/mKmjbwo/O2uIOJBDKPgnePEGMC+G5O5n
-         Sk6Q==
-X-Gm-Message-State: AOAM530pMa6p/WfAd+U+u60jkayDkKOIka+ppgtgdf3BJRaGtHRHZIRq
-        +0xnc1g/gSF5YqQY2h+baQ==
-X-Google-Smtp-Source: ABdhPJwLZq65HhVx00Z+kBjdLPPoK/F+LZNbbmDQnuIslYL0/WZPL5e8iAkGE7yBF8Ro91M82EaELg==
-X-Received: by 2002:a6b:bc85:: with SMTP id m127mr7797275iof.89.1590780622785;
-        Fri, 29 May 2020 12:30:22 -0700 (PDT)
+        bh=snjj37/YdMHAZOpkk9/RRV5o12QUCoSQOMCE8M28IQg=;
+        b=irIPjdrjZeoDOP300tM9f1inJxjL0CvxNEughDC/O94ehQtbKk3m6nAGBS/9ctSDlg
+         VwteBEUT1O5yOh3bgzk6WaB3eYJ1IoNM6RXxmqhuS9da0LBlFnsCvZ+aNUar5jcuPNQ9
+         /aMuLKBfXSZV1OoScC/v8JRbO7rRJVmhu1TA3QsNwEb4F3JBXsPLUKnjaXQJv4Kikav0
+         1qnBfMOF8e5jDoDbK2QHvVYjSiuDWNzl1DSn5rHedVb4yqHEN9g2lHbJAwBN2OVygDv9
+         XW+4rbWCMurxldZm9TyEQfEbImH4UQrhDQQD409FZM0F3YLlhRduvflJMnictS6m6Wa4
+         L6Kw==
+X-Gm-Message-State: AOAM5305V6XC0B3RfffMR3l2TOEfU384bPt8Zzo5fWZccfTbs8Pcni+p
+        pEBFdA2HV8oop45h/JMwxQ==
+X-Google-Smtp-Source: ABdhPJzwB9AW1q+9HkoCpzsKv8lCmKg8zrgaxgbznjc6r+aKG0ZlZeZpl3AdnKYyasYzPUNG7F9l8w==
+X-Received: by 2002:a02:c802:: with SMTP id p2mr8840537jao.111.1590780692506;
+        Fri, 29 May 2020 12:31:32 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s15sm5231607iln.49.2020.05.29.12.30.21
+        by smtp.gmail.com with ESMTPSA id x22sm5300039ill.9.2020.05.29.12.31.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:30:21 -0700 (PDT)
-Received: (nullmailer pid 2804702 invoked by uid 1000);
-        Fri, 29 May 2020 19:30:20 -0000
-Date:   Fri, 29 May 2020 13:30:20 -0600
+        Fri, 29 May 2020 12:31:31 -0700 (PDT)
+Received: (nullmailer pid 2806583 invoked by uid 1000);
+        Fri, 29 May 2020 19:31:30 -0000
+Date:   Fri, 29 May 2020 13:31:30 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v7 2/5] dt-bindings: iio: magnetometer: ak8975: convert
- format to yaml, add maintainer
-Message-ID: <20200529193020.GA2800479@bogus>
-References: <20200528145851.11791-1-jonathan.albrieux@gmail.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v10 1/2] dt-bindings: mtd: Add Nand Flash Controller
+ support for Intel LGM SoC
+Message-ID: <20200529193130.GA2805164@bogus>
+References: <20200528153929.46859-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200528153929.46859-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528145851.11791-1-jonathan.albrieux@gmail.com>
+In-Reply-To: <20200528153929.46859-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:58:47PM +0200, Jonathan Albrieux wrote:
-> Converts documentation from txt format to yaml.
+On Thu, May 28, 2020 at 11:39:28PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> Add YAML file for dt-bindings to support NAND Flash Controller
+> on Intel's Lightning Mountain SoC.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > ---
->  .../bindings/iio/magnetometer/ak8975.txt      | 37 ---------
->  .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 77 +++++++++++++++++++
->  2 files changed, 77 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+>  .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 93 ++++++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> deleted file mode 100644
-> index 0576b9df0bf2..000000000000
-> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -* AsahiKASEI AK8975 magnetometer sensor
-> -
-> -Required properties:
-> -
-> -  - compatible : should be "asahi-kasei,ak8975".
-> -  - reg : the I2C address of the magnetometer.
-> -
-> -Optional properties:
-> -
-> -  - gpios : AK8975 has a "Data ready" pin (DRDY) which informs that data
-> -      is ready to be read and is possible to listen on it. If used,
-> -      this should be active high. Prefer interrupt over this.
-> -
-> -  - interrupts : interrupt for DRDY pin. Triggered on rising edge.
-> -
-> -  - vdd-supply: an optional regulator that needs to be on to provide VDD.
-> -
-> -  - mount-matrix: an optional 3x3 mounting rotation matrix.
-> -
-> -Example:
-> -
-> -ak8975@c {
-> -        compatible = "asahi-kasei,ak8975";
-> -        reg = <0x0c>;
-> -        interrupt-parent = <&gpio6>;
-> -        interrupts = <15 IRQ_TYPE_EDGE_RISING>;
-> -        vdd-supply = <&ldo_3v3_gnss>;
-> -        mount-matrix = "-0.984807753012208",  /* x0 */
-> -                       "0",                   /* y0 */
-> -                       "-0.173648177666930",  /* z0 */
-> -                       "0",                   /* x1 */
-> -                       "-1",                  /* y1 */
-> -                       "0",                   /* z1 */
-> -                       "-0.173648177666930",  /* x2 */
-> -                       "0",                   /* y2 */
-> -                       "0.984807753012208";   /* z2 */
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
 > new file mode 100644
-> index 000000000000..55b18784e503
+> index 000000000000..afecc9920e04
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-> @@ -0,0 +1,77 @@
+> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+> @@ -0,0 +1,93 @@
 > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/iio/magnetometer/asahi-kasei,ak8975.yaml#
+> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: AsahiKASEI AK8975 magnetometer sensor
+> +title: Intel LGM SoC NAND Controller Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: "nand-controller.yaml"
 > +
 > +maintainers:
-> +  - Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > +
 > +properties:
 > +  compatible:
-> +    oneOf:
-> +      - enum:
-> +        - asahi-kasei,ak8975
-> +        - asahi-kasei,ak8963
-> +        - asahi-kasei,ak09911
-> +        - asahi-kasei,ak09912
-> +      - enum:
-> +        - ak8975
-> +        - ak8963
-> +        - ak09911
-> +        - ak09912
-> +        deprecated: true
+> +    const: intel,lgm-nand-controller
+
+Doesn't match the example.
+
 > +
 > +  reg:
+> +    maxItems: 6
+> +
+> +  reg-names:
+> +    items:
+> +       - const: ebunand
+> +       - const: hsnand
+> +       - const: nand_cs0
+> +       - const: nand_cs1
+> +       - const: addr_sel0
+> +       - const: addr_sel1
+> +
+> +  clocks:
 > +    maxItems: 1
 > +
-> +  gpios:
-> +    maxItems: 1
-> +    description: |
-> +      AK8975 has a "Data ready" pin (DRDY) which informs that data
-> +      is ready to be read and is possible to listen on it. If used,
-> +      this should be active high. Prefer interrupt over this.
+> +  dmas:
+> +    maxItems: 2
 > +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: interrupt for DRDY pin. Triggered on rising edge.
+> +  dma-names:
+> +    items:
+> +      - const: tx
+> +      - const: rx
 > +
-> +  vdd-supply:
-> +    maxItems: 1
-
-Drop this. -supply is always 1.
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+> +patternProperties:
+> +  "^nand@[a-f0-9]+$":
+> +    type: object
+> +    properties:
+> +      reg:
+> +        minimum: 0
+> +        maximum: 7
+> +
+> +      nand-ecc-mode: true
+> +
+> +      nand-ecc-algo:
+> +        const: hw
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - dmas
+> +  - dma-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    nand-controller@e0f00000 {
+> +      compatible = "intel,lgm-nand";
+> +      reg = <0xe0f00000 0x100>,
+> +            <0xe1000000 0x300>,
+> +            <0xe1400000 0x8000>,
+> +            <0xe1c00000 0x1000>,
+> +            <0x17400000 0x4>,
+> +            <0x17c00000 0x4>;
+> +      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1",
+> +        "addr_sel0", "addr_sel1";
+> +      clocks = <&cgu0 125>;
+> +      dmas = <&dma0 8>, <&dma0 9>;
+> +      dma-names = "tx", "rx";
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      nand@0 {
+> +        reg = <0>;
+> +        nand-on-flash-bbt;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.11.0
+> 
