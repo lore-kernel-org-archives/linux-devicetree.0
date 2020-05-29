@@ -2,275 +2,125 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE53DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312F4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B82F6206E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:51:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JAjFOaLg"
+	by mail.kernel.org (Postfix) with ESMTP id 111352073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590774871;
+	bh=yQ8ZOTYFLGZ95Rjd6orK75m4u9nmvN16pym6e0JLaIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cjmp9vaClqvhq+tV1cYHK3cdnkjRkXi8Wjds5fIQusdAvlHN7MeM0eiAXJ2ZpIgPZ
+	 DvTNTyCU6TYjhqBYX0v9ffRVC3jd6Rads6mLNuQEWod02spMLifnkVr5w8qagP0cZq
+	 4RDeq9FcqTD/YyI83lraWPsE6LJqoD5HlhwqoCI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgE2Rve (ORCPT
+        id S1728000AbgE2Rya (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 13:51:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbgE2Rvd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:51:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83BCC03E969
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 10:51:32 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id s8so4680472wrt.9
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 10:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x7+kp26v03K8JoMEQ/WwyjM8KWS07AyG9uk4mKD875Y=;
-        b=JAjFOaLgdWIHtR7M+bEQy37Bma9p8ICIbbwAMrC9Z2DM5QKq6OujyCH5iiGerJ1mkx
-         A3vnMoiIflpy9/HLR9lWFLsuYE4Rz3idRo4CU5HoI1sQxc4JNeHzUdkSXd2DFO7RCk+c
-         KtaDpPiTk6UsxrmM2BXrbqP5/rQTZcuzAUr0U=
+        Fri, 29 May 2020 13:54:30 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35662 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726849AbgE2Rya (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:54:30 -0400
+Received: by mail-il1-f195.google.com with SMTP id a14so3378180ilk.2;
+        Fri, 29 May 2020 10:54:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x7+kp26v03K8JoMEQ/WwyjM8KWS07AyG9uk4mKD875Y=;
-        b=h9tpA3iO/HxlUfk+Sj5lxawOR8ScTFI+t7ySch1zP47zWG5h8qzyQc8Eqr9ef2qU+c
-         /urcOavurYyJehGWd15JJ01DTCNrRx89+R1kl8eA1Adl4/jPHzuBMqs7asQOkKqR+uYc
-         A93e+29+rxx+oWd5+x9facYh6Vd+d5NQrYG5U5p6v4UeCgwu7rYNm5bMg/4X50S3I5W3
-         NubcIffXc2gYBo9tqCxa+EG28NcEWj5eljCHPV6me3Jaf4jWDIRx55u2HqopE6w3JGok
-         WFCbienVuYxLpYpd97uaVjQENhxK9AQHvqrr5c5XU3szNJ5roZBz58ceeXrS3WQXyNfG
-         mNRw==
-X-Gm-Message-State: AOAM531+wj4pwy45M9qsr+2bxhAelDo8MvrsvTzk0X7+ODQdSckVDgX0
-        K1V3c6epYbjwxyzkd81tB0N+5DSaZJnA/jvoiQeu6Q==
-X-Google-Smtp-Source: ABdhPJzcuAyXyV9Kv024sxV7/Yvl/hv9vDTiOpv3gCDVMqELz0Zp0vuHqDN10USnTMku2E214cOmwcBzpTe6Gh+xoTc=
-X-Received: by 2002:adf:ec03:: with SMTP id x3mr9724830wrn.297.1590774691425;
- Fri, 29 May 2020 10:51:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JRLQD8tZL6OQnQHTqlPhbsa62qbf/5d0HG4XhZBvQ5w=;
+        b=h7I2XJDxPcRk8BWN5nPZe0cF09lXraftJ4Ivi3ODU4Zey/LbVGBT8pHBlp5uEHaAuP
+         WE+z5Lx0ObSQR6jFzSPWuPXEjGO1uvHKvjP8cXzrIAlUETbZXCG5nQ4aeT274G9J0UrD
+         C72g6nh79iM8gcFidCPd7T3lLC2sfSrByfiDlSNIWs5LfIjBF6IBVJkeApj/9N3I1+7I
+         jorzyrmkJwnX3I1clZjriKo0JSk6BhtxmguI8rZ1l9ewSrlFcXLdaQypw9HaYU3htbBF
+         o3cLTeMyjmXDfghQrvT1tTe1sy/eEdknJEKRdQK/oAxakJJ1CYzymHD7zOBAp7g32skK
+         a0Zg==
+X-Gm-Message-State: AOAM533+nQksb7cAbnBmlKu3OVTVpON3AUClF2ixTrRUSgpPz8HRo/Xu
+        5+CmdEN3VuO/tW/8gWeVHw==
+X-Google-Smtp-Source: ABdhPJw3BuIponOiJUvjhEg0SQfwbXTvL50hkGcPP9yZXqPug/g0lgkyMlDOD4T/PK7RUlC/nD+QzQ==
+X-Received: by 2002:a92:d591:: with SMTP id a17mr8913352iln.13.1590774868655;
+        Fri, 29 May 2020 10:54:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p75sm5118764ilb.23.2020.05.29.10.54.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:54:27 -0700 (PDT)
+Received: (nullmailer pid 2652931 invoked by uid 1000);
+        Fri, 29 May 2020 17:54:26 -0000
+Date:   Fri, 29 May 2020 11:54:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
+Message-ID: <20200529175426.GA2652858@bogus>
+References: <20200526222056.18072-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526222056.18072-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
- <20200526191303.1492-10-james.quinlan@broadcom.com> <59a0b4e1454a8ef4d3e4ebaf55dcbf3dcd2d73a2.camel@suse.de>
- <CA+-6iNyOKvY-xNfXqDRa5_nJVJuqGKA-oe-ejNuJHUBt6ORu0A@mail.gmail.com> <CAL_JsqJsxxC6msUXBCa9naitMLfOcVZauk44gPJNGGe3iXRzsA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJsxxC6msUXBCa9naitMLfOcVZauk44gPJNGGe3iXRzsA@mail.gmail.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Fri, 29 May 2020 13:51:19 -0400
-Message-ID: <CA+-6iNy-H=TGuvu4ybODP3PaMtzSMtPdm3WMiPM69fou1qLLcg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/14] device core: Add ability to handle multiple dma offsets
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Corey Minyard <minyard@acm.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526222056.18072-2-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 1:35 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Wed, May 27, 2020 at 9:43 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
-> >
-> > Hi Nicolas,
-> >
-> > On Wed, May 27, 2020 at 11:00 AM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> > >
-> > > Hi Jim,
-> > > one thing comes to mind, there is a small test suite in drivers/of/unittest.c
-> > > (specifically of_unittest_pci_dma_ranges()) you could extend it to include your
-> > > use cases.
-> > Sure, will check out.
-> > >
-> > > On Tue, 2020-05-26 at 15:12 -0400, Jim Quinlan wrote:
-> > > > The new field in struct device 'dma_pfn_offset_map' is used to facilitate
-> > > > the use of multiple pfn offsets between cpu addrs and dma addrs.  It is
-> > > > similar to 'dma_pfn_offset' except that the offset chosen depends on the
-> > > > cpu or dma address involved.
-> > > >
-> > > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > > > ---
-> > > >  drivers/of/address.c        | 65 +++++++++++++++++++++++++++++++++++--
-> > > >  drivers/usb/core/message.c  |  3 ++
-> > > >  drivers/usb/core/usb.c      |  3 ++
-> > > >  include/linux/device.h      | 10 +++++-
-> > > >  include/linux/dma-direct.h  | 10 ++++--
-> > > >  include/linux/dma-mapping.h | 46 ++++++++++++++++++++++++++
-> > > >  kernel/dma/Kconfig          | 13 ++++++++
-> > > >  7 files changed, 144 insertions(+), 6 deletions(-)
-> > > >
-> > >
-> > > [...]
-> > >
-> > > > @@ -977,10 +1020,19 @@ int of_dma_get_range(struct device *dev, struct
-> > > > device_node *np, u64 *dma_addr,
-> > > >               pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
-> > > >                        range.bus_addr, range.cpu_addr, range.size);
-> > > >
-> > > > +             num_ranges++;
-> > > >               if (dma_offset && range.cpu_addr - range.bus_addr != dma_offset)
-> > > > {
-> > > > -                     pr_warn("Can't handle multiple dma-ranges with different
-> > > > offsets on node(%pOF)\n", node);
-> > > > -                     /* Don't error out as we'd break some existing DTs */
-> > > > -                     continue;
-> > > > +                     if (!IS_ENABLED(CONFIG_DMA_PFN_OFFSET_MAP)) {
-> > > > +                             pr_warn("Can't handle multiple dma-ranges with
-> > > > different offsets on node(%pOF)\n", node);
-> > > > +                             pr_warn("Perhaps set DMA_PFN_OFFSET_MAP=y?\n");
-> > > > +                             /*
-> > > > +                              * Don't error out as we'd break some existing
-> > > > +                              * DTs that are using configs w/o
-> > > > +                              * CONFIG_DMA_PFN_OFFSET_MAP set.
-> > > > +                              */
-> > > > +                             continue;
-> > >
-> > > dev->bus_dma_limit is set in of_dma_configure(), this function's caller, based
-> > > on dma_start's value (set after this continue). So you'd be effectively setting
-> > > the dev->bus_dma_limit to whatever we get from the first dma-range.
-> > I'm not seeing that at all.  On the  evaluation of each dma-range,
-> > dma_start and dma_end are re-evaluated to be the lowest and highest
-> > bus values of the  dma-ranges seen so far.  After all dma-ranges are
-> > examined,  dev->bus_dma_limit being set to the highest.  In fact, the
-> > current code -- ie before my commits -- already does this for multiple
-> > dma-ranges as long as the cpu-bus offset is the same in the
-> > dma-ranges.
-> > >
-> > > This can be troublesome depending on how the dma-ranges are setup, for example
-> > > if the first dma-range doesn't include the CMA area, in arm64 generally set as
-> > > high as possible in ZONE_DMA32, that would render it useless for
-> > > dma/{direct/swiotlb}. Again depending on the bus_dma_limit value, if smaller
-> > > than ZONE_DMA you'd be unable to allocate any DMA memory.
-> > >
-> > > IMO, a solution to this calls for a revamp of dma-direct's dma_capable(): match
-> > > the target DMA memory area with each dma-range we have to see if it fits.
-> > >
-> > > > +                     }
-> > > > +                     dma_multi_pfn_offset = true;
-> > > >               }
-> > > >               dma_offset = range.cpu_addr - range.bus_addr;
-> > > >
-> > > > @@ -991,6 +1043,13 @@ int of_dma_get_range(struct device *dev, struct
-> > > > device_node *np, u64 *dma_addr,
-> > > >                       dma_end = range.bus_addr + range.size;
-> > > >       }
-> > > >
-> > > > +     if (dma_multi_pfn_offset) {
-> > > > +             dma_offset = 0;
-> > > > +             ret = attach_dma_pfn_offset_map(dev, node, num_ranges);
-> > > > +             if (ret)
-> > > > +                     return ret;
-> > > > +     }
-> > > > +
-> > > >       if (dma_start >= dma_end) {
-> > > >               ret = -EINVAL;
-> > > >               pr_debug("Invalid DMA ranges configuration on node(%pOF)\n",
-> > > > diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
-> > > > index 6197938dcc2d..aaa3e58f5eb4 100644
-> > > > --- a/drivers/usb/core/message.c
-> > > > +++ b/drivers/usb/core/message.c
-> > > > @@ -1960,6 +1960,9 @@ int usb_set_configuration(struct usb_device *dev, int
-> > > > configuration)
-> > > >                */
-> > > >               intf->dev.dma_mask = dev->dev.dma_mask;
-> > > >               intf->dev.dma_pfn_offset = dev->dev.dma_pfn_offset;
-> > > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
-> > > > +             intf->dev.dma_pfn_offset_map = dev->dev.dma_pfn_offset_map;
-> > > > +#endif
-> > >
-> > > Thanks for looking at this, that said, I see more instances of drivers changing
-> > > dma_pfn_offset outside of the core code. Why not doing this there too?
-> > >
-> > > Also, are we 100% sure that dev->dev.dma_pfn_offset isn't going to be freed
-> > > before we're done using intf->dev? Maybe it's safer to copy the ranges?
-> > >
-> > > >               INIT_WORK(&intf->reset_ws, __usb_queue_reset_device);
-> > > >               intf->minor = -1;
-> > > >               device_initialize(&intf->dev);
-> > > > diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> > > > index f16c26dc079d..d2ed4d90e56e 100644
-> > > > --- a/drivers/usb/core/usb.c
-> > > > +++ b/drivers/usb/core/usb.c
-> > > > @@ -612,6 +612,9 @@ struct usb_device *usb_alloc_dev(struct usb_device
-> > > > *parent,
-> > > >        */
-> > > >       dev->dev.dma_mask = bus->sysdev->dma_mask;
-> > > >       dev->dev.dma_pfn_offset = bus->sysdev->dma_pfn_offset;
-> > > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
-> > > > +     dev->dev.dma_pfn_offset_map = bus->sysdev->dma_pfn_offset_map;
-> > > > +#endif
-> > > >       set_dev_node(&dev->dev, dev_to_node(bus->sysdev));
-> > > >       dev->state = USB_STATE_ATTACHED;
-> > > >       dev->lpm_disable_count = 1;
-> > > > diff --git a/include/linux/device.h b/include/linux/device.h
-> > > > index ac8e37cd716a..67a240ad4fc5 100644
-> > > > --- a/include/linux/device.h
-> > > > +++ b/include/linux/device.h
-> > > > @@ -493,6 +493,8 @@ struct dev_links_info {
-> > > >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-> > > >   *           DMA limit than the device itself supports.
-> > > >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-> > > > + * @dma_pfn_offset_map:      Like dma_pfn_offset but used when there are
-> > > > multiple
-> > > > + *           pfn offsets for multiple dma-ranges.
-> > > >   * @dma_parms:       A low level driver may set these to teach IOMMU code
-> > > > about
-> > > >   *           segment limitations.
-> > > >   * @dma_pools:       Dma pools (if dma'ble device).
-> > > > @@ -578,7 +580,13 @@ struct device {
-> > > >                                            allocations such descriptors. */
-> > > >       u64             bus_dma_limit;  /* upstream dma constraint */
-> > > >       unsigned long   dma_pfn_offset;
-> > > > -
-> > > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
-> > > > +     const struct dma_pfn_offset_region *dma_pfn_offset_map;
-> > > > +                                     /* Like dma_pfn_offset, but for
-> > > > +                                      * the unlikely case of multiple
-> > > > +                                      * offsets. If non-null, dma_pfn_offset
-> > > > +                                      * will be set to 0. */
-> > > > +#endif
-> > >
-> > > I'm still sad this doesn't fully replace dma_pfn_offset & bus_dma_limit. I feel
-> > > the extra logic involved in incorporating this as default isn't going to be
-> > > noticeable as far as performance is concerned to single dma-range users, and
-> > > it'd make for a nicer DMA code. Also you'd force everyone to test their changes
-> > > on the multi dma-ranges code path, as opposed to having this disabled 99.9% of
-> > > the time (hence broken every so often).
-> > Good point.
->
-> +1
->
-> > > Note that I sympathize with the amount of work involved on improving that, so
-> > > better wait to hear what more knowledgeable people have to say about this :)
-> > Yes, I agree.  I want to avoid coding and testing one solution only to
-> > have a different reviewer NAK it.
->
-> It's a pretty safe bet that everyone will prefer one code path over 2.
->
-> Rob
-Thanks for  the input.  Will do, and send out v3 ASAP.
-Thanks, Jim
+On Wed, 27 May 2020 01:20:53 +0300, Serge Semin wrote:
+> Baikal-T1 Clocks Control Unit is responsible for transformation of a
+> signal coming from an external oscillator into clocks of various
+> frequencies to propagate them then to the corresponding clocks
+> consumers (either individual IP-blocks or clock domains). In order
+> to create a set of high-frequency clocks the external signal is
+> firstly handled by the embedded into CCU PLLs. So the corresponding
+> dts-node is just a normal clock-provider node with standard set of
+> properties. Note as being part of the Baikal-T1 System Controller its
+> DT node is supposed to be a child the system controller node.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-mips@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v2:
+> - Rearrange the SoBs.
+> - Discard comments in the bindings file header.
+> - Add dual GPL/BSD license.
+> - Add spaces around the ASCII-graphics in the binding description.
+> - Remove reference to Documentation/devicetree/bindings/clock/clock-bindings.txt
+>   file.
+> - Discard redundant object check against "/schemas/clock/clock.yaml#" schema.
+> - Discard redundant descriptions of the "#clock-cells" property.
+> - Remove "reg" property since from now the clock DT node is supposed to be
+>   a child of the syscon-compatible system controller node.
+> - Remove "clock-output-names" property support.
+> - Replace "additionalProperties: false" with "unevaluatedProperties: false".
+> - Lowercase the nodes name in the examples.
+> - Use "clock-controller" node name suffix in the examples.
+> - Remove unnecessary comments in the clocks dt-bindings header file.
+> 
+> Changelog v3:
+> - Get the reg property back even though the driver is using the parental
+>   syscon regmap.
+> - The DT schema will live separately from the system controller, but the
+>   corresponding sub-node of the later DT schema will $ref this one.
+> ---
+>  .../bindings/clock/baikal,bt1-ccu-pll.yaml    | 131 ++++++++++++++++++
+>  include/dt-bindings/clock/bt1-ccu.h           |  16 +++
+>  2 files changed, 147 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+>  create mode 100644 include/dt-bindings/clock/bt1-ccu.h
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
