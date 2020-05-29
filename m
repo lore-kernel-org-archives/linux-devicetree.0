@@ -2,77 +2,104 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC7BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA54C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0ECC2072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3742072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590742049;
+	bh=pxiiu9xqqkiXKrFjgHAuys/IAK5bZGOOkPDarFrmq58=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0cPit8SJnLAqUnU4bJ50Cbcld/FtIy2EoyqWPpa03jK977JIDx94AhjZVtCJp65Fe
+	 3GYBlCSTSZxSjuL8OhL9JCqOAkzJDCIQW8ttFRxK5nKwPQrfx0MqofXdkPZ3ExLFKe
+	 YjlhKHdLBgtrgddcXFUBUH3JmYnIjiHh6wWOw63Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725839AbgE2Iqp (ORCPT
+        id S1725768AbgE2Ir3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 04:46:45 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36226 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgE2Iqo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 04:46:44 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Fri, 29 May 2020 04:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgE2Ir2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 04:47:28 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 468C32A4304;
-        Fri, 29 May 2020 09:46:43 +0100 (BST)
-Date:   Fri, 29 May 2020 10:46:40 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v7 17/20] mtd: rawnand: Hide the generic OOB layout
- objects behind helpers
-Message-ID: <20200529104640.1997434f@collabora.com>
-In-Reply-To: <20200529104548.0038bbe7@collabora.com>
-References: <20200529002517.3546-1-miquel.raynal@bootlin.com>
-        <20200529002517.3546-18-miquel.raynal@bootlin.com>
-        <20200529104548.0038bbe7@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED3D82075A;
+        Fri, 29 May 2020 08:47:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590742048;
+        bh=pxiiu9xqqkiXKrFjgHAuys/IAK5bZGOOkPDarFrmq58=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=03qgbRgrutFPSwgNQGcnHfA3qNKi8K1gN6exO6igM9hw6I1JMbgAvWLyZbxN5kkC8
+         X4ItvWrbD1K5VhRerc9Mr1E0b/DZg/IdhP/n9KCmPyRJLRJA9Qoeb1WNLhstTO6lAU
+         WMe49b583l1kp4OmECVFAaWbHaLJzxThNRxnnPso=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jeafm-00GDoF-CQ; Fri, 29 May 2020 09:47:26 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 29 May 2020 09:47:26 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] irqchip: Add Loongson HyperTransport Vector
+ support
+In-Reply-To: <20200528152757.1028711-2-jiaxun.yang@flygoat.com>
+References: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
+ <20200528152757.1028711-2-jiaxun.yang@flygoat.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <913f1c809fc1fa479c5d6cd6fb375bf7@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, chenhc@lemote.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 May 2020 10:45:48 +0200
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
-
-> On Fri, 29 May 2020 02:25:14 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On 2020-05-28 16:27, Jiaxun Yang wrote:
+> This controller appears on Loongson-3 chips for receiving interrupt
+> vectors from PCH's PIC and PCH's PCIe MSI interrupts.
 > 
-> > +const struct mtd_ooblayout_ops *nand_get_large_page_layout(void)  
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> v2:
+> 	- Style cleanup
+> 	- Set ack callback and set correct edge_irq handler
 > 
-> nand_get_large_page_ooblayout() (same for the other helpers).
-> 
+> v3:
+> 	- Correct bitops in ACK callback
+> v4:
+> 	- Drop irqsave for spinlocks
+> 	- Fix brace align and ordering issue thanks to tglx
+> ---
 
-And sorry if I got it wrong in my previous review :-/.
+When adding a changelog to a patch, please add the text after the '---'
+delimiter, without adding an extra '---' at the end. This otherwise
+confuses tools like mb2q or b4.
 
-> > +{
-> > +	return &nand_ooblayout_lp_ops;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nand_get_large_page_layout);  
+Please see Documentation/process/submitting-patches.rst ("14) The 
+canonical patch format").
 
+I've fixed it up locally, no need to resend.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
