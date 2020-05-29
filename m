@@ -2,128 +2,120 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611E9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF2AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41FE420814
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897AD20723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590772189;
-	bh=jnAmj83BKe7yTlSfOn8/pJKY/MXlHpPOsXcZyc8cZLg=;
+	s=default; t=1590772358;
+	bh=pWdiLQKXlqkVWGFk1vwAA7pmGBuWEqo3AyBqWZl5aR8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EggmAc9xAmjhVJWgM2o9XsbDB9fbB64XeuILm3smBBMHZvhvgpjoCG/osD3uv2o7h
-	 Q/YTTUyHLBOuubwFFEmGQmV0kQ0cusnXRDp2G8PN5j3PY6GrXlxdnJqks2DYkZNFRi
-	 VnQIWwCikz+UPl4Rm/SZhaqkp8jvm73N3QcSviNY=
+	b=KHMP4jK7M8U0tHMwjzjjBCjEa3XnjeF6Cdf0yV17U0BisvCFQluQM0ynPsofhiibW
+	 lJG2Lv3U6btosFFjK8WPgzJzRoHCZRm4OnEANqrh8sTDUXpGGutTVs/QAboSDj4TCe
+	 Y31G68rQABxiiDEllFi9nruPegFM0GdMqdYiKrck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgE2RJq (ORCPT
+        id S1726555AbgE2RMe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 13:09:46 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44183 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2RJp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:09:45 -0400
-Received: by mail-io1-f67.google.com with SMTP id p20so75013iop.11;
-        Fri, 29 May 2020 10:09:45 -0700 (PDT)
+        Fri, 29 May 2020 13:12:34 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34777 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2RMe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:12:34 -0400
+Received: by mail-il1-f195.google.com with SMTP id v11so3254165ilh.1;
+        Fri, 29 May 2020 10:12:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=a2QGu421ez2t5PQEVQq+/SgHTvBOn/gTqn0sjVtJtGE=;
-        b=H+3zMuTRKHIoJzuRQktf8R+Lxt8l67mPX8SLIhYevqQJ0M/DjUz+NY7/IY5xykM22I
-         EZtX8igemBMF92CrYd+UoASya0QYlrPxIgN46fhnq8gVIJAdqkiMKiVPRr1lb2pxo8J5
-         J6gcWtrxtvG3FxOnv7gB+7EHCPz5WfUQQ/KHjNiuGTfpFk56yB5AkOCNNvtET0jXjOTn
-         VHYsFxoS15ycZCxpFqjH9hKlMM4glMVXSSVoJVz+RQFbLzADqu3JPg8LLIfiG5hJSHn+
-         tlv2I4kHx/eHRbWXIbCtQCu56ShwSrjTm3UicBBl+vtAaJUSxOHSct7YTr7V0jNBJjD1
-         VCXQ==
-X-Gm-Message-State: AOAM532U/pJA+AHUMQ3q94W74YKwleNJ6lAtTcB9Iq+rJPFC2TbViS83
-        bFiaKaHdiCZ3FcFhzNPShA==
-X-Google-Smtp-Source: ABdhPJwZQWo0WulZlgDVmME3mzUnoX5pm5ZHXXSnckD9PxPpBYBHxltswNiWrwj4WRIeDI0rwBeAOw==
-X-Received: by 2002:a05:6638:406:: with SMTP id q6mr8134452jap.125.1590772184764;
-        Fri, 29 May 2020 10:09:44 -0700 (PDT)
+        bh=bx0PYvSq6NXKj78JIhFRx0Ln0MPRytiQWRFm69j6/II=;
+        b=FibTTiAXPZA8ncGPD15f56t67fVXt50ryXvQcrpouWAHMUzjDv1nMYHkF8ZGH+wVdn
+         lP14S8UMxjKZFQGJwccUuGIXrooQgj6fpD9KP4UafcYLcp97mY6mYYWdI5D24Df24vcI
+         i2Qwc4bsxEE65hccxWAMsxMwDZSx1WWFbTQM4JlwiTcYlr6mqvk3kQWUNPeXH5xE7uPn
+         WbCSp3T2YAWb3ubnf55t0qnblXtog/VpwZjXVcH48RkZOgohLlbVNpYTDjDOPMmZ5nP6
+         OKkrSNQzNDO+fE+dCyO/4Y4IA9sIj14sKf/TR4c2OiUQ/Lew6C2gmKMddtewRzhrWPIF
+         sAkQ==
+X-Gm-Message-State: AOAM530gtSvSuqwlMUSxONSPxXWq1p9YGfgjZlaoGaEnSquTtC2pFdG+
+        mSudf7criqDAqRjS/3Gn6g==
+X-Google-Smtp-Source: ABdhPJx3pelBzqI23xyZAGyODV+mdjrDEnHa6vJcIHqwehHVDJoZHGYIfuPjm8tPctXXxT9q75pF9A==
+X-Received: by 2002:a92:5b15:: with SMTP id p21mr7028596ilb.22.1590772353030;
+        Fri, 29 May 2020 10:12:33 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c1sm4963408ilq.56.2020.05.29.10.09.43
+        by smtp.gmail.com with ESMTPSA id v13sm5199788ili.15.2020.05.29.10.12.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 10:09:44 -0700 (PDT)
-Received: (nullmailer pid 2580445 invoked by uid 1000);
-        Fri, 29 May 2020 17:09:43 -0000
-Date:   Fri, 29 May 2020 11:09:43 -0600
+        Fri, 29 May 2020 10:12:32 -0700 (PDT)
+Received: (nullmailer pid 2586805 invoked by uid 1000);
+        Fri, 29 May 2020 17:12:31 -0000
+Date:   Fri, 29 May 2020 11:12:31 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@gmail.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: iio: imu: bmi160: add regulators and
- mount-matrix
-Message-ID: <20200529170943.GA2578764@bogus>
-References: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
- <20200525164615.14962-3-jonathan.albrieux@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Olivier Sobrie <olivier.sobrie@silexinsight.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Waleed Ziad <waleed94ziad@gmail.com>,
+        sebastien.rabou@silexinsight.com
+Subject: Re: [PATCH 3/3] hwrng: ba431-rng: add support for BA431 hwrng
+Message-ID: <20200529171231.GA2581035@bogus>
+References: <20200525195606.2941649-1-olivier.sobrie@silexinsight.com>
+ <20200525195606.2941649-4-olivier.sobrie@silexinsight.com>
+ <CAK8P3a3=HoQZuBoqyFgyde1X7BRfcH-GFQpu=8acOi_JhVU99g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525164615.14962-3-jonathan.albrieux@gmail.com>
+In-Reply-To: <CAK8P3a3=HoQZuBoqyFgyde1X7BRfcH-GFQpu=8acOi_JhVU99g@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, May 25, 2020 at 06:46:01PM +0200, Jonathan Albrieux wrote:
-> Add vdd-supply and vddio-supply support.
-> Add mount-matrix support.
+On Mon, May 25, 2020 at 10:28:46PM +0200, Arnd Bergmann wrote:
+> On Mon, May 25, 2020 at 10:07 PM Olivier Sobrie
+> <olivier.sobrie@silexinsight.com> wrote:
+> >
+> > Silex insight BA431 is an IP designed to generate random numbers that
+> > can be integrated in various FPGA.
+> > This driver adds support for it through the hwrng interface.
+> >
+> > This driver is used in Silex Insight Viper OEM boards.
+> >
+> > Signed-off-by: Olivier Sobrie <olivier.sobrie@silexinsight.com>
+> > Signed-off-by: Waleed Ziad <waleed94ziad@gmail.com>
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../bindings/iio/imu/bosch,bmi160.yaml           | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> The driver looks good to me.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> index 0d0ef84e22b9..cfe40dbcd723 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> +++ b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> @@ -37,6 +37,17 @@ properties:
->        set if the specified interrupt pin should be configured as
->        open drain. If not set, defaults to push-pull.
->  
-> +  vdd-supply:
-> +    maxItems: 1
+> Acked-by: Arnd Bergmann  <arnd@arndb.de>
+> 
+> >  drivers/char/hw_random/Kconfig     |  10 ++
+> >  drivers/char/hw_random/Makefile    |   1 +
+> >  drivers/char/hw_random/ba431-rng.c | 240 +++++++++++++++++++++++++++++
+> 
+> I wonder if we should move drivers/char/hw_random to its own top-level drivers
+> subsystem outside of drivers/char. It seems to be growing steadily and is larger
+> than a lot of other subsystems with currently 34 drivers in there.
+> 
+> Not your problem though.
+> 
+> > +       /* Wait until the state changed */
+> > +       for (i = 0; i < BA431_RESET_READ_STATUS_RETRIES; ++i) {
+> > +               state = ba431_trng_get_state(ba431);
+> > +               if (state >= BA431_STATE_STARTUP)
+> > +                       break;
+> > +
+> > +               udelay(BA431_RESET_READ_STATUS_INTERVAL);
+> > +       }
+> 
+> Looking for something to improve, I noticed that this loop can take over
+> a millisecond to time out, and it always runs in non-atomic context.
+> It may be better to use usleep_range() than udelay().
 
-Supplies are always a single item, so don't need this.
+Or better yet, use the register polling helpers.
 
-> +    description: provide VDD power to the sensor.
-> +
-> +  vddio-supply:
-> +    maxItems: 1
-> +    description: provide VDD IO power to the sensor.
-> +
-> +  mount-matrix:
-> +    description: an optional 3x3 mounting rotation matrix
-> +
->  required:
->    - compatible
->    - reg
-> @@ -52,9 +63,14 @@ examples:
->          bmi160@68 {
->                  compatible = "bosch,bmi160";
->                  reg = <0x68>;
-> +                vdd-supply = <&pm8916_l17>;
-> +                vddio-supply = <&pm8916_l6>;
->                  interrupt-parent = <&gpio4>;
->                  interrupts = <12 IRQ_TYPE_EDGE_RISING>;
->                  interrupt-names = "INT1";
-> +                mount-matrix = "0", "1", "0",
-> +                               "-1", "0", "0",
-> +                               "0", "0", "1";
->          };
->      };
->    - |
-> -- 
-> 2.17.1
-> 
+Rob
