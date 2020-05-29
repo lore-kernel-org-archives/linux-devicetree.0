@@ -2,139 +2,195 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A853DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 06:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9966BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 06:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D6E208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 06:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xuJ+Uuw9"
+	by mail.kernel.org (Postfix) with ESMTP id 7B92F20723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 06:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725777AbgE2G1P (ORCPT
+        id S1725913AbgE2Gb6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 02:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgE2G1O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 02:27:14 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4EDC03E969
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 23:27:13 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id m1so932343pgk.1
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 23:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8/ekMaS9IDMDDdO/sPjkKucuBStRVoSIxnyYCbHSwBw=;
-        b=xuJ+Uuw9Ef07VpZZJck5BRrLLjK9JUuGHxlAQMLSxIjTqkhmVP7njEqLYb1QUHUbI6
-         YeEoXUANw66Q1BMpHw3jD8+2VxIExgI3p03OEXFYYA5WI8lnezYaIC/HTyYi/aIF6IpF
-         v/2v6nXdZ1Zuop9oOlIYtDz9JgyMLMOVhriSUoUO7iXgec7rsfGmv7p8bZjAeMeUn8cw
-         dgz2ICNWSF+IQbpcF7XUQnVZWOV67wajBxaa7A/i0zH7Byx2+pEjLTMgTGHO/PU7Qq8t
-         ZPSw3dfacj5WgyYRIVbn1O0AewUkjv7yJppEBRyvy2zOowjlnbwGymhMCkBBtb+tQmCH
-         dYAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8/ekMaS9IDMDDdO/sPjkKucuBStRVoSIxnyYCbHSwBw=;
-        b=qc4A9SjoLQ1anguou9UVabYcVDQ8dZHQQcrFSkHx+wZ4JqFR8z7SAfyuPSpVoXHV2b
-         GSdwoc7kAeDXLjRnjAbgkZcDapooPB+NDH6mF7pA2n+QXiNYJJDaMiXlG7GV0MP2ANrc
-         MdCFyXo7CTSGXoT0ncmWXU2FhIVHBrAG8iJk/vjOPDnuPpd0kXy7oW9thC1BmgI1iTIe
-         cpXQ1jP97w+TT2HlNIMD6jICiN5H6en5UhsGNorRNp3T2WkAQlfFwdrSFUH0YRH+J0bz
-         cdahfhgvL2Mb5CVtyL3cT4mKpHgHH85kezFYtecr3gWqSsMiMSjNPJ8ioXHvzMcNUyQB
-         q6kg==
-X-Gm-Message-State: AOAM531t772iLCfDHVZGWckH3HKTaWrwRYERBHW05ENvlOnVdwiS9Ks1
-        NqolKXzTy8WkEfYE4FUQFjkU7w==
-X-Google-Smtp-Source: ABdhPJxam8QRdVRuBgKKTLUtj/XnW3H2lWM3XSsyQFA/l5gFf4bV/xqthW3fpc0DOB/QJ02i9EnAew==
-X-Received: by 2002:a63:d318:: with SMTP id b24mr6284198pgg.403.1590733632609;
-        Thu, 28 May 2020 23:27:12 -0700 (PDT)
-Received: from localhost ([122.172.60.59])
-        by smtp.gmail.com with ESMTPSA id g27sm6532578pfr.51.2020.05.28.23.27.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 May 2020 23:27:11 -0700 (PDT)
-Date:   Fri, 29 May 2020 11:57:09 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200529062709.tjmlguu5ovhk4t7o@vireshk-i7>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200528192005.GA494874@bogus>
- <CABb+yY3KKpDHTsTBescW_rXmqmLzJh-Ogaotk2n=nYRkfHy2cg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY3KKpDHTsTBescW_rXmqmLzJh-Ogaotk2n=nYRkfHy2cg@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        Fri, 29 May 2020 02:31:58 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:43250 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbgE2Gb5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 02:31:57 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 19940200087;
+        Fri, 29 May 2020 08:31:55 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 985C9200DAC;
+        Fri, 29 May 2020 08:31:49 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DBC31402A7;
+        Fri, 29 May 2020 14:31:42 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, aisheng.dong@nxp.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: clock: Convert i.MX8QXP LPCG to json-schema
+Date:   Fri, 29 May 2020 14:21:39 +0800
+Message-Id: <1590733299-12051-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29-05-20, 00:20, Jassi Brar wrote:
-> The fact that all these bits are backed by one physical signal makes
+Convert the i.MX8QXP LPCG binding to DT schema format using json-schema.
 
-I believe that within the IP itself, there must be 32 signals, just
-that only one comes out of it all OR'd together. Maybe that can be
-verified by writing 0x01 to it multiple times and it should generate
-the interrupt only once on the first instance. i.e. writing 1 to any
-big again won't raise the interrupt.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/clock/imx8qxp-lpcg.txt     | 51 ---------------
+ .../devicetree/bindings/clock/imx8qxp-lpcg.yaml    | 72 ++++++++++++++++++++++
+ 2 files changed, 72 insertions(+), 51 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml
 
-> the firmware implement its own mux-demux'ing scheme.
-
-Similar to how the interrupt controllers do it in the kernel, they
-receive a single interrupt and then go check its registers/bits to see
-which peripheral raised it.
-
-> So the choice was
-> between demux and single signal at a time.
-
-Well, the demux is on the firmware side and the kernel may not need to
-worry about that, let the platform do it ?
-
-> Had there been one signal
-> per bit, the implementation would have definitely been 'efficient'.
-
-I will say 'More efficient', it will still be 'efficient' if we
-implement doorbell.
-
-> And the first platform the driver was developed on, required message
-> passing over the registers.
-
-I think it was correctly done at that point of time. No doubt about
-that.
-
-> So now my approach is to make do with what
-> we have...unless it shows in numbers.
-
-ARM's office is closed (lock-down) and he doesn't have remote access
-to the board and so was unable to do it until now.
-
-Numbers or no numbers, I don't think there is a question here about
-what is the most efficient way of doing it. Doing it in parallel (when
-the hardware allows) is surely going to be more efficient. Sending a
-signal, getting it processed by the firmware, doing something with it
-and then sending an Ack and that being received by kernel will take
-time. Why make a queue on the kernel side when we don't have to. :)
-
-> Anyways, if it comes to that, I'd rather a separate "doorbell' driver
-> than a driver working in two s/w modes.
-
-I think that would be fine with everyone, if you are fine with that
-now (based on plain logic and no numbers), maybe we can get that done
-now?
-
+diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+deleted file mode 100644
+index 965cfa4..0000000
+--- a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
++++ /dev/null
+@@ -1,51 +0,0 @@
+-* NXP i.MX8QXP LPCG (Low-Power Clock Gating) Clock bindings
+-
+-The Low-Power Clock Gate (LPCG) modules contain a local programming
+-model to control the clock gates for the peripherals. An LPCG module
+-is used to locally gate the clocks for the associated peripheral.
+-
+-Note:
+-This level of clock gating is provided after the clocks are generated
+-by the SCU resources and clock controls. Thus even if the clock is
+-enabled by these control bits, it might still not be running based
+-on the base resource.
+-
+-Required properties:
+-- compatible:	Should be one of:
+-		  "fsl,imx8qxp-lpcg-adma",
+-		  "fsl,imx8qxp-lpcg-conn",
+-		  "fsl,imx8qxp-lpcg-dc",
+-		  "fsl,imx8qxp-lpcg-dsp",
+-		  "fsl,imx8qxp-lpcg-gpu",
+-		  "fsl,imx8qxp-lpcg-hsio",
+-		  "fsl,imx8qxp-lpcg-img",
+-		  "fsl,imx8qxp-lpcg-lsio",
+-		  "fsl,imx8qxp-lpcg-vpu"
+-- reg:		Address and length of the register set
+-- #clock-cells:	Should be <1>
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.
+-See the full list of clock IDs from:
+-include/dt-bindings/clock/imx8qxp-clock.h
+-
+-Examples:
+-
+-#include <dt-bindings/clock/imx8qxp-clock.h>
+-
+-conn_lpcg: clock-controller@5b200000 {
+-	compatible = "fsl,imx8qxp-lpcg-conn";
+-	reg = <0x5b200000 0xb0000>;
+-	#clock-cells = <1>;
+-};
+-
+-usdhc1: mmc@5b010000 {
+-	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+-	interrupt-parent = <&gic>;
+-	interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+-	reg = <0x5b010000 0x10000>;
+-	clocks = <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_IPG_CLK>,
+-		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_PER_CLK>,
+-		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_HCLK>;
+-	clock-names = "ipg", "per", "ahb";
+-};
+diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml
+new file mode 100644
+index 0000000..d5b6825
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/imx8qxp-lpcg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP i.MX8QXP LPCG (Low-Power Clock Gating) Clock bindings
++
++maintainers:
++  - Aisheng Dong <aisheng.dong@nxp.com>
++
++description: |
++  The Low-Power Clock Gate (LPCG) modules contain a local programming
++  model to control the clock gates for the peripherals. An LPCG module
++  is used to locally gate the clocks for the associated peripheral.
++
++  This level of clock gating is provided after the clocks are generated
++  by the SCU resources and clock controls. Thus even if the clock is
++  enabled by these control bits, it might still not be running based
++  on the base resource.
++
++  The clock consumer should specify the desired clock by having the clock
++  ID in its "clocks" phandle cell. See the full list of clock IDs from:
++  include/dt-bindings/clock/imx8-clock.h
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx8qxp-lpcg-adma
++      - fsl,imx8qxp-lpcg-conn
++      - fsl,imx8qxp-lpcg-dc
++      - fsl,imx8qxp-lpcg-dsp
++      - fsl,imx8qxp-lpcg-gpu
++      - fsl,imx8qxp-lpcg-hsio
++      - fsl,imx8qxp-lpcg-img
++      - fsl,imx8qxp-lpcg-lsio
++      - fsl,imx8qxp-lpcg-vpu
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx8-clock.h>
++    #include <dt-bindings/firmware/imx/rsrc.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    clock-controller@5b200000 {
++        compatible = "fsl,imx8qxp-lpcg-conn";
++        reg = <0x5b200000 0xb0000>;
++        #clock-cells = <1>;
++    };
++
++    mmc@5b010000 {
++        compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
++        interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
++        reg = <0x5b010000 0x10000>;
++        clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
++                 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
++                 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
++        clock-names = "ipg", "per", "ahb";
++        power-domains = <&pd IMX_SC_R_SDHC_0>;
++        status = "disabled";
++    };
 -- 
-viresh
+2.7.4
+
