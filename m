@@ -2,95 +2,165 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832BEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2108C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57668207D4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590780440;
-	bh=p6+yXBaxuRr6UtrPjsePvXMahSM0RC5gMAKoncfMd2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XGEGSEcJVNQkcof/du/EwhNiZzswik/8MWh/QbPcjZRaB3a2f+gPPXP/Q/cFTBKSC
-	 CePB/LNGhLZqmpL2vj84V7tNXgM9Csk28q4O9P0o/jWtl1r5tmRO3HRm2v75IZXr2N
-	 7t5pgoTpiQQSCiMwObMNEjmsrLRUDp4PzZseWzdQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8D0C020810
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RfvfsSBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgE2T1U (ORCPT
+        id S1727851AbgE2T26 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 15:27:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40086 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2T1T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:27:19 -0400
-Received: by mail-io1-f67.google.com with SMTP id q8so543999iow.7;
-        Fri, 29 May 2020 12:27:17 -0700 (PDT)
+        Fri, 29 May 2020 15:28:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2T25 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:28:57 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60A10C03E969
+        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 12:28:57 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id f89so1633096qva.3
+        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 12:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZUPYQ00DC7rLfUUH3JDdCSp5GxeLlc9fJl+uaK0OPX4=;
+        b=RfvfsSBALcYZ0d8tPv24jfR4X6Co2E9cs1V4RP9DtRLRpjXo0sDiD0kSlb/W54ZkKi
+         JmLGrhhXYBaTbg07Osd/4G4uptniWI3z6wUYmLhqoD4grEHE3SUPipuMuu6e35Y2yLFG
+         cA+vnVcWloaPASoR1eJ9otsbdhxrty87SyjSw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/aw5rjkKZ1aNLtzNBPRgdXUzA/GNRGygjmxINK2X5fA=;
-        b=eV/Mi4WwwWa3DWlq519I98Q3928vrnTRASTCn849XMHBKmAXmumMefZvMbmQ/c39J2
-         mf15nHjRuncP+U/dafc0XBoFcS+sA6WTfVWFqdmrJoLKjsC80+1/fv/d4aCW6vat1P2h
-         6PsMwmR0M/xEri9+CfvHlmp/C4eJsbAsYDVNe81nNSjhp/Lnk9CHyGz9/8E9q6UWZ2wu
-         IEZx6DstJbcZkrgMZ4GBu/+KB6G9Yud7y6srdniKgsUgh/15Tdt/qFNnoDC1cqBfMQh5
-         +ZXHfkw2eqG/8OSsxx7SjKLn5iImW42VvUlWe6ef4NchAsQc+srkhgLKYALbMy3uRNz0
-         misA==
-X-Gm-Message-State: AOAM531ElIaDi2EQtygdQiKcgBwmU9LaQ9yfACV5r4ho6Jg+glTbercb
-        lDEWp9KgWYGNGSVaQ2zGlw==
-X-Google-Smtp-Source: ABdhPJzI+XOVZoeOXsD31yjOKfbl4d6VkVa2jbPtpd2RLN5CANUU/Kj27igKjwRkwCJ3YG/2Z4DjRQ==
-X-Received: by 2002:a02:90cd:: with SMTP id c13mr8587847jag.83.1590780437502;
-        Fri, 29 May 2020 12:27:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v76sm5436198ill.73.2020.05.29.12.27.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:27:16 -0700 (PDT)
-Received: (nullmailer pid 2799831 invoked by uid 1000);
-        Fri, 29 May 2020 19:27:15 -0000
-Date:   Fri, 29 May 2020 13:27:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Pedro Tsai <pedro.tsai@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v2] dt-bindings: net: rename the bindings
- document for MediaTek STAR EMAC
-Message-ID: <20200529192715.GA2799386@bogus>
-References: <20200528135902.14041-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZUPYQ00DC7rLfUUH3JDdCSp5GxeLlc9fJl+uaK0OPX4=;
+        b=cdaGWiW50bg7lTryifG0Nh2InfYyEPLYuqj/R4jw7J8dfD9+R+QYXbMtVcaBi8ql3A
+         3rCKzoKmY50XcSTq9IxPVJOpWUJl/Y6p1vc8Y91nRGLUL9AyDkpgARA2OWO1zlEovaSX
+         clacdGTn2z+F7NWmK7UPm1ZXOIx3WP47s5hsxt3aTQzPRkmXi2f1PIlfXPc3ka8uKjkK
+         B12ew0cxBzmOf38c54t66Z5CiDsz0YxUriw76Wylz6Ap423mx/4uqrUTe66cniFNmcvU
+         9PPepq5CVPTPoc5IF7RVnMfPAG405QuAKee5ZG2JT/pl/D9DEW9Grc3kJH0L3brgieVY
+         jleA==
+X-Gm-Message-State: AOAM532TUyUIPonyIQvzKYzZaFse2OvHH0cS6XmdvGW9yag75ckN8MVk
+        xQFP+QB2x7MBNmYlh9e1ckQgXU2dx8KvNlosg04K0g==
+X-Google-Smtp-Source: ABdhPJxGEsWvHkXVC4qHYX1mdaN4dvQje9KW0A7Iz6PDk8LmuJEe8MjD7kHmcAxLVFFztzfpDlCD2K6MwpT9eCIitJQ=
+X-Received: by 2002:a05:6214:a0c:: with SMTP id dw12mr10216031qvb.219.1590780536388;
+ Fri, 29 May 2020 12:28:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528135902.14041-1-brgl@bgdev.pl>
+References: <20200519214604.180036-1-pmalani@chromium.org>
+In-Reply-To: <20200519214604.180036-1-pmalani@chromium.org>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Fri, 29 May 2020 12:28:46 -0700
+Message-ID: <CACeCKadZGv+j8fg0R3R9A48LDB6nKj1+mj9pO4bV4=LrMvt-hw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 15:59:02 +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The driver itself was renamed before getting merged into mainline, but
-> the binding document kept the old name. This makes both names consistent.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
-> v1 -> v2:
-> - update the id field as well
-> 
->  .../net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml}      | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml} (96%)
-> 
+Hi Rob,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Would you prefer these switches to be defined in the
+usb-connector.yaml bindings file?
+If there are no other concerns, I can push a fresh version of the
+patch with the properties defined in usb-connector.yaml.
+
+Thanks,
+
+On Tue, May 19, 2020 at 2:46 PM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Add properties for mode, orientation and USB data role switches for
+> Type C connectors. When available, these will allow the Type C connector
+> class port driver to configure the various switches according to USB PD
+> information (like orientation, alt mode etc.) provided by the Chrome OS
+> EC controller.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Acked-by: Benson Leung <bleung@chromium.org>
+> ---
+>
+> Changes in v3:
+> - Fixed Acked-by tag typo.
+>
+> Changes in v2:
+> - Added more text to the switch descriptions, explaining their purpose,
+>   and relation to the Type C connector class framework.
+>
+>  .../bindings/chrome/google,cros-ec-typec.yaml | 40 ++++++++++++++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> index 6d7396ab8bee..800c005a0e44 100644
+> --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -21,7 +21,34 @@ properties:
+>      const: google,cros-ec-typec
+>
+>    connector:
+> -    $ref: /schemas/connector/usb-connector.yaml#
+> +    allOf:
+> +      - $ref: /schemas/connector/usb-connector.yaml#
+> +      - type: object
+> +        properties:
+> +          mode-switch:
+> +            description: Reference to a DT node for the USB Type C Multiplexer
+> +              for this connector. This switch controls the data lines routing
+> +              for this connector for various operation modes, including
+> +              Alternate Modes. This switch is assumed registered with the Type C
+> +              connector class framework by its driver. The Type C connector
+> +              class framework assumes that the mode switch property uses this
+> +              name.
+> +
+> +          orientation-switch:
+> +            description: Reference to a DT node for the USB Type C orientation
+> +              switch for this connector. This switch controls routing the
+> +              correct data pairs depending on the cable plug orientation from
+> +              this connector to the USB / Alternate Mode controllers. This
+> +              switch is assumed registered with the Type C connector class
+> +              framework by its driver. The Type C connector class framework
+> +              assumes that the orientation switch property uses this name.
+> +
+> +          usb-role-switch:
+> +            description: Reference to a DT node for the USB Data role switch
+> +              for this connector. This switch is assumed registered with the
+> +              Type C connector class framework by its driver. The Type C
+> +              connector class framework assumes that the USB role switch
+> +              property uses this name.
+>
+>  required:
+>    - compatible
+> @@ -49,6 +76,17 @@ examples:
+>              data-role = "dual";
+>              try-power-role = "source";
+>            };
+> +
+> +          connector@1 {
+> +            compatible = "usb-c-connector";
+> +            reg = <1>;
+> +            power-role = "dual";
+> +            data-role = "host";
+> +            try-power-role = "source";
+> +            mode-switch = <&typec_mux>;
+> +            orientation-switch = <&typec_orientation_switch>;
+> +            usb-role-switch = <&typec_mux>;
+> +          };
+>          };
+>        };
+>      };
+> --
+> 2.26.2.761.g0e0b3e54be-goog
+>
