@@ -2,44 +2,45 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00336C433E8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD31C433E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D57792071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D9D2071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgE2OlC (ORCPT
+        id S1727112AbgE2Olg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 10:41:02 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48826 "EHLO
+        Fri, 29 May 2020 10:41:36 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48900 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgE2OlC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 10:41:02 -0400
+        with ESMTP id S1727097AbgE2OlF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 10:41:05 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B45488030772;
-        Fri, 29 May 2020 14:40:59 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C93A08030778;
+        Fri, 29 May 2020 14:41:02 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iTst7I1AReSh; Fri, 29 May 2020 17:40:59 +0300 (MSK)
+        with ESMTP id 3OtGVrrvXh79; Fri, 29 May 2020 17:41:02 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 02/11] dt-bindings: dma: dw: Add max burst transaction length property
-Date:   Fri, 29 May 2020 17:40:45 +0300
-Message-ID: <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 06/11] dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
+Date:   Fri, 29 May 2020 17:40:49 +0300
+Message-ID: <20200529144054.4251-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -51,57 +52,72 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This array property is used to indicate the maximum burst transaction
-length supported by each DMA channel.
+Full multi-block transfers functionality is enabled in DW DMA
+controller only if CHx_MULTI_BLK_EN is set. But LLP-based transfers
+can be executed only if hardcode channel x LLP register feature isn't
+enabled, which can be switched on at the IP core synthesis for
+optimization. If it's enabled then the LLP register is hardcoded to
+zero, so the blocks chaining based on the LLPs is unsupported.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
 ---
 
 Changelog v2:
 - Rearrange SoBs.
-- Move $ref to the root level of the properties. So do with the
-  constraints.
-- Set default max-burst-len to 256 TR-WIDTH words.
+- Add comment about why hardware accelerated LLP list support depends
+  on both MBLK_EN and HC_LLP configs setting.
+- Use explicit bits state comparison operator.
 
 Changelog v3:
-- Add more details into the property description about what limitations
-  snps,max-burst-len defines.
+- Move the patch to the head of the series.
 ---
- .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/dma/dw/core.c | 11 ++++++++++-
+ drivers/dma/dw/regs.h |  1 +
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-index e7611840a7cf..20870f5c14dd 100644
---- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-+++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-@@ -120,6 +120,21 @@ properties:
-         enum: [0, 1]
-         default: 1
- 
-+  snps,max-burst-len:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description: |
-+      Maximum length of the burst transactions supported by the controller.
-+      This property defines the upper limit of the run-time burst setting
-+      (CTLx.SRC_MSIZE/CTLx.DST_MSIZE fields) so the allowed burst length
-+      will be from 1 to max-burst-len words. It's an array property with one
-+      cell per channel in the units determined by the value set in the
-+      CTLx.SRC_TR_WIDTH/CTLx.DST_TR_WIDTH fields (data width).
-+    items:
-+      maxItems: 8
-+      items:
-+        enum: [4, 8, 16, 32, 64, 128, 256]
-+        default: 256
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 21cb2a58dbd2..33e99d95b3d3 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -1178,8 +1178,17 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 			 */
+ 			dwc->block_size =
+ 				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
 +
-   snps,dma-protection-control:
-     $ref: /schemas/types.yaml#definitions/uint32
-     description: |
++			/*
++			 * According to the DW DMA databook the true scatter-
++			 * gether LLPs aren't available if either multi-block
++			 * config is disabled (CHx_MULTI_BLK_EN == 0) or the
++			 * LLP register is hard-coded to zeros
++			 * (CHx_HC_LLP == 1).
++			 */
+ 			dwc->nollp =
+-				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
++				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
++				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
+ 		} else {
+ 			dwc->block_size = pdata->block_size;
+ 			dwc->nollp = !pdata->multi_block[i];
+diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
+index 3fce66ecee7a..1ab840b06e79 100644
+--- a/drivers/dma/dw/regs.h
++++ b/drivers/dma/dw/regs.h
+@@ -125,6 +125,7 @@ struct dw_dma_regs {
+ 
+ /* Bitfields in DWC_PARAMS */
+ #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
++#define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
+ 
+ /* bursts size */
+ enum dw_dma_msize {
 -- 
 2.26.2
 
