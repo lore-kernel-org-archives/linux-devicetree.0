@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C480BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965D3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA8821475
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A293208B8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590772726;
-	bh=4mxOlAMlrg9LOuBVaJ3Lv63Dwxs9nV/mEb4tMFkxJgw=;
+	s=default; t=1590772746;
+	bh=VHVB3ZEMfoIWVXNsm9ILDnKy8ezRAfAuuDIi/779PI8=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=zqnV7Guf8BJWZJtdhTdTw1OS1MLV2y6f2I+Uzi9uy0edL3EySguMpECjtR4mt64ax
-	 /qRKcGi3xeWFzYfn2sIplrdgL7HcpMvWLenKU0EvaAQOlWi9RRDUPIIr58rtVm7Rca
-	 TJQFzTeS2KI8UTjga92tUsjYPkYZF65LXe3xD1xg=
+	b=0tlBhluCLidSJ6TFQ1z44HtAVcnuv50y2Z4ll6as1e2OsypUhi8jaC8NPwO8vm7Fj
+	 VxelKCuMEbIuAjbrotUhsGYiiCO+NhHSR3aJhzY9N0U8/cHy2Rij4BIsdKBkpw4rGo
+	 bBRIB5c+zk/NSwmRbKVXPlBd52XB9wIOnMcV1ng8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgE2RSn (ORCPT
+        id S1727023AbgE2RTF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 13:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37708 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 13:19:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgE2RSn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 13:18:43 -0400
+        id S1725839AbgE2RTF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 13:19:05 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B9BD2074D;
-        Fri, 29 May 2020 17:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B54B2074D;
+        Fri, 29 May 2020 17:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590772723;
-        bh=4mxOlAMlrg9LOuBVaJ3Lv63Dwxs9nV/mEb4tMFkxJgw=;
+        s=default; t=1590772745;
+        bh=VHVB3ZEMfoIWVXNsm9ILDnKy8ezRAfAuuDIi/779PI8=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=yDnEn002K6KwchpFjotldajIe+XsklIQxLjooaQAfTmiJQaLFkNQpsnnXxrRWA/hM
-         we6k79QKxDHizz+AdRymGN1R4SX+nVldVnWGN0jL4gdZIDmQpv9R51nr97O6mzSkHx
-         cJJ5IoZnE5uctXhjLWv0GhyoTFmawqiU01cSQ1i8=
-Date:   Fri, 29 May 2020 18:18:39 +0100
+        b=Hkc+ylfCfo/AEO4hHSf9XaKOsw1Py/vnQqh9Dt4ITxfxh3RF414V2yZ2GwboWfluz
+         yJMbB1s6N8dEDqhtl5leOXb2KeFu+40XaHb0OChUWFrazUb621x65p9D3dLtiTRLOZ
+         eDAezfM2xGi2p1RQ3giv0loFCOp0n26XvRe0hFqY=
+Date:   Fri, 29 May 2020 18:19:01 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        liang.j.jin@ericsson.com, Sergey.Semin@baikalelectronics.ru,
+        Sergey.Semin@baikalelectronics.ru,
+        Liang Jin J <liang.j.jin@ericsson.com>,
         lars.povlsen@microchip.com, andriy.shevchenko@linux.intel.com,
         fancer.lancer@gmail.com, robh+dt@kernel.org
-In-Reply-To: <20200529155806.16758-1-dinguyen@kernel.org>
-References: <20200529155806.16758-1-dinguyen@kernel.org>
-Subject: Re: [PATCHv4 1/2] spi: dw: add reset control
-Message-Id: <159077271266.17043.7681179786954514180.b4-ty@kernel.org>
+In-Reply-To: <20200527204110.25676-1-dinguyen@kernel.org>
+References: <20200527204110.25676-1-dinguyen@kernel.org>
+Subject: Re: [PATCHv3 1/2] spi: dw: add reset control
+Message-Id: <159077271265.17043.9965324824608502053.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 May 2020 10:58:05 -0500, Dinh Nguyen wrote:
+On Wed, 27 May 2020 15:41:09 -0500, Dinh Nguyen wrote:
 > Add mechanism to get the reset control and deassert it in order to bring
 > the IP out of reset.
 
