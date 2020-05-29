@@ -2,115 +2,94 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961E7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA248C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E81206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B12206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DHHeolFj"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tfLXq4IV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390063AbgE2DGN (ORCPT
+        id S2388624AbgE2DGJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 23:06:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391657AbgE2DGL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 23:06:11 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A627C08C5C6
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 20:06:11 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d3so465723pln.1
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 20:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bRzfSDD2gaLEL9NamArGGrWpz6V8R9/pVHTMUKrxQJE=;
-        b=DHHeolFjNU7cZaU+lwwzEyqj5gapFR2dFMlkMSgH8vHBkxMTM95f1rHu6ULM5nTFUJ
-         tuo1lbyIY7yvtZ2x6xe7DFQdzhxpUaGV75thnsnTfCEyuZcInhpWnN1LRFUWqhRaseWZ
-         zhJUkfvbeNqv1NCXnUTeJf3NzcpVpxIDXBg2BSw7Bg3EvA1Ns+tOrsdGHLnz52gEIrXs
-         HJIx17Z2RgZkqwWTDi02xuJ4iJt2reyD+VVbsmQdi0M4vkjktTzmNCGQiGxIt2Lo3lQb
-         rS+nesSim3GW1TGB8tNmA5zjI1sPuGDRpybmOcTRNAUkrg4YL56/OIqEEmmh1Ex6KeK7
-         8dLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bRzfSDD2gaLEL9NamArGGrWpz6V8R9/pVHTMUKrxQJE=;
-        b=WK/maOH4+yr6YLocDyIZ8hw0TeY4k4VXM6XEP9G03UTQIRaPEmlnccLhHbQGCqmMKW
-         pWDisX7t0xxSZezhjF5IjjBSyrPrpGfjbAbVR15+4Q5gLTv3DSPMxK34JjwSWsg9bmr+
-         E/NLeAv10+cBjBxhni9PG7Fg1L2cuySraLWIMg6j2p4GQS6mzW5uNrOcDnEOFQ7db5GG
-         Ph1MlcWlTOPipsX5Nxa5WhWOe4ZCTW9YgwhqbnSabMS/wQYyNhFSdCNk/nt9IsS0JKPC
-         P//DnpUeWVcSTnxopbwU1GSH835QpCTYqsSyCFBx0u+0gNGXdn9h33wvbeJO6IjxJwaM
-         HqRA==
-X-Gm-Message-State: AOAM533vMm4WV3+ioq/6lvA1ywU3kcqVMpn0i5Yl1BH3aYPOZ6V4wBwH
-        7wEdjiKoVkcqakA/OJqLs12PTUTmQg4=
-X-Google-Smtp-Source: ABdhPJyJLX0xumL3rRiNlPe2G72WD6ImRxaUkIb2ZjUungccspNLe+5a7wm8x2T/r2NpdM1NjjIbrw==
-X-Received: by 2002:a17:90b:ec4:: with SMTP id gz4mr7444586pjb.36.1590721570961;
-        Thu, 28 May 2020 20:06:10 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f18sm5241435pga.75.2020.05.28.20.06.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 20:06:10 -0700 (PDT)
-Date:   Thu, 28 May 2020 20:05:05 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
- dts
-Message-ID: <20200529030505.GY279327@builder.lan>
-References: <20200524023815.21789-1-jonathan@marek.ca>
+        Thu, 28 May 2020 23:06:09 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:14673 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389650AbgE2DGH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 23:06:07 -0400
+X-UUID: 7a69bbd5323748a7ac47d22a87cdce20-20200529
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=2DSr7ykOqmhgi2+WieyVzdmY00Ec4k69EeBwPT4JtEE=;
+        b=tfLXq4IV/3yMKhXLcFLsUIHaTF17jMU6W6B+2m+z4rfmf4qzysh22b4OXgVvY+yRXIX/6mDPw6G7B2zgtT1wLzXhS1c8bNHtY/VJSSqp6V0rk7GjoY3sdS7AqThypoxdDVRuE2RS/JSG5myFwIT2b1VXk79AbouEQLf/5DD19No=;
+X-UUID: 7a69bbd5323748a7ac47d22a87cdce20-20200529
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1930201207; Fri, 29 May 2020 11:06:00 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 29 May 2020 11:05:54 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 29 May 2020 11:05:58 +0800
+Message-ID: <1590721559.23866.0.camel@mtkswgap22>
+Subject: Re: [PATCH v2 0/4] Spilt PCIe node to comply with hardware design
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     <chuanjia.liu@mediatek.com>
+CC:     <robh+dt@kernel.org>, <matthias.bgg@gmail.com>,
+        <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <bhelgaas@google.com>,
+        <jianjun.wang@mediatek.com>, <yong.wu@mediatek.com>,
+        <srv_heupstream@mediatek.com>
+Date:   Fri, 29 May 2020 11:05:59 +0800
+In-Reply-To: <20200528061648.32078-1-chuanjia.liu@mediatek.com>
+References: <20200528061648.32078-1-chuanjia.liu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200524023815.21789-1-jonathan@marek.ca>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
+T24gVGh1LCAyMDIwLTA1LTI4IGF0IDE0OjE2ICswODAwLCBjaHVhbmppYS5saXVAbWVkaWF0ZWsu
+Y29tIHdyb3RlOg0KPiBUaGVyZSBhcmUgdHdvIGluZGVwZW5kZW50IFBDSWUgY29udHJvbGxlcnMg
+aW4gTVQyNzEyL01UNzYyMiBwbGF0Zm9ybSwNCj4gYW5kIGVhY2ggb2YgdGhlbSBzaG91bGQgY29u
+dGFpbiBhbiBpbmRlcGVuZGVudCBNU0kgZG9tYWluLg0KPiANCj4gSW4gY3VycmVudCBhcmNoaXRl
+Y3R1cmUsIE1TSSBkb21haW4gd2lsbCBiZSBpbmhlcml0ZWQgZnJvbSB0aGUgcm9vdA0KPiBicmlk
+Z2UsIGFuZCBhbGwgb2YgdGhlIGRldmljZXMgd2lsbCBzaGFyZSB0aGUgc2FtZSBNU0kgZG9tYWlu
+Lg0KPiBIZW5jZSB0aGF0LCB0aGUgUENJZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVybHkg
+aWYgdGhlIGlycSBudW1iZXINCj4gd2hpY2ggcmVxdWlyZWQgaXMgbW9yZSB0aGFuIDMyLg0KPiAN
+Cj4gU3BsaXQgdGhlIFBDSWUgbm9kZSBmb3IgTVQyNzEyL01UNzYyMiBwbGF0Zm9ybSB0byBmaXgg
+TVNJIGlzc3VlIGFuZA0KPiBjb21wbHkgd2l0aCB0aGUgaGFyZHdhcmUgZGVzaWduLg0KPiANCj4g
+Y2hhbmdlIG5vdGU6DQo+IHYyOiBjaGFuZ2UgdGhlIGFsbG9jYXRpb24gb2YgbXQyNzEyIFBDSWUg
+TU1JTyBzcGFjZSBkdWUgdG8gdGhlIGFsbGNhdGlvbg0KPiBzaXplIGlzIG5vdCByaWdodCBpbiB2
+MS4NCj4gDQo+IGNodWFuamlhLmxpdSAoNCk6DQo+ICAgZHQtYmluZGluZ3M6IFBDSTogTWVkaWF0
+ZWs6IFVwZGF0ZSBQQ0llIGJpbmRpbmcNCj4gICBQQ0k6IG1lZGlhdGVrOiBVc2UgcmVnbWFwIHRv
+IGdldCBzaGFyZWQgcGNpZS1jZmcgYmFzZQ0KPiAgIGFybTY0OiBkdHM6IG1lZGlhdGVrOiBTcGxp
+dCBQQ0llIG5vZGUgZm9yIE1UMjcxMi9NVDc2MjINCj4gICBBUk06IGR0czogbWVkaWF0ZWs6IFVw
+ZGF0ZSBtdDc2MjkgUENJZSBub2RlDQo+IA0KPiAgLi4uL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1w
+Y2llLWNmZy55YW1sICAgICAgIHwgIDM4ICsrKysrDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9wY2kvbWVkaWF0ZWstcGNpZS50eHQgfCAxNDQgKysrKysrKysrKystLS0tLS0tDQo+ICBhcmNo
+L2FybS9ib290L2R0cy9tdDc2MjktcmZiLmR0cyAgICAgICAgICAgICAgfCAgIDMgKy0NCj4gIGFy
+Y2gvYXJtL2Jvb3QvZHRzL210NzYyOS5kdHNpICAgICAgICAgICAgICAgICB8ICAyMyArLS0NCj4g
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQyNzEyZS5kdHNpICAgICB8ICA3NSArKysr
+Ky0tLS0NCj4gIC4uLi9kdHMvbWVkaWF0ZWsvbXQ3NjIyLWJhbmFuYXBpLWJwaS1yNjQuZHRzICB8
+ICAxNiArLQ0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDc2MjItcmZiMS5kdHMg
+IHwgICA2ICstDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NzYyMi5kdHNpICAg
+ICAgfCAgNjggKysrKysrLS0tDQo+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0
+ZWsuYyAgICAgICAgfCAgMjUgKystDQo+ICA5IGZpbGVzIGNoYW5nZWQsIDI1OCBpbnNlcnRpb25z
+KCspLCAxNDAgZGVsZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWNmZy55YW1sDQo+IA0KPiAt
+LQ0KPiAyLjE4LjANCj4gDQo+IA0KRm9yIHRoZSBzZXJpZXM6DQpBY2tlZC1ieTogUnlkZXIgTGVl
+IDxyeWRlci5sZWVAbWVkaWF0ZWsuY29tPg0K
 
-> Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
-> 
-> Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
-> few changes. Notably, the HDK865 dts has regulator config changed a bit based
-> on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
-
-Can you please elaborate on this discrepancy? I do remember seeing
-something odd when looking at this, but it seems like I didn't document
-it anywhere...
-
-Thanks,
-Bjorn
-
-> 
-> Jonathan Marek (6):
->   arm64: dts: qcom: sm8150: add apps_smmu node
->   arm64: dts: qcom: sm8250: add apps_smmu node
->   arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
->   arm64: dts: qcom: sm8250: Add USB and PHY device nodes
->   arm64: dts: qcom: add sm8150 hdk dts
->   arm64: dts: qcom: add sm8250 hdk dts
-> 
->  arch/arm64/boot/dts/qcom/Makefile       |   2 +
->  arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
->  arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
->  5 files changed, 1384 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
-> 
-> -- 
-> 2.26.1
-> 
