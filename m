@@ -2,81 +2,88 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77C4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60187C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6294206F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6E4206F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgE2NPh (ORCPT
+        id S1726792AbgE2NQK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 09:15:37 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44832 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgE2NPg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 09:15:36 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f18so1845827otq.11;
-        Fri, 29 May 2020 06:15:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=49RdcpXaSsv8n0+9Svc8c226Mooo3bw3+KfG0LmEHBg=;
-        b=N/8B3nmfPyKUn01oXLs9z0b92mBJrbXrib/7/m/pSOK8Xsn7yxBags2+mc5DXiBv/w
-         XSKq4crdXttV6Fe4f+GANyZvWgTiZqyZOkspMFUXtGqGdNkER/FPS7PidnQHvpGyHBlS
-         koHT4l9TlWup9VijCVemkaFu+f95GlQY583JcwRw//3TBsPxDXGP2p3rxB3ZXmEfiHkS
-         k9BJvibZNvqNLkA9c+ml2NikiABfTjx063KFydDgDdNmTvf6B2dDk/HDBfSNCjsPoxRx
-         VcmgLlxoaA/aDAFrb+Z44fr0Dp+fJHSi9EUBTMReFeYmKvzLK7RbX2viqEgeqSET51we
-         mfPA==
-X-Gm-Message-State: AOAM530TYdupHWnkYSwCoRTVa7T4ICpmZrKafT0Ac3Fuhk3st//6aJCW
-        cEbE7gZyr0dKeSglfcJWi17+bqTUXq/Qbk0rQsOcOQ==
-X-Google-Smtp-Source: ABdhPJy9r8uif0PDOCfxyGQ3SCUhIxSizUHgxywxMK8H5ulX1pmWMhohG7vyprf0iT6fNyV8tJ1FjRGIe/kvE6JlD04=
-X-Received: by 2002:a05:6830:1151:: with SMTP id x17mr6090773otq.250.1590758135755;
- Fri, 29 May 2020 06:15:35 -0700 (PDT)
+        Fri, 29 May 2020 09:16:10 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:49241 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgE2NQK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 09:16:10 -0400
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 94D42FF813;
+        Fri, 29 May 2020 13:16:03 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Weijie Gao <weijie.gao@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Julien Su <juliensu@mxic.com.tw>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v8 0/5] Preparation to the generic ECC engine abstraction
+Date:   Fri, 29 May 2020 15:15:57 +0200
+Message-Id: <20200529131602.21532-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590614320-30160-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590614320-30160-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 29 May 2020 15:15:24 +0200
-Message-ID: <CAMuHMdU5NgySkQoUy8KnUksEQ2a1GPQN0tk8jLXHxxwSqtnDew@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: dts: r8a7742: Add thermal device to DT
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> This patch instantiates the thermal sensor module with thermal-zone
-> support.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+This is a respin of the end of my previous series, just the patches which needed to be fixed.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+Changes in v8:
+* Split "Convert generic NAND bits to ECC framework" into several peaces:
+  > added two helpers
+  > converted SPI-NAND then raw-NAND.
+* Fixed a comment.
+* Used the _ooblayout suffix instead of _layout.
 
-Gr{oetje,eeting}s,
+Miquel Raynal (5):
+  mtd: nand: Convert generic NAND bits to use the ECC framework
+  mtd: rawnand: Hide the generic OOB layout objects behind helpers
+  mtd: rawnand: Write a compatibility layer
+  mtd: rawnand: Move generic OOB layouts to the ECC framework
+  mtd: rawnand: Move the user input parsing bits to the ECC framework
 
-                        Geert
+ drivers/mtd/nand/ecc.c                        | 314 +++++++++++++++
+ drivers/mtd/nand/raw/Kconfig                  |   1 +
+ drivers/mtd/nand/raw/arasan-nand-controller.c |   2 +-
+ drivers/mtd/nand/raw/atmel/nand-controller.c  |   5 +-
+ drivers/mtd/nand/raw/davinci_nand.c           |   3 +-
+ drivers/mtd/nand/raw/denali.c                 |   3 +
+ .../mtd/nand/raw/ingenic/ingenic_nand_drv.c   |   6 +-
+ drivers/mtd/nand/raw/nand_base.c              | 380 ++++--------------
+ drivers/mtd/nand/raw/nand_toshiba.c           |   2 +-
+ drivers/mtd/nand/raw/sunxi_nand.c             |   3 +-
+ drivers/mtd/nand/raw/tegra_nand.c             |   5 +-
+ drivers/mtd/nand/raw/vf610_nfc.c              |   2 +-
+ include/linux/mtd/nand.h                      |  23 +-
+ include/linux/mtd/rawnand.h                   |  17 +-
+ 14 files changed, 428 insertions(+), 338 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
