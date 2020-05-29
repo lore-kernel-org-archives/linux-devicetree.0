@@ -2,134 +2,96 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056F2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE74C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D943220776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EAF207D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 18:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590776022;
-	bh=AKZfwR0JxlHu3s1HVkgAARCa7UvkLMo2iNxmyl+SG28=;
+	s=default; t=1590776081;
+	bh=ymAIBEab5FPPSocmORa0t3x2q+8B8IbR04s9IZ3rwS8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iCXYelBrAM91ItONzanhtDJrSytUe1rpHl3xFDtt5U/gqOeB7JsZJMZmF77SmC5wX
-	 dtvgTAgPAq1SXvmk6lnuySDtbGYmNeY2kveC57iMnkEEL0TrKa9Ng6Pey7jsbXl8Sm
-	 pj6nQNy8tXwWS7JxU2C5MtKtoqSu3l8O4wyRUL3Q=
+	b=C/+84TdEOMHGzsbzD/qFW7Hyp9rFYjKrFwh1prIYUVF7fH3TjLRtAJoiHgKr/pW2J
+	 wMqHOU0aSSTSKwHJ95Yz44dOKqdLoalInPBNN+snCkykgge6dOpMNzXSB6I5AxPQLG
+	 FVv0HrNfg0aMkabWioYQN7vhxxhHtDJG5RGZnNe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgE2SNm (ORCPT
+        id S1726924AbgE2SOk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 14:13:42 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37039 "EHLO
+        Fri, 29 May 2020 14:14:40 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41013 "EHLO
         mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2SNl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 14:13:41 -0400
-Received: by mail-il1-f193.google.com with SMTP id r2so3408551ila.4;
-        Fri, 29 May 2020 11:13:41 -0700 (PDT)
+        with ESMTP id S1725839AbgE2SOk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 14:14:40 -0400
+Received: by mail-il1-f193.google.com with SMTP id d1so3381527ila.8;
+        Fri, 29 May 2020 11:14:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=aRBnenMFveSAABdwlROP/FvdOi6pos1MRvJer5gJKo8=;
-        b=N1eI2QxLX3cf32YTIZjABQ7XNWHMFsKWSy5ANpfndBGWwagRpX8dASVBY7b4ajLpnW
-         D+TQ+MZwcNjhS1seiMODaniq1IaRh7boiR7+/LEGOMjiDRamwg/yVa2Z50XaoLJiiFRH
-         DFIG4WAehP8gLlFy1mD0c0W44LfFkhpXf3w8f5ocQqJA2LtO/DcG6A6m2+Kitq83BqQe
-         LrLl0tVEQ5IKe5BToTbiN2Ju7w5hJIdykHzFPlVRZE+Hwu+Ezko6K+7478wvszfoTr97
-         mxWDTLV+T5+1RWJUVNc2GA6E/+BB8/EiK5dOzwAip0axUs/+FbhR9f5dODZmqZWCV8qq
-         YGhw==
-X-Gm-Message-State: AOAM533jIf2LExfJNOEeagr2prIlil9HfZNmHGZKlDYXwavX9YIXTmJe
-        f0ENtcrbU2ivjKZAnjtjSw==
-X-Google-Smtp-Source: ABdhPJx2nW8lDxavRSJmbF0k3z1CkhwQPOmSKpswzKd6H4iHfuG5Z9SNcWxYWDtEg0wux3hPuBSakA==
-X-Received: by 2002:a92:d34b:: with SMTP id a11mr8638435ilh.180.1590776020832;
-        Fri, 29 May 2020 11:13:40 -0700 (PDT)
+        bh=cpRQ/sE4FwRCuliRnokEgxqnFdsexjORBq+C6UB3EhI=;
+        b=kz+WIsIP8Rguby+Po0t3vRSw3BU3rIWD8ZXEMDEBott5BQPhLpsG8dCeiWBq0ko7ow
+         JvYJZ/pXszhBcfh5rkyVEdUb1ZuPNtldwjupuqOvHNk7NlqwD4GPCuLDIeeT0RyrtcfG
+         ZAwP9C2QswEiBIMLJo8bFl0MqpQk4DyCHHUV7ehgEsUg0fCDlSBW9vD74o6yOkHwXXqW
+         UlNXr8MetKGMZwmb08PREl8mvpxCRBN3w/HeFZQLbxOfT/aNSWLaLq5YIJUWqbw9/4+r
+         HNg/G+8uh27APzrH/nwD/j7IjLO3b5RLUz5NeVrNyvKgKjD8b1M4Jy9CXDOkDJ4YUPLU
+         v5SA==
+X-Gm-Message-State: AOAM532lOKCL7iKaZnHbrmHP++sIEnTpLfEjNj0NfjZtSZmqY35cifXx
+        RZ0XGNX/h40kAgI+fbl54g==
+X-Google-Smtp-Source: ABdhPJzvi9bsOJFgClHgIdgjoPscdvkkEsnqnNIGf4ndljse4E6rFhgqWxD2dgYBIkQ7YzCNJ9ZWCA==
+X-Received: by 2002:a92:9c52:: with SMTP id h79mr8272285ili.252.1590776078779;
+        Fri, 29 May 2020 11:14:38 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p3sm4173510iog.31.2020.05.29.11.13.38
+        by smtp.gmail.com with ESMTPSA id j17sm5012580ilq.79.2020.05.29.11.14.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 11:13:39 -0700 (PDT)
-Received: (nullmailer pid 2683492 invoked by uid 1000);
-        Fri, 29 May 2020 18:13:38 -0000
-Date:   Fri, 29 May 2020 12:13:38 -0600
+        Fri, 29 May 2020 11:14:38 -0700 (PDT)
+Received: (nullmailer pid 2685148 invoked by uid 1000);
+        Fri, 29 May 2020 18:14:37 -0000
+Date:   Fri, 29 May 2020 12:14:37 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/11] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200529181338.GA2676189@bogus>
-References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
- <20200527153046.6172-3-Sergey.Semin@baikalelectronics.ru>
- <20200527153351.rmzguymz7lm6gvsx@mobilestation>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-kernel@vger.kernel.org,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-clk@vger.kernel.org, Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 02/25] dt-bindings: clock: Add a binding for the RPi
+ Firmware clocks
+Message-ID: <20200529181437.GA2685096@bogus>
+References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
+ <919e2f2f13583d4d53d0e95b81fc3fb8a7606107.1590594293.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527153351.rmzguymz7lm6gvsx@mobilestation>
+In-Reply-To: <919e2f2f13583d4d53d0e95b81fc3fb8a7606107.1590594293.git-series.maxime@cerno.tech>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 06:33:51PM +0300, Serge Semin wrote:
-> Rob,
-> Could you pay attention to this patch? The patchset review procedure is
-> nearly over, while the DT part is only partly reviewed by you.
-
-Pretty sure I commented on this. Not sure what version, you're sending 
-new versions too fast. Give people time to review.
-
+On Wed, 27 May 2020 17:44:58 +0200, Maxime Ripard wrote:
+> The firmware running on the RPi VideoCore can be used to discover and
+> change the various clocks running in the BCM2711. Since devices will
+> need to use them through the DT, let's add a pretty simple binding.
 > 
-> Thanks
-> -Sergey
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> On Wed, May 27, 2020 at 06:30:37PM +0300, Serge Semin wrote:
-> > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
-> > i2c "reg" property. If it is the compiler will print a warning:
-> > 
-> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> > 
-> > In order to silence dtc up let's discard the flag from the DW I2C DT
-> > binding example for now. Just revert this commit when dtc is fixed.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Cc: linux-mips@vger.kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v3:
-> > - This is a new patch created as a result of the Rob request to remove
-> >   the EEPROM-slave bit setting in the DT binndings example until the dtc
-> >   is fixed.
-> > ---
-> >  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > index 4bd430b2b41d..101d78e8f19d 100644
-> > --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > @@ -137,7 +137,7 @@ examples:
-> >  
-> >        eeprom@64 {
-> >          compatible = "linux,slave-24c02";
-> > -        reg = <0x40000064>;
-> > +        reg = <0x64>;
 
-This is wrong though because "linux,slave-24c02" should have bit 30 set. 
-(And either the unit-address was wrong or we can define the unit-address 
-does not include the high bits.)
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
