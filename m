@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38D5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EA1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC3920814
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855EE20C09
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590725981;
-	bh=lPI6A83ttQ/c1j1m7UcKEFeIJazjx5XcZ050fvSwitM=;
+	s=default; t=1590725988;
+	bh=33+MHwIedDJ1eCtpRa7VZElWCFVUcTFTamW43B1VK2U=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=FvSZw/t6J52L6Y01ojf3O6y/y6HSDIOG3Y0IMAKf6xrVqFwZp6KEbNBmYbhQf/8yz
-	 VIIOUGXX9ChdvcgZ8qITAvf3QEnhQ9B5ZFb7kN7XpKPqMnDTRUwwtalbyTenhIPa7X
-	 afzm2zB1Qg0szObmkQ2NcZHUNt4SEwE3M6FTIZNE=
+	b=XE2sAUnH61pdnDckbU6l0XIIGQ194c2EABa03znXHUkwMhy+uerlSadIArxRSKEEH
+	 ZNbz9ep8t9goIie4BwEKfZNWFBfPY+DU0gwiZ2mJNLhw3VleAzyDWnpTAXrauilrd7
+	 vmFKgfJbLPZ+tFWqjMlWi22QqODX4hoWOHVWTyuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgE2ETk (ORCPT
+        id S1728844AbgE2ETr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 00:19:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45512 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 00:19:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgE2ETk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 00:19:40 -0400
+        id S1728842AbgE2ETq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 00:19:46 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C252207D3;
-        Fri, 29 May 2020 04:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8981D20814;
+        Fri, 29 May 2020 04:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590725979;
-        bh=lPI6A83ttQ/c1j1m7UcKEFeIJazjx5XcZ050fvSwitM=;
+        s=default; t=1590725985;
+        bh=33+MHwIedDJ1eCtpRa7VZElWCFVUcTFTamW43B1VK2U=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=FLoDt9ZaYlmcWVtsbov0qFpFQnYWpDrZlJE8pluEIXwGBFctnyQ70IBUVDMCHnTPC
-         ySnCdMFeCBEQag+v9idxiHKADP31tRaLwg7xGqsD5++rkjuyvjLtAS7mWz8zzH+1oL
-         RdrggKyTQ+m2k9Nwbzkj658elIKf729eZieXBJCg=
+        b=y1IYg0PlIZFZTBahbBdFs8PRajY+bFIxDvd3m3A7jSgE9aPPpaoBrSyJll/14YzzS
+         B2GDlFDstzXOLtacHn39d16w8THXHK4q1JFprQsFPKgXo3VVhIhZT2oQbx+JZE48fr
+         UohXpuwo6xCMOHhtpV/eCIPBUGhLacyHQaaTrJVE=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582278742-1626-2-git-send-email-macpaul.lin@mediatek.com>
-References: <1582278742-1626-1-git-send-email-macpaul.lin@mediatek.com> <1582278742-1626-2-git-send-email-macpaul.lin@mediatek.com>
-Subject: Re: [PATCH 1/5] dt-bindings: clock: mediatek: document clk bindings for Mediatek MT6765 SoC
+In-Reply-To: <1582278742-1626-3-git-send-email-macpaul.lin@mediatek.com>
+References: <1582278742-1626-1-git-send-email-macpaul.lin@mediatek.com> <1582278742-1626-3-git-send-email-macpaul.lin@mediatek.com>
+Subject: Re: [PATCH 2/5] dt-bindings: clock: mediatek: document clk bindings mipi0a for Mediatek MT6765 SoC
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
         CC Hwang <cc.hwang@mediatek.com>,
@@ -70,17 +70,16 @@ To:     Catalin Marinas <catalin.marinas@arm.com>,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mediatek@lists.infradead.org,
         mtk01761 <wendell.lin@mediatek.com>
-Date:   Thu, 28 May 2020 21:19:38 -0700
-Message-ID: <159072597842.69627.10940278621295452958@swboyd.mtv.corp.google.com>
+Date:   Thu, 28 May 2020 21:19:44 -0700
+Message-ID: <159072598489.69627.4505171077410009164@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Macpaul Lin (2020-02-21 01:52:18)
-> This patch adds the binding documentation for apmixedsys, audsys, camsys,
-> imgsys, infracfg, mmsys, pericfg, topckgen
+Quoting Macpaul Lin (2020-02-21 01:52:19)
+> This patch adds the binding documentation for mipi0a.
 >=20
 > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 > Signed-off-by: Owen Chen <owen.chen@mediatek.com>
