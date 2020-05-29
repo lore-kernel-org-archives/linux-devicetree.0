@@ -2,95 +2,100 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F8EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9290C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1908D20897
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77FC2071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590787745;
-	bh=owlI+0lXB9zQV69nRV96LG0IqM3mYRi2tFsvKjKJXu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F+w86LaI3uQ5cHBKggNc6pJCImHClpt3JrMMY8oCXrefkN/a4EH0UYcB3QnraIXDn
-	 2+GDKOgq6MlV5PeIaFTzAt/6F9282PluxvJhXkRs0ZBWMkWlwGg1ynQPT6mOAFlldA
-	 1Cg5eZmpALdF9ci/rEsVCaOkMqMJiKKUEa3mhbzA=
+	s=default; t=1590788654;
+	bh=AhZEqcIqoU3XCYXoKIAeYmUZg7CdTdaOgkemT7fqeYE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T1YGfkJ6yOLOXW56m6r7jIUZIwmLmzZcJEqnuUsUfjQ5purxeVtjG979Iwe7eAqUK
+	 pbhPrCsqwfO9ltKFyTnmAj+vDg/ieQcWhT6S1G5r4gENybDUPcPGbBjTjXBBQdyb6i
+	 3u5ocKslvcBNBQnqtZEjJdAo7owQWmCi/3bj2YGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgE2V3E (ORCPT
+        id S1728086AbgE2VoO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 17:29:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39430 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgE2V3E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:29:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id c8so893145iob.6;
-        Fri, 29 May 2020 14:29:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EkE+6//HPeALlSFIVg26ucZzI23gJBcyX6L2mQ0CHFs=;
-        b=cZaSzUQZGN1emh1zU0wqcDOGdmS4sjd1QtKidYEsml1bZDRhj1ImCJMi3vflY87Nny
-         ApuVW12+UAcJQG4NnCHpMrxmE06Vk3Htuq3mqnh9hX5Rj+aLRLhIc1ZJijSQiimrlx+M
-         RrQomsilsUNWQdrWjMknE0RNhU9B2lBeEkmDYh6o+ixDxcU04u3XniWxQKzoO9gOc2RK
-         FjFdkGSioEeD/VkFDeTKB7szlCLrdeNKWAynylJBUiMH1aj4UFlHul4qPPyhxpU6VyKp
-         TluP8Sz5Qwa84UxXJkF8I6b+dr/prpse0oQUZT8WYFg/+OoYHBWdC0klbnvRnBqWNaKN
-         A4kw==
-X-Gm-Message-State: AOAM530wA8O3/N8ymURSKm+iaycgMKXrYAy2neOGC7MUb/kn4JsTf/9R
-        oqeWbdRXPgEia9hiJ+TutJ+ZNvnK4g==
-X-Google-Smtp-Source: ABdhPJy6pahK2/QoZLOirJ/eOuHSg4yWPD0tIkE0E0gvSPYs2cAWTAlQy6a6rNMU7W6RfA/dmm7/pQ==
-X-Received: by 2002:a02:b88e:: with SMTP id p14mr8865236jam.36.1590787743197;
-        Fri, 29 May 2020 14:29:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v14sm5258547ilm.66.2020.05.29.14.29.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 14:29:02 -0700 (PDT)
-Received: (nullmailer pid 3002091 invoked by uid 1000);
-        Fri, 29 May 2020 21:29:01 -0000
-Date:   Fri, 29 May 2020 15:29:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: timer: renesas: cmt: Convert to
- json-schema
-Message-ID: <20200529212901.GA3000996@bogus>
-References: <20200505155127.4836-1-geert+renesas@glider.be>
+        Fri, 29 May 2020 17:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728138AbgE2VoO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 17:44:14 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 002502071A
+        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 21:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590788653;
+        bh=AhZEqcIqoU3XCYXoKIAeYmUZg7CdTdaOgkemT7fqeYE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gXoD01IFLcKFd5chvrWy20PNIl1FvszTW18mRFqTmrYcw6pSE6x5nQg5vIGAQqUUD
+         XTVy0PuCuxa7Cw4ZeS06sUNhCYi/MxmQ+Y17gWWoSR+llDUNHcE1nvgnmJpIKtwk0S
+         w6KuCgTgttawM1cx5edEjfcodGjfxfSRPyvYzsc0=
+Received: by mail-ot1-f49.google.com with SMTP id m2so1153294otr.12
+        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 14:44:12 -0700 (PDT)
+X-Gm-Message-State: AOAM532y2zoBjPhRrJZHSv6VTu+R2MKQTgCVkOyO2FuO2kwNVaE61mYJ
+        Amhy611CzUx87L7tkoPoRMkv0aZJcNH31pB9LA==
+X-Google-Smtp-Source: ABdhPJyKXSGm0uMa6anJydAADQvJ14ipR6NcNxYg0/WWgS7j2NvtMClo/gTCT9AeW4R4g1S31JjbLkyJEBgcyGpN85o=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr7960663ots.192.1590788652195;
+ Fri, 29 May 2020 14:44:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505155127.4836-1-geert+renesas@glider.be>
+References: <20200528132323.30288-1-geert+renesas@glider.be>
+ <CAL_JsqJOPd2txkz298Rs12N+keJNYg2_qjCc-3vDwtL5iNXZmA@mail.gmail.com> <CAMuHMdU-FKoO+8cM2FOZRvENTuCEK02C=Si-bUiNCVrrp10qBA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU-FKoO+8cM2FOZRvENTuCEK02C=Si-bUiNCVrrp10qBA@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 29 May 2020 15:44:00 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+goALPsbhQ=Euh7fUupfC1gXO+AZXR=Obm9G_zMN7q4A@mail.gmail.com>
+Message-ID: <CAL_Jsq+goALPsbhQ=Euh7fUupfC1gXO+AZXR=Obm9G_zMN7q4A@mail.gmail.com>
+Subject: Re: [PATCH dt-schema] Fix interrupt controllers with interrupt-map
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:51:27PM +0200, Geert Uytterhoeven wrote:
-> Convert the Renesas Compare Match Timer (CMT) Device Tree binding
-> documentation to json-schema.
-> 
-> Document missing properties.
-> Update the example to match reality.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> v2:
->   - Add missing "additionalProperties: false",
->   - Add Reviewed-by.
-> ---
->  .../devicetree/bindings/timer/renesas,cmt.txt | 110 -----------
->  .../bindings/timer/renesas,cmt.yaml           | 182 ++++++++++++++++++
->  2 files changed, 182 insertions(+), 110 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.yaml
+On Fri, May 29, 2020 at 10:02 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Rob,
+>
+> On Fri, May 29, 2020 at 5:54 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > On Thu, May 28, 2020 at 7:23 AM Geert Uytterhoeven
+> > <geert+renesas@glider.be> wrote:
+> > > When an interrupt controller has an "interrupt-map" property, an "is
+> > > valid under each of" error is triggered.
+> > >
+> > > Fix this by allowing "interrupt-controller" and "interrupt-map" to
+> > > coexist, in both the interrrupts meta-schema and the
+> > > interrupt-controller schema.
+> >
+> > But both should not be present. If 'interrupt-controller' is present,
+>
+> Why not?
 
-Looks like this didn't get applied yet, so I've applied it.
+Well, maybe I'm wrong. If you have more than just transparent
+remapping (i.e. mask/unmask/clear), then perhaps both are appropriate
+because you want get the irq domain for the first irq parent.
+
+> > the Linux irq parsing code will ignore 'interrupt-map'. Seems like
+> > that's backwards, but this parsing code is older than dirt and we'd
+> > probably break some 1990s machine changing it.
+>
+> That's fine.  rza1_irqc_parse_map() parses the interrupt-map itself,
+> to map from downstream to upstream interrupts.
+
+You shouldn't really be parsing interrupt-map yourself. The code there
+doesn't account for #address-cells which can be a factor for
+interrupt-map. dtc is gaining some checks for 'interrupt-map', so
+let's hope you have it right.
 
 Rob
