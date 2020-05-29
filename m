@@ -2,105 +2,179 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC88C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D8FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 09:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6C4220776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590742365;
-	bh=lM0pqY9A9HZVoYYkL4jwxKyhd9Qx14GNUqXeaDFjVOo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VrpinKj5jll/giQ96Ztkaa+iRTG6Hzut7STBxi0LXQR/C5Sr2uCWLOJ4PjrLfq3XT
-	 APZBlxw9KZS0Q83PLHoSWRm6G/nST3ZbdacydzT1hJzMMhepTofx6SAlpby9qc//cO
-	 wvdpqz6RoKJyJRA5stx5g+D2krn/lzFaTMlYeSN8=
+	by mail.kernel.org (Postfix) with ESMTP id DD77A207BC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 09:14:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6OoWEOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgE2Iwh (ORCPT
+        id S1726161AbgE2JOa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 04:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgE2Iwh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 04:52:37 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64BD020776;
-        Fri, 29 May 2020 08:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590742356;
-        bh=lM0pqY9A9HZVoYYkL4jwxKyhd9Qx14GNUqXeaDFjVOo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZgClWNM0sAw4ZxYh9THr6qbNd7jM70YaNC0SdMPioFnxjGn4TcS7nYa5LWy/VP0+i
-         ExwrRSZ7UhSxoLq0udFelaLxB5gmonMSGF/EV90Bh2Km2pWII+L0wohxOBx5xnDnGc
-         a7Klo8lfxdyhf3TgBAi2FGW440lqLHzZp6h9SrS8=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jeakk-00GDsx-Na; Fri, 29 May 2020 09:52:34 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Huacai Chen <chenhc@lemote.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 0/6] Three Loongson irqchip support
-Date:   Fri, 29 May 2020 09:52:13 +0100
-Message-Id: <159074223979.887186.1909053030258448427.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
-References: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
+        Fri, 29 May 2020 05:14:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgE2JO3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 05:14:29 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FACC03E969;
+        Fri, 29 May 2020 02:14:29 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m18so1714617ljo.5;
+        Fri, 29 May 2020 02:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8ucA1gw/ho1zSjwgJBn04nUvtlOmcEkuOvqSSP+X35Y=;
+        b=H6OoWEOF97lm2cCfXBbp3785Efsi+f15oMc4dJhbp7Z+m2oCo5HSkIANJ1dN2xCMtB
+         3g9dQFGu8D/x21reKf6SKaOiGXFpzhQVHrRQAR6N22YNDXY/NPjdMVzCjf4CBev8BxUp
+         5tX1usKImxyRwg3GLA9CrXVyZFI0cX8m4NryjxJyAZMdzJ7VMfjK/Gf20zYFqqXmd5zq
+         lL7zxwv9kHLpP4Pr4ANVXJCXRUmOqzEm0sskrumRQONW/zQ2xbt+nbro/Rm0A9m+38VV
+         FNzzarU+v3mZvD2Zalr/fSpLqZCw41mtQ9l1mi5cTTcRCJBOwrqIJ2gLiFufXoRR4O2x
+         bWDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ucA1gw/ho1zSjwgJBn04nUvtlOmcEkuOvqSSP+X35Y=;
+        b=G5idfrrOnc5I8I5Xf2KUVatFOobOjUZk6ypWs7kH5uem/9qDnvFMwQ5jFxwKM9FLF8
+         4REASY/ibFP/QLZ6bJin/KNglMRRp/HGVJPO41SRVxNT26xLiblXx3eaZXgrWXuJo5xQ
+         q4iStVxPCY9KtefcujB143uq+mIAEL7LkPVHWhmkV9t0I0HOo3X2Oakl1jsGP2Qqn+ff
+         ghTCc0oM1Hrgf4DtDcokxqLh+LDgxM4jJH0KuMSmsejydZ2uu56G6c3SB6QiW7+ADSeU
+         e8/kbz/4HdsT8iVN9Kw2Vu/cnyz6jBB6jKbR2j2shbRT38mBJ3LAKQvcKudXBflwuk+F
+         5big==
+X-Gm-Message-State: AOAM530pvLjpY8hL5Oj/3uRWECkuVUwT1jQM9vCYF1WwRWfC+IjHFjxf
+        cPP87icnYr3jc73A7JGSEgGPoXWXNYtZDlHUjNIGqSoF
+X-Google-Smtp-Source: ABdhPJxQWYV58ZprSnFScmEouw+J5GBxzk0/Tb470NoRu5UW6cbA0I3QwIY8Y0lmCdsE+6ikpmy9GqsZI2ByGcmH1eA=
+X-Received: by 2002:a2e:300d:: with SMTP id w13mr3789851ljw.245.1590743667722;
+ Fri, 29 May 2020 02:14:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-kernel@vger.kernel.org, jason@lakedaemon.net, chenhc@lemote.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200528103755.17381-1-steves.lee@maximintegrated.com> <20200528141749.GB4186430@bogus>
+In-Reply-To: <20200528141749.GB4186430@bogus>
+From:   Steve Lee <steves.lee.maxim@gmail.com>
+Date:   Fri, 29 May 2020 18:14:16 +0900
+Message-ID: <CABff4NTc1faPpuunzt6kwOk5YsA0drvkHFvNPhyG6uZZDrqc0w@mail.gmail.com>
+Subject: Re: [V6 PATCH 1/2] dt-bindings: Added device tree binding for max98390
+To:     Rob Herring <robh@kernel.org>
+Cc:     Steve Lee <steves.lee@maximintegrated.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 28 May 2020 23:27:48 +0800, Jiaxun Yang wrote:
-> v5:
->   - Add some range checks in dt-schema
-> 
-> Jiaxun Yang (6):
->   irqchip: Add Loongson HyperTransport Vector support
->   dt-bindings: interrupt-controller: Add Loongson HTVEC
->   irqchip: Add Loongson PCH PIC controller
->   dt-bindings: interrupt-controller: Add Loongson PCH PIC
->   irqchip: Add Loongson PCH MSI controller
->   dt-bindings: interrupt-controller: Add Loongson PCH MSI
-> 
-> [...]
+On Thu, May 28, 2020 at 11:17 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, May 28, 2020 at 07:37:55PM +0900, Steve Lee wrote:
+> > Add DT binding of max98390 amplifier driver.
+> >
+> > Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+> > ---
+> > Changed since V5:
+> >       * Change txt to yaml and fix up the examples.
+> > Changed since V4:
+> >       * No changes.
+> > Changed since V3:
+> >       * No changes.
+> > Changed since V2:
+> >       * No changes.
+> > Changed since V1:
+> >       * Modified sample text in example
+> >
+> >  .../bindings/sound/maxim,max98390.yaml        | 39 +++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+> > new file mode 100644
+> > index 000000000000..1ed4ab9e1c37
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+> > @@ -0,0 +1,39 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/sound/maxim,max98390.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Maxim Integrated MAX98390 Speaker Amplifier with Integrated Dynamic Speaker Management
+> > +
+> > +maintainers:
+> > +  - Steve Lee <steves.lee@maximintegrated.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +      const: maxim,max98390
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: I2C address of the device.
+> > +
+> > +  temperature_calib:
+>
+> s/_/-/
 
-Applied to irq/irqchip-next, thanks!
+ This is follow as coreboot in Chromium OS case.
+I'd follow this name unchanged.
 
-[1/6] irqchip: Add Loongson HyperTransport Vector support
-      commit: 818e915fbac518e8c78e1877a0048d92d4965e5a
-[2/6] dt-bindings: interrupt-controller: Add Loongson HTVEC
-      commit: 6c2832c3c6edc38ab58bad29731b4951c0a90cf8
-[3/6] irqchip: Add Loongson PCH PIC controller
-      commit: ef8c01eb64ca6719da449dab0aa9424e13c58bd0
-[4/6] dt-bindings: interrupt-controller: Add Loongson PCH PIC
-      commit: b6e4bc125fc517969f97d901b1845ebf47bbea26
-[5/6] irqchip: Add Loongson PCH MSI controller
-      commit: 632dcc2c75ef6de3272aa4ddd8f19da1f1ace323
-[6/6] dt-bindings: interrupt-controller: Add Loongson PCH MSI
-      commit: da10a4b626657387845f32d37141fc7d48ebbdb3
+>
+> And missing 'maxim' prefix.
 
-I've cherry-picked Rob's Rbs that were posted on the v4 series.
+ Added missed prefix maxim prefix.
 
-Cheers,
+>
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
+>
+> Any constraints? 0-2^32 are valid values?
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+ I added range of the values
 
+>
+> > +
+> > +  r0_calib:
+>
+> Same here.
 
+I added range of the values.
+
+>
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: This is r0 calibration data which was measured in factory mode.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+>
+> Add:
+>
+> additionalProperties: false
+
+I have added this.
+
+>
+> > +
+> > +examples:
+> > +  - |
+> > +    max98390: amplifier@38 {
+> > +            compatible = "maxim,max98390";
+> > +            reg = <0x38>;
+> > +            maxim,temperature_calib = <1024>;
+> > +            maxim,r0_calib = <100232>;
+> > +    };
+> > --
+> > 2.17.1
+> >
