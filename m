@@ -2,79 +2,81 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EDDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147BEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1352F2065F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAAC12145D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590773782;
+	bh=gFzlNDFBfZNdJmNgS5WN0gu32teA7SqBpaR5FIJBrsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UKdW3bY4u2ziRm6bZub3TsLF2azSnSo12n/ITlTbcRhQ39KlDBfKluTY/KMI8pe3z
+	 ZdsWZQwOSHDZUi3IN9s2HbqpYR1pzxv/O9StfGR2Sxkd55cuhNVFhVE5vRUsU/Qtqa
+	 1lRAnbkREPWAOn7w6DgHbMjSR1oU2k0By3sU6Sug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgE2Rf7 (ORCPT
+        id S1728069AbgE2RgS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 13:35:59 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50272 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2Rf5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:35:57 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 062A78030772;
-        Fri, 29 May 2020 17:35:55 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TmsV8aoEI2cj; Fri, 29 May 2020 20:35:54 +0300 (MSK)
-Date:   Fri, 29 May 2020 20:35:53 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Feng Tang <feng.tang@intel.com>, <devicetree@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        <linux-mips@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200529173553.cynsoyndwfdekqkx@mobilestation>
-References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
- <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
- <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
- <20200529173325.GR4610@sirena.org.uk>
+        Fri, 29 May 2020 13:36:18 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46945 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728062AbgE2RgP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:36:15 -0400
+Received: by mail-il1-f195.google.com with SMTP id h3so3251437ilh.13;
+        Fri, 29 May 2020 10:36:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+vldnj1A/A3DB6U9SQBWonFdPuOH0+2SZoMnNU6BJCY=;
+        b=II2Q3vIN8TseP2BdYARKsz50LyWiVH7k3ubfvt591B/r5ayZFYoBaYjIGSt4oEDsqH
+         H38qJIgMAJBb7Mpuji6JMMatG5Qtd3Q3+r2fqVmdQTpBC1hSGt6ZpucTQQ/ACg1I5YwT
+         sjGozx170hLitaZp64J68Pihmkq/7dLFckS+j8NHrMQrOwrzRs4y1xAZeE0oLEcECS/p
+         EDCqvLqv28sfUXQ6Vmb4aBbmVI98hmaHVkgTJn9mjXoYeo5G/VWO4i5UZMCnuIhB2cvp
+         uJXzJ2/R1tujvBK91hqM8/DjE8PbhiwogZbvEvBNZ2iL2K+zGZt4TU8Y8l4GJpnqUOPB
+         lswA==
+X-Gm-Message-State: AOAM533esXrcxeXrWlHHpGOa2S834o84RI0y42GVlsoLXKU635Vsd500
+        lntslRILk1Njr7Lf/dXYrZ5m/0c=
+X-Google-Smtp-Source: ABdhPJw0D9Aj4dJOagyxhADhUi0We3v2dIBpchp7r06PGdMsavEqNpTwmfpl5+OcDOLyr+R5c/ad9g==
+X-Received: by 2002:a6b:7c45:: with SMTP id b5mr7568415ioq.31.1590773240343;
+        Fri, 29 May 2020 10:27:20 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p75sm5083828ilb.23.2020.05.29.10.27.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:27:19 -0700 (PDT)
+Received: (nullmailer pid 2610380 invoked by uid 1000);
+        Fri, 29 May 2020 17:27:18 -0000
+Date:   Fri, 29 May 2020 11:27:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-leds@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: leds: fix macro names for pca955x
+Message-ID: <20200529172718.GA2610321@bogus>
+References: <20200526092052.24172-1-f.suligoi@asem.it>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529173325.GR4610@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200526092052.24172-1-f.suligoi@asem.it>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:33:25PM +0100, Mark Brown wrote:
-> On Fri, May 29, 2020 at 08:26:42PM +0300, Serge Semin wrote:
+On Tue, 26 May 2020 11:20:52 +0200, Flavio Suligoi wrote:
+> The documentation reports the wrong macro names
+> related to the pca9532 instead of the pca955x
 > 
-> > You must have missed the patch 16:
-> > 0e8332aaf059 dt-bindings: spi: Convert DW SPI binding to DT schema
-> > As you can see it has been acked by Rob. So you can also merge it into your
-> > repo. Though It has to be rebased first due to the Dinh Nguyen patches
-> > recently merged in. Do you want me to do the rebasing?
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> ---
+>  Documentation/devicetree/bindings/leds/leds-pca955x.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> Please rebase.  TBH I'd not noticed Rob's review so I just left it
-> waiting for that, there's such a huge backlog there it didn't occur to
-> me that it might've been reviewed.
 
-Ok. I'll do the rebasing shortly. (also have to add the optional reset properties
-into the bindings)
-
--Sergey
+Acked-by: Rob Herring <robh@kernel.org>
