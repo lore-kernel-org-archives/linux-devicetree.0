@@ -2,70 +2,92 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937AFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D657AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 777732072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD51B2072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 08:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="SG6YwROh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725355AbgE2If0 (ORCPT
+        id S1725562AbgE2IhH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 04:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2IfZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 04:35:25 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E331C03E969
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 01:35:25 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 29 May 2020 04:37:07 -0400
+Received: from [115.28.160.31] ([115.28.160.31]:49902 "EHLO
+        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1725306AbgE2IhF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 04:37:05 -0400
+Received: from hanazono.local (unknown [116.236.177.50])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BD2B52A42CE;
-        Fri, 29 May 2020 09:35:23 +0100 (BST)
-Date:   Fri, 29 May 2020 10:35:20 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v7 16/20] mtd: nand: Convert generic NAND bits to use
- the ECC framework
-Message-ID: <20200529103520.187d4957@collabora.com>
-In-Reply-To: <20200529002517.3546-17-miquel.raynal@bootlin.com>
-References: <20200529002517.3546-1-miquel.raynal@bootlin.com>
-        <20200529002517.3546-17-miquel.raynal@bootlin.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id D26B1600B5;
+        Fri, 29 May 2020 16:37:01 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
+        t=1590741422; bh=vcez4Uof2phLwxNSzZXqwMGVMxaC1zLW1pHsq0myX3c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SG6YwROhbzgsHoBEWiufLmgZAk77BQRpFVYx9WLBgSkMfq3syoQzKNTr/H+QPGG7D
+         yatqWt2/TfmdSFwOcAaupd/jqSDZt4xnnyc5VIa9ZG1WQnktn75OFHSMGNM0gY1+1i
+         2yOTP21DNPcWKVc80eOBKS32jEi65rdObG+YmrL0=
+Subject: Re: [PATCH 1/3] dt-bindings: mips: Document two Loongson generic
+ boards
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, maz@kernel.org
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com>
+ <20200529034338.1137776-2-jiaxun.yang@flygoat.com>
+From:   WANG Xuerui <kernel@xen0n.name>
+Message-ID: <8ecd4bdd-ad3a-7cd5-65b0-f8a637facc98@xen0n.name>
+Date:   Fri, 29 May 2020 16:37:01 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.0a1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200529034338.1137776-2-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 May 2020 02:25:13 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+Hi Jiaxun,
 
-> - * struct_nand_device->memorg and struct_nand_device->eccreq should be filled
-> - * at device detection time to reflect the NAND device
-> + * struct_nand_device->memorg and struct_nand_device->ecc.ctx.conf should
-> + * be filled at device detection time to reflect the NAND device
 
-Is it not struct_nand_device->ecc.requirements?
+On 2020/5/29 11:43, Jiaxun Yang wrote:
+> Document loongson3-8core-ls7a and loongson3-r4-ls7a, with
+> two boards LS7A PCH.
+
+"with two boards LS7A PCH" -- maybe you mean "two boards with LS7A PCH"?
+
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>   .../devicetree/bindings/mips/loongson/devices.yaml        | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> index 74ed4e397a78..6164b0fcb493 100644
+> --- a/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> @@ -24,4 +24,12 @@ properties:
+>         - description: Generic Loongson3 Octa Core + RS780E
+>           items:
+>             - const: loongson,loongson3-8core-rs780e
+> +
+> +      - description: Generic Loongson3 Quad Core + LS7A
+> +        items:
+> +          - const: loongson,loongson3-8core-ls7a
+> +
+> +      - description: Generic Loongson3 Release 4 + LS7A
+"R4" instead of "Release 4", as in /proc/cpuinfo output?
+> +        items:
+> +          - const: loongson,loongson3-r4-ls7a
+>   ...
