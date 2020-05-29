@@ -2,293 +2,134 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084ADC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38F3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20BB212CC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PDpAVMHj"
+	by mail.kernel.org (Postfix) with ESMTP id 860502075F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 02:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406814AbgE2C3z (ORCPT
+        id S2389654AbgE2Cl4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 22:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406806AbgE2C3y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 22:29:54 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C2DC08C5C8
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 19:29:54 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f3so445380pfd.11
-        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 19:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3l/uy9rkSgcqOcPxEDKlHX2a7wRD2FJSR8LJkg5Mydk=;
-        b=PDpAVMHjMU8db05ww6y3TqOibPw36FTVxG+D7IDJUwbM1cQCQXH7DmukxiTiLAOMne
-         XDEnWH4pU5A2U0tBJSbRNF8XGvgU4EX3zrSzgjE35h7Z1Lz/FioBStsmSfmf0HFIifXC
-         hO4cctO+/7ye+4E9wOy7DiPLuPSct4qM9RT74aK8vz+/rsR7Yx65qWT/hN7NJSkW6WFw
-         j00nHXD9zgWFtVnD0PrpN1fPnSuLkNAF5nJsD7IRvBpCyemRAgNY0oOR2inpmTaztsHq
-         hLsznz5dVev3nGHMHgj8hPXVGTaOkh3O7kw4uSowLYmqtcrxJDtROsLmSxuqCgu4sODz
-         eR1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3l/uy9rkSgcqOcPxEDKlHX2a7wRD2FJSR8LJkg5Mydk=;
-        b=mQOo5I2rimFmduaYxYz9eMfyMq8sB8nCpZFiepAwHwnOJu485m2v19TSUG/KE96S1M
-         +EjXEfKtXgqoA2JLIYJgKL7OgHIudGymPwLVdoUfCJorN9T7FuOY4wFw7ufftRlQkRq0
-         H529Yw5rUmm0jNKFaHGZr6otiJ2MtW6NzWvvvN+nnZuuVIQYBULeRg/5tJL26F3u1xC3
-         0oAroDL76wZxNlZxWipzJTWJ1N2gnfPFhb94ixxtQFEcYRS5Kxp1VfLquEjBoBX/LjIp
-         qSUfDCbo4Xswnr5xIOTBWPHoZWEuFF7VYkv9HB5FCBbR7ierCVW8f4C0+IVduH0s8IeJ
-         qqQQ==
-X-Gm-Message-State: AOAM5339M/3h83/C1JumrE7wsfLhuTcu15ShYTva/LeoFPQ2V4lpDLIm
-        XU7PqRgjPs2/bBWiPINEc1GDOeBXDXg=
-X-Google-Smtp-Source: ABdhPJxhTrem+6swxocNd1/XW0+hUviSs6g6emgO+YsgjaI4iM4SJVt84no+lZF35PTPOpy7jDNRFw==
-X-Received: by 2002:a65:52cd:: with SMTP id z13mr5961753pgp.259.1590719393398;
-        Thu, 28 May 2020 19:29:53 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v9sm5541381pgj.54.2020.05.28.19.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 19:29:52 -0700 (PDT)
-Date:   Thu, 28 May 2020 19:28:47 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH v3 5/5] regulator: qcom: labibb: Add SC interrupt handling
-Message-ID: <20200529022847.GO279327@builder.lan>
-References: <20200528154625.17742-1-sumit.semwal@linaro.org>
- <20200528154625.17742-6-sumit.semwal@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528154625.17742-6-sumit.semwal@linaro.org>
+        Thu, 28 May 2020 22:41:56 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:7473 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389601AbgE2Cl4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 May 2020 22:41:56 -0400
+Date:   29 May 2020 11:41:53 +0900
+X-IronPort-AV: E=Sophos;i="5.73,447,1583161200"; 
+   d="scan'208";a="48301692"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 29 May 2020 11:41:53 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9AF25400F92F;
+        Fri, 29 May 2020 11:41:53 +0900 (JST)
+Message-ID: <87imgfzclq.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Question about "xxx,yyy" style property
+In-Reply-To: <20200528223916.GA804926@bogus>
+References: <87pnay3ptb.wl-kuninori.morimoto.gx@renesas.com>
+        <20200528223916.GA804926@bogus>
+User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 28 May 08:46 PDT 2020, Sumit Semwal wrote:
 
-> From: Nisha Kumari <nishakumari@codeaurora.org>
-> 
-> Add Short circuit interrupt handling and recovery for the lab and
-> ibb regulators on qcom platforms.
-> 
-> The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
-> notification which will be triggered on short circuit. They should
-> try to enable the regulator once, and if it doesn't get enabled,
-> handle shutting down the panel accordingly.
-> 
-> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+The Subject was "Re: [PATCH] ASoC: dt-bindings: simple-card: care missing address #address-cells"
 
-It would be nice to see a short summary of your changes from the
-original patch here, like:
+Hi Rob
 
-[sumit: Changed this and that]
+I'm trying to create v2 of simple-card patch,
+And got issue which I can't solve by myself.
 
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> 
-> --
-> v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
->      per-regulator instead of clearing both lab and ibb errors on either irq
->      triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
->      notification to clients.
-> v3: sumits: updated as per review comments of v2: removed spurious check for
->      irq in handler and some unused variables; inlined some of the code,
->      omitted IRQF_TRIGGER_RISING as it's coming from DT.
-> 
-> ---
->  drivers/regulator/qcom-labibb-regulator.c | 92 +++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
-> 
-> diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-> index 634d08461c6e..695ffac71e81 100644
-> --- a/drivers/regulator/qcom-labibb-regulator.c
-> +++ b/drivers/regulator/qcom-labibb-regulator.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  // Copyright (c) 2020, The Linux Foundation. All rights reserved.
->  
-> +#include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/of_irq.h>
->  #include <linux/of.h>
-> @@ -18,6 +19,7 @@
->  #define REG_LABIBB_ENABLE_CTL		0x46
->  #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
->  #define LABIBB_CONTROL_ENABLE		BIT(7)
-> +#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
->  
->  #define LAB_ENABLE_CTL_MASK		BIT(7)
->  #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
-> @@ -27,12 +29,17 @@
->  #define IBB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 10)
->  #define LABIBB_OFF_ON_DELAY		(8200)
->  
-> +#define POLLING_SCP_DONE_INTERVAL_US	5000
-> +#define POLLING_SCP_TIMEOUT		16000
-> +
->  struct labibb_regulator {
->  	struct regulator_desc		desc;
->  	struct device			*dev;
->  	struct regmap			*regmap;
->  	struct regulator_dev		*rdev;
->  	u16				base;
-> +	int				sc_irq;
+I think "xxx,yyy" (= which has "," at the property name)
+needs special care, but it is very un-understandable...
+Now, I'm give up.
+So, can I ask you 2 things about Yaml Doc "xxx,yyy" type property ?
 
-This is now a local variable in register_labibb_regulator().
+========================
+1) reference own definitions from "xxx,yyy"
+========================
 
-> +	int				vreg_enabled;
+I guess "xxx,yyy" naming property needs to has "description", right ?
 
-bool is a better representation of this (and the vreg_ prefix doesn't
-really add value).
+But, it is OK if it references "/schemas/xxxx"
 
->  	u8				type;
->  };
->  
-> @@ -65,6 +72,8 @@ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
->  	if (ret < 0)
->  		dev_err(reg->dev, "Write failed: enable %s regulator\n",
->  			reg->desc.name);
-> +	else
-> +		reg->vreg_enabled = 1;
+	--- OK ------
+	xxx,yyy:
+	  description: xxx
+	  $ref: /schemas/types.yaml#/definitions/phandle-array
+	-------------
 
-No I see why you add these wrappers around the regmap in the previous
-patch.
+but, will be error if it references own definitions
 
-My request to not print an error message on enable/disable errors
-remains.
+	--- NG ------
+	xxx,yyy:
+	  description: xxx
+	  $ref: "#/definitions/mydef"
+	-------------
 
->  
->  	return ret;
->  }
-> @@ -78,6 +87,8 @@ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
->  	if (ret < 0)
->  		dev_err(reg->dev, "Disable failed: disable %s\n",
->  			reg->desc.name);
-> +	else
-> +		reg->vreg_enabled = 0;
->  
->  	return ret;
->  }
-> @@ -88,11 +99,70 @@ static struct regulator_ops qcom_labibb_ops = {
->  	.is_enabled		= qcom_labibb_regulator_is_enabled,
->  };
->  
-> +static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
-> +{
-> +	int ret;
-> +	u16 reg;
-> +	unsigned int val;
-> +	struct labibb_regulator *labibb_reg = _reg;
-> +	bool in_sc_err, scp_done = false;
-> +
-> +	ret = regmap_read(labibb_reg->regmap,
-> +			  labibb_reg->base + REG_LABIBB_STATUS1, &val);
-> +	if (ret < 0) {
-> +		dev_err(labibb_reg->dev, "sc_err_irq: Read failed, ret=%d\n",
-> +			ret);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
-> +		labibb_reg->desc.name, val);
-> +
-> +	in_sc_err = !!(val & LABIBB_STATUS1_SC_DETECT_BIT);
-> +
-> +	/*
-> +	 * The SC(short circuit) fault would trigger PBS(Portable Batch
-> +	 * System) to disable regulators for protection. This would
-> +	 * cause the SC_DETECT status being cleared so that it's not
-> +	 * able to get the SC fault status.
-> +	 * Check if the regulator is enabled in the driver but
-> +	 * disabled in hardware, this means a SC fault had happened
-> +	 * and SCP handling is completed by PBS.
-> +	 */
-> +	if (!in_sc_err) {
-> +
+This is the related error
 
-Empty line
+	-- error(?) --
+	xxx.yaml: properties:xxx,yyy:\
+	  $ref: '#/definitions/mydef' does not match 'types.yaml#[/]{0,1}definitions/.*'
+	--------------
 
-Regards,
-Bjorn
+# but, there is no problem if it was defined as "patternProperties"
 
-> +		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
-> +
-> +		ret = regmap_read_poll_timeout(labibb_reg->regmap,
-> +					reg, val,
-> +					!(val & LABIBB_CONTROL_ENABLE),
-> +					POLLING_SCP_DONE_INTERVAL_US,
-> +					POLLING_SCP_TIMEOUT);
-> +
-> +		if (!ret && labibb_reg->vreg_enabled) {
-> +			dev_dbg(labibb_reg->dev,
-> +				"%s has been disabled by SCP\n",
-> +				labibb_reg->desc.name);
-> +			scp_done = true;
-> +		}
-> +	}
-> +
-> +	if (in_sc_err || scp_done) {
-> +		regulator_lock(labibb_reg->rdev);
-> +		regulator_notifier_call_chain(labibb_reg->rdev,
-> +						REGULATOR_EVENT_OVER_CURRENT,
-> +						NULL);
-> +		regulator_unlock(labibb_reg->rdev);
-> +	}
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static int register_labibb_regulator(struct labibb_regulator *reg,
->  				const struct labibb_regulator_data *reg_data,
->  				struct device_node *of_node)
->  {
->  	struct regulator_config cfg = {};
-> +	int ret;
->  
->  	reg->base = reg_data->base;
->  	reg->type = reg_data->type;
-> @@ -108,6 +178,28 @@ static int register_labibb_regulator(struct labibb_regulator *reg,
->  	reg->desc.poll_enabled_time = reg_data->poll_enabled_time;
->  	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
->  
-> +	reg->sc_irq = -EINVAL;
-> +	ret = of_irq_get_byname(of_node, "sc-err");
-> +	if (ret < 0) {
-> +		dev_err(reg->dev, "Unable to get sc-err, ret = %d\n",
-> +			ret);
-> +		return ret;
-> +	} else
-> +		reg->sc_irq = ret;
-> +
-> +	if (reg->sc_irq > 0) {
-> +		ret = devm_request_threaded_irq(reg->dev,
-> +						reg->sc_irq,
-> +						NULL, labibb_sc_err_handler,
-> +						IRQF_ONESHOT,
-> +						"sc-err", reg);
-> +		if (ret) {
-> +			dev_err(reg->dev, "Failed to register sc-err irq ret=%d\n",
-> +				ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	cfg.dev = reg->dev;
->  	cfg.driver_data = reg;
->  	cfg.regmap = reg->regmap;
-> -- 
-> 2.26.2
-> 
+Q. The "xxx,yyy" property can't references own definitions,
+   or needs some magical extra settings ??
+
+========================
+2) phandle for "xxx,yyy"
+========================
+
+I noticed that it seems "xxx,yyy" property can't be referenced.
+Here, "xxx,yyy" has "type: object" and "additionalProperties: false"
+(below didn't happen if it doesn't have "additionalProperties: false")
+
+If "xxx,yyy" has phandle, but not referenced,
+This is not a problem.
+
+	--- OK ---
+	...
+	foo = <&bar>;
+	...
+	xxx_yyy: xxx,yyy {
+	  ...
+	};
+	--------------
+
+But will be error if it is referenced.
+
+	--- NG ---
+	foo = <&xxx_yyy>;
+	...
+	xxx_yyy: xxx,yyy {
+	  ...
+	};
+	------------
+
+The error is
+
+	-- error ---
+	xxx.yaml: xxx.yyy: \
+	Additional properties are not allowed ('phandle' was unexpected)
+	------------
+
+Q. The "xxx,yyy" needs magical settings to be referenced, or can't be ?
