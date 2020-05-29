@@ -2,107 +2,120 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C4BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 11:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E94C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 11:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B10206E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 11:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C366C207F5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 11:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gIiY2uXf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X+WskA+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgE2LLZ (ORCPT
+        id S1725865AbgE2LNq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 07:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgE2LLX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 07:11:23 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CAE1C03E969
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 04:11:23 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id k3so635811ual.8
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 04:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2AwrUer66OLVbJn9gdzvmfOhYQqwIlg5wUQfH8z+L9E=;
-        b=gIiY2uXfVx/jE5BgaImYNhlcq8Xd5qTnTI7LkXYOntgiBeoPwssFpKuZ8wqLvAvB4/
-         LX7Jb9eMDQ53brUmKsW0F2XDgbLPzN4Q4FoFuovNs+Cc2B4y4GKpsfw2g//pgZBK2Vob
-         +bnRipihc4uKFDvIBdDOsJdKn3Mc8C1MrKkbEErgX5WGdtOn6AyBk1TRQdAbwRDahkqN
-         IIC/J1PGd7xwDYV8nGUKaW0Ib2K4I9bxCpo+SZIFPdOB9Ho/PjsQXvuDvv6ZEveExO3G
-         Wb+c+piCnfmHOantUQDNU3hAcLsNGrgbcjaD/HehEBR66mk+O7DDpSZAPBikBGgHQ0Gj
-         8x7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2AwrUer66OLVbJn9gdzvmfOhYQqwIlg5wUQfH8z+L9E=;
-        b=kUPIvmBeCTKemEy4wYqa3l0ReAhHHNRa7LeY3TI5iP3yWvcyN87mUuGY9sYfGyOXsm
-         9nt226zwSCg8V8pS1OHzJoQgBP29qsXfwLFJ3L51dtkGFatteDgGgnWV9ZH9m2rV9yWx
-         pQU5uApaKWJ0IwGVRyUXy8n2bK8PWirmm5y6MqM0zM13/j/MWv+5VchrvLO6Dl3h533A
-         65yWhc3mUcSmdZ6E3dtEn/o3VeajVKgkw5fJlxXEhvQOxg0CYe+FJB2qsbZAmysygGm4
-         qhLZ5NA9a59rJDHMM2nBJ4eOxNIHF73qn7oLsgzrqK6xEg++IfJEXiE2O/zYh3P8Al8E
-         GpFQ==
-X-Gm-Message-State: AOAM531q1vHvL7wFEZrWHPoojxmnrjn4Hvc1ZvsfEAJkMhLPIxX8Fnzg
-        sxSpXGWBzbmHu9EHTqSJM8dcBsMJiMfbXUG4Inl3aQ==
-X-Google-Smtp-Source: ABdhPJxzIJYkIIPCpHPcwk9GVxYXgVz7s/pLv3zscWWcayOPhVZi78TJgQ2gcLvnE1Sv4H8X+ooqNNHjqbT8vtW53Xg=
-X-Received: by 2002:ab0:70c9:: with SMTP id r9mr5439045ual.15.1590750682843;
- Fri, 29 May 2020 04:11:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521091356.2211020-1-lkundrak@v3.sk> <20200521091356.2211020-2-lkundrak@v3.sk>
- <CAPDyKFogpp+9d44Dgc8gXmeULj2CxoUzo4EhnLp+=_1YcvXT-g@mail.gmail.com> <20200528225445.GB815881@bogus>
-In-Reply-To: <20200528225445.GB815881@bogus>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 29 May 2020 13:10:46 +0200
-Message-ID: <CAPDyKFpcxncUFf+qMaRGnC1qA0ST1HzQCrars5YZTeMfFVHj6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: mmc: Convert sdhci-pxa to json-schema
-To:     Rob Herring <robh@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
+        Fri, 29 May 2020 07:13:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41496 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgE2LNq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 07:13:46 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TBDUJA037663;
+        Fri, 29 May 2020 06:13:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590750810;
+        bh=laSh5WDSxtGsanL/QvTs+5ZA+9Q2Ea1wGgBncXX0Eko=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=X+WskA+KaiRKwU/n8cyC2YGhQkVT/PsQHXi9nTZ6Wp8u7uQanjdU15XwvOotFra92
+         K+6IeWPeZJ5UUN93ww51WwYM8Jrr6rCgA24BYUmFlMLUYHbqVcNThTlTctXFZJ2k7m
+         sA+pNIfGeUp+wNyoLol73bh6K18u5Uuak5EvC3j0=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04TBDUsm044198
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 06:13:30 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
+ May 2020 06:13:30 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 29 May 2020 06:13:30 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TBDPMA027241;
+        Fri, 29 May 2020 06:13:27 -0500
+Subject: Re: [PATCH 04/12] dt-bindings: irqchip: ti,sci-intr: Update bindings
+ to drop the usage of gic as parent
+To:     Rob Herring <robh@kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>
+References: <20200520124454.10532-1-lokeshvutla@ti.com>
+ <20200520124454.10532-5-lokeshvutla@ti.com> <20200528221406.GA769073@bogus>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <df339bc8-f1ad-0056-b2be-9b4957cb63d8@ti.com>
+Date:   Fri, 29 May 2020 16:43:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200528221406.GA769073@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 May 2020 at 00:54, Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, May 27, 2020 at 09:59:10AM +0200, Ulf Hansson wrote:
-> > On Thu, 21 May 2020 at 11:14, Lubomir Rintel <lkundrak@v3.sk> wrote:
-> > >
-> > > Convert the sdhci-pxa binding to DT schema format using json-schema.
-> > >
-> > > At the same time, fix a couple of issues with the examples discovered by
-> > > the validation tool -- a semicolon instead of a comma and wrong node names.
-> > >
-> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> >
-> > Rob, are you fine with this v2? I am intending to queue it up via my
-> > mmc tree, unless you want to pick it?
->
-> You can take it if you drop my name from 'maintainers'. Ideally, it
-> shouldn't be your name either (should have called it 'owners'
-> instead...).
+Hi Rob,
 
-Patch amended!
+[..snip..]
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>> index 1a8718f8855d..8b56b2de1c73 100644
+>> --- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>> @@ -44,15 +44,17 @@ Required Properties:
+>>  			4: If intr supports level triggered interrupts.
+>>  - interrupt-controller:	Identifies the node as an interrupt controller
+>>  - #interrupt-cells:	Specifies the number of cells needed to encode an
+>> -			interrupt source. The value should be 2.
+>> -			First cell should contain the TISCI device ID of source
+>> -			Second cell should contain the interrupt source offset
+>> -			within the device.
+>> +			interrupt source. The value should be 1.
+>> +			First cell should contain interrupt router input number
+>> +			as specified by hardware.
+>>  - ti,sci:		Phandle to TI-SCI compatible System controller node.
+>> -- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
+>> -- ti,sci-rm-range-girq:	Array of TISCI subtype ids representing the host irqs
+>> -			assigned to this interrupt router. Each subtype id
+>> -			corresponds to a range of host irqs.
+>> +- ti,sci-dev-id:	TISCI device id of interrupt controller.
+>> +- ti,interrupt-ranges:	Set of triplets containing ranges that convert
+>> +			the INTR output interrupt numbers to parent's
+>> +			interrupt number. Each triplet has following entries:
+>> +			- First entry specifies the base for intr output irq
+>> +			- Second entry specifies the base for parent irqs
+>> +			- Third entry specifies the limit
+> 
+> Humm, sounds like what interrupt-map does.
 
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+IIUC, for every irq translation there should be an entry in interrupt-map
+property. These Controllers has interrupts ranging from 32, 256 and more. It
+might be odd to have 256  entries in the interrupt map no? Also there are
+multiple interrupt controllers which need such translations.
 
-Thanks, applied to my next branch!
+Thanks and regards,
+Lokesh
 
-Kind regards
-Uffe
