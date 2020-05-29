@@ -2,126 +2,352 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D528AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 22:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EC4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 22:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC0CA20721
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 22:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD5420776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 22:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590789756;
-	bh=nOy9ZreAdSbLCL4LUAbM4x6S2k0JZCQlGgFXC3HRXpY=;
+	s=default; t=1590790580;
+	bh=wnmTf5RGyEmFNHEoVkexUdL9F07Rj6vU+X5fscoxL/o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cYtVM3EOFibyhiNaCG3vd+hNlVfPSPpnq3rutIuEbEPEOo0TMMJk/yrb6+12rnNKD
-	 6nlqwXtXHEdRHGueQd3OiPf1qpHFydWEOc1XOQvfhHokRG/PirrZc8EduHx1Ya1lxb
-	 8oAeExiEvMFwqlbjJZF0qX0MRbr6yv3RSu0B6iBg=
+	b=DLKd63kq+wudoedYc4xeQs0MfMj6kdqujAaOZ9XZmdTMXpsMFpa1SBV8TakIQTcn0
+	 VsU/JrU056Y83wJJoMswhB5UncurJcD0QWAHyl1kUmTSCuRSJwDOUOpJ7T9jOB9VRK
+	 ktlmx9GhDaOLtiol0ZhGUp87RDmBfVqM6SJ+EcJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgE2WCf (ORCPT
+        id S1726555AbgE2WQT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 18:02:35 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41264 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbgE2WCd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 18:02:33 -0400
-Received: by mail-il1-f195.google.com with SMTP id d1so3965141ila.8;
-        Fri, 29 May 2020 15:02:31 -0700 (PDT)
+        Fri, 29 May 2020 18:16:19 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45262 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbgE2WQR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 18:16:17 -0400
+Received: by mail-io1-f65.google.com with SMTP id y5so962175iob.12;
+        Fri, 29 May 2020 15:16:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ey+euqvOmqUImoTBB2c0M0l++8FF2H9dMAuHLAI3Tqc=;
-        b=AMDqbMQDmzx81TuMDddBm+6bVzwr4xB2g13DTqQ+QGSg+YXL5SJgOtx9HTCcwY77Xs
-         Bg6GnUfbvwBK6UJdRArImkndV2iVhoxxGstL9+X4ZxGrO/yNW6KnZhAmj9Mvypx1zH0X
-         oBL7IBPST2jVmUOcday2FZKNirVUWdTWWMX4Be0+Q35ka4GoBwsg1tR1F7pRpq8Fzf90
-         5aRJfAMkaOO4aKRKiJx44v/0KFVfWEpRyeUTapukaJV8tyDu3iqh71Mv0FXuBiWM0G8U
-         kc5ubGRSlOIt2Us4O4LgtoX0MQabtBHPMD0x9FyLby37I7l94mTiMqldwcy9xqSneR8t
-         iC7g==
-X-Gm-Message-State: AOAM533cC+/jzilGhhgQZyx/LEcZXomeCs8Istw8Bo/O+ci2AHQNJsFj
-        6oqvLjKDOxFkxiuiNr7yrw==
-X-Google-Smtp-Source: ABdhPJzNWmmXUGBwhds+2xenwoMMy1OTA6A0d/d1mqOwtAUoqyJfHTffiePOi46UYGDeJSKGzIC8Ew==
-X-Received: by 2002:a05:6e02:11b2:: with SMTP id 18mr9916280ilj.229.1590789751505;
-        Fri, 29 May 2020 15:02:31 -0700 (PDT)
+        bh=2cLdB+OgwVdPEusIn797fTW3o4kTXDvT8vR+743GqDs=;
+        b=Fjjty2CUFfkr7zqP0WWj9EmDaADAJiKHTqfAkGSwAO6/yxFrcx2rfEEIU5sBQz+054
+         PRrJQ8MwSj5dAWfoxTkAN9YAAJY7UJ+nGO9yYbVMM680kXamrmVxIZJMr5s0ito4/SVT
+         zm/3YxwsJYK+OzXXxIL7viT448eN/+B1Dr1IwY5HcgAnrMTvNnu4cTq+zVO14g+ik6lp
+         BH3tqjUGN3Oiztng0xyHY9g4QKtSoQfTxDZSe3TwQnEwU/SsVrtY7zxzu4upEstYUlM3
+         JdI6eXDpmjwosbm11dbkQ2evzS290gJyTlji85slp2xWnMUTncDDUpHT3DDyDjdNDkXI
+         wJdg==
+X-Gm-Message-State: AOAM5324A/6S6z4E1wnZJteCHO9Wx1YolXfnFsnF64lQRW92jEs8oTQP
+        oxzDEPgo+hGnSL+W3DZzqQ==
+X-Google-Smtp-Source: ABdhPJzrtSk4TEEgBK2gmUbHOnr9SeVIblKA/dDNfzDz5Uz4YfhzdOSfehsQz+b152Enn4SkfT5wMw==
+X-Received: by 2002:a5d:9b8a:: with SMTP id r10mr8712578iom.171.1590790575678;
+        Fri, 29 May 2020 15:16:15 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p75sm5426367ilb.23.2020.05.29.15.02.29
+        by smtp.gmail.com with ESMTPSA id n27sm5583697ild.76.2020.05.29.15.16.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 15:02:29 -0700 (PDT)
-Received: (nullmailer pid 3063727 invoked by uid 1000);
-        Fri, 29 May 2020 22:02:28 -0000
-Date:   Fri, 29 May 2020 16:02:28 -0600
+        Fri, 29 May 2020 15:16:14 -0700 (PDT)
+Received: (nullmailer pid 3085265 invoked by uid 1000);
+        Fri, 29 May 2020 22:16:13 -0000
+Date:   Fri, 29 May 2020 16:16:13 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
-Subject: Re: [PATCH] i2c: add 'single-master' property to generic bindings
-Message-ID: <20200529220228.GA3052199@bogus>
-References: <20200527113039.5380-1-wsa+renesas@sang-engineering.com>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     sre@kernel.org, pali@kernel.org, afd@ti.com, dmurphy@ti.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sspatil@android.com
+Subject: Re: [PATCH v12 2/4] dt-bindings: power: Convert battery.txt to
+ battery.yaml
+Message-ID: <20200529221613.GA3064745@bogus>
+References: <20200528225350.661-1-r-rivera-matos@ti.com>
+ <20200528225350.661-3-r-rivera-matos@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527113039.5380-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20200528225350.661-3-r-rivera-matos@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:30:39PM +0200, Wolfram Sang wrote:
-> It is useful to know if we are the only master on a given bus. Because
-> this is a HW description of the bus, add it to the generic bindings.
+On Thu, May 28, 2020 at 05:53:48PM -0500, Ricardo Rivera-Matos wrote:
+> From: Dan Murphy <dmurphy@ti.com>
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Cc: Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
+> Convert the battery.txt file to yaml and fix up the examples.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
+>  .../bindings/power/supply/battery.txt         |  82 +---------
+>  .../bindings/power/supply/battery.yaml        | 143 ++++++++++++++++++
+>  2 files changed, 144 insertions(+), 81 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
 > 
-> We added 'multi-master' back then because most busses are single-master
-> and 'multi-master' was the exception. In hindsight, however, this was a
-> bad choice because 'multi-master' should be the default, i.e. if you
-> know nothing, you should assume there could be another master.
-> 
-> So, we can't deduce that a missing 'multi-master' property automatically
-> means 'single-master'. That's why we need this new property.
-> 
-> I am a bit tempted to mark 'multi-master' as deprecated because the
-> default should be multi-master. However, it might also be a bit more
-> descriptive to let "no property" still mean "we don't know". I'd be
-> thankful for more opinions here.
-
-Could you just have different timeouts for clearing stalled bus. You 
-know quickly if 'single-master' is set, but have to wait longer if not?
-
-Note that we need to add a bunch of these properties to dt-schema 
-i2c-controller.yaml. I hadn't done that because I want to dual license 
-in the process, but lots of folks have touched i2c.txt IIRC.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> Thanks and happy hacking,
-> 
->    Wolfram
-> 
->  Documentation/devicetree/bindings/i2c/i2c.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-> index 819436b48fae..438ae123107e 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-> @@ -70,7 +70,12 @@ wants to support one of the below features, it should adapt these bindings.
->  - multi-master
->  	states that there is another master active on this bus. The OS can use
->  	this information to adapt power management to keep the arbitration awake
-> -	all the time, for example.
-> +	all the time, for example. Can not be combined with 'single-master'.
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 3049cf88bdcf..b9a81621ce59 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -1,81 +1 @@
+> -Battery Characteristics
+> -
+> -The devicetree battery node provides static battery characteristics.
+> -In smart batteries, these are typically stored in non-volatile memory
+> -on a fuel gauge chip. The battery node should be used where there is
+> -no appropriate non-volatile memory, or it is unprogrammed/incorrect.
+> -
+> -Upstream dts files should not include battery nodes, unless the battery
+> -represented cannot easily be replaced in the system by one of a
+> -different type. This prevents unpredictable, potentially harmful,
+> -behavior should a replacement that changes the battery type occur
+> -without a corresponding update to the dtb.
+> -
+> -Required Properties:
+> - - compatible: Must be "simple-battery"
+> -
+> -Optional Properties:
+> - - voltage-min-design-microvolt: drained battery voltage
+> - - voltage-max-design-microvolt: fully charged battery voltage
+> - - energy-full-design-microwatt-hours: battery design energy
+> - - charge-full-design-microamp-hours: battery design capacity
+> - - precharge-current-microamp: current for pre-charge phase
+> - - charge-term-current-microamp: current for charge termination phase
+> - - constant-charge-current-max-microamp: maximum constant input current
+> - - constant-charge-voltage-max-microvolt: maximum constant input voltage
+> - - factory-internal-resistance-micro-ohms: battery factory internal resistance
+> - - ocv-capacity-table-0: An array providing the open circuit voltage (OCV)
+> -   of the battery and corresponding battery capacity percent, which is used
+> -   to look up battery capacity according to current OCV value. And the open
+> -   circuit voltage unit is microvolt.
+> - - ocv-capacity-table-1: Same as ocv-capacity-table-0
+> - ......
+> - - ocv-capacity-table-n: Same as ocv-capacity-table-0
+> - - ocv-capacity-celsius: An array containing the temperature in degree Celsius,
+> -   for each of the battery capacity lookup table. The first temperature value
+> -   specifies the OCV table 0, and the second temperature value specifies the
+> -   OCV table 1, and so on.
+> - - resistance-temp-table: An array providing the temperature in degree Celsius
+> -   and corresponding battery internal resistance percent, which is used to look
+> -   up the resistance percent according to current temperature to get a accurate
+> -   batterty internal resistance in different temperatures.
+> -
+> -Battery properties are named, where possible, for the corresponding
+> -elements in enum power_supply_property, defined in
+> -https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/power_supply.h
+> -
+> -Batteries must be referenced by chargers and/or fuel-gauges
+> -using a phandle. The phandle's property should be named
+> -"monitored-battery".
+> -
+> -Example:
+> -
+> -	bat: battery {
+> -		compatible = "simple-battery";
+> -		voltage-min-design-microvolt = <3200000>;
+> -		voltage-max-design-microvolt = <4200000>;
+> -		energy-full-design-microwatt-hours = <5290000>;
+> -		charge-full-design-microamp-hours = <1430000>;
+> -		precharge-current-microamp = <256000>;
+> -		charge-term-current-microamp = <128000>;
+> -		constant-charge-current-max-microamp = <900000>;
+> -		constant-charge-voltage-max-microvolt = <4200000>;
+> -		factory-internal-resistance-micro-ohms = <250000>;
+> -		ocv-capacity-celsius = <(-10) 0 10>;
+> -		ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
+> -		ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
+> -		ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
+> -		resistance-temp-table = <20 100>, <10 90>, <0 80>, <(-10) 60>;
+> -	};
+> -
+> -	charger: charger@11 {
+> -		....
+> -		monitored-battery = <&bat>;
+> -		...
+> -	};
+> -
+> -	fuel_gauge: fuel-gauge@22 {
+> -		....
+> -		monitored-battery = <&bat>;
+> -		...
+> -	};
+> +The contents of this file has been moved to battery.yaml
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.yaml b/Documentation/devicetree/bindings/power/supply/battery.yaml
+> new file mode 100644
+> index 000000000000..f0b544a22219
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/supply/battery.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +- single-master
-> +	states that there is no other master active on this bus. The OS can use
-> +	this information to detect a stalled bus more reliably, for example.
-> +	Can not be combined with 'multi-master'.
->  
->  Required properties (per child device)
->  --------------------------------------
+> +title: Battery Characteristics
+> +
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org> 
+> +
+> +description: |
+> +  The devicetree battery node provides static battery characteristics.
+> +  In smart batteries, these are typically stored in non-volatile memory
+> +  on a fuel gauge chip. The battery node should be used where there is
+> +  no appropriate non-volatile memory, or it is unprogrammed/incorrect.
+> +
+> +  Upstream dts files should not include battery nodes, unless the battery
+> +  represented cannot easily be replaced in the system by one of a
+> +  different type. This prevents unpredictable, potentially harmful,
+> +  behavior should a replacement that changes the battery type occur
+> +  without a corresponding update to the dtb.
+> +
+> +  Battery properties are named, where possible, for the corresponding elements
+> +  in enum power_supply_property, defined in include/linux/power_supply.h
+> +
+> +  Batteries must be referenced by chargers and/or fuel-gauges using a phandle.
+> +  The phandle's property should be named "monitored-battery".
+> +
+> +properties:
+> +  compatible:
+> +    const: simple-battery
+
+I suspect we'll need a battery.yaml and simple-battery.yaml schema if 
+these properties are used for other batteries. Not sure really, so fine 
+for now.
+
+> +
+> +  voltage-min-design-microvolt: 
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+Don't need types on many of these as standard units have a type already.
+
+> +    description: drained battery voltage
+> +
+> +  voltage-max-design-microvolt:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: fully charged battery voltage
+> +
+> +  energy-full-design-microwatt-hours:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: battery design energy
+> +
+> +  charge-full-design-microamp-hours:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: battery design capacity
+> +
+> +  precharge-current-microamp:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: current for pre-charge phase
+> +
+> +  charge-term-current-microamp:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: current for charge termination phase
+> +
+> +  constant-charge-current-max-microamp:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: maximum constant input current
+> +
+> +  constant-charge-voltage-max-microvolt:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: maximum constant input voltage
+> +
+> +  factory-internal-resistance-micro-ohms:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: battery factory internal resistance
+> +
+> +  ocv-capacity-table-0:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    description: |
+> +      An array providing the open circuit voltage (OCV)
+> +      of the battery and corresponding battery capacity percent, which is used
+> +      to look up battery capacity according to current OCV value. And the open
+> +      circuit voltage unit is microvolt.
+> +
+> +  ocv-capacity-table-1:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    description: Same as ocv-capacity-table-0
+> +
+> +  ocv-capacity-table-n:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    description: Same as ocv-capacity-table-0
+
+Make this a pattern under patternProperties: '^ocv-capacity-table-[0-9]$' 
+
+Is 10 enough or maybe you need more.
+
+maxItems: 100 ?? I asssume 1% granularity would be enough for everyone?
+items:
+  items:
+    - description: open circuit voltage (OCV) in microvolts
+    - description: battery capacity percent
+      maximum: 100
+
+> +
+> +  ocv-capacity-celsius:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      An array containing the temperature in degree Celsius,
+> +      for each of the battery capacity lookup table. The first temperature value
+> +      specifies the OCV table 0, and the second temperature value specifies the
+> +      OCV table 1, and so on.
+> +
+> +  resistance-temp-table:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    description: |
+> +      An array providing the temperature in degree Celsius
+> +      and corresponding battery internal resistance percent, which is used to
+> +      look up the resistance percent according to current temperature to get an
+> +      accurate batterty internal resistance in different temperatures.
+
+Similar definition needed here.
+
+> +
+> +  monitored-battery:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle to the battery node being monitored
+
+As this is the battery node, this property doesn't belong here.
+
+> +
+> +required:
+> +  - compatible
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    power {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      battery:battery {
+> +        compatible = "simple-battery";
+> +        voltage-min-design-microvolt = <3200000>;
+> +        voltage-max-design-microvolt = <4200000>;
+> +        energy-full-design-microwatt-hours = <5290000>;
+> +        charge-full-design-microamp-hours = <1430000>;
+> +        precharge-current-microamp = <256000>;
+> +        charge-term-current-microamp = <128000>;
+> +        constant-charge-current-max-microamp = <900000>;
+> +        constant-charge-voltage-max-microvolt = <4200000>;
+> +        factory-internal-resistance-micro-ohms = <250000>;
+> +        ocv-capacity-celsius = <(-10) 0 10>;
+> +        ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>;
+> +        ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>;
+> +        resistance-temp-table = <20 100>, <10 90>, <0 80>, <(-10) 60>;
+> +      };
+> +
+> +      charger:charger@11 {
+
+Drop unused labels.
+
+> +        reg = <0x11>;
+> +        monitored-battery = <&battery>;
+> +      };
+> +
+> +      fuel_gauge:fuel-gauge@22 {
+> +        reg = <0x22>;
+> +        monitored-battery = <&battery>;
+> +      };
+> +    };
 > -- 
-> 2.20.1
+> 2.26.2
 > 
