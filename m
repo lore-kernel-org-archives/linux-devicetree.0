@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6FFC433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86FFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A613E20814
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD482206B6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 13:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgE2NMW (ORCPT
+        id S1727114AbgE2NM3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 09:12:22 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48126 "EHLO
+        Fri, 29 May 2020 09:12:29 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48170 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgE2NMU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 09:12:20 -0400
+        with ESMTP id S1727093AbgE2NM1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 09:12:27 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1E78E803077A;
-        Fri, 29 May 2020 13:12:15 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id CB9818029EA5;
+        Fri, 29 May 2020 13:12:24 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id YhZta2FXjP8y; Fri, 29 May 2020 16:12:14 +0300 (MSK)
+        with ESMTP id YzOyTpdIMmze; Fri, 29 May 2020 16:12:24 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
         Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 03/16] spi: dw: Locally wait for the DMA transfers completion
-Date:   Fri, 29 May 2020 16:11:52 +0300
-Message-ID: <20200529131205.31838-4-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 15/16] spi: dw: Use regset32 DebugFS method to create regdump file
+Date:   Fri, 29 May 2020 16:12:04 +0300
+Message-ID: <20200529131205.31838-16-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,201 +53,158 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In general each DMA-based SPI transfer can be split up into two stages:
-DMA data transmission/reception and SPI-bus transmission/reception. DMA
-asynchronous transactions completion can be tracked by means of the
-DMA async Tx-descriptor completion callback. But that callback being
-called indicates that the DMA transfer has been finished, it doesn't
-mean that SPI data transmission is also done. Moreover in fact it isn't
-for at least Tx-only SPI transfers. Upon DMA transfer completion some
-data is left in the Tx FIFO and being pushed out by the SPI controller.
-So in order to make sure that an SPI transfer is completely pushed to the
-SPI-bus, the driver has to wait for both DMA transaction and the SPI-bus
-transmission/reception are finished. Note if there is a way to
-asynchronously track the former event by means of the DMA async Tx
-callback, there isn't easy one for the later (IRQ-based solution won't
-work since SPI controller doesn't notify about Rx FIFO being empty).
-
-The DMA transfer completion callback isn't suitable to wait for the
-SPI controller activity finish either. The callback might (in case of DW
-DMAC it will) be called in the tasklet context. Waiting for the SPI
-controller to complete the transfer might take a considerable amount of
-time since SPI-bus might be pretty slow. In this case delaying the
-execution in the tasklet atomic context might cause significant system
-performance drop.
-
-So to speak the best option we've got to solve the problem is to
-consequently wait for both stages being finished in the locally
-implemented SPI transfer execution procedure even if it costs us of the
-local wait-function re-implementation. In this case we don't need to use
-the SPI-core transfer-wait functionality, but we'll make sure that
-all DMA and SPI-bus transactions are completely finished before the
-SPI-core transfer_one callback returns. In this commit we provide an
-implementation of the DMA-transfers completion wait functionality.
-The DW APB SSI DMA-specific SPI transfer_one function waits for both
-Tx and Rx DMA transfers being finished, and only then exits with zero
-returned signalling to the SPI core that the SPI transfer is finished.
-This implementation is fully equivalent to the currently used
-DMA-execution-SPI-core-wait algorithm. The SPI-bus transmission/reception
-wait methods will be added in the follow-up commits.
+DebugFS kernel interface provides a dedicated method to create the
+registers dump file. Use it instead of creating a generic DebugFS
+file with manually written read callback function.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
 Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Feng Tang <feng.tang@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
----
- drivers/spi/spi-dw-mid.c | 44 ++++++++++++++++++++++++++++++++++++----
- drivers/spi/spi-dw.h     |  2 ++
- 2 files changed, 42 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index 7ff1acaa55f8..355b641c4483 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -11,9 +11,11 @@
- #include "spi-dw.h"
+---
+
+Changelog v3:
+- Add commas in the debugfs_reg32 structure initializer and after the last
+  item of the array dw_spi_dbgfs_regs.
+---
+ drivers/spi/spi-dw-core.c | 86 ++++++++++++---------------------------
+ drivers/spi/spi-dw.h      |  2 +
+ 2 files changed, 28 insertions(+), 60 deletions(-)
+
+diff --git a/drivers/spi/spi-dw-core.c b/drivers/spi/spi-dw-core.c
+index 4d1849699a12..323c66c5db50 100644
+--- a/drivers/spi/spi-dw-core.c
++++ b/drivers/spi/spi-dw-core.c
+@@ -29,66 +29,29 @@ struct chip_data {
+ };
  
- #ifdef CONFIG_SPI_DW_MID_DMA
-+#include <linux/completion.h>
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/irqreturn.h>
-+#include <linux/jiffies.h>
- #include <linux/pci.h>
- #include <linux/platform_data/dma-dw.h>
+ #ifdef CONFIG_DEBUG_FS
+-#define SPI_REGS_BUFSIZE	1024
+-static ssize_t dw_spi_show_regs(struct file *file, char __user *user_buf,
+-		size_t count, loff_t *ppos)
+-{
+-	struct dw_spi *dws = file->private_data;
+-	char *buf;
+-	u32 len = 0;
+-	ssize_t ret;
+-
+-	buf = kzalloc(SPI_REGS_BUFSIZE, GFP_KERNEL);
+-	if (!buf)
+-		return 0;
+-
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"%s registers:\n", dev_name(&dws->master->dev));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"=================================\n");
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"CTRLR0: \t0x%08x\n", dw_readl(dws, DW_SPI_CTRLR0));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"CTRLR1: \t0x%08x\n", dw_readl(dws, DW_SPI_CTRLR1));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"SSIENR: \t0x%08x\n", dw_readl(dws, DW_SPI_SSIENR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"SER: \t\t0x%08x\n", dw_readl(dws, DW_SPI_SER));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"BAUDR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_BAUDR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"TXFTLR: \t0x%08x\n", dw_readl(dws, DW_SPI_TXFTLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"RXFTLR: \t0x%08x\n", dw_readl(dws, DW_SPI_RXFTLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"TXFLR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_TXFLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"RXFLR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_RXFLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"SR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_SR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"IMR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_IMR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"ISR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_ISR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"DMACR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_DMACR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"DMATDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMATDLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"DMARDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMARDLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"=================================\n");
+-
+-	ret = simple_read_from_buffer(user_buf, count, ppos, buf, len);
+-	kfree(buf);
+-	return ret;
++
++#define DW_SPI_DBGFS_REG(_name, _off)	\
++{					\
++	.name = _name,			\
++	.offset = _off,			\
+ }
  
-@@ -66,6 +68,8 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
- 	dws->master->dma_rx = dws->rxchan;
- 	dws->master->dma_tx = dws->txchan;
+-static const struct file_operations dw_spi_regs_ops = {
+-	.owner		= THIS_MODULE,
+-	.open		= simple_open,
+-	.read		= dw_spi_show_regs,
+-	.llseek		= default_llseek,
++static const struct debugfs_reg32 dw_spi_dbgfs_regs[] = {
++	DW_SPI_DBGFS_REG("CTRLR0", DW_SPI_CTRLR0),
++	DW_SPI_DBGFS_REG("CTRLR1", DW_SPI_CTRLR1),
++	DW_SPI_DBGFS_REG("SSIENR", DW_SPI_SSIENR),
++	DW_SPI_DBGFS_REG("SER", DW_SPI_SER),
++	DW_SPI_DBGFS_REG("BAUDR", DW_SPI_BAUDR),
++	DW_SPI_DBGFS_REG("TXFTLR", DW_SPI_TXFTLR),
++	DW_SPI_DBGFS_REG("RXFTLR", DW_SPI_RXFTLR),
++	DW_SPI_DBGFS_REG("TXFLR", DW_SPI_TXFLR),
++	DW_SPI_DBGFS_REG("RXFLR", DW_SPI_RXFLR),
++	DW_SPI_DBGFS_REG("SR", DW_SPI_SR),
++	DW_SPI_DBGFS_REG("IMR", DW_SPI_IMR),
++	DW_SPI_DBGFS_REG("ISR", DW_SPI_ISR),
++	DW_SPI_DBGFS_REG("DMACR", DW_SPI_DMACR),
++	DW_SPI_DBGFS_REG("DMATDLR", DW_SPI_DMATDLR),
++	DW_SPI_DBGFS_REG("DMARDLR", DW_SPI_DMARDLR),
+ };
  
-+	init_completion(&dws->dma_completion);
+ static int dw_spi_debugfs_init(struct dw_spi *dws)
+@@ -100,8 +63,11 @@ static int dw_spi_debugfs_init(struct dw_spi *dws)
+ 	if (!dws->debugfs)
+ 		return -ENOMEM;
+ 
+-	debugfs_create_file("registers", S_IFREG | S_IRUGO,
+-		dws->debugfs, (void *)dws, &dw_spi_regs_ops);
++	dws->regset.regs = dw_spi_dbgfs_regs;
++	dws->regset.nregs = ARRAY_SIZE(dw_spi_dbgfs_regs);
++	dws->regset.base = dws->regs;
++	debugfs_create_regset32("registers", 0400, dws->debugfs, &dws->regset);
 +
  	return 0;
- 
- free_rxchan:
-@@ -91,6 +95,8 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
- 	dws->master->dma_rx = dws->rxchan;
- 	dws->master->dma_tx = dws->txchan;
- 
-+	init_completion(&dws->dma_completion);
-+
- 	return 0;
  }
  
-@@ -121,7 +127,7 @@ static irqreturn_t dma_transfer(struct dw_spi *dws)
- 
- 	dev_err(&dws->master->dev, "%s: FIFO overrun/underrun\n", __func__);
- 	dws->master->cur_msg->status = -EIO;
--	spi_finalize_current_transfer(dws->master);
-+	complete(&dws->dma_completion);
- 	return IRQ_HANDLED;
- }
- 
-@@ -142,6 +148,29 @@ static enum dma_slave_buswidth convert_dma_width(u8 n_bytes) {
- 	return DMA_SLAVE_BUSWIDTH_UNDEFINED;
- }
- 
-+static int dw_spi_dma_wait(struct dw_spi *dws, struct spi_transfer *xfer)
-+{
-+	unsigned long long ms;
-+
-+	ms = xfer->len * MSEC_PER_SEC * BITS_PER_BYTE;
-+	do_div(ms, xfer->effective_speed_hz);
-+	ms += ms + 200;
-+
-+	if (ms > UINT_MAX)
-+		ms = UINT_MAX;
-+
-+	ms = wait_for_completion_timeout(&dws->dma_completion,
-+					 msecs_to_jiffies(ms));
-+
-+	if (ms == 0) {
-+		dev_err(&dws->master->cur_msg->spi->dev,
-+			"DMA transaction timed out\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * dws->dma_chan_busy is set before the dma transfer starts, callback for tx
-  * channel will clear a corresponding bit.
-@@ -155,7 +184,7 @@ static void dw_spi_dma_tx_done(void *arg)
- 		return;
- 
- 	dw_writel(dws, DW_SPI_DMACR, 0);
--	spi_finalize_current_transfer(dws->master);
-+	complete(&dws->dma_completion);
- }
- 
- static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
-@@ -204,7 +233,7 @@ static void dw_spi_dma_rx_done(void *arg)
- 		return;
- 
- 	dw_writel(dws, DW_SPI_DMACR, 0);
--	spi_finalize_current_transfer(dws->master);
-+	complete(&dws->dma_completion);
- }
- 
- static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
-@@ -260,6 +289,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
- 	/* Set the interrupt mask */
- 	spi_umask_intr(dws, imr);
- 
-+	reinit_completion(&dws->dma_completion);
-+
- 	dws->transfer_handler = dma_transfer;
- 
- 	return 0;
-@@ -268,6 +299,7 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
- static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
- {
- 	struct dma_async_tx_descriptor *txdesc, *rxdesc;
-+	int ret;
- 
- 	/* Prepare the TX dma transfer */
- 	txdesc = dw_spi_dma_prepare_tx(dws, xfer);
-@@ -288,7 +320,11 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
- 		dma_async_issue_pending(dws->txchan);
- 	}
- 
--	return 1;
-+	ret = dw_spi_dma_wait(dws, xfer);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
- }
- 
- static void mid_spi_dma_stop(struct dw_spi *dws)
 diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 79782e93eb12..9585d0c83a6d 100644
+index 0b2cd7994513..151ba316619e 100644
 --- a/drivers/spi/spi-dw.h
 +++ b/drivers/spi/spi-dw.h
-@@ -2,6 +2,7 @@
- #ifndef DW_SPI_HEADER_H
+@@ -3,6 +3,7 @@
  #define DW_SPI_HEADER_H
  
-+#include <linux/completion.h>
+ #include <linux/completion.h>
++#include <linux/debugfs.h>
  #include <linux/irqreturn.h>
  #include <linux/io.h>
  #include <linux/scatterlist.h>
-@@ -145,6 +146,7 @@ struct dw_spi {
- 	unsigned long		dma_chan_busy;
- 	dma_addr_t		dma_addr; /* phy address of the Data register */
- 	const struct dw_spi_dma_ops *dma_ops;
-+	struct completion	dma_completion;
+@@ -152,6 +153,7 @@ struct dw_spi {
  
  #ifdef CONFIG_DEBUG_FS
  	struct dentry *debugfs;
++	struct debugfs_regset32 regset;
+ #endif
+ };
+ 
 -- 
 2.26.2
 
