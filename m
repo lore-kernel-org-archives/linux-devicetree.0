@@ -2,120 +2,131 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E94C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 11:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD45C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 11:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C366C207F5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 11:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D838A207D4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 11:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X+WskA+K"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Wkaw94XO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbgE2LNq (ORCPT
+        id S1726282AbgE2LkE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 07:13:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41496 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgE2LNq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 07:13:46 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TBDUJA037663;
-        Fri, 29 May 2020 06:13:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590750810;
-        bh=laSh5WDSxtGsanL/QvTs+5ZA+9Q2Ea1wGgBncXX0Eko=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=X+WskA+KaiRKwU/n8cyC2YGhQkVT/PsQHXi9nTZ6Wp8u7uQanjdU15XwvOotFra92
-         K+6IeWPeZJ5UUN93ww51WwYM8Jrr6rCgA24BYUmFlMLUYHbqVcNThTlTctXFZJ2k7m
-         sA+pNIfGeUp+wNyoLol73bh6K18u5Uuak5EvC3j0=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04TBDUsm044198
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 06:13:30 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
- May 2020 06:13:30 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 29 May 2020 06:13:30 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TBDPMA027241;
-        Fri, 29 May 2020 06:13:27 -0500
-Subject: Re: [PATCH 04/12] dt-bindings: irqchip: ti,sci-intr: Update bindings
- to drop the usage of gic as parent
-To:     Rob Herring <robh@kernel.org>
-CC:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>
-References: <20200520124454.10532-1-lokeshvutla@ti.com>
- <20200520124454.10532-5-lokeshvutla@ti.com> <20200528221406.GA769073@bogus>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <df339bc8-f1ad-0056-b2be-9b4957cb63d8@ti.com>
-Date:   Fri, 29 May 2020 16:43:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 29 May 2020 07:40:04 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:25533 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbgE2LkD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 07:40:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590752403; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ULnHO3lQn35d/Unhx2ItBX6eZJKBINasYWCghlKe0pE=;
+ b=Wkaw94XONmcPgx6R/ddgjtjDt01wkP3C7xOiQ0bZEHDPzhdL79k0kC5evoABRW4FU+KEO8A1
+ sJejn2EFHO5svDM8VrDFNHdY3yhPQ0OiczLLeCmgcYjmwSFC6lXgn1aBO/QO4j7/dfXaOrqA
+ oWzX25nOYiGqqKS5fNZdf2dvDm4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ed0f488ea0dfa490eb3cf12 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 11:39:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CFBD2C43395; Fri, 29 May 2020 11:39:51 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1FF9FC433C9;
+        Fri, 29 May 2020 11:39:51 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200528221406.GA769073@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Fri, 29 May 2020 17:09:51 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
+        nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
+        saravanak@google.com, mka@chromium.org, robh+dt@kernel.org,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 04/10] OPP: Add support for parsing interconnect
+ bandwidth
+In-Reply-To: <20200529044437.5wmbbews2vn66dia@vireshk-i7>
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-5-georgi.djakov@linaro.org>
+ <20200529044437.5wmbbews2vn66dia@vireshk-i7>
+Message-ID: <423a76300ccc9a8fa9e825cab56d4d36@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-[..snip..]
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> index 1a8718f8855d..8b56b2de1c73 100644
->> --- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> @@ -44,15 +44,17 @@ Required Properties:
->>  			4: If intr supports level triggered interrupts.
->>  - interrupt-controller:	Identifies the node as an interrupt controller
->>  - #interrupt-cells:	Specifies the number of cells needed to encode an
->> -			interrupt source. The value should be 2.
->> -			First cell should contain the TISCI device ID of source
->> -			Second cell should contain the interrupt source offset
->> -			within the device.
->> +			interrupt source. The value should be 1.
->> +			First cell should contain interrupt router input number
->> +			as specified by hardware.
->>  - ti,sci:		Phandle to TI-SCI compatible System controller node.
->> -- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
->> -- ti,sci-rm-range-girq:	Array of TISCI subtype ids representing the host irqs
->> -			assigned to this interrupt router. Each subtype id
->> -			corresponds to a range of host irqs.
->> +- ti,sci-dev-id:	TISCI device id of interrupt controller.
->> +- ti,interrupt-ranges:	Set of triplets containing ranges that convert
->> +			the INTR output interrupt numbers to parent's
->> +			interrupt number. Each triplet has following entries:
->> +			- First entry specifies the base for intr output irq
->> +			- Second entry specifies the base for parent irqs
->> +			- Third entry specifies the limit
+On 2020-05-29 10:14, Viresh Kumar wrote:
+> On 12-05-20, 15:53, Georgi Djakov wrote:
+>>  struct dev_pm_opp *_opp_allocate(struct opp_table *table)
+>>  {
+>>  	struct dev_pm_opp *opp;
+>> -	int count, supply_size;
+>> +	int supply_count, supply_size, icc_size;
+>> 
+>>  	/* Allocate space for at least one supply */
+>> -	count = table->regulator_count > 0 ? table->regulator_count : 1;
+>> -	supply_size = sizeof(*opp->supplies) * count;
+>> +	supply_count = table->regulator_count > 0 ? table->regulator_count : 
+>> 1;
+>> +	supply_size = sizeof(*opp->supplies) * supply_count;
+>> +	icc_size = sizeof(*opp->bandwidth) * table->path_count;
+>> 
+>>  	/* allocate new OPP node and supplies structures */
+>> -	opp = kzalloc(sizeof(*opp) + supply_size, GFP_KERNEL);
+>> +	opp = kzalloc(sizeof(*opp) + supply_size + icc_size, GFP_KERNEL);
+>> +
+>>  	if (!opp)
+>>  		return NULL;
+>> 
+>>  	/* Put the supplies at the end of the OPP structure as an empty 
+>> array */
+>>  	opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
+>> +	opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies + 
+>> supply_count);
+>>  	INIT_LIST_HEAD(&opp->node);
 > 
-> Humm, sounds like what interrupt-map does.
+> Added this delta here.
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 7302f2631f8d..dfbd3d10410c 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1330,7 +1330,8 @@ struct dev_pm_opp *_opp_allocate(struct opp_table 
+> *table)
+> 
+>         /* Put the supplies at the end of the OPP structure as an empty 
+> array */
+>         opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
+> -       opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies +
+> supply_count);
+> +       if (icc_size)
+> +               opp->bandwidth = (struct dev_pm_opp_icc_bw
+> *)(opp->supplies + supply_count);
 
-IIUC, for every irq translation there should be an entry in interrupt-map
-property. These Controllers has interrupts ranging from 32, 256 and more. It
-might be odd to have 256  entries in the interrupt map no? Also there are
-multiple interrupt controllers which need such translations.
+nice catch!
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-Thanks and regards,
-Lokesh
+>         INIT_LIST_HEAD(&opp->node);
+> 
+>         return opp;
 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
