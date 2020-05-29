@@ -2,109 +2,125 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39C9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C1CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACBCB207BC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590747509;
-	bh=1gO1/eZcCypQP2/ERBE2xRPkz/uvzqJx0ATFlqsEmQ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=g6xcOXGMzKPeSgl/DWbpyQcKFAEHaRr8DfuI1bRJ/D8qgjggg3Q7GutESSXLLsYMO
-	 FiNk4U3m8C7/7M5d55brnB3svrd2kKGboL1GGYA6oJqnbBAYVMP5ZULqfoBC0cK+Fs
-	 VTeUN48uLpPhOK1RHf1Z1XYcsiUljyh4o9LelPag=
+	by mail.kernel.org (Postfix) with ESMTP id 86F36206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 10:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgE2KS3 (ORCPT
+        id S1725936AbgE2KUX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 06:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49016 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 06:20:23 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46225 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2KS2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 06:18:28 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D7832075A;
-        Fri, 29 May 2020 10:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590747508;
-        bh=1gO1/eZcCypQP2/ERBE2xRPkz/uvzqJx0ATFlqsEmQ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CmSiG5525ab+yozhZiB84XPVzV7snokbfJF9Rtldc9iVsemZb0h2E/7sxR0sbiSAQ
-         9HW8JvwQCF+b4epTSwe4rIDn1tkLcCaJEeWOrJcTLX7eIhRCnTxM32clXQIlFvzXJS
-         VAAHNMY9zmUfU9+oPFoTPyUo/pQgmqfvRVhx2ahU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jec5q-00GF29-8i; Fri, 29 May 2020 11:18:26 +0100
+        id S1725790AbgE2KUW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 06:20:22 -0400
+IronPort-SDR: LukgJ8TSaQRuS3E7HpYm3kgC48gbosrwcIv8mqJQRNIl7sCDdMLGShbLrjAqLyHv1cDo/lk5k5
+ 4FvXu9BKyG5w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 03:20:21 -0700
+IronPort-SDR: tCOyUULUn9i4scVuAzjaMNFp3Gasyjdf/ViwSD4S9LPTJhLmxZv2guxSvILN5a59b6/kZ8LWZP
+ izErP8sOPPmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
+   d="scan'208";a="257302559"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 29 May 2020 03:20:16 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jec7f-009aoH-8V; Fri, 29 May 2020 13:20:19 +0300
+Date:   Fri, 29 May 2020 13:20:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Alan Cox <alan@linux.intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 05/16] spi: dw: Add SPI Rx-done wait method to
+ DMA-based transfer
+Message-ID: <20200529102019.GC1634618@smile.fi.intel.com>
+References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
+ <20200529035915.20790-6-Sergey.Semin@baikalelectronics.ru>
+ <20200529094648.GY1634618@smile.fi.intel.com>
+ <20200529101328.bfoyyvmwm5gfflxv@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 May 2020 11:18:26 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 04/12] dt-bindings: irqchip: ti,sci-intr: Update bindings
- to drop the usage of gic as parent
-In-Reply-To: <f803f646-2a55-4f15-9682-1dc616d7c714@ti.com>
-References: <20200520124454.10532-1-lokeshvutla@ti.com>
- <20200520124454.10532-5-lokeshvutla@ti.com> <20200528221406.GA769073@bogus>
- <f803f646-2a55-4f15-9682-1dc616d7c714@ti.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <4ea8c6110a16900220a65f1d44145146@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: lokeshvutla@ti.com, robh@kernel.org, tglx@linutronix.de, nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, grygorii.strashko@ti.com, peter.ujfalusi@ti.com, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529101328.bfoyyvmwm5gfflxv@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-29 11:14, Lokesh Vutla wrote:
-> Hi Rob,
+On Fri, May 29, 2020 at 01:13:28PM +0300, Serge Semin wrote:
+> On Fri, May 29, 2020 at 12:46:48PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 29, 2020 at 06:59:03AM +0300, Serge Semin wrote:
+> > > Having any data left in the Rx FIFO after the DMA engine claimed it has
+> > > finished all DMA transactions is an abnormal situation, since the DW SPI
+> > > controller driver expects to have all the data being fetched and placed
+> > > into the SPI Rx buffer at that moment. In case if this has happened we
+> > > assume that DMA engine still may be doing the data fetching, thus we give
+> > > it sometime to finish. If after a short period of time the data is still
+> > > left in the Rx FIFO, the driver will give up waiting and return an error
+> > > indicating that the SPI controller/DMA engine must have hung up or failed
+> > > at some point of doing their duties.
+> > 
+> > ...
+> > 
+> > > +static int dw_spi_dma_wait_rx_done(struct dw_spi *dws)
+> > > +{
+> > > +	int retry = WAIT_RETRIES;
+> > > +	struct spi_delay delay;
+> > > +	unsigned long ns, us;
+> > > +	u32 nents;
+> > > +
+> > > +	/*
+> > > +	 * It's unlikely that DMA engine is still doing the data fetching, but
+> > > +	 * if it's let's give it some reasonable time. The timeout calculation
+> > > +	 * is based on the synchronous APB/SSI reference clock rate, on a
+> > > +	 * number of data entries left in the Rx FIFO, times a number of clock
+> > > +	 * periods normally needed for a single APB read/write transaction
+> > > +	 * without PREADY signal utilized (which is true for the DW APB SSI
+> > > +	 * controller).
+> > > +	 */
+> > > +	nents = dw_readl(dws, DW_SPI_RXFLR);
+> > 
 > 
-> On 29/05/20 3:44 am, Rob Herring wrote:
->> On Wed, May 20, 2020 at 06:14:46PM +0530, Lokesh Vutla wrote:
->>> Drop the firmware related dt-bindings and use the hardware specified
->>> interrupt numbers within Interrupt Router. This ensures interrupt 
->>> router
->>> DT node need not assume any interrupt parent type.
->> 
->> I didn't like this binding to begin with, but now you're breaking
->> compatibility.
+> > > +	ns = NSEC_PER_SEC / dws->max_freq * 4 * nents;
+> > 
+> > I think we may slightly increase precision by writing this like
+> > 
+> > 	ns = 4 * NSEC_PER_SEC / dws->max_freq * nents;
 > 
-> Yes, I do agree that this change is breaking backward compatibility. 
-> But IMHO,
-> this does cleanup of firmware specific properties from DT. Since this 
-> is not
-> deployed out yet in the wild market, I took the leverage of breaking 
-> backward
-> compatibility. Before accepting these changes from firmware team, I did
-> discuss[0] with Marc on this topic.
+> Good point. Although both 4 and NSEC_PER_SEC are signed. The later is
+> 1000000000L. Formally speaking on x32 systems (4 * 1000 000 000L) equals
+> to a negative value. Though overflow still won't happen so the result will
+> be correct. Anyway to be on a safe side it would be better to use an explicit
+> unsigned literal:
+> 
+> +       ns = 4U * NSEC_PER_SEC / dws->max_freq * nents;
 
-And I assume that should anyone complain about the kernel being broken
-because they have an old firmware, you'll be OK with the patches being
-reverted, right?
+Yes, right.
 
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+With Best Regards,
+Andy Shevchenko
+
+
