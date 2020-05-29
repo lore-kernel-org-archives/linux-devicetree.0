@@ -2,105 +2,148 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2838AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747BDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3EA820776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4167E20810
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590787461;
-	bh=YWyIq/178DCdspHNjqPNAh5CzI4dPnsCJP3BOTj/Fs8=;
+	s=default; t=1590787601;
+	bh=4PcmKVXv3+Pm537ytXY6tA02wQ0lM4OxDXfeD1RfrVg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wfhUske6hp88E70vmU48CX2Xlipl4P/gEB0vZu/QKr28ZYFO9KLw12cC2mMQdrg1J
-	 6jjhJ8tIyIROsQhdeqEmD+22YBSWS5G3BFyhJ1BkE3K6gGZwijDxqnFuyOxpqex2vM
-	 6ZwqN3W6W3Ogg+QB0qbSOjm8X4Fh/r/2cCtCeHfs=
+	b=PS+q1j6ByqRZqWBTXus4rthTTgwfKoXxc9DKvKojfzB6P17134VmdngQoBmxo/dE/
+	 d9M6m2gHL+TGeLLMda8nAmimAv0SUiuM+lrexD9rIwVfNH1300N+o8vs+5S3D59PGn
+	 4fZC+Gk/p65DH4upzFHvq4ZlXX2eXbsJ55JSKE0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgE2VYU (ORCPT
+        id S1728071AbgE2V0k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 17:24:20 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40789 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbgE2VYU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:24:20 -0400
-Received: by mail-il1-f195.google.com with SMTP id t8so3376693ilm.7;
-        Fri, 29 May 2020 14:24:19 -0700 (PDT)
+        Fri, 29 May 2020 17:26:40 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35846 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgE2V0k (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:26:40 -0400
+Received: by mail-il1-f196.google.com with SMTP id 17so3942588ilj.3;
+        Fri, 29 May 2020 14:26:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=uowho2igbLeYdvcPX3pvLRT9zcMohs3wO1m6OZGWISE=;
-        b=ay2ADklElmDDyXLi5yyOTViBj6iRx8/zrpc2D5rhziKm75c7+aIfclTiT2LVzJVbKt
-         BfUB2H4CEDK0Xqt1Bx184YmLotCyOfF03p+jB2QPEwrHvtSH1PlxZmofSbBQP8XoOFrm
-         qRPq+w1J8ppBqx3p1tg4enaBAUcAof0rbzgLmZwg58/02YFjiYnwMddMv+ZHaSNpWKlx
-         lfRXkZSORAYeMdwuinzSIN6Rk4UpXIdsDuqRz7ovp8R8bXKhpAh5KIKKzIELgT0RChEt
-         tk3mB09X48eaj4ykyBbCKpAW7PRhvCa9BeUlcyrIVHFsuKGsmlvvduUIMswO/Gd3Kl1J
-         N7JA==
-X-Gm-Message-State: AOAM530tSpBWNyPkpiNPIcnFxjBV5pXzQZDa+jhfVLxVK4cLIqqwE1PB
-        PVXgKJ/71zwlNQP9WaJdug==
-X-Google-Smtp-Source: ABdhPJz/qLHW9IoKyI+iX/bqpRWeziSYW8gFNNZGjEIqFx7OXO5F0hX1+RCCulHWqGa35KT8U1Cm4g==
-X-Received: by 2002:a92:5fda:: with SMTP id i87mr7186744ill.292.1590787459003;
-        Fri, 29 May 2020 14:24:19 -0700 (PDT)
+        bh=+2I2uh+lCRQ53KIyx03FmW/+jeIMFqOBrGTcbc9lM4s=;
+        b=Pikg9MLLTqzQ2jwqEe6IFmOXh4LISsKfaPmROxgGYDuQJutrBVTO1HxCvEdzFITZwj
+         Ltn14m37MHv6e5VpR6KBH58k4f2UqWaW57jpw7Tn6c2VxucQoRKkGYkMbRGSh+GvcOe6
+         +iSHFUloRI9U8NOmyw81mQSJiVTBnvsJQfqoCpEyeMjC9yHhVlMWB5MLr9SxFULCB8JZ
+         VgxSiRY/eY+eWUt0qgp/+z36Zdk+nt5yJAw65TEXozYwafSeT+qbFpRF0VJC0/Vz7kfL
+         HUv8ebxvm0nglmxeLL94l8/722pdSt2oCymRNEIs07FarCPIePNFO8eR0zOAWau7e0fq
+         x1cA==
+X-Gm-Message-State: AOAM531Ud/gU7ndHtfVtDsFI0GoGiCvsdVgTPEVNjKrB7ATe0D2FNBBc
+        dkcwRLpE2nsDnevokxYFoVxgKubrhg==
+X-Google-Smtp-Source: ABdhPJzR/qUOw/XdsiMltbuXXMqaCmOfvW7wTfv0VjXShbJx2eIblPx7c2mxeaGCHZ4eWqhGUoRnAQ==
+X-Received: by 2002:a92:8488:: with SMTP id y8mr2707079ilk.262.1590787599226;
+        Fri, 29 May 2020 14:26:39 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i10sm5312514ilp.28.2020.05.29.14.24.14
+        by smtp.gmail.com with ESMTPSA id t65sm1498148ilk.38.2020.05.29.14.26.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 14:24:18 -0700 (PDT)
-Received: (nullmailer pid 2994336 invoked by uid 1000);
-        Fri, 29 May 2020 21:24:13 -0000
-Date:   Fri, 29 May 2020 15:24:13 -0600
+        Fri, 29 May 2020 14:26:38 -0700 (PDT)
+Received: (nullmailer pid 2998245 invoked by uid 1000);
+        Fri, 29 May 2020 21:26:37 -0000
+Date:   Fri, 29 May 2020 15:26:37 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     linux-mips@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v5 02/11] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200529212413.GA2994283@bogus>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
+To:     Felix Fietkau <nbd@nbd.name>
+Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: net: wireless: mt76: add power-limits
+ node
+Message-ID: <20200529212637.GA2994957@bogus>
+References: <20200529161929.24751-1-nbd@nbd.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200529161929.24751-1-nbd@nbd.name>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 May 2020 17:40:45 +0300, Serge Semin wrote:
-> This array property is used to indicate the maximum burst transaction
-> length supported by each DMA channel.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Move $ref to the root level of the properties. So do with the
->   constraints.
-> - Set default max-burst-len to 256 TR-WIDTH words.
-> 
-> Changelog v3:
-> - Add more details into the property description about what limitations
->   snps,max-burst-len defines.
-> ---
->  .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
+On Fri, May 29, 2020 at 06:19:27PM +0200, Felix Fietkau wrote:
+> This subnode can be used to set per-rate tx power limits either per
+> country code / regdomain or globally.
+> These limits are typically provided by the device manufacturers and are
+> used to limit sideband emissions and stay within regulatory limits
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+How do other WiFi chips handle this? If this is added to DT, then it 
+should be common for all WiFi h/w.
+ 
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> ---
+>  .../bindings/net/wireless/mediatek,mt76.txt   | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+> index ab7e7a00e534..9d9ace0cfbf9 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+> @@ -36,6 +36,7 @@ Optional nodes:
+>  - led: Properties for a connected LED
+>    Optional properties:
+>      - led-sources: See Documentation/devicetree/bindings/leds/common.txt
+> +- power-limits: contains per-regdomain/channel rate power limit subnodes
+>  
+>  &pcie {
+>  	pcie0 {
+> @@ -76,3 +77,49 @@ wmac: wmac@18000000 {
+>  
+>  	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
+>  };
+> +
+> +
+> +Subnodes of power-limits:
+> +
+> +Properties:
+> +- country: One or more country codes, as used by the cfg80211 regdomain code
+> +- regdomain: "FCC", "ETSI" or "JP"
+> +
+> +If neither country, nor regdomain is specified, the power limits node is used
+> +as a fallback when no other subnode matches.
+> +
+> +Subnodes txpower-2g, txpower-5g:
+> +
+> +Properties:
+> +- channels: pairs of first and last channel number
+> +- cck: 4 half-dBm per-rate power limit values
+> +- ofdm: 8 half-dBm per-rate power limit values
+> +- mcs:
+> +	sets of per-rate power limit values for 802.11n/802.11ac rates for
+> +	multiple channel bandwidth settings.
+> +	Each set starts with the number of channel bandwidth settings for
+> +	which the rate set applies, followed by either 8 (MT7603/MT7628) or
+> +	10 (all other chips) power limit values.
+> +	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
+> +
+> +
+> +power-limit example:
+> +
+> +power-limits {
+> +	r0 {
+> +		regdomain = "FCC";
+> +		txpower-5g {
+> +			r1 {
+> +				channels = <36 48>;
+> +				ofdm = <23 23 23 23 23 23 23 23>;
+> +				mcs = <1 23 23 23 23 23 23 23 23 23 23>,
+> +					  <3 22 22 22 22 22 22 22 22 22 22>;
+> +			};
+> +			r2 {
+> +				channels = <100 181>;
+> +				ofdm = <14 14 14 14 14 14 14 14>;
+> +				mcs = <4 14 14 14 14 14 14 14 14 14 14>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.24.0
+> 
