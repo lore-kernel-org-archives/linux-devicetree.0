@@ -2,138 +2,133 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2524DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846BAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F342520723
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6453B2075A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 17:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590772502;
-	bh=3UEdCLS2U2X6sRTkzwKK/m7e1dIvATzh1907ZI7A8es=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HLT3gJxXVwt1BNjiR6WR2x+yZlM8v06jSVhgCBlf8vjO93ymaGgcEMoiUMdFpmJHn
-	 QL8v+kQtkPDWu+NFfCDTjZEStLG7ac2aEvXlSyMXMeHs7WGFb1rJoJs34fvd1dFZXz
-	 AaUO9Ojmq9uTK0z2FANoe4rxSGz9mK3PFAno0ULw=
+	s=default; t=1590772717;
+	bh=mjF6mC3mF3QNXp2WlNCL1zZZbC1Evj4Ace79zxEKflE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=2oFYzouLTDSwusg5UPbHix1RfK6JiLiYbbn6efDi2lHiW1LgwLDBzNqVxpEJjH6QL
+	 C+l2Dszu0xc9T1ndLLavnjvfEap0VV3CA/UT307gBXGrQhlCUMg6c9/whGIMY6prRt
+	 zzF8QAHAfeU1tZM8C0bpwxHaw/QKK3mTbsKhRZoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725913AbgE2RPB (ORCPT
+        id S1725913AbgE2RSh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 13:15:01 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:38019 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2RPB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 13:15:01 -0400
-Received: by mail-il1-f195.google.com with SMTP id q18so3234317ilm.5;
-        Fri, 29 May 2020 10:15:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kNm3vdi6ihnVei8rU4MqO8m2guJKDe0NrdeWkMfAtqc=;
-        b=oimmwbYkZQg+uqZaL1MueTM2SrZRttqgC4UfXoJqbKdzN1DdQCaTx7KoUiJ0s7CcZj
-         xVAdOkhquU63fY1fJ2MT4kr22nYebfArLHzgpzSYLEeL+WKwnY/dkEWQFf/acIAZE++1
-         IG/Fx4rr6+CRhRa74kphP+kzbB3qEWMC9d0i5tmHajJrWCLwnsF1aKUBt1zqFkEu9vCp
-         W4FIDIgD621z6RwQhBcHkg9xsNkIqA38obN0/0oknA394oULKZyApKks5IMDaHjO3xj3
-         Wi0ScqVswj6XBVYJg6y8CM5RWXBC9+qokoftOhTXBOE3qrn6AqBY+w0SAC3KG+f1Iu6e
-         BpCQ==
-X-Gm-Message-State: AOAM533nJTXOruFV+rCqLvf2W3qo9dD/u39wyQRqQqXBfMvJBMh/d5Qh
-        yBO6T/m+Or98cTqNUDis1A==
-X-Google-Smtp-Source: ABdhPJzJCOA11eEXWWu9FCBhBqjrR7k5EiZ78OyhLYkzNV1vNtLk1Nwml/TcoIcJ+mHYelzmkTYUgA==
-X-Received: by 2002:a92:5ac2:: with SMTP id b63mr3528622ilg.134.1590772500200;
-        Fri, 29 May 2020 10:15:00 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a17sm4993973ild.31.2020.05.29.10.14.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 10:14:59 -0700 (PDT)
-Received: (nullmailer pid 2590915 invoked by uid 1000);
-        Fri, 29 May 2020 17:14:58 -0000
-Date:   Fri, 29 May 2020 11:14:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     kishon@ti.com, vkoul@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        adrian.hunter@intel.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel: Add Keem Bay eMMC PHY
- bindings
-Message-ID: <20200529171458.GA2588871@bogus>
-References: <20200526050452.8837-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200526050452.8837-2-wan.ahmad.zainie.wan.mohamad@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526050452.8837-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Fri, 29 May 2020 13:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgE2RSg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 13:18:36 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DA442074D;
+        Fri, 29 May 2020 17:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590772716;
+        bh=mjF6mC3mF3QNXp2WlNCL1zZZbC1Evj4Ace79zxEKflE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=NEz58XCgYR+BQkwlF0Yd0sn/+mQGZhAx5KtSHLjD2aCqLCAR9s9EZJY54qh8LFlUY
+         Kb4mNjHFdf5uYakcB3aw82g4hl78FvjpHtz3tcl3nIPSbRJksZhDDdbMw1O5t0sGPs
+         feK9PjK4ZpJC6F55lSVelSCXhORaCJjf7TNMR29s=
+Date:   Fri, 29 May 2020 18:18:32 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+In-Reply-To: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
+Message-Id: <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:04:51PM +0800, Wan Ahmad Zainie wrote:
-> Binding description for Intel Keem Bay eMMC PHY.
+On Fri, 29 May 2020 16:11:49 +0300, Serge Semin wrote:
+> Baikal-T1 SoC provides a DW DMA controller to perform low-speed peripherals
+> Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
+> APB SSI devices embedded into the SoC. Currently the DMA-based transfers
+> are supported by the DW APB SPI driver only as a middle layer code for
+> Intel MID/Elkhart PCI devices. Seeing the same code can be used for normal
+> platform DMAC device we introduced a set of patches to fix it within this
+> series.
 > 
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-> ---
->  .../bindings/phy/intel,keembay-emmc-phy.yaml  | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
-> new file mode 100644
-> index 000000000000..d3e0f169eb0a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2020 Intel Corporation
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/intel,keembay-emmc-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Intel Keem Bay eMMC PHY bindings
-> +
-> +maintainers:
-> +  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,keembay-emmc-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: emmcclk
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#phy-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    phy@20290000 {
-> +          compatible = "intel,keembay-emmc-phy";
-> +          reg = <0x0 0x20290000 0x0 0x54>;
+> [...]
 
-Examples expect a single cell for address and size.
+Applied to
 
-> +          clocks = <&emmc>;
-> +          clock-names = "emmcclk";
-> +          #phy-cells = <0>;
-> +    };
-> -- 
-> 2.17.1
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[01/15] spi: dw: Set xfer effective_speed_hz
+        commit: de4c2875a5ff2c886df60f2086c6affca83f890a
+[02/15] spi: dw: Return any value retrieved from the dma_transfer callback
+        commit: f0410bbf7d0fb80149e3b17d11d31f5b5197873e
+[03/15] spi: dw: Locally wait for the DMA transfers completion
+        commit: bdbdf0f06337d3661b64c0288c291cb06624065e
+[04/15] spi: dw: Add SPI Tx-done wait method to DMA-based transfer
+        commit: 1ade2d8a72f9240825f6be050f0d49c840f7daeb
+[05/15] spi: dw: Add SPI Rx-done wait method to DMA-based transfer
+        commit: 33726eff3d98e643f7d7a0940f4024844b430c82
+[06/15] spi: dw: Parameterize the DMA Rx/Tx burst length
+        commit: c534df9d6225314d1403e4330a22d68c35e0eb55
+[07/15] spi: dw: Use DMA max burst to set the request thresholds
+        commit: 0b2b66514fc9971b3a6002ba038d74f77705fd34
+[08/15] spi: dw: Fix Rx-only DMA transfers
+        commit: 46164fde6b7890e7a3982d54549947c8394c0192
+[09/15] spi: dw: Add core suffix to the DW APB SSI core source file
+        commit: 77ccff803d27279ccc100dc906c6f456c8fa515c
+[10/15] spi: dw: Move Non-DMA code to the DW PCIe-SPI driver
+        commit: 6c710c0cb6725bdbe647b958756685aed0295936
+[11/15] spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
+        commit: 06cfadb8c51b05c6b91c2d43e0fe72b3d643dced
+[12/15] spi: dw: Add DW SPI DMA/PCI/MMIO dependency on the DW SPI core
+        commit: ecb3a67edfd353837dc23b538fb250d1dfd88e7b
+[13/15] spi: dw: Cleanup generic DW DMA code namings
+        commit: 57784411728ff4d72ae051fdbba1e54fcb1f8d6f
+[14/15] spi: dw: Add DMA support to the DW SPI MMIO driver
+        commit: 0fdad596d46b28d5c3e39d1897c5e3878b64d9a2
+[15/15] spi: dw: Use regset32 DebugFS method to create regdump file
+        commit: 8378449d1f79add31be77e77fc7df9f639878e9c
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
