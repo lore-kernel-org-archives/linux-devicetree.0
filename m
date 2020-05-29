@@ -2,128 +2,121 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1539DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E67C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA73021475
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="ErFV4aKk"
+	by mail.kernel.org (Postfix) with ESMTP id BC1F6207F5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 16:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgE2QTg (ORCPT
+        id S1727779AbgE2QVl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 12:19:36 -0400
-Received: from nbd.name ([46.4.11.11]:39410 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbgE2QTf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 12:19:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
-        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=AylzNCRVoQbwIAp6arjQA9caBIZ3bOW9933qSf24gyE=; b=ErFV4aKkxTpdawqH5VUVhccEF9
-        S/Y+MqMnwHWzBt9hoMmlyaoYlxVcjYz09IHgkVaaA3dDKzIAsGFG2J2u9bThIXEr3jqY8gyjfFZWy
-        PF8MNGLJWz6Krf/2ExHLygtQdEvlC0NCEL0Tkr4OQE7Ck/HG2521C5TIRZoCFTKQGDfo=;
-Received: from p4ff13c20.dip0.t-ipconnect.de ([79.241.60.32] helo=maeck.lan)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1jehjG-0007eI-PN; Fri, 29 May 2020 18:19:30 +0200
-Received: by maeck.lan (Postfix, from userid 501)
-        id BD5F98917448; Fri, 29 May 2020 18:19:29 +0200 (CEST)
-From:   Felix Fietkau <nbd@nbd.name>
-To:     linux-wireless@vger.kernel.org
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: net: wireless: mt76: add power-limits node
-Date:   Fri, 29 May 2020 18:19:27 +0200
-Message-Id: <20200529161929.24751-1-nbd@nbd.name>
-X-Mailer: git-send-email 2.24.0
+        Fri, 29 May 2020 12:21:41 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49750 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgE2QVk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 12:21:40 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 078768030772;
+        Fri, 29 May 2020 16:21:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id t-5OvJZSG0eC; Fri, 29 May 2020 19:21:31 +0300 (MSK)
+Date:   Fri, 29 May 2020 19:21:30 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/10] spi: Adding support for Microchip Sparx5 SoC
+Message-ID: <20200529162130.hsjcde27xhohl6jl@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200513140031.25633-1-lars.povlsen@microchip.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This subnode can be used to set per-rate tx power limits either per
-country code / regdomain or globally.
-These limits are typically provided by the device manufacturers and are
-used to limit sideband emissions and stay within regulatory limits
+Hello Lars,
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
----
- .../bindings/net/wireless/mediatek,mt76.txt   | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
+On Wed, May 13, 2020 at 04:00:21PM +0200, Lars Povlsen wrote:
+> This is an add-on series to the main SoC Sparx5 series
+> (Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>).
+> 
+> The series add support for Sparx5 on top of the existing
+> ocelot/jaguar2 spi driver.
+> 
+> It spins off the existing support for the MSCC platforms into a
+> separate driver, as adding new platforms from the MSCC/Microchip
+> product lines will further complicate (clutter) the original driver.
+> 
+> New YAML dt-bindings are provided for the resulting driver.
+> 
+> It is expected that the DT patches are to be taken directly by the arm-soc
+> maintainers.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-index ab7e7a00e534..9d9ace0cfbf9 100644
---- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-@@ -36,6 +36,7 @@ Optional nodes:
- - led: Properties for a connected LED
-   Optional properties:
-     - led-sources: See Documentation/devicetree/bindings/leds/common.txt
-+- power-limits: contains per-regdomain/channel rate power limit subnodes
- 
- &pcie {
- 	pcie0 {
-@@ -76,3 +77,49 @@ wmac: wmac@18000000 {
- 
- 	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
- };
-+
-+
-+Subnodes of power-limits:
-+
-+Properties:
-+- country: One or more country codes, as used by the cfg80211 regdomain code
-+- regdomain: "FCC", "ETSI" or "JP"
-+
-+If neither country, nor regdomain is specified, the power limits node is used
-+as a fallback when no other subnode matches.
-+
-+Subnodes txpower-2g, txpower-5g:
-+
-+Properties:
-+- channels: pairs of first and last channel number
-+- cck: 4 half-dBm per-rate power limit values
-+- ofdm: 8 half-dBm per-rate power limit values
-+- mcs:
-+	sets of per-rate power limit values for 802.11n/802.11ac rates for
-+	multiple channel bandwidth settings.
-+	Each set starts with the number of channel bandwidth settings for
-+	which the rate set applies, followed by either 8 (MT7603/MT7628) or
-+	10 (all other chips) power limit values.
-+	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
-+
-+
-+power-limit example:
-+
-+power-limits {
-+	r0 {
-+		regdomain = "FCC";
-+		txpower-5g {
-+			r1 {
-+				channels = <36 48>;
-+				ofdm = <23 23 23 23 23 23 23 23>;
-+				mcs = <1 23 23 23 23 23 23 23 23 23 23>,
-+					  <3 22 22 22 22 22 22 22 22 22 22>;
-+			};
-+			r2 {
-+				channels = <100 181>;
-+				ofdm = <14 14 14 14 14 14 14 14>;
-+				mcs = <4 14 14 14 14 14 14 14 14 14 14>;
-+			};
-+		};
-+	};
-+};
--- 
-2.24.0
+Regarding our cooperation. It can be implemented as follows. Since your patchset
+is less cumbersome than mine and is more ready to be integrated into the generic DW
+APB SSI code, it would be better to first make it through Mark', Andy' and my reviews
+to be further merged into the kernel version of the driver. After that I'll have
+my code altered so it could be applied on top of your patches. When everything
+is done we'll have a more comprehensive DW APB SSI driver with poll-based
+PIO operations support, new features like rx-delay, etc.
 
+Thank you one more time for the series you've shared with us. Let's see what can
+be done to improve it...
+
+-Sergey
+
+> 
+> Lars Povlsen (10):
+>   spi: dw: Add support for polled operation via no IRQ specified in DT
+>   spi: dw: Add support for RX sample delay register
+>   spi: dw: Add support for client driver memory operations
+>   dt-bindings: spi: Add bindings for spi-dw-mchp
+>   spi: spi-dw-mmio: Spin off MSCC platforms into spi-dw-mchp
+>   dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
+>   spi: spi-dw-mchp: Add Sparx5 support
+>   arm64: dts: sparx5: Add SPI controller
+>   arm64: dts: sparx5: Add spi-nor support
+>   arm64: dts: sparx5: Add spi-nand devices
+> 
+>  .../bindings/spi/mscc,ocelot-spi.yaml         |  89 ++++
+>  .../bindings/spi/snps,dw-apb-ssi.txt          |   7 +-
+>  MAINTAINERS                                   |   2 +
+>  arch/arm64/boot/dts/microchip/sparx5.dtsi     |  37 ++
+>  .../boot/dts/microchip/sparx5_pcb125.dts      |  16 +
+>  .../boot/dts/microchip/sparx5_pcb134.dts      |  22 +
+>  .../dts/microchip/sparx5_pcb134_board.dtsi    |   9 +
+>  .../boot/dts/microchip/sparx5_pcb135.dts      |  23 +
+>  .../dts/microchip/sparx5_pcb135_board.dtsi    |   9 +
+>  arch/mips/configs/generic/board-ocelot.config |   2 +-
+>  drivers/spi/Kconfig                           |   7 +
+>  drivers/spi/Makefile                          |   1 +
+>  drivers/spi/spi-dw-mchp.c                     | 399 ++++++++++++++++++
+>  drivers/spi/spi-dw-mmio.c                     |  93 ----
+>  drivers/spi/spi-dw.c                          |  31 +-
+>  drivers/spi/spi-dw.h                          |   4 +
+>  16 files changed, 644 insertions(+), 107 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>  create mode 100644 drivers/spi/spi-dw-mchp.c
+> 
+> --
+> 2.26.2
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
