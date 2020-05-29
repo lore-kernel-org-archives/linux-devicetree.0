@@ -2,112 +2,94 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E192EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F06C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB84F208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y8IOIIbg"
+	by mail.kernel.org (Postfix) with ESMTP id A30622067B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 19:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgE2Tjf (ORCPT
+        id S1727879AbgE2Ts3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 15:39:35 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43606 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2Tjf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:39:35 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TJdP6B037266;
-        Fri, 29 May 2020 14:39:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590781165;
-        bh=wQ582Jun/nwakMpVHCTGC+XK6lct9XsIpF/gTKCzB4E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=y8IOIIbgm87LrsXCKCcUbTGdAcKHRwAu8QJEeHzVJRcjRZ/e7U8Hh8xCeF08Tsyp1
-         NsIfBDRAbDXOZIXycPjJWkWr63uGpgIkutvuZU/LiPTM7gbbSePlsCZS7b3vmjcTYb
-         6QMjwKrczyzOuEgiZDYA2k5QEjJKpKnLUjEdwkHA=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04TJdPXe124917
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 14:39:25 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
- May 2020 14:39:24 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 29 May 2020 14:39:24 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TJdMYP008147;
-        Fri, 29 May 2020 14:39:22 -0500
-Subject: Re: [PATCH v4 0/2] soc: ti: add k3 platforms chipid module driver
-To:     <santosh.shilimkar@oracle.com>, Arnd Bergmann <arnd@arndb.de>
-CC:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>
-References: <20200512123449.16517-1-grygorii.strashko@ti.com>
- <a132765e-f4e4-a1e8-fb43-239188fecf1b@ti.com>
- <CAK8P3a31DYOn1TyjxCYM7ebc9nL5EFKsNpSHkq55bG54Bns+MA@mail.gmail.com>
- <cb980673-d3ad-53b8-9351-196ff3f47c45@oracle.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <f06a6285-aa9f-918b-044c-c0ba1f0ad1fc@ti.com>
-Date:   Fri, 29 May 2020 22:39:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 15:48:29 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35733 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbgE2Ts2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 15:48:28 -0400
+Received: by mail-oi1-f196.google.com with SMTP id z9so3681337oid.2;
+        Fri, 29 May 2020 12:48:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pst8C2tVyYuFv+xfb5MfEs+AZNNtDDZgtn4hcqD1seA=;
+        b=FhyQ0coXbfgQkrxRrcYwgPfItE0jJxvc/5JJI03p+Of7lbVP6IY8pYmtOlv9ZaB9+o
+         5U17B0z8QTWbAlKov+93YdQEpA7nm8upchx0DQh2IV6NVMMpSRz5JsXL5kSsMUtWus8v
+         VtzkEYaLAhjKX9DpcnW3ud/pOHpFHbJJ19YfKGIIisibl6GcvmwjcQsfAUc9LOt+Ejpq
+         42oXCXcawZQs9EFaq+1qN1T/Rg5XG1xLRQe06Do1K18WZVwgS3OHNG/OY26rjb4sRQMU
+         gb0lGtr1RBRJFCuTXmzXVMM/IGW4LA6zUc2VlwVzsK1JakOI8bxfZEZi2fAlWTCorieb
+         zYQA==
+X-Gm-Message-State: AOAM531wjiG4/f37dAJK7kLnHPK4w/t9O2/QDh3+qglP+674Kc65KlGW
+        CNRe0uPauE44N4pppEfS+rXtObE34wAckU2ZSEE=
+X-Google-Smtp-Source: ABdhPJwlQSai9nYpf0uOpQAS4xHdM/Sp0KKbEBrax8t6pK+klNcpA39HMQmQJYs2Osqqn0x40DZD5fjgF1dMgh/+a40=
+X-Received: by 2002:a05:6808:1:: with SMTP id u1mr7204321oic.54.1590781707694;
+ Fri, 29 May 2020 12:48:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cb980673-d3ad-53b8-9351-196ff3f47c45@oracle.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590614320-30160-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdX+m7WixJiNJyrpHxjnp5vFHi3ULuT7QgPOA93NE1XiHQ@mail.gmail.com> <20200529191402.GA2771130@bogus>
+In-Reply-To: <20200529191402.GA2771130@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 29 May 2020 21:48:16 +0200
+Message-ID: <CAMuHMdURcNed9EmG+gkfUzF1tvcEY1jxpOmMF86yOxOgWsG4gg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: timer: renesas,cmt: Document r8a7742 CMT support
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
+On Fri, May 29, 2020 at 9:14 PM Rob Herring <robh@kernel.org> wrote:
+> On Fri, May 29, 2020 at 02:53:02PM +0200, Geert Uytterhoeven wrote:
+> > On Wed, May 27, 2020 at 11:19 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > Document SoC specific compatible strings for r8a7742. No driver change
+> > > is needed as the fallback strings will activate the right code.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Please note this DT binding is under yamlization, cfr.
+> > "[PATCH v2] dt-bindings: timer: renesas: cmt: Convert to json-schema"
+> > (20200505155127.4836-1-geert+renesas@glider.be).
+>
+> Do I need to pick that one up? Doesn't look like it's been applied
+> AFAICT.
 
-On 29/05/2020 22:19, santosh.shilimkar@oracle.com wrote:
-> On 5/29/20 11:34 AM, Arnd Bergmann wrote:
->> On Fri, May 29, 2020 at 8:22 PM Grygorii Strashko
->> <grygorii.strashko@ti.com> wrote:
->>> On 12/05/2020 15:34, Grygorii Strashko wrote:
->>
->>>>    .../bindings/soc/ti/k3-socinfo.yaml           |  40 +++++
->>>>    drivers/soc/ti/Kconfig                        |  10 ++
->>>>    drivers/soc/ti/Makefile                       |   1 +
->>>>    drivers/soc/ti/k3-socinfo.c                   | 152 ++++++++++++++++++
->>>>    4 files changed, 203 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
->>>>    create mode 100644 drivers/soc/ti/k3-socinfo.c
->>>>
->>>
->>> Any chances you can pick this up?
->>
->> I merged a version of this driver from Santosh's pull request into the
->> arm/drviers tree yesterday.
->>
->> Is there something missing?
->>
-> Nope. I was going to reply on the thread but missed it.
+Would be nice. Thanks!
 
-Oh. Thanks. I've missed that it was already picked up.
+Gr{oetje,eeting}s,
 
-Thanks again.
+                        Geert
 
 -- 
-Best regards,
-grygorii
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
