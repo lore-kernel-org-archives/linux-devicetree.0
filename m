@@ -2,96 +2,152 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774A8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7602EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540F620810
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB2B20810
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 21:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590788728;
-	bh=4zbEZSZyMk5DhqI3Bb1UCHq7lh988vHi4SYqLvxciNQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r161GDkPMLG/6tOIat6IQcuzOV6awp0lZLh+Nyzzg5pnbmFbsQ0elmBgtPT6DeJn0
-	 IavwVurR/h2sxUVS8e2jL/VduUs26JLAaJhfEW0hv5twos4ZlQi1qiQv8SoFyfJ5j7
-	 fMSUr+iuYf00yWAa+LZgDvMYRfIaVcqoRUWzziCs=
+	s=default; t=1590789304;
+	bh=90nMNMJZG3bE6EONlBgplDhLtYLcosIsBsMQPBXQX5I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vDpBAWsmp8U+RDVh+7Bv9SS532B7oE76A9SuF4ecAaYbvkrZB8klI8S93clZyVfYn
+	 jkFhyseKSGSrVcdgaMX8k+vsJAJB8XaRn7711lP6YSpNvdaq+V64zMKgxa6Mf9XVEQ
+	 WFZ3nT7QL4irIzjnX0AsN9trkq4eOV3+jCuREqmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgE2VpX (ORCPT
+        id S1728105AbgE2VzD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 17:45:23 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37214 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbgE2VpX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 17:45:23 -0400
-Received: by mail-il1-f196.google.com with SMTP id r2so3962034ila.4;
-        Fri, 29 May 2020 14:45:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gr0zXVVEplEEw2j9ufWrSiyQP2XN9MvxyfVD2I7gbHQ=;
-        b=Op1WLfQciyUdcxkX6WcZIwGbhOObiLGqF3km8uKHORMsQSuHTyAqtjkglyGM/d3+fX
-         BcgeY5A1ChiKuhxiIUNqRgsdlu+x8FgAWMFOWkv6YDgNUiJr5fi5heWBxLGbQhsL/EOr
-         6S7KVDpYOb+Ql3N4gJsBz6zcBJGd3/o2mk8bU9VeOkILgAXWAnTaqzqjAwSKTCbVNBLe
-         7v6Lf6zjaZTbiGsFUvc6gJ7SlGkXj7xt4E9l+sgGnPjLK5M2Jutgp/qCm/5aNqmju7q/
-         TuvMST8M5bl70FBjo7cHzfqwprP9q/XHljXhQBw2+zSWEcoUzv1idST4AABM5Hdhg7is
-         wFeA==
-X-Gm-Message-State: AOAM533UgvJ355Hgv9/JKVy6ggkBD0RTEVIuLydmO3C8I2bs5dP8db6w
-        Vw7oHiW4vduh64ErOSB7VA==
-X-Google-Smtp-Source: ABdhPJzjdTgPakR313ticbx9ElFMdis/0s2/gMfV5CG62ElhWJEG0x+1MYzSLCe7d3QknAKFV0d7CQ==
-X-Received: by 2002:a92:c68c:: with SMTP id o12mr8480896ilg.96.1590788722523;
-        Fri, 29 May 2020 14:45:22 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id g4sm5334133ilj.45.2020.05.29.14.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 14:45:21 -0700 (PDT)
-Received: (nullmailer pid 3036995 invoked by uid 1000);
-        Fri, 29 May 2020 21:45:19 -0000
-Date:   Fri, 29 May 2020 15:45:19 -0600
+        Fri, 29 May 2020 17:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726975AbgE2VzD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 17:55:03 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABE4920897;
+        Fri, 29 May 2020 21:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590789302;
+        bh=90nMNMJZG3bE6EONlBgplDhLtYLcosIsBsMQPBXQX5I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Vl65MHJ2VWrBN3QVABldy5J+oYUDjGIJIdHVsGWB4EAqqA2wh8iDjxttk1uv/G8u6
+         AfNomewL5esdgfno+4IYHbkNA+dfyvq6dWntRDcXdSGAHjNl7sn00mnZPyLxEX/ZFi
+         iatsQ0JyWihsGNcSybTjTPM1Pq70976o+gyQEymY=
+Received: by mail-oi1-f179.google.com with SMTP id b3so3917849oib.13;
+        Fri, 29 May 2020 14:55:02 -0700 (PDT)
+X-Gm-Message-State: AOAM531eUE/8JyOiHZu87vlJ31e9JONAkvGGOlzsWLfcTs91A2RZ+iOZ
+        5tlnRTGw4Yc2W7tN1wxRTmskGYwKbdBl6mofLA==
+X-Google-Smtp-Source: ABdhPJxIY/0QhqrBJ9IPX5ItnGlWYG6SbttnUxbw31iB150uuosHqwH393VTbbRuU9m5Bwbq+6XIOKFUfnsaCLKBpGo=
+X-Received: by 2002:aca:564a:: with SMTP id k71mr7374718oib.147.1590789301910;
+ Fri, 29 May 2020 14:55:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200422222242.241699-1-pmalani@chromium.org> <20200511192800.GA28762@bogus>
+ <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
+In-Reply-To: <20200512134154.GC2085641@kuha.fi.intel.com>
 From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
+Date:   Fri, 29 May 2020 15:54:50 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+Message-ID: <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        twawrzynczak@chromium.org, Benson Leung <bleung@chromium.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: Document 7211 compatible
- for brcm, bcm2835-gpio.txt
-Message-ID: <20200529214519.GA3036732@bogus>
-References: <20200529191522.27938-1-f.fainelli@gmail.com>
- <20200529191522.27938-2-f.fainelli@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529191522.27938-2-f.fainelli@gmail.com>
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 May 2020 12:15:19 -0700, Florian Fainelli wrote:
-> Document the brcm,bcm7211-gpio compatible string in the
-> brcm,bcm2835-gpio.txt document.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Tue, May 12, 2020 at 7:42 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> Hi guys,
+>
+> On Mon, May 11, 2020 at 01:46:35PM -0700, Prashant Malani wrote:
+> > Hi Rob,
+> >
+> > Thank you for reviewing the patch. Kindly see my comments inline:
+> >
+> > On Mon, May 11, 2020 at 02:28:00PM -0500, Rob Herring wrote:
+> > > On Wed, Apr 22, 2020 at 03:22:39PM -0700, Prashant Malani wrote:
+> > > > Add properties for mode, orientation and USB data role switches for
+> > > > Type C connectors. When available, these will allow the Type C connector
+> > > > class port driver to configure the various switches according to USB PD
+> > > > information (like orientation, alt mode etc.) provided by the Chrome OS
+> > > > EC controller.
+> > > >
+> > > > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > > > ---
+> > > >  .../bindings/chrome/google,cros-ec-typec.yaml | 27 ++++++++++++++++++-
+> > > >  1 file changed, 26 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> > > > index 6d7396ab8bee..b5814640aa32 100644
+> > > > --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> > > > +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> > > > @@ -21,7 +21,21 @@ properties:
+> > > >      const: google,cros-ec-typec
+> > > >
+> > > >    connector:
+> > > > -    $ref: /schemas/connector/usb-connector.yaml#
+> > > > +    allOf:
+> > > > +      - $ref: /schemas/connector/usb-connector.yaml#
+> > > > +      - type: object
+> > > > +        properties:
+> > >
+> > > These don't seem CrOS EC specific, so why document them as such.
+> >
+> > Are you referring to the "mode-switch", "orientation-switch" and
+> > "usb-role-switch" properties? If so, then yes, they aren't Cros EC
+> > specific. The Type C connector class framework requires the nodes to be
+> > named like this, and the cros-ec-typec driver uses this framework, hence
+> > the description here (the Type C connector class framework doesn't have
+> > any bindings).
+> >
+> > Would it be better to add in the description string that Type Connector
+> > class expects these switches to be named this way? :
+> >
+> > " Reference to a DT node for the USB Type C Multiplexer controlling the
+> > data lines routing for this connector. This switch is assumed registered
+> > with the Type C connector class framework, which requires it to be named
+> > this way."
+> > >
+> > > > +          mode-switch:
+> > > > +            description: Reference to a DT node for the USB Type C Multiplexer
+> > > > +              controlling the data lines routing for this connector.
+> > >
+> > > This is for alternate mode muxing I presume.
+> >
+> > Yes, that's right.
+> > >
+> > > We already have a mux-control binding. Why not use that here?
+> >
+> > Heikki might be able to offer more insight into why this is the case,
+> > since the connector class framework seems to expect a phandle and for
+> > the device driver to implement a "set" command. Heikki, would you happen to know?
+>
+> The mode-switch here would actually represent the "consumer" part in
+> the mux-control bindings. So the mux-controls would describe the
+> relationship between the "mode-switch" and the mux controller(s),
+> while the mode-switch property describes the relationship between
+> something like USB Type-C Port Manager (or this cros_ec function) and
+> the "mux consumer".
 
-Acked-by: Rob Herring <robh@kernel.org>
+The "USB Type-C Port Manager" is not just the parent node in your case?
+
+Can you point me to what you expect your DT to look like showing the
+mode switch node, the connector, the USB host(s), and the DP/HDMI
+bridge/output?
+
+Rob
