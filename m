@@ -2,47 +2,44 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF64C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49C9C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45F0E20707
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36622074D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389524AbgE2D7l (ORCPT
+        id S2390278AbgE2D7n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 23:59:41 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45454 "EHLO
+        Thu, 28 May 2020 23:59:43 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45418 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389305AbgE2D7k (ORCPT
+        with ESMTP id S2388744AbgE2D7k (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 23:59:40 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 70360803077A;
-        Fri, 29 May 2020 03:59:37 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id EC5DF8030779;
+        Fri, 29 May 2020 03:59:35 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id N8_5g2D6vp7n; Fri, 29 May 2020 06:59:36 +0300 (MSK)
+        with ESMTP id xT5FdjWP_obT; Fri, 29 May 2020 06:59:35 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 09/16] spi: dw: Add core suffix to the DW APB SSI core source file
-Date:   Fri, 29 May 2020 06:59:07 +0300
-Message-ID: <20200529035915.20790-10-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v5 07/16] spi: dw: Use DMA max burst to set the request thresholds
+Date:   Fri, 29 May 2020 06:59:05 +0300
+Message-ID: <20200529035915.20790-8-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,51 +51,132 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Generic DMA support is going to be part of the DW APB SSI core object.
-In order to preserve the kernel loadable module name as spi-dw.ko, let's
-add the "-core" suffix to the object with generic DW APB SSI code and
-build it into the target spi-dw.ko driver.
+Each channel of DMA controller may have a limited length of burst
+transaction (number of IO operations performed at ones in a single
+DMA client request). This parameter can be used to setup the most
+optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
+overrun we can set the DMA Tx level to be of FIFO depth minus the
+maximum burst transactions length. To prevent the Rx buffer underflow
+the DMA Rx level should be set to the maximum burst transactions length.
+This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
+in accordance with these rules.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Feng Tang <feng.tang@intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 
 ---
 
 Changelog v3:
-- This is a new patch added as a result of the discussion with Andy
-  Shevchenko.
+- Use min() method to calculate the optimal burst values.
 ---
- drivers/spi/Makefile                    | 1 +
- drivers/spi/{spi-dw.c => spi-dw-core.c} | 0
- 2 files changed, 1 insertion(+)
- rename drivers/spi/{spi-dw.c => spi-dw-core.c} (100%)
+ drivers/spi/spi-dw-mid.c | 37 +++++++++++++++++++++++++++++++++----
+ drivers/spi/spi-dw.h     |  2 ++
+ 2 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 28f601327f8c..70ebc2a62e5f 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_SPI_COLDFIRE_QSPI)		+= spi-coldfire-qspi.o
- obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
- obj-$(CONFIG_SPI_DLN2)			+= spi-dln2.o
- obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
-+spi-dw-y				:= spi-dw-core.o
- obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
- obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
- spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw-core.c
-similarity index 100%
-rename from drivers/spi/spi-dw.c
-rename to drivers/spi/spi-dw-core.c
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index 93463bdba0f8..ff79b4239d68 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -36,6 +36,31 @@ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
+ 	return true;
+ }
+ 
++static void mid_spi_maxburst_init(struct dw_spi *dws)
++{
++	struct dma_slave_caps caps;
++	u32 max_burst, def_burst;
++	int ret;
++
++	def_burst = dws->fifo_len / 2;
++
++	ret = dma_get_slave_caps(dws->rxchan, &caps);
++	if (!ret && caps.max_burst)
++		max_burst = caps.max_burst;
++	else
++		max_burst = RX_BURST_LEVEL;
++
++	dws->rxburst = min(max_burst, def_burst);
++
++	ret = dma_get_slave_caps(dws->txchan, &caps);
++	if (!ret && caps.max_burst)
++		max_burst = caps.max_burst;
++	else
++		max_burst = TX_BURST_LEVEL;
++
++	dws->txburst = min(max_burst, def_burst);
++}
++
+ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ {
+ 	struct dw_dma_slave slave = {
+@@ -73,6 +98,8 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ 
+ 	init_completion(&dws->dma_completion);
+ 
++	mid_spi_maxburst_init(dws);
++
+ 	return 0;
+ 
+ free_rxchan:
+@@ -100,6 +127,8 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
+ 
+ 	init_completion(&dws->dma_completion);
+ 
++	mid_spi_maxburst_init(dws);
++
+ 	return 0;
+ }
+ 
+@@ -229,7 +258,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+ 	memset(&txconf, 0, sizeof(txconf));
+ 	txconf.direction = DMA_MEM_TO_DEV;
+ 	txconf.dst_addr = dws->dma_addr;
+-	txconf.dst_maxburst = TX_BURST_LEVEL;
++	txconf.dst_maxburst = dws->txburst;
+ 	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
+ 	txconf.device_fc = false;
+@@ -321,7 +350,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	memset(&rxconf, 0, sizeof(rxconf));
+ 	rxconf.direction = DMA_DEV_TO_MEM;
+ 	rxconf.src_addr = dws->dma_addr;
+-	rxconf.src_maxburst = RX_BURST_LEVEL;
++	rxconf.src_maxburst = dws->rxburst;
+ 	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
+ 	rxconf.device_fc = false;
+@@ -346,8 +375,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	u16 imr = 0, dma_ctrl = 0;
+ 
+-	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
+-	dw_writel(dws, DW_SPI_DMATDLR, TX_BURST_LEVEL);
++	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
++	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
+ 
+ 	if (xfer->tx_buf) {
+ 		dma_ctrl |= SPI_DMA_TDMAE;
+diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+index 9585d0c83a6d..9247670fcdfb 100644
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+@@ -142,7 +142,9 @@ struct dw_spi {
+ 
+ 	/* DMA info */
+ 	struct dma_chan		*txchan;
++	u32			txburst;
+ 	struct dma_chan		*rxchan;
++	u32			rxburst;
+ 	unsigned long		dma_chan_busy;
+ 	dma_addr_t		dma_addr; /* phy address of the Data register */
+ 	const struct dw_spi_dma_ops *dma_ops;
 -- 
 2.26.2
 
