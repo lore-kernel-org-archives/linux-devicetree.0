@@ -2,115 +2,164 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB62C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618F2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8A29214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE652073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="URWVUOZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgE2OD7 (ORCPT
+        id S1727027AbgE2OEj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 10:03:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41747 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2OD6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 10:03:58 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 23so2622019oiq.8;
-        Fri, 29 May 2020 07:03:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uDJ4Btq9hlxbNCcGfnKl79K6Z3PoAMkIaZIqBmoR+cM=;
-        b=WeWrj+BP3yx4IWJGiqemW7wE/cv+fD96YF+aF+25HB3i7HIWBBfIXu60rdRozyeFn+
-         W6Bv/FVbAcKy6/bIe9dWyIpAd5rAx5Qi4ZQFqKnUwGNdWw6AZsMp9Fym593kEr3/Y1Bh
-         ugfdlAJqWFEa+7kDbSDT19RCzSLSgyU0t7Lj1dDehYSaj5gQ/6CG//dal7s/SfaNcc7Y
-         QAc+SltzYb71UlDmI7rKyKUqne66HX0cEtuKyqF/PprftzhFRbuVflQ0zj4OXCxsEb4z
-         /nmGCODzkHiZyNAb5QBny/ouGwxSxdI2eughW8X+FDU6831euSuQtSz35KgJORBu+MgO
-         mrww==
-X-Gm-Message-State: AOAM533sbv+05j4BiWOFs2mTfYnH034p+HzdhG3ogsiONkF8d6XcIKhf
-        M7+SAT/HeNYSCzLp+yRDIpjlh1r8Hk55C6fpbns=
-X-Google-Smtp-Source: ABdhPJxuWZmx/BcGQIQHL9kIiVbCuLv+D17s9jpKNSJyt4pYIoAZ3H0oH9tfjaD4OV5KJpPxJtLI4f36mhQ2co+tUv8=
-X-Received: by 2002:aca:210a:: with SMTP id 10mr5565192oiz.153.1590761036723;
- Fri, 29 May 2020 07:03:56 -0700 (PDT)
+        Fri, 29 May 2020 10:04:39 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:8703 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgE2OEi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 10:04:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590761078; x=1622297078;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=sAGWaqia1JF0ryeRDXVzFPeaOltQyl1NGW+wvlqDi/E=;
+  b=URWVUOZqjoRzONnnH/q05xZjn/+tJ5OFy7pO4A+Xk04NClzFwzEmk4o0
+   oCWnUXvIo8Wr+e7NX4gZd3ZxcXRAD91ziqCgppCunRr+bfiTFYkbpxvnr
+   yRJPrOPmoTdwXF89Mps9VhpjPZi0eYEoLE9KGjR2p9lCx2JEm2MTt6Kpi
+   1dNTJhotEvcLn4RhZUA0Q1SRj3UuAhNBR2cur/hAD4kAbfpqiyUtRjhSV
+   8GYqQJw47Wu3LzpeGDd1dAwwUKdE5YkCycXSX2rgERb7R6YAmHsEcSCIb
+   h++3ncSfc75VYDZJ0DWPYwEwcmUVFsLrokUlKsOY7EfsbW+oN3GThFvoF
+   Q==;
+IronPort-SDR: xpzqGjpyykV5Ih2wHq02FXx0AqsGr/X8yLZnO6sUmywda4kivT2QCL6RfgUMu/+Mo7l9o/BFdz
+ eE5+qVqCa2lVZL5SDnAKAB9ZWgFApKonr+D6Tn6LKVvhGj0EMsHHtXKOQO4hBQk4pAhpJdC3/T
+ oSeo8ia8aXe0OQprk4ftk7b2Q5mkFCr7fBh1lEuOKj3veab6yAchm6/zODKBhgT3fNGupVkkZX
+ NyNMfNrLKlKmDbgry41qbg+dHhM/zAN07j+tX4W+FU0kPMqY2yjRRAJZ5m8BXBRwZSwDb8/s93
+ CCI=
+X-IronPort-AV: E=Sophos;i="5.73,448,1583218800"; 
+   d="scan'208";a="76764161"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 May 2020 07:04:37 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 29 May 2020 07:04:40 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 29 May 2020 07:04:25 -0700
+References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-11-lars.povlsen@microchip.com> <159054759981.88029.2630901114208720574@swboyd.mtv.corp.google.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, SoC Team <soc@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 10/14] dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+In-Reply-To: <159054759981.88029.2630901114208720574@swboyd.mtv.corp.google.com>
+Date:   Fri, 29 May 2020 16:04:32 +0200
+Message-ID: <87lflaq1lb.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-References: <1590611013-26029-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590611013-26029-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590611013-26029-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 29 May 2020 16:03:45 +0200
-Message-ID: <CAMuHMdWmasOizdsNqz+w0HzmmiAHtJY1Jv0twte671p_p6=0Rw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7742-iwg21d-q7: Enable HSUSB, USB2.0 and XHCI
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
 
-On Wed, May 27, 2020 at 10:24 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable support for HSUB, USB2.0 and xhci on iWave RZ/G1H carrier board.
+Stephen Boyd writes:
+
+> Quoting Lars Povlsen (2020-05-13 05:55:28)
+>> diff --git a/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+>> new file mode 100644
+>> index 0000000000000..594007d8fc59a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+>> @@ -0,0 +1,46 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/clock/microchip,sparx5-dpll.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Microchip Sparx5 DPLL Clock
+>> +
+>> +maintainers:
+>> +  - Lars Povlsen <lars.povlsen@microchip.com>
+>> +
+>> +description: |
+>> +  The Sparx5 DPLL clock controller generates and supplies clock to
+>> +  various peripherals within the SoC.
+>> +
+>> +  This binding uses common clock bindings
+>> +  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> I don't think we need this sentence. Please drop it.
 
-Thanks for your patch!
+OK. (Assuming the "This binding ..." part).
 
-> --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: microchip,sparx5-dpll
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: dpll registers
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#clock-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  # Clock provider for eMMC:
+>> +  - |
+>> +    clks: clks@61110000c {
+>
+> Node name should be clock-controller@61110000c
 
-> @@ -88,6 +114,21 @@
->                 function = "sdhi2";
->                 power-source = <1800>;
->         };
-> +
-> +       usb0_pins: usb0 {
-> +               groups = "usb0";
-> +               function = "usb0";
-> +       };
-> +
-> +       usb1_pins: usb1 {
-> +               groups = "usb1";
-> +               function = "usb1";
-> +       };
-> +
-> +       usb2_pins: usb2 {
-> +               groups = "usb2";
-> +               function = "usb2";
-> +       };
->  };
+Ok.
 
-Looking at the schematics[*], I'm having a hard time making some sense
-out of this.
+>
+>> +         compatible = "microchip,sparx5-dpll";
+>> +         #clock-cells = <1>;
+>> +         reg = <0x1110000c 0x24>;
+>
+> Does it consume any clks itself? I'd expect to see some sort of 'clocks'
+> property in this node.
+>
+>> +    };
 
-GP5_21 (USB1_OVC) seems to be GPIO_AVB_SEL, and
-GP5_22 (USB2_PWEN) is GPIO_SD1_LED?
+I changed the driver to use a fixed-rate input clock, replacing the
+BASE_CLOCK define(s). Additionally, I made the ahb_clock into
+fixed-factor clock using the A53 cpu clock as a base.
 
-I must be missing something?
+So I updated the example and added 'clocks' to the schema.
 
-[*] *RZ_G1H_SOM.pdf, *RZ_G1M_G1N_G1H_Q7 carrierBoard.pdf
+I will send you a new series shortly.
 
-Gr{oetje,eeting}s,
+Thank you for the comments.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Lars Povlsen,
+Microchip
