@@ -2,152 +2,175 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13FBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 00:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF045C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 01:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A51AD20776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 00:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C4120723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 01:38:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Awvs9rJt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hw6+Tuar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438174AbgE2Axh (ORCPT
+        id S2390754AbgE2Biw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 20:53:37 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:32304 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2438167AbgE2Axg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 20:53:36 -0400
-X-UUID: a68046c16bb149f5892918719c8b01ff-20200529
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/lOPSyCSRH8SaRh0UrYmb2qBLU0m25A26vWSjOAhAzw=;
-        b=Awvs9rJtUKRmaW223hgHgyROhiX52oAfmrGmw3ZpYy6TYQpmtDDq+SX9c35JGpO7btn9XMChany4W56FhL+V1w5rzroUwt0HDnhFxfEmBTnEyhoy3fIb2Sybs8nzhX6aEMoM7dUieZUwHol5yEuJVSSQiokfnezy2lneosR4RuI=;
-X-UUID: a68046c16bb149f5892918719c8b01ff-20200529
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1393919277; Fri, 29 May 2020 08:53:31 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 29 May 2020 08:53:25 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 29 May 2020 08:53:24 +0800
-Message-ID: <1590713609.1313.1.camel@mtkswgap22>
-Subject: Re: [PATCH v6 08/16] soc: mediatek: cmdq: add write_s function
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <dri-devel@lists.freedesktop.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        HS Liao <hs.liao@mediatek.com>
-Date:   Fri, 29 May 2020 08:53:29 +0800
-In-Reply-To: <086cd50f-1cf5-a87d-9547-7a826e6b6252@gmail.com>
-References: <1590685491-17107-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1590685491-17107-9-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <086cd50f-1cf5-a87d-9547-7a826e6b6252@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 28 May 2020 21:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390746AbgE2Biu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 21:38:50 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A990C08C5C8
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 18:38:50 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r10so521342pgv.8
+        for <devicetree@vger.kernel.org>; Thu, 28 May 2020 18:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TdQg+fivBnczs2lb7tarAIsmkoEmc6eowGbAVZodCK0=;
+        b=Hw6+Tuard4AD3/vUIts7Cbac2h+EizLNBIGuRfgksogG1PQk5znvug5MG4ZNXdeoWY
+         r/iv5pXaNa8pjSF0+ZNYjbZ/iOlk3Ga1qoaJSjVA66HuWJUpeRpNWMY/jBWITtEVft8n
+         JmQfThjT8G69YGm88lTyQJW6A0w8sxM+4V7dVnd37rNX7XmiVdx13yftMHoMulWWiDnx
+         cDZ1N+mLZptgB0PLFwkZQz35Q/lFJPPHNgm2q8m2xV6MXhIOxabMiRVlHv6BbyKwA0gJ
+         nR5fN9klhY9kcwwlE4NoP6y7hvfvmIemgSWkNimxP21uieX2wj9x6ztgjSLV0QGGlSPj
+         I5Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TdQg+fivBnczs2lb7tarAIsmkoEmc6eowGbAVZodCK0=;
+        b=Tak3KWYhC0Y1UnI9oqYqd9OQct0BZ8XecnwLXw6psLHj8WtHX8k0MDV6UxuG6pP5Hq
+         v3cXUcwBiVXUkSFQeVNwOBmd2y+eY11T7b3yvvtN5svsfQORRSn5gMtiAGcqZ0t7P1qT
+         WlG/Fc+aHMNKNx0dWxXpQWMo65/VWmQ0TwRQfCdZ9s98qqwMrrTY742bRhH50bUSg3qZ
+         OdGbzbSNyj43IZ/6QPl9/mNkGtyWG99a6LCI78x8FquSVETN6mwmaEDFhvGi5lmGlQWF
+         1DLIImKsFaIdWgZhBXH0P5n7LdMFN0olaiUetTJIreQQQjsFuVut/g++UqwM1ImSLdh1
+         kOFA==
+X-Gm-Message-State: AOAM530eYAd9sgY3IjIv4pPLYJeP2wKAPWezBr8Wwf8p+eKLfjSEpdCp
+        lzdzNUVs/x+4B1obKQGYV7FgvA==
+X-Google-Smtp-Source: ABdhPJxOTmTsMKTFLK6nGt+6SuzLQpgZHZ8QORG/lxSaXzWRBDQLvtLtNKdQvhDfCWgfBGWI9YkgTQ==
+X-Received: by 2002:a63:451c:: with SMTP id s28mr6059359pga.340.1590716329674;
+        Thu, 28 May 2020 18:38:49 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id w19sm5750068pfq.43.2020.05.28.18.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 18:38:49 -0700 (PDT)
+Date:   Thu, 28 May 2020 18:37:43 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH v3 1/5] regulator: Allow regulators to verify enabled
+ during enable()
+Message-ID: <20200529013743.GL279327@builder.lan>
+References: <20200528154625.17742-1-sumit.semwal@linaro.org>
+ <20200528154625.17742-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BADAF1CEB1FE522F0D19D2C0252EAD855B25F39E7E640634BA704236E5DB5E2F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528154625.17742-2-sumit.semwal@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgTWF0dGhpYXMsDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQpPbiBUaHUsIDIwMjAt
-MDUtMjggYXQgMjM6MDggKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+IA0KPiBPbiAy
-OC8wNS8yMDIwIDE5OjA0LCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6DQo+ID4gYWRkIHdyaXRlX3Mg
-ZnVuY3Rpb24gaW4gY21kcSBoZWxwZXIgZnVuY3Rpb25zIHdoaWNoDQo+ID4gd3JpdGVzIHZhbHVl
-IGNvbnRhaW5zIGluIGludGVybmFsIHJlZ2lzdGVyIHRvIGFkZHJlc3MNCj4gPiB3aXRoIGxhcmdl
-IGRtYSBhY2Nlc3Mgc3VwcG9ydC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMg
-SHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZl
-cnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jICAgfCAyMSArKysrKysrKysrKysrKysr
-KysrKy0NCj4gPiAgaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCB8ICAx
-ICsNCj4gPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgICB8IDIwICsr
-KysrKysrKysrKysrKysrKysrDQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhl
-bHBlci5jDQo+ID4gaW5kZXggMzMxNTNkMTdjOWQ5Li5lZTI0YzBlYzBhMjQgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiArKysgYi9k
-cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+IEBAIC0xOCw2ICsxOCwx
-MCBAQCBzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiB7DQo+ID4gIAl1bmlvbiB7DQo+ID4gIAkJdTMy
-IHZhbHVlOw0KPiA+ICAJCXUzMiBtYXNrOw0KPiA+ICsJCXN0cnVjdCB7DQo+ID4gKwkJCXUxNiBh
-cmdfYzsNCj4gPiArCQkJdTE2IHNyY19yZWc7DQo+ID4gKwkJfTsNCj4gPiAgCX07DQo+ID4gIAl1
-bmlvbiB7DQo+ID4gIAkJdTE2IG9mZnNldDsNCj4gPiBAQCAtMjksNyArMzMsNyBAQCBzdHJ1Y3Qg
-Y21kcV9pbnN0cnVjdGlvbiB7DQo+ID4gIAkJc3RydWN0IHsNCj4gPiAgCQkJdTggc29wOjU7DQo+
-ID4gIAkJCXU4IGFyZ19jX3Q6MTsNCj4gPiAtCQkJdTggYXJnX2JfdDoxOw0KPiA+ICsJCQl1OCBz
-cmNfdDoxOw0KPiANCj4gVGhpcyBzaG91bGQgYmUgcGFydCBvZiA3LzE2Lg0KDQpvaywgSSdsbCBt
-b3ZlIGl0DQoNCj4gDQo+ID4gIAkJCXU4IGRzdF90OjE7DQo+ID4gIAkJfTsNCj4gPiAgCX07DQo+
-ID4gQEAgLTIyMiw2ICsyMjYsMjEgQEAgaW50IGNtZHFfcGt0X3dyaXRlX21hc2soc3RydWN0IGNt
-ZHFfcGt0ICpwa3QsIHU4IHN1YnN5cywNCj4gPiAgfQ0KPiA+ICBFWFBPUlRfU1lNQk9MKGNtZHFf
-cGt0X3dyaXRlX21hc2spOw0KPiA+ICANCj4gPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0
-IGNtZHFfcGt0ICpwa3QsIHUxNiBoaWdoX2FkZHJfcmVnX2lkeCwNCj4gPiArCQkgICAgIHUxNiBh
-ZGRyX2xvdywgdTE2IHNyY19yZWdfaWR4KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgY21kcV9pbnN0
-cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gDQo+IElmIHlvdSB3YW50IGFuIGVtcHR5IHN0cnVj
-dCBvbiB0aGUgc3RhY2ssIEkgdGhpbmsge307IHNob3VsZCBiZSBlbm91Z2gsIHJpZ2h0Pw0KDQpZ
-ZXMsIEknbGwgY2hhbmdlIHRoZSBzdHlsZSwgdGhhbmtzDQoNCg0KUmVnYXJkcywNCkRlbm5pcw0K
-DQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCj4gPiArDQo+ID4gKwlpbnN0Lm9wID0g
-Q01EUV9DT0RFX1dSSVRFX1M7DQo+ID4gKwlpbnN0LnNyY190ID0gQ01EUV9SRUdfVFlQRTsNCj4g
-PiArCWluc3Quc29wID0gaGlnaF9hZGRyX3JlZ19pZHg7DQo+ID4gKwlpbnN0Lm9mZnNldCA9IGFk
-ZHJfbG93Ow0KPiA+ICsJaW5zdC5zcmNfcmVnID0gc3JjX3JlZ19pZHg7DQo+ID4gKw0KPiA+ICsJ
-cmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ID4gK30NCj4gPiAr
-RVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zKTsNCj4gPiArDQo+ID4gIGludCBjbWRxX3Br
-dF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBldmVudCkNCj4gPiAgew0KPiA+ICAJc3Ry
-dWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ID4gZGlmZiAtLWdpdCBhL2lu
-Y2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggYi9pbmNsdWRlL2xpbnV4L21h
-aWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+ID4gaW5kZXggMTIxYzNiYjZkM2RlLi5lZTY3ZGQz
-Yjg2ZjUgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1h
-aWxib3guaA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
-LmgNCj4gPiBAQCAtNTksNiArNTksNyBAQCBlbnVtIGNtZHFfY29kZSB7DQo+ID4gIAlDTURRX0NP
-REVfSlVNUCA9IDB4MTAsDQo+ID4gIAlDTURRX0NPREVfV0ZFID0gMHgyMCwNCj4gPiAgCUNNRFFf
-Q09ERV9FT0MgPSAweDQwLA0KPiA+ICsJQ01EUV9DT0RFX1dSSVRFX1MgPSAweDkwLA0KPiA+ICAJ
-Q01EUV9DT0RFX0xPR0lDID0gMHhhMCwNCj4gPiAgfTsNCj4gPiAgDQo+ID4gZGlmZiAtLWdpdCBh
-L2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggYi9pbmNsdWRlL2xpbnV4L3Nv
-Yy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gaW5kZXggODMzNDAyMTFlMWQzLi5kNjIzZjFhYTc4
-MTQgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEu
-aA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiBA
-QCAtMTIsNiArMTIsOCBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgvdGltZXIuaD4NCj4gPiAgDQo+
-ID4gICNkZWZpbmUgQ01EUV9OT19USU1FT1VUCQkweGZmZmZmZmZmdQ0KPiA+ICsjZGVmaW5lIENN
-RFFfQUREUl9ISUdIKGFkZHIpCSgodTMyKSgoKGFkZHIpID4+IDE2KSAmIEdFTk1BU0soMzEsIDAp
-KSkNCj4gPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRyKSB8IEJJVCgx
-KSkNCj4gPiAgDQo+ID4gIHN0cnVjdCBjbWRxX3BrdDsNCj4gPiAgDQo+ID4gQEAgLTEwMiw2ICsx
-MDQsMjQgQEAgaW50IGNtZHFfcGt0X3dyaXRlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJz
-eXMsIHUxNiBvZmZzZXQsIHUzMiB2YWx1ZSk7DQo+ID4gIGludCBjbWRxX3BrdF93cml0ZV9tYXNr
-KHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ID4gIAkJCXUxNiBvZmZzZXQsIHUz
-MiB2YWx1ZSwgdTMyIG1hc2spOw0KPiA+ICANCj4gPiArLyoqDQo+ID4gKyAqIGNtZHFfcGt0X3dy
-aXRlX3MoKSAtIGFwcGVuZCB3cml0ZV9zIGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0DQo+ID4g
-KyAqIEBwa3Q6CXRoZSBDTURRIHBhY2tldA0KPiA+ICsgKiBAaGlnaF9hZGRyX3JlZ19pZHg6CWlu
-dGVybmFsIHJlZ2lzdGVyIElEIHdoaWNoIGNvbnRhaW5zIGhpZ2ggYWRkcmVzcyBvZiBwYQ0KPiA+
-ICsgKiBAYWRkcl9sb3c6CWxvdyBhZGRyZXNzIG9mIHBhDQo+ID4gKyAqIEBzcmNfcmVnX2lkeDoJ
-dGhlIENNRFEgaW50ZXJuYWwgcmVnaXN0ZXIgSUQgd2hpY2ggY2FjaGUgc291cmNlIHZhbHVlDQo+
-ID4gKyAqIEBtYXNrOgl0aGUgc3BlY2lmaWVkIHRhcmdldCBhZGRyZXNzIG1hc2ssIHVzZSBVMzJf
-TUFYIGlmIG5vIG5lZWQNCj4gPiArICoNCj4gPiArICogUmV0dXJuOiAwIGZvciBzdWNjZXNzOyBl
-bHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+ID4gKyAqDQo+ID4gKyAqIFN1cHBvcnQg
-d3JpdGUgdmFsdWUgdG8gcGh5c2ljYWwgYWRkcmVzcyB3aXRob3V0IHN1YnN5cy4gVXNlIENNRFFf
-QUREUl9ISUdIKCkNCj4gPiArICogdG8gZ2V0IGhpZ2ggYWRkcmVzcyBhbmQgY2FsbCBjbWRxX3Br
-dF9hc3NpZ24oKSB0byBhc3NpZ24gdmFsdWUgaW50byBpbnRlcm5hbA0KPiA+ICsgKiByZWcuIEFs
-c28gdXNlIENNRFFfQUREUl9MT1coKSB0byBnZXQgbG93IGFkZHJlc3MgZm9yIGFkZHJfbG93IHBh
-cmFtZXRlciB3aGVuDQo+ID4gKyAqIGNhbGwgdG8gdGhpcyBmdW5jdGlvbi4NCj4gPiArICovDQo+
-ID4gK2ludCBjbWRxX3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9h
-ZGRyX3JlZ19pZHgsDQo+ID4gKwkJICAgICB1MTYgYWRkcl9sb3csIHUxNiBzcmNfcmVnX2lkeCk7
-DQo+ID4gKw0KPiA+ICAvKioNCj4gPiAgICogY21kcV9wa3Rfd2ZlKCkgLSBhcHBlbmQgd2FpdCBm
-b3IgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gPiAgICogQHBrdDoJdGhlIENN
-RFEgcGFja2V0DQo+ID4gDQoNCg==
+On Thu 28 May 08:46 PDT 2020, Sumit Semwal wrote:
 
+> Some regulators might need to verify that they have indeed been enabled
+> after the enable() call is made and enable_time delay has passed.
+> 
+> This is implemented by repeatedly checking is_enabled() upto
+> poll_enabled_time, waiting for the already calculated enable delay in
+> each iteration.
+> 
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> ---
+>  drivers/regulator/core.c         | 28 ++++++++++++++++++++++++++++
+>  include/linux/regulator/driver.h |  5 +++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> index 7486f6e4e613..06199f182114 100644
+> --- a/drivers/regulator/core.c
+> +++ b/drivers/regulator/core.c
+> @@ -2409,6 +2409,34 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
+>  
+>  	_regulator_enable_delay(delay);
+
+My interpretation of "enable_time" (i.e. the value of delay) is that it
+denotes the maximum time it will take for the regulator to turn on, and
+the purpose of this patch is to be able to handle cases where we can
+poll the hardware to see if it completed earlier.
+
+So I think you should flip the meaning of your two variables around,
+making "delay" the total time to sleep and the newly introduced
+"poll_enabled_time" the interval at which you check if the hardware
+finished early.
+
+Regards,
+Bjorn
+
+>  
+> +	/* If set, poll upto poll_enabled_time uS to see if the regulator
+> +	 * actually got enabled.
+> +	 * For each iteration, wait for the enable_time delay calculated
+> +	 * above already.
+> +	 * If the regulator isn't enabled after poll_enabled_time has
+> +	 * expired, return -ETIMEDOUT.
+> +	 */
+> +	if (rdev->desc->poll_enabled_time) {
+> +		unsigned int time_remaining = rdev->desc->poll_enabled_time;
+> +
+> +		while (time_remaining > 0) {
+> +			/* We've already waited for enable_time above;
+> +			 * so we can start with immediate check of the
+> +			 * status of the regulator.
+> +			 */
+> +			if (rdev->desc->ops->is_enabled(rdev))
+> +				break;
+> +
+> +			_regulator_enable_delay(delay);
+> +			time_remaining -= delay;
+> +		}
+> +
+> +		if (time_remaining <= 0) {
+> +			rdev_err(rdev, "Enabled check failed.\n");
+> +			return -ETIMEDOUT;
+> +		}
+> +	}
+> +
+>  	trace_regulator_enable_complete(rdev_get_name(rdev));
+>  
+>  	return 0;
+> diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+> index 29d920516e0b..bb50e943010f 100644
+> --- a/include/linux/regulator/driver.h
+> +++ b/include/linux/regulator/driver.h
+> @@ -322,6 +322,9 @@ enum regulator_type {
+>   * @enable_time: Time taken for initial enable of regulator (in uS).
+>   * @off_on_delay: guard time (in uS), before re-enabling a regulator
+>   *
+> + * @poll_enabled_time: Maximum time (in uS) to poll if the regulator is
+> + *                          actually enabled, after enable() call
+> + *
+>   * @of_map_mode: Maps a hardware mode defined in a DeviceTree to a standard mode
+>   */
+>  struct regulator_desc {
+> @@ -389,6 +392,8 @@ struct regulator_desc {
+>  
+>  	unsigned int off_on_delay;
+>  
+> +	unsigned int poll_enabled_time;
+> +
+>  	unsigned int (*of_map_mode)(unsigned int mode);
+>  };
+>  
+> -- 
+> 2.26.2
+> 
