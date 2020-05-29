@@ -2,78 +2,126 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820D9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 15:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9957C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 15:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560D32072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 15:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81E220814
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 15:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590767667;
-	bh=727z0MzokijBc/N68UkwTJGjq3Sxi05X3K0ayOXmq2o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=swzQiVdq0Iy4mfuFFCkvwAQgeA6tHHM9Xuk26ib4s95jKDi/mbuuMjI4GlWu+xH6j
-	 PSGvceba2VHVtvOMX9uM863QtYYJgdPKAaqMcTShQS4/37uJoWeXtsCxt+q6CxtHcq
-	 DMQrBTc4phKiRa4mVp9zUB4pweiwuFF3hw43qNek=
+	s=default; t=1590767894;
+	bh=DKe6k1X2sNZ70atW9Z+9GVwAyAKVYlyY5QzaAyE/cxg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UI0AVeFXKkCTXWzvqXRijLg5cnvbZf2tWNasdf5rL13zL/oiFD7/jU+wD1ShatC/+
+	 6dQc+4LTfB8LsgrLZFeseJ9u3ybDg4IGEoib2VVAqubnHfE8WkZgFOQ6OvlHav4wBW
+	 3rcFc2yRruPrkbcwwStEywVgZ3zP6ckPLKxA7AjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgE2Py1 (ORCPT
+        id S1727076AbgE2P6O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 11:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32994 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 11:58:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgE2Py0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 May 2020 11:54:26 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        id S1726845AbgE2P6O (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 May 2020 11:58:14 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BA002072D
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 15:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 734DA2072D;
+        Fri, 29 May 2020 15:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590767666;
-        bh=727z0MzokijBc/N68UkwTJGjq3Sxi05X3K0ayOXmq2o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HJ4JVHniKMSqgzZFpQdBoL1ablUXUwKJfmnonViXsmwWHq13cgnQj05Lce7R3yTHw
-         glpcpiM/HSbDCoygfcPxDUeDYr3+/8nywdINp/0qsvCNVKnfK9bHoBfjQ8NyRu9WC6
-         nyvzcsK5YJEKsYKFrt3Eg4ITggZa7AOxovwBOt50=
-Received: by mail-oi1-f171.google.com with SMTP id w4so3001973oia.1
-        for <devicetree@vger.kernel.org>; Fri, 29 May 2020 08:54:26 -0700 (PDT)
-X-Gm-Message-State: AOAM531wyN0vn+STajxDWm4gSo7OLGIBkZVH+5eFCGHif8Zb0LRFae/e
-        /zWHoqu8Rq0FLG2CM6q8nJd5mdkYL0gK5DN/TQ==
-X-Google-Smtp-Source: ABdhPJwO9tPmRK4UcXLHPfWmR47hlPB4NgDEdD5d82ySRDDwGt6/UIqjF1pJnjRWy40i+fYovgcMfiQ5gJYhKVBMr3E=
-X-Received: by 2002:a05:6808:7cb:: with SMTP id f11mr6553511oij.152.1590767665682;
- Fri, 29 May 2020 08:54:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200528132323.30288-1-geert+renesas@glider.be>
-In-Reply-To: <20200528132323.30288-1-geert+renesas@glider.be>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 29 May 2020 09:54:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJOPd2txkz298Rs12N+keJNYg2_qjCc-3vDwtL5iNXZmA@mail.gmail.com>
-Message-ID: <CAL_JsqJOPd2txkz298Rs12N+keJNYg2_qjCc-3vDwtL5iNXZmA@mail.gmail.com>
-Subject: Re: [PATCH dt-schema] Fix interrupt controllers with interrupt-map
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1590767893;
+        bh=DKe6k1X2sNZ70atW9Z+9GVwAyAKVYlyY5QzaAyE/cxg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=h1fFz0g0JdXyYAUhlce+XjTpPSxI1Y3mpe62hzgpHexkdlnrBjJqZoWVco0nmaT1r
+         t/ndMGO4dkMXBU37MvqKq+dfiijYoQ9Vn9vA+IjuHKu8JzQ9pHcnzZ8zKOqit6a59g
+         gDZTmzi+bY9aNJF8iNAbUwsBxvWyGmcwr9P/OeSU=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org,
+        linux-spi@vger.kernel.org, broonie@kernel.org, robh+dt@kernel.org,
+        Sergey.Semin@baikalelectronics.ru, fancer.lancer@gmail.com,
+        andriy.shevchenko@linux.intel.com, lars.povlsen@microchip.com,
+        liang.j.jin@ericsson.com
+Subject: [PATCHv4 1/2] spi: dw: add reset control
+Date:   Fri, 29 May 2020 10:58:05 -0500
+Message-Id: <20200529155806.16758-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 7:23 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> When an interrupt controller has an "interrupt-map" property, an "is
-> valid under each of" error is triggered.
->
-> Fix this by allowing "interrupt-controller" and "interrupt-map" to
-> coexist, in both the interrrupts meta-schema and the
-> interrupt-controller schema.
+Add mechanism to get the reset control and deassert it in order to bring
+the IP out of reset.
 
-But both should not be present. If 'interrupt-controller' is present,
-the Linux irq parsing code will ignore 'interrupt-map'. Seems like
-that's backwards, but this parsing code is older than dirt and we'd
-probably break some 1990s machine changing it.
+Signed-off-by: Liang Jin J <liang.j.jin@ericsson.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v4: no change
+v3: allow for other failures
+    remove tab for rstc reset_control
+v2: use _get_optional_exclusive
+    put IP back into reset if there was an error in probe function
+---
+ drivers/spi/spi-dw-mmio.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Rob
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index 0894b4c09496..a1b87d4606ba 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -19,6 +19,7 @@
+ #include <linux/acpi.h>
+ #include <linux/property.h>
+ #include <linux/regmap.h>
++#include <linux/reset.h>
+ 
+ #include "spi-dw.h"
+ 
+@@ -29,6 +30,7 @@ struct dw_spi_mmio {
+ 	struct clk     *clk;
+ 	struct clk     *pclk;
+ 	void           *priv;
++	struct reset_control *rstc;
+ };
+ 
+ #define MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL	0x24
+@@ -224,6 +226,14 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto out_clk;
+ 
++	/* find an optional reset controller */
++	dwsmmio->rstc = devm_reset_control_get_optional_exclusive(&pdev->dev, "spi");
++	if (IS_ERR(dwsmmio->rstc)) {
++		ret = PTR_ERR(dwsmmio->rstc);
++		goto out_clk;
++	}
++	reset_control_deassert(dwsmmio->rstc);
++
+ 	dws->bus_num = pdev->id;
+ 
+ 	dws->max_freq = clk_get_rate(dwsmmio->clk);
+@@ -257,6 +267,8 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	clk_disable_unprepare(dwsmmio->pclk);
+ out_clk:
+ 	clk_disable_unprepare(dwsmmio->clk);
++	reset_control_assert(dwsmmio->rstc);
++
+ 	return ret;
+ }
+ 
+@@ -268,6 +280,7 @@ static int dw_spi_mmio_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ 	clk_disable_unprepare(dwsmmio->pclk);
+ 	clk_disable_unprepare(dwsmmio->clk);
++	reset_control_assert(dwsmmio->rstc);
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
+
