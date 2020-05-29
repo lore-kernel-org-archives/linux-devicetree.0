@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034A8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07793C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB15520DD4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 03:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A2220707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 04:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389564AbgE2D7m (ORCPT
+        id S1726057AbgE2EAP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 May 2020 23:59:42 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45478 "EHLO
+        Fri, 29 May 2020 00:00:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45410 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389447AbgE2D7l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 23:59:41 -0400
+        with ESMTP id S2389579AbgE2D7o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 May 2020 23:59:44 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 49785803079C;
-        Fri, 29 May 2020 03:59:39 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B29FE8029EA1;
+        Fri, 29 May 2020 03:59:42 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CYsBNvkYaqym; Fri, 29 May 2020 06:59:38 +0300 (MSK)
+        with ESMTP id W0w-AkINMplP; Fri, 29 May 2020 06:59:42 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
         Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 11/16] spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
-Date:   Fri, 29 May 2020 06:59:09 +0300
-Message-ID: <20200529035915.20790-12-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v5 15/16] spi: dw: Use regset32 DebugFS method to create regdump file
+Date:   Fri, 29 May 2020 06:59:13 +0300
+Message-ID: <20200529035915.20790-16-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,19 +53,14 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since there is a generic method available to initialize the DW SPI DMA
-interface on any DT and ACPI-based platforms, which in general can be
-designed with not only DW DMAC but with any DMA engine on board, we can
-freely remove the CONFIG_DW_DMAC_PCI config from dependency list of
-CONFIG_SPI_DW_DMA. Especially seeing that we don't use anything DW DMAC
-specific in the new driver.
+DebugFS kernel interface provides a dedicated method to create the
+registers dump file. Use it instead of creating a generic DebugFS
+file with manually written read callback function.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -73,23 +68,143 @@ Cc: Feng Tang <feng.tang@intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
----
- drivers/spi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 03b061975f70..6a84f3dad35c 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -228,7 +228,7 @@ config SPI_DESIGNWARE
+---
+
+Changelog v3:
+- Add commas in the debugfs_reg32 structure initializer and after the last
+  item of the array dw_spi_dbgfs_regs.
+---
+ drivers/spi/spi-dw-core.c | 86 ++++++++++++---------------------------
+ drivers/spi/spi-dw.h      |  2 +
+ 2 files changed, 28 insertions(+), 60 deletions(-)
+
+diff --git a/drivers/spi/spi-dw-core.c b/drivers/spi/spi-dw-core.c
+index 4d1849699a12..323c66c5db50 100644
+--- a/drivers/spi/spi-dw-core.c
++++ b/drivers/spi/spi-dw-core.c
+@@ -29,66 +29,29 @@ struct chip_data {
+ };
  
- config SPI_DW_DMA
- 	bool "DMA support for DW SPI controller"
--	depends on SPI_DESIGNWARE && DW_DMAC_PCI
-+	depends on SPI_DESIGNWARE
+ #ifdef CONFIG_DEBUG_FS
+-#define SPI_REGS_BUFSIZE	1024
+-static ssize_t dw_spi_show_regs(struct file *file, char __user *user_buf,
+-		size_t count, loff_t *ppos)
+-{
+-	struct dw_spi *dws = file->private_data;
+-	char *buf;
+-	u32 len = 0;
+-	ssize_t ret;
+-
+-	buf = kzalloc(SPI_REGS_BUFSIZE, GFP_KERNEL);
+-	if (!buf)
+-		return 0;
+-
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"%s registers:\n", dev_name(&dws->master->dev));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"=================================\n");
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"CTRLR0: \t0x%08x\n", dw_readl(dws, DW_SPI_CTRLR0));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"CTRLR1: \t0x%08x\n", dw_readl(dws, DW_SPI_CTRLR1));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"SSIENR: \t0x%08x\n", dw_readl(dws, DW_SPI_SSIENR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"SER: \t\t0x%08x\n", dw_readl(dws, DW_SPI_SER));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"BAUDR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_BAUDR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"TXFTLR: \t0x%08x\n", dw_readl(dws, DW_SPI_TXFTLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"RXFTLR: \t0x%08x\n", dw_readl(dws, DW_SPI_RXFTLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"TXFLR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_TXFLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"RXFLR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_RXFLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"SR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_SR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"IMR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_IMR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"ISR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_ISR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"DMACR: \t\t0x%08x\n", dw_readl(dws, DW_SPI_DMACR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"DMATDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMATDLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"DMARDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMARDLR));
+-	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+-			"=================================\n");
+-
+-	ret = simple_read_from_buffer(user_buf, count, ppos, buf, len);
+-	kfree(buf);
+-	return ret;
++
++#define DW_SPI_DBGFS_REG(_name, _off)	\
++{					\
++	.name = _name,			\
++	.offset = _off,			\
+ }
  
- config SPI_DW_PCI
- 	tristate "PCI interface driver for DW SPI core"
+-static const struct file_operations dw_spi_regs_ops = {
+-	.owner		= THIS_MODULE,
+-	.open		= simple_open,
+-	.read		= dw_spi_show_regs,
+-	.llseek		= default_llseek,
++static const struct debugfs_reg32 dw_spi_dbgfs_regs[] = {
++	DW_SPI_DBGFS_REG("CTRLR0", DW_SPI_CTRLR0),
++	DW_SPI_DBGFS_REG("CTRLR1", DW_SPI_CTRLR1),
++	DW_SPI_DBGFS_REG("SSIENR", DW_SPI_SSIENR),
++	DW_SPI_DBGFS_REG("SER", DW_SPI_SER),
++	DW_SPI_DBGFS_REG("BAUDR", DW_SPI_BAUDR),
++	DW_SPI_DBGFS_REG("TXFTLR", DW_SPI_TXFTLR),
++	DW_SPI_DBGFS_REG("RXFTLR", DW_SPI_RXFTLR),
++	DW_SPI_DBGFS_REG("TXFLR", DW_SPI_TXFLR),
++	DW_SPI_DBGFS_REG("RXFLR", DW_SPI_RXFLR),
++	DW_SPI_DBGFS_REG("SR", DW_SPI_SR),
++	DW_SPI_DBGFS_REG("IMR", DW_SPI_IMR),
++	DW_SPI_DBGFS_REG("ISR", DW_SPI_ISR),
++	DW_SPI_DBGFS_REG("DMACR", DW_SPI_DMACR),
++	DW_SPI_DBGFS_REG("DMATDLR", DW_SPI_DMATDLR),
++	DW_SPI_DBGFS_REG("DMARDLR", DW_SPI_DMARDLR),
+ };
+ 
+ static int dw_spi_debugfs_init(struct dw_spi *dws)
+@@ -100,8 +63,11 @@ static int dw_spi_debugfs_init(struct dw_spi *dws)
+ 	if (!dws->debugfs)
+ 		return -ENOMEM;
+ 
+-	debugfs_create_file("registers", S_IFREG | S_IRUGO,
+-		dws->debugfs, (void *)dws, &dw_spi_regs_ops);
++	dws->regset.regs = dw_spi_dbgfs_regs;
++	dws->regset.nregs = ARRAY_SIZE(dw_spi_dbgfs_regs);
++	dws->regset.base = dws->regs;
++	debugfs_create_regset32("registers", 0400, dws->debugfs, &dws->regset);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+index 0b2cd7994513..151ba316619e 100644
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+@@ -3,6 +3,7 @@
+ #define DW_SPI_HEADER_H
+ 
+ #include <linux/completion.h>
++#include <linux/debugfs.h>
+ #include <linux/irqreturn.h>
+ #include <linux/io.h>
+ #include <linux/scatterlist.h>
+@@ -152,6 +153,7 @@ struct dw_spi {
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *debugfs;
++	struct debugfs_regset32 regset;
+ #endif
+ };
+ 
 -- 
 2.26.2
 
