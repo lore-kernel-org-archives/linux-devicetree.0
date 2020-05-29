@@ -2,90 +2,128 @@ Return-Path: <SRS0=jZdE=7L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DD0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F23C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3C4B20C09
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDF3207BC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 May 2020 14:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgE2OhW (ORCPT
+        id S1727109AbgE2OlE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 May 2020 10:37:22 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:47086 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgE2OhU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 10:37:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g25so2039956otp.13;
-        Fri, 29 May 2020 07:37:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jj4mzsZRsuulNyYkFaO1ypi6y1uFCcozwvQiDRIxL5g=;
-        b=Z3036X0P1Du7BIsLa8sjZn3lc1hdGcXNxteyzhdcsMrC93ce0ZYZT+7LJEC07/4pxm
-         O6V8f9nzNDbP7ggkc/LyvVMKc0LKlNE+P5R/B8QekEGEeYmfHaovZY8ubdCdMG4qvBtK
-         ttbyzfDixpzjPAdgWrUOupqqzqKA/ji9HPasP7BOwnXpUvfjaudtBA6f8RGZ2mi1G41n
-         FRsi794fYIPffKqGAJqNIadC05MV9/Hz1zGyAgv7xiIWseOeFF+sGD9kIRVrwA5i8H//
-         npet4urc5FLPEJb6PzSttY3exalr0vji0LGpnwjdIDGGGPOfhWXlIYVfEc5/4jZZWCMy
-         yevA==
-X-Gm-Message-State: AOAM532XWlcHvI5X5xZXMkGW27ZjSA+k5yGx/HJvQ8D1u9MvPPT7WN8i
-        6/jk403htdFazWa9tFWcoR/uwWgFzOEGeZbnvfI=
-X-Google-Smtp-Source: ABdhPJw2pXqw5uoHxXylWsls/iOUECUt5BLseUa85DJo57fsATIt2sp7i3jvjAN/BW6n98bBGYolPwQBjnuy65KKT2o=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr6155020otp.145.1590763034829;
- Fri, 29 May 2020 07:37:14 -0700 (PDT)
+        Fri, 29 May 2020 10:41:04 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48846 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgE2OlE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 May 2020 10:41:04 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9353A803077A;
+        Fri, 29 May 2020 14:41:00 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Ocl0qMsTQRXG; Fri, 29 May 2020 17:40:59 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 03/11] dmaengine: Introduce min burst length capability
+Date:   Fri, 29 May 2020 17:40:46 +0300
+Message-ID: <20200529144054.4251-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <1590611013-26029-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590611013-26029-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590611013-26029-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 29 May 2020 16:36:58 +0200
-Message-ID: <CAMuHMdU888FN+gGdh6F_4z-kDKWuhaMrG-UokVhU4TS_S3JsLw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: r8a7742-iwg21d-q7: Sound DMA support via
- DVC on DTS
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:24 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable sound with DMA support on carrier board.
->
-> DMA transfer uses DVC
->
->      DMA               DMApp
-> [MEM] -> [SRC] -> [DVC] -> [SSIU] -> [SSI]
->
->      DMA               DMApp
-> [MEM] <- [DVC] <- [SRC] <- [SSIU] <- [SSI]
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Some hardware aside from default 0/1 may have greater minimum burst
+transactions length constraints. Here we introduce the DMA device
+and slave capability, which if required can be initialized by the DMA
+engine driver with the device-specific value.
 
-To the best of my (limited) auto knowledge...
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
-Gr{oetje,eeting}s,
+---
 
-                        Geert
+Changelog v3:
+- This is a new patch created as a result of the discussion with Vinud and
+  Andy in the framework of DW DMA burst and LLP capabilities.
+---
+ drivers/dma/dmaengine.c   | 1 +
+ include/linux/dmaengine.h | 4 ++++
+ 2 files changed, 5 insertions(+)
 
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index d31076d9ef25..b332ffe52780 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -590,6 +590,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+ 	caps->src_addr_widths = device->src_addr_widths;
+ 	caps->dst_addr_widths = device->dst_addr_widths;
+ 	caps->directions = device->directions;
++	caps->min_burst = device->min_burst;
+ 	caps->max_burst = device->max_burst;
+ 	caps->residue_granularity = device->residue_granularity;
+ 	caps->descriptor_reuse = device->descriptor_reuse;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index e1c03339918f..0c7403b27133 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -465,6 +465,7 @@ enum dma_residue_granularity {
+  *	Since the enum dma_transfer_direction is not defined as bit flag for
+  *	each type, the dma controller should set BIT(<TYPE>) and same
+  *	should be checked by controller as well
++ * @min_burst: min burst capability per-transfer
+  * @max_burst: max burst capability per-transfer
+  * @cmd_pause: true, if pause is supported (i.e. for reading residue or
+  *	       for resume later)
+@@ -478,6 +479,7 @@ struct dma_slave_caps {
+ 	u32 src_addr_widths;
+ 	u32 dst_addr_widths;
+ 	u32 directions;
++	u32 min_burst;
+ 	u32 max_burst;
+ 	bool cmd_pause;
+ 	bool cmd_resume;
+@@ -769,6 +771,7 @@ struct dma_filter {
+  *	Since the enum dma_transfer_direction is not defined as bit flag for
+  *	each type, the dma controller should set BIT(<TYPE>) and same
+  *	should be checked by controller as well
++ * @min_burst: min burst capability per-transfer
+  * @max_burst: max burst capability per-transfer
+  * @residue_granularity: granularity of the transfer residue reported
+  *	by tx_status
+@@ -839,6 +842,7 @@ struct dma_device {
+ 	u32 src_addr_widths;
+ 	u32 dst_addr_widths;
+ 	u32 directions;
++	u32 min_burst;
+ 	u32 max_burst;
+ 	bool descriptor_reuse;
+ 	enum dma_residue_granularity residue_granularity;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
