@@ -2,171 +2,137 @@ Return-Path: <SRS0=koE9=7M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A0EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 12:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9D4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 13:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44CF42074B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 12:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=km6g.us header.i=@km6g.us header.b="viDU7nHJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4F754207D5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 13:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgE3MvD (ORCPT
+        id S1728993AbgE3NEf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 30 May 2020 08:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
+        Sat, 30 May 2020 09:04:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgE3MvD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 30 May 2020 08:51:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C79C03E969
-        for <devicetree@vger.kernel.org>; Sat, 30 May 2020 05:51:02 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id z18so2520389lji.12
-        for <devicetree@vger.kernel.org>; Sat, 30 May 2020 05:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=km6g.us; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A7MoXFf0+k24ZJ0xE7dxQMHlYNoQ4i6xVNFYw3gZONQ=;
-        b=viDU7nHJz9GLKyvVfnmaQzuVJRJfPDEsiPDafjItWVdcvxhrnhgcFGdHR7UhoNbrxT
-         GuCwV0LU8aDlWNaAk30xcc9dRcjQ2p9DQ1RyYHdtPQxJPP3CwpDJZIwh35bT47ilslvp
-         m51C5SH8jq6f+qe5MqhsohJf1VAk4q33DzKoGI/REeoWtXsw+QrF5e/rpNUyxaQzJBUm
-         WZpO4hVdkN5WKjmiwUjHX/toUfJJhMH5soMPSKTEHyUDpAtlGVr0tKncVikJxZg6F4yK
-         IgmiQroAtsfPZvfDQKiFRTJOQKrpmKSQKPnLiYS75fqAQwRuuLOCo5eqlsCcgftrRlbq
-         ePww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A7MoXFf0+k24ZJ0xE7dxQMHlYNoQ4i6xVNFYw3gZONQ=;
-        b=R0ilYDO9bcQ6BALQXU2VVHEcf/5iTRrBHAXmjDWizBz1XM9rD9Lsr1WIh74JngwdKE
-         xD/yKXWr80W58sQhYmGN7t7j2b2e5r1HGnsBMglqMDBYgZWjkZ7VC2sCVx0HNk8CF0qj
-         mvpTVRmyeBx4kVZJwpv1gMMZPIuv5ymtUqPeNNTQxGeAGeAGafSYlEbmaZ5sErkGzAjK
-         d+Hm9AliBOsT1tjQ3FzLqrTjGe6wzvYFYeS480Gh68hFeVXzORr4Ans9CJsezpjF/Y0X
-         FEnlW20OXBTp4tEpNkvvQVWVnzgmWwrNS7vx4RnTSfH3OoHzmux/zke24lpMIui2Njij
-         X9Uw==
-X-Gm-Message-State: AOAM533e5vuFC4g7ktTQ9HSn3zOBbyh2oHlsgAAE87vULJz7DoZcRZq4
-        UePnDc9QCnwHlyI4LHtXZKpUbvIziRXpXoLaUYkF/A==
-X-Google-Smtp-Source: ABdhPJxT2WfMdBmO1lPqeelQNK9xuUcXa9b2iDztzq36z4exu31N74ZCt13SnBaQPLeApNT677Csy32qvA17hoQJ43A=
-X-Received: by 2002:a2e:810c:: with SMTP id d12mr6323787ljg.410.1590843060975;
- Sat, 30 May 2020 05:51:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200530123222.361104-1-kevin+linux@km6g.us>
-In-Reply-To: <20200530123222.361104-1-kevin+linux@km6g.us>
+        with ESMTP id S1728304AbgE3NEe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 30 May 2020 09:04:34 -0400
+Received: from mail.net18.km6g.us (mail.net18.km6g.us [IPv6:2607:5300:203:24b0:3::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2610C03E969
+        for <devicetree@vger.kernel.org>; Sat, 30 May 2020 06:04:34 -0700 (PDT)
+Received: from [2001:470:8afe:60:716b:c9b9:d55a:f6f1] (helo=balrog20.km6g.us)
+        by mail.net18.km6g.us with esmtp (Exim 4.93.0.4 (FreeBSD))
+        (envelope-from <kevin+linux@km6g.us>)
+        id 1jf0fT-0003hx-NC; Sat, 30 May 2020 08:32:51 -0400
 From:   "Kevin P. Fleming" <kevin+linux@km6g.us>
-Date:   Sat, 30 May 2020 08:50:49 -0400
-Message-ID: <CAE+Udoq_mNiwfjwm1Fw==6wcQ71GU-U+t=Kd5ixvaXMg_+WQNA@mail.gmail.com>
-Subject: Re: [PATCH] rtc: abx80x: Add support for autocalibration filter capacitor
-To:     "Kevin P. Fleming" <kevin+linux@km6g.us>
-Cc:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+To:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     "Kevin P. Fleming" <kevin+linux@km6g.us>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] rtc: abx80x: Add support for autocalibration filter capacitor
+Date:   Sat, 30 May 2020 08:32:22 -0400
+Message-Id: <20200530123222.361104-1-kevin+linux@km6g.us>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sorry, this was sent prematurely and should have been split into two
-patches. It has been resent properly.
+All of the parts supported by this driver can make use of a
+small capacitor to improve the accuracy of the autocalibration
+process for their RC oscillators. If a capacitor is connected,
+a configuration register must be set to enable its use, so a
+new Device Tree property has been added for that purpose.
 
-On Sat, May 30, 2020 at 8:32 AM Kevin P. Fleming <kevin+linux@km6g.us> wrote:
->
-> All of the parts supported by this driver can make use of a
-> small capacitor to improve the accuracy of the autocalibration
-> process for their RC oscillators. If a capacitor is connected,
-> a configuration register must be set to enable its use, so a
-> new Device Tree property has been added for that purpose.
->
-> Signed-off-by: Kevin P. Fleming <kevin+linux@km6g.us>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> To: linux-rtc@vger.kernel.org
-> To: devicetree@vger.kernel.org
-> ---
->  .../bindings/rtc/abracon,abx80x.txt           |  6 ++++
->  drivers/rtc/rtc-abx80x.c                      | 34 +++++++++++++++++++
->  2 files changed, 40 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-> index 2405e35a1bc0..ad5d59ed6f24 100644
-> --- a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-> +++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-> @@ -29,3 +29,9 @@ and valid to enable charging:
->   - "abracon,tc-diode": should be "standard" (0.6V) or "schottky" (0.3V)
->   - "abracon,tc-resistor": should be <0>, <3>, <6> or <11>. 0 disables the output
->                            resistor, the other values are in kOhm.
-> +
-> +All of the devices can have a 47pf capacitor attached to increase the
-> +autocalibration accuracy of their RC oscillators. To enable usage of the
-> +capacitor the following property has to be defined:
-> +
-> + - "abracon,autocal-filter"
-> diff --git a/drivers/rtc/rtc-abx80x.c b/drivers/rtc/rtc-abx80x.c
-> index 3521d8e8dc38..be5a814e8c0b 100644
-> --- a/drivers/rtc/rtc-abx80x.c
-> +++ b/drivers/rtc/rtc-abx80x.c
-> @@ -76,6 +76,9 @@
->  #define ABX8XX_CFG_KEY_OSC     0xa1
->  #define ABX8XX_CFG_KEY_MISC    0x9d
->
-> +#define ABX8XX_REG_AFCTRL      0x26
-> +#define ABX8XX_AUTOCAL_FILTER_ENABLE   0xa0
-> +
->  #define ABX8XX_REG_ID0         0x28
->
->  #define ABX8XX_REG_OUT_CTRL    0x30
-> @@ -130,6 +133,31 @@ static int abx80x_is_rc_mode(struct i2c_client *client)
->         return (flags & ABX8XX_OSS_OMODE) ? 1 : 0;
->  }
->
-> +static int abx80x_enable_autocal_filter(struct i2c_client *client)
-> +{
-> +       int err;
-> +
-> +       /*
-> +        * Write the configuration key register to enable access to the AFCTRL
-> +        * register
-> +        */
-> +       err = i2c_smbus_write_byte_data(client, ABX8XX_REG_CFG_KEY,
-> +                                       ABX8XX_CFG_KEY_MISC);
-> +       if (err < 0) {
-> +               dev_err(&client->dev, "Unable to write configuration key\n");
-> +               return -EIO;
-> +       }
-> +
-> +       err = i2c_smbus_write_byte_data(client, ABX8XX_REG_AFCTRL,
-> +                                       ABX8XX_AUTOCAL_FILTER_ENABLE);
-> +       if (err < 0) {
-> +               dev_err(&client->dev, "Unable to write autocal filter register\n");
-> +               return -EIO;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int abx80x_enable_trickle_charger(struct i2c_client *client,
->                                          u8 trickle_cfg)
->  {
-> @@ -825,6 +853,12 @@ static int abx80x_probe(struct i2c_client *client,
->                         return err;
->         }
->
-> +       if (of_property_read_bool(np, "abracon,autocal_filter")) {
-> +               err = abx80x_enable_autocal_filter(client);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
->         if (client->irq > 0) {
->                 dev_info(&client->dev, "IRQ %d supplied\n", client->irq);
->                 err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-> --
-> 2.26.2
->
+Signed-off-by: Kevin P. Fleming <kevin+linux@km6g.us>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+To: linux-rtc@vger.kernel.org
+To: devicetree@vger.kernel.org
+---
+ .../bindings/rtc/abracon,abx80x.txt           |  6 ++++
+ drivers/rtc/rtc-abx80x.c                      | 34 +++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
+index 2405e35a1bc0..ad5d59ed6f24 100644
+--- a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
++++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
+@@ -29,3 +29,9 @@ and valid to enable charging:
+  - "abracon,tc-diode": should be "standard" (0.6V) or "schottky" (0.3V)
+  - "abracon,tc-resistor": should be <0>, <3>, <6> or <11>. 0 disables the output
+                           resistor, the other values are in kOhm.
++
++All of the devices can have a 47pf capacitor attached to increase the
++autocalibration accuracy of their RC oscillators. To enable usage of the
++capacitor the following property has to be defined:
++
++ - "abracon,autocal-filter"
+diff --git a/drivers/rtc/rtc-abx80x.c b/drivers/rtc/rtc-abx80x.c
+index 3521d8e8dc38..be5a814e8c0b 100644
+--- a/drivers/rtc/rtc-abx80x.c
++++ b/drivers/rtc/rtc-abx80x.c
+@@ -76,6 +76,9 @@
+ #define ABX8XX_CFG_KEY_OSC	0xa1
+ #define ABX8XX_CFG_KEY_MISC	0x9d
+ 
++#define ABX8XX_REG_AFCTRL	0x26
++#define ABX8XX_AUTOCAL_FILTER_ENABLE	0xa0
++
+ #define ABX8XX_REG_ID0		0x28
+ 
+ #define ABX8XX_REG_OUT_CTRL	0x30
+@@ -130,6 +133,31 @@ static int abx80x_is_rc_mode(struct i2c_client *client)
+ 	return (flags & ABX8XX_OSS_OMODE) ? 1 : 0;
+ }
+ 
++static int abx80x_enable_autocal_filter(struct i2c_client *client)
++{
++	int err;
++
++	/*
++	 * Write the configuration key register to enable access to the AFCTRL
++	 * register
++	 */
++	err = i2c_smbus_write_byte_data(client, ABX8XX_REG_CFG_KEY,
++					ABX8XX_CFG_KEY_MISC);
++	if (err < 0) {
++		dev_err(&client->dev, "Unable to write configuration key\n");
++		return -EIO;
++	}
++
++	err = i2c_smbus_write_byte_data(client, ABX8XX_REG_AFCTRL,
++					ABX8XX_AUTOCAL_FILTER_ENABLE);
++	if (err < 0) {
++		dev_err(&client->dev, "Unable to write autocal filter register\n");
++		return -EIO;
++	}
++
++	return 0;
++}
++
+ static int abx80x_enable_trickle_charger(struct i2c_client *client,
+ 					 u8 trickle_cfg)
+ {
+@@ -825,6 +853,12 @@ static int abx80x_probe(struct i2c_client *client,
+ 			return err;
+ 	}
+ 
++	if (of_property_read_bool(np, "abracon,autocal_filter")) {
++		err = abx80x_enable_autocal_filter(client);
++		if (err)
++			return err;
++	}
++
+ 	if (client->irq > 0) {
+ 		dev_info(&client->dev, "IRQ %d supplied\n", client->irq);
+ 		err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+-- 
+2.26.2
+
