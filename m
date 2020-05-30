@@ -2,49 +2,47 @@ Return-Path: <SRS0=koE9=7M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF647C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 09:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0548EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 09:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C510520776
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 09:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF47B20810
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 09:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgE3J1B (ORCPT
+        id S1728071AbgE3JcB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 30 May 2020 05:27:01 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56670 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbgE3J1A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 30 May 2020 05:27:00 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 69F3B1C0C0E; Sat, 30 May 2020 00:52:17 +0200 (CEST)
-Date:   Sat, 30 May 2020 00:52:17 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
+        Sat, 30 May 2020 05:32:01 -0400
+Received: from sauhun.de ([88.99.104.3]:59768 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727947AbgE3JcA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 30 May 2020 05:32:00 -0400
+Received: from localhost (p5486c6a9.dip0.t-ipconnect.de [84.134.198.169])
+        by pokefinder.org (Postfix) with ESMTPSA id CFEEE2C206B;
+        Sat, 30 May 2020 11:31:58 +0200 (CEST)
+Date:   Sat, 30 May 2020 11:31:52 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     devicetree-compiler@vger.kernel.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frank Rowand <frowand.list@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
-Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
-Message-ID: <20200529225217.GA23601@duo.ucw.cz>
-References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
- <20200424093226.GB2647@amd>
- <20200424124423.jo25ai5oifvalgpr@earth.universe>
- <20200529140555.ozlvz4egihkvo3aw@earth.universe>
- <20200529160204.GA6025@duo.ucw.cz>
- <20200529180306.pjevb6qdv7jvmxtu@earth.universe>
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] check: Add 10bit/slave i2c reg flags support
+Message-ID: <20200530093152.GA1038@ninjato>
+References: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527141517.22677-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
 Content-Disposition: inline
-In-Reply-To: <20200529180306.pjevb6qdv7jvmxtu@earth.universe>
+In-Reply-To: <20200527141517.22677-1-Sergey.Semin@baikalelectronics.ru>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -52,71 +50,42 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---cWoXeonUoKmBZSoM
+--XsQoSWH+UP9D9v3l
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
 
-> On Fri, May 29, 2020 at 06:02:04PM +0200, Pavel Machek wrote:
-> > > ping?
-> >=20
-> > Well, I thought that we maybe do not need standard LEDs on medical hard=
-ware.
->=20
-> The discussion died and the patch was not applied :) In general
-> IDK how worthwhile it is to use standard LED names for them. I
-> suppose the number of people planning to create something like
-> OpenWRT for medical devices is not so big.
+> +	addr = reg & 0x3FFFFFFFU;
+> +	snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
 
-:-)
+Hmm, this hardcoded value will not work if we ever need to add another
+bit. I hope this will never happen, though.
 
-> > > > The device is a medical patient monitor and these are alarm LEDs
-> > > > informing about critical device or patient status. They are
-> > > > referenced by their color (those are discrete LEDs, not a
-> > > > multi-color one) basically everywhere. The only exception is
-> > > > "silenced", which means that audible alarm is surpressed. I
-> > > > don't think we have something comparable for any of those LEDs
-> > > > in the mainline tree.
-> >=20
-> > Actually, we have "platform:*:mute" LEDs, that could be used for
-> > "silenced".
->=20
-> I see you point, but wonder if mute is the right choice. The LED
-> signals a silenced alarm, which IMHO is not the same:
->=20
-> * The alarm silencing is temporary and system unsilences after
->   1-2 minutes.
-> * LED is usually blinking instead of solid like a laptop mute LED
->   (so that operator is aware of silenced alarm)
-> * Device usually cannot be put into silenced mode before the alarm
->   appears
-> * Some medical devices still generate perodic beeps
->=20
-> AFAIK this is named alarm silencing by basically everyone for
-> medical devices. So I think naming this platfrom:*:mute would
-> increase the mess.
+> +		if ((reg & (1U << 31)) && addr > 0x3ff)
 
-Ok, I guess it does not matter much. Generally no two LEDs behave
-exactly the same, and I'd believe this would be close enough, but
-=2E.. it really does not matter.
+Same here with bit 31. I haven't checked DTC but can't we import the
+header with the defines into the project? Or is this then a circular
+dependency?
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---cWoXeonUoKmBZSoM
+--XsQoSWH+UP9D9v3l
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtGSIQAKCRAw5/Bqldv6
-8t7PAJ9ow6Q+gMjdqrdDFtfPSloIuwM0NgCfVMVP20+FwwaIKnq0iwnn6/DdIDM=
-=BaAq
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7SKAQACgkQFA3kzBSg
+KbZlOg//QVOBxervblGxNh6EaaJKJnG8BWawizgJ3J/y+8fLrL5/Jac8F/0I5mBh
+j4gopVhrEJ45xp8Z8IyTUZyAc+gtYnL5+2ARrXCv5RWhOzHbym2EahgkAt5tJtfE
+j8ntt3onMPaWTUGoEZOnhMT4qlS5R0cFzcE/hic/TXFKUgs5GNFycK/JTuqdIYWy
+0nYLkQw3V+fyXHnBI9pssrx+wmJAlXM+pQzoIDlcmXCNbEPf0Yq5w9TD2svmIkl+
+y6MxuryziguQ0YeLEaSVQlxuodi4fdAO0igcOlwmGtUTwCvPozgYN9S8lHNVqXMM
+kFZ/jrKWdzSjFQwTjz5lc3dybJWMRip9Dbwzp7yLEYVLt4fbqRv4Hl9pFVfWIeOo
+ahpJ4J8S+zrcLs16uOJv/G5q8/UyfCRI3TEd/gJlnvsh/surrNdbcagc4xqYIZax
+/U0+EP7GEcFKZ3OE6C8xgSbossurkckTl+khtrSbReaX2iOYMrttOezJ8ttAs23A
+wo3QdSPlwWJH66/wPmS9SPJITC/IVHYCCCHPBJBA1WqElU7OojMzyLHT7AIKjgHB
+zFN0f8jlJhgbb3S97RLAAOWMwJyauKAFzzy3KQ9Lv7pZii7vi2d+9UbHsshyV2Pm
+hcQ0zGzrjwEtIN6zcWZqwVqXyO0aGgfErGCK4IWG7IOEwCzKhBs=
+=c1F6
 -----END PGP SIGNATURE-----
 
---cWoXeonUoKmBZSoM--
+--XsQoSWH+UP9D9v3l--
