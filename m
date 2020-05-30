@@ -2,137 +2,119 @@ Return-Path: <SRS0=koE9=7M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9D4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 13:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69987C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 13:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F754207D5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 13:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4193120723
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 13:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgE3NEf (ORCPT
+        id S1728802AbgE3N0j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 30 May 2020 09:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgE3NEe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 30 May 2020 09:04:34 -0400
-Received: from mail.net18.km6g.us (mail.net18.km6g.us [IPv6:2607:5300:203:24b0:3::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2610C03E969
-        for <devicetree@vger.kernel.org>; Sat, 30 May 2020 06:04:34 -0700 (PDT)
-Received: from [2001:470:8afe:60:716b:c9b9:d55a:f6f1] (helo=balrog20.km6g.us)
-        by mail.net18.km6g.us with esmtp (Exim 4.93.0.4 (FreeBSD))
-        (envelope-from <kevin+linux@km6g.us>)
-        id 1jf0fT-0003hx-NC; Sat, 30 May 2020 08:32:51 -0400
-From:   "Kevin P. Fleming" <kevin+linux@km6g.us>
-To:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     "Kevin P. Fleming" <kevin+linux@km6g.us>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH] rtc: abx80x: Add support for autocalibration filter capacitor
-Date:   Sat, 30 May 2020 08:32:22 -0400
-Message-Id: <20200530123222.361104-1-kevin+linux@km6g.us>
-X-Mailer: git-send-email 2.26.2
+        Sat, 30 May 2020 09:26:39 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:42442 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728797AbgE3N0j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 30 May 2020 09:26:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id B933EFB03;
+        Sat, 30 May 2020 15:26:36 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jH8te9rYstS2; Sat, 30 May 2020 15:26:35 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id A29C944AF9; Sat, 30 May 2020 15:26:34 +0200 (CEST)
+Date:   Sat, 30 May 2020 15:26:34 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 1/6] dt-bindings: display/bridge: Add binding for
+ input mux bridge
+Message-ID: <20200530132634.GA3337@bogon.m.sigxcpu.org>
+References: <cover.1589548223.git.agx@sigxcpu.org>
+ <14a44a664f40584ffa25c1764aab5ebf97809c71.1589548223.git.agx@sigxcpu.org>
+ <20200528194804.GA541078@bogus>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200528194804.GA541078@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-All of the parts supported by this driver can make use of a
-small capacitor to improve the accuracy of the autocalibration
-process for their RC oscillators. If a capacitor is connected,
-a configuration register must be set to enable its use, so a
-new Device Tree property has been added for that purpose.
+Hi Rob,
+On Thu, May 28, 2020 at 01:48:04PM -0600, Rob Herring wrote:
+> On Fri, May 15, 2020 at 03:12:10PM +0200, Guido Günther wrote:
+> > The bridge allows to select the input source via a mux controller.
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  .../display/bridge/mux-input-bridge.yaml      | 123 ++++++++++++++++++
+> >  1 file changed, 123 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml b/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+> > new file mode 100644
+> > index 000000000000..4029cf63ee5c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+> > @@ -0,0 +1,123 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/bridge/mux-input-bridge.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: DRM input source selection via multiplexer
+> 
+> DRM is not a hardware thing.
 
-Signed-off-by: Kevin P. Fleming <kevin+linux@km6g.us>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-To: linux-rtc@vger.kernel.org
-To: devicetree@vger.kernel.org
----
- .../bindings/rtc/abracon,abx80x.txt           |  6 ++++
- drivers/rtc/rtc-abx80x.c                      | 34 +++++++++++++++++++
- 2 files changed, 40 insertions(+)
+I thought about naming the mux pixel-input-mux (input-mux sounding too
+generic) but then i hit rockchip-drm and went for that name.  The
+binding itself is not a drm thing in itself it really aims to model how
+the mux is placed in the 'display pipeline' of the SoC (as Laurent
+explained). Should I go with pixel-input-mux?
 
-diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-index 2405e35a1bc0..ad5d59ed6f24 100644
---- a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-+++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-@@ -29,3 +29,9 @@ and valid to enable charging:
-  - "abracon,tc-diode": should be "standard" (0.6V) or "schottky" (0.3V)
-  - "abracon,tc-resistor": should be <0>, <3>, <6> or <11>. 0 disables the output
-                           resistor, the other values are in kOhm.
-+
-+All of the devices can have a 47pf capacitor attached to increase the
-+autocalibration accuracy of their RC oscillators. To enable usage of the
-+capacitor the following property has to be defined:
-+
-+ - "abracon,autocal-filter"
-diff --git a/drivers/rtc/rtc-abx80x.c b/drivers/rtc/rtc-abx80x.c
-index 3521d8e8dc38..be5a814e8c0b 100644
---- a/drivers/rtc/rtc-abx80x.c
-+++ b/drivers/rtc/rtc-abx80x.c
-@@ -76,6 +76,9 @@
- #define ABX8XX_CFG_KEY_OSC	0xa1
- #define ABX8XX_CFG_KEY_MISC	0x9d
- 
-+#define ABX8XX_REG_AFCTRL	0x26
-+#define ABX8XX_AUTOCAL_FILTER_ENABLE	0xa0
-+
- #define ABX8XX_REG_ID0		0x28
- 
- #define ABX8XX_REG_OUT_CTRL	0x30
-@@ -130,6 +133,31 @@ static int abx80x_is_rc_mode(struct i2c_client *client)
- 	return (flags & ABX8XX_OSS_OMODE) ? 1 : 0;
- }
- 
-+static int abx80x_enable_autocal_filter(struct i2c_client *client)
-+{
-+	int err;
-+
-+	/*
-+	 * Write the configuration key register to enable access to the AFCTRL
-+	 * register
-+	 */
-+	err = i2c_smbus_write_byte_data(client, ABX8XX_REG_CFG_KEY,
-+					ABX8XX_CFG_KEY_MISC);
-+	if (err < 0) {
-+		dev_err(&client->dev, "Unable to write configuration key\n");
-+		return -EIO;
-+	}
-+
-+	err = i2c_smbus_write_byte_data(client, ABX8XX_REG_AFCTRL,
-+					ABX8XX_AUTOCAL_FILTER_ENABLE);
-+	if (err < 0) {
-+		dev_err(&client->dev, "Unable to write autocal filter register\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- static int abx80x_enable_trickle_charger(struct i2c_client *client,
- 					 u8 trickle_cfg)
- {
-@@ -825,6 +853,12 @@ static int abx80x_probe(struct i2c_client *client,
- 			return err;
- 	}
- 
-+	if (of_property_read_bool(np, "abracon,autocal_filter")) {
-+		err = abx80x_enable_autocal_filter(client);
-+		if (err)
-+			return err;
-+	}
-+
- 	if (client->irq > 0) {
- 		dev_info(&client->dev, "IRQ %d supplied\n", client->irq);
- 		err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
--- 
-2.26.2
+> The graph binding is already designed to support muxing. Generally, 
+> multiple endpoints on an input node is a mux. So either the device with 
+> the input ports knows how to select the input, or you just need a 
+> mux-control property for the port to have some other device implement 
+> the control.
 
+A mux control property is how it's modeled at the moment but that is
+very SoC specific.
+
+> You could do it like you have below. That would be appropriate if 
+> there's a separate h/w device controlling the muxing. Say for example 
+> some board level device controlled by i2c.
+
+It's a different part of the SoC that lives in a register range very
+separate (iomuxc_gpr) from MIPI/DSI (nwl). Does that qualify?
+
+Cheers,
+ -- Guido
+
+> 
+> Rob
+> 
