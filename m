@@ -4,104 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 07:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC7EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 07:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D785205CB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 07:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8DA2075A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 30 May 2020 07:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="qGi68XKZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="mhLNh75T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgE3HFW (ORCPT
+        id S1728762AbgE3HSF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 30 May 2020 03:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgE3HFV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 30 May 2020 03:05:21 -0400
-X-Greylist: delayed 53148 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 30 May 2020 00:05:21 PDT
-Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A542EC03E969;
-        Sat, 30 May 2020 00:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2OBufPQoFXMLUJ8IsnqyQTwHGOG7uH3gtIDWCufmzmY=; b=qGi68XKZ8oRRIHbIuSWXW7OaIu
-        EkrRYKgcP74Yb6/MPxXnnG0c2wjrGd1lLb5Zmf3ru8CPv84MOJIZWTGGNeH9h0m5O4Zp5bbsDjow1
-        2lkffpcrTiv4b/NvKp7UqHLYVXFTnBZKg9wTvX7j1a/Nbd0wEFKlHDJnoK9GI9tRX6f8=;
-Received: from p4ff13c20.dip0.t-ipconnect.de ([79.241.60.32] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1jevYV-0001kb-UA; Sat, 30 May 2020 09:05:20 +0200
-Subject: Re: [PATCH 1/3] dt-bindings: net: wireless: mt76: add power-limits
- node
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200529161929.24751-1-nbd@nbd.name>
- <20200529212637.GA2994957@bogus>
-From:   Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <76ea310a-bca3-dd50-0569-be69b975fefa@nbd.name>
-Date:   Sat, 30 May 2020 09:05:07 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Sat, 30 May 2020 03:18:05 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:34790 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgE3HSF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 30 May 2020 03:18:05 -0400
+Received: from halation.net.flygoat.com (unknown [IPv6:240e:390:496:b320::d68])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 9020420E8D;
+        Sat, 30 May 2020 07:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1590823084; bh=FokPmXVAmxcnVPTY1hKOBLr9DbGlwiipDcqx7CnsyLs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mhLNh75TUpn2Ry6HuI0nCWnGDcXsCtjZvU9iJwuuP3hwMpgEJgb8m/EmIGLKwHaN7
+         c1bgvQ87OxVojzF80t3wt41pou3sWnoUdc3twFKwGWedF0oBmL1wv8CJ3WwNS0KEze
+         kYILkyIaH9hwcLAsMKpGqCMBuC6EqJJSIT/zeiD3zOG1pw9NqFFMoZC/kEJsP8CNsV
+         REjf+NFhvCr6qHuSxoyVr4uEK1hm+skhNe1Q+nq+YerLF9U1mxGd583VcfDnEW3Jo5
+         b3x4sgysP/pQ6H/hbnMrkopI8QbimuCYbVb1OAxXh1DuTfpFjmYbrFDr4Oz75gssuo
+         X2++150GGBReA==
+Date:   Sat, 30 May 2020 15:17:52 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     robh@kernel.org
+Cc:     apw@canonical.com, joe@perches.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: checkpatch warnings with PCI DT compatible string
+Message-ID: <20200530151752.2f40fb08@halation.net.flygoat.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200529212637.GA2994957@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-05-29 23:26, Rob Herring wrote:
-> On Fri, May 29, 2020 at 06:19:27PM +0200, Felix Fietkau wrote:
->> This subnode can be used to set per-rate tx power limits either per
->> country code / regdomain or globally.
->> These limits are typically provided by the device manufacturers and are
->> used to limit sideband emissions and stay within regulatory limits
-> 
-> How do other WiFi chips handle this? If this is added to DT, then it 
-> should be common for all WiFi h/w.
-Most devices store this data in EEPROM, and the way it's handled also
-varies across different chips. QCA has EEPROM data that only provides
-limits for edge channels (called "conformance test limits")
-The only other example I could find of a driver that stores it in DT is
-mwifiex, which uses an opaque short array of bytes that is passed to the
-firmware directly.
-So I don't think it makes sense to put this in the common bindings.
-On the other hand, I did try to keep the format as generic and
-extensible as possible, so we could always move it over from mt76 to the
-common binding once we encounter another driver that needs something
-like this.
+Hi there,
 
-- Felix
+When I was trying to create dts for my platform that need PCI
+DeviceTree sub node to express interrupt of children devices under the
+bridge, like this:
+
+pci@1a000000 {
+    compatible = "loongson,ls7a-pci";
+    device_type = "pci";
+    #address-cells = <3>;
+    #size-cells = <2>;
+    #interrupt-cells = <2>;
+    msi-parent = <&msi>;
+
+    reg = <0 0x1a000000 0 0x02000000>,
+        <0xefe 0x00000000 0 0x20000000>;
+
+    ranges = <0x01000000 0x0 0x00020000 0x0 0x00020000 0x0 0x00020000>,
+            <0x02000000 0x0 0x40000000 0x0 0x40000000 0x0 0x40000000>;
+
+    ohci@4,0 {
+        compatible = "pci0014,7a24.0",
+                    "pci0014,7a24",
+                    "pciclass0c0310",
+                    "pciclass0c03";
+
+        reg = <0x2000 0x0 0x0 0x0 0x0>;
+        interrupts = <49 IRQ_TYPE_LEVEL_HIGH>;
+        interrupt-parent = <&pic>;
+    };
+};
+
+I got such checkpatch warnings:
+
+WARNING: DT compatible string "pci0014,7a24.0" appears un-documented --
+check ./Documentation/devicetree/bindings/ #206: FILE:
+arch/mips/boot/dts/loongson/ls7a-pch.dtsi:38:
++                               compatible = "pci0014,7a24.0",
+
+WARNING: DT compatible string vendor "pci0014" appears un-documented --
+check ./Documentation/devicetree/bindings/vendor-prefixes.yaml #206:
+FILE: arch/mips/boot/dts/loongson/ls7a-pch.dtsi:38:
++                               compatible = "pci0014,7a24.0",
+
+Just wonder if using such compatible string is allowed?
+
+I've saw some some usages like mine in the tree, such as
+arch/x86/platform/ce4100/falconfalls.dts, and
+arch/mips/boot/dts/img/boston.dts.
+
+If that's allowed, should we surpress these warnings in checkpatch
+script?
+
+Thanks.
+
+--
+Jiaxun Yang 
