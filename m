@@ -2,168 +2,117 @@ Return-Path: <SRS0=hbEn=7N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEE5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 14:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90ADC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 15:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C09B20776
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 14:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590935333;
-	bh=WJ048ICWOTY+GRwHR44Gd5AyJQwMiCSu66cBgCEcpiQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TU9PjvTbVOkfIzs10Ymlu5lMYJq/WHBbMEmBuWlr20Grq+6Q1ovxheI9MFrhpxDA+
-	 Tc/yVPnftHKoALcSjf6biqmYG7CacqNgmhQwOkCrMD9RNrU4X9KgUciK07W8tV3hoe
-	 BPJhX18Vv/rFDz6gl9x6BL85BTTtFO/lT6nwnmY0=
+	by mail.kernel.org (Postfix) with ESMTP id C5B3F2076B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 15:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgEaO2u (ORCPT
+        id S1726193AbgEaPgP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 10:28:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38004 "EHLO mail.kernel.org"
+        Sun, 31 May 2020 11:36:15 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:46746 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgEaO2u (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 31 May 2020 10:28:50 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C00CF2076B;
-        Sun, 31 May 2020 14:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590935329;
-        bh=WJ048ICWOTY+GRwHR44Gd5AyJQwMiCSu66cBgCEcpiQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HwO/HmGcwQU+AlFXcDkLX/cpQxEe7tAFrWXFo9G11C6Zjhq6LJRRdYkC29Ly+D4mA
-         dpCRXKoPoDM9LlEebcOF7TuV7GJ+Pgv2Cek9F29FSdwK2sTsGqXTJTHNNlSVgpjDQy
-         P0eQz9IhVvyB6ctpltibAC+N3wPBxR8ieEwu3+w0=
-Date:   Sun, 31 May 2020 15:28:45 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@gmail.com,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v4 4/5] iio: imu: bmi160: added regulator support
-Message-ID: <20200531152845.2aeaba14@archlinux>
-In-Reply-To: <20200525164615.14962-5-jonathan.albrieux@gmail.com>
-References: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
-        <20200525164615.14962-5-jonathan.albrieux@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725912AbgEaPgP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 31 May 2020 11:36:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 45D7FFB03;
+        Sun, 31 May 2020 17:36:12 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BPwWvG9Wfq8s; Sun, 31 May 2020 17:36:11 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 52F2944BF8; Sun, 31 May 2020 17:36:10 +0200 (CEST)
+Date:   Sun, 31 May 2020 17:36:10 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, robh@kernel.org,
+        kernel@puri.sm, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        mchehab@kernel.org, Anson.Huang@nxp.com, angus@akkea.ca,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] arm64: dts: Add a device tree for the Librem5 phone
+Message-ID: <20200531153610.GA9581@bogon.m.sigxcpu.org>
+References: <20200514155737.12160-1-martin.kepplinger@puri.sm>
+ <20200529162850.GC3709@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200529162850.GC3709@amd>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 25 May 2020 18:46:03 +0200
-Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
-
-> Add vdd-supply and vddio-supply support.
+Hi,
+On Fri, May 29, 2020 at 06:28:50PM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> While working on an msm8916 device and having explicit declarations for
-> regulators, without setting these regulators to regulators-always-on it
-> happened those lines weren't ready because they could have been controlled
-> by other components, causing failure in module's probe.
+> > From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+> > 
+> > Add a devicetree description for the Librem 5 phone. The early batches
+> > that have been sold are supported as well as the mass-produced device
+> > available later this year, see https://puri.sm/products/librem-5/
+> > 
+> > This boots to a working console with working WWAN modem, wifi usdhc,
+> > IMU sensor device, proximity sensor, haptic motor, gpio keys, GNSS and LEDs.
+> > 
+> > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
 > 
-> This patch aim is to solve this situation by adding regulators control
-> during bmi160_chip_init() and bmi160_chip_uninit(), assuring power to
-> this component.
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-
-Applied,
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/imu/bmi160/bmi160.h      |  2 ++
->  drivers/iio/imu/bmi160/bmi160_core.c | 24 ++++++++++++++++++++++++
->  2 files changed, 26 insertions(+)
+> > +		blue {
+> > +			label = "phone:blue:front";
+> > +			label = "phone:green:front";
+> > +			label = "phone:red:front";
 > 
-> diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-> index 621f5309d735..923c3b274fde 100644
-> --- a/drivers/iio/imu/bmi160/bmi160.h
-> +++ b/drivers/iio/imu/bmi160/bmi160.h
-> @@ -3,10 +3,12 @@
->  #define BMI160_H_
->  
->  #include <linux/iio/iio.h>
-> +#include <linux/regulator/consumer.h>
->  
->  struct bmi160_data {
->  	struct regmap *regmap;
->  	struct iio_trigger *trig;
-> +	struct regulator_bulk_data supplies[2];
->  };
->  
->  extern const struct regmap_config bmi160_regmap_config;
-> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-> index 77b05bd4a2b2..d3316ca02fbd 100644
-> --- a/drivers/iio/imu/bmi160/bmi160_core.c
-> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
-> @@ -15,6 +15,7 @@
->  #include <linux/delay.h>
->  #include <linux/irq.h>
->  #include <linux/of_irq.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include <linux/iio/iio.h>
->  #include <linux/iio/triggered_buffer.h>
-> @@ -709,6 +710,12 @@ static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
->  	unsigned int val;
->  	struct device *dev = regmap_get_device(data->regmap);
->  
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = regmap_write(data->regmap, BMI160_REG_CMD, BMI160_CMD_SOFTRESET);
->  	if (ret)
->  		return ret;
-> @@ -793,9 +800,16 @@ int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type)
->  static void bmi160_chip_uninit(void *data)
->  {
->  	struct bmi160_data *bmi_data = data;
-> +	struct device *dev = regmap_get_device(bmi_data->regmap);
-> +	int ret;
->  
->  	bmi160_set_mode(bmi_data, BMI160_GYRO, false);
->  	bmi160_set_mode(bmi_data, BMI160_ACCEL, false);
-> +
-> +	ret = regulator_bulk_disable(ARRAY_SIZE(bmi_data->supplies),
-> +				     bmi_data->supplies);
-> +	if (ret)
-> +		dev_err(dev, "Failed to disable regulators: %d\n", ret);
->  }
->  
->  int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> @@ -815,6 +829,16 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
->  	dev_set_drvdata(dev, indio_dev);
->  	data->regmap = regmap;
->  
-> +	data->supplies[0].supply = "vdd";
-> +	data->supplies[1].supply = "vddio";
-> +	ret = devm_regulator_bulk_get(dev,
-> +				      ARRAY_SIZE(data->supplies),
-> +				      data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = bmi160_chip_init(data, use_spi);
->  	if (ret)
->  		return ret;
+> Droid 4 uses "status-led:{red,green,blue}". Could this use same
+> naming?
+
+Looking at leds-class.rst we don't have a useful devicename so
+should that just be omitted and s.th. like
+
+		label = "blue:status";
+		label = "green:status";
+		label = "red:status";
+
+be used instead. If we want to map to current usage
+
+		label = "blue:status";
+		label = "green:boot";
+		label = "red:charging";
+
+would be even closer but since that is bound to change just going with
+"status" would make sense.
+Cheers,
+ -- Guido
+
+
+> 
+> > +			label = "lm3560:flash";
+> > +			label = "lm3560:torch";
+> 
+> This is one LED, right? I'm pretty sure we don't want lm3560 in the
+> name... "main-camera:flash" would be better. Even better would be
+> something that's already in use.
+> 
+> > +			label = "white:backlight_cluster";
+> 
+> Make this ":backlight", please. Again, we want something that's
+> already used.
+> 
+> Best regards,
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
 
