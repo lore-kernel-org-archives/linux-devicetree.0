@@ -2,112 +2,115 @@ Return-Path: <SRS0=hbEn=7N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F48C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83437C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F46A2076B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5389A207BB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:28:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uIDE2Nld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgEaRMu (ORCPT
+        id S1728166AbgEaR2M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 13:12:50 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45784 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgEaRMu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 31 May 2020 13:12:50 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id CDB5F8030866;
-        Sun, 31 May 2020 17:12:41 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WwALV05hloaX; Sun, 31 May 2020 20:12:40 +0300 (MSK)
-Date:   Sun, 31 May 2020 20:12:39 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 08/11] i2c: designware: Convert driver to using regmap
- API
-Message-ID: <20200531171239.l64zfkoncecngfll@mobilestation>
-References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
- <20200528093322.23553-9-Sergey.Semin@baikalelectronics.ru>
- <20200530110930.GC1038@ninjato>
- <20200530210554.GA15682@ninjato>
+        Sun, 31 May 2020 13:28:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgEaR2L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 31 May 2020 13:28:11 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D539C061A0E;
+        Sun, 31 May 2020 10:28:11 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id p5so3235640wrw.9;
+        Sun, 31 May 2020 10:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h+V0If/8WPtg9Cm+oT9f9ZK7VvNPlURM+alM6i1MjXI=;
+        b=uIDE2NldMA1Ige94hh6Yg7i0lpOMf2Dk4klWFGLPFY4AN9lalr2pwEzOJO9CojH9Ml
+         0MlBu3aaeYfzrYo+8PbKTYRn8T0iDJ7lTlH8VW58rl5UtujNC9SN+V1C+T8SXVo36Lqd
+         QDQsvniwIwbekrglyKulejbT1YezE/e0/9UuGzjvmjdJkWm+2unR41w2j+TgfW1YMjJT
+         wBQuRsAgO+RPesZtwPzDaK6DZyrNWZrpoE25ZnLrd6oZp7JC15rD4Jv/bq4N9Tt05M6P
+         3fEQM+AXiDNZb4P3NJ4MnUY/JCz8MzxXsdhnKstmAsyAqF8yzH8gRA/wRccQGRchLbyt
+         Ag/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h+V0If/8WPtg9Cm+oT9f9ZK7VvNPlURM+alM6i1MjXI=;
+        b=kFdeUALlrPoUOc2OepSerUgIrfL2t649Dy7J9nRwKOgKL/CGNiNDzc7SqlDq7fUejk
+         qgQizBeDxtJS3nrzCsYpsmhWD/d3H0lwqPi2CwcyTdLQ0G014Qu8JpHJkxP/rEMmsOsL
+         x1xFAcbmz1xM7pXxhzprzwLKDuxK6nW7mI+bg4rtUp5o/h/tX9kRNDpk/MlHNOlVqnID
+         2cDQJqG9KKzRI+L3etaeg6yutFsvWND/mwEQTWYIzv4j8bDl6hRVEJI+KbOe7mqAtsiW
+         YaslYsPP/HL6Hvgsh0DXkH34OLL81ExvPKcux980d2xhiLYWCw9a+j3aa9nmor2DHsn2
+         iFvQ==
+X-Gm-Message-State: AOAM533O3vdHeNzSonWe8as8jMVi2W6LOvOzW9M6p/cvuBN9Sy/m7IjN
+        2WdjXz7nvfGxgoZ9b6AuGl4=
+X-Google-Smtp-Source: ABdhPJwhwMV1txEqP1MDXRBAwRZK4winX3/2r9eBJjs5xP8yP41cmQNPWFe0xQA+MLVklBrL/6pviA==
+X-Received: by 2002:adf:9f48:: with SMTP id f8mr18262454wrg.228.1590946089619;
+        Sun, 31 May 2020 10:28:09 -0700 (PDT)
+Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
+        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 10:28:09 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/14] msm8992 DTS updates, peripheral enablement
+Date:   Sun, 31 May 2020 19:27:50 +0200
+Message-Id: <20200531172804.256335-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200530210554.GA15682@ninjato>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 30, 2020 at 11:05:54PM +0200, Wolfram Sang wrote:
-> On Sat, May 30, 2020 at 01:09:30PM +0200, Wolfram Sang wrote:
-> > On Thu, May 28, 2020 at 12:33:18PM +0300, Serge Semin wrote:
-> > > Seeing the DW I2C driver is using flags-based accessors with two
-> > > conditional clauses it would be better to replace them with the regmap
-> > > API IO methods and to initialize the regmap object with read/write
-> > > callbacks specific to the controller registers map implementation. This
-> > > will be also handy for the drivers with non-standard registers mapping
-> > > (like an embedded into the Baikal-T1 System Controller DW I2C block, which
-> > > glue-driver is a part of this series).
-> > > 
-> > > As before the driver tries to detect the mapping setup at probe stage and
-> > > creates a regmap object accordingly, which will be used by the rest of the
-> > > code to correctly access the controller registers. In two places it was
-> > > appropriate to convert the hand-written read-modify-write and
-> > > read-poll-loop design patterns to the corresponding regmap API
-> > > ready-to-use methods.
-> > > 
-> > > Note the regmap IO methods return value is checked only at the probe
-> > > stage. The rest of the code won't do this because basically we have
-> > > MMIO-based regmap so non of the read/write methods can fail (this also
-> > > won't be needed for the Baikal-T1-specific I2C controller).
-> > > 
-> > > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> > > Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: linux-mips@vger.kernel.org
-> > 
-> > My codecheckers found these, rightfully I'd say:
-> > 
-> > SPARSE
-> > drivers/i2c/busses/i2c-designware-master.c:427:53: warning: incorrect type in argument 3 (different signedness)
-> > drivers/i2c/busses/i2c-designware-master.c:427:53:    expected unsigned int *val
-> > drivers/i2c/busses/i2c-designware-master.c:427:53:    got int *
-> > 
-> > CC
-> > drivers/i2c/busses/i2c-designware-common.c:127: warning: Excess function parameter 'base' description in 'i2c_dw_init_regmap'
-> > 
-> > ^ means there is an argument documented which does not exist in the
-> > function declaration
-> 
-> Well, I fixed these two minor things for your now...
-> 
+This patch series adds support for PMU, PSCI, SPMI
+and SCM, as well as all six cores on msm8992.
 
-Great! Sorry for me not doing it on time. I was away from my laptop and internet
-last day to do that. I saw your message about the sparse detecting the problems
-while I was on my way to outskirts and was going to fix them today either in a
-new version of the patchset or sending follow-up patches. But you already fixed
-the problems. Thank you very much for doing that for me. 
+Please note though, that due to the lack of a core 
+cluster interconnect driver, it is only recommended 
+to use one cluster (as in set NR_CPUS to 4) for now.
+The other two technically work, but in practice slow
+down the platform by a LOT.
 
--Sergey
+Hopefully with a proper MMCC driver this platform can be
+brought up to speed with other Qualcomm SoCs.
+
+Konrad Dybcio (14):
+  arm64: dts: Add a proper CPU map for MSM8992
+  arm64: dts: msm8992: Place clock nodes in clocks{}
+  arm64: dts: msm8992: Add a SCM node
+  firmware: qcom_scm: Add msm8992 compatible
+  Documentation: Document msm8992 qcom_scm compatible
+  arm64: dts: msm8992: Add a spmi_bus node
+  arm64: dts: msm8992: Add BLSP2 UART2 node
+  arm64: dts: msm8992: Add a BLSP I2C2 node
+  arm64: dts: msm8992: Add a BLSP I2C6 node
+  arm64: dts: msm8992: Add PMU node
+  arm64: dts: msm8992: Add PSCI support.
+  arm64: dts: qcom: Update msm8992 pin configuration
+  arm64: dts: qcom: Fix msm8992 SDHCI
+  arm64: dts: qcom: Add a label to the msm8992 rpm-requests node
+
+ .../devicetree/bindings/firmware/qcom,scm.txt |   1 +
+ arch/arm64/boot/dts/qcom/msm8992-pins.dtsi    | 149 ++++++++++++----
+ arch/arm64/boot/dts/qcom/msm8992.dtsi         | 167 ++++++++++++++++--
+ drivers/firmware/qcom_scm.c                   |   1 +
+ 4 files changed, 275 insertions(+), 43 deletions(-)
+
+-- 
+2.26.2
+
