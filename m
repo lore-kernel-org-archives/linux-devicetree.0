@@ -2,76 +2,76 @@ Return-Path: <SRS0=hbEn=7N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AB5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEC6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8962074B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96759207D5
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUUqbJz8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eP15yulH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgEaR3K (ORCPT
+        id S1727084AbgEaRrD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 13:29:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
+        Sun, 31 May 2020 13:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgEaR2Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 31 May 2020 13:28:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EDDDC061A0E;
-        Sun, 31 May 2020 10:28:16 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e1so9194399wrt.5;
-        Sun, 31 May 2020 10:28:16 -0700 (PDT)
+        with ESMTP id S1726193AbgEaRrC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 31 May 2020 13:47:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A85C061A0E;
+        Sun, 31 May 2020 10:47:02 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x14so9247660wrp.2;
+        Sun, 31 May 2020 10:47:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VwYKi1TVSKCTfYptId4p6rTM5P6mM5EdUkCP+QK5U2U=;
-        b=WUUqbJz8ibnFCPJgjSSFRJ+Mp2NB+PV9t2bzGTM4QK+7xPDoYy0a4USM0reIQJAj6t
-         I5GU6T+ZUfc2J3bleAQNgmeEWhxiWVPrYg1h3Bh9aiEZ70Z6udAolq7Fq349JNGYwj5C
-         tsBbYjHVtfUOg0BJ2kneC55CRxHAPpPTWMRaiY1hy+oWzXERGRn/n8uyisZj+6Trc90/
-         H4AlXuRxLS6BOVd/miD0PpB+GcnP4//yL/vJDWKSzhKYlP8uGUIcG5ygGtAzW5tIpwn/
-         aoEX+sxFWfoVhs5ceAVgB5MaRoBKjrAluM+luQoUrauVSCy6gaUCh8q6VZatScIi0Bkk
-         pLHg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0igUM99u6qi0G2V9QHiKNIc+/Cm62S0GvQJm5Z6yraI=;
+        b=eP15yulHnOheIw44ncZUq2rVU/kWIIjQ51dynpgDc7ik+73HqCU6wNUlwCxROjyqFT
+         eCiV7qFJSjAfnfbwBs129WmT45YHyv0LEg/bdKmiS+IuRTR24PzFIGW6ujzHtYtVSABr
+         3OjuzaaLvJuQ0AKHOwoAvFe45B6H2sBtY/2NpEUtmu8sC18ZVQSF09fe+kchygYwYtgd
+         BIFMAI2LsFCNP1bFED3IBO4ruIGhcZXXFSMKNz8a8bm9YIGNeE1DycoTMIyTfSs+nyRb
+         MIHsqEn/Pz4L0zVREX3R92OSRkogU/Af0WkTFIa0A1CSk54JnzG0ar5zxDq2lzrnY/hK
+         +ugg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VwYKi1TVSKCTfYptId4p6rTM5P6mM5EdUkCP+QK5U2U=;
-        b=lJDa4WrrazZndcD8l+2lkIYXB6mvccv0cmv2d8a3calguoysCil8809xvspSbUFSz7
-         8HGrqgjYysYX0hH11oMi/vjp+AInZnt/rmIgjtou1VKvCcY/i0tK7JmdtF5CT8j2+kNS
-         xRVvou0voAFg8ZTTaRrFrP89A5f41VOEuSgcnztaIYx3MWcHpzVOEpKNQa0dGa7QUHIM
-         aK71AX64Zu5pfUJazldsxO1QihIhC060Y6VtPSAxLZdKhOyb4oVmc72rZAYsdVHmhKC4
-         5xllgF27CW0z9BGnAKFVutwqrTHmZYHuqoXOOfLPKmZSgdvoqv0wZeoF+M8LLSFhM4Gc
-         OShg==
-X-Gm-Message-State: AOAM532sTo7gjChuTHHoKPCN9l7mIRgFBWmCJUBQfh3Q1PYvPQN8HfrB
-        xFXjKPi1jldzyCHjbYfFXfg=
-X-Google-Smtp-Source: ABdhPJyQsQi68bizr9S3a5ZHY+lQTflW3hKhHZPoizLfBWkgsBpm2Qe9Mu8nmUgOme7vTiKQ61JIKQ==
-X-Received: by 2002:a5d:4488:: with SMTP id j8mr17650291wrq.242.1590946094825;
-        Sun, 31 May 2020 10:28:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0igUM99u6qi0G2V9QHiKNIc+/Cm62S0GvQJm5Z6yraI=;
+        b=FLpNTlgVwpFTFlnfwDpuvr3/seW/KwNwY+34P/yEFyLaCYrdd8Pveo93ZQpIBHQHof
+         N4kD0219dZbNo4nur5mHPx5VrSryBQEjAxTyd9u+er1YcLMzfG7iR6031YoSOVOU1e9S
+         DANYcIcbu/LD8rpYI/vOP0q4a7dI95nSgogcegzvS39GAbOC/hHaup1TFX7Wm089hZ6J
+         8+FVAnVcHGKU6dM46re4Jlw5lRgizJXC/aP9vDx7LZqb4Xv5hi8Xh3lq5ECtvelpYTK6
+         I1nTcNVgpwlihekHehd7Cqfa37z0Fsep5Qw0Ur1ca7VjF+YMUptUSkT2K1/dvi9VF6wH
+         7eLw==
+X-Gm-Message-State: AOAM530xuXoYbviKXWTE7xtDKmTkj+71qzPqYONJ0IVNVYqwTboUa+nV
+        Brapqvkhj2lcL8XypXJ3UWs=
+X-Google-Smtp-Source: ABdhPJyTv1d7YcEb2pEVi4URbVPgL7HdLi/EU2CphoV+LO8URSwLmHF+DGnvsNadjC5gRxVvj2pwYQ==
+X-Received: by 2002:adf:80f0:: with SMTP id 103mr17371010wrl.232.1590947220924;
+        Sun, 31 May 2020 10:47:00 -0700 (PDT)
 Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.13
+        by smtp.googlemail.com with ESMTPSA id x186sm9716494wmg.8.2020.05.31.10.46.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 10:28:14 -0700 (PDT)
+        Sun, 31 May 2020 10:47:00 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 03/14] arm64: dts: msm8992: Add a SCM node
-Date:   Sun, 31 May 2020 19:27:53 +0200
-Message-Id: <20200531172804.256335-4-konradybcio@gmail.com>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Add msm8992 GCC driver
+Date:   Sun, 31 May 2020 19:46:06 +0200
+Message-Id: <20200531174612.260113-1-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200531172804.256335-1-konradybcio@gmail.com>
-References: <20200531172804.256335-1-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -80,28 +80,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+This SoC is very similar to msm8994, but features
+less clocks (as in no UFS or PCIE1-related ones,
+for example). This implementation also adds support
+for GDSCs and resets, which are lacking in the current
+8994 driver and I can't test them over there, as I don't
+have a device featuring that SoC. Qualcomm also 
+separates 8992 and 8994 drivers on downstream kernels,
+so I find this appropriate.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index e255b577af37..535be60521d8 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -154,6 +154,12 @@ smem {
- 		hwlocks = <&sfpb_mutex 3>;
- 	};
- 
-+	firmware {
-+		scm {
-+			compatible = "qcom,scm-msm8992";
-+		};
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+Konrad Dybcio (4):
+  drivers: clk: qcom: Add msm8992 GCC driver
+  Add compatible strings and the include files for the msm8992 GCC.
+  arm64: dts: Adjust msm8992 DTS to use the correct GCC driver
+  driver: clk: Add msm8992 GCC Kconfig and Makefile entries
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml   |    2 +
+ arch/arm64/boot/dts/qcom/msm8992.dtsi         |   15 +-
+ drivers/clk/qcom/Kconfig                      |    8 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/gcc-msm8992.c                | 2429 +++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-msm8992.h  |  144 +
+ include/dt-bindings/reset/qcom,gcc-msm8992.h  |    8 +
+ 7 files changed, 2600 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/clk/qcom/gcc-msm8992.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8992.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8992.h
+
 -- 
 2.26.2
 
