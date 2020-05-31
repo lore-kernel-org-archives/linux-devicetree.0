@@ -2,66 +2,46 @@ Return-Path: <SRS0=hbEn=7N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDE2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A61C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3D52074B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22C3207D5
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 17:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="su+/USQK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TWiYxGu6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgEaRrK (ORCPT
+        id S1728264AbgEaRue (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 13:47:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37458 "EHLO
+        Sun, 31 May 2020 13:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728347AbgEaRrJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 31 May 2020 13:47:09 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0DFCC061A0E;
-        Sun, 31 May 2020 10:47:08 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k26so9144351wmi.4;
-        Sun, 31 May 2020 10:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wt153X3SfGeLU/28PiLxyW7Eg/sDzOciAysSAgQvX4I=;
-        b=su+/USQKJq4UqSIn5rk1NuF6PU5Dp0PySUOCq9diRI10J8VtkT3jaAxBwfvOK0OeIw
-         M+FFfh9ADXn6EBjZbfcJ3S4gMnCWW3KV+0LEF5JUbJabGbBlDQPBYMLIMXY4YmA64zFJ
-         Fa/B9R30zXOj7jasDYt/7pjoSwgNnZPXWza0+TomqPJVXY6kYC9m/W/2cpKu9XLFJa7/
-         g+gm0zOfHHNCEMv/SA10xHRuzyJy3GiC9slC39gCOucP2T1/Rb1WSAw7OBGDKvBn8FWR
-         rf0ldQcgVFE7EewyxhbENfsIZkEVk72YbUhnvghS2UKfcQlN8lzIMTwWMGSkv4dDOHSR
-         aavA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wt153X3SfGeLU/28PiLxyW7Eg/sDzOciAysSAgQvX4I=;
-        b=sU56qPoWo6XcRU7DhonO+7e9Yb33aQh2LAM7GPPxdIbdoA/mgPi5i5k65TitnXD6IJ
-         aGvLN4o2MQojOQCO/8HAqRMM7GFjEUkOXWcIO6UyWMZ7p+6Tlr4cvoUzhTeUmTsvzwju
-         wLH6L7jJRte8AIvVkxKOJv7z+/TJkfn4qj/icSr2mOO54QbgpjFJh6LkCDbg34K0itwv
-         3NBVfMQcyWH7B02aV0/C7T/lfIKJafWigoQljhdsApdlnu8r2rSrYs7e2VY6saQMZ5lt
-         9gyIBukfeTpGPC1eIAbqXFLz4D5v25U3auK2ZWD/XT+Izq80N0tCIstI09/y1Wyz8C6C
-         Iadw==
-X-Gm-Message-State: AOAM5327LSjQrIkP+XPA7dMGiboRJP6yFxyGMDH6abnAj9vp1YaR8i5i
-        KxceL4jRzocTrkER3Jnabvo=
-X-Google-Smtp-Source: ABdhPJyKLnkCUWM88yGl6jCAA+Hq6hrKlFtvmexOpR1Mb/cj34UcdXQ/yUqdXl6wqdyNv7XC8ibOvw==
-X-Received: by 2002:a1c:9cd5:: with SMTP id f204mr17605713wme.105.1590947227683;
-        Sun, 31 May 2020 10:47:07 -0700 (PDT)
-Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id x186sm9716494wmg.8.2020.05.31.10.47.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 10:47:07 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
+        with ESMTP id S1726193AbgEaRud (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 31 May 2020 13:50:33 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1509C061A0E;
+        Sun, 31 May 2020 10:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=t5o4BK2xKZN+N/stDYG7dBasqIdG794v6sxkRmMBFD8=; b=TWiYxGu61btEaO8hn8j32LXiw3
+        X5LqG4cxMFKkuL0yEG7F17BPTgwZHGSmrA3IncOV/BplW/J932GuQ6jN/PWZiVZMtTtLYV5LModnf
+        aCAfm56XvyKX7dFRiZNgQFyJSY55MsPaSOoJkpA5ov6lAESunTN24k4avHzC+TzA+4Ddnj669PPf5
+        zAJDAMlO/9NPOwL7tzqPCBCH36VkYpVeULkLuk9M9KUTqQYXrrrfVSJWnRY7wgqkbpfJcyqQXfmgY
+        QdPreXeP7Sg7ix21HpOdaxjI+1pl+l0a1yAyLbYJEdC1Zr9lYiOkneyS0shxidtt8QPYyk3qN8ALD
+        qeibsgTA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jfS6O-0001DW-JC; Sun, 31 May 2020 17:50:28 +0000
+Subject: Re: [PATCH 4/4] driver: clk: Add msm8992 GCC Kconfig and Makefile
+ entries
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -69,216 +49,55 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] Add compatible strings and the include files for the msm8992 GCC.
-Date:   Sun, 31 May 2020 19:46:08 +0200
-Message-Id: <20200531174612.260113-3-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200531174612.260113-1-konradybcio@gmail.com>
 References: <20200531174612.260113-1-konradybcio@gmail.com>
+ <20200531174612.260113-5-konradybcio@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d5813ebc-dcb2-afc2-7a7e-71e73113f8fc@infradead.org>
+Date:   Sun, 31 May 2020 10:50:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200531174612.260113-5-konradybcio@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds the include files and documents compatible
-strings for the msm8992 GCC driver
+On 5/31/20 10:46 AM, Konrad Dybcio wrote:
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  drivers/clk/qcom/Kconfig  | 8 ++++++++
+>  drivers/clk/qcom/Makefile | 1 +
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 11ec6f466467..d102b4015289 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -197,6 +197,14 @@ config MSM_MMCC_8974
+>  	  Say Y if you want to support multimedia devices such as display,
+>  	  graphics, video encode/decode, camera, etc.
+>  
+> +config MSM_GCC_8992
+> +	tristate "MSM8992 Global Clock Controller"
+> +	select QCOM_GDSC
+> +	help
+> +	  Support for the global clock controller on msm8992 devices.
+> +	  Say Y if you want to use peripheral devices such as UART, SPI,
+> +	  i2c, USB, SD/eMMC, PCIe, etc.
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- .../devicetree/bindings/clock/qcom,gcc.yaml   |   2 +
- include/dt-bindings/clock/qcom,gcc-msm8992.h  | 144 ++++++++++++++++++
- include/dt-bindings/reset/qcom,gcc-msm8992.h  |   8 +
- 3 files changed, 154 insertions(+)
- create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8992.h
- create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8992.h
+	  I2C
+please.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-index e533bb0cfd2b..66e51f2c0c27 100644
---- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-@@ -26,6 +26,7 @@ description: |
-   - dt-bindings/reset/qcom,gcc-msm8660.h
-   - dt-bindings/clock/qcom,gcc-msm8974.h
-   - dt-bindings/reset/qcom,gcc-msm8974.h
-+  - dt-bindings/reset/qcom,gcc-msm8992.h
-   - dt-bindings/clock/qcom,gcc-msm8994.h
-   - dt-bindings/clock/qcom,gcc-mdm9615.h
-   - dt-bindings/reset/qcom,gcc-mdm9615.h
-@@ -45,6 +46,7 @@ properties:
-       - qcom,gcc-msm8974
-       - qcom,gcc-msm8974pro
-       - qcom,gcc-msm8974pro-ac
-+      - qcom,gcc-msm8992
-       - qcom,gcc-msm8994
-       - qcom,gcc-mdm9615
-       - qcom,gcc-sdm630
-diff --git a/include/dt-bindings/clock/qcom,gcc-msm8992.h b/include/dt-bindings/clock/qcom,gcc-msm8992.h
-new file mode 100644
-index 000000000000..8591a881005d
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,gcc-msm8992.h
-@@ -0,0 +1,144 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-+ */
-+
-+
-+#ifndef _DT_BINDINGS_CLK_MSM_GCC_8992_H
-+#define _DT_BINDINGS_CLK_MSM_GCC_8992_H
-+
-+#define GPLL0_EARLY                     0
-+#define GPLL0                           1
-+#define GPLL4_EARLY                     2
-+#define GPLL4                           3
-+#define USB30_MASTER_CLK_SRC            4
-+#define BLSP1_QUP1_I2C_APPS_CLK_SRC     5
-+#define BLSP1_QUP1_SPI_APPS_CLK_SRC     6
-+#define BLSP1_QUP2_I2C_APPS_CLK_SRC     7
-+#define BLSP1_QUP2_SPI_APPS_CLK_SRC     8
-+#define BLSP1_QUP3_I2C_APPS_CLK_SRC     9
-+#define BLSP1_QUP3_SPI_APPS_CLK_SRC     10
-+#define BLSP1_QUP4_I2C_APPS_CLK_SRC     11
-+#define BLSP1_QUP4_SPI_APPS_CLK_SRC     12
-+#define BLSP1_QUP5_I2C_APPS_CLK_SRC     13
-+#define BLSP1_QUP5_SPI_APPS_CLK_SRC     14
-+#define BLSP1_QUP6_I2C_APPS_CLK_SRC     15
-+#define BLSP1_QUP6_SPI_APPS_CLK_SRC     16
-+#define BLSP1_UART1_APPS_CLK_SRC        17
-+#define BLSP1_UART2_APPS_CLK_SRC        18
-+#define BLSP1_UART3_APPS_CLK_SRC        19
-+#define BLSP1_UART4_APPS_CLK_SRC        20
-+#define BLSP1_UART5_APPS_CLK_SRC        21
-+#define BLSP1_UART6_APPS_CLK_SRC        22
-+#define BLSP2_QUP1_I2C_APPS_CLK_SRC     23
-+#define BLSP2_QUP1_SPI_APPS_CLK_SRC     24
-+#define BLSP2_QUP2_I2C_APPS_CLK_SRC     25
-+#define BLSP2_QUP2_SPI_APPS_CLK_SRC     26
-+#define BLSP2_QUP3_I2C_APPS_CLK_SRC     27
-+#define BLSP2_QUP3_SPI_APPS_CLK_SRC     28
-+#define BLSP2_QUP4_I2C_APPS_CLK_SRC     29
-+#define BLSP2_QUP4_SPI_APPS_CLK_SRC     30
-+#define BLSP2_QUP5_I2C_APPS_CLK_SRC     31
-+#define BLSP2_QUP5_SPI_APPS_CLK_SRC     32
-+#define BLSP2_QUP6_I2C_APPS_CLK_SRC     33
-+#define BLSP2_QUP6_SPI_APPS_CLK_SRC     34
-+#define BLSP2_UART1_APPS_CLK_SRC        35
-+#define BLSP2_UART2_APPS_CLK_SRC        36
-+#define BLSP2_UART3_APPS_CLK_SRC        37
-+#define BLSP2_UART4_APPS_CLK_SRC        38
-+#define BLSP2_UART5_APPS_CLK_SRC        39
-+#define BLSP2_UART6_APPS_CLK_SRC        40
-+#define GP1_CLK_SRC                     41
-+#define GP2_CLK_SRC                     42
-+#define GP3_CLK_SRC                     43
-+#define PCIE_0_AUX_CLK_SRC              44
-+#define PCIE_0_PIPE_CLK_SRC             45
-+#define PDM2_CLK_SRC                    46
-+#define SDCC1_APPS_CLK_SRC              47
-+#define SDCC2_APPS_CLK_SRC              48
-+#define SDCC3_APPS_CLK_SRC              49
-+#define SDCC4_APPS_CLK_SRC              50
-+#define TSIF_REF_CLK_SRC                51
-+#define USB30_MOCK_UTMI_CLK_SRC         52
-+#define USB3_PHY_AUX_CLK_SRC            53
-+#define USB_HS_SYSTEM_CLK_SRC           54
-+#define GCC_BLSP1_AHB_CLK               55
-+#define GCC_BLSP1_QUP1_I2C_APPS_CLK     56
-+#define GCC_BLSP1_QUP1_SPI_APPS_CLK     57
-+#define GCC_BLSP1_QUP2_I2C_APPS_CLK     58
-+#define GCC_BLSP1_QUP2_SPI_APPS_CLK     59
-+#define GCC_BLSP1_QUP3_I2C_APPS_CLK     60
-+#define GCC_BLSP1_QUP3_SPI_APPS_CLK     61
-+#define GCC_BLSP1_QUP4_I2C_APPS_CLK     62
-+#define GCC_BLSP1_QUP4_SPI_APPS_CLK     63
-+#define GCC_BLSP1_QUP5_I2C_APPS_CLK     64
-+#define GCC_BLSP1_QUP5_SPI_APPS_CLK     65
-+#define GCC_BLSP1_QUP6_I2C_APPS_CLK     66
-+#define GCC_BLSP1_QUP6_SPI_APPS_CLK     67
-+#define GCC_BLSP1_UART1_APPS_CLK        69
-+#define GCC_BLSP1_UART2_APPS_CLK        70
-+#define GCC_BLSP1_UART3_APPS_CLK        71
-+#define GCC_BLSP1_UART4_APPS_CLK        72
-+#define GCC_BLSP1_UART5_APPS_CLK        73
-+#define GCC_BLSP1_UART6_APPS_CLK        74
-+#define GCC_BLSP2_AHB_CLK               75
-+#define GCC_BLSP2_QUP1_I2C_APPS_CLK     76
-+#define GCC_BLSP2_QUP1_SPI_APPS_CLK     77
-+#define GCC_BLSP2_QUP2_I2C_APPS_CLK     78
-+#define GCC_BLSP2_QUP2_SPI_APPS_CLK     79
-+#define GCC_BLSP2_QUP3_I2C_APPS_CLK     80
-+#define GCC_BLSP2_QUP3_SPI_APPS_CLK     81
-+#define GCC_BLSP2_QUP4_I2C_APPS_CLK     82
-+#define GCC_BLSP2_QUP4_SPI_APPS_CLK     83
-+#define GCC_BLSP2_QUP5_I2C_APPS_CLK     84
-+#define GCC_BLSP2_QUP5_SPI_APPS_CLK     85
-+#define GCC_BLSP2_QUP6_I2C_APPS_CLK     86
-+#define GCC_BLSP2_QUP6_SPI_APPS_CLK     87
-+#define GCC_BLSP2_UART1_APPS_CLK        88
-+#define GCC_BLSP2_UART2_APPS_CLK        89
-+#define GCC_BLSP2_UART3_APPS_CLK        90
-+#define GCC_BLSP2_UART4_APPS_CLK        91
-+#define GCC_BLSP2_UART5_APPS_CLK        92
-+#define GCC_BLSP2_UART6_APPS_CLK        93
-+#define GCC_BOOT_ROM_AHB_CLK            94
-+#define GCC_GP1_CLK                     95
-+#define GCC_GP2_CLK                     96
-+#define GCC_GP3_CLK                     97
-+#define GCC_MSS_CFG_AHB_CLK             98
-+#define GCC_MSS_Q6_BIMC_AXI_CLK         99
-+#define GCC_PCIE_0_AUX_CLK              100
-+#define GCC_PCIE_0_CFG_AHB_CLK          101
-+#define GCC_PCIE_0_MSTR_AXI_CLK         102
-+#define GCC_PCIE_0_PIPE_CLK             103
-+#define GCC_PCIE_0_SLV_AXI_CLK          104
-+#define GCC_PDM2_CLK                    105
-+#define GCC_PDM_AHB_CLK                 106
-+#define GCC_PRNG_AHB_CLK                107
-+#define GCC_SDCC1_AHB_CLK               108
-+#define GCC_SDCC1_APPS_CLK              109
-+#define GCC_SDCC2_AHB_CLK               110
-+#define GCC_SDCC2_APPS_CLK              111
-+#define GCC_SDCC3_AHB_CLK               112
-+#define GCC_SDCC3_APPS_CLK              113
-+#define GCC_SDCC4_AHB_CLK               114
-+#define GCC_SDCC4_APPS_CLK              115
-+#define GCC_SYS_NOC_USB3_AXI_CLK        116
-+#define GCC_TSIF_AHB_CLK                117
-+#define GCC_TSIF_REF_CLK                118
-+#define GCC_USB2_HS_PHY_SLEEP_CLK       119
-+#define GCC_USB30_MASTER_CLK            120
-+#define GCC_USB30_MOCK_UTMI_CLK         121
-+#define	GCC_USB30_SLEEP_CLK             122
-+#define GCC_USB3_PHY_AUX_CLK            123
-+#define GCC_USB3_PHY_PIPE_CLK           124
-+#define GCC_USB_HS_AHB_CLK              125
-+#define GCC_USB_HS_SYSTEM_CLK           126
-+#define GCC_USB_PHY_CFG_AHB2PHY_CLK     127
-+
-+
-+/* Indexes for GDSCs */
-+#define PCIE_GDSC                       0
-+#define PCIE_0_GDSC                     1
-+#define USB30_GDSC                      2
-+
-+#endif
-diff --git a/include/dt-bindings/reset/qcom,gcc-msm8992.h b/include/dt-bindings/reset/qcom,gcc-msm8992.h
-new file mode 100644
-index 000000000000..558dfeffdeef
---- /dev/null
-+++ b/include/dt-bindings/reset/qcom,gcc-msm8992.h
-@@ -0,0 +1,8 @@
-+#ifndef _DT_BINDINGS_RESET_MSM_GCC_8992_H
-+#define _DT_BINDINGS_RESET_MSM_GCC_8992_H
-+
-+#define PCIE_PHY_0_RESET 0
-+#define QUSB2_PHY_RESET 1
-+#define USB3_PHY_RESET 2
-+
-+#endif
+> +
+>  config MSM_GCC_8994
+>  	tristate "MSM8994 Global Clock Controller"
+>  	help
+
+
 -- 
-2.26.2
+~Randy
 
