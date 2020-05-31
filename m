@@ -7,56 +7,53 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251D5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 14:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DDCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 14:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE9A720776
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 14:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F0C207BB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 14:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590933907;
-	bh=Q2n3PK4t8Mi2Fesp5491E0TYuqLEWg1ufhgUZV0WppQ=;
+	s=default; t=1590935255;
+	bh=NKrkeo6UXWPyI9u8qha+YBNOzdVtFMBruVoUoj76jBg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Jz6d3/xkezIji6mrAGxg3lffFF0HNj8SVM9QfZbSlDzk/cEA3tRiXRZlJNYso3EHb
-	 OcnzFkja5sQTgOVyu/qyg14EemQRW1ofu4tUwSh3pvAf2t9V2ylt9HDzGDNUFZhY/X
-	 +6FnnVQpmcD9nqTH4nnxWPbJXGnN6bshjewGOCSk=
+	b=u7jIk4LtXETaqP4XOORWFfBsnkAn6xGccHY4/Df1Up3/CJOPCEso93BpcHDQPfixX
+	 jMzI7/ICm6hU8rTzPqxvB/zGzwWO8+nqPhYSaXbxRVOohFBskWDjJVeHycW29igqpO
+	 DdichqGgGOaxx4i4vG4Dh4Xpr+nnlLcKJHqpWIv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgEaOFG (ORCPT
+        id S1727084AbgEaO1e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 10:05:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
+        Sun, 31 May 2020 10:27:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgEaOFG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 31 May 2020 10:05:06 -0400
+        id S1725987AbgEaO1e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 31 May 2020 10:27:34 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08F8D20723;
-        Sun, 31 May 2020 14:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC782076B;
+        Sun, 31 May 2020 14:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590933905;
-        bh=Q2n3PK4t8Mi2Fesp5491E0TYuqLEWg1ufhgUZV0WppQ=;
+        s=default; t=1590935253;
+        bh=NKrkeo6UXWPyI9u8qha+YBNOzdVtFMBruVoUoj76jBg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=03UTh0FuzNlIQYXJ1g4/jt3bsAoqObJFHg473+GDU9n4L1aEQf7OmuDskylrMk1CJ
-         NXclUkCt+BbMPCHs2F7+UbThB3rwNsQDBM+Nr/tIVWv4rRNtXJZh+Ei8eEHtasTLeo
-         /olOD3dbiiDjliq6g0zsSHgs2WQWXTKshrgv5L3A=
-Date:   Sun, 31 May 2020 15:05:01 +0100
+        b=s/lo1Zbt/ogvrQA8qvH/7UmEOvxYKustGfl5DZeAfRI1nUThdzUWujSDU5ZXV7Ith
+         AoJyYFrVFSfLQlkuK7xHp/l7m0BN/eWFaAB/eWEZea2KD8Va5A+AsPfScAWjvF7HFt
+         ht+G4KYBkG90Me/Q8lhpbIu7EPXKzLrVTzl9PWxk=
+Date:   Sun, 31 May 2020 15:27:28 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        linux-kernel@vger.kernel.org,
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@gmail.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v4 2/5] dt-bindings: iio: imu: bmi160: add regulators
- and mount-matrix
-Message-ID: <20200531150501.55a6e4c8@archlinux>
-In-Reply-To: <20200529170943.GA2578764@bogus>
+Subject: Re: [PATCH v4 3/5] iio: imu: bmi160: fix typo
+Message-ID: <20200531152728.24f96084@archlinux>
+In-Reply-To: <20200525164615.14962-4-jonathan.albrieux@gmail.com>
 References: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
-        <20200525164615.14962-3-jonathan.albrieux@gmail.com>
-        <20200529170943.GA2578764@bogus>
+        <20200525164615.14962-4-jonathan.albrieux@gmail.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -66,71 +63,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 May 2020 11:09:43 -0600
-Rob Herring <robh@kernel.org> wrote:
+On Mon, 25 May 2020 18:46:02 +0200
+Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
 
-> On Mon, May 25, 2020 at 06:46:01PM +0200, Jonathan Albrieux wrote:
-> > Add vdd-supply and vddio-supply support.
-> > Add mount-matrix support.
-> > 
-> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > ---
-> >  .../bindings/iio/imu/bosch,bmi160.yaml           | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> > index 0d0ef84e22b9..cfe40dbcd723 100644
-> > --- a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> > @@ -37,6 +37,17 @@ properties:
-> >        set if the specified interrupt pin should be configured as
-> >        open drain. If not set, defaults to push-pull.
-> >  
-> > +  vdd-supply:
-> > +    maxItems: 1  
+> Fix a typo in MODULE_AUTHOR() argument.
 > 
-> Supplies are always a single item, so don't need this.
-
-Given this (and case below) were it outstanding for this patch I
-fixed them up whilst applying rather than getting Jonathan to
-go around again.
-
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+applied
 
 Thanks,
 
-Jonathan
-
+J
+> ---
+>  drivers/iio/imu/bmi160/bmi160_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > +    description: provide VDD power to the sensor.
-> > +
-> > +  vddio-supply:
-> > +    maxItems: 1
-> > +    description: provide VDD IO power to the sensor.
-> > +
-> > +  mount-matrix:
-> > +    description: an optional 3x3 mounting rotation matrix
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -52,9 +63,14 @@ examples:
-> >          bmi160@68 {
-> >                  compatible = "bosch,bmi160";
-> >                  reg = <0x68>;
-> > +                vdd-supply = <&pm8916_l17>;
-> > +                vddio-supply = <&pm8916_l6>;
-> >                  interrupt-parent = <&gpio4>;
-> >                  interrupts = <12 IRQ_TYPE_EDGE_RISING>;
-> >                  interrupt-names = "INT1";
-> > +                mount-matrix = "0", "1", "0",
-> > +                               "-1", "0", "0",
-> > +                               "0", "0", "1";
-> >          };
-> >      };
-> >    - |
-> > -- 
-> > 2.17.1
-> >   
+> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+> index 6af65d6f1d28..77b05bd4a2b2 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> @@ -853,6 +853,6 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+>  }
+>  EXPORT_SYMBOL_GPL(bmi160_core_probe);
+>  
+> -MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com");
+> +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com>");
+>  MODULE_DESCRIPTION("Bosch BMI160 driver");
+>  MODULE_LICENSE("GPL v2");
 
