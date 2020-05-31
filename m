@@ -2,144 +2,89 @@ Return-Path: <SRS0=hbEn=7N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C67C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 13:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD12C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 14:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D938720776
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 13:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A2A207D0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 14:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590933503;
-	bh=P0ZYutxLRZ5Nn4J4uOgSOkVo4czM/dT+KQmhLVoDdBs=;
+	s=default; t=1590933763;
+	bh=D0gzVmbStb3PNrgx07STWnv6E9+eaE4lkytsQOUloMo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=N/vr1e0UX2AAq4R6CrDsurykBOXs2F63o3fXK+dCt0pd80Jl8YgcLEnS53FiWrcH0
-	 2rNrWy9UDTEb9XTQCULd+sHYpYvyeDLC8RCLN6tJi91Xn6iOnRXJqa2lhHnlCXQVsy
-	 UzqY0Oh39icqyaA8DtVZGqUYm74/yqykBUsfW1eM=
+	b=VgDSzEp/fHEYv35Jena8N0gyOvXMeF/dQ6miNogemPsUSSs0X5IzPEnJk+qMHSE7f
+	 9vKmBKQN2FpxTd0uJPZUh37wd6KFMw/Y2uNcdVGRitcw5iI3+79lSaZZqupwnOsvB8
+	 QOBrR+kMKElDAsYChENfdgXmMoYst5FWkl39f7lI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgEaN6T (ORCPT
+        id S1727906AbgEaOCm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 09:58:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51042 "EHLO mail.kernel.org"
+        Sun, 31 May 2020 10:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbgEaN6T (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 31 May 2020 09:58:19 -0400
+        id S1725889AbgEaOCm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 31 May 2020 10:02:42 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF47920723;
-        Sun, 31 May 2020 13:58:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31BEC20723;
+        Sun, 31 May 2020 14:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590933498;
-        bh=P0ZYutxLRZ5Nn4J4uOgSOkVo4czM/dT+KQmhLVoDdBs=;
+        s=default; t=1590933762;
+        bh=D0gzVmbStb3PNrgx07STWnv6E9+eaE4lkytsQOUloMo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hJAzHtyI3qbaXDQDcvQE3Tu2ISA+C3OKEaRgMgTgPSBsp+kPBvNEYO6DniUb0Cd5a
-         pOupT5SqWRkspaWkXZZ2T4Zfn8M21IxP5U8LMIcOaJSElpPAtry11j0IIw3likT+Ft
-         hDu586uloWsKI9i5LRGNpvHUIliqLFe1KCVVBUy8=
-Date:   Sun, 31 May 2020 14:58:14 +0100
+        b=M5YdxIOv/f+cfB+IQz7cJj3I5UTNze3fSLSHeqbcYoLulWwuPK0oY0vv9tKYBtZ+v
+         Evc/pjHzvVOmh3vmb/p/SVixEhR9kWoAqHzVGeWPn1smQWFyWlbpfWmSdE0Y/z1aRR
+         P9H33oD7qhvnnqmJqYfi/O1naV+NW6uC7Gi9BRXo=
+Date:   Sun, 31 May 2020 15:02:37 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        andy.shevchenko@gmail.com, robh+dt@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [GIT PULL] Immutable branch between MFD, IIO and Power due for
- the v5.8 merge window
-Message-ID: <20200531145814.2425e965@archlinux>
-In-Reply-To: <20200528070939.7btxjwuqn7bhf4xe@earth.universe>
-References: <20200526090646.25827-1-sravanhome@gmail.com>
-        <20200526094702.GN3628@dell>
-        <20200528070939.7btxjwuqn7bhf4xe@earth.universe>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, daniel.baluta@gmail.com,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v4 1/5] dt-bindings: iio: imu: bmi160: convert format to
+ yaml, add maintainer
+Message-ID: <20200531150237.106d8b83@archlinux>
+In-Reply-To: <20200529170834.GA2578530@bogus>
+References: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
+        <20200525164615.14962-2-jonathan.albrieux@gmail.com>
+        <20200529170834.GA2578530@bogus>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
- On Thu, 28 May 2020 09:09:39 +0200
-Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
+On Fri, 29 May 2020 11:08:34 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-> Hi,
->=20
-> Thanks for taking care of it Lee, merged!
+> On Mon, 25 May 2020 18:46:00 +0200, Jonathan Albrieux wrote:
+> > Converts documentation from txt format to yaml.
+> > 
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> > ---
+> >  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 ---------
+> >  .../bindings/iio/imu/bosch,bmi160.yaml        | 75 +++++++++++++++++++
+> >  2 files changed, 75 insertions(+), 37 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> >   
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks indeed.
-
-Given timing I'll probably only get this into IIO via a rebase
-after rc1.
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to poke at.
 
 Thanks,
 
 Jonathan
-
->=20
-> -- Sebastian
->=20
-> On Tue, May 26, 2020 at 10:47:02AM +0100, Lee Jones wrote:
-> > Enjoy!
-> >=20
-> > The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f=
-3136:
-> >=20
-> >   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-> >=20
-> > are available in the Git repository at:
-> >=20
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd=
--iio-power-v5.8
-> >=20
-> > for you to fetch changes up to 904ac71f4b0c1c26ec47ff597cb3d3c7d36e618d:
-> >=20
-> >   MAINTAINERS: Add entry for mp2629 Battery Charger driver (2020-05-26 =
-10:42:02 +0100)
-> >=20
-> > ----------------------------------------------------------------
-> > Immutable branch between MFD, IIO and Power due for the v5.8 merge wind=
-ow
-> >=20
-> > ----------------------------------------------------------------
-> > Saravanan Sekar (6):
-> >       dt-bindings: mfd: Add document bindings for mp2629
-> >       mfd: mp2629: Add support for mps battery charger
-> >       iio: adc: mp2629: Add support for mp2629 ADC driver
-> >       power: supply: Add support for mps mp2629 battery charger
-> >       power: supply: mp2629: Add impedance compensation config
-> >       MAINTAINERS: Add entry for mp2629 Battery Charger driver
-> >=20
-> >  Documentation/ABI/testing/sysfs-class-power-mp2629 |   8 +
-> >  .../devicetree/bindings/mfd/mps,mp2629.yaml        |  62 ++
-> >  MAINTAINERS                                        |   5 +
-> >  drivers/iio/adc/Kconfig                            |  10 +
-> >  drivers/iio/adc/Makefile                           |   1 +
-> >  drivers/iio/adc/mp2629_adc.c                       | 208 +++++++
-> >  drivers/mfd/Kconfig                                |   9 +
-> >  drivers/mfd/Makefile                               |   2 +
-> >  drivers/mfd/mp2629.c                               |  79 +++
-> >  drivers/power/supply/Kconfig                       |  10 +
-> >  drivers/power/supply/Makefile                      |   1 +
-> >  drivers/power/supply/mp2629_charger.c              | 669 +++++++++++++=
-++++++++
-> >  include/linux/mfd/mp2629.h                         |  26 +
-> >  13 files changed, 1090 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.ya=
-ml
-> >  create mode 100644 drivers/iio/adc/mp2629_adc.c
-> >  create mode 100644 drivers/mfd/mp2629.c
-> >  create mode 100644 drivers/power/supply/mp2629_charger.c
-> >  create mode 100644 include/linux/mfd/mp2629.h
-> >=20
-> > --=20
-> > Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> > Linaro Services Technical Lead
-> > Linaro.org =E2=94=82 Open source software for ARM SoCs
-> > Follow Linaro: Facebook | Twitter | Blog =20
-
