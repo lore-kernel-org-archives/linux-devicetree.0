@@ -2,117 +2,170 @@ Return-Path: <SRS0=hbEn=7N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90ADC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 15:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6628DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 15:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B3F2076B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 15:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F13E2068D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 31 May 2020 15:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgEaPgP (ORCPT
+        id S1728012AbgEaPqS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 11:36:15 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:46746 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgEaPgP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 31 May 2020 11:36:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 45D7FFB03;
-        Sun, 31 May 2020 17:36:12 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id BPwWvG9Wfq8s; Sun, 31 May 2020 17:36:11 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 52F2944BF8; Sun, 31 May 2020 17:36:10 +0200 (CEST)
-Date:   Sun, 31 May 2020 17:36:10 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, robh@kernel.org,
-        kernel@puri.sm, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        mchehab@kernel.org, Anson.Huang@nxp.com, angus@akkea.ca,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] arm64: dts: Add a device tree for the Librem5 phone
-Message-ID: <20200531153610.GA9581@bogon.m.sigxcpu.org>
-References: <20200514155737.12160-1-martin.kepplinger@puri.sm>
- <20200529162850.GC3709@amd>
+        Sun, 31 May 2020 11:46:18 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:51683 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726193AbgEaPqS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 31 May 2020 11:46:18 -0400
+Received: from pro2.mail.ovh.net (unknown [10.108.1.191])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 7F74754B9C51;
+        Sun, 31 May 2020 17:46:15 +0200 (CEST)
+Received: from localhost (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 31 May
+ 2020 17:46:14 +0200
+Date:   Sun, 31 May 2020 17:44:06 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2 4/4] dt-bindings: iio: scd30: add device binding file
+Message-ID: <20200531154406.GA27246@arch>
+References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
+ <20200530213630.87159-5-tomasz.duszynski@octakon.com>
+ <20200531111914.56dbff8b@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200529162850.GC3709@amd>
+In-Reply-To: <20200531111914.56dbff8b@archlinux>
+X-Originating-IP: [89.70.180.118]
+X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 15080021879647853650
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudeffedgledtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnhepleekkeeuhfdtleehlefgffeltedthfekveefueevteeuvdejgeejtdetueffgeefnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkpheptddrtddrtddrtddpkeelrdejtddrudektddruddukeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehpmhgvvghrfiesphhmvggvrhifrdhnvght
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-On Fri, May 29, 2020 at 06:28:50PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-> > 
-> > Add a devicetree description for the Librem 5 phone. The early batches
-> > that have been sold are supported as well as the mass-produced device
-> > available later this year, see https://puri.sm/products/librem-5/
-> > 
-> > This boots to a working console with working WWAN modem, wifi usdhc,
-> > IMU sensor device, proximity sensor, haptic motor, gpio keys, GNSS and LEDs.
-> > 
-> > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> 
-> 
-> > +		blue {
-> > +			label = "phone:blue:front";
-> > +			label = "phone:green:front";
-> > +			label = "phone:red:front";
-> 
-> Droid 4 uses "status-led:{red,green,blue}". Could this use same
-> naming?
+On Sun, May 31, 2020 at 11:19:14AM +0100, Jonathan Cameron wrote:
+> On Sat, 30 May 2020 23:36:30 +0200
+> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+>
+> > Add SCD30 sensor binding file.
+> >
+> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > ---
+> >  .../iio/chemical/sensirion,scd30.yaml         | 68 +++++++++++++++++++
+> >  MAINTAINERS                                   |  1 +
+> >  2 files changed, 69 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> > new file mode 100644
+> > index 000000000000..34cc3925d64d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> > @@ -0,0 +1,68 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/chemical/sensirion,scd30.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Sensirion SCD30 carbon dioxide sensor
+> > +
+> > +maintainers:
+> > +  - Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > +
+> > +description: |
+> > +  Air quality sensor capable of measuring co2 concentration, temperature
+> > +  and relative humidity.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - sensirion,scd30
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  vdd-supply: true
+> > +
+> > +  sensirion,sel-gpios:
+> > +    description: GPIO connected to the SEL line
+> > +    maxItems: 1
+> > +
+> > +  sensirion,pwm-gpios:
+> > +    description: GPIO connected to the PWM line
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    # include <dt-bindings/interrupt-controller/irq.h>
+> > +    i2c {
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +
+> > +      scd30@61 {
+>
+> Nodes should have generic names.  Not sure we have an appropriate
+> one in the spec, but as main focus of people using this will be
+> c02 herpas
+>
+> 	c02@61?
+>
 
-Looking at leds-class.rst we don't have a useful devicename so
-should that just be omitted and s.th. like
+There are already a few recommended node names ending with '-sensor' on the list
+like air-pollution-sensor or temperature-sensor. I'd say co2-sensor would work
+here.
 
-		label = "blue:status";
-		label = "green:status";
-		label = "red:status";
-
-be used instead. If we want to map to current usage
-
-		label = "blue:status";
-		label = "green:boot";
-		label = "red:charging";
-
-would be even closer but since that is bound to change just going with
-"status" would make sense.
-Cheers,
- -- Guido
-
-
-> 
-> > +			label = "lm3560:flash";
-> > +			label = "lm3560:torch";
-> 
-> This is one LED, right? I'm pretty sure we don't want lm3560 in the
-> name... "main-camera:flash" would be better. Even better would be
-> something that's already in use.
-> 
-> > +			label = "white:backlight_cluster";
-> 
-> Make this ":backlight", please. Again, we want something that's
-> already used.
-> 
-> Best regards,
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
+> Rob may well have a better suggestion!
+>
+> > +        compatible = "sensirion,scd30";
+> > +        reg = <0x61>;
+> > +        vdd-supply = <&vdd>;
+> > +        interrupt-parent = <&gpio0>;
+> > +        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> > +      };
+> > +    };
+> > +  - |
+> > +    # include <dt-bindings/interrupt-controller/irq.h>
+> > +    serial {
+> > +      scd30 {
+> > +        compatible = "sensirion,scd30";
+> > +        vdd-supply = <&vdd>;
+> > +        interrupt-parent = <&gpio0>;
+> > +        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> > +      };
+> > +    };
+> > +
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 5db4b446c8ba..0ab9cf39e051 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -15140,6 +15140,7 @@ F:	include/uapi/linux/phantom.h
+> >  SENSIRION SCD30 CARBON DIOXIDE SENSOR DRIVER
+> >  M:	Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> >  S:	Maintained
+> > +F:	Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> >  F:	drivers/iio/chemical/scd30.h
+> >  F:	drivers/iio/chemical/scd30_core.c
+> >  F:	drivers/iio/chemical/scd30_i2c.c
+>
