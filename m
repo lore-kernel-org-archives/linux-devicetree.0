@@ -2,197 +2,97 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1347C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76379C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 17:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4E2206E2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF31206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 17:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591031339;
+	bh=U4zySYo9+Zn4LG0NqTAIuOjQNwa7638vn5i7EqhQmGc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YPC6CHe/nT6JGI7ibTG/1vqzeQylszvm3m5Uh5SPivI2rbZIGRdTFvBM/lRzWWZ8j
+	 tLLAnemp7fbA2Z8SRW7vJQMjy2GkhsMqR1/1eGKkc4yLbhNIxSibWLkJYV148L6NyI
+	 axgsBE3OGesxAyDJcFhVb/1Y/kjGiOcHtdlvDc4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgFARFd (ORCPT
+        id S1726017AbgFARIu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:05:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41044 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgFARFd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 13:05:33 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id B61BB2A23F8
-Received: by earth.universe (Postfix, from userid 1000)
-        id 4E7143C08C7; Mon,  1 Jun 2020 19:05:28 +0200 (CEST)
-Date:   Mon, 1 Jun 2020 19:05:28 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>
-Subject: Re: [PATCHv1 00/19] Improve SBS battery support
-Message-ID: <20200601170528.r5w3aeijny3v5yx3@earth.universe>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
- <CGME20200601104027eucas1p2b076ee860520d709e8178c41550653f7@eucas1p2.samsung.com>
- <15933a91-dd89-1f94-c2f2-79be4395f4c1@samsung.com>
+        Mon, 1 Jun 2020 13:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727795AbgFARIu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:08:50 -0400
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77F5D207D0;
+        Mon,  1 Jun 2020 17:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591031329;
+        bh=U4zySYo9+Zn4LG0NqTAIuOjQNwa7638vn5i7EqhQmGc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ni6vAZlZT4tj1xl51yOTbBxf5AwGuYWF7t8Rps7Sqztp3gZOZLVqUOrKv5yhUVa5Y
+         qZlEnxrRdplCiICKkBvni4EjL4RXM5OQlcSmYIewhdE3iN8gFnlE5AUnW1H5Ql4qMl
+         2MSFYfDkprtS06cQXSsTxuHUJiK4fn6SU1enW+AI=
+Received: by mail-oo1-f54.google.com with SMTP id h7so1558501ooc.9;
+        Mon, 01 Jun 2020 10:08:49 -0700 (PDT)
+X-Gm-Message-State: AOAM530KkjzcWllcaTBi4LLgadeAkBBvPtTE1bfnYJXmUw08EAkGveZ2
+        tecXVbvrz0226++kt6XNigC34xvFFN585rjuGg==
+X-Google-Smtp-Source: ABdhPJz8JITuBczH1/+7mXTyYTNWxr6eeT/W/in0quS2K3VUyNTENu0mTyptKAZMzD7iEn/vxKZx2t9W6xAOzoCb/Bg=
+X-Received: by 2002:a4a:2c88:: with SMTP id o130mr17580139ooo.81.1591031328789;
+ Mon, 01 Jun 2020 10:08:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pptq4mcmy2xywbfv"
-Content-Disposition: inline
-In-Reply-To: <15933a91-dd89-1f94-c2f2-79be4395f4c1@samsung.com>
+References: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527141517.22677-1-Sergey.Semin@baikalelectronics.ru> <20200530093152.GA1038@ninjato>
+In-Reply-To: <20200530093152.GA1038@ninjato>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 1 Jun 2020 11:08:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJeod3Rm4K_7c3AcH8A4aMKKmT97CcbGpRbG4b0yWzrXA@mail.gmail.com>
+Message-ID: <CAL_JsqJeod3Rm4K_7c3AcH8A4aMKKmT97CcbGpRbG4b0yWzrXA@mail.gmail.com>
+Subject: Re: [PATCH v2] check: Add 10bit/slave i2c reg flags support
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Linux I2C <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, May 30, 2020 at 3:32 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+>
+> > +     addr = reg & 0x3FFFFFFFU;
+> > +     snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
+>
+> Hmm, this hardcoded value will not work if we ever need to add another
+> bit. I hope this will never happen, though.
 
---pptq4mcmy2xywbfv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I had this concern and requested the first time this was submitted
+(and abandoned) to just mask out the top byte. However, Joel's version
+of this fix[1] does some actual checks on 10-bit addressing, so I've
+dropped that request.
 
-Hi Marek,
+> > +             if ((reg & (1U << 31)) && addr > 0x3ff)
+>
+> Same here with bit 31. I haven't checked DTC but can't we import the
+> header with the defines into the project? Or is this then a circular
+> dependency?
 
-On Mon, Jun 01, 2020 at 12:40:27PM +0200, Marek Szyprowski wrote:
-> On 13.05.2020 20:55, Sebastian Reichel wrote:
-> > This patchset improves support for SBS compliant batteries. Due to
-> > the changes, the battery now exposes 32 power supply properties and
-> > (un)plugging it generates a backtrace containing the following message
-> > without the first patch in this series:
-> >
-> > ---------------------------
-> > WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4=
-/0x104
-> > add_uevent_var: too many keys
-> > ---------------------------
-> >
-> > For references this is what an SBS battery status looks like after
-> > the patch series has been applied:
-> >
-> > cat /sys/class/power_supply/sbs-0-000b/uevent
-> > POWER_SUPPLY_NAME=3Dsbs-0-000b
-> > POWER_SUPPLY_TYPE=3DBattery
-> > POWER_SUPPLY_STATUS=3DDischarging
-> > POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-> > POWER_SUPPLY_HEALTH=3DGood
-> > POWER_SUPPLY_PRESENT=3D1
-> > POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-> > POWER_SUPPLY_CYCLE_COUNT=3D12
-> > POWER_SUPPLY_VOLTAGE_NOW=3D11441000
-> > POWER_SUPPLY_CURRENT_NOW=3D-26000
-> > POWER_SUPPLY_CURRENT_AVG=3D-24000
-> > POWER_SUPPLY_CAPACITY=3D76
-> > POWER_SUPPLY_CAPACITY_ERROR_MARGIN=3D1
-> > POWER_SUPPLY_TEMP=3D198
-> > POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D438600
-> > POWER_SUPPLY_TIME_TO_FULL_AVG=3D3932100
-> > POWER_SUPPLY_SERIAL_NUMBER=3D0000
-> > POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D10800000
-> > POWER_SUPPLY_VOLTAGE_MAX_DESIGN=3D10800000
-> > POWER_SUPPLY_ENERGY_NOW=3D31090000
-> > POWER_SUPPLY_ENERGY_FULL=3D42450000
-> > POWER_SUPPLY_ENERGY_FULL_DESIGN=3D41040000
-> > POWER_SUPPLY_CHARGE_NOW=3D2924000
-> > POWER_SUPPLY_CHARGE_FULL=3D3898000
-> > POWER_SUPPLY_CHARGE_FULL_DESIGN=3D3800000
-> > POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3D3000000
-> > POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=3D12300000
-> > POWER_SUPPLY_MANUFACTURE_YEAR=3D2017
-> > POWER_SUPPLY_MANUFACTURE_MONTH=3D7
-> > POWER_SUPPLY_MANUFACTURE_DAY=3D3
-> > POWER_SUPPLY_MANUFACTURER=3DUR18650A
-> > POWER_SUPPLY_MODEL_NAME=3DGEHC
->=20
-> This patch landed in linux-next dated 20200529. Sadly it causes a=20
-> regression on Samsung Exynos-based Chromebooks (Exynos5250 Snow,=20
-> Exynos5420 Peach-Pi and Exynos5800 Peach-Pit). System boots to=20
-> userspace, but then, when udev populates /dev, booting hangs:
->=20
-> [=A0=A0=A0 4.435167] VFS: Mounted root (ext4 filesystem) readonly on devi=
-ce=20
-> 179:51.
-> [=A0=A0=A0 4.457477] devtmpfs: mounted
-> [=A0=A0=A0 4.460235] Freeing unused kernel memory: 1024K
-> [=A0=A0=A0 4.464022] Run /sbin/init as init process
-> INIT: version 2.88 booting
-> [info] Using makefile-style concurrent boot in runlevel S.
-> [=A0=A0=A0 5.102096] random: crng init done
-> [....] Starting the hotplug events dispatcher: systemd-udevdstarting=20
-> version 236
-> [ ok .
-> [....] Synthesizing the initial hotplug events...[ ok done.
-> [....] Waiting for /dev to be fully populated...[=A0=A0 34.409914]=20
-> TPS65090_RAILSDCDC1: disabling
-> [=A0=A0 34.412977] TPS65090_RAILSDCDC2: disabling
-> [=A0=A0 34.417021] TPS65090_RAILSDCDC3: disabling
-> [=A0=A0 34.423848] TPS65090_RAILSLDO1: disabling
-> [=A0=A0 34.429068] TPS65090_RAILSLDO2: disabling
+Easier to just duplicate the define here which Joel's patches do.
 
-:(
+Rob
 
-log does not look useful either.
-
-> Bisect between v5.7-rc1 and next-20200529 pointed me to the first bad=20
-> commit: [c4b12a2f3f3de670f6be5e96092a2cab0b877f1a] power: supply:=20
-> sbs-battery: simplify read_read_string_data.
-
-ok. I tested this on an to-be-upstreamed i.MX6 based system
-and arch/arm/boot/dts/imx53-ppd.dts. I think the difference
-is, that i2c-exynos5 does not expose I2C_FUNC_SMBUS_READ_BLOCK_DATA.
-I hoped all systems using SBS battery support this, but now
-I see I2C_FUNC_SMBUS_EMUL only supports writing block data.
-Looks like I need to add another patch implementing that
-using the old code with added PEC support.
-
-In any case that should only return -ENODEV for the property
-(and uevent), but not break boot. So something fishy is going
-on.
-
-> However reverting it in linux-next doesn't fix the issue, so the
-> next commits are also relevant to this issue.
-
-The next patch, which adds PEC support depends on the simplification
-of sbs_read_string_data. The old, open coded variant will result in
-PEC failure for string properties (which should not stop boot either
-of course). Can you try reverting both?
-
-If that helps I will revert those two instead of dropping the whole
-series for this merge window.
-
-> Let me know how can I help debugging it.
-
-I suspect, that this is userspace endlessly retrying reading the
-battery uevent when an error is returned. Could you check this?
-Should be easy to see by adding some printfs.
-
-That would mean a faulty battery could stall complete boot without
-a useful error message, which is bad and needs to be fixed.
-
-Sorry for the inconvience and thanks for your report,
-
--- Sebastian
-
---pptq4mcmy2xywbfv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7VNVEACgkQ2O7X88g7
-+prs4Q/+Oog/pqXDuQrwMX2D8/43npxQGz7VEb2GI/wiyim6Oq9Kw1XgTjJnUpfG
-adWleKQhPYlj07KHSC7ZibvRre4k0y1SCvfsHE2U5Twkgr1N77oyarxshhNuhR2n
-DqpLKb5iFq0k0uP6AIgUnBQBX597AY9OGzVDjTw7GuFMtjBtLLSl8p9sh1CfkL/s
-yhsVNwptOTcYZsHS+VeKrT7vtzJjwF0h8X01eKfUPBeMd1usKZOsQbkHjilObQ4g
-JQW04ozLEuEkMn8rqEJ127bHz8IPHYnXfxpPYMY5oA8XqZ3cRFsfTQKt7Yh/EzJH
-hIYmqc2MMjcshv9jpAyCW1blyy9gXhjOEjIXQGkGC/yvZw8EFw0oE5ve44LC2+uQ
-4t54P0Ae39O+ZO2l/z86EXDSuYzFWhGv48/Gn+xYUS4KPfs/SoqwVK6BP1XJCibA
-EkW6V0n8Jd1ee5jTQlApBTqzWoGSntoqP7LnHQeWdq+54JDAGY3Pfydq8HxaIM4+
-QvxfcGY6+Xc+SMuWFpMdBuVP+Z11Sq4rk8nA7LY546n/+E81eU7zFCOAnZfXewIH
-4s9xyNV8pjCvqIhsyiw5mLTxx5/ZNmJa5aqcZeh/sSScaOUl4PsoZvXo7ahDHJz6
-2PPUheRmlUz8fQXdlCrpDzcM/HH+wYMJiQTq13cQZ4WYY5XauZk=
-=s38G
------END PGP SIGNATURE-----
-
---pptq4mcmy2xywbfv--
+[1] https://www.spinics.net/lists/devicetree-compiler/msg03196.html
