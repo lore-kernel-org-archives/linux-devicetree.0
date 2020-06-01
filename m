@@ -2,84 +2,113 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9948AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A9BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAB220772
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591026345;
-	bh=I1QNcubnkBiVqp8C0B/Bw6MQXPw5KUSU71O/PQ0wsqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gl9aDp++sr+WpNC5Kr7ognOkfk6hPM0Id0y79y7JRGRWXc1vzg7qPfVkWG0rUQHMH
-	 xwFg7rxx/H5+QaZRtlQwO7AH82NhgE35qiuoko2XE8GaQAjkgz+ZO6TxRyW7S3ePlU
-	 2qlczqBdxzeKByPuV8D5aXfd+xRpndxbydHWSz4Y=
+	by mail.kernel.org (Postfix) with ESMTP id DAE6920760
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgFAPpp (ORCPT
+        id S1727890AbgFAPwJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:45:45 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39205 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgFAPpo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 11:45:44 -0400
-Received: by mail-il1-f195.google.com with SMTP id p5so8712228ile.6;
-        Mon, 01 Jun 2020 08:45:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9eAi6L1Wwr3b4WyGnwlWexYJD0hToo1UIxNvGsxBAHg=;
-        b=NLZtgQlSJ4bpsBIajcRfvelOVkwnH67ApeaRZS1XCVi6hkWR6tLk+j4DidxL81+PBY
-         5ovHeUFEmDwaepeB6c/Mwa7+GqzbPbUrr2iNYWTvSOxWf80Lut8iu2007fkffGfVRPa5
-         FrTTzA6Whq+iRg9jecdBoyCQkFySmkslKhEm/XwCK5sHgExikAFXBXQdqwPxIlgKwe3a
-         VEJr+tZt6R4qb9tOXgIPiSQzvsJattbEgYo7Wa8uxGF7vyGPDAMjPI7H7sMereXDnc+5
-         Q+TcqQENQ1klBbSdkCM9DctulpBRhbi0b7Eh0b0Ix3u+//k4kLbNhK5KH2XxQsUai+Gb
-         ojiw==
-X-Gm-Message-State: AOAM531i85EZcUEPjrBNSJDkbNi2Zh1DirC0vwtls/QPvfJecR89bmtp
-        T7iqnDiy7AQys2c2W3D21JHJysk=
-X-Google-Smtp-Source: ABdhPJxjnYD2UksdFfSt5FPK33IF1kdBEIa5oPEWJ8ZUKlZkfDjA3+Vmny5r+fRBo71fa1pKF4XzEg==
-X-Received: by 2002:a05:6e02:c62:: with SMTP id f2mr8170084ilj.43.1591026343897;
-        Mon, 01 Jun 2020 08:45:43 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id p75sm9948000ilb.23.2020.06.01.08.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 08:45:43 -0700 (PDT)
-Received: (nullmailer pid 967107 invoked by uid 1000);
-        Mon, 01 Jun 2020 15:45:42 -0000
-Date:   Mon, 1 Jun 2020 09:45:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux-kernel@vger.kernel.org, peng.fan@nxp.com,
-        hongxing.zhu@nxp.com, linux@rempel-privat.de,
-        devicetree@vger.kernel.org, Linux-imx@nxp.com,
-        aisheng.dong@nxp.com, jaswinder.singh@linaro.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH] dt-bindings: mailbox: Convert imx mu to json-schema
-Message-ID: <20200601154542.GA967000@bogus>
-References: <1591007864-30267-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 1 Jun 2020 11:52:09 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:51260 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgFAPwJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 11:52:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 682DD8030802;
+        Mon,  1 Jun 2020 15:52:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZBZK0Artunwm; Mon,  1 Jun 2020 18:52:05 +0300 (MSK)
+Date:   Mon, 1 Jun 2020 18:52:04 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+Message-ID: <20200601155204.hsatjbukj6haxhld@mobilestation>
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+ <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
+ <20200601151903.ipd5ikw35z53eq2t@mobilestation>
+ <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1591007864-30267-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 01 Jun 2020 18:37:44 +0800, Anson Huang wrote:
-> Convert the i.MX MU binding to DT schema format using json-schema
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  .../devicetree/bindings/mailbox/fsl,mu.txt         | 58 --------------
->  .../devicetree/bindings/mailbox/fsl,mu.yaml        | 89 ++++++++++++++++++++++
->  2 files changed, 89 insertions(+), 58 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->  create mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
+On Mon, Jun 01, 2020 at 06:30:22PM +0300, Andy Shevchenko wrote:
+> On Mon, Jun 1, 2020 at 6:19 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Mon, Jun 01, 2020 at 04:56:21PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Jun 1, 2020 at 3:26 PM Serge Semin
+> > > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > >
+> > > > Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+> > > > and MIPS CPS CPUidle drivers.
+> > > ...
+> > > > +MIPS CORE DRIVERS
+> > > > +M:     Serge Semin <fancer.lancer@gmail.com>
+> > > > +L:     linux-mips@vger.kernel.org
+> > > > +S:     Supported
+> > > > +F:     drivers/bus/mips_cdmm.c
+> > > > +F:     drivers/irqchip/irq-mips-cpu.c
+> > > > +F:     drivers/irqchip/irq-mips-gic.c
+> > > > +F:     drivers/clocksource/mips-gic-timer.c
+> > > > +F:     drivers/cpuidle/cpuidle-cps.c
+> > >
+> > > I think nowadays checkpatch.pl warns on wrong ordering in this data base.
+> >
+> > Alas it doesn't.
 > 
 
-Applied, thanks!
+> Ah, it definitely will.
+> it was relatively recently added by:
+> commit 9bbce40a4f72fe01a65669aee9f4036baa7fa26e
+> Author: Joe Perches <joe@perches.com>
+> Date:   Tue May 26 10:36:34 2020 +1000
+> 
+>    checkpatch: additional MAINTAINER section entry ordering checks
+> 
+> 
+> > Good point though.
+> 
+> You're welcome.
+
+Next time I won't forget that then. BTW the notes at the top of the MAINTAINERS
+file don't explicitly say about the files-list order. Only about the
+whole maintainers list entries order. Seeing the rest of the sub-entries like
+L:, M:, etc. aren't ordered then it's probably better to have an explicit
+statement, that files should be alphabetically listed, especially when
+checkpatch.pl starts warning about that.
+
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
