@@ -2,97 +2,114 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76379C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 17:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B49C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 17:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF31206E2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 17:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591031339;
-	bh=U4zySYo9+Zn4LG0NqTAIuOjQNwa7638vn5i7EqhQmGc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YPC6CHe/nT6JGI7ibTG/1vqzeQylszvm3m5Uh5SPivI2rbZIGRdTFvBM/lRzWWZ8j
-	 tLLAnemp7fbA2Z8SRW7vJQMjy2GkhsMqR1/1eGKkc4yLbhNIxSibWLkJYV148L6NyI
-	 axgsBE3OGesxAyDJcFhVb/1Y/kjGiOcHtdlvDc4g=
+	by mail.kernel.org (Postfix) with ESMTP id D118820776
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 17:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbgFARIu (ORCPT
+        id S1727957AbgFARNV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbgFARIu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:08:50 -0400
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77F5D207D0;
-        Mon,  1 Jun 2020 17:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591031329;
-        bh=U4zySYo9+Zn4LG0NqTAIuOjQNwa7638vn5i7EqhQmGc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ni6vAZlZT4tj1xl51yOTbBxf5AwGuYWF7t8Rps7Sqztp3gZOZLVqUOrKv5yhUVa5Y
-         qZlEnxrRdplCiICKkBvni4EjL4RXM5OQlcSmYIewhdE3iN8gFnlE5AUnW1H5Ql4qMl
-         2MSFYfDkprtS06cQXSsTxuHUJiK4fn6SU1enW+AI=
-Received: by mail-oo1-f54.google.com with SMTP id h7so1558501ooc.9;
-        Mon, 01 Jun 2020 10:08:49 -0700 (PDT)
-X-Gm-Message-State: AOAM530KkjzcWllcaTBi4LLgadeAkBBvPtTE1bfnYJXmUw08EAkGveZ2
-        tecXVbvrz0226++kt6XNigC34xvFFN585rjuGg==
-X-Google-Smtp-Source: ABdhPJz8JITuBczH1/+7mXTyYTNWxr6eeT/W/in0quS2K3VUyNTENu0mTyptKAZMzD7iEn/vxKZx2t9W6xAOzoCb/Bg=
-X-Received: by 2002:a4a:2c88:: with SMTP id o130mr17580139ooo.81.1591031328789;
- Mon, 01 Jun 2020 10:08:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
- <20200527141517.22677-1-Sergey.Semin@baikalelectronics.ru> <20200530093152.GA1038@ninjato>
-In-Reply-To: <20200530093152.GA1038@ninjato>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 1 Jun 2020 11:08:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJeod3Rm4K_7c3AcH8A4aMKKmT97CcbGpRbG4b0yWzrXA@mail.gmail.com>
-Message-ID: <CAL_JsqJeod3Rm4K_7c3AcH8A4aMKKmT97CcbGpRbG4b0yWzrXA@mail.gmail.com>
-Subject: Re: [PATCH v2] check: Add 10bit/slave i2c reg flags support
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
+        Mon, 1 Jun 2020 13:13:21 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:51644 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgFARNT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 13:13:19 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BAE0B8030808;
+        Mon,  1 Jun 2020 17:13:13 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LAyjhD2Voz9V; Mon,  1 Jun 2020 20:13:13 +0300 (MSK)
+Date:   Mon, 1 Jun 2020 20:13:11 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Linux I2C <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND v2 0/6] mips: Add DT bindings for MIPS CDMM and
+ MIPS GIC
+Message-ID: <20200601171311.bra7canlvnvswyxq@mobilestation>
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+ <d59ef33155e2ae965e79522ab220c177@kernel.org>
+ <20200601152449.2okwqaqw4262nedu@mobilestation>
+ <20200601165646.GA12402@alpha.franken.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200601165646.GA12402@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 30, 2020 at 3:32 AM Wolfram Sang <wsa@the-dreams.de> wrote:
->
->
-> > +     addr = reg & 0x3FFFFFFFU;
-> > +     snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
->
-> Hmm, this hardcoded value will not work if we ever need to add another
-> bit. I hope this will never happen, though.
+On Mon, Jun 01, 2020 at 06:56:46PM +0200, Thomas Bogendoerfer wrote:
+> On Mon, Jun 01, 2020 at 06:24:49PM +0300, Serge Semin wrote:
+> > Hello Marc,
+> > 
+> > On Mon, Jun 01, 2020 at 01:31:27PM +0100, Marc Zyngier wrote:
+> > > On 2020-06-01 13:21, Serge Semin wrote:
+> > > 
+> > > [...]
+> > > 
+> > > > Since Paul isn't looking after the MIPS arch code anymore, Ralf hasn't
+> > > > been seen maintaining MIPS for a long time, Thomas is only responsible
+> > > > for the next part of it:
+> > > > 	F:      Documentation/devicetree/bindings/mips/
+> > > > 	F:      Documentation/mips/
+> > > > 	F:      arch/mips/
+> > > > 	F:      drivers/platform/mips/
+> > > > the MIPS-specific drivers like:
+> > > > 	F:	drivers/bus/mips_cdmm.c
+> > > > 	F:	drivers/irqchip/irq-mips-cpu.c
+> > > > 	F:	drivers/irqchip/irq-mips-gic.c
+> > > > 	F:	drivers/clocksource/mips-gic-timer.c
+> > > > 	F:	drivers/cpuidle/cpuidle-cps.c
+> > > > seem to be left for the subsystems maintainers to support. So if you
+> > > > don't
+> > > > mind or unless there is a better alternative, I can help with looking
+> > > > after them to ease the maintainers review burden and since I'll be
+> > > > working
+> > > > on our MIPS-based SoC drivers integrating into the mainline kernel repo
+> > > > anyway. If you don't like this idea, please just decline the last
+> > > > patch in the series.
+> > > 
+> > 
+> > > Given how deeply integrated the MIPS GIC is in the architecture, I'd
+> > > really like Thomas to co-maintain it, or at the very least give his
+> > > blessing on you being the dedicated point of contact for MIPS GIC
+> > > stuff.
+> > 
+> > I don't mind either way. First option might be even better. Thomas,
+> > what do you think?
+> 
+> sure, I'm happy to be your co-maintainer.
+> 
 
-I had this concern and requested the first time this was submitted
-(and abandoned) to just mask out the top byte. However, Joel's version
-of this fix[1] does some actual checks on 10-bit addressing, so I've
-dropped that request.
+Great! As soon as we finish a discussion regarding the files-list ordering
+raised around the last patch in the series, I'll resend the patchset with you
+added to the list of the MIPS core drivers maintainers.
 
-> > +             if ((reg & (1U << 31)) && addr > 0x3ff)
->
-> Same here with bit 31. I haven't checked DTC but can't we import the
-> header with the defines into the project? Or is this then a circular
-> dependency?
+-Sergey
 
-Easier to just duplicate the define here which Joel's patches do.
-
-Rob
-
-[1] https://www.spinics.net/lists/devicetree-compiler/msg03196.html
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
