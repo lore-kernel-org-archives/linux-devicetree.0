@@ -2,352 +2,181 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD4AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC2FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED0F6206E2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EWQ+h2Ql"
+	by mail.kernel.org (Postfix) with ESMTP id 461F0206A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbgFASJC (ORCPT
+        id S1730619AbgFASkr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:09:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730816AbgFASJA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 14:09:00 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4172BC05BD43
-        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 11:09:00 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id 1so451267vsl.9
-        for <devicetree@vger.kernel.org>; Mon, 01 Jun 2020 11:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8C9nZZ223Ym2Yu6kAsg8djTOCmzyUhENE1KLNfd1yJg=;
-        b=EWQ+h2QllfPBjw9NCajMjQmKg2ws03FB1fgBA+wsRgyqsLZizY5CYa/isLQk+vkUSv
-         /CXFsTB7GU0Kovv6AiCDBLzjHLEu2R8zYtJkx7E4vdYyVw79FzeOL9Ez4Bi2/kj+dOeV
-         MBlU4gJ5RfqWtMTVCNYknujqQuMZ1KcAC/mwk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8C9nZZ223Ym2Yu6kAsg8djTOCmzyUhENE1KLNfd1yJg=;
-        b=ay2IXroO4gUBwIjYHA/BqxbRAwFyJbF507E4PIsI1WlCc8exK2ITXMtl3+YYydftt2
-         ItX5ZaF9AwbrIgy0gAHw4ahDEJgZ2wWxlVerfjyz9taYasT7A0ta9iicG/ubTQ4M7xUo
-         4wHLG4ojtQRtsICXrXQvH5o3LnrqyPwV8k+9t4v8udW/l9lqfL6JzoV2zs89cCEjdYa4
-         ++s4mwn8vZw9mjI2O51WYxOBJouXBtNJRkxRqH74wCp9z0tHDNFRqk3BskU5c+7zXsxp
-         aNUIE8PBsex8R7QweZ0Qlc+fa3D9XfYyu/J3f5ieQw4n2xchCMBcpIY5M6qUGcktFl2U
-         odnQ==
-X-Gm-Message-State: AOAM530XaEwBYSjsL2nVR6SmwtFbFuhUKqXrU4d3vSXwBMzQztz8Obfq
-        f0M/Qf3mJWLHGG4eB8SM/vpNEhIdIIY=
-X-Google-Smtp-Source: ABdhPJzZz4+T+qRt9JIIMiYm9wjWLdlgmgEbu2QWbL3Fb5o/5iHsjd3tpFosjwDCTPUdr6I4PcER9g==
-X-Received: by 2002:a67:f55a:: with SMTP id z26mr15230525vsn.4.1591034938750;
-        Mon, 01 Jun 2020 11:08:58 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id u74sm29730vkb.12.2020.06.01.11.08.57
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 11:08:57 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id z12so307077uap.6
-        for <devicetree@vger.kernel.org>; Mon, 01 Jun 2020 11:08:57 -0700 (PDT)
-X-Received: by 2002:a9f:2804:: with SMTP id c4mr15410245uac.8.1591034936529;
- Mon, 01 Jun 2020 11:08:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
- <1589307480-27508-3-git-send-email-rbokka@codeaurora.org> <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
- <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org> <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
- <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org> <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
- <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
- <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org> <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
- <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org> <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
- <9ecb5790-47fe-583b-6fc3-8f4f3ce7860e@linaro.org> <CAD=FV=XbbUkeSwvcverBS8t6BCHuw3UT0_KYfx9LFGqmZyY2hA@mail.gmail.com>
- <871dd2c1-4b16-f883-b8c5-806a0df1edf8@linaro.org> <CAD=FV=UCwUO5aKrUj7e+v6Bpkh_O+wuSXD5tJHdGOfaVTL0t1w@mail.gmail.com>
- <1211660e-f1b0-0636-2dcf-1bc765118de3@linaro.org>
-In-Reply-To: <1211660e-f1b0-0636-2dcf-1bc765118de3@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 1 Jun 2020 11:08:44 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VcfYVQMmWvSkBG0VNBcqt5a3Y_b4eNBgDenPB5wUNGaw@mail.gmail.com>
-Message-ID: <CAD=FV=VcfYVQMmWvSkBG0VNBcqt5a3Y_b4eNBgDenPB5wUNGaw@mail.gmail.com>
-Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
+        Mon, 1 Jun 2020 14:40:47 -0400
+Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:44408 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729949AbgFASkk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 14:40:40 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id C99A98204787;
+        Mon,  1 Jun 2020 18:23:02 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 94961837F24F;
+        Mon,  1 Jun 2020 18:23:02 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fear85_350d3b926d7f
+X-Filterd-Recvd-Size: 6754
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  1 Jun 2020 18:22:59 +0000 (UTC)
+Message-ID: <2e96576791604862a11f094665b0c4e9c3263fd4.camel@perches.com>
+Subject: [RFC PATCH -next] MAINTAINERS: Update F: and X: entry ordering (was
+ Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers)
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
         Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 01 Jun 2020 11:22:58 -0700
+In-Reply-To: <CAHp75Vej9gRAVspzfruciQ7weFunNBtj8GxbgBCVWtGwk5_ntQ@mail.gmail.com>
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+         <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+         <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
+         <20200601151903.ipd5ikw35z53eq2t@mobilestation>
+         <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
+         <20200601155204.hsatjbukj6haxhld@mobilestation>
+         <CAHp75Vej9gRAVspzfruciQ7weFunNBtj8GxbgBCVWtGwk5_ntQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 2020-06-01 at 19:04 +0300, Andy Shevchenko wrote:
+> On Mon, Jun 1, 2020 at 6:52 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Mon, Jun 01, 2020 at 06:30:22PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Jun 1, 2020 at 6:19 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > > On Mon, Jun 01, 2020 at 04:56:21PM +0300, Andy Shevchenko wrote:
+> > > > > On Mon, Jun 1, 2020 at 3:26 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > > > > Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+> > > > > > and MIPS CPS CPUidle drivers.
+> > > > > ...
+> > > > > > +MIPS CORE DRIVERS
+> > > > > > +M:     Serge Semin <fancer.lancer@gmail.com>
+> > > > > > +L:     linux-mips@vger.kernel.org
+> > > > > > +S:     Supported
+> > > > > > +F:     drivers/bus/mips_cdmm.c
+> > > > > > +F:     drivers/irqchip/irq-mips-cpu.c
+> > > > > > +F:     drivers/irqchip/irq-mips-gic.c
+> > > > > > +F:     drivers/clocksource/mips-gic-timer.c
+> > > > > > +F:     drivers/cpuidle/cpuidle-cps.c
+> > > > > 
+> > > > > I think nowadays checkpatch.pl warns on wrong ordering in this data base.
+[]
+> > Next time I won't forget that then. BTW the notes at the top of the MAINTAINERS
+> > file don't explicitly say about the files-list order. Only about the
+> > whole maintainers list entries order. Seeing the rest of the sub-entries like
+> > L:, M:, etc. aren't ordered then it's probably better to have an explicit
+> > statement, that files should be alphabetically listed, especially when
+> > checkpatch.pl starts warning about that.
+> 
+> Joe, what do you think?
 
-On Mon, Jun 1, 2020 at 2:25 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 26/05/2020 23:31, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Fri, May 22, 2020 at 4:18 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >>
-> >> On 21/05/2020 22:28, Doug Anderson wrote:
-> >>> Hi,
-> >>>
-> >>> On Thu, May 21, 2020 at 8:56 AM Srinivas Kandagatla
-> >>> <srinivas.kandagatla@linaro.org> wrote:
-> >>>>
-> >>>> On 21/05/2020 16:10, Doug Anderson wrote:
-> >>>>>> On 20/05/2020 23:48, Doug Anderson wrote:
-> >>>>>>>> Is this only applicable for corrected address space?
-> >>>>>>> I guess I was proposing a two dts-node / two drive approach here.
-> >>>>>>>
-> >>>>>>> dts node #1:just covers the memory range for accessing the FEC-corrected data
-> >>>>>>> driver #1: read-only and reads the FEC-corrected data
-> >>>>>>>
-> >>>>>>> dts node #2: covers the memory range that's_not_  the FEC-corrected
-> >>>>>>> memory range.
-> >>>>>>> driver #2: read-write.  reading reads uncorrected data
-> >>>>>>>
-> >>>>>>> Does that seem sane?
-> >>>>>> I see your point but it does not make sense to have two node for same thing.
-> >>>>> OK, so that sounds as if we want to go with the proposal where we
-> >>>>> "deprecate the old driver and/or bindings and say that there really
-> >>>>> should just be one node and one driver".
-> >>>>>
-> >>>>> Would this be acceptable to you?
-> >>>>>
-> >>>>> 1. Officially mark the old bindings as deprecated.
-> >>>>
-> >>>> Possibly Yes for some reasons below!
-> >>>>
-> >>>>>
-> >>>>> 2. Leave the old driver there to support the old deprecated bindings,
-> >>>>> at least until everyone can be transferred over.  There seem to be
-> >>>>> quite a few existing users of "qcom,qfprom" and we're supposed to make
-> >>>>> an attempt at keeping the old device trees working, at least for a
-> >>>>> little while.  Once everyone is transferred over we could decide to
-> >>>>> delete the old driver.
-> >>>> we could consider "qcom,qfrom" to be only passing corrected address
-> >>>> space. Till we transition users to new bindings!
-> >>>>
-> >>>>>
-> >>>> Yes.
-> >>>>
-> >>>>> 3. We will have a totally new driver here.
-> >>>> No, we should still be using the same driver. But the exiting driver
-> >>>> seems to incorrect and is need of fixing.
-> >>>>
-> >>>> Having a look at the memory map for old SoCs like msm8996 and msm8916
-> >>>> shows that memory map that was passed to qfprom driver is corrected
-> >>>> address space. Writes will not obviously work!
-> >>>>
-> >>>> This should also be true with sdm845 or sc7180
-> >>>>
-> >>>> That needs to be fixed first!
-> >>>
-> >>> OK, so to summarize:
-> >>>
-> >>
-> >>> 1. We will have one driver: "drivers/nvmem/qfprom.c"
-> >>
-> >> Yes, we should one driver for this because we are dealing with exactly
-> >> same IP.
-> >>
-> >>>
-> >>> 2. If the driver detects that its reg is pointing to the corrected
-> >>> address space then it should operate in read-only mode.  Maybe it can
-> >>> do this based on the compatible string being just "qcom,qfprom" or
-> >>> maybe it can do this based on the size of the "reg".
-> >>
-> >> I found out that there is a version register at offset of 0x6000 which
-> >> can give MAJOR, MINOR and STEP numbers.
-> >>
-> >> So we could still potentially continue using "qcom,qfprom"
-> >
-> > OK, sounds good.  I think it's still good practice to include both the
-> > SoC specific and the generic.  Even if the driver never does anything
-> > with the SoC-specific compatible string it doesn't hurt to have it
-> > there.  Thus, we'd want:
-> >
-> > compatible = "qcom,msm8996-qfprom", "qcom,qfprom"
-> >
-> > The driver itself would never need to refer to the SoC-specific name
-> > but that does give us more flexibility.
-> >
-> >
-> >> The address space can be split into 3 resources, which is inline with
-> >> Specs as well
-> >>
-> >> 1. Raw address space ("raw")
-> >> 2. Configuration address space ("conf" or "core")
-> >> 3. Corrected address space ("corrected")
-> >
-> > Sure, this is OK with me then.  Originally Ravi had 3 ranges but then
-> > he was (in the driver) treating it as one range.  As long as the
-> > driver truly treats it as 3 ranges I have no problem doing it like
-> > this.
-> >
-> > In general, over the years, there has been a push to keep
-> > implementation details out of the dts and rely more on the "of_match"
-> > table to add SoC-specific details.  This becomes really important when
-> > 1 year down the road you realize that you need one more random
-> > property or address range to fix some bug and then you need to figure
-> > out how to try to keep old "dts" files compatible.  It's not a
-> > hard-and-fast rule, though.
->
-> Am not 100% sure if "qcom,fuse-blow-frequency" is something integration
-> specific or SoC Specific, My idea was that this will give more
-> flexibility in future. As adding new SoC Support does not need driver
-> changes.
->
-> Having said that, Am okay either way!
+Fine by me.  Maybe something like the below.
 
-Yeah, it's always a balance.  I guess the question is: why do we think
-driver changes are worse than dts changes?  The value still needs to
-be somewhere and having it in the driver isn't a terrible place.
+Another thing might be to intermix the F and X entries so that
+exclusions are more obviously against the F: entries.
+
+There aren't many MAINTAINERS lines changed when the modified
+parse-maintainers is run, but I think it reads better.
+
+It doesn't seem the last major reordering with parse-maintainers
+caused any significant issue for anyone.
+
+I think having Linus run scripts/parse-maintainers.pl just before
+every release or every few releases would make this issue go away.
+---
+ MAINTAINERS                  |  1 +
+ scripts/checkpatch.pl        | 17 +++++++----------
+ scripts/parse-maintainers.pl |  5 ++---
+ 3 files changed, 10 insertions(+), 13 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b045b70e54df..4b53119504ff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -118,6 +118,7 @@ Descriptions of section entries and preferred order
+ 	   F:	net/
+ 	   X:	net/ipv6/
+ 	   matches all files in and below net excluding net/ipv6/
++	   F: and X: entries are intermixed in case sensitive alphabetic order
+ 	N: Files and directories *Regex* patterns.
+ 	   N:	[^a-z]tegra	all files whose path contains tegra
+ 	                        (not including files like integrator)
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index dd750241958b..499c85be0b2f 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3099,16 +3099,13 @@ sub process {
+ 				if ($curindex < 0) {
+ 					WARN("MAINTAINERS_STYLE",
+ 					     "Unknown MAINTAINERS entry type: '$cur'\n" . $herecurr);
+-				} else {
+-					if ($previndex >= 0 && $curindex < $previndex) {
+-						WARN("MAINTAINERS_STYLE",
+-						     "Misordered MAINTAINERS entry - list '$cur:' before '$prev:'\n" . $hereprev);
+-					} elsif ((($prev eq 'F' && $cur eq 'F') ||
+-						  ($prev eq 'X' && $cur eq 'X')) &&
+-						 ($prevval cmp $curval) > 0) {
+-						WARN("MAINTAINERS_STYLE",
+-						     "Misordered MAINTAINERS entry - list file patterns in alphabetic order\n" . $hereprev);
+-					}
++				} elsif ($previndex >= 0 && $curindex < $previndex && !($prev =~ /[FX]/ && $cur =~ /[FX]/)) {
++					WARN("MAINTAINERS_STYLE",
++					     "Misordered MAINTAINERS entry - list '$cur:' before '$prev:'\n" . $hereprev);
++				} elsif ((($prev =~ /[FX]/ && $cur =~ /[FX]/) &&
++					  ($prevval cmp $curval) > 0)) {
++					WARN("MAINTAINERS_STYLE",
++					     "Misordered MAINTAINERS entry - list F and X file patterns in alphabetic order\n" . $hereprev);
+ 				}
+ 			}
+ 		}
+diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
+index 2ca4eb3f190d..8d2247a596f0 100755
+--- a/scripts/parse-maintainers.pl
++++ b/scripts/parse-maintainers.pl
+@@ -84,9 +84,8 @@ sub by_pattern($$) {
+     $a_index = 1000 if ($a_index == -1);
+     $b_index = 1000 if ($b_index == -1);
+ 
+-    if (($a1 =~ /^F$/ && $b1 =~ /^F$/) ||
+-	($a1 =~ /^X$/ && $b1 =~ /^X$/)) {
+-	return $a cmp $b;
++    if (($a1 =~ /^[FX]$/ && $b1 =~ /^[FX]$/)) {
++	return substr($a, 1) cmp substr($b, 1);
+     }
+ 
+     if ($a_index < $b_index) {
 
 
-> Incase we go compatible way, I would like to see compatible strings
-> having proper IP versions to have ip version rather than SoC names.
->
-> Having SoC names in compatible string means both driver and bindings
-> need update for every new SoC which can be overhead very soon!
-
-Almost certainly the compatible strings should have SoC names in them.
-Yes it means a binding update every time a new SoC comes up but that
-is just how device tree works.  Presumably there's enough chatter on
-this that Rob H has totally tuned it out at this point in time, but
-there are many other instances of this.
-
-NOTE: just because we have the SoC name in the compatible string
-_doesn't_ mean that the driver has to change.  You already said that
-the IP version can be detected earlier in this thread, right?  You
-said:
-
-I found out that there is a version register at offset of 0x6000 which
-can give MAJOR, MINOR and STEP numbers.
-
-So how about this:
-
-a) Compatible contains "SoC" version and the generic "qcom,qfrom", so:
-
-compatible = "qcom,sdm845-qfprom", "qcom,qfrom"
-
-b) Bindings will need to be updated for every new SoC, but that's
-normal and should be a trivial patch to just add a new SoC to the
-list.
-
-c) If the driver can be made to make its decisions about frequencies /
-timings completely by MAJOR/MINOR/STEP numbers then it can use those
-in its decision and it will never need to use the SoC-specific
-compatible string.  The SoC-specific compatible string will only be
-present as a fallback "oops we have to workaround a bug that we didn't
-know about".
-
-
-> Rob can help review once we have v2 bindings out!
-
-Sounds good.  If you're still not convinced by my arguments we can see
-if we can get Rob to clarify once we have a v2.  :-)
-
-
-> >> Exiting qfprom entries or read-only qfprom  will have "corrected"
-> >> address space which can be the only resource provided by device tree
-> >> entries.
-> >> Other two entries("raw" and "conf") are optional.
-> >>
-> >> qfprom: qfprom@780000 {
-> >>           compatible = "qcom,qfprom";
-> >>          reg = <0 0x00780000 0 0x8ff>,
-> >>                  <0 0x00782000 0 0x100>,
-> >>                  <0 0x00784000 0 0x8ff>;
-> >>          reg-names = "raw", "conf", "corrected";
-> >>
-> >>          vcc-supply = <&vreg_xyz>;
-> >>
-> >>          clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-> >>          clock-names = "secclk";
-> >>
-> >>          assigned-clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-> >>           assigned-clock-rates = <19200000>;
-> >>
-> >>          qcom,fuse-blow-frequency = <4800000>
-> >>
-> >>           #address-cells = <1>;
-> >>           #size-cells = <1>;
-> >>
-> >>          qusb2p_hstx_trim: hstx-trim-primary@25b {
-> >>                  reg = <0x25b 0x1>;
-> >>                  bits = <1 3>;
-> >>          };
-> >> };
-> >>
-> >> Regarding clk rate setting, the default rate can be set using
-> >> assigned-clock-rates property, however the blow frequency can go as new
-> >> binding.
-> >> regarding voltage range for regulator, it should come as part of board
-> >> specific voltage regulator node. In worst case we can discuss on adding
-> >> new bindings for allowing specific range.
-> >
-> > I'd up to you (and Rob H, who probably will wait for the next rev of
-> > the binding before chiming in) but the "qcom,fuse-blow-frequency" is
-> > the type of property that feels better in the driver and achieved from
-> > the of_match table.  Then you don't need to worry about adding it to
-> > the bindings.  Voltage (if needed) would be similar, but I would hope
-> > we don't need it.
-> >
-> >
-> >> for Older SoCs: we still continue to use old style with just one
-> >> resource corresponding to corrected by default.
-> >>
-> >> qfprom: qfprom@784000 {
-> >>           compatible = "qcom,qfprom";
-> >>           reg = <0 0x00784000 0 0x8ff>;
-> >>           #address-cells = <1>;
-> >>           #size-cells = <1>;
-> >>
-> >>           qusb2p_hstx_trim: hstx-trim-primary@1eb {
-> >>                   reg = <0x1eb 0x1>;
-> >>                   bits = <1 4>;
-> >>           };
-> >>
-> >>           qusb2s_hstx_trim: hstx-trim-secondary@1eb {
-> >>                   reg = <0x1eb 0x2>;
-> >>                   bits = <6 4>;
-> >>           };
-> >> };
-> >>
-> >>
-> >> I see the patch as adding write support to qfprom, rather than adding
-> >> new driver or new SoC support.
-> >>
-> >> This in summary should give us good direction for this patch!
-> >>
-> >> Correct me if I miss understood something here!
-> >
-> > Sounds sane to me.
->
-> Cool! lets see how v2 will endup like!
->
-> --srini
-> >
-> >
-> > -Doug
-> >
