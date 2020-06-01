@@ -2,124 +2,242 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CD0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 02:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EC2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 02:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 014702074A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 02:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KmkEfssR"
+	by mail.kernel.org (Postfix) with ESMTP id 8E37320776
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 02:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgFACRK (ORCPT
+        id S1726951AbgFACXN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 22:17:10 -0400
-Received: from mail-eopbgr30069.outbound.protection.outlook.com ([40.107.3.69]:52132
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727804AbgFACRI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 31 May 2020 22:17:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CsS3LtLFDUvVkHLMeQhR3tEZuj1TSCVVtkw5S6nBHqL2RxAeNcxurKL8kk6MoEpvFc0qvDfwb7fKDJM2Br99R1GKz8hBdDraQwKQhvINJnU3JLZKGH+/sXRHbmAYmS9p2XwvVuUjcOmLkSdJ6QeNPbjYbkk+RmWcHZ2CUjSTpoNmBck/Og2QJwwjALzAGN5Pm/x9LiAkMutkYvGwcDOoreDo/SetTVwZnduR4pX1mFBFPICFHRwx+cG2e1jf0mHAtobQNHWcDSHULEvFGlE+5gOlyIKosibyjQ0JtYwmE8R9aZvE10wJEx3/eOqxnIwGOSQc1Q54cJn2yizB6s9alg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xrTmuuoq14giV56JF650aYj9KIXJVdCdksumOEy1rSo=;
- b=TBlScKPSOzD64gYT7Ow6dyyUupBsSh9h7gApuZyHolXO2UnGYQUKA7PzNQZbJdghL/2lANm17MC7DVU34WlnfXybknFD6lLstsRfrdVBiicN3iQDi0gDKpTN8g+vnHrQT+13bK9YlWZUGKPvy53BS+CI8iCZ5k3vp5H5scOdf2Y3ZN2Xgo7J3p2ylwJls46ZHt32aAPEzJIVaukWVEEFCGM3qLgwk13w9yCPZNeeqTl7qkx4xl0x5bPwtNUxVFX+/0R6QZAmk3vT1LzNhzBhJ83Kf0EBTFEqDhmfV4st6fMzVtGH06JW38v30VKBwy2OcEbvVgDaOgfQ12zUZuu2Cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xrTmuuoq14giV56JF650aYj9KIXJVdCdksumOEy1rSo=;
- b=KmkEfssRCVjL/n1tL0RQavslsLtR40afa8vRTtkencvFFoG3uu/pcCdkIHYgeE+sEtPzqyCAgxJoo4N6IkB0JrvHx7Pa/2G8h9ZzQAK6423jduuuTBw/SiHz+4pBvwYw0CvpGM/1hezJjDc1Ae6bcnus8zSDSHYwp9SlUW5cW9k=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2744.eurprd04.prod.outlook.com (2603:10a6:4:94::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Mon, 1 Jun
- 2020 02:17:05 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3045.022; Mon, 1 Jun 2020
- 02:17:05 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de,
-        aisheng.dong@nxp.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        l.stach@pengutronix.de, devicetree@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: imx8qxp: Add ethernet alias
-Date:   Mon,  1 Jun 2020 10:06:20 +0800
-Message-Id: <1590977180-9957-4-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590977180-9957-1-git-send-email-peng.fan@nxp.com>
-References: <1590977180-9957-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0157.apcprd06.prod.outlook.com
- (2603:1096:1:1e::11) To DB6PR0402MB2760.eurprd04.prod.outlook.com
- (2603:10a6:4:a1::14)
+        Sun, 31 May 2020 22:23:13 -0400
+Received: from mga07.intel.com ([134.134.136.100]:23151 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725953AbgFACXM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 31 May 2020 22:23:12 -0400
+IronPort-SDR: wi5LGNmf34ObJfPOGYU9gQ/v0L+Lz7yrsLzGuKJ98rwhPcF/aK/rV31LzrNwF+j0tbO1KY/mTl
+ 9zuHUXUJqniQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 19:23:12 -0700
+IronPort-SDR: jogtF6iv/8NEwGKYG3+f05QlTBYhhBSaft+mnrY0kd7bx1YGqNImp2DR755dWtdve6cnxsXWo8
+ yk/ZWw8Z898w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
+   d="scan'208";a="286129401"
+Received: from dytagah-mobl.amr.corp.intel.com (HELO localhost) ([10.252.58.236])
+  by orsmga002.jf.intel.com with ESMTP; 31 May 2020 19:23:03 -0700
+Date:   Mon, 1 Jun 2020 05:23:01 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v9 1/8] tpm: tpm_tis: Make implementation of read16,
+ read32 and write32 optional
+Message-ID: <20200601022301.GA796332@linux.intel.com>
+References: <20200526141658.157801-1-amirmizi6@gmail.com>
+ <20200526141658.157801-2-amirmizi6@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0157.apcprd06.prod.outlook.com (2603:1096:1:1e::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3045.17 via Frontend Transport; Mon, 1 Jun 2020 02:17:01 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 14aa449d-08ed-4c29-1c06-08d805d1e0a4
-X-MS-TrafficTypeDiagnostic: DB6PR0402MB2744:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB2744F8DEB2B474E441B0DA7D888A0@DB6PR0402MB2744.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
-X-Forefront-PRVS: 0421BF7135
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: d1ZyDq2qj35zw5yM4HCTgyMJPCzf2Cd/B1F4cv9KQwuts7qycaTcpHEYaIWKxjVboLf6rTrzpS7vj3ajyet1Zq8PdLppac8PEDvd5vymrtONYMqSVMo0Ptct0u/9+lWLj8/PbUhIZKHAtH125232oiYJrMiTJDpiPcp32X3RRVrh8caTc1KtLKU5UKIj60eoFI02WV7A/FSv0DNw3TBay+qooLBIR4oGxQM5DvJsYRPdjyV7GKMInQoU4cR0K6XzmRmXJ1HTzWbYx+twF9FWgwn2YvnTY13fPHHH9cVbx+NlLvSi4Xecy1LsotL3KFmOSRUwOZueo6a5/jWZ64uKaU9ykEVQ4Hd3oarnp89Gj+1z57LYvbTVbYjaUx9Fw14SnyEKm3+erpJ/JczhzHU6JTmJ3eIwF1J4DB16ASb+/Cg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(346002)(396003)(39860400002)(26005)(316002)(52116002)(6666004)(186003)(16526019)(6506007)(8676002)(6512007)(9686003)(478600001)(6486002)(8936002)(4326008)(69590400007)(2906002)(36756003)(66946007)(66476007)(66556008)(2616005)(956004)(86362001)(4744005)(5660300002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: PU3+vbhDjOcKz+9pv7I5YoM4G34JYrUylPWdkrqt8qsd7Ft140fuiC2WStK+I2iUACwna+MSnNk1kpDRcMdlwafHrqNmm4ZBrh7auLI560PU+doyY8Hz5uoIbHDyChYHM1ETsqxSUxWY6Hxsq/cJOtH+r+seJdtmFAEwLh+BC6MzJQr72RytDdM6a7vl6+F71D/oG3X/FgwyB1u6fPXgp37FeG3sH/WQcmaK1GN+4oxmACA6FD/ZdTl8pUe2COVSy37rQOaxxt2K3ViBtTM5DGg2HPNx22sMdeEA3SOKecXeR6EHun8A4lxEtsx6sMlGhy2xQBKXPx6jwhAbhFmaN2J3YnJu/ccsqhXgOKGYx3F4TG5LhMlA6Fo0fAkxO9MV1K0hI8kGX3E4snKj8exDbxrcB+nV+ZDpacRLooTwPO+OxLU2EIvphBemrkqaS0O1HbsqteteTQ8LAEp/bHeQ9caV9l6OajkNnlYSNaMkbHo=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14aa449d-08ed-4c29-1c06-08d805d1e0a4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2020 02:17:05.1858
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aXXhD/OBNJREeRdC/bAmUqX42tV3UyHDl8l5kVCWrXQWahgYLq+596RQUsT5dvhBoylEWYNvzGZBghl3VrCnsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2744
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526141658.157801-2-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Plese, write the short summary as
 
-Add ethernet alias, so bootloader code can use this to find the
-primary ethernet device, and set the MAC address.
+tpm: Make read{16, 32}() and write32() in tpm_tis_phy_ops optional
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+On Tue, May 26, 2020 at 05:16:51PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Only tpm_tis can use memory-mapped I/O, which is truly mapped into
+> the kernel's memory space. Therefore, using ioread16/ioread32/iowrite32
+> turns into a straightforward pointer dereference.
+> Every other driver requires more complicated operations to read more than
+> one byte at a time and will just fall back to read_bytes/write_bytes.
+> Therefore, move this common code out of tpm_tis_spi and into tpm_tis_core
+> so that it is used automatically when low-level drivers do not implement
+> the specialized methods.
+> 
+> Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> ---
+>  drivers/char/tpm/tpm_tis_core.h     | 38 +++++++++++++++++++++++++++++++---
+>  drivers/char/tpm/tpm_tis_spi.h      |  4 ----
+>  drivers/char/tpm/tpm_tis_spi_cr50.c |  3 ---
+>  drivers/char/tpm/tpm_tis_spi_main.c | 41 -------------------------------------
+>  4 files changed, 35 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+> index 7337819..d06c65b 100644
+> --- a/drivers/char/tpm/tpm_tis_core.h
+> +++ b/drivers/char/tpm/tpm_tis_core.h
+> @@ -122,13 +122,35 @@ static inline int tpm_tis_read8(struct tpm_tis_data *data, u32 addr, u8 *result)
+>  static inline int tpm_tis_read16(struct tpm_tis_data *data, u32 addr,
+>  				 u16 *result)
+>  {
+> -	return data->phy_ops->read16(data, addr, result);
+> +	__le16 result_le;
+> +	int rc;
+> +
+> +	if (data->phy_ops->read16)
+> +		return data->phy_ops->read16(data, addr, result);
+> +
+> +	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
+> +				       (u8 *)&result_le);
+> +	if (!rc)
+> +		*result = le16_to_cpu(result_le);
+> +
+> +	return rc;
+>  }
+>  
+>  static inline int tpm_tis_read32(struct tpm_tis_data *data, u32 addr,
+>  				 u32 *result)
+>  {
+> -	return data->phy_ops->read32(data, addr, result);
+> +	__le32 result_le;
+> +	int rc;
+> +
+> +	if (data->phy_ops->read32)
+> +		return data->phy_ops->read32(data, addr, result);
+> +
+> +	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
+> +				       (u8 *)&result_le);
+> +	if (!rc)
+> +		*result = le32_to_cpu(result_le);
+> +
+> +	return rc;
+>  }
+>  
+>  static inline int tpm_tis_write_bytes(struct tpm_tis_data *data, u32 addr,
+> @@ -145,7 +167,17 @@ static inline int tpm_tis_write8(struct tpm_tis_data *data, u32 addr, u8 value)
+>  static inline int tpm_tis_write32(struct tpm_tis_data *data, u32 addr,
+>  				  u32 value)
+>  {
+> -	return data->phy_ops->write32(data, addr, value);
+> +	__le32 value_le;
+> +	int rc;
+> +
+> +	if (data->phy_ops->write32)
+> +		return data->phy_ops->write32(data, addr, value);
+> +
+> +	value_le = cpu_to_le32(value);
+> +	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
+> +					(u8 *)&value_le);
+> +
+> +	return rc;
+>  }
+>  
+>  static inline bool is_bsw(void)
+> diff --git a/drivers/char/tpm/tpm_tis_spi.h b/drivers/char/tpm/tpm_tis_spi.h
+> index bba7397..d0f66f6 100644
+> --- a/drivers/char/tpm/tpm_tis_spi.h
+> +++ b/drivers/char/tpm/tpm_tis_spi.h
+> @@ -31,10 +31,6 @@ extern int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
+>  extern int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+>  				u8 *in, const u8 *out);
+>  
+> -extern int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result);
+> -extern int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result);
+> -extern int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value);
+> -
+>  #ifdef CONFIG_TCG_TIS_SPI_CR50
+>  extern int cr50_spi_probe(struct spi_device *spi);
+>  #else
+> diff --git a/drivers/char/tpm/tpm_tis_spi_cr50.c b/drivers/char/tpm/tpm_tis_spi_cr50.c
+> index 37d72e8..f339d20 100644
+> --- a/drivers/char/tpm/tpm_tis_spi_cr50.c
+> +++ b/drivers/char/tpm/tpm_tis_spi_cr50.c
+> @@ -215,9 +215,6 @@ static int tpm_tis_spi_cr50_write_bytes(struct tpm_tis_data *data, u32 addr,
+>  static const struct tpm_tis_phy_ops tpm_spi_cr50_phy_ops = {
+>  	.read_bytes = tpm_tis_spi_cr50_read_bytes,
+>  	.write_bytes = tpm_tis_spi_cr50_write_bytes,
+> -	.read16 = tpm_tis_spi_read16,
+> -	.read32 = tpm_tis_spi_read32,
+> -	.write32 = tpm_tis_spi_write32,
+>  };
+>  
+>  static void cr50_print_fw_version(struct tpm_tis_data *data)
+> diff --git a/drivers/char/tpm/tpm_tis_spi_main.c b/drivers/char/tpm/tpm_tis_spi_main.c
+> index d1754fd..95fef9d 100644
+> --- a/drivers/char/tpm/tpm_tis_spi_main.c
+> +++ b/drivers/char/tpm/tpm_tis_spi_main.c
+> @@ -152,44 +152,6 @@ static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
+>  	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
+>  }
+>  
+> -int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
+> -{
+> -	__le16 result_le;
+> -	int rc;
+> -
+> -	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
+> -				       (u8 *)&result_le);
+> -	if (!rc)
+> -		*result = le16_to_cpu(result_le);
+> -
+> -	return rc;
+> -}
+> -
+> -int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
+> -{
+> -	__le32 result_le;
+> -	int rc;
+> -
+> -	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
+> -				       (u8 *)&result_le);
+> -	if (!rc)
+> -		*result = le32_to_cpu(result_le);
+> -
+> -	return rc;
+> -}
+> -
+> -int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
+> -{
+> -	__le32 value_le;
+> -	int rc;
+> -
+> -	value_le = cpu_to_le32(value);
+> -	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
+> -					(u8 *)&value_le);
+> -
+> -	return rc;
+> -}
+> -
+>  int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
+>  		     int irq, const struct tpm_tis_phy_ops *phy_ops)
+>  {
+> @@ -205,9 +167,6 @@ int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
+>  static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
+>  	.read_bytes = tpm_tis_spi_read_bytes,
+>  	.write_bytes = tpm_tis_spi_write_bytes,
+> -	.read16 = tpm_tis_spi_read16,
+> -	.read32 = tpm_tis_spi_read32,
+> -	.write32 = tpm_tis_spi_write32,
+>  };
+>  
+>  static int tpm_tis_spi_probe(struct spi_device *dev)
+> -- 
+> 2.7.4
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 8ce997110cd6..ff6368af7d39 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -23,6 +23,8 @@
- 		i2c1 = &adma_i2c1;
- 		i2c2 = &adma_i2c2;
- 		i2c3 = &adma_i2c3;
-+		ethernet0 = &fec1;
-+		ethernet1 = &fec2;
- 		gpio0 = &lsio_gpio0;
- 		gpio1 = &lsio_gpio1;
- 		gpio2 = &lsio_gpio2;
--- 
-2.16.4
+Other than that looks good.
 
+/Jarkko
+> 
