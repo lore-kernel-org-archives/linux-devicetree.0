@@ -2,174 +2,147 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C943C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 01:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F1CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 01:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62DD120707
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 01:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C1620825
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 01:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DhBv92Se"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VsFQ2Usp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgFABQe (ORCPT
+        id S1726962AbgFABa6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 21:16:34 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35798 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgFABQe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 31 May 2020 21:16:34 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0511GFBE077304;
-        Sun, 31 May 2020 20:16:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590974175;
-        bh=nmBVOGZ6DigGZrEHfDNyY0pzJCmoX4ALlVYIJmH8ruU=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=DhBv92SeT8NUFq0TfpZHoKtzpDOrYomFTV02VZQhPeTmUfo43amF0iyCBmyIZRURA
-         W2J+kffABIadckRvm8g4OasEa+ttkI5E11foTqm9V9+6pNqYHHgXVBtHZLZvDHbGst
-         0QD/BMj29EFcADgh6J7ZLNS4m3+XWbyiUSc3vmBU=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0511GFQN088753
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 31 May 2020 20:16:15 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 31
- May 2020 20:16:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Sun, 31 May 2020 20:16:14 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0511GBQt059820;
-        Sun, 31 May 2020 20:16:12 -0500
-Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
- perform only 32-bit accesses
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devicetree@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200522033631.32574-1-kishon@ti.com>
- <20200522033631.32574-4-kishon@ti.com>
- <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
- <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
- <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
- <b3663862-44df-867f-0824-28802909f224@ti.com>
- <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
- <457db3ae-e68a-d2fc-ba5f-5393ad464413@ti.com>
-Message-ID: <e31f1479-ba0e-d599-4cdc-dd1395d02e6c@ti.com>
-Date:   Mon, 1 Jun 2020 06:46:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sun, 31 May 2020 21:30:58 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:49233 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgFABa5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 31 May 2020 21:30:57 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200601013054epoutp0223fe07f15b5c534128639e6fc1e55c8d~UR2IUzyjd3182631826epoutp02t
+        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 01:30:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200601013054epoutp0223fe07f15b5c534128639e6fc1e55c8d~UR2IUzyjd3182631826epoutp02t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590975054;
+        bh=JTwM6QCv9nPVaQSrpu86bU9wEvCr6ibtM4h10TLt4uM=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=VsFQ2UspCek1XSeIXT/n01b9JK7gOCSOzLHDYfRwkRMYme46mG+S7ZmcGCa2Wput/
+         zBdcIRIoRcJAh/F12jJv4HMAqzqOk/C07NbL+0hLsRCLLK5RpAVRnyUUc045H52VsO
+         cEcMKr70nzJbA4UISWxc7GjHVHg9zzQpqhpEwYjk=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200601013054epcas5p3e3b771e73d2063448fed84381c2c9c87~UR2Hysudi1677916779epcas5p3A;
+        Mon,  1 Jun 2020 01:30:54 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        21.B8.09703.E4A54DE5; Mon,  1 Jun 2020 10:30:54 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200601013053epcas5p37291890b3a1a3b05f835824f942e1343~UR2G2jgC41677916779epcas5p3-;
+        Mon,  1 Jun 2020 01:30:53 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200601013053epsmtrp143ecd481342151a64371a0a0f20965f3~UR2G1FOKS0981709817epsmtrp1e;
+        Mon,  1 Jun 2020 01:30:53 +0000 (GMT)
+X-AuditID: b6c32a4a-4cbff700000025e7-af-5ed45a4edcf7
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6C.F4.08382.D4A54DE5; Mon,  1 Jun 2020 10:30:53 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200601013050epsmtip16ddfaaa880272854cac9badb2a61012c~UR2D-OdVi2353723537epsmtip1U;
+        Mon,  1 Jun 2020 01:30:50 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc:     <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <avri.altman@wdc.com>,
+        <martin.petersen@oracle.com>, <kwmad.kim@samsung.com>,
+        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200529080546.GB23221@kozik-lap>
+Subject: RE: [PATCH v10 10/10] arm64: dts: Add node for ufs exynos7
+Date:   Mon, 1 Jun 2020 07:00:48 +0530
+Message-ID: <000001d637b4$49ff2ff0$ddfd8fd0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <457db3ae-e68a-d2fc-ba5f-5393ad464413@ti.com>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIpylB333LdzxFXBilpc4hv6O2l1ANHKSouAge4CJsBYqHLHqfmR7Iw
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGKsWRmVeSWpSXmKPExsWy7bCmlq5f1JU4g5vbRSxe/rzKZvFp/TJW
+        i/lHzrFanD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsuq/vYLNYfvwfk8X/PTvYLZZuvcno
+        wONxua+XyWPTqk42j81L6j1aTu5n8fj49BaLR9+WVYwenzfJebQf6GYK4IjisklJzcksSy3S
+        t0vgymhpTirYz1Vx7fgOxgbGE5xdjJwcEgImEn//3GXsYuTiEBLYzShx9PxnJgjnE6PEpGmf
+        WCGcb4wSz3/1s8C0TLo5lxkisZdR4vzVdywQzhtGiRV3TrOCVLEJ6ErsWNzGBmKLANmbbyxn
+        ByliFjjJJHGkr4cJJMEpoC/x6f82sCJhAWeJs8eegTWzCKhIzLv7BayGV8BS4vOrWywQtqDE
+        yZlPwGxmAW2JZQtfM0OcpCDx8+kyVohlbhIn/lxjgqgRlzj6swfsVAmBExwSrX/aGSEaXCTa
+        d3yF+kdY4tXxLewQtpTEy/42IJsDyM6W6NllDBGukVg67xhUub3EgStzWEBKmAU0Jdbv0odY
+        xSfR+/sJE0Qnr0RHmxBEtapE87urUJ3SEhO7u1khbA+JM2suME1gVJyF5LFZSB6bheSBWQjL
+        FjCyrGKUTC0ozk1PLTYtMMpLLdcrTswtLs1L10vOz93ECE5qWl47GB8++KB3iJGJg/EQowQH
+        s5II72T1S3FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeZV+nIkTEkhPLEnNTk0tSC2CyTJxcEo1
+        MHk9blaVVxBbkvq180m2TU3+jY3XVtyfX1W4hnvlaeFa/qqdr/7IpP+cekRJjflSZrzhyp2p
+        R/eqCgrpbdaS/uCo5FL96+wiGcMp814seL+vdp2oipcl2+drrlcW1E/afKqBf5m7wb1u+c5I
+        n1e377BtTny78mHovPv/zG80i0/q3qMlfuZow6lr899bTPOZo2ttLXR/onRwE397MHN2bdek
+        M3OMhdkcarcI2ankXF95forfNrWTrCaejYVxcumcBQpO3Vv3Xexzniv4OHlv2ea6lL6mz1NN
+        ec9VhMWVb1rC0/z5pPXrXZ9v6tw2/uo/8/2j7DMNJxVNNBhDHTvX3br7csO2KY7G/w/GsBbH
+        zVNiKc5INNRiLipOBADHO5102QMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsWy7bCSnK5v1JU4g1VPBC1e/rzKZvFp/TJW
+        i/lHzrFanD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsuq/vYLNYfvwfk8X/PTvYLZZuvcno
+        wONxua+XyWPTqk42j81L6j1aTu5n8fj49BaLR9+WVYwenzfJebQf6GYK4IjisklJzcksSy3S
+        t0vgylj8/RRzwSuOir17JrA3MG5g72Lk5JAQMJGYdHMucxcjF4eQwG5GiVMH5jFBJKQlrm+c
+        AFUkLLHy33N2iKJXQEX/N7CCJNgEdCV2LG5jA7FFgOzNN5aDFTELXGaS+LN0LSNEx2NGiXkf
+        NrCAVHEK6Et8+r8NrENYwFni7LFnYJNYBFQk5t39AraaV8BS4vOrWywQtqDEyZlPwGxmAW2J
+        pzefwtnLFr5mhjhPQeLn02WsEFe4SZz4c40JokZc4ujPHuYJjMKzkIyahWTULCSjZiFpWcDI
+        sopRMrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIzhCtTR3MG5f9UHvECMTB+MhRgkOZiUR
+        3snql+KEeFMSK6tSi/Lji0pzUosPMUpzsCiJ894oXBgnJJCeWJKanZpakFoEk2Xi4JRqYFo4
+        Z2rl7TXZh7Lbn+m2pTVWrDSblZBpcXtn+xb2Ww+dmVcdclxfFM3YXNnGPvHEV6+XceurvmQ8
+        nPph18O0X/m5bxd6Wd2pjD5Z4759vmiYoLCsfOEtjo/7k1jC9WZk9pkYRsTtYvu86ygjQ+7i
+        BZ3z3+sZlRco/D+0+C/L/I0XrpgKsygknXnVNHU7d9Xb/N+ezgxiQVcVew/9XWttl3YjOV0h
+        eFaH+0EzPi0j0W+mFgENCb6N7it9sprr7l4Se3Ax6Fuei/4lXbln1v/4ZCSXWs7yXDFhySy2
+        ogSbcy/Zw0UuXovVklL5e2cyt10xw+SCXyrLP6scn2ca1XxY43muUUPT61ccQZpXtq3dpsRS
+        nJFoqMVcVJwIAF9Aeww/AwAA
+X-CMS-MailID: 20200601013053epcas5p37291890b3a1a3b05f835824f942e1343
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200528013245epcas5p37851891649512882c7b1ffb5f903c506
+References: <20200528011658.71590-1-alim.akhtar@samsung.com>
+        <CGME20200528013245epcas5p37851891649512882c7b1ffb5f903c506@epcas5p3.samsung.com>
+        <20200528011658.71590-11-alim.akhtar@samsung.com>
+        <20200529080546.GB23221@kozik-lap>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 5/28/2020 3:36 AM, Kishon Vijay Abraham I wrote:
-> Hi Rob,
-> 
-> On 5/27/2020 10:07 PM, Rob Herring wrote:
->> On Wed, May 27, 2020 at 4:49 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>
->>> Hi Rob,
->>>
->>> On 5/26/2020 8:42 PM, Rob Herring wrote:
->>>> On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>>
->>>>> Hi Rob,
->>>>>
->>>>> On 5/22/2020 9:24 PM, Rob Herring wrote:
->>>>>> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>>>>
->>>>>>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
->>>>>>> 32-bit accesses for reading or writing to Cadence registers. Convert all
->>>>>>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
->>>>>>> for adding PCIe support in TI's J721E SoC.
->>>>>>
->>>>>> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
->>>>>> with this and never can be given the PCI_COMMAND and PCI_STATUS
->>>>>> registers are in the same word (IIRC, that's the main reason 32-bit
->>>>>> config space accesses are broken). So this isn't going to work at
->>>>>
->>>>> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
->>>>> could be reset while raising legacy interrupt. While this cannot be avoided for
->>>>> TI's J721E, other platforms doesn't have to have this limitation.
->>>>>> least for EP accesses. And maybe you need a custom .raise_irq() hook
->>>>>> to minimize any problems (such as making the RMW atomic at least from
->>>>>> the endpoint's perspective).
->>>>>
->>>>> This is to make sure EP doesn't update in-consistent state when RC is updating
->>>>> the PCI_STATUS register? Since this involves two different systems, how do we
->>>>> make this atomic?
->>>>
->>>> You can't make it atomic WRT both systems, but is there locking around
->>>> each RMW? Specifically, are preemption and interrupts disabled to
->>>> ensure time between a read and write are minimized? You wouldn't want
->>>> interrupts disabled during the delay too though (i.e. around
->>>> .raise_irq()).
->>>
->>> Okay, I'll add spin spin_lock_irqsave() in cdns_pcie_write_sz(). As you also
->>> pointed below that delay for legacy interrupt is wrong and it has to be fixed
->>> (with a later series).
->>
->> But you don't need a lock everywhere. You need locks in the callers
->> (and only sometimes).
-> 
-> Okay, the locks should be added only for registers where HOST can also write to
-> the same register? Maybe only raise_irq then..
-> 
->>
->>> How do you want to handle cdns_pcie_ep_fn_writew() now? Because now we are
->>> changing the default implementation to perform only 32-bit access (used for
->>> legacy interrupt, msi-x interrupt and while writing standard headers) and it's
->>> not okay only for legacy interrupts for platforms other than TI.
->>
->> Now I'm wondering how set_msi is not racy in the current code with the
->> host setting/clearing PCI_MSI_FLAGS_ENABLE? Maybe that bit is RO from
->> the EP side?
-> 
-> set_msi/set_msix is a one time configuration that is invoked before the host
-> establishes the link with the endpoint. I don't think we have to consider this
-> as racy.
 
-Can we try to close on this discussion please?
-
-Thanks
-Kishon
-
-> 
-> Thanks
-> Kishon
-> 
->>
->> Ultimately I think you're going to have to provide your own endpoint
->> functions or you need accessors for specific registers like
->> PCI_MSI_FLAGS. Then for example, you just rely on the 2 bytes before
->> PCI_MSI_FLAGS being reserved and do a 32-bit access without a RMW.
->> Trying to abstract this at the register read/write level is going to
->> be fragile
->>
->> Rob
->>
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: 29 May 2020 13:36
+> To: Alim Akhtar <alim.akhtar=40samsung.com>
+> Cc: robh=40kernel.org; devicetree=40vger.kernel.org; linux-scsi=40vger.ke=
+rnel.org;
+> avri.altman=40wdc.com; martin.petersen=40oracle.com;
+> kwmad.kim=40samsung.com; stanley.chu=40mediatek.com;
+> cang=40codeaurora.org; linux-samsung-soc=40vger.kernel.org; linux-arm-
+> kernel=40lists.infradead.org; linux-kernel=40vger.kernel.org
+> Subject: Re: =5BPATCH v10 10/10=5D arm64: dts: Add node for ufs exynos7
+>=20
+> On Thu, May 28, 2020 at 06:46:58AM +0530, Alim Akhtar wrote:
+> > Adding dt node foe UFS and UFS-PHY for exynos7 SoC.
+> >
+> > Signed-off-by: Alim Akhtar <alim.akhtar=40samsung.com>
+> > Tested-by: Pawe=C5=82=20Chmiel=20<pawel.mikolaj.chmiel=40gmail.com>=0D=
+=0A>=20>=20---=0D=0A>=20>=20=20.../boot/dts/exynos/exynos7-espresso.dts=20=
+=20=20=20=20=20=7C=20=204=20++=0D=0A>=20>=20=20arch/arm64/boot/dts/exynos/e=
+xynos7.dtsi=20=20=20=20=20=20=20=7C=2043=20++++++++++++++++++-=0D=0A>=20=0D=
+=0A>=20Thanks,=20applied=20to=20next/dt-late.=20It=20might=20miss=20this=20=
+merge=20window=20and=20in=20such=0D=0A>=20case=20I=20will=20keep=20it=20for=
+=20v5.9=20cycle.=0D=0AThanks=20Krzysztof.=0D=0A>=20=0D=0A>=20Best=20regards=
+,=0D=0A>=20Krzysztof=0D=0A=0D=0A=0D=0A
