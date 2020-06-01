@@ -2,162 +2,105 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1CDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 04:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE627C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 04:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A370520659
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 04:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCF92076B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 04:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RtclL/1m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yEeMkr8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725765AbgFAEFp (ORCPT
+        id S1725935AbgFAEUw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 00:05:45 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40382 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFAEFp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 00:05:45 -0400
-Received: from [10.0.0.249] (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2990E20B717B;
-        Sun, 31 May 2020 21:05:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2990E20B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1590984344;
-        bh=cRf16aYvsFXacsv2R2HsGnQ+AFezDz46tzhgNYqzsKQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RtclL/1mN0GD5uQjpU2HqQMKwfeCxJF7ii6ZMHj1q8msZDrQl3a61nZvqqop/mGeG
-         +bxU39v107EGEpBikMuO+iu4qzmqb+8SjDrtEiRMmCNrLLpEmRo0efZ8pYE0dEAJfw
-         Iq/vtpTkpHILxsgjyodTpvugBzpBvpLdSBmcmuWk=
-Subject: Re: [RFC][PATCH 0/2] Add support for using reserved memory for ima
- buffer pass
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        masahiroy@kernel.org, james.morse@arm.com, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, gregkh@linuxfoundation.org,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        balajib@linux.microsoft.com
-References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
- <20200505095620.GA82424@C02TD0UTHF1T.local>
- <e8c7d74e-74bf-caa3-452d-23faa649e825@linux.microsoft.com>
- <20200512230509.GA2654@bogus>
- <7701df90-a68b-b710-4279-9d64e45ee792@linux.microsoft.com>
- <87v9knpa36.fsf@morokweng.localdomain>
-From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
-Message-ID: <9c016a54-1c05-2f5c-6755-3814309e17af@linux.microsoft.com>
-Date:   Sun, 31 May 2020 21:05:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 00:20:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgFAEUv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 00:20:51 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B9DC08C5C0
+        for <devicetree@vger.kernel.org>; Sun, 31 May 2020 21:20:51 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id nm22so3727861pjb.4
+        for <devicetree@vger.kernel.org>; Sun, 31 May 2020 21:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hMKh+B5RDPq+o7Oive8w/r87Zbfpk7DQQkXRUfW4IOg=;
+        b=yEeMkr8V1c7yN+4qOTxaNQ2aaHNewu0hEjwsE4ztlBYLaxeAoUTDgbzHG/eNwqpA/P
+         ADC6E0J1xwDpDPCI3hzLDl7hJc3DjP2FcwWAMTtAChrAFq2fzvIp6o2P4yHYNjEucjby
+         2aa/lx1bNvFNzOasCR3b6SXbaqGnLqDHgqMDqKGnpAx0iCGMUcM+C54w12zv1ywDzbpB
+         ZZGv6z+3pmzCiZplGNcXZZUySenCxB2gXecX/wJxb49TcOM+nyCZJwij1F0qCVM5mb/d
+         wYMIC57zxKxJQp58gqL7cVOXdtkGbfVuvswMC8yXpR865usDWXl7UpqwjCLkn1J1mOSh
+         PvMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hMKh+B5RDPq+o7Oive8w/r87Zbfpk7DQQkXRUfW4IOg=;
+        b=LMNbz8cg2/fECQ/XcXVDZviSUESVQX9k/Vdm6rgsFv4ctrvBQ96IUynRP6EUMzciYP
+         NfklgpIwl4NgPkgWgzpUsJgmnJNNsWdYMn23h3bDtrGUFBWTcOXwfNM3igvy21jJ1Jt0
+         fnfRiPHbft+9ewTFzoIQh+gMekiXpgjv+tnX3stH+ehxTREJxA0LpL0/wgto9t9t8DWu
+         Z0+adQvmqHmPJQK0jUvjZIY+2nybW8rb2tKdi5Pc/MPJcF8OD/+trfHtynpw2/tGaH04
+         eQbZrOvH3HK5MXJyAdyk1V1fCa8jlD7C4rVaLNOiyCh2DXexojOnkPkz/fC6iwYxhAcx
+         rtCw==
+X-Gm-Message-State: AOAM5314CAtXAa01p26PZUGs+MiKfjOzvJLLirrgOSzMoFdJqnAhBMze
+        3WIGfUDPbobHdqPkT+0B4yuwcw==
+X-Google-Smtp-Source: ABdhPJyaIPN0AabB07SDvg8FYmCd2w+PPO/BCoqJqMkvufUjUsRbWQviG1tVmqdXzOsE/DE1c0k1RA==
+X-Received: by 2002:a17:90b:888:: with SMTP id bj8mr21322762pjb.148.1590985251318;
+        Sun, 31 May 2020 21:20:51 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id x132sm12983751pfd.214.2020.05.31.21.20.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 May 2020 21:20:50 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 09:50:48 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/11] dt-bindings: dma: dw: Convert DW DMAC to DT
+ binding
+Message-ID: <20200601042048.hk73khbz4wipevct@vireshk-i7>
+References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
+ <20200529144054.4251-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <87v9knpa36.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529144054.4251-2-Sergey.Semin@baikalelectronics.ru>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 29-05-20, 17:40, Serge Semin wrote:
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with dt-schema. This commit replaces the Synopsis
+> Designware DMA controller legacy bare text bindings with YAML file.
+> The only required prorties are "compatible", "reg", "#dma-cells" and
+> "interrupts", which will be used by the driver to correctly find the
+> controller memory region and handle its events. The rest of the properties
+> are optional, since in case if either "dma-channels" or "dma-masters" isn't
+> specified, the driver will attempt to auto-detect the IP core
+> configuration.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-On 5/22/20 9:08 PM, Thiago Jung Bauermann wrote:
-> 
-> Hello Prakhar,
-> 
-> Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
-> 
->> On 5/12/20 4:05 PM, Rob Herring wrote:
->>> On Wed, May 06, 2020 at 10:50:04PM -0700, Prakhar Srivastava wrote:
->>>> Hi Mark,
->>>
->>> Please don't top post.
->>>
->>>> This patch set currently only address the Pure DT implementation.
->>>> EFI and ACPI implementations will be posted in subsequent patchsets.
->>>>
->>>> The logs are intended to be carried over the kexec and once read the
->>>> logs are no longer needed and in prior conversation with James(
->>>> https://lore.kernel.org/linux-arm-kernel/0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com/)
->>>> the apporach of using a chosen node doesn't
->>>> support the case.
->>>>
->>>> The DT entries make the reservation permanent and thus doesnt need kernel
->>>> segments to be used for this, however using a chosen-node with
->>>> reserved memory only changes the node information but memory still is
->>>> reserved via reserved-memory section.
->>>
->>> I think Mark's point was whether it needs to be permanent. We don't
->>> hardcode the initrd address for example.
->>>
->> Thankyou for clarifying my misunderstanding, i am modelling this keeping to the
->> TPM log implementation that uses a reserved memory. I will rev up the version
->> with chosen-node support.
->> That will make the memory reservation free after use.
-> 
-> Nice. Do you intend to use the same property that powerpc uses
-> (linux,ima-kexec-buffer)?
-> 
-I was naming it ima-buffer, but naming is not a huge concern.
-I will use linux,ima-kexec-buffer.
->>>> On 5/5/20 2:59 AM, Mark Rutland wrote:
->>>>> Hi Prakhar,
->>>>>
->>>>> On Mon, May 04, 2020 at 01:38:27PM -0700, Prakhar Srivastava wrote:
->>>>>> IMA during kexec(kexec file load) verifies the kernel signature and measures
->>>
->>> What's IMAIMA is a LSM attempting to detect if files have been accidentally or
->> maliciously altered, both remotely and locally, it can also be used
->> to appraise a file's measurement against a "good" value stored as an extended
->> attribute, and enforce local file integrity.
->>
->> IMA also validates and measures the signers of the kernel and initrd
->> during kexec. The measurements are extended to PCR 10(configurable) and the logs
->> stored in memory, however once kexec'd the logs are lost. Kexec is used as
->> secondary boot loader in may use cases and loosing the signer
->> creates a security hole.
->>
->> This patch is an implementation to carry over the logs and making it
->> possible to remotely validate the signers of the kernel and initrd. Such a
->> support exits only in powerpc.
->> This patch makes the carry over of logs architecture independent and puts the
->> complexity in a driver.
-> 
-> If I'm not mistaken, the code at arch/powerpc/kexec/ima.c isn't actually
-> powerpc-specific. It could be moved to an arch-independent directory and
-> used by any other architecture which supports device trees.
-> 
-> I think that's the simplest way forward. And to be honest I'm still
-> trying to understand why you didn't take that approach. Did you try it
-> and hit some obstacle or noticed a disadvantage for your use case?
-> 
-The approach i have in this patch set is to provide an abstraction layer 
-that can be called from any architecture.
-However taking a deeper look only the setup dtb is probably architecture
-specific, only because the architecture specific kexec sets up the 
-device tree. I can also move the code up in security/ima. However i do
-have some concerns with layering. I am hoping you can provide me with 
-some guidance in this aspect, i will send you the patch i am working on
-to get some early feedback.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Thanks,
-Prakhar Srivastava
-
-
-> --
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
-> 
+-- 
+viresh
