@@ -2,119 +2,203 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0872C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81256C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFB802065C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C27C2077D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="N/SzcJgl"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VqZYir9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725972AbgFAKhs (ORCPT
+        id S1726089AbgFAKkb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:37:48 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:35896 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725925AbgFAKhr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 06:37:47 -0400
-X-UUID: 394d6998af134c8690c692338d0e4123-20200601
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=1ubZI9bQ8AA1BT1/8Z5X+IHX0+39sOSJHMhP1+hac8k=;
-        b=N/SzcJgl397H4uuPS8/+6ws0a1tn3EbRswPKG1jFFR9xj6VlSf44jI6tsyRmMiaKkQdjK0op73bx2IqI1IVXOY2yxJkv0f2pvMvC/jGNt2zGGeWnIfZonzu4XeLN26fKCs9yWfF9N3iw27ZFmpKL8PWjfZIP5zxmAoHVAq5q1qE=;
-X-UUID: 394d6998af134c8690c692338d0e4123-20200601
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <jerry-ch.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 966313528; Mon, 01 Jun 2020 18:37:44 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 1 Jun 2020 18:37:42 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 1 Jun 2020 18:37:41 +0800
-Message-ID: <1591007863.15207.1.camel@mtksdccf07>
-Subject: Re: [RFC PATCH V4 4/4] platform: mtk-isp: Add Mediatek FD driver
-From:   Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>, <yuzhao@chromium.org>,
-        <zwisler@chromium.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg 
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= 
-        <Sean.Cheng@mediatek.com>, "Sj Huang" <sj.huang@mediatek.com>,
-        Christie Yu =?UTF-8?Q?=28=E6=B8=B8=E9=9B=85=E6=83=A0=29?= 
-        <christie.yu@mediatek.com>,
-        Frederic Chen =?UTF-8?Q?=28=E9=99=B3=E4=BF=8A=E5=85=83=29?= 
-        <frederic.chen@mediatek.com>,
-        Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= 
-        <jungo.lin@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Date:   Mon, 1 Jun 2020 18:37:43 +0800
-In-Reply-To: <CAAFQd5BBfapVv_3cwGte=p=6G8QXZQP=-ciZ8NBZZeSBGrHmCA@mail.gmail.com>
-References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
-         <20191204124732.10932-5-Jerry-Ch.chen@mediatek.com>
-         <20200521182825.GA249683@chromium.org>
-         <1590156658.27807.84.camel@mtksdccf07>
-         <CAAFQd5DodDfWsHkhQZP-M70k9_2sUwwb4zHtWfTx5EDyEKkwow@mail.gmail.com>
-         <1590755163.23156.24.camel@mtksdccf07>
-         <CAAFQd5BBfapVv_3cwGte=p=6G8QXZQP=-ciZ8NBZZeSBGrHmCA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 1 Jun 2020 06:40:31 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:51404 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgFAKka (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 06:40:30 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200601104028euoutp0253b68944d9a4bab3c9ced8c5db8028f7~UZV9vNRSl1402414024euoutp02a
+        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 10:40:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200601104028euoutp0253b68944d9a4bab3c9ced8c5db8028f7~UZV9vNRSl1402414024euoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591008028;
+        bh=/Gdbip4R8JUAfQa6cujlq0e0Q4h2fBOUhAoNV4LwAeo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=VqZYir9kppvdPXw6Bbip7iz3RaeY/1E9izZyW1Mt7WUOnEmQd0XkDyCFXB1iSZsv3
+         VYsvblNFL7er/ORRMEn+5jhtosAixDAm1eE2DIV5jGEMC09BhgtFQ8MJUNRvRa1AsY
+         tsedVhOblA2VPkIB5/hKOYM/josL9F37NM3XmiMc=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200601104028eucas1p18a9b6c867e9c4cb90d5a9a9ad0212728~UZV9f-sJg2526625266eucas1p13;
+        Mon,  1 Jun 2020 10:40:28 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 27.93.60698.C1BD4DE5; Mon,  1
+        Jun 2020 11:40:28 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200601104027eucas1p2b076ee860520d709e8178c41550653f7~UZV8wqHUV1744917449eucas1p2J;
+        Mon,  1 Jun 2020 10:40:27 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200601104027eusmtrp2b227ba4119a30344c41228ead9a83b91~UZV8v9bf90787807878eusmtrp2b;
+        Mon,  1 Jun 2020 10:40:27 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-82-5ed4db1c01cf
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2E.7A.08375.B1BD4DE5; Mon,  1
+        Jun 2020 11:40:27 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200601104027eusmtip1adaa625ff84700328004b3295bca4bce~UZV8NBDXU0602606026eusmtip1Y;
+        Mon,  1 Jun 2020 10:40:27 +0000 (GMT)
+Subject: Re: [PATCHv1 00/19] Improve SBS battery support
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <15933a91-dd89-1f94-c2f2-79be4395f4c1@samsung.com>
+Date:   Mon, 1 Jun 2020 12:40:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKKsWRmVeSWpSXmKPExsWy7djPc7oyt6/EGbz7rGIx/8g5VovmxevZ
+        LDaf62G1uLxrDpvF594jjBYzzu9jspj7ZSqzReveI+wWd1/7WZzeXeLA5bHj7hJGj02rOtk8
+        9s9dw+7xeZNcAEsUl01Kak5mWWqRvl0CV8a3D1OYChqkKp5MPsPUwHhQrIuRk0NCwETi/cMr
+        7F2MXBxCAisYJdYdvcwI4XxhlDh94j5U5jOjxJp3SxhhWj62XmeCSCxnlHj77ycrhPOeUWLl
+        t/1sIFXCAhYSXxb9BmsXEbjDKHHnzCtWkASzwEpGiS/9ISA2m4ChRNfbLrAGXgE7iUW/T4LV
+        sAioSPw9vBJsnahArETP/VfMEDWCEidnPmEBsTkF3CSmTX3ICDFTXqJ562xmCFtc4taT+WDn
+        SQgcYpeYvvA0K8TdLhJXjtyAsoUlXh3fwg5hy0j83wnT0Mwo8fDcWnYIp4dR4nLTDKivrSXu
+        nPsFdCoH0ApNifW79CHCjhITD+9mBglLCPBJ3HgrCHEEn8SkbdOhwrwSHW1CENVqErOOr4Nb
+        e/DCJeYJjEqzkLw2C8k7s5C8Mwth7wJGllWM4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiB
+        ien0v+NfdzDu+5N0iFGAg1GJh1fj0uU4IdbEsuLK3EOMEhzMSiK8TmdPxwnxpiRWVqUW5ccX
+        leakFh9ilOZgURLnNV70MlZIID2xJDU7NbUgtQgmy8TBKdXAKHNzQU379HBWB1WDm3vkF6bc
+        XpRxN5Zt7ad56X8io281v8k40dD58ZCO4wUZt+7c6vUbNvLeqJYukYuaL3behWHC9xdFlqFe
+        5n/jpXuMQ3M3qf+McaiyZVdPimQ59iqbvff14szH/nLPFCY+E8px8F6ekjN/4Z8/eg+cn0+y
+        PCS/gEtAO1JMiaU4I9FQi7moOBEA1jBJh0gDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsVy+t/xu7rSt6/EGbzbamwx/8g5VovmxevZ
+        LDaf62G1uLxrDpvF594jjBYzzu9jspj7ZSqzReveI+wWd1/7WZzeXeLA5bHj7hJGj02rOtk8
+        9s9dw+7xeZNcAEuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5m
+        WWqRvl2CXsa3D1OYChqkKp5MPsPUwHhQrIuRk0NCwETiY+t1JhBbSGApo8SrM6EQcRmJk9Ma
+        WCFsYYk/17rYuhi5gGreMkqceLGDESQhLGAh8WXRb3aQhIjAPUaJxVca2UESzAIrGSWO7Qvq
+        YuQA6nCVWLI2CCTMJmAo0fUWZBAnB6+AncSi3yfBFrAIqEj8PbwSbKaoQKxE9+If7BA1ghIn
+        Zz5hAbE5Bdwkpk19yAgx3kxi3uaHzBC2vETz1tlQtrjErSfzmSYwCs1C0j4LScssJC2zkLQs
+        YGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERiD24793LyD8dLG4EOMAhyMSjy8F85fjhNi
+        TSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucD00NeSbyhqaG5
+        haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZG3zizWy8y5my6oz9LIp/n4TPX
+        r8o/qqcymCh/Xf8iof4m97m+4y777CM23ti2yXHio8YCbhHrAyWFPEvuG007Hpf/5siqZ8pJ
+        fk9f/57y8r3R6ZDr27nyXe6c4jLjkbK4yZxr9qyf4c6a450HZVd+C1t+Z55ymkekcuquyQ9y
+        7UKDzsTJGug4KbEUZyQaajEXFScCAFjiS2TXAgAA
+X-CMS-MailID: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+        <CGME20200601104027eucas1p2b076ee860520d709e8178c41550653f7@eucas1p2.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA1LTI5IGF0IDE0OjU5ICswMjAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
-T24gRnJpLCBNYXkgMjksIDIwMjAgYXQgMjoyNiBQTSBKZXJyeS1jaCBDaGVuDQo+IDxKZXJyeS1j
-aC5DaGVuQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBUb21hc3osDQo+ID4NCj4g
-PiBJIEFwcHJlY2lhdGUgeW91ciByZXZpZXcgY29tbWVudHMsIGhlcmUncyB0aGUgcmVwbHkuDQo+
-ID4NCj4gPiBPbiBNb24sIDIwMjAtMDUtMjUgYXQgMTQ6MjQgKzAyMDAsIFRvbWFzeiBGaWdhIHdy
-b3RlOg0KPiA+ID4gcg0KPiA+ID4NCj4gPiA+IE9uIEZyaSwgTWF5IDIyLCAyMDIwIGF0IDQ6MTEg
-UE0gSmVycnktY2ggQ2hlbg0KPiA+ID4gPEplcnJ5LWNoLkNoZW5AbWVkaWF0ZWsuY29tPiB3cm90
-ZToNCj4gPiA+ID4NCj4gPiA+ID4gSGkgVG9tYXN6LA0KPiA+ID4gPg0KPiA+ID4gPiBPbiBUaHUs
-IDIwMjAtMDUtMjEgYXQgMTg6MjggKzAwMDAsIFRvbWFzeiBGaWdhIHdyb3RlOg0KPiA+ID4gPiA+
-IEhpIEplcnJ5LA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gT24gV2VkLCBEZWMgMDQsIDIwMTkgYXQg
-MDg6NDc6MzJQTSArMDgwMCwgSmVycnktY2ggQ2hlbiB3cm90ZToNCj4gW3NuaXBdDQo+ID4gPiBJ
-c24ndCBzdGlsbCBhIG5lZWQgdG8gY2xhbXAoKSB3aWR0aCBhbmQgaGVpZ2h0IHRvIG1pbi9tYXgs
-IHRob3VnaD8NCj4gPiBZZXMsIEknbGwgYWRkIHRoZW0gYmFjay4NCj4gPg0KPiA+IFRoaXMgZnVu
-Y3Rpb24gd2lsbCBiZSByZWZpbmVkIGFzIDoNCj4gPg0KPiA+IHN0YXRpYyB2b2lkIG10a19mZF9m
-aWxsX3BpeGZtdF9tcChzdHJ1Y3QgdjRsMl9waXhfZm9ybWF0X21wbGFuZSAqZGZtdCwNCj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdTMyIHBpeGZtdCkNCj4gPiB7DQo+ID4g
-ICAgICAgICB2NGwyX2ZpbGxfcGl4Zm10X21wKGRmbXQsIHBpeGZtdCwgZGZtdC0+d2lkdGgsIGRm
-bXQtPmhlaWdodCk7DQo+ID4NCj4gPiAgICAgICAgIGRmbXQtPmZpZWxkID0gVjRMMl9GSUVMRF9O
-T05FOw0KPiA+ICAgICAgICAgZGZtdC0+Y29sb3JzcGFjZSA9IFY0TDJfQ09MT1JTUEFDRV9CVDIw
-MjA7DQo+ID4gICAgICAgICBkZm10LT55Y2Jjcl9lbmMgPSBWNEwyX1lDQkNSX0VOQ19ERUZBVUxU
-Ow0KPiA+ICAgICAgICAgZGZtdC0+cXVhbnRpemF0aW9uID0gVjRMMl9RVUFOVElaQVRJT05fREVG
-QVVMVDsNCj4gPiAgICAgICAgIGRmbXQtPnhmZXJfZnVuYyA9IFY0TDJfTUFQX1hGRVJfRlVOQ19E
-RUZBVUxUKGRmbXQtPmNvbG9yc3BhY2UpOw0KPiA+DQo+ID4gICAgICAgICAvKiBLZWVwIHVzZXIg
-c2V0dGluZyBhcyBwb3NzaWJsZSAqLw0KPiA+ICAgICAgICAgZGZtdC0+d2lkdGggPSBjbGFtcChk
-Zm10LT53aWR0aCwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTVRLX0ZEX09VVFBV
-VF9NSU5fV0lEVEgsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIE1US19GRF9PVVRQ
-VVRfTUFYX1dJRFRIKTsNCj4gPiAgICAgICAgIGRmbXQtPmhlaWdodCA9IGNsYW1wKGRmbXQtPmhl
-aWdodCwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE1US19GRF9PVVRQVVRfTUlO
-X0hFSUdIVCwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE1US19GRF9PVVRQVVRf
-TUFYX0hFSUdIVCk7DQo+IA0KPiBOb3RlIHRoYXQgdGhpcyB3b3VsZCBjYXVzZSB0aGUgb3RoZXIg
-ZmllbGRzIG9mIGRmbXQgdG8gYmUgaW5jb25zaXN0ZW50DQo+IHdpdGggd2lkdGggYW5kIGhlaWdo
-dC4gVGhlIGNvcnJlY3Qgd2F5IHRvIGRvIHRoaXMgd291bGQgYmUgdG8gZmlyc3QNCj4gY2xhbXAg
-YW5kIHRoZW4gY2FsbCB2NGwyX2ZpbGxfcGl4Zm10X21wKCkuDQo+IA0KT2ssIEkgd2lsbCBmaXgg
-aXQuDQoNClRoYW5rcyBhbmQgQmVzdCByZWdhcmRzLA0KSmVycnkNCj4gQmVzdCByZWdhcmRzLA0K
-PiBUb21hc3oNCg0K
+Hi Sebastian,
+
+On 13.05.2020 20:55, Sebastian Reichel wrote:
+> This patchset improves support for SBS compliant batteries. Due to
+> the changes, the battery now exposes 32 power supply properties and
+> (un)plugging it generates a backtrace containing the following message
+> without the first patch in this series:
+>
+> ---------------------------
+> WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4/0x104
+> add_uevent_var: too many keys
+> ---------------------------
+>
+> For references this is what an SBS battery status looks like after
+> the patch series has been applied:
+>
+> cat /sys/class/power_supply/sbs-0-000b/uevent
+> POWER_SUPPLY_NAME=sbs-0-000b
+> POWER_SUPPLY_TYPE=Battery
+> POWER_SUPPLY_STATUS=Discharging
+> POWER_SUPPLY_CAPACITY_LEVEL=Normal
+> POWER_SUPPLY_HEALTH=Good
+> POWER_SUPPLY_PRESENT=1
+> POWER_SUPPLY_TECHNOLOGY=Li-ion
+> POWER_SUPPLY_CYCLE_COUNT=12
+> POWER_SUPPLY_VOLTAGE_NOW=11441000
+> POWER_SUPPLY_CURRENT_NOW=-26000
+> POWER_SUPPLY_CURRENT_AVG=-24000
+> POWER_SUPPLY_CAPACITY=76
+> POWER_SUPPLY_CAPACITY_ERROR_MARGIN=1
+> POWER_SUPPLY_TEMP=198
+> POWER_SUPPLY_TIME_TO_EMPTY_AVG=438600
+> POWER_SUPPLY_TIME_TO_FULL_AVG=3932100
+> POWER_SUPPLY_SERIAL_NUMBER=0000
+> POWER_SUPPLY_VOLTAGE_MIN_DESIGN=10800000
+> POWER_SUPPLY_VOLTAGE_MAX_DESIGN=10800000
+> POWER_SUPPLY_ENERGY_NOW=31090000
+> POWER_SUPPLY_ENERGY_FULL=42450000
+> POWER_SUPPLY_ENERGY_FULL_DESIGN=41040000
+> POWER_SUPPLY_CHARGE_NOW=2924000
+> POWER_SUPPLY_CHARGE_FULL=3898000
+> POWER_SUPPLY_CHARGE_FULL_DESIGN=3800000
+> POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3000000
+> POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=12300000
+> POWER_SUPPLY_MANUFACTURE_YEAR=2017
+> POWER_SUPPLY_MANUFACTURE_MONTH=7
+> POWER_SUPPLY_MANUFACTURE_DAY=3
+> POWER_SUPPLY_MANUFACTURER=UR18650A
+> POWER_SUPPLY_MODEL_NAME=GEHC
+
+This patch landed in linux-next dated 20200529. Sadly it causes a 
+regression on Samsung Exynos-based Chromebooks (Exynos5250 Snow, 
+Exynos5420 Peach-Pi and Exynos5800 Peach-Pit). System boots to 
+userspace, but then, when udev populates /dev, booting hangs:
+
+[    4.435167] VFS: Mounted root (ext4 filesystem) readonly on device 
+179:51.
+[    4.457477] devtmpfs: mounted
+[    4.460235] Freeing unused kernel memory: 1024K
+[    4.464022] Run /sbin/init as init process
+INIT: version 2.88 booting
+[info] Using makefile-style concurrent boot in runlevel S.
+[    5.102096] random: crng init done
+[....] Starting the hotplug events dispatcher: systemd-udevdstarting 
+version 236
+[ ok .
+[....] Synthesizing the initial hotplug events...[ ok done.
+[....] Waiting for /dev to be fully populated...[   34.409914] 
+TPS65090_RAILSDCDC1: disabling
+[   34.412977] TPS65090_RAILSDCDC2: disabling
+[   34.417021] TPS65090_RAILSDCDC3: disabling
+[   34.423848] TPS65090_RAILSLDO1: disabling
+[   34.429068] TPS65090_RAILSLDO2: disabling
+
+Bisect between v5.7-rc1 and next-20200529 pointed me to the first bad 
+commit: [c4b12a2f3f3de670f6be5e96092a2cab0b877f1a] power: supply: 
+sbs-battery: simplify read_read_string_data. However reverting it in 
+linux-next doesn't fix the issue, so the next commits are also relevant 
+to this issue.
+
+Let me know how can I help debugging it.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
