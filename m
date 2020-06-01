@@ -2,159 +2,130 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11359C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16EEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 19:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B4D20679
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBFB220734
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 19:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HHXQoRKk"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="iwHH84UO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgFASzy (ORCPT
+        id S1727803AbgFATSa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45264 "EHLO
+        Mon, 1 Jun 2020 15:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730491AbgFASzx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 14:55:53 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B81BC061A0E
-        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 11:55:53 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id e2so10196531eje.13
-        for <devicetree@vger.kernel.org>; Mon, 01 Jun 2020 11:55:53 -0700 (PDT)
+        with ESMTP id S1726751AbgFATS3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 15:18:29 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49EFAC03E96B
+        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 12:18:28 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b6so9620198ljj.1
+        for <devicetree@vger.kernel.org>; Mon, 01 Jun 2020 12:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ll0Hxtpd9kUjoZ6368PBnHFjk1t/KP9A5doX0NsjS8Y=;
-        b=HHXQoRKkRwnj5wx8VXlsES6HymXOV8W2MTPYDHm4YaFpj9bCVwM2Nxf2BlFpKZp3XB
-         2Qh/o6KxlEKLbqinUeFXafMKslx9YzDJAaZs+8Unv53j5DBKoqiPBjGvg/IYBC7Q3JA/
-         Ieg4HsYz/NKf3SaU/zciPOSrIIBePr/Z58XAE=
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/B/vJSdZ4H+DclQbmiiPRhS99BSxRaLniCcxhXNQdaA=;
+        b=iwHH84UOoC537MGk6E7us+S+9Zdopz5u3Mz9r49FApyoOZsxNbMpSYkDpYz+aYUmIa
+         gtYJ4Nu2LvDhSS9BFKk/dXVwM+V+xJdfWYttpRfsGqdl+mfJLbnevBNm+6jq/a3qu6CS
+         79cIP/nF1F5EzENa3hIe43wwl8d/B/SzpYMrgV+aDEoXxYeViLETePnqL6+klDaawcpX
+         9Q+NOyq2LouzXifA0UFaf9jIAdeXnxvtv9zoddLb2ACAVvgArDVoDnSfzqzGD6APHcu8
+         RWbhRoiDb2muv9dDnZFBL/MccbVhteizvEX7iahC7D4K1DHIFyVP4Ro83iNhRQPi/oNz
+         WSsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ll0Hxtpd9kUjoZ6368PBnHFjk1t/KP9A5doX0NsjS8Y=;
-        b=Wr66AeKQxyeS5io1O80MAkSUbEUINITsrQuY3N/flum19NyIOcHCNXA9Cgp/7a+7pH
-         txJSiK4iUGIMsQbiR+Y2iZ4OW6EoCgvkb8Cs3y8m5KDgEiLavsBbEOU1hDy4EaDxGshk
-         l8LM8yVAYjNWA3mZX5VnlspMdAkdzGoQao5QX2Ak1COeN9wzMUzAgfqswxZyP1sLT5+J
-         D+ZhY6S+VbtZxQrzpIv2wxHJZEF9p6COTLWiPgBcamjac3F4J7wq6VyCFrR9sK0oEGQt
-         nkXQSBpB22d4KbsvuEpSbps+ggcVTd8YG88B492Q3bzZdFG/l/siLt6/xpWqqdZ7qOus
-         tlrA==
-X-Gm-Message-State: AOAM533yvYDLn9SXis5IdBdfer8O5iDXuAWM6OHGHi/DUU8bGi0noqpX
-        Cx+U//8XwOg2DS40BUkl3meUpLhMSnMJzg==
-X-Google-Smtp-Source: ABdhPJzutDuIBDk4YTTQgep/inXIFUcIH78xYEmvbjrtbtZwHdePKOCAcIsleLSiFzq+UD2GjkLhbw==
-X-Received: by 2002:a17:906:f06:: with SMTP id z6mr20488659eji.105.1591037750523;
-        Mon, 01 Jun 2020 11:55:50 -0700 (PDT)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
-        by smtp.gmail.com with ESMTPSA id e9sm153912edl.25.2020.06.01.11.55.49
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 11:55:50 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id f185so581408wmf.3
-        for <devicetree@vger.kernel.org>; Mon, 01 Jun 2020 11:55:49 -0700 (PDT)
-X-Received: by 2002:a7b:c622:: with SMTP id p2mr590231wmk.55.1591037285905;
- Mon, 01 Jun 2020 11:48:05 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/B/vJSdZ4H+DclQbmiiPRhS99BSxRaLniCcxhXNQdaA=;
+        b=HfNpgNOIb1NXyqMiUhr/Dbf0PlRJSzFJLALzJdizR9GfnXBTKYnKRHVHkLVrRUkqGZ
+         vWZYOMdn12K2qkaRKb3N4svwFnUizJnlCvJ0zEBhumHdySH/rTl32z7HP8XcM41VcRa0
+         QNlZmATrCRmIlip46PiN7PuQ85R8BWstK7s4txZk86Ukxv2eoEbiZwleqUWmGi4yEttf
+         d7dVYxUaCzc34aTm/g1p3fYNSTEr7wxldFUTeXxWxtEUM4qZQzyZb67qZFMZdk1pPZ8j
+         2DhMFRozpoAWc2KjBYJu/bI6jcVEFHbaKyyqRqr5JweMaMcTv2dF1RimO/i88bwc2eGP
+         YHwA==
+X-Gm-Message-State: AOAM530ylHvPnbaFb4sWIO8ijAE7ardLpzq6dsMyILi6CEixLdK9WuGv
+        G9IniVBTuFnFMQsVzlVmpXEQYdk3fMc=
+X-Google-Smtp-Source: ABdhPJy3cN4yLGJe+/Z+8B7cDMmCco1eIsfE3RnyFphuEUNzt9DcbvqKy/QmOpfmfS39sSO6wln/8A==
+X-Received: by 2002:a2e:970c:: with SMTP id r12mr11288156lji.145.1591039106548;
+        Mon, 01 Jun 2020 12:18:26 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:42cb:40f3:c0fd:7859:f21:5d63])
+        by smtp.gmail.com with ESMTPSA id f12sm118393lfp.8.2020.06.01.12.18.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jun 2020 12:18:25 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] dt-bindings: memory: document Renesas RPC-IF
+ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        linux-mtd@lists.infradead.org
+References: <812e6e58-d13f-3f44-5f55-22266b690c57@cogentembedded.com>
+ <116683d1-d402-4d7f-3357-1c8cde807076@cogentembedded.com>
+ <20200501212547.GB15294@bogus>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <85e1ebd0-4b27-5382-c591-59d63d5b73de@cogentembedded.com>
+Date:   Mon, 1 Jun 2020 22:18:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-References: <20200518132731.20855-1-dongchun.zhu@mediatek.com>
- <20200518132731.20855-3-dongchun.zhu@mediatek.com> <20200521195113.GC14214@chromium.org>
- <1590139561.8804.390.camel@mhfsdcap03> <CAAFQd5CCsT_oM9aij_imV+NABzByi94RmCj97Dx0Tk3S0WDsTg@mail.gmail.com>
- <1590570089.8804.453.camel@mhfsdcap03>
-In-Reply-To: <1590570089.8804.453.camel@mhfsdcap03>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 1 Jun 2020 20:47:54 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5Dgboh8om68546ADELX3g-0y40rdBxY+H3WsX5xAD1_FQ@mail.gmail.com>
-Message-ID: <CAAFQd5Dgboh8om68546ADELX3g-0y40rdBxY+H3WsX5xAD1_FQ@mail.gmail.com>
-Subject: Re: [V6, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
-        <shengnan.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200501212547.GB15294@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:03 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
->
-> Hi Tomasz,
->
-> On Mon, 2020-05-25 at 13:45 +0200, Tomasz Figa wrote:
-> > On Fri, May 22, 2020 at 11:27 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
-> > >
-> > > Hi Tomasz,
-> > >
-> > > Thanks for the review. My replies are as below.
-> > >
-> > > On Thu, 2020-05-21 at 19:51 +0000, Tomasz Figa wrote:
-> > > > Hi Dongchun, Sakari,
-> > > >
-> > > > On Mon, May 18, 2020 at 09:27:31PM +0800, Dongchun Zhu wrote:
-> > [snip]
-> > > > > +   pm_runtime_enable(dev);
-> > > > > +   if (!pm_runtime_enabled(dev)) {
-> > > > > +           ret = dw9768_runtime_resume(dev);
-> > > > > +           if (ret < 0) {
-> > > > > +                   dev_err(dev, "failed to power on: %d\n", ret);
-> > > > > +                   goto entity_cleanup;
-> > > > > +           }
-> > > > > +   }
-> > > > > +
-> > > > > +   ret = v4l2_async_register_subdev(&dw9768->sd);
-> > > > > +   if (ret < 0)
-> > > > > +           goto entity_cleanup;
-> > > > > +
-> > > > > +   return 0;
-> > > > > +
-> > > > > +entity_cleanup:
-> > > >
-> > > > Need to power off if the code above powered on.
-> > > >
-> > >
-> > > Thanks for the reminder.
-> > > If there is something wrong with runtime PM, actuator is to be powered
-> > > on via dw9768_runtime_resume() API.
-> > > When actuator sub-device is powered on completely and async registered
-> > > successfully, we shall power off it afterwards.
-> > >
-> >
-> > The code above calls dw9768_runtime_resume() if
-> > !pm_runtime_enabled(dev), but the clean-up code below the
-> > entity_cleanup label doesn't have the corresponding
-> > dw9768_runtime_suspend() call.
-> >
->
-> Did you mean the 'entity_cleanup' after v4l2_async_register_subdev()?
+On 05/02/2020 12:25 AM, Rob Herring wrote:
 
-Yes.
+>> Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
+>> HyperFlash connected to the SoC to be accessed via the external address
+>> space read mode or the manual mode.
+>>
+>> Document the device tree bindings for the Renesas RPC-IF found in the R-Car
+>> gen3 SoCs.
+>>
+>> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+[...]
+>> Index: linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
+>> ===================================================================
+>> --- /dev/null
+>> +++ linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
+>> @@ -0,0 +1,88 @@
+[...]
+>> +patternProperties:
+>> +  "^.*@[0-9a-f]+$":
+> 
+> ^flash@... if you're that restrictive.
+> 
+>> +    type: object
+>> +    properties:
+>> +      compatible:
+>> +        oneOf:
+>> +          - const: cfi-flash
+>> +          - const: jedec,spi-nor
+> 
+> enum is better than oneOf+const.
 
-> Actually I made some changes for OV02A V9, according to this comment.
-> Could you help review that change? Thanks.
+        - enum:
+          - cfi-flash
+          - jedec,spi-nor
 
-Sure, I will take a look.
+causes the build error you encountered while trying to merge the last time.
+What was I doing wrong?
 
-Best regards,
-Tomasz
+[...]
+
+MBR, Sergei
