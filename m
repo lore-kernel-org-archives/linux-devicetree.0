@@ -2,233 +2,106 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9EAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 13:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB198C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 13:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3952068D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 13:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891BE207FB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 13:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zf2g5J8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgFANmD (ORCPT
+        id S1726113AbgFAN4e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:42:03 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2264 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725974AbgFANmD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:42:03 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 5D2CA80A4B98C2E3164F;
-        Mon,  1 Jun 2020 14:42:01 +0100 (IST)
-Received: from localhost (10.47.94.81) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 1 Jun 2020
- 14:42:00 +0100
-Date:   Mon, 1 Jun 2020 14:41:20 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-CC:     Jonathan Cameron <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <andy.shevchenko@gmail.com>,
-        <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 1/4] iio: chemical: scd30: add core driver
-Message-ID: <20200601144120.000038ba@Huawei.com>
-In-Reply-To: <20200601113006.GA28560@arch>
-References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
-        <20200530213630.87159-2-tomasz.duszynski@octakon.com>
-        <20200531105840.27e17f3d@archlinux>
-        <20200531192152.GC27246@arch>
-        <20200601113604.00002d70@Huawei.com>
-        <20200601113006.GA28560@arch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 1 Jun 2020 09:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgFAN4d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 09:56:33 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D7EC05BD43;
+        Mon,  1 Jun 2020 06:56:33 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v2so3499199pfv.7;
+        Mon, 01 Jun 2020 06:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NnJ2aNDnHxnX78YplbfmtL0qZ9sbXLKRHhLXydSwmbs=;
+        b=Zf2g5J8PciyeJ3M9+j9tm0SwFeo02JbuT4cP06zTvhbTncf3t6qGuKO3/zDXILg+VA
+         /lVKDICquxnsOLoCRpcX1QWuRbOsdmb/53MIiJOEs0NqIXvhe/JSmYpEi7kP6oFItp1a
+         aqN+vPmWGGZl7ha1s6daaAp31F3bz7A2zVCVXBgpZaopOCp3J9eQiHyhyF3Oq/bUDZ6V
+         C30GTaRiN68Q0QZB1pHk9lf+tLEHkYxkMuzLtTXhdYyNQ3icrxRjUlSaa86al0+kisyK
+         JXxeKcE7NozwBzv8b0ytibUZPujyh+QkpzNOAFhr5S10S10imEDYbpmUikjfyiC/QW4Y
+         qkGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NnJ2aNDnHxnX78YplbfmtL0qZ9sbXLKRHhLXydSwmbs=;
+        b=h7bXIEOu4YWUVdwbh0rXjwnnYc/cp26cwQU/nBtACqXR5+DNVti7wLyMBXU7Ny5aFb
+         kFnpPuHW8hW0H8YaKs9+J1YH2NnoJDiymlrQQAGTLpP8lMoLURVOw/rmc4i/MmaESYBZ
+         k10TBqsC/aintHRxlI1dpdFflwE2pu05SBG0z2g86ZdqNv9ayCAd0c8Uj9ykRbrqNJPd
+         KtM4YcxChtlg0RPgxyA5Tgyac82p4HzbPowQRlpXGsiSTp/JAkqNuZOkS2DysD2hRYgF
+         +6tY6m8u4RYNFqZw6JrmSOKE0NRh/n4g4Y9Lq96wke5kfM7LxNnuOanVVMfSb1lFbu2L
+         GNFw==
+X-Gm-Message-State: AOAM531x4Degw20qm8lEstYUUOGsFBZUmqFQEK4kP7gyhOxdAc3CdbmC
+        W4q8HJYZIOMxVYPHAZ8f6E0qli5YLKqm2oiAKv4=
+X-Google-Smtp-Source: ABdhPJzp4kqPEV9xtuw6yNWIcBe/q7YWBMM7fE0PPWGX8XNJn90BPLkgNVLDiPMj9eaJDZp2o54lQV8nSax2uYQma+4=
+X-Received: by 2002:a62:1c46:: with SMTP id c67mr14165404pfc.170.1591019793048;
+ Mon, 01 Jun 2020 06:56:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.94.81]
-X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru> <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Jun 2020 16:56:21 +0300
+Message-ID: <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Jun 1, 2020 at 3:26 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+> and MIPS CPS CPUidle drivers.
 ...
+> +MIPS CORE DRIVERS
+> +M:     Serge Semin <fancer.lancer@gmail.com>
+> +L:     linux-mips@vger.kernel.org
+> +S:     Supported
+> +F:     drivers/bus/mips_cdmm.c
+> +F:     drivers/irqchip/irq-mips-cpu.c
+> +F:     drivers/irqchip/irq-mips-gic.c
+> +F:     drivers/clocksource/mips-gic-timer.c
+> +F:     drivers/cpuidle/cpuidle-cps.c
 
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
-> > > > > +		scd30_command_t command)
-> > > > > +{
-> > > > > +	static const unsigned long scd30_scan_masks[] = { 0x07, 0x00 };
-> > > > > +	struct scd30_state *state;
-> > > > > +	struct iio_dev *indio_dev;
-> > > > > +	int ret;
-> > > > > +	u16 val;
-> > > > > +
-> > > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
-> > > > > +	if (!indio_dev)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	state = iio_priv(indio_dev);
-> > > > > +	state->dev = dev;  
-> > > >
-> > > > Doesn't seem to be used.
-> > > >  
-> > > > > +	state->priv = priv;  
-> > > >
-> > > > What's this for?  At least at first glance I can't find it being used
-> > > > anywhere.
-> > > >  
-> > > > > +	state->irq = irq;
-> > > > > +	state->pressure_comp = SCD30_PRESSURE_COMP_DEFAULT;
-> > > > > +	state->meas_interval = SCD30_MEAS_INTERVAL_DEFAULT;
-> > > > > +	state->command = command;
-> > > > > +	mutex_init(&state->lock);
-> > > > > +	init_completion(&state->meas_ready);
-> > > > > +
-> > > > > +	dev_set_drvdata(dev, indio_dev);
-> > > > > +
-> > > > > +	indio_dev->dev.parent = dev;  
-> > > >
-> > > > Side note that there is a series moving this into the core under revision at
-> > > > the moment.  Hopefully I'll remember to fix this up when applying your patch
-> > > > if that one has gone in ahead of it.
-> > > >  
-> > > > > +	indio_dev->info = &scd30_info;
-> > > > > +	indio_dev->name = name;
-> > > > > +	indio_dev->channels = scd30_channels;
-> > > > > +	indio_dev->num_channels = ARRAY_SIZE(scd30_channels);
-> > > > > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > > > > +	indio_dev->available_scan_masks = scd30_scan_masks;
-> > > > > +
-> > > > > +	state->vdd = devm_regulator_get(dev, "vdd");
-> > > > > +	if (IS_ERR(state->vdd)) {
-> > > > > +		if (PTR_ERR(state->vdd) == -EPROBE_DEFER)
-> > > > > +			return -EPROBE_DEFER;
-> > > > > +
-> > > > > +		dev_err(dev, "failed to get regulator\n");
-> > > > > +		return PTR_ERR(state->vdd);
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = regulator_enable(state->vdd);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	ret = devm_add_action_or_reset(dev, scd30_disable_regulator, state);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +  
-> > > >
-> > > > A comment here on why it makes sense to register this here.  What
-> > > > started mesurement? It seems that happens well below here so
-> > > > we should really call this after that start all.
-> > > >  
-> > >
-> > > Sensor after being powered up starts in mode it was left in.
-> > > Chances are it was continuous mode and we want to shut it down.  
-> >
-> > That's fine.  The question is why 'here' as opposed to after the below where you
-> > put it into continuous mode.
-> >  
-> 
-> Let's suppose sensor got energized and started measuring. Then without
-> registering action which stops measurement we jump to device reset etc.
-> 
-> Now if reset failed for whatever reason (same applies to everything
-> below reset) devm will gracefully unwind previous actions but sensor
-> will continue doing his job. But there's no point. Better to save some
-> milliaps for later.
-
-I'm not convinced. Note that in your example, the sensor was already on.
-If we never loaded the driver it would stay on.  We should
-deal with only problems we have potentially created.
-
-If reset fails, it shouldn't 'enable' the sensor hence we are just in
-the same state as if the driver hadn't loaded at all.  Also if reset
-fails the chance of a disable succeeding is very low.
-
-The code is much more logical with this being done immediately after
-the action to enable thing we are disabling.  So please put it down
-there.
+I think nowadays checkpatch.pl warns on wrong ordering in this data base.
 
 
-
-> 
-> In case we have real regulator then there's no real issue because
-> power gets cut off during cleanup.
-> 
-> Quite often though there's only a dummy one which does nothing useful
-> except making regulator framework happy.
-> 
-> So my thinking here is that we're slightly better off registering
-> scd30_stop_meas() action earlier to prevent such scenario from happening.
-> 
-> > >  
-> > > > > +	ret = devm_add_action_or_reset(dev, scd30_stop_meas, state);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	ret = scd30_reset(state);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "failed to reset device: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	if (state->irq > 0) {
-> > > > > +		ret = scd30_setup_trigger(indio_dev);
-> > > > > +		if (ret) {
-> > > > > +			dev_err(dev, "failed to setup trigger: %d\n", ret);
-> > > > > +			return ret;
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-> > > > > +					      scd30_trigger_handler, NULL);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	ret = scd30_command_read(state, CMD_FW_VERSION, &val);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "failed to read firmware version: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +	dev_info(dev, "firmware version: %d.%d\n", val >> 8, (char)val);
-> > > > > +
-> > > > > +	ret = scd30_command_write(state, CMD_MEAS_INTERVAL,
-> > > > > +				  state->meas_interval);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "failed to set measurement interval: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "failed to start measurement: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-Here is where we should register that cleanup handler.
-
-Jonathan
-
-> > > > > +
-> > > > > +	return devm_iio_device_register(dev, indio_dev);
-> > > > > +}
-> > > > > +EXPORT_SYMBOL(scd30_probe);
-> > > > > +
-> > > > > +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
-> > > > > +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor core driver");
-> > > > > +MODULE_LICENSE("GPL v2");
-> > > > > --
-> > > > > 2.26.2
-> > > > >  
-> > > >  
-> >
-> >  
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
