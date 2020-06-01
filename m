@@ -2,203 +2,217 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81256C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80301C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C27C2077D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:40:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VqZYir9k"
+	by mail.kernel.org (Postfix) with ESMTP id 6511F20772
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgFAKkb (ORCPT
+        id S1727875AbgFAKsJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:40:31 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:51404 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgFAKka (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 06:40:30 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200601104028euoutp0253b68944d9a4bab3c9ced8c5db8028f7~UZV9vNRSl1402414024euoutp02a
-        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 10:40:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200601104028euoutp0253b68944d9a4bab3c9ced8c5db8028f7~UZV9vNRSl1402414024euoutp02a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591008028;
-        bh=/Gdbip4R8JUAfQa6cujlq0e0Q4h2fBOUhAoNV4LwAeo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=VqZYir9kppvdPXw6Bbip7iz3RaeY/1E9izZyW1Mt7WUOnEmQd0XkDyCFXB1iSZsv3
-         VYsvblNFL7er/ORRMEn+5jhtosAixDAm1eE2DIV5jGEMC09BhgtFQ8MJUNRvRa1AsY
-         tsedVhOblA2VPkIB5/hKOYM/josL9F37NM3XmiMc=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200601104028eucas1p18a9b6c867e9c4cb90d5a9a9ad0212728~UZV9f-sJg2526625266eucas1p13;
-        Mon,  1 Jun 2020 10:40:28 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 27.93.60698.C1BD4DE5; Mon,  1
-        Jun 2020 11:40:28 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200601104027eucas1p2b076ee860520d709e8178c41550653f7~UZV8wqHUV1744917449eucas1p2J;
-        Mon,  1 Jun 2020 10:40:27 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200601104027eusmtrp2b227ba4119a30344c41228ead9a83b91~UZV8v9bf90787807878eusmtrp2b;
-        Mon,  1 Jun 2020 10:40:27 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-82-5ed4db1c01cf
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2E.7A.08375.B1BD4DE5; Mon,  1
-        Jun 2020 11:40:27 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200601104027eusmtip1adaa625ff84700328004b3295bca4bce~UZV8NBDXU0602606026eusmtip1Y;
-        Mon,  1 Jun 2020 10:40:27 +0000 (GMT)
-Subject: Re: [PATCHv1 00/19] Improve SBS battery support
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <15933a91-dd89-1f94-c2f2-79be4395f4c1@samsung.com>
-Date:   Mon, 1 Jun 2020 12:40:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKKsWRmVeSWpSXmKPExsWy7djPc7oyt6/EGbz7rGIx/8g5VovmxevZ
-        LDaf62G1uLxrDpvF594jjBYzzu9jspj7ZSqzReveI+wWd1/7WZzeXeLA5bHj7hJGj02rOtk8
-        9s9dw+7xeZNcAEsUl01Kak5mWWqRvl0CV8a3D1OYChqkKp5MPsPUwHhQrIuRk0NCwETi/cMr
-        7F2MXBxCAisYJdYdvcwI4XxhlDh94j5U5jOjxJp3SxhhWj62XmeCSCxnlHj77ycrhPOeUWLl
-        t/1sIFXCAhYSXxb9BmsXEbjDKHHnzCtWkASzwEpGiS/9ISA2m4ChRNfbLrAGXgE7iUW/T4LV
-        sAioSPw9vBJsnahArETP/VfMEDWCEidnPmEBsTkF3CSmTX3ICDFTXqJ562xmCFtc4taT+WDn
-        SQgcYpeYvvA0K8TdLhJXjtyAsoUlXh3fwg5hy0j83wnT0Mwo8fDcWnYIp4dR4nLTDKivrSXu
-        nPsFdCoH0ApNifW79CHCjhITD+9mBglLCPBJ3HgrCHEEn8SkbdOhwrwSHW1CENVqErOOr4Nb
-        e/DCJeYJjEqzkLw2C8k7s5C8Mwth7wJGllWM4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiB
-        ien0v+NfdzDu+5N0iFGAg1GJh1fj0uU4IdbEsuLK3EOMEhzMSiK8TmdPxwnxpiRWVqUW5ccX
-        leakFh9ilOZgURLnNV70MlZIID2xJDU7NbUgtQgmy8TBKdXAKHNzQU379HBWB1WDm3vkF6bc
-        XpRxN5Zt7ad56X8io281v8k40dD58ZCO4wUZt+7c6vUbNvLeqJYukYuaL3behWHC9xdFlqFe
-        5n/jpXuMQ3M3qf+McaiyZVdPimQ59iqbvff14szH/nLPFCY+E8px8F6ekjN/4Z8/eg+cn0+y
-        PCS/gEtAO1JMiaU4I9FQi7moOBEA1jBJh0gDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsVy+t/xu7rSt6/EGbzbamwx/8g5VovmxevZ
-        LDaf62G1uLxrDpvF594jjBYzzu9jspj7ZSqzReveI+wWd1/7WZzeXeLA5bHj7hJGj02rOtk8
-        9s9dw+7xeZNcAEuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5m
-        WWqRvl2CXsa3D1OYChqkKp5MPsPUwHhQrIuRk0NCwETiY+t1JhBbSGApo8SrM6EQcRmJk9Ma
-        WCFsYYk/17rYuhi5gGreMkqceLGDESQhLGAh8WXRb3aQhIjAPUaJxVca2UESzAIrGSWO7Qvq
-        YuQA6nCVWLI2CCTMJmAo0fUWZBAnB6+AncSi3yfBFrAIqEj8PbwSbKaoQKxE9+If7BA1ghIn
-        Zz5hAbE5Bdwkpk19yAgx3kxi3uaHzBC2vETz1tlQtrjErSfzmSYwCs1C0j4LScssJC2zkLQs
-        YGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERiD24793LyD8dLG4EOMAhyMSjy8F85fjhNi
-        TSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucD00NeSbyhqaG5
-        haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZG3zizWy8y5my6oz9LIp/n4TPX
-        r8o/qqcymCh/Xf8iof4m97m+4y777CM23ti2yXHio8YCbhHrAyWFPEvuG007Hpf/5siqZ8pJ
-        fk9f/57y8r3R6ZDr27nyXe6c4jLjkbK4yZxr9qyf4c6a450HZVd+C1t+Z55ymkekcuquyQ9y
-        7UKDzsTJGug4KbEUZyQaajEXFScCAFjiS2TXAgAA
-X-CMS-MailID: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
-        <CGME20200601104027eucas1p2b076ee860520d709e8178c41550653f7@eucas1p2.samsung.com>
+        Mon, 1 Jun 2020 06:48:09 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45672 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbgFAKsJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Jun 2020 06:48:09 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5EA832006EC;
+        Mon,  1 Jun 2020 12:48:06 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 612AC2006E5;
+        Mon,  1 Jun 2020 12:48:02 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4198340280;
+        Mon,  1 Jun 2020 18:47:57 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, linux@rempel-privat.de, peng.fan@nxp.com,
+        jaswinder.singh@linaro.org, hongxing.zhu@nxp.com,
+        aisheng.dong@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: mailbox: Convert imx mu to json-schema
+Date:   Mon,  1 Jun 2020 18:37:44 +0800
+Message-Id: <1591007864-30267-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Convert the i.MX MU binding to DT schema format using json-schema
 
-On 13.05.2020 20:55, Sebastian Reichel wrote:
-> This patchset improves support for SBS compliant batteries. Due to
-> the changes, the battery now exposes 32 power supply properties and
-> (un)plugging it generates a backtrace containing the following message
-> without the first patch in this series:
->
-> ---------------------------
-> WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4/0x104
-> add_uevent_var: too many keys
-> ---------------------------
->
-> For references this is what an SBS battery status looks like after
-> the patch series has been applied:
->
-> cat /sys/class/power_supply/sbs-0-000b/uevent
-> POWER_SUPPLY_NAME=sbs-0-000b
-> POWER_SUPPLY_TYPE=Battery
-> POWER_SUPPLY_STATUS=Discharging
-> POWER_SUPPLY_CAPACITY_LEVEL=Normal
-> POWER_SUPPLY_HEALTH=Good
-> POWER_SUPPLY_PRESENT=1
-> POWER_SUPPLY_TECHNOLOGY=Li-ion
-> POWER_SUPPLY_CYCLE_COUNT=12
-> POWER_SUPPLY_VOLTAGE_NOW=11441000
-> POWER_SUPPLY_CURRENT_NOW=-26000
-> POWER_SUPPLY_CURRENT_AVG=-24000
-> POWER_SUPPLY_CAPACITY=76
-> POWER_SUPPLY_CAPACITY_ERROR_MARGIN=1
-> POWER_SUPPLY_TEMP=198
-> POWER_SUPPLY_TIME_TO_EMPTY_AVG=438600
-> POWER_SUPPLY_TIME_TO_FULL_AVG=3932100
-> POWER_SUPPLY_SERIAL_NUMBER=0000
-> POWER_SUPPLY_VOLTAGE_MIN_DESIGN=10800000
-> POWER_SUPPLY_VOLTAGE_MAX_DESIGN=10800000
-> POWER_SUPPLY_ENERGY_NOW=31090000
-> POWER_SUPPLY_ENERGY_FULL=42450000
-> POWER_SUPPLY_ENERGY_FULL_DESIGN=41040000
-> POWER_SUPPLY_CHARGE_NOW=2924000
-> POWER_SUPPLY_CHARGE_FULL=3898000
-> POWER_SUPPLY_CHARGE_FULL_DESIGN=3800000
-> POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3000000
-> POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=12300000
-> POWER_SUPPLY_MANUFACTURE_YEAR=2017
-> POWER_SUPPLY_MANUFACTURE_MONTH=7
-> POWER_SUPPLY_MANUFACTURE_DAY=3
-> POWER_SUPPLY_MANUFACTURER=UR18650A
-> POWER_SUPPLY_MODEL_NAME=GEHC
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/mailbox/fsl,mu.txt         | 58 --------------
+ .../devicetree/bindings/mailbox/fsl,mu.yaml        | 89 ++++++++++++++++++++++
+ 2 files changed, 89 insertions(+), 58 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
 
-This patch landed in linux-next dated 20200529. Sadly it causes a 
-regression on Samsung Exynos-based Chromebooks (Exynos5250 Snow, 
-Exynos5420 Peach-Pi and Exynos5800 Peach-Pit). System boots to 
-userspace, but then, when udev populates /dev, booting hangs:
-
-[    4.435167] VFS: Mounted root (ext4 filesystem) readonly on device 
-179:51.
-[    4.457477] devtmpfs: mounted
-[    4.460235] Freeing unused kernel memory: 1024K
-[    4.464022] Run /sbin/init as init process
-INIT: version 2.88 booting
-[info] Using makefile-style concurrent boot in runlevel S.
-[    5.102096] random: crng init done
-[....] Starting the hotplug events dispatcher: systemd-udevdstarting 
-version 236
-[ ok .
-[....] Synthesizing the initial hotplug events...[ ok done.
-[....] Waiting for /dev to be fully populated...[   34.409914] 
-TPS65090_RAILSDCDC1: disabling
-[   34.412977] TPS65090_RAILSDCDC2: disabling
-[   34.417021] TPS65090_RAILSDCDC3: disabling
-[   34.423848] TPS65090_RAILSLDO1: disabling
-[   34.429068] TPS65090_RAILSLDO2: disabling
-
-Bisect between v5.7-rc1 and next-20200529 pointed me to the first bad 
-commit: [c4b12a2f3f3de670f6be5e96092a2cab0b877f1a] power: supply: 
-sbs-battery: simplify read_read_string_data. However reverting it in 
-linux-next doesn't fix the issue, so the next commits are also relevant 
-to this issue.
-
-Let me know how can I help debugging it.
-
-Best regards
+diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+deleted file mode 100644
+index 26b7a88..0000000
+--- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
++++ /dev/null
+@@ -1,58 +0,0 @@
+-NXP i.MX Messaging Unit (MU)
+---------------------------------------------------------------------
+-
+-The Messaging Unit module enables two processors within the SoC to
+-communicate and coordinate by passing messages (e.g. data, status
+-and control) through the MU interface. The MU also provides the ability
+-for one processor to signal the other processor using interrupts.
+-
+-Because the MU manages the messaging between processors, the MU uses
+-different clocks (from each side of the different peripheral buses).
+-Therefore, the MU must synchronize the accesses from one side to the
+-other. The MU accomplishes synchronization using two sets of matching
+-registers (Processor A-facing, Processor B-facing).
+-
+-Messaging Unit Device Node:
+-=============================
+-
+-Required properties:
+--------------------
+-- compatible :	should be "fsl,<chip>-mu", the supported chips include
+-		imx6sx, imx7s, imx8qxp, imx8qm.
+-		The "fsl,imx6sx-mu" compatible is seen as generic and should
+-		be included together with SoC specific compatible.
+-		There is a version 1.0 MU on imx7ulp, use "fsl,imx7ulp-mu"
+-		compatible to support it.
+-		To communicate with i.MX8 SCU, "fsl,imx8-mu-scu" could be
+-		used for fast IPC
+-- reg :		Should contain the registers location and length
+-- interrupts :	Interrupt number. The interrupt specifier format depends
+-		on the interrupt controller parent.
+-- #mbox-cells:  Must be 2.
+-			  <&phandle type channel>
+-			    phandle   : Label name of controller
+-			    type      : Channel type
+-			    channel   : Channel number
+-
+-		This MU support 4 type of unidirectional channels, each type
+-		has 4 channels. A total of 16 channels. Following types are
+-		supported:
+-		0 - TX channel with 32bit transmit register and IRQ transmit
+-		acknowledgment support.
+-		1 - RX channel with 32bit receive register and IRQ support
+-		2 - TX doorbell channel. Without own register and no ACK support.
+-		3 - RX doorbell channel.
+-
+-Optional properties:
+--------------------
+-- clocks :	phandle to the input clock.
+-- fsl,mu-side-b : Should be set for side B MU.
+-
+-Examples:
+---------
+-lsio_mu0: mailbox@5d1b0000 {
+-	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+-	reg = <0x0 0x5d1b0000 0x0 0x10000>;
+-	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+-	#mbox-cells = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml b/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
+new file mode 100644
+index 0000000..93db996
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mailbox/fsl,mu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP i.MX Messaging Unit (MU)
++
++maintainers:
++  - Dong Aisheng <aisheng.dong@nxp.com>
++
++description: |
++  The Messaging Unit module enables two processors within the SoC to
++  communicate and coordinate by passing messages (e.g. data, status
++  and control) through the MU interface. The MU also provides the ability
++  for one processor to signal the other processor using interrupts.
++
++  Because the MU manages the messaging between processors, the MU uses
++  different clocks (from each side of the different peripheral buses).
++  Therefore, the MU must synchronize the accesses from one side to the
++  other. The MU accomplishes synchronization using two sets of matching
++  registers (Processor A-facing, Processor B-facing).
++
++properties:
++  compatible:
++    oneOf:
++      - const: fsl,imx6sx-mu
++      - const: fsl,imx7ulp-mu
++      - const: fsl,imx8-mu-scu
++      - items:
++          - enum:
++            - fsl,imx7s-mu
++            - fsl,imx8mq-mu
++            - fsl,imx8mm-mu
++            - fsl,imx8mn-mu
++            - fsl,imx8mp-mu
++            - fsl,imx8qxp-mu
++          - const: fsl,imx6sx-mu
++      - description: To communicate with i.MX8 SCU with fast IPC
++        items:
++          - const: fsl,imx8qxp-mu
++          - const: fsl,imx8-mu-scu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  "#mbox-cells":
++    description: |
++      <&phandle type channel>
++      phandle   : Label name of controller
++      type      : Channel type
++      channel   : Channel number
++
++      This MU support 4 type of unidirectional channels, each type
++      has 4 channels. A total of 16 channels. Following types are
++      supported:
++      0 - TX channel with 32bit transmit register and IRQ transmit
++          acknowledgment support.
++      1 - RX channel with 32bit receive register and IRQ support
++      2 - TX doorbell channel. Without own register and no ACK support.
++      3 - RX doorbell channel.
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  fsl,mu-side-b:
++    description: boolean, if present, means it is for side B MU.
++    type: boolean
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    mailbox@5d1b0000 {
++        compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
++        reg = <0x0 0x5d1b0000 0x0 0x10000>;
++        interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
++        #mbox-cells = <2>;
++    };
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.7.4
 
