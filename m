@@ -2,116 +2,118 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE02C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 12:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25290C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 12:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A99207D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 12:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591014690;
-	bh=DEEaUOEt24o9uKz0Ey7PzyuEOfgwa1FgnGsP3iqM8hA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JorFtAj6GbQ3D5bY1w6W2uFKnjZ8jufjMi3ePq4s4VLH9ZC80eQwj5rCTwbTMde0L
-	 tmW68SL+4qRyzNCeScbJ6CXdmT/mhWMhX/N5OZmNM8xuOVFsxBw3e0gR6suKDWPe6F
-	 a5xRnshZkfME18inosllJc1sDEfH29yHSME5WwGg=
+	by mail.kernel.org (Postfix) with ESMTP id 0529220679
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 12:41:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vOYbWtug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbgFAMb3 (ORCPT
+        id S1726110AbgFAMlm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40008 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 08:41:42 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:38799 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbgFAMb3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 1 Jun 2020 08:31:29 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725978AbgFAMlk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Jun 2020 08:41:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591015299; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=8+lCDm9rpKrJa4R0/IaBeE0FRek83VnCPFNnXBqhPck=; b=vOYbWtugp8a4Vyx5lrH/OkC2FsUkCnlYJwwJGyI53GcTElua1ogIPMdtzrTjYnpeib8tPFiA
+ kRkonuWFrjuU0HtEJzgAo5VXYNHac5qEzEBTmuO4L7j4yGun9WHHBR9BdDW/Noqe8XYHftTQ
+ tJjRin6AREaO1VjuPba2ufAf/fQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5ed4f77276fccbb4c839e7d9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 12:41:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 48CC8C433CB; Mon,  1 Jun 2020 12:41:21 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [49.207.141.73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D68CF20679;
-        Mon,  1 Jun 2020 12:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591014689;
-        bh=DEEaUOEt24o9uKz0Ey7PzyuEOfgwa1FgnGsP3iqM8hA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0CjmdrqbPcjg4n3n7xmuSB+DmHeJBjq9UcdxGvTjQEnWpKeZ3MrsgddfBUnWzKJEX
-         zzmb3e4pB8bSjWojsKLWXrWFmLzMj/Mfuv1pUg7fPKOMOabVdq7MnoClr2ZC5eCd8v
-         9y9NdiEc4U84iYsuML66RjoGviT9y1faIlL87DX8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jfjbD-00Gtms-CX; Mon, 01 Jun 2020 13:31:27 +0100
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7A917C433C6;
+        Mon,  1 Jun 2020 12:41:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7A917C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V6 4/5] clk: qcom: Add ipq6018 apss clock controller
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org
+References: <1590582292-13314-1-git-send-email-sivaprak@codeaurora.org>
+ <1590582292-13314-5-git-send-email-sivaprak@codeaurora.org>
+ <159063116486.69627.5280506237179820811@swboyd.mtv.corp.google.com>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <824cd7bb-0971-d387-4b78-75c36ddf2f66@codeaurora.org>
+Date:   Mon, 1 Jun 2020 18:11:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <159063116486.69627.5280506237179820811@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 01 Jun 2020 13:31:27 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 0/6] mips: Add DT bindings for MIPS CDMM and
- MIPS GIC
-In-Reply-To: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <d59ef33155e2ae965e79522ab220c177@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: Sergey.Semin@baikalelectronics.ru, tsbogend@alpha.franken.de, tglx@linutronix.de, gregkh@linuxfoundation.org, fancer.lancer@gmail.com, Alexey.Malahov@baikalelectronics.ru, paul.burton@imgtec.com, robh+dt@kernel.org, arnd@arndb.de, jason@lakedaemon.net, rjw@rjwysocki.net, daniel.lezcano@linaro.org, jhogan@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-01 13:21, Serge Semin wrote:
+Hi Stepen,
 
-[...]
+On 5/28/2020 7:29 AM, Stephen Boyd wrote:
+> Quoting Sivaprakash Murugesan (2020-05-27 05:24:51)
+>> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6018.c
+>> new file mode 100644
+>> index 0000000..004f7e1
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/apss-ipq6018.c
+>> @@ -0,0 +1,106 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/err.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/module.h>
+>> +
+>> +#include <dt-bindings/clock/qcom,apss-ipq.h>
+>> +
+>> +#include "common.h"
+>> +#include "clk-regmap.h"
+>> +#include "clk-branch.h"
+>> +#include "clk-alpha-pll.h"
+>> +#include "clk-regmap-mux.h"
+>> +
+>> +enum {
+>> +       P_XO,
+>> +       P_APSS_PLL_EARLY,
+>> +};
+>> +
+>> +static const struct clk_parent_data parents_apcs_alias0_clk_src[] = {
+>> +       { .fw_name = "xo" },
+>> +       { .fw_name = "pll" },
+> This pll clk is not described in the binding. Please add it there.
 
-> Since Paul isn't looking after the MIPS arch code anymore, Ralf hasn't
-> been seen maintaining MIPS for a long time, Thomas is only responsible
-> for the next part of it:
-> 	F:      Documentation/devicetree/bindings/mips/
-> 	F:      Documentation/mips/
-> 	F:      arch/mips/
-> 	F:      drivers/platform/mips/
-> the MIPS-specific drivers like:
-> 	F:	drivers/bus/mips_cdmm.c
-> 	F:	drivers/irqchip/irq-mips-cpu.c
-> 	F:	drivers/irqchip/irq-mips-gic.c
-> 	F:	drivers/clocksource/mips-gic-timer.c
-> 	F:	drivers/cpuidle/cpuidle-cps.c
-> seem to be left for the subsystems maintainers to support. So if you 
-> don't
-> mind or unless there is a better alternative, I can help with looking
-> after them to ease the maintainers review burden and since I'll be 
-> working
-> on our MIPS-based SoC drivers integrating into the mainline kernel repo
-> anyway. If you don't like this idea, please just decline the last
-> patch in the series.
+Sorry I did not get this, this PLL is not directly defined in this 
+driver and it comes
 
-Given how deeply integrated the MIPS GIC is in the architecture, I'd
-really like Thomas to co-maintain it, or at the very least give his
-blessing on you being the dedicated point of contact for MIPS GIC
-stuff.
+from dts. do you still want to describe it in binding?
 
-Thanks,
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
