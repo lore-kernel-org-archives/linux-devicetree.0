@@ -2,94 +2,115 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA41C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC08DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D160F2068D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B95207D0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591045821;
-	bh=Epi+B5a14ZLrdBjYroHkIYz4oFK780AX3h54uLpHhI0=;
+	s=default; t=1591047144;
+	bh=9JPZ7ogAFTl3QiXoGBf+EmzaVaO486lPb/IEExnpaMs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s5VrhEPtCD+cQOQzKueTDJKYAc0OmfWWnKvQ72ChdIHrqyLwFhbuncP06Wr3TQfTE
-	 pkV6dGQO+fyU4oe+34DXgVt4pKW6Pu+XZ9Sch5v9Bsix7Eo4RFYeO2nVoG/jKojrr5
-	 XqdHSTY4PREMprDoGQ2i2IUjtKlrbp01HqCNrnts=
+	b=sWNDUxkZAiJcErSUqwLHYTlPrv3gAr9jRaOWh7c31BrCM2SElC+mgk4jPWpINpDyi
+	 M8sAagyK/Rp+7ocdsgZll/vYXiZvWHrYVdrFKRJ69zDoT0vRvwpKuN6a+du8tTpqIf
+	 ybob70fMZDuuVAGci+UpFSrM+bVi36sb/3tdpko4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgFAVKR (ORCPT
+        id S1728216AbgFAVcU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:10:17 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39981 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgFAVKR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 17:10:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id q8so8495236iow.7;
-        Mon, 01 Jun 2020 14:10:16 -0700 (PDT)
+        Mon, 1 Jun 2020 17:32:20 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37618 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgFAVcT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 17:32:19 -0400
+Received: by mail-il1-f194.google.com with SMTP id r2so10856883ila.4;
+        Mon, 01 Jun 2020 14:32:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=EWFsJ8KquEamPSHLBCsWKX7Wk2ZEpcA0iDByLeFaMOk=;
-        b=ZvC2OsA7VSTQmEXAXhxPuegfnqu0bP3fb6w4bUGpQbFexPIEw4FLnEUu2EKPT4ovZ3
-         cnq38qIgBYtbsbzYOodqeFPdD7yX4xBMN6g3Xj52+TSG5jMD+e4kny1CNz/845Y+fHva
-         14DVsMTOsvNTW4/u3xVSOl5+ZKb1WsYQZMuaAtsK1xZfmk7GDmb3FQB0jeaUUEOToVKY
-         2FAYpi9MuHcfzKujnsrcgeq3hW21qora9sUrDSsde/n4ozP1jKtjvz/OqEL8UTI2OrDV
-         AIbM4K0MQCxED3e4ZcqIupG34ht8Arpnrt6aN2My5T8dJTLiCfmHm6iRYSSep5uW5MpV
-         Xe8Q==
-X-Gm-Message-State: AOAM531RLAqrprQq8fpyocRIIOne1/9tA65gKcAbNycn6pLXaGhRXPOB
-        bSCglSBnXHK4mkbYTPpihw==
-X-Google-Smtp-Source: ABdhPJzmCg/sHwePu42Cw+EiO+dOJNrVLw/0YD3MZLKZeR5d6kmgwS0LnOT6i5dVqu5Fl2O7AEvdgw==
-X-Received: by 2002:a02:3f0f:: with SMTP id d15mr21521006jaa.138.1591045816050;
-        Mon, 01 Jun 2020 14:10:16 -0700 (PDT)
+        bh=KmqdPjmKi1JsFB5M9JoF0ic/ni7mUj8Ld/K9RQPC/wI=;
+        b=e0a+jScmWNqrb1cqt9kF/Yf5FqXC3FnBxiWLCUg77EIAOMtOt/1/qNjLYWCJ3TNLMG
+         45aBKM51Bfrk+w14s2MRm3KowkAeQhjonoy32UXYd5AUkgoZwTNPbrudydhnG1LBxLWr
+         DRICS9IEPAsMnteJUhI2RNAat6M8dBbLgBZG0UowggJRbTWN0WquHOeWZZk8hSohSfOz
+         YRfPIXm+ucUTr+CEBajJBRqpO4594UicjpSOjAfJV0qTcqjQ8MTu3Jv4/aOiBmfQiJZM
+         O+7Du82Y52WocjNCp2B2Gj4o7fHx/eaYKdd3rn6jKQLC7vObgOYpqQDEnX74Ray/xIJx
+         dr1A==
+X-Gm-Message-State: AOAM5334b7qGfx+1lePR5mf6tV4DSMd2R3YxC4l0B5E8Eng59R/dlZHQ
+        MO7DvXO26vO7VWCUSwPljw==
+X-Google-Smtp-Source: ABdhPJxcDy18dpk1MqV1lWeF44sQZHoChgAxfWTvpW2F+X+1hLmjYqir/8cNHemHgkNLDjDLv0WK7Q==
+X-Received: by 2002:a05:6e02:13a9:: with SMTP id h9mr3518316ilo.20.1591047137611;
+        Mon, 01 Jun 2020 14:32:17 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t9sm333655ilg.74.2020.06.01.14.10.14
+        by smtp.gmail.com with ESMTPSA id b10sm396689ilb.2.2020.06.01.14.32.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 14:10:15 -0700 (PDT)
-Received: (nullmailer pid 1502746 invoked by uid 1000);
-        Mon, 01 Jun 2020 21:10:13 -0000
-Date:   Mon, 1 Jun 2020 15:10:13 -0600
+        Mon, 01 Jun 2020 14:32:16 -0700 (PDT)
+Received: (nullmailer pid 1537618 invoked by uid 1000);
+        Mon, 01 Jun 2020 21:32:15 -0000
+Date:   Mon, 1 Jun 2020 15:32:15 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        devicetree@vger.kernel.org,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 10/10] PCI: qcom: Add Force GEN1 support
-Message-ID: <20200601211013.GA1502690@bogus>
-References: <20200514200712.12232-1-ansuelsmth@gmail.com>
- <20200514200712.12232-11-ansuelsmth@gmail.com>
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v2 4/5] PCI: uniphier: Add iATU register support
+Message-ID: <20200601213215.GA1521885@bogus>
+References: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1589536743-6684-5-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514200712.12232-11-ansuelsmth@gmail.com>
+In-Reply-To: <1589536743-6684-5-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 14 May 2020 22:07:11 +0200, Ansuel Smith wrote:
-> From: Sham Muthayyan <smuthayy@codeaurora.org>
+On Fri, May 15, 2020 at 06:59:02PM +0900, Kunihiko Hayashi wrote:
+> This gets iATU register area from reg property. In Synopsis DWC version
+> 4.80 or later, since iATU register area is separated from core register
+> area, this area is necessary to get from DT independently.
 > 
-> Add Force GEN1 support needed in some ipq8064 board that needs to limit
-> some PCIe line to gen1 for some hardware limitation. This is set by the
-> max-link-speed binding and needed by some soc based on ipq8064. (for
-> example Netgear R7800 router)
-> 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index a8dda39..493f105 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -447,6 +447,13 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->pci.dbi_base))
+>  		return PTR_ERR(priv->pci.dbi_base);
+>  
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
+> +	if (res) {
+> +		priv->pci.atu_base = devm_pci_remap_cfg_resource(dev, res);
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This isn't config space, so this function shouldn't be used.
+
+Use devm_platform_ioremap_resource_byname().
+
+> +		if (IS_ERR(priv->pci.atu_base))
+> +			priv->pci.atu_base = NULL;
+> +	}
+> +
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+>  	priv->base = devm_ioremap_resource(dev, res);
+
+Feel free to convert this one too.
+
+>  	if (IS_ERR(priv->base))
+> -- 
+> 2.7.4
+> 
