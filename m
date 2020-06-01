@@ -2,111 +2,114 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B622C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BB1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1AE206E2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:43:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591047787;
-	bh=uLa7Si1QGqmdKzqCdgycL5Os6wjAozKeff/H2hDefyE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V9OXzfYlzmIPF0spm7ADkwZKwY2wgV2qVrCqTZxhXdOmfbxkM1TXZgrCF9X/0w/LH
-	 S0TIp0R0pbSB1Bfs+lDGe6cSE2IpmwEkWOqUsxEnUK9SWn2gS+qU/hODKDdORmdgXr
-	 Ve5+sqteg3txrOfStiOToixM0ahhgQpSEP8Y9Nh4=
+	by mail.kernel.org (Postfix) with ESMTP id DCD132073B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgFAVnG (ORCPT
+        id S1729800AbgFAV5S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:43:06 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38459 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728846AbgFAVnF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 17:43:05 -0400
-Received: by mail-il1-f193.google.com with SMTP id b5so4720446iln.5;
-        Mon, 01 Jun 2020 14:43:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=h6bmu3CJcmV/9le9YJQNFFMA2nIiHEqBi68n/JP+HZg=;
-        b=GIBpUgXLGNQtvFt1EWaoJF3RlvYpSbbvRcJ0vLAJkJ9CWrSptqT1gHLtcB0/6T0k0v
-         reao62fnjV0XRf5TCK4DpU+XtH7ep1fKtL0A/DbGVMgeKnlbEWjmEMwjmhzphAWRqmXO
-         Oop1FBDbk4TACltLAzmMSOqbUlw3475yR7dQ6bFIEM0q5nu2bRLWgOa60dIT4gG6yjyR
-         etKx1r4fmvInn7F/8YXDofYZIWHPzYi66JD50XyHm/a9/sehxaYlrgkue4vOFo900r8T
-         S9u9rTBYj6IVRZDdm2eW/HrkyT4ES3PrqDA+0ZEEQ1AOrdpt4fi3LqZVRdtkf2UFBrxW
-         zC3g==
-X-Gm-Message-State: AOAM533467UdltmP5nTId3MNKEV26T91g75gVlFZScGmlxOmEQz7JJC1
-        aw4zBLAsTa4hFB+02hOumw==
-X-Google-Smtp-Source: ABdhPJyjdTs1k1AJmK5ghDCtRiwra/ZwCyc7YXPiOjDJbc7itj5xSqUIw+cqQ9LzQTmIn5vJwpBTSQ==
-X-Received: by 2002:a05:6e02:e53:: with SMTP id l19mr5346647ilk.96.1591047783964;
-        Mon, 01 Jun 2020 14:43:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id g4sm387323ilj.45.2020.06.01.14.43.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 14:43:03 -0700 (PDT)
-Received: (nullmailer pid 1554558 invoked by uid 1000);
-        Mon, 01 Jun 2020 21:43:02 -0000
-Date:   Mon, 1 Jun 2020 15:43:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v2 5/5] PCI: uniphier: Add error message when failed to
- get phy
-Message-ID: <20200601214302.GA1538223@bogus>
-References: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1589536743-6684-6-git-send-email-hayashi.kunihiko@socionext.com>
+        Mon, 1 Jun 2020 17:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728917AbgFAV5S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 17:57:18 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD184C061A0E;
+        Mon,  1 Jun 2020 14:57:17 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 16EE92A24B9
+Received: by earth.universe (Postfix, from userid 1000)
+        id 921263C08C7; Mon,  1 Jun 2020 23:57:13 +0200 (CEST)
+Date:   Mon, 1 Jun 2020 23:57:13 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCHv1 00/19] Improve SBS battery support
+Message-ID: <20200601215713.kefq72upysjjlrwm@earth.universe>
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+ <20200529162704.GA3709@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zdj3sjeruhoqdhgk"
 Content-Disposition: inline
-In-Reply-To: <1589536743-6684-6-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20200529162704.GA3709@amd>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 06:59:03PM +0900, Kunihiko Hayashi wrote:
-> Even if phy driver doesn't probe, the error message can't be distinguished
-> from other errors. This displays error message caused by the phy driver
-> explicitly.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index 493f105..7ae9688 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -468,8 +468,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(priv->rst);
->  
->  	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
-> -	if (IS_ERR(priv->phy))
-> -		return PTR_ERR(priv->phy);
-> +	if (IS_ERR(priv->phy)) {
-> +		ret = PTR_ERR(priv->phy);
-> +		dev_err(dev, "Failed to get phy (%d)\n", ret);
 
-This will print an error on EPROBE_DEFERRED which isn't an error.
+--zdj3sjeruhoqdhgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +		return ret;
-> +	}
->  
->  	platform_set_drvdata(pdev, priv);
->  
-> -- 
-> 2.7.4
-> 
+Hi,
+
+On Fri, May 29, 2020 at 06:27:04PM +0200, Pavel Machek wrote:
+> > This patchset improves support for SBS compliant batteries. Due to
+> > the changes, the battery now exposes 32 power supply properties and
+> > (un)plugging it generates a backtrace containing the following message
+> > without the first patch in this series:
+> >=20
+> > ---------------------------
+> > WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4=
+/0x104
+> > add_uevent_var: too many keys
+> > ---------------------------
+> >=20
+> > For references this is what an SBS battery status looks like after
+> > the patch series has been applied:
+> >=20
+> > POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D10800000
+> > POWER_SUPPLY_VOLTAGE_MAX_DESIGN=3D10800000
+>=20
+> Is that correct, BTW? sounds like these should not be equal...
+
+(Some) GE batteries have weird values stored in the SBS chip.
+For example manufacturer and model name are swapped:
+
+POWER_SUPPLY_MANUFACTURER=3DUR18650A
+POWER_SUPPLY_MODEL_NAME=3DGEHC
+
+I carefully checked manufacturer/model name when writing these
+patches some time ago and came to the conclusion that the batteries
+do report it the wrong way around.
+
+I will have a look for the design voltages (which are not modified
+by this patchset), but I expect this to be another GE specific thing.
+
+-- Sebastian
+
+--zdj3sjeruhoqdhgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7VebQACgkQ2O7X88g7
++ppwnw/+OxP+ohJdLekmFK9Z6xByRmB746XuY51AvyPxPn1i+6BYCNYiF9BH1H6H
+NigPpmlgaNOPVVAQGaB67rlIAEVFgOM893vY6BQEWqK8kf/cwGDy0z0OyMvQIct2
+j4seRHmom2gfHWsmrZIsD1O1LO3ENwkIMFXBDt1r/Km5UPdChoQ84qdGpIWbBQKC
+19AnKoMaQSERyZZne2vHqBmDDmnxo2P7burzUhPSMV2h//1XXeW2s1uEZiKie7xn
+5llxeOWHScN50sS7V69ZFjMSYYN5poLsk4KyQhJo0WnMZIY0G3+gO8BK4UbncsOy
+jBSv1iEnGRnFt2f3Sfn6Jn9Dq+nSJCY95S/Ho4aPFcdUsaGApnJcTkAF9xxMfugG
+i0kFZLvUCThcwOekMZvxjZjD5tk0cWQlJ1HNMwsBO9ZVXOFBSMiL8QY/f2VdF70n
+kQ7sEgdAHelkgVrrsynWY0GcBqH9/QdUpFxu3xwUqb4kVV+DB0K5ZCzp0Iot9GQR
+I3w4MB60c6DJ9xAbrRr5+WcX2IT+GvzzS0boe/yw7rq2thVcsrzBTvPlPNqmj3l8
+m5ML0+rCNDzHsRzfyKavXrkf0OLW+tIAn7m+7HbOWM/2xf4tsBKVHidB7Zkr3bEi
+ml/3Ht7zNUy2MDWNWOPu8PWqNjW637qt1cxd38lhCtFdxsbMII8=
+=mJgM
+-----END PGP SIGNATURE-----
+
+--zdj3sjeruhoqdhgk--
