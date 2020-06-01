@@ -2,399 +2,825 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36746C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 20:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC890C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 20:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7602074B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 20:29:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silexinside.onmicrosoft.com header.i=@silexinside.onmicrosoft.com header.b="fzxouead"
+	by mail.kernel.org (Postfix) with ESMTP id 7471B2074B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 20:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591043966;
+	bh=POGreWoK64eDZqpUz0n8fRveebmSpfNktg7zl1wjyG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NOng7iIqkbP8NJrlO98qpC2cIUv9Fw0VMqGLBgMOoRE/BIdxkNXYsRUPPTgbEBgoy
+	 GY8m4SeRU89I8y9iUWD8J8Zu2nJrEI/jbyC2qIyTYD0kTrWPZxDfIWigvyTHkOF1XV
+	 kulngTqJrcNHQU7675zLgKLYTKNvB0IGbk6bvrNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgFAU3u (ORCPT
+        id S1728309AbgFAUj0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:29:50 -0400
-Received: from mail-ve1eur02hn2208.outbound.protection.outlook.com ([52.100.10.208]:41954
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727096AbgFAU3t (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:29:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JkL6K199weMsz11bCFH1sSwFZIHnGeUPiyWYyoVydu9DZKX3RSIPswQV1oKcY0aPJwW164UfS5jIw+RtgNuPHxREUofHwHS0hJo9LWclF3YO8LIn3KLE+DXUF9F97MyYmQ6soumEfkyI3ICsjfM63wQ73fy+UybvkJUBjAYCqItsg+myXPKapXFpRu2ou11LrwfmquZlNZSh771HrILni6lIm/a48/e3uVSKFlbA5tdI/skDOzkyVaDuvHFpz4a7lPOvLNkjyVCc1xeMJOD27FWvYA4I/0TcKQoNB21XWjycv7pgNt9dTQbTMTySCFSOu8fksgsXO4lMf+SGcBwNPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P98AxuA238ck8FmM+g+MmiMc9CbnOmaoD8MOmMmXuhc=;
- b=V+GBF3LoFaLmAHMg53hAVycmb5zkk/EAElMuzqyED0+0UTtVqKi3E3BVyLH/YYeO818rdrIw7NL6VZbgJF0aIk7lHc6FW7T8NWZlW+bDqQTJ3Op9H5DObeAQ0zNUp3fxaSlYNyqPZsTnltuYgzbNRqQey+4eVZMC7/lE4rk5j0xblPd1PR2eAgliszTwO2hoeCL3Vdp8htb+XWdLkkizjKkuMQ5qvqoyad1kWifLfpczDMfE5UANBfSYSZ0CB0YaS5aLYLoNQQVkVXMfRUt0eGvMH0qNZqefGfIcJFG+IqvP0jGIv0Up0weI4Ar4ZLvL96N9lKa/ie17wtvvqQT7+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silexinsight.com; dmarc=pass action=none
- header.from=silexinsight.com; dkim=pass header.d=silexinsight.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silexinside.onmicrosoft.com; s=selector2-silexinside-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P98AxuA238ck8FmM+g+MmiMc9CbnOmaoD8MOmMmXuhc=;
- b=fzxoueadIebmEBqYfmM//hK09DWoiENocR0Lmy7aRUavZlHrxybtppm7kisMhbs3WJKslYllYF0bZV5cj/v/lzXU5UQtUqpi9qYS1hEZok47Zl0D+OQKmmlkYux2WGeNGyM9FAMePN+wDjOwLwwkGz+IoS2iwAWVqIdF5rCu3Hc=
-Authentication-Results: selenic.com; dkim=none (message not signed)
- header.d=none;selenic.com; dmarc=none action=none
- header.from=silexinsight.com;
-Received: from AM7PR09MB3621.eurprd09.prod.outlook.com (2603:10a6:20b:10d::15)
- by AM7PR09MB3957.eurprd09.prod.outlook.com (2603:10a6:20b:11f::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Mon, 1 Jun
- 2020 20:28:04 +0000
-Received: from AM7PR09MB3621.eurprd09.prod.outlook.com
- ([fe80::e902:acdf:8750:e9e2]) by AM7PR09MB3621.eurprd09.prod.outlook.com
- ([fe80::e902:acdf:8750:e9e2%8]) with mapi id 15.20.3045.024; Mon, 1 Jun 2020
- 20:28:04 +0000
-From:   Olivier Sobrie <olivier.sobrie@silexinsight.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Olivier Sobrie <olivier.sobrie@silexinsight.com>,
-        Waleed Ziad <waleed94ziad@gmail.com>,
-        sebastien.rabou@silexinsight.com
-Subject: [PATCH v2 2/2] hwrng: ba431-rng: add support for BA431 hwrng
-Date:   Mon,  1 Jun 2020 16:27:40 +0200
-Message-Id: <20200601142740.443548-3-olivier.sobrie@silexinsight.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601142740.443548-1-olivier.sobrie@silexinsight.com>
-References: <20200601142740.443548-1-olivier.sobrie@silexinsight.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM4PR0902CA0004.eurprd09.prod.outlook.com
- (2603:10a6:200:9b::14) To AM7PR09MB3621.eurprd09.prod.outlook.com
- (2603:10a6:20b:10d::15)
+        Mon, 1 Jun 2020 16:39:26 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40625 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgFAUjZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 16:39:25 -0400
+Received: by mail-io1-f66.google.com with SMTP id q8so8402742iow.7;
+        Mon, 01 Jun 2020 13:39:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GsGD2e7wg/l5ei8VQR4vviC5Q+PPU7coRhtReRBfiXE=;
+        b=otQmzsQixQ4OwyumNk+BiNQ3oRZesSNrU3AzJVbUh2DrSPG+nLm7z2GY+a0sVckIow
+         P2rO9siu+Ogm5Zntm3xo4qSizNnp4+SWefTSbiDagvl5lT1q6dbNugCmAybkKcHluz+d
+         PKhc6OI5QrHrzUExbq9n5QI5XB23oazJEbu7D42AYoP+hC0OdA1iHlafneqWLXvI+pmb
+         akF2q2DsOKgwvUVpieY8xFxHqBqtoMF6HnJ2o/9kOl0/aHJN+QQb5aQjvMxTQ1NxBtiP
+         MDGMTRvIa7gziTsHZzXn6NXGdVhtn6wQetcozfTcT72mva4dcvVrUM1QlXxD1KPcTfd+
+         xQbA==
+X-Gm-Message-State: AOAM5331XrIn7MTQmIZkmruy4UWP7ojs8Pjuknuh6s10Up9sVrAtH0RJ
+        1zUfQPz2JgdPzyl4jg3Z69r7NGA=
+X-Google-Smtp-Source: ABdhPJzDhEzHSwJ7yPULpgZ1GbBVAi7hDmu2BLiYOQL9SpF0S83YRw/wnLzWiiOvriQzY9G8rGBukw==
+X-Received: by 2002:a5d:87c4:: with SMTP id q4mr20833946ios.169.1591043962839;
+        Mon, 01 Jun 2020 13:39:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id r68sm329553ilb.37.2020.06.01.13.39.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 13:39:21 -0700 (PDT)
+Received: (nullmailer pid 1452446 invoked by uid 1000);
+        Mon, 01 Jun 2020 20:39:21 -0000
+Date:   Mon, 1 Jun 2020 14:39:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daire.McNamara@microchip.com
+Cc:     amurray@thegoodpenguin.co.uk, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        devicetree@vger.kernel.org
+Subject: Re: Subject: [PATCH v9 2/2] PCI: Microchip: Add host driver for
+ Microchip PCIe controller
+Message-ID: <20200601203921.GA1345403@bogus>
+References: <f08d04901b66a1d2d9329d5cc6bb47864d66254f.camel@microchip.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (2a02:a03f:a7df:f300:3173:2902:9670:18b) by AM4PR0902CA0004.eurprd09.prod.outlook.com (2603:10a6:200:9b::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Mon, 1 Jun 2020 20:28:04 +0000
-X-Mailer: git-send-email 2.26.2
-X-Originating-IP: [2a02:a03f:a7df:f300:3173:2902:9670:18b]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fb4e32b0-b204-42dd-a0a5-08d8066a49cf
-X-MS-TrafficTypeDiagnostic: AM7PR09MB3957:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM7PR09MB3957237DAEF0AFCCFE010443F48A0@AM7PR09MB3957.eurprd09.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0421BF7135
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: o3wiO/n7YuKj+4tKryltFKOp1J39yjj38WvhvyQZtHd8mKGcyi5ZEnFX7Ss9Pisb5fYyY0jqgo1KlG/CnSDbEPCiejQabDEu6wYHCdOAI5oJIPcjLtbEJs2sY4CS7ObdA62xYOsmExFo3czK/CQE4w+QJENkttQB8397rwTQJtCtZQXK1f/thnriaqw+QR+6FqhD2UxN0XBukA/PRKgCAkgBKzqGYxThBiy8Ra+aOuEJmv+XpiN+Biz47NYlEBd5ayWz0o0jTsZWeqIrpJhvLZz0IeOmLIrGwKCoreo5TrDQ+NUgsiUT4j526hHts5nptj7Mbl0rmB3jBrXKEUvVvrzq+hmoPYISknw9Flk5DWaJOtx/kjPWG4XO++3EY7CYmcVdj+rAHQvBKkENXR2BQZiN7FPJbQAugivKmSyAriFbkVgLEvR/JQTjWQQdguhSLDWU55bV5jTtlXIZhjSwi7E3GGSzEvVGLdvw4rwzB0vciWU/r3JCZqtHVf/BJcthC9HnX92QQNHmN/V5m3vmLll4Ld6XFn0niV4q2mwqarDFJTB4zMwG3Hhq1hL7NFxV2I7u82art0J84dK6ovhwDBo3EXkmHSqt5Ky3Svbeb52+67PBPJtqriqWNE2urdS/Ti7cjAPqF8mWTtGsgU89z29eGbLEhHYUboItuVheFlucGBqgLvFKn4BqTiuXvaz3
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:AM7PR09MB3621.eurprd09.prod.outlook.com;PTR:;CAT:OSPM;SFTY:;SFS:(366004)(396003)(346002)(136003)(39830400003)(376002)(5660300002)(36756003)(6496006)(52116002)(66556008)(8936002)(1076003)(86362001)(16526019)(186003)(66476007)(66946007)(2616005)(8676002)(44832011)(107886003)(4326008)(508600001)(2906002)(316002)(6486002)(110136005)(54906003)(6666004)(23200700001);DIR:OUT;SFP:1501;
-X-MS-Exchange-AntiSpam-MessageData: BNJVU7FZDWWJ+7LfnwI1zoV1CZy4L2qt9VWexIlnU4z9CP5BFzbuO8AoYC4AGDhOgbdKQMlkSwj1HyU0wjySGI2uz6rnj4eOQWifxkWLgB/AOI947EhunYvbdVbYgj1taDTN4+nPV0FeCZgBCFkrXJV+52YypKKTgMnoG+Ynhz0MljyttkABo4/0w7nImVpl2hdkhqUww7s09jBhEkisulBLoPplWwe+6DTr+BFFfcn4hjLL1WA85/WxsJc/ew+gCBkBWNfslmV0qf8M5gFuY0vtHhFt2Vm2LSRjvZxUcTdlQLHTvf9fVB9FFrXWM2qoant1FbCsagPkHX4EClPimvGrBlH8T+jcYoD01Y+mSIxeQEhvKgTsqDfYlw4DlVv5EM8ZSkYGyC9gT4DkPTMglmDG0dz2EmFANmcBhLrSAviSA+G6eiOM/CFAjatjmN1cuor7ugBYnE/Nmdm09Itna+m0Fo8WfsntLInDJQNcwWxlD2xjXv8gZ/XENOiFQLWa3qF+HKyPSutLUepHqgR7btxvdyQGspovIXkxn7OkHNA=
-X-OriginatorOrg: silexinsight.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb4e32b0-b204-42dd-a0a5-08d8066a49cf
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2020 20:28:04.8465
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a02f6f9b-0f64-4420-b881-fca545d421d8
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: D6v3div4q3RIO+GYUiGoXTLVzGVVKHkTv2y39Riv5tfbmwbxQc459LGgcE/c1RoaRYx0DcfTzhtrd4t7QvaeAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR09MB3957
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f08d04901b66a1d2d9329d5cc6bb47864d66254f.camel@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Silex insight BA431 is an IP designed to generate random numbers that
-can be integrated in various FPGA.
-This driver adds support for it through the hwrng interface.
+On Wed, May 20, 2020 at 11:46:32AM +0000, Daire.McNamara@microchip.com wrote:
+> 
 
-This driver is used in Silex Insight Viper OEM boards.
+Something mangled the subject.
 
-Signed-off-by: Olivier Sobrie <olivier.sobrie@silexinsight.com>
-Signed-off-by: Waleed Ziad <waleed94ziad@gmail.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/char/hw_random/Kconfig     |  12 ++
- drivers/char/hw_random/Makefile    |   1 +
- drivers/char/hw_random/ba431-rng.c | 234 +++++++++++++++++++++++++++++
- 3 files changed, 247 insertions(+)
- create mode 100644 drivers/char/hw_random/ba431-rng.c
+> This patch adds support for the Microchip PCIe PolarFire PCIe
+> controller when configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> ---
+>  drivers/pci/controller/Kconfig               |   9 +
+>  drivers/pci/controller/Makefile              |   1 +
+>  drivers/pci/controller/pcie-microchip-host.c | 664 +++++++++++++++++++
+>  3 files changed, 674 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-microchip-host.c
+> 
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 91bfdb784829..5ec760466bd9 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -258,6 +258,15 @@ config PCI_HYPERV_INTERFACE
+>  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+>  	  have a common interface with the Hyper-V PCI frontend driver.
+>  
+> +config PCIE_MICROCHIP_HOST
+> +	bool "Microchip AXI PCIe host bridge support"
+> +	depends on PCI_MSI && OF
+> +	select PCI_MSI_IRQ_DOMAIN
+> +	select GENERIC_MSI_IRQ_DOMAIN
+> +	help
+> +	  Say Y here if you want kernel to support the Microchip AXI PCIe
+> +	  Host Bridge driver.
+> +
+>  source "drivers/pci/controller/dwc/Kconfig"
+>  source "drivers/pci/controller/mobiveil/Kconfig"
+>  source "drivers/pci/controller/cadence/Kconfig"
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index 158c59771824..416528d8553e 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
+>  obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
+>  obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+>  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+> +obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
+>  obj-$(CONFIG_VMD) += vmd.o
+>  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
+>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+> new file mode 100644
+> index 000000000000..bdea416aff79
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-microchip-host.c
+> @@ -0,0 +1,664 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Microchip AXI PCIe Bridge host controller driver
+> + *
+> + * Copyright (c) 2018 - 2019 Microchip Corporation. All rights reserved.
+> + *
+> + * Author: Daire McNamara <daire.mcnamara@microchip.com>
+> + *
+> + * Based on:
+> + *	pcie-rcar.c
+> + *	pcie-xilinx.c
+> + *	pcie-altera.c
+> + */
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/module.h>
+> +#include <linux/msi.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/pci-ecam.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "../pci.h"
+> +
+> +/* Number of MSI IRQs */
+> +#define MC_NUM_MSI_IRQS				32
+> +#define MC_NUM_MSI_IRQS_CODED			5
+> +
+> +/* PCIe Bridge Phy and Controller Phy offsets */
+> +#define MC_PCIE1_BRIDGE_ADDR			0x00008000u
+> +#define MC_PCIE1_CTRL_ADDR			0x0000a000u
+> +
+> +/* PCIe Controller Phy Regs */
+> +#define MC_SEC_ERROR_INT			0x28
+> +#define  SEC_ERROR_INT_TX_RAM_SEC_ERR_INT	GENMASK(3, 0)
+> +#define  SEC_ERROR_INT_RX_RAM_SEC_ERR_INT	GENMASK(7, 4)
+> +#define  SEC_ERROR_INT_PCIE2AXI_RAM_SEC_ERR_INT	GENMASK(11, 8)
+> +#define  SEC_ERROR_INT_AXI2PCIE_RAM_SEC_ERR_INT	GENMASK(15, 12)
+> +#define MC_SEC_ERROR_INT_MASK			0x2c
+> +#define MC_DED_ERROR_INT			0x30
+> +#define  DED_ERROR_INT_TX_RAM_DED_ERR_INT	GENMASK(3, 0)
+> +#define  DED_ERROR_INT_RX_RAM_DED_ERR_INT	GENMASK(7, 4)
+> +#define  DED_ERROR_INT_PCIE2AXI_RAM_DED_ERR_INT	GENMASK(11, 8)
+> +#define  DED_ERROR_INT_AXI2PCIE_RAM_DED_ERR_INT	GENMASK(15, 12)
+> +#define MC_DED_ERROR_INT_MASK			0x34
+> +#define MC_ECC_CONTROL				0x38
+> +#define  ECC_CONTROL_AXI2PCIE_RAM_ECC_BYPASS	BIT(27)
+> +#define  ECC_CONTROL_PCIE2AXI_RAM_ECC_BYPASS	BIT(26)
+> +#define  ECC_CONTROL_RX_RAM_ECC_BYPASS		BIT(25)
+> +#define  ECC_CONTROL_TX_RAM_ECC_BYPASS		BIT(24)
+> +#define MC_LTSSM_STATE				0x5c
+> +#define  LTSSM_L0_STATE				0x10
+> +#define MC_PCIE_EVENT_INT			0x14c
+> +#define  PCIE_EVENT_INT_L2_EXIT_INT		BIT(0)
+> +#define  PCIE_EVENT_INT_HOTRST_EXIT_INT		BIT(1)
+> +#define  PCIE_EVENT_INT_DLUP_EXIT_INT		BIT(2)
+> +#define  PCIE_EVENT_INT_L2_EXIT_INT_MASK	BIT(16)
+> +#define  PCIE_EVENT_INT_HOTRST_EXIT_INT_MASK	BIT(17)
+> +#define  PCIE_EVENT_INT_DLUP_EXIT_INT_MASK	BIT(18)
+> +
+> +/* PCIe Bridge Phy Regs */
+> +#define MC_PCIE_PCI_IDS_DW1			0x9c
+> +
+> +/* PCIe Config space MSI capability structure */
+> +#define MC_MSI_CAP_CTRL				0xe0u
+> +#define  MSI_ENABLE				(0x01u << 16)
+> +#define  MSI_CAP_MULTI				(MC_NUM_MSI_IRQS_CODED << 17)
+> +#define  MSI_ENABLE_MULTI			(MC_NUM_MSI_IRQS_CODED << 20)
+> +#define MC_MSI_MSG_LO_ADDR			0xe4u
+> +#define MC_MSI_MSG_HI_ADDR			0xe8u
+> +#define MC_MSI_MSG_DATA				0xf0u
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 9bc46da8d77a8..4f50ee02c639e 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -74,6 +74,18 @@ config HW_RANDOM_ATMEL
- 
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_BA431
-+	tristate "Silex Insight BA431 Random Number Generator support"
-+	default HW_RANDOM
-+	help
-+	  This driver provides kernel-side support for the Random Number
-+	  Generator hardware based on Silex Insight BA431 IP.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ba431-rng.
-+
-+	  If unsure, say Y.
-+
- config HW_RANDOM_BCM2835
- 	tristate "Broadcom BCM2835/BCM63xx Random Number Generator support"
- 	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X || \
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index a7801b49ce6c0..02ccadafcca99 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_HW_RANDOM_TIMERIOMEM) += timeriomem-rng.o
- obj-$(CONFIG_HW_RANDOM_INTEL) += intel-rng.o
- obj-$(CONFIG_HW_RANDOM_AMD) += amd-rng.o
- obj-$(CONFIG_HW_RANDOM_ATMEL) += atmel-rng.o
-+obj-$(CONFIG_HW_RANDOM_BA431) += ba431-rng.o
- obj-$(CONFIG_HW_RANDOM_GEODE) += geode-rng.o
- obj-$(CONFIG_HW_RANDOM_N2RNG) += n2-rng.o
- n2-rng-y := n2-drv.o n2-asm.o
-diff --git a/drivers/char/hw_random/ba431-rng.c b/drivers/char/hw_random/ba431-rng.c
-new file mode 100644
-index 0000000000000..a39e3abf50b94
---- /dev/null
-+++ b/drivers/char/hw_random/ba431-rng.c
-@@ -0,0 +1,234 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2020 Silex Insight
-+
-+#include <linux/delay.h>
-+#include <linux/hw_random.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/workqueue.h>
-+
-+#define BA431_RESET_DELAY			1 /* usec */
-+#define BA431_RESET_READ_STATUS_TIMEOUT		1000 /* usec */
-+#define BA431_RESET_READ_STATUS_INTERVAL	10 /* usec */
-+#define BA431_READ_RETRY_INTERVAL		1 /* usec */
-+
-+#define BA431_REG_CTRL				0x00
-+#define BA431_REG_FIFO_LEVEL			0x04
-+#define BA431_REG_STATUS			0x30
-+#define BA431_REG_FIFODATA			0x80
-+
-+#define BA431_CTRL_ENABLE			BIT(0)
-+#define BA431_CTRL_SOFTRESET			BIT(8)
-+
-+#define BA431_STATUS_STATE_MASK			(BIT(1) | BIT(2) | BIT(3))
-+#define BA431_STATUS_STATE_OFFSET		1
-+
-+enum ba431_state {
-+	BA431_STATE_RESET,
-+	BA431_STATE_STARTUP,
-+	BA431_STATE_FIFOFULLON,
-+	BA431_STATE_FIFOFULLOFF,
-+	BA431_STATE_RUNNING,
-+	BA431_STATE_ERROR
-+};
-+
-+struct ba431_trng {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct hwrng rng;
-+	atomic_t reset_pending;
-+	struct work_struct reset_work;
-+};
-+
-+static inline u32 ba431_trng_read_reg(struct ba431_trng *ba431, u32 reg)
-+{
-+	return ioread32(ba431->base + reg);
-+}
-+
-+static inline void ba431_trng_write_reg(struct ba431_trng *ba431, u32 reg,
-+					u32 val)
-+{
-+	iowrite32(val, ba431->base + reg);
-+}
-+
-+static inline enum ba431_state ba431_trng_get_state(struct ba431_trng *ba431)
-+{
-+	u32 status = ba431_trng_read_reg(ba431, BA431_REG_STATUS);
-+
-+	return (status & BA431_STATUS_STATE_MASK) >> BA431_STATUS_STATE_OFFSET;
-+}
-+
-+static int ba431_trng_is_in_error(struct ba431_trng *ba431)
-+{
-+	enum ba431_state state = ba431_trng_get_state(ba431);
-+
-+	if ((state < BA431_STATE_STARTUP) ||
-+	    (state >= BA431_STATE_ERROR))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int ba431_trng_reset(struct ba431_trng *ba431)
-+{
-+	int ret;
-+
-+	/* Disable interrupts, random generation and enable the softreset */
-+	ba431_trng_write_reg(ba431, BA431_REG_CTRL, BA431_CTRL_SOFTRESET);
-+	udelay(BA431_RESET_DELAY);
-+	ba431_trng_write_reg(ba431, BA431_REG_CTRL, BA431_CTRL_ENABLE);
-+
-+	/* Wait until the state changed */
-+	if (readx_poll_timeout(ba431_trng_is_in_error, ba431, ret, !ret,
-+			       BA431_RESET_READ_STATUS_INTERVAL,
-+			       BA431_RESET_READ_STATUS_TIMEOUT)) {
-+		dev_err(ba431->dev, "reset failed (state: %d)\n",
-+			ba431_trng_get_state(ba431));
-+		return -ETIMEDOUT;
-+	}
-+
-+	dev_info(ba431->dev, "reset done\n");
-+
-+	return 0;
-+}
-+
-+static void ba431_trng_reset_work(struct work_struct *work)
-+{
-+	struct ba431_trng *ba431 = container_of(work, struct ba431_trng,
-+						reset_work);
-+	ba431_trng_reset(ba431);
-+	atomic_set(&ba431->reset_pending, 0);
-+}
-+
-+static void ba431_trng_schedule_reset(struct ba431_trng *ba431)
-+{
-+	if (atomic_cmpxchg(&ba431->reset_pending, 0, 1))
-+		return;
-+
-+	schedule_work(&ba431->reset_work);
-+}
-+
-+static int ba431_trng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct ba431_trng *ba431 = container_of(rng, struct ba431_trng, rng);
-+	u32 *data = buf;
-+	unsigned int level, i;
-+	int n = 0;
-+
-+	while (max > 0) {
-+		level = ba431_trng_read_reg(ba431, BA431_REG_FIFO_LEVEL);
-+		if (!level) {
-+			if (ba431_trng_is_in_error(ba431)) {
-+				ba431_trng_schedule_reset(ba431);
-+				break;
-+			}
-+
-+			if (!wait)
-+				break;
-+
-+			udelay(BA431_READ_RETRY_INTERVAL);
-+			continue;
-+		}
-+
-+		i = level;
-+		do {
-+			data[n++] = ba431_trng_read_reg(ba431,
-+							BA431_REG_FIFODATA);
-+			max -= sizeof(*data);
-+		} while (--i && (max > 0));
-+
-+		if (ba431_trng_is_in_error(ba431)) {
-+			n -= (level - i);
-+			ba431_trng_schedule_reset(ba431);
-+			break;
-+		}
-+	}
-+
-+	n *= sizeof(data);
-+	return (n || !wait) ? n : -EIO;
-+}
-+
-+static void ba431_trng_cleanup(struct hwrng *rng)
-+{
-+	struct ba431_trng *ba431 = container_of(rng, struct ba431_trng, rng);
-+
-+	ba431_trng_write_reg(ba431, BA431_REG_CTRL, 0);
-+	cancel_work_sync(&ba431->reset_work);
-+}
-+
-+static int ba431_trng_init(struct hwrng *rng)
-+{
-+	struct ba431_trng *ba431 = container_of(rng, struct ba431_trng, rng);
-+
-+	return ba431_trng_reset(ba431);
-+}
-+
-+static int ba431_trng_probe(struct platform_device *pdev)
-+{
-+	struct ba431_trng *ba431;
-+	struct resource *res;
-+	int ret;
-+
-+	ba431 = devm_kzalloc(&pdev->dev, sizeof(*ba431), GFP_KERNEL);
-+	if (!ba431)
-+		return -ENOMEM;
-+
-+	ba431->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	ba431->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(ba431->base))
-+		return PTR_ERR(ba431->base);
-+
-+	atomic_set(&ba431->reset_pending, 0);
-+	INIT_WORK(&ba431->reset_work, ba431_trng_reset_work);
-+	ba431->rng.name = pdev->name;
-+	ba431->rng.init = ba431_trng_init;
-+	ba431->rng.cleanup = ba431_trng_cleanup;
-+	ba431->rng.read = ba431_trng_read;
-+
-+	platform_set_drvdata(pdev, ba431);
-+
-+	ret = hwrng_register(&ba431->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "BA431 registration failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	dev_info(&pdev->dev, "BA431 TRNG registered\n");
-+
-+	return 0;
-+}
-+
-+static int ba431_trng_remove(struct platform_device *pdev)
-+{
-+	struct ba431_trng *ba431 = platform_get_drvdata(pdev);
-+
-+	hwrng_unregister(&ba431->rng);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ba431_trng_dt_ids[] = {
-+	{ .compatible = "silex-insight,ba431-rng", .data = NULL },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ba431_trng_dt_ids);
-+
-+static struct platform_driver ba431_trng_driver = {
-+	.driver = {
-+		.name = "ba431-rng",
-+		.of_match_table = ba431_trng_dt_ids,
-+	},
-+	.probe = ba431_trng_probe,
-+	.remove = ba431_trng_remove,
-+};
-+
-+module_platform_driver(ba431_trng_driver);
-+
-+MODULE_AUTHOR("Olivier Sobrie <olivier@sobrie.be>");
-+MODULE_DESCRIPTION("TRNG driver for Silex Insight BA431");
-+MODULE_LICENSE("GPL");
--- 
-2.26.2
+There's standard definitions for these registers, use them.
 
+> +
+> +#define MC_IMASK_LOCAL				0x180
+> +#define  PCIE_LOCAL_INT_ENABLE			0x0f000000u
+> +#define  PCI_INTS				0x0f000000u
+> +#define  PM_MSI_INT_SHIFT			24
+> +#define  PCIE_ENABLE_MSI			0x10000000u
+> +#define  MSI_INT				0x10000000u
+> +#define  MSI_INT_SHIFT				28
+> +#define MC_ISTATUS_LOCAL			0x184
+> +#define MC_IMASK_HOST				0x188
+> +#define MC_ISTATUS_HOST				0x18c
+> +#define MC_MSI_ADDR				0x190
+> +#define MC_ISTATUS_MSI				0x194
+> +
+> +/* PCIe Master table init defines */
+> +#define MC_ATR0_PCIE_WIN0_SRCADDR_PARAM		0x600u
+> +#define  ATR0_PCIE_ATR_SIZE			0x1f
+> +#define  ATR0_PCIE_ATR_SIZE_SHIFT		1
+> +#define MC_ATR0_PCIE_WIN0_SRC_ADDR		0x604u
+> +#define MC_ATR0_PCIE_WIN0_TRSL_ADDR_LSB		0x608u
+> +#define MC_ATR0_PCIE_WIN0_TRSL_ADDR_UDW		0x60cu
+> +#define MC_ATR0_PCIE_WIN0_TRSL_PARAM		0x610u
+> +
+> +/* PCIe AXI slave table init defines */
+> +#define MC_ATR0_AXI4_SLV0_SRCADDR_PARAM		0x800u
+> +#define  ATR_SIZE_SHIFT				1
+> +#define  ATR_IMPL_ENABLE			1
+> +#define MC_ATR0_AXI4_SLV0_SRC_ADDR		0x804u
+> +#define MC_ATR0_AXI4_SLV0_TRSL_ADDR_LSB		0x808u
+> +#define MC_ATR0_AXI4_SLV0_TRSL_ADDR_UDW		0x80cu
+> +#define MC_ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
+> +#define  PCIE_TX_RX_INTERFACE			0x00000000u
+> +#define  PCIE_CONFIG_INTERFACE			0x00000001u
+> +
+> +#define ATT_ENTRY_SIZE			32
+> +
+> +struct mc_msi {
+> +	struct mutex lock;		/* Protect used bitmap */
+> +	struct irq_domain *msi_domain;
+> +	struct irq_domain *dev_domain;
+> +	u32 num_vectors;
+> +	u64 vector_phy;
+> +	DECLARE_BITMAP(used, MC_NUM_MSI_IRQS);
+> +};
+> +
+> +struct mc_pcie {
+> +	struct platform_device *pdev;
+> +	void __iomem *cfg_base_addr;
+> +	void __iomem *bridge_base_addr;
+> +	void __iomem *ctrl_base_addr;
+
+> +	u64 cfghw_base_addr;
+> +	u64 cfg_size;
+> +	u32 atr_sz;
+> +	u32 irq;
+
+These are all already stored as resources, no reason to store them again 
+here.
+
+> +	struct irq_domain *intx_domain;
+> +	raw_spinlock_t intx_mask_lock;
+> +	struct mc_msi msi;
+> +};
+> +
+> +static inline u32 cfg_readl(struct mc_pcie *pcie, const u32 reg)
+> +{
+> +	return readl_relaxed(pcie->cfg_base_addr + reg);
+> +}
+> +
+> +static inline void cfg_writel(struct mc_pcie *pcie, const u32 val,
+> +			      const u32 reg)
+> +{
+> +	writel_relaxed(val, pcie->cfg_base_addr + reg);
+> +}
+> +
+> +static void mc_pcie_enable(struct mc_pcie *pcie)
+> +{
+> +	u32 enb;
+> +
+> +	enb = readl(pcie->bridge_base_addr + MC_LTSSM_STATE);
+> +	enb |= LTSSM_L0_STATE;
+> +	writel(enb, pcie->bridge_base_addr + MC_LTSSM_STATE);
+> +}
+> +
+> +static void mc_pcie_isr(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct mc_pcie *pcie = irq_desc_get_handler_data(desc);
+> +	struct device *dev = &pcie->pdev->dev;
+> +	struct mc_msi *msi = &pcie->msi;
+> +	unsigned long status;
+> +	unsigned long intx_status;
+> +	unsigned long msi_status;
+> +	u32 bit;
+> +	u32 virq;
+> +
+> +	/*
+> +	 * The core provides a single interrupt for both INTx/MSI messages.
+> +	 * So we'll read both INTx and MSI status.
+> +	 */
+> +	chained_irq_enter(chip, desc);
+> +
+> +	status = readl(pcie->bridge_base_addr + MC_ISTATUS_LOCAL);
+> +	while (status & (PCI_INTS | MSI_INT)) {
+> +		intx_status = (status & PCI_INTS) >> PM_MSI_INT_SHIFT;
+> +		for_each_set_bit(bit, &intx_status, PCI_NUM_INTX) {
+> +			virq = irq_find_mapping(pcie->intx_domain, bit + 1);
+> +			if (virq)
+> +				generic_handle_irq(virq);
+> +			else
+> +				dev_err_ratelimited(dev, "bad INTx IRQ %d\n",
+> +						    bit);
+> +
+> +			/* Clear that interrupt bit */
+> +			writel(1 << (bit + PM_MSI_INT_SHIFT),
+> +			       pcie->bridge_base_addr + MC_ISTATUS_LOCAL);
+> +		}
+> +
+> +		msi_status = (status & MSI_INT);
+> +		if (msi_status) {
+> +			msi_status = readl(pcie->bridge_base_addr +
+> +					   MC_ISTATUS_MSI);
+> +			for_each_set_bit(bit, &msi_status, msi->num_vectors) {
+> +				virq = irq_find_mapping(msi->dev_domain, bit);
+> +				if (virq)
+> +					generic_handle_irq(virq);
+> +				else
+> +					dev_err_ratelimited(dev,
+> +							    "bad MSI IRQ %d\n",
+> +							    bit);
+> +
+> +				/* Clear that MSI interrupt bit */
+> +				writel((1 << bit), pcie->bridge_base_addr +
+> +				       MC_ISTATUS_MSI);
+> +			}
+> +			/* Clear the ISTATUS MSI bit */
+> +			writel(1 << MSI_INT_SHIFT, pcie->bridge_base_addr +
+> +			       MC_ISTATUS_LOCAL);
+> +		}
+> +
+> +		status = readl(pcie->bridge_base_addr + MC_ISTATUS_LOCAL);
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int mc_pcie_parse_dt(struct mc_pcie *pcie)
+> +{
+> +	struct platform_device *pdev = pcie->pdev;
+> +	struct device *dev = &pcie->pdev->dev;
+> +	struct mc_msi *msi = &pcie->msi;
+> +	struct resource *res;
+> +	void __iomem *axi_base_addr;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	axi_base_addr = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(axi_base_addr))
+> +		return PTR_ERR(axi_base_addr);
+> +
+> +	pcie->bridge_base_addr = axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
+> +	pcie->ctrl_base_addr = axi_base_addr + MC_PCIE1_CTRL_ADDR;
+> +
+> +	msi->vector_phy = MC_MSI_ADDR;
+> +
+> +	msi->num_vectors = MC_NUM_MSI_IRQS;
+> +
+> +	pcie->irq = platform_get_irq(pdev, 0);
+> +	if (pcie->irq < 0) {
+> +		dev_err(dev, "unable to request IRQ%d\n", pcie->irq);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void mc_pcie_enable_msi(struct mc_pcie *pcie)
+> +{
+> +	struct mc_msi *msi = &pcie->msi;
+> +	u32 msg_ctrl = cfg_readl(pcie, MC_MSI_CAP_CTRL);
+> +
+> +	msg_ctrl |= MSI_ENABLE_MULTI | MSI_CAP_MULTI | MSI_ENABLE;
+> +	cfg_writel(pcie, msg_ctrl, MC_MSI_CAP_CTRL);
+> +
+> +	cfg_writel(pcie, lower_32_bits(msi->vector_phy), MC_MSI_MSG_LO_ADDR);
+> +	cfg_writel(pcie, upper_32_bits(msi->vector_phy), MC_MSI_MSG_HI_ADDR);
+> +}
+> +
+> +static int mc_host_init(struct mc_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	mc_pcie_enable(pcie);
+> +
+> +	val = ECC_CONTROL_AXI2PCIE_RAM_ECC_BYPASS |
+> +	      ECC_CONTROL_PCIE2AXI_RAM_ECC_BYPASS |
+> +	      ECC_CONTROL_RX_RAM_ECC_BYPASS | ECC_CONTROL_TX_RAM_ECC_BYPASS;
+> +	writel(val, pcie->ctrl_base_addr + MC_ECC_CONTROL);
+
+These should all be able to use the _relaxed variant.
+
+> +
+> +	val = PCIE_EVENT_INT_L2_EXIT_INT | PCIE_EVENT_INT_HOTRST_EXIT_INT |
+> +	      PCIE_EVENT_INT_DLUP_EXIT_INT | PCIE_EVENT_INT_L2_EXIT_INT_MASK |
+> +	      PCIE_EVENT_INT_HOTRST_EXIT_INT_MASK |
+> +	      PCIE_EVENT_INT_DLUP_EXIT_INT_MASK;
+> +	writel(val, pcie->ctrl_base_addr + MC_PCIE_EVENT_INT);
+> +
+> +	val = SEC_ERROR_INT_TX_RAM_SEC_ERR_INT |
+> +	      SEC_ERROR_INT_RX_RAM_SEC_ERR_INT |
+> +	      SEC_ERROR_INT_PCIE2AXI_RAM_SEC_ERR_INT |
+> +	      SEC_ERROR_INT_AXI2PCIE_RAM_SEC_ERR_INT;
+> +	writel(val, pcie->ctrl_base_addr + MC_SEC_ERROR_INT);
+> +	writel(val, pcie->ctrl_base_addr + MC_SEC_ERROR_INT_MASK);
+> +
+> +	val = DED_ERROR_INT_TX_RAM_DED_ERR_INT |
+> +	      DED_ERROR_INT_RX_RAM_DED_ERR_INT |
+> +	      DED_ERROR_INT_PCIE2AXI_RAM_DED_ERR_INT |
+> +	      DED_ERROR_INT_AXI2PCIE_RAM_DED_ERR_INT;
+> +	writel(val, pcie->ctrl_base_addr + MC_DED_ERROR_INT);
+> +	writel(val, pcie->ctrl_base_addr + MC_DED_ERROR_INT_MASK);
+> +
+> +	writel(0, pcie->bridge_base_addr + MC_IMASK_LOCAL);
+> +	writel(GENMASK(31, 0), pcie->bridge_base_addr + MC_ISTATUS_LOCAL);
+> +	writel(0, pcie->bridge_base_addr + MC_IMASK_HOST);
+> +	writel(GENMASK(31, 0), pcie->bridge_base_addr + MC_ISTATUS_HOST);
+> +
+> +	/* Configure Address Translation Table 0 for PCIe config space */
+> +	writel(PCIE_CONFIG_INTERFACE, pcie->bridge_base_addr +
+> +	       MC_ATR0_AXI4_SLV0_TRSL_PARAM);
+> +
+> +	val = lower_32_bits(pcie->cfghw_base_addr) |
+> +	      (pcie->atr_sz << ATR_SIZE_SHIFT) | ATR_IMPL_ENABLE;
+> +	writel(val, pcie->bridge_base_addr + MC_ATR0_AXI4_SLV0_SRCADDR_PARAM);
+> +	writel(0, pcie->bridge_base_addr + MC_ATR0_AXI4_SLV0_SRC_ADDR);
+> +
+> +	val = lower_32_bits(pcie->cfghw_base_addr);
+> +	writel(val, pcie->bridge_base_addr + MC_ATR0_AXI4_SLV0_TRSL_ADDR_LSB);
+> +	val = upper_32_bits(pcie->cfghw_base_addr);
+> +	writel(val, pcie->bridge_base_addr + MC_ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
+> +
+> +	val = readl(pcie->bridge_base_addr + MC_ATR0_PCIE_WIN0_SRCADDR_PARAM);
+> +	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
+> +	writel(val, pcie->bridge_base_addr + MC_ATR0_PCIE_WIN0_SRCADDR_PARAM);
+> +	writel(0, pcie->bridge_base_addr + MC_ATR0_PCIE_WIN0_SRC_ADDR);
+> +
+> +	return 0;
+> +}
+> +
+> +static void mc_mask_intx_irq(struct irq_data *data)
+> +{
+> +	struct irq_desc *desc = irq_to_desc(data->irq);
+> +	struct mc_pcie *pcie;
+> +	unsigned long flags;
+> +	u32 mask, val;
+> +
+> +	pcie = irq_desc_get_chip_data(desc);
+> +	mask = PCIE_LOCAL_INT_ENABLE;
+> +	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> +	val = readl(pcie->bridge_base_addr + MC_IMASK_LOCAL);
+> +	val &= ~mask;
+> +	writel(val, pcie->bridge_base_addr + MC_IMASK_LOCAL);
+> +	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+> +}
+> +
+> +static void mc_unmask_intx_irq(struct irq_data *data)
+> +{
+> +	struct irq_desc *desc = irq_to_desc(data->irq);
+> +	struct mc_pcie *pcie;
+> +	unsigned long flags;
+> +	u32 mask, val;
+> +
+> +	pcie = irq_desc_get_chip_data(desc);
+> +	mask = PCIE_LOCAL_INT_ENABLE;
+> +	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> +	val = readl(pcie->bridge_base_addr + MC_IMASK_LOCAL);
+> +	val |= mask;
+> +	writel(val, pcie->bridge_base_addr + MC_IMASK_LOCAL);
+> +	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+> +}
+> +
+> +static struct irq_chip mc_intx_irq_chip = {
+> +	.name = "microchip_pcie:intx",
+> +	.irq_enable = mc_unmask_intx_irq,
+> +	.irq_disable = mc_mask_intx_irq,
+> +	.irq_mask = mc_mask_intx_irq,
+> +	.irq_unmask = mc_unmask_intx_irq,
+
+I believe you can drop enable/disable and mask/unmask will be used by 
+the core.
+
+> +};
+> +
+> +static int mc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> +			    irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &mc_intx_irq_chip, handle_simple_irq);
+> +	irq_set_chip_data(irq, domain->host_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops intx_domain_ops = {
+> +	.map = mc_pcie_intx_map,
+> +};
+> +
+> +static struct irq_chip mc_msi_irq_chip = {
+> +	.name = "Microchip PCIe MSI",
+> +	.irq_mask = pci_msi_mask_irq,
+> +	.irq_unmask = pci_msi_unmask_irq,
+> +};
+> +
+> +static struct msi_domain_info mc_msi_domain_info = {
+> +	.flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> +		  MSI_FLAG_PCI_MSIX),
+> +	.chip = &mc_msi_irq_chip,
+> +};
+> +
+> +static void mc_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> +{
+> +	struct mc_pcie *pcie = irq_data_get_irq_chip_data(data);
+> +	phys_addr_t addr = pcie->msi.vector_phy;
+> +
+> +	msg->address_lo = lower_32_bits(addr);
+> +	msg->address_hi = upper_32_bits(addr);
+> +	msg->data = data->hwirq;
+> +
+> +	dev_dbg(&pcie->pdev->dev, "msi#%x address_hi %#x address_lo %#x\n",
+> +		(int)data->hwirq, msg->address_hi, msg->address_lo);
+> +}
+> +
+> +static int mc_msi_set_affinity(struct irq_data *irq_data,
+> +			       const struct cpumask *mask, bool force)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static struct irq_chip mc_msi_bottom_irq_chip = {
+> +	.name = "Microchip MSI",
+> +	.irq_compose_msi_msg = mc_compose_msi_msg,
+> +	.irq_set_affinity = mc_msi_set_affinity,
+> +};
+> +
+> +static int mc_irq_msi_domain_alloc(struct irq_domain *domain,
+> +				   unsigned int virq, unsigned int nr_irqs,
+> +				   void *args)
+> +{
+> +	struct mc_pcie *pcie = domain->host_data;
+> +	struct mc_msi *msi = &pcie->msi;
+> +	unsigned long bit;
+> +	u32 reg;
+> +
+> +	WARN_ON(nr_irqs != 1);
+> +	mutex_lock(&msi->lock);
+> +	bit = find_first_zero_bit(msi->used, msi->num_vectors);
+> +	if (bit >= msi->num_vectors) {
+> +		mutex_unlock(&msi->lock);
+> +		return -ENOSPC;
+> +	}
+> +
+> +	set_bit(bit, msi->used);
+> +	mutex_unlock(&msi->lock);
+> +
+> +	irq_domain_set_info(domain, virq, bit, &mc_msi_bottom_irq_chip,
+> +			    domain->host_data, handle_simple_irq, NULL, NULL);
+> +
+> +	/* Enable MSI interrupts */
+> +	reg = readl(pcie->bridge_base_addr + MC_IMASK_LOCAL);
+> +	reg |= PCIE_ENABLE_MSI;
+> +	writel(reg, pcie->bridge_base_addr + MC_IMASK_LOCAL);
+
+Should have the spinlock around it?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void mc_irq_msi_domain_free(struct irq_domain *domain,
+> +				   unsigned int virq, unsigned int nr_irqs)
+> +{
+> +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> +	struct mc_pcie *pcie = irq_data_get_irq_chip_data(d);
+> +	struct mc_msi *msi = &pcie->msi;
+> +
+> +	mutex_lock(&msi->lock);
+> +
+> +	if (test_bit(d->hwirq, msi->used))
+> +		__clear_bit(d->hwirq, msi->used);
+> +	else
+> +		dev_err(&pcie->pdev->dev, "trying to free unused MSI%lu\n",
+> +			d->hwirq);
+> +
+> +	mutex_unlock(&msi->lock);
+> +}
+> +
+> +static const struct irq_domain_ops msi_domain_ops = {
+> +	.alloc	= mc_irq_msi_domain_alloc,
+> +	.free	= mc_irq_msi_domain_free,
+> +};
+> +
+> +static int mc_allocate_msi_domains(struct mc_pcie *pcie)
+> +{
+> +	struct device *dev = &pcie->pdev->dev;
+> +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> +	struct mc_msi *msi = &pcie->msi;
+> +
+> +	mutex_init(&pcie->msi.lock);
+> +
+> +	msi->dev_domain = irq_domain_add_linear(NULL, msi->num_vectors,
+> +						&msi_domain_ops, pcie);
+> +	if (!msi->dev_domain) {
+> +		dev_err(dev, "failed to create IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+> +						    &mc_msi_domain_info,
+> +						    msi->dev_domain);
+> +	if (!msi->msi_domain) {
+> +		dev_err(dev, "failed to create MSI domain\n");
+> +		irq_domain_remove(msi->dev_domain);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int mc_pcie_init_irq_domains(struct mc_pcie *pcie)
+> +{
+> +	struct device *dev = &pcie->pdev->dev;
+> +	struct device_node *node = dev->of_node;
+> +
+> +	pcie->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> +						  &intx_domain_ops, pcie);
+> +	if (!pcie->intx_domain) {
+> +		dev_err(dev, "failed to get an INTx IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+> +	raw_spin_lock_init(&pcie->intx_mask_lock);
+> +
+> +	return mc_allocate_msi_domains(pcie);
+> +}
+> +
+> +static void mc_pci_unmap_cfg(void *ptr)
+> +{
+> +	pci_ecam_free((struct pci_config_window *)ptr);
+> +}
+> +
+> +static int mc_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct mc_pcie *pcie;
+> +	struct pci_host_bridge *bridge;
+> +	struct pci_config_window *cfg;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource_entry *win;
+> +	struct resource *bus_range = NULL;
+> +	struct resource *cfgres;
+> +	int ret;
+> +	resource_size_t size;
+> +	u32 index;
+> +	u32 atr_sz;
+> +	u32 val;
+> +
+> +	if (!dev->of_node)
+> +		return -ENODEV;
+> +
+> +	/* Allocate the PCIe port */
+> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+> +	if (!bridge)
+> +		return -ENOMEM;
+> +
+> +	pcie = pci_host_bridge_priv(bridge);
+> +
+> +	pcie->pdev = pdev;
+> +
+> +	cfgres = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pcie->cfghw_base_addr = cfgres->start;
+> +	size = resource_size(cfgres);
+> +	pcie->cfg_size = size;
+
+Why do you save this? Not used anywhere.
+
+> +	pcie->atr_sz = find_first_bit((const unsigned long *)&size, 64) - 1;
+
+size can be 32 or 64 bits, so this is wrong in the 32-bit case though 
+I'm guessing you never have >4G of config space.
+
+Use roundup_pow_of_two or ilog2.
+
+> +
+> +	ret = mc_pcie_parse_dt(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "parsing devicetree failed, ret %x\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(pcie->irq, mc_pcie_isr, pcie);
+> +
+> +	ret = mc_host_init(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize host\n");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Configure all inbound and outbound windows and prepare
+> +	 * for config access
+> +	 */
+> +	ret = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
+> +					      &bridge->dma_ranges, &bus_range);
+> +	if (ret) {
+> +		dev_err(dev, "failed to parse PCI ranges\n");
+> +		return ret;
+> +	}
+> +
+> +	index = 1;
+> +	resource_list_for_each_entry(win, &bridge->windows) {
+> +		if ((resource_type(win->res) != IORESOURCE_MEM) &&
+> +		    (resource_type(win->res) != IORESOURCE_IO))
+> +			continue;
+> +
+> +		size = resource_size(win->res);
+> +		atr_sz = find_first_bit((const unsigned long *)&size, 64) - 1;
+
+Same issue here.
+
+> +
+> +		/*
+> +		 * Configure Address Translation Table index for PCI
+> +		 * mem space
+> +		 */
+> +		writel(PCIE_TX_RX_INTERFACE, pcie->bridge_base_addr +
+> +		       (index * ATT_ENTRY_SIZE) +
+> +		       MC_ATR0_AXI4_SLV0_TRSL_PARAM);
+> +
+> +		val = lower_32_bits(win->res->start) |
+> +				    (atr_sz << ATR_SIZE_SHIFT) |
+> +				    ATR_IMPL_ENABLE;
+> +
+> +		writel(val, pcie->bridge_base_addr +
+> +		       (index * ATT_ENTRY_SIZE) +
+> +		       MC_ATR0_AXI4_SLV0_SRCADDR_PARAM);
+> +
+> +		val = upper_32_bits(win->res->start);
+> +		writel(val, pcie->bridge_base_addr + (index * ATT_ENTRY_SIZE) +
+> +				MC_ATR0_AXI4_SLV0_SRC_ADDR);
+> +
+> +		val = lower_32_bits(win->res->start - win->offset);
+> +		writel(val, pcie->bridge_base_addr +
+> +		       (index * ATT_ENTRY_SIZE) +
+> +		       MC_ATR0_AXI4_SLV0_TRSL_ADDR_LSB);
+> +
+> +		val = upper_32_bits(win->res->start);
+> +		writel(val, pcie->bridge_base_addr + (index * ATT_ENTRY_SIZE) +
+> +				MC_ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
+> +
+> +		index++;
+> +	}
+> +
+> +	ret = mc_pcie_init_irq_domains(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "failed creating IRQ domains\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Parse and map our Configuration Space windows */
+> +	cfg = pci_ecam_create(dev, cfgres, bus_range, &pci_generic_ecam_ops);
+> +	if (IS_ERR(cfg)) {
+> +		dev_err(dev, "failed creating Configuration Space\n");
+> +		return PTR_ERR(cfg);
+> +	}
+> +
+> +	pcie->cfg_base_addr = cfg->win;
+> +
+> +	val = cfg_readl(pcie, PCI_PRIMARY_BUS);
+> +	val &= 0xff000000;
+> +	val |= 0x00ff0100;
+> +	cfg_writel(pcie, val, PCI_PRIMARY_BUS);
+
+What's this for?
+
+> +
+> +	/* Hardware doesn't setup MSI by default */
+> +	mc_pcie_enable_msi(pcie);
+> +
+> +	val = PCIE_ENABLE_MSI | PCIE_LOCAL_INT_ENABLE;
+> +	writel(val, pcie->bridge_base_addr + MC_IMASK_LOCAL);
+> +
+> +	ret = devm_add_action_or_reset(dev, mc_pci_unmap_cfg, cfg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Initialize bridge */
+> +	bridge->dev.parent = dev;
+> +	bridge->sysdata = cfg;
+> +	bridge->busnr = cfg->busr.start;
+> +	bridge->ops = &pci_generic_ecam_ops.pci_ops;
+> +	bridge->map_irq = of_irq_parse_and_map_pci;
+> +	bridge->swizzle_irq = pci_common_swizzle;
+> +
+> +	return pci_host_probe(bridge);
+> +}
+> +
+> +static const struct of_device_id mc_pcie_of_match[] = {
+> +	{ .compatible = "microchip,pf-axi-pcie-host-1.0" },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, mc_pcie_of_match)
+> +
+> +static struct platform_driver mc_pcie_driver = {
+> +	.probe = mc_pcie_probe,
+> +	.driver = {
+> +		.name = "microchip-pcie",
+> +		.of_match_table = mc_pcie_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +
+> +builtin_platform_driver(mc_pcie_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Microchip PCIe host controller driver");
+> +MODULE_AUTHOR("Daire McNamara <daire.mcnamara@microchip.com>");
+> -- 
+> 2.17.1
+> 
