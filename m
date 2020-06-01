@@ -2,251 +2,436 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7879DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E94C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 484CC20738
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FAB2074B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Nap1S/8W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="RLtlU5Np"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgFAPO5 (ORCPT
+        id S1726128AbgFAPQD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:14:57 -0400
-Received: from mail-mw2nam12on2052.outbound.protection.outlook.com ([40.107.244.52]:11177
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726075AbgFAPO5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:14:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RvlYTFu6+MSSjA8t04VmcMLLeFwf6Fnfm4fmfhgdNaxyMa1xL24bkATYVqnrbLaw9iHCgkUgonriSkUGC5CP6rRYfoIdM8OLju8U2BAnx03RHaYgvbvItG4uZodW6ABpb91kE8NMRBZW6Dlbxmbu8VkneW5NOZQ6PK7S1k5tdNoz10JaEvXHdhDVC323qLv41wg9Canok6F54H+pwhNKkoTB65XSvml1lqyspcWSXTilk2d8oIC1Iv5VUJl4pnwNBPcxlOMc0TRHi6ls9WNItHGydkbx/Rd0oRaki+lQyjf/+TKzoqNU6czxn0MDdy5Gd1bZTc2XhSzIBvatFHDV5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=16IUQfyFwqwcPxuboFbcyRyafjnu+ThxKm21d1nvDyY=;
- b=gvNBOWKQIFNKb7SCo4Xl0y9lRaT7RqZkPdXKWbbmD23mBXn0y6fuL2MFxlv+KYHye4A3Cc+g+Zgf5gLG7ZvNhqKxmEh8c74y22xp1LCATpuS6ieEe5XLdrsMcwGHjGdVwPmMg9uYvCA0oUuL0zN+eUjr9qZGixS9bQnKseZvEp2lNYl0/yI9+04aRRuTFhWT3CZLYND3b5IDKcUiexcofvjk08/9IgHRlNNwwKZlH1MXtY2D3CAFITfupmRykf4AU7aGv1TKQ649NeP9mq1iY2Rpwoo9Amya2Zwr0hgy5tAqjircMGAiLViiNHNVGcnLvMIDep9xd1kHecM4/Vz01g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=16IUQfyFwqwcPxuboFbcyRyafjnu+ThxKm21d1nvDyY=;
- b=Nap1S/8WOrdojagHWJZvSDKBL5R8umoNhykjXJJttRQzcoB3U3smKklCIxYFD5hbjJB6Hmo8OaXyRD4S49CB4nlYvTS4CA2lSMukOcgroXcHk7xze9DZSMoNUxajOGZEbdG71EAGNhO04KDW5CeeOYWi0ENPedyWRQul6AVV5qo=
-Received: from DM6PR02MB6876.namprd02.prod.outlook.com (2603:10b6:5:22c::11)
- by DM6PR02MB5947.namprd02.prod.outlook.com (2603:10b6:5:17c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Mon, 1 Jun
- 2020 15:14:53 +0000
-Received: from DM6PR02MB6876.namprd02.prod.outlook.com
- ([fe80::ad68:d392:e519:f671]) by DM6PR02MB6876.namprd02.prod.outlook.com
- ([fe80::ad68:d392:e519:f671%9]) with mapi id 15.20.3045.024; Mon, 1 Jun 2020
- 15:14:52 +0000
-From:   Vishal Sagar <vsagar@xilinx.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Hyun Kwon <hyunk@xilinx.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Joe Perches <joe@perches.com>
-Subject: RE: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- UHD-SDI Receiver Subsystem
-Thread-Topic: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- UHD-SDI Receiver Subsystem
-Thread-Index: AQHWHjDqbGMdUbwGV0Cvu6UqAu/TlaibEMuAgCj+eYA=
-Date:   Mon, 1 Jun 2020 15:14:52 +0000
-Message-ID: <DM6PR02MB6876116CECBA49741FF57E79A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
-References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
- <20200429141705.18755-2-vishal.sagar@xilinx.com>
- <20200506130225.GD5946@pendragon.ideasonboard.com>
-In-Reply-To: <20200506130225.GD5946@pendragon.ideasonboard.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: ideasonboard.com; dkim=none (message not signed)
- header.d=none;ideasonboard.com; dmarc=none action=none
- header.from=xilinx.com;
-x-originating-ip: [149.199.50.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 90f43119-b26a-4963-dc9c-08d8063e88fd
-x-ms-traffictypediagnostic: DM6PR02MB5947:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR02MB5947B6BC00E8DE58205844AEA78A0@DM6PR02MB5947.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0421BF7135
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9yaBUcAXVgjM8z3BVuc+2cYeyNn1iy9maASjyo7R/7HUnKm9nMmQdblOmhs7RbNvzUa4nA8fDMv6kT2xRksLhpvxcXfkHF3oeWd7p8Xbc3U0zC5AfDWmBAFaVOc5zXvGkqZcRkTU/qJNOwY1EeTDKxs21MYZEFmPzlPhA+Za2mgR9lzKlkKJoxg7Gl5ZwOL8G2O8l+iLTQ7PLxp6IjZV/NwUpT+kv4cZO/6lPMXK8QFYQ6Ifu2YmeLB6efBxswaV4D9xDSA9/8fzR9AtMQHxL8h3daRDzDXKsObDFc7pm4OH6ywrT2gmfeC0Zs13EFna08mPKoqWqcF0tvREy5E4wPXAdQXx1gxohlnW4MEogaKqRPVI2qbZnHiy23gvKY1INhHo86y98uM8GWwzzWQnSg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB6876.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(376002)(39860400002)(396003)(346002)(55016002)(71200400001)(83380400001)(6916009)(5660300002)(4326008)(9686003)(33656002)(7416002)(52536014)(316002)(8936002)(54906003)(478600001)(966005)(64756008)(7696005)(66446008)(76116006)(26005)(53546011)(6506007)(66946007)(8676002)(66556008)(86362001)(66476007)(2906002)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 3VbNmadW4NM98Bbef8aWj20KJkGHWVR+r3HCyAz904e5bs/64K38sPRrBmtdWEN48FozaT+AgIELC6A3sPY6EqW3DiKOgxxrpwkaBftbXfg4dtEFXQgMwTEjCRN397/VOaproWGowyu0slhZGIxnd6NfdK54OE1M45YTZ3TWQeH/LymiqYaX/n9sAt587+68G+NCpayq2h2fq4Wo/e0/nN8ReJaU6Mk260KeEn3Dt5y7m65GnrYtyOhSV2J8tJQ0cEdKKVUj15bJ53tuRe4p4i+n6K12hRKF64qY3bppzEJjNHVipnqMZmuMS5JNP1HkMyIvdB25+D5bVjTAB8JpeuYv6YJZ8jAANJRcXh8YNW9nz0bNG+4Ypx5zdyV/vC9zkPmL/K0zD9kczG350tvyM4C8eLmlNe0P5yc3rBZG7CK2afS95vuIUNbpnviRmC3MnyHKI5v7vAt8N9xxIVJmGW7zLuR5og2jkgPb3n4xri5nFYKK2LCDsh2A820azkaQ
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 1 Jun 2020 11:16:03 -0400
+Received: from gproxy6-pub.mail.unifiedlayer.com ([67.222.39.168]:39603 "EHLO
+        gproxy6-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726327AbgFAPQD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 11:16:03 -0400
+X-Greylist: delayed 1289 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Jun 2020 11:16:01 EDT
+Received: from cmgw10.unifiedlayer.com (unknown [10.9.0.10])
+        by gproxy6.mail.unifiedlayer.com (Postfix) with ESMTP id 2075C1E0B3E
+        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 08:54:31 -0600 (MDT)
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+        by cmsmtp with ESMTP
+        id flpcjty5PxgMWflpejZfDq; Mon, 01 Jun 2020 08:54:31 -0600
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.3 cv=cODOTGWN c=1 sm=1 tr=0
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10:nop_charset_1
+ a=nTHF0DUjJn0A:10:nop_rcvd_month_year
+ a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
+ a=JfrnYn6hAAAA:8 a=yk56JuNMXvj-j4NLtGMA:9 a=k7fQ0PofDHJ_D0n9:21
+ a=eGWgZIWGoZCdjxqI:21 a=QEXdDO2ut3YA:10:nop_charset_2
+ a=rsP06fVo5MYu2ilr0aT5:22 a=1CNFftbPRP8L7MoqJWF3:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ABsPewTX/44/kRoSBC3OMTE4BQw/66NmwHcg2pjgaoM=; b=RLtlU5NpQ+gtHvuB8r789zlhHa
+        lGEbithqfZVxDHhS563wBSLp5z/VHSfgvm8heut4APLaT/KtoKXjTpgwcY7EWga1P2IQtPTU0CO0C
+        ZPmXGG7fOAVfX3VwVAW8kIhTQTCDCuT9wh0lEJK08CJxhWzDGP98Dya882UdKM5sopUHyPWxKRdgD
+        ilqQhD9ezsdANerJoV3RszSct8LZVUl5/+L1/f+1i9QcEJwjco3PiNg5njjnubsCvcNkQULusGHFb
+        fKIfaUEiKcqoYqpqQpKFKyxk4aJJdun6BCPJp4HvB/TwpNeFb2uHGkRDdCZJFskiOhs7ejto/OfLm
+        YMiTpePQ==;
+Received: from dslb-002-205-073-081.002.205.pools.vodafone-ip.de ([2.205.73.81]:51476 helo=[192.168.178.164])
+        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <parthiban@linumiz.com>)
+        id 1jflpb-00047q-SK; Mon, 01 Jun 2020 14:54:28 +0000
+Subject: Re: [PATCH] ARM: dts: imx6ull: add MYiR MYS-6ULX SBC
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Parthiban <parthiban@linumiz.com>
+References: <20200408184351.135716-1-parthiban@linumiz.com>
+ <20200426133300.GE30501@dragon>
+From:   Parthiban <parthiban@linumiz.com>
+Message-ID: <3cfed170-ea23-e92f-e10e-e3b5c6e96008@linumiz.com>
+Date:   Mon, 1 Jun 2020 16:54:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90f43119-b26a-4963-dc9c-08d8063e88fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2020 15:14:52.7021
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9DlxNN2+hG/LoDo4cpI2gcyIeyKZ36rO+30HQODYipi46TMdgdNiGCh5MsiWiB61yj8vvW26oSDPpvLSX8KvtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5947
+In-Reply-To: <20200426133300.GE30501@dragon>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 2.205.73.81
+X-Source-L: No
+X-Exim-ID: 1jflpb-00047q-SK
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: dslb-002-205-073-081.002.205.pools.vodafone-ip.de ([192.168.178.164]) [2.205.73.81]:51476
+X-Source-Auth: parthiban@linumiz.com
+X-Email-Count: 7
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRA
-aWRlYXNvbmJvYXJkLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgNiwgMjAyMCA2OjMyIFBN
-DQo+IFRvOiBWaXNoYWwgU2FnYXIgPHZzYWdhckB4aWxpbnguY29tPg0KPiBDYzogSHl1biBLd29u
-IDxoeXVua0B4aWxpbnguY29tPjsgbWNoZWhhYkBrZXJuZWwub3JnOw0KPiByb2JoK2R0QGtlcm5l
-bC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBNaWNoYWwgU2ltZWsNCj4gPG1pY2hhbHNAeGls
-aW54LmNvbT47IGxpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGhhbnMudmVya3VpbEBjaXNjby5jb207IGxpbnV4LWFybS0NCj4ga2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IERpbmVz
-aCBLdW1hcg0KPiA8ZGluZXNoa0B4aWxpbnguY29tPjsgU2FuZGlwIEtvdGhhcmkgPHNhbmRpcGtA
-eGlsaW54LmNvbT47IEpvZSBQZXJjaGVzDQo+IDxqb2VAcGVyY2hlcy5jb20+DQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0ggdjIgMS8yXSBtZWRpYTogZHQtYmluZGluZ3M6IG1lZGlhOiB4aWxpbng6IEFk
-ZCBYaWxpbnggVUhELQ0KPiBTREkgUmVjZWl2ZXIgU3Vic3lzdGVtDQo+IA0KPiBIaSBWaXNoYWws
-DQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4NCj4gDQo+IE9uIFdlZCwgQXByIDI5LCAy
-MDIwIGF0IDA3OjQ3OjAzUE0gKzA1MzAsIFZpc2hhbCBTYWdhciB3cm90ZToNCj4gPiBBZGQgYmlu
-ZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgWGlsaW54IFVIRC1TREkgUmVjZWl2ZXIgU3Vic3lzdGVt
-Lg0KPiA+DQo+ID4gVGhlIFhpbGlueCBVSEQtU0RJIFJlY2VpdmVyIFN1YnN5c3RlbSBjb25zaXN0
-cyBvZiBTTVBURSBVSEQtU0RJIChSWCkgSVANCj4gPiBjb3JlLCBhbiBTREkgUlggdG8gVmlkZW8g
-QnJpZGdlIElQIGNvcmUgdG8gY29udmVydCBTREkgdmlkZW8gdG8gbmF0aXZlDQo+ID4gdmlkZW8g
-YW5kIGEgVmlkZW8gSW4gdG8gQVhJNC1TdHJlYW0gSVAgY29yZSB0byBjb252ZXJ0IG5hdGl2ZSB2
-aWRlbyB0bw0KPiA+IEFYSTQtU3RyZWFtLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogVmlzaGFs
-IFNhZ2FyIDx2aXNoYWwuc2FnYXJAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPiB2Mg0KPiA+IC0g
-UmVtb3ZlZCByZWZlcmVuY2VzIHRvIHhsbngsdmlkZW8qDQo+ID4gLSBGaXhlZCBhcyBwZXIgU2Fr
-YXJpIEFpbHVzIGFuZCBSb2IgSGVycmluZydzIGNvbW1lbnRzDQo+ID4gLSBDb252ZXJ0ZWQgdG8g
-eWFtbCBmb3JtYXQNCj4gPg0KPiA+ICAuLi4vYmluZGluZ3MvbWVkaWEveGlsaW54L3hsbngsc2Rp
-cnhzcy55YW1sICAgfCAxMzIgKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxMzIgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3hpbGlueC94bG54LHNkaXJ4c3MueWFtbA0K
-PiA+DQo+ID4gZGlmZiAtLWdpdA0KPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZWRpYS94aWxpbngveGxueCxzZGlyeHNzLnlhbWwNCj4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbWVkaWEveGlsaW54L3hsbngsc2Rpcnhzcy55YW1sDQo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjkxMzNhZDE5ZGY1NQ0KPiA+
-IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEveGlsaW54L3hsbngsc2Rpcnhzcy55YW1sDQo+ID4gQEAgLTAsMCArMSwxMzIgQEAN
-Cj4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1D
-bGF1c2UpDQo+ID4gKyVZQU1MIDEuMg0KPiA+ICstLS0NCj4gPiArJGlkOiBodHRwOi8vZGV2aWNl
-dHJlZS5vcmcvc2NoZW1hcy9tZWRpYS94aWxpbngveGxueCxzZGlyeHNzLnlhbWwjDQo+ID4gKyRz
-Y2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KPiA+
-ICsNCj4gPiArDQo+ID4gK3RpdGxlOiBYaWxpbnggU01QVEUgVUhELVNESSBSZWNlaXZlciBTdWJz
-eXN0ZW0NCj4gPiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gVmlzaGFsIFNhZ2FyIDx2
-aXNoYWwuc2FnYXJAeGlsaW54LmNvbT4NCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOiB8DQo+ID4g
-KyAgVGhlIFNNUFRFIFVIRC1TREkgUmVjZWl2ZXIgKFJYKSBTdWJzeXN0ZW0gYWxsb3dzIHlvdSB0
-byBxdWlja2x5IGNyZWF0ZQ0KPiBzeXN0ZW1zDQo+ID4gKyAgYmFzZWQgb24gU01QVEUgU0RJIHBy
-b3RvY29scy4gSXQgcmVjZWl2ZXMgdW5hbGlnbmVkIG5hdGl2ZSBTREkgc3RyZWFtcw0KPiBmcm9t
-DQo+ID4gKyAgdGhlIFNESSBHVCBQSFkgYW5kIG91dHB1dHMgYW4gQVhJNC1TdHJlYW0gdmlkZW8g
-c3RyZWFtLCBuYXRpdmUgdmlkZW8sIG9yDQo+ID4gKyAgbmF0aXZlIFNESSB1c2luZyBYaWxpbngg
-dHJhbnNjZWl2ZXJzIGFzIHRoZSBwaHlzaWNhbCBsYXllci4NCj4gPiArDQo+ID4gKyAgVGhlIHN1
-YnN5c3RlbSBjb25zaXN0cyBvZg0KPiA+ICsgIDEgLSBTTVBURSBVSEQtU0RJIFJ4DQo+ID4gKyAg
-MiAtIFNESSBSeCB0byBOYXRpdmUgVmlkZW8gQnJpZGdlDQo+ID4gKyAgMyAtIFZpZGVvIEluIHRv
-IEFYSTQtU3RyZWFtIEJyaWRnZQ0KPiA+ICsNCj4gPiArICBUaGUgc3Vic3lzdGVtIGNhbiBjYXB0
-dXJlIFNESSBzdHJlYW1zIGluIHVwdG8gMTJHIG1vZGUgOCBkYXRhIHN0cmVhbXMNCj4gYW5kIG91
-dHB1dA0KPiANCj4gcy91cHRvL3VwIHRvLw0KPiANCg0KSSB3aWxsIGZpeCB0aGlzIGluIG5leHQg
-dmVyc2lvbi4gDQoNCj4gPiArICBhIGR1YWwgcGl4ZWwgcGVyIGNsb2NrIFJHQi9ZVVY0NDQsNDIy
-LzQyMCAxMC8xMiBiaXRzIHBlciBjb21wb25lbnQNCj4gQVhJNC1TdHJlYW0uDQo+ID4gKw0KPiA+
-ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBhdGlibGU6DQo+ID4gKyAgICBpdGVtczoNCj4gPiAr
-ICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgIC0geGxueCx2LXNtcHRlLXVoZHNkaS1yeC1zcy0y
-LjANCj4gPiArDQo+ID4gKyAgcmVnOg0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4g
-KyAgaW50ZXJydXB0czoNCj4gPiArICAgIG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICsgIGNsb2Nr
-czoNCj4gPiArICAgIGRlc2NyaXB0aW9uOiBMaXN0IG9mIGNsb2NrIHNwZWNpZmllcnMNCj4gPiAr
-ICAgIGl0ZW1zOg0KPiA+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBBWEk0LUxpdGUgY2xvY2sNCj4g
-PiArICAgICAgLSBkZXNjcmlwdGlvbjogU01QVEUgVUhELVNESSBSeCBjb3JlIGNsb2NrDQo+ID4g
-KyAgICAgIC0gZGVzY3JpcHRpb246IFZpZGVvIGNsb2NrDQo+ID4gKw0KPiA+ICsgIGNsb2NrLW5h
-bWVzOg0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIC0gY29uc3Q6IHNfYXhpX2FjbGsNCj4g
-PiArICAgICAgLSBjb25zdDogc2RpX3J4X2Nsaw0KPiA+ICsgICAgICAtIGNvbnN0OiB2aWRlb19v
-dXRfY2xrDQo+ID4gKw0KPiA+ICsgIHhsbngsYnBwOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IEJp
-dHMgcGVyIHBpeGVsIHN1cHBvcnRlZC4gQ2FuIGJlIDEwIG9yIDEyIGJpdHMgcGVyIHBpeGVsIG9u
-bHkuDQo+ID4gKyAgICBhbGxPZjoNCj4gPiArICAgICAgLSAkcmVmOiAiL3NjaGVtYXMvdHlwZXMu
-eWFtbCMvZGVmaW5pdGlvbnMvdWludDMyIg0KPiA+ICsgICAgICAtIGVudW06IFsxMCwgMTJdDQo+
-IA0KPiBJIGRvbid0IHNlZSB0aGlzIGFzIGEgZGVzaWduIHBhcmFtZXRlciBpbiB0aGUgZG9jdW1l
-bnRhdGlvbiAocGcyOTAsDQo+IHYyLjApLiBXaGF0IGRvZXMgaXQgY29ycmVzcG9uZCB0byA/IEFs
-bCB0aGUgQlBDIG1lbnRpb25zIGluIHRoZQ0KPiBkb2N1bWVudGF0aW9uIGFsd2F5cyBzdGF0ZSB0
-aGF0IDEwLWJpdCBpcyB0aGUgb25seSBzdXBwb3J0ZWQgdmFsdWUuDQo+IA0KDQpUaGUgbmV3IHZl
-cnNpb24gb2YgSVAgYmVpbmcgcmVsZWFzZWQgd2lsbCBoYXZlIDEwIGFuZCAxMiBiaXQgc3VwcG9y
-dC4gSXQgaXMgYWxyZWFkeSBpbiB0aGUgWGlsaW54IGxpbnV4LXhsbnggcmVwby4NCkkgd2lsbCBy
-ZW5hbWUgdGhpcyB0byAieGxueCxicGMiIGluc3RlYWQgb2YgInhsbngsYnBwIiB0byByZWZlciB0
-byBiaXRzIHBlciBjb21wb25lbnQuDQoNCj4gPiArDQo+ID4gKyAgeGxueCxsaW5lLXJhdGU6DQo+
-ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICBUaGUgbWF4aW11bSBtb2RlIHN1cHBv
-cnRlZCBieSB0aGUgZGVzaWduLiBQb3NzaWJsZSB2YWx1ZXMgYXJlIGFzDQo+IGJlbG93DQo+ID4g
-KyAgICAgIDEyR19TRElfOERTIC0gMTJHIG1vZGUgd2l0aCA4IGRhdGEgc3RyZWFtcw0KPiA+ICsg
-ICAgICA2R19TREkgICAgICAtICA2RyBtb2RlDQo+ID4gKyAgICAgIDNHX1NESSAgICAgIC0gIDNH
-IG1vZGUNCj4gPiArICAgIGVudW06DQo+ID4gKyAgICAgIC0gMTJHX1NESV84RFMNCj4gPiArICAg
-ICAgLSA2R19TREkNCj4gPiArICAgICAgLSAzR19TREkNCj4gDQo+IEhvdyBhYm91dCBtYWtpbmcg
-dGhpcyBhbiBpbnRlZ2VyIHByb3BlcnR5LCB3aXRoICNkZWZpbmUgaW4NCj4gaW5jbHVkZS9kdC1i
-aW5kaW5ncy9tZWRpYS94aWxpbngtc2RpLmggPyBBcyBmYXIgYXMgSSB1bmRlcnN0YW5kLCB0aGUg
-U0RJDQo+IFRYIHN1YnN5c3RlbSBoYXMgdGhlIHNhbWUgcGFyYW1ldGVyLCBzbyB0aGUgI2RlZmlu
-ZSBjb3VsZCBiZSBzaGFyZWQNCj4gYmV0d2VlbiB0aGUgdHdvLg0KPiANCg0KWWVzIHRoYXQgaXMg
-b2sgd2l0aCBtZS4gSSB3aWxsIGFkZCB0aGlzIGluIHRoZSBuZXh0IHZlcnNpb24uDQoNCj4gPiAr
-DQo+ID4gKyAgeGxueCxpbmNsdWRlLWVkaDoNCj4gPiArICAgIHR5cGU6IGJvb2xlYW4NCj4gPiAr
-ICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIFRoaXMgaXMgcHJlc2VudCB3aGVuIHRoZSBF
-cnJvciBEZXRlY3Rpb24gYW5kIEhhbmRsaW5nIHByb2Nlc3NvciBpcw0KPiA+ICsgICAgICBlbmFi
-bGVkIGluIGRlc2lnbi4NCj4gPiArDQo+ID4gKyAgcG9ydHM6DQo+ID4gKyAgICB0eXBlOiBvYmpl
-Y3QNCj4gPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIEdlbmVyYWxseSB0aGUgU0RJ
-IHBvcnQgaXMgY29ubmVjdGVkIHRvIGEgZGV2aWNlIGxpa2UgU0RJIEJyb2FkY2FzdA0KPiBjYW1l
-cmENCj4gPiArICAgICAgd2hpY2ggaXMgaW5kZXBlbmRlbnRseSBjb250cm9sbGVkLiBIZW5jZSBw
-b3J0QDAgaXMgYSBzb3VyY2UgcG9ydCB3aGljaA0KPiBjYW4gYmUNCj4gPiArICAgICAgY29ubmVj
-dGVkIHRvIGRvd25zdHJlYW0gSVAgd2hpY2ggY2FuIHdvcmsgd2l0aCBBWEk0IFN0cmVhbSBkYXRh
-Lg0KPiANCj4gV2Ugc2hvdWxkIHN0aWxsIGhhdmUgYW4gaW5wdXQgcG9ydC4gSXQgY2FuIGJlIGNv
-bm5lY3RlZCB0byBhIERUIG5vZGUgZm9yDQo+IGEgcGh5c2ljYWwgU0RJIGNvbm5lY3Rvciwgb3Ig
-YW55IG90aGVyIGNvbXBvbmVudCBpbiB0aGUgcGxhdGZvcm0gKEkNCj4gZXhwZWN0IHRoZSBmb3Jt
-ZXIgdG8gYmUgdGhlIGNvbW1vbiBjYXNlKS4gVGhlcmUgYXJlIERUIGJpbmRpbmdzIGZvcg0KPiBj
-b25uZWN0b3JzIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Nv
-bm5lY3Rvci8sIHdlDQo+IHNob3VsZCBhZGQgb25lIGZvciBTREkuDQo+IA0KDQpZZXMgdGhlIGlu
-cHV0IHBvcnQgaXMgYSBwaHlzaWNhbCBTREkgY29ubmVjdG9yIGNvbm5lY3RlZCB0byBhbiBlcXVp
-cG1lbnQgbGlrZSBicm9hZGNhc3QgY2FtZXJhLg0KQnV0IHRoZSBjYW1lcmEvZXF1aXBtZW50IGNh
-bid0IGJlIGNvbnRyb2xsZWQgYnkgdGhlIFY0TDIgcGlwZWxpbmUgYW5kIFNESSBwcm90b2NvbCBp
-cyB1bmlkaXJlY3Rpb25hbC4NCg0KSWYgd2UgYWRkIGFub3RoZXIgZHQgbm9kZSwgdGhlbiBJIHRo
-aW5rIGFub3RoZXIgZHVtbXkgdjRsIHN1YmRldiBkcml2ZXIgd2lsbCBuZWVkIHRvIGltcGxlbWVu
-dGVkIGFuZCBsb2FkZWQNCnRvIGNvbXBsZXRlIHRoZSBwaXBlIGFzIFhpbGlueCBWaWRlbyBkcml2
-ZXIgd2lsbCBuZWVkIGl0Lg0KDQpDb3VsZCB5b3UgcGxlYXNlIHNoYXJlIHRoZSByZWFzb24gdG8g
-aGF2ZSB0aGlzIGlucHV0IHBvcnQgaW4gdGhlIFNESSBSeCBkcml2ZXI/DQoNCj4gPiArICAgIHBy
-b3BlcnRpZXM6DQo+ID4gKyAgICAgIHBvcnRAMDoNCj4gPiArICAgICAgICB0eXBlOiBvYmplY3QN
-Cj4gPiArICAgICAgICBkZXNjcmlwdGlvbjogU291cmNlIHBvcnQNCj4gPiArICAgICAgICBwcm9w
-ZXJ0aWVzOg0KPiA+ICsgICAgICAgICAgcmVnOg0KPiA+ICsgICAgICAgICAgICBjb25zdDogMA0K
-PiA+ICsgICAgICAgICAgZW5kcG9pbnQ6DQo+ID4gKyAgICAgICAgICAgIHR5cGU6IG9iamVjdA0K
-PiA+ICsgICAgICAgICAgICBwcm9wZXJ0aWVzOg0KPiA+ICsgICAgICAgICAgICAgIHJlbW90ZS1l
-bmRwb2ludDogdHJ1ZQ0KPiA+ICsgICAgICAgICAgICByZXF1aXJlZDoNCj4gPiArICAgICAgICAg
-ICAgICAtIHJlbW90ZS1lbmRwb2ludA0KPiA+ICsgICAgICAgICAgICBhZGRpdGlvbmFsUHJvcGVy
-dGllczogZmFsc2UNCj4gPiArICAgICAgICBhZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4g
-PiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+ICsgIC0gY29tcGF0aWJsZQ0KPiA+ICsgIC0gcmVnDQo+
-ID4gKyAgLSBpbnRlcnJ1cHRzDQo+ID4gKyAgLSBjbG9ja3MNCj4gPiArICAtIGNsb2NrLW5hbWVz
-DQo+ID4gKyAgLSB4bG54LGxpbmUtcmF0ZQ0KPiA+ICsgIC0geGxueCxicHANCj4gPiArICAtIHBv
-cnRzDQo+ID4gKw0KPiA+ICthZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiArDQo+ID4g
-K2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+ICsgICAgdWhkc2Rpcnhzczogdi1zbXB0ZS11aGRz
-ZGktcnhzc0A4MDAwMDAwMCB7DQo+ID4gKyAgICAgIGNvbXBhdGlibGUgPSAieGxueCx2LXNtcHRl
-LXVoZHNkaS1yeC1zcy0yLjAiOw0KPiA+ICsgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+
-Ow0KPiA+ICsgICAgICBpbnRlcnJ1cHRzID0gPDAgODkgND47DQo+ID4gKyAgICAgIHJlZyA9IDww
-eDAgMHg4MDAwMDAwMCAweDAgMHgxMDAwMD47DQo+ID4gKyAgICAgIHhsbngsaW5jbHVkZS1lZGg7
-DQo+ID4gKyAgICAgIHhsbngsbGluZS1yYXRlID0gIjEyR19TRElfOERTIjsNCj4gPiArICAgICAg
-Y2xvY2tzID0gPCZjbGtfMT4sIDwmc2k1NzBfMT4sIDwmY2xrXzI+Ow0KPiA+ICsgICAgICBjbG9j
-ay1uYW1lcyA9ICJzX2F4aV9hY2xrIiwgInNkaV9yeF9jbGsiLCAidmlkZW9fb3V0X2NsayI7DQo+
-ID4gKyAgICAgIHhsbngsYnBwID0gPDEwPjsNCj4gPiArDQo+ID4gKyAgICAgIHBvcnRzIHsNCj4g
-PiArICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAjc2l6ZS1jZWxs
-cyA9IDwwPjsNCj4gPiArICAgICAgICBwb3J0QDAgew0KPiA+ICsgICAgICAgICAgcmVnID0gPDA+
-Ow0KPiA+ICsgICAgICAgICAgc2Rpcnhfb3V0OiBlbmRwb2ludCB7DQo+ID4gKyAgICAgICAgICAg
-IHJlbW90ZS1lbmRwb2ludCA9IDwmdmNhcF9zZGlyeF9pbj47DQo+ID4gKyAgICAgICAgICB9Ow0K
-PiA+ICsgICAgICAgIH07DQo+ID4gKyAgICAgIH07DQo+ID4gKyAgICB9Ow0KPiANCj4gLS0NCj4g
-UmVnYXJkcywNCj4gDQo+IExhdXJlbnQgUGluY2hhcnQNCg0KUmVnYXJkcw0KVmlzaGFsIFNhZ2Fy
-IA0KDQo=
+
+
+On 4/26/20 3:33 PM, Shawn Guo wrote:
+> On Wed, Apr 08, 2020 at 08:43:51PM +0200, Parthiban Nallathambi wrote:
+>> Add support for the MYiR imx6ULL based single board computer
+>> equipped with on board 256MB NAND & RAM. The board also
+>> provides expansion header for expansion board, but this
+>> commit adds only support for SBC.
+>>
+>> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+>> ---
+>>  arch/arm/boot/dts/Makefile                       |   1 +
+>>  arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts |  19 ++
+>>  arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi     | 247 +++++++++++++++++++++++
+>>  3 files changed, 267 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
+>>  create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index e8dd99201397..eab86051d782 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -612,6 +612,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+>>  	imx6ull-14x14-evk.dtb \
+>>  	imx6ull-colibri-eval-v3.dtb \
+>>  	imx6ull-colibri-wifi-eval-v3.dtb \
+>> +	imx6ull-myir-mys-6ulx-nand.dtb \
+>>  	imx6ull-opos6uldev.dtb \
+>>  	imx6ull-phytec-segin-ff-rdk-nand.dtb \
+>>  	imx6ull-phytec-segin-ff-rdk-emmc.dtb \
+>> diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
+>> new file mode 100644
+>> index 000000000000..6eaba8a8d7a9
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
+>> @@ -0,0 +1,19 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2020 Linumiz
+>> + * Author: Parthiban Nallathambi <parthiban@linumiz.com>
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "imx6ull.dtsi"
+>> +#include "imx6ull-myir-mys-6ulx.dtsi"
+>> +
+>> +/ {
+>> +	model = "MYiR i.MX6ULL MYS-6ULX Single Board Computer with NAND";
+>> +	compatible = "myir,imx6ul-mys-6ulx-nand", "myir,imx6ul-mys-6ulx",
+>> +		     "fsl,imx6ull";
+> 
+> Any new compatible needs to be documented.
+
+Sure, thanks.
+
+> 
+>> +};
+>> +
+>> +&gpmi {
+>> +	status = "okay";
+>> +};
+>> diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
+>> new file mode 100644
+>> index 000000000000..f0a514187c21
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
+>> @@ -0,0 +1,247 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2020 Linumiz
+>> + * Author: Parthiban Nallathambi <parthiban@linumiz.com>
+>> + */
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/pwm/pwm.h>
+>> +
+>> +/ {
+>> +	model = "MYiR MYS-6ULX Single Board Computer";
+>> +	compatible = "myir,imx6ull-mys-6ulx", "fsl,imx6ull";
+>> +
+>> +	chosen {
+>> +		stdout-path = &uart1;
+>> +	};
+>> +
+>> +	regulators: regulators {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+> 
+> Drop the container node and put fixed regulator nodes directly under
+> root.  Suggest to use name schema below:
+> 
+> 	regulator-xxx {
+> 		...
+> 	};
+
+Fixed in v2. thanks
+
+> 
+> Shawn
+> 
+>> +
+>> +		vdd_5v: regulator@0 {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "VDD_5V";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			regulator-always-on;
+>> +			regulator-boot-on;
+>> +		};
+>> +
+>> +		vdd_3v3: regulator@1 {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "VDD_3V3";
+>> +			regulator-min-microvolt = <3300000>;
+>> +			regulator-max-microvolt = <3300000>;
+>> +			regulator-always-on;
+>> +			vin-supply = <&vdd_5v>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&fec1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_enet1>;
+>> +	phy-mode = "rmii";
+>> +	phy-handle = <&ethphy0>;
+>> +	phy-supply = <&vdd_3v3>;
+>> +	status = "okay";
+>> +
+>> +	mdio: mdio {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		ethphy0: ethernet-phy@0 {
+>> +			reg = <0>;
+>> +			compatible = "ethernet-phy-ieee802.3-c22";
+>> +			interrupt-parent = <&gpio5>;
+>> +			interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+>> +			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+>> +			clock-names = "rmii-ref";
+>> +			status = "okay";
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&gpmi {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_gpmi_nand>;
+>> +	nand-on-flash-bbt;
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&uart1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_uart1>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usbotg1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+>> +	dr_mode = "otg";
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usbotg2 {
+>> +	dr_mode = "host";
+>> +	disable-over-current;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usdhc1 {
+>> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+>> +	pinctrl-0 = <&pinctrl_usdhc1>;
+>> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+>> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+>> +	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
+>> +	no-1-8-v;
+>> +	keep-power-in-suspend;
+>> +	wakeup-source;
+>> +	vmmc-supply = <&vdd_3v3>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usdhc2 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usdhc2>;
+>> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
+>> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
+>> +	bus-width = <8>;
+>> +	non-removable;
+>> +	keep-power-in-suspend;
+>> +	vmmc-supply = <&vdd_3v3>;
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&iomuxc {
+>> +	pinctrl_enet1: enet1grp {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
+>> +			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
+>> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
+>> +			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
+>> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
+>> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
+>> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
+>> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
+>> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
+>> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
+>> +			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_gpmi_nand: gpminandgrp {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_NAND_CLE__RAWNAND_CLE		0x0b0b1
+>> +			MX6UL_PAD_NAND_ALE__RAWNAND_ALE		0x0b0b1
+>> +			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B	0x0b0b1
+>> +			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0x0b000
+>> +			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B	0x0b0b1
+>> +			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B	0x0b0b1
+>> +			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B	0x0b0b1
+>> +			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0x0b0b1
+>> +			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01	0x0b0b1
+>> +			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02	0x0b0b1
+>> +			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03	0x0b0b1
+>> +			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04	0x0b0b1
+>> +			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05	0x0b0b1
+>> +			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06	0x0b0b1
+>> +			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07	0x0b0b1
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_uart1: uart1grp {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
+>> +			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_usb_otg1_id: usbotg1idgrp {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_GPIO1_IO00__ANATOP_OTG1_ID	0x17059
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_usdhc1: usdhc1grp {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
+>> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10059
+>> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
+>> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
+>> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
+>> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
+>> +			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
+>> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
+>> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
+>> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
+>> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
+>> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
+>> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
+>> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
+>> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
+>> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
+>> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_usdhc2: usdhc2grp {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10069
+>> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
+>> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
+>> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
+>> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
+>> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
+>> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x17059
+>> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x17059
+>> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x17059
+>> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x17059
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
+>> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
+>> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
+>> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
+>> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
+>> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
+>> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170b9
+>> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170b9
+>> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170b9
+>> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170b9
+>> +		>;
+>> +	};
+>> +
+>> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+>> +		fsl,pins = <
+>> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
+>> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
+>> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
+>> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
+>> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
+>> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
+>> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170f9
+>> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170f9
+>> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170f9
+>> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170f9
+>> +		>;
+>> +	};
+>> +};
+>> -- 
+>> 2.11.0
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Thanks,
+Parthiban N
++4915163761545
