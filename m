@@ -2,260 +2,123 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9FAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 03:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934E4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 03:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6EE206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 03:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F43B206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 03:53:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UzjUoCfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgFADpo (ORCPT
+        id S1727089AbgFADxr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 31 May 2020 23:45:44 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43800 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbgFADpn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 31 May 2020 23:45:43 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A759D1A0592;
-        Mon,  1 Jun 2020 05:45:40 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A95AD1A05CA;
-        Mon,  1 Jun 2020 05:45:36 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A85B5402E4;
-        Mon,  1 Jun 2020 11:45:31 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        hongtao.jia@freescale.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: thermal: Convert qoriq to json-schema
-Date:   Mon,  1 Jun 2020 11:35:20 +0800
-Message-Id: <1590982520-5437-1-git-send-email-Anson.Huang@nxp.com>
+        Sun, 31 May 2020 23:53:47 -0400
+Received: from mail-eopbgr70085.outbound.protection.outlook.com ([40.107.7.85]:43968
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727050AbgFADxr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 31 May 2020 23:53:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cpihDk/Aqz6WFB/xVTsMJMpZB62clyHCT8owksUU8II0xhjXaJXajG84KmaoqZ74LR5Ar6XDv9LrQz568dWqbqPi2j8yMP4OpnZwqRNUlrTWnWBgK8tFNAx34UwlhsKjCsQuMc7xXhXRxeIdutjQERN88atugPYWOGlYkDsgANneu7gTQ1lIP48mdSyYLYHV4Igg/df2AYeq8uWlQEd6D97MHAn5fdQGAykQXXU7QmAuqQ0Bl0sP7xm5u/ydM2ajS+49AmEz6bUR0PWxAno5BCSqXP3yKwry43UqW0DEV7zdikAyXkkYDx/6FWpiSt7BYk+xPOeETjterCRPqzDHtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FwbhX2Idsrxieujj/Kq5c0pr0q2R66ph9RRONGZsnp4=;
+ b=jpmKN0J4LBRIoqxh57kRzb7eSMD7up1+iotnfBRfATFckgmGIROkiM03OY9y6JGmNovkVvjdRaS6ZjV2AvZnwY1zvXoS5mB7Hv58NVzdtUqxpj7elEVIkd9RqOIYceGbhshhqlWJP0X8pox8pwGhzvKSSoNQlp1b7AT/gTN+arS8c912EAG4zAvV5uzQ5tyeQvjbdXvebU+70Q7AY3qzQ8g0/zxKJJQwMQlhivKVLaSNG3xrP+SlollvrxlmJWrmnd839KEPRCTCbQmOuhcscImsn5AIpc4Tyn+DUdm62rbcbIrXtoG/0XpYDPdaBCN6HbHLWRsgik0+DWPvnQAgUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FwbhX2Idsrxieujj/Kq5c0pr0q2R66ph9RRONGZsnp4=;
+ b=UzjUoCfifcYznK6Frijky7bJ/Mcp8fClasTCYM2XE39IRMfaUc2Ms9Znjzn9iOBtDKwJDDTQZtSE/3eS3ouNVHeK70w/IfnS8h1Z1tdUBFw5Deb7SXu3sbytojBoRsTlyc/1HI651QfRWZRXExgmoEEmfCenay3uNxT9TGcWvhw=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2920.eurprd04.prod.outlook.com (2603:10a6:4:9d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Mon, 1 Jun
+ 2020 03:53:43 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3045.022; Mon, 1 Jun 2020
+ 03:53:43 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de,
+        aisheng.dong@nxp.com, robh+dt@kernel.org, sboyd@kernel.org,
+        linux@rempel-privat.de, jaswinder.singh@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        l.stach@pengutronix.de, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2 0/3] imx8m: add mu support
+Date:   Mon,  1 Jun 2020 11:43:16 +0800
+Message-Id: <1590982999-7149-1-git-send-email-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR03CA0096.apcprd03.prod.outlook.com
+ (2603:1096:4:7c::24) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR03CA0096.apcprd03.prod.outlook.com (2603:1096:4:7c::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.7 via Frontend Transport; Mon, 1 Jun 2020 03:53:38 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e9b92cd3-023f-488c-b84a-08d805df607d
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2920:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB292040F4891454E055FC7272888A0@DB6PR0402MB2920.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1284;
+X-Forefront-PRVS: 0421BF7135
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: m8tpC0YIBbSf6V1JDlPVJqQQ3hFyekuyRVA+/QDxU70+TH4U8tgsb0/zMMFriNlXxCniMNwAa71UqhN7go5k7tVup5tUKCzf+ivcakYWprCnCnXTneDoDpHtLq+5u32eI2dWjopb4WpXYWG4vpLBtHvqY6v+/yyYqD7OztMXT9w6JosuBd8mdHu0/cX5RlPof2sXzedOSu+Crr0wnDv4rQlFTfHb1f14DQFzqjUBE8poOs64VbloEYOLvedAT0VNFmVfXMebm98D+UrBwDFm2dXZBiq68au5/MAfWbu3UobN9oEhU72fmYFQ6ksRojQRrzD5vlLUnJi5n6OspUhhLJXJVwyEzg5uydWGyWQ1UqYnfNNUnkj/4Xq91gwvWjPtZtZq2d2FLACPDZ+KwGvNCKnYWX83kndru1yZuRirm3E=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(36756003)(4326008)(6486002)(8936002)(6666004)(8676002)(7416002)(6506007)(9686003)(6512007)(478600001)(69590400007)(16526019)(26005)(316002)(52116002)(5660300002)(66946007)(66476007)(4744005)(2906002)(66556008)(86362001)(186003)(956004)(83380400001)(2616005)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 5mNPz3F7DR0BRWUy2y+SQaKni9+HgvqyFjDvKXGGGqRvKFOY8luTRUBXL/OMiUP33S0G2tGvJgks0NsK0oZqyzg2erxrMPUXhpJUphyTgdt5EwN198WikPEnoUVpvG7BPNPoUODr0z67IwQu73v6flFLiLLzkJfVRWNgkS8V0gwcAmMWEaNRcjYUTl5MwMzBjXw8Qd9W9Diy/XGkJCJehzcPjgPTEA5wZcFr+zAf9lqIJmj85fxiJUhIOIWsqyBNAqLZp5oIhtUQFQSxVO5vwkd3RTAx+11LdZ+YSrfW5Kh5P1vwOAUhHdbJ8AemEuDCJhRyqj95wtwn+xQelWKivPKifJ9x4zBvuAsK3U4YQNMo9MPeupHuF1m0z6X/Wm0S1/gBj/037L9MdM1coRLnJkZ23I0Qow96y7Jt88RtBy09BHzJlAiR3sBv4UipEJ/VDTS58M/m28+8AbH45nyDUHFzZZTW0unHvfZvnTK3OzY=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9b92cd3-023f-488c-b84a-08d805df607d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2020 03:53:43.1391
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0tI/ZZCmgvPkNbeEKSgIp3xaajsk/3dP+r3qA8fD5ejjVX8uUvvC9O4lxBErz4DWNVd3E8fvqOueOiBbTfhQDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2920
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the qoriq thermal binding to DT schema format using json-schema
+From: Peng Fan <peng.fan@nxp.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- add 'maxItems' for 'fsl,tmu-range' property;
-	- add 'minItems'/'maxItems' and items descriptions for 'fsl,tmu-calibration' property;
-	- remove description for common property '#thermal-sensor-cells';
-	- refine 'fsl,tmu-calibration' format in example.
----
- .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
- .../devicetree/bindings/thermal/qoriq-thermal.yaml | 112 +++++++++++++++++++++
- 2 files changed, 112 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
- create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+V2:
+ Add dt-bindings
+ Merge dts changes into one patch, since all is to add mu node
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-deleted file mode 100644
-index 28f2cba..0000000
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ /dev/null
-@@ -1,71 +0,0 @@
--* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
--
--Required properties:
--- compatible : Must include "fsl,qoriq-tmu" or "fsl,imx8mq-tmu". The
--	version of the device is determined by the TMU IP Block Revision
--	Register (IPBRR0) at offset 0x0BF8.
--	Table of correspondences between IPBRR0 values and example  chips:
--		Value           Device
--		----------      -----
--		0x01900102      T1040
--- reg : Address range of TMU registers.
--- interrupts : Contains the interrupt for TMU.
--- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
--	the SoC reference manual. The first cell is TTR0CR, the second is
--	TTR1CR, etc.
--- fsl,tmu-calibration : A list of cell pairs containing temperature
--	calibration data, as specified by the SoC reference manual.
--	The first cell of each pair is the value to be written to TTCFGR,
--	and the second is the value to be written to TSCFGR.
--- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
--	site ID, and represents the "n" in TRITSRn and TRATSRn.
--
--Optional property:
--- little-endian : If present, the TMU registers are little endian. If absent,
--	the default is big endian.
--- clocks : the clock for clocking the TMU silicon.
--
--Example:
--
--tmu@f0000 {
--	compatible = "fsl,qoriq-tmu";
--	reg = <0xf0000 0x1000>;
--	interrupts = <18 2 0 0>;
--	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
--	fsl,tmu-calibration = <0x00000000 0x00000025
--			       0x00000001 0x00000028
--			       0x00000002 0x0000002d
--			       0x00000003 0x00000031
--			       0x00000004 0x00000036
--			       0x00000005 0x0000003a
--			       0x00000006 0x00000040
--			       0x00000007 0x00000044
--			       0x00000008 0x0000004a
--			       0x00000009 0x0000004f
--			       0x0000000a 0x00000054
--
--			       0x00010000 0x0000000d
--			       0x00010001 0x00000013
--			       0x00010002 0x00000019
--			       0x00010003 0x0000001f
--			       0x00010004 0x00000025
--			       0x00010005 0x0000002d
--			       0x00010006 0x00000033
--			       0x00010007 0x00000043
--			       0x00010008 0x0000004b
--			       0x00010009 0x00000053
--
--			       0x00020000 0x00000010
--			       0x00020001 0x00000017
--			       0x00020002 0x0000001f
--			       0x00020003 0x00000029
--			       0x00020004 0x00000031
--			       0x00020005 0x0000003c
--			       0x00020006 0x00000042
--			       0x00020007 0x0000004d
--			       0x00020008 0x00000056
--
--			       0x00030000 0x00000012
--			       0x00030001 0x0000001d>;
--	#thermal-sensor-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-new file mode 100644
-index 0000000..c5df999
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/qoriq-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
-+
-+maintainers:
-+  - Hongtao Jia <hongtao.jia@freescale.com>
-+
-+properties:
-+  compatible:
-+    description: |
-+      The version of the device is determined by the TMU IP Block Revision
-+      Register (IPBRR0) at offset 0x0BF8.
-+      Table of correspondences between IPBRR0 values and example chips:
-+            Value           Device
-+            ----------      -----
-+            0x01900102      T1040
-+    enum:
-+      - fsl,qoriq-tmu
-+      - fsl,imx8mq-tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,tmu-range:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-array'
-+    description: |
-+      The values to be programmed into TTRnCR, as specified by the SoC
-+      reference manual. The first cell is TTR0CR, the second is TTR1CR, etc.
-+    maxItems: 4
-+
-+  fsl,tmu-calibration:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-matrix'
-+    description: |
-+      A list of cell pairs containing temperature calibration data, as
-+      specified by the SoC reference manual. The first cell of each pair
-+      is the value to be written to TTCFGR, and the second is the value
-+      to be written to TSCFGR.
-+    items:
-+      items:
-+        - description: value for TTCFGR
-+        - description: value for TSCFGR
-+    minItems: 1
-+    maxItems: 64
-+
-+  little-endian:
-+    description: |
-+      boolean, if present, the TMU registers are little endian. If absent,
-+      the default is big endian.
-+    type: boolean
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - fsl,tmu-range
-+  - fsl,tmu-calibration
-+  - '#thermal-sensor-cells'
-+
-+examples:
-+  - |
-+    tmu@f0000 {
-+        compatible = "fsl,qoriq-tmu";
-+        reg = <0xf0000 0x1000>;
-+        interrupts = <18 2 0 0>;
-+        fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
-+        fsl,tmu-calibration = <0x00000000 0x00000025>,
-+                              <0x00000001 0x00000028>,
-+                              <0x00000002 0x0000002d>,
-+                              <0x00000003 0x00000031>,
-+                              <0x00000004 0x00000036>,
-+                              <0x00000005 0x0000003a>,
-+                              <0x00000006 0x00000040>,
-+                              <0x00000007 0x00000044>,
-+                              <0x00000008 0x0000004a>,
-+                              <0x00000009 0x0000004f>,
-+                              <0x0000000a 0x00000054>,
-+                              <0x00010000 0x0000000d>,
-+                              <0x00010001 0x00000013>,
-+                              <0x00010002 0x00000019>,
-+                              <0x00010003 0x0000001f>,
-+                              <0x00010004 0x00000025>,
-+                              <0x00010005 0x0000002d>,
-+                              <0x00010006 0x00000033>,
-+                              <0x00010007 0x00000043>,
-+                              <0x00010008 0x0000004b>,
-+                              <0x00010009 0x00000053>,
-+                              <0x00020000 0x00000010>,
-+                              <0x00020001 0x00000017>,
-+                              <0x00020002 0x0000001f>,
-+                              <0x00020003 0x00000029>,
-+                              <0x00020004 0x00000031>,
-+                              <0x00020005 0x0000003c>,
-+                              <0x00020006 0x00000042>,
-+                              <0x00020007 0x0000004d>,
-+                              <0x00020008 0x00000056>,
-+                              <0x00030000 0x00000012>,
-+                              <0x00030001 0x0000001d>;
-+        #thermal-sensor-cells = <1>;
-+    };
+Add mu dt bindings
+Add mu node
+Add i.MX8MP mu root clk
+
+Peng Fan (3):
+  dt-bindings: mailbox: imx-mu: support i.MX8M
+  arm64: dts: imx8m: add mu node
+  clk: imx8mp: add mu root clk
+
+ Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 3 ++-
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi            | 9 +++++++++
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi            | 9 +++++++++
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi            | 9 +++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi            | 9 +++++++++
+ drivers/clk/imx/clk-imx8mp.c                         | 1 +
+ 6 files changed, 39 insertions(+), 1 deletion(-)
+
 -- 
-2.7.4
+2.16.4
 
