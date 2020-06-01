@@ -2,238 +2,1163 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EF7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB8BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 948D2206A4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C782077D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 10:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgFAKP7 (ORCPT
+        id S1725972AbgFAKgq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:15:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:36018 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgFAKP5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:15:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30B8B1FB;
-        Mon,  1 Jun 2020 03:15:56 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 136723F305;
-        Mon,  1 Jun 2020 03:15:54 -0700 (PDT)
-Subject: Re: [PATCH v3 04/20] arm64: dts: arm: vexpress: Move fixed devices
- out of bus node
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-To:     Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200513103016.130417-1-andre.przywara@arm.com>
- <20200513103016.130417-5-andre.przywara@arm.com>
- <20200528024810.GA232303@roeck-us.net>
- <48afb8bb-a22a-54df-7751-55b7b84c3c88@arm.com>
-Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
- 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
- i4aIXCH3Wv6K
-Organization: ARM Ltd.
-Message-ID: <22687572-becf-7b4e-9759-cfba44677a1d@arm.com>
-Date:   Mon, 1 Jun 2020 11:14:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 06:36:46 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2260 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725788AbgFAKgq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Jun 2020 06:36:46 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id C388E90100A8D35D9F2C;
+        Mon,  1 Jun 2020 11:36:44 +0100 (IST)
+Received: from localhost (10.47.94.81) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 1 Jun 2020
+ 11:36:44 +0100
+Date:   Mon, 1 Jun 2020 11:36:04 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+CC:     Jonathan Cameron <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <andy.shevchenko@gmail.com>,
+        <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2 1/4] iio: chemical: scd30: add core driver
+Message-ID: <20200601113604.00002d70@Huawei.com>
+In-Reply-To: <20200531192152.GC27246@arch>
+References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
+        <20200530213630.87159-2-tomasz.duszynski@octakon.com>
+        <20200531105840.27e17f3d@archlinux>
+        <20200531192152.GC27246@arch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <48afb8bb-a22a-54df-7751-55b7b84c3c88@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.94.81]
+X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 28/05/2020 14:30, André Przywara wrote:
+On Sun, 31 May 2020 21:21:52 +0200
+Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
 
-Hi,
-
-> On 28/05/2020 03:48, Guenter Roeck wrote:
+> On Sun, May 31, 2020 at 10:58:40AM +0100, Jonathan Cameron wrote:
+> > On Sat, 30 May 2020 23:36:27 +0200
+> > Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+> >  
+> > > Add Sensirion SCD30 carbon dioxide core driver.
+> > >
+> > > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>  
+> >
+> > Hi Tomasz
+> >
+> > A few things inline.  Includes the alignment issue on
+> > x86_32 that I fell into whilst trying to fix timestamp
+> > alignment issues.  Suggested resolution inline for that.
+> >
+> > Thanks,
+> >
+> > Jonathan
+> >  
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-iio-scd30 |  20 +
+> > >  MAINTAINERS                                   |   6 +
+> > >  drivers/iio/chemical/Kconfig                  |  11 +
+> > >  drivers/iio/chemical/Makefile                 |   1 +
+> > >  drivers/iio/chemical/scd30.h                  |  75 ++
+> > >  drivers/iio/chemical/scd30_core.c             | 764 ++++++++++++++++++
+> > >  6 files changed, 877 insertions(+)
+> > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > >  create mode 100644 drivers/iio/chemical/scd30.h
+> > >  create mode 100644 drivers/iio/chemical/scd30_core.c
+> > >
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > > new file mode 100644
+> > > index 000000000000..a05b1d28e94a
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > > @@ -0,0 +1,20 @@
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/calibration
+> > > +Date:		June 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		Contaminants build-up in the measurement chamber or optical
+> > > +		elements deterioration leads to sensor drift.
+> > > +
+> > > +		One can compensate for sensor drift by using either automatic
+> > > +		self calibration (asc) or forced recalibration (frc). If used
+> > > +		at once one will overwrite the other.
+> > > +
+> > > +		Writing 1 or 0 to this attribute will respectively activate or
+> > > +		deactivate asc.
+> > > +
+> > > +		Picking value from the range [400 1 2000] and writing it to the
+> > > +		sensor will set frc.  
+> > Seems to me like this would be more intuitive as two separate parameters
+> > perhaps:
+> > calibration_auto_enable
+> > calibration_forced_value
+> > ?
+> >  
 > 
-> Hi Guenter,
+> Fine.
 > 
->> On Wed, May 13, 2020 at 11:30:00AM +0100, Andre Przywara wrote:
->>> The devicetree compiler complains when DT nodes without a reg property
->>> live inside a (simple) bus node:
->>> Warning (simple_bus_reg): Node /bus@8000000/motherboard-bus/refclk32khz
->>>                           missing or empty reg/ranges property
->>>
->>> Move the fixed clocks, the fixed regulator, the leds and the config bus
->>> subtree to the root node, since they do not depend on any busses.
->>>
->>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
->>
->> This patch results in tracebacks when booting the vexpress-a15 machine
->> with vexpress-v2p-ca15-tc1 devicetree file in qemu. Reverting it as well
->> as the subsequent patches affecting the same file (to avoid revert
->> conflicts) fixes the problem.
+> > > +
+> > > +		Upon reading current asc status and frc value are returned
+> > > +		respectively.
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 60ed2963efaa..41a509cca6f1 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -15137,6 +15137,12 @@ S:	Maintained
+> > >  F:	drivers/misc/phantom.c
+> > >  F:	include/uapi/linux/phantom.h
+> > >
+> > > +SENSIRION SCD30 CARBON DIOXIDE SENSOR DRIVER
+> > > +M:	Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > > +S:	Maintained
+> > > +F:	drivers/iio/chemical/scd30.h
+> > > +F:	drivers/iio/chemical/scd30_core.c
+> > > +
+> > >  SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
+> > >  M:	Tomasz Duszynski <tduszyns@gmail.com>
+> > >  S:	Maintained
+> > > diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+> > > index 7f21afd73b1c..99e852b67e55 100644
+> > > --- a/drivers/iio/chemical/Kconfig
+> > > +++ b/drivers/iio/chemical/Kconfig
+> > > @@ -85,6 +85,17 @@ config PMS7003
+> > >  	  To compile this driver as a module, choose M here: the module will
+> > >  	  be called pms7003.
+> > >
+> > > +config SCD30_CORE
+> > > +	tristate "SCD30 carbon dioxide sensor driver"
+> > > +	select IIO_BUFFER
+> > > +	select IIO_TRIGGERED_BUFFER
+> > > +	help
+> > > +	  Say Y here to build support for the Sensirion SCD30 sensor with carbon
+> > > +	  dioxide, relative humidity and temperature sensing capabilities.
+> > > +
+> > > +	  To compile this driver as a module, choose M here: the module will
+> > > +	  be called scd30_core.
+> > > +
+> > >  config SENSIRION_SGP30
+> > >  	tristate "Sensirion SGPxx gas sensors"
+> > >  	depends on I2C
+> > > diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+> > > index aba4167db745..c9804b041ecd 100644
+> > > --- a/drivers/iio/chemical/Makefile
+> > > +++ b/drivers/iio/chemical/Makefile
+> > > @@ -12,6 +12,7 @@ obj-$(CONFIG_BME680_SPI) += bme680_spi.o
+> > >  obj-$(CONFIG_CCS811)		+= ccs811.o
+> > >  obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
+> > >  obj-$(CONFIG_PMS7003) += pms7003.o
+> > > +obj-$(CONFIG_SCD30_CORE) += scd30_core.o
+> > >  obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
+> > >  obj-$(CONFIG_SPS30) += sps30.o
+> > >  obj-$(CONFIG_VZ89X)		+= vz89x.o
+> > > diff --git a/drivers/iio/chemical/scd30.h b/drivers/iio/chemical/scd30.h
+> > > new file mode 100644
+> > > index 000000000000..9b25f7423142
+> > > --- /dev/null
+> > > +++ b/drivers/iio/chemical/scd30.h
+> > > @@ -0,0 +1,75 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +#ifndef _SCD30_H
+> > > +#define _SCD30_H
+> > > +
+> > > +#include <linux/completion.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/mutex.h>
+> > > +#include <linux/pm.h>
+> > > +#include <linux/regulator/consumer.h>
+> > > +#include <linux/types.h>
+> > > +
+> > > +struct scd30_state;
+> > > +
+> > > +enum scd30_cmd {
+> > > +	/* start continuous measurement with pressure compensation */
+> > > +	CMD_START_MEAS,
+> > > +	/* stop continuous measurement */
+> > > +	CMD_STOP_MEAS,
+> > > +	/* set/get measurement interval */
+> > > +	CMD_MEAS_INTERVAL,
+> > > +	/* check whether new measurement is ready */
+> > > +	CMD_MEAS_READY,
+> > > +	/* get measurement */
+> > > +	CMD_READ_MEAS,
+> > > +	/* turn on/off automatic self calibration */
+> > > +	CMD_ASC,
+> > > +	/* set/get forced recalibration value */
+> > > +	CMD_FRC,
+> > > +	/* set/get temperature offset */
+> > > +	CMD_TEMP_OFFSET,
+> > > +	/* get firmware version */
+> > > +	CMD_FW_VERSION,
+> > > +	/* reset sensor */
+> > > +	CMD_RESET,
+> > > +	/*
+> > > +	 * Command for altitude compensation was omitted intentionally because
+> > > +	 * the same can be achieved by means of CMD_START_MEAS which takes
+> > > +	 * pressure above the sea level as an argument.
+> > > +	 */
+> > > +};
+> > > +
+> > > +#define SCD30_MEAS_COUNT 3
+> > > +
+> > > +typedef int (*scd30_command_t)(struct scd30_state *state, enum scd30_cmd cmd,
+> > > +			       u16 arg, void *response, int size);
+> > > +
+> > > +struct scd30_state {
+> > > +	/* serialize access to the device */
+> > > +	struct mutex lock;
+> > > +	struct device *dev;
+> > > +	struct regulator *vdd;
+> > > +	struct completion meas_ready;
+> > > +	void *priv;
+> > > +	int irq;
+> > > +	/*
+> > > +	 * no way to retrieve current ambient pressure compensation value from
+> > > +	 * the sensor so keep one around
+> > > +	 */
+> > > +	u16 pressure_comp;
+> > > +	u16 meas_interval;
+> > > +	int meas[SCD30_MEAS_COUNT];
+> > > +
+> > > +	scd30_command_t command;
+> > > +};
+> > > +
+> > > +int scd30_suspend(struct device *dev);
+> > > +int scd30_resume(struct device *dev);
+> > > +
+> > > +static __maybe_unused SIMPLE_DEV_PM_OPS(scd30_pm_ops, scd30_suspend,
+> > > +					scd30_resume);
+> > > +
+> > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+> > > +		scd30_command_t command);
+> > > +
+> > > +#endif
+> > > diff --git a/drivers/iio/chemical/scd30_core.c b/drivers/iio/chemical/scd30_core.c
+> > > new file mode 100644
+> > > index 000000000000..3b7d0a7ea7ae
+> > > --- /dev/null
+> > > +++ b/drivers/iio/chemical/scd30_core.c
+> > > @@ -0,0 +1,764 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Sensirion SCD30 carbon dioxide sensor core driver
+> > > + *
+> > > + * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > > + */
+> > > +#include <linux/bits.h>
+> > > +#include <linux/completion.h>
+> > > +#include <linux/delay.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/errno.h>
+> > > +#include <linux/export.h>
+> > > +#include <linux/iio/buffer.h>
+> > > +#include <linux/iio/iio.h>
+> > > +#include <linux/iio/sysfs.h>
+> > > +#include <linux/iio/trigger.h>
+> > > +#include <linux/iio/trigger_consumer.h>
+> > > +#include <linux/iio/triggered_buffer.h>
+> > > +#include <linux/iio/types.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/irqreturn.h>
+> > > +#include <linux/jiffies.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/mutex.h>
+> > > +#include <linux/regulator/consumer.h>
+> > > +#include <linux/string.h>
+> > > +#include <linux/sysfs.h>
+> > > +#include <linux/types.h>
+> > > +#include <asm/byteorder.h>
+> > > +
+> > > +#include "scd30.h"
+> > > +
+> > > +#define SCD30_PRESSURE_COMP_MIN_MBAR 700
+> > > +#define SCD30_PRESSURE_COMP_MAX_MBAR 1400
+> > > +#define SCD30_PRESSURE_COMP_DEFAULT 1013
+> > > +#define SCD30_MEAS_INTERVAL_MIN_S 2
+> > > +#define SCD30_MEAS_INTERVAL_MAX_S 1800
+> > > +#define SCD30_MEAS_INTERVAL_DEFAULT SCD30_MEAS_INTERVAL_MIN_S
+> > > +#define SCD30_FRC_MIN_PPM 400
+> > > +#define SCD30_FRC_MAX_PPM 2000
+> > > +#define SCD30_TEMP_OFFSET_MAX 655360
+> > > +#define SCD30_EXTRA_TIMEOUT_PER_S 250
+> > > +
+> > > +enum {
+> > > +	SCD30_CONC,
+> > > +	SCD30_TEMP,
+> > > +	SCD30_HR,
+> > > +};
+> > > +
+> > > +static int scd30_command_write(struct scd30_state *state, enum scd30_cmd cmd,
+> > > +			       u16 arg)
+> > > +{
+> > > +	return state->command(state, cmd, arg, NULL, 0);
+> > > +}
+> > > +
+> > > +static int scd30_command_read(struct scd30_state *state, enum scd30_cmd cmd,
+> > > +			      u16 *val)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	ret = state->command(state, cmd, 0, val, sizeof(*val));
+> > > +	*val = be16_to_cpup((__be16 *)val);  
+> >
+> > Please use a local variable for the __be16 as it makes thing more readable
+> > and easier to check for endian problems.
+> >  
 > 
-> Many thanks for the heads up! I was able to reproduce it here. On the
-> first glance it looks like the UART is probed before the clocks now,
-> because the traversal of the changed DT leads to a different probe
-> order. I will look into how to fix this.
-
-Turned out to be a bit more complicated:
-The arm,vexpress,config-bus driver walks up the device tree to find a
-arm,vexpress,site property [1]. With this patch the first parent node
-with that property it finds is now the root node, with the wrong site ID
-(0xf instead of 0x0). So it queries the wrong clocks (those IDs are
-actually reserved there), and QEMU reports back "0", consequently [2].
-Finding a clock frequency in the range of [0, 0] won't get very far.
-
-Possible solutions are:
-1) Just keep the mcc and its children at where it is in mainline right
-now, so *partly* reverting this patch. This has the problem of still
-producing a dtc warning, so kind of defeats the purpose of this patch.
-
-2) Add a "arm,vexpress,site = <0>;" line to the "mcc" node itself.
-Works, but looks somewhat dodgy, as the mcc node should really be a
-child of the motherboard node, and we should not hack around this.
-
-3) Dig deeper and fix the DT in a way that makes dtc happy. Might
-involve (dummy?) ranges or reg properties. My gut feeling is that
-arm,vexpress-sysreg,func should really have been "reg" in the first
-place, but that's too late to change now, anyway.
-
-I will post 2) as a fix if 3) turns out to be not feasible.
-
-Cheers,
-Andre
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/bus/vexpress-config.c#n46
-[2]
-https://git.qemu.org/?p=qemu.git;a=blob;f=hw/arm/vexpress.c;hb=HEAD#l404
+> Okay.
 > 
-> Cheers,
-> Andre
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int scd30_reset(struct scd30_state *state)
+> > > +{
+> > > +	int ret;
+> > > +	u16 val;
+> > > +
+> > > +	ret = scd30_command_write(state, CMD_RESET, 0);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	/* sensor boots up within 2 secs */
+> > > +	msleep(2000);
+> > > +	/*
+> > > +	 * Power-on-reset causes sensor to produce some glitch on i2c bus and
+> > > +	 * some controllers end up in error state. Try to recover by placing
+> > > +	 * any data on the bus.
+> > > +	 */
+> > > +	scd30_command_read(state, CMD_MEAS_READY, &val);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +/* simplified float to fixed point conversion with a scaling factor of 0.01 */
+> > > +static int scd30_float_to_fp(int float32)
+> > > +{
+> > > +	int fraction, shift,
+> > > +	    mantissa = float32 & GENMASK(22, 0),
+> > > +	    sign = float32 & BIT(31) ? -1 : 1,
+> > > +	    exp = (float32 & ~BIT(31)) >> 23;
+> > > +
+> > > +	/* special case 0 */
+> > > +	if (!exp && !mantissa)
+> > > +		return 0;
+> > > +
+> > > +	exp -= 127;
+> > > +	if (exp < 0) {
+> > > +		exp = -exp;
+> > > +		/* return values ranging from 1 to 99 */
+> > > +		return sign * ((((BIT(23) + mantissa) * 100) >> 23) >> exp);
+> > > +	}
+> > > +
+> > > +	/* return values starting at 100 */
+> > > +	shift = 23 - exp;
+> > > +	float32 = BIT(exp) + (mantissa >> shift);
+> > > +	fraction = mantissa & GENMASK(shift - 1, 0);
+> > > +
+> > > +	return sign * (float32 * 100 + ((fraction * 100) >> shift));
+> > > +}
+> > > +
+> > > +static int scd30_read_meas(struct scd30_state *state)
+> > > +{
+> > > +	int i, ret;
+> > > +
+> > > +	ret = state->command(state, CMD_READ_MEAS, 0, state->meas,
+> > > +			     sizeof(state->meas));
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	be32_to_cpu_array(state->meas, state->meas, ARRAY_SIZE(state->meas));
+> > > +
+> > > +	for (i = 0; i < ARRAY_SIZE(state->meas); i++)
+> > > +		state->meas[i] = scd30_float_to_fp(state->meas[i]);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int scd30_wait_meas_irq(struct scd30_state *state)
+> > > +{
+> > > +	int ret, timeout;
+> > > +
+> > > +	timeout = state->meas_interval * (1000 + SCD30_EXTRA_TIMEOUT_PER_S);
+> > > +	timeout = msecs_to_jiffies(timeout);
+> > > +	reinit_completion(&state->meas_ready);
+> > > +	enable_irq(state->irq);
+> > > +	ret = wait_for_completion_interruptible_timeout(&state->meas_ready,
+> > > +							timeout);
+> > > +	if (ret > 0)
+> > > +		ret = 0;
+> > > +	else if (!ret)
+> > > +		ret = -ETIMEDOUT;
+> > > +
+> > > +	disable_irq(state->irq);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int scd30_wait_meas_poll(struct scd30_state *state)
+> > > +{
+> > > +	int timeout = state->meas_interval * SCD30_EXTRA_TIMEOUT_PER_S;
+> > > +	int tries = 5;
+> > > +
+> > > +	do {
+> > > +		int ret;
+> > > +		u16 val;
+> > > +
+> > > +		ret = scd30_command_read(state, CMD_MEAS_READY, &val);
+> > > +		if (ret)
+> > > +			return -EIO;
+> > > +
+> > > +		/* new measurement available */
+> > > +		if (val)
+> > > +			break;
+> > > +
+> > > +		msleep_interruptible(timeout);
+> > > +	} while (--tries);
+> > > +
+> > > +	return tries ? 0 : -ETIMEDOUT;
+> > > +}
+> > > +
+> > > +static int scd30_read_poll(struct scd30_state *state)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	ret = scd30_wait_meas_poll(state);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	return scd30_read_meas(state);
+> > > +}
+> > > +
+> > > +static int scd30_read(struct scd30_state *state)
+> > > +{
+> > > +	if (state->irq > 0)
+> > > +		return scd30_wait_meas_irq(state);
+> > > +
+> > > +	return scd30_read_poll(state);
+> > > +}
+> > > +
+> > > +static int scd30_read_raw(struct iio_dev *indio_dev,
+> > > +			  struct iio_chan_spec const *chan,
+> > > +			  int *val, int *val2, long mask)
+> > > +{
+> > > +	struct scd30_state *state = iio_priv(indio_dev);
+> > > +	int ret, meas[SCD30_MEAS_COUNT];
+> > > +
+> > > +	switch (mask) {
+> > > +	case IIO_CHAN_INFO_RAW:
+> > > +	case IIO_CHAN_INFO_PROCESSED:
+> > > +		ret = iio_device_claim_direct_mode(indio_dev);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		mutex_lock(&state->lock);
+> > > +		ret = scd30_read(state);
+> > > +		memcpy(meas, state->meas, SCD30_MEAS_COUNT * sizeof(*meas));  
+> >
+> > The local copy seems a bit excessive.  This isn't likely to be a particularly
+> > fast path so perhaps skip the copy but hold the locks until we are
+> > done with the buffer?
+> >  
 > 
->>
->> Guenter
->>
->> ---
->> [   12.744248] ------------[ cut here ]------------
->> [   12.744562] WARNING: CPU: 0 PID: 20 at drivers/tty/serial/serial_core.c:471 uart_get_baud_rate+0x100/0x154
->> [   12.744607] Modules linked in:
->> [   12.744785] CPU: 0 PID: 20 Comm: kworker/0:1 Not tainted 5.7.0-rc7-next-20200526 #1
->> [   12.744818] Hardware name: ARM-Versatile Express
->> [   12.745021] Workqueue: events amba_deferred_retry_func
->> [   12.745155] [<c0312484>] (unwind_backtrace) from [<c030c490>] (show_stack+0x10/0x14)
->> [   12.745206] [<c030c490>] (show_stack) from [<c0880f04>] (dump_stack+0xc8/0xdc)
->> [   12.745239] [<c0880f04>] (dump_stack) from [<c0346e44>] (__warn+0xdc/0xf4)
->> [   12.745270] [<c0346e44>] (__warn) from [<c0346f0c>] (warn_slowpath_fmt+0xb0/0xb8)
->> [   12.745302] [<c0346f0c>] (warn_slowpath_fmt) from [<c0a6b16c>] (uart_get_baud_rate+0x100/0x154)
->> [   12.745336] [<c0a6b16c>] (uart_get_baud_rate) from [<c0a7f5ac>] (pl011_set_termios+0x48/0x32c)
->> [   12.745367] [<c0a7f5ac>] (pl011_set_termios) from [<c0a6bbbc>] (uart_set_options+0x124/0x164)
->> [   12.745404] [<c0a6bbbc>] (uart_set_options) from [<c1b8c804>] (pl011_console_setup+0x214/0x230)
->> [   12.745438] [<c1b8c804>] (pl011_console_setup) from [<c03ab0d8>] (try_enable_new_console+0x98/0x138)
->> [   12.745469] [<c03ab0d8>] (try_enable_new_console) from [<c03acc64>] (register_console+0xe8/0x304)
->> [   12.745499] [<c03acc64>] (register_console) from [<c0a6c88c>] (uart_add_one_port+0x4c0/0x504)
->> [   12.745529] [<c0a6c88c>] (uart_add_one_port) from [<c0a80404>] (pl011_register_port+0x5c/0xac)
->> [   12.745568] [<c0a80404>] (pl011_register_port) from [<c097f5a0>] (amba_probe+0x9c/0x110)
->> [   12.745602] [<c097f5a0>] (amba_probe) from [<c0b57e84>] (really_probe+0x218/0x348)
->> [   12.745632] [<c0b57e84>] (really_probe) from [<c0b580c0>] (driver_probe_device+0x5c/0xb4)
->> [   12.745662] [<c0b580c0>] (driver_probe_device) from [<c0b55ff4>] (bus_for_each_drv+0x58/0xb8)
->> [   12.745692] [<c0b55ff4>] (bus_for_each_drv) from [<c0b57bf8>] (__device_attach+0xd4/0x140)
->> [   12.745721] [<c0b57bf8>] (__device_attach) from [<c0b56eb0>] (bus_probe_device+0x88/0x90)
->> [   12.745751] [<c0b56eb0>] (bus_probe_device) from [<c0b53234>] (device_add+0x3d4/0x6e8)
->> [   12.745782] [<c0b53234>] (device_add) from [<c097f664>] (amba_device_try_add+0x50/0x2d4)
->> [   12.745812] [<c097f664>] (amba_device_try_add) from [<c097f924>] (amba_deferred_retry+0x3c/0x98)
->> [   12.745847] [<c097f924>] (amba_deferred_retry) from [<c097f988>] (amba_deferred_retry_func+0x8/0x40)
->> [   12.745881] [<c097f988>] (amba_deferred_retry_func) from [<c0365b6c>] (process_one_work+0x2b8/0x6e8)
->> [   12.745912] [<c0365b6c>] (process_one_work) from [<c0365fe0>] (worker_thread+0x44/0x540)
->> [   12.745942] [<c0365fe0>] (worker_thread) from [<c036d810>] (kthread+0x16c/0x178)
->> [   12.745973] [<c036d810>] (kthread) from [<c03001a8>] (ret_from_fork+0x14/0x2c)
->> [   12.746041] Exception stack(0xc73abfb0 to 0xc73abff8)
->> [   12.746181] bfa0:                                     00000000 00000000 00000000 00000000
->> [   12.746302] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->> [   12.746397] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
->> [   12.746651] ---[ end trace 2a3f61da56bd8a49 ]---
->>
->> ---
->> # bad: [b0523c7b1c9d0edcd6c0fe6d2cb558a9ad5c60a8] Add linux-next specific files for 20200526
->> # good: [9cb1fd0efd195590b828b9b865421ad345a4a145] Linux 5.7-rc7
->> git bisect start 'next-20200526' 'v5.7-rc7'
->> # bad: [0c7351ad83670964e48cb9a098ad732c1ecbf804] Merge remote-tracking branch 'crypto/master'
->> git bisect bad 0c7351ad83670964e48cb9a098ad732c1ecbf804
->> # bad: [42e11d9b4682229fa7187d129758b8c382f8cd5d] Merge remote-tracking branch 'jc_docs/docs-next'
->> git bisect bad 42e11d9b4682229fa7187d129758b8c382f8cd5d
->> # bad: [ab6f501559e9efa687c711a781243cf6651a82d3] Merge remote-tracking branch 'm68k/for-next'
->> git bisect bad ab6f501559e9efa687c711a781243cf6651a82d3
->> # bad: [44aaa516ca63b3ab2da8ae81e9c6a58656e6acb5] Merge branch 'arm/drivers' into for-next
->> git bisect bad 44aaa516ca63b3ab2da8ae81e9c6a58656e6acb5
->> # good: [1cb00f8c3b36e6ae026fb58d1cd2ccd78b81aa9f] Merge tag 'qcom-arm64-for-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into arm/dt
->> git bisect good 1cb00f8c3b36e6ae026fb58d1cd2ccd78b81aa9f
->> # bad: [ed0c25932fbfafdfe37e9633dee21770d3c5a306] Merge branch 'arm/defconfig' into for-next
->> git bisect bad ed0c25932fbfafdfe37e9633dee21770d3c5a306
->> # bad: [9eddc06a3bc79402f50176703237ed045ae77b16] Merge branch 'mmp/fixes' into arm/dt
->> git bisect bad 9eddc06a3bc79402f50176703237ed045ae77b16
->> # bad: [87b990ab62722a8a3cb0691107971ab1bd7bddb5] Merge tag 'mvebu-dt64-5.8-1' of git://git.infradead.org/linux-mvebu into arm/dt
->> git bisect bad 87b990ab62722a8a3cb0691107971ab1bd7bddb5
->> # bad: [94cc3f1baabac5e5c4dcc6c2f070353f8315d0ee] arm64: dts: juno: Fix SCPI shared mem node name
->> git bisect bad 94cc3f1baabac5e5c4dcc6c2f070353f8315d0ee
->> # bad: [a78aee9e434932a500db36cc6d88daeff3745e9f] arm64: dts: juno: Fix GIC child nodes
->> git bisect bad a78aee9e434932a500db36cc6d88daeff3745e9f
->> # bad: [feebdc3f7950d7e44e914e821f6c04e58e292c74] arm64: dts: fvp: Move fixed clocks out of bus node
->> git bisect bad feebdc3f7950d7e44e914e821f6c04e58e292c74
->> # good: [849bfc3dfc13cde6ec04fbcf32af553ded9f7ec3] arm64: dts: fvp: Move fixed devices out of bus node
->> git bisect good 849bfc3dfc13cde6ec04fbcf32af553ded9f7ec3
->> # bad: [d9258898ad49cbb46caffe23af0d4f0b766e67a2] arm64: dts: vexpress: Move fixed devices out of bus node
->> git bisect bad d9258898ad49cbb46caffe23af0d4f0b766e67a2
->> # first bad commit: [d9258898ad49cbb46caffe23af0d4f0b766e67a2] arm64: dts: vexpress: Move fixed devices out of bus node
->>
+> Okay.
 > 
+> > > +		mutex_unlock(&state->lock);
+> > > +		iio_device_release_direct_mode(indio_dev);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		switch (chan->type) {
+> > > +		case IIO_CONCENTRATION:
+> > > +			*val = meas[chan->address] / 1000000;
+> > > +			*val2 = meas[chan->address] % 1000000;
+> > > +
+> > > +			return IIO_VAL_INT_PLUS_MICRO;
+> > > +		case IIO_TEMP:
+> > > +		case IIO_HUMIDITYRELATIVE:
+> > > +			*val = meas[chan->address] * 10;
+> > > +
+> > > +			return IIO_VAL_INT;
+> > > +		default:
+> > > +			return -EINVAL;
+> > > +		}
+> > > +	case IIO_CHAN_INFO_SCALE:
+> > > +		switch (chan->type) {
+> > > +		case IIO_CONCENTRATION:
+> > > +			*val = 0;
+> > > +			*val2 = 1;
+> > > +
+> > > +			return IIO_VAL_INT_PLUS_MICRO;
+> > > +		case IIO_TEMP:
+> > > +		case IIO_HUMIDITYRELATIVE:
+> > > +			*val = 10;
+> > > +
+> > > +			return IIO_VAL_INT;
+> > > +		default:
+> > > +			return -EINVAL;
+> > > +		}
+> > > +	case IIO_CHAN_INFO_SAMP_FREQ:
+> > > +		*val = 0;
+> > > +		*val2 = 0;
+> > > +
+> > > +		mutex_lock(&state->lock);
+> > > +		ret = scd30_command_read(state, CMD_MEAS_INTERVAL, (u16 *)val2);  
+> >
+> > See below. I'll assume you'll fix all of these.
+> >  
+> > > +		mutex_unlock(&state->lock);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		*val2 = 1000000000 / *val2;
+> > > +
+> > > +		return IIO_VAL_INT_PLUS_NANO;
+> > > +	case IIO_CHAN_INFO_CALIBSCALE:
+> > > +		mutex_lock(&state->lock);
+> > > +		*val = state->pressure_comp / 10;
+> > > +		*val2 = (state->pressure_comp % 10) * 100000;
+> > > +		mutex_unlock(&state->lock);
+> > > +
+> > > +		return IIO_VAL_INT_PLUS_MICRO;
+> > > +	case IIO_CHAN_INFO_CALIBBIAS:
+> > > +		*val = 0;
+> > > +		mutex_lock(&state->lock);
+> > > +		ret = scd30_command_read(state, CMD_TEMP_OFFSET, (u16 *)val);  
+> >
+> > Reading a u16 directly into a int is not a good idea.  What you get will
+> > depend  on the endianness of the machine.
+> >  
+> 
+> Right, that would obviously break on BE. Sometimes trying to keep number
+> of local variables low simply stops paying off :).
+> 
+> > Use an intermediate variable of the right size.
+> >  
+> > > +		mutex_unlock(&state->lock);
+> > > +
+> > > +		return IIO_VAL_INT;
+> > > +	}
+> > > +
+> > > +	return -EINVAL;
+> > > +}
+> > > +
+> > > +static int scd30_write_raw(struct iio_dev *indio_dev,
+> > > +			   struct iio_chan_spec const *chan,
+> > > +			   int val, int val2, long mask)
+> > > +{
+> > > +	struct scd30_state *state = iio_priv(indio_dev);
+> > > +	int ret = -EINVAL;
+> > > +
+> > > +	mutex_lock(&state->lock);
+> > > +	switch (mask) {
+> > > +	case IIO_CHAN_INFO_SAMP_FREQ:
+> > > +		if (val)
+> > > +			break;
+> > > +
+> > > +		val = 1000000000 / val2;
+> > > +		if (val < SCD30_MEAS_INTERVAL_MIN_S ||
+> > > +		    val > SCD30_MEAS_INTERVAL_MAX_S)
+> > > +			break;
+> > > +
+> > > +		ret = scd30_command_write(state, CMD_MEAS_INTERVAL, val);
+> > > +		if (ret)
+> > > +			break;
+> > > +
+> > > +		state->meas_interval = val;
+> > > +		break;
+> > > +	case IIO_CHAN_INFO_CALIBSCALE:
+> > > +		val = (val * 1000000 + val2) / 100000;
+> > > +		if (val < SCD30_PRESSURE_COMP_MIN_MBAR ||
+> > > +		    val > SCD30_PRESSURE_COMP_MAX_MBAR)
+> > > +			break;
+> > > +
+> > > +		ret = scd30_command_write(state, CMD_START_MEAS, val);
+> > > +		if (ret)
+> > > +			break;
+> > > +
+> > > +		state->pressure_comp = val;
+> > > +		break;
+> > > +	case IIO_CHAN_INFO_CALIBBIAS:
+> > > +		if (val < 0 || val > SCD30_TEMP_OFFSET_MAX)
+> > > +			break;
+> > > +		/*
+> > > +		 * Manufacturer does not explicitly specify min/max sensible
+> > > +		 * values hence check is omitted for simplicity.
+> > > +		 */
+> > > +		ret = scd30_command_write(state, CMD_TEMP_OFFSET / 10, val);
+> > > +	}
+> > > +	mutex_unlock(&state->lock);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int scd30_write_raw_get_fmt(struct iio_dev *indio_dev,
+> > > +				   struct iio_chan_spec const *chan, long mask)
+> > > +{
+> > > +	switch (mask) {
+> > > +	case IIO_CHAN_INFO_RAW:
+> > > +	case IIO_CHAN_INFO_CALIBBIAS:
+> > > +		return IIO_VAL_INT;
+> > > +	case IIO_CHAN_INFO_CALIBSCALE:
+> > > +		return IIO_VAL_INT_PLUS_MICRO;
+> > > +	case IIO_CHAN_INFO_SAMP_FREQ:
+> > > +		return IIO_VAL_INT_PLUS_NANO;
+> > > +	}
+> > > +
+> > > +	return -EINVAL;
+> > > +}
+> > > +
+> > > +static const int scd30_pressure_calibscale_available[] = {
+> > > +	SCD30_PRESSURE_COMP_MIN_MBAR / 10, 0,
+> > > +	0, 100000,
+> > > +	SCD30_PRESSURE_COMP_MAX_MBAR / 10, 0,
+> > > +};
+> > > +
+> > > +static const int scd30_temp_calibbias_available[] = {
+> > > +	0, 10, SCD30_TEMP_OFFSET_MAX,
+> > > +};
+> > > +
+> > > +static int scd30_read_avail(struct iio_dev *indio_dev,
+> > > +			    struct iio_chan_spec const *chan, const int **vals,
+> > > +			    int *type, int *length, long mask)
+> > > +{
+> > > +	switch (mask) {
+> > > +	case IIO_CHAN_INFO_CALIBSCALE:
+> > > +		*vals = scd30_pressure_calibscale_available;
+> > > +		*type = IIO_VAL_INT_PLUS_MICRO;
+> > > +
+> > > +		return IIO_AVAIL_RANGE;
+> > > +	case IIO_CHAN_INFO_CALIBBIAS:
+> > > +		*vals = scd30_temp_calibbias_available;
+> > > +		*type = IIO_VAL_INT;
+> > > +
+> > > +		return IIO_AVAIL_RANGE;
+> > > +	}
+> > > +
+> > > +	return -EINVAL;
+> > > +}
+> > > +
+> > > +static ssize_t sampling_frequency_available_show(struct device *dev,
+> > > +						 struct device_attribute *attr,
+> > > +						 char *buf)
+> > > +{
+> > > +	int i = SCD30_MEAS_INTERVAL_MIN_S;
+> > > +	ssize_t len = 0;
+> > > +
+> > > +	do {
+> > > +		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%09u ",
+> > > +				 1000000000 / i);
+> > > +		/*
+> > > +		 * Not all values fit PAGE_SIZE buffer hence print every 6th
+> > > +		 * (each frequency differs by 6s in time domain from the
+> > > +		 * adjecent). Unlisted but valid ones are still accepted.  
+> >
+> > adjacent
+> >
+> > Hmm. Maybe we need to think about some description for inverse of linear
+> > cases as they are likely to be fairly common.
+> > This will work in meantime.
+> >  
+> > > +		 */
+> > > +		i += 6;
+> > > +	} while (i <= SCD30_MEAS_INTERVAL_MAX_S);
+> > > +
+> > > +	buf[len - 1] = '\n';
+> > > +
+> > > +	return len;
+> > > +}
+> > > +
+> > > +static ssize_t calibration_show(struct device *dev,
+> > > +				struct device_attribute *attr, char *buf)
+> > > +{
+> > > +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> > > +	struct scd30_state *state = iio_priv(indio_dev);
+> > > +	u16 asc, frc;
+> > > +	int ret;
+> > > +
+> > > +	mutex_lock(&state->lock);
+> > > +	ret = scd30_command_read(state, CMD_ASC, &asc);
+> > > +	if (ret)
+> > > +		goto out;
+> > > +
+> > > +	ret = scd30_command_read(state, CMD_FRC, &frc);
+> > > +out:
+> > > +	mutex_unlock(&state->lock);
+> > > +
+> > > +	return ret ?: sprintf(buf, "%d %d\n", asc, frc);
+> > > +}
+> > > +
+> > > +static ssize_t calibration_store(struct device *dev,
+> > > +				 struct device_attribute *attr, const char *buf,
+> > > +				 size_t len)
+> > > +{
+> > > +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> > > +	struct scd30_state *state = iio_priv(indio_dev);
+> > > +	int ret;
+> > > +	u16 val;  
+> >
+> > As commented above, this interface doesn't win on the
+> > obvious front so needs a rethink!
+> >  
+> > > +
+> > > +	ret = kstrtou16(buf, 0, &val);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	mutex_lock(&state->lock);
+> > > +	if (val == 0 || val == 1)
+> > > +		ret = scd30_command_write(state, CMD_ASC, val);
+> > > +	else if (val >= SCD30_FRC_MIN_PPM && val <= SCD30_FRC_MAX_PPM)
+> > > +		ret = scd30_command_write(state, CMD_FRC, val);
+> > > +	else
+> > > +		ret = -EINVAL;
+> > > +	mutex_unlock(&state->lock);
+> > > +
+> > > +	return ret ?: len;
+> > > +}
+> > > +
+> > > +static IIO_DEVICE_ATTR_RO(sampling_frequency_available, 0);
+> > > +static IIO_DEVICE_ATTR_RW(calibration, 0);
+> > > +
+> > > +static struct attribute *scd30_attrs[] = {
+> > > +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+> > > +	&iio_dev_attr_calibration.dev_attr.attr,
+> > > +	NULL
+> > > +};
+> > > +
+> > > +static const struct attribute_group scd30_attr_group = {
+> > > +	.attrs = scd30_attrs,
+> > > +};
+> > > +
+> > > +static const struct iio_info scd30_info = {
+> > > +	.attrs = &scd30_attr_group,
+> > > +	.read_raw = scd30_read_raw,
+> > > +	.write_raw = scd30_write_raw,
+> > > +	.write_raw_get_fmt = scd30_write_raw_get_fmt,
+> > > +	.read_avail = scd30_read_avail,
+> > > +};
+> > > +
+> > > +#define SCD30_CHAN_SCAN_TYPE(_sign, _realbits) .scan_type = { \
+> > > +	.sign = _sign, \
+> > > +	.realbits = _realbits, \
+> > > +	.storagebits = 32, \
+> > > +	.endianness = IIO_CPU, \
+> > > +}
+> > > +
+> > > +static const struct iio_chan_spec scd30_channels[] = {
+> > > +	{
+> > > +		.type = IIO_PRESSURE,
+> > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_CALIBSCALE),
+> > > +		.info_mask_separate_available = BIT(IIO_CHAN_INFO_CALIBSCALE),
+> > > +		.scan_index = -1,
+> > > +	},
+> > > +	{
+> > > +		.type = IIO_CONCENTRATION,
+> > > +		.channel2 = IIO_MOD_CO2,
+> > > +		.address = SCD30_CONC,
+> > > +		.scan_index = SCD30_CONC,
+> > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> > > +				      BIT(IIO_CHAN_INFO_SCALE),
+> > > +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> > > +		.modified = 1,
+> > > +
+> > > +		SCD30_CHAN_SCAN_TYPE('u', 16),
+> > > +	},
+> > > +	{
+> > > +		.type = IIO_TEMP,
+> > > +		.address = SCD30_TEMP,
+> > > +		.scan_index = SCD30_TEMP,
+> > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
+> > > +				      BIT(IIO_CHAN_INFO_CALIBBIAS) |
+> > > +				      BIT(IIO_CHAN_INFO_SCALE),  
+> >
+> > Combination of processed and scale is unusual.  Normally scale provides
+> > a conversion factor or a _RAW reading.  
+> 
+> Right that's pointless. Scales were for raw measurements inside buffer.
+> Somehow I failed to realize that only co2 concentration is raw.
+> 
+> >
+> > I 'think' these units are otherwise fine (milli degrees centigrade)
+> >
+> >  
+> > > +		.info_mask_separate_available = BIT(IIO_CHAN_INFO_CALIBBIAS),
+> > > +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> > > +
+> > > +		SCD30_CHAN_SCAN_TYPE('s', 14),
+> > > +	},
+> > > +	{
+> > > +		.type = IIO_HUMIDITYRELATIVE,
+> > > +		.address = SCD30_HR,
+> > > +		.scan_index = SCD30_HR,
+> > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
+> > > +				      BIT(IIO_CHAN_INFO_SCALE),  
+> >
+> > As above. Not normal to see scale and processed.
+> >  
+> > > +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> > > +
+> > > +		SCD30_CHAN_SCAN_TYPE('u', 14),
+> > > +	},
+> > > +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> > > +};
+> > > +
+> > > +int __maybe_unused scd30_suspend(struct device *dev)
+> > > +{
+> > > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> > > +	struct scd30_state *state  = iio_priv(indio_dev);
+> > > +	int ret;
+> > > +
+> > > +	ret = scd30_command_write(state, CMD_STOP_MEAS, 0);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	return regulator_disable(state->vdd);
+> > > +}
+> > > +EXPORT_SYMBOL(scd30_suspend);
+> > > +
+> > > +int __maybe_unused scd30_resume(struct device *dev)
+> > > +{
+> > > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> > > +	struct scd30_state *state = iio_priv(indio_dev);
+> > > +	int ret;
+> > > +
+> > > +	ret = regulator_enable(state->vdd);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	return scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
+> > > +}
+> > > +EXPORT_SYMBOL(scd30_resume);
+> > > +
+> > > +static void scd30_stop_meas(void *data)
+> > > +{
+> > > +	struct scd30_state *state = data;
+> > > +
+> > > +	scd30_command_write(state, CMD_STOP_MEAS, 0);
+> > > +}
+> > > +
+> > > +static void scd30_disable_regulator(void *data)
+> > > +{
+> > > +	struct scd30_state *state = data;
+> > > +
+> > > +	regulator_disable(state->vdd);
+> > > +}
+> > > +
+> > > +static irqreturn_t scd30_irq_handler(int irq, void *priv)
+> > > +{
+> > > +	struct iio_dev *indio_dev = priv;
+> > > +
+> > > +	if (iio_buffer_enabled(indio_dev)) {  
+> >
+> > There is a potential quirk here.  It's possible that
+> > this device is using a different trigger, but another device
+> > is registered to use this one.  If that happens this check
+> > will be a bit counter intuitive.
+> >
+> > As such you might want to provide the validate callback so
+> > that this device is the only device allowed to use it's
+> > own trigger.
+> >  
+> 
+> Right. This needs to be fixed.
+> 
+> > > +		iio_trigger_poll(indio_dev->trig);
+> > > +
+> > > +		return IRQ_HANDLED;
+> > > +	}
+> > > +
+> > > +	return IRQ_WAKE_THREAD;
+> > > +}
+> > > +
+> > > +static irqreturn_t scd30_irq_thread_handler(int irq, void *priv)
+> > > +{
+> > > +	struct iio_dev *indio_dev = priv;
+> > > +	struct scd30_state *state = iio_priv(indio_dev);
+> > > +	int ret;
+> > > +
+> > > +	ret = scd30_read_meas(state);
+> > > +	if (ret)
+> > > +		goto out;
+> > > +
+> > > +	complete_all(&state->meas_ready);
+> > > +out:
+> > > +	return IRQ_HANDLED;
+> > > +}
+> > > +
+> > > +static irqreturn_t scd30_trigger_handler(int irq, void *p)
+> > > +{
+> > > +	struct iio_poll_func *pf = p;
+> > > +	struct iio_dev *indio_dev = pf->indio_dev;
+> > > +	struct scd30_state *state = iio_priv(indio_dev);
+> > > +	struct {
+> > > +		int data[SCD30_MEAS_COUNT];
+> > > +		u64 ts;  
+> >
+> > Turns out I was wrong when suggesting this approach for drivers.  On x86_32
+> > this will result in there not being any padding between the
+> > data and the timestamp (and in IIO rule of naturally aligned there
+> > needs to be 4 bytes there).  Result is that this structure is
+> > too short.  (thanks btw to Andy who pointed out this issue!)
+> >
+> > So, to force that my current preference is.
+> >
+> > 	struct {
+> > 		int data[SCD30_MEAS_COUNT];
+> > 		s64 ts __aligned(8);
+> > 	} scan;
+> >  
+> 
+> Ah, so x86_32 aligns s64 to 4 bytes.
+
+yup
+
+> 
+> > However, given we do have a hole in the structure there is
+> > a kernel data leak.  So either you need to zero it here,
+> > or move it into the iio_priv() structure.  Doing that
+> > will ensure it is zeroed at allocation.
+> >  
+> > > +	} scan;
+> > > +	int ret;
+> > > +
+> > > +	mutex_lock(&state->lock);
+> > > +	if (!iio_trigger_using_own(indio_dev))
+> > > +		ret = scd30_read_poll(state);
+> > > +	else
+> > > +		ret = scd30_read_meas(state);
+> > > +	memcpy(scan.data, state->meas, sizeof(state->meas));
+> > > +	mutex_unlock(&state->lock);
+> > > +	if (ret)
+> > > +		goto out;
+> > > +
+> > > +	iio_push_to_buffers_with_timestamp(indio_dev, &scan,
+> > > +					   iio_get_time_ns(indio_dev));
+> > > +out:
+> > > +	iio_trigger_notify_done(indio_dev->trig);
+> > > +	return IRQ_HANDLED;
+> > > +}
+> > > +
+> > > +static int scd30_set_trigger_state(struct iio_trigger *trig, bool state)
+> > > +{
+> > > +	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
+> > > +	struct scd30_state *st = iio_priv(indio_dev);
+> > > +
+> > > +	if (state)
+> > > +		enable_irq(st->irq);
+> > > +	else
+> > > +		disable_irq(st->irq);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct iio_trigger_ops scd30_trigger_ops = {
+> > > +	.set_trigger_state = scd30_set_trigger_state,
+> > > +};
+> > > +
+> > > +static int scd30_setup_trigger(struct iio_dev *indio_dev)
+> > > +{
+> > > +	struct scd30_state *state = iio_priv(indio_dev);
+> > > +	struct device *dev = indio_dev->dev.parent;
+> > > +	struct iio_trigger *trig;
+> > > +	int ret;
+> > > +
+> > > +	trig = devm_iio_trigger_alloc(dev, "%s-dev%d", indio_dev->name,
+> > > +				      indio_dev->id);
+> > > +	if (!trig) {
+> > > +		dev_err(dev, "failed to allocate trigger\n");
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > > +	trig->dev.parent = dev;
+> > > +	trig->ops = &scd30_trigger_ops;
+> > > +	iio_trigger_set_drvdata(trig, indio_dev);
+> > > +
+> > > +	ret = devm_iio_trigger_register(dev, trig);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	indio_dev->trig = iio_trigger_get(trig);
+> > > +
+> > > +	ret = devm_request_threaded_irq(dev, state->irq, scd30_irq_handler,
+> > > +					scd30_irq_thread_handler,
+> > > +					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> > > +					indio_dev->name, indio_dev);
+> > > +	if (ret)
+> > > +		dev_err(dev, "failed to request irq\n");
+> > > +
+> > > +	disable_irq(state->irq);  
+> >
+> > Given there is a gap between the request above and this disable, this
+> > disable needs a comment explaining why it is here.
+> >
+> > I'm assuming it's an optimization?
+> >  
+> 
+> Interrupt is enabled just before taking measurement to grab the fresh
+> data and disabled afterwards. Not disabling it here would produce fat warning
+> about unbalanced irqs.
+> 
+> And that is because sensor takes measurements continuously. On demand
+> mode, even though possible, doesn't work reliably. Sensor (at least the one
+> sitting on my desk) needs way too much time to wakeup and grab measurement which
+> makes the whole point of adjustable sampling frequency pointless :).
+> 
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+> > > +		scd30_command_t command)
+> > > +{
+> > > +	static const unsigned long scd30_scan_masks[] = { 0x07, 0x00 };
+> > > +	struct scd30_state *state;
+> > > +	struct iio_dev *indio_dev;
+> > > +	int ret;
+> > > +	u16 val;
+> > > +
+> > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
+> > > +	if (!indio_dev)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	state = iio_priv(indio_dev);
+> > > +	state->dev = dev;  
+> >
+> > Doesn't seem to be used.
+> >  
+> > > +	state->priv = priv;  
+> >
+> > What's this for?  At least at first glance I can't find it being used
+> > anywhere.
+> >  
+> > > +	state->irq = irq;
+> > > +	state->pressure_comp = SCD30_PRESSURE_COMP_DEFAULT;
+> > > +	state->meas_interval = SCD30_MEAS_INTERVAL_DEFAULT;
+> > > +	state->command = command;
+> > > +	mutex_init(&state->lock);
+> > > +	init_completion(&state->meas_ready);
+> > > +
+> > > +	dev_set_drvdata(dev, indio_dev);
+> > > +
+> > > +	indio_dev->dev.parent = dev;  
+> >
+> > Side note that there is a series moving this into the core under revision at
+> > the moment.  Hopefully I'll remember to fix this up when applying your patch
+> > if that one has gone in ahead of it.
+> >  
+> > > +	indio_dev->info = &scd30_info;
+> > > +	indio_dev->name = name;
+> > > +	indio_dev->channels = scd30_channels;
+> > > +	indio_dev->num_channels = ARRAY_SIZE(scd30_channels);
+> > > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > > +	indio_dev->available_scan_masks = scd30_scan_masks;
+> > > +
+> > > +	state->vdd = devm_regulator_get(dev, "vdd");
+> > > +	if (IS_ERR(state->vdd)) {
+> > > +		if (PTR_ERR(state->vdd) == -EPROBE_DEFER)
+> > > +			return -EPROBE_DEFER;
+> > > +
+> > > +		dev_err(dev, "failed to get regulator\n");
+> > > +		return PTR_ERR(state->vdd);
+> > > +	}
+> > > +
+> > > +	ret = regulator_enable(state->vdd);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = devm_add_action_or_reset(dev, scd30_disable_regulator, state);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +  
+> >
+> > A comment here on why it makes sense to register this here.  What
+> > started mesurement? It seems that happens well below here so
+> > we should really call this after that start all.
+> >  
+> 
+> Sensor after being powered up starts in mode it was left in.
+> Chances are it was continuous mode and we want to shut it down.
+
+That's fine.  The question is why 'here' as opposed to after the below where you
+put it into continuous mode.
+
+> 
+> > > +	ret = devm_add_action_or_reset(dev, scd30_stop_meas, state);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = scd30_reset(state);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to reset device: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	if (state->irq > 0) {
+> > > +		ret = scd30_setup_trigger(indio_dev);
+> > > +		if (ret) {
+> > > +			dev_err(dev, "failed to setup trigger: %d\n", ret);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> > > +					      scd30_trigger_handler, NULL);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = scd30_command_read(state, CMD_FW_VERSION, &val);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to read firmware version: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +	dev_info(dev, "firmware version: %d.%d\n", val >> 8, (char)val);
+> > > +
+> > > +	ret = scd30_command_write(state, CMD_MEAS_INTERVAL,
+> > > +				  state->meas_interval);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to set measurement interval: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to start measurement: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	return devm_iio_device_register(dev, indio_dev);
+> > > +}
+> > > +EXPORT_SYMBOL(scd30_probe);
+> > > +
+> > > +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
+> > > +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor core driver");
+> > > +MODULE_LICENSE("GPL v2");
+> > > --
+> > > 2.26.2
+> > >  
+> >  
+
 
