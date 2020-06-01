@@ -2,88 +2,111 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F8BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14717C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11B6A20810
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65A3207D5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 15:23:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="cMk+YVu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgFAPTI (ORCPT
+        id S1727113AbgFAPX3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:19:08 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:51066 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgFAPTH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 11:19:07 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BF2248030834;
-        Mon,  1 Jun 2020 15:19:05 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vQXYeRGinzjd; Mon,  1 Jun 2020 18:19:05 +0300 (MSK)
-Date:   Mon, 1 Jun 2020 18:19:03 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
-Message-ID: <20200601151903.ipd5ikw35z53eq2t@mobilestation>
-References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
- <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
- <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
+        Mon, 1 Jun 2020 11:23:29 -0400
+Received: from gproxy9-pub.mail.unifiedlayer.com ([69.89.20.122]:34329 "EHLO
+        gproxy9-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727099AbgFAPX3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 11:23:29 -0400
+X-Greylist: delayed 1448 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Jun 2020 11:23:28 EDT
+Received: from cmgw12.unifiedlayer.com (unknown [10.9.0.12])
+        by gproxy9.mail.unifiedlayer.com (Postfix) with ESMTP id DDAF71E069F
+        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 08:59:18 -0600 (MDT)
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+        by cmsmtp with ESMTP
+        id fluGj3aDtN8ArfluIj3FTE; Mon, 01 Jun 2020 08:59:18 -0600
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.3 cv=KZv8TzQD c=1 sm=1 tr=0
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=nTHF0DUjJn0A:10:nop_rcvd_month_year
+ a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
+ a=wHFN-Wy_BNrSwam1PQgA:9 a=rsP06fVo5MYu2ilr0aT5:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+        ; s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=gm93I/tP/3ljpDVuFJauy7WyI7MNDnanjRIlNgj8E/A=; b=cMk+YVu3/GxiaVWVWz1lE1ZrVS
+        8l/GnCdb6pSKNlWiIreBfhU24IvZQsP9bF4setA9YhU33jEBs9c9ZVoSWUuS9KseMTm6/Z9tksspK
+        1DUjXnjkY6XWoAKA01b74afx/hB4JQmhZycUuSsczDyPgoWH9KQTr4hFFwnn1Qfx6GQF5sn77QAl+
+        juqVobIb7eoac4dHwQwFPVytuZKGpr3WSuTWapwTRvzWqThy0WwqVn9+k6JXxx9yb+7iPqcuE6uUY
+        iTvC0dZic3SDry22V6cfoCUQp1aYXCKxn92fdzVFRXHm+MQRdCpRTrZ+luvxL3hK8z+7lX4Go+JXR
+        wQdaXb3A==;
+Received: from dslb-002-205-073-081.002.205.pools.vodafone-ip.de ([2.205.73.81]:57650 helo=arch.fritz.box)
+        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <parthiban@linumiz.com>)
+        id 1jfluF-0007Bg-Ax; Mon, 01 Jun 2020 14:59:15 +0000
+From:   Parthiban Nallathambi <parthiban@linumiz.com>
+To:     m.felsch@pengutronix.de, shawnguo@kernel.org, robh+dt@kernel.org,
+        s.hauer@pengutronix.de
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Parthiban Nallathambi <parthiban@linumiz.com>
+Subject: [PATCH v2 1/2] dt-bindings: arm: fsl: Add MYiR Tech boards
+Date:   Mon,  1 Jun 2020 16:58:56 +0200
+Message-Id: <20200601145857.5658-1-parthiban@linumiz.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 2.205.73.81
+X-Source-L: No
+X-Exim-ID: 1jfluF-0007Bg-Ax
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: dslb-002-205-073-081.002.205.pools.vodafone-ip.de (arch.fritz.box) [2.205.73.81]:57650
+X-Source-Auth: parthiban@linumiz.com
+X-Email-Count: 22
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 04:56:21PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 1, 2020 at 3:26 PM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
-> > and MIPS CPS CPUidle drivers.
-> ...
-> > +MIPS CORE DRIVERS
-> > +M:     Serge Semin <fancer.lancer@gmail.com>
-> > +L:     linux-mips@vger.kernel.org
-> > +S:     Supported
-> > +F:     drivers/bus/mips_cdmm.c
-> > +F:     drivers/irqchip/irq-mips-cpu.c
-> > +F:     drivers/irqchip/irq-mips-gic.c
-> > +F:     drivers/clocksource/mips-gic-timer.c
-> > +F:     drivers/cpuidle/cpuidle-cps.c
-> 
-> I think nowadays checkpatch.pl warns on wrong ordering in this data base.
+Add entries for MYiR Tech imx6ULL eval boards.
 
-Alas it doesn't. Good point though.
+Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
--Sergey
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index cd3fbe7e3948..592d73187da4 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -264,6 +264,8 @@ properties:
+               - armadeus,imx6ull-opos6uldev # OPOS6UL (i.MX6ULL) SoM on OPOS6ULDev board
+               - fsl,imx6ull-14x14-evk     # i.MX6 UltraLiteLite 14x14 EVK Board
+               - kontron,imx6ull-n6411-som # Kontron N6411 SOM
++              - myir,imx6ull-mys-6ulx # MYiR Tech iMX6ULL Evaluation Board
++              - myir,imx6ull-mys-6ulx-nand # MYiR Tech iMX6ULL Evaluation Board with NAND
+               - toradex,colibri-imx6ull-eval            # Colibri iMX6ULL Module on Colibri Evaluation Board
+               - toradex,colibri-imx6ull-wifi-eval       # Colibri iMX6ULL Wi-Fi / Bluetooth Module on Colibri Evaluation Board
+           - const: fsl,imx6ull
+-- 
+2.26.2
 
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
