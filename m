@@ -2,127 +2,70 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF480C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 07:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45084C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 08:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDFE2074B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 07:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="QJIC2sGS"
+	by mail.kernel.org (Postfix) with ESMTP id 2DDA42074B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 08:04:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbgFAH71 (ORCPT
+        id S1727828AbgFAIEw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:59:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgFAH70 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 03:59:26 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FD9C05BD43
-        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 00:59:25 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id s192so2197276vkh.3
-        for <devicetree@vger.kernel.org>; Mon, 01 Jun 2020 00:59:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+/lonEZ7lAjJM9p39P8BR7wI92X7wL1JFjHzHvAjHkM=;
-        b=QJIC2sGSvW8+pkA3XwPz6SEdhDVwIlJXrSvgwrJz14gWv9GFyjtDG2MTUcUmBE9l/P
-         bFNwlOPsXAWxexrOr1FTH77p7eziPmqwaCwGID1oap6GBKrL6bP3eKe5qkD6tXL7uk2X
-         AsmB7QGgkZYU5ME7vUpGEwso2aVlQHv3oAdXI0rooRnnCqt1KHlc6NdJOf5WkBA/tLWk
-         0HmRDDYVgBWOKM8wQwZO6+lG88hsmWd0K/Qcbpso+qCDMK6HjpYt5w6hR6ty4EmjPrjF
-         ysAIR0YGSpqPj7ajyUokQlELevpS2gTch8EmZmHAPyqDvGWCwnC5SUywivMOGkZQ+Qmb
-         hyHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+/lonEZ7lAjJM9p39P8BR7wI92X7wL1JFjHzHvAjHkM=;
-        b=Zs/jCY2B6hJPWT403vRnS36DDLuoPklZSMqdSAIp/u9UO809aKnHbCHYH9t7FXZxW4
-         gziWJyuLiK6fMgB8iv88MD3JmqGtgIBxksI0Oj7byQed+4OGk6xftnO5BYRewQKdWYiz
-         y74OXAE2RdJxZpFhyEeBuB4m1vk88oSAfzG3W38ymyXASlmiXZxKHbb+THYqocjwB0fd
-         3D9IjU75HAfUjkP40oTkCzDEq5evDXBA/5WaowTGLTpXoSeMyQfsIzoARQqqEtZ56Dwm
-         5Iqm2ysngfldl/Id1iMnabLnj2a7LPvpYqO3/5johK+cEl5MhfEmUQO0lIuPiDfiaqir
-         7bqw==
-X-Gm-Message-State: AOAM533IBt6lsw7OpEeQH7kUdbMR4Mrt6DppfwmUu1D/ozaKywxvn8sS
-        xloBTUusG36IPw7OoBIBP7ob5dtVUYitNr7jHLlvBw==
-X-Google-Smtp-Source: ABdhPJz5/TY/hSbADj3oi4wF5cfCkxs3IZ3jGUJwi+iQ030QrAjfPx7lmoOmw/UVp6y5U0jhlKMWyCVws+HntU+xFxQ=
-X-Received: by 2002:a1f:2d8e:: with SMTP id t136mr246292vkt.61.1590998364343;
- Mon, 01 Jun 2020 00:59:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
- <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
- <20200526102018.kznh6aglpkqlp6en@gilmour.lan> <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
- <20200527091335.7wc3uy67lbz7j4di@gilmour.lan> <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
- <20200528073055.znutrhkryzu3grrl@gilmour.lan>
-In-Reply-To: <20200528073055.znutrhkryzu3grrl@gilmour.lan>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 1 Jun 2020 15:58:26 +0800
-Message-ID: <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Jun 2020 04:04:52 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:40656 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbgFAIEw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Jun 2020 04:04:52 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C4C84200689;
+        Mon,  1 Jun 2020 10:04:50 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F1FE9200683;
+        Mon,  1 Jun 2020 10:04:46 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4A8E140280;
+        Mon,  1 Jun 2020 16:04:42 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] ARM: dts: imx6qdl: Remove invalid interrupt for GPC node
+Date:   Mon,  1 Jun 2020 15:54:29 +0800
+Message-Id: <1590998069-28212-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=8828=E6=97=
-=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:30=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Daniel,
->
-> On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
-> > On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tech> wrote=
-:
-> > > I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-Hong=
-) if you
-> > > want.
-> >
-> > That would be great, although given the potentially inconsistent
-> > results we've been seeing so far it would be great if you could
-> > additionally push a git branch somewhere.
-> > That way we can have higher confidence that we are applying exactly
-> > the same patches to the same base etc.
->
-> So I sent a new iteration yesterday, and of course forgot to cc you... So=
-rry for
-> that.
->
-> I've pushed my current branch here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/log/?h=
-=3Drpi4-kms
+In latest i.MX6Q RM Rev.6, 05/2020, #90 SPI interrupt is reserved,
+so remove it from GPC node.
 
-Thanks to Maxime!
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I have tried your repository on branch rpi4-kms.  The DRM VC4 is used!
-But got some issues:
-1. Some weird error message in dmesg.  Not sure it is related, or not
-[    5.219321] [drm:vc5_hdmi_init_resources] *ERROR* Failed to get
-HDMI state machine clock
-https://gist.github.com/starnight/3f317dca121065a361cf08e91225e389
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index b047403..deb09df 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -871,8 +871,7 @@
+ 				reg = <0x020dc000 0x4000>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <3>;
+-				interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
+-					     <0 90 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-parent = <&intc>;
+ 				clocks = <&clks IMX6QDL_CLK_IPG>;
+ 				clock-names = "ipg";
+-- 
+2.7.4
 
-2. The screen flashes suddenly sometimes.
-
-3. The higher resolutions, like 1920x1080 ... are lost after hot
-re-plug HDMI cable (HDMI0)
-
-Jian-Hong Pan
