@@ -2,115 +2,160 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC08DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CECC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B95207D0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591047144;
-	bh=9JPZ7ogAFTl3QiXoGBf+EmzaVaO486lPb/IEExnpaMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sWNDUxkZAiJcErSUqwLHYTlPrv3gAr9jRaOWh7c31BrCM2SElC+mgk4jPWpINpDyi
-	 M8sAagyK/Rp+7ocdsgZll/vYXiZvWHrYVdrFKRJ69zDoT0vRvwpKuN6a+du8tTpqIf
-	 ybob70fMZDuuVAGci+UpFSrM+bVi36sb/3tdpko4=
+	by mail.kernel.org (Postfix) with ESMTP id D82C3206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 21:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgFAVcU (ORCPT
+        id S1728802AbgFAVil (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:32:20 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37618 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbgFAVcT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 17:32:19 -0400
-Received: by mail-il1-f194.google.com with SMTP id r2so10856883ila.4;
-        Mon, 01 Jun 2020 14:32:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KmqdPjmKi1JsFB5M9JoF0ic/ni7mUj8Ld/K9RQPC/wI=;
-        b=e0a+jScmWNqrb1cqt9kF/Yf5FqXC3FnBxiWLCUg77EIAOMtOt/1/qNjLYWCJ3TNLMG
-         45aBKM51Bfrk+w14s2MRm3KowkAeQhjonoy32UXYd5AUkgoZwTNPbrudydhnG1LBxLWr
-         DRICS9IEPAsMnteJUhI2RNAat6M8dBbLgBZG0UowggJRbTWN0WquHOeWZZk8hSohSfOz
-         YRfPIXm+ucUTr+CEBajJBRqpO4594UicjpSOjAfJV0qTcqjQ8MTu3Jv4/aOiBmfQiJZM
-         O+7Du82Y52WocjNCp2B2Gj4o7fHx/eaYKdd3rn6jKQLC7vObgOYpqQDEnX74Ray/xIJx
-         dr1A==
-X-Gm-Message-State: AOAM5334b7qGfx+1lePR5mf6tV4DSMd2R3YxC4l0B5E8Eng59R/dlZHQ
-        MO7DvXO26vO7VWCUSwPljw==
-X-Google-Smtp-Source: ABdhPJxcDy18dpk1MqV1lWeF44sQZHoChgAxfWTvpW2F+X+1hLmjYqir/8cNHemHgkNLDjDLv0WK7Q==
-X-Received: by 2002:a05:6e02:13a9:: with SMTP id h9mr3518316ilo.20.1591047137611;
-        Mon, 01 Jun 2020 14:32:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id b10sm396689ilb.2.2020.06.01.14.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 14:32:16 -0700 (PDT)
-Received: (nullmailer pid 1537618 invoked by uid 1000);
-        Mon, 01 Jun 2020 21:32:15 -0000
-Date:   Mon, 1 Jun 2020 15:32:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v2 4/5] PCI: uniphier: Add iATU register support
-Message-ID: <20200601213215.GA1521885@bogus>
-References: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1589536743-6684-5-git-send-email-hayashi.kunihiko@socionext.com>
+        Mon, 1 Jun 2020 17:38:41 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34530 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728182AbgFAVil (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Jun 2020 17:38:41 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jfs8h-00050b-1D; Mon, 01 Jun 2020 23:38:35 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] media: rockchip: Introduce driver for the camera interface on PX30
+Date:   Mon, 01 Jun 2020 23:38:34 +0200
+Message-ID: <1779471.kMuJgyiE6z@diego>
+In-Reply-To: <CAAFQd5AVD+LhYZziqNUfga1sCp98MMu+ESgBMagS1n6++ae=pg@mail.gmail.com>
+References: <20200529130405.929429-1-maxime.chevallier@bootlin.com> <CAAFQd5AVD+LhYZziqNUfga1sCp98MMu+ESgBMagS1n6++ae=pg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589536743-6684-5-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 15, 2020 at 06:59:02PM +0900, Kunihiko Hayashi wrote:
-> This gets iATU register area from reg property. In Synopsis DWC version
-> 4.80 or later, since iATU register area is separated from core register
-> area, this area is necessary to get from DT independently.
+Hi Tomasz,
+
+Am Montag, 1. Juni 2020, 20:45:14 CEST schrieb Tomasz Figa:
+> On Fri, May 29, 2020 at 3:04 PM Maxime Chevallier
+> <maxime.chevallier@bootlin.com> wrote:
+> >
+> > Hello everyone,
+> >
+> > Here's a V2 of the series adding very basic support for the camera interface on
+> > the Rockchip PX30 SoC.
+> >
+> > Thanks to everyone that commented on the first series, your reviews were
+> > very helpful :)
+> >
+> > This Camera Interface is also supported on other Rockchip SoC such as
+> > the RK1808, RK3128, RK3288 and RK3288, but for now I've only been able to
+> > test it on the PX30, using a PAL format.
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+> How does this hardware relate to the one handled by the rkisp1 driver
+> that is available under staging/media/rkisp1? It was written with
+> RK3399 in mind, but I have a loose recollection that the hardware in
+> RK3288 was roughly the same.
+
+(un-)educated guess would be that the rk3288 has both.
+
+When introducing new IPs Rockchip often keeps the previous incarnation
+around - probably as a fallback.
+
+From a bit of digging around manuals and vendor-dtsi [0] I found:
+
+in rk3288.dtsi both:
+- isp: isp@ff910000
+- cif_isp0: cif_isp@ff910000
+
+- grf_con_disable_isp in GRF_SOC_CON6
+- dphy_rx1_src_sel (1: isp, 0: csi host) in GRF_SOC_CON14
+
+
+Heiko
+
+
+[0] https://github.com/rockchip-linux/kernel/blob/develop-4.4/arch/arm/boot/dts/rk3288.dtsi
+
+
+> +Helen Koike +Dafna Hirschfeld working on the rkisp1 driver.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index a8dda39..493f105 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -447,6 +447,13 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->pci.dbi_base))
->  		return PTR_ERR(priv->pci.dbi_base);
->  
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
-> +	if (res) {
-> +		priv->pci.atu_base = devm_pci_remap_cfg_resource(dev, res);
-
-This isn't config space, so this function shouldn't be used.
-
-Use devm_platform_ioremap_resource_byname().
-
-> +		if (IS_ERR(priv->pci.atu_base))
-> +			priv->pci.atu_base = NULL;
-> +	}
-> +
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
->  	priv->base = devm_ioremap_resource(dev, res);
-
-Feel free to convert this one too.
-
->  	if (IS_ERR(priv->base))
-> -- 
-> 2.7.4
+> Best regards,
+> Tomasz
 > 
+> >
+> > This driver is mostly based on the driver found in Rockchip's BSP, that
+> > has been trimmed down to support the set of features that I was able to test,
+> > that is pretty much a very basic one-frame capture and video streaming
+> > with GStreamer.
+> >
+> > This first draft only supports the Parallel interface, although the
+> > controller has support for BT656 and CSI2.
+> >
+> > Finally, this controller has an iommu that could be used in this driver,
+> > but as of today I've not been able to get it to work.
+> >
+> > Any review is welcome.
+> >
+> > Thanks,
+> >
+> > Maxime
+> >
+> > --- Changes since V1 ---
+> >
+> >  - Took reviews from Rob, Hans, Robin and Heiko into account :
+> >   - Renamed the clocks in the binding
+> >   - Fixed the DT schema compiling
+> >   - Fixed a few typos
+> >   - Used the clk bulk API
+> >   - Used the reset array API
+> >   - Changed a few helpers for more suitable ones
+> >   - Rebased on 5.7-rc7
+> >
+> >
+> >
+> > Maxime Chevallier (3):
+> >   media: dt-bindings: media: Document Rockchip CIF bindings
+> >   media: rockchip: Introduce driver for Rockhip's camera interface
+> >   arm64: dts: rockchip: Add the camera interface description of the PX30
+> >
+> >  .../bindings/media/rockchip-cif.yaml          |  100 ++
+> >  arch/arm64/boot/dts/rockchip/px30.dtsi        |   12 +
+> >  drivers/media/platform/Kconfig                |   13 +
+> >  drivers/media/platform/Makefile               |    1 +
+> >  drivers/media/platform/rockchip/cif/Makefile  |    3 +
+> >  drivers/media/platform/rockchip/cif/capture.c | 1170 +++++++++++++++++
+> >  drivers/media/platform/rockchip/cif/dev.c     |  358 +++++
+> >  drivers/media/platform/rockchip/cif/dev.h     |  213 +++
+> >  drivers/media/platform/rockchip/cif/regs.h    |  256 ++++
+> >  9 files changed, 2126 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/rockchip-cif.yaml
+> >  create mode 100644 drivers/media/platform/rockchip/cif/Makefile
+> >  create mode 100644 drivers/media/platform/rockchip/cif/capture.c
+> >  create mode 100644 drivers/media/platform/rockchip/cif/dev.c
+> >  create mode 100644 drivers/media/platform/rockchip/cif/dev.h
+> >  create mode 100644 drivers/media/platform/rockchip/cif/regs.h
+> >
+> > --
+> > 2.25.4
+> >
+> 
+
+
+
+
