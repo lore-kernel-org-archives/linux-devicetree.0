@@ -2,83 +2,116 @@ Return-Path: <SRS0=Zx7r=7O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC48C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 12:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE02C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 12:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0202077D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 12:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A99207D5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  1 Jun 2020 12:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591014690;
+	bh=DEEaUOEt24o9uKz0Ey7PzyuEOfgwa1FgnGsP3iqM8hA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JorFtAj6GbQ3D5bY1w6W2uFKnjZ8jufjMi3ePq4s4VLH9ZC80eQwj5rCTwbTMde0L
+	 tmW68SL+4qRyzNCeScbJ6CXdmT/mhWMhX/N5OZmNM8xuOVFsxBw3e0gR6suKDWPe6F
+	 a5xRnshZkfME18inosllJc1sDEfH29yHSME5WwGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgFAMWC (ORCPT
+        id S1725978AbgFAMb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:22:02 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50164 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbgFAMVh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 08:21:37 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2F3908030725;
-        Mon,  1 Jun 2020 12:21:32 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AoIO7QRmanTE; Mon,  1 Jun 2020 15:21:31 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mon, 1 Jun 2020 08:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbgFAMb3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Jun 2020 08:31:29 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D68CF20679;
+        Mon,  1 Jun 2020 12:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591014689;
+        bh=DEEaUOEt24o9uKz0Ey7PzyuEOfgwa1FgnGsP3iqM8hA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0CjmdrqbPcjg4n3n7xmuSB+DmHeJBjq9UcdxGvTjQEnWpKeZ3MrsgddfBUnWzKJEX
+         zzmb3e4pB8bSjWojsKLWXrWFmLzMj/Mfuv1pUg7fPKOMOabVdq7MnoClr2ZC5eCd8v
+         9y9NdiEc4U84iYsuML66RjoGviT9y1faIlL87DX8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jfjbD-00Gtms-CX; Mon, 01 Jun 2020 13:31:27 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 01 Jun 2020 13:31:27 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paul.burton@imgtec.com>,
         Rob Herring <robh+dt@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 5/6] bus: cdmm: Add MIPS R5 arch support
-Date:   Mon, 1 Jun 2020 15:21:20 +0300
-Message-ID: <20200601122121.15809-6-Sergey.Semin@baikalelectronics.ru>
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 0/6] mips: Add DT bindings for MIPS CDMM and
+ MIPS GIC
 In-Reply-To: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <d59ef33155e2ae965e79522ab220c177@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: Sergey.Semin@baikalelectronics.ru, tsbogend@alpha.franken.de, tglx@linutronix.de, gregkh@linuxfoundation.org, fancer.lancer@gmail.com, Alexey.Malahov@baikalelectronics.ru, paul.burton@imgtec.com, robh+dt@kernel.org, arnd@arndb.de, jason@lakedaemon.net, rjw@rjwysocki.net, daniel.lezcano@linaro.org, jhogan@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-CDMM may be available not only on MIPS R2 architectures, but also on
-newer MIPS R5 chips. For instance our P5600 chip has one. Let's mark
-the CDMM bus being supported for that MIPS arch too.
+On 2020-06-01 13:21, Serge Semin wrote:
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
----
- drivers/bus/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[...]
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 6d4e4497b59b..971c07bc92d4 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -58,7 +58,7 @@ config IMX_WEIM
- 
- config MIPS_CDMM
- 	bool "MIPS Common Device Memory Map (CDMM) Driver"
--	depends on CPU_MIPSR2
-+	depends on CPU_MIPSR2 || CPU_MIPSR5
- 	help
- 	  Driver needed for the MIPS Common Device Memory Map bus in MIPS
- 	  cores. This bus is for per-CPU tightly coupled devices such as the
+> Since Paul isn't looking after the MIPS arch code anymore, Ralf hasn't
+> been seen maintaining MIPS for a long time, Thomas is only responsible
+> for the next part of it:
+> 	F:      Documentation/devicetree/bindings/mips/
+> 	F:      Documentation/mips/
+> 	F:      arch/mips/
+> 	F:      drivers/platform/mips/
+> the MIPS-specific drivers like:
+> 	F:	drivers/bus/mips_cdmm.c
+> 	F:	drivers/irqchip/irq-mips-cpu.c
+> 	F:	drivers/irqchip/irq-mips-gic.c
+> 	F:	drivers/clocksource/mips-gic-timer.c
+> 	F:	drivers/cpuidle/cpuidle-cps.c
+> seem to be left for the subsystems maintainers to support. So if you 
+> don't
+> mind or unless there is a better alternative, I can help with looking
+> after them to ease the maintainers review burden and since I'll be 
+> working
+> on our MIPS-based SoC drivers integrating into the mainline kernel repo
+> anyway. If you don't like this idea, please just decline the last
+> patch in the series.
+
+Given how deeply integrated the MIPS GIC is in the architecture, I'd
+really like Thomas to co-maintain it, or at the very least give his
+blessing on you being the dedicated point of contact for MIPS GIC
+stuff.
+
+Thanks,
+
+         M.
 -- 
-2.26.2
-
+Jazz is not dead. It just smells funny...
