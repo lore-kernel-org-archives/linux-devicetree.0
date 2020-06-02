@@ -2,100 +2,75 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67D3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C026DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3DE820663
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A6F20734
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:06:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilWBNL6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgFBUEx (ORCPT
+        id S1726580AbgFBUGa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:04:53 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39864 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBUEx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:04:53 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id BF88E1C0BD2; Tue,  2 Jun 2020 22:04:51 +0200 (CEST)
-Date:   Tue, 2 Jun 2020 22:04:36 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        devicetree@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-Message-ID: <20200602200436.GA6535@amd>
-References: <20200526164652.2331-1-dmurphy@ti.com>
- <20200526164652.2331-2-dmurphy@ti.com>
- <20200527014902.GA859634@bogus>
- <20200527133948.GA5011@amd>
- <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
+        Tue, 2 Jun 2020 16:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBUG3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:06:29 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45159C08C5C0
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 13:06:29 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n24so14049889ejd.0
+        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 13:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
+        bh=2cvL0+Yd9yN39Q4W3Qqy3Rcpep61FLY3/TIOy09PrYQ=;
+        b=ilWBNL6s/oqv/pCLSUhL8IL831D81QGaeiNVKp0LalmXfcBuxutdTlF0Cc5SKaDDl6
+         tdO/hoPcG61TPtpylyPK3kBVMD/f1XfPjgfZr9ZO0wxs55mwF7xFscZ+9Pkz0m9MCRpS
+         0TqpEQ7+odCILe4DjqorpWyhIhJnKNV2GaeF4kuk0OBrB+2Silo7pL0hJvQ1pa74Go90
+         3TtFVFoJc7dGV3BLpr/raidOS4rfGoICmxCxgotaMjst7psccsp0blAyVko+xGS66rCM
+         TU4gK+zRCT6bbyG9kC9nO3loifidqpus0Angr7i6i1D8h8h47bA8WUiCM5RuJyfQ4wI/
+         f3aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:cc;
+        bh=2cvL0+Yd9yN39Q4W3Qqy3Rcpep61FLY3/TIOy09PrYQ=;
+        b=lijehi0HZvsg/bIliLs5hYaBjsbIkqnHtm6b/RLFi/WZ31zql8F7XtCphkQGdBZbtR
+         9WVzFu4srmLgioiZkzn20DxcSqgsLAYhxkFu/Kq5eyMcM3W+kVqQshUj0m/R8wWpfoy9
+         ZASZbjwbFoMMyer18WcVjJEDO/RGq+rqxbQnkIzmryyr4baZhaZ5wkvbH7Fb+VOlNR7x
+         o8IHk8wYi09Grf2etv7xTAEWtwj+5zX3qEJ5ZMGPIVOtNxjE71r7BmPT01drkiBJ6NKD
+         j5/ngu0ecnJC7ozUJ+vVnSf69z0puVPrsrtanwvl6KI6Ic2bVTV9LNFKI4MzFBO+0tZV
+         yIww==
+X-Gm-Message-State: AOAM530kQbsh+MMswQ1MUUZs8SZf06d0F5KXeifwuclmWBtvxB/Qrnls
+        cj9oVrWMPC1w6WbOuq6TpabndfyuV9C4q5jSmqM=
+X-Received: by 2002:a17:906:ae85:: with SMTP id md5mt16518434ejb.213.1591128388033;
+ Tue, 02 Jun 2020 13:06:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200602200407.320908-1-konradybcio@gmail.com>
+In-Reply-To: <20200602200407.320908-1-konradybcio@gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Tue, 2 Jun 2020 22:05:52 +0200
+Message-ID: <CAMS8qEUOYuLfWTm4y9a2ZPJ2KyRs287jfkka0XntSWXyeZhgtQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] soc: qcom: smd-rpm: Add msm8994 compatible
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed 2020-05-27 08:35:06, Rob Herring wrote:
-> On Wed, May 27, 2020 at 7:39 AM Pavel Machek <pavel@ucw.cz> wrote:
-> >
-> > Hi!
-> >
-> > Thanks for reviews!
-> >
-> > > > +additionalProperties: false
-> > > > +...
-> > > > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> > >
-> > > This isn't a binding file. Belongs in another patch.
-> >
-> > These constants are directly related to the binding. It makes sense to
-> > go in one patch...
->=20
-> Yes, the header does go in this patch, but kernel subsystem files do not.
->=20
-> Part of the reason for separating is we generate a DT only repository
-> which filters out all the kernel code. Ideally this is just filtering
-> out commits and the commit messages still make sens
-
-Well, but the patch can't be split like that. Otherwise we risk null
-pointer dereferences when one part is applied but not the second one.
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---xHFwDpU9dbj6ez1V
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7WsNQACgkQMOfwapXb+vI4JwCeLxatm3ymua/F9hO67BMmNsBg
-FugAnRNkhigolL/rsu4UJ5kw26SOvJM8
-=njXg
------END PGP SIGNATURE-----
-
---xHFwDpU9dbj6ez1V--
+Interestingly enough, this compatible has been used in lg-bullhead DTS
+for a long long time, even though it has never existed upstream.
