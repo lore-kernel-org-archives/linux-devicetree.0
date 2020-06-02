@@ -2,189 +2,219 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A50C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05568C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 244F22068D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED2E206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:07:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKdJMl8T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUihOM2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgFBRE3 (ORCPT
+        id S1726380AbgFBRHd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54992 "EHLO
+        Tue, 2 Jun 2020 13:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgFBRE3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 13:04:29 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D504BC05BD1E;
-        Tue,  2 Jun 2020 10:04:28 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id u5so5350791pgn.5;
-        Tue, 02 Jun 2020 10:04:28 -0700 (PDT)
+        with ESMTP id S1725969AbgFBRHd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 13:07:33 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5342C05BD1E;
+        Tue,  2 Jun 2020 10:07:32 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id a2so13456506ejb.10;
+        Tue, 02 Jun 2020 10:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qP1SFtSKI85Od2m/ro+JDsXQO3tioUkpdU+dKmyTlRI=;
-        b=oKdJMl8TzZa9ODZicGnJcIHOSTF432mRcPBazZ/oTtgrH1YkrG0tPbvTQTywX7E82v
-         LznKAjaKPExPwMtJX05Ej3AH1saH0AN4BtFgPqV8V1Y6X4p21PRg1GpxrLArdhxiQ8H0
-         YmIuXFrMUMYLRyztBUc0V3yiM2htahRds38SIt+on1RRdOheHwCCh1WJnSJqlXbhDIMQ
-         zGW4dt7W/JC4DAGz4ZSkjDA/rLd3jRQc5MdtRmeBz0L00VBeD+RNZkSBduKADuyamVN0
-         pNFL0CZsl6CINpv0svITsMuZGqldfK3kC/bntvftYNTN6H4lo2NRC0rzNQWi2MNyTNIa
-         EyyQ==
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=V/+GyojHTJmw9bNM7yNcM312FFXJq2IqXj9L0INWy7Q=;
+        b=oUihOM2aArIzupffsfqXi1JfMuJRjqs3ARf07yCOOfjJhx4qfwVGnr8L9/mO59fxG7
+         YkoiGX2HQF1N0bdzc/cIoLLF6N8ELK3bcnZ7sNlBInF/kF38+CiSP77QfXS6ocfJua7y
+         WijyaTNFtN9g95rE2qp/MyO/TTe9toSOFHadtQ9Ihjl7hJB3gl66gyB4y0IvpcAbrS9R
+         IKFmhmCZSR8GZrOlr1DF4idkY2RelTJp+zTW0dbX4cdRxuEC6F/c9+UGScIhG/JnTPGi
+         zGuv3H9zSQHgDMos58H+FdGJiyfaCz9/r+iz/KjgBIlzRezO4zVw3PXeJcJ0fZGmOKwo
+         gH1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qP1SFtSKI85Od2m/ro+JDsXQO3tioUkpdU+dKmyTlRI=;
-        b=o7nYeQXgz5mssPo/Aqq5fEhi3T1ROqzAkL+6j1L85RP7sENnqQ4TP5AI3aTQESy1oH
-         i6fAtxckolNso8tGwAZ7tcLNPJo2JJHyp/qHa6Qr3Nmjy5luQ5iyE992DHgp/zM2kqft
-         Yhd2IqCe57yS5MhIB6/zXEmlQmff+0Aj7t1cd2rl5mNYUTbj4Qmxc0F9la45A6867178
-         iVuJ+2+EsGrI4nynaQBungi2JNXmEtp0V7LI047vUxTZomPSteN4ZY/9XoNHSmWtAIKL
-         3FFU0PnbjQOhlKeY/90UkbBWsmK9ZUVM/xXdv06LJ0P8B5u+gbinWoUjR3T7ROusGWEx
-         mphQ==
-X-Gm-Message-State: AOAM533jMn13naivjVlVJjjp1bbYq7eprmHVBaG8FpvXIEPqBcJZYIOL
-        2AXpFLM7TUr6kaL9XYfk2V0UbDmfNy3yDnRpllw=
-X-Google-Smtp-Source: ABdhPJxlrtHHSjUce6iWy8kx5cGdV/gbgQevdhKK2v4Wg33jtRnDrxZu3cO9IRlBrmWXR9y0L8UBAUJdRuX9Kv1FLGk=
-X-Received: by 2002:a63:305:: with SMTP id 5mr24160733pgd.74.1591117468175;
- Tue, 02 Jun 2020 10:04:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=V/+GyojHTJmw9bNM7yNcM312FFXJq2IqXj9L0INWy7Q=;
+        b=bkABzHeV18DZiKhE7XA/M00/66QnLq7lYdreq4W+1LiaJQRvOyQhi1Xamen+3Qx+Dh
+         MeMkfbndVIHhl3i6uXZen9BfAsA8P399loUUfYaMPk0hFQUq6qOKj4X5TGnJIEHQvKPD
+         5VpB/Qw2ciobHdba+5EhpeCLBOcfDCeMb0q4A2NTqs24hFYwhblDb9tFGDuoLL9Vms+T
+         0ICCDbLeyLHVLd24lMrI9WYUfkmm6pdE0t84zjnKcbNDpJ8wUYEMbxe7p4nC/ftJtCHx
+         MC5QAPHUBK3J/qrEOSNQTT6yMhps2LiqrMylZMBGMEipMKgOKDPMq7IfsQg53uV4A0eN
+         jCtA==
+X-Gm-Message-State: AOAM532bxOeSZtladZkvS8xqqu/Ga9rcqLTrsmvEzeLfelo2fscMnmMu
+        LPkly6Ux7HoE9bta7nfffWU=
+X-Google-Smtp-Source: ABdhPJwtxv/ulcv2XTV5KKFBCd5AuSSVaD3Al4wFIOXiobGanl9V3pBfCUgu5FQsWlEVX8mmteKm5Q==
+X-Received: by 2002:a17:906:5a99:: with SMTP id l25mr25266661ejq.235.1591117651146;
+        Tue, 02 Jun 2020 10:07:31 -0700 (PDT)
+Received: from AnsuelXPS (host9-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.9])
+        by smtp.gmail.com with ESMTPSA id cx13sm1816868edb.20.2020.06.02.10.07.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jun 2020 10:07:30 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Bjorn Helgaas'" <helgaas@kernel.org>
+Cc:     "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
+        "'Rob Herring'" <robh@kernel.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200602115353.20143-12-ansuelsmth@gmail.com> <20200602163255.GA821782@bjorn-Precision-5520>
+In-Reply-To: <20200602163255.GA821782@bjorn-Precision-5520>
+Subject: R: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
+Date:   Tue, 2 Jun 2020 19:07:27 +0200
+Message-ID: <001101d63900$4c7aae60$e5700b20$@gmail.com>
 MIME-Version: 1.0
-References: <20200602164723.28858-1-tomasz.duszynski@octakon.com> <20200602164723.28858-4-tomasz.duszynski@octakon.com>
-In-Reply-To: <20200602164723.28858-4-tomasz.duszynski@octakon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 2 Jun 2020 20:04:16 +0300
-Message-ID: <CAHp75VfjWG_3XC5FJoaU7XXJc+04JTbEKdjZK=g6ffBPvJNhxA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] iio: chemical: scd30: add serial interface driver
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQHL9MTNXAygDpahgIhhkQkgvfxVz6jaFSqg
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
->
-> Add serial interface driver for the SCD30 sensor.
+> On Tue, Jun 02, 2020 at 01:53:52PM +0200, Ansuel Smith wrote:
+> > From: Sham Muthayyan <smuthayy@codeaurora.org>
+> >
+> > Add Force GEN1 support needed in some ipq8064 board that needs to
+> limit
+> > some PCIe line to gen1 for some hardware limitation. This is set by the
+> > max-link-speed binding and needed by some soc based on ipq8064. (for
+> > example Netgear R7800 router)
+> >
+> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 259b627bf890..0ce15d53c46e 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/types.h>
+> >
+> > +#include "../../pci.h"
+> >  #include "pcie-designware.h"
+> >
+> >  #define PCIE20_PARF_SYS_CTRL			0x00
+> > @@ -99,6 +100,8 @@
+> >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+> >  #define SLV_ADDR_SPACE_SZ			0x10000000
+> >
+> > +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
+> > +
+> >  #define DEVICE_TYPE_RC				0x4
+> >
+> >  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+> > @@ -195,6 +198,7 @@ struct qcom_pcie {
+> >  	struct phy *phy;
+> >  	struct gpio_desc *reset;
+> >  	const struct qcom_pcie_ops *ops;
+> > +	int gen;
+> >  };
+> >
+> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> > @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  	/* wait for clock acquisition */
+> >  	usleep_range(1000, 1500);
+> >
+> > +	if (pcie->gen == 1) {
+> > +		val = readl(pci->dbi_base +
+> PCIE20_LNK_CONTROL2_LINK_STATUS2);
+> > +		val |= 1;
+> 
+> Is this the same bit that's visible in config space as
+> PCI_EXP_LNKSTA_CLS_2_5GB?  Why not use that #define?
+> 
+> There are a bunch of other #defines in this file that look like
+> redefinitions of standard things:
+> 
+>   #define PCIE20_COMMAND_STATUS                   0x04
+>     Looks like PCI_COMMAND
+> 
+>   #define CMD_BME_VAL                             0x4
+>     Looks like PCI_COMMAND_MASTER
+> 
+>   #define PCIE20_DEVICE_CONTROL2_STATUS2          0x98
+>     Looks like (PCIE20_CAP + PCI_EXP_DEVCTL2)
+> 
+>   #define PCIE_CAP_CPL_TIMEOUT_DISABLE            0x10
+>     Looks like PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
+> 
+>   #define PCIE20_CAP                              0x70
+>     This one is obviously device-specific
+> 
+>   #define PCIE20_CAP_LINK_CAPABILITIES            (PCIE20_CAP + 0xC)
+>     Looks like (PCIE20_CAP + PCI_EXP_LNKCAP)
+> 
+>   #define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT (BIT(10) |
+> BIT(11))
+>     Looks like PCI_EXP_LNKCAP_ASPMS
+> 
+>   #define PCIE20_CAP_LINK_1                       (PCIE20_CAP + 0x14)
+>   #define PCIE_CAP_LINK1_VAL                      0x2FD7F
+>     This looks like PCIE20_CAP_LINK_1 should be (PCIE20_CAP +
+>     PCI_EXP_SLTCAP), but "CAP_LINK_1" doesn't sound like the Slot
+>     Capabilities register, and I don't know what PCIE_CAP_LINK1_VAL
+>     means.
+> 
 
-...
+The define are used by ipq8074 and I really can't test the changes. Anyway
+it shouldn't make a difference use the define instead of the custom value so
+a patch should not harm anything... Problem is the last 2 define that we
+really
+don't know what they are about... How should I proceed? Change only the 
+value related to PCI_EXP_LNKSTA_CLS_2_5GB or change all the other except the
 
-> +static u16 scd30_serdev_cmd_lookup_tbl[] = {
-> +       [CMD_START_MEAS] = 0x0036,
-> +       [CMD_STOP_MEAS] = 0x0037,
-> +       [CMD_MEAS_INTERVAL] = 0x0025,
-> +       [CMD_MEAS_READY] = 0x0027,
-> +       [CMD_READ_MEAS] = 0x0028,
-> +       [CMD_ASC] = 0x003a,
-> +       [CMD_FRC] = 0x0039,
-> +       [CMD_TEMP_OFFSET] = 0x003b,
-> +       [CMD_FW_VERSION] = 0x0020,
-> +       [CMD_RESET] = 0x0034,
+last 2?
 
-Hmm... Can't we keep them ordered by value?
 
-> +};
+> > +		writel(val, pci->dbi_base +
+> PCIE20_LNK_CONTROL2_LINK_STATUS2);
+> > +	}
+> >
+> >  	/* Set the Max TLP size to 2K, instead of using default of 4K */
+> >  	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
+> > @@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct
+> platform_device *pdev)
+> >  		goto err_pm_runtime_put;
+> >  	}
+> >
+> > +	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
+> > +	if (pcie->gen < 0)
+> > +		pcie->gen = 2;
+> > +
+> >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> "parf");
+> >  	pcie->parf = devm_ioremap_resource(dev, res);
+> >  	if (IS_ERR(pcie->parf)) {
+> > --
+> > 2.25.1
+> >
 
-...
-
-> +       ret = wait_for_completion_interruptible_timeout(&priv->meas_ready,
-> +                                                       SCD30_SERDEV_TIMEOUT);
-> +       if (ret > 0)
-> +               ret = 0;
-> +       else if (!ret)
-> +               ret = -ETIMEDOUT;
-> +
-> +       return ret;
-
-Perhaps
-
-  if (ret < 0)
-    return ret;
-  if (ret == 0)
-    return -ETIMEDOUT;
-  return 0;
-
-?
-
-...
-
-> +       char txbuf[SCD30_SERDEV_MAX_BUF_SIZE] = { SCD30_SERDEV_ADDR },
-> +            rxbuf[SCD30_SERDEV_MAX_BUF_SIZE], *rsp = response;
-
-Please, apply type to each variable separately.
-
-...
-
-> +       switch (txbuf[1]) {
-> +       case SCD30_SERDEV_WRITE:
-
-> +               if (memcmp(txbuf, txbuf, txsize)) {
-
-I'm not sure I understand this.
-
-> +                       dev_err(state->dev, "wrong message received\n");
-> +                       return -EIO;
-> +               }
-> +               break;
-> +       case SCD30_SERDEV_READ:
-
-> +               if (rxbuf[2] != (rxsize -
-> +                                SCD30_SERDEV_RX_HEADER_SIZE -
-> +                                SCD30_SERDEV_CRC_SIZE)) {
-
-Perhaps you can come up with better indentation/ line split?
-
-> +                       dev_err(state->dev,
-> +                               "received data size does not match header\n");
-> +                       return -EIO;
-> +               }
-> +
-> +               rxsize -= SCD30_SERDEV_CRC_SIZE;
-> +               crc = get_unaligned_le16(rxbuf + rxsize);
-> +               if (crc != scd30_serdev_calc_crc(rxbuf, rxsize)) {
-> +                       dev_err(state->dev, "data integrity check failed\n");
-> +                       return -EIO;
-> +               }
-> +
-> +               rxsize -= SCD30_SERDEV_RX_HEADER_SIZE;
-> +               memcpy(rsp, rxbuf + SCD30_SERDEV_RX_HEADER_SIZE, rxsize);
-> +               break;
-> +       default:
-> +               dev_err(state->dev, "received unknown op code\n");
-> +               return -EIO;
-> +       }
-> +
-> +       return 0;
-> +}
-
-...
-
-> +static struct serdev_device_driver scd30_serdev_driver = {
-> +       .driver = {
-
-> +               .name = KBUILD_MODNAME,
-
-This is not the best what we can do. The name is an ABI and better if
-it will be constant (independent on file name).
-
-> +               .of_match_table = scd30_serdev_of_match,
-> +               .pm = &scd30_pm_ops,
-> +       },
-> +       .probe = scd30_serdev_probe,
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
