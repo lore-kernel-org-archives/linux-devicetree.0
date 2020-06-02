@@ -2,58 +2,59 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BB6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6FFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D401A2068D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3971420738
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="auZuFEQ7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uMmpehXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgFBQm2 (ORCPT
+        id S1725969AbgFBQpj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:42:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45914 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgFBQm2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 12:42:28 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052GgQXv090985;
-        Tue, 2 Jun 2020 11:42:26 -0500
+        Tue, 2 Jun 2020 12:45:39 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56462 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBQpj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 12:45:39 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052GjTqp021845;
+        Tue, 2 Jun 2020 11:45:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591116146;
-        bh=isgop+zgmnt9+2x8jJzzOjuiDiGSs1YhFo1LurPj2nM=;
+        s=ti-com-17Q1; t=1591116329;
+        bh=FkD8MfXarrMT52/8HocMxQ3RjzaE8Cf7SRdZEsk5RS8=;
         h=From:To:CC:Subject:Date;
-        b=auZuFEQ7i9UfZg3vmsc/CPHBk6Tn7zkwM8Dx+Q1RgMNYAb8g7QHVQL2Vazcw6chzO
-         1iBqshB+3yG5y/obPqgpWZHU7VP+0jPWb8eHJ/Ovyx0dc4459DNV9F6BIAgKMwazfS
-         hsnrJNQUYV4teRZs8cRecQ63lgLxRLjTxMdUvzlE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052GgQd8004160
+        b=uMmpehXCTVESUmMieJmjsoGYuYT1V82+xJExzq2XaqKTCRbUxKWX6aesCxqcRVi4g
+         ewAIKf42ln3Q+6Y+CyinvEDWdQKkXXYaQhvAfQuZLphIHbu7HyzI/7kHgHjwR4gWeO
+         d3cEQadF1EtNjx+XhQVqpd+X6jAKP5WVvzzuUYqA=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052GjTRr118087
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 2 Jun 2020 11:42:26 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 2 Jun 2020 11:45:29 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
- 2020 11:42:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 11:45:28 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 2 Jun 2020 11:42:26 -0500
+ Frontend Transport; Tue, 2 Jun 2020 11:45:28 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052GgPHg098890;
-        Tue, 2 Jun 2020 11:42:26 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052GjSse105213;
+        Tue, 2 Jun 2020 11:45:28 -0500
 From:   Dan Murphy <dmurphy@ti.com>
-To:     <robh@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [RESEND PATCH] dt-bindings: property-units: Add picoseconds type
-Date:   Tue, 2 Jun 2020 11:42:19 -0500
-Message-ID: <20200602164219.3159-1-dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v5 0/4] RGMII Internal delay common property
+Date:   Tue, 2 Jun 2020 11:45:18 -0500
+Message-ID: <20200602164522.3276-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -64,25 +65,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the '-ps' picosecond unit suffix for property names.
+Hello
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/devicetree/bindings/property-units.txt | 1 +
- 1 file changed, 1 insertion(+)
+The RGMII internal delay is a common setting found in most RGMII capable PHY
+devices.  It was found that many vendor specific device tree properties exist
+to do the same function. This creates a common property to be used for PHY's
+that have tunable internal delays for the Rx and Tx paths.
 
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index e9b8360b3288..00094070bdac 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -17,6 +17,7 @@ Time/Frequency
- -ms		: millisecond
- -us		: microsecond
- -ns		: nanosecond
-+-ps		: picosecond
- 
- Distance
- ----------------------------------------
+Dan Murphy (4):
+  dt-bindings: net: Add tx and rx internal delays
+  net: phy: Add a helper to return the index for of the internal delay
+  dt-bindings: net: Add RGMII internal delay for DP83869
+  net: dp83869: Add RGMII internal delay configuration
+
+ .../devicetree/bindings/net/ethernet-phy.yaml | 13 +++
+ .../devicetree/bindings/net/ti,dp83869.yaml   | 16 +++-
+ drivers/net/phy/dp83869.c                     | 82 ++++++++++++++++++-
+ drivers/net/phy/phy_device.c                  | 51 ++++++++++++
+ include/linux/phy.h                           |  2 +
+ 5 files changed, 160 insertions(+), 4 deletions(-)
+
 -- 
 2.26.2
 
