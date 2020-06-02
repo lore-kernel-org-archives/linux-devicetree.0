@@ -2,173 +2,128 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D33C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BADAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B732068D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D8D2068D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:10:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rVRr6k1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgFBXHp (ORCPT
+        id S1728454AbgFBXKe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:07:45 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57676 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgFBXHp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:07:45 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C898F803083B;
-        Tue,  2 Jun 2020 23:07:41 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 36FlyoStlb5r; Wed,  3 Jun 2020 02:07:40 +0300 (MSK)
-Date:   Wed, 3 Jun 2020 02:07:38 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 06/10] dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
-Message-ID: <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200513140031.25633-7-lars.povlsen@microchip.com>
+        Tue, 2 Jun 2020 19:10:34 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43582 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgFBXKe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:10:34 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052NASrt118881;
+        Tue, 2 Jun 2020 18:10:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591139428;
+        bh=dE0qBYvIatQtqxHG5Y7eamyWzzcpi2JcluSxv2foNYo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rVRr6k1nJAKKSCqp997lWVbYLF2j3y8WJrLtvGMazrKUtGUofd+lKlxpkpoFZG3ys
+         D4aqm11ptCs6tPhu+ciNstSB/tSFbFR/DqCX6IVDeqWlZ62MImJzktDivSKV19QV/9
+         b6Mf++f2N/6iRiRYIwGGOm7CWoUrLPdM6LREC6pQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052NARda022346
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 18:10:27 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 18:10:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 18:10:27 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052NAReI127270;
+        Tue, 2 Jun 2020 18:10:27 -0500
+Subject: Re: [PATCH net-next v5 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200602164522.3276-1-dmurphy@ti.com>
+ <20200602164522.3276-5-dmurphy@ti.com>
+ <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <61888788-041f-7b93-9d99-7dad4c148021@ti.com>
+Date:   Tue, 2 Jun 2020 18:10:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200513140031.25633-7-lars.povlsen@microchip.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 13, 2020 at 04:00:27PM +0200, Lars Povlsen wrote:
-> This add DT bindings for the Sparx5 SPI driver.
+Florian
 
-This whole file can be easily merged in to the generic DW APB SSI DT
-binding file. Just use "if: properties: compatible: const: ..." construction
-to distinguish ocelot, jaguar, sparx5 and non-sparx5 nodes.
+On 6/2/20 5:33 PM, Florian Fainelli wrote:
+>
+> On 6/2/2020 9:45 AM, Dan Murphy wrote:
+>> Add RGMII internal delay configuration for Rx and Tx.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+> [snip]
+>
+>> +
+>>   enum {
+>>   	DP83869_PORT_MIRRORING_KEEP,
+>>   	DP83869_PORT_MIRRORING_EN,
+>> @@ -108,6 +113,8 @@ enum {
+>>   struct dp83869_private {
+>>   	int tx_fifo_depth;
+>>   	int rx_fifo_depth;
+>> +	s32 rx_id_delay;
+>> +	s32 tx_id_delay;
+>>   	int io_impedance;
+>>   	int port_mirroring;
+>>   	bool rxctrl_strap_quirk;
+>> @@ -232,6 +239,22 @@ static int dp83869_of_init(struct phy_device *phydev)
+>>   				 &dp83869->tx_fifo_depth))
+>>   		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
+>>   
+>> +	ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
+>> +				   &dp83869->rx_id_delay);
+>> +	if (ret) {
+>> +		dp83869->rx_id_delay =
+>> +				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>> +		ret = 0;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>> +				   &dp83869->tx_id_delay);
+>> +	if (ret) {
+>> +		dp83869->tx_id_delay =
+>> +				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>> +		ret = 0;
+>> +	}
+> It is still not clear to me why is not the parsing being done by the PHY
+> library helper directly?
 
-> 
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> ---
->  .../bindings/spi/mscc,ocelot-spi.yaml         | 49 +++++++++++++++----
->  1 file changed, 39 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
-> index a3ac0fa576553..8beecde4b0880 100644
-> --- a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
-> @@ -23,15 +23,23 @@ properties:
->      enum:
->        - mscc,ocelot-spi
->        - mscc,jaguar2-spi
-> +      - microchip,sparx5-spi
-> 
->    interrupts:
->      maxItems: 1
-> 
->    reg:
->      minItems: 2
-> -    items:
-> -      - description: Designware SPI registers
-> -      - description: CS override registers
-> +    maxItems: 3
-> +    oneOf:
-> +      - items:
-> +          - description: Designware SPI registers
-> +          - description: CS override registers (Not sparx5).
-> +      - items:
-> +          - description: Designware SPI registers
-> +          - description: CS override registers (Not sparx5).
-> +          - description: Direct mapped SPI read area. If provided, the
-> +              driver will register spi_mem_op's to take advantage of it.
-> 
->    clocks:
->      maxItems: 1
-> @@ -43,6 +51,23 @@ properties:
->         enum: [ 2, 4 ]
->      maxItems: 1
-> 
+Why would we do that for these properties and not any other?
 
-> +  spi-rx-delay-us:
-> +    description: |
-> +      The delay (in usec) of the RX signal sample position. This can
-> +      be used to tne the RX timing in order to acheive higher
-> +      speeds. This is used for all devices on the bus.
-> +    default: 0
-> +    maxItems: 1
+Unless there is a new precedence being set here by having the PHY 
+framework do all the dt node parsing for common properties.
 
-spi-rx-delay-us is defined for a particular SPI-slave. Please see the
-DT binding file: Documentation/devicetree/bindings/spi/spi-controller.yaml .
-Although as I suggested before this delay isn't what the Dw APB SSI RX sample
-delay functionality does. Probably a vendor-specific property would be better
-here. But I'd also define it on a SPI-slave basis, not for all devices on the
-bus.
+Dan
 
-> +
-> +  interface-mapping-mask:
-> +    description: |
-> +      On the Sparx5 variant, two different busses are connected to the
-> +      controller. This property is a mask per chip-select, indicating
-> +      whether the CS should go to one or the other interface.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 0
-> +    maxItems: 1
 
-As Mark rightfully suggested this seems like an SPI-slave related property, then
-most likely it should be defined on the SPI-slave basis (probably as a bool
-property). Additionally it's vendor-specific, so the property name should be
-accordingly prefixed.
 
-> +
->  required:
->    - compatible
->    - reg
-> @@ -50,11 +75,15 @@ required:
-> 
->  examples:
->    - |
-> -    spi0: spi@101000 {
-> -      compatible = "mscc,ocelot-spi";
-> -      #address-cells = <1>;
-> -      #size-cells = <0>;
-> -      reg = <0x101000 0x100>, <0x3c 0x18>;
-> -      interrupts = <9>;
-> -      clocks = <&ahb_clk>;
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    spi0: spi@600104000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        compatible = "microchip,sparx5-spi";
-
-> +        reg = <0x00104000 0x40>, <0 0>, <0x3000000 0x4000000>;
-
-I have a doubt that defining an empty reg region is a good idea, since you can
-detect the reg requirements by the node compatible string.
-
--Sergey
-
-> +        num-cs = <16>;
-> +        reg-io-width = <4>;
-> +        reg-shift = <2>;
-> +        clocks = <&ahb_clk>;
-> +        interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
->      };
-> --
-> 2.26.2
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
