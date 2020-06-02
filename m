@@ -2,174 +2,163 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE01C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 08:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C6AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 08:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC8A42077D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 08:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D7F207DA
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 08:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kK/IlOt+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="O8RnlUql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgFBIPM (ORCPT
+        id S1725907AbgFBISe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:15:12 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:26864 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726185AbgFBIPJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 04:15:09 -0400
-X-UUID: 41f700aa76014982907c2e4dcb054db8-20200602
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=L04bYCk8wivAACUMFnflEPSxZwU86UwuPofSNkaCMCU=;
-        b=kK/IlOt+LmAuxs+qhSF4osH/4xMPI0ZIGCblJ1ptxihKEa55ui80wayDtP2Qm4r9TYCmY6fx4S9A4re0x8XZyBuYBBguZOwtNMeiutEo6e+0CBEjJ66dxCH06vEmALJHFOfr1vyL5mBPw7uh1kfJcM0Zd6gv59VP1S6zP+stwMM=;
-X-UUID: 41f700aa76014982907c2e4dcb054db8-20200602
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1379994272; Tue, 02 Jun 2020 16:15:00 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 2 Jun 2020 16:14:59 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 2 Jun 2020 16:14:58 +0800
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Crystal Guo <Crystal.Guo@mediatek.com>
-Subject: [PATCH v6 2/2] hwrng: add sec-rng driver
-Date:   Tue, 2 Jun 2020 16:14:38 +0800
-Message-ID: <1591085678-22764-3-git-send-email-neal.liu@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+        Tue, 2 Jun 2020 04:18:34 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:4398 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBISd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 04:18:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591085914; x=1622621914;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=3qntvJu5hZf6NiiWOF/rC2X4oeQHa+Lu7499eTjv9dQ=;
+  b=O8RnlUql8MHu4ivlcaz3fSTq/OC+JBAwmp89yUeCM1cLXYvzaWwCqwtG
+   b6iBEavwOFDOKc85BQ2cL/CAaDQmxheKBJbK3RO3cHIi4YDvfUr+1pqDu
+   e7lQuFcUnpXMZHa3/EVawlyaQr6bJoMQiHJ86jrJb1GiGsSPGiB9AZZCo
+   4XKTHw4ZIK6b9OPdYoxhWSVawZvOQNZaDKI53uA/1UQt6OpPuXmzHPmzb
+   PTRgx7/2CslEGlEmJc4iF1BTCHySAns6HD1pp60Ok7u85ZSArzVgWJkkh
+   fNN567VvoIykUr2k67kGZcUWpLn8bYlMD1UnppKKNhiZEnCYgckLCKDVh
+   Q==;
+IronPort-SDR: s5o+IBS6/JNEQ7wKvOXOhREeKVcIIXGYbDHcjkfYBX+4Md5mh2V0jTi/yJ4zR4C2bigz2aXE7v
+ bQ/zdJb9USgfM3zycHBzgTSHso5olRyqpbKltfn1KjWvu0ioDCQYa4Lha3ZrX/8zJf8Yof60Jg
+ v2TJrOvldDzsRi1wLnDaELNo/BL8Qu+Rps1l8Z7SkV1R/rlQj+sgCIysZn7EPkcS1XZGEKusKC
+ RX7TMKlCMA19r11DALUQaakzlb5IbjVNp4DJGLmeaVuTO//xrQJNxiICDqOnH6g12EmMaWycAj
+ jyE=
+X-IronPort-AV: E=Sophos;i="5.73,463,1583218800"; 
+   d="scan'208";a="77876474"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jun 2020 01:18:33 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 2 Jun 2020 01:18:32 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 2 Jun 2020 01:18:30 -0700
+References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200529162130.hsjcde27xhohl6jl@mobilestation>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/10] spi: Adding support for Microchip Sparx5 SoC
+In-Reply-To: <20200529162130.hsjcde27xhohl6jl@mobilestation>
+Date:   Tue, 2 Jun 2020 10:18:28 +0200
+Message-ID: <87img9q3sb.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 909ABA3B6E64AD00041CC4B3A9BF7D20E656DA2E14FD0DBC349B80906CF174CA2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rm9yIHNlY3VyaXR5IGF3YXJlbmVzcyBTb0NzIG9uIEFSTXY4IHdpdGggVHJ1c3Rab25lIGVuYWJs
-ZWQsDQpwZXJpcGhlcmFscyBsaWtlIGVudHJvcHkgc291cmNlcyBpcyBub3QgYWNjZXNzaWJsZSBm
-cm9tIG5vcm1hbCB3b3JsZA0KKGxpbnV4KSBhbmQgcmF0aGVyIGFjY2Vzc2libGUgZnJvbSBzZWN1
-cmUgd29ybGQgKEhZUC9BVEYvVEVFKSBvbmx5Lg0KVGhpcyBkcml2ZXIgYWltcyB0byBwcm92aWRl
-IGEgZ2VuZXJpYyBpbnRlcmZhY2UgdG8gQXJtIFRydXN0ZWQNCkZpcm13YXJlIG9yIEh5cGVydmlz
-b3Igcm5nIHNlcnZpY2UuDQoNClNpZ25lZC1vZmYtYnk6IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRp
-YXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2NoYXIvaHdfcmFuZG9tL0tjb25maWcgICB8ICAgMTMg
-KysrKw0KIGRyaXZlcnMvY2hhci9od19yYW5kb20vTWFrZWZpbGUgIHwgICAgMSArDQogZHJpdmVy
-cy9jaGFyL2h3X3JhbmRvbS9zZWMtcm5nLmMgfCAgMTU1ICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrDQogMyBmaWxlcyBjaGFuZ2VkLCAxNjkgaW5zZXJ0aW9ucygrKQ0KIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2NoYXIvaHdfcmFuZG9tL3NlYy1ybmcuYw0KDQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9jaGFyL2h3X3JhbmRvbS9LY29uZmlnIGIvZHJpdmVycy9jaGFyL2h3
-X3JhbmRvbS9LY29uZmlnDQppbmRleCA5YmM0NmRhLi5jYjljOGE5IDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9jaGFyL2h3X3JhbmRvbS9LY29uZmlnDQorKysgYi9kcml2ZXJzL2NoYXIvaHdfcmFuZG9t
-L0tjb25maWcNCkBAIC00NzQsNiArNDc0LDE5IEBAIGNvbmZpZyBIV19SQU5ET01fS0VZU1RPTkUN
-CiAJaGVscA0KIAkgIFRoaXMgb3B0aW9uIGVuYWJsZXMgS2V5c3RvbmUncyBoYXJkd2FyZSByYW5k
-b20gZ2VuZXJhdG9yLg0KIA0KK2NvbmZpZyBIV19SQU5ET01fU0VDVVJFDQorCXRyaXN0YXRlICJB
-cm0gU2VjdXJpdHkgUmFuZG9tIE51bWJlciBHZW5lcmF0b3Igc3VwcG9ydCINCisJZGVwZW5kcyBv
-biBIQVZFX0FSTV9TTUNDQyB8fCBDT01QSUxFX1RFU1QNCisJZGVmYXVsdCBIV19SQU5ET00NCisJ
-aGVscA0KKwkgIFRoaXMgZHJpdmVyIHByb3ZpZGVzIGtlcm5lbC1zaWRlIHN1cHBvcnQgZm9yIHRo
-ZSBBcm0gU2VjdXJpdHkNCisJICBSYW5kb20gTnVtYmVyIEdlbmVyYXRvci4NCisNCisJICBUbyBj
-b21waWxlIHRoaXMgZHJpdmVyIGFzIGEgbW9kdWxlLCBjaG9vc2UgTSBoZXJlLiB0aGUNCisJICBt
-b2R1bGUgd2lsbCBiZSBjYWxsZWQgc2VjLXJuZy4NCisNCisJICBJZiB1bnN1cmUsIHNheSBZLg0K
-Kw0KIGVuZGlmICMgSFdfUkFORE9NDQogDQogY29uZmlnIFVNTF9SQU5ET00NCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL2NoYXIvaHdfcmFuZG9tL01ha2VmaWxlIGIvZHJpdmVycy9jaGFyL2h3X3JhbmRv
-bS9NYWtlZmlsZQ0KaW5kZXggYTc4MDFiNC4uMDQ1MzNkMSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-Y2hhci9od19yYW5kb20vTWFrZWZpbGUNCisrKyBiL2RyaXZlcnMvY2hhci9od19yYW5kb20vTWFr
-ZWZpbGUNCkBAIC00MSwzICs0MSw0IEBAIG9iai0kKENPTkZJR19IV19SQU5ET01fUzM5MCkgKz0g
-czM5MC10cm5nLm8NCiBvYmotJChDT05GSUdfSFdfUkFORE9NX0tFWVNUT05FKSArPSBrcy1zYS1y
-bmcubw0KIG9iai0kKENPTkZJR19IV19SQU5ET01fT1BURUUpICs9IG9wdGVlLXJuZy5vDQogb2Jq
-LSQoQ09ORklHX0hXX1JBTkRPTV9OUENNKSArPSBucGNtLXJuZy5vDQorb2JqLSQoQ09ORklHX0hX
-X1JBTkRPTV9TRUNVUkUpICs9IHNlYy1ybmcubw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2hhci9o
-d19yYW5kb20vc2VjLXJuZy5jIGIvZHJpdmVycy9jaGFyL2h3X3JhbmRvbS9zZWMtcm5nLmMNCm5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi5jNmQzODcyDQotLS0gL2Rldi9udWxs
-DQorKysgYi9kcml2ZXJzL2NoYXIvaHdfcmFuZG9tL3NlYy1ybmcuYw0KQEAgLTAsMCArMSwxNTUg
-QEANCisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKy8qDQorICogQ29weXJp
-Z2h0IChDKSAyMDIwIE1lZGlhVGVrIEluYy4NCisgKi8NCisNCisjaW5jbHVkZSA8bGludXgvYXJt
-LXNtY2NjLmg+DQorI2luY2x1ZGUgPGxpbnV4L2h3X3JhbmRvbS5oPg0KKyNpbmNsdWRlIDxsaW51
-eC9tb2R1bGUuaD4NCisjaW5jbHVkZSA8bGludXgvb2YuaD4NCisjaW5jbHVkZSA8bGludXgvcGxh
-dGZvcm1fZGV2aWNlLmg+DQorDQorI2RlZmluZSBTTUNfUkVUX05VTQk0DQorI2RlZmluZSBTRUNf
-Uk5EX1NJWkUJKHNpemVvZih1MzIpICogU01DX1JFVF9OVU0pDQorDQorI2RlZmluZSBIV1JOR19T
-TUNfRkFTVF9DQUxMX1ZBTChmdW5jX251bSkgXA0KKwlBUk1fU01DQ0NfQ0FMTF9WQUwoQVJNX1NN
-Q0NDX0ZBU1RfQ0FMTCwgQVJNX1NNQ0NDX1NNQ18zMiwgXA0KKwkJCSAgIEFSTV9TTUNDQ19PV05F
-Ul9TSVAsIChmdW5jX251bSkpDQorDQorI2RlZmluZSB0b19zZWNfcm5nKHApCWNvbnRhaW5lcl9v
-ZihwLCBzdHJ1Y3Qgc2VjX3JuZ19wcml2LCBybmcpDQorDQordHlwZWRlZiB2b2lkIChzZWNfcm5n
-X2ZuKSh1bnNpZ25lZCBsb25nLCB1bnNpZ25lZCBsb25nLCB1bnNpZ25lZCBsb25nLA0KKwkJCSAg
-dW5zaWduZWQgbG9uZywgdW5zaWduZWQgbG9uZywgdW5zaWduZWQgbG9uZywNCisJCQkgIHVuc2ln
-bmVkIGxvbmcsIHVuc2lnbmVkIGxvbmcsDQorCQkJICBzdHJ1Y3QgYXJtX3NtY2NjX3JlcyAqKTsN
-CisNCitzdHJ1Y3Qgc2VjX3JuZ19wcml2IHsNCisJdTE2IGZ1bmNfbnVtOw0KKwlzZWNfcm5nX2Zu
-ICpybmdfZm47DQorCXN0cnVjdCBod3JuZyBybmc7DQorfTsNCisNCisvKiBTaW1wbGUgd3JhcHBl
-ciBmdW5jdGlvbnMgdG8gYmUgYWJsZSB0byB1c2UgYSBmdW5jdGlvbiBwb2ludGVyICovDQorc3Rh
-dGljIHZvaWQgc2VjX3JuZ19zbWModW5zaWduZWQgbG9uZyBhMCwgdW5zaWduZWQgbG9uZyBhMSwN
-CisJCQl1bnNpZ25lZCBsb25nIGEyLCB1bnNpZ25lZCBsb25nIGEzLA0KKwkJCXVuc2lnbmVkIGxv
-bmcgYTQsIHVuc2lnbmVkIGxvbmcgYTUsDQorCQkJdW5zaWduZWQgbG9uZyBhNiwgdW5zaWduZWQg
-bG9uZyBhNywNCisJCQlzdHJ1Y3QgYXJtX3NtY2NjX3JlcyAqcmVzKQ0KK3sNCisJYXJtX3NtY2Nj
-X3NtYyhhMCwgYTEsIGEyLCBhMywgYTQsIGE1LCBhNiwgYTcsIHJlcyk7DQorfQ0KKw0KK3N0YXRp
-YyB2b2lkIHNlY19ybmdfaHZjKHVuc2lnbmVkIGxvbmcgYTAsIHVuc2lnbmVkIGxvbmcgYTEsDQor
-CQkJdW5zaWduZWQgbG9uZyBhMiwgdW5zaWduZWQgbG9uZyBhMywNCisJCQl1bnNpZ25lZCBsb25n
-IGE0LCB1bnNpZ25lZCBsb25nIGE1LA0KKwkJCXVuc2lnbmVkIGxvbmcgYTYsIHVuc2lnbmVkIGxv
-bmcgYTcsDQorCQkJc3RydWN0IGFybV9zbWNjY19yZXMgKnJlcykNCit7DQorCWFybV9zbWNjY19o
-dmMoYTAsIGExLCBhMiwgYTMsIGE0LCBhNSwgYTYsIGE3LCByZXMpOw0KK30NCisNCitzdGF0aWMg
-Ym9vbCBfX3NlY19nZXRfcm5kKHN0cnVjdCBzZWNfcm5nX3ByaXYgKnByaXYsIHVpbnQzMl90ICp2
-YWwpDQorew0KKwlzdHJ1Y3QgYXJtX3NtY2NjX3JlcyByZXM7DQorDQorCXByaXYtPnJuZ19mbihI
-V1JOR19TTUNfRkFTVF9DQUxMX1ZBTChwcml2LT5mdW5jX251bSksDQorCQkJMCwgMCwgMCwgMCwg
-MCwgMCwgMCwgJnJlcyk7DQorDQorCWlmICghcmVzLmEwICYmICFyZXMuYTEgJiYgIXJlcy5hMiAm
-JiAhcmVzLmEzKQ0KKwkJcmV0dXJuIGZhbHNlOw0KKw0KKwl2YWxbMF0gPSByZXMuYTA7DQorCXZh
-bFsxXSA9IHJlcy5hMTsNCisJdmFsWzJdID0gcmVzLmEyOw0KKwl2YWxbM10gPSByZXMuYTM7DQor
-DQorCXJldHVybiB0cnVlOw0KK30NCisNCitzdGF0aWMgaW50IHNlY19ybmdfcmVhZChzdHJ1Y3Qg
-aHdybmcgKnJuZywgdm9pZCAqYnVmLCBzaXplX3QgbWF4LCBib29sIHdhaXQpDQorew0KKwlzdHJ1
-Y3Qgc2VjX3JuZ19wcml2ICpwcml2ID0gdG9fc2VjX3JuZyhybmcpOw0KKwl1MzIgdmFsWzRdID0g
-ezB9Ow0KKwlpbnQgcmV0dmFsID0gMDsNCisJaW50IGk7DQorDQorCXdoaWxlIChtYXggPj0gU0VD
-X1JORF9TSVpFKSB7DQorCQlpZiAoIV9fc2VjX2dldF9ybmQocHJpdiwgdmFsKSkNCisJCQlyZXR1
-cm4gcmV0dmFsOw0KKw0KKwkJZm9yIChpID0gMDsgaSA8IFNNQ19SRVRfTlVNOyBpKyspIHsNCisJ
-CQkqKHUzMiAqKWJ1ZiA9IHZhbFtpXTsNCisJCQlidWYgKz0gc2l6ZW9mKHUzMik7DQorCQl9DQor
-DQorCQlyZXR2YWwgKz0gU0VDX1JORF9TSVpFOw0KKwkJbWF4IC09IFNFQ19STkRfU0laRTsNCisJ
-fQ0KKw0KKwlyZXR1cm4gcmV0dmFsOw0KK30NCisNCitzdGF0aWMgaW50IHNlY19ybmdfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCit7DQorCXN0cnVjdCBzZWNfcm5nX3ByaXYg
-KnByaXY7DQorCWNvbnN0IGNoYXIgKm1ldGhvZDsNCisJaW50IHJldDsNCisNCisJcHJpdiA9IGRl
-dm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKnByaXYpLCBHRlBfS0VSTkVMKTsNCisJaWYg
-KCFwcml2KQ0KKwkJcmV0dXJuIC1FTk9NRU07DQorDQorCWlmIChvZl9wcm9wZXJ0eV9yZWFkX3N0
-cmluZyhwZGV2LT5kZXYub2Zfbm9kZSwgIm1ldGhvZCIsICZtZXRob2QpKQ0KKwkJcmV0dXJuIC1F
-TlhJTzsNCisNCisJaWYgKCFzdHJuY21wKCJzbWMiLCBtZXRob2QsIHN0cmxlbigic21jIikpKQ0K
-KwkJcHJpdi0+cm5nX2ZuID0gc2VjX3JuZ19zbWM7DQorCWVsc2UgaWYgKCFzdHJuY21wKCJodmMi
-LCBtZXRob2QsIHN0cmxlbigiaHZjIikpKQ0KKwkJcHJpdi0+cm5nX2ZuID0gc2VjX3JuZ19odmM7
-DQorDQorCWlmIChJU19FUlIocHJpdi0+cm5nX2ZuKSkgew0KKwkJZGV2X2VycigmcGRldi0+ZGV2
-LCAibWV0aG9kICVzIGlzIG5vdCBzdXBwb3J0ZWRcbiIsIG1ldGhvZCk7DQorCQlyZXR1cm4gLUVJ
-TlZBTDsNCisJfQ0KKw0KKwlpZiAob2ZfcHJvcGVydHlfcmVhZF91MTYocGRldi0+ZGV2Lm9mX25v
-ZGUsICJtZXRob2QtZmlkIiwNCisJCQkJICZwcml2LT5mdW5jX251bSkpDQorCQlyZXR1cm4gLUVO
-WElPOw0KKw0KKwlpZiAob2ZfcHJvcGVydHlfcmVhZF91MTYocGRldi0+ZGV2Lm9mX25vZGUsICJx
-dWFsaXR5IiwNCisJCQkJICZwcml2LT5ybmcucXVhbGl0eSkpDQorCQlyZXR1cm4gLUVOWElPOw0K
-Kw0KKwlwcml2LT5ybmcubmFtZSA9IHBkZXYtPm5hbWU7DQorCXByaXYtPnJuZy5yZWFkID0gc2Vj
-X3JuZ19yZWFkOw0KKwlwcml2LT5ybmcucHJpdiA9ICh1bnNpZ25lZCBsb25nKSZwZGV2LT5kZXY7
-DQorDQorCXJldCA9IGRldm1faHdybmdfcmVnaXN0ZXIoJnBkZXYtPmRldiwgJnByaXYtPnJuZyk7
-DQorCWlmIChyZXQpIHsNCisJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZWdpc3Rl
-ciBybmcgZGV2aWNlOiAlZFxuIiwgcmV0KTsNCisJCXJldHVybiByZXQ7DQorCX0NCisNCisJcmV0
-dXJuIDA7DQorfQ0KKw0KK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHNlY19ybmdf
-bWF0Y2hbXSA9IHsNCisJeyAuY29tcGF0aWJsZSA9ICJhcm0sc2VjLXJuZyIsIH0sDQorCXt9DQor
-fTsNCitNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBzZWNfcm5nX21hdGNoKTsNCisNCitzdGF0aWMg
-c3RydWN0IHBsYXRmb3JtX2RyaXZlciBzZWNfcm5nX2RyaXZlciA9IHsNCisJLnByb2JlID0gc2Vj
-X3JuZ19wcm9iZSwNCisJLmRyaXZlciA9IHsNCisJCS5uYW1lID0gS0JVSUxEX01PRE5BTUUsDQor
-CQkub3duZXIgPSBUSElTX01PRFVMRSwNCisJCS5vZl9tYXRjaF90YWJsZSA9IHNlY19ybmdfbWF0
-Y2gsDQorCX0sDQorfTsNCisNCittb2R1bGVfcGxhdGZvcm1fZHJpdmVyKHNlY19ybmdfZHJpdmVy
-KTsNCisNCitNT0RVTEVfREVTQ1JJUFRJT04oIlNlY3VyaXR5IFJhbmRvbSBOdW1iZXIgR2VuZXJh
-dG9yIERyaXZlciIpOw0KK01PRFVMRV9BVVRIT1IoIk5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRl
-ay5jb20+Iik7DQorTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KLS0gDQoxLjcuOS41DQo=
 
+Serge Semin writes:
+
+> Hello Lars,
+>
+> On Wed, May 13, 2020 at 04:00:21PM +0200, Lars Povlsen wrote:
+>> This is an add-on series to the main SoC Sparx5 series
+>> (Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>).
+>>
+>> The series add support for Sparx5 on top of the existing
+>> ocelot/jaguar2 spi driver.
+>>
+>> It spins off the existing support for the MSCC platforms into a
+>> separate driver, as adding new platforms from the MSCC/Microchip
+>> product lines will further complicate (clutter) the original driver.
+>>
+>> New YAML dt-bindings are provided for the resulting driver.
+>>
+>> It is expected that the DT patches are to be taken directly by the arm-soc
+>> maintainers.
+>
+> Regarding our cooperation. It can be implemented as follows. Since your patchset
+> is less cumbersome than mine and is more ready to be integrated into the generic DW
+> APB SSI code, it would be better to first make it through Mark', Andy' and my reviews
+> to be further merged into the kernel version of the driver. After that I'll have
+> my code altered so it could be applied on top of your patches. When everything
+> is done we'll have a more comprehensive DW APB SSI driver with poll-based
+> PIO operations support, new features like rx-delay, etc.
+>
+
+Hi Serge!
+
+I think I would be able to work on the SPI patches this week. Should I
+base it on the current spi-next or 5.7? Then address the comments and
+send out a new revision?
+
+Thanks for reaching out.
+
+---Lars
+
+> Thank you one more time for the series you've shared with us. Let's see what can
+> be done to improve it...
+>
+> -Sergey
+>
+>>
+>> Lars Povlsen (10):
+>>   spi: dw: Add support for polled operation via no IRQ specified in DT
+>>   spi: dw: Add support for RX sample delay register
+>>   spi: dw: Add support for client driver memory operations
+>>   dt-bindings: spi: Add bindings for spi-dw-mchp
+>>   spi: spi-dw-mmio: Spin off MSCC platforms into spi-dw-mchp
+>>   dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
+>>   spi: spi-dw-mchp: Add Sparx5 support
+>>   arm64: dts: sparx5: Add SPI controller
+>>   arm64: dts: sparx5: Add spi-nor support
+>>   arm64: dts: sparx5: Add spi-nand devices
+>>
+>>  .../bindings/spi/mscc,ocelot-spi.yaml         |  89 ++++
+>>  .../bindings/spi/snps,dw-apb-ssi.txt          |   7 +-
+>>  MAINTAINERS                                   |   2 +
+>>  arch/arm64/boot/dts/microchip/sparx5.dtsi     |  37 ++
+>>  .../boot/dts/microchip/sparx5_pcb125.dts      |  16 +
+>>  .../boot/dts/microchip/sparx5_pcb134.dts      |  22 +
+>>  .../dts/microchip/sparx5_pcb134_board.dtsi    |   9 +
+>>  .../boot/dts/microchip/sparx5_pcb135.dts      |  23 +
+>>  .../dts/microchip/sparx5_pcb135_board.dtsi    |   9 +
+>>  arch/mips/configs/generic/board-ocelot.config |   2 +-
+>>  drivers/spi/Kconfig                           |   7 +
+>>  drivers/spi/Makefile                          |   1 +
+>>  drivers/spi/spi-dw-mchp.c                     | 399 ++++++++++++++++++
+>>  drivers/spi/spi-dw-mmio.c                     |  93 ----
+>>  drivers/spi/spi-dw.c                          |  31 +-
+>>  drivers/spi/spi-dw.h                          |   4 +
+>>  16 files changed, 644 insertions(+), 107 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>>  create mode 100644 drivers/spi/spi-dw-mchp.c
+>>
+>> --
+>> 2.26.2
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--
+Lars Povlsen,
+Microchip
