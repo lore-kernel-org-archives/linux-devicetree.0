@@ -2,296 +2,117 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E523C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7773C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED7C20734
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591094339;
-	bh=7akxGeDBAwqDHNPbY466qX2fnjCF1AbecUSRAueZ4ks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GrAn55km44wMnZTED2RW5vVIQuJnlSSzApqOXLP809RMV5jZgSS/ngc0WOrPYAPBA
-	 zCs4LCMrzQ2dUecPe86FjUJO7mCR/QVZcU+DhCR9OFPBR3e7Mru4BObsunKjirjT5p
-	 MmOyhw9rM55qAbSMuy2+rj6VGGYcAO+K2rQevOSM=
+	by mail.kernel.org (Postfix) with ESMTP id 847B720679
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Z4VUDVFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgFBKi6 (ORCPT
+        id S1725958AbgFBKog (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgFBKi6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:38:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 018D620679;
-        Tue,  2 Jun 2020 10:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591094337;
-        bh=7akxGeDBAwqDHNPbY466qX2fnjCF1AbecUSRAueZ4ks=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W3/70se8FzD74EQgzLoM4WhS0WIFPuiz7g0/2ciOHh3Xc0FSr/jthKdOtp5PmKmdY
-         QrDCOXwBnqXE/oLAjx/8js9OllASJ22QQ0+ivqnrDbzjBsC24dp0S161dymIlJhoAx
-         6Dnkltsajp8l/b7wPNhTx3EkkUsqk3dGVo0gK43c=
-Date:   Tue, 2 Jun 2020 12:38:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com,
-        Crystal Guo <Crystal.Guo@mediatek.com>
-Subject: Re: [PATCH v6 2/2] hwrng: add sec-rng driver
-Message-ID: <20200602103855.GB2991896@kroah.com>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
- <1591085678-22764-3-git-send-email-neal.liu@mediatek.com>
+        Tue, 2 Jun 2020 06:44:36 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59537 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbgFBKoe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 06:44:34 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id g4P6jXBaDCKzeg4PAjJ3Qt; Tue, 02 Jun 2020 12:44:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1591094672; bh=1WzPUPBIE0Uaz6t74C5WQPm2crJOnZO/Fn4WuxbrM0s=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Z4VUDVFHsqJqWJs8+DlWcTaWPdwdnw8gko60VMLYOilDzsUb3W8+durQUBUvL5+oP
+         Sthoq+4c1YJQUssMAIP8WtDOkOEttFDeVrrD6AZGYw8oYA+2yI2TQnBF2X6kmgWGV4
+         Zk0/NJHVeACTXGcWwimmntqZ3nYTeN+VDhP8Oa1q4nKJBQxh02kYO2Xza7ByPTIxqK
+         rLUZh0fwu14Db/HnVXJhj/fnwO+XXzH/c0reY9pENHv9o0NymHsHrKZSeL5ijvifZS
+         eqGQmISUDPh3UywOeyL0vtdLYH+uo/HdMuJoKr4p6EfTB7byOgX4OUYfl4MiXNISuo
+         6mq+X5GqEFaGg==
+Subject: Re: [PATCH v2 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
+ Subsystem driver
+To:     Vishal Sagar <vsagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Joe Perches <joe@perches.com>
+References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
+ <20200429141705.18755-3-vishal.sagar@xilinx.com>
+ <368b7efb-3faf-bb71-2bd0-826f2ab031e6@xs4all.nl>
+ <DM6PR02MB6876F989682935D38AA9BF19A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <d696e0ed-3e59-f6a6-1f8d-b1725083de84@xs4all.nl>
+Date:   Tue, 2 Jun 2020 12:44:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591085678-22764-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <DM6PR02MB6876F989682935D38AA9BF19A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJcogKHJH5sedMLRm7iDVY5GJFXG6YtbvUoqEh55LOJH4zg6u1HF2mt9uivno374New6GAHucz89E7ee6JkqmobSD9+UdFIcUjJTBhrXxr5AdnMfRE74
+ IMdRhfoZKwXJPM8ECuNkEsezBa6X1mvtV4C6MBu0ZomrW+4QlMaMTpqpLWO/6EYrP/2ckZFtKcBLQW5Ddzy88Wa35QCRf/48b9AMvCXQr8TW5ZgAEEJRKM3h
+ bwY7Daae8yl4w/g8npNRVCkNpqSPm01e0HLBVkYDFnCWHqaD7LFxubGvdWsFmTpE/72ELPTClNJNNBt6Q5kBdPfNbiivna8seASaVVRG8sfFICbSJU3wqKrq
+ pDYUz/72ubcrJrgkEB9hsNIN8Li4IpUqOhIZU44mmxGeX+GKtOz+SkXsD65pKw25YJXttlyij3MnBQoeDn1BNNeZrvieDrRfAlHbxAjyxro5a2xiEuMiQC7Y
+ gart/4mzMjX0unDnfGYGtXhZIcbp3CWs+spCpm8pWVMkeTqok8tXkkWltkChM5/1Z3ocRSInar4we11HmjVoZi4S4+puW3Y74ROVUyvtZYeJM7rxIquIDwoK
+ 4OBxnALO+J5qqW91BP7C5Bqz3Z13dtgsPoZLco6VYfTcWRIRuxe706YwxEytmsV1lK8=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 04:14:38PM +0800, Neal Liu wrote:
-> For security awareness SoCs on ARMv8 with TrustZone enabled,
-> peripherals like entropy sources is not accessible from normal world
-> (linux) and rather accessible from secure world (HYP/ATF/TEE) only.
-> This driver aims to provide a generic interface to Arm Trusted
-> Firmware or Hypervisor rng service.
+On 01/06/2020 16:59, Vishal Sagar wrote:
+> Hi Hans,
 > 
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> ---
->  drivers/char/hw_random/Kconfig   |   13 ++++
->  drivers/char/hw_random/Makefile  |    1 +
->  drivers/char/hw_random/sec-rng.c |  155 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 169 insertions(+)
->  create mode 100644 drivers/char/hw_random/sec-rng.c
+> Thanks for reviewing!
 > 
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 9bc46da..cb9c8a9 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -474,6 +474,19 @@ config HW_RANDOM_KEYSTONE
->  	help
->  	  This option enables Keystone's hardware random generator.
->  
-> +config HW_RANDOM_SECURE
-> +	tristate "Arm Security Random Number Generator support"
-> +	depends on HAVE_ARM_SMCCC || COMPILE_TEST
-> +	default HW_RANDOM
-> +	help
-> +	  This driver provides kernel-side support for the Arm Security
-> +	  Random Number Generator.
-> +
-> +	  To compile this driver as a module, choose M here. the
-> +	  module will be called sec-rng.
-> +
-> +	  If unsure, say Y.
+>>> +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
+>>> +		if (!xsdirxss->vidlocked) {
+>>> +			dev_err(dev, "Can't get values when video not
+>> locked!\n");
+>>> +			return -EINVAL;
+>>> +		}
+>>> +		ctrl->val = xsdirxss->ts_is_interlaced;
+>>
+>> This control makes no sense: the v4l2_dv_timings struct will already tell you
+>> if it is an interlaced format or not. Same for v4l2_mbus_framefmt.
+>>
+> 
+> The SDI has a concept of supporting progressive, interlaced (both as we know normally) and a progressive segmented frames(psf).
+> The progressive segmented frames have their video content in progressive format but the transport stream is interlaced.
+> This is distinguished using the bit 6 and 7 of Byte 2 in the 4 byte ST352 payload.
+> Refer to sec 5.3 in SMPTE ST 352:2010.
+> 
+> This control can be used by the application to distinguish normal interlaced and progressive segmented frames.
 
-Why Y?
+Ah, interesting. So this relies on the receiver to reconstruct the progressive
+frame by combining the top and bottom field, right?
 
+I think this deserves a new v4l2_field value:
 
+V4L2_FIELD_ALTERNATE_PROG
 
-> +
->  endif # HW_RANDOM
->  
->  config UML_RANDOM
-> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-> index a7801b4..04533d1 100644
-> --- a/drivers/char/hw_random/Makefile
-> +++ b/drivers/char/hw_random/Makefile
-> @@ -41,3 +41,4 @@ obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
->  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
->  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
->  obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
-> +obj-$(CONFIG_HW_RANDOM_SECURE) += sec-rng.o
-> diff --git a/drivers/char/hw_random/sec-rng.c b/drivers/char/hw_random/sec-rng.c
-> new file mode 100644
-> index 0000000..c6d3872
-> --- /dev/null
-> +++ b/drivers/char/hw_random/sec-rng.c
-> @@ -0,0 +1,155 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 MediaTek Inc.
-> + */
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/hw_random.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define SMC_RET_NUM	4
-> +#define SEC_RND_SIZE	(sizeof(u32) * SMC_RET_NUM)
-> +
-> +#define HWRNG_SMC_FAST_CALL_VAL(func_num) \
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_32, \
-> +			   ARM_SMCCC_OWNER_SIP, (func_num))
-> +
-> +#define to_sec_rng(p)	container_of(p, struct sec_rng_priv, rng)
-> +
-> +typedef void (sec_rng_fn)(unsigned long, unsigned long, unsigned long,
-> +			  unsigned long, unsigned long, unsigned long,
-> +			  unsigned long, unsigned long,
-> +			  struct arm_smccc_res *);
+Basically this is identical to V4L2_FIELD_ALTERNATE, except that the two fields
+combine to a single progressive frame.
 
-Why not throw some more unsigned longs in there?  :)
+Regards,
 
-Seriously, no variable names for these?  Why not?
+	Hans
 
-And given that you only use the first parameter, why have 7 of them that
-are not used at all?  That feels pointless and needlessly complex.
-
-> +
-> +struct sec_rng_priv {
-> +	u16 func_num;
-> +	sec_rng_fn *rng_fn;
-> +	struct hwrng rng;
-> +};
-
-Nit, if you put 'struct hwrng' at the top of the structure, your
-"to_sec_rng()" macro resolves to a simple cast, no math at all.
-
-> +
-> +/* Simple wrapper functions to be able to use a function pointer */
-> +static void sec_rng_smc(unsigned long a0, unsigned long a1,
-> +			unsigned long a2, unsigned long a3,
-> +			unsigned long a4, unsigned long a5,
-> +			unsigned long a6, unsigned long a7,
-> +			struct arm_smccc_res *res)
-> +{
-> +	arm_smccc_smc(a0, a1, a2, a3, a4, a5, a6, a7, res);
-> +}
-> +
-> +static void sec_rng_hvc(unsigned long a0, unsigned long a1,
-> +			unsigned long a2, unsigned long a3,
-> +			unsigned long a4, unsigned long a5,
-> +			unsigned long a6, unsigned long a7,
-> +			struct arm_smccc_res *res)
-> +{
-> +	arm_smccc_hvc(a0, a1, a2, a3, a4, a5, a6, a7, res);
-> +}
-> +
-> +static bool __sec_get_rnd(struct sec_rng_priv *priv, uint32_t *val)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	priv->rng_fn(HWRNG_SMC_FAST_CALL_VAL(priv->func_num),
-> +			0, 0, 0, 0, 0, 0, 0, &res);
-
-See, all 0's :(
-
-You could hard-code them in the functions above instead.
-
-But, all of this pointer indirection is really odd, why is it needed at
-all?  Why not just call one or the other depending on the "type" at
-runtime?  Wouldn't that actually be faster (hint, it is...), if you
-cared about speed here (hint, I doubt it matters).
-
-> +
-> +	if (!res.a0 && !res.a1 && !res.a2 && !res.a3)
-> +		return false;
-> +
-> +	val[0] = res.a0;
-> +	val[1] = res.a1;
-> +	val[2] = res.a2;
-> +	val[3] = res.a3;
-
-So no values out of the random number generator can be 0?  Feels like an
-odd thing for a random number not to be allowed to do, why this
-restriction?
-
-> +
-> +	return true;
-> +}
-> +
-> +static int sec_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-> +{
-> +	struct sec_rng_priv *priv = to_sec_rng(rng);
-> +	u32 val[4] = {0};
-> +	int retval = 0;
-> +	int i;
-> +
-> +	while (max >= SEC_RND_SIZE) {
-> +		if (!__sec_get_rnd(priv, val))
-> +			return retval;
-> +
-> +		for (i = 0; i < SMC_RET_NUM; i++) {
-> +			*(u32 *)buf = val[i];
-> +			buf += sizeof(u32);
-
-Wait, what happens if buf is not a multiple of 4?  Didn't you just
-overwrite some memory above with the previous line?
-
-> +		}
-> +
-> +		retval += SEC_RND_SIZE;
-> +		max -= SEC_RND_SIZE;
-> +	}
-> +
-> +	return retval;
-> +}
-> +
-> +static int sec_rng_probe(struct platform_device *pdev)
-> +{
-> +	struct sec_rng_priv *priv;
-> +	const char *method;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	if (of_property_read_string(pdev->dev.of_node, "method", &method))
-> +		return -ENXIO;
-> +
-> +	if (!strncmp("smc", method, strlen("smc")))
-> +		priv->rng_fn = sec_rng_smc;
-> +	else if (!strncmp("hvc", method, strlen("hvc")))
-> +		priv->rng_fn = sec_rng_hvc;
-> +
-> +	if (IS_ERR(priv->rng_fn)) {
-
-How can this ever be true?
-
-Just put another else on the above list and you should be fine.
-
-> +		dev_err(&pdev->dev, "method %s is not supported\n", method);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (of_property_read_u16(pdev->dev.of_node, "method-fid",
-> +				 &priv->func_num))
-> +		return -ENXIO;
-> +
-> +	if (of_property_read_u16(pdev->dev.of_node, "quality",
-> +				 &priv->rng.quality))
-> +		return -ENXIO;
-> +
-> +	priv->rng.name = pdev->name;
-> +	priv->rng.read = sec_rng_read;
-> +	priv->rng.priv = (unsigned long)&pdev->dev;
-> +
-> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register rng device: %d\n", ret);
-
-Doesn't the caller print out something if this fails?
-
-thanks,
-
-greg k-h
+PS: I'll look at your other comments separately
