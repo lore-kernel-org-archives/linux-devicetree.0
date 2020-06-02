@@ -2,239 +2,241 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72124C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 07:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EACC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 07:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F53B20734
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 07:17:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ieQ+EmLb"
+	by mail.kernel.org (Postfix) with ESMTP id 4B5632072F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 07:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgFBHRO (ORCPT
+        id S1725872AbgFBHZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:17:14 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:35168 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgFBHRN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 03:17:13 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200602071709euoutp014b849be3c52d42aee12e715a65f4cc9a~UqNuHMvIL2399723997euoutp01U
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 07:17:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200602071709euoutp014b849be3c52d42aee12e715a65f4cc9a~UqNuHMvIL2399723997euoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591082229;
-        bh=JsgrURxyyIUcRr6e0rQIdWvE6G69hadgaZJB07kL+hs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ieQ+EmLbJmtY47rMx9ZGpyrMKpV/16ysGNgllmAb0rnMaCNgCKGEGGJcA2E4ackyV
-         A9/IIPqjEc1pn14t/UKQPuSpw1XVWNDdIIca/fMuHycMxyZd7q4FaHJ0UTi8jGenPV
-         D6twUl/BWSOhOk3kap5r3PD6RvKz94T85fRXK1pY=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200602071708eucas1p239b7a316344c6da38d1951b79654c573~UqNt6nhjP3233632336eucas1p2x;
-        Tue,  2 Jun 2020 07:17:08 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 55.BB.61286.4FCF5DE5; Tue,  2
-        Jun 2020 08:17:08 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200602071708eucas1p2649a2c4ff129269aa3d643c84dacf5f3~UqNtZ5QDZ0274302743eucas1p2e;
-        Tue,  2 Jun 2020 07:17:08 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200602071708eusmtrp1bb2e028cec46324e7b291f98e43e930f~UqNtYjVOu1355213552eusmtrp19;
-        Tue,  2 Jun 2020 07:17:08 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-f3-5ed5fcf4afb1
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 07.CE.08375.4FCF5DE5; Tue,  2
-        Jun 2020 08:17:08 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200602071707eusmtip28efe06720880f12a3644fb3d6ad60776~UqNs4hMYN0686806868eusmtip2K;
-        Tue,  2 Jun 2020 07:17:07 +0000 (GMT)
-Subject: Re: [PATCHv1 00/19] Improve SBS battery support
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <b3fd35de-1dd6-1ddc-7e57-2d9ab2860e81@samsung.com>
-Date:   Tue, 2 Jun 2020 09:17:09 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
+        Tue, 2 Jun 2020 03:25:12 -0400
+Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:50539 "EHLO
+        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725616AbgFBHZM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 03:25:12 -0400
+X-Greylist: delayed 568 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jun 2020 03:25:10 EDT
+Received: from pro2.mail.ovh.net (unknown [10.108.1.149])
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 9B4386059ACD;
+        Tue,  2 Jun 2020 09:15:40 +0200 (CEST)
+Received: from localhost (34.103.240.103) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
+ 09:15:41 +0200
+Date:   Tue, 2 Jun 2020 09:13:28 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2 1/4] iio: chemical: scd30: add core driver
+Message-ID: <20200602071328.GA2668@arch>
+References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
+ <20200530213630.87159-2-tomasz.duszynski@octakon.com>
+ <20200531105840.27e17f3d@archlinux>
+ <20200531192152.GC27246@arch>
+ <20200601113604.00002d70@Huawei.com>
+ <20200601113006.GA28560@arch>
+ <20200601144120.000038ba@Huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200601170528.r5w3aeijny3v5yx3@earth.universe>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djPc7pf/lyNM5i1ytJi/pFzrBbNi9ez
-        WWw+18NqcXnXHDaLz71HGC1mnN/HZDH3y1Rmi9a9R9gt7r72c+D02HF3CaPHplWdbB77565h
-        9/i8SS6AJYrLJiU1J7MstUjfLoErY8urb+wFyzQr5p04w9bA2KjcxcjBISFgIrHsO2sXIyeH
-        kMAKRolXp627GLmA7C+MEnNP3mGBcD4zSpy68J8NpAqk4cjPXcwQieWMEmu6D7JBOO8ZJRqX
-        HWAGqRIWsJD4sug3O4gtImAuceLWTUaQImaBVUwSc9b1gxWxCRhKdL3tAhvLK2An8eT8LVaQ
-        m1gEVCS+HAQLiwrESvTcf8UMUSIocXLmExYQm1PAVuL2k5dgNrOAvETz1tnMELa4xK0n85lA
-        dkkI7GOXuLBtKgvE2S4SJ+b9Y4ewhSVeHd8CZctInJ7cwwLR0Mwo8fDcWnYIp4dR4nLTDEaI
-        KmuJO+d+sYFcxyygKbF+lz5E2FFi4uHdzJCA5JO48VYQ4gg+iUnbpkOFeSU62oQgqtUkZh1f
-        B7f24IVLzBMYlWYheW0WkndmIXlnFsLeBYwsqxjFU0uLc9NTiw3zUsv1ihNzi0vz0vWS83M3
-        MQJT0el/xz/tYPx6KekQowAHoxIP74b7V+KEWBPLiitzDzFKcDArifA6nT0dJ8SbklhZlVqU
-        H19UmpNafIhRmoNFSZzXeNHLWCGB9MSS1OzU1ILUIpgsEwenVAOj29eu9GSL6b9Lkg/tkPGU
-        e2BTURSdulP5fPFqltS5Fv//v1mk6Z6uMEl+ddObqfuTct873NXeFpZsapO9ZVvIqfMLcm8I
-        SD/mvsBx9OtO+6Ae718fEkOYXrA/WZMcf5015GtB1V7/33Hlvpc2q1vqTchy/xnDzpMcYPBh
-        d6jhl5mbPFKD+6SVWIozEg21mIuKEwF1g6GrQQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xe7pf/lyNM/i0R8xi/pFzrBbNi9ez
-        WWw+18NqcXnXHDaLz71HGC1mnN/HZDH3y1Rmi9a9R9gt7r72c+D02HF3CaPHplWdbB77565h
-        9/i8SS6AJUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjf
-        LkEvY8urb+wFyzQr5p04w9bA2KjcxcjJISFgInHk5y7mLkYuDiGBpYwSd08sZYJIyEicnNbA
-        CmELS/y51sUGUfSWUaLp2ydGkISwgIXEl0W/2UFsEQFziRO3bjKCFDELrGKS+H9sBQtERyOT
-        xP0rz8DGsgkYSnS9BRnFycErYCfx5PwtoBUcHCwCKhJfDoKFRQViJboX/2CHKBGUODnzCQuI
-        zSlgK3H7yUswm1nATGLe5ofMELa8RPPW2VC2uMStJ/OZJjAKzULSPgtJyywkLbOQtCxgZFnF
-        KJJaWpybnltsqFecmFtcmpeul5yfu4kRGH/bjv3cvIPx0sbgQ4wCHIxKPLwb7l+JE2JNLCuu
-        zD3EKMHBrCTC63T2dJwQb0piZVVqUX58UWlOavEhRlOg3yYyS4km5wNTQ15JvKGpobmFpaG5
-        sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBkadd5kioc5bgjLrD/uW71a2N825oC7d
-        eNTs7/7+1XN3+E8sdqv/EXqRr3I7j0jzoociEy8qn3zPO2XH8glxKwz9fl9oOb1BzubQTZNf
-        G6P7tt2rz01Zyce7wY+j6amph3BzTUesrcGkPtZ3yi57fk1yc84J2PjD6PpCt/fbenqfcK/N
-        2hvLekWJpTgj0VCLuag4EQBtMWe91QIAAA==
-X-CMS-MailID: 20200602071708eucas1p2649a2c4ff129269aa3d643c84dacf5f3
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
-        <CGME20200601104027eucas1p2b076ee860520d709e8178c41550653f7@eucas1p2.samsung.com>
-        <15933a91-dd89-1f94-c2f2-79be4395f4c1@samsung.com>
-        <20200601170528.r5w3aeijny3v5yx3@earth.universe>
+Content-Disposition: inline
+In-Reply-To: <20200601144120.000038ba@Huawei.com>
+X-Originating-IP: [34.103.240.103]
+X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 18202423796053400822
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefiedgudduvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnheptdehveethfffudetjeeftdekueehjeegjedvteffgfevkefffeegffeugeehgfejnecukfhppedtrddtrddtrddtpdefgedruddtfedrvdegtddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehpmhgvvghrfiesphhmvggvrhifrdhnvght
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On Mon, Jun 01, 2020 at 02:41:20PM +0100, Jonathan Cameron wrote:
+> ...
+>
+> > > > > > +
+> > > > > > +	return ret;
+> > > > > > +}
+> > > > > > +
+> > > > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+> > > > > > +		scd30_command_t command)
+> > > > > > +{
+> > > > > > +	static const unsigned long scd30_scan_masks[] = { 0x07, 0x00 };
+> > > > > > +	struct scd30_state *state;
+> > > > > > +	struct iio_dev *indio_dev;
+> > > > > > +	int ret;
+> > > > > > +	u16 val;
+> > > > > > +
+> > > > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
+> > > > > > +	if (!indio_dev)
+> > > > > > +		return -ENOMEM;
+> > > > > > +
+> > > > > > +	state = iio_priv(indio_dev);
+> > > > > > +	state->dev = dev;
+> > > > >
+> > > > > Doesn't seem to be used.
+> > > > >
+> > > > > > +	state->priv = priv;
+> > > > >
+> > > > > What's this for?  At least at first glance I can't find it being used
+> > > > > anywhere.
+> > > > >
+> > > > > > +	state->irq = irq;
+> > > > > > +	state->pressure_comp = SCD30_PRESSURE_COMP_DEFAULT;
+> > > > > > +	state->meas_interval = SCD30_MEAS_INTERVAL_DEFAULT;
+> > > > > > +	state->command = command;
+> > > > > > +	mutex_init(&state->lock);
+> > > > > > +	init_completion(&state->meas_ready);
+> > > > > > +
+> > > > > > +	dev_set_drvdata(dev, indio_dev);
+> > > > > > +
+> > > > > > +	indio_dev->dev.parent = dev;
+> > > > >
+> > > > > Side note that there is a series moving this into the core under revision at
+> > > > > the moment.  Hopefully I'll remember to fix this up when applying your patch
+> > > > > if that one has gone in ahead of it.
+> > > > >
+> > > > > > +	indio_dev->info = &scd30_info;
+> > > > > > +	indio_dev->name = name;
+> > > > > > +	indio_dev->channels = scd30_channels;
+> > > > > > +	indio_dev->num_channels = ARRAY_SIZE(scd30_channels);
+> > > > > > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > > > > > +	indio_dev->available_scan_masks = scd30_scan_masks;
+> > > > > > +
+> > > > > > +	state->vdd = devm_regulator_get(dev, "vdd");
+> > > > > > +	if (IS_ERR(state->vdd)) {
+> > > > > > +		if (PTR_ERR(state->vdd) == -EPROBE_DEFER)
+> > > > > > +			return -EPROBE_DEFER;
+> > > > > > +
+> > > > > > +		dev_err(dev, "failed to get regulator\n");
+> > > > > > +		return PTR_ERR(state->vdd);
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	ret = regulator_enable(state->vdd);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	ret = devm_add_action_or_reset(dev, scd30_disable_regulator, state);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > >
+> > > > > A comment here on why it makes sense to register this here.  What
+> > > > > started mesurement? It seems that happens well below here so
+> > > > > we should really call this after that start all.
+> > > > >
+> > > >
+> > > > Sensor after being powered up starts in mode it was left in.
+> > > > Chances are it was continuous mode and we want to shut it down.
+> > >
+> > > That's fine.  The question is why 'here' as opposed to after the below where you
+> > > put it into continuous mode.
+> > >
+> >
+> > Let's suppose sensor got energized and started measuring. Then without
+> > registering action which stops measurement we jump to device reset etc.
+> >
+> > Now if reset failed for whatever reason (same applies to everything
+> > below reset) devm will gracefully unwind previous actions but sensor
+> > will continue doing his job. But there's no point. Better to save some
+> > milliaps for later.
+>
+> I'm not convinced. Note that in your example, the sensor was already on.
+> If we never loaded the driver it would stay on.  We should
+> deal with only problems we have potentially created.
+>
 
-On 01.06.2020 19:05, Sebastian Reichel wrote:
-> On Mon, Jun 01, 2020 at 12:40:27PM +0200, Marek Szyprowski wrote:
->> On 13.05.2020 20:55, Sebastian Reichel wrote:
->>> This patchset improves support for SBS compliant batteries. Due to
->>> the changes, the battery now exposes 32 power supply properties and
->>> (un)plugging it generates a backtrace containing the following message
->>> without the first patch in this series:
->>>
->>> ---------------------------
->>> WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4/0x104
->>> add_uevent_var: too many keys
->>> ---------------------------
->>>
->>> For references this is what an SBS battery status looks like after
->>> the patch series has been applied:
->>>
->>> cat /sys/class/power_supply/sbs-0-000b/uevent
->>> POWER_SUPPLY_NAME=sbs-0-000b
->>> POWER_SUPPLY_TYPE=Battery
->>> POWER_SUPPLY_STATUS=Discharging
->>> POWER_SUPPLY_CAPACITY_LEVEL=Normal
->>> POWER_SUPPLY_HEALTH=Good
->>> POWER_SUPPLY_PRESENT=1
->>> POWER_SUPPLY_TECHNOLOGY=Li-ion
->>> POWER_SUPPLY_CYCLE_COUNT=12
->>> POWER_SUPPLY_VOLTAGE_NOW=11441000
->>> POWER_SUPPLY_CURRENT_NOW=-26000
->>> POWER_SUPPLY_CURRENT_AVG=-24000
->>> POWER_SUPPLY_CAPACITY=76
->>> POWER_SUPPLY_CAPACITY_ERROR_MARGIN=1
->>> POWER_SUPPLY_TEMP=198
->>> POWER_SUPPLY_TIME_TO_EMPTY_AVG=438600
->>> POWER_SUPPLY_TIME_TO_FULL_AVG=3932100
->>> POWER_SUPPLY_SERIAL_NUMBER=0000
->>> POWER_SUPPLY_VOLTAGE_MIN_DESIGN=10800000
->>> POWER_SUPPLY_VOLTAGE_MAX_DESIGN=10800000
->>> POWER_SUPPLY_ENERGY_NOW=31090000
->>> POWER_SUPPLY_ENERGY_FULL=42450000
->>> POWER_SUPPLY_ENERGY_FULL_DESIGN=41040000
->>> POWER_SUPPLY_CHARGE_NOW=2924000
->>> POWER_SUPPLY_CHARGE_FULL=3898000
->>> POWER_SUPPLY_CHARGE_FULL_DESIGN=3800000
->>> POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3000000
->>> POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=12300000
->>> POWER_SUPPLY_MANUFACTURE_YEAR=2017
->>> POWER_SUPPLY_MANUFACTURE_MONTH=7
->>> POWER_SUPPLY_MANUFACTURE_DAY=3
->>> POWER_SUPPLY_MANUFACTURER=UR18650A
->>> POWER_SUPPLY_MODEL_NAME=GEHC
->> This patch landed in linux-next dated 20200529. Sadly it causes a
->> regression on Samsung Exynos-based Chromebooks (Exynos5250 Snow,
->> Exynos5420 Peach-Pi and Exynos5800 Peach-Pit). System boots to
->> userspace, but then, when udev populates /dev, booting hangs:
->>
->> [    4.435167] VFS: Mounted root (ext4 filesystem) readonly on device
->> 179:51.
->> [    4.457477] devtmpfs: mounted
->> [    4.460235] Freeing unused kernel memory: 1024K
->> [    4.464022] Run /sbin/init as init process
->> INIT: version 2.88 booting
->> [info] Using makefile-style concurrent boot in runlevel S.
->> [    5.102096] random: crng init done
->> [....] Starting the hotplug events dispatcher: systemd-udevdstarting
->> version 236
->> [ ok .
->> [....] Synthesizing the initial hotplug events...[ ok done.
->> [....] Waiting for /dev to be fully populated...[   34.409914]
->> TPS65090_RAILSDCDC1: disabling
->> [   34.412977] TPS65090_RAILSDCDC2: disabling
->> [   34.417021] TPS65090_RAILSDCDC3: disabling
->> [   34.423848] TPS65090_RAILSLDO1: disabling
->> [   34.429068] TPS65090_RAILSLDO2: disabling
-> :(
->
-> log does not look useful either.
->
->> Bisect between v5.7-rc1 and next-20200529 pointed me to the first bad
->> commit: [c4b12a2f3f3de670f6be5e96092a2cab0b877f1a] power: supply:
->> sbs-battery: simplify read_read_string_data.
-> ok. I tested this on an to-be-upstreamed i.MX6 based system
-> and arch/arm/boot/dts/imx53-ppd.dts. I think the difference
-> is, that i2c-exynos5 does not expose I2C_FUNC_SMBUS_READ_BLOCK_DATA.
-> I hoped all systems using SBS battery support this, but now
-> I see I2C_FUNC_SMBUS_EMUL only supports writing block data.
-> Looks like I need to add another patch implementing that
-> using the old code with added PEC support.
->
-> In any case that should only return -ENODEV for the property
-> (and uevent), but not break boot. So something fishy is going
-> on.
->
->> However reverting it in linux-next doesn't fix the issue, so the
->> next commits are also relevant to this issue.
-> The next patch, which adds PEC support depends on the simplification
-> of sbs_read_string_data. The old, open coded variant will result in
-> PEC failure for string properties (which should not stop boot either
-> of course). Can you try reverting both?
-Indeed, reverting both (and fixing the conflict) restores proper boot.
-> If that helps I will revert those two instead of dropping the whole
-> series for this merge window.
->
->> Let me know how can I help debugging it.
-> I suspect, that this is userspace endlessly retrying reading the
-> battery uevent when an error is returned. Could you check this?
-> Should be easy to see by adding some printfs.
-I've added some debug messages in sbs_get_property() and it read the 
-same properties many times. However I've noticed that if I wait long 
-enough booting finally continues.
-> That would mean a faulty battery could stall complete boot without
-> a useful error message, which is bad and needs to be fixed.
->
-> Sorry for the inconvience and thanks for your report,
+Fair enough.
 
-No problem, finding regressions is one of the linux-next goal.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+> If reset fails, it shouldn't 'enable' the sensor hence we are just in
+> the same state as if the driver hadn't loaded at all.  Also if reset
+> fails the chance of a disable succeeding is very low.
+>
+> The code is much more logical with this being done immediately after
+> the action to enable thing we are disabling.  So please put it down
+> there.
+>
+>
+>
+> >
+> > In case we have real regulator then there's no real issue because
+> > power gets cut off during cleanup.
+> >
+> > Quite often though there's only a dummy one which does nothing useful
+> > except making regulator framework happy.
+> >
+> > So my thinking here is that we're slightly better off registering
+> > scd30_stop_meas() action earlier to prevent such scenario from happening.
+> >
+> > > >
+> > > > > > +	ret = devm_add_action_or_reset(dev, scd30_stop_meas, state);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	ret = scd30_reset(state);
+> > > > > > +	if (ret) {
+> > > > > > +		dev_err(dev, "failed to reset device: %d\n", ret);
+> > > > > > +		return ret;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	if (state->irq > 0) {
+> > > > > > +		ret = scd30_setup_trigger(indio_dev);
+> > > > > > +		if (ret) {
+> > > > > > +			dev_err(dev, "failed to setup trigger: %d\n", ret);
+> > > > > > +			return ret;
+> > > > > > +		}
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> > > > > > +					      scd30_trigger_handler, NULL);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	ret = scd30_command_read(state, CMD_FW_VERSION, &val);
+> > > > > > +	if (ret) {
+> > > > > > +		dev_err(dev, "failed to read firmware version: %d\n", ret);
+> > > > > > +		return ret;
+> > > > > > +	}
+> > > > > > +	dev_info(dev, "firmware version: %d.%d\n", val >> 8, (char)val);
+> > > > > > +
+> > > > > > +	ret = scd30_command_write(state, CMD_MEAS_INTERVAL,
+> > > > > > +				  state->meas_interval);
+> > > > > > +	if (ret) {
+> > > > > > +		dev_err(dev, "failed to set measurement interval: %d\n", ret);
+> > > > > > +		return ret;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	ret = scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
+> > > > > > +	if (ret) {
+> > > > > > +		dev_err(dev, "failed to start measurement: %d\n", ret);
+> > > > > > +		return ret;
+> > > > > > +	}
+> Here is where we should register that cleanup handler.
+>
+> Jonathan
+>
+> > > > > > +
+> > > > > > +	return devm_iio_device_register(dev, indio_dev);
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL(scd30_probe);
+> > > > > > +
+> > > > > > +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
+> > > > > > +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor core driver");
+> > > > > > +MODULE_LICENSE("GPL v2");
+> > > > > > --
+> > > > > > 2.26.2
+> > > > > >
+> > > > >
+> > >
+> > >
+>
+>
