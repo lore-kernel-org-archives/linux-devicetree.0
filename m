@@ -2,169 +2,130 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E34C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485BCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3B46207FB
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A11420734
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="drH65z9Q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WoDUn//r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgFBJiu (ORCPT
+        id S1726380AbgFBJtN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:38:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgFBJiu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 05:38:50 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760D3C061A0E
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 02:38:48 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id p18so9535751eds.7
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 02:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=W0EAxKYZ1cy7EQz5SmmqXsQnpOBPA6z8vgEtS2GOSuY=;
-        b=drH65z9QCFx7VpluTZaPf8cNXvMnji1Zw2v13zTnotv2QHpST54MDbm33aYUQRGTJv
-         0QULZlT5uAkEZuTvOhzrSMqJ9YapVqZYDij+6jchFqzqcjtUcMPrwrCgKP7ct/hpwUiK
-         Icvl+0uC9vWI4KC69z0KY8jHbZGlZhyLd3kpE57L7bfJ4Cpt8dz+qs04+Y0J/gRKD0gE
-         SYD0xd89cpu3EFRcQji9vlrDA7Dv0jvvwKCxGAp1AJ9A5QTEgCe3eZQGd6LNx6AU6Aus
-         M68A0D5RvptQcClwn9HKmhlxaZARlTB0HTQQ4CBTd55q9gyNSOhbya3xERNyLzArDc6X
-         iOUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W0EAxKYZ1cy7EQz5SmmqXsQnpOBPA6z8vgEtS2GOSuY=;
-        b=ElaT9nNNonbRtkipvRIFtagzGvTdQtayjxeAjX8LLl/PF78bnSFQUi3HXsHqXfWmio
-         lLyFwP4i0pVm2Zqa4lFjJ0aboBtmUNzjkpFhyShj292tPm0tZ6b/iTONhOAQI+2F62Ak
-         1Ie0oBOBCXFRbs1u1kYJZsg9gMj3wwo/fe3ezjmLcbIsRLUqo7HOdRv36QTVpaL/ulFO
-         gi/2IAcebPo0Xym2aol6ow6NpvYYtAK9q7dKigRhpbeUj+s2mlZxqXbpJIrPSC6lpuQ6
-         rsUM/ZOQtQgOtxi8hQFBHT2Z9m//xVUAxaeadqWnhL/Kz0QQstldPs7QtxnoVcavehPS
-         z8tg==
-X-Gm-Message-State: AOAM5316MgDHX35cim8ZYHhC8Jj2yru1ins0mUK7UJEPPj6oCk+Rw9ph
-        IcPT/IQ+NI9Guvf0uY8uUfnQOA==
-X-Google-Smtp-Source: ABdhPJwh69GX0fxQPd28WCwoX+IJ3u/GdmphexSL7+uh9AzkMYiU+9haAje2FoMpFLt799mKYxxrDw==
-X-Received: by 2002:a05:6402:17e6:: with SMTP id t6mr24443948edy.243.1591090727183;
-        Tue, 02 Jun 2020 02:38:47 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id j5sm1319532edk.53.2020.06.02.02.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 02:38:46 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 11:38:36 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>,
-        "felix.kuehling@amd.com" <felix.kuehling@amd.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>
-Subject: Re: [PATCH v7 21/24] iommu/arm-smmu-v3: Add stall support for
- platform devices
-Message-ID: <20200602093836.GA1029680@myrica>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-22-jean-philippe@linaro.org>
- <4741b6c45d1a43b69041ecb5ce0be0d5@huawei.com>
+        Tue, 2 Jun 2020 05:49:13 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:39654 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgFBJtN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 05:49:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591091352; x=1622627352;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=XYWvcTMnu5gYjXeMs5ChljnhBkkNboMpnYYArlKHA2Y=;
+  b=WoDUn//rTpWgTuD+HxRRkDzKDOV3Xp69/yl+MDI9lQFz2tvBYpthWNMT
+   9WEddTAzz5Grr4DZDqaJPTa6zvwG/uqqI1QMjKMw54oSdehVunlUhrBW9
+   XREu++t50pZBVWl2MgMjr9hncSaaCXYEYr8jqMFp3qqZz59nXifN3+k32
+   lvCrE1WObAca/SPQHnAHS4vZlAM6TP7TEUzSpisnegZy0hfSJOvxC+EqO
+   ghtoAFBG+vFtr2y5CtV7zL82Jfmg0apLEG1LLLKVmsdt7OvTlQVzDMSey
+   uICZr+ubPEMUJk06YN5bgBmKSKIuNx9Kj1DSsqgLoRt/VN+UmaJGlhifu
+   g==;
+IronPort-SDR: vkMrKR4DTnFoAhQgn4Xj1OqpqZBjuz9tFOz8GKffkGjDmng3TRtTay4RgFkq7ULrjECwGmLp2m
+ MdaD91OpomcTxZoazsPtP8rBvk1J/QPwvHPriOj4gjHo6X3yW+V7odKuskYGG/vk5coh3y+k4v
+ 5vkWGsKDTL2niv/nkykeYnFTG4jIV0YXk4WAsd2uVrVbQ89uuxfPhB3A8oxGLQzsiG5teIAGDZ
+ GxjzyHPPXkMhugow9mwMqubhKeLm9tfEeYLqLs8YPwhZ3VbI/aLrVZOqNwif5U3PoYtoSP0QBS
+ LIk=
+X-IronPort-AV: E=Sophos;i="5.73,463,1583218800"; 
+   d="scan'208";a="78594449"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jun 2020 02:49:12 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 2 Jun 2020 02:49:12 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 2 Jun 2020 02:49:09 -0700
+References: <20200513130842.24847-1-lars.povlsen@microchip.com> <20200513130842.24847-4-lars.povlsen@microchip.com> <20200528022502.GA3234572@bogus>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Sebastian Reichel <sre@kernel.org>, SoC Team <soc@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/5] dt-bindings: reset: ocelot: Add documentation for 'microchip,reset-switch-core' property
+In-Reply-To: <20200528022502.GA3234572@bogus>
+Date:   Tue, 2 Jun 2020 11:49:08 +0200
+Message-ID: <87wo4piyqz.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4741b6c45d1a43b69041ecb5ce0be0d5@huawei.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shameer,
 
-On Mon, Jun 01, 2020 at 12:42:15PM +0000, Shameerali Kolothum Thodi wrote:
-> >  /* IRQ and event handlers */
-> > +static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
-> > +{
-> > +	int ret;
-> > +	u32 perm = 0;
-> > +	struct arm_smmu_master *master;
-> > +	bool ssid_valid = evt[0] & EVTQ_0_SSV;
-> > +	u8 type = FIELD_GET(EVTQ_0_ID, evt[0]);
-> > +	u32 sid = FIELD_GET(EVTQ_0_SID, evt[0]);
-> > +	struct iommu_fault_event fault_evt = { };
-> > +	struct iommu_fault *flt = &fault_evt.fault;
-> > +
-> > +	/* Stage-2 is always pinned at the moment */
-> > +	if (evt[1] & EVTQ_1_S2)
-> > +		return -EFAULT;
-> > +
-> > +	master = arm_smmu_find_master(smmu, sid);
-> > +	if (!master)
-> > +		return -EINVAL;
-> > +
-> > +	if (evt[1] & EVTQ_1_READ)
-> > +		perm |= IOMMU_FAULT_PERM_READ;
-> > +	else
-> > +		perm |= IOMMU_FAULT_PERM_WRITE;
-> > +
-> > +	if (evt[1] & EVTQ_1_EXEC)
-> > +		perm |= IOMMU_FAULT_PERM_EXEC;
-> > +
-> > +	if (evt[1] & EVTQ_1_PRIV)
-> > +		perm |= IOMMU_FAULT_PERM_PRIV;
-> > +
-> > +	if (evt[1] & EVTQ_1_STALL) {
-> > +		flt->type = IOMMU_FAULT_PAGE_REQ;
-> > +		flt->prm = (struct iommu_fault_page_request) {
-> > +			.flags = IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE,
-> > +			.pasid = FIELD_GET(EVTQ_0_SSID, evt[0]),
-> > +			.grpid = FIELD_GET(EVTQ_1_STAG, evt[1]),
-> > +			.perm = perm,
-> > +			.addr = FIELD_GET(EVTQ_2_ADDR, evt[2]),
-> > +		};
-> > +
-> 
-> > +		if (ssid_valid)
-> > +			flt->prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
-> 
-> Do we need to set this for STALL mode only support? I had an issue with this
-> being set on a vSVA POC based on our D06 zip device(which is a "fake " pci dev
-> that supports STALL mode but no PRI). The issue is, CMDQ_OP_RESUME doesn't
-> have any ssid or SSV params and works on sid and stag only.
+Rob Herring writes:
 
-I don't understand the problem, arm_smmu_page_response() doesn't set SSID
-or SSV when sending a CMDQ_OP_RESUME. Could you detail the flow of a stall
-event and RESUME command in your prototype?  Are you getting issues with
-the host driver or the guest driver?
+> On Wed, May 13, 2020 at 03:08:40PM +0200, Lars Povlsen wrote:
+>> This documents the 'microchip,reset-switch-core' property in the
+>> ocelot-reset driver.
+>>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  .../devicetree/bindings/power/reset/ocelot-reset.txt        | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+>> index 4d530d8154848..20fff03753ad2 100644
+>> --- a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+>> +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+>> @@ -9,9 +9,15 @@ microchip Sparx5 armv8 SoC's.
+>>  Required Properties:
+>>   - compatible: "mscc,ocelot-chip-reset" or "microchip,sparx5-chip-reset"
+>>
+>> +Optional properties:
+>> +- microchip,reset-switch-core : Perform a switch core reset at the
+>> +  time of driver load. This is may be used to initialize the switch
+>> +  core to a known state (before other drivers are loaded).
+>
+> How do you know when other drivers are loaded? This could be a module
+> perhaps. Doesn't seem like something that belongs in DT.
+>
 
-We do need to forward the SSV flag all the way to the guest driver, so the
-guest can find the faulting address space using the SSID. Once the guest
-handled the fault, then we don't send the SSID back to the host as part of
-the RESUME command.
+The reset driver is loaded at postcore_initcall() time, which ensures it
+is loaded before other drivers using the switch core. I noticed other
+drivers do the same to do low-level system reset and initialization at
+early boot time.
 
-Thanks,
-Jean
+> Can this behavior be implied with "microchip,sparx5-chip-reset"?
 
-> Hence, it is difficult for
-> Qemu SMMUv3 to populate this fields while preparing a page response. I can see
-> that this flag is being checked in iopf_handle_single() (patch 04/24) as well. For POC,
-> I used a temp fix[1] to work around this. Please let me know your thoughts.
-> 
-> Thanks,
-> Shameer
-> 
-> 1. https://github.com/hisilicon/kernel-dev/commit/99ff96146e924055f38d97a5897e4becfa378d15
-> 
+Since we need to cater for both modus operandi, I would need two driver
+compatible strings per platform, which scales worse than a single
+property.
+
+The "microchip,reset-switch-core" is a device configuration property
+which tells the system (driver) how the hw should be handled. Since you
+do not *always* want to reset the switch core (f.ex. when implementing
+systems with warm reboot), I think it makes perfect sense - but I may be
+biased off course :-)
+
+Thank you for (all) of your comments, by the way!
+
+---Lars
+
+>
+> Rob
+
+-- 
+Lars Povlsen,
+Microchip
