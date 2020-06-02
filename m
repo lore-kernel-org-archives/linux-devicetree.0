@@ -2,130 +2,204 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485BCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B364C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A11420734
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:49:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WoDUn//r"
+	by mail.kernel.org (Postfix) with ESMTP id E3FB5206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgFBJtN (ORCPT
+        id S1726139AbgFBJvz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:49:13 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:39654 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBJtN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 05:49:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591091352; x=1622627352;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=XYWvcTMnu5gYjXeMs5ChljnhBkkNboMpnYYArlKHA2Y=;
-  b=WoDUn//rTpWgTuD+HxRRkDzKDOV3Xp69/yl+MDI9lQFz2tvBYpthWNMT
-   9WEddTAzz5Grr4DZDqaJPTa6zvwG/uqqI1QMjKMw54oSdehVunlUhrBW9
-   XREu++t50pZBVWl2MgMjr9hncSaaCXYEYr8jqMFp3qqZz59nXifN3+k32
-   lvCrE1WObAca/SPQHnAHS4vZlAM6TP7TEUzSpisnegZy0hfSJOvxC+EqO
-   ghtoAFBG+vFtr2y5CtV7zL82Jfmg0apLEG1LLLKVmsdt7OvTlQVzDMSey
-   uICZr+ubPEMUJk06YN5bgBmKSKIuNx9Kj1DSsqgLoRt/VN+UmaJGlhifu
-   g==;
-IronPort-SDR: vkMrKR4DTnFoAhQgn4Xj1OqpqZBjuz9tFOz8GKffkGjDmng3TRtTay4RgFkq7ULrjECwGmLp2m
- MdaD91OpomcTxZoazsPtP8rBvk1J/QPwvHPriOj4gjHo6X3yW+V7odKuskYGG/vk5coh3y+k4v
- 5vkWGsKDTL2niv/nkykeYnFTG4jIV0YXk4WAsd2uVrVbQ89uuxfPhB3A8oxGLQzsiG5teIAGDZ
- GxjzyHPPXkMhugow9mwMqubhKeLm9tfEeYLqLs8YPwhZ3VbI/aLrVZOqNwif5U3PoYtoSP0QBS
- LIk=
-X-IronPort-AV: E=Sophos;i="5.73,463,1583218800"; 
-   d="scan'208";a="78594449"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jun 2020 02:49:12 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 2 Jun 2020 02:49:12 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 2 Jun 2020 02:49:09 -0700
-References: <20200513130842.24847-1-lars.povlsen@microchip.com> <20200513130842.24847-4-lars.povlsen@microchip.com> <20200528022502.GA3234572@bogus>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Sebastian Reichel <sre@kernel.org>, SoC Team <soc@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/5] dt-bindings: reset: ocelot: Add documentation for 'microchip,reset-switch-core' property
-In-Reply-To: <20200528022502.GA3234572@bogus>
-Date:   Tue, 2 Jun 2020 11:49:08 +0200
-Message-ID: <87wo4piyqz.fsf@soft-dev15.microsemi.net>
+        Tue, 2 Jun 2020 05:51:55 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:54684 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgFBJvz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 05:51:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 854CC8030836;
+        Tue,  2 Jun 2020 09:51:50 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id kXqPIGerUUjQ; Tue,  2 Jun 2020 12:51:48 +0300 (MSK)
+Date:   Tue, 2 Jun 2020 12:51:46 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Joe Perches <joe@perches.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH -next] MAINTAINERS: Update F: and X: entry ordering
+ (was Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers)
+Message-ID: <20200602095146.whjqqt25u2q5lgsa@mobilestation>
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+ <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
+ <20200601151903.ipd5ikw35z53eq2t@mobilestation>
+ <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
+ <20200601155204.hsatjbukj6haxhld@mobilestation>
+ <CAHp75Vej9gRAVspzfruciQ7weFunNBtj8GxbgBCVWtGwk5_ntQ@mail.gmail.com>
+ <2e96576791604862a11f094665b0c4e9c3263fd4.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2e96576791604862a11f094665b0c4e9c3263fd4.camel@perches.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello Joe
 
-Rob Herring writes:
+On Mon, Jun 01, 2020 at 11:22:58AM -0700, Joe Perches wrote:
+> On Mon, 2020-06-01 at 19:04 +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 1, 2020 at 6:52 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > On Mon, Jun 01, 2020 at 06:30:22PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Jun 1, 2020 at 6:19 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > > > On Mon, Jun 01, 2020 at 04:56:21PM +0300, Andy Shevchenko wrote:
+> > > > > > On Mon, Jun 1, 2020 at 3:26 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > > > > > Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+> > > > > > > and MIPS CPS CPUidle drivers.
+> > > > > > ...
+> > > > > > > +MIPS CORE DRIVERS
+> > > > > > > +M:     Serge Semin <fancer.lancer@gmail.com>
+> > > > > > > +L:     linux-mips@vger.kernel.org
+> > > > > > > +S:     Supported
+> > > > > > > +F:     drivers/bus/mips_cdmm.c
+> > > > > > > +F:     drivers/irqchip/irq-mips-cpu.c
+> > > > > > > +F:     drivers/irqchip/irq-mips-gic.c
+> > > > > > > +F:     drivers/clocksource/mips-gic-timer.c
+> > > > > > > +F:     drivers/cpuidle/cpuidle-cps.c
+> > > > > > 
+> > > > > > I think nowadays checkpatch.pl warns on wrong ordering in this data base.
+> []
+> > > Next time I won't forget that then. BTW the notes at the top of the MAINTAINERS
+> > > file don't explicitly say about the files-list order. Only about the
+> > > whole maintainers list entries order. Seeing the rest of the sub-entries like
+> > > L:, M:, etc. aren't ordered then it's probably better to have an explicit
+> > > statement, that files should be alphabetically listed, especially when
+> > > checkpatch.pl starts warning about that.
+> > 
+> > Joe, what do you think?
+> 
+> Fine by me.  Maybe something like the below.
+> 
+> Another thing might be to intermix the F and X entries so that
+> exclusions are more obviously against the F: entries.
+> 
+> There aren't many MAINTAINERS lines changed when the modified
+> parse-maintainers is run, but I think it reads better.
+> 
+> It doesn't seem the last major reordering with parse-maintainers
+> caused any significant issue for anyone.
 
-> On Wed, May 13, 2020 at 03:08:40PM +0200, Lars Povlsen wrote:
->> This documents the 'microchip,reset-switch-core' property in the
->> ocelot-reset driver.
->>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../devicetree/bindings/power/reset/ocelot-reset.txt        | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
->> index 4d530d8154848..20fff03753ad2 100644
->> --- a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
->> +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
->> @@ -9,9 +9,15 @@ microchip Sparx5 armv8 SoC's.
->>  Required Properties:
->>   - compatible: "mscc,ocelot-chip-reset" or "microchip,sparx5-chip-reset"
->>
->> +Optional properties:
->> +- microchip,reset-switch-core : Perform a switch core reset at the
->> +  time of driver load. This is may be used to initialize the switch
->> +  core to a known state (before other drivers are loaded).
->
-> How do you know when other drivers are loaded? This could be a module
-> perhaps. Doesn't seem like something that belongs in DT.
->
+I was also thinking about a text explaining the F: section order requirement.
+Like this:
 
-The reset driver is loaded at postcore_initcall() time, which ensures it
-is loaded before other drivers using the switch core. I noticed other
-drivers do the same to do low-level system reset and initialization at
-early boot time.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 865aeafee3b2..253f8f97891f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -111,7 +111,8 @@ Descriptions of section entries and preferred order
+ 	   F:	drivers/net/	all files in and below drivers/net
+ 	   F:	drivers/net/*	all files in drivers/net, but not below
+ 	   F:	*/net/*		all files in "any top level directory"/net
+-	   One pattern per line.  Multiple F: lines acceptable.
++	   One pattern per line. Multiple F: lines acceptable, but are
++	   supposed to be listed in alphabetical order.
+ 	X: *Excluded* files and directories that are NOT maintained, same
+ 	   rules as F:. Files exclusions are tested before file matches.
+ 	   Can be useful for excluding a specific subdirectory, for instance:
 
-> Can this behavior be implied with "microchip,sparx5-chip-reset"?
+The rest suggested by you is fine with me. Intermixing F and X seems reasonable
+so the maintainers could group inclusion and exclusion sections together
+with respect to the files/directories they refer to.
 
-Since we need to cater for both modus operandi, I would need two driver
-compatible strings per platform, which scales worse than a single
-property.
+-Sergey
 
-The "microchip,reset-switch-core" is a device configuration property
-which tells the system (driver) how the hw should be handled. Since you
-do not *always* want to reset the switch core (f.ex. when implementing
-systems with warm reboot), I think it makes perfect sense - but I may be
-biased off course :-)
-
-Thank you for (all) of your comments, by the way!
-
----Lars
-
->
-> Rob
-
--- 
-Lars Povlsen,
-Microchip
+> 
+> I think having Linus run scripts/parse-maintainers.pl just before
+> every release or every few releases would make this issue go away.
+> ---
+>  MAINTAINERS                  |  1 +
+>  scripts/checkpatch.pl        | 17 +++++++----------
+>  scripts/parse-maintainers.pl |  5 ++---
+>  3 files changed, 10 insertions(+), 13 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b045b70e54df..4b53119504ff 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -118,6 +118,7 @@ Descriptions of section entries and preferred order
+>  	   F:	net/
+>  	   X:	net/ipv6/
+>  	   matches all files in and below net excluding net/ipv6/
+> +	   F: and X: entries are intermixed in case sensitive alphabetic order
+>  	N: Files and directories *Regex* patterns.
+>  	   N:	[^a-z]tegra	all files whose path contains tegra
+>  	                        (not including files like integrator)
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index dd750241958b..499c85be0b2f 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3099,16 +3099,13 @@ sub process {
+>  				if ($curindex < 0) {
+>  					WARN("MAINTAINERS_STYLE",
+>  					     "Unknown MAINTAINERS entry type: '$cur'\n" . $herecurr);
+> -				} else {
+> -					if ($previndex >= 0 && $curindex < $previndex) {
+> -						WARN("MAINTAINERS_STYLE",
+> -						     "Misordered MAINTAINERS entry - list '$cur:' before '$prev:'\n" . $hereprev);
+> -					} elsif ((($prev eq 'F' && $cur eq 'F') ||
+> -						  ($prev eq 'X' && $cur eq 'X')) &&
+> -						 ($prevval cmp $curval) > 0) {
+> -						WARN("MAINTAINERS_STYLE",
+> -						     "Misordered MAINTAINERS entry - list file patterns in alphabetic order\n" . $hereprev);
+> -					}
+> +				} elsif ($previndex >= 0 && $curindex < $previndex && !($prev =~ /[FX]/ && $cur =~ /[FX]/)) {
+> +					WARN("MAINTAINERS_STYLE",
+> +					     "Misordered MAINTAINERS entry - list '$cur:' before '$prev:'\n" . $hereprev);
+> +				} elsif ((($prev =~ /[FX]/ && $cur =~ /[FX]/) &&
+> +					  ($prevval cmp $curval) > 0)) {
+> +					WARN("MAINTAINERS_STYLE",
+> +					     "Misordered MAINTAINERS entry - list F and X file patterns in alphabetic order\n" . $hereprev);
+>  				}
+>  			}
+>  		}
+> diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
+> index 2ca4eb3f190d..8d2247a596f0 100755
+> --- a/scripts/parse-maintainers.pl
+> +++ b/scripts/parse-maintainers.pl
+> @@ -84,9 +84,8 @@ sub by_pattern($$) {
+>      $a_index = 1000 if ($a_index == -1);
+>      $b_index = 1000 if ($b_index == -1);
+>  
+> -    if (($a1 =~ /^F$/ && $b1 =~ /^F$/) ||
+> -	($a1 =~ /^X$/ && $b1 =~ /^X$/)) {
+> -	return $a cmp $b;
+> +    if (($a1 =~ /^[FX]$/ && $b1 =~ /^[FX]$/)) {
+> +	return substr($a, 1) cmp substr($b, 1);
+>      }
+>  
+>      if ($a_index < $b_index) {
+> 
+> 
