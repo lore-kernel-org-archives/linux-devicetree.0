@@ -2,208 +2,128 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6218FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8469C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 407CE2068D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591118908;
-	bh=yGkdrYOWLWdmzVsGczOoFywq0agQlbTTQsSxiiUAia0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=OEufdjyodW9Aey4aIewYG6YIlHT45WwqwSEpf0yQTmKmDAwfyERd64hzjiPUT/Blj
-	 Q5XtM2WjikbVrdYOUJZnGsx/kiKE/k0tUYyXhfU3yB3nJmNo7SubxMkJFYWNTKUuZv
-	 d3bYqi4BGQu/PwQ8LACbPxKPU21okpV3xRdZC6UM=
+	by mail.kernel.org (Postfix) with ESMTP id CA5D9206E2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yviw9z29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgFBR2Y (ORCPT
+        id S1726373AbgFBRhN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:28:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgFBR2Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:28:24 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C49D2068D;
-        Tue,  2 Jun 2020 17:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591118903;
-        bh=yGkdrYOWLWdmzVsGczOoFywq0agQlbTTQsSxiiUAia0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uLGAssqQ3lodfFxvZFDZNFc3KCcKe/w1tJzGNm7CQoykFcyI6qtognbpDGFQToFOM
-         vTiEjTih17YYcsf3bCbYdxYGBeJzvduB6AnTe+cRcx0BWh4xE1qKk9Nbd6q3pwjIUH
-         HWrw204xfcs7dQuSN+/4/RhRtz/F1KpZu1EWO49o=
-Date:   Tue, 2 Jun 2020 12:28:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     ansuelsmth@gmail.com
-Cc:     'Rob Herring' <robh+dt@kernel.org>,
-        'Sham Muthayyan' <smuthayy@codeaurora.org>,
-        'Rob Herring' <robh@kernel.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Stanimir Varbanov' <svarbanov@mm-sol.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Varadarajan Narayanan <varada@codeaurora.org>
-Subject: Re: R: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
-Message-ID: <20200602172821.GA829015@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <001101d63900$4c7aae60$e5700b20$@gmail.com>
+        Tue, 2 Jun 2020 13:37:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBRhN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 13:37:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA5B7C05BD1E;
+        Tue,  2 Jun 2020 10:37:12 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q16so1636114plr.2;
+        Tue, 02 Jun 2020 10:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yC3b8DT3Kq2HwvI7o7BNmEUaQSfwkzDaER9EH5kkdq0=;
+        b=Yviw9z295zj5fjLl2vUlLMAJzpUBdI6yODgLo71V+gnRWdy/HAfOku+4RRGF+yzmqK
+         t+au//KmqSyun3jNCn8vCEmKZNdAFWTJftT893d+nbe9PjQ8sJDXaTHzCZ/jv3Wa/7/Y
+         QigrSViYpDIh7VAmvvZTyDug+wYeFeI+s7pGmAbiZpsKOOY1z3i1+6IG3saPoQPuQW8L
+         PRHyMDST7Kx8Ek98ZFeCdl8Ojb5DhgTobkvM0vWcFMfafJCDpPpjqhzsc+N/z6iB08FZ
+         DSJW5bxNzFbXaXqd0LKkWoaLxpbP935w0N9J0lqkRULyFI9st4ghdJYOiCX90M0LelV8
+         k1lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yC3b8DT3Kq2HwvI7o7BNmEUaQSfwkzDaER9EH5kkdq0=;
+        b=USIgqTyBh0ZtIVk9pYJfF+BWG2boro1dM0fR1aq1cXWIlSy/Q6hqgvzbuq6/+UICX1
+         eZa2fKWtwCzxtE58lZLgKRznAy+yYfOGcfbkZ/J8iMeRlTAaiTtDeSyD6Vs9e6WNhnY+
+         ncyyGyBTnTar5pelb9m5FuDIlUtkO65BjFcRSl8uTSJG9Mv8IQpmXk3xbe14k90QI+TP
+         7ylrdJ/WT+Qc/Oc1zDuG8cfRSWxj2XMreCNs243TkWLBH+IJmxb6MP0SFb67LynaAQgh
+         1j0TOYUmQoawhse3liiSLq8ZcE7F4U5mM6s9LdK8KQVZyAjJUxzf9LYUuml3QXqO/Xtx
+         7QHw==
+X-Gm-Message-State: AOAM532H8cMTA+QsQrpacOAlWzPzjvwjQbl7Yxcr+IMzx+IXNKUAUfdf
+        6wXOHs94IS26Rx+v3COJ/Wk=
+X-Google-Smtp-Source: ABdhPJz/gwr+d9DNnYFiNawK6YhfZFHEyC8/iMMp5w+Vh1TRDaGaZmArZRTSZkbx1AZrUmItAtFU5g==
+X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr17901684plr.128.1591119432420;
+        Tue, 02 Jun 2020 10:37:12 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.152.125])
+        by smtp.gmail.com with ESMTPSA id i22sm2864382pfo.92.2020.06.02.10.36.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jun 2020 10:37:11 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 04/10] arm64: dts: actions: limit address range for pinctrl node
+Date:   Tue,  2 Jun 2020 23:03:06 +0530
+Message-Id: <1591119192-18538-5-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
+References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[+cc Varada]
+After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
+Actions Semi S700") following error has been observed while booting
+Linux on Cubieboard7-lite(based on S700 SoC).
 
-On Tue, Jun 02, 2020 at 07:07:27PM +0200, ansuelsmth@gmail.com wrote:
-> > On Tue, Jun 02, 2020 at 01:53:52PM +0200, Ansuel Smith wrote:
-> > > From: Sham Muthayyan <smuthayy@codeaurora.org>
-> > >
-> > > Add Force GEN1 support needed in some ipq8064 board that needs to
-> > limit
-> > > some PCIe line to gen1 for some hardware limitation. This is set by the
-> > > max-link-speed binding and needed by some soc based on ipq8064. (for
-> > > example Netgear R7800 router)
-> > >
-> > > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> > b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index 259b627bf890..0ce15d53c46e 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -27,6 +27,7 @@
-> > >  #include <linux/slab.h>
-> > >  #include <linux/types.h>
-> > >
-> > > +#include "../../pci.h"
-> > >  #include "pcie-designware.h"
-> > >
-> > >  #define PCIE20_PARF_SYS_CTRL			0x00
-> > > @@ -99,6 +100,8 @@
-> > >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-> > >  #define SLV_ADDR_SPACE_SZ			0x10000000
-> > >
-> > > +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
-> > > +
-> > >  #define DEVICE_TYPE_RC				0x4
-> > >
-> > >  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-> > > @@ -195,6 +198,7 @@ struct qcom_pcie {
-> > >  	struct phy *phy;
-> > >  	struct gpio_desc *reset;
-> > >  	const struct qcom_pcie_ops *ops;
-> > > +	int gen;
-> > >  };
-> > >
-> > >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> > > @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct
-> > qcom_pcie *pcie)
-> > >  	/* wait for clock acquisition */
-> > >  	usleep_range(1000, 1500);
-> > >
-> > > +	if (pcie->gen == 1) {
-> > > +		val = readl(pci->dbi_base +
-> > PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> > > +		val |= 1;
-> > 
-> > Is this the same bit that's visible in config space as
-> > PCI_EXP_LNKSTA_CLS_2_5GB?  Why not use that #define?
-> > 
-> > There are a bunch of other #defines in this file that look like
-> > redefinitions of standard things:
-> > 
-> >   #define PCIE20_COMMAND_STATUS                   0x04
-> >     Looks like PCI_COMMAND
-> > 
-> >   #define CMD_BME_VAL                             0x4
-> >     Looks like PCI_COMMAND_MASTER
-> > 
-> >   #define PCIE20_DEVICE_CONTROL2_STATUS2          0x98
-> >     Looks like (PCIE20_CAP + PCI_EXP_DEVCTL2)
-> > 
-> >   #define PCIE_CAP_CPL_TIMEOUT_DISABLE            0x10
-> >     Looks like PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
-> > 
-> >   #define PCIE20_CAP                              0x70
-> >     This one is obviously device-specific
-> > 
-> >   #define PCIE20_CAP_LINK_CAPABILITIES            (PCIE20_CAP + 0xC)
-> >     Looks like (PCIE20_CAP + PCI_EXP_LNKCAP)
-> > 
-> >   #define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT (BIT(10) |
-> > BIT(11))
-> >     Looks like PCI_EXP_LNKCAP_ASPMS
-> > 
-> >   #define PCIE20_CAP_LINK_1                       (PCIE20_CAP + 0x14)
-> >   #define PCIE_CAP_LINK1_VAL                      0x2FD7F
-> >     This looks like PCIE20_CAP_LINK_1 should be (PCIE20_CAP +
-> >     PCI_EXP_SLTCAP), but "CAP_LINK_1" doesn't sound like the Slot
-> >     Capabilities register, and I don't know what PCIE_CAP_LINK1_VAL
-> >     means.
-> 
-> The define are used by ipq8074 and I really can't test the changes.
-> Anyway it shouldn't make a difference use the define instead of the
-> custom value so a patch should not harm anything... Problem is the
-> last 2 define that we really don't know what they are about... How
-> should I proceed? Change only the value related to
-> PCI_EXP_LNKSTA_CLS_2_5GB or change all the other except the last 2?
+[    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
+resource [mem 0xe01b0000-0xe01b0fff]
+[    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
 
-I personally would change all the ones I mentioned above (in a
-separate patch from the one that adds "max-link-speed" support).
-Testing isn't a big deal because changing the #defines shouldn't
-change the generated code at all.
+This is due to the fact that memory range for "sps" power domain controller
+clashes with pinctrl.
 
-PCIE20_CAP_LINK_1 / PCIE_CAP_LINK1_VAL looks like a potential bug or
-at least a very misleading name.  I wouldn't touch it unless we can
-figure out what's going on.
+One way to fix it, is to limit pinctrl address range which is safe
+to do as current pinctrl driver uses address range only up to 0x100.
 
-Looks like most of this was added by 5d76117f070d ("PCI: qcom: Add
-support for IPQ8074 PCIe controller").  Shame on me for not asking
-these questions at the time.
+This commit limits the pinctrl address range to 0x100 so that it doesn't
+conflict with sps range.
 
-Sham, Varada, can you shed any light on PCIE20_CAP_LINK_1 and
-PCIE_CAP_LINK1_VAL?
+Fixes: 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for Actions
+Semi S700")
 
-> > > +		writel(val, pci->dbi_base +
-> > PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> > > +	}
-> > >
-> > >  	/* Set the Max TLP size to 2K, instead of using default of 4K */
-> > >  	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
-> > > @@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct
-> > platform_device *pdev)
-> > >  		goto err_pm_runtime_put;
-> > >  	}
-> > >
-> > > +	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
-> > > +	if (pcie->gen < 0)
-> > > +		pcie->gen = 2;
-> > > +
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > "parf");
-> > >  	pcie->parf = devm_ioremap_resource(dev, res);
-> > >  	if (IS_ERR(pcie->parf)) {
-> > > --
-> > > 2.25.1
-> > >
-> 
+Suggested-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since v2:
+	* this is no more don't merge and fixed
+	  the broken S700 boot by limiting pinctrl
+	  address range.
+	* Modified the subject to reflect the changes.
+Changes since v1:
+        * No change.
+Changes since RFC:
+        * kept as do not merge.
+---
+ arch/arm64/boot/dts/actions/s700.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+index 2006ad5424fa..f8eb72bb4125 100644
+--- a/arch/arm64/boot/dts/actions/s700.dtsi
++++ b/arch/arm64/boot/dts/actions/s700.dtsi
+@@ -231,7 +231,7 @@
+ 
+ 		pinctrl: pinctrl@e01b0000 {
+ 			compatible = "actions,s700-pinctrl";
+-			reg = <0x0 0xe01b0000 0x0 0x1000>;
++			reg = <0x0 0xe01b0000 0x0 0x100>;
+ 			clocks = <&cmu CLK_GPIO>;
+ 			gpio-controller;
+ 			gpio-ranges = <&pinctrl 0 0 136>;
+-- 
+2.7.4
+
