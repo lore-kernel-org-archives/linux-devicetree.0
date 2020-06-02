@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BCAC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BF0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A688C2074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6EF2074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpNtAv4G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPGilbj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgFBLyo (ORCPT
+        id S1728059AbgFBLyh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35110 "EHLO
+        Tue, 2 Jun 2020 07:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgFBLyn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 07:54:43 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1EDC061A0E;
-        Tue,  2 Jun 2020 04:54:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j198so2090265wmj.0;
-        Tue, 02 Jun 2020 04:54:42 -0700 (PDT)
+        with ESMTP id S1726977AbgFBLyg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 07:54:36 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 190CEC061A0E;
+        Tue,  2 Jun 2020 04:54:36 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x6so3056986wrm.13;
+        Tue, 02 Jun 2020 04:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bzzvhyMzVv3Z/fV4OGF2FsiFFhxIni2+nKg6tj7GTUk=;
-        b=YpNtAv4G1J9EhIQAuvAxQKxZUjgDyaIVEKJka1yRu2puEw14PMLlqrRYCp3Grg+q8d
-         cOcnlnxU9wNAsbiDG0ychniBjwGE44wowKoOXH5FmDnghzHSIkPW93KX2KogrL1fkgk0
-         IRGaCivEJKhMcGzsnxQQ4nCL8Y5XokFhzEm/sr2nrnJKDWntLpfOrqZyprwSZWhU+WYZ
-         1G38fuKvFJ2XGqbG2v4nqjdP+ezaN47WHUeupKNd97du8c/f1WCzYpuJdAFsK3jQKsU8
-         gEJeuSyscKEpRj8SpWgWTk03gG0vn/nWAIG8Gk102VLEHMc1j+KPp0RYjhsVTemhEydF
-         OzWQ==
+        bh=ioo9tN1eVsbgycuXVtXW3j/mdJh9pHsUFw60B6xaAJg=;
+        b=OPGilbj7UjSYk9ZchqbkyFuPkLvGV2w71w6eB3yzbzyhyzclPQ6a+w1TnzeVAX8FEd
+         DOgv6gdm72XTP6dUvVblAlud4o6+I7AN/J3h65S3yNZXcuaQNSXJvhIhsGjHVv8BGCI3
+         690nYPxqXv4aPnkxF8lfjnJwkruYOkCEGMZ7jOKpdC+CMrY1kLZ9ZgbCgNM1frYrxOqu
+         Cf2KkUccSmBBw0BHUe7Pc1M2lNkXGAeIAXPEXoo3pZpsYi3IIMBvDTs709pU7BaR4xn0
+         s6Di564UkLwo3zbedA3SlEkJD5KaLcQElFO96G5P1sVAU0OxTuFucb6jz+Oi+efzHxNX
+         3lhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bzzvhyMzVv3Z/fV4OGF2FsiFFhxIni2+nKg6tj7GTUk=;
-        b=uMj/G7Gas7xMsNIAsdDgyRHLsqK33Z+lPjCEmg9z96poYBcGwZsar8Demz/vNa8AXg
-         Rsip69idfDIfCDViORhetyzPKkz0vdB16hvd8AID+AvfaVvj9QnEGwy7TRnbkXFQL1Gj
-         2sIPGkAEatUP7GHaTl6jEQx2Zi6hpKJtCQ1XvA+wgRmLnb1CCM9t30apMUQ0xul1D/nQ
-         vsh0n00/nJob9/6lxLLGkg8w+tnroC0AszeZcHOFk4zp/tQSGk/O13hxNbMwir+t7aLe
-         qN3/yrC3SfKhBnwO/g+h9WTTxmEKQCue5TJzej9eg0Q8XhlzB04B84JLC7nLLvYerjrG
-         G1gw==
-X-Gm-Message-State: AOAM533z0ZezUJDg7VfU24Fmcz226HwXSKx9xIbYGTYA4QoZXF+y7/VU
-        st8dhKZRVXo4vrENXjPEpOc=
-X-Google-Smtp-Source: ABdhPJxqAqkvZJ2uNToTjmLSaK+Xexa4SVvEuSg9juTmHudR/Ir4Ow/eSAfYI6Rb4xJAn0viuw0Sfg==
-X-Received: by 2002:a7b:c204:: with SMTP id x4mr3762230wmi.22.1591098881483;
-        Tue, 02 Jun 2020 04:54:41 -0700 (PDT)
+        bh=ioo9tN1eVsbgycuXVtXW3j/mdJh9pHsUFw60B6xaAJg=;
+        b=q6DKXQFWAuB7B4cOnW/Hl9h11gJ7O0RbTo9uxUnMlK+PU5JMw0zPvVYxnTU/gyx4tm
+         rkefGlqolE1y00IjnonaPaATx5z1YE08c51EKKQVks+fynKaEgV0ljLd7/2bp10bbzWF
+         zaKEcG6xphBSUjemgcLE5Rvdt5ECvrmXCAugeEokSWyLw559G3kOFuhCJU9hSDoMM4kc
+         Ig12VJqAHXgZJfMl5XAjpMfL6vWOm5rz6MrwswEqhb0sbbj1mtLOjwj2f3Z85YGaQoYm
+         fqjjdrqV4KTUsOOYdDlEfIMAV04e0mbtRkasy9gB/w8DoFOTqfaiWbPf/mYEapWXip9+
+         3H5A==
+X-Gm-Message-State: AOAM530buXqNc19f153JRqLj6ccbUQy0zu9cbGRX8OGZnYVhWyXw1y4B
+        LCn4Qu/gS/DxHKkJ+n6Cy/E=
+X-Google-Smtp-Source: ABdhPJxWvG6gP1xb6MNdtvpUdYbBOn0bBHaTVxTJUwCJtK+32mQrYuenIXkSvpxLIpAmxnmu1V9dpQ==
+X-Received: by 2002:a5d:4484:: with SMTP id j4mr25594162wrq.325.1591098874758;
+        Tue, 02 Jun 2020 04:54:34 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host9-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.9])
-        by smtp.googlemail.com with ESMTPSA id b18sm3273777wrn.88.2020.06.02.04.54.39
+        by smtp.googlemail.com with ESMTPSA id b18sm3273777wrn.88.2020.06.02.04.54.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 04:54:40 -0700 (PDT)
+        Tue, 02 Jun 2020 04:54:34 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>, stable@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -72,9 +72,9 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>, stable@vger.kernel.org,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 07/11] PCI: qcom: Define some PARF params needed for ipq8064 SoC
-Date:   Tue,  2 Jun 2020 13:53:48 +0200
-Message-Id: <20200602115353.20143-8-ansuelsmth@gmail.com>
+Subject: [PATCH v5 05/11] dt-bindings: PCI: qcom: Add ext reset
+Date:   Tue,  2 Jun 2020 13:53:46 +0200
+Message-Id: <20200602115353.20143-6-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200602115353.20143-1-ansuelsmth@gmail.com>
 References: <20200602115353.20143-1-ansuelsmth@gmail.com>
@@ -85,77 +85,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Set some specific value for Tx De-Emphasis, Tx Swing and Rx equalization
-needed on some ipq8064 based device (Netgear R7800 for example). Without
-this the system locks on kernel load.
+Document ext reset used in ipq8064 SoC by qcom PCIe driver.
 
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Cc: stable@vger.kernel.org # v4.5+
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 27 ++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ Documentation/devicetree/bindings/pci/qcom,pcie.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index f2ea1ab6f584..f5398b0d270c 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -46,6 +46,9 @@
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index becdbdc0fffa..6efcef040741 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -179,6 +179,7 @@
+ 			- "pwr"			PWR reset
+ 			- "ahb"			AHB reset
+ 			- "phy_ahb"		PHY AHB reset
++			- "ext"			EXT reset
  
- #define PCIE20_PARF_PHY_CTRL			0x40
- #define PCIE20_PARF_PHY_REFCLK			0x4C
-+#define PHY_REFCLK_SSP_EN			BIT(16)
-+#define PHY_REFCLK_USE_PAD			BIT(12)
-+
- #define PCIE20_PARF_DBI_BASE_ADDR		0x168
- #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
- #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-@@ -77,6 +80,18 @@
- #define DBI_RO_WR_EN				1
- 
- #define PERST_DELAY_US				1000
-+/* PARF registers */
-+#define PCIE20_PARF_PCS_DEEMPH			0x34
-+#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		((x) << 16)
-+#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	((x) << 8)
-+#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	((x) << 0)
-+
-+#define PCIE20_PARF_PCS_SWING			0x38
-+#define PCS_SWING_TX_SWING_FULL(x)		((x) << 8)
-+#define PCS_SWING_TX_SWING_LOW(x)		((x) << 0)
-+
-+#define PCIE20_PARF_CONFIG_BITS		0x50
-+#define PHY_RX0_EQ(x)				((x) << 24)
- 
- #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
- #define SLV_ADDR_SPACE_SZ			0x10000000
-@@ -293,6 +308,7 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
-+	struct device_node *node = dev->of_node;
- 	u32 val;
- 	int ret;
- 
-@@ -347,6 +363,17 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	val &= ~BIT(0);
- 	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
- 
-+	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
-+		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
-+			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
-+			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
-+		       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
-+		writel(PCS_SWING_TX_SWING_FULL(120) |
-+			       PCS_SWING_TX_SWING_LOW(120),
-+		       pcie->parf + PCIE20_PARF_PCS_SWING);
-+		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
-+	}
-+
- 	/* enable external reference clock */
- 	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
- 	val |= BIT(16);
+ - reset-names:
+ 	Usage: required for ipq8074
+@@ -287,8 +288,9 @@
+ 			 <&gcc PCIE_HCLK_RESET>,
+ 			 <&gcc PCIE_POR_RESET>,
+ 			 <&gcc PCIE_PCI_RESET>,
+-			 <&gcc PCIE_PHY_RESET>;
+-		reset-names = "axi", "ahb", "por", "pci", "phy";
++			 <&gcc PCIE_PHY_RESET>,
++			 <&gcc PCIE_EXT_RESET>;
++		reset-names = "axi", "ahb", "por", "pci", "phy", "ext";
+ 		pinctrl-0 = <&pcie_pins_default>;
+ 		pinctrl-names = "default";
+ 	};
 -- 
 2.25.1
 
