@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED36DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A70C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BECB6206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BB1205CB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k+9cCuBX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QXlPBnFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgFBL5e (ORCPT
+        id S1728070AbgFBMK7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:57:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35550 "EHLO
+        Tue, 2 Jun 2020 08:10:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbgFBL5b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 07:57:31 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE20FC08C5C0
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 04:57:31 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id j189so4290465oih.10
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 04:57:31 -0700 (PDT)
+        with ESMTP id S1725921AbgFBMK6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 08:10:58 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6204DC061A0E
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 05:10:57 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id g5so10185324otg.6
+        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 05:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Bnys2wOoEU1x/ikV5ijTNA/FpnweJ1oEqvvB7NUEA+A=;
-        b=k+9cCuBX+07ki3h/U1eTOzlr6ODNPkXXcMKP6TfZD7xxmJxeBWW3n9KjD5Mg1xqfxl
-         CqMnaNTwFk4x77rZ3i4IpXbcT3Lz0kMvuu5YL/MJ1IvMjZQqxUnWCDc5VhRoQRm9ETn/
-         t9/MEFpNnEXCG0JRS0g0z25GDiOozWbkOTdxfYjCG5iAvZFoaBtC80XqC3qwp1Egq7Bj
-         oXW7ASgx69H0zp0YNjuLPGrC0UFqf2u/Qphzr8zuZBi1hTWXjrU0MRk7pWYFRAyoxyV5
-         MibIXAuxNYlXoDbaxIpKNnSPdw1PNSBNbD7I8rhM/2vJb17fdDmqsTVVpccOou9NM1ZX
-         5zMg==
+        bh=1qFYBco/WCH7tu9DLPtQEulTnbFYvq9GbR7jnbTNciQ=;
+        b=QXlPBnFIATOuHoCuZffqqkhWQyhwogDi3hK37VEbuIWcZCRkn1jkcLPsX5wXWkNAMg
+         DwsWmWeTpCpsl/wDQajbwiTiTCODFZRP9zUH7Aot6d32b9wZMnfawyid+Kq3orBDe1vD
+         z28Yxt/NZlDIWYp5UJERfW2PXXDaZnD6COOiNSCNDpIQiQ6ZKTgRsKIn+iAc+rux+zbp
+         R+UNGt7nW0q7w9voZl/w7LKVblfC89wUzemupYKOukEZx8hG7v3J+qqFBF4kYanotPRy
+         +FzqZ1eY6ZxoVV8402fU3Vp5Ejc5GNLjinwqYFNS1+zS0JQxPxCHNSF7XZyVJz40N4Jr
+         6EZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Bnys2wOoEU1x/ikV5ijTNA/FpnweJ1oEqvvB7NUEA+A=;
-        b=HWe1YjUrQDOgWIT0aSLE680jgM2LYveV66G/4t9CRcZg7Spfsj0f3v6dGUiWsbHlwY
-         Eo4nPvBz63lE1zFCUGFFxfBKGfG6C3DTNPzGFFRaBvw7IIKzVQuN/GBu9lPTfJfgB2YY
-         /rT+3sjImEvyy6okJXHSQwnUfH0sTdTeZE2ibtCuaSYb3QmjlxRMRl7l1F+X75RoydqB
-         i+VjjNbSgT2Bl5ZIF8WPKWq3B34GDgvBRmanGDNqtKvcngd6nNAcHffXgAzWS4we2PRL
-         LC1yMEwCPmc57L3vTXH63q/ba+ltZvMWCu9gfWG3YN1VNUI9enPV8OklnwhT6BXupnWL
-         IRlQ==
-X-Gm-Message-State: AOAM533eyYF8caLTzGUPVhc5xD6rWKw0aded7YcQLLVr7Rm5TRee45N3
-        oQ9Teo5BJqyllYBmIO+fHp8TwCQBgpIlDlDm6a/IPg==
-X-Google-Smtp-Source: ABdhPJyF04o7i6kEvgUR2RRqw2rFPSQaTPQrgt/KTJQMMVnh2YChB0XvplTmPPHzK36jN1aEaoBMWgCgPKD1BB58jkU=
-X-Received: by 2002:aca:50cf:: with SMTP id e198mr2811324oib.76.1591099050929;
- Tue, 02 Jun 2020 04:57:30 -0700 (PDT)
+        bh=1qFYBco/WCH7tu9DLPtQEulTnbFYvq9GbR7jnbTNciQ=;
+        b=QEFYtUhS4wTQD837pLEcpFETNqv0DiiWm8M3fG0qwS53PzboqY0Gk6HdTwZm3JLTca
+         ihoSr4SrR72cv68TTUQI1raazbHvKGgKiohWYjPW/ybw9QLa0I9UeY2Hey0UIV6kkPKE
+         p4dCuLOE312Er9unKnjOdlEwbqa25wiJrzen8ni8oP/Swb9gRb85v5cylj/ipydRHKWC
+         lT89nWogd8sA+h2IyOvcQMP06PCmG3vEYgXDlCSUA+Kw0tbyM2HnXlrVEBq7GoJTDx9g
+         HBrReJoKQXua/J0DpsgH3871pC6eqEOoRefJtr+4wXMPUd+EPoQRdRxZif3qqGt/0SS+
+         AxXg==
+X-Gm-Message-State: AOAM5323aVdv/wYK4SqJo/DeNZdhH5HmuOX2GNndScLzhC+9NhdEanJd
+        JqWUsve6VIP0M5VKcto35VRyrYzMAaNa9uIkNmJzQA==
+X-Google-Smtp-Source: ABdhPJxPcZxNR0aHWKUOKGsJCKpNxHh10At7X7wwT8NO113zyaLP+fcyJUOIRBPYq2s9N2kkF1akJEDuQR/v+5SuaGk=
+X-Received: by 2002:a05:6830:242e:: with SMTP id k14mr4294854ots.36.1591099856686;
+ Tue, 02 Jun 2020 05:10:56 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200602100924.26256-1-sumit.semwal@linaro.org>
- <20200602100924.26256-2-sumit.semwal@linaro.org> <20200602112415.GD5684@sirena.org.uk>
-In-Reply-To: <20200602112415.GD5684@sirena.org.uk>
+ <20200602100924.26256-5-sumit.semwal@linaro.org> <20200602113241.GE5684@sirena.org.uk>
+In-Reply-To: <20200602113241.GE5684@sirena.org.uk>
 From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Tue, 2 Jun 2020 17:27:19 +0530
-Message-ID: <CAO_48GHdhafjgLH1-3upZPXhNjKSt_bPAnPpjA+nhR2wrLbcZw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] regulator: Allow regulators to verify enabled
- during enable()
+Date:   Tue, 2 Jun 2020 17:40:45 +0530
+Message-ID: <CAO_48GGgNUGosN2PiL=U5JkR3Bh5wNK3N4xYYML1UwmdfDPRww@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] regulator: qcom: Add labibb driver
 To:     Mark Brown <broonie@kernel.org>
 Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
         lgirdwood@gmail.com, robh+dt@kernel.org,
@@ -77,26 +76,73 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Mark,
 
-Thanks for the review!
+Thank you very much for reviewing.
 
-On Tue, 2 Jun 2020 at 16:54, Mark Brown <broonie@kernel.org> wrote:
+
+On Tue, 2 Jun 2020 at 17:02, Mark Brown <broonie@kernel.org> wrote:
 >
-> On Tue, Jun 02, 2020 at 03:39:20PM +0530, Sumit Semwal wrote:
+> On Tue, Jun 02, 2020 at 03:39:23PM +0530, Sumit Semwal wrote:
 >
+> > +static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
+> > +{
+> > +     int ret;
+> > +     unsigned int val;
+> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
 > > +
-> > +             if (time_remaining <= 0) {
-> > +                     rdev_err(rdev, "Enabled check failed.\n");
-> > +                     return -ETIMEDOUT;
+> > +     ret = regmap_read(reg->regmap, reg->base + REG_LABIBB_STATUS1, &val);
+> > +     if (ret < 0) {
+> > +             dev_err(reg->dev, "Read register failed ret = %d\n", ret);
+> > +             return ret;
+> > +     }
+> > +     return !!(val & LABIBB_STATUS1_VREG_OK_BIT);
+> > +}
 >
-> s/failed/timed out/
-Ack
+> This should be a get_status() callback...
 >
-> > + * @poll_enabled_time: Maximum time (in uS) to poll if the regulator is
-> > + *                          actually enabled, after enable() call
-> > + *
+From my (limited) understanding of downstream code, it seemed like for
+this set of regulators, the 'enabled' check is done via the
+'REG_LABIBB_STATUS1 reg; for some reason, not via the same enable_reg
+/ enable_mask ones.  That's why I used it as is_enabled() callback.
+I will try and check with the QC folks to clarify this point about
+their hardware.
+
+> > +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+> > +{
+> > +     return regulator_enable_regmap(rdev);
+> > +}
+> > +
+> > +static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
+> > +{
+> > +     return regulator_disable_regmap(rdev);
+> > +}
 >
-> This comment needs updating to reflect the new implementation.
-Yes, I will update.
+> ...is_enabled() should just be regulator_is_enabled_regmap() and these
+> functions should just be removed entirely, you can use the regmap
+> operations directly as the ops without the wrapper.
+
+The 2 wrappers are a precursor to the next patch, where we keep track
+of regulator's enable status to check during SC handling.
+>
+> > +     match = of_match_device(qcom_labibb_match, &pdev->dev);
+> > +     if (!match)
+> > +             return -ENODEV;
+> > +
+> > +     for (reg_data = match->data; reg_data->name; reg_data++) {
+> > +             child = of_get_child_by_name(pdev->dev.of_node, reg_data->name);
+> > +
+> > +             if (WARN_ON(child == NULL))
+> > +                     return -EINVAL;
+>
+> This feels like the DT bindings are confused - why do we need to search
+> like this?
+The WARN_ON? This was suggested by Bjorn to catch the case where the
+DT binding for a PMIC instantiates only one of the regulators.
+>
+> > +             dev_info(dev, "Registering %s regulator\n", child->full_name);
+>
+> This is noise, remove it.  The regulator framework will announce new
+> regulators anyway.
+Agreed. will remove in the next iteration.
 
 Best,
 Sumit.
