@@ -4,158 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD41C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1820C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04AAD206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98AF2205CB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgFBKu1 (ORCPT
+        id S1726139AbgFBKzV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:50:27 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:57579 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726606AbgFBKu0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 06:50:26 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 02 Jun 2020 16:20:20 +0530
-Received: from vbadigan-linux.qualcomm.com ([10.206.24.109])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 02 Jun 2020 16:20:13 +0530
-Received: by vbadigan-linux.qualcomm.com (Postfix, from userid 76677)
-        id 210404BF9; Tue,  2 Jun 2020 16:20:13 +0530 (IST)
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V3 2/3] mmc: sdhci: Allow platform controlled voltage switching
-Date:   Tue,  2 Jun 2020 16:17:55 +0530
-Message-Id: <1591094883-11674-3-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1591094883-11674-1-git-send-email-vbadigan@codeaurora.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1591094883-11674-1-git-send-email-vbadigan@codeaurora.org>
+        Tue, 2 Jun 2020 06:55:21 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:44208 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgFBKzV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:55:21 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2DE6D200A30;
+        Tue,  2 Jun 2020 12:55:19 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5C8DD200634;
+        Tue,  2 Jun 2020 12:55:15 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5B3E640285;
+        Tue,  2 Jun 2020 18:55:10 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: imx6sll: Make ssi node name same as other platforms
+Date:   Tue,  2 Jun 2020 18:44:50 +0800
+Message-Id: <1591094690-30514-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vijay Viswanath <vviswana@codeaurora.org>
+In imx6sll.dtsi, the ssi node name is different with other
+platforms (imx6qdl, imx6sl, imx6sx), but the
+sound/soc/fsl/fsl-asoc-card.c machine driver needs to check
+ssi node name for audmux configuration, then different ssi
+node name causes issue on imx6sll platform.
 
-If vendor platform drivers are controlling whole logic of voltage
-switching, then sdhci driver no need control vqmmc regulator.
-So skip enabling/disable vqmmc from SDHC driver.
+So we change ssi node name to make all platforms have same
+name.
 
-Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
- drivers/mmc/host/sdhci.h |  1 +
- 2 files changed, 20 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/imx6sll.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 37b1158c1c0c..e6275c2202b0 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -4105,6 +4105,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	unsigned int override_timeout_clk;
- 	u32 max_clk;
- 	int ret;
-+	bool enable_vqmmc = false;
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index edd3abb9a9f1..51e59e16f6c9 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -271,7 +271,7 @@
+ 					status = "disabled";
+ 				};
  
- 	WARN_ON(host == NULL);
- 	if (host == NULL)
-@@ -4118,9 +4119,12 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	 * the host can take the appropriate action if regulators are not
- 	 * available.
- 	 */
--	ret = mmc_regulator_get_supply(mmc);
--	if (ret)
--		return ret;
-+	if (!mmc->supply.vqmmc) {
-+		ret = mmc_regulator_get_supply(mmc);
-+		if (ret)
-+			return ret;
-+		enable_vqmmc  = true;
-+	}
+-				ssi1: ssi-controller@2028000 {
++				ssi1: ssi@2028000 {
+ 					compatible = "fsl,imx6sl-ssi", "fsl,imx51-ssi";
+ 					reg = <0x02028000 0x4000>;
+ 					interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+@@ -284,7 +284,7 @@
+ 					status = "disabled";
+ 				};
  
- 	DBG("Version:   0x%08x | Present:  0x%08x\n",
- 	    sdhci_readw(host, SDHCI_HOST_VERSION),
-@@ -4377,7 +4381,15 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		mmc->caps |= MMC_CAP_NEEDS_POLL;
+-				ssi2: ssi-controller@202c000 {
++				ssi2: ssi@202c000 {
+ 					compatible = "fsl,imx6sl-ssi", "fsl,imx51-ssi";
+ 					reg = <0x0202c000 0x4000>;
+ 					interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+@@ -297,7 +297,7 @@
+ 					status = "disabled";
+ 				};
  
- 	if (!IS_ERR(mmc->supply.vqmmc)) {
--		ret = regulator_enable(mmc->supply.vqmmc);
-+		if (enable_vqmmc) {
-+			ret = regulator_enable(mmc->supply.vqmmc);
-+			if (ret) {
-+				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
-+					mmc_hostname(mmc), ret);
-+				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
-+			}
-+			host->sdhci_core_to_disable_vqmmc = !ret;
-+		}
- 
- 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
- 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
-@@ -4390,12 +4402,6 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
- 						    3600000))
- 			host->flags &= ~SDHCI_SIGNALING_330;
--
--		if (ret) {
--			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
--				mmc_hostname(mmc), ret);
--			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
--		}
- 	}
- 
- 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
-@@ -4626,7 +4632,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	return 0;
- 
- unreg:
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->sdhci_core_to_disable_vqmmc)
- 		regulator_disable(mmc->supply.vqmmc);
- undma:
- 	if (host->align_buffer)
-@@ -4644,7 +4650,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
- {
- 	struct mmc_host *mmc = host->mmc;
- 
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->sdhci_core_to_disable_vqmmc)
- 		regulator_disable(mmc->supply.vqmmc);
- 
- 	if (host->align_buffer)
-@@ -4787,7 +4793,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
- 
- 	destroy_workqueue(host->complete_wq);
- 
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->sdhci_core_to_disable_vqmmc)
- 		regulator_disable(mmc->supply.vqmmc);
- 
- 	if (host->align_buffer)
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 0008bbd27127..0770c036e2ff 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -567,6 +567,7 @@ struct sdhci_host {
- 	u32 caps1;		/* CAPABILITY_1 */
- 	bool read_caps;		/* Capability flags have been read */
- 
-+	bool sdhci_core_to_disable_vqmmc;  /* sdhci core can disable vqmmc */
- 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
- 	unsigned int            ocr_avail_sd;
- 	unsigned int            ocr_avail_mmc;
+-				ssi3: ssi-controller@2030000 {
++				ssi3: ssi@2030000 {
+ 					compatible = "fsl,imx6sl-ssi", "fsl,imx51-ssi";
+ 					reg = <0x02030000 0x4000>;
+ 					interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.21.0
 
