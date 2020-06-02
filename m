@@ -2,117 +2,111 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7773C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330C6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 847B720679
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DA220679
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:47:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Z4VUDVFH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RnmLLWR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgFBKog (ORCPT
+        id S1726461AbgFBKr2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:44:36 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59537 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726267AbgFBKoe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 06:44:34 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id g4P6jXBaDCKzeg4PAjJ3Qt; Tue, 02 Jun 2020 12:44:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1591094672; bh=1WzPUPBIE0Uaz6t74C5WQPm2crJOnZO/Fn4WuxbrM0s=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Z4VUDVFHsqJqWJs8+DlWcTaWPdwdnw8gko60VMLYOilDzsUb3W8+durQUBUvL5+oP
-         Sthoq+4c1YJQUssMAIP8WtDOkOEttFDeVrrD6AZGYw8oYA+2yI2TQnBF2X6kmgWGV4
-         Zk0/NJHVeACTXGcWwimmntqZ3nYTeN+VDhP8Oa1q4nKJBQxh02kYO2Xza7ByPTIxqK
-         rLUZh0fwu14Db/HnVXJhj/fnwO+XXzH/c0reY9pENHv9o0NymHsHrKZSeL5ijvifZS
-         eqGQmISUDPh3UywOeyL0vtdLYH+uo/HdMuJoKr4p6EfTB7byOgX4OUYfl4MiXNISuo
-         6mq+X5GqEFaGg==
-Subject: Re: [PATCH v2 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
- Subsystem driver
-To:     Vishal Sagar <vsagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Joe Perches <joe@perches.com>
-References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
- <20200429141705.18755-3-vishal.sagar@xilinx.com>
- <368b7efb-3faf-bb71-2bd0-826f2ab031e6@xs4all.nl>
- <DM6PR02MB6876F989682935D38AA9BF19A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <d696e0ed-3e59-f6a6-1f8d-b1725083de84@xs4all.nl>
-Date:   Tue, 2 Jun 2020 12:44:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 2 Jun 2020 06:47:28 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:15900 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbgFBKr2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:47:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591094847; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=KmJ3nT5wP6W5LJoeHmFVqVcNCLtBatXw/8h8arB12JM=; b=RnmLLWR0s4SgPma/1nqjh2aWiVXrE4Y1CqHHLas1qjLdyS3kt13W7yS7By+p/GWUtTrclpd5
+ pIm5RJf0S+pPBGErWq59/rMP4I6ughdPs4ljKyDbpKvT/3XA8H11KgWHpO0nbPNZEaFW3QgE
+ 9HrMbwOCS4cNfgYKq0M/uCcoC+0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5ed62e3f8e09c0ae0922b754 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 10:47:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DEB3EC43387; Tue,  2 Jun 2020 10:47:26 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [49.207.141.73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67E8FC433C9;
+        Tue,  2 Jun 2020 10:47:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67E8FC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V6 4/5] clk: qcom: Add ipq6018 apss clock controller
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org
+References: <1590582292-13314-1-git-send-email-sivaprak@codeaurora.org>
+ <1590582292-13314-5-git-send-email-sivaprak@codeaurora.org>
+ <159063116486.69627.5280506237179820811@swboyd.mtv.corp.google.com>
+ <824cd7bb-0971-d387-4b78-75c36ddf2f66@codeaurora.org>
+ <159104019638.69627.9161269856470136421@swboyd.mtv.corp.google.com>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <4266555a-5e4f-4340-1b3c-487a70805751@codeaurora.org>
+Date:   Tue, 2 Jun 2020 16:17:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <DM6PR02MB6876F989682935D38AA9BF19A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <159104019638.69627.9161269856470136421@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJcogKHJH5sedMLRm7iDVY5GJFXG6YtbvUoqEh55LOJH4zg6u1HF2mt9uivno374New6GAHucz89E7ee6JkqmobSD9+UdFIcUjJTBhrXxr5AdnMfRE74
- IMdRhfoZKwXJPM8ECuNkEsezBa6X1mvtV4C6MBu0ZomrW+4QlMaMTpqpLWO/6EYrP/2ckZFtKcBLQW5Ddzy88Wa35QCRf/48b9AMvCXQr8TW5ZgAEEJRKM3h
- bwY7Daae8yl4w/g8npNRVCkNpqSPm01e0HLBVkYDFnCWHqaD7LFxubGvdWsFmTpE/72ELPTClNJNNBt6Q5kBdPfNbiivna8seASaVVRG8sfFICbSJU3wqKrq
- pDYUz/72ubcrJrgkEB9hsNIN8Li4IpUqOhIZU44mmxGeX+GKtOz+SkXsD65pKw25YJXttlyij3MnBQoeDn1BNNeZrvieDrRfAlHbxAjyxro5a2xiEuMiQC7Y
- gart/4mzMjX0unDnfGYGtXhZIcbp3CWs+spCpm8pWVMkeTqok8tXkkWltkChM5/1Z3ocRSInar4we11HmjVoZi4S4+puW3Y74ROVUyvtZYeJM7rxIquIDwoK
- 4OBxnALO+J5qqW91BP7C5Bqz3Z13dtgsPoZLco6VYfTcWRIRuxe706YwxEytmsV1lK8=
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 01/06/2020 16:59, Vishal Sagar wrote:
-> Hi Hans,
-> 
-> Thanks for reviewing!
-> 
->>> +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
->>> +		if (!xsdirxss->vidlocked) {
->>> +			dev_err(dev, "Can't get values when video not
->> locked!\n");
->>> +			return -EINVAL;
->>> +		}
->>> +		ctrl->val = xsdirxss->ts_is_interlaced;
+
+On 6/2/2020 1:06 AM, Stephen Boyd wrote:
+> Quoting Sivaprakash Murugesan (2020-06-01 05:41:15)
+>> On 5/28/2020 7:29 AM, Stephen Boyd wrote:
+>>> Quoting Sivaprakash Murugesan (2020-05-27 05:24:51)
+>>>> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6018.c
+>>>> new file mode 100644
+>>>> index 0000000..004f7e1
+>>>> --- /dev/null
+>>>> +++ b/drivers/clk/qcom/apss-ipq6018.c
+>>>> @@ -0,0 +1,106 @@
+>>>> +       P_XO,
+>>>> +       P_APSS_PLL_EARLY,
+>>>> +};
+>>>> +
+>>>> +static const struct clk_parent_data parents_apcs_alias0_clk_src[] = {
+>>>> +       { .fw_name = "xo" },
+>>>> +       { .fw_name = "pll" },
+>>> This pll clk is not described in the binding. Please add it there.
+>> Sorry I did not get this, this PLL is not directly defined in this
+>> driver and it comes
 >>
->> This control makes no sense: the v4l2_dv_timings struct will already tell you
->> if it is an interlaced format or not. Same for v4l2_mbus_framefmt.
+>> from dts. do you still want to describe it in binding?
 >>
-> 
-> The SDI has a concept of supporting progressive, interlaced (both as we know normally) and a progressive segmented frames(psf).
-> The progressive segmented frames have their video content in progressive format but the transport stream is interlaced.
-> This is distinguished using the bit 6 and 7 of Byte 2 in the 4 byte ST352 payload.
-> Refer to sec 5.3 in SMPTE ST 352:2010.
-> 
-> This control can be used by the application to distinguish normal interlaced and progressive segmented frames.
+> Yes, there should be a clock-names property for "pll" and a clocks
+> property in the binding document. I didn't see that.
 
-Ah, interesting. So this relies on the receiver to reconstruct the progressive
-frame by combining the top and bottom field, right?
+These are defined in
 
-I think this deserves a new v4l2_field value:
+https://lkml.org/lkml/2020/5/27/658and
 
-V4L2_FIELD_ALTERNATE_PROG
+https://lkml.org/lkml/2020/5/27/659
 
-Basically this is identical to V4L2_FIELD_ALTERNATE, except that the two fields
-combine to a single progressive frame.
+it has been defined as part of mailbox binding, since this driver does
 
-Regards,
+not have a dts node and it is child of apcs mailbox driver.
 
-	Hans
-
-PS: I'll look at your other comments separately
