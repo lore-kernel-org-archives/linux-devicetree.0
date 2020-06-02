@@ -2,220 +2,131 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2768C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DEDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB64E20679
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 09:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F345207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:09:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uZr9rCwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgFBJ5F (ORCPT
+        id S1726110AbgFBKJj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:57:05 -0400
-Received: from mga12.intel.com ([192.55.52.136]:50609 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgFBJ5F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:57:05 -0400
-IronPort-SDR: kgh/cr5DKADTl0fZ6IQClxEltISwO05NjvH5iCqp+Tsflx6YXEv/9sLKP9J6YZR1mP0T02oS35
- 25dLY2vw1PQw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:57:01 -0700
-IronPort-SDR: f5pjhVT4Hj49CKceAZLTS74rIEdpoYh4/acIP08Zj1vAOUlBP6YhHPZuGdb0XaFyASIKWEl1L2
- T9Kb4uSOJ+2A==
-X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
-   d="scan'208";a="416128886"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:56:56 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 9497820A25; Tue,  2 Jun 2020 12:56:54 +0300 (EEST)
-Date:   Tue, 2 Jun 2020 12:56:54 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>, Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
-        <shengnan.wang@mediatek.com>
-Subject: Re: [V9, 1/2] media: dt-bindings: media: i2c: Document OV02A10
- bindings
-Message-ID: <20200602095654.GD29325@paasikivi.fi.intel.com>
-References: <1590569355.8804.448.camel@mhfsdcap03>
- <CAL_Jsq+sN0SVidTrY0ODXEkzkxYFvG1FTnL0oRQBSKf=ynLdyQ@mail.gmail.com>
- <20200527211628.GT7618@paasikivi.fi.intel.com>
- <1590636882.8804.474.camel@mhfsdcap03>
- <20200528072332.GW7618@paasikivi.fi.intel.com>
- <1590653082.8804.517.camel@mhfsdcap03>
- <CAAFQd5AuHDpQN8xZsWgnAt6m2reAYJbs9nBp0+mBo7_FS81LbQ@mail.gmail.com>
- <1590978816.8804.523.camel@mhfsdcap03>
- <CAAFQd5AY9gejoiwxojvvG0FaVfEAf8gCqOddvo-dxemQWFksVw@mail.gmail.com>
- <1591078501.8804.539.camel@mhfsdcap03>
+        Tue, 2 Jun 2020 06:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgFBKJj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 06:09:39 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5D52C08C5C0
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 03:09:38 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x11so1153287plv.9
+        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 03:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9EWmfZNZs76IOluosDfmNrcdSeX3EmBQEAHMvHcf/Vk=;
+        b=uZr9rCwig9hq4NeVRTrP9yee3JCzQwSVErzm2dL4W5KxPlvfZGS28uIBMB94tfdytB
+         iTxIl0AMvr1+HntgrZ8WRFYeGX/i+01pdp6HXa+m3FBywDvc2vX1kT+uTtJQSje+9m2P
+         ca6mm3GoCXIzlz7Gpn7lnZxAhXqrtIUXwcBOcOao8HpciVMj4Z3JGw97UC9JRyMv+WUd
+         cLGFmxaYUhZvOjDx3mnBkn5HFiBvzlrAiHDq+EUoG5Mvr/r94wpggUe/7fl10rlnF0Vf
+         tXIOLk5Jex9citYAJ3yOVmG+KAWmBAbOkdKiAT3HpLlIo8gH4/kThrcvZMPAwOrQK/X8
+         4s9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9EWmfZNZs76IOluosDfmNrcdSeX3EmBQEAHMvHcf/Vk=;
+        b=iPPen1Ch8ejdtugW477sbQ+Q/PodWR/LZjgpismmsENdEtYOE/awo1arPp6E4aB+3J
+         8oZ+d5flrFaLlKGd+TslXAojxjxofpBr8lpkVNPnKhkw7AYLO0qTo+pdEjGGhDKxz0qy
+         yOGSP0gpZwbXYa3OTQOmGdlWowcNgeK5nvytcKBhvNGAksAWg+pySzKbp+huYE4Qgp+f
+         p9lFnxZEHJIuuOYBwLK9AyidPWyvNlQHs1TB+rjjNrHQ+KDTsJym12OjOVfUPRzxKgXC
+         t50rL4kOvhbm4U0slUEQ/mVGzxuJwKoyAFyfxzNilENR6PQ7sCNP1mZIjLm0iJOxgZvZ
+         eZhw==
+X-Gm-Message-State: AOAM5307HKkrQNJ3jSkH/T8kmYcyMEwxbDHx08xae4hRVd278L9VoDW9
+        j+X65fG7vvFcEO8XWW61ue0XGQ==
+X-Google-Smtp-Source: ABdhPJwcz+UPRaGJjz1YGfQ6cG165j/BIiASbSQ2PPFQQAhFhCjtu6LEh3fyjK4bz6/m/UhhPBboDQ==
+X-Received: by 2002:a17:90a:3d49:: with SMTP id o9mr4352805pjf.26.1591092577852;
+        Tue, 02 Jun 2020 03:09:37 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id d8sm1931276pgb.42.2020.06.02.03.09.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 03:09:37 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org
+Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v4 0/5] Qualcomm labibb regulator driver
+Date:   Tue,  2 Jun 2020 15:39:19 +0530
+Message-Id: <20200602100924.26256-1-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591078501.8804.539.camel@mhfsdcap03>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dongchun,
+This series adds a driver for LAB/IBB regulators found on some Qualcomm SoCs.
+These regulators provide positive and/or negative boost power supplies
+for LCD/LED display panels connected to the SoC.
 
-On Tue, Jun 02, 2020 at 02:15:01PM +0800, Dongchun Zhu wrote:
-> Hi Tomasz, Sakari,
-> 
-> On Mon, 2020-06-01 at 20:18 +0200, Tomasz Figa wrote:
-> > On Mon, Jun 1, 2020 at 4:35 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
-> > >
-> > > Hi Tomasz,
-> > >
-> > > On Fri, 2020-05-29 at 15:43 +0200, Tomasz Figa wrote:
-> > > > On Thu, May 28, 2020 at 10:06 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
-> > > > >
-> > > > > Hi Sakari,
-> > > > >
-> > > > > On Thu, 2020-05-28 at 10:23 +0300, Sakari Ailus wrote:
-> > > > > > Hi Dongchun,
-> > > > > >
-> > > > > > On Thu, May 28, 2020 at 11:34:42AM +0800, Dongchun Zhu wrote:
-> > > > > > > Hi Sakari, Rob,
-> > > > > > >
-> > > > > > > On Thu, 2020-05-28 at 00:16 +0300, Sakari Ailus wrote:
-> > > > > > > > Hi Rob, Dongchun,
-> > > > > > > >
-> > > > > > > > On Wed, May 27, 2020 at 09:27:22AM -0600, Rob Herring wrote:
-> > > > > > > > > > > > +    properties:
-> > > > > > > > > > > > +      endpoint:
-> > > > > > > > > > > > +        type: object
-> > > > > > > > > > > > +        additionalProperties: false
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +        properties:
-> > > > > > > > > >
-> > > > > > > > > > Actually I wonder whether we need to declare 'clock-lanes' here?
-> > > > > > > > >
-> > > > > > > > > Yes, if you are using it.
-> > > > > > > >
-> > > > > > > > Dongchun, can you confirm the chip has a single data and a single clock
-> > > > > > > > lane and that it does not support lane reordering?
-> > > > > > > >
-> > > > > > >
-> > > > > > > From the datasheet, 'MIPI inside the OV02A10 provides one single
-> > > > > > > uni-directional clock lane and one bi-directional data lane solution for
-> > > > > > > communication links between components inside a mobile device.
-> > > > > > > The data lane has full support for HS(uni-directional) and
-> > > > > > > LP(bi-directional) data transfer mode.'
-> > > > > > >
-> > > > > > > The sensor doesn't support lane reordering, so 'clock-lanes' property
-> > > > > > > would not be added in next release.
-> > > > > > >
-> > > > > > > > So if there's nothing to convey to the driver, also the data-lanes should
-> > > > > > > > be removed IMO.
-> > > > > > > >
-> > > > > > >
-> > > > > > > However, 'data-lanes' property may still be required.
-> > > > > > > It is known that either data-lanes or clock-lanes is an array of
-> > > > > > > physical data lane indexes. Position of an entry determines the logical
-> > > > > > > lane number, while the value of an entry indicates physical lane, e.g.,
-> > > > > > > for 1-lane MIPI CSI-2 bus we could have "data-lanes = <1>;", assuming
-> > > > > > > the clock lane is on hardware lane 0.
-> > > > > > >
-> > > > > > > As mentioned earlier, the OV02A10 sensor supports only 1C1D and does not
-> > > > > > > support lane reordering, so here we shall use 'data-lanes = <1>' as
-> > > > > > > there is only a clock lane for OV02A10.
-> > > > > > >
-> > > > > > > Reminder:
-> > > > > > > If 'data-lanes' property is not present, the driver would assume
-> > > > > > > four-lane operation. This means for one-lane or two-lane operation, this
-> > > > > > > property must be present and set to the right physical lane indexes.
-> > > > > > > If the hardware does not support lane reordering, monotonically
-> > > > > > > incremented values shall be used from 0 or 1 onwards, depending on
-> > > > > > > whether or not there is also a clock lane.
-> > > > > >
-> > > > > > How can the driver use four lanes, considering the device only supports a
-> > > > > > single lane??
-> > > > > >
-> > > > >
-> > > > > I understood your meaning.
-> > > > > If we omit the property 'data-lanes', the sensor should work still.
-> > > > > But then what's the meaning of the existence of 'data-lanes'?
-> > > > > If this property 'data-lanes' is always optional, then why dt-bindings
-> > > > > provide the interface?
-> > > > >
-> > > > > In the meantime, if omitting 'data-lanes' for one sensor(transmitter)
-> > > > > that has only one physical data lane, MIPI receiver(e.g., MIPI CSI-2)
-> > > > > shall enable four-lane configuration, which may increase consumption of
-> > > > > both power and resource in the process of IIC communication.
-> > > >
-> > > > Wouldn't the receiver still have the data-lanes property under its
-> > > > endpoint node, telling it how many lanes and in which order should be
-> > > > used?
-> > > >
-> > >
-> > > The MIPI receiver(RX) shall use
-> > > v4l2_async_notifier_add_fwnode_remote_subdev() API to parse the property
-> > > "data-lanes" under sensor output port.
-> > 
-> > That's not true. The MIPI receiver driver parses its own port node
-> > corresponding to the sensor. Also quoting the documentation [1]:
-> > 
-> > "An endpoint subnode of a device contains all properties needed for
-> > _configuration of this device_ for data exchange with other device. In most
-> > cases properties at the peer 'endpoint' nodes will be identical, however they
-> > might need to be different when there is any signal modifications on the bus
-> > between two devices, e.g. there are logic signal inverters on the lines."
-> > 
-> > In this case, there is such a signal modification if the sensor has a
-> > 1-lane bus and the receiver more lines, so the data-lanes properties
-> > would be different on both sides.
-> > 
-> > [1] https://elixir.bootlin.com/linux/v5.7/source/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > 
-> 
-> Sorry for the misunderstanding.
-> After doing some experiments about the data-lanes property under sensor
-> i2c node, we found the API
-> v4l2_async_notifier_add_fwnode_remote_subdev() that MIPI receiver driver
-> used indeed parses the data-lanes under its own port node.
-> 
-> Sorry make a mistake for the use case of sensor data-lanes previously.
-> Now We may encounter one new question for this patch.
-> In practice we haven't used the data-lanes under sensor i2c node
-> anywhere, if sensor driver itself doesn't parse that.
-> 
-> But there is still one reason to keep the exactly right data-lanes in
-> DT. That is, the data-lanes under sensor i2c node could be used as a
-> reference for MIPI receiver driver.
-> Just as Tomasz said, 'The MIPI receiver driver parses its own port node
-> corresponding to the sensor'.
-> 
-> Sakari, Tomasz, what's your opinions about the present of data-lanes
-> under sensor node or not?
+This series adds the support for pmi8998 PMIC found in SDM845 family of SoCs.
 
-The receiver driver doesn't parse the properties in the sensor
-(transmitter) device's endpoint. If that property provides no information
-to the receiver, as is the case here, it should be omitted.
+Changes from v3:
+- Handled review comments from v3
+- In core, swapped the meaning of enable_time and poll_enabled_time; so we
+   wait for total enable_time delay, and poll in-between at poll_enabled_time
+   interval now.
+- fixed dt_bindings_check issues in dt-bindings patch.
+- Cleanup of register_labibb_regulator(), and adapted to updated meaning of
+   poll_enabled_time.
+
+Changes from v2:
+- Review comments from v2
+- Moved the poll-to-check-enabled functionality to regulator core.
+- Used more core features to simplify enable/disable functions.
+- Moved the devicetree binding to yaml.
+- Updated interrupt-names and simplified handling.
+
+Changes from v1:
+- Incorporated review comments from v1
+- Changed from virtual-regulator based handling to individual regulator based
+  handling.
+- Reworked the core to merge most of enable/disable functions, combine the
+  regulator_ops into one and allow for future variations.
+- is_enabled() is now _really_ is_enabled()
+- Simplified the SC interrupt handling - use regmap_read_poll_timeout,
+  REGULATOR_EVENT_OVER_CURRENT handling and notification to clients.
+
+Nisha Kumari (4):
+  dt-bindings: regulator: Add labibb regulator
+  arm64: dts: qcom: pmi8998: Add nodes for LAB and IBB regulators
+  regulator: qcom: Add labibb driver
+  regulator: qcom: labibb: Add SC interrupt handling
+
+Sumit Semwal (1):
+  regulator: Allow regulators to verify enabled during enable()
+
+ .../regulator/qcom-labibb-regulator.yaml      |  79 +++++
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi         |  14 +
+ drivers/regulator/Kconfig                     |  10 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/core.c                      |  58 +++-
+ drivers/regulator/qcom-labibb-regulator.c     | 289 ++++++++++++++++++
+ include/linux/regulator/driver.h              |   5 +
+ 7 files changed, 455 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+ create mode 100644 drivers/regulator/qcom-labibb-regulator.c
 
 -- 
-Regards,
+2.26.2
 
-Sakari Ailus
