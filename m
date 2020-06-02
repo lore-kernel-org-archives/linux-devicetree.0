@@ -2,91 +2,157 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACBFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F775C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968F52067B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3D120734
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mgvbJhQR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YZ9QK3EZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgFBXWp (ORCPT
+        id S1728304AbgFBXZv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:22:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgFBXWo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:22:44 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F4B5C08C5C2
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 16:22:44 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id w20so214232uaa.2
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 16:22:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rui6nfEXkR9RNeNeTRrsaME99AQHMk8K/AUIJ5I/AMI=;
-        b=mgvbJhQRav73RcCysfGBhLfjII+KzTEIxOz5wXi5BzuaVgVxxYssljthV0APDBLs6m
-         CwORb6IW9136cyU59Jxtnyhi3QGu0gv5oIuQ/Uyi0UQvVyMn065B93SdLGu8BzalAOhv
-         rXRLgD6nB8CDNniy7aeJauFOEhHjz8j8gim2Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rui6nfEXkR9RNeNeTRrsaME99AQHMk8K/AUIJ5I/AMI=;
-        b=F8MFbIaYfNmchbiIngdBYt/yG4TfXCp3ejpSWGUhJOCHjzLbykRIuv/RK6kRGXP3GZ
-         iwRA3ac0erAVzTt3shPrrRXGfR5hyn/KXhKLT5206hbkh55Q/g/OoYSRFyrNrSRO+HBv
-         8Qqc/0yT5Qc9hI+IcFZcvQB2vkKfUm1tOH8C8KLJ6Kvy3VIQUDObq5b7nEx+Ojf0oSAx
-         eCNeN2gy1DkEgYCdtFYomMI5lbfDPSE4ZQNwxQZCRJlBVxjifkv1G6m6GgI2Ean7lVs7
-         3tCPf7lgmO/S6XYjQdtokF6ObGEGj+dQ/Fj6dHCzbvhlLjfm0Jelks/9eioOwqgcsuNO
-         n/Lg==
-X-Gm-Message-State: AOAM530Q3O+huPwB7oxQ1NUQNl4a7AuNsJtJLRKSbGVy0lgGkgkkyvDU
-        UsckbjbtJwF/UyeI9T10D4QFr7Ukt3g=
-X-Google-Smtp-Source: ABdhPJwvgFV3+MVdPxiw4c9psVNjZL6JmSX8Ek9PfDr0NNcEQnu/RK1mJXziInNvvPxo5/FbKX9dHQ==
-X-Received: by 2002:ab0:6044:: with SMTP id o4mr19118459ual.117.1591140163400;
-        Tue, 02 Jun 2020 16:22:43 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id p75sm70166vkf.1.2020.06.02.16.22.42
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 16:22:42 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id s192so19779vkh.3
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 16:22:42 -0700 (PDT)
-X-Received: by 2002:ac5:c54e:: with SMTP id d14mr204225vkl.30.1591140161937;
- Tue, 02 Jun 2020 16:22:41 -0700 (PDT)
+        Tue, 2 Jun 2020 19:25:51 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44994 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgFBXZv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:25:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052NPikl122066;
+        Tue, 2 Jun 2020 18:25:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591140344;
+        bh=57f0sfDTz9OQHmsWrmTpwvsYlGRpugs3Euu4K1JkpO8=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=YZ9QK3EZSrjlprVxCKsqNkiPJnzxZKoCLCXJXArOwUM2f34tP1Gc8+o4LW6PAt3mu
+         Sgfulw3L0z8PcdF14Ra+oyDZbcO7W42KcftKC+EwoCQ9URVkSZaaSyIDpy5YGcA7+q
+         g4KmMKlsg7nFemc+JZNAcTGiKAC2EjHBO8j77wOo=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052NPieK040733
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 18:25:44 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 18:25:44 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 18:25:44 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052NPiAo053381;
+        Tue, 2 Jun 2020 18:25:44 -0500
+Subject: Re: [PATCH net-next v5 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200602164522.3276-1-dmurphy@ti.com>
+ <20200602164522.3276-5-dmurphy@ti.com>
+ <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
+ <61888788-041f-7b93-9d99-7dad4c148021@ti.com>
+ <6981527b-f155-a46b-574a-2e6621589ca4@gmail.com>
+ <f92f70b2-6e42-5bdb-187d-ecd8533b06a6@ti.com>
+Message-ID: <fd70a4c5-0489-bb47-5ad8-b0d668495b17@ti.com>
+Date:   Tue, 2 Jun 2020 18:25:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200602052104.7795-1-lukas.bulwahn@gmail.com>
- <828311d2-61ea-42cb-1449-a53f3772543d@roeck-us.net> <CAODwPW_oxDxF_5-icRs0eaRVLgtP+bDc_OSKa=EcfeSp=c6Fag@mail.gmail.com>
-In-Reply-To: <CAODwPW_oxDxF_5-icRs0eaRVLgtP+bDc_OSKa=EcfeSp=c6Fag@mail.gmail.com>
-From:   Evan Benn <evanbenn@chromium.org>
-Date:   Wed, 3 Jun 2020 09:22:16 +1000
-X-Gmail-Original-Message-ID: <CAKz_xw0Tqr-idoZbNzg_didSCr5L+L1=76xjF=Sqj4DgpL9g7Q@mail.gmail.com>
-Message-ID: <CAKz_xw0Tqr-idoZbNzg_didSCr5L+L1=76xjF=Sqj4DgpL9g7Q@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: rectify entry in ARM SMC WATCHDOG DRIVER
-To:     Julius Werner <jwerner@chromium.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f92f70b2-6e42-5bdb-187d-ecd8533b06a6@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Apologies for that slip up.
+Florian
 
-Reviewed-by: Evan Benn <evanbenn@chromium.org>
-
-On Wed, Jun 3, 2020 at 6:16 AM Julius Werner <jwerner@chromium.org> wrote:
+On 6/2/20 6:18 PM, Dan Murphy wrote:
+> Florian
 >
-> Reviewed-by: Julius Werner <jwerner@chromium.org>
+> On 6/2/20 6:13 PM, Florian Fainelli wrote:
+>>
+>> On 6/2/2020 4:10 PM, Dan Murphy wrote:
+>>> Florian
+>>>
+>>> On 6/2/20 5:33 PM, Florian Fainelli wrote:
+>>>> On 6/2/2020 9:45 AM, Dan Murphy wrote:
+>>>>> Add RGMII internal delay configuration for Rx and Tx.
+>>>>>
+>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>> ---
+>>>> [snip]
+>>>>
+>>>>> +
+>>>>>    enum {
+>>>>>        DP83869_PORT_MIRRORING_KEEP,
+>>>>>        DP83869_PORT_MIRRORING_EN,
+>>>>> @@ -108,6 +113,8 @@ enum {
+>>>>>    struct dp83869_private {
+>>>>>        int tx_fifo_depth;
+>>>>>        int rx_fifo_depth;
+>>>>> +    s32 rx_id_delay;
+>>>>> +    s32 tx_id_delay;
+>>>>>        int io_impedance;
+>>>>>        int port_mirroring;
+>>>>>        bool rxctrl_strap_quirk;
+>>>>> @@ -232,6 +239,22 @@ static int dp83869_of_init(struct phy_device
+>>>>> *phydev)
+>>>>>                     &dp83869->tx_fifo_depth))
+>>>>>            dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
+>>>>>    +    ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
+>>>>> +                   &dp83869->rx_id_delay);
+>>>>> +    if (ret) {
+>>>>> +        dp83869->rx_id_delay =
+>>>>> + dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>>>>> +        ret = 0;
+>>>>> +    }
+>>>>> +
+>>>>> +    ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>>>>> +                   &dp83869->tx_id_delay);
+>>>>> +    if (ret) {
+>>>>> +        dp83869->tx_id_delay =
+>>>>> + dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>>>>> +        ret = 0;
+>>>>> +    }
+>>>> It is still not clear to me why is not the parsing being done by 
+>>>> the PHY
+>>>> library helper directly?
+>>> Why would we do that for these properties and not any other?
+>> Those properties have a standard name, which makes them suitable for
+>> parsing by the core PHY library.
+>>> Unless there is a new precedence being set here by having the PHY
+>>> framework do all the dt node parsing for common properties.
+>> You could parse the vendor properties through the driver, let the PHY
+>> library parse the standard properties, and resolve any ordering
+>> precedence within the driver. In general, I would favor standard
+>> properties over vendor properties.
+>>
+>> Does this help?
+>
+> Ok so new precedence then.
+>
+> Because there are common properties like tx-fifo-depth, rx-fifo-depth, 
+> enet-phy-lane-swap and max_speed that the PHY framework should parse 
+> as well.
+>
+I am assuming that the retrieval of the property and getting the index 
+should be 2 separate APIs?
+
+One API to get the property value and one API to find the index value.
+
+Dan
+
+
+> Dan
+>
