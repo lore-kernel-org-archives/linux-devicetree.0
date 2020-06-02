@@ -2,144 +2,148 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41287C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8718BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6BB2067B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6043720734
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JtxlATgt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKBZK0fK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgFBXaX (ORCPT
+        id S1728114AbgFBXdC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:30:23 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46648 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgFBXaX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:30:23 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052NIAut035519;
-        Tue, 2 Jun 2020 18:18:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591139890;
-        bh=B/WbR0ieFR+upVOAWaKc+gb7oNaJlchuQLeU7X+5h8Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JtxlATgtWTz/2V6BwAKkhWz0uSMCAHH7hu8j/dHaq5mLzrhR57DeBrcKmdJNLcN6A
-         C/3ifPvg/Kit9blAb2WUUT9luHQ0ddZsKFXSSRWgT+v17PVqHDUv9JF5vif0f6+t/E
-         ijB233L/yeGGRCJ+Y8/jTKoLLwNsIg5nH9M2opNQ=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052NIA0t032906
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 2 Jun 2020 18:18:10 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
- 2020 18:18:10 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 2 Jun 2020 18:18:10 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052NI9Kh009536;
-        Tue, 2 Jun 2020 18:18:09 -0500
-Subject: Re: [PATCH net-next v5 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200602164522.3276-1-dmurphy@ti.com>
- <20200602164522.3276-5-dmurphy@ti.com>
- <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
- <61888788-041f-7b93-9d99-7dad4c148021@ti.com>
- <6981527b-f155-a46b-574a-2e6621589ca4@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f92f70b2-6e42-5bdb-187d-ecd8533b06a6@ti.com>
-Date:   Tue, 2 Jun 2020 18:18:04 -0500
+        Tue, 2 Jun 2020 19:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727826AbgFBXdC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:33:02 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 100A0C08C5C1
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 16:33:02 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id j198so3277120wmj.0
+        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 16:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gRIfKnJl6SPT0TJEscdrNR/IF4u0o0KTS5V3RmcEUyM=;
+        b=JKBZK0fKK1R/SWy7yxMUC8suZIyxultiSmdoxR3UvAqPTsEh9pJ12gIrHrzxSaP/wJ
+         1KwHQ4uoqdDgRKP0rUf2ngjWH7KZegwN3bN3V0kq9BXoNNPADqqSu7p+CrNekbPkRtfT
+         XY2cvpv2j70n9V+knYIMoo6y+UfAxd1/go08NJBEzjSHP9N5MB0RJKmI28BhLy7XlwqM
+         lCJxePHePQ8cjXxRuURh2oe5D/XWTn2F/3MKpL6fOZbesn/sVSh3daVKWyOccvCXi45v
+         Iu9yNec0gWwQRQBwywqYhtf4mEyXK3s/RT4q/DGWc/HUW/7/sM2ur/sD8LjJgaMuomWc
+         LLwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gRIfKnJl6SPT0TJEscdrNR/IF4u0o0KTS5V3RmcEUyM=;
+        b=pheaswT+4m2N0+IZ93fiTd82UOQrmJ0sXsjGYhx+Vhadq1Sn6Q5ovV7rNU2Bb6aCov
+         5qdm5y7Oi0XmnXNQbDgOP0rHvKw+UL4Zn1KcGc5z9wnNz0I64QQ2p4C5qEkNzztb5LZz
+         plSAcnPsEFutV8abPcAOIzwmPEx5anZr3eI+ypl1i9iguyZ4dQzp5DEckPUpgC3d0CkJ
+         BwiFURt8CywQVSce5AtN64FTPyNJQhKEP1j4hJBdMzIT7WDMcSEJ7Wfj8TjkAJH8EP3D
+         IJBd8UNm6Wyyqq9/y1K32+1aC9UXSODI/Zxlivyf+EqU3L3dhoQWIvoqwx/yvTw1cbAu
+         o7jQ==
+X-Gm-Message-State: AOAM533OJ4djjfBsh2zRN7bzKaftW6eEijRtiksj1vMlIi9yaU1IDkjC
+        jvvlyPh25bNTyv1aScLb5MhhEw==
+X-Google-Smtp-Source: ABdhPJwcp1KiPxegia0Y7JYvV9kaPCj1e5qD1uO6/BUPm79pbtxCR2NUJxnMNO9b3KYzZzZvZw3CLg==
+X-Received: by 2002:a1c:5987:: with SMTP id n129mr5999760wmb.60.1591140780694;
+        Tue, 02 Jun 2020 16:33:00 -0700 (PDT)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id l18sm418067wmj.22.2020.06.02.16.32.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 16:33:00 -0700 (PDT)
+Subject: Re: [PATCH 1/4] drivers: clk: qcom: Add msm8992 GCC driver
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200531174612.260113-1-konradybcio@gmail.com>
+ <20200531174612.260113-2-konradybcio@gmail.com>
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Message-ID: <7e618280-ecb8-cf1a-5243-737e56278662@linaro.org>
+Date:   Wed, 3 Jun 2020 00:33:40 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <6981527b-f155-a46b-574a-2e6621589ca4@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200531174612.260113-2-konradybcio@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Florian
+On 31/05/2020 18:46, Konrad Dybcio wrote:
 
-On 6/2/20 6:13 PM, Florian Fainelli wrote:
->
-> On 6/2/2020 4:10 PM, Dan Murphy wrote:
->> Florian
->>
->> On 6/2/20 5:33 PM, Florian Fainelli wrote:
->>> On 6/2/2020 9:45 AM, Dan Murphy wrote:
->>>> Add RGMII internal delay configuration for Rx and Tx.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>> [snip]
->>>
->>>> +
->>>>    enum {
->>>>        DP83869_PORT_MIRRORING_KEEP,
->>>>        DP83869_PORT_MIRRORING_EN,
->>>> @@ -108,6 +113,8 @@ enum {
->>>>    struct dp83869_private {
->>>>        int tx_fifo_depth;
->>>>        int rx_fifo_depth;
->>>> +    s32 rx_id_delay;
->>>> +    s32 tx_id_delay;
->>>>        int io_impedance;
->>>>        int port_mirroring;
->>>>        bool rxctrl_strap_quirk;
->>>> @@ -232,6 +239,22 @@ static int dp83869_of_init(struct phy_device
->>>> *phydev)
->>>>                     &dp83869->tx_fifo_depth))
->>>>            dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
->>>>    +    ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
->>>> +                   &dp83869->rx_id_delay);
->>>> +    if (ret) {
->>>> +        dp83869->rx_id_delay =
->>>> +                dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
->>>> +        ret = 0;
->>>> +    }
->>>> +
->>>> +    ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
->>>> +                   &dp83869->tx_id_delay);
->>>> +    if (ret) {
->>>> +        dp83869->tx_id_delay =
->>>> +                dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
->>>> +        ret = 0;
->>>> +    }
->>> It is still not clear to me why is not the parsing being done by the PHY
->>> library helper directly?
->> Why would we do that for these properties and not any other?
-> Those properties have a standard name, which makes them suitable for
-> parsing by the core PHY library.
->> Unless there is a new precedence being set here by having the PHY
->> framework do all the dt node parsing for common properties.
-> You could parse the vendor properties through the driver, let the PHY
-> library parse the standard properties, and resolve any ordering
-> precedence within the driver. In general, I would favor standard
-> properties over vendor properties.
->
-> Does this help?
+> +static struct clk_fixed_factor xo = {
+> +	.mult = 1,
+> +	.div = 1,
+> +	.hw.init = &(struct clk_init_data)
+> +	{
+> +		.name = "xo",
+> +		.parent_names = (const char *[]) { "xo_board" },
+> +		.num_parents = 1,
+> +		.ops = &clk_fixed_factor_ops,
+> +	},
+> +};
 
-Ok so new precedence then.
+I think you can drop that, and use the DTS definition.
 
-Because there are common properties like tx-fifo-depth, rx-fifo-depth, 
-enet-phy-lane-swap and max_speed that the PHY framework should parse as 
-well.
+xo_board: xo_board {
+     compatible = "fixed-clock";
+     #clock-cells = <0>;
+     clock-frequency = <19200000>;
+};
 
-Dan
+sleep_clk: sleep_clk {
+     compatible = "fixed-clock";
+     #clock-cells = <0>;
+     clock-frequency = <32768>;
+};
+
+clock_gcc: clock-controller@fc400000 {
+     compatible = "qcom,gcc-msm8994";
+     #clock-cells = <1>;
+     #reset-cells = <1>;
+     #power-domain-cells = <1>;
+     reg = <0xfc400000 0x2000>;
+
++    clock-names = "xo",
++                  "sleep_clk";
++    clocks = <&xo_board>,
++             <&sleep_clk>;
+
+};
+
+
+> +static int gcc_msm8992_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct clk *clk;
+> +
+> +	clk = devm_clk_register(dev, &xo.hw);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+
+You should drop this too.
+
+
+> +MODULE_ALIAS("platform:gcc-msm8992");
+
+and that.
+
+---
+bod
 
