@@ -2,182 +2,324 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832AFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE62BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6401B206A4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGUa5+DQ"
+	by mail.kernel.org (Postfix) with ESMTP id C268E206A4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgFBKKa (ORCPT
+        id S1728294AbgFBKKb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgFBKJq (ORCPT
+        Tue, 2 Jun 2020 06:10:31 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:54844 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgFBKJq (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 06:09:46 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74106C05BD43
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 03:09:46 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id a4so4836383pfo.4
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 03:09:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vautb822ZfqbgT9H1qhF7C4M74PWhQzgpsc/iQMPhyE=;
-        b=MGUa5+DQjvlhtfr049c1/fZTWBfJSEvMFonHlxrFq/sQnDeuGeJcc19rbD1i2IUYFW
-         wLdRgfi5usAEHgvKX+OpQiU8rU7Wukf4IBm7E1vRavICIGExstq2YzYucy2VItWJKOa+
-         jeZPXSqL+224vtF1Uhg376HaG0Q77QkIazFNHY1K5ndrpRfNcOAE+wcbJszpvM3VA8b3
-         yt4sy+m/l7mzThlR4/45Oxmf0iIzi3ZG4xs6tKIq/66HY8NrivhPSydQrhMaMdnSVgd5
-         DZGaTpACkz+3blFLW4phCxLZByRK4jdSNCSvI1owaTzER2JWfPUn1eKbji0Gt/bMBP+7
-         ZaGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vautb822ZfqbgT9H1qhF7C4M74PWhQzgpsc/iQMPhyE=;
-        b=JXXCwCilbcp8sUY3ZlFY0rKU3hG3XE59049aoObCexAlKG7tjT264VAyHE4xjWsmwF
-         95Vwnvjq/2oQ/RkAzD59jg+4T+CrpDIj36UNNPrNBT+XLNNOdeqBPVBHHPOgtMsUo+Zq
-         1v2WJu2TdbXQ9a4io3+u2mhSWG217Vxp7sSZW1IT6o64kmIqUKajqsgInpz844ruYnb8
-         QxxH1fZBUsHoastsjnhRJwrfAGVbchFYrciMRmIrmG7Wkv22XsTJ6FaSb/E6kO9fz1to
-         lmlToDSqHS73UaZkHCwzswDc52L1op3/XBCw8g2nx46JF3F16SOjsmz2Ru6Co5PuMhxq
-         WEYA==
-X-Gm-Message-State: AOAM531WoJp4omKqKdVnA9Gy6MdWFSM1F8kMuPcFRtP9AGvK7707stRi
-        FXBt14yO+NS+IevPRyhGgQB1EA==
-X-Google-Smtp-Source: ABdhPJyvrxxge7r1kiYD3PJFB7Ec7P66SkuqUcn7jCBYLTysyG8pMddjI4b3PuPNg2NaNhrHragmnw==
-X-Received: by 2002:a62:9242:: with SMTP id o63mr24360759pfd.310.1591092585950;
-        Tue, 02 Jun 2020 03:09:45 -0700 (PDT)
-Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id d8sm1931276pgb.42.2020.06.02.03.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 03:09:45 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org
-Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v4 2/5] dt-bindings: regulator: Add labibb regulator
-Date:   Tue,  2 Jun 2020 15:39:21 +0530
-Message-Id: <20200602100924.26256-3-sumit.semwal@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200602100924.26256-1-sumit.semwal@linaro.org>
-References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2E5048030836;
+        Tue,  2 Jun 2020 10:09:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TtgB5ZNz8eqX; Tue,  2 Jun 2020 13:09:38 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 2/6] dt-bindings: interrupt-controller: Convert mti,gic to DT schema
+Date:   Tue, 2 Jun 2020 13:09:17 +0300
+Message-ID: <20200602100921.1155-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200602100921.1155-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200602100921.1155-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nisha Kumari <nishakumari@codeaurora.org>
+Modern device tree bindings are supposed to be created as YAML-files
+in accordance with DT schema. This commit replaces MIPS GIC legacy bare
+text binding with YAML file. As before the binding file states that the
+corresponding dts node is supposed to be compatible with MIPS Global
+Interrupt Controller indicated by the "mti,gic" compatible string and
+to provide a mandatory interrupt-controller and '#interrupt-cells'
+properties. There might be optional registers memory range,
+"mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
+specified.
 
-Adding the devicetree binding for labibb regulator.
+MIPS GIC also includes a free-running global timer, per-CPU count/compare
+timers, and a watchdog. Since currently the GIC Timer is only supported the
+DT schema expects an IRQ and clock-phandler charged timer sub-node with
+"mti,mips-gic-timer" compatible string.
 
-Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
- [sumits: cleanup as per review comments and update to yaml]
---
-v2: updated for better compatible string and names.
-v3: moved to yaml
-v4: fixed dt_binding_check issues
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
 ---
- .../regulator/qcom-labibb-regulator.yaml      | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
 
-diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+I don't really know who is the corresponding driver maintainer, so I
+added Paul to the maintainers property since he used to be looking for the
+MIPS arch and Thomas looking after it now. Any idea what email should be
+specified there instead?
+
+Changelog prev:
+- Since timer sub-node has no unit-address, the node shouldn't be named
+  with one. So alter the MIPS GIC bindings to have a pure "timer"
+  sub-node.
+- Discard allOf: [ $ref: /schemas/interrupt-controller.yaml# ].
+- Since it's a conversion patch use GPL-2.0-only SPDX header.
+---
+ .../interrupt-controller/mips-gic.txt         |  67 --------
+ .../interrupt-controller/mti,gic.yaml         | 148 ++++++++++++++++++
+ 2 files changed, 148 insertions(+), 67 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+deleted file mode 100644
+index 173595305e26..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
++++ /dev/null
+@@ -1,67 +0,0 @@
+-MIPS Global Interrupt Controller (GIC)
+-
+-The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
+-It also supports local (per-processor) interrupts and software-generated
+-interrupts which can be used as IPIs.  The GIC also includes a free-running
+-global timer, per-CPU count/compare timers, and a watchdog.
+-
+-Required properties:
+-- compatible : Should be "mti,gic".
+-- interrupt-controller : Identifies the node as an interrupt controller
+-- #interrupt-cells : Specifies the number of cells needed to encode an
+-  interrupt specifier.  Should be 3.
+-  - The first cell is the type of interrupt, local or shared.
+-    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
+-  - The second cell is the GIC interrupt number.
+-  - The third cell encodes the interrupt flags.
+-    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
+-    flags.
+-
+-Optional properties:
+-- reg : Base address and length of the GIC registers.  If not present,
+-  the base address reported by the hardware GCR_GIC_BASE will be used.
+-- mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
+-  to which the GIC may not route interrupts.  Valid values are 2 - 7.
+-  This property is ignored if the CPU is started in EIC mode.
+-- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
+-  reserved for IPIs.
+-  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
+-  of the reserved range.
+-  If not specified, the driver will allocate the last 2 * number of VPEs in the
+-  system.
+-
+-Required properties for timer sub-node:
+-- compatible : Should be "mti,gic-timer".
+-- interrupts : Interrupt for the GIC local timer.
+-
+-Optional properties for timer sub-node:
+-- clocks : GIC timer operating clock.
+-- clock-frequency : Clock frequency at which the GIC timers operate.
+-
+-Note that one of clocks or clock-frequency must be specified.
+-
+-Example:
+-
+-	gic: interrupt-controller@1bdc0000 {
+-		compatible = "mti,gic";
+-		reg = <0x1bdc0000 0x20000>;
+-
+-		interrupt-controller;
+-		#interrupt-cells = <3>;
+-
+-		mti,reserved-cpu-vectors = <7>;
+-		mti,reserved-ipi-vectors = <40 8>;
+-
+-		timer {
+-			compatible = "mti,gic-timer";
+-			interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
+-			clock-frequency = <50000000>;
+-		};
+-	};
+-
+-	uart@18101400 {
+-		...
+-		interrupt-parent = <&gic>;
+-		interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
+-		...
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
 new file mode 100644
-index 000000000000..178820ec04c7
+index 000000000000..9f0eb3addac4
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
-@@ -0,0 +1,79 @@
++++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+@@ -0,0 +1,148 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/regulator/qcom-labibb-regulator.yaml#
++$id: http://devicetree.org/schemas/interrupt-controller/mti,gic.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
++title: MIPS Global Interrupt Controller
 +
 +maintainers:
-+  - Sumit Semwal <sumit.semwal@linaro.org>
++  - Paul Burton <paulburton@kernel.org>
++  - Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 +
-+description:
-+  LAB can be used as a positive boost power supply and IBB can be used as a
-+  negative boost power supply for display panels. Currently implemented for
-+  pmi8998.
-+
-+allOf:
-+  - $ref: "regulator.yaml#"
++description: |
++  The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
++  It also supports local (per-processor) interrupts and software-generated
++  interrupts which can be used as IPIs. The GIC also includes a free-running
++  global timer, per-CPU count/compare timers, and a watchdog.
 +
 +properties:
 +  compatible:
-+    const: qcom,pmi8998-lab-ibb
++    const: mti,gic
 +
-+  lab:
++  "#interrupt-cells":
++    const: 3
++    description: |
++      The 1st cell is the type of interrupt: local or shared defined in the
++      file 'dt-bindings/interrupt-controller/mips-gic.h'. The 2nd cell is the
++      GIC interrupt number. The 3d cell encodes the interrupt flags setting up
++      the IRQ trigger modes, which are defined in the file
++      'dt-bindings/interrupt-controller/irq.h'.
++
++  reg:
++    description: |
++      Base address and length of the GIC registers space. If not present,
++      the base address reported by the hardware GCR_GIC_BASE will be used.
++    maxItems: 1
++
++  interrupt-controller: true
++
++  mti,reserved-cpu-vectors:
++    description: |
++      Specifies the list of CPU interrupt vectors to which the GIC may not
++      route interrupts. This property is ignored if the CPU is started in EIC
++      mode.
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32-array
++      - minItems: 1
++        maxItems: 6
++        uniqueItems: true
++        items:
++          minimum: 2
++          maximum: 7
++
++  mti,reserved-ipi-vectors:
++    description: |
++      Specifies the range of GIC interrupts that are reserved for IPIs.
++      It accepts two values: the 1st is the starting interrupt and the 2nd is
++      the size of the reserved range. If not specified, the driver will
++      allocate the last (2 * number of VPEs in the system).
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32-array
++      - items:
++          - minimum: 0
++            maximum: 254
++          - minimum: 2
++            maximum: 254
++
++  timer:
 +    type: object
-+
++    description: |
++      MIPS GIC includes a free-running global timer, per-CPU count/compare
++      timers, and a watchdog. Currently only the GIC Timer is supported.
 +    properties:
++      compatible:
++        const: mti,gic-timer
 +
 +      interrupts:
++        description: |
++          Interrupt for the GIC local timer, so normally it's suppose to be of
++          <GIC_LOCAL X IRQ_TYPE_NONE> format.
 +        maxItems: 1
-+        description:
-+          Short-circuit interrupt for lab.
 +
-+      interrupt-names:
-+        const: sc-err
++      clocks:
++        maxItems: 1
++
++      clock-frequency: true
 +
 +    required:
-+    - interrupts
-+    - interrupt-names
++      - compatible
++      - interrupts
 +
-+  ibb:
-+    type: object
++    oneOf:
++      - required:
++          - clocks
++      - required:
++          - clock-frequency
 +
-+    properties:
++    additionalProperties: false
 +
-+      interrupts:
-+        maxItems: 1
-+        description:
-+          Short-circuit interrupt for lab.
-+
-+      interrupt-names:
-+        const: sc-err
-+
-+    required:
-+    - interrupts
-+    - interrupt-names
++unevaluatedProperties: false
 +
 +required:
 +  - compatible
++  - "#interrupt-cells"
++  - interrupt-controller
 +
 +examples:
 +  - |
++    #include <dt-bindings/interrupt-controller/mips-gic.h>
 +    #include <dt-bindings/interrupt-controller/irq.h>
 +
-+    labibb {
-+      compatible = "qcom,pmi8998-lab-ibb";
++    interrupt-controller@1bdc0000 {
++      compatible = "mti,gic";
++      reg = <0x1bdc0000 0x20000>;
++      interrupt-controller;
++      #interrupt-cells = <3>;
++      mti,reserved-cpu-vectors = <7>;
++      mti,reserved-ipi-vectors = <40 8>;
 +
-+      lab {
-+        interrupts = <0x3 0x0 IRQ_TYPE_EDGE_RISING>;
-+        interrupt-names = "sc-err";
-+      };
-+
-+      ibb {
-+        interrupts = <0x3 0x2 IRQ_TYPE_EDGE_RISING>;
-+        interrupt-names = "sc-err";
++      timer {
++        compatible = "mti,gic-timer";
++        interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
++        clock-frequency = <50000000>;
 +      };
 +    };
++  - |
++    #include <dt-bindings/interrupt-controller/mips-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
 +
++    interrupt-controller@1bdc0000 {
++      compatible = "mti,gic";
++      reg = <0x1bdc0000 0x20000>;
++      interrupt-controller;
++      #interrupt-cells = <3>;
++
++      timer {
++        compatible = "mti,gic-timer";
++        interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
++        clocks = <&cpu_pll>;
++      };
++    };
++  - |
++    interrupt-controller {
++      compatible = "mti,gic";
++      interrupt-controller;
++      #interrupt-cells = <3>;
++    };
 +...
 -- 
 2.26.2
