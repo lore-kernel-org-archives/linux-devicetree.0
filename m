@@ -2,228 +2,120 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15E5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 15:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6229FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 15:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90404206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 15:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430F120757
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 15:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Oz9Xqz55";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bJM6OPVo"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IHA54byG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbgFBPIh (ORCPT
+        id S1726241AbgFBPSy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:08:37 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:46411 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725958AbgFBPIh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 11:08:37 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 52D3558029D;
-        Tue,  2 Jun 2020 11:08:36 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 02 Jun 2020 11:08:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=gy1oFJKqpBP4SByoQQwaUJAvM+9
-        w8yd8uHa/7cqBJYw=; b=Oz9Xqz55njCGiEvASU5op28H1HwHkjvsX30FAklJvnC
-        9SRwNgp+FAsmWDWl2eGPl/wwn2wX8iyHIIDpUhDjbxB7ek8aBGBEgqPApx01cJee
-        ow72sBBRgkWLGsHHvtuUDxH3cgPp6vZ2IhNqhLL/RB3IOIzbyV8SRrB7FgtHxmux
-        mm8q7dyytgf0taBIKSlN4wXh7c9VEwqrVND5Rb52ANfnDzAPAmnWONIEcR1OaMfs
-        bnND44Y8qXvtXYaTllhuRgGaRpRw374gEZ1kilfWmxUfh4oxYDidSUTI3aSeDI5y
-        Yk/rNyvw7halECPY0JtZEUNQBHLZCoI2suQFBvap7Uw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=gy1oFJ
-        KqpBP4SByoQQwaUJAvM+9w8yd8uHa/7cqBJYw=; b=bJM6OPVoNRNPTageBFCxr/
-        IN/eDOTiB/u5xeOBUfJZ7dPocqBHKKQmsp7LkdPM4o027HNQoJNFV8UzNnHkhimN
-        hwAAwp9IxdEKn5yUNVDVqqEbXV9qo3w8/pCScjiyZmSQIH9N1IpBRoP8ZNuLifP2
-        z78jC9+XbmPYa87Ae5US+movKmAI8Pir0IYmv9XPaMdWcg6pm+5SFud3raTOhv/2
-        JI2A8GQ+hQQceElacAMzKPp6ZEVUvdgLQfqSf9TjG2O2Lgmw6dKfhZ9sZo683m2p
-        y1Mc+GDYcbkqivtCnyEXJs1qHBUwCuobPgB4wcBf1l3zcz7UhsAka2b3+PNwNYFg
-        ==
-X-ME-Sender: <xms:c2vWXkhdVEW6ST4sMVFQgmKUTFTvuPer01RwFoKyAodm4pEC_tk76A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepffetteevieejteeuhfffgeektefghfeileehhedtuddutefhhfejtddvtddu
-    ledvnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekle
-    drieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:c2vWXtCDEAcKfSgqwYDZX7tjB7rLCyk7f6fK6F2QNuL4qtIuAbF7TQ>
-    <xmx:c2vWXsFXlbOKzrCYCsFvwq4O5GZ-ck9CYfRuifQYUyM_3Hm0ZbjU3A>
-    <xmx:c2vWXlQvPSwwrNNBVCFjU57a4PX_szp_kzAzcH61aCULz3_pjaSXHw>
-    <xmx:dGvWXomyvR5ShMrCKL5WanwF1A69eGDNVxpMFlapZCgrDvWRLw219Q>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 119FE30614FA;
-        Tue,  2 Jun 2020 11:08:34 -0400 (EDT)
-Date:   Tue, 2 Jun 2020 17:08:34 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 104/105] dt-bindings: display: vc4: hdmi: Add BCM2711
- HDMI controllers bindings
-Message-ID: <20200602150834.6xovwdxpgncq3ybh@gilmour>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <e85e24a494a3ff41177c94673ced0f4280b6a0ee.1590594512.git-series.maxime@cerno.tech>
- <20200529181833.GA2685451@bogus>
+        Tue, 2 Jun 2020 11:18:54 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33598 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgFBPSy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 11:18:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052FIBl9080160;
+        Tue, 2 Jun 2020 15:18:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=goh2CjFO2OFs3pZp2oX5aZuGyT+iy3/nHuM1bPl/gaE=;
+ b=IHA54byGViv1xA85nmDf/7GQNGXznlHYhlC87CtDLuvViPKOBbwgjJYKoSgJ9XJVCPtE
+ jDAJZfHSy34Du3AMicRnbAamyMW5YEbIY8Qce+N+bk9gGmLxN6lt24O1Z//81ERs7c1z
+ HgoStbQcltiAor/5/h7iwLlAbSkH2xAJsbNRsRXecOH1Ez9h15iR2fw624er3SUQ02bN
+ uu8mMw8+8770HuFHouvBJvQBH04TOEVLyaDLpQ3r5MiiBgm7AeBxN0m3rXVeEUdCswbu
+ xmpLmelXOFTDMo0X8oM5SbXKgQJxAevaLJ2CUk/EFBe0e8W3LNpxpBUoEaVhOp1OMCcr 7Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31dkruhngm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 15:18:31 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052FDvEE006186;
+        Tue, 2 Jun 2020 15:18:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31c25p7g3e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 15:18:30 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052FISDW018762;
+        Tue, 2 Jun 2020 15:18:28 GMT
+Received: from [10.74.110.208] (/10.74.110.208)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 08:18:28 -0700
+Subject: Re: [PATCH resend 0/2] dts: keystone-k2g-evm: Display support
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>,
+        dri-devel@lists.freedesktop.org, ssantosh@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     mark.rutland@arm.com, praneeth@ti.com, robh+dt@kernel.org,
+        peter.ujfalusi@ti.com, laurent.pinchart@ideasonboard.com
+References: <cover.1581671951.git.jsarha@ti.com>
+ <6749076a-cbc1-d8e2-bc35-2e2a9ad80a6d@oracle.com>
+ <973b69f2-bbe1-3c1b-615f-751bb8d5d83e@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <5e4c0754-f347-25d7-e5b6-11bc490dfcc0@oracle.com>
+Date:   Tue, 2 Jun 2020 08:18:26 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="idttynnu6hrdagv3"
-Content-Disposition: inline
-In-Reply-To: <20200529181833.GA2685451@bogus>
+In-Reply-To: <973b69f2-bbe1-3c1b-615f-751bb8d5d83e@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1011
+ adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020110
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 6/2/20 1:13 AM, Tomi Valkeinen wrote:
+> Hi Santosh,
+> 
+> On 14/02/2020 19:40, santosh.shilimkar@oracle.com wrote:
+>> On 2/14/20 1:22 AM, Jyri Sarha wrote:
+>>> Resend because the earlier recipient list was wrong.
+>>>
+>>> Now that drm/tidss is queued for mainline, lets add display support for
+>>> k2g-evm. There is no hurry since tidss is out only in v5.7, but it
+>>> should not harm to have the dts changes in place before that.
+>>>
+>>> Jyri Sarha (2):
+>>>    ARM: dts: keystone-k2g: Add DSS node
+>>>    ARM: dts: keystone-k2g-evm: add HDMI video support
+>>>
+>>>   arch/arm/boot/dts/keystone-k2g-evm.dts | 101 +++++++++++++++++++++++++
+>>>   arch/arm/boot/dts/keystone-k2g.dtsi    |  22 ++++++
+>>>   2 files changed, 123 insertions(+)
+>>>
+>> Ok. Will add this to the next queue.
+> 
+> What happened with this one? It used to be in linux-next, but now I 
+> don't see it anymore.
+> 
+Pull request [1] was sent during last merge window. Thought it was
+picked up but doesn't seems to be. Have sent question to arm-soc
+maintainers.
 
---idttynnu6hrdagv3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards,
+Santosh
 
-Hi Rob,
-
-On Fri, May 29, 2020 at 12:18:33PM -0600, Rob Herring wrote:
-> On Wed, May 27, 2020 at 05:49:14PM +0200, Maxime Ripard wrote:
-> > The HDMI controllers found in the BCM2711 SoC need some adjustments to =
-the
-> > bindings, especially since the registers have been shuffled around in m=
-ore
-> > register ranges.
-> >=20
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > ---
-> >  Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml | 109=
- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 109 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2=
-711-hdmi.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdm=
-i.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> > new file mode 100644
-> > index 000000000000..6091fe3d315b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> > @@ -0,0 +1,109 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->=20
-> Dual license...
->=20
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/brcm,bcm2711-hdmi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Broadcom BCM2711 HDMI Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Eric Anholt <eric@anholt.net>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - brcm,bcm2711-hdmi0
-> > +      - brcm,bcm2711-hdmi1
->=20
-> What's the difference between the 2 blocks?=20
-
-The register layout and the lane mapping in the PHY change a bit.
-
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: HDMI controller register range
-> > +      - description: DVP register range
-> > +      - description: HDMI PHY register range
-> > +      - description: Rate Manager register range
-> > +      - description: Packet RAM register range
-> > +      - description: Metadata RAM register range
-> > +      - description: CSC register range
-> > +      - description: CEC register range
-> > +      - description: HD register range
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: hdmi
-> > +      - const: dvp
-> > +      - const: phy
-> > +      - const: rm
-> > +      - const: packet
-> > +      - const: metadata
-> > +      - const: csc
-> > +      - const: cec
-> > +      - const: hd
-> > +
-> > +  clocks:
-> > +    description: The HDMI state machine clock
-> > +
-> > +  clock-names:
-> > +    const: hdmi
-> > +
-> > +  ddc:
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: >
-> > +      Phandle of the I2C controller used for DDC EDID probing
->=20
-> Goes in the connector.
->=20
-> And isn't the standard name ddc-i2c-bus?
->=20
-> > +
-> > +  hpd-gpios:
-> > +    description: >
-> > +      The GPIO pin for the HDMI hotplug detect (if it doesn't appear
-> > +      as an interrupt/status bit in the HDMI controller itself)
->=20
-> Goes in the connector.
-
-If this was an entirely new binding, I would agree, but this is not
-really the case here.
-
-We discussed it already for the v2, and this binding is essentially the
-same one than the bcm2835 HDMI controller.
-
-I initially sent a patch adding conditionnals for the clocks and regs
-differences too, and you asked to split the binding into a separate file
-to simplify it a bit.
-
-Supporting both the old binding, and the new one based on the connector
-is going to make the code significantly more complicated, and I'm not
-really sure why we would here.
-
-Thanks!
-Maxime
-
---idttynnu6hrdagv3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXtZrcQAKCRDj7w1vZxhR
-xS63AQChWBDf5sP/ABh3lPAf9fleWlDwl1ELjIJJmVcgvpMHdwEA7OiJMvxjuIzW
-wGuu/pUZM36aV5U9/r21kOAWpvo1Rgs=
-=4keu
------END PGP SIGNATURE-----
-
---idttynnu6hrdagv3--
+[1] https://www.spinics.net/lists/arm-kernel/msg791224.html
