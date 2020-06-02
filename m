@@ -2,187 +2,101 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62633C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED36DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 455B4207ED
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BECB6206E2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rPaW7gDQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k+9cCuBX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgFBLy0 (ORCPT
+        id S1726110AbgFBL5e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
+        Tue, 2 Jun 2020 07:57:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFBLyX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 07:54:23 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A47C061A0E;
-        Tue,  2 Jun 2020 04:54:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l10so3082595wrr.10;
-        Tue, 02 Jun 2020 04:54:22 -0700 (PDT)
+        with ESMTP id S1725966AbgFBL5b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 07:57:31 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE20FC08C5C0
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 04:57:31 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id j189so4290465oih.10
+        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 04:57:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2wtQFXbmzC4/d8oVsOGWU0M31JIOAZfPwOO9JlNgV6A=;
-        b=rPaW7gDQP90eaYUWfocrZarTDq3foj9NBI2+vdBuQtKeJ8kaLi9E57oxNIcWynULgJ
-         DTK2xwiglZZ62JPy3WayfYStIGIH7XqJtVpUq6BYu/j58La3U8Lmty5vRdZKVXglrBIR
-         1yVqxjD35wsNWZ4ihE1Kk7yeCjv26bepc3JcTWTaBkERpJMOqV5QJZSTbAArI7OaF7M+
-         5NzlaWwVJe2MJ2MktUEVtBx0XMvvu4B0wddNtVeWRKzt7at4/Kjj8SKNXQGRox1tNm25
-         3cIb77wFxldAGH1AOLF5Nn0PvE9C1XO2pRmEuq/Q8ynLtbdc7FylSeVxpypJkikHWz6x
-         uT0Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bnys2wOoEU1x/ikV5ijTNA/FpnweJ1oEqvvB7NUEA+A=;
+        b=k+9cCuBX+07ki3h/U1eTOzlr6ODNPkXXcMKP6TfZD7xxmJxeBWW3n9KjD5Mg1xqfxl
+         CqMnaNTwFk4x77rZ3i4IpXbcT3Lz0kMvuu5YL/MJ1IvMjZQqxUnWCDc5VhRoQRm9ETn/
+         t9/MEFpNnEXCG0JRS0g0z25GDiOozWbkOTdxfYjCG5iAvZFoaBtC80XqC3qwp1Egq7Bj
+         oXW7ASgx69H0zp0YNjuLPGrC0UFqf2u/Qphzr8zuZBi1hTWXjrU0MRk7pWYFRAyoxyV5
+         MibIXAuxNYlXoDbaxIpKNnSPdw1PNSBNbD7I8rhM/2vJb17fdDmqsTVVpccOou9NM1ZX
+         5zMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2wtQFXbmzC4/d8oVsOGWU0M31JIOAZfPwOO9JlNgV6A=;
-        b=d94DqipOuC7GSs2iBhwxJJZya/4BDeY5KCdSQnBp3xbNUKnWG2zNWLaYQYvZktJaY3
-         srLErSSUQKbYEBM4h20dQunfyFSnhNLShNUwS+xIa5nMzVjLrgaifzOBkKe4LxGgQXWy
-         zMpoQP1Utnv7s2/HBE4XBxXlzKRYZ1QJ3DzB3SoMTjUcECwaI0+QJfwrC28HwKmgbv36
-         QNt4TTBRqimd14aQfiEKdcDUMkW6BFPjIWPHyVVbNZiY0hkXT8SlsLiVTyfEE2zGfwYC
-         Lez/KBn9Y+5YesG0YpKnAsk6Rjz7Do9QZM1XS93JPJYppwCRZ7LWCnU1GpKyP8Gd5fFj
-         BG0A==
-X-Gm-Message-State: AOAM532mE3El+mC4On3mlNf90/Kc0fHf0Wv9lVYCYw1jjTlPaCurJZ3I
-        S4Cg4SCOLaIwqO2TQx96UIA=
-X-Google-Smtp-Source: ABdhPJyOdDG9ZJJFvykD+EoExCrvxVZTm1q7+KjEbm5cg4u0HptGlA9r8y73NrghpR5k7s5CMUPquQ==
-X-Received: by 2002:a5d:4ec3:: with SMTP id s3mr28049104wrv.103.1591098861685;
-        Tue, 02 Jun 2020 04:54:21 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host9-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.9])
-        by smtp.googlemail.com with ESMTPSA id b18sm3273777wrn.88.2020.06.02.04.54.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 04:54:21 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 01/11] PCI: qcom: Add missing ipq806x clocks in PCIe driver
-Date:   Tue,  2 Jun 2020 13:53:42 +0200
-Message-Id: <20200602115353.20143-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200602115353.20143-1-ansuelsmth@gmail.com>
-References: <20200602115353.20143-1-ansuelsmth@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bnys2wOoEU1x/ikV5ijTNA/FpnweJ1oEqvvB7NUEA+A=;
+        b=HWe1YjUrQDOgWIT0aSLE680jgM2LYveV66G/4t9CRcZg7Spfsj0f3v6dGUiWsbHlwY
+         Eo4nPvBz63lE1zFCUGFFxfBKGfG6C3DTNPzGFFRaBvw7IIKzVQuN/GBu9lPTfJfgB2YY
+         /rT+3sjImEvyy6okJXHSQwnUfH0sTdTeZE2ibtCuaSYb3QmjlxRMRl7l1F+X75RoydqB
+         i+VjjNbSgT2Bl5ZIF8WPKWq3B34GDgvBRmanGDNqtKvcngd6nNAcHffXgAzWS4we2PRL
+         LC1yMEwCPmc57L3vTXH63q/ba+ltZvMWCu9gfWG3YN1VNUI9enPV8OklnwhT6BXupnWL
+         IRlQ==
+X-Gm-Message-State: AOAM533eyYF8caLTzGUPVhc5xD6rWKw0aded7YcQLLVr7Rm5TRee45N3
+        oQ9Teo5BJqyllYBmIO+fHp8TwCQBgpIlDlDm6a/IPg==
+X-Google-Smtp-Source: ABdhPJyF04o7i6kEvgUR2RRqw2rFPSQaTPQrgt/KTJQMMVnh2YChB0XvplTmPPHzK36jN1aEaoBMWgCgPKD1BB58jkU=
+X-Received: by 2002:aca:50cf:: with SMTP id e198mr2811324oib.76.1591099050929;
+ Tue, 02 Jun 2020 04:57:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+ <20200602100924.26256-2-sumit.semwal@linaro.org> <20200602112415.GD5684@sirena.org.uk>
+In-Reply-To: <20200602112415.GD5684@sirena.org.uk>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Tue, 2 Jun 2020 17:27:19 +0530
+Message-ID: <CAO_48GHdhafjgLH1-3upZPXhNjKSt_bPAnPpjA+nhR2wrLbcZw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] regulator: Allow regulators to verify enabled
+ during enable()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lgirdwood@gmail.com, robh+dt@kernel.org,
+        Nisha Kumari <nishakumari@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Aux and Ref clk are missing in PCIe qcom driver. Add support for this
-optional clks for ipq8064/apq8064 SoC.
+Hi Mark,
 
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+Thanks for the review!
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 5ea527a6bd9f..4bf93ab8c7a7 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -88,6 +88,8 @@ struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
- 	struct clk *core_clk;
- 	struct clk *phy_clk;
-+	struct clk *aux_clk;
-+	struct clk *ref_clk;
- 	struct reset_control *pci_reset;
- 	struct reset_control *axi_reset;
- 	struct reset_control *ahb_reset;
-@@ -246,6 +248,14 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
- 	if (IS_ERR(res->phy_clk))
- 		return PTR_ERR(res->phy_clk);
- 
-+	res->aux_clk = devm_clk_get_optional(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	res->ref_clk = devm_clk_get_optional(dev, "ref");
-+	if (IS_ERR(res->ref_clk))
-+		return PTR_ERR(res->ref_clk);
-+
- 	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
- 	if (IS_ERR(res->pci_reset))
- 		return PTR_ERR(res->pci_reset);
-@@ -278,6 +288,8 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
- 	clk_disable_unprepare(res->iface_clk);
- 	clk_disable_unprepare(res->core_clk);
- 	clk_disable_unprepare(res->phy_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+	clk_disable_unprepare(res->ref_clk);
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
- }
- 
-@@ -307,16 +319,28 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 		goto err_assert_ahb;
- 	}
- 
-+	ret = clk_prepare_enable(res->core_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_core;
-+	}
-+
- 	ret = clk_prepare_enable(res->phy_clk);
- 	if (ret) {
- 		dev_err(dev, "cannot prepare/enable phy clock\n");
- 		goto err_clk_phy;
- 	}
- 
--	ret = clk_prepare_enable(res->core_clk);
-+	ret = clk_prepare_enable(res->aux_clk);
- 	if (ret) {
--		dev_err(dev, "cannot prepare/enable core clock\n");
--		goto err_clk_core;
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_clk_aux;
-+	}
-+
-+	ret = clk_prepare_enable(res->ref_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ref clock\n");
-+		goto err_clk_ref;
- 	}
- 
- 	ret = reset_control_deassert(res->ahb_reset);
-@@ -372,10 +396,14 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	return 0;
- 
- err_deassert_ahb:
--	clk_disable_unprepare(res->core_clk);
--err_clk_core:
-+	clk_disable_unprepare(res->ref_clk);
-+err_clk_ref:
-+	clk_disable_unprepare(res->aux_clk);
-+err_clk_aux:
- 	clk_disable_unprepare(res->phy_clk);
- err_clk_phy:
-+	clk_disable_unprepare(res->core_clk);
-+err_clk_core:
- 	clk_disable_unprepare(res->iface_clk);
- err_assert_ahb:
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
--- 
-2.25.1
+On Tue, 2 Jun 2020 at 16:54, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Jun 02, 2020 at 03:39:20PM +0530, Sumit Semwal wrote:
+>
+> > +
+> > +             if (time_remaining <= 0) {
+> > +                     rdev_err(rdev, "Enabled check failed.\n");
+> > +                     return -ETIMEDOUT;
+>
+> s/failed/timed out/
+Ack
+>
+> > + * @poll_enabled_time: Maximum time (in uS) to poll if the regulator is
+> > + *                          actually enabled, after enable() call
+> > + *
+>
+> This comment needs updating to reflect the new implementation.
+Yes, I will update.
 
+Best,
+Sumit.
