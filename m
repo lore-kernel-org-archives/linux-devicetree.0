@@ -2,75 +2,102 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C026DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0297FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A6F20734
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40C22074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilWBNL6s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XeGLUQDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgFBUGa (ORCPT
+        id S1726373AbgFBUIm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55114 "EHLO
+        Tue, 2 Jun 2020 16:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBUG3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:06:29 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45159C08C5C0
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 13:06:29 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id n24so14049889ejd.0
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 13:06:29 -0700 (PDT)
+        with ESMTP id S1726130AbgFBUIm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:08:42 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667A9C08C5C0;
+        Tue,  2 Jun 2020 13:08:41 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c71so4117132wmd.5;
+        Tue, 02 Jun 2020 13:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
-        bh=2cvL0+Yd9yN39Q4W3Qqy3Rcpep61FLY3/TIOy09PrYQ=;
-        b=ilWBNL6s/oqv/pCLSUhL8IL831D81QGaeiNVKp0LalmXfcBuxutdTlF0Cc5SKaDDl6
-         tdO/hoPcG61TPtpylyPK3kBVMD/f1XfPjgfZr9ZO0wxs55mwF7xFscZ+9Pkz0m9MCRpS
-         0TqpEQ7+odCILe4DjqorpWyhIhJnKNV2GaeF4kuk0OBrB+2Silo7pL0hJvQ1pa74Go90
-         3TtFVFoJc7dGV3BLpr/raidOS4rfGoICmxCxgotaMjst7psccsp0blAyVko+xGS66rCM
-         TU4gK+zRCT6bbyG9kC9nO3loifidqpus0Angr7i6i1D8h8h47bA8WUiCM5RuJyfQ4wI/
-         f3aw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y+jeG0ZqrVfo+FYQhNDp8MJBv+24WC+dS4BIyM6NDKs=;
+        b=XeGLUQDpIvVZAOhGXpLXoZ05/8oUpeyco6yuo7H62Woq7W0xuRq/vW8rR7DVUd5vyK
+         XRT+q0lM/SslslRba+wUrENsCNIc/bbU/bWGc6H/5fqWNY1sK8neHeAu42wFglmugOCb
+         E7Cazu1TF7B5nKz67/cIbG3dc+g12izo+T2DNCw9FkXPAPmK3bdIR+nZqZbklxnHLKbZ
+         bAjse3nKUsi9EJzAQwrwrF5JWpK21x6utpsLFDkNjAPaxX2P2tIKpsUhtKZxH66RSWuW
+         q/fKOpPqXPXsPhhtnWCoRgVG+f1FsZm/otqRWlVC73rJkapyqnSCc0wHolaPMAGjBzn5
+         B+/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc;
-        bh=2cvL0+Yd9yN39Q4W3Qqy3Rcpep61FLY3/TIOy09PrYQ=;
-        b=lijehi0HZvsg/bIliLs5hYaBjsbIkqnHtm6b/RLFi/WZ31zql8F7XtCphkQGdBZbtR
-         9WVzFu4srmLgioiZkzn20DxcSqgsLAYhxkFu/Kq5eyMcM3W+kVqQshUj0m/R8wWpfoy9
-         ZASZbjwbFoMMyer18WcVjJEDO/RGq+rqxbQnkIzmryyr4baZhaZ5wkvbH7Fb+VOlNR7x
-         o8IHk8wYi09Grf2etv7xTAEWtwj+5zX3qEJ5ZMGPIVOtNxjE71r7BmPT01drkiBJ6NKD
-         j5/ngu0ecnJC7ozUJ+vVnSf69z0puVPrsrtanwvl6KI6Ic2bVTV9LNFKI4MzFBO+0tZV
-         yIww==
-X-Gm-Message-State: AOAM530kQbsh+MMswQ1MUUZs8SZf06d0F5KXeifwuclmWBtvxB/Qrnls
-        cj9oVrWMPC1w6WbOuq6TpabndfyuV9C4q5jSmqM=
-X-Received: by 2002:a17:906:ae85:: with SMTP id md5mt16518434ejb.213.1591128388033;
- Tue, 02 Jun 2020 13:06:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200602200407.320908-1-konradybcio@gmail.com>
-In-Reply-To: <20200602200407.320908-1-konradybcio@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y+jeG0ZqrVfo+FYQhNDp8MJBv+24WC+dS4BIyM6NDKs=;
+        b=HKKZjTzvXOpRmjamRB0OpiHYH1etoZtLNWHIUfF5jcfTF0reuUIFspUx2w9CydcAiQ
+         sMLllnX0qZ6oC1ysEoWPbN2KM5WwN2Wlo7AsUUHnKZDQduYB435F7tpL5nuqZEoDSAV4
+         3n6tYvFWmmshXnKV0ZrZSHGKmuOFw642tAYkk6nZoj++UDHySn9dYN3Ip9WRQ9lZ+22U
+         iDQU61h4f385KO7mutYGXa2c/SC8vHtjPK7Rp5QwmAoQmNcUZewawSeHmCiLLXDANWaS
+         MPjN5dSvo1KX+CAHxaXSOrUFg9m7rU4tkn3JOoHV4hH/6PcuU1Puxh861MH+WBvZdxuc
+         VgqQ==
+X-Gm-Message-State: AOAM531rfqkOyxhklZlUsEfKQSuGbBGsKKj3o67GVkuhgWsn4jI/EjFK
+        Y7HKtTd5Q+PL7F7nQ2ccFiE=
+X-Google-Smtp-Source: ABdhPJwYnaOip6Sui7beKMmyEvg77hj+NaVMFX+2mWUkUmTT6nLerN0vv4KB6p1wrJ29FZ26pve46Q==
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr5480279wml.70.1591128520179;
+        Tue, 02 Jun 2020 13:08:40 -0700 (PDT)
+Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
+        by smtp.googlemail.com with ESMTPSA id c140sm1164317wmd.18.2020.06.02.13.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 13:08:39 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Tue, 2 Jun 2020 22:05:52 +0200
-Message-ID: <CAMS8qEUOYuLfWTm4y9a2ZPJ2KyRs287jfkka0XntSWXyeZhgtQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] soc: qcom: smd-rpm: Add msm8994 compatible
-Cc:     Andy Gross <agross@kernel.org>,
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] Documentation: Document an existing qcom,rpm-msm8996 compatible
+Date:   Tue,  2 Jun 2020 22:08:36 +0200
+Message-Id: <20200602200837.321712-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Interestingly enough, this compatible has been used in lg-bullhead DTS
-for a long long time, even though it has never existed upstream.
+This compatible has been included in the driver for
+some time, but it has been overlooked in documentation.
+
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+index 25541a475ead..4b916d67064a 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+@@ -24,6 +24,7 @@ resources.
+ 		    "qcom,rpm-msm8974"
+ 		    "qcom,rpm-msm8976"
+ 		    "qcom,rpm-msm8994"
++		    "qcom,rpm-msm8996"
+ 		    "qcom,rpm-msm8998"
+ 		    "qcom,rpm-sdm660"
+ 		    "qcom,rpm-qcs404"
+-- 
+2.26.2
+
