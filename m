@@ -2,150 +2,152 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B308EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C671C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99AF4207D0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6022054F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:51:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JhhykH0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgFBXoj (ORCPT
+        id S1726875AbgFBXv5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:44:39 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57864 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFBXoj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:44:39 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 739AD8030808;
-        Tue,  2 Jun 2020 23:44:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vYqbvJLx9H0f; Wed,  3 Jun 2020 02:44:35 +0300 (MSK)
-Date:   Wed, 3 Jun 2020 02:44:34 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/10] spi: Adding support for Microchip Sparx5 SoC
-Message-ID: <20200602234434.tznhbtt3sgpz5lxz@mobilestation>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200529162130.hsjcde27xhohl6jl@mobilestation>
- <87img9q3sb.fsf@soft-dev15.microsemi.net>
+        Tue, 2 Jun 2020 19:51:57 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38382 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbgFBXv5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:51:57 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 876A22B3;
+        Wed,  3 Jun 2020 01:51:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591141914;
+        bh=Fe8f3kgWX47nIzg78wyxjbab4WD6Saxj6pxZxkB/gRo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JhhykH0rs1dR3LZsV2DsnKzuF2z9VlZj4+I2990IxcsJkczDcz7VYPYx26TRo4Hqs
+         pJ3UkFFW7TOPtB1S1AxdP6uT0Jac6CbZ7Z6OJd89o8ZSdD7yQaDvoLg7Lp18AkwXkD
+         rD2FG3r3HaSGN5hYDv+GDvzDB9etxpWO1icCqJDY=
+Date:   Wed, 3 Jun 2020 02:51:39 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v8 04/10] drm: bridge: dw_mipi_dsi: allow bridge daisy
+ chaining
+Message-ID: <20200602235139.GS6547@pendragon.ideasonboard.com>
+References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
+ <20200427081952.3536741-5-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87img9q3sb.fsf@soft-dev15.microsemi.net>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200427081952.3536741-5-adrian.ratiu@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 10:18:28AM +0200, Lars Povlsen wrote:
-> 
-> Serge Semin writes:
-> 
-> > Hello Lars,
-> >
-> > On Wed, May 13, 2020 at 04:00:21PM +0200, Lars Povlsen wrote:
-> >> This is an add-on series to the main SoC Sparx5 series
-> >> (Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>).
-> >>
-> >> The series add support for Sparx5 on top of the existing
-> >> ocelot/jaguar2 spi driver.
-> >>
-> >> It spins off the existing support for the MSCC platforms into a
-> >> separate driver, as adding new platforms from the MSCC/Microchip
-> >> product lines will further complicate (clutter) the original driver.
-> >>
-> >> New YAML dt-bindings are provided for the resulting driver.
-> >>
-> >> It is expected that the DT patches are to be taken directly by the arm-soc
-> >> maintainers.
-> >
-> > Regarding our cooperation. It can be implemented as follows. Since your patchset
-> > is less cumbersome than mine and is more ready to be integrated into the generic DW
-> > APB SSI code, it would be better to first make it through Mark', Andy' and my reviews
-> > to be further merged into the kernel version of the driver. After that I'll have
-> > my code altered so it could be applied on top of your patches. When everything
-> > is done we'll have a more comprehensive DW APB SSI driver with poll-based
-> > PIO operations support, new features like rx-delay, etc.
-> >
-> 
+Hi Adrian,
 
-> Hi Serge!
-> 
-> I think I would be able to work on the SPI patches this week. Should I
-> base it on the current spi-next or 5.7? Then address the comments and
-> send out a new revision?
+Thank you for the patch.
 
-Finally I've done a part of review. It must be enough for v2. As Mark said the
-new version is supposed to be based on the spi-next, since that branch's got
-all recent DW APB SSI patches applied.
+On Mon, Apr 27, 2020 at 11:19:46AM +0300, Adrian Ratiu wrote:
+> Up until now the assumption was that the synopsis dsi bridge will
+> directly connect to an encoder provided by the platform driver, but
+> the current practice for drivers is to leave the encoder empty via
+> the simple encoder API and add their logic to their own drm_bridge.
+> 
+> Thus we need an ablility to connect the DSI bridge to another bridge
+> provided by the platform driver, so we extend the dw_mipi_dsi bind()
+> API with a new "previous bridge" arg instead of just hardcoding NULL.
+> 
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> New in v8.
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c   | 6 ++++--
+>  drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c | 2 +-
+>  include/drm/bridge/dw_mipi_dsi.h                | 5 ++++-
+>  3 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> index 16fd87055e7b7..140ff40fa1b62 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> @@ -1456,11 +1456,13 @@ EXPORT_SYMBOL_GPL(dw_mipi_dsi_remove);
+>  /*
+>   * Bind/unbind API, used from platforms based on the component framework.
+>   */
+> -int dw_mipi_dsi_bind(struct dw_mipi_dsi *dsi, struct drm_encoder *encoder)
+> +int dw_mipi_dsi_bind(struct dw_mipi_dsi *dsi,
+> +		     struct drm_encoder *encoder,
+> +		     struct drm_bridge *prev_bridge)
+>  {
+>  	int ret;
+>  
+> -	ret = drm_bridge_attach(encoder, &dsi->bridge, NULL, 0);
+> +	ret = drm_bridge_attach(encoder, &dsi->bridge, prev_bridge, 0);
 
--Sergey
+Please note that chaining of bridges doesn't work well if multiple
+bridges in the chain try to create a connector. This is why a
+DRM_BRIDGE_ATTACH_NO_CONNECTOR flag has been added, with a helper to
+create a connector for a chain of bridges (drm_bridge_connector_init()).
+This won't play well with the component framework. I would recommend
+using the of_drm_find_bridge() instead in the rockchip driver, and
+deprecating dw_mipi_dsi_bind().
 
-> 
-> Thanks for reaching out.
-> 
-> ---Lars
-> 
-> > Thank you one more time for the series you've shared with us. Let's see what can
-> > be done to improve it...
-> >
-> > -Sergey
-> >
-> >>
-> >> Lars Povlsen (10):
-> >>   spi: dw: Add support for polled operation via no IRQ specified in DT
-> >>   spi: dw: Add support for RX sample delay register
-> >>   spi: dw: Add support for client driver memory operations
-> >>   dt-bindings: spi: Add bindings for spi-dw-mchp
-> >>   spi: spi-dw-mmio: Spin off MSCC platforms into spi-dw-mchp
-> >>   dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
-> >>   spi: spi-dw-mchp: Add Sparx5 support
-> >>   arm64: dts: sparx5: Add SPI controller
-> >>   arm64: dts: sparx5: Add spi-nor support
-> >>   arm64: dts: sparx5: Add spi-nand devices
-> >>
-> >>  .../bindings/spi/mscc,ocelot-spi.yaml         |  89 ++++
-> >>  .../bindings/spi/snps,dw-apb-ssi.txt          |   7 +-
-> >>  MAINTAINERS                                   |   2 +
-> >>  arch/arm64/boot/dts/microchip/sparx5.dtsi     |  37 ++
-> >>  .../boot/dts/microchip/sparx5_pcb125.dts      |  16 +
-> >>  .../boot/dts/microchip/sparx5_pcb134.dts      |  22 +
-> >>  .../dts/microchip/sparx5_pcb134_board.dtsi    |   9 +
-> >>  .../boot/dts/microchip/sparx5_pcb135.dts      |  23 +
-> >>  .../dts/microchip/sparx5_pcb135_board.dtsi    |   9 +
-> >>  arch/mips/configs/generic/board-ocelot.config |   2 +-
-> >>  drivers/spi/Kconfig                           |   7 +
-> >>  drivers/spi/Makefile                          |   1 +
-> >>  drivers/spi/spi-dw-mchp.c                     | 399 ++++++++++++++++++
-> >>  drivers/spi/spi-dw-mmio.c                     |  93 ----
-> >>  drivers/spi/spi-dw.c                          |  31 +-
-> >>  drivers/spi/spi-dw.h                          |   4 +
-> >>  16 files changed, 644 insertions(+), 107 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
-> >>  create mode 100644 drivers/spi/spi-dw-mchp.c
-> >>
-> >> --
-> >> 2.26.2
-> >>
-> >> _______________________________________________
-> >> linux-arm-kernel mailing list
-> >> linux-arm-kernel@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> --
-> Lars Povlsen,
-> Microchip
+>  	if (ret) {
+>  		DRM_ERROR("Failed to initialize bridge with drm\n");
+>  		return ret;
+> diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+> index 3feff0c45b3f7..83ef43be78135 100644
+> --- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+> +++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+> @@ -929,7 +929,7 @@ static int dw_mipi_dsi_rockchip_bind(struct device *dev,
+>  		return ret;
+>  	}
+>  
+> -	ret = dw_mipi_dsi_bind(dsi->dmd, &dsi->encoder);
+> +	ret = dw_mipi_dsi_bind(dsi->dmd, &dsi->encoder, NULL);
+>  	if (ret) {
+>  		DRM_DEV_ERROR(dev, "Failed to bind: %d\n", ret);
+>  		return ret;
+> diff --git a/include/drm/bridge/dw_mipi_dsi.h b/include/drm/bridge/dw_mipi_dsi.h
+> index b0e390b3288e8..699b3531f5b36 100644
+> --- a/include/drm/bridge/dw_mipi_dsi.h
+> +++ b/include/drm/bridge/dw_mipi_dsi.h
+> @@ -14,6 +14,7 @@
+>  #include <drm/drm_modes.h>
+>  
+>  struct drm_display_mode;
+> +struct drm_bridge;
+>  struct drm_encoder;
+>  struct dw_mipi_dsi;
+>  struct mipi_dsi_device;
+> @@ -62,7 +63,9 @@ struct dw_mipi_dsi *dw_mipi_dsi_probe(struct platform_device *pdev,
+>  				      const struct dw_mipi_dsi_plat_data
+>  				      *plat_data);
+>  void dw_mipi_dsi_remove(struct dw_mipi_dsi *dsi);
+> -int dw_mipi_dsi_bind(struct dw_mipi_dsi *dsi, struct drm_encoder *encoder);
+> +int dw_mipi_dsi_bind(struct dw_mipi_dsi *dsi,
+> +		     struct drm_encoder *encoder,
+> +		     struct drm_bridge *prev_bridge);
+>  void dw_mipi_dsi_unbind(struct dw_mipi_dsi *dsi);
+>  void dw_mipi_dsi_set_slave(struct dw_mipi_dsi *dsi, struct dw_mipi_dsi *slave);
+>  
+
+-- 
+Regards,
+
+Laurent Pinchart
