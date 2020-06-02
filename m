@@ -2,136 +2,139 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3992C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F07C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1A820870
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41382053B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591100091;
-	bh=hS7g9g/aSqZzPJBPg66kKL88fBvDX9aRfUs29YzvkBs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=b1FntdaxHiJKfGFSfhn+gFSArOJTTtiN7jVhoYz+SkUzmg+/TDr5qTWmhqsyNljMT
-	 izhIqao/T93e64IQqPMjEwbRWYi9JdEZ9OiR2HN5j1OvcBz+FMcDNe/d9Mt/0OTUjR
-	 vXD98hL2hpC1Kr42GWCe/M1XMyPdbHg7DEXZynHk=
+	s=default; t=1591100533;
+	bh=zoYzZzP112/newTQzfSumttw9583gdScBlj4fN9D0gQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=imH/S2OqVTY9xzMH0AiW8mg1fLaqO8pWbr9FeF5Qakm3Lo5iljiXUVpdDkWwMj4xW
+	 MZ65bmWrZouubLjaLmUDhFK2M8nhR6Y8EODIFyymbBZwi4A9FhdcKtwmT+DK6Q6fhV
+	 ttHmg7etDmwICkdPQjPUxb+NrbcVcfUigupdmWJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgFBMOq (ORCPT
+        id S1726946AbgFBMWJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55142 "EHLO mail.kernel.org"
+        Tue, 2 Jun 2020 08:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbgFBMOq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:14:46 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726937AbgFBMWJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:22:09 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BE6A2068D;
-        Tue,  2 Jun 2020 12:14:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1D5B2053B;
+        Tue,  2 Jun 2020 12:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591100085;
-        bh=hS7g9g/aSqZzPJBPg66kKL88fBvDX9aRfUs29YzvkBs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yl/i7Qiqq7UoiHmOVqVo+SEn4KgETDEedHdFCdNCuS9f2E2SQng2voWzPfHPcO6YE
-         8CF1FQSd08KxkT7RlTX59097gDyqNuMBxG3McsUgXYZn1n9qp24KE+RNxGUKVpsrLE
-         /QrUIwIAtq/wHHtTJJMYo7XfANI0AplH+lQth1YE=
-Received: by mail-oi1-f169.google.com with SMTP id c194so7020383oig.5;
-        Tue, 02 Jun 2020 05:14:45 -0700 (PDT)
-X-Gm-Message-State: AOAM532rmY1+BQ9CYyDuFLCE6cBO2lFp6FW3CClAI+rFysYQbJT/FXPy
-        M54+9xkJyfwX2roPJdU0xR9VP8/LUClsqFo7BaQ=
-X-Google-Smtp-Source: ABdhPJxW1sEkwPq7K4sRBd1zGPvt9cMm19769d1cEMMvHkLmv/96Zuuq0m9uCjS+3j1U8+rNjcP1B0egOpse0Ai0JB0=
-X-Received: by 2002:aca:b707:: with SMTP id h7mr2899814oif.174.1591100084934;
- Tue, 02 Jun 2020 05:14:44 -0700 (PDT)
+        s=default; t=1591100528;
+        bh=zoYzZzP112/newTQzfSumttw9583gdScBlj4fN9D0gQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0+7Z0cr/oGYllCuEhye3XCHQXlI/VQ0JGybEDtdLdxtR2FzpV4I4z38sODGWRWmo1
+         GrfH/N1d4ttjvEsE/TA/lao9K21uOYKA8lDqftrCR5FfViPifMs9UPp0w85v+1wTMa
+         jQCcEhdZQCBkE2ylbd974aI+Ds/GVCfVcDTNiCb0=
+Date:   Tue, 2 Jun 2020 13:22:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH v4 5/5] regulator: qcom: labibb: Add SC interrupt handling
+Message-ID: <20200602122205.GF5684@sirena.org.uk>
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+ <20200602100924.26256-6-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 2 Jun 2020 14:14:33 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
-Message-ID: <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
-Subject: Re: Security Random Number Generator support
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com,
-        Crystal Guo <Crystal.Guo@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gdTfX7fkYsEEjebm"
+Content-Disposition: inline
+In-Reply-To: <20200602100924.26256-6-sumit.semwal@linaro.org>
+X-Cookie: We are not a clone.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 10:15, Neal Liu <neal.liu@mediatek.com> wrote:
->
-> These patch series introduce a security random number generator
-> which provides a generic interface to get hardware rnd from Secure
-> state. The Secure state can be Arm Trusted Firmware(ATF), Trusted
-> Execution Environment(TEE), or even EL2 hypervisor.
->
-> Patch #1..2 adds sec-rng kernel driver for Trustzone based SoCs.
-> For security awareness SoCs on ARMv8 with TrustZone enabled,
-> peripherals like entropy sources is not accessible from normal world
-> (linux) and rather accessible from secure world (HYP/ATF/TEE) only.
-> This driver aims to provide a generic interface to Arm Trusted
-> Firmware or Hypervisor rng service.
->
->
-> changes since v1:
-> - rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs can reuse
->   this driver.
->   - refine coding style and unnecessary check.
->
->   changes since v2:
->   - remove unused comments.
->   - remove redundant variable.
->
->   changes since v3:
->   - add dt-bindings for MediaTek rng with TrustZone enabled.
->   - revise HWRNG SMC call fid.
->
->   changes since v4:
->   - move bindings to the arm/firmware directory.
->   - revise driver init flow to check more property.
->
->   changes since v5:
->   - refactor to more generic security rng driver which
->     is not platform specific.
->
-> *** BLURB HERE ***
->
-> Neal Liu (2):
->   dt-bindings: rng: add bindings for sec-rng
->   hwrng: add sec-rng driver
->
 
-There is no reason to model a SMC call as a driver, and represent it
-via a DT node like this.
+--gdTfX7fkYsEEjebm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It would be much better if this SMC interface is made truly generic,
-and wired into the arch_get_random() interface, which can be used much
-earlier.
+On Tue, Jun 02, 2020 at 03:39:24PM +0530, Sumit Semwal wrote:
 
+>  static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+>  {
+> -	return regulator_enable_regmap(rdev);
+> +	int ret;
+> +	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
+> +
+> +	ret = regulator_enable_regmap(rdev);
+> +	if (ret >= 0)
+> +		reg->enabled = true;
 
->  .../devicetree/bindings/rng/sec-rng.yaml      |  53 ++++++
->  drivers/char/hw_random/Kconfig                |  13 ++
->  drivers/char/hw_random/Makefile               |   1 +
->  drivers/char/hw_random/sec-rng.c              | 155 ++++++++++++++++++
->  4 files changed, 222 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/sec-rng.yaml
->  create mode 100644 drivers/char/hw_random/sec-rng.c
->
-> --
-> 2.18.0
+Can we not read the register we just wrote to here?
+
+> +	/*
+> +	 * The SC(short circuit) fault would trigger PBS(Portable Batch
+> +	 * System) to disable regulators for protection. This would
+> +	 * cause the SC_DETECT status being cleared so that it's not
+> +	 * able to get the SC fault status.
+> +	 * Check if the regulator is enabled in the driver but
+> +	 * disabled in hardware, this means a SC fault had happened
+> +	 * and SCP handling is completed by PBS.
+> +	 */
+> +	if (!in_sc_err) {
+> +
+> +		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
+> +
+> +		ret = regmap_read_poll_timeout(labibb_reg->regmap,
+> +					reg, val,
+> +					!(val & LABIBB_CONTROL_ENABLE),
+> +					POLLING_SCP_DONE_INTERVAL_US,
+> +					POLLING_SCP_TIMEOUT);
+
+Why do we need a timeout here?
+
+> +						NULL);
+> +		regulator_unlock(labibb_reg->rdev);
+> +	}
+> +	return IRQ_HANDLED;
+
+This returns IRQ_HANDLED even if we didn't detect an interrupt source...
+Especially given the need to check to see if the regulator was turned
+off by the hardware it seems like there must be some false positives.
+
+> +	} else {
+> +		ret = devm_request_threaded_irq(reg->dev,
+> +						sc_irq,
+> +						NULL, labibb_sc_err_handler,
+> +						IRQF_ONESHOT,
+> +						"sc-err", reg);
+
+This looks like we're requesting the interrupt before we register the
+regulator which means the interrupt might fire without the regulator
+being there.  The order of registration should be reversed.
+
+--gdTfX7fkYsEEjebm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7WRGwACgkQJNaLcl1U
+h9AQxAf8DfQwS+lpjrOoHgyYMGAdrelohDwZkiQnvYkAj/OfYQd3p5mkrBwbDamD
+yShU2qO7B/HwJ7aTdKuvkh4C7I6+j2i2aLCKjaiaej3mkPuk+0UExjH6lApQNS0c
+M7ENfxK05L3iAqKFvGx8DBNtr7BwJ12BV0jD/TZNxu9rXXEEXhRbnKNRx8pySXBz
+Qw8dP84h7WQARO089CaJf1JrbQES4TAxd0n0nCeTkqT6ynF7UHYrnbwN78s0f4Ef
+1ntUPHeyyFnmQjFlx3a+zAaOanSGIMbn25B0J+1msieGqjeXruhkf8n6YjNRHUDq
+uLCyTwC1rkX4ricMwVqRGfjA03eE0Q==
+=9Ynm
+-----END PGP SIGNATURE-----
+
+--gdTfX7fkYsEEjebm--
