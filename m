@@ -2,131 +2,173 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C2FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 22:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D33C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEEAC2068D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 22:33:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNnm978m"
+	by mail.kernel.org (Postfix) with ESMTP id 96B732068D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 23:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgFBWdx (ORCPT
+        id S1729021AbgFBXHp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:33:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbgFBWdw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 18:33:52 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCE0C08C5C0;
-        Tue,  2 Jun 2020 15:33:52 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l10so254752wrr.10;
-        Tue, 02 Jun 2020 15:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PtGVXqcTc64CdaV++HlXk2NwJAsozYe6VtwS/wGydGk=;
-        b=JNnm978m2Tjes/vaXxc4gWPaS+ByDpoLLejQREPLD0TzRnBxR8wT78FibPzf06wSju
-         VgIM6ZjOySipXtBVR8wmqgrJiS9CsaLbCjSjfgnCbO6i5A99avCGuWRVz9/+lkjLz7b0
-         eOOmMATIQaA/RdsKvOKOewhOjXLHkeQlxG5AOdeQ2niJq8PnROq9Xvq5hhdlXO/LLkVU
-         1OP2gr7729buJQOtcXAFp87gKtUXJqcEvp25B1c8J9g66CIH58d/ujdHPDfFH/86HoA3
-         4IHh4wgq9sgeM52xfVQVr5YAGldvlwk4mVCF/MKv0hjcCsVf0UMFl/M6sF7ygphqWrg9
-         9lbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PtGVXqcTc64CdaV++HlXk2NwJAsozYe6VtwS/wGydGk=;
-        b=UryGCMm7/sOYGnt8X2E8wduzBC6x3MGLQmApHbYPi9AvpUATr/mvp45CGUY35xnOgp
-         b+YaJCnkksmRvnIA5ovzldcqUXNBMYvwflYFHuxvhnySzXCLXh5oFXwGGluxOy6258Q2
-         II7GBHHF/dwdnnSlAU8A7JgQgc3azpMcCE+0UtKZkxJyHKHqmpaUOQBXFaGHMFpy16sX
-         xI0JNkJ/JjyX2kr/VBLohgzyfW376mE5G8sF498OZir9B59wvFHzqy9OUWHNUUKZPm6D
-         uEUhqPUoV8md0FrxQxnDRBRtowPA/Ncu8gCo8r48ffLUUY18EMGH9yO2XOKFlEvHqJ+g
-         FBNg==
-X-Gm-Message-State: AOAM530kwQ5TloQoZEVNpiuQbc6unbBcw+INtOLkyQXYNJJPtZ9R7Hez
-        qjjvPsmp034e7BRB3QkFn7qAat5b
-X-Google-Smtp-Source: ABdhPJyIwCcPTPmX4Qo+4ikBX6m+r7Scb6XSJ0eeoHam69b347gB6Irc45DPlt4yAoAxuE90OM0IXA==
-X-Received: by 2002:adf:82cf:: with SMTP id 73mr26888381wrc.382.1591137230357;
-        Tue, 02 Jun 2020 15:33:50 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id c140sm313375wmd.18.2020.06.02.15.33.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 15:33:49 -0700 (PDT)
-Subject: Re: [PATCH net-next v5 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
-        davem@davemloft.net, robh@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200602164522.3276-1-dmurphy@ti.com>
- <20200602164522.3276-5-dmurphy@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
-Date:   Tue, 2 Jun 2020 15:33:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        Tue, 2 Jun 2020 19:07:45 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57676 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgFBXHp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 19:07:45 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C898F803083B;
+        Tue,  2 Jun 2020 23:07:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 36FlyoStlb5r; Wed,  3 Jun 2020 02:07:40 +0300 (MSK)
+Date:   Wed, 3 Jun 2020 02:07:38 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 06/10] dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
+Message-ID: <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-7-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200602164522.3276-5-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200513140031.25633-7-lars.povlsen@microchip.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, May 13, 2020 at 04:00:27PM +0200, Lars Povlsen wrote:
+> This add DT bindings for the Sparx5 SPI driver.
 
+This whole file can be easily merged in to the generic DW APB SSI DT
+binding file. Just use "if: properties: compatible: const: ..." construction
+to distinguish ocelot, jaguar, sparx5 and non-sparx5 nodes.
 
-On 6/2/2020 9:45 AM, Dan Murphy wrote:
-> Add RGMII internal delay configuration for Rx and Tx.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
+>  .../bindings/spi/mscc,ocelot-spi.yaml         | 49 +++++++++++++++----
+>  1 file changed, 39 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+> index a3ac0fa576553..8beecde4b0880 100644
+> --- a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+> @@ -23,15 +23,23 @@ properties:
+>      enum:
+>        - mscc,ocelot-spi
+>        - mscc,jaguar2-spi
+> +      - microchip,sparx5-spi
+> 
+>    interrupts:
+>      maxItems: 1
+> 
+>    reg:
+>      minItems: 2
+> -    items:
+> -      - description: Designware SPI registers
+> -      - description: CS override registers
+> +    maxItems: 3
+> +    oneOf:
+> +      - items:
+> +          - description: Designware SPI registers
+> +          - description: CS override registers (Not sparx5).
+> +      - items:
+> +          - description: Designware SPI registers
+> +          - description: CS override registers (Not sparx5).
+> +          - description: Direct mapped SPI read area. If provided, the
+> +              driver will register spi_mem_op's to take advantage of it.
+> 
+>    clocks:
+>      maxItems: 1
+> @@ -43,6 +51,23 @@ properties:
+>         enum: [ 2, 4 ]
+>      maxItems: 1
+> 
 
-[snip]
+> +  spi-rx-delay-us:
+> +    description: |
+> +      The delay (in usec) of the RX signal sample position. This can
+> +      be used to tne the RX timing in order to acheive higher
+> +      speeds. This is used for all devices on the bus.
+> +    default: 0
+> +    maxItems: 1
+
+spi-rx-delay-us is defined for a particular SPI-slave. Please see the
+DT binding file: Documentation/devicetree/bindings/spi/spi-controller.yaml .
+Although as I suggested before this delay isn't what the Dw APB SSI RX sample
+delay functionality does. Probably a vendor-specific property would be better
+here. But I'd also define it on a SPI-slave basis, not for all devices on the
+bus.
 
 > +
->  enum {
->  	DP83869_PORT_MIRRORING_KEEP,
->  	DP83869_PORT_MIRRORING_EN,
-> @@ -108,6 +113,8 @@ enum {
->  struct dp83869_private {
->  	int tx_fifo_depth;
->  	int rx_fifo_depth;
-> +	s32 rx_id_delay;
-> +	s32 tx_id_delay;
->  	int io_impedance;
->  	int port_mirroring;
->  	bool rxctrl_strap_quirk;
-> @@ -232,6 +239,22 @@ static int dp83869_of_init(struct phy_device *phydev)
->  				 &dp83869->tx_fifo_depth))
->  		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
->  
-> +	ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
-> +				   &dp83869->rx_id_delay);
-> +	if (ret) {
-> +		dp83869->rx_id_delay =
-> +				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
-> +		ret = 0;
-> +	}
-> +
-> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
-> +				   &dp83869->tx_id_delay);
-> +	if (ret) {
-> +		dp83869->tx_id_delay =
-> +				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
-> +		ret = 0;
-> +	}
+> +  interface-mapping-mask:
+> +    description: |
+> +      On the Sparx5 variant, two different busses are connected to the
+> +      controller. This property is a mask per chip-select, indicating
+> +      whether the CS should go to one or the other interface.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    default: 0
+> +    maxItems: 1
 
-It is still not clear to me why is not the parsing being done by the PHY
-library helper directly?
--- 
-Florian
+As Mark rightfully suggested this seems like an SPI-slave related property, then
+most likely it should be defined on the SPI-slave basis (probably as a bool
+property). Additionally it's vendor-specific, so the property name should be
+accordingly prefixed.
+
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -50,11 +75,15 @@ required:
+> 
+>  examples:
+>    - |
+> -    spi0: spi@101000 {
+> -      compatible = "mscc,ocelot-spi";
+> -      #address-cells = <1>;
+> -      #size-cells = <0>;
+> -      reg = <0x101000 0x100>, <0x3c 0x18>;
+> -      interrupts = <9>;
+> -      clocks = <&ahb_clk>;
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    spi0: spi@600104000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "microchip,sparx5-spi";
+
+> +        reg = <0x00104000 0x40>, <0 0>, <0x3000000 0x4000000>;
+
+I have a doubt that defining an empty reg region is a good idea, since you can
+detect the reg requirements by the node compatible string.
+
+-Sergey
+
+> +        num-cs = <16>;
+> +        reg-io-width = <4>;
+> +        reg-shift = <2>;
+> +        clocks = <&ahb_clk>;
+> +        interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>      };
+> --
+> 2.26.2
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
