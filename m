@@ -2,132 +2,191 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B8AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDE8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 21:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D36A206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BAA5206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 21:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgFBU46 (ORCPT
+        id S1726214AbgFBVML (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:56:58 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:51586 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgFBU46 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:56:58 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 20B6180511;
-        Tue,  2 Jun 2020 22:56:55 +0200 (CEST)
-Date:   Tue, 2 Jun 2020 22:56:53 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Liu Ying <victor.liu@nxp.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for KOE
- TX26D202VM0BWA panel
-Message-ID: <20200602205653.GC56418@ravnborg.org>
-References: <1590991880-24273-1-git-send-email-victor.liu@nxp.com>
- <CACvgo50UOby-xV_OYmM55VUXUbwLxK-q6bs2FoS_FuwB9ChYJg@mail.gmail.com>
+        Tue, 2 Jun 2020 17:12:11 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57460 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgFBVML (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 17:12:11 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A56768030835;
+        Tue,  2 Jun 2020 21:12:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PmcTIkUkiYD7; Wed,  3 Jun 2020 00:12:04 +0300 (MSK)
+Date:   Wed, 3 Jun 2020 00:12:04 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        SoC Team <soc@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into
+ spi-dw-mchp
+Message-ID: <20200602211203.3lad22zvt5yagane@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-6-lars.povlsen@microchip.com>
+ <20200513151811.GL4803@sirena.org.uk>
+ <20200519120519.GE24801@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CACvgo50UOby-xV_OYmM55VUXUbwLxK-q6bs2FoS_FuwB9ChYJg@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=8AirrxEcAAAA:8 a=yWwjhyuKAAAA:8 a=nC4w6PE1AAAA:8
-        a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=rqLoeK0XAFqiYc_KYMYA:9
-        a=CjuIK1q_8ugA:10 a=ST-jHhOKWsTCqRlWije3:22 a=Af9y4jXI75YbyZfcaVTS:22
-        a=6x2acwxlnJam7TDHjV8g:22 a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <20200519120519.GE24801@soft-dev15.microsemi.net>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Emil.
-
-On Tue, Jun 02, 2020 at 01:46:19PM +0100, Emil Velikov wrote:
-> On Tue, 2 Jun 2020 at 08:17, Liu Ying <victor.liu@nxp.com> wrote:
-> >
-> > This patch adds support for Kaohsiung Opto-Electronics Inc.
-> > 10.1" TX26D202VM0BWA WUXGA(1920x1200) TFT LCD panel with LVDS interface.
-> > The panel has dual LVDS channels.
-> >
-> > My panel is manufactured by US Micro Products(USMP).  There is a tag at
-> > the back of the panel, which indicates the panel type is 'TX26D202VM0BWA'
-> > and it's made by KOE in Taiwan.
-> >
-> > The panel spec from USMP can be found at:
-> > https://www.usmicroproducts.com/sites/default/files/datasheets/USMP-T101-192120NDU-A0.pdf
-> >
-> > The below panel spec from KOE is basically the same to the one from USMP.
-> > However, the panel type 'TX26D202VM0BAA' is a little bit different.
-> > It looks that the two types of panel are compatible with each other.
-> > http://www.koe.j-display.com/upload/product/TX26D202VM0BAA.pdf
-> >
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > Signed-off-by: Liu Ying <victor.liu@nxp.com>
-> > ---
-> >  drivers/gpu/drm/panel/panel-simple.c | 34 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > index b6ecd15..7c222ec 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -2200,6 +2200,37 @@ static const struct panel_desc koe_tx14d24vm1bpa = {
-> >         },
-> >  };
-> >
-> > +static const struct display_timing koe_tx26d202vm0bwa_timing = {
-> > +       .pixelclock = { 151820000, 156720000, 159780000 },
-> > +       .hactive = { 1920, 1920, 1920 },
-> > +       .hfront_porch = { 105, 130, 142 },
-> > +       .hback_porch = { 45, 70, 82 },
-> > +       .hsync_len = { 30, 30, 30 },
-> > +       .vactive = { 1200, 1200, 1200},
-> > +       .vfront_porch = { 3, 5, 10 },
-> > +       .vback_porch = { 2, 5, 10 },
-> > +       .vsync_len = { 5, 5, 5 },
-> > +};
-> > +
-> > +static const struct panel_desc koe_tx26d202vm0bwa = {
-> > +       .timings = &koe_tx26d202vm0bwa_timing,
-> > +       .num_timings = 1,
-> > +       .bpc = 8,
-> > +       .size = {
-> > +               .width = 217,
-> > +               .height = 136,
-> > +       },
-> > +       .delay = {
-> > +               .prepare = 1000,
-> > +               .enable = 1000,
-> > +               .unprepare = 1000,
-> > +               .disable = 1000,
-> Ouch 1s for each delay is huge. Nevertheless it matches the specs so,
-> the series is:
-> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+On Tue, May 19, 2020 at 02:05:19PM +0200, Lars Povlsen wrote:
+> On 13/05/20 16:18, Mark Brown wrote:
+> > Date: Wed, 13 May 2020 16:18:11 +0100
+> > From: Mark Brown <broonie@kernel.org>
+> > To: Lars Povlsen <lars.povlsen@microchip.com>
+> > Cc: SoC Team <soc@kernel.org>, Microchip Linux Driver Support
+> >  <UNGLinuxDriver@microchip.com>, linux-spi@vger.kernel.org,
+> >  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+> >  linux-arm-kernel@lists.infradead.org, Alexandre Belloni
+> >  <alexandre.belloni@bootlin.com>
+> > Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into
+> >  spi-dw-mchp
+> > User-Agent: Mutt/1.10.1 (2018-07-13)
+> > 
+> > On Wed, May 13, 2020 at 04:00:26PM +0200, Lars Povlsen wrote:
+> > 
+> > > +config SPI_DW_MCHP
+> > > +	tristate "Memory-mapped io interface driver using DW SPI core of MSCC SoCs"
+> > > +	default y if ARCH_SPARX5
+> > > +	default y if SOC_VCOREIII
+> > 
+> > Why the default ys?
 > 
-> Sam, Thierry I assume you'll merge the series. Let me know if I should
-> pick it up.
-I am quite busy with non-linux stuff these days so fine if you can pick
-them up. I like that simple panel patches are processed fast.
+> The SoC will typically boot from SPI... But its not a requirement per
+> se. I will remove it.
+> 
+> > 
+> > > +++ b/drivers/spi/Makefile
+> > > @@ -37,6 +37,7 @@ obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
+> > >  obj-$(CONFIG_SPI_DLN2)			+= spi-dln2.o
+> > >  obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
+> > >  obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
+> > > +obj-$(CONFIG_SPI_DW_MCHP)		+= spi-dw-mchp.o
+> > >  obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
+> > >  spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
+> > >  obj-$(CONFIG_SPI_EFM32)			+= spi-efm32.o
+> > 
+> > Please keep the file alphabetically sorted.
+> > 
+> 
+> Noted.
+> 
+> > > +++ b/drivers/spi/spi-dw-mchp.c
+> > > @@ -0,0 +1,232 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Memory-mapped interface driver for MSCC SoCs
+> > > + *
+> > 
+> > Please make the entire comment a C++ one so things look more
+> > intentional.
+> 
+> Sure, I can do that. The presented form matches that of the other
+> spi-dw-* drivers, but I can see other using // blocks. Ack.
+> 
+> > 
+> > > +#define MAX_CS		4
+> > 
+> > This should be namespaced.
+> 
+> Ack.
+> 
 
-I expect to have some hours for linux work friday or saturday, but no
-promises...
+> > 
+> > > +	rx_sample_dly = 0;
+> > > +	device_property_read_u32(&pdev->dev, "spi-rx-delay-us", &rx_sample_dly);
+> > > +	dws->rx_sample_dly = DIV_ROUND_UP(rx_sample_dly,
+> > > +					  (dws->max_freq / 1000000));
 
-	Sam
+Perhaps 100000 is better to be replace with macro USEC_PER_SEC...
 
+Moreover are you sure the formulae is correct?
+dws->rx_sample_dly - a number of ssi_clk periods/cycles to delay the Rx-data sample,
+dws->max_freq - ssi_clk frequency (not period).
+
+In real math the formulae would look like:
+S = d * P [s], where d - number of delay cycles, P - ssi_clk period in seconds,
+S - requested delay in seconds.
+In the driver notation: d = dws->rx_sample_dly, P = 1 / dws->max_freq,
+S = rx_sample_dly ("spi-rx-delay-us" property value).
+
+dws->rx_sample_dly * (1 / dws->max_freq) = rx_sample_dly <=>
+dws->rx_sample_dly = rx_sample_dly * dws->max_freq.
+
+Though that's represented in seconds, so if rx_sample_dly is specified in usec,
+then you'd need to scale it down dividing by USEC_PER_SEC.
+
+For example, imagine we need a delay of 1 usec with ssi_clk of 50MHz.
+By your formulae we'd have: 1 / (50000000 / 1000000) = 0 cycles (actually 1 due
+to DIV_ROUND_UP, but incorrect anyway),
+By mine: 1 * (500000000 / 1000000) = 50 cycles. Seems closer to reality.
+
+Am I missing something?
+
+> > 
+> > If this is a standard feature of the DesignWare IP why parse it here and
+> > not in the generic code?
+> 
+> This is a standard feature of the DesignWare IP, so good suggestion. I
+> will arrange with Serge.
+
+Regarding "spi-rx-delay-us" and the sampling delay the IP supports. Here is what
+documentation says regarding the register, which is then initialized with this
+parameter "This register controls the number of ssi_clk cycles that are
+delayed from the default sample time before the actual sample of the rxd input
+signal occurs." While the "spi-rx-delay-us" property is described as: "Delay, in
+microseconds, after a read transfer." I may misunderstand something, but IMO
+these descriptions don't refer to the same values. The only real use of the
+"spi-rx-delay-us" property I've found in "./drivers/input/rmi4/rmi_spi.c".
+That driver gets the value of the property and just sets the delay_usecs
+of some transfers, which isn't even close to the functionality the RX_SAMPLE_DLY
+register provides. 
+
+To be clear the RX_SAMPLE_DLY register can be used to delay the RX-bits sample
+with respect to the normal Rx sampling timing. The delay is measured in the 
+numbers of the ssi_clk periods. (Note also that the maximum delay is limited
+with a constant parameter pre-initialized at the IP-core synthesis stage. It can
+be defined within a range [4, 255]. In our IP it's limited with just 4 periods.)
+
+As I see it, a better way would be to either define a new vendor-specific
+property like "snps,rx-sample-delay-ns" (note NS here, since normally the
+ssi_clk is much higher than 1MHz), or define a new generic SPI property.
+Mark, Andy?
+
+-Sergey
 
 > 
-> -Emil
+> Thank you for your comments!
+> 
+> ---Lars
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
