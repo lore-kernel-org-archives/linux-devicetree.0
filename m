@@ -2,114 +2,100 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F17C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67D3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA7320734
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qgcFhYp4"
+	by mail.kernel.org (Postfix) with ESMTP id A3DE820663
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgFBUE3 (ORCPT
+        id S1728256AbgFBUEx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgFBUE3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:04:29 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D49EC08C5C0;
-        Tue,  2 Jun 2020 13:04:29 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r9so4124823wmh.2;
-        Tue, 02 Jun 2020 13:04:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fFrkZGbA6MKpDgVip+5WxkE5C44o6dddKdANoh/CvHM=;
-        b=qgcFhYp45+G/WE7//BnFqthX06KgvrqMjiscgxv7rWUBSlCDMbW8St8blvXXSgOJtx
-         G+y1dBZH5s4+ojGuba0v3YjK7faXyitZKvxTbDHZgg7/4w0GJ2FkUKahJIGwn8YhfzhV
-         +90585NFL0x/C+UBfr+1VIVwWtDQD2HxCSM3SVX0LU5gS2r6jdmeShAkWR3d8Qv6Y6Ax
-         VJmzdZMzR1el2AuegYHt5kfLu063zBysz/gsgeU6mDMnaCsOZoIh/1tvF157QkvlmtJG
-         WRD7Yx/nqQO3fiU+SsmDQssVnikHXJYKf6gqe/pAkpUGR7P0HT6C/EIyCxFhk/B/jf9F
-         Boyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fFrkZGbA6MKpDgVip+5WxkE5C44o6dddKdANoh/CvHM=;
-        b=aTeVH/OgUTGUI0jkZLN7+KdVbZ4JJWbgotubM1m0Vu+ttiB7LW4ECv3Sc+uR175qwq
-         KFBrQ2A6Oy+tjibelhvmSSP4Af9t5D2X9ily8EQkiDie0X25KBAHZVSu6IssgYxdDsaK
-         vQpj025HJpklVc7wo0bCwdERimxo+oCD3CUcJ68jvXxUgF8q8TQe/btGaSjAyASQba77
-         V7le62rdFc4OMu36tH2Xt4tGfYlKyqvz5Tt4bI1hEs6xDwQA9lhSdchkKfbGdDgFRuAI
-         0f8ydSUPnnUWf+yihzyqRBzVqBkgkKYtAEvtL3kYym/4V3z+XlJbW8Vfq/ijkEuz6GIo
-         JZwQ==
-X-Gm-Message-State: AOAM533TxgD8mY193lXZm2Bw8XwKzRC055wclJiLiG6NjF0kvFM+DNjU
-        iDhMKUKNFXeVCVfEiVWBwIg=
-X-Google-Smtp-Source: ABdhPJyX8nC46je0w47ASRbkIn1n/QchF1gqe14i2MuX22455rQM89KCOQuktRwbnBMv73hDtLTBxQ==
-X-Received: by 2002:a1c:188:: with SMTP id 130mr771701wmb.93.1591128267894;
-        Tue, 02 Jun 2020 13:04:27 -0700 (PDT)
-Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id a1sm1241777wmd.28.2020.06.02.13.04.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 13:04:27 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] soc: qcom: smd-rpm: Add msm8994 compatible
-Date:   Tue,  2 Jun 2020 22:04:07 +0200
-Message-Id: <20200602200407.320908-1-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 2 Jun 2020 16:04:53 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39864 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBUEx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:04:53 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id BF88E1C0BD2; Tue,  2 Jun 2020 22:04:51 +0200 (CEST)
+Date:   Tue, 2 Jun 2020 22:04:36 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        devicetree@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
+ documention
+Message-ID: <20200602200436.GA6535@amd>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-2-dmurphy@ti.com>
+ <20200527014902.GA859634@bogus>
+ <20200527133948.GA5011@amd>
+ <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the compatible for the RPM in msm8994.
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
- drivers/soc/qcom/smd-rpm.c                                  | 1 +
- 2 files changed, 2 insertions(+)
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-index 616fddcd09fd..25541a475ead 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-@@ -23,6 +23,7 @@ resources.
- 		    "qcom,rpm-msm8916"
- 		    "qcom,rpm-msm8974"
- 		    "qcom,rpm-msm8976"
-+		    "qcom,rpm-msm8994"
- 		    "qcom,rpm-msm8998"
- 		    "qcom,rpm-sdm660"
- 		    "qcom,rpm-qcs404"
-diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-index 005dd30c58fa..54eb5cbc05fd 100644
---- a/drivers/soc/qcom/smd-rpm.c
-+++ b/drivers/soc/qcom/smd-rpm.c
-@@ -233,6 +233,7 @@ static const struct of_device_id qcom_smd_rpm_of_match[] = {
- 	{ .compatible = "qcom,rpm-msm8916" },
- 	{ .compatible = "qcom,rpm-msm8974" },
- 	{ .compatible = "qcom,rpm-msm8976" },
-+	{ .compatible = "qcom,rpm-msm8994" },
- 	{ .compatible = "qcom,rpm-msm8996" },
- 	{ .compatible = "qcom,rpm-msm8998" },
- 	{ .compatible = "qcom,rpm-sdm660" },
--- 
-2.26.2
+On Wed 2020-05-27 08:35:06, Rob Herring wrote:
+> On Wed, May 27, 2020 at 7:39 AM Pavel Machek <pavel@ucw.cz> wrote:
+> >
+> > Hi!
+> >
+> > Thanks for reviews!
+> >
+> > > > +additionalProperties: false
+> > > > +...
+> > > > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> > >
+> > > This isn't a binding file. Belongs in another patch.
+> >
+> > These constants are directly related to the binding. It makes sense to
+> > go in one patch...
+>=20
+> Yes, the header does go in this patch, but kernel subsystem files do not.
+>=20
+> Part of the reason for separating is we generate a DT only repository
+> which filters out all the kernel code. Ideally this is just filtering
+> out commits and the commit messages still make sens
 
+Well, but the patch can't be split like that. Otherwise we risk null
+pointer dereferences when one part is applied but not the second one.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7WsNQACgkQMOfwapXb+vI4JwCeLxatm3ymua/F9hO67BMmNsBg
+FugAnRNkhigolL/rsu4UJ5kw26SOvJM8
+=njXg
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
