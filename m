@@ -2,70 +2,100 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CD4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 13:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50020C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 14:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8F920772
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 13:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEC720772
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 14:16:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sAAGbc+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgFBNv7 (ORCPT
+        id S1728374AbgFBOQb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:51:59 -0400
-Received: from muru.com ([72.249.23.125]:56720 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgFBNv7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:51:59 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 50EC180C5;
-        Tue,  2 Jun 2020 13:52:49 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 06:51:55 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Drew Fustini <drew@beagleboard.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Suman Anna <s-anna@ti.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: AM33xx-l4: add gpio-ranges
-Message-ID: <20200602135155.GE37466@atomide.com>
-References: <20200602131428.GA496390@x1>
- <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
+        Tue, 2 Jun 2020 10:16:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbgFBOQ3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 10:16:29 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 608F7C08C5C0;
+        Tue,  2 Jun 2020 07:16:29 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id m23so934740vko.2;
+        Tue, 02 Jun 2020 07:16:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/6a0t6+7th0CQZpcLX9FSsj+5y1OPdbod01fcXwFCW0=;
+        b=sAAGbc+hD14yma5Er/rT2CCXst65zCjTzv3RNPwbAeZqS0/qsLDQWFjHQjoTuGAeC1
+         +ipXKm1ZoDdcONOTRhvidUfFwpVg9ZsOpg2F9JImpLXgIqY0vPmq3ISAC7ehqsaJyMmq
+         ZIFnQiTa33xomn0HYM9RDwIFwF1icxNzbRDDq6u6o9Q1UGOmrT87cYXWR/pujy6Ekztp
+         2UuzBjskR5IeOYFERkM/ERIzFsjrdlN3XM2XasDzmANJrlRl4hlq3+XNUK4ornQQazI2
+         FWhzgAb1osiFDN4tgCYp2/JcYCQqPDD7ObSfnTlXAS7/7NHk0s+GDr6H2eP6sns6ZMVy
+         FruQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/6a0t6+7th0CQZpcLX9FSsj+5y1OPdbod01fcXwFCW0=;
+        b=cw2uiQCQqzGrryIYX+dwc2NbVo70djoCgzqvG8HegzeDDnIQBkkRhg0IdM6KX99qT+
+         lfJmZOrYHF0C5qSc17g/ze2Nu3qAf7Aee4SjP0enOnL9rbZH2UDjkBDh3x6oSyxO83Kx
+         B1G/0Y37WaxjWSj1iood6s/h5uWy4ONX/lfMZeyNbUgD/Xt6hRZdlC7YoQfVqzeH+4zP
+         5RrKDH3l9aKqlmGI2LY7v1y+zqecJnEeV7w4vzCAl2pzlfdGeWDC8PIrKADToCmDzav8
+         iOcVNpUee8DuUiyepIje19/yoqu/tPP3SlxH8W18tjXmu4C0AE5H7wdS90vQoTOIQlqi
+         2i1g==
+X-Gm-Message-State: AOAM532qxK0+R96Txb/8B4c5+VLXuD6eEDsmRfMOnbn+aGbMLgKUdU2g
+        jLbhtSoMWHQYQGeO7KeY6qo4G0MIPDCTIl7b3/cbbqKB
+X-Google-Smtp-Source: ABdhPJwsUlpy33FnIB6m4RAYn6vpQrhwYECjwYK+Cfnuf/EDhnqFeqzbq/cAlJV6cbDMbQlGYt6WBz8NxB2C5SttY3Q=
+X-Received: by 2002:a1f:2ac6:: with SMTP id q189mr9360992vkq.28.1591107388620;
+ Tue, 02 Jun 2020 07:16:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
+References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
+In-Reply-To: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Tue, 2 Jun 2020 15:13:10 +0100
+Message-ID: <CACvgo50eb5_jp_6B5tkV9cX_X2_y2Xnavu+wvUUhHN5FsV9hiw@mail.gmail.com>
+Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
+To:     Krishna Manikandan <mkrishn@codeaurora.org>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno@lists.freedesktop.org,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
+        "Kristian H . Kristensen" <hoegsberg@chromium.org>,
+        mka@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [200602 13:44]:
-> 
-> 
-> On 02/06/2020 16:14, Drew Fustini wrote:
-> > Add gpio-ranges properties to the gpio controller nodes.
-> > 
-> > These gpio-ranges were created based on "Table 9-10. CONTROL_MODULE
-> > REGISTERS" in the  "AM335x Technical Reference Manual" [0] and "Table
-> > 4-2. Pin Attributes" in the "AM335x Sitara Processor datasheet" [1].
-> > A csv file with this data is available for reference [2].
-> 
-> It will be good if you can explain not only "what" is changed, but
-> also "why" it's needed in commit message.
+Hi Krishna,
 
-Also, please check (again) that this is the same for all the am3
-variants. For omap3, we had different pad assignments even between
-SoC revisions. Different pad routings should be easy to deal with
-in the dts if needed though.
+On Tue, 2 Jun 2020 at 08:17, Krishna Manikandan <mkrishn@codeaurora.org> wrote:
+>
+> Define shutdown callback for display drm driver,
+> so as to disable all the CRTCS when shutdown
+> notification is received by the driver.
+>
+> This change will turn off the timing engine so
+> that no display transactions are requested
+> while mmu translations are getting disabled
+> during reboot sequence.
+>
+> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+>
+AFAICT atomics is setup in msm_drm_ops::bind and shutdown in
+msm_drm_ops::unbind.
 
-Regards,
+Are you saying that unbind never triggers? If so, then we should
+really fix that instead, since this patch seems more like a
+workaround.
 
-Tony
+-Emil
