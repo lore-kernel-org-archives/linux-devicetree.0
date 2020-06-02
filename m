@@ -2,191 +2,191 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDE8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 21:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483EDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 21:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAA5206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 21:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232342087D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 21:41:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591134094;
+	bh=lE2qIKk7fGwpmdgOyUmGUSZcTgDTl1S+IeWtKVRZiB4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sfG4UO7raa0Heg/9uooyf+d9GF8zuw7nYn8e2NnisJm85A7s/xDk3BOggl1hn4p3a
+	 LH42MZN3y/nejbJdbvkNsQMrSLQ/6LVVZxHJbBby37jRq7oA0ThgxETr7LpUK0ySMf
+	 48g8OrggEfeaIUe/OUHYBLLgJW7XbZab6K5GQrC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgFBVML (ORCPT
+        id S1728272AbgFBVld (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 17:12:11 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57460 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFBVML (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 17:12:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A56768030835;
-        Tue,  2 Jun 2020 21:12:07 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PmcTIkUkiYD7; Wed,  3 Jun 2020 00:12:04 +0300 (MSK)
-Date:   Wed, 3 Jun 2020 00:12:04 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        SoC Team <soc@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into
- spi-dw-mchp
-Message-ID: <20200602211203.3lad22zvt5yagane@mobilestation>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200513140031.25633-6-lars.povlsen@microchip.com>
- <20200513151811.GL4803@sirena.org.uk>
- <20200519120519.GE24801@soft-dev15.microsemi.net>
+        Tue, 2 Jun 2020 17:41:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728226AbgFBVld (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 2 Jun 2020 17:41:33 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4884B20823;
+        Tue,  2 Jun 2020 21:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591134092;
+        bh=lE2qIKk7fGwpmdgOyUmGUSZcTgDTl1S+IeWtKVRZiB4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MDcmsG4AsJa29AZLZyoyaLg1XXhJzFswAk0zW/njIgWzQbow0ZCLgSsLqd+gAeQXG
+         C+8NWnC9t990cXc67f2TeU+s0cPjHcss27WIhpkpp9pNbZ/SHobhFO7ecDYXdWqccD
+         84jHiAhyesNMy12lNigcDvQHG9hH+oyoyWjcyaQQ=
+Received: by mail-oi1-f181.google.com with SMTP id z9so13394714oid.2;
+        Tue, 02 Jun 2020 14:41:32 -0700 (PDT)
+X-Gm-Message-State: AOAM533CA/eeis7UXDUuGs/awHAZB91FxuNFoRk/YixuRvacY6iI+fZu
+        aLKfDBWeEFU7sR/OYZwamVcHv8UQaDaAjHNrdA==
+X-Google-Smtp-Source: ABdhPJxGd1RDkZpLil39OM00IhmdJlV8U5qy7Nn3gSrgTh2gorz+2QOj5O8k4Aoo1zTVz6xs3rPGF8jvSLdSMIFh7Rs=
+X-Received: by 2002:a05:6808:7cb:: with SMTP id f11mr4487019oij.152.1591134091638;
+ Tue, 02 Jun 2020 14:41:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200519120519.GE24801@soft-dev15.microsemi.net>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+ <20200526191303.1492-4-james.quinlan@broadcom.com> <20200529174634.GA2630216@bogus>
+ <CA+-6iNwWBFYHVKiwwJ95DYQ5zmc5uBo1cgZzd6rpD++aQWgGpw@mail.gmail.com>
+In-Reply-To: <CA+-6iNwWBFYHVKiwwJ95DYQ5zmc5uBo1cgZzd6rpD++aQWgGpw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 2 Jun 2020 15:41:19 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKtASTzACSNn8BgmEBqf0eyR8RB_tjY7aUnvK+2GYXTbg@mail.gmail.com>
+Message-ID: <CAL_JsqKtASTzACSNn8BgmEBqf0eyR8RB_tjY7aUnvK+2GYXTbg@mail.gmail.com>
+Subject: Re: [PATCH v2 03/14] dt-bindings: PCI: Add bindings for more Brcmstb chips
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 02:05:19PM +0200, Lars Povlsen wrote:
-> On 13/05/20 16:18, Mark Brown wrote:
-> > Date: Wed, 13 May 2020 16:18:11 +0100
-> > From: Mark Brown <broonie@kernel.org>
-> > To: Lars Povlsen <lars.povlsen@microchip.com>
-> > Cc: SoC Team <soc@kernel.org>, Microchip Linux Driver Support
-> >  <UNGLinuxDriver@microchip.com>, linux-spi@vger.kernel.org,
-> >  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-> >  linux-arm-kernel@lists.infradead.org, Alexandre Belloni
-> >  <alexandre.belloni@bootlin.com>
-> > Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into
-> >  spi-dw-mchp
-> > User-Agent: Mutt/1.10.1 (2018-07-13)
-> > 
-> > On Wed, May 13, 2020 at 04:00:26PM +0200, Lars Povlsen wrote:
-> > 
-> > > +config SPI_DW_MCHP
-> > > +	tristate "Memory-mapped io interface driver using DW SPI core of MSCC SoCs"
-> > > +	default y if ARCH_SPARX5
-> > > +	default y if SOC_VCOREIII
-> > 
-> > Why the default ys?
-> 
-> The SoC will typically boot from SPI... But its not a requirement per
-> se. I will remove it.
-> 
-> > 
-> > > +++ b/drivers/spi/Makefile
-> > > @@ -37,6 +37,7 @@ obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
-> > >  obj-$(CONFIG_SPI_DLN2)			+= spi-dln2.o
-> > >  obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
-> > >  obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
-> > > +obj-$(CONFIG_SPI_DW_MCHP)		+= spi-dw-mchp.o
-> > >  obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
-> > >  spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
-> > >  obj-$(CONFIG_SPI_EFM32)			+= spi-efm32.o
-> > 
-> > Please keep the file alphabetically sorted.
-> > 
-> 
-> Noted.
-> 
-> > > +++ b/drivers/spi/spi-dw-mchp.c
-> > > @@ -0,0 +1,232 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * Memory-mapped interface driver for MSCC SoCs
-> > > + *
-> > 
-> > Please make the entire comment a C++ one so things look more
-> > intentional.
-> 
-> Sure, I can do that. The presented form matches that of the other
-> spi-dw-* drivers, but I can see other using // blocks. Ack.
-> 
-> > 
-> > > +#define MAX_CS		4
-> > 
-> > This should be namespaced.
-> 
-> Ack.
-> 
+On Tue, Jun 2, 2020 at 2:53 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+>
+> On Fri, May 29, 2020 at 1:46 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, May 26, 2020 at 03:12:42PM -0400, Jim Quinlan wrote:
+> > > From: Jim Quinlan <jquinlan@broadcom.com>
+> > >
+> > > - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+> > >   7211 (STB version of RPi4).
+> > > - add new property 'brcm,scb-sizes'
+> > > - add new property 'resets'
+> > > - add new property 'reset-names'
+> > > - allow 'ranges' and 'dma-ranges' to have more than one item and update
+> > >   the example to show this.
+> > >
+> > > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > > ---
+> > >  .../bindings/pci/brcm,stb-pcie.yaml           | 40 +++++++++++++++++--
+> > >  1 file changed, 36 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > index 8680a0f86c5a..66a7df45983d 100644
+> > > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > @@ -14,7 +14,13 @@ allOf:
+> > >
+> > >  properties:
+> > >    compatible:
+> > > -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> > > +    items:
+> > > +      - enum:
+> >
+> > Don't need items here. Just change the const to enum.
+> >
+> > > +          - brcm,bcm2711-pcie # The Raspberry Pi 4
+> > > +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> > > +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+> > > +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> > > +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> > >
+> > >    reg:
+> > >      maxItems: 1
+> > > @@ -34,10 +40,12 @@ properties:
+> > >        - const: msi
+> > >
+> > >    ranges:
+> > > -    maxItems: 1
+> > > +    minItems: 1
+> > > +    maxItems: 4
+> > >
+> > >    dma-ranges:
+> > > -    maxItems: 1
+> > > +    minItems: 1
+> > > +    maxItems: 6
+> > >
+> > >    clocks:
+> > >      maxItems: 1
+> > > @@ -58,8 +66,30 @@ properties:
+> > >
+> > >    aspm-no-l0s: true
+> > >
+> > > +  resets:
+> > > +    description: for "brcm,bcm7216-pcie", must be a valid reset
+> > > +      phandle pointing to the RESCAL reset controller provider node.
+> > > +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> > > +
+> > > +  reset-names:
+> > > +    items:
+> > > +      - const: rescal
+> >
+> > These are going to need to be an if/then schema if they only apply to
+> > certain compatible(s).
+>
+> Why is that -- the code is general enough to handle its presence or
+> not (it is an optional compatibility)>
 
-> > 
-> > > +	rx_sample_dly = 0;
-> > > +	device_property_read_u32(&pdev->dev, "spi-rx-delay-us", &rx_sample_dly);
-> > > +	dws->rx_sample_dly = DIV_ROUND_UP(rx_sample_dly,
-> > > +					  (dws->max_freq / 1000000));
+Because an if/then schema expresses in a parse-able form what your
+'description' does in free form text.
 
-Perhaps 100000 is better to be replace with macro USEC_PER_SEC...
+Presumably a 'resets' property for !brcm,bcm7216-pcie is invalid, so
+we should check that. The schema shouldn't be just what some driver
+happens to currently allow. Also, it's not a driver's job to validate
+DT, so it shouldn't check any of this.
 
-Moreover are you sure the formulae is correct?
-dws->rx_sample_dly - a number of ssi_clk periods/cycles to delay the Rx-data sample,
-dws->max_freq - ssi_clk frequency (not period).
+> > > +  brcm,scb-sizes:
+> > > +    description: (u32, u32) tuple giving the 64bit PCIe memory
+> > > +      viewport size of a memory controller.  There may be up to
+> > > +      three controllers, and each size must be a power of two
+> > > +      with a size greater or equal to the amount of memory the
+> > > +      controller supports.
+> >
+> > This sounds like what dma-ranges should express?
+>
+> There is some overlap but this contains information that is not in the
+> dma-ranges.  Believe me I tried.
 
-In real math the formulae would look like:
-S = d * P [s], where d - number of delay cycles, P - ssi_clk period in seconds,
-S - requested delay in seconds.
-In the driver notation: d = dws->rx_sample_dly, P = 1 / dws->max_freq,
-S = rx_sample_dly ("spi-rx-delay-us" property value).
+I don't understand. If you had 3 dma-ranges entries, you'd have 3
+sizes. Can you expand or show me what you tried?
 
-dws->rx_sample_dly * (1 / dws->max_freq) = rx_sample_dly <=>
-dws->rx_sample_dly = rx_sample_dly * dws->max_freq.
+> > If not, we do have 64-bit size if that what you need.
+>
+> IIRC I tried the 64-bit size but the YAML validator did not like it;
+> it wanted numbers like  <0x1122334455667788> while dtc wanted <
+> 0x11223344 0x55667788>.  I gave up trying and switched to u32.
 
-Though that's represented in seconds, so if rx_sample_dly is specified in usec,
-then you'd need to scale it down dividing by USEC_PER_SEC.
+You used the /bits/ annotation for dtc?:
 
-For example, imagine we need a delay of 1 usec with ssi_clk of 50MHz.
-By your formulae we'd have: 1 / (50000000 / 1000000) = 0 cycles (actually 1 due
-to DIV_ROUND_UP, but incorrect anyway),
-By mine: 1 * (500000000 / 1000000) = 50 cycles. Seems closer to reality.
+/bits/ 64 <0x1122334455667788>
 
-Am I missing something?
+I also made a recent fix to dt-schema around handling of 64-bit sizes,
+so update if you have problems still.
 
-> > 
-> > If this is a standard feature of the DesignWare IP why parse it here and
-> > not in the generic code?
-> 
-> This is a standard feature of the DesignWare IP, so good suggestion. I
-> will arrange with Serge.
-
-Regarding "spi-rx-delay-us" and the sampling delay the IP supports. Here is what
-documentation says regarding the register, which is then initialized with this
-parameter "This register controls the number of ssi_clk cycles that are
-delayed from the default sample time before the actual sample of the rxd input
-signal occurs." While the "spi-rx-delay-us" property is described as: "Delay, in
-microseconds, after a read transfer." I may misunderstand something, but IMO
-these descriptions don't refer to the same values. The only real use of the
-"spi-rx-delay-us" property I've found in "./drivers/input/rmi4/rmi_spi.c".
-That driver gets the value of the property and just sets the delay_usecs
-of some transfers, which isn't even close to the functionality the RX_SAMPLE_DLY
-register provides. 
-
-To be clear the RX_SAMPLE_DLY register can be used to delay the RX-bits sample
-with respect to the normal Rx sampling timing. The delay is measured in the 
-numbers of the ssi_clk periods. (Note also that the maximum delay is limited
-with a constant parameter pre-initialized at the IP-core synthesis stage. It can
-be defined within a range [4, 255]. In our IP it's limited with just 4 periods.)
-
-As I see it, a better way would be to either define a new vendor-specific
-property like "snps,rx-sample-delay-ns" (note NS here, since normally the
-ssi_clk is much higher than 1MHz), or define a new generic SPI property.
-Mark, Andy?
-
--Sergey
-
-> 
-> Thank you for your comments!
-> 
-> ---Lars
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Rob
