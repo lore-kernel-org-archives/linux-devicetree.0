@@ -2,191 +2,92 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FF5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 19:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFDCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 19:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE854206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 19:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F121B206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 19:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hhZEW1wH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgFBTRh (ORCPT
+        id S1726461AbgFBTfu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:17:37 -0400
-Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:33841 "EHLO
-        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726174AbgFBTRg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 15:17:36 -0400
-Received: from pro2.mail.ovh.net (unknown [10.109.138.188])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id A77146081342;
-        Tue,  2 Jun 2020 21:17:34 +0200 (CEST)
-Received: from localhost (34.103.240.103) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
- 21:17:34 +0200
-Date:   Tue, 2 Jun 2020 21:15:17 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v3 3/4] iio: chemical: scd30: add serial interface driver
-Message-ID: <20200602191517.GE2668@arch>
-References: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
- <20200602164723.28858-4-tomasz.duszynski@octakon.com>
- <CAHp75VfjWG_3XC5FJoaU7XXJc+04JTbEKdjZK=g6ffBPvJNhxA@mail.gmail.com>
- <20200602175723.GC2668@arch>
+        Tue, 2 Jun 2020 15:35:50 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49038 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFBTfu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 15:35:50 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052JZUKG110487;
+        Tue, 2 Jun 2020 14:35:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591126530;
+        bh=b/5XkevPHJRhZ2gZPRNiUFvjA4NxbX0UBQv0ibyIS/k=;
+        h=From:To:CC:Subject:Date;
+        b=hhZEW1wH2G8LUUa2Oqp26T/S0wzqzgHBRdGcVPTBR99RJFKg9uCSRcXLHZ1BexB6a
+         0QaV3sNMEKJ3UN0VzxrPyRrEl7s7I2EC1cNPJFUJ5pp4o00ciz7dtYqgZn25Y8kinE
+         Tzywzhonp7f6Eyo/+TJxtmMaWLapAaGO5i55CwGM=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052JZUVv102654;
+        Tue, 2 Jun 2020 14:35:30 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 14:35:29 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 14:35:29 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052JZTWP050953;
+        Tue, 2 Jun 2020 14:35:30 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 1/2] dt-bindings: ASoc: Fix tdm-slot documentation spelling error
+Date:   Tue, 2 Jun 2020 14:35:23 -0500
+Message-ID: <20200602193524.30309-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200602175723.GC2668@arch>
-X-Originating-IP: [34.103.240.103]
-X-ClientProxiedBy: DAG2EX1.emp2.local (172.16.2.11) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 11947486865640807583
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedguddtfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnheptdehveethfffudetjeeftdekueehjeegjedvteffgfevkefffeegffeugeehgfejnecukfhppedtrddtrddtrddtpdefgedruddtfedrvdegtddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehpmhgvvghrfiesphhmvggvrhifrdhnvght
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 07:57:23PM +0200, Tomasz Duszynski wrote:
-> On Tue, Jun 02, 2020 at 08:04:16PM +0300, Andy Shevchenko wrote:
-> > On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
-> > <tomasz.duszynski@octakon.com> wrote:
-> > >
-> > > Add serial interface driver for the SCD30 sensor.
-> >
-> > ...
-> >
-> > > +static u16 scd30_serdev_cmd_lookup_tbl[] = {
-> > > +       [CMD_START_MEAS] = 0x0036,
-> > > +       [CMD_STOP_MEAS] = 0x0037,
-> > > +       [CMD_MEAS_INTERVAL] = 0x0025,
-> > > +       [CMD_MEAS_READY] = 0x0027,
-> > > +       [CMD_READ_MEAS] = 0x0028,
-> > > +       [CMD_ASC] = 0x003a,
-> > > +       [CMD_FRC] = 0x0039,
-> > > +       [CMD_TEMP_OFFSET] = 0x003b,
-> > > +       [CMD_FW_VERSION] = 0x0020,
-> > > +       [CMD_RESET] = 0x0034,
-> >
-> > Hmm... Can't we keep them ordered by value?
-> >
-> > > +};
-> >
-> > ...
-> >
-> > > +       ret = wait_for_completion_interruptible_timeout(&priv->meas_ready,
-> > > +                                                       SCD30_SERDEV_TIMEOUT);
-> > > +       if (ret > 0)
-> > > +               ret = 0;
-> > > +       else if (!ret)
-> > > +               ret = -ETIMEDOUT;
-> > > +
-> > > +       return ret;
-> >
-> > Perhaps
-> >
-> >   if (ret < 0)
-> >     return ret;
-> >   if (ret == 0)
-> >     return -ETIMEDOUT;
-> >   return 0;
-> >
-> > ?
->
-> Matter of style but since I will be doing other changes I can touch that
-> too.
->
-> >
-> > ...
-> >
-> > > +       char txbuf[SCD30_SERDEV_MAX_BUF_SIZE] = { SCD30_SERDEV_ADDR },
-> > > +            rxbuf[SCD30_SERDEV_MAX_BUF_SIZE], *rsp = response;
-> >
-> > Please, apply type to each variable separately.
-> >
->
-> Fine.
->
-> > ...
-> >
-> > > +       switch (txbuf[1]) {
-> > > +       case SCD30_SERDEV_WRITE:
-> >
-> > > +               if (memcmp(txbuf, txbuf, txsize)) {
-> >
-> > I'm not sure I understand this.
-> >
->
-> Ah, thanks for catching this. tx should be compared to rx.
->
-> > > +                       dev_err(state->dev, "wrong message received\n");
-> > > +                       return -EIO;
-> > > +               }
-> > > +               break;
-> > > +       case SCD30_SERDEV_READ:
-> >
-> > > +               if (rxbuf[2] != (rxsize -
-> > > +                                SCD30_SERDEV_RX_HEADER_SIZE -
-> > > +                                SCD30_SERDEV_CRC_SIZE)) {
-> >
-> > Perhaps you can come up with better indentation/ line split?
-> >
->
-> I'd rather leave it as is.
->
+Fix the spelling of 'specified'.  Also fix grammarical issue with the
+use of 'a' over 'an'
 
-On the second thought, that would fit 100 column line.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/sound/tdm-slot.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > > +                       dev_err(state->dev,
-> > > +                               "received data size does not match header\n");
-> > > +                       return -EIO;
-> > > +               }
-> > > +
-> > > +               rxsize -= SCD30_SERDEV_CRC_SIZE;
-> > > +               crc = get_unaligned_le16(rxbuf + rxsize);
-> > > +               if (crc != scd30_serdev_calc_crc(rxbuf, rxsize)) {
-> > > +                       dev_err(state->dev, "data integrity check failed\n");
-> > > +                       return -EIO;
-> > > +               }
-> > > +
-> > > +               rxsize -= SCD30_SERDEV_RX_HEADER_SIZE;
-> > > +               memcpy(rsp, rxbuf + SCD30_SERDEV_RX_HEADER_SIZE, rxsize);
-> > > +               break;
-> > > +       default:
-> > > +               dev_err(state->dev, "received unknown op code\n");
-> > > +               return -EIO;
-> > > +       }
-> > > +
-> > > +       return 0;
-> > > +}
-> >
-> > ...
-> >
-> > > +static struct serdev_device_driver scd30_serdev_driver = {
-> > > +       .driver = {
-> >
-> > > +               .name = KBUILD_MODNAME,
-> >
-> > This is not the best what we can do. The name is an ABI and better if
-> > it will be constant (independent on file name).
-> >
-> > > +               .of_match_table = scd30_serdev_of_match,
-> > > +               .pm = &scd30_pm_ops,
-> > > +       },
-> > > +       .probe = scd30_serdev_probe,
-> > > +};
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
+diff --git a/Documentation/devicetree/bindings/sound/tdm-slot.txt b/Documentation/devicetree/bindings/sound/tdm-slot.txt
+index 34cf70e2cbc4..4bb513ae62fc 100644
+--- a/Documentation/devicetree/bindings/sound/tdm-slot.txt
++++ b/Documentation/devicetree/bindings/sound/tdm-slot.txt
+@@ -14,8 +14,8 @@ For instance:
+ 	dai-tdm-slot-tx-mask = <0 1>;
+ 	dai-tdm-slot-rx-mask = <1 0>;
+ 
+-And for each spcified driver, there could be one .of_xlate_tdm_slot_mask()
+-to specify a explicit mapping of the channels and the slots. If it's absent
++And for each specified driver, there could be one .of_xlate_tdm_slot_mask()
++to specify an explicit mapping of the channels and the slots. If it's absent
+ the default snd_soc_of_xlate_tdm_slot_mask() will be used to generating the
+ tx and rx masks.
+ 
+-- 
+2.26.2
+
