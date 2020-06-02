@@ -2,170 +2,172 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D305DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93147C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B000F207D8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 10:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700DF206A4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D3v51V4Y"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="aIy8vP+K";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ALBmZRsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgFBK4J (ORCPT
+        id S1726320AbgFBLEx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgFBK4J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 06:56:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC3DC05BD43
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 03:56:06 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id p5so2896541wrw.9
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 03:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zoyTcyBnHY+drX5v7SAgyghAKKMbaJC1+1oDWq+RDXs=;
-        b=D3v51V4YKXhUKnJPtW4V4QvG5a8/aZCj0VeqUCP5QQD3Z4XAqvw0Hx3MIZUNhsJWCM
-         2OOTvhnnW66j1NnxnuOCLbWZ6WkSSQ9P2RBVyIFAnG1hBsU2jv26UHA3wLgqAegM1Jok
-         5LgPVVZJ2PGCYi6V2FnEm0or4NXh69KIHz7qHDX82xotr3NTmC0IzztpdReRJ8ZEf/UV
-         P+0ohbjgCwgwOL7wHyGc64lctqSWbjgj66xveQZ8lW4kp1fB7lhZH7vmoyUvMOpF9hYx
-         llCC3youihpIiVRh/v7JhY1QAwV6NF3Q2Z9WRTdXYiNI66l+Tlt5ILVjYBouQvjUDI40
-         hbMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zoyTcyBnHY+drX5v7SAgyghAKKMbaJC1+1oDWq+RDXs=;
-        b=EK9ha64KjxR9jAQLhy95RbzTPjKaudW860jGubixiKyGQyOcU4dP0re92TF/oZaU0T
-         rMvJZU0REFEOskyK/FoizsAL+AWz9tQBQ0KRYzWsmnEmFsaKWpwkDxecGV40UAHpJoIm
-         JlkuvWJ7/83y9f2rI+SqpKpJQ9FgAsmY6zJcMFG8V3EHHEJGUSyv0OSzbCEiFqG9T9Rj
-         7qv85EwzprGmM5xblP1cDFfIcyv+PHdGFz15sPsvXJd77y49iRcy+pRmTC1qNHSZJWa6
-         +oaJ/3Ay6gPfJoAW64RJnkALOPwAtGOXhTG9HbVgmS7hotAmFuE+xXGUQxhnFNR7i3g9
-         O2Gw==
-X-Gm-Message-State: AOAM531SmoL+JzFrSLAg0li2pSa9UgQuRCXiHNVX5W5J42eXx4Km4Sm7
-        k3eVZ7tG+1JGlyWDX3tivPa9mw==
-X-Google-Smtp-Source: ABdhPJxK9ZB5DguLdg9OqabgaHC8y249h8H0GKOz+wifrgio3qbISgDQgaumSCMFIn+/FF9jJirWNA==
-X-Received: by 2002:adf:ea8b:: with SMTP id s11mr26398235wrm.168.1591095365239;
-        Tue, 02 Jun 2020 03:56:05 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id y66sm2991524wmy.24.2020.06.02.03.56.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jun 2020 03:56:04 -0700 (PDT)
-Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse
- support
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
- <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
- <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org>
- <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
- <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org>
- <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
- <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
- <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org>
- <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
- <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org>
- <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
- <9ecb5790-47fe-583b-6fc3-8f4f3ce7860e@linaro.org>
- <CAD=FV=XbbUkeSwvcverBS8t6BCHuw3UT0_KYfx9LFGqmZyY2hA@mail.gmail.com>
- <871dd2c1-4b16-f883-b8c5-806a0df1edf8@linaro.org>
- <CAD=FV=UCwUO5aKrUj7e+v6Bpkh_O+wuSXD5tJHdGOfaVTL0t1w@mail.gmail.com>
- <1211660e-f1b0-0636-2dcf-1bc765118de3@linaro.org>
- <CAD=FV=VcfYVQMmWvSkBG0VNBcqt5a3Y_b4eNBgDenPB5wUNGaw@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <1d276cdc-247c-b663-0f69-0961cf75134b@linaro.org>
-Date:   Tue, 2 Jun 2020 11:56:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 2 Jun 2020 07:04:53 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:43471 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726007AbgFBLEs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 07:04:48 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id EB8E4580358;
+        Tue,  2 Jun 2020 07:04:46 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 02 Jun 2020 07:04:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=7HHu7QfhHPpbXmDpTyynkqVQP/G
+        clpO7AEZNhrh18AI=; b=aIy8vP+KnWZJ7Wf1/SCoo6xVtD/CybIu+f41jnVDctk
+        mghK2ZoehPVR/pBqde7vP0EIuI09trWMcuDBV5yhQ0ruBKPsi1tvT2SvU2w7+nRJ
+        lYDb7rahyhtbta0Vz4UF7afYtPQuwvGdNQZxnsiqTgJ2lr6z9iWkHvI6hicVh615
+        ryawe7MLMKCYqZEnYAzx3dQWaNmCRPgk0bzU2b8Z6uXrGVMg0dduLlPUztqjp4r7
+        GGLIodDa0N/EU3pdjrQZ63y53q+3JkTjyaNmQloVFY6w/d4wqFNpHwN7K7BaX7VT
+        Nsl/HEOYUXQxfFXvoSrBmVqc2p8QMVP8YDXGFhiqb6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=7HHu7Q
+        fhHPpbXmDpTyynkqVQP/GclpO7AEZNhrh18AI=; b=ALBmZRsP1UmYVWy5MGtSX/
+        yVQJSgV67x/vocs6vTLBI11RLGNu2ddAB4vBj9hTsw0bDRYjALwxL5H1nCp01vAw
+        PDhl76FpRx/wFK/Qp6xfesrGx3wBpGvpvJLQ5+ZFJ/kTO8GI3Fijy+6Q+kBEBY9T
+        MMszDb1OA2htuqQdYU3EMfKc68O+VWSG9vf9rhjVG+QVFhYmnpJOe1downiocJRr
+        ift3puUverNRaH3bvINmX0nQkK/N179dawyAJNS2L/ew7C2VTjxXI8kc2gq9oKWn
+        OxGtZPTr8k5QCj1GPsUcofcuCQtRML1lzycZ3GeHDwL8rnArwXKzQUou/gnMy7eg
+        ==
+X-ME-Sender: <xms:TDLWXvVzsNCTt5urJTCaPct8dQOyGp4jvMqZx4vP7MtXFq8mfIWxFw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepheelgfehhfefiefgfeegteeuveeigffhffdvtdeuffffleekgeefudejfefh
+    veelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmnecukf
+    hppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:TDLWXnmZIQf_q2O5GHzhfmsRyX8opdaSiINEdBhnYs3ohpunkfczUA>
+    <xmx:TDLWXrZmHZoIiIAYPEyOEdi5d7gXXqaW4qH0LG6k8KTuGoZ7W4zh0A>
+    <xmx:TDLWXqWrd9F80PBtbW7KN9lv6aiumBHrs8RQVnmnC8uWl_p9bnKpLQ>
+    <xmx:TjLWXqj_kuI4y1vFcu1864cESgkisqX6bLB-F4M2AxdbEU0hfi2nPA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C46EF30624E4;
+        Tue,  2 Jun 2020 07:04:43 -0400 (EDT)
+Date:   Tue, 2 Jun 2020 13:04:42 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
+Message-ID: <20200602110442.2ceuymhwuomvjj6i@gilmour>
+References: <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
+ <20200507172158.cybtakpo6cxv6wcs@gilmour.lan>
+ <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
+ <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
+ <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
+ <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
+ <20200527091335.7wc3uy67lbz7j4di@gilmour.lan>
+ <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
+ <20200528073055.znutrhkryzu3grrl@gilmour.lan>
+ <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=VcfYVQMmWvSkBG0VNBcqt5a3Y_b4eNBgDenPB5wUNGaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5pdc5mmeqmvo6ueh"
+Content-Disposition: inline
+In-Reply-To: <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+--5pdc5mmeqmvo6ueh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 01/06/2020 19:08, Doug Anderson wrote:
->> Am not 100% sure if "qcom,fuse-blow-frequency" is something integration
->> specific or SoC Specific, My idea was that this will give more
->> flexibility in future. As adding new SoC Support does not need driver
->> changes.
->>
->> Having said that, Am okay either way!
-> Yeah, it's always a balance.  I guess the question is: why do we think
-> driver changes are worse than dts changes?  The value still needs to
-> be somewhere and having it in the driver isn't a terrible place.
-> 
+Hi,
 
-TBH, its an overkill if we are using same IP version across multiple SoCs.
+On Mon, Jun 01, 2020 at 03:58:26PM +0800, Jian-Hong Pan wrote:
+> Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=8828=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:30=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > Hi Daniel,
+> >
+> > On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
+> > > On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tech> wro=
+te:
+> > > > I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-Ho=
+ng) if you
+> > > > want.
+> > >
+> > > That would be great, although given the potentially inconsistent
+> > > results we've been seeing so far it would be great if you could
+> > > additionally push a git branch somewhere.
+> > > That way we can have higher confidence that we are applying exactly
+> > > the same patches to the same base etc.
+> >
+> > So I sent a new iteration yesterday, and of course forgot to cc you... =
+Sorry for
+> > that.
+> >
+> > I've pushed my current branch here:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/log/?=
+h=3Drpi4-kms
+>=20
+> Thanks to Maxime!
+>=20
+> I have tried your repository on branch rpi4-kms.  The DRM VC4 is used!
+> But got some issues:
+> 1. Some weird error message in dmesg.  Not sure it is related, or not
+> [    5.219321] [drm:vc5_hdmi_init_resources] *ERROR* Failed to get
+> HDMI state machine clock
+> https://gist.github.com/starnight/3f317dca121065a361cf08e91225e389
 
-> 
->> Incase we go compatible way, I would like to see compatible strings
->> having proper IP versions to have ip version rather than SoC names.
->>
->> Having SoC names in compatible string means both driver and bindings
->> need update for every new SoC which can be overhead very soon!
-> Almost certainly the compatible strings should have SoC names in them.
-> Yes it means a binding update every time a new SoC comes up but that
-> is just how device tree works.  Presumably there's enough chatter on
-> this that Rob H has totally tuned it out at this point in time, but
-> there are many other instances of this.
-> 
-> NOTE: just because we have the SoC name in the compatible string
-> _doesn't_  mean that the driver has to change.  You already said that
-> the IP version can be detected earlier in this thread, right?  You
-> said:
-> 
-> I found out that there is a version register at offset of 0x6000 which
-> can give MAJOR, MINOR and STEP numbers.
-> 
-> So how about this:
-> 
-> a) Compatible contains "SoC" version and the generic "qcom,qfrom", so:
-> 
-> compatible = "qcom,sdm845-qfprom", "qcom,qfrom"
-> 
-> b) Bindings will need to be updated for every new SoC, but that's
-> normal and should be a trivial patch to just add a new SoC to the
-> list.
-> 
-> c) If the driver can be made to make its decisions about frequencies /
-> timings completely by MAJOR/MINOR/STEP numbers then it can use those
-> in its decision and it will never need to use the SoC-specific
-> compatible string.  The SoC-specific compatible string will only be
-> present as a fallback "oops we have to workaround a bug that we didn't
-> know about".
+That's a deferred probing. The first time the HDMI driver is being
+probed, the firmware clock driver has not been probed yet. It's making
+another attempt later on, which succeeds.
 
-This makes more sense to me, I would still stay with  MAJOR/MINOR/STEP 
-numbers mostly unless we are dealing with some corner cases.
+> 2. The screen flashes suddenly sometimes.
+>=20
+> 3. The higher resolutions, like 1920x1080 ... are lost after hot
+> re-plug HDMI cable (HDMI0)
 
+I'm not sure on how to exactly reproduce those issues (or what they are)
+though, can you expand on this?
 
-thanks,
-srini
-> 
-> 
->> Rob can help review once we have v2 bindings out!
-> Sounds good.  If you're still not convinced by my arguments we can see
-> if we can get Rob to clarify once we have a v2.:-)
-> 
-> 
+Maxime
+
+--5pdc5mmeqmvo6ueh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXtYySgAKCRDj7w1vZxhR
+xfUBAP46Th1pk7x3jxfXvrbbwj1VxBv4kbEOV1Bu98RJiU1LywD/RjzWHXndJXmh
+fEI26r6ziCy/1OpEIZxssHX9I6WnfQ4=
+=suuo
+-----END PGP SIGNATURE-----
+
+--5pdc5mmeqmvo6ueh--
