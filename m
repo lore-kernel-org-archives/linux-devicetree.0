@@ -2,208 +2,132 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF9AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B8AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41D142072F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:53:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gUQhoSQG"
+	by mail.kernel.org (Postfix) with ESMTP id 3D36A206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 20:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgFBUxw (ORCPT
+        id S1726223AbgFBU46 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbgFBUxv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:53:51 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B77C08C5C1
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 13:53:51 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id j198so3062269wmj.0
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 13:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UNdx3Mmpf3DrIzViCGyzis6VE+eW7LcGk/DvPm/aizg=;
-        b=gUQhoSQGFIHa7ZtNQ/mcdet2GnsJdah69f2gfvdvdf3oal9ZbFaY5RBDmch2/JCwpo
-         1ySrRPlo+q1t6qjbKXPFmySFIdIUeoYzuR+SDIhTteakfiGtW0pdZri/mG9znO4mjmE5
-         VpRIxXI+2IPUmFBA+igDQybSrvkqI8sP+60yo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNdx3Mmpf3DrIzViCGyzis6VE+eW7LcGk/DvPm/aizg=;
-        b=NXWev9NXtnh14fB0BOJY/aqQOR9UOZXXUGr1bAPHHYOH2tpyvtO6EgzCbQRusZXk2L
-         GQfhZjwVaVvKjNDI97YE4yA/B/XfUelQbfSxsVHdlvHa1ig8ov1Iap8cof5UN7bjUSpg
-         sOqGYCKKuVCAVuoh90b+HW0tgh1vLZrHbWIwp47Rpt64IOO2zr3U3EdzWYRMZKFlCU18
-         gY3jyhfuEKmhr9fmwDyL15uR6Ma/2m2ns5dBevytzJd+0l6aJ8c1q40L43oSoVx9gFEp
-         HKbFIHcMHUoOPqdNS5PVCx2durlEWN7R5Zq5YM7ppanaKyDve/3Lpf5QhIhyVKiRzrva
-         zzGA==
-X-Gm-Message-State: AOAM532mz7GRB1EsEi0rBvOljxMjfhH2/YiHTf6GeB6RkXhcc3RTwk9w
-        CMC0T6FROQdh6T2eFHLbIRDxOhxTQs1RPcztD82R+w==
-X-Google-Smtp-Source: ABdhPJwkj8NL5zp+q4S4GBVPgKweYcMhpEHQU9ScieMb1qOnyIRY9ZULyNPHba9ox1is5xBNjGQKqzly82AVsgTZlQM=
-X-Received: by 2002:a7b:c0cc:: with SMTP id s12mr5862628wmh.111.1591131229682;
- Tue, 02 Jun 2020 13:53:49 -0700 (PDT)
+        Tue, 2 Jun 2020 16:56:58 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51586 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgFBU46 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 16:56:58 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 20B6180511;
+        Tue,  2 Jun 2020 22:56:55 +0200 (CEST)
+Date:   Tue, 2 Jun 2020 22:56:53 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     Liu Ying <victor.liu@nxp.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for KOE
+ TX26D202VM0BWA panel
+Message-ID: <20200602205653.GC56418@ravnborg.org>
+References: <1590991880-24273-1-git-send-email-victor.liu@nxp.com>
+ <CACvgo50UOby-xV_OYmM55VUXUbwLxK-q6bs2FoS_FuwB9ChYJg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
- <20200526191303.1492-4-james.quinlan@broadcom.com> <20200529174634.GA2630216@bogus>
-In-Reply-To: <20200529174634.GA2630216@bogus>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Tue, 2 Jun 2020 16:53:37 -0400
-Message-ID: <CA+-6iNwWBFYHVKiwwJ95DYQ5zmc5uBo1cgZzd6rpD++aQWgGpw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/14] dt-bindings: PCI: Add bindings for more Brcmstb chips
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACvgo50UOby-xV_OYmM55VUXUbwLxK-q6bs2FoS_FuwB9ChYJg@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=8AirrxEcAAAA:8 a=yWwjhyuKAAAA:8 a=nC4w6PE1AAAA:8
+        a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=rqLoeK0XAFqiYc_KYMYA:9
+        a=CjuIK1q_8ugA:10 a=ST-jHhOKWsTCqRlWije3:22 a=Af9y4jXI75YbyZfcaVTS:22
+        a=6x2acwxlnJam7TDHjV8g:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 1:46 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, May 26, 2020 at 03:12:42PM -0400, Jim Quinlan wrote:
-> > From: Jim Quinlan <jquinlan@broadcom.com>
+Hi Emil.
+
+On Tue, Jun 02, 2020 at 01:46:19PM +0100, Emil Velikov wrote:
+> On Tue, 2 Jun 2020 at 08:17, Liu Ying <victor.liu@nxp.com> wrote:
 > >
-> > - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
-> >   7211 (STB version of RPi4).
-> > - add new property 'brcm,scb-sizes'
-> > - add new property 'resets'
-> > - add new property 'reset-names'
-> > - allow 'ranges' and 'dma-ranges' to have more than one item and update
-> >   the example to show this.
+> > This patch adds support for Kaohsiung Opto-Electronics Inc.
+> > 10.1" TX26D202VM0BWA WUXGA(1920x1200) TFT LCD panel with LVDS interface.
+> > The panel has dual LVDS channels.
 > >
-> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > My panel is manufactured by US Micro Products(USMP).  There is a tag at
+> > the back of the panel, which indicates the panel type is 'TX26D202VM0BWA'
+> > and it's made by KOE in Taiwan.
+> >
+> > The panel spec from USMP can be found at:
+> > https://www.usmicroproducts.com/sites/default/files/datasheets/USMP-T101-192120NDU-A0.pdf
+> >
+> > The below panel spec from KOE is basically the same to the one from USMP.
+> > However, the panel type 'TX26D202VM0BAA' is a little bit different.
+> > It looks that the two types of panel are compatible with each other.
+> > http://www.koe.j-display.com/upload/product/TX26D202VM0BAA.pdf
+> >
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > Signed-off-by: Liu Ying <victor.liu@nxp.com>
 > > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 40 +++++++++++++++++--
-> >  1 file changed, 36 insertions(+), 4 deletions(-)
+> >  drivers/gpu/drm/panel/panel-simple.c | 34 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
 > >
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > index 8680a0f86c5a..66a7df45983d 100644
-> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -14,7 +14,13 @@ allOf:
+> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > index b6ecd15..7c222ec 100644
+> > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > @@ -2200,6 +2200,37 @@ static const struct panel_desc koe_tx14d24vm1bpa = {
+> >         },
+> >  };
 > >
-> >  properties:
-> >    compatible:
-> > -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> > +    items:
-> > +      - enum:
->
-> Don't need items here. Just change the const to enum.
->
-> > +          - brcm,bcm2711-pcie # The Raspberry Pi 4
-> > +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-> > +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-> > +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
-> > +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
-> >
-> >    reg:
-> >      maxItems: 1
-> > @@ -34,10 +40,12 @@ properties:
-> >        - const: msi
-> >
-> >    ranges:
-> > -    maxItems: 1
-> > +    minItems: 1
-> > +    maxItems: 4
-> >
-> >    dma-ranges:
-> > -    maxItems: 1
-> > +    minItems: 1
-> > +    maxItems: 6
-> >
-> >    clocks:
-> >      maxItems: 1
-> > @@ -58,8 +66,30 @@ properties:
-> >
-> >    aspm-no-l0s: true
-> >
-> > +  resets:
-> > +    description: for "brcm,bcm7216-pcie", must be a valid reset
-> > +      phandle pointing to the RESCAL reset controller provider node.
-> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> > +static const struct display_timing koe_tx26d202vm0bwa_timing = {
+> > +       .pixelclock = { 151820000, 156720000, 159780000 },
+> > +       .hactive = { 1920, 1920, 1920 },
+> > +       .hfront_porch = { 105, 130, 142 },
+> > +       .hback_porch = { 45, 70, 82 },
+> > +       .hsync_len = { 30, 30, 30 },
+> > +       .vactive = { 1200, 1200, 1200},
+> > +       .vfront_porch = { 3, 5, 10 },
+> > +       .vback_porch = { 2, 5, 10 },
+> > +       .vsync_len = { 5, 5, 5 },
+> > +};
 > > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: rescal
->
-> These are going to need to be an if/then schema if they only apply to
-> certain compatible(s).
+> > +static const struct panel_desc koe_tx26d202vm0bwa = {
+> > +       .timings = &koe_tx26d202vm0bwa_timing,
+> > +       .num_timings = 1,
+> > +       .bpc = 8,
+> > +       .size = {
+> > +               .width = 217,
+> > +               .height = 136,
+> > +       },
+> > +       .delay = {
+> > +               .prepare = 1000,
+> > +               .enable = 1000,
+> > +               .unprepare = 1000,
+> > +               .disable = 1000,
+> Ouch 1s for each delay is huge. Nevertheless it matches the specs so,
+> the series is:
+> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+> 
+> Sam, Thierry I assume you'll merge the series. Let me know if I should
+> pick it up.
+I am quite busy with non-linux stuff these days so fine if you can pick
+them up. I like that simple panel patches are processed fast.
 
-Why is that -- the code is general enough to handle its presence or
-not (it is an optional compatibility)>
+I expect to have some hours for linux work friday or saturday, but no
+promises...
 
->
->
-> > +
-> > +  brcm,scb-sizes:
-> > +    description: (u32, u32) tuple giving the 64bit PCIe memory
-> > +      viewport size of a memory controller.  There may be up to
-> > +      three controllers, and each size must be a power of two
-> > +      with a size greater or equal to the amount of memory the
-> > +      controller supports.
->
-> This sounds like what dma-ranges should express?
+	Sam
 
-There is some overlap but this contains information that is not in the
-dma-ranges.  Believe me I tried.
 
->
-> If not, we do have 64-bit size if that what you need.
-
-IIRC I tried the 64-bit size but the YAML validator did not like it;
-it wanted numbers like  <0x1122334455667788> while dtc wanted <
-0x11223344 0x55667788>.  I gave up trying and switched to u32.
-
-Thanks,
-Jim
-
->
->
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +      - items:
-> > +          minItems: 2
-> > +          maxItems: 6
-> > +
-> >  required:
-> >    - reg
-> > +  - ranges
-> >    - dma-ranges
-> >    - "#interrupt-cells"
-> >    - interrupts
-> > @@ -93,7 +123,9 @@ examples:
-> >                      msi-parent = <&pcie0>;
-> >                      msi-controller;
-> >                      ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-> > -                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-> > +                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
-> > +                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
-> >                      brcm,enable-ssc;
-> > +                    brcm,scb-sizes = <0x0 0x80000000 0x0 0x80000000>;
-> >              };
-> >      };
-> > --
-> > 2.17.1
-> >
+> 
+> -Emil
