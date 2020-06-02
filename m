@@ -2,141 +2,122 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF03C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF7BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95A15206A2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56FD620663
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 12:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AM+9tD6c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JetxGkcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgFBMti (ORCPT
+        id S1726130AbgFBM47 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43652 "EHLO
+        Tue, 2 Jun 2020 08:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMth (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 08:49:37 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A31C061A0E
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 05:49:37 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id q2so1952361vsr.1
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 05:49:37 -0700 (PDT)
+        with ESMTP id S1726012AbgFBM47 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 08:56:59 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC23C061A0E;
+        Tue,  2 Jun 2020 05:56:59 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id a10so1195623uan.8;
+        Tue, 02 Jun 2020 05:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=u2UCJQtDiG0eHQBJkG5+CdCw59UdXa7OZsIDHTFqlNI=;
-        b=AM+9tD6cynbWf8zZpkOGrVG16SS8ZAJDBrCBcdZsdX5thmEf7Yww4G8MZu09ToM/1f
-         6XbT6VaSn2jqfmcI/kfjlRwYBCXWMjFuYdPYNQQhVW6Poo2x/DlaKJCsNDz8ZlFNMU75
-         NWK+BU/oTz0eGcPG95ZWQZtaxcwDQANzeV66VzYAwx1KWc5EBruseix8RDYgCx4qiKp/
-         rNv2BK2jHuY6cltKUZoo1wtvDgUY55rtvW7lHuXPuYs/6jbJFPSyTkYSArPY5Jd3OuER
-         3yEhUBImO1/iwZJDzgV9ii0+8GMHbD+57eEq2ODXwZymjiZDFS1GU2MKoWMzf5jaVrHh
-         Xb2A==
+        bh=BpsIlBQ5nejFohRETbNb9q04gA6fq5BCcsSBn6KKApI=;
+        b=JetxGkcmZWwBcj73qk5GvrPQ52LZYWBhk1chHXBbYxrojwIOYCdLU6/e4biJGuow5b
+         tVoDhU2dirPxe0+SQa6spJ5Di7Jjk0/Bkgco+Tpe0Z3oAFDHwh0KzP7w92q5qj/3/x3Q
+         9L8vVzBOe32M8mc6kbcNKPmzg0fzMn/paYJ/jnoHguC1SPWDNX9zXsXanb+WqbRV+249
+         QMj5r88MFMgwB/mim2CvQ6KmhxANKMbwldClAaVj/3SBwiVC5ZmtFzpv9tadk+xPBodH
+         xg5ImqIr4I7KAgHbdnae1fbbQpdjwEwen0yl9P7/GvxCOo+2LHlSYtreF+iVF4LI/u8f
+         8AVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=u2UCJQtDiG0eHQBJkG5+CdCw59UdXa7OZsIDHTFqlNI=;
-        b=QDbL/IOdh9kLBzEBGNiAVZCiGlWT7Dajo9RJ+K92bkg+lLjn9F08lajtzJlnqQlbkk
-         dA+TAylq63YliOi8P3gs03jnyZlPvqcZ3aBbmFMdAPtgzwPd8Cfw0HO4rPJMxgVvFSM+
-         48q1s4TK35zexUWxqlzmfWXuuivBNakZApB/lpiY/gcmrDlfDRYwBm0wHvJEC33pUgOI
-         8P5L08Y76H+ThPsHLzv55OBmIOpbPUS5BGpnQSV2pc7ju2Rnq6uuTx2jOdizh/pf/eeA
-         qV2NUZZ5IdeakjXt0wvsVXxeu5016eGSBC60GATVzl7TFxKef9hyukutXNTFwJOB4TVu
-         FRyA==
-X-Gm-Message-State: AOAM530wqyHwLaNu/s9G0P4cZbLtNSti//w4pvWQxqWNMc/EWovahqm6
-        98AWc2Qna0DNbQZVEp5XAqdPi3Qw60KJwsPyh44=
-X-Google-Smtp-Source: ABdhPJw/+z7NB2VWRLaqW6glWW9sGgKJepBqz0O7f+2nQCNT4ZvDq0MnedfrItwQYQF9aQ3NnGmW8s5bLIbEp8NUrCU=
-X-Received: by 2002:a67:3291:: with SMTP id y139mr5737284vsy.37.1591102176673;
- Tue, 02 Jun 2020 05:49:36 -0700 (PDT)
+        bh=BpsIlBQ5nejFohRETbNb9q04gA6fq5BCcsSBn6KKApI=;
+        b=PKkx4xmIBXJtad+QTQRR6oeT9vTjYqg6ss9NBreIy6NKlUurbVwR5gEQ8S+6Ryz8Yb
+         17CnHYAOM4rktD1zJMhMzW2jUTzX9YSxnVH20pCXaFO4BQ1D2BQ2l6deCt2q57/UH/up
+         mpIHBuDDTHv3pLM8fze7oYYp7B/FtnjGhTHZUABDHlxkSO3nFwesg6/eju7lb1S5FyZp
+         kCoCo4W9PfSzrtnJ962ufV8y4RH7sU9wL3jNqHb/MgJvOIGHIvkjUwTNHNZ1KcQCTfjD
+         5lAVUej5dZAZZyM8zn0ONJFcfQw8qryZJr+wMIZ9m81tr3gN+OxilqB/dDlAQePky7vh
+         Y3pA==
+X-Gm-Message-State: AOAM53174QG3mV1MyUUoZkzMorYgoR0ZMzoduvJMRFMGooJgad01Ejxq
+        XVrhVu6Uz+FYA+RNnvDl5Cm/3t0kHSbwdxMy9XM=
+X-Google-Smtp-Source: ABdhPJy94b4dAChxDuW4wDOKIg2tO2nMimj827DSzBUBaeBS4xq/NcIVF/RbxLJKqEmvBcwkcK/jKU0XrmmGsie+2ZA=
+X-Received: by 2002:a9f:22e1:: with SMTP id 88mr13225614uan.19.1591102618237;
+ Tue, 02 Jun 2020 05:56:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <1590991880-24273-1-git-send-email-victor.liu@nxp.com>
-In-Reply-To: <1590991880-24273-1-git-send-email-victor.liu@nxp.com>
+References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
+ <20200427081952.3536741-9-adrian.ratiu@collabora.com> <4acc09e8-0610-01f6-b18d-3ffc390c45a3@st.com>
+ <87blm387vt.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
+In-Reply-To: <87blm387vt.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
 From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Tue, 2 Jun 2020 13:46:19 +0100
-Message-ID: <CACvgo50UOby-xV_OYmM55VUXUbwLxK-q6bs2FoS_FuwB9ChYJg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for KOE TX26D202VM0BWA panel
-To:     Liu Ying <victor.liu@nxp.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        NXP Linux Team <linux-imx@nxp.com>
+Date:   Tue, 2 Jun 2020 13:53:40 +0100
+Message-ID: <CACvgo51QyzEa8LFpGq5zjYV-0TifQRtNh4WhMYy8jNtaswxd7Q@mail.gmail.com>
+Subject: Re: [Linux-stm32] [PATCH v8 08/10] drm: stm: dw-mipi-dsi: let the
+ bridge handle the HW version check
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     Philippe CORNU <philippe.cornu@st.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 08:17, Liu Ying <victor.liu@nxp.com> wrote:
->
-> This patch adds support for Kaohsiung Opto-Electronics Inc.
-> 10.1" TX26D202VM0BWA WUXGA(1920x1200) TFT LCD panel with LVDS interface.
-> The panel has dual LVDS channels.
->
-> My panel is manufactured by US Micro Products(USMP).  There is a tag at
-> the back of the panel, which indicates the panel type is 'TX26D202VM0BWA'
-> and it's made by KOE in Taiwan.
->
-> The panel spec from USMP can be found at:
-> https://www.usmicroproducts.com/sites/default/files/datasheets/USMP-T101-192120NDU-A0.pdf
->
-> The below panel spec from KOE is basically the same to the one from USMP.
-> However, the panel type 'TX26D202VM0BAA' is a little bit different.
-> It looks that the two types of panel are compatible with each other.
-> http://www.koe.j-display.com/upload/product/TX26D202VM0BAA.pdf
->
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: Liu Ying <victor.liu@nxp.com>
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index b6ecd15..7c222ec 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2200,6 +2200,37 @@ static const struct panel_desc koe_tx14d24vm1bpa = {
->         },
->  };
->
-> +static const struct display_timing koe_tx26d202vm0bwa_timing = {
-> +       .pixelclock = { 151820000, 156720000, 159780000 },
-> +       .hactive = { 1920, 1920, 1920 },
-> +       .hfront_porch = { 105, 130, 142 },
-> +       .hback_porch = { 45, 70, 82 },
-> +       .hsync_len = { 30, 30, 30 },
-> +       .vactive = { 1200, 1200, 1200},
-> +       .vfront_porch = { 3, 5, 10 },
-> +       .vback_porch = { 2, 5, 10 },
-> +       .vsync_len = { 5, 5, 5 },
-> +};
-> +
-> +static const struct panel_desc koe_tx26d202vm0bwa = {
-> +       .timings = &koe_tx26d202vm0bwa_timing,
-> +       .num_timings = 1,
-> +       .bpc = 8,
-> +       .size = {
-> +               .width = 217,
-> +               .height = 136,
-> +       },
-> +       .delay = {
-> +               .prepare = 1000,
-> +               .enable = 1000,
-> +               .unprepare = 1000,
-> +               .disable = 1000,
-Ouch 1s for each delay is huge. Nevertheless it matches the specs so,
-the series is:
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+Hi Adrian,
 
-Sam, Thierry I assume you'll merge the series. Let me know if I should
-pick it up.
+On Mon, 1 Jun 2020 at 10:14, Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
+>
+> On Fri, 29 May 2020, Philippe CORNU <philippe.cornu@st.com> wrote:
+> > Hi Adrian, and thank you very much for the patchset.  Thank you
+> > also for having tested it on STM32F769 and STM32MP1.  Sorry for
+> > the late response, Yannick and I will review it as soon as
+> > possible and we will keep you posted.  Note: Do not hesitate to
+> > put us in copy for the next version  (philippe.cornu@st.com,
+> > yannick.fertre@st.com) Regards, Philippe :-)
+>
+> Hi Philippe,
+>
+> Thank you very much for your previous and future STM testing,
+> really appreciate it! I've CC'd Yannick until now but I'll also CC
+> you sure :)
+>
+> It's been over a month since I posted v8 and I was just gearing up
+> to address all feedback, rebase & retest to prepare v9 but I'll
+> wait a little longer, no problem, it's no rush.
+>
+Small idea, pardon for joining so late:
+
+Might be a good idea to add inline comment, why the clocks are disabled so late.
+Effectively a 2 line version of the commit summary.
+
+Feel free to make that a separate/follow-up patch.
 
 -Emil
