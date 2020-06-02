@@ -2,146 +2,268 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B98BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C3DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12081206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A8C20835
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AQvHjZgv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoRrDRQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgFBQKa (ORCPT
+        id S1726809AbgFBQNZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:10:30 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:11551 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgFBQKa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:10:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591114229; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=6WkZkPNZYqHtyoOR3WPRpDqJzCSNDoDiaqF/KoiR35c=;
- b=AQvHjZgvmt5IdIFAkFRgvRhNTRLsFrkI56sUZxVZ9KAr4E59a+w5rr8HiiZrKI6uU6vkYKo9
- FDDVx6DbpOkW9IwlAr/RGgVaJxOfcuDbGzSeEZzBymlLR8BKg/0T9dioYXETQvYA5mMMigGr
- xcS6jr64qfZSr3UlfiP59vG8wWw=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5ed679ee2738686126788cd0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 16:10:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5E079C43395; Tue,  2 Jun 2020 16:10:21 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 816A8C433CB;
-        Tue,  2 Jun 2020 16:10:20 +0000 (UTC)
+        Tue, 2 Jun 2020 12:13:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgFBQNY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 12:13:24 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF15C08C5C0
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 09:13:23 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x13so4011499wrv.4
+        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 09:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YCc3Aqf4BIr9Rnf1jzyRRww8U9DCaXD931Bc2v9LHGk=;
+        b=RoRrDRQ+wD+Q30mxCNkTZsCyOMwpWwgQvWv9uanSn6cmrlMar1iPbj8tiWB+vk8o1V
+         7YVB1mKdedpI4U0wJXL5Ny/Ecbe/EELxODi1LpHdpLPjTgF8Z0KWV9+LrQGqufNd4xGk
+         yQIy7+CkagZgk9IT5nzX0hJR9DPwuPFU1jwu1sNNQtDUpl6Kx5N08ZbbdBqV/ugWzr8z
+         gxfxdh5pC0WmkOavqVVUe1uhuVhg1Bzwf+KpkMVSKCXCKHy9Niy+lOcFOoAoSEOZk/oE
+         qidriLh1QmHPx2dN5bBd0vyRYMFSQHVii2WsIKQsrH2vG2FMEqMrZoyy5YYKEZpwhjY8
+         q52g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YCc3Aqf4BIr9Rnf1jzyRRww8U9DCaXD931Bc2v9LHGk=;
+        b=fTiFLhWSLlzIBs8mVMoJDHsuHSRyVr+rB1UDA9iFTznhaOpfXehpE5v5YmihNhpFuw
+         fBfXMAoJAsijB6XjoYgOx9z3s3T8ESxmMhy2rGnb1AfThzckms8NCQdslpZGMzb+R6wN
+         SgH4uYGYuOWVtCVG8m5ncclkdsozbRO8jpe6zIMfi3Ukx3dl5+72smEir47aQ7ultTZr
+         z1uAhKm8gGa4xE9QzbhO9Evcyj/z++qv9dY1nEYHTU0DOou0zEAUcgUS5ifz5EPhipsp
+         Its/gnTXdRHuQ9W0ei6emMgOSNdCV96GTlSrMvyYPM5nRsSW/zwvqoqp8s7HIrVGxm+P
+         2xEQ==
+X-Gm-Message-State: AOAM530HuEIO/AzPTwa8FHAfrmClwRB0SVl42bbacDG1bcCBgTqVPGtY
+        rhckuH6MyGLabq8zPbwnD0U=
+X-Google-Smtp-Source: ABdhPJy5ltrqEymhwegMFG4Q9FZ9dFa7xPt8JJj3b23N9OLf5r+kpZ1CgmhluHc2969SgNBk3ZJlvw==
+X-Received: by 2002:adf:d84c:: with SMTP id k12mr26912631wrl.265.1591114401767;
+        Tue, 02 Jun 2020 09:13:21 -0700 (PDT)
+Received: from cluster5 ([80.76.206.81])
+        by smtp.gmail.com with ESMTPSA id c140sm291884wmd.18.2020.06.02.09.13.21
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Tue, 02 Jun 2020 09:13:21 -0700 (PDT)
+From:   Matthew Hagan <mnhagan88@gmail.com>
+Cc:     Matthew Hagan <mnhagan88@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/3] ARM: dts: NSP: Add common bindings for Meraki MX64/65
+Date:   Tue,  2 Jun 2020 17:11:17 +0100
+Message-Id: <d2db4e0aafff74cd16b2c2a9b2c86fba7d8f5f84.1591114003.git.mnhagan88@gmail.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1591114003.git.mnhagan88@gmail.com>
+References: <cover.1591114003.git.mnhagan88@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 02 Jun 2020 21:40:20 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
-        "Kristian H . Kristensen" <hoegsberg@chromium.org>,
-        mka@chromium.org, devicetree-owner@vger.kernel.org
-Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
-In-Reply-To: <CACvgo50b+m2+onak=AZfgihkBXEP9POjMR52087v==-puLdkQQ@mail.gmail.com>
-References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
- <CACvgo50eb5_jp_6B5tkV9cX_X2_y2Xnavu+wvUUhHN5FsV9hiw@mail.gmail.com>
- <cd61dd742e73b89794fc1b812d9fdcd9@codeaurora.org>
- <CACvgo50b+m2+onak=AZfgihkBXEP9POjMR52087v==-puLdkQQ@mail.gmail.com>
-Message-ID: <8742ac6fbd498fdc22dcd469c3a2d52a@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Emil,
+Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+---
+ arch/arm/boot/dts/bcm958625-mx6x-common.dtsi | 172 +++++++++++++++++++
+ 1 file changed, 172 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm958625-mx6x-common.dtsi
 
-On 2020-06-02 21:09, Emil Velikov wrote:
-> On Tue, 2 Jun 2020 at 15:49, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Hi Emil,
->> 
->> On 2020-06-02 19:43, Emil Velikov wrote:
->> > Hi Krishna,
->> >
->> > On Tue, 2 Jun 2020 at 08:17, Krishna Manikandan
->> > <mkrishn@codeaurora.org> wrote:
->> >>
->> >> Define shutdown callback for display drm driver,
->> >> so as to disable all the CRTCS when shutdown
->> >> notification is received by the driver.
->> >>
->> >> This change will turn off the timing engine so
->> >> that no display transactions are requested
->> >> while mmu translations are getting disabled
->> >> during reboot sequence.
->> >>
->> >> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
->> >>
->> > AFAICT atomics is setup in msm_drm_ops::bind and shutdown in
->> > msm_drm_ops::unbind.
->> >
->> > Are you saying that unbind never triggers? If so, then we should
->> > really fix that instead, since this patch seems more like a
->> > workaround.
->> >
->> 
->> Which path do you suppose that the unbind should be called from, 
->> remove
->> callback? Here we are talking about the drivers which are builtin, 
->> where
->> remove callbacks are not called from the driver core during
->> reboot/shutdown,
->> instead shutdown callbacks are called which needs to be defined in 
->> order
->> to
->> trigger unbind. So AFAICS there is nothing to be fixed.
->> 
-> Interesting - in drm effectively only drm panels implement .shutdown.
-> So my naive assumption was that .remove was used implicitly by core,
-> as part of the shutdown process. Yet that's not the case, so it seems
-> that many drivers could use some fixes.
-> 
-> Then again, that's an existing problem which is irrelevant for msm.
-> -Emil
-
-To give more context, we are actually targeting the clients/consumers
-of SMMU/IOMMU here because we have to make sure that before the supplier
-(SMMU) shuts down, its consumers/clients need to be shutdown properly.
-Now the ordering of this is taken care in the SMMU driver via 
-device_link
-which makes sure that consumer shutdown callbacks are called first, but 
-we
-need to define shutdown callbacks for all its consumers to make sure we
-actually shutdown the clients or else it would invite the crashes during 
-reboot
-which in this case was seen for display.
-
-Thanks,
-Sai
-
+diff --git a/arch/arm/boot/dts/bcm958625-mx6x-common.dtsi b/arch/arm/boot/dts/bcm958625-mx6x-common.dtsi
+new file mode 100644
+index 000000000000..1e253dd0941a
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm958625-mx6x-common.dtsi
+@@ -0,0 +1,172 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Common Bindings for Cisco Meraki MX64 (Kingpin) and MX65 (Alamo) devices.
++ *
++ * Copyright (C) 2020 Matthew Hagan <mnhagan88@gmail.com>
++ */
++
++/dts-v1/;
++
++#include "bcm-nsp.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x60000000 0x80000000>;
++	};
++
++	pwm-leds {
++		compatible = "pwm-leds";
++
++		red {
++			label = "pwm:led:red";
++			pwms = <&pwm 1 50000>;
++		};
++
++		green {
++			label = "pwm:led:green";
++			pwms = <&pwm 2 50000>;
++		};
++
++		blue {
++			label = "pwm:led:blue";
++			pwms = <&pwm 3 50000>;
++		};
++	};
++};
++
++&L2 {
++        arm,io-coherent;
++        prefetch-data = <1>;
++        prefetch-instr = <1>;
++};
++
++&uart0 {
++	clock-frequency = <62500000>;
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	eeprom: at24@50 {
++		compatible = "atmel,24c64";
++		pagesize = <32>;
++		reg = <0x50>;
++	};
++};
++
++&amac2 {
++	status = "okay";
++};
++
++&nand {
++	nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-on-flash-bbt;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		nand-ecc-strength = <24>;
++		nand-ecc-step-size = <1024>;
++
++		brcm,nand-oob-sector-size = <27>;
++
++		partition@0 {
++			label = "U-boot";
++			reg = <0x00 0x80000>;
++			read-only;
++		};
++
++		partition@80000 {
++			label = "Shmoo";
++			reg = <0x80000 0x80000>;
++			read-only;
++		};
++
++		partition@100000 {
++			label = "bootkernel1";
++			reg = <0x100000 0x300000>;
++		};
++
++		partition@400000 {
++			label = "senao_nvram";
++			reg = <0x400000 0x100000>;
++		};
++
++		partition@500000 {
++			label = "bootkernel2";
++			reg = <0x500000 0x300000>;
++		};
++
++		partition@800000 {
++			label = "ubi";
++			reg = <0x800000 0x3f700000>;
++		};
++	};
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&pwm {
++	status = "okay";
++	#pwm-cells = <2>;
++	chan0 {
++		channel = <1>;
++		active_low = <1>;
++		};
++	chan1 {
++		channel = <2>;
++		active_low = <1>;
++	};
++	chan2 {
++		channel = <3>;
++		active_low = <1>;
++	};
++};
++
++&ccbtimer1 {
++	status = "disabled";
++};
++
++&pinctrl {
++	pinctrl-names = "default";
++	pinctrl-0 = <&nand_sel>, <&gpiobs>, <&pwmc>;
++
++	nand_sel: nand_sel {
++		function = "nand";
++		groups = "nand_grp";
++	};
++
++	gpiobs: gpiobs {
++		function = "gpio_b";
++		groups = "gpio_b_0_grp", "gpio_b_1_grp", "gpio_b_2_grp",
++			 "gpio_b_3_grp";
++	};
++
++	pwmc: pwmc {
++		function = "pwm";
++		groups = "pwm0_grp", "pwm1_grp", "pwm2_grp", "pwm3_grp";
++	};
++
++	i2c_sel: i2c {
++		function = "i2c";
++		groups = "i2c_grp";
++	};
++};
++
++&sata_phy {
++	status = "disabled";
++};
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.25.4
+
