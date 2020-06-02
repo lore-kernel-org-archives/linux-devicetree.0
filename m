@@ -2,92 +2,119 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F33C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 18:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C513C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 18:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A872068D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 18:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D223206E2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 18:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V4aE8O7t"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="mi2pqEPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgFBSRu (ORCPT
+        id S1726630AbgFBSYf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38176 "EHLO
+        Tue, 2 Jun 2020 14:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgFBSRt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 14:17:49 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CFD6C08C5C1
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 11:17:49 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id n5so1235341ybo.7
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 11:17:49 -0700 (PDT)
+        with ESMTP id S1726037AbgFBSYc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 14:24:32 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBA0BC08C5C1
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 11:24:30 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id n24so13746003ejd.0
+        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 11:24:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XO5zhh03cD8xcnE7YG3/0qATRVY10NIoznHjKKdiQLs=;
-        b=V4aE8O7tPeCEWTFG/9ZitIb9tWUY1xODTnLRXthXMlQuWF4vL6wU7lZD81h+JJoCR0
-         xvhR24EB0sZ5I7AlSx7VyNCoqZDsL46wfYL6wCpVUtOBKqmm5nNhckZe+kfFQ1R3122+
-         LcuE0rlS77CWnyIrOEQuEOuZra71juQIswQoGVIWhjlZuZRW77tykBwtPjqG6Hz/YVA+
-         lAAgVXsY3zxAtNDpi4PUaTr6HUtWW/aeF7TBfdSgdKk+uvQK8BDWz5I+7gy3e47J31fG
-         43aQOmgnp0UkUSMqrwqWvrzwrCkGaqGji+Ww0ZoQmSdxM72ORfbur61zlloqo6hR4NGy
-         +U5w==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ScERK/mJtzfpHxvmlaUf1mObMaQePkT0Fb4iHyumpT8=;
+        b=mi2pqEPFdVSVruBZqBFQglIeWbr7dHFIV04+Zs7NI9FmcMe+VIFp7FBoFzL/G8zM0q
+         1Ln1G/ACLb6v4L5gsIGBLJ/ot+wV2xF4Uo3QDvb3dwvV1K0XH2lpNZdiH8yO7+wodOf6
+         zWtnJsPDKo7LDsx2Iz14oXO9SmKNJu3072l7gxkGs0GPnRA3ghSznaV4/CWlfOeNCSyx
+         yFLYaUf3ZehK6g0hBNBThER7lKuou/JIujr3Zp1O/07vK3JEDPg4eAPJx1+y08jawl1Z
+         65/GYDSKpHpsr1cXXpOSuB/cy4Ah3UljMMpiaCFUlq6cINCfWnfnRtTrQU1MyFUkiNMG
+         fMvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XO5zhh03cD8xcnE7YG3/0qATRVY10NIoznHjKKdiQLs=;
-        b=s7QFNFdjyuVn9hJ7/ODjvROsrfViCIGCiN9f3vaum4IBLJ3+y6MxvKH+yojQWXnrUd
-         I/A+7wcYwcBB8EW3HMjrIRzD7ARbxacK+8ojcX6ifZoyDX/OAlpAO/HMLqPWIqxBd5cy
-         BfeKSNFzua2AyDuS35vdEzsetfEmFIzJTl9tlRa6fpKYaMTAnk6BKuf1+CMlmC0q5stY
-         8DVOeENHyNVLjPWIn72T+1BOX0JSZdhbtRVCn8hzu0Dcxs61QcBRYBmV5/gSh23d4MrK
-         eXYuYPSEJRWpN+6Z6jkGKdqC9gutYl5KMV5s7XgWnVeeVeN6Pgo7cY7AbEcKoJesO9la
-         NHmQ==
-X-Gm-Message-State: AOAM533ZHXgF5lzIv6PjuA6p8Aq92nNGO5yxs1aiQhaWyJO9tRirBH9Y
-        WLiSh66PmkffKRQeSMPS3Kt/Dt+q9mz1mCB2bfgYJw==
-X-Google-Smtp-Source: ABdhPJyvUcQzaoxP9Z7+NA0ayq3zt+AYQ/qtQiBSju3DDjPhcIvQogWwu9LOqruUSOLERNvMmPwP1B1X9R/Yr5Hmyvw=
-X-Received: by 2002:a25:9ac4:: with SMTP id t4mr20795775ybo.356.1591121868222;
- Tue, 02 Jun 2020 11:17:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ScERK/mJtzfpHxvmlaUf1mObMaQePkT0Fb4iHyumpT8=;
+        b=UMoHRCHTtQJUgN45WmSg/wUKlBTRLgbabkXRKSu6Ypi++UG87Q0C+E/daON/AWW/5a
+         3QG4NaIP/Q9N5IzWzGW2QYWyCe6q+lMJ9iHIvdEBnW80CFZHV/LhlKlWJXV/QisWfv2k
+         s1ofMeuufg6mPjtV8oa9Ui37sh1QJzJP/6wG/4d5R+AYRusK5UYkvetD4KV3XLGO5HD1
+         PbWnfFtarQhYfssKmMPJprVJpn2/yXXj9d+1H9DGf1kIrWD0SUFsOLkgtZj2eTgfCYHZ
+         +BlkLBG8NHTs18xTzME+qe97rWGGNUjRo8tALUvT6vjeF360h924HbSi7xDvfQmthceq
+         NTMg==
+X-Gm-Message-State: AOAM532Z1wV5K+ClM9bGSgg8sFZFwpWjAwaf/EbfL7dOsOh/nh+G9of2
+        /g50ajWPIiuPaQ2ghph1TSuGKw==
+X-Google-Smtp-Source: ABdhPJzNqi0MnKQeX4fi+7IoeKx/H/jIAfnNcU0IWd6A5k8embb5CjFNsKUpq7Jt5RozAoi4g5RRkg==
+X-Received: by 2002:a17:906:651:: with SMTP id t17mr25633280ejb.394.1591122269431;
+        Tue, 02 Jun 2020 11:24:29 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id v12sm1945405eda.39.2020.06.02.11.24.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 11:24:28 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 20:24:25 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, jkridner@beagleboard.org,
+        robertcnelson@gmail.com
+Subject: Re: [PATCH] ARM: dts: AM33xx-l4: add gpio-ranges
+Message-ID: <20200602182425.GA862776@x1>
+References: <20200602131428.GA496390@x1>
+ <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
 MIME-Version: 1.0
-References: <20200529030012.254592-1-jnchase@google.com> <20200529030012.254592-3-jnchase@google.com>
- <CALTkaQ2OR+bc2QGeucA5aP3SiM5HLnx5=DoZQ51E_1d99Hb5Uw@mail.gmail.com>
- <CALTkaQ0NLgjS7H7De=7jy9jRG1xMFSbzdmxrFNerNU+o1rRzpg@mail.gmail.com> <d7e759d1-9bdf-0ab3-143a-f0e374667f04@xs4all.nl>
-In-Reply-To: <d7e759d1-9bdf-0ab3-143a-f0e374667f04@xs4all.nl>
-From:   Jeff Chase <jnchase@google.com>
-Date:   Tue, 2 Jun 2020 14:17:36 -0400
-Message-ID: <CALTkaQ3mq0iEPqSt92HVVkePRsUnuB2H=OZyp3O01jBSz=86_A@mail.gmail.com>
-Subject: Re: Fwd: [PATCH v3 2/2] media: cec: i2c: ch7322: Add ch7322 CEC
- controller driver
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > I haven't looked into the cec notifier mechanism yet but would it be
-> > better to try to use that instead if possible and just ignore this
-> > device's physical address detection? Then I could do more of a proper
-> > reset in this enable op. But I'm not sure if I can properly associate
-> > the device with an HDMI port on my platform unless I make some changes
-> > to coreboot.
->
-> I don't think this is useful: it's nice to have the CEC adapter do the
-> physical address detection.
->
-> One question about that though: if there is no physical address, can this
-> driver still transmit CEC messages? Specifically Image View On. This is
-> important to wake up displays that pull down the HPD when in standby.
+On Tue, Jun 02, 2020 at 04:44:03PM +0300, Grygorii Strashko wrote:
+> 
+> 
+> On 02/06/2020 16:14, Drew Fustini wrote:
+> > Add gpio-ranges properties to the gpio controller nodes.
+> > 
+> > These gpio-ranges were created based on "Table 9-10. CONTROL_MODULE
+> > REGISTERS" in the  "AM335x Technical Reference Manual" [0] and "Table
+> > 4-2. Pin Attributes" in the "AM335x Sitara Processor datasheet" [1].
+> > A csv file with this data is available for reference [2].
+> 
+> It will be good if you can explain not only "what" is changed, but
+> also "why" it's needed in commit message.
 
-Yes it can. I just verified this with the kwikwai analyzer.
+That is a good point.
 
-Thanks,
-Jeff
+One reason for this patch is I think it makes sense to add gpio-ranges
+properties as they describe the relationship between a gpio line and
+pin control register that exists in the hardware.  For example, GPMC_A0
+pin has mode 7 which is labeled gpio1_16. The conf_gpmc_a0 register is
+at offset 840h which makes it pin 16.
+
+The other reason is that I would like to patch omap_gpio_set_config()
+to call gpiochip_generic_config() for PIN_CONFIG_PULL_{UP,DOWN}. It
+currently fails at pinctrl_get_device_gpio_range():
+
+  omap_gpio_set_config()  
+  |- gpiochip_generic_config()
+     |- pinctrl_gpio_set_config()
+        |- gpio_to_pin()
+           |- pinctrl_get_device_gpio_range() [no gpio-ranges so fails]
+
+
+Thank you,
+Drew
