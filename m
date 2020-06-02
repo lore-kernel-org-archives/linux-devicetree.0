@@ -2,114 +2,139 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E08EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 05:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CF7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 05:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 647E9206A2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 05:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7FzDG0J"
+	by mail.kernel.org (Postfix) with ESMTP id CBF9B206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 05:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725787AbgFBFVQ (ORCPT
+        id S1728273AbgFBFZD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58994 "EHLO
+        Tue, 2 Jun 2020 01:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgFBFVP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 01:21:15 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A734C061A0E;
-        Mon,  1 Jun 2020 22:21:15 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n24so11472802ejd.0;
-        Mon, 01 Jun 2020 22:21:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8MzhGFpvwa3UfXHYcRPsEGkWRSqJ2Iw6pEALuEOQqkE=;
-        b=H7FzDG0JwgG/2pH1MrAAwYpycYFTHKzyMni1BuTKXn8qcaFxMk2NxfmD5v2tN7m0yu
-         06lVhvSbSV3+kCHvfED1hVSLHu6jE54FoQyNYhWoiulZD6wE8kqi/wDaMpB18f54kOGS
-         KCnBjHpbYyt62Id7AKefASLUJWL5z2lZNPRmNnroIAjZeCAWsXFTvWinNir8rTKRx8bs
-         Tf1py3P/zhGrhJwPd0VRvOgRu1JF6BkqVCKyoYtxJuzolDhMRrqF0nVFQS1yra+WMUyC
-         B164aIqxs2fZ9uscg5zpwPcH7WY9Hrsq48rrStfqYtvF6Up5d2GziSpstir/6siZL5cs
-         3bsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8MzhGFpvwa3UfXHYcRPsEGkWRSqJ2Iw6pEALuEOQqkE=;
-        b=EV5LHb33CQGqo2Ajqn3oG+Mg0lbU0aEpXETbW+zH3Ayrt3iOzfbngan8AHOlCwIdvh
-         0jem3Byj1so8lzd0cAdVGBFeJGTwNWC+K+vKspOGzPMMRi4kw/3v8/P8pVl+XKR53GUt
-         2WsvrWQd1DtAnpvRinkrbM63wkPJZAZhFNatIFytt7oGqSoJ8ySgUZRiInA4LQJKgJPu
-         JxJs22mhjI3P1UTEEcWPeE/Dv/rdwMyCnGyLqtIlSGXMupH5+ygoUcmiR7+nLy1qCLPp
-         zs+20RiSbTt6ubfq8yCFaSo/fkRPO6IbaE2FOv8MEOnpIWyEJZLh4zF2fgk4946epWgF
-         /n0Q==
-X-Gm-Message-State: AOAM533YqRcISTpAKI8Hp+q7DbhYojNMm2SL4BP5aNCCWcNVRDgmpfiP
-        WRvJMeGqNoSZXysbAUlrgZE=
-X-Google-Smtp-Source: ABdhPJwEJtJjHtnjQTurvhRnMv4L0axzw7MUv6dHx4TtBwbTsUpo6AqwjzJ1Mia58QfXBAgo7esmmA==
-X-Received: by 2002:a17:906:2e1a:: with SMTP id n26mr21516079eji.425.1591075274098;
-        Mon, 01 Jun 2020 22:21:14 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2df2:5300:959a:b3cc:b169:a3f0])
-        by smtp.gmail.com with ESMTPSA id dh22sm964480edb.94.2020.06.01.22.21.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 22:21:13 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Julius Werner <jwerner@chromium.org>,
-        Evan Benn <evanbenn@chromium.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-watchdog@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: rectify entry in ARM SMC WATCHDOG DRIVER
-Date:   Tue,  2 Jun 2020 07:21:04 +0200
-Message-Id: <20200602052104.7795-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S1728263AbgFBFZD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 01:25:03 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11FAC05BD43
+        for <devicetree@vger.kernel.org>; Mon,  1 Jun 2020 22:25:02 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jfzPu-0002KI-09; Tue, 02 Jun 2020 07:24:50 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jfzPs-0002Lz-VZ; Tue, 02 Jun 2020 07:24:48 +0200
+Date:   Tue, 2 Jun 2020 07:24:48 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     peng.fan@nxp.com
+Cc:     shawnguo@kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de,
+        aisheng.dong@nxp.com, robh+dt@kernel.org, sboyd@kernel.org,
+        linux@rempel-privat.de, jaswinder.singh@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        l.stach@pengutronix.de, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] dt-bindings: mailbox: imx-mu: support i.MX8M
+Message-ID: <20200602052448.fxepmwltc4465q4i@pengutronix.de>
+References: <1590999602-29482-1-git-send-email-peng.fan@nxp.com>
+ <1590999602-29482-2-git-send-email-peng.fan@nxp.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c2h6m5xrkl3f4s3k"
+Content-Disposition: inline
+In-Reply-To: <1590999602-29482-2-git-send-email-peng.fan@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:18:57 up 199 days, 20:37, 185 users,  load average: 0.07, 0.08,
+ 0.05
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit 5c24a28b4eb8 ("dt-bindings: watchdog: Add ARM smc wdt for mt8173
-watchdog") added the new ARM SMC WATCHDOG DRIVER entry in MAINTAINERS, but
-slipped in a minor mistake.
 
-Luckily, ./scripts/get_maintainer.pl --self-test=patterns complains:
+--c2h6m5xrkl3f4s3k
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  warning: no file matches F: devicetree/bindings/watchdog/arm-smc-wdt.yaml
+On Mon, Jun 01, 2020 at 04:20:00PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> Add i.MX8MQ/M/N/P compatible string to support i.MX8M SoCs
+>=20
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Docum=
+entation/devicetree/bindings/mailbox/fsl,mu.txt
+> index 26b7a88c2fea..906377acf2cd 100644
+> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> @@ -18,7 +18,8 @@ Messaging Unit Device Node:
+>  Required properties:
+>  -------------------
+>  - compatible :	should be "fsl,<chip>-mu", the supported chips include
+> -		imx6sx, imx7s, imx8qxp, imx8qm.
+> +		imx6sx, imx7s, imx8qxp, imx8qm, imx8mq, imx8mm, imx8mn,
+> +		imx8mp.
+>  		The "fsl,imx6sx-mu" compatible is seen as generic and should
+>  		be included together with SoC specific compatible.
+>  		There is a version 1.0 MU on imx7ulp, use "fsl,imx7ulp-mu"
+> --=20
+> 2.16.4
+>=20
+>=20
 
-Update file entry to intended file location.
+Hi Peng,
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Julius, Evan, please ack.
+The fsl,mu.yaml was already taken by Rob, so one or other patch will
+break by merge. I assume you should drop this change.
 
-Wim, please pick this minor patch into your -next tree.
 
-applies cleanly on next-20200529
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--c2h6m5xrkl3f4s3k
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b045b70e54df..dcfb09700b96 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1489,7 +1489,7 @@ ARM SMC WATCHDOG DRIVER
- M:	Julius Werner <jwerner@chromium.org>
- R:	Evan Benn <evanbenn@chromium.org>
- S:	Maintained
--F:	devicetree/bindings/watchdog/arm-smc-wdt.yaml
-+F:	Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
- F:	drivers/watchdog/arm_smc_wdt.c
- 
- ARM SMMU DRIVERS
--- 
-2.17.1
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl7V4pgACgkQ4omh9DUa
+UbObbg//WhWLqmjlyeR0A0GCaFvcBoDzS1TBdruVqmmFsGcgHhnHeH3c3STzS8ig
+cvnCfziAkNQLbRiqqPZO9J2n39SIX/Nps2JujTRTUldgKYK4/OTge15skrNTXQDD
+R/J3a6HaqgFPDTjEMzgjOe/1MvMtJrao1Ej4sJ08BSkQICy/GOPzVGy7/VeSFF1g
+3X6Z8lzHsU2BdS5IzTwQGEWVZ2JkEnK8qmyTHFL7HFjpNgh7CWwv34u2GAaeaC8/
+HnpfPA1JI2WEHbv+fVxMZjx04cmbHXFclp2qPu8skAgcEJMB1+UelVUPuXDgvqlj
+0kE2SgPeVtgX+IWWqaUbZh5f3baAUXu/I+miACCeLCV3SBcDJMDI7G5N4KV8mMu4
+QzXzHXVSEshTKSNx8rj6v04TSycrD/F5zArIfy04dnkoWd9ZZuwDR2BzQziHQqUa
+STPlogKn80dqho1oScRU0UtVTJtnk/SH8AgNatL+vJZbD4x4eW5ntE1LiU5oUfUR
+VvbsdhCPduN2QvTv+cENBC6BzqONJMDumHgY/8RirvqvfL2zSFxKwtAu9q5ay56r
+0Lkv2AQhn8d49EbEebxIPSM++gdUEw5usf/pbRT0J+YHPAviTZkhovjCAuPlli9D
+VKZHRW2V7rsbv4BArG8SpKGFDuHLgFNDZvaI+aM0HqiGYrS/hbM=
+=YyCu
+-----END PGP SIGNATURE-----
+
+--c2h6m5xrkl3f4s3k--
