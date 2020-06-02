@@ -2,178 +2,201 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B60C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F22C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9C26206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:38:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u9u62OK0"
+	by mail.kernel.org (Postfix) with ESMTP id 7208C2077D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 17:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgFBRij (ORCPT
+        id S1726174AbgFBRvH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:38:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbgFBRij (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 13:38:39 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1987C05BD1E;
-        Tue,  2 Jun 2020 10:38:38 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 64so5367261pfg.8;
-        Tue, 02 Jun 2020 10:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HAbgr6zzu7r3PzTp5xRYYLgURACWC5IB5Lo9NqHN5fo=;
-        b=u9u62OK0Uz5k1NzgozSXxo36T3wV9tU3tuP7QiUTICd5Z10I5tWt/FC90JijoDefoB
-         hv2LAGTV3gI99dRYnbE/XPwDsJnXFEG+gx2NdICxSiBzqA+oaklooUtdmwuP+J9kpbFf
-         oK+arfayMtiRluo0rXam4pMeEa8F3yKXQAoDGLYbyDWBkkLRnQRRyOTAjv1l9alSPrm8
-         lzguxtttntllPT5yCJ7gcV7nzz8G19UOeseFAlA3TzpNfcIAov+O23C2W2EqtUkTfmsS
-         o3ZYmU700zdrxhni6MLHxrAea767urY6Ti3b9v+aUjL1IT1XPa3QU+IYYKzyrsFMp+Z4
-         0Xlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HAbgr6zzu7r3PzTp5xRYYLgURACWC5IB5Lo9NqHN5fo=;
-        b=D0vgDrVbw6TZFExSsR/J08Vz5bVHIRULo3pXuRIkBkJVqQex9fGrga8fUImaYFgogt
-         5ovH6ukDtVnCAXcmV1UfF+vrl0Iydb/MDOkXnIRcmhUn6HnvonqvutnrFOizQ1BBqwsK
-         D9a/OAPuE/9Nc6HENHcv/7Z1RPA9yjc68hf24OixF788Y/5KGOppncvZCUhhxBNy+tPq
-         HQguBWGD4ojbqVZDojKuPuCqBPct/VGo3Ihwur6iTSEER6KILlVtn/Mz9s8Qm/kfCUm5
-         A6ve6xc0ovQlIIlzxXBuBWEoALamoy2cD2XOjXwpJo5KwR+hCN4/emeJfO0Wq+CFYSgf
-         mGLA==
-X-Gm-Message-State: AOAM530YIOZPV6e9EA1LoIp9w2J4ow7aKwzG0jzUkyYitSmDAa7TIM+C
-        oKXwk1hke93NQ9DW5GQ09r4=
-X-Google-Smtp-Source: ABdhPJxAbqcmXVF8wyXKbHqP1xkJnZ4nuq6VrQpjX+86dyaNozOCQsWXCGFL4FJIV2YghvUde/YaSA==
-X-Received: by 2002:a63:658:: with SMTP id 85mr24337043pgg.181.1591119518467;
-        Tue, 02 Jun 2020 10:38:38 -0700 (PDT)
-Received: from localhost.localdomain ([223.235.152.125])
-        by smtp.gmail.com with ESMTPSA id i22sm2864382pfo.92.2020.06.02.10.38.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jun 2020 10:38:37 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 10/10] arm64: dts: actions: Add uSD support for Cubieboard7
-Date:   Tue,  2 Jun 2020 23:03:12 +0530
-Message-Id: <1591119192-18538-11-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
-References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
+        Tue, 2 Jun 2020 13:51:07 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:53673 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726019AbgFBRvH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 13:51:07 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.143.250])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 7A652550CCA6;
+        Tue,  2 Jun 2020 19:51:04 +0200 (CEST)
+Received: from localhost (34.103.240.103) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
+ 19:51:03 +0200
+Date:   Tue, 2 Jun 2020 19:48:46 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v3 2/4] iio: chemical: scd30: add I2C interface driver
+Message-ID: <20200602174846.GB2668@arch>
+References: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
+ <20200602164723.28858-3-tomasz.duszynski@octakon.com>
+ <CAHp75Vc60q1PC9j6KR1-OJHxw=nBAHt9zJK=h9f27yJxMHpb8A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc60q1PC9j6KR1-OJHxw=nBAHt9zJK=h9f27yJxMHpb8A@mail.gmail.com>
+X-Originating-IP: [34.103.240.103]
+X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 10486631732823481503
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjihesthdtredttddtjeenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtheevtefhffduteejfedtkeeuheejgeejvdetfffgveekffefgeffueeghefgjeenucfkpheptddrtddrtddrtddpfeegrddutdefrddvgedtrddutdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds uSD support for Cubieboard7 board based on Actions Semi
-S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
-added yet, fixed regulator has been used as a regulator node.
+Hello Andy,
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v2:
-	* No change.
-Changes since v1:
-        * No change.
-Changes since RFC:
-        * No change.
----
- arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
- arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
- 2 files changed, 42 insertions(+)
+On Tue, Jun 02, 2020 at 08:14:13PM +0300, Andy Shevchenko wrote:
+> On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
+> <tomasz.duszynski@octakon.com> wrote:
+> >
+> > Add I2C interface driver for the SCD30 sensor.
+>
+> ...
+>
+> > +static u16 scd30_i2c_cmd_lookup_tbl[] = {
+> > +       [CMD_START_MEAS] = 0x0010,
+> > +       [CMD_STOP_MEAS] = 0x0104,
+> > +       [CMD_MEAS_INTERVAL] = 0x4600,
+> > +       [CMD_MEAS_READY] = 0x0202,
+> > +       [CMD_READ_MEAS] = 0x0300,
+> > +       [CMD_ASC] = 0x5306,
+> > +       [CMD_FRC] = 0x5204,
+> > +       [CMD_TEMP_OFFSET] = 0x5403,
+> > +       [CMD_FW_VERSION] = 0xd100,
+> > +       [CMD_RESET] = 0xd304,
+>
+> Keep sorted by value?
+>
 
-diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-index 63e375cd9eb4..ec117eb12f3a 100644
---- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-+++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-@@ -13,6 +13,7 @@
- 
- 	aliases {
- 		serial3 = &uart3;
-+		mmc0 = &mmc0;
- 	};
- 
- 	chosen {
-@@ -28,6 +29,23 @@
- 		device_type = "memory";
- 		reg = <0x1 0xe0000000 0x0 0x0>;
- 	};
-+
-+	/* Fixed regulator used in the absence of PMIC */
-+	vcc_3v1: vcc-3v1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.1V";
-+		regulator-min-microvolt = <3100000>;
-+		regulator-max-microvolt = <3100000>;
-+	};
-+
-+	/* Fixed regulator used in the absence of PMIC */
-+	sd_vcc: sd-vcc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.1V";
-+		regulator-min-microvolt = <3100000>;
-+		regulator-max-microvolt = <3100000>;
-+		regulator-always-on;
-+	};
- };
- 
- &i2c0 {
-@@ -81,6 +99,14 @@
- 			bias-pull-up;
- 		};
- 	};
-+
-+	mmc0_default: mmc0_default {
-+		pinmux {
-+			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-+				 "sd0_cmd_mfp", "sd0_clk_mfp";
-+			function = "sd0";
-+		};
-+	};
- };
- 
- &timer {
-@@ -90,3 +116,18 @@
- &uart3 {
- 	status = "okay";
- };
-+
-+/* uSD */
-+&mmc0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_default>;
-+	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-+	no-sdio;
-+	no-mmc;
-+	no-1-8-v;
-+	bus-width = <4>;
-+	vmmc-supply = <&sd_vcc>;
-+	vqmmc-supply = <&sd_vcc>;
-+};
-+
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index b1a34f95d44c..2bb29bc683ef 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/clock/actions,s700-cmu.h>
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/actions,s700-reset.h>
- #include <dt-bindings/power/owl-s700-powergate.h>
--- 
-2.7.4
+I'd rather leave it as is simply because order here matches order in
+sensor datasheet.
 
+> > +};
+>
+> ...
+>
+> > +       ret = i2c_master_send(client, txbuf, txsize);
+>
+> > +       if (ret != txsize)
+> > +               return ret < 0 ? ret : -EIO;
+>
+> Wouldn't be better
+>
+>   if (ret < 0)
+>     return ret;
+>   if (ret != txsize)
+>     return -EIO;
+>
+> ?
+>
+
+Hmm, okay. Perhaps slightly easier to read.
+
+> > +       if (!rxbuf)
+> > +               return 0;
+> > +
+> > +       ret = i2c_master_recv(client, rxbuf, rxsize);
+>
+> > +       if (ret != rxsize)
+> > +               return ret < 0 ? ret : -EIO;
+>
+> Ditto.
+>
+> ...
+>
+> > +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd,
+> > +                            u16 arg, void *response, int size)
+> > +{
+> > +       char crc, buf[SCD30_I2C_MAX_BUF_SIZE], *rsp = response;
+> > +       int i, ret;
+>
+> i -> offset ?
+>
+
+'i' is shorter and I am lazy :).
+
+> > +       put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
+> > +       i = 2;
+> > +
+> > +       if (rsp) {
+> > +               /* each two bytes are followed by a crc8 */
+> > +               size += size / 2;
+> > +       } else {
+> > +               put_unaligned_be16(arg, buf + i);
+> > +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> > +               i += 2;
+>
+> > +               buf[i] = crc;
+> > +               i += 1;
+>
+> buf[offset++] = crc; ?
+>
+
+I'd rather stick to what I have now. It looks more consistent.
+
+> > +               /* commands below don't take an argument */
+> > +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
+> > +                       i -= 3;
+> > +       }
+> > +
+> > +       ret = scd30_i2c_xfer(state, buf, i, buf, size);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       /* validate received data and strip off crc bytes */
+> > +       for (i = 0; i < size; i += 3) {
+> > +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> > +               if (crc != buf[i + 2]) {
+> > +                       dev_err(state->dev, "data integrity check failed\n");
+> > +                       return -EIO;
+> > +               }
+> > +
+>
+> > +               *rsp++ = buf[i];
+>
+> + 0 (for the sake of consistency?
+>
+
+Adding 0 is a little bit odd.
+
+> > +               *rsp++ = buf[i + 1];
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+>
+> ...
+>
+> > +static struct i2c_driver scd30_i2c_driver = {
+> > +       .driver = {
+>
+> > +               .name = KBUILD_MODNAME,
+>
+> Better to hard code.
+>
+
+I seriously doubt anyone will ever want to change module name. What for?
+
+> > +               .of_match_table = scd30_i2c_of_match,
+> > +               .pm = &scd30_pm_ops,
+> > +       },
+> > +       .probe_new = scd30_i2c_probe,
+> > +};
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
