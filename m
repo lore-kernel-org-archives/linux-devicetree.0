@@ -2,150 +2,137 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF851C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 19:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0D0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 19:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC56A2074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 19:37:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ha/pn0BX"
+	by mail.kernel.org (Postfix) with ESMTP id E4804206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 19:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgFBThd (ORCPT
+        id S1727011AbgFBTjg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:37:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBThd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 15:37:33 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47528C08C5C1
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 12:37:33 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 64so5633435pfg.8
-        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 12:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bJnC8pb9inJ4WASV7qVCuCabCRcXZDxttLDFcET0dPc=;
-        b=Ha/pn0BXsUvRjOzGNc0GJXisWDaYC6hsmIaIt4veiwt/qOBrFIyP91gWdk0MIjL3SP
-         CtXg3HDwFvPW9uc6fKiYNh0Rdg8AapVZng26a36EW9Ul23Yk3vMUneyzBf4ON8PFZLOP
-         Yni5OWTIjVYNJ55ki+7sCflmTV3aRAX7Okn1Wwj6zv04gZHLuxFaZKb9QIEPfg/R7izY
-         v0gGGqsRfp3lhMfXDevaHCmuH/Nu6XiKLLW8HkKoKKGqyqOWF1ZS6dBjcyZbxRRItrSX
-         cGa2QzSeSMMclncAx8VzL5FZzWi4q8206AVEcoTiyu4h0vPuwIA97o387htSfu+b20l4
-         6u2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bJnC8pb9inJ4WASV7qVCuCabCRcXZDxttLDFcET0dPc=;
-        b=INmZRU6k1GCzTX/fwD3Fhv+cou+93xuVC+r+ieTd9I4cFFpbjxH77b6OtY1M1+fBgL
-         tC0H/SKKo+CgJOj6ezXxF3s3cg/VWxmhdho2XYQg+ln9Ss8MNSY1VlDtIkWDELC62wOw
-         pVGLOjO9FdfBrrUOMX378C3OabjRT1s2rehUDTlvGheqncvKNX0FdH+kcSufgJ/So9ry
-         2tg868DnXfRrJ6PQ+5Ndjv44FaaoIn1CH4IcVdxrH9/jxlpxGukEXx8q41ogJsWvs6Jl
-         QWRdxgmJHZqPSik4uf4vMv1lvPaD3aXiFscTR884OpL5JsVmuRFRrCgATFhO44tNUVKM
-         XEzQ==
-X-Gm-Message-State: AOAM533PYcAhLJ6WenIgQd5a1loZhjLvrKiDiD1drNEHbc9e0nDubsrR
-        gnmTxRurGxqFFnue4+q0NhLKCA==
-X-Google-Smtp-Source: ABdhPJy3Abo428EgMH5dNF9Mw8Ft+chYmLJaz1u5kKFL3gpyXhgREJRJ/iH853fmYqj1SDPu5DREaw==
-X-Received: by 2002:a63:4f09:: with SMTP id d9mr24769623pgb.10.1591126652763;
-        Tue, 02 Jun 2020 12:37:32 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id y9sm3105189pjy.56.2020.06.02.12.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 12:37:32 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 13:37:30 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] remoteproc: Introduce rproc_of_parse_firmware()
- helper
-Message-ID: <20200602193730.GA29840@xps15>
-References: <20200521001006.2725-1-s-anna@ti.com>
- <20200521001006.2725-2-s-anna@ti.com>
+        Tue, 2 Jun 2020 15:39:36 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57156 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFBTjg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 15:39:36 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 259968030808;
+        Tue,  2 Jun 2020 19:39:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GjhvlG4R7G07; Tue,  2 Jun 2020 22:39:31 +0300 (MSK)
+Date:   Tue, 2 Jun 2020 22:39:31 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 02/10] spi: dw: Add support for RX sample delay register
+Message-ID: <20200602193931.vl36k3c6uyiaizah@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-3-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200521001006.2725-2-s-anna@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200513140031.25633-3-lars.povlsen@microchip.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 07:10:03PM -0500, Suman Anna wrote:
-> Add a new helper function rproc_of_parse_firmware() to the remoteproc
-> core that can be used by various remoteproc drivers to look up the
-> the "firmware-name" property from a rproc device node. This property
-> is already being used by multiple drivers, so this helper can avoid
-> repeating equivalent code in remoteproc drivers.
+On Wed, May 13, 2020 at 04:00:23PM +0200, Lars Povlsen wrote:
+> This add support for the RX_SAMPLE_DLY register. If enabled in the
+> Designware IP, it allows tuning of the rx data signal by means of an
+> internal rx sample fifo.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> The register is located at offset 0xf0, and if the option is not
+> enabled in the IP, changing the register will have no effect.
+> 
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
-> v2: New patch
+>  drivers/spi/spi-dw.c | 7 +++++++
+>  drivers/spi/spi-dw.h | 2 ++
+>  2 files changed, 9 insertions(+)
 > 
->  drivers/remoteproc/remoteproc_core.c     | 23 +++++++++++++++++++++++
->  drivers/remoteproc/remoteproc_internal.h |  2 ++
->  2 files changed, 25 insertions(+)
+> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+> index e572eb34a3c1a..32997f28fa5bb 100644
+> --- a/drivers/spi/spi-dw.c
+> +++ b/drivers/spi/spi-dw.c
+> @@ -81,6 +81,9 @@ static ssize_t dw_spi_show_regs(struct file *file, char __user *user_buf,
+>  			"DMATDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMATDLR));
+>  	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+>  			"DMARDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMARDLR));
+
+> +	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+> +			 "RX_SAMPLE_DLY: \t0x%08x\n",
+> +			 dw_readl(dws, DW_SPI_RX_SAMPLE_DLY));
+
+debugfs_reg32 interface is now utilized in the driver to dump the registers
+state. So this will have to be converted to just a new entry in the
+dw_spi_dbgfs_regs array.
+
+>  	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+>  			"=================================\n");
+> 
+> @@ -315,6 +318,10 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+>  		spi_set_clk(dws, chip->clk_div);
+>  	}
 > 
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> +	/* Apply RX sample delay, iff requested (nonzero) */
 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 9f04c30c4aaf..c458b218d524 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1034,6 +1034,29 @@ rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, size_t len,
->  }
->  EXPORT_SYMBOL(rproc_of_resm_mem_entry_init);
->  
-> +/**
-> + * rproc_of_parse_firmware() - parse and return the firmware-name
-> + * @dev: pointer on device struct representing a rproc
-> + * @index: index to use for the firmware-name retrieval
-> + * @fw_name: pointer to a character string, in which the firmware
-> + *           name is returned on success and unmodified otherwise.
-> + *
-> + * This is an OF helper function that parses a device's DT node for
-> + * the "firmware-name" property and returns the firmware name pointer
-> + * in @fw_name on success.
-> + *
-> + * Return: 0 on success, or an appropriate failure.
-> + */
-> +int rproc_of_parse_firmware(struct device *dev, int index, const char **fw_name)
-> +{
-> +	int ret;
+s/iff/if
+
+> +	if (dws->rx_sample_dly)
+> +		dw_writel(dws, DW_SPI_RX_SAMPLE_DLY, dws->rx_sample_dly);
 > +
-> +	ret = of_property_read_string_index(dev->of_node, "firmware-name",
-> +					    index, fw_name);
-> +	return ret ? ret : 0;
-> +}
-> +EXPORT_SYMBOL(rproc_of_parse_firmware);
-> +
->  /*
->   * A lookup table for resource handlers. The indices are defined in
->   * enum fw_resource_type.
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index 4ba7cb59d3e8..e5341e91d2fc 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -28,6 +28,8 @@ struct rproc_debug_trace {
->  void rproc_release(struct kref *kref);
->  irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int vq_id);
->  void rproc_vdev_release(struct kref *ref);
-> +int rproc_of_parse_firmware(struct device *dev, int index,
-> +			    const char **fw_name);
->  
->  /* from remoteproc_virtio.c */
->  int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id);
-> -- 
-> 2.26.0
+>  	dws->n_bytes = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
+>  	dws->dma_width = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
 > 
+> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+> index 1bf5713e047d3..ed6e47b3f50da 100644
+> --- a/drivers/spi/spi-dw.h
+> +++ b/drivers/spi/spi-dw.h
+> @@ -31,6 +31,7 @@
+>  #define DW_SPI_IDR			0x58
+>  #define DW_SPI_VERSION			0x5c
+>  #define DW_SPI_DR			0x60
+> +#define DW_SPI_RX_SAMPLE_DLY		0xf0
+>  #define DW_SPI_CS_OVERRIDE		0xf4
+> 
+>  /* Bit fields in CTRLR0 */
+> @@ -111,6 +112,7 @@ struct dw_spi {
+> 
+>  	int			cs_override;
+>  	u32			reg_io_width;	/* DR I/O width in bytes */
+
+> +	u8			rx_sample_dly;	/* RX fifo tuning (option) */
+
+This doesn't seem like a good place for this parameter. The sample delay is
+SPI-slave specific. So as I see it, the parameter should be moved to the
+chip_data.
+
+-Sergey
+
+>  	u16			bus_num;
+>  	u16			num_cs;		/* supported slave numbers */
+>  	void (*set_cs)(struct spi_device *spi, bool enable);
+> --
+> 2.26.2
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
