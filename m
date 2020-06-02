@@ -2,116 +2,101 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE860C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 08:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8627C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 08:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A4C2072F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 08:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB47207D5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 08:14:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="doCaxwsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725969AbgFBIHU (ORCPT
+        id S1725900AbgFBIOB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:07:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgFBIHS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 04:07:18 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B90BC061A0E;
-        Tue,  2 Jun 2020 01:07:18 -0700 (PDT)
-Received: from ni.home (unknown [IPv6:2a01:cb19:8092:cf00:aaa1:59ff:fe08:91d5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: myjosserand)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 241792A223D;
-        Tue,  2 Jun 2020 09:07:14 +0100 (BST)
-From:   =?UTF-8?q?Myl=C3=A8ne=20Josserand?= 
-        <mylene.josserand@collabora.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, heiko@sntech.de,
-        robh+dt@kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, mylene.josserand@collabora.com,
-        kernel@collabora.com
-Subject: [PATCH v4 1/2] clk: rockchip: rk3288: Handle clock tree for rk3288w
-Date:   Tue,  2 Jun 2020 10:06:43 +0200
-Message-Id: <20200602080644.11333-2-mylene.josserand@collabora.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200602080644.11333-1-mylene.josserand@collabora.com>
-References: <20200602080644.11333-1-mylene.josserand@collabora.com>
+        Tue, 2 Jun 2020 04:14:01 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51350 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBIOB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 04:14:01 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0528DWxd017543;
+        Tue, 2 Jun 2020 03:13:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591085612;
+        bh=W/u4Gfn8Bq+eBQ50ZyVyRSF3E4LsSNzZM/DU8aita/I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=doCaxwsbt8NFkstWB1KPdIFMfNjNNLipev6pIncVThGfebFxJlpuA8OL30Yng3UFj
+         6Xe2UD2dJJh6/C1MfVGr3uoMTVjo1fodAEdjUUk3YKDlZW/eOLr4jL1NI1mIx6CbK0
+         kR7YE9RNq8m1Q48wvNO5pRUPz0/9jAUcSJxqHqjc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0528DWEE024193
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 03:13:32 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 03:13:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 03:13:32 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0528DTnO024976;
+        Tue, 2 Jun 2020 03:13:29 -0500
+Subject: Re: [PATCH resend 0/2] dts: keystone-k2g-evm: Display support
+To:     <santosh.shilimkar@oracle.com>, Jyri Sarha <jsarha@ti.com>,
+        <dri-devel@lists.freedesktop.org>, <ssantosh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+CC:     <mark.rutland@arm.com>, <praneeth@ti.com>, <robh+dt@kernel.org>,
+        <peter.ujfalusi@ti.com>, <tomi.valkeinen@ti.com>,
+        <laurent.pinchart@ideasonboard.com>
+References: <cover.1581671951.git.jsarha@ti.com>
+ <6749076a-cbc1-d8e2-bc35-2e2a9ad80a6d@oracle.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <973b69f2-bbe1-3c1b-615f-751bb8d5d83e@ti.com>
+Date:   Tue, 2 Jun 2020 11:13:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <6749076a-cbc1-d8e2-bc35-2e2a9ad80a6d@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The revision rk3288w has a different clock tree about "hclk_vio"
-clock, according to the BSP kernel code.
+Hi Santosh,
 
-This patch handles this difference by detecting which device-tree
-we are using. If it is a "rockchip,rk3288-cru", let's register
-the clock tree as it was before. If the device-tree node is
-"rockchip,rk3288w-cru", we will apply the difference with this
-version of this SoC.
+On 14/02/2020 19:40, santosh.shilimkar@oracle.com wrote:
+> On 2/14/20 1:22 AM, Jyri Sarha wrote:
+>> Resend because the earlier recipient list was wrong.
+>>
+>> Now that drm/tidss is queued for mainline, lets add display support for
+>> k2g-evm. There is no hurry since tidss is out only in v5.7, but it
+>> should not harm to have the dts changes in place before that.
+>>
+>> Jyri Sarha (2):
+>>    ARM: dts: keystone-k2g: Add DSS node
+>>    ARM: dts: keystone-k2g-evm: add HDMI video support
+>>
+>>   arch/arm/boot/dts/keystone-k2g-evm.dts | 101 +++++++++++++++++++++++++
+>>   arch/arm/boot/dts/keystone-k2g.dtsi    |  22 ++++++
+>>   2 files changed, 123 insertions(+)
+>>
+> Ok. Will add this to the next queue.
 
-Noticed that this new device-tree compatible must be handled in
-bootloader such as u-boot.
+What happened with this one? It used to be in linux-next, but now I don't see it anymore.
 
-Signed-off-by: Mylène Josserand <mylene.josserand@collabora.com>
----
- drivers/clk/rockchip/clk-rk3288.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+  Tomi
 
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index cc2a177bbdbf..204976e2d0cb 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -425,8 +425,6 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
- 	COMPOSITE(0, "aclk_vio0", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
- 			RK3288_CLKSEL_CON(31), 6, 2, MFLAGS, 0, 5, DFLAGS,
- 			RK3288_CLKGATE_CON(3), 0, GFLAGS),
--	DIV(0, "hclk_vio", "aclk_vio0", 0,
--			RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
- 	COMPOSITE(0, "aclk_vio1", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
- 			RK3288_CLKSEL_CON(31), 14, 2, MFLAGS, 8, 5, DFLAGS,
- 			RK3288_CLKGATE_CON(3), 2, GFLAGS),
-@@ -819,6 +817,16 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
- 	INVERTER(0, "pclk_isp", "pclk_isp_in", RK3288_CLKSEL_CON(29), 3, IFLAGS),
- };
- 
-+static struct rockchip_clk_branch rk3288w_hclkvio_branch[] __initdata = {
-+	DIV(0, "hclk_vio", "aclk_vio1", 0,
-+			RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
-+};
-+
-+static struct rockchip_clk_branch rk3288_hclkvio_branch[] __initdata = {
-+	DIV(0, "hclk_vio", "aclk_vio0", 0,
-+			RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
-+};
-+
- static const char *const rk3288_critical_clocks[] __initconst = {
- 	"aclk_cpu",
- 	"aclk_peri",
-@@ -936,6 +944,14 @@ static void __init rk3288_clk_init(struct device_node *np)
- 				   RK3288_GRF_SOC_STATUS1);
- 	rockchip_clk_register_branches(ctx, rk3288_clk_branches,
- 				  ARRAY_SIZE(rk3288_clk_branches));
-+
-+	if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
-+		rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
-+					       ARRAY_SIZE(rk3288w_hclkvio_branch));
-+	else
-+		rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch,
-+					       ARRAY_SIZE(rk3288_hclkvio_branch));
-+
- 	rockchip_clk_protect_critical(rk3288_critical_clocks,
- 				      ARRAY_SIZE(rk3288_critical_clocks));
- 
 -- 
-2.26.2
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
