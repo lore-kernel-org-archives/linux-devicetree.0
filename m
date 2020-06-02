@@ -2,170 +2,146 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4841C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA02C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59F72086A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591115582;
-	bh=KEF/4sEpuXc2S9hUWzC5Rg9NoWrf4iyqBG4+55SorsI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=MDMHGurh/YzPACGS41Qqj3a9P/EitI5XMNSZyYLfAzkBUUzsFLrlNfWF1b947CLQz
-	 tNokdE7aIfEXw9RL2F7CsR5c4zSZ4V2U6AXKM57lmKlWzSBx0vGdNLj6pHsIVcl6yk
-	 A1ibdOazMzvcOuAF8Y2+0OuF6HbZQRMlS86NdhuY=
+	by mail.kernel.org (Postfix) with ESMTP id 03BCA20738
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 16:35:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="bitYm4Vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgFBQc6 (ORCPT
+        id S1726373AbgFBQfD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgFBQc6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:32:58 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B50A20738;
-        Tue,  2 Jun 2020 16:32:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591115577;
-        bh=KEF/4sEpuXc2S9hUWzC5Rg9NoWrf4iyqBG4+55SorsI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MinDMEL1xXnxdjvjLnAJ0W14PWa2eGUT44UUqj4dYj6QfLB2UuhGQphHqg9Ueodxb
-         4CZHHTPeUrOli+baLyISlpfKEb9BoWd8aQ8ARjBAJTchbaQjm8xL2PCjORtcnl5qud
-         da8sXHO4WjNhRbchbnTrVBwxEEStlBCI8h2ypBwg=
-Date:   Tue, 2 Jun 2020 11:32:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
-Message-ID: <20200602163255.GA821782@bjorn-Precision-5520>
+        Tue, 2 Jun 2020 12:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBQfD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 12:35:03 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC66C08C5C0
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 09:35:02 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id mb16so13400531ejb.4
+        for <devicetree@vger.kernel.org>; Tue, 02 Jun 2020 09:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=GTp3v0xs6mu5kFIbCxhtRB6gkwXEBZW6SmRoVZ5I7s8=;
+        b=bitYm4VsV59axD8Yyh4/9Ainp4Ejsxy3f6GGf06ZdUqBePwsXjnxUv7AmcsFBxvAy+
+         sDgixVmXWE6rE7BLZHD3F1/LiFked4NddpNfvEFHK/NblwSiZoc9dwiIABl4C18iogld
+         C2nem6F99yGeMb5XU56PVEoWwTQ2o8qPyaMB6SkojPG1j908NQJhpg8LYDaPIVXxWOd9
+         BNm+13BoZV0nIpK21TFz6d+M7RIzMWciWSxuwtcHm9t9eGgH+irmW4Ews6p5nUE03jI5
+         ZQUWTlmxEzbsAJRn9CsQ34znh7kYX/db89XVj6UXQgRXDW9qCmRKCffbHNcW24DpcDlE
+         /UVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=GTp3v0xs6mu5kFIbCxhtRB6gkwXEBZW6SmRoVZ5I7s8=;
+        b=W9CBGYd26xvrFxaRWwsGWvAGBR6tenkzWhPAtYq2FD77d6HHBna+Iss7w3aPkpRsP6
+         HnhGrMFgs2b6NHJBQlryVho9a42HfE9FfDIdlF84icHxY3vXUNM5vFUFiogznl9Ekb8q
+         CDBXmwysWK8RcHqmUS7Y0AVaeOusUUjudwfmzxRLLO7Da0e55q0l+BTvmzna/7vjUwO4
+         s9UyRjnVzT0LgSUHTbM5SktXLAGFQtR/SSfqTeV8JJ07VdA8DkeU1BLzv9j0FAhvU+Xg
+         2U0iSoHCeHVc/vTQa/8NHGY5N9QlXadaFo2gr6gbji+orcXETWqDSz+LGP49iCCrkCN7
+         A1Ng==
+X-Gm-Message-State: AOAM53048JVDf8KLd1IW4yfc84ncxvB28k/I5bIDFSP3TyAtUpi5M0ux
+        mKYbAtQVnWNr4f+zcwlykyrwKw==
+X-Google-Smtp-Source: ABdhPJwDC5xZ0HQrYmCYTAi9W3vztRFSPp2byu4s2Wfk9myNfuwm4bvRwoMVZ7BolQqQim/GmZ2krg==
+X-Received: by 2002:a17:906:1c8c:: with SMTP id g12mr13519380ejh.456.1591115701447;
+        Tue, 02 Jun 2020 09:35:01 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id ce16sm1829533ejb.76.2020.06.02.09.35.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 09:35:00 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 18:34:58 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, jkridner@beagleboard.org,
+        robertcnelson@gmail.com
+Subject: Re: [PATCH] ARM: dts: AM33xx-l4: add gpio-ranges
+Message-ID: <20200602163458.GA847883@x1>
+References: <20200602131428.GA496390@x1>
+ <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
+ <20200602135155.GE37466@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200602115353.20143-12-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200602135155.GE37466@atomide.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 01:53:52PM +0200, Ansuel Smith wrote:
-> From: Sham Muthayyan <smuthayy@codeaurora.org>
+On Tue, Jun 02, 2020 at 06:51:55AM -0700, Tony Lindgren wrote:
+> * Grygorii Strashko <grygorii.strashko@ti.com> [200602 13:44]:
+> > 
+> > 
+> > On 02/06/2020 16:14, Drew Fustini wrote:
+> > > Add gpio-ranges properties to the gpio controller nodes.
+> > > 
+> > > These gpio-ranges were created based on "Table 9-10. CONTROL_MODULE
+> > > REGISTERS" in the  "AM335x Technical Reference Manual" [0] and "Table
+> > > 4-2. Pin Attributes" in the "AM335x Sitara Processor datasheet" [1].
+> > > A csv file with this data is available for reference [2].
+> > 
+> > It will be good if you can explain not only "what" is changed, but
+> > also "why" it's needed in commit message.
 > 
-> Add Force GEN1 support needed in some ipq8064 board that needs to limit
-> some PCIe line to gen1 for some hardware limitation. This is set by the
-> max-link-speed binding and needed by some soc based on ipq8064. (for
-> example Netgear R7800 router)
+> Also, please check (again) that this is the same for all the am3
+> variants. For omap3, we had different pad assignments even between
+> SoC revisions. Different pad routings should be easy to deal with
+> in the dts if needed though.
 > 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> Regards,
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 259b627bf890..0ce15d53c46e 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -27,6 +27,7 @@
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  
->  #define PCIE20_PARF_SYS_CTRL			0x00
-> @@ -99,6 +100,8 @@
->  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
->  #define SLV_ADDR_SPACE_SZ			0x10000000
->  
-> +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
-> +
->  #define DEVICE_TYPE_RC				0x4
->  
->  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-> @@ -195,6 +198,7 @@ struct qcom_pcie {
->  	struct phy *phy;
->  	struct gpio_desc *reset;
->  	const struct qcom_pcie_ops *ops;
-> +	int gen;
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	/* wait for clock acquisition */
->  	usleep_range(1000, 1500);
->  
-> +	if (pcie->gen == 1) {
-> +		val = readl(pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> +		val |= 1;
+> Tony
 
-Is this the same bit that's visible in config space as
-PCI_EXP_LNKSTA_CLS_2_5GB?  Why not use that #define?
+It appears that the only usage of am33xx-l4.dtsi is for am335x for which
+specific parts mentioned in those dtsi files are 3352, 3358, and 3359.
 
-There are a bunch of other #defines in this file that look like
-redefinitions of standard things:
+$ git grep am33xx-l4.dtsi 
+arch/arm/boot/dts/am33xx.dtsi:#include "am33xx-l4.dtsi"
+$ git grep -l '#include "am33xx.dtsi"' arch/ |wc -l
+27
+$ git grep -l '#include "am33xx.dtsi"' arch/ |grep -v am335x |wc -l
+0
 
-  #define PCIE20_COMMAND_STATUS                   0x04
-    Looks like PCI_COMMAND
+Also, it appears that the only AM33xx parts that actually exist are [0]:
 
-  #define CMD_BME_VAL                             0x4
-    Looks like PCI_COMMAND_MASTER
+AM3351, AM3352, AM3354, AM3356, AM3357, AM3358, AM3359
 
-  #define PCIE20_DEVICE_CONTROL2_STATUS2          0x98
-    Looks like (PCIE20_CAP + PCI_EXP_DEVCTL2)
+I clicked on the datasheet link for each product page and while the URL
+has the specific part number in it [1], they all end up loading the
+exact same PDF. The header states:
 
-  #define PCIE_CAP_CPL_TIMEOUT_DISABLE            0x10
-    Looks like PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
+"AM3359, AM3358, AM3357, AM3356, AM3354, AM3352, AM3351
+SPRS717L – OCTOBER 2011 – REVISED MARCH 2020"
 
-  #define PCIE20_CAP                              0x70
-    This one is obviously device-specific
+Thus, I do believe all SoC's using am33xx-l4.dtsi would have the same
+memory map for the pin control registers and the same relationshop from
+pin to gpio line.  For example, GPMC_A0 has mode 7 and it is labeled
+gpio1_16.  conf_gpmc_a0 is at offset 840h which makes it pin 16.
 
-  #define PCIE20_CAP_LINK_CAPABILITIES            (PCIE20_CAP + 0xC)
-    Looks like (PCIE20_CAP + PCI_EXP_LNKCAP)
+Maybe am33xx-l4.dtsi should have actually been named am335x-l4.dtsi?
 
-  #define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT (BIT(10) | BIT(11))
-    Looks like PCI_EXP_LNKCAP_ASPMS
+Though I suppose there is no point in changing that now.
 
-  #define PCIE20_CAP_LINK_1                       (PCIE20_CAP + 0x14)
-  #define PCIE_CAP_LINK1_VAL                      0x2FD7F
-    This looks like PCIE20_CAP_LINK_1 should be (PCIE20_CAP +
-    PCI_EXP_SLTCAP), but "CAP_LINK_1" doesn't sound like the Slot
-    Capabilities register, and I don't know what PCIE_CAP_LINK1_VAL
-    means.
+thanks,
+drew
 
-> +		writel(val, pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> +	}
->  
->  	/* Set the Max TLP size to 2K, instead of using default of 4K */
->  	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
-> @@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> +	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
-> +	if (pcie->gen < 0)
-> +		pcie->gen = 2;
-> +
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
->  	pcie->parf = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(pcie->parf)) {
-> -- 
-> 2.25.1
-> 
+[0] http://www.ti.com/processors/sitara-arm/am335x-cortex-a8/overview.html
+[1] https://www.ti.com/lit/ds/symlink/am3359.pdf
